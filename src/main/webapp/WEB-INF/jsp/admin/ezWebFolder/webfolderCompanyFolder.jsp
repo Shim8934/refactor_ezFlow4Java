@@ -14,6 +14,7 @@
 		<script type="text/javascript" >        
 			var g_windowReference = null;
 			var arrSubFolder      = [];
+			var selectedFolder    = "";
 			
 			window.onload = function () {
 				getData();
@@ -72,7 +73,9 @@
 				
 				var spanFolderName = document.createElement("span");
 				spanFolderName.innerHTML = list["folderName"];
-				spanFolderName.setAttribute("class", "spanName");				
+				spanFolderName.setAttribute("class", "spanName");
+				spanFolderName.setAttribute("name", list["folderId"]);
+				spanFolderName.onclick = function() {getSelected(this);};
 				
 				divElmt.appendChild(imgElmt);
 				divElmt.appendChild(imgElmt2);
@@ -108,6 +111,17 @@
 				}		
 			}
 			
+			function getSelected(obj) {				
+				var previousElmt = document.getElementsByName(selectedFolder)[0];
+				
+				if (previousElmt != null && previousElmt.getAttribute("name") != obj.getAttribute("name")) {
+					previousElmt.style.color = "";					
+				}
+				
+				selectedFolder = obj.getAttribute("name");
+				obj.style.color = "#e04343";
+			}
+			
 			function getDetailTree(obj) {
 				//Check if already in arrSubFolder
 				var uniqueId = obj.getAttribute("id");
@@ -115,7 +129,7 @@
 				if (arrSubFolder.indexOf(uniqueId) != -1) {
 					var childElmt = obj.parentElement.lastElementChild;
 					
-					if (obj.className  == "webfolderMinus") {
+					if (obj.className == "webfolderMinus") {
 						obj.src= "/images/OrganTree_cross/plus_normal.gif";
 						obj.setAttribute("class", "webfolderPlus");						
 						childElmt.style.display = "none";
@@ -127,7 +141,9 @@
 					}
 				}
 				else {
-					obj.src = "/images/OrganTree_cross/minus_normal.gif";					
+					obj.src = "/images/OrganTree_cross/minus_normal.gif";
+					obj.setAttribute("class", "webfolderMinus");
+					
 					$.ajax({
 						type: "POST",
 						url: "/admin/ezWebFolder/getSubFolderTree.do",
