@@ -997,7 +997,9 @@ form{display:inline;margin:0}
 	border:1px solid #b6b6b6;
 	border-right:1px solid #b6b6b6;
 	font-size:12px;
-
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-sapce:no-wrap;
 }
 
 .tstyle2 td {
