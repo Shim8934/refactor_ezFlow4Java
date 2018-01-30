@@ -35,6 +35,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -200,13 +201,14 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 
 	@Override
-	public PersonalGetEmpOfMonthVO getEmpOfMonth(String pTerm, int tenantID) throws Exception {
+	public PersonalGetEmpOfMonthVO getEmpOfMonth(String pTerm, LoginVO userInfo) throws Exception {
 		logger.debug("getEmpOfMonth started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PTERM", pTerm);
-		map.put("tenantID", tenantID);
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("tenantID", userInfo.getTenantId());
 
 		logger.debug("getEmpOfMonth ended");
 		return ezPersonalDAO.getEmpOfMonth(map);

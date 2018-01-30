@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzPersonalService {
 	public List<PersonalSliderImageVO> getSilderList(String companyID, String mode, String sliderID, int tenantID) throws Exception;
@@ -32,7 +33,7 @@ public interface EzPersonalService {
 	
 	public List<PersonalNoticeVO> getNoticeListUser (String companyID, int pTotal, int pCount, int pStart, int tenantID) throws Exception;
 	
-	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm, int tenantID) throws Exception;
+	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm, LoginVO userInfo) throws Exception;
 	
 	public PersonalLightPollVO getCurrentPoll (String pUserID, String pCompanyID, int tenantID) throws Exception;
 	

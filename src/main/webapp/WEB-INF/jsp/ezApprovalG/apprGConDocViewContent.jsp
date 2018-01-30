@@ -13,8 +13,7 @@
 	        	
 	        	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
             		ret = true;
-            	}
-            	else { 
+            	} else { 
             		ret = false;	                		
             	} 
 	        	return ret;
