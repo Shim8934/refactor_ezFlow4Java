@@ -15262,7 +15262,7 @@
          FROM 
          	TBL_ENDAPRDOCINFO 
          WHERE  
-         	DocID = #v_DOCID#
+         	DocID = #v_OrgDocID#
          AND
          	TENANT_ID = #v_TENANTID#
          AND
@@ -15275,7 +15275,7 @@
          FROM 
          	TBL_ENDAPRDOCINFO 
          WHERE  
-         	DocID = #v_DOCID#
+         	DocID = #v_OrgDocID#
          AND
          	TENANT_ID = #v_TENANTID#
          AND
@@ -16884,7 +16884,7 @@
         FROM 
         	 TBL_ENDAPRDOCINFO 
         WHERE  
-        	 DOCID = #v_DOCID#
+        	 DOCID = #v_orgDocID#
         AND
         	 TENANT_ID = #v_TENANTID#
         AND
@@ -19901,7 +19901,7 @@
             DocNo = #v_DocNo#,
             HasAttachYN = #v_HasAttachYN#,
             HasOpinionYN = 'N',
-            StartDate = TO_Date(#v_StartDate#, 'YYYY-MM-DD HH24:MI:SS'), 
+            StartDate = TO_DATE(#v_StartDate#, 'YYYY-MM-DD HH24:MI:SS'), 
             EndDate = TO_DATE(#v_EndDate#, 'YYYY-MM-DD HH24:MI:SS'),
             WriterID = #v_WriterID#,
             WriterName = #v_WriterName#,
