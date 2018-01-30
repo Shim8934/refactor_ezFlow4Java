@@ -11558,7 +11558,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = staATAnHam;
 				
 				map3.put("v_APRSTATE", staASSungIn);
-				map3.put("v_APRMEMBERSN", docXML.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
+				map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
 
 				ezApprovalGDAO.updateAprLineInfo2(map3);
 				

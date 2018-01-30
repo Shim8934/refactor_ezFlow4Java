@@ -889,6 +889,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+		
+		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
+			useZipCodeSearch = "YES";
+		}
 		
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("txtInfo", pInfo);
@@ -913,6 +918,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("txtOldPassword", password);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";
