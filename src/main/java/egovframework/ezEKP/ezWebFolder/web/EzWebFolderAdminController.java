@@ -254,57 +254,40 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@RequestMapping(value="/admin/ezWebFolder/getCapacities.do", method = RequestMethod.POST)	
 	public String getCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		int currPage  = Integer.parseInt(request.getParameter("currentPage"));
+		String currPage  = request.getParameter("currentPage");
 		String searchStr = request.getParameter("searchStr");
 		String searchOpt = request.getParameter("searchOpt");
 		String companyId = request.getParameter("companyId");
-		int totalUsers = 0;
-		int totalPages = 0;
-		int pageSize = 10;
 		
-		List<UserCapacityVO> listUserCapacity = ezWebFolderAdminService.getListUserCapacity(companyId, searchStr, searchOpt, userInfo.getTenantId(), userInfo.getPrimary());
-		
-		for(UserCapacityVO capacity: listUserCapacity) {
-			if (capacity.getTotalUsed().equals("0")) {
-				capacity.setUsedRate(0);
-			}
-			else {				
-				double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10737418.24;
-				capacity.setUsedRate((int)(Integer.parseInt(capacity.getTotalUsed())/totalCapByBytes));
-			}
-		}
-		
-		//Paging
-		totalUsers = listUserCapacity.size();
-		totalPages = (totalUsers + pageSize - 1)/pageSize;
-		List<UserCapacityVO> renderList = new ArrayList<UserCapacityVO>();
-		
-		logger.debug("totalUsers: " + totalUsers + " || TotalPages: " + totalPages + " || CurrPage: " + currPage);
-
-		if (totalPages == 0 || totalPages == 1) {
-			model.addAttribute("capacityList", listUserCapacity);
-		}
-		else {
-			if (currPage < totalPages) {				
-				int startPoint = (currPage - 1) * pageSize;
-				int endPoint = currPage * pageSize;
-				renderList = listUserCapacity.subList(startPoint, endPoint);	
-				model.addAttribute("capacityList", renderList);
-			}
-			else {
-				if (currPage > totalPages) {
-					currPage = totalPages;
-				}
-				int startPoint = (currPage - 1) * pageSize;
-				int endPoint = totalUsers;				
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url = gwServerUrl + "/webfolderadmin/basicstorage/id/" + companyId + "/person";
 				
-				renderList = listUserCapacity.subList(startPoint, endPoint);
-				model.addAttribute("capacityList", renderList);
-			}
-		}
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("primary", userInfo.getPrimary())
+				.queryParam("searchStr", searchStr)
+				.queryParam("searchOpt", searchOpt)
+				.queryParam("currentPage", currPage);
+		RestTemplate rest = new RestTemplate();
 		
-		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("totalUsers", totalUsers);		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);		
+		JSONParser jp = new JSONParser();		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());				
+		String status = resultBody.get("status").toString();
+				
+		if (status.equals("ok")) {			
+			JSONArray listUserCapacity = (JSONArray) resultBody.get("data");
+			long totalPages = (long) resultBody.get("totalPages");
+			long totalUsers = (long) resultBody.get("totalUsers");
+			model.addAttribute("capacityList", listUserCapacity);
+			model.addAttribute("totalPages", totalPages);
+			model.addAttribute("totalUsers", totalUsers);
+		}
+	
 		return "json";
 	}
 	
@@ -314,14 +297,20 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String newStorageValue = request.getParameter("newStorage");
 		String companyId       = request.getParameter("companyId");
 		
-		try {
-			for (String userId : userList) {
-				ezWebFolderAdminService.updateNewAmount(userId, newStorageValue, companyId, userInfo.getTenantId());
-			}			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");		
+		String url = gwServerUrl + "/webfolderadmin/basicstorage/" + newStorageValue + "/person";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("companyId", companyId)
+				.queryParam("userList", String.join(",", userList));			
+		RestTemplate rest = new RestTemplate();
+		
+		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/restoreCapacities.do", method = RequestMethod.POST)
@@ -330,7 +319,24 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String companyId       = request.getParameter("companyId");
 		String totalAmount     = "0";
 		
-		try {
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");		
+		String url = gwServerUrl + "/webfolderadmin/storagereset/person";
+		
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("companyId", companyId)
+				.queryParam("userList", String.join(",", userList));			
+		RestTemplate rest = new RestTemplate();
+		
+		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		
+		
+/*		try {
 			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, userInfo.getTenantId());
 			if (webfolderConfig != null) {
 				totalAmount = webfolderConfig.getTotalLimit();
@@ -342,7 +348,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)	
