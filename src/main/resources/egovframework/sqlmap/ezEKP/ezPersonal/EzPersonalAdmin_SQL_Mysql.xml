@@ -687,6 +687,8 @@
 				TBL_PS_EMPMONTH
 	  	    WHERE
 	  	    	TERM = #v_pTerm#
+            AND
+                PHYSICALDELIVERYOFFICENAME = #companyID#                   
 	  	    AND
 	  	    	TENANT_ID = #tenantID#	
 		]]>
