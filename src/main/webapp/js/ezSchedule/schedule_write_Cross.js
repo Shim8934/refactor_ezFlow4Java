@@ -93,19 +93,23 @@ function save_schedule()
 	        }
     	}
     }
-    if(!check_time())
+    //2018.01.30 김기반복설정시 기본 날짜 사용안하고 반복 설정된 날짜 사용
+    if(!timeCheck)
     {
-        alert(timecheckstring);
-        saveCheck = false;
-        
-        return;
-    }
-    
-    if (CheckPreviously()) {
-        alert(strLang272);
-        saveCheck = false;
-        
-        return;
+    	if(!check_time())
+    	{
+    		alert(timecheckstring);
+    		saveCheck = false;
+    		
+    		return;
+    	}
+    	
+    	if (CheckPreviously()) {
+    		alert(strLang272);
+    		saveCheck = false;
+    		
+    		return;
+    	}
     }
     
 	if (scheduleid == "") check_name();
