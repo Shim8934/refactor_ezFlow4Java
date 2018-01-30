@@ -11,7 +11,7 @@
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/TreeView.js"></script>
+	    <script type="text/javascript" src="/js/ezWebFolder/treeView.js"></script>
 		<script type="text/javascript" >	        
 		    var companyFolderId = "";
 		    var deptFolderId    = "";
@@ -20,6 +20,23 @@
 		    window.onload = function () {
 		
 		    };
+		    
+		    function test() {
+    			var url = "/ezWebFolder/folderList.do";
+    			$.ajax({
+    				type:"GET",
+    				url : url,
+    				dataType: "JSON",
+    				success : function (data) {
+    					var result = data.test;
+    					alert(result);
+    				},
+    				error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134' />" + error);
+					}
+    			})
+		    }
+		    
 		    
 		    function goPage(idx) {
 		    	switch (idx) {
@@ -55,6 +72,8 @@
 					async: true,
 					success : function(data) {				
 						var result = data.folderList;												
+						createTree(data);
+						console.log(result);						
 					},
 	 				error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134' />" + error);
@@ -65,13 +84,14 @@
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
 	    <div id="left" style="overflow: auto">
-	        <div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"></div>	        
+	        <div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"></div>
 			<h2>
   				<span style="display:inline-block;width:100%;" onclick="getCompanyList('1');">회사폴더</span>
   			</h2>  
     		<ul>
-		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="" >가온아이</span></li>
-		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >하위폴더</span></li>		        
+    			</div>
+ 		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="" >가온아이</span></li> 
+ 		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >하위폴더</span></li>		         
 		    </ul>  	
 		    <h2>
   				<span style="display:inline-block;width:100%;">부서폴더</span>
@@ -85,7 +105,7 @@
   				<span style="display:inline-block;width:100%;">개인폴더</span>
   			</h2>  
     		<ul>
-		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="" >영화</span></li>
+		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="test()" >영화</span></li>
 		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >문서</span></li>		        
 		    </ul>  
 		    
