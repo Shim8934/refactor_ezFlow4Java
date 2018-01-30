@@ -638,6 +638,8 @@
                     	DEPARTMENT = #v_pDeptID#
                     AND
                     	TENANT_ID = #tenantID#
+                    AND
+                        PHYSICALDELIVERYOFFICENAME = #companyID#    
                    UNION 
                     SELECT
                         B.CN ,
@@ -661,7 +663,7 @@
                     ON
                         A.CN = B.CN 
                     AND
-                      A.TENANT_ID = B.TENANT_ID
+                        A.TENANT_ID = B.TENANT_ID
                     JOIN
                         TBL_DEPTMASTER C
                     ON
@@ -673,7 +675,9 @@
                     AND
                         A.DEPTID = #v_pDeptID#
                     AND
-                        A.TENANT_ID = #tenantID#          	
+                        A.TENANT_ID = #tenantID#
+                    AND
+                        B.PHYSICALDELIVERYOFFICENAME = #companyID#              	
 		]]>
 	</insert>
 	

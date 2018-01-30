@@ -899,6 +899,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("setEmployeeMonth started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String userID = "", deptID = "";
 		String type = request.getParameter("type");
 		String term = request.getParameter("term");
@@ -910,10 +911,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			deptID = request.getParameter("deptID");
 		}
 		
-		int tenantID = userInfo.getTenantId();
-		
 		try {
-			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, tenantID);
+			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, userInfo);
 			logger.debug("setEmployeeMonth ended");
 			return "OK";
 		} catch (Exception e) {

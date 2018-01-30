@@ -3544,8 +3544,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useAllowTextSelection = ezCommonService.getTenantConfig("useAllowTextSelection", userInfo.getTenantId());
 		
 		model.addAttribute("editor", editor);
+		model.addAttribute("useAllowTextSelection", useAllowTextSelection);
 		
 		logger.debug("approvUIcontent ended");
 		
