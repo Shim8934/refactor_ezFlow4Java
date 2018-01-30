@@ -254,6 +254,12 @@
 	            	alert("<spring:message code='ezCommunity.t595' />");
 	                return false;
 	            }
+	            
+	            if ($("#selRes2").val() >= 100){
+	            	alert("<spring:message code='ezCommunity.csj01' />");
+	            	poll_add.selRes2.focus();
+	            	return false;
+	            }
 
                 return true;
             }
