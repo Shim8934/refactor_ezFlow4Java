@@ -10,7 +10,7 @@ public class UserCapacityVO {
 	private String companyName;
 	private String jobTitle;
 	private String totalUsed;
-	private double usedRate;
+	private int usedRate;
 	private int tenantId;
 	
 	public String getUserId() {
@@ -93,11 +93,11 @@ public class UserCapacityVO {
 		this.totalUsed = totalUsed;
 	}
 
-	public double getUsedRate() {
+	public int getUsedRate() {
 		return usedRate;
 	}
 
-	public void setUsedRate(double usedRate) {
+	public void setUsedRate(int usedRate) {
 		this.usedRate = usedRate;
 	}	
 	

@@ -4,20 +4,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -31,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -41,7 +36,6 @@ import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
-import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -84,7 +78,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
         //Add more function here
         
         
-		return "ezWebFolder/webfolderLeft";
+		return "ezWebFolder/webfolderTest";
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/uploadFile.do")
@@ -149,7 +143,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
             		fileVO.setFileName(pFileName[i]);
             		fileVO.setDownloadCnt(0);
             		fileVO.setFilePath(getWebFolderDirPath(user.getTenantId()) + pFileName[i]);
-            		fileVO.setFileSize(getFileSize(fileSize[i]));
+            		//fileVO.setFileSize(getFileSize(fileSize[i]));
+            		fileVO.setFileSize(Long.toString(fileSize[i]));
             		fileVO.setFolderId(folderId);
             		fileVO.setTenantId(user.getTenantId());
             		fileVO.setCreateId(user.getId());    
@@ -524,14 +519,14 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		switch(folderType) {
 			case "1":
 				if (userInfo.getRollInfo().indexOf("c=1") == -1) {
-					FolderSimpleVO folderList = ezWebFolderService.getSimpleSubFolder(folderId, userInfo.getTenantId());
+					FolderSimpleVO folderList = ezWebFolderService.getSimpleFolder(folderId, userInfo.getTenantId());
 					model.addAttribute("folderList", folderList);
 				}
 				else {
 					List<FolderSimpleVO> companyFolderList = ezWebFolderService.getAllSimpleSubFolders("root", userInfo.getTenantId());
 					
 					for (FolderSimpleVO company: companyFolderList) {
-						getAllSubDepts(company, userInfo.getTenantId(), 0);						
+						ezWebFolderService.getAllSubDepts(company, userInfo.getTenantId(), 0);						
 					}		
 					
 					model.addAttribute("folderList", companyFolderList);
@@ -545,38 +540,9 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}	
 
 		return "json";
-	}
-	
-	
-	
-	private void getAllSubDepts(FolderSimpleVO company, int tenantId, int mode) throws Exception {
-		List<FolderSimpleVO> listSubSimpleFolders = ezWebFolderService.getAllSimpleSubFolders(company.getFolderId(), tenantId);
-		
-		if (listSubSimpleFolders.size() > 0) {			
-			company.setListSubFolders(listSubSimpleFolders);
-			company.setHasSubFolder(1);
-			
-			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
-				if (mode == 0) {
-					getAllSubDepts(subFolder, tenantId, mode);
-				}
-				else {
-					List<FolderSimpleVO> subSimpleDepts = ezWebFolderService.getAllSimpleSubFolders(subFolder.getFolderId(), tenantId);
-					if (subSimpleDepts.size() > 0) {
-						subFolder.setHasSubFolder(1);
-					}
-					else {
-						subFolder.setHasSubFolder(0);
-					}
-				}		
-			}
-		}
-		else {
-			company.setHasSubFolder(0);			
-		}		
-	}
+	}	
 
-	private String getFileSize(long fileSize) {
+	/*private String getFileSize(long fileSize) {
 		String fileSize_ = "";
 		
         if (fileSize / 1024 / 1024 >= 1) {
@@ -592,7 +558,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
         }
         
         return fileSize_;
-	}
+	}*/
 	
 	private String getMaxFileID(int tenantId) throws Exception {
 		int currentMaxFileId = -1;

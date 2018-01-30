@@ -268,10 +268,10 @@
 		    			tdElmt5.textContent = result[i]["jobTitle"];
 		    			
 		    			tdElmt6.setAttribute("style","text-align: center;");
-		    			tdElmt6.textContent = result[i]["totalUsed"];
+		    			tdElmt6.textContent = getFileSize(result[i]["totalUsed"]);
 		    			
 		    			tdElmt7.setAttribute("style","text-align: center;");
-		    			tdElmt7.textContent = result[i]["totalCapacity"];
+		    			tdElmt7.textContent = result[i]["totalCapacity"] + "GB";
 		    			
 		    			tdElmt8.setAttribute("style","white-space:nowrap; text-align:center;");
 		    			
@@ -452,7 +452,7 @@
 			   }
 			   
 			   for (var i = 0; i < checkedArr.length; i++) {
-				   if (parseInt(checkedArr[i]["usedAmount"]) > parseInt(newValue)) {
+				   if (parseFloat(checkedArr[i]["usedAmount"]) > parseFloat(newValue)*1073741824) {
 					   alert("Cannot set the new value less than used amount!");
 					   return;
 				   }
@@ -520,6 +520,22 @@
 		    		return false;
 		       }
 		   }
+		   
+		   function getFileSize(fileSize) {
+				var fileSize_ = "";
+				
+                if (fileSize / 1024 / 1024 > 1) {
+                	fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
+                }
+                else if (fileSize / 1024 > 1) {
+                	fileSize_ = parseInt(fileSize / 1024) + "KB";
+                }
+                else {
+                	fileSize_ = fileSize + "B";
+                }		
+                
+		        return fileSize_;
+			}
 
 	    </script>
 	</head>

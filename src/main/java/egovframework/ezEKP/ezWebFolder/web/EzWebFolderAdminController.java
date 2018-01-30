@@ -5,27 +5,41 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -37,10 +51,16 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	private CommonUtil commonUtil;
 	
 	@Autowired
+	private Properties config;
+	
+	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
 	@Resource(name = "EzWebFolderAdminService")
-	private EzWebFolderAdminService ezWebFolderAdminService;	
+	private EzWebFolderAdminService ezWebFolderAdminService;
+	
+	@Resource(name = "EzWebFolderService")
+	private EzWebFolderService ezWebFolderService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderAdminController.class);
 	
@@ -85,19 +105,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(j++, vo);
 			}
-		}
-		
-		String companyId = resultList.get(0).getCn();
-		WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, userInfo.getTenantId());
-		
-		if (webfolderConfig != null) {
-			personalLimit = webfolderConfig.getTotalLimit();
-			uploadLimit   = webfolderConfig.getUploadLimit();
-		}		
+		}	
         
 		model.addAttribute("list", resultList);
-		model.addAttribute("persLimit", personalLimit);
-		model.addAttribute("upLimit", uploadLimit);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
 		
 		return "admin/ezWebFolder/webfolderCompanyConfig";
@@ -129,10 +139,23 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminCompanyFolder.do")
 	public String webfolderCompanyFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {       
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-        //Add more function here
-        
-        model.addAttribute("companyID", "S907000");
-        
+		
+		//Get list of companies
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(j++, vo);
+			}
+		}
+		
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
+		
 		return "admin/ezWebFolder/webfolderCompanyFolder";
 	}
 	
@@ -174,26 +197,26 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	public void saveConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {       
 		logger.debug("saveConfig is running!");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-        
-		String personalLimit = request.getParameter("pLimitVal") != null ? request.getParameter("pLimitVal") : "";
-		String uploadLimit   = request.getParameter("uLimitVal") != null ? request.getParameter("uLimitVal") : "";
-		String companyId     = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);        
+		String personalLimit = request.getParameter("pLimitVal");
+		String uploadLimit   = request.getParameter("uLimitVal");
+		String companyId     = request.getParameter("companyId");		
 		
-		logger.debug("personalLimit: " + personalLimit + " || uploadLimit: " + uploadLimit + " || companyId: " + companyId);
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");		
+		String url = gwServerUrl + "/webfolderadmin/basicstorage/" + personalLimit + "/comp";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("uploadLimit", uploadLimit)
+				.queryParam("companyId", companyId);
+		RestTemplate rest = new RestTemplate();
 		
-		if (personalLimit.equals("") || uploadLimit.equals("") || companyId.equals("")) {
-			logger.debug("saveConfig illegal arguments!");
-			return;
-		}
-		
-		try {
-			ezWebFolderAdminService.saveConfig(personalLimit, uploadLimit, companyId, userInfo.getTenantId());
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);	
+	
 		logger.debug("saveConfig finishes!");
 	}
 	
@@ -202,8 +225,26 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		logger.debug("getConfig is running!");		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);    
 		String companyId = request.getParameter("companyId");		
-		WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, userInfo.getTenantId());
-		model.addAttribute("webfolderConfig", webfolderConfig);
+		
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url = gwServerUrl + "/webfolderadmin/basicstorage/id/" + companyId + "/comp";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());	
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);		
+		JSONParser jp = new JSONParser();		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());				
+		String status = resultBody.get("status").toString();
+				
+		if (status.equals("ok")) {			
+			JSONObject webfolderConfig = (JSONObject) resultBody.get("data");			
+			model.addAttribute("webfolderConfig", webfolderConfig);
+		}
 		
 		logger.debug("getConfig finishes!");
 		
@@ -227,9 +268,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			if (capacity.getTotalUsed().equals("0")) {
 				capacity.setUsedRate(0);
 			}
-			else {
-				double totalCapKB = Integer.parseInt(capacity.getTotalCapacity()) * 1048576.0;
-				capacity.setUsedRate(Integer.parseInt(capacity.getTotalUsed())/totalCapKB);
+			else {				
+				double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10737418.24;
+				capacity.setUsedRate((int)(Integer.parseInt(capacity.getTotalUsed())/totalCapByBytes));
 			}
 		}
 		
@@ -387,6 +428,59 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("totalRows", totalRows);
 		return "json";
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/getCompanyFolderTree.do", method = RequestMethod.POST)	
+	public String getCompanyFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String offset    = userInfo.getOffset();				
+		String companyId = request.getParameter("companyId");
+		
+		logger.debug("Company ID: " + companyId);
+		
+		FolderVO folderVO = ezWebFolderService.getCompanyFolderId(companyId, offset, userInfo.getTenantId());
+		FolderSimpleVO company = ezWebFolderService.getSimpleFolder(folderVO.getFolderId(), userInfo.getTenantId());
+		ezWebFolderService.getAllSubDepts(company, userInfo.getTenantId(), 1);
+		
+		model.addAttribute("companyTree", company);
+
+		return "json";
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/getSubFolderTree.do", method = RequestMethod.POST)	
+	public String getSubFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);				
+		String folderId = request.getParameter("folderId");		
+
+		FolderSimpleVO folder = ezWebFolderService.getSimpleFolder(folderId, userInfo.getTenantId());
+		ezWebFolderService.getAllSubDepts(folder, userInfo.getTenantId(), 1);
+		
+		model.addAttribute("subTree", folder);
+
+		return "json";
+	}
+	
+	
+	@RequestMapping(value="/admin/ezWebFolder/targetSelect.do")
+	public String selectTarget(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+		logger.debug("select target is running!");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userInfoDeptCode="";				
+		String pCompanyID="";
+
+		userInfoDeptCode = userInfo.getDeptID();
+		pCompanyID = userInfo.getCompanyID();
+		
+		String langData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+
+		model.addAttribute("pCompanyID", pCompanyID);
+		model.addAttribute("userInfoDeptCode", userInfoDeptCode);
+		model.addAttribute("langData", langData);
+		model.addAttribute("primary", userInfo.getPrimary());
+		
+		logger.debug("select target finishes!");
+		return "admin/ezWebFolder/targetSelect";
 	}
 	
 	

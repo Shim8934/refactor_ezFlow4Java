@@ -22,8 +22,15 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		        
+		       
+		        preprocess();
 		    };
+		    
+		    function preprocess() {
+		    	var leftElmt = document.getElementById("left");
+		    	var firstH2Elmt = leftElmt.getElementsByTagName("h2")[0];
+		    	firstH2Elmt.click();
+		    }
 		    
 		    function goPage(idx) {
 		    	switch(idx) {
@@ -59,8 +66,8 @@
   				<span style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t101' /></span>
   			</h2>  
     		<ul>
-    			<li><span id="company"  style="width: 100%; display: inline-block;" onClick="goPage(1)" ><spring:message code='ezWebFolder.t102' /></span></li>
-		        <li><span id="personal" style="width: 100%; display: inline-block;" onClick="goPage(2)" ><spring:message code='ezWebFolder.t103' /></span></li>		        	        
+    			<li><span id="company"  style="width: 100%; display: inline-block;" onClick="goPage(1);" ><spring:message code='ezWebFolder.t102' /></span></li>
+		        <li><span id="personal" style="width: 100%; display: inline-block;" onClick="goPage(2);" ><spring:message code='ezWebFolder.t103' /></span></li>		        	        
 		    </ul>
 		    
 		    <h2>

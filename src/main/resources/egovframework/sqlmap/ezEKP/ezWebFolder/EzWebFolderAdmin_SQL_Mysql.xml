@@ -114,15 +114,29 @@
  				U.PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
  				CASE WHEN #primary# = '1' THEN U.COMPANY ELSE U.COMPANY2 END AS COMPANY_NAME,
  				IF(W.TOTAL_CAPACITY IS NOT NULL, W.TOTAL_CAPACITY, IFNULL(C.TOTAL_LIMIT, 0)) AS TOTAL_CAPACITY,
- 				CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END AS JOB_TITLE,
- 				IF(W.TOTAL_USED IS NOT NULL, W.TOTAL_USED, 0) AS TOTAL_USED,
+ 				CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END AS JOB_TITLE,				
+ 				(
+ 					SELECT IFNULL(SUM(CAST(F.FILE_SIZE AS INT)), 0)
+ 					   FROM 
+ 					   		(
+ 					   			TBL_WEBFOLDER_FOLDER S INNER JOIN TBL_WEBFOLDER_FILE F ON S.FOLDER_ID = F.FOLDER_ID
+ 					   		)
+					   WHERE
+					   		F.TENANT_ID = 0
+					   AND
+					   		S.FOLDER_TYPE = 'U'
+					   AND
+					   		S.OWNER_ID = U.CN
+			   ) AS TOTAL_USED,
  				U.TENANT_ID AS TENANT_ID
-			FROM TBL_USERMASTER U LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN
-								  LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID								  
-			WHERE 
-				U.TENANT_ID = #tenantId# 
+			FROM 
+				TBL_USERMASTER U 
+								  LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN
+								  LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
+			WHERE
+				U.TENANT_ID = #tenantId#
 			AND
-				 U.PHYSICALDELIVERYOFFICENAME = #companyId#	
+				 U.PHYSICALDELIVERYOFFICENAME = #companyId#
 		]]>
 		
 		<isNotNull property="searchOpt">
@@ -194,10 +208,10 @@
 		<isEqual property="v_temp" compareValue="1">     
         	<![CDATA[
 	            INSERT INTO TBL_WEBFOLDER_USER (
-	                CN,        	TOTAL_CAPACITY,        TOTAL_USED,        COMPANY_ID, 		TENANT_ID
+	                CN,        	TOTAL_CAPACITY,       COMPANY_ID, 		TENANT_ID
 	            )
 	            VALUES(
-	                #userId#,	#totalCapacity#,           0,       	  #companyId#,      #tenantId#
+	                #userId#,	#totalCapacity#,      #companyId#,      #tenantId#
             )
         	]]>
         </isEqual>
