@@ -646,7 +646,9 @@
                     AND
                     	DEPARTMENT = #v_pDeptID#
                     AND
-                    	TENANT_ID = #tenantID#	
+                    	TENANT_ID = #tenantID#
+                    AND
+                        PHYSICALDELIVERYOFFICENAME = #companyID#    	
           		UNION 
           			SELECT
           				B.CN ,
@@ -682,7 +684,9 @@
                     AND
                     	A.DEPTID = #v_pDeptID#
                     AND
-                    	A.TENANT_ID = #tenantID#	 )
+                    	A.TENANT_ID = #tenantID#
+                    AND
+                        B.PHYSICALDELIVERYOFFICENAME = #companyID# )
 		]]>
 	</insert>
 	
@@ -692,6 +696,8 @@
 				TBL_PS_EMPMONTH
 	  	    WHERE
 	  	    	TERM = #v_pTerm#
+            AND
+                PHYSICALDELIVERYOFFICENAME = #companyID#    
 	  	    AND
 	  	    	TENANT_ID = #tenantID#	
 		]]>
