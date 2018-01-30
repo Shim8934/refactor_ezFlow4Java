@@ -12790,7 +12790,7 @@
         ( SerialNo, CabinetClassNo, SC1, SC2, SC3, TENANT_ID, COMPANYID )
         ( SELECT 
         		 SerialNo ,
-                 CONCAT(#v_DDeptCode#, #v_DTaskCode#, #v_YEAR#,  #v_CNT#)   ,
+                 #v_DDeptCode# || #v_DTaskCode#m|| #v_YEAR# ||  #v_CNT#   ,
                  SC1 ,
                  SC2 ,
                  SC3 ,
