@@ -265,16 +265,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		List<UserCapacityVO> listUserCapacity = ezWebFolderAdminService.getListUserCapacity(companyId, searchStr, searchOpt, userInfo.getTenantId(), userInfo.getPrimary());
 		
 		for(UserCapacityVO capacity: listUserCapacity) {
-			logger.debug("-----------------------------");
-			logger.debug("User Name: " + capacity.getUserName() + " || User Id: " + capacity.getUserId());
-			logger.debug("TEST LAN NUA: " + capacity.getTotalUsed());
-			logger.debug("=============================");
 			if (capacity.getTotalUsed().equals("0")) {
 				capacity.setUsedRate(0);
 			}
-			else {
-				double totalCapKB = Integer.parseInt(capacity.getTotalCapacity()) * 1048576.0;
-				capacity.setUsedRate(Integer.parseInt(capacity.getTotalUsed())/totalCapKB);
+			else {				
+				double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10737418.24;
+				capacity.setUsedRate((int)(Integer.parseInt(capacity.getTotalUsed())/totalCapByBytes));
 			}
 		}
 		

@@ -542,7 +542,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "json";
 	}	
 
-	private String getFileSize(long fileSize) {
+	/*private String getFileSize(long fileSize) {
 		String fileSize_ = "";
 		
         if (fileSize / 1024 / 1024 >= 1) {
@@ -558,7 +558,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
         }
         
         return fileSize_;
-	}
+	}*/
 	
 	private String getMaxFileID(int tenantId) throws Exception {
 		int currentMaxFileId = -1;

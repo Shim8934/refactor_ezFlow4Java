@@ -20,7 +20,6 @@
 		    window.onload = function () {
 		
 		    };
-
 		    
 		    function goPage(idx) {
 		    	switch (idx) {
