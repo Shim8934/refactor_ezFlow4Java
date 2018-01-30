@@ -165,13 +165,15 @@
 			WHERE  
 				COMPANY_ID = #companyId#
 			AND
+				FOLDER_TYPE = 'C'
+			AND
 				FOLDER_UPPER = 'root'
 			AND
 				TENANT_ID = #tenantId#	
 		]]>		
     </select>
     
-    <select id="EzWebFolderDAO.getFileLogSequence" resultMap="folderVO">             
+    <select id="EzWebFolderDAO.getFileLogSequence" resultClass="String">             
 		<![CDATA[
 			SELECT 
 				IFNULL(MAX(CONVERT(LOG_ID, UNSIGNED INTEGER)),-1) as maxno

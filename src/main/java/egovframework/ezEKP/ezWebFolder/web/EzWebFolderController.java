@@ -78,7 +78,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
         //Add more function here
         
         
-		return "ezWebFolder/webfolderLeft";
+		return "ezWebFolder/webfolderTest";
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/uploadFile.do")
@@ -143,7 +143,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
             		fileVO.setFileName(pFileName[i]);
             		fileVO.setDownloadCnt(0);
             		fileVO.setFilePath(getWebFolderDirPath(user.getTenantId()) + pFileName[i]);
-            		fileVO.setFileSize(getFileSize(fileSize[i]));
+            		//fileVO.setFileSize(getFileSize(fileSize[i]));
+            		fileVO.setFileSize(Long.toString(fileSize[i]));
             		fileVO.setFolderId(folderId);
             		fileVO.setTenantId(user.getTenantId());
             		fileVO.setCreateId(user.getId());    
@@ -518,7 +519,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		switch(folderType) {
 			case "1":
 				if (userInfo.getRollInfo().indexOf("c=1") == -1) {
-					FolderSimpleVO folderList = ezWebFolderService.getSimpleSubFolder(folderId, userInfo.getTenantId());
+					FolderSimpleVO folderList = ezWebFolderService.getSimpleFolder(folderId, userInfo.getTenantId());
 					model.addAttribute("folderList", folderList);
 				}
 				else {

@@ -18,7 +18,7 @@ public interface EzWebFolderService {
 	void moveFile(String fileId, String folderId, int tenantId) throws Exception;
 	String getFileLogSequence(int tenantId) throws Exception;
 	FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception;
-	FolderSimpleVO getSimpleSubFolder(String folderId, int tenantId) throws Exception;
+	FolderSimpleVO getSimpleFolder(String folderId, int tenantId) throws Exception;
 	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId) throws Exception;
 	FolderVO getCompanyFolderId(String companyId, String offset, int tenantId) throws Exception;
 	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i) throws Exception;

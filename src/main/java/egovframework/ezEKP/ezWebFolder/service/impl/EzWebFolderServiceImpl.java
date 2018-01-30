@@ -123,7 +123,7 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	}
 
 	@Override
-	public FolderSimpleVO getSimpleSubFolder(String folderId, int tenantId) throws Exception {
+	public FolderSimpleVO getSimpleFolder(String folderId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);		
 		map.put("tenantId", tenantId);

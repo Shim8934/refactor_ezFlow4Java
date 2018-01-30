@@ -13,12 +13,11 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
 		<script type="text/javascript" >
-			var currPersonalLimit = "<c:out value='${persLimit}'/>";
-			var currUploadLimit   = "<c:out value='${upLimit}'/>";
+			var currPersonalLimit = "";
+			var currUploadLimit   = "";
 		
 		    window.onload = function () {
-				
-		        
+		    	change();	        
 		    };
 		    
 		    function change() {
@@ -66,6 +65,11 @@
 		    	if (!isValid(personalLimitVal)) {
 		    		alert("Please enter a valid numeric value!");
 		    		document.getElementById("personalLimit").focus();
+		    		return;
+		    	}
+		    	
+		    	if (parseInt(uploadLimitVal) > parseInt(personalLimitVal)) {
+		    		alert("You can not set the upload limit amount greater than personal limit amount");
 		    		return;
 		    	}
 		    	
