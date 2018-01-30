@@ -300,6 +300,8 @@
 	            var arrRows = selList.GetSelectedRows();
 	            var strName = "";
 	            for (var i = 0; i < arrRows.length; i++) {
+	          	    //2018.01.29 김기하
+	            	selList.DeleteRow(arrRows[i].id);
 	            }
 	        }
 	        

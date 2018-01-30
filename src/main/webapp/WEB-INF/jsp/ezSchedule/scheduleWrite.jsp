@@ -54,7 +54,7 @@
 	        var pDeptAdmin = "<c:out value='${pDeptAdmin}'/>";
 	        var offSetMin = "<c:out value='${offSetMin}'/>";
 	        var useAnyoneEdit = "<c:out value='${useAnyoneEdit}'/>";
-		    
+		    var timeCheck = false;
 		    window.onload = function () {
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezSchedule.t1031' />";
@@ -411,6 +411,10 @@
 	            document.body.appendChild(form);
 	            form.submit();
 	        }
+	        function abcd(){
+	        	console.log($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+	        	console.log($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+	        }
 	    </script>
 	</head>
 
@@ -422,6 +426,7 @@
 	                    <td style="height: 20px">
 	                        <div id="menu">
 	                            <ul id="menuTable">	
+	                                <li onclick="abcd();">abcd</li>
 	                                <li><span onclick="checkupload()"><spring:message code='ezSchedule.t358'/></span></li>
 	                                <c:if test="${scheduleId == ''}">
 	                                	<li><span onclick="check_name()"><spring:message code='ezSchedule.t53'/></span></li>
