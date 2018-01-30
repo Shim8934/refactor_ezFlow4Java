@@ -5369,7 +5369,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 * 진행되어야할 문서 (APRSTATE 002 : 진행 , 005 : 보류)의 정보 추출
 			 * -> 문서 정보, 첨부 정보, 결재선 정보
 			 * */
-			String approveRet = getApproveDocInfo(userInfo, docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset(), mode);
+			String approveRet = getApproveDocInfo(userInfo, docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset(), mode, "");
 			Document aprXML = commonUtil.convertStringToDocument(approveRet);
 			
 			drafterDept = aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
@@ -8867,7 +8867,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	 * 결재가 진행되어야할 문서 추출 -> XML
 	 * */
 	@Override
-	public String getApproveDocInfo(LoginVO userInfo, String docID, String companyID, String lang, int tenantID, String offset, String mode) throws Exception {
+	public String getApproveDocInfo(LoginVO userInfo, String docID, String companyID, String lang, int tenantID, String offset, String mode, String chamState) throws Exception {
 		StringBuilder rtnVal = new StringBuilder();
 		
 		rtnVal.append("<APROVEDATA>");
@@ -8878,6 +8878,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCID", docID.trim());
 		map.put("v_USERID", userInfo.getId());
 		map.put("v_MODE", mode);
+		map.put("v_CHAMSTATE", chamState);
 		// 002(진행) || 005(보류) 문서 추출 -> 결재처리 안된 문서 추출
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getApproveDocInfo(map);
 		

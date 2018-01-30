@@ -379,7 +379,7 @@
 								SELECT 
 									* 
 									FROM 
-										VAPRDOINGDOCLIST 
+										vgongramaprdoingdoclist 
 		               				WHERE 
 		               					APRMEMBERID IN ($v_USERIDS$) 
 		               				AND 
@@ -5673,8 +5673,12 @@
               	COMPANYID = #companyID#
           AND
           		APRMEMBERID = #v_USERID#
-        LIMIT 1
-         ]]>
+     ]]>
+         <isEqual property="v_CHAMSTATE" compareValue="017">
+          AND
+          		DOCSTATE = #v_CHAMSTATE#
+         </isEqual> 
+	        LIMIT 1
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSignInfo" parameterClass="Map" resultClass="ApprGSignInfoVO"> -->
 <!-- 		{CALL EZSP_GETSIGNINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -8322,7 +8326,7 @@
    			SELECT 
    				COUNT(DOCID) 
    			FROM 
-   				VAPRDOINGDOCLIST 
+   				VGONGRAMAPRDOINGDOCLIST 
    			WHERE 
    				APRMEMBERID IN ($v_USERIDS$) 
    			AND 
@@ -9241,7 +9245,7 @@
 			 SELECT 
 			 	COUNT(DOCID) 
 			 FROM 
-			 	VAPRDOINGDOCLIST  
+			 	vgongramaprdoingdoclist  
 			 WHERE 
 			 	APRMEMBERID IN ($v_USERIDS$) 
 			 AND 
@@ -11538,7 +11542,7 @@
 				SELECT 
 					COUNT(DOCID) 
 				FROM 
-					VAPRDOINGDOCLIST 
+					vgongramaprdoingdoclist 
          		WHERE 
          			TENANT_ID = #v_TENANTID#
          		AND

@@ -199,7 +199,7 @@ public interface EzApprovalGService {
 	
 	public String getApprovalPWD1(String dUserID, int tenantID, String companyID) throws Exception;
 	
-	public String getApproveDocInfo(LoginVO userInfo, String docID, String companyID, String lang, int tenantID, String offset, String mode) throws Exception;
+	public String getApproveDocInfo(LoginVO userInfo, String docID, String companyID, String lang, int tenantID, String offset, String mode, String chamState) throws Exception;
 	
 	public String getLastOpinionContent(String docID, String companyID, String lang, int tenantID) throws Exception;
 	

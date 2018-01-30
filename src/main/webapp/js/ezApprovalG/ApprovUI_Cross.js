@@ -1188,7 +1188,8 @@ function getApprovInfo() {
     			docID : pDocID,
     			userID : pUserID,
     			deptID : OrgAprUserDeptID,
-    			mode : pMode
+    			mode : pMode,
+    			chamState : docState
     		},
     		success: function(xml){
     			result = xml;
