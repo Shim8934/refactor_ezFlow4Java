@@ -12790,7 +12790,7 @@
         ( SerialNo, CabinetClassNo, SC1, SC2, SC3, TENANT_ID, COMPANYID )
         ( SELECT 
         		 SerialNo ,
-                 CONCAT(#v_DDeptCode#, #v_DTaskCode#, #v_YEAR#,  #v_CNT#)   ,
+                 #v_DDeptCode# || #v_DTaskCode#m|| #v_YEAR# ||  #v_CNT#   ,
                  SC1 ,
                  SC2 ,
                  SC3 ,
@@ -19378,15 +19378,15 @@
         	COMPANYID = #companyID#)
    </insert>
    
-   <insert id="EzApprovalG.insertHesongAprReceiptProcessInfo3" parameterClass="Map"> <!--강민수1  --> <!-- ??? -->
+   <insert id="EzApprovalG.insertHesongAprReceiptProcessInfo3" parameterClass="Map"> 
    		<![CDATA[
    		INSERT INTO 
    			TBL_APRRECEIPTPROCESSINFO 
    		(   ReceiveSN, DocID, SentDeptID,      SentDeptName,     SentDeptName2,    ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState,   AprState,      ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID) 
    		 (select 
-   		 	* 
+   		 	#v_PSN#,   DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,       SentDeptName,    SentDeptName2,      DocState, #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',       '',          '',             '',         '',               '',                '',                 DocID , TENANT_ID , COMPANYID 
    		 from (SELECT 
-	   			#v_PSN#,   DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,       SentDeptName,    SentDeptName2,      DocState, #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',       '',          '',             '',         '',               '',                '',                 DocID , TENANT_ID , COMPANYID
+	   			*
 	   		 FROM 
 	   		 	TBL_APRRECEIPTPROCESSINFO 
 	   		 WHERE 

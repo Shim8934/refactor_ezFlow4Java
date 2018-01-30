@@ -571,7 +571,9 @@
        		WHERE
        			TERM = #v_PTERM#
        		AND
-       			A.TENANT_ID = #tenantID#	
+       			A.TENANT_ID = #tenantID#
+            AND
+                B.PHYSICALDELIVERYOFFICENAME = #companyID#    	
         	ORDER BY
         		TERM DESC
 		]]>
