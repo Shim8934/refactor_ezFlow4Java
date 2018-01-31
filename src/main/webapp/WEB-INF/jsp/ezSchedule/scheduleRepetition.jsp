@@ -411,11 +411,14 @@
 		    	    rtn["REPDISPLAY"] = recurString + " " + allDayString + ", " + strLang79 + ":" + scheduleTerm;
 		    	}
 		    	if (ReturnFunction != null) {
-		    	    ReturnFunction(rtn);
+		    	    //2018.01.30 김기하 일정반복 시 시간기준 점 변경  
+		    		window.parent.timeCheck = true;
+		    		ReturnFunction(rtn);
 		    	    parent.DivPopUpHidden();
 	
 		    	}
 		    	else {
+		    	    
 		    	    window.returnValue = rtn;
 		    	    window.close();
 		    	}
@@ -730,6 +733,8 @@
 	
 		    function remove_click()
 		    {
+		    	//2018.01.30 김기하 반복 일정 취소 시 시가 기준 점 기존으로 변경
+		    	window.parent.timeCheck = false;
 		    	var rtn = new Array();
 		    	rtn["SDATE"] = "";
 		    	rtn["EDATE"] = "";

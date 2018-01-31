@@ -503,7 +503,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	private String getMemberInfo(String pXMLString, String pCellList, String pPropList, String pMemberID, String pCategory) {		
         logger.debug("getMemberInfo started");
         logger.debug("pCellList=" + pCellList + ",pPropList=" + pPropList + ",pMemberID=" + pMemberID 
-                + ",pCategory=" + pCategory + ",pXMLString=" + pXMLString);
+                + ",pCategory=" + pCategory);
 
 	    Document doc = commonUtil.convertStringToDocument(pXMLString);
         StringBuilder nodeInfo = new StringBuilder("<ROW>");
