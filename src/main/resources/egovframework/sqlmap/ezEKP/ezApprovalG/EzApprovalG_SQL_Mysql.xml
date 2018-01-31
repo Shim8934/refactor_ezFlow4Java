@@ -5004,8 +5004,14 @@
 		    	DOCID = #v_DOCID#
 		    AND 
 		    	APRMEMBERID = #v_USERID#
+		      <isEqual property="v_CHAMSTATE" compareValue="017">
+	      	AND 
+	      	 	APRSTATE = '000'
+		      </isEqual> 
+		      <isNotEqual property="v_CHAMSTATE" compareValue="017">
 		    AND 
-		    	( APRSTATE = '002' OR APRSTATE = '005' OR APRSTATE = '000') 
+		       ( APRSTATE = '002' OR APRSTATE = '005')
+		      </isNotEqual>
 		    AND
 		    	TENANT_ID = #v_TENANTID#
 		    AND
@@ -5025,8 +5031,14 @@
 		    	DOCID = #v_DOCID#
 		    AND 
 		    	APRMEMBERID = #v_USERID#
+		      <isEqual property="v_CHAMSTATE" compareValue="017">
+	      	AND 
+	      	 	APRSTATE = '000'
+		      </isEqual> 
+		      <isNotEqual property="v_CHAMSTATE" compareValue="017">
 		    AND 
-		    	( APRSTATE = '002' OR APRSTATE = '005' OR APRSTATE = '000') 
+		       ( APRSTATE = '002' OR APRSTATE = '005')
+		      </isNotEqual> 
 		    AND
 		    	TENANT_ID = #v_TENANTID#
 		    AND

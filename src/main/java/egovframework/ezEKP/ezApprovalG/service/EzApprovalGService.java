@@ -466,7 +466,7 @@ public interface EzApprovalGService {
 
 	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
 
-	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum) throws Exception;
+	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState) throws Exception;
 
 	public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
 
