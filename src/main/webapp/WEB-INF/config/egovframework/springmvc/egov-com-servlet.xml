@@ -66,13 +66,8 @@
             <mvc:exclude-mapping path="/ezPortal/componentListTransfer.do"/>      
             <mvc:exclude-mapping path="/ezTalkGate/main.do"/>      
             <mvc:exclude-mapping path="/ezConn/**"/>      
-<<<<<<< HEAD
             <mvc:exclude-mapping path="/ezUCMessenger/**"/>      
             <mvc:exclude-mapping path="/ezjournal/**"/>      
-=======
-            <mvc:exclude-mapping path="/ezUCMessenger/**"/>    
-            <mvc:exclude-mapping path="/ezjournal/**"/>  
->>>>>>> 30b990e73acd0833cca0843bbf5f2f9a948a0d7f
 		    <bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
         
