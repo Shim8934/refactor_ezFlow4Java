@@ -763,9 +763,11 @@ function ListView() {
                     if (getNodeText(oDatas[7]) == "0")
                         TextCell2.setAttribute("style", "font-weight:bold;");
 
-                    TextCell2.innerHTML = ReplaceText(getNodeText(oDatas[5]), "<br>", "&nbsp;");
-                    ContentNewCell2.appendChild(TextCell2);
-
+                    //TextCell2.innerHTML = ReplaceText(getNodeText(oDatas[5]), "<br>", "&nbsp;");
+                    
+                    //ContentNewCell2.appendChild(TextCell2);
+                    ContentNewCell2.innerHTML += MakeXMLString(getNodeText(oDatas[5]));
+                    
                     Contenttr1.appendChild(ContentNewCell1);
                     Contenttr2.appendChild(ContentNewCell2);
                     ContentTbody.appendChild(Contenttr1);

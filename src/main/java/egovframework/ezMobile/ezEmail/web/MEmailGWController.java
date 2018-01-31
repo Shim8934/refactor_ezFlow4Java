@@ -1185,6 +1185,20 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				useFromAddress = "NO";
 			}
 			
+			String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", info.getTenantId());
+			
+			if (dotNetIntegration.equals("YES")) {
+				String mobileDownloadInline = config.getProperty("config.MobileDownloadInline");
+							
+				if (bodyValue != null && !bodyValue.isEmpty()) {
+					bodyValue = bodyValue.replace("/ezEmail/downloadInline.do", mobileDownloadInline);
+				}
+				
+				if (tempBody != null && !tempBody.isEmpty()) {
+					tempBody = tempBody.replace("/ezEmail/downloadInline.do", mobileDownloadInline);
+				}
+			}
+			
 			JSONObject data = new JSONObject();
 	        data.put("fromEmail",fromEmail);
 			data.put("to", to);
@@ -2275,6 +2289,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 								
 								// 기존 메시지가 Multipart 메시지일 경우의 처리
 								if (oldMessage.getContent() instanceof Multipart) {
+									String mobileDownloadInline = "/ezEmail/downloadInline.do";
+									String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", info.getTenantId());
+									
+									if (dotNetIntegration.equals("YES")) {
+										mobileDownloadInline = config.getProperty("config.MobileDownloadInline");
+									}
+									
 								    // 기존 메시지의 Multipart를 불러온다.
 									Multipart mp = (Multipart)oldMessage.getContent();
 									int count = mp.getCount();
@@ -2329,7 +2350,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		    									}
 		    									
 		    									String bodyContent = content.getContent().toString();
-		    									bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);							
+		    									bodyContent = convertDownloadInlineImageURLtoCid(bodyContent, mobileDownloadInline);							
 		    									content.setContent(bodyContent, "text/html; charset=utf-8");
 		    									relatedPart.addBodyPart(content, 0);
 		    									
@@ -2440,7 +2461,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		    								mixedPart.setSubType("related");
 		    								
 		    								String bodyContent = content.getContent().toString();																
-		                                    bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);                          
+		                                    bodyContent = convertDownloadInlineImageURLtoCid(bodyContent, mobileDownloadInline);                          
 		                                    content.setContent(bodyContent, "text/html; charset=utf-8");                            
 		                                    mixedPart.addBodyPart(content, 0);
 		                                    
@@ -3150,7 +3171,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("useKukudocs", useKukudocs);
 			
 			if (bodyInfoList != null) { 
-				mail.put("htmlBody", bodyInfoList.get(0));
+				String htmlBody = bodyInfoList.get(0);
+				String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", info.getTenantId());
+				
+				if (dotNetIntegration.equals("YES")) {
+					String mobileDownloadInline = config.getProperty("config.MobileDownloadInline");
+										
+					htmlBody = htmlBody.replace("/ezEmail/downloadInline.do", mobileDownloadInline);
+				}
+				
+				mail.put("htmlBody", htmlBody);
 				mail.put("pAttachListHtmlSub", pAttachListHtmlSub);
 				mail.put("pAttachListHtml", bodyInfoList.get(1));
 				mail.put("isAttach", bodyInfoList.get(4));
@@ -3966,6 +3996,41 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId}/addressbook/{addressId}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getAddressInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String addressId) {		
+		LOGGER.debug("MOBILE G/W MAIL getAddressInfo started.");
+		LOGGER.debug("userId=" + userId + ",addressId=" + addressId);
+		
+        JSONObject data = new JSONObject();
+        JSONObject result = new JSONObject();
+		
+        try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+										       
+			AddressVO addressInfo = ezAddressService.getAddressInfo(
+										info.getTenantId(),
+										info.getPrimary(),
+										addressId
+										);
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", addressInfo);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "fail");			
+		}
+        
+		LOGGER.debug("MOBILE G/W MAIL getAddressInfo ended.");
+		
+		return result;
+	}
+	
 	/**
 	 * 메일 책갈피 지정 실행 함수
 	 */
@@ -4300,8 +4365,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         return returnValue;
     }
 	
-	private String convertDownloadInlineImageURLtoCid(String htmlStr) {
-		Pattern pat = Pattern.compile("src=\"/ezEmail/downloadInline\\.do.*?contentId=%3C(.*?)%3E\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	private String convertDownloadInlineImageURLtoCid(String htmlStr, String downloadInlineUri) {
+		downloadInlineUri = downloadInlineUri.replace(".", "\\.");
+		String regex = "src=\"" + downloadInlineUri + ".*?contentId=%3C(.*?)%3E\"";				
+		Pattern pat = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher mat = pat.matcher(htmlStr);
 				
 		StringBuffer result = new StringBuffer();

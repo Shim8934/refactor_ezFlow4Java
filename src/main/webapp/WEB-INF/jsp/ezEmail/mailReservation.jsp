@@ -21,7 +21,6 @@
 			var g_drafturl = "${draftUrl}";
             var g_bHardDelete = "0";
             var pUse_Editor = "${useEditor}";
-            var p_Use_IE11Browser = "${useIE11Browser}";
             var pNoneActiveX = "${noneActiveX}";
             document.onselectstart = function () {
                 if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")

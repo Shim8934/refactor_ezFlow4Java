@@ -53,7 +53,6 @@
 	        var isfileup = false;
 	        var pUse_Editor = "${useEditor}";
 	        var pNoneActiveX = "YES";
-	        var pUse_IE11Browser = "CK";
 	        var saveItemBoardId = "";
 	        var SelBoard = false;
 	        function window_onload() {

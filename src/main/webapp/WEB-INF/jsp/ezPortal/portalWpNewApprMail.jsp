@@ -11,18 +11,8 @@
 			<article id="appr_article" class="appr_mail">
 				<div class="tab">
     				<ul>
-    					<%-- <li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li> --%>
-    					<c:choose>
-    						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
-    							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="javascript:alert('<spring:message code='ezPortal.jjs10' />');" width="50" height="115"></li>
-     							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>
-    						</c:when>
-    						<c:otherwise>
-								<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li>
-    							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>		
-    						</c:otherwise>
-    					</c:choose>
-    					
+						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li>
+  						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>		
     				</ul>
     			</div>
     			<!-- graph -->
@@ -90,14 +80,7 @@
               				<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /><span id="draftCNT" class="tab_num">(0)</span></span></dt>
             			</dl>
             			<!-- /tab -->
-            			<c:choose>
-            				<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
-            					<%-- <span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span> --%>
-            				</c:when>
-            				<c:otherwise>
-            				<span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span>
-            				</c:otherwise>
-            			</c:choose>
+           				<span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span>
             		</div>
           			<div id ="ApprList" class="appr_mailcont">            
               			<ul class="listtype_txt">
@@ -111,20 +94,8 @@
     		<article id="mail_article" style="display:none;" class="appr_mail">
 				<div class="tab">
     				<ul>
-     					<%-- <li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="change_article('appr')" width="50" height="115"></li> --%>
-     					<%-- <li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" width="50" height="115"></li>
-     					<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li> --%>    
-     					<c:choose>
-    						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
-    							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="javascript:alert('<spring:message code='ezPortal.jjs10' />');" width="50" height="115"></li>
-     							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li>
-    						</c:when>
-    						<c:otherwise>
-								<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="change_article('appr')" width="50" height="115"></li>
-    							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li>		
-    						</c:otherwise>
-    					</c:choose>
-     					
+						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="change_article('appr')" width="50" height="115"></li>
+  						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li>		
     				</ul>
     			</div>
     			<!-- graph -->
@@ -177,9 +148,7 @@
 		    var pListTypeValue = "1";
 		    var strLang1_NewApprMail = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
-		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "${noneActiveX}";
-		    var host = "${host}";
 		    
 		    document.onselectstart = function () { return false; };
 		    
@@ -192,13 +161,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        
-		        if (host == 'jgw.cloud.kaoni.com1') {
-		        	//getApprGraph();
-			        change_article("mail");
-			        getMailGraph();	
-		        } else {
-		        	getApprGraph();
-		        }
+		        getApprGraph();
 		        
 		        try { top.onresize() } catch (e) { }
 		    }
@@ -395,15 +358,7 @@
 	            if (CrossYN()) {
 	                openLocation = "/ezApprovalG/aprDocView.do?docID=";
 	            } else {
-	                if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO") {
-	                    openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	                } else {
-	                    if (pUse_IE11Browser == "CK") {
-	                        openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	                    } else {
-	                        openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	                    }
-	                }
+	            	openLocation = "/ezApprovalG/aprDocView.do?docID=";
 	            }
 	            
 	            openLocation = openLocation + escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
@@ -446,15 +401,7 @@
 					if (CrossYN()) {
 		                openLocation = "/ezApprovalG/draftui.do?formURL=";
 		            } else {
-		                if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO") {
-		                    openLocation = "/ezApprovalG/draftui.do?formURL=";
-		                } else {
-		                    if (pUse_IE11Browser == "CK") {
-		                        openLocation = "/ezApprovalG/draftui.do?formURL=";
-		                    } else {
-		                        openLocation = "/ezApprovalG/draftui.do?formURL=";
-		                    }
-		                }
+		            	openLocation = "/ezApprovalG/draftui.do?formURL=";
 		            }
 	
 		            openLocation = openLocation + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
@@ -478,15 +425,7 @@
 		            if (CrossYN()) {
 		                openLocation = "/myoffice/ezApprovalG/ReceivUI/recev_CK.aspx?DocID=";
 		            } else {
-		                if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO") {
-		                    openLocation = "/myoffice/ezApprovalG/ReceivUI/recev_TFI.aspx?DocID=";
-		                } else {
-		                    if (pUse_IE11Browser == "CK") {
-		                        openLocation = "/myoffice/ezApprovalG/ReceivUI/recev_IE.aspx?DocID=";
-		                    } else {
-		                        openLocation = "/myoffice/ezApprovalG/ReceivUI/recev.aspx?DocID=";
-		                    }
-		                }
+		            	openLocation = "/myoffice/ezApprovalG/ReceivUI/recev_TFI.aspx?DocID=";
 		            }
 	
 		            openLocation = openLocation + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
@@ -517,15 +456,7 @@
 	                if (CrossYN()) {
 	                    openLocation = "/ezApprovalG/approvui.do?docID=";
 	                } else {
-	                    if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO") {
-	                        openLocation = "/ezApprovalG/approvui.do?docID=";
-	                    } else {
-	                        if (pUse_IE11Browser == "CK") {
-	                            openLocation = "/ezApprovalG/approvui.do?docID=";
-	                        } else {
-	                            openLocation = "/ezApprovalG/approvui.do?docID=";
-	                        }
-	                    }
+	                	openLocation = "/ezApprovalG/approvui.do?docID=";
 	                }
 
 	                openLocation = openLocation + escape(pArgument[0]);

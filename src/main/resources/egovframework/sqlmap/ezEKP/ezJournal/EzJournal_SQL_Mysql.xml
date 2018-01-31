@@ -5,9 +5,25 @@
 
 	<typeAlias alias="JournaltypeVO" type="egovframework.ezEKP.ezJournal.vo.JournaltypeVO"/>
 	
+	<typeAlias alias="JournalFormInfoVO" type="egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO"/>
+
 	<resultMap class="JournaltypeVO" id="JournaltypeMap">
 		<result property="journaltypeId" 	column="type_id" columnIndex="1"/>
 		<result property="journalUse" 		column="used" columnIndex="2"/>
+	</resultMap>
+
+ 	<resultMap class="JournalFormInfoVO" id="JournalFormInfoVO">
+		<result property="formId"		column="form_id"			columnIndex="1"/>
+		<result property="formName"		column="form_name"			columnIndex="2"/>
+		<result property="formInfo"		column="form_info"			columnIndex="3"/>
+		<result property="formDate"		column="form_date"			columnIndex="4"/>
+		<result property="formWriter"	column="form_writer"		columnIndex="5"/>
+		<result property="formStatus"	column="form_status"		columnIndex="6"/>
+	</resultMap> 
+	
+	<resultMap class="JournalFormInfoVO" id="BasicFormInfoVO">
+		<result property="formId"		column="form_id"			columnIndex="1"/>
+		<result property="formName"		column="form_name"			columnIndex="2"/>
 	</resultMap>
 
 	<select id="selectJournalTypeList" resultMap="JournaltypeMap" parameterClass="Map">
@@ -52,4 +68,80 @@
 			#deptId#,
 			#tenantId#)
 	</insert>	
+	
+	<select id="getFormList" parameterClass="map" resultMap="JournalFormInfoVO">
+			select 
+				form_id,
+				form_name,
+				form_info,
+				form_date,
+				form_writer,
+				form_status
+			from 
+				tbl_journal_form 
+			where
+				type_id = #typeId#
+			and
+				company_id = #companyId#
+			and
+				tenant_id = #tenantId#
+			order by form_id asc
+	</select>
+	
+	<select id="getFormUseDeptList" parameterClass="map" resultClass="String">
+			select 
+				a.DISPLAYNAME
+			from
+				tbl_deptmaster a join tbl_journal_form_user_dept b on a.CN = b.dept_id
+			where
+				b.form_id = #formId#
+	</select>
+	
+	<select id="getDeptUseFormList" parameterClass="map" resultMap="BasicFormInfoVO">
+		select 
+			a.form_id,
+			a.form_name
+		from 
+			tbl_journal_form a join tbl_journal_form_user_dept b on a.form_id = b.form_id
+		where 
+			b.dept_id = #deptId#
+		and
+			a.type_id = #typeId#
+		and
+			a.tenant_id = #tenantId#
+	</select>
+	
+	<select id="getBasicFormList" parameterClass="map" resultMap="BasicFormInfoVO">
+		select distinct
+			a.form_id,
+			a.form_name
+		from 
+			tbl_journal_form a join tbl_journal_form_type b on a.company_id = b.company_id
+		where 
+			b.used = 'use'
+		and
+			a.form_status = 'basic'			
+		and
+			a.tenant_id = #tenantId#	
+	</select>
+	
+	<insert id="insertForm" parameterClass="map">
+		insert into tbl_journal_form (
+			form_id,	tenant_id,		form_name,		form_content,		type_id,		form_date,		form_writer,		form_info,		company_id
+		)
+		values (
+			#formId#,	#tenantId#,		#formName#,		#formContent#,		#typeId#,		now(),			#formWriter#,		#formInfo#,		#companyId#
+		)
+	</insert>
+	
+	<insert id="insertUseDept" parameterClass="map">
+		insert into tbl_journal_form_user_dept (
+			dept_id,	form_id
+		)
+		values (
+			#deptId#,	#formId#
+		)
+	</insert>
+	
 </sqlMap>
+

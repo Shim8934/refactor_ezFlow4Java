@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzEmailDAO")
@@ -155,5 +156,4 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	public void setMailColor(Map<String, Object> map) throws Exception{
 		insert("EzEmailDAO.setMailColor", map);
 	}
-	
 }

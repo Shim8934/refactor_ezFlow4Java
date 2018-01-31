@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+
+import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
+
 
 public interface EzJournalService {
 
@@ -16,4 +20,14 @@ public interface EzJournalService {
 	
 	//회사 생성시 양식함 초기 입력 메서드
 	public void insertJournaltype(String companyId, String tenantId, ArrayList<JournaltypeVO> journaltypeList);
+
+	public List<JournalFormInfoVO> getFormList(String typeId, String companyId, String tenantId) throws Exception;
+
+	public List<JournalFormInfoVO> getDeptUseFormList(String typeId, String companyId,
+			String tenantId, String deptId) throws Exception;
+
+	public List<JournalFormInfoVO> getBasicFormList(String companyId, String tenantId) throws Exception;
+
+	public void insertForm(JSONObject jsonParam) throws Exception;
+
 }
