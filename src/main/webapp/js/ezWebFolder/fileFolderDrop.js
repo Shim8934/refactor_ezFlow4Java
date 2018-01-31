@@ -143,7 +143,7 @@ function fileupload() {
     
 }
 
-function renderResult(result) {
+function renderResult(result) {	
 	if (!result) {
 		alert(strErr);
 		return;
@@ -195,7 +195,14 @@ function renderResult(result) {
 			objTd3.appendChild(fileIconElmt);
 			objTd4.textContent = jsObj["fileName"];
 			objTd5.textContent = jsObj["fileSize"];
-			objTd6.textContent = jsObj["createName"];
+			
+			if (primary == "1") {
+				objTd6.textContent = jsObj["createName1"];
+			}
+			else {
+				objTd6.textContent = jsObj["createName2"];
+			}			
+			
 			objTd7.textContent = jsObj["createDate"].substring(0, 10);
 			
 			if (jsObj["fileShareStatus"] == "0") {

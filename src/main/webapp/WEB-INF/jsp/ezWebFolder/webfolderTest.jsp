@@ -12,9 +12,9 @@
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>	
-    <script type="text/javascript">
-   	   var xhr  		= new XMLHttpRequest();
+    <script type="text/javascript">   	   
    	   var file 		= new Array();
+   	   var primary      = "<c:out value='${primary}'/>";
    	   var currFolderId = "opensol"; //Just for test
    	   var strShared1	= "<spring:message code = 'ezWebFolder.t105'/>";
    	   var strShared2	= "<spring:message code = 'ezWebFolder.t106'/>";

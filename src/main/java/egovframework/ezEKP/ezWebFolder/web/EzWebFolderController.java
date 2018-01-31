@@ -6,27 +6,45 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -44,6 +62,9 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private Properties config;
 	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
@@ -77,117 +98,64 @@ public class EzWebFolderController extends EgovFileMngUtil {
         userInfo = commonUtil.userInfo(loginCookie);
         //Add more function here
         
-        
+        model.addAttribute("primary", userInfo.getPrimary());
 		return "ezWebFolder/webfolderTest";
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/uploadFile.do")
 	@ResponseBody
 	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {		
-		logger.debug("Upload file is running!");		
-		LoginVO user = commonUtil.userInfo(loginCookie);		
-		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
-		String folderId = request.getParameter("folderId"); //baonk 2018/01/16
-		int cnt = multiFile.size();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String realPath = request.getServletContext().getRealPath("");
-		String[] pFileName = new String[cnt];
-        Long[] fileSize = new Long[cnt];
-        String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", user.getTenantId());
-        ObjectMapper om = new ObjectMapper();
-
-        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	
-            for (int i = 0; i < cnt; i++) {
-                String _pFileName = multiFile.get(i).getOriginalFilename();
-                
-                if (_pFileName.indexOf(commonUtil.separator) > 0) {
-                    _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
-                }
-                
-                pFileName[i] = _pFileName;
-            }
-        }      
-        
-        String pDirPath = getWebFolderDirPath(user.getTenantId());        		
-        pDirPath = realPath + pDirPath;
-        
-        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
-        	pDirPath = pDirPath + commonUtil.separator;
-        }
-        
-        File file = new File(pDirPath);
-
-        if (!file.exists()) {
-        	file.mkdir();        
-        }
-
-        List<FileVO> list = new ArrayList<FileVO>();
-        
-        for (int i = 0; i < cnt; i++) {        	
-        	fileSize[i] = multiFile.get(i).getSize();
-            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
-            
-            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {   	
-            	try {
-            		writeUploadedFile(multiFile.get(i), pFileName[i], pDirPath);
-            		//Save to database           		
-            		FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(extend, user.getTenantId());
-            		Date date = new Date();
-            		FileVO fileVO = new FileVO();
-            		
-            		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), user.getOffset(), true);
-            		
-            		fileVO.setCreateDate(timeUTC);
-            		fileVO.setUpdateDate(timeUTC);
-            		fileVO.setFileExt(extend);
-            		fileVO.setFileName(pFileName[i]);
-            		fileVO.setDownloadCnt(0);
-            		fileVO.setFilePath(getWebFolderDirPath(user.getTenantId()) + pFileName[i]);
-            		//fileVO.setFileSize(getFileSize(fileSize[i]));
-            		fileVO.setFileSize(Long.toString(fileSize[i]));
-            		fileVO.setFolderId(folderId);
-            		fileVO.setTenantId(user.getTenantId());
-            		fileVO.setCreateId(user.getId());    
-            		fileVO.setUpdateId(user.getId());
-            		fileVO.setFileIconUrl(fileType.getTypeIcon());
-            		fileVO.setFileShareStatus("0");
-            		fileVO.setUseStatus("Y");
-            		fileVO.setTypeId(fileType.getTypeId());
-            		fileVO.setFavouriteStatus("0");         		
-            		fileVO.setCreateName1(user.getDisplayName1());
-            		fileVO.setCreateName2(user.getDisplayName2());
-            		fileVO.setFileId(getMaxFileID(user.getTenantId()));
-            		
-            		ezWebFolderService.insertFile(fileVO);
-            		list.add(fileVO);
-            		
-            		//Save log to database
-            		FileLogVO fileLog = new FileLogVO();            		
-            		
-            		fileLog.setLogType("C");
-            		fileLog.setCompanyId(user.getCompanyID());
-            		fileLog.setCreateDate(timeUTC);
-            		fileLog.setCreateId(user.getId());
-            		fileLog.setCreateName1(user.getDisplayName1());
-            		fileLog.setCreateName2(user.getDisplayName2());
-            		fileLog.setFileName(pFileName[i]);
-            		fileLog.setFileSize(fileVO.getFileSize());
-            		fileLog.setFileExt(fileVO.getFileExt());
-            		fileLog.setFileType(fileType.getTypeName());
-            		fileLog.setLogId(getMaxLogID(user.getTenantId()));
-            		fileLog.setTenantId(user.getTenantId());
-            		
-            		ezWebFolderAdminService.insertFileLog(fileLog);
-            	}
-            	catch (Exception e) {
-            		e.printStackTrace();            		
-            	}			
-            }
-        }
-
-        logger.debug("Upload file finishes!");        
-            
-        return om.writeValueAsString(list);
+		logger.debug("Upload file is running!");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
+		String folderId = request.getParameter("folderId");		
+	    
+	    MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>(); 
+	    for(MultipartFile file : multiFiles) { 
+	        ByteArrayResource resource = new ByteArrayResource(file.getBytes()) { 
+	            @Override 
+	            public String getFilename() { 
+	                return file.getOriginalFilename();
+	            } 
+	        }; 
+	        map.add("files", resource);
+	    }	    
+	    
+	    String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url = gwServerUrl + "/webfolder/filemanage/fileupload";
+				
+		HttpHeaders headers = new HttpHeaders();	
+		headers.add("Accept","application/json");		 
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+	    HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
+	    
+	    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+	    		.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("offset", userInfo.getOffset())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("userName1", userInfo.getDisplayName1())
+				.queryParam("userName2", userInfo.getDisplayName2())
+				.queryParam("folderId", folderId)
+				.queryParam("companyId", userInfo.getCompanyID());
+		RestTemplate rest = new RestTemplate();		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp = new JSONParser();		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());				
+		String status = resultBody.get("status").toString();
+		JSONArray listFileVO = null;
+		
+		if (status.equals("ok")) {			
+			listFileVO = (JSONArray) resultBody.get("data");			
+		}
+		else {
+			return "";
+		}
+		
+		logger.debug("Upload file finishes!");
+		
+		return listFileVO.toString();		
     }
 	
 	@RequestMapping(value="/ezWebFolder/downloadAttach.do", produces="application/zip")
@@ -602,7 +570,5 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return Integer.toString(currentMaxLogId);
 	}
 
-	private String getWebFolderDirPath(int tenantId) {
-		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
-	}
+
 }
