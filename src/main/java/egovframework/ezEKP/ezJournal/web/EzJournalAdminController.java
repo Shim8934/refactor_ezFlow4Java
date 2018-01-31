@@ -36,7 +36,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  */
 
 @Controller
-public class EzJournalAdminController extends EgovFileMngUtil{
+public class EzJournalAdminController {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzJournalAdminController.class);
 	

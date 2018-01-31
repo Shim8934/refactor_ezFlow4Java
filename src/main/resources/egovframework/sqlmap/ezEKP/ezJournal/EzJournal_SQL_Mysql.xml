@@ -3,4 +3,53 @@
 
 <sqlMap namespace="ezJournal">
 
+	<typeAlias alias="JournaltypeVO" type="egovframework.ezEKP.ezJournal.vo.JournaltypeVO"/>
+	
+	<resultMap class="JournaltypeVO" id="JournaltypeMap">
+		<result property="journaltypeId" 	column="type_id" columnIndex="1"/>
+		<result property="journalUse" 		column="used" columnIndex="2"/>
+	</resultMap>
+
+	<select id="selectJournalTypeList" resultMap="JournaltypeMap" parameterClass="Map">
+		select type_id, used from tbl_journal_form_type
+		where tenant_id=#tenantId#
+		and company_id=#companyId#
+	</select>
+	
+	<insert id="insertJournalTypeList" parameterClass="Map">
+		insert into tbl_journal_form_type 
+			(type_id,
+			used,
+			company_id,
+			tenant_id)
+			values
+			(#typeId#,
+			'use',
+			#companyId#,
+			#tenantId#)
+	</insert>
+	
+	<update id="updateJournalTypeList" parameterClass="Map">
+		update 
+			tbl_journal_form_type
+		set
+			used=#used#
+		where
+			type_id = #typeId#
+		and
+			company_id = #companyId#
+		and
+			tenant_id = #tenantId#
+	</update>
+	
+	<insert id="insertJournalAuthor" parameterClass="Map">
+		insert into tbl_journal_auth
+			(user_id,
+			dept_id,
+			tenant_id)
+		values
+			(#userId#,
+			#deptId#,
+			#tenantId#)
+	</insert>	
 </sqlMap>
