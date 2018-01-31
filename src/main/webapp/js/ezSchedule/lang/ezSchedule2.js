@@ -157,6 +157,8 @@ var strLang271 = "Select attachment to delete."
 var strLang272 = "End time is earlier than the time today.";
 var strLang273 = "Certain departments can register a department manager, company manager.";
 var strLang274 = "Companies can register only certain company managers.";
+/* 2017-01-31 */
+var strLang275 = "반복 일정은 시작시간을 오늘 이전으로 등록할 수 없습니다.";
 var strLang535 = "No data found.";
 
 var strLang1000 = "Can not insert company schedule.";
