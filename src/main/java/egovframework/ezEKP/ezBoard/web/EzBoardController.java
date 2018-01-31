@@ -184,9 +184,9 @@ public class EzBoardController extends EgovFileMngUtil{
         String func = "";
         String subFunc = "";
         String photoType = "";
-        String applyFlag = "";
+        String applyFlag = "";     
         
-        userInfo = commonUtil.userInfo(loginCookie);
+        userInfo = commonUtil.userInfo(loginCookie);        
         
         String strLang = userInfo.getLang();
 		String pUserID = userInfo.getId();
@@ -194,6 +194,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pCompanyID = userInfo.getCompanyID();
 		String pRollInfo = userInfo.getRollInfo();
 		int tenantID = userInfo.getTenantId();
+		
+        //baonk 추가
+        String pollFlag = "";
+        if (ezCommonService.getTenantConfig("ballotSystem", tenantID).equalsIgnoreCase("YES")) {
+        	pollFlag = "YES";
+        }
+        else {
+        	pollFlag = "NO";
+        }
+        //end
 		
 		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
 			photoType  = request.getParameter("photoType");
@@ -271,6 +281,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("questionAdmin", questionAdmin);
         modelMap.addAttribute("MyBoardTopFlag", ezCommonService.getTenantConfig("MyBoardTopFlag", tenantID));
         modelMap.addAttribute("useQuestion", useQuestion);
+        modelMap.addAttribute("pollFlag", pollFlag);
         
 		return "ezBoard/boardLeft";
 	}
@@ -319,7 +330,19 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 환경설정 호출 Method
 	 */
 	@RequestMapping(value="/ezBoard/boardConfig.do")
-	public String boardConfig() throws Exception{	
+	public String boardConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+        //baonk 추가
+        String pollFlag = "";
+        if (ezCommonService.getTenantConfig("ballotSystem", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        	pollFlag = "YES";
+        }
+        else {
+        	pollFlag = "NO";
+        }
+        //end
+        
+        modelMap.addAttribute("pollFlag", pollFlag);
 		return "ezBoard/boardConfig";
 	}
 	

@@ -28,7 +28,7 @@
 	        var PhotoType = "${photoType}";
 	        var g_ReadyState = "";
 	        var first = 1;
-	        var items = "${resultCount}";
+	        var items = "${resultCount}";	        
 	
 		    window.onresize = function () {
 		        var menuSize = (parseInt(items) + 2) * 30;
@@ -625,7 +625,7 @@
 	            	</c:if>
 	        	</ul>
 		    </c:if>
-		    <div class="pollDiv" onclick="Poll_Open(1)">
+		    <div class="pollDiv" onclick="Poll_Open(1)" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
 	        	<h2><span><spring:message code="ezBoard.t371" /></span></h2>
 	        </div>	
 	        <ul>
