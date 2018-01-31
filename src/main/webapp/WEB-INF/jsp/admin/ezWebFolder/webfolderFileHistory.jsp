@@ -40,13 +40,7 @@
         	window.onresize = function () {
 				var divList = document.getElementById("mainSetting");				
 				var reheight = document.documentElement.clientHeight - 170;	
-				
-				if (reheight < 500) {
-					divList.style.height = "500px";	
-				}
-				else {
-					divList.style.height = reheight + "px";		
-				}
+				divList.style.height = reheight + "px";
 			};
 			
 			window.onload = function () {
@@ -427,7 +421,7 @@
 	   		</div> 	 	
 	   </div>
 	   
-	   <div id="mainSetting" style="margin: 10px 0px;">
+	   <div id="mainSetting" style="margin: 10px 0px; height:500px; overflow: auto;">
 	   		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileHistory">
 	   			<tr>	   				
 					<th width="40px" style="text-align: center;"><spring:message code='ezWebFolder.t155' /></th>

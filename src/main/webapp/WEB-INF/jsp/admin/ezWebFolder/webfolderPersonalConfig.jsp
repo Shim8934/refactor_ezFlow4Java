@@ -31,14 +31,8 @@
 			
         	window.onresize = function () {
 				var divList = document.getElementById("mainSetting");				
-				var reheight = document.documentElement.clientHeight - 190;	
-				
-				if (reheight < 500) {
-					divList.style.height = "500px";	
-				}
-				else {
-					divList.style.height = reheight + "px";		
-				}
+				var reheight = document.documentElement.clientHeight - 190;				
+				divList.style.height = reheight + "px";
 			};
 			
 			window.onload = function() {
@@ -591,7 +585,7 @@
 	   		</div>	   	 	
 	   </div>
 	   
-	   <div id="mainSetting" style="margin: 10px 0px;">
+	   <div id="mainSetting" style="margin: 10px 0px; height:500px; overflow: auto;">
 	   		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileStorage">
 	   			<tr>
 	   				<th width="10px"><input type="checkbox" onchange="getCheckAll(this);"></th>

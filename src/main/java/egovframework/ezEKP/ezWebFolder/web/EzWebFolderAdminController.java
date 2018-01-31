@@ -1,16 +1,14 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -91,8 +88,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminRight.do")
 	public String webfolderAdminRight(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {       
 		LoginVO userInfo     = commonUtil.userInfo(loginCookie);
-		String personalLimit = "";
-		String uploadLimit 	 = "";
 
 		//Get list of companies
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
@@ -197,7 +192,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	public void saveConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {       
 		logger.debug("saveConfig is running!");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);        
+		LoginVO userInfo     = commonUtil.userInfo(loginCookie);        
 		String personalLimit = request.getParameter("pLimitVal");
 		String uploadLimit   = request.getParameter("uLimitVal");
 		String companyId     = request.getParameter("companyId");		
@@ -281,8 +276,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 				
 		if (status.equals("ok")) {			
 			JSONArray listUserCapacity = (JSONArray) resultBody.get("data");
-			long totalPages = (long) resultBody.get("totalPages");
-			long totalUsers = (long) resultBody.get("totalUsers");
+			long totalPages            = (long) resultBody.get("totalPages");
+			long totalUsers            = (long) resultBody.get("totalUsers");
 			model.addAttribute("capacityList", listUserCapacity);
 			model.addAttribute("totalPages", totalPages);
 			model.addAttribute("totalUsers", totalUsers);
@@ -316,8 +311,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@RequestMapping(value="/admin/ezWebFolder/restoreCapacities.do", method = RequestMethod.POST)
 	public void restoreCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "userListParam") List<String> userList, HttpServletResponse response) throws Exception {       
 		LoginVO userInfo       = commonUtil.userInfo(loginCookie);		
-		String companyId       = request.getParameter("companyId");
-		String totalAmount     = "0";
+		String companyId       = request.getParameter("companyId");		
 		
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");		
 		String url = gwServerUrl + "/webfolderadmin/storagereset/person";
@@ -330,109 +324,60 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("companyId", companyId)
-				.queryParam("userList", String.join(",", userList));			
-		RestTemplate rest = new RestTemplate();
+				.queryParam("userList", String.join(",", userList));
 		
+		RestTemplate rest = new RestTemplate();		
 		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-		
-		
-/*		try {
-			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, userInfo.getTenantId());
-			if (webfolderConfig != null) {
-				totalAmount = webfolderConfig.getTotalLimit();
-			}
-			
-			for (String userId : userList) {
-				ezWebFolderAdminService.updateNewAmount(userId, totalAmount, companyId, userInfo.getTenantId());
-			}			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}*/
+
 	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)	
 	public String getFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offset    = userInfo.getOffset();
 		String primary   = userInfo.getPrimary();
-		int currPage     = Integer.parseInt(request.getParameter("currentPage"));
+		String currPage  = request.getParameter("currentPage");
 		String companyId = request.getParameter("companyId");
-		String startDate = request.getParameter("startDate") != null ? request.getParameter("startDate") : "";	
+		String startDate = request.getParameter("startDate") != null ? request.getParameter("startDate") : "";
 		String endDate   = request.getParameter("endDate")   != null ? request.getParameter("endDate")   : "";
 		String fileExt   = request.getParameter("fileExt")   != null ? request.getParameter("fileExt")   : "";
 		String fileName  = request.getParameter("fileName")  != null ? request.getParameter("fileName")  : "";
-		String userName  = request.getParameter("userName")  != null ? request.getParameter("userName")  : "";		
-		int totalRows = 0;
-		int totalPages = 0;
-		int pageSize = 10;
-		String searchChk = "1";
+		String userName  = request.getParameter("userName")  != null ? request.getParameter("userName")  : "";
 		
-		logger.debug("StartDate: " + startDate + " || EndDate: " + endDate + " || FileExt: " + fileExt + " || FileName: " + fileName + " || Username: " + userName);
-		
-		if (startDate.equals("") && endDate.equals("") && fileExt.equals("") && fileName.equals("") && userName.equals("")) {
-			searchChk = "0";
-		}
-		
-		if (searchChk.equals("1")) {
-			if (startDate.equals("")) {
-				//Get logs in three months
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Date now = new Date();						 
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(now);	
-				cal.add(Calendar.MONTH, -3);
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url = gwServerUrl + "/webfolderadmin/filehistorylist";
 				
-				startDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
-				endDate = commonUtil.getDateStringInUTC(sdf.format(now), offset, true); 
-			}
-			else {
-				String startDateTmp = startDate + " 00:00:00";
-				String endDateTmp   = endDate + " 23:59:59";
-				
-				startDate = commonUtil.getDateStringInUTC(startDateTmp, userInfo.getOffset(), true);
-				endDate   = commonUtil.getDateStringInUTC(endDateTmp, userInfo.getOffset(), true);
-			}
-		}
-		
-		logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
-		
-		List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, primary, offset, userInfo.getTenantId());
-		
-		//Paging
-		if (listFileLogs != null) {
-			totalRows  = listFileLogs.size();
-		}
-		
-		totalPages = (totalRows + pageSize - 1)/pageSize;
-		List<FileLogVO> renderList = new ArrayList<FileLogVO>();
-		
-		logger.debug("totalUsers: " + totalRows + " || TotalPages: " + totalPages + " || CurrPage: " + currPage);
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		if (totalPages == 0 || totalPages == 1) {
-			model.addAttribute("fileLogList", listFileLogs);
-		}
-		else {
-			if (currPage < totalPages) {				
-				int startPoint = (currPage - 1) * pageSize;
-				int endPoint = currPage * pageSize;
-				renderList = listFileLogs.subList(startPoint, endPoint);	
-				model.addAttribute("fileLogList", renderList);
-			}
-			else {
-				if (currPage > totalPages) {
-					currPage = totalPages;
-				}
-				int startPoint = (currPage - 1) * pageSize;
-				int endPoint = totalRows;				
-				
-				renderList = listFileLogs.subList(startPoint, endPoint);
-				model.addAttribute("fileLogList", renderList);
-			}
-		}
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("primary", primary)
+				.queryParam("offset", offset)
+				.queryParam("companyId", companyId)
+				.queryParam("startDate", startDate)
+				.queryParam("fileExt", fileExt)
+				.queryParam("fileName", fileName)
+				.queryParam("userName", userName)
+				.queryParam("currentPage", currPage)
+				.queryParam("endDate", endDate);
+		RestTemplate rest = new RestTemplate();
 		
-		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("totalRows", totalRows);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);		
+		JSONParser jp = new JSONParser();		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());				
+		String status = resultBody.get("status").toString();
+				
+		if (status.equals("ok")) {			
+			JSONArray listFileLogs = (JSONArray) resultBody.get("data");
+			long totalPages        = (long) resultBody.get("totalPages");
+			long totalRows         = (long) resultBody.get("totalRows");
+			model.addAttribute("fileLogList", listFileLogs);
+			model.addAttribute("totalPages", totalPages);
+			model.addAttribute("totalRows", totalRows);
+		}	
+		
 		return "json";
 	}
 	
