@@ -15746,7 +15746,7 @@
 			  				TBL_CABINETCLASS.ProcessDeptName2, 
 			  				TBL_CABINET.CabinetClassNo, 
 			  				TBL_CABINETCLASS.RecTypeCode as RecTypeCode, 
-			  				TBL_CABINETCLASS.CreateDate + $offsetMin$/(24*60) AS ClassCreateDate, 
+			  				TBL_CABINETCLASS.CreateDate + ($offsetMin$/(24*60)) AS ClassCreateDate, 
 			  				TBL_CABINETCLASS.OwnerID, 
 			  				TBL_CABINETCLASS.SpecialCatalogFlag, 
 			  				TBL_CABINETCLASS.TerminateFlag, 
