@@ -608,7 +608,7 @@
 		  <table class="content" >
 		    <tr>
 		      <th><spring:message code='ezApprovalG.t1075'/></th>
-		      <td><TextArea style="width:100%; height:70px" id=txtSummary name=txtSummary></TextArea>
+		      <td><TextArea style="width:97%; height:70px; resize:none;" id=txtSummary name=txtSummary></TextArea>
 		      </td>
 		    </tr>
 		    <tr >
@@ -623,7 +623,7 @@
 		  </table>
 		</Div>
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		  <a class="imgbtn"><span id="btnReset" onclick="return btnReset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
 		  <a class="imgbtn"><span id="btnOK" onclick="return btnOK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
 		  <a class="imgbtn"><span id="btnClose" onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
