@@ -7928,7 +7928,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			apprGDocListVOList.get(0).setHasOpinionYn("N");;
 		}
 		
-		if (mode.equals("CHAMJOEND")) {
+		if (mode.equals("CHAMJOEND") || mode.equals("CHAMJOAPR") ) {
 			apprGDocListVOList.get(0).setDocState("017");
 		}
 		
@@ -8646,7 +8646,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (strXML.getElementsByTagName("DOCSTATE").item(0).getTextContent().equals("017")) {
 					map.put("v_MODE", "END");
 					aprCount =  ezApprovalGDAO.checkAprLine(map);
-					strXML.getElementsByTagName("DOCSTATE").item(0).setTextContent("001");
 				}
 			}
 		}
@@ -8905,7 +8904,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			href = makeListField(signXML.getElementsByTagName("HREF").item(0).getTextContent());
 		}
 		
-		if (mode.toUpperCase().equals("END")) {
+		if (mode.toUpperCase().equals("CHAMJOEND")) {
 			orgDocID = ezApprovalGDAO.getChamJoDocID(map);
 			docID = orgDocID;
 		}

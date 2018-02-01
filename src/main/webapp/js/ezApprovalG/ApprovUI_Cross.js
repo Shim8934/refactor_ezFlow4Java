@@ -1174,7 +1174,7 @@ function getApprovInfo() {
  				if (xml == "END") {
  					pMode = "CHAMJOEND";
  				} else {
- 					pMode = xml;
+ 					pMode = "CHAMJOAPR";
  				}
  			}        			
  		});
@@ -1365,7 +1365,7 @@ function getCurApproverAprLine(type) {
         var dataNodes = GetLastChildNodes(objNodes[i], params);
 
         var pCurrentAprState = getNodeText(dataNodes[12]);
-        if ((getNodeText(dataNodes[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5))) {
+        if ((getNodeText(dataNodes[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5) || (pCurrentAprState == strAprState0))) {
             pAprLineType = getNodeText(dataNodes[11]);
 
             if (approvalFlag == "S") {
@@ -1384,8 +1384,13 @@ function getCurApproverAprLine(type) {
             	
             	pAprMemberSN = AprLineSNCount(pAprLineType, objNodes, pTmpAprLineType);
             }
-            
-            break;
+            if (docState == "017") {
+            	if (pAprLineType == "007") {
+            		break;
+            	} 
+            } else {
+            	break;
+            }
         }
     }
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType2)
