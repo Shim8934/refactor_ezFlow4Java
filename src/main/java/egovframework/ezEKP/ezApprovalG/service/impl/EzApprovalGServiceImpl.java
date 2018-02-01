@@ -18967,7 +18967,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						if(globals.getProperty("Globals.DbType").equals("mysql")){
 							extraSelectClause += ",DATE_ADD(DATE_FORMAT(" + utcDate[0] + ",'%Y-%m-%d %H:%i'), INTERVAL " + cabinetListVO.getOffsetMin() + " MINUTE) AS" + utcDate[1] ;
 						} else { 
-							extraSelectClause += "," + utcDate[0] + "+ '" + cabinetListVO.getOffsetMin() + "'/(12*60) AS" + utcDate[1] ;
+							extraSelectClause += "," + utcDate[0] + "+ '" + cabinetListVO.getOffsetMin() + "'/(24*60) AS" + utcDate[1] ;
 						}
 					} else {
 						extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(i).getTextContent().trim();
@@ -19063,7 +19063,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 } 
 		 
 		 List<ApprGCabinetVO> apprGCabinetList = ezApprovalGDAO.getCabinetList(cabinetListVO);
-		 
 		 StringBuffer sb = new StringBuffer();
 		 sb.append("<DATA>");
         
