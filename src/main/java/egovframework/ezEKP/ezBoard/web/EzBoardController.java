@@ -197,7 +197,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
         //baonk 추가
         String pollFlag = "";
-        if (ezCommonService.getTenantConfig("ballotSystem", tenantID).equalsIgnoreCase("YES")) {
+        if (ezCommonService.getTenantConfig("useBallotSystem", tenantID).equalsIgnoreCase("YES")) {
         	pollFlag = "YES";
         }
         else {
@@ -334,7 +334,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
         //baonk 추가
         String pollFlag = "";
-        if (ezCommonService.getTenantConfig("ballotSystem", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        if (ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
         	pollFlag = "YES";
         }
         else {
