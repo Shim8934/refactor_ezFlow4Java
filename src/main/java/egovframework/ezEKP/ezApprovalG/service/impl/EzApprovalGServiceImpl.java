@@ -13090,7 +13090,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String rtnVal = "TRUE";
 		
 		String companyID = objParam.getElementsByTagName("COMPANYID").item(0).getTextContent();
-		String cabID = objParam.getElementsByTagName("CABINETID").item(0).getTextContent();
+		String cabID = objParam.getElementsByTagName("CABINETID").item(0).getTextContent().trim();
 		String manualFlag = objParam.getElementsByTagName("MANUALFLAG").item(0).getTextContent();
 		String deptCode = objParam.getElementsByTagName("DEPTCODE").item(0).getTextContent();
 		String deptName = objParam.getElementsByTagName("DEPTNAME").item(0).getTextContent();
@@ -18830,7 +18830,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DocType", docType);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
-
+		
 		 // 기록물 테이블에 저장하는 쿼리.
 		ezApprovalGDAO.insertRegRecord(map);
 		
