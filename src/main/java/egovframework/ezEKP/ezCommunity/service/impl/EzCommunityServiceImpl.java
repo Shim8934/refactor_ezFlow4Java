@@ -7253,4 +7253,15 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		return result;
 	}
+	// 2018-01-10 강민수92 한줄댓글 개수
+	@Override
+	public String getOneLineReplyCount(String pBoardID, String pItemID, int tenantId) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("boardID", pBoardID);
+		map.put("itemID", pItemID);
+		map.put("tenantID", tenantId);
+		return ezCommunityDAO.getOneLineReplyCount(map);
+	}
 }
