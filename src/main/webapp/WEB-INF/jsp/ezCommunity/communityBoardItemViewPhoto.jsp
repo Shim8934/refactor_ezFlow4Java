@@ -48,6 +48,7 @@
 		    var pUse_Editor = "<c:out value = '${ userEditor}' />";
 		    
 		    window.onload = function () {
+		    	self.resizeTo(765, 795);
 		    	var html = "";
 		    	
 				$.ajax({
@@ -75,14 +76,26 @@
 	
 		        SetAttachmentInfo();
 		        
-		        if (OneLineReplyFlag == "1") {
-		        	getOneLineReply();
-		        }
+// 		        if (OneLineReplyFlag == "1") {
+// 		        	getOneLineReply();
+// 		        }
 	
 		        if (g_progresswin) {
 		        	g_progresswin.close();
 		        }
 		    }
+		    
+// 		    window.onresize = function () {
+// 	            var contentHeight;
+// 	            contentHeight = document.documentElement.clientHeight - 650;
+	           
+// 	            if(contentHeight < 40){
+// 	            	contentHeight = 40;
+// 	            }
+// 	            document.getElementById("messagePad").style.height = contentHeight + "PX";
+// 	            document.getElementById("message").style.height = contentHeight + "PX";
+//	            document.getElementById("pad1").style.height = contentHeight + "PX";
+// 		    };
 	
 		    function AddLinkTarget() {
 		        try {
@@ -287,7 +300,7 @@
 	            var filepath = "";
 	            var strAttach = "";
 	            var bUseDext = true;
-
+				var lstAttachLink = "";
 	            var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
 
 	            for (i = 0; i < xmldomNodes.length; i++) {
@@ -585,19 +598,23 @@
 // 	                window.opener.document.Script.refresh_onclick2();
 // 	            } catch (e) { }
 // 	        }
+
+		 	 //강민수92
+		    function btn_One_Line_Reply_Onclick() {
+		    	openCommunityBoardComment();
+	    		return;
+		    } 
 		</script>
 		
-		
-
 	</head>
-	<body class="popup" style ="overflow-x:hidden">
+	<body class="popup" style ="overflow-x:hidden; height:100%">
 		<table class="layout">
 			<tr>
 			
 		    	<td style="height:20px">
 		    		<div id="menu">
 			        	<ul>
-			        	
+			        		<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
 					        <c:choose>
 					        	<c:when test="${boardInfo.boardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
 					        		<li ID='btn_Reply' style="display:none"><span onclick='btn_Reply_Onclick()'><spring:message code = 'ezCommunity.t207' /></span></li>
@@ -677,17 +694,19 @@
 			</tr>
 			<tr>
 		    	<td style="height:20px">
-		    		<table class="content">
+		    		<table class="content" style="width:100%">
 			        	<tr>
-				        	<th><spring:message code = 'ezCommunity.t138' /></th>
-				          	<td id="WriteUserNM" style="white-space:nowrap"><div id = title style="OVERFLOW-Y:auto;WIDTH:%;cursor:pointer;HEIGHT:16px;vertical-align:middle" onclick='OpenUserInfo("${item.writerID}")'><c:out value = '${item.writerName}' /></div></td>
-				          	<th><spring:message code = 'ezCommunity.t932' /></th>
+				        	<th style="width:10%"><spring:message code = 'ezCommunity.t138' /></th>
+				          	<td id="WriteUserNM" style="white-space:nowrap; width:40%"><div id = title style="OVERFLOW-Y:auto;WIDTH:%;cursor:pointer;HEIGHT:16px;vertical-align:middle" onclick='OpenUserInfo("${item.writerID}")'><c:out value = '${item.writerName}' /></div></td>
+				          	<th style="width:10%"><spring:message code = 'ezCommunity.t932' /></th>
 				          	<td id="User_DeptNM" style="padding-right:10px;white-space:nowrap"><span><c:out value = '${item.writerDeptName }' /></span></td>
-				          	<th><spring:message code = 'ezCommunity.t960' /></th>
-				          	<td id="User_JobTitle" style="padding-right:10px;white-space:nowrap;"><span><c:out value = '${item.extensionAttribute3}' /></span></td>
 				        </tr>
-				        <tr>
-				        	<th><spring:message code = 'ezCommunity.t210' /></th>
+				        <tr>  	
+				          	<th style="width:10%"><spring:message code = 'ezCommunity.t960' /></th>
+				          	<td id="User_JobTitle" colspan="3" style="padding-right:10px;white-space:nowrap;"><span><c:out value = '${item.extensionAttribute3}' /></span></td>
+				        </tr>
+				        <tr> 
+				        	<th style="width:10%"><spring:message code = 'ezCommunity.t210' /></th>
 				          	<td width="100%" id="cTitle" colSpan="5"><div id="Div1" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; overflow-y:auto;"><c:out value = '${item.title}' /></div></td>
 				        </tr>
 			    	</table>
@@ -697,15 +716,15 @@
 			
 			<c:choose>
 				<c:when test="${boardInfo.gubun != '3' }">
-					<td class="pad1">
+					<td class="pad1" id="messagePad" style="height:100%">
 				        <iframe id="message" class="margin" name="message" style="padding:0; height:100%; width:100%; overflow:auto;border:0px"></iframe>
 				    </td>
 				</c:when>
 				
 				<c:otherwise>
-				    <td class="pad1">
-				    	<div class="viewbox" style="border:1px solid #b6b6b6;"><img src='${gImageUrl}' border=0 width='${gWidth }' height ='${gHeight}' name=zb_target_resize style='cursor:pointer' onclick=window.open(this.src,"_blank","","false") >
-				        	<iframe id="message" class='margin' name="message" style="padding: 0;width:100%;height:100%;border:0px"></iframe>      
+				    <td class="pad1" id="messagePad" style="height:450px">
+				    	<div class="viewbox" style="border:1px solid #b6b6b6;"><img src='${gImageUrl}' border=0 width='${gWidth }' height ='${gHeight}' name=zb_target_resize style='cursor:pointer' onclick=window.open(this.src, "_blank", "" ,"false") >
+				        	<iframe id="message" class='margin' name="message" style="padding: 0;width:100%;border:0px"></iframe>      
 				    	</div>
 				    </td>
 				</c:otherwise>
@@ -715,34 +734,34 @@
 			
 			<c:choose>
 				<c:when test="${oneLineReplyFlag == '1' }">
-					<tr>
-		    			<td style="height:20px">
-		    				<table class="content">
-		        				<tr>
-		          					<td style="height:50px" colspan="3">
-		          						<div align="left" id="onelinereplylist" style="MARGIN-TOP:0px;OVERFLOW:auto;PADDING-TOP:0px;HEIGHT:58px;BACKGROUND-COLOR:white"></div>
-		          					</td>
-		        				</tr>
-		        				<tr>
-		          					<th><spring:message code = 'ezCommunity.t961' /></th>
-		          					<td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td>
-		          					<td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()" style="width:40px" ><spring:message code = 'ezCommunity.t958' /></span></a></td>
-		        				</tr>
-		      				</table>
-		      			</td>
-		  			</tr>
-		  			<tr>
-		    			<td style="DISPLAY:none;height:20px" class="pad1">
-		    				<table class="file">
-		        				<tr>
-		          					<th><spring:message code = 'ezCommunity.t141' /></th>
-		          					<td class="pos1"><div id="lstAttachLink"></div></td>
-		          					<td class="pos2"><a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code = 'ezCommunity.t962' /></span></a><a class="imgbtn"><span onClick="attach_Download()"><spring:message code = 'ezCommunity.t20' /></span></a> </td>
-		          					<td id="ItemLevel"></td>
-		        				</tr>
-		      				</table>
-		      			</td>
-		  			</tr>
+<!-- 					<tr> -->
+<!-- 		    			<td style="height:20px"> -->
+<!-- 		    				<table class="content"> -->
+<!-- 		        				<tr> -->
+<!-- 		          					<td style="height:50px" colspan="3"> -->
+<!-- 		          						<div align="left" id="onelinereplylist" style="MARGIN-TOP:0px;OVERFLOW:auto;PADDING-TOP:0px;HEIGHT:58px;BACKGROUND-COLOR:white"></div> -->
+<!-- 		          					</td> -->
+<!-- 		        				</tr> -->
+<!-- 		        				<tr> -->
+<%-- 		          					<th><spring:message code = 'ezCommunity.t961' /></th> --%>
+<!-- 		          					<td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td> -->
+<%-- 		          					<td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()" style="width:40px" ><spring:message code = 'ezCommunity.t958' /></span></a></td> --%>
+<!-- 		        				</tr> -->
+<!-- 		      				</table> -->
+<!-- 		      			</td> -->
+<!-- 		  			</tr> -->
+<!-- 		  			<tr> -->
+<!-- 		    			<td style="DISPLAY:none;height:20px" class="pad1"> -->
+<!-- 		    				<table class="file"> -->
+<!-- 		        				<tr> -->
+<%-- 		          					<th><spring:message code = 'ezCommunity.t141' /></th> --%>
+<!-- 		          					<td class="pos1"><div id="lstAttachLink"></div></td> -->
+<%-- 		          					<td class="pos2"><a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code = 'ezCommunity.t962' /></span></a><a class="imgbtn"><span onClick="attach_Download()"><spring:message code = 'ezCommunity.t20' /></span></a> </td> --%>
+<!-- 		          					<td id="ItemLevel"></td> -->
+<!-- 		        				</tr> -->
+<!-- 		      				</table> -->
+<!-- 		      			</td> -->
+<!-- 		  			</tr> -->
 				</c:when>
 				
 				<c:otherwise>
@@ -800,7 +819,11 @@
 		      		</td>
 		  		</tr>
 			</c:if>
-
 		</table>
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>
 </html>

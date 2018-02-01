@@ -357,4 +357,6 @@ public interface EzCommunityService {
 	public void deleteReservedBoardItem(String realPath)throws Exception;
 
 	public void sendReplyNoticeMail(String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception;
+
+	public String getOneLineReplyCount(String pBoardID, String pItemID,int tenantId) throws Exception;
 }
