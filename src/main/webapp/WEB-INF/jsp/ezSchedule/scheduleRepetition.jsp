@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 	    <script type="text/javascript" src="/js/ezSchedule/dlg_schedule.js"></script>
-	    
+	    <script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script>
 		<!-- data picker-->		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
@@ -25,7 +25,9 @@
 	    <script type="text/javascript">
 		    var RetValue;
 		    var ReturnFunction;
-		    
+		    //2018.01.31 김기하 함수 사용을 위해 부모로부터 변수 가져옴
+		    var companyID = window.parent.companyID;
+		    var offSetMin = window.parent.offSetMin;
 		    window.onload = function()
 		    {   
 		        try {
@@ -215,6 +217,11 @@
 		    	    
 		    		repetition = "0";				
 		    	}
+		    	//2018.01-31 김기하 반복 시 시작일자 검사 
+	    	    if (CheckPreviously(true)) {
+	    	    	alert(strLang272);
+	        		return;
+	        	}
 		    	
 		    	if (alldaycheck.checked == true)
 		    	{
@@ -411,11 +418,14 @@
 		    	    rtn["REPDISPLAY"] = recurString + " " + allDayString + ", " + strLang79 + ":" + scheduleTerm;
 		    	}
 		    	if (ReturnFunction != null) {
-		    	    ReturnFunction(rtn);
+		    	    //2018.01.30 김기하 일정반복 시 시간기준 점 변경  
+		    		window.parent.timeCheck = true;
+		    		ReturnFunction(rtn);
 		    	    parent.DivPopUpHidden();
 	
 		    	}
 		    	else {
+		    	    
 		    	    window.returnValue = rtn;
 		    	    window.close();
 		    	}
@@ -730,6 +740,8 @@
 	
 		    function remove_click()
 		    {
+		    	//2018.01.30 김기하 반복 일정 취소 시 시가 기준 점 기존으로 변경
+		    	window.parent.timeCheck = false;
 		    	var rtn = new Array();
 		    	rtn["SDATE"] = "";
 		    	rtn["EDATE"] = "";
@@ -823,8 +835,11 @@
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    }
 		    
+		    
+		    //CheckPreviously 함수 사용을 위해 schedule_write_Corss.js 호출하고  스크립트에 포함된 함수인 check_time 삭제. 
+		    
 		    //2017-11-01 #9736  일정반복설정시, 시작일과 종료일을 반대로 지정해도 경고없이 등록되는 현상 
-		    function check_time() {
+		   /*  function check_time() {
 		        var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
@@ -862,7 +877,7 @@
 		        }
 		        
 		        return true;
-		    }
+		    } */
 		</script>
 	</head>
 	<body class="popup">

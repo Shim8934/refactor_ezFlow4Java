@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -301,7 +303,7 @@
 							<td><c:out value='${item.title2}'/></td>
 							<td><c:out value='${item.extensionAttribute102}'/></td>
 						</c:if>
-						<td><c:out value='${item.updateDT}'/></td>
+						<td><c:out value='${fn:substring(item.updateDT, 0, 4)}'/>-<c:out value='${fn:substring(item.updateDT, 4, 6)}'/>-<c:out value='${fn:substring(item.updateDT, 6, 8)}'/></td>
 					</tr>	
 				</c:forEach>	   
 			</form>

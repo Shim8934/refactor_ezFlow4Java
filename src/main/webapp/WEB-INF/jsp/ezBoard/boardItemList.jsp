@@ -523,7 +523,9 @@
 		            alert("<spring:message code='ezBoard.t262' />");
 		            return;
 		        }
-		        var feature = GetOpenWindowfeature(765, 820);
+		        //IE에서 새창 크기 조절 가능하게 수정
+		        //2018.01.29 김기하
+		        var feature = GetOpenWindowfeature(765, 820).replace("resizable=no","resizable=yes"); 
 
 	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 		    }
