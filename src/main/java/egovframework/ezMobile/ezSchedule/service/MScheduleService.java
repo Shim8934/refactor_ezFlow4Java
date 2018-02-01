@@ -23,7 +23,7 @@ public interface MScheduleService {
 
 	public MScheduleInfoVO scheduleInfo(String scheduleId, String offSetMin, int tenantId) throws Exception;
 	
-	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate, String searchTitle) throws Exception;
+	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate, String searchTitle, String searchColumn, String searchData) throws Exception;
 	
 	public JSONObject scheduleMainList(MCommonVO info, String listCnt) throws Exception;	
 	
