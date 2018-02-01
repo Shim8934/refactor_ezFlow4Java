@@ -8,22 +8,22 @@
 		<spring:message code='ezApprovalG.e2'/>
 	    <title><spring:message code='ezApprovalG.t30'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link type="text/css" rel="stylesheet" href="<%=MakeFileVersionPath(RM.GetString("e2")) %>">
-	    <script type="text/javascript" src="<%=MakeFileVersionPath(RM.GetString("e1")) %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/common/XmlHttpRequest.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/common/mouseeffect.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("ezDraft_HWP.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/DraftUI/draftG.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/conn/conn_HWP.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/docnum/docnumberG_HWP.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/ezLine/js/AutoAprLine.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/ezAprDocAttach/getDocAttach.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/ezAPRATTACH/attachG.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/common/escapenew.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/printer/appandbody.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/ezLine/js/CheckLines.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/Common/Kaoni_ActiveX.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/js/SendMailApprove.js") %>"></script>
+		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/ezDraft_HWP.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/draftG.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_HWP.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/AutoAprLine.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/attachG.js"></script>
+		<script type="text/javascript" src="/js/escapenew.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/appandbody.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/CheckLines.js"></script>
+		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 	    <script type="text/javascript">
 	    	var pNoneActiveX = "<%=NoneActiveX%>";
 	        var FormHref = '<%=_formURL%>';

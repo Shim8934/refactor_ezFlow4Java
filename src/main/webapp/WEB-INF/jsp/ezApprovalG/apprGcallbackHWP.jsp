@@ -7,12 +7,12 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t66'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <script type="text/javascript" src="<%= MakeFileVersionPath("/myoffice/common/XmlHttpRequest.js") %>"></script>
-	    <link rel="stylesheet" href="<%=MakeFileVersionPath(RM.GetString("e2")) %>" type="text/css">
-	    <script type="text/javascript" src="<%=MakeFileVersionPath(RM.GetString("e1")) %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/common/mouseeffect.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/conn/conn_HWP.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("../ezDocInfo/setLogData.js") %>"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/setLogData.js"></script>
 	    <script type="text/javascript">
 	    	var pNoneActiveX = "<%=NoneActiveX%>";
 	        var xmlhttp = createXMLHttpRequest();

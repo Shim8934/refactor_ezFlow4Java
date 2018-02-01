@@ -7,28 +7,28 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t1'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<%=MakeFileVersionPath(RM.GetString("e2")) %>" type="text/css">
-	    <script type="text/javascript" src="<%=MakeFileVersionPath(RM.GetString("e1")) %>"></script>
-	    <script type="text/javascript" src="<%= MakeFileVersionPath("/myoffice/common/XmlHttpRequest.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/common/mouseeffect.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/conn/conn_HWP.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/docnum/docnumberG_HWP.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("ezAprove_HWP.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/ezAPRATTACH/attachG.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/ezAprDocAttach/getDocAttach.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/common/escapenew.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/ezApprovalG/printer/appandbody.js") %>"></script>
-	    <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/Common/Kaoni_ActiveX.js") %>"></script>
-	    <script type="text/javascript" src="<%= MakeFileVersionPath("/myoffice/ezApprovalG/js/SendMailApprove.js") %>"></script>
+		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_HWP.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/ezAprove_HWP.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/attachG.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach.js"></script>
+		<script type="text/javascript" src="/js/escapenew.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/appandbody.js"></script>
+		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 	    <script type="text/javascript">
-	    	var pNoneActiveX = "<%=NoneActiveX%>";
-	        var OrgAprUserID = '<%=_pOrgAprUserID%>'
-	        var OrgAprUserName = '<%=_pOrgAprUserName%>'
-	        var OrgAprUserName2 = '<%=_pOrgAprUserName2%>'
-	        var OrgAprUserDeptID = '<%=_pOrgAprUserDeptID%>'
-	        var pEndDocHref = '<%=_pDirPath%>'
-	        var pDocID = '<%=_DocID%>';
-	        var pingUserID = "<%=_tempUserID%>";
+	    	var pNoneActiveX = "${noneActiveX}";
+	        var OrgAprUserID = "${orgAprUserID}";
+	        var OrgAprUserName = "${orgAprUserName}";
+	        var OrgAprUserName2 = "${orgAprUserName2}";
+	        var OrgAprUserDeptID = "${orgAprUserDeptID}";
+	        var pEndDocHref = "${dirPath}";
+	        var pDocID = "${docID}";
+	        var pingUserID = "${tempUserID}";
 	        var pDocInfo = null;
 	        var pDocHref = new String("");
 	        var pUserID = new String("");
@@ -87,24 +87,24 @@
 	
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user";
-	        arr_userinfo[1] = "<%=userinfo.UserID%>";
-		    arr_userinfo[2] = "<%=userinfo.DisplayName%>";
-	        arr_userinfo[3] = "<%=userinfo.Title%>";
-	        arr_userinfo[4] = "<%=userinfo.DeptID%>";
-	        arr_userinfo[5] = "<%=userinfo.DeptName%>";
-	        arr_userinfo[6] = "<%=userinfo.Jikchek%>";
+	        arr_userinfo[1]  = "${userInfo.id}";
+		    arr_userinfo[2]  = "${userInfo.displayName}";
+		    arr_userinfo[3]  = "${userInfo.title}";
+		    arr_userinfo[4]  = "${userInfo.deptID}";
+		    arr_userinfo[5]  = "${userInfo.deptName}";
+		    arr_userinfo[6]  = "${userInfo.jikChek}";
 	        arr_userinfo[7] = "N";
-	        arr_userinfo[8] = "<%=userinfo.Email%>";
-		    arr_userinfo[9] = "";
-	    	arr_userinfo[10] = "<%=_pSusinAdmin%>";
-	    	arr_userinfo[11] = "<%=userinfo.DisplayName1%>";
-	        arr_userinfo[12] = "<%=userinfo.DisplayName2%>";
-	        arr_userinfo[13] = "<%=userinfo.Title1%>";
-	        arr_userinfo[14] = "<%=userinfo.Title2%>";
-	        arr_userinfo[15] = "<%=userinfo.DeptName1%>";
-	        arr_userinfo[16] = "<%=userinfo.DeptName2%>";
+	        arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[9]  = "";
+		    arr_userinfo[10] = "${susinAdmin}";
+		    arr_userinfo[11]  = "${userInfo.displayName1}";
+		    arr_userinfo[12]  = "${userInfo.displayName2}";
+		    arr_userinfo[13]  = "${userInfo.title1}";
+		    arr_userinfo[14]  = "${userInfo.title2}";
+		    arr_userinfo[15]  = "${userInfo.deptName1}";
+		    arr_userinfo[16]  = "${userInfo.deptName2}";
 	
-	        var pCompanyID = "<%=userinfo.CompanyID%>";
+	        var pCompanyID = "${userInfo.companyID}";
 	        var KuyjeType = "002";
 	        var signDateFormat = "<%=_optSignDateFormat%>";
 		    var isSplit = "<%=_optisSplit%>";
