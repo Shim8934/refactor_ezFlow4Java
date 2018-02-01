@@ -1,4 +1,4 @@
-﻿function OpenInformationUI(pInformationContent)
+﻿﻿function OpenInformationUI(pInformationContent)
 {
 	var parameter = pInformationContent;
 	var url = "/myoffice/ezCommunity/htm/ezAPROPINION.aspx";
@@ -224,7 +224,7 @@ function OneLineReply_onkeydown() {
 //강민수92
 function Save_OneLineReply() {
     if (Reply_FG != "true") {
-        alert("<spring:message code='ezBoard.t303' />");
+        alert(strLang173);
 	    return;
 	}
     if (OneLineReplyFlag == "1") {

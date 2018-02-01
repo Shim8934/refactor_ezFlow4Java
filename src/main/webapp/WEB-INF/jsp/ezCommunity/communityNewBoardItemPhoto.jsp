@@ -304,6 +304,13 @@
 		    }
 	
 		    function SaveItem() {
+		    	var strArray = document.getElementById('txtPhotoFile').value.split('.'); 
+		    	var mimeType = strArray[strArray.length];
+		    	if (mimeType != "gif" && mimeType != "jpg" && mimeType != "png" && mimeType != "jpeg") {
+		    		alert(strLang85);
+		    		return;
+		    	} 
+		    	
 		        unloadflag ="1";
 
 		        if(MHTLoadComplete != "true") {

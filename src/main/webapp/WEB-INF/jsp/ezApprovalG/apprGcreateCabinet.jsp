@@ -222,7 +222,7 @@
 		</div>
 		<table style="border:0;border-collapse:collapse; border-spacing:0;padding:0px;width:100%;margin-top:5px;">
 		  <tr> 
-		    <td class="btnposition">
+		    <td class="btnposition btnpositionNew">
 		      <a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
 		      <a class="imgbtn"><span id="btnCancel" onclick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a> 
 		    </td>

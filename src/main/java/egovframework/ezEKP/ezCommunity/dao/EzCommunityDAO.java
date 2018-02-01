@@ -1140,4 +1140,9 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.sendPostNoticeMailGet1", map);
 	}
 
+	public String getOneLineReplyCount(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		return String.valueOf(select("EzCommunityDAO.getOneLineReplyCount", map));
+	}
+
 }

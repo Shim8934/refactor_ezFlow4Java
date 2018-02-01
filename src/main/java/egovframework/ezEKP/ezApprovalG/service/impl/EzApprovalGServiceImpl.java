@@ -22157,15 +22157,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantId);
 		map.put("companyID" , companyID);
 		map.put("v_FLAG", flag);
-		
+		// 마지막 결재 순번 구하기
 		int lastKyulJeCnt = ezApprovalGDAO.lastKyulJeCnt(map);
 		
 		map.put("v_memSN", lastKyulJeCnt - 1);
 		
 		String lastHabYuiSN = ezApprovalGDAO.lastHabYuiSN(map);
-		
+
 		map.put("v_memSN", lastHabYuiSN);
-		
+		// 마지막 결재가 개인, 부서 순차 합의일 경우 aprmembersn 출력
 		String lastKyulJeHabYuiYN = ezApprovalGDAO.lastKyulJeHabYuiYN(map);
 		int result = 0;
 		
