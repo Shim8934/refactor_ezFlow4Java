@@ -97,9 +97,20 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
+        //baonk 추가
+        String pollFlag = "";
+        if (ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        	pollFlag = "YES";
+        }
+        else {
+        	pollFlag = "NO";
+        }
+        //end		
+		
 		String usePortal = ezCommonService.getTenantConfig("Use_portal", userInfo.getTenantId());
 		
 		model.addAttribute("usePortal", usePortal);
+		model.addAttribute("pollFlag", pollFlag);
 
 		logger.debug("personalLeft ended");
 		return "admin/ezPersonal/personalLeft";

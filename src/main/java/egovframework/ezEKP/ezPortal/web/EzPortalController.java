@@ -1464,9 +1464,9 @@ public class EzPortalController extends EgovFileMngUtil {
 	}*/
 	
 	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
-	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest req) throws Exception {
+	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("wpNewVote is running!");
-		loginVO = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.userInfo(loginCookie);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		int qstId = -1;
 		String qstTitle = "";
@@ -1475,80 +1475,180 @@ public class EzPortalController extends EgovFileMngUtil {
 		int compareEnd = 0;
 		int compareStart = 0;
 		Date nowTime = new Date();
+		String votePoll = "";
+		int pPollItemSeq = 0;
+		String pPollTitle = "";
+		String pPollResultContent = "";
 		
-		//Get list of questions for user
-		Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();
-		ezPollService.getAllQuestionForUser2(loginVO, setOfQuestions, "", "");
-		List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);		
+		String checkFlag = ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId());
 		
-		if (!listTotalQuestions.isEmpty()) {
-			//Get only processing poll
-			for (Iterator<PollQuestionVO> iterator = listTotalQuestions.iterator(); iterator.hasNext(); ) {
-				PollQuestionVO pollQstVO = iterator.next();
-				Date endDate = formatter.parse(pollQstVO.getEndDate());				
-				compareEnd = endDate.compareTo(nowTime);				
+		if (checkFlag.equalsIgnoreCase("YES")) {
+			//Get list of questions for user
+			Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();
+			ezPollService.getAllQuestionForUser2(userInfo, setOfQuestions, "", "");
+			List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);		
+			
+			if (!listTotalQuestions.isEmpty()) {
+				//Get only processing poll
+				for (Iterator<PollQuestionVO> iterator = listTotalQuestions.iterator(); iterator.hasNext(); ) {
+					PollQuestionVO pollQstVO = iterator.next();
+					Date endDate = formatter.parse(pollQstVO.getEndDate());				
+					compareEnd = endDate.compareTo(nowTime);				
+					
+				    if (compareEnd <= 0) {
+				        iterator.remove();
+				    }
+				    else {
+				    	//baonk added 20180109
+				    	Date startDate = formatter.parse(pollQstVO.getStartDate());
+				    	compareStart = startDate.compareTo(nowTime);
+				    	
+				    	if (compareStart > 0) {
+				    		iterator.remove();
+				    	}
+				    	//end
+				    }
+				}
 				
-			    if (compareEnd <= 0) {
-			        iterator.remove();
-			    }
-			    else {
-			    	//baonk added 20180109
-			    	Date startDate = formatter.parse(pollQstVO.getStartDate());
-			    	compareStart = startDate.compareTo(nowTime);
-			    	
-			    	if (compareStart > 0) {
-			    		iterator.remove();
-			    	}
-			    	//end
-			    }
-			}
+				//Get list of modifying question
+				List<PollQuestionVO> listOfModifyingQst = new ArrayList<PollQuestionVO>();
+				
+				for (PollQuestionVO pollQstVO : listTotalQuestions) {
+					if (pollQstVO.getIsMofifying() == 1) {
+						listOfModifyingQst.add(pollQstVO);
+					}
+				}
+				
+				//Remove all modifying questions
+				listTotalQuestions.removeAll(listOfModifyingQst);
+				
+				if (!listTotalQuestions.isEmpty()) {
+					//Sort listQuestions by question id					
+					Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) -> {
+				        return Integer.valueOf(qst1.getQstId()).compareTo(qst2.getQstId());
+					});		
+					
+					PollQuestionVO question = listTotalQuestions.get(listTotalQuestions.size() - 1);
+					qstTitle = question.getTitle();
+					qstId = question.getQstId();			
+					seeResultBefore = question.getResultFirst();			
+					
+					//Get list of Options		
+					List<PollAnswerVO> listOptions = ezPollService.getListOptionsOfQst(qstId, userInfo.getTenantId());
+					
+					//Sort list of options by number of votes
+					Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) -> {
+				        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
+					});
 			
-			//Get list of modifying question
-			List<PollQuestionVO> listOfModifyingQst = new ArrayList<PollQuestionVO>();
-			
-			for (PollQuestionVO pollQstVO : listTotalQuestions) {
-				if (pollQstVO.getIsMofifying() == 1) {
-					listOfModifyingQst.add(pollQstVO);
+					totalVoteToday = listTotalQuestions.size();
+					
+					model.addAttribute("listOptions", listOptions);
+					model.addAttribute("numberOfOptions", listOptions.size());				
 				}
 			}
 			
-			//Remove all modifying questions
-			listTotalQuestions.removeAll(listOfModifyingQst);
+			model.addAttribute("qstTitle", qstTitle);		
+			model.addAttribute("qstId", qstId);	
+			model.addAttribute("tenantId", userInfo.getTenantId());			
+			model.addAttribute("seeResultBefore", seeResultBefore);
+			model.addAttribute("totalVoteToday", totalVoteToday);
 			
-			if (!listTotalQuestions.isEmpty()) {
-				//Sort listQuestions by question id					
-				Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) -> {
-			        return Integer.valueOf(qst1.getQstId()).compareTo(qst2.getQstId());
-				});		
-				
-				PollQuestionVO question = listTotalQuestions.get(listTotalQuestions.size() - 1);
-				qstTitle = question.getTitle();
-				qstId = question.getQstId();			
-				seeResultBefore = question.getResultFirst();			
-				
-				//Get list of Options		
-				List<PollAnswerVO> listOptions = ezPollService.getListOptionsOfQst(qstId, loginVO.getTenantId());
-				
-				//Sort list of options by number of votes
-				Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) -> {
-			        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
-				});
-		
-				totalVoteToday = listTotalQuestions.size();
-				
-				model.addAttribute("listOptions", listOptions);
-				model.addAttribute("numberOfOptions", listOptions.size());				
-			}
+			logger.debug("wpNewVote finishes");
+			return "/ezPortal/portalWpNewVote";
 		}
+		else {			
+			PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
+			
+			if (result != null) {
+				if (result.getResult() > 0) {
+					if (result.getResult() != 0) {
+						votePoll = Integer.toString(result.getResult());
+					}
+				} else {
+					votePoll = "";
+				}	
+				
+				if (result.getItemSeq() > 0) {
+					if (result.getItemSeq() != 0) {
+						pPollItemSeq = result.getItemSeq();
+						int maxAns = Integer.parseInt(result.getPollSelectionCount());
+						pPollTitle = userInfo.getPrimary().equals("1") ? result.getPollTitle() : result.getPollTitle2();
+						
+						List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq, userInfo.getTenantId());
+						
+						int pTotalCnt = 0;
+						
+						for (int i=0; i<list.size(); i++) {
+							pTotalCnt = pTotalCnt + list.get(i).getCount();
+						}
+						
+						List<Integer> pPollResultList = new ArrayList<Integer>();
+						int resultPrintCnt = 0;
+						
+						for (int i=0; i<list.size(); i++) {
+							if (i >= 4) {
+								break;
+							} else {
+								float poolRstCnt = list.get(i).getCount();
+								float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
+								String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
+								String titleString = strAnswer;
+								if (strAnswer.length() > 11) {
+									strAnswer = strAnswer.substring(0, 11) + "…";
+								}
+								pPollResultList.add(list.get(i).getResult());
+								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
+								"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
+								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
+								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
+								"</dl>";
+		                        resultPrintCnt++;
+							}
+						}
+						
+						if (resultPrintCnt < 4) {
+							for (int i=1; i<=maxAns; i++) {
+								boolean isDuplication = false;
+								for (int j=0; j<pPollResultList.size(); j++) {
+									if (i == pPollResultList.get(j)) {
+										isDuplication = true;
+										break;
+									}
+								}
+								
+								if (!isDuplication) {
+									String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
+									String titleString = strAnswer;
+									if (strAnswer.length() > 13) {
+										strAnswer = strAnswer.substring(0, 13) + "...";
+									}
+									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
+		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
+		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
+																	resultPrintCnt++;
+									if (resultPrintCnt == 4) {
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			model.addAttribute("pPollTitle", pPollTitle);
+			model.addAttribute("votePoll", votePoll);
+			model.addAttribute("pPollItemSeq", pPollItemSeq);
+			model.addAttribute("pPollResultContent", pPollResultContent);
+			model.addAttribute("userLang", userInfo.getLang());
+			
+			logger.debug("wpNewPoll End");
+			return "/ezPortal/portalWpNewPoll";
+		}	
 		
-		model.addAttribute("qstTitle", qstTitle);		
-		model.addAttribute("qstId", qstId);	
-		model.addAttribute("tenantId", loginVO.getTenantId());			
-		model.addAttribute("seeResultBefore", seeResultBefore);
-		model.addAttribute("totalVoteToday", totalVoteToday);
-		
-		logger.debug("wpNewVote finishes");
-		return "/ezPortal/portalWpNewVote";
 	}
 	
 	

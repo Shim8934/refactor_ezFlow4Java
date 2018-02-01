@@ -615,7 +615,7 @@
 	        </c:if>
 	        
 		    <c:if test="${useQuestion == 'YES'}">
-		    	<div class="qst" onclick="Open_Func(1)"> 
+		    	<div class="qst" onclick="Open_Func(1)">
 		        	<h2><span><spring:message code="ezBoard.t365" /></span></h2>		        
 		    	</div>
 		    	<ul>
