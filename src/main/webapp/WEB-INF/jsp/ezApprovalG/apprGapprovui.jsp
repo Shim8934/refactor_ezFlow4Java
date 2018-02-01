@@ -262,8 +262,8 @@
 		            }
 		        }
 		    }
-		    function openOtherApprovUI()
-		    {
+		    
+		    function openOtherApprovUI() {
 		        var pArgument = new Array();
 		        pArgument[0] = NextDocID;
 		        pArgument[1] = NextDocUserID;
@@ -271,20 +271,15 @@
 		        pArgument[4] = NextDocUserName2;
 		        pArgument[3] = NextDocDeptID;
 		        var formURL = NextDocHref;
-		        if (NextDocExtended.toLowerCase() == "doc")
-		        {
+		        if (NextDocExtended.toLowerCase() == "doc") {
 		            var openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID="+escape(pArgument[0]);
 		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        }
-		        else if (NextDocExtended.toLowerCase() == "hwp")
-		        {
-		            var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?DocID="+escape(pArgument[0]);
-		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
-		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        }
-		        else
-		        {
+		        } else if (NextDocExtended.toLowerCase() == "hwp") {
+		            var openLocation = "/ezApprovalG/ezAproveUI_HWP.do?docID=" + escape(pArgument[0]);
+		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
+		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
+		        } else {
 		            var openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_CK.aspx?DocID="+escape(pArgument[0]);
 		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
@@ -299,6 +294,7 @@
 		            btnClose_onclick();
 		        }
 		    }
+		    
 		    function DocumentComplete()
 		    {
 		        if (flag == false) 
