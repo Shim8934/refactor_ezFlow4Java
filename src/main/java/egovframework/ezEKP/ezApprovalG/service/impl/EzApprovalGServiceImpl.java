@@ -1704,11 +1704,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("docType.toString() : " + docTypes.toString());
 		logger.debug("dlength : " + dlength);
 		StringBuilder sb = new StringBuilder();
-		for (int k = 0; k < dlength; k++) {
-			String code2 = (String) docTypes.get(k).get("CODE2");
-			String name = (String) docTypes.get(k).get("NAME");
+		
+		String code2 = "";
+		String name = "";
+		String dbType = globals.getProperty("Globals.DbType"); 
 
-			logger.debug("code2 ///"+code2 + "name //" + name + "slected//" + selected  );
+		for (int k = 0; k < dlength; k++) {
+			if(dbType.equals("mysql")){
+				code2 = (String) docTypes.get(k).get("code2");
+				name = (String) docTypes.get(k).get("name");
+			} else if (dbType.equals("oracle")) { 
+				code2 = (String) docTypes.get(k).get("CODE2");
+				name = (String) docTypes.get(k).get("NAME");
+			}
+
 			if (code2.equals(selected)) {
 				sb.append("<OPTION value=" + code2 + " selected>" + name + "</OPTION>");
 			} else {
