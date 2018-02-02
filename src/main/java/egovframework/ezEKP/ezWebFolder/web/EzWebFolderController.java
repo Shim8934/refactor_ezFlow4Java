@@ -2,10 +2,22 @@ package egovframework.ezEKP.ezWebFolder.web;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
@@ -26,14 +38,28 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
+import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
+import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -44,6 +70,19 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -102,52 +141,66 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "ezWebFolder/webfolderTest";
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezWebFolder/uploadFile.do")
 	@ResponseBody
-	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {		
+	public String uploadFile2(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {
 		logger.debug("Upload file is running!");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo               = commonUtil.userInfo(loginCookie);
 		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
-		String folderId = request.getParameter("folderId");		
-	    
-	    MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>(); 
-	    for(MultipartFile file : multiFiles) { 
-	        ByteArrayResource resource = new ByteArrayResource(file.getBytes()) { 
-	            @Override 
-	            public String getFilename() { 
-	                return file.getOriginalFilename();
-	            } 
-	        }; 
-	        map.add("files", resource);
-	    }	    
-	    
-	    String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url = gwServerUrl + "/webfolder/filemanage/fileupload";
-				
-		HttpHeaders headers = new HttpHeaders();	
-		headers.add("Accept","application/json");		 
-		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-	    HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
-	    
-	    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-	    		.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("offset", userInfo.getOffset())
-				.queryParam("userId", userInfo.getId())
-				.queryParam("userName1", userInfo.getDisplayName1())
-				.queryParam("userName2", userInfo.getDisplayName2())
-				.queryParam("folderId", folderId)
-				.queryParam("companyId", userInfo.getCompanyID());
-		RestTemplate rest = new RestTemplate();		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		String folderId                = request.getParameter("folderId"); 	    	
+		String gwServerUrl             = config.getProperty("config.webfolderGwServerURL");
+		String url                     = gwServerUrl + "/webfolder/filemanage/fileupload";
 		
-		JSONParser jp = new JSONParser();		
+		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+		requestFactory.setBufferRequestBody(false);	
+		
+		RestTemplate restTemplate         = new RestTemplate(requestFactory);      
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray   = new JSONArray();
+        
+        for (MultipartFile file: multiFiles) {
+        	JSONObject fileJson        = new JSONObject();        	
+            ByteArrayResource resource = new ByteArrayResource(file.getBytes()) {
+            	@Override
+            	public String getFilename() {
+            		return file.getOriginalFilename();
+            	}
+            };
+
+			fileJson.put("originalFilename", file.getOriginalFilename());		
+			jsonArray.add(fileJson);            
+            map.add("files", resource);            
+        }
+        
+        jsonObject.put("nameArray", jsonArray);
+		jsonObject.put("tenantId", userInfo.getTenantId());
+		jsonObject.put("offset", userInfo.getOffset());
+		jsonObject.put("userId", userInfo.getId());
+		jsonObject.put("userName1", userInfo.getDisplayName1());
+		jsonObject.put("userName2", userInfo.getDisplayName2());
+		jsonObject.put("folderId", folderId);
+		jsonObject.put("companyId", userInfo.getCompanyID());
+        
+        map.add("data", jsonObject);
+		
+		HttpHeaders headers = new HttpHeaders();		
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);		
+		
+		HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
+	    UriComponentsBuilder builder                     = UriComponentsBuilder.fromHttpUrl(url);		
+		ResponseEntity<String> result                    = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+
+		JSONParser jp         = new JSONParser();		
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());				
-		String status = resultBody.get("status").toString();
-		JSONArray listFileVO = null;
+		String status         = resultBody.get("status").toString();
+		JSONArray listFileVO  = null;
 		
 		if (status.equals("ok")) {			
-			listFileVO = (JSONArray) resultBody.get("data");			
+			listFileVO = (JSONArray) resultBody.get("data");		
 		}
 		else {
 			return "";
@@ -155,13 +208,24 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		logger.debug("Upload file finishes!");
 		
-		return listFileVO.toString();		
-    }
-	
+		return listFileVO.toString();	
+	}
+
 	@RequestMapping(value="/ezWebFolder/downloadAttach.do", produces="application/zip")
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("Download attach is running!");	
+		logger.debug("Download attach is running!");
+		
 		LoginVO user = commonUtil.userInfo(loginCookie);	
+		String offset = user.getOffset();
+		String listFileId = request.getParameter("fileList");	
+		String[] fileIDList = listFileId.split(",");
+		
+		logger.debug("FileList: " + fileIDList.toString());
+		
+		//webfolder/filemanage/filedownload
+		
+		
+		/*LoginVO user = commonUtil.userInfo(loginCookie);	
 		String offset = user.getOffset();
 		String listFileId = request.getParameter("fileList");	
 		String[] fileIDList = listFileId.split(",");
@@ -263,7 +327,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			fileLog.setTenantId(user.getTenantId());
 			
 			ezWebFolderAdminService.insertFileLog(fileLog);
-		}
+		}*/
 		
 		
 		logger.debug("Download attach finishes!");	
@@ -569,6 +633,4 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 		return Integer.toString(currentMaxLogId);
 	}
-
-
 }

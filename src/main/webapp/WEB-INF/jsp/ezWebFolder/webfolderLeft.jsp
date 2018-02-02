@@ -89,7 +89,6 @@
   				<span style="display:inline-block;width:100%;" onclick="getCompanyList('1');">회사폴더</span>
   			</h2>  
     		<ul>
-    			</div>
  		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="" >가온아이</span></li> 
  		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >하위폴더</span></li>		         
 		    </ul>  	

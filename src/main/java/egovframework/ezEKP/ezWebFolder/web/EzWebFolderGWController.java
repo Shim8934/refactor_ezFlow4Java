@@ -1,12 +1,18 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -15,11 +21,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -326,31 +336,49 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/webfolder/filemanage/fileupload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject fileUploadGW(@RequestParam(value = "files") List<MultipartFile> multiFileLists, HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
-		int tenantId      = Integer.parseInt(request.getParameter("tenantId"));
-		String offset     = request.getParameter("offset");
-		String userId	  = request.getParameter("userId");
-		String userName1  = request.getParameter("userName1");
-		String userName2  = request.getParameter("userName2");
-		String folderId   = request.getParameter("folderId");
-		String companyId  = request.getParameter("companyId");		
-		JSONObject result = new JSONObject();
+	public JSONObject fileUploadGW2(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile>multiFileLists, HttpServletRequest request) throws Exception {
+		JSONParser jp          = new JSONParser();
+		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);	
 		
-		logger.debug("folderId: " + folderId + " || userId: " + userId + " || companyId: " + companyId);
+		JSONArray nameArray    = jsonObject.get("nameArray") != null ? (JSONArray) jsonObject.get("nameArray")        : null;
+		int tenantId           = jsonObject.get("tenantId")  != null ? ((Long) jsonObject.get("tenantId")).intValue() : -1;
+		String offset          = jsonObject.get("offset")    != null ? (String) jsonObject.get("offset")              : "";
+		String userId	       = jsonObject.get("userId")    != null ? (String) jsonObject.get("userId")              : "";
+		String userName1       = jsonObject.get("userName1") != null ? (String) jsonObject.get("userName1")           : "";
+		String userName2       = jsonObject.get("userName2") != null ? (String) jsonObject.get("userName2")           : "";
+		String folderId        = jsonObject.get("folderId")  != null ? (String) jsonObject.get("folderId")            : "";
+		String companyId       = jsonObject.get("companyId") != null ? (String) jsonObject.get("companyId")           : "";		
+		JSONObject result      = new JSONObject();		
 		
+		if (nameArray == null || tenantId == -1 || offset.equals("") || userId.equals("") || userName1.equals("") || userName2.equals("") || folderId.equals("") || companyId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			return result;
+		}
+		
+		if (nameArray.size() != multiFileLists.size()) {
+			logger.debug("Some files upload failed!");
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			return result;
+		}
+
 		try {	
-			int cnt = multiFileLists.size();
+			int cnt                    = multiFileLists.size();
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String realPath = request.getServletContext().getRealPath("");
-			String[] pFileName = new String[cnt];
-	        Long[] fileSize = new Long[cnt];
-	        String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", tenantId);	        
-	        
-	        logger.debug("File Name: " + multiFileLists.get(0).getOriginalFilename());
-	 
-	        if (StringUtils.isNotEmpty(multiFileLists.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFileLists.get(0).getOriginalFilename())) {	        	
+			String realPath            = request.getServletContext().getRealPath("");
+			String[] pFileName         = new String[cnt];
+	        Long[] fileSize            = new Long[cnt];
+	        String useExtension        = ezCommonService.getTenantConfig("USE_FileExtension", tenantId);	        
+	        	 
+	        if (((JSONObject)nameArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)nameArray.get(0)).get("originalFilename"))) {	        	
 	            for (int i = 0; i < cnt; i++) {
-	                String _pFileName = multiFileLists.get(i).getOriginalFilename();
+	            	//logger.debug("Original File Name: " + ((JSONObject)nameArray.get(i)).get("originalFilename"));
+	            	
+	                String _pFileName = (String)((JSONObject)nameArray.get(i)).get("originalFilename");
 	                
 	                if (_pFileName.indexOf(commonUtil.separator) > 0) {
 	                    _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
@@ -379,65 +407,57 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	        	fileSize[i] = multiFileLists.get(i).getSize();
 	            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
 	            
-	            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {   	
-	            	try {
-	            		writeUploadedFile(multiFileLists.get(i), pFileName[i], pDirPath);
-	            		//Save to database           		
-	            		FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(extend, tenantId);
-	            		Date date = new Date();
-	            		FileVO fileVO = new FileVO();
-	            		
-	            		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-	            		
-	            		fileVO.setCreateDate(timeUTC);
-	            		fileVO.setUpdateDate(timeUTC);
-	            		fileVO.setFileExt(extend);
-	            		fileVO.setFileName(pFileName[i]);
-	            		fileVO.setDownloadCnt(0);
-	            		fileVO.setFilePath(getWebFolderDirPath(tenantId) + pFileName[i]);
-	            		//fileVO.setFileSize(getFileSize(fileSize[i]));
-	            		fileVO.setFileSize(Long.toString(fileSize[i]));
-	            		fileVO.setFolderId(folderId);
-	            		fileVO.setTenantId(tenantId);
-	            		fileVO.setCreateId(userId);    
-	            		fileVO.setUpdateId(userId);
-	            		fileVO.setFileIconUrl(fileType.getTypeIcon());
-	            		fileVO.setFileShareStatus("0");
-	            		fileVO.setUseStatus("Y");
-	            		fileVO.setTypeId(fileType.getTypeId());
-	            		fileVO.setFavouriteStatus("0");         		
-	            		fileVO.setCreateName1(userName1);
-	            		fileVO.setCreateName2(userName2);
-	            		fileVO.setFileId(getMaxFileID(tenantId));
-	            		
-	            		ezWebFolderService.insertFile(fileVO);
-	            		list.add(fileVO);
-	            		
-	            		//Save log to database
-	            		FileLogVO fileLog = new FileLogVO();            		
-	            		
-	            		fileLog.setLogType("C");
-	            		fileLog.setCompanyId(companyId);
-	            		fileLog.setCreateDate(timeUTC);
-	            		fileLog.setCreateId(userId);
-	            		fileLog.setCreateName1(userName1);
-	            		fileLog.setCreateName2(userName2);
-	            		fileLog.setFileName(pFileName[i]);
-	            		fileLog.setFileSize(fileVO.getFileSize());
-	            		fileLog.setFileExt(fileVO.getFileExt());
-	            		fileLog.setFileType(fileType.getTypeName());
-	            		fileLog.setLogId(getMaxLogID(tenantId));
-	            		fileLog.setTenantId(tenantId);
-	            		
-	            		ezWebFolderAdminService.insertFileLog(fileLog);
-	            	}
-	            	catch (Exception e) {
-	        			result.put("status", "error");
-	        			result.put("code", 1);			
-	        			result.put("data", "");           		
-	            	}			
+	            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {	            	
+            		writeUploadedFile(multiFileLists.get(i), pFileName[i], pDirPath);
+            		//Save to database           		
+            		FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(extend, tenantId);
+            		Date date = new Date();
+            		FileVO fileVO = new FileVO();
+            		
+            		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+            		
+            		fileVO.setCreateDate(timeUTC);
+            		fileVO.setUpdateDate(timeUTC);
+            		fileVO.setFileExt(extend);
+            		fileVO.setFileName(pFileName[i]);
+            		fileVO.setDownloadCnt(0);
+            		fileVO.setFilePath(getWebFolderDirPath(tenantId) + pFileName[i]);
+            		fileVO.setFileSize(Long.toString(fileSize[i]));
+            		fileVO.setFolderId(folderId);
+            		fileVO.setTenantId(tenantId);
+            		fileVO.setCreateId(userId);    
+            		fileVO.setUpdateId(userId);
+            		fileVO.setFileIconUrl(fileType.getTypeIcon());
+            		fileVO.setFileShareStatus("0");
+            		fileVO.setUseStatus("Y");
+            		fileVO.setTypeId(fileType.getTypeId());
+            		fileVO.setFavouriteStatus("0");         		
+            		fileVO.setCreateName1(userName1);
+            		fileVO.setCreateName2(userName2);
+            		fileVO.setFileId(getMaxFileID(tenantId));
+            		
+            		ezWebFolderService.insertFile(fileVO);
+            		list.add(fileVO);
+            		
+            		//Save log to database
+            		FileLogVO fileLog = new FileLogVO();            		
+            		
+            		fileLog.setLogType("C");
+            		fileLog.setCompanyId(companyId);
+            		fileLog.setCreateDate(timeUTC);
+            		fileLog.setCreateId(userId);
+            		fileLog.setCreateName1(userName1);
+            		fileLog.setCreateName2(userName2);
+            		fileLog.setFileName(pFileName[i]);
+            		fileLog.setFileSize(fileVO.getFileSize());
+            		fileLog.setFileExt(fileVO.getFileExt());
+            		fileLog.setFileType(fileType.getTypeName());
+            		fileLog.setLogId(getMaxLogID(tenantId));
+            		fileLog.setTenantId(tenantId);
+            		
+            		ezWebFolderAdminService.insertFileLog(fileLog);			
 	            }
-	        }  
+	        }
 
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -450,7 +470,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		}
 		
 		return result;
-	}
+	}	
 	
 	private String getWebFolderDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
@@ -498,4 +518,47 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return Integer.toString(currentMaxLogId);
 	}
 	
+	private void writeUploadFile(String bytearray, String newName, String stordFilePath) throws Exception {    	   	
+		InputStream stream = null;
+		OutputStream bos = null;
+		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
+		
+		try {
+		    File cFile = new File(stordFilePathReal);
+	
+		    if (!cFile.isDirectory()) {
+				boolean _flag = cFile.mkdirs();
+				if (!_flag) {
+				    throw new IOException("Directory creation Failed ");
+				}
+		    }
+	
+		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
+		    Decoder decoder = Base64.getDecoder();
+
+		    bos.write(decoder.decode(bytearray));
+
+		} catch (FileNotFoundException fnfe) {
+			logger.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			logger.debug("ioe: {}", ioe);
+		} catch (Exception e) {
+			logger.debug("e: {}", e);
+		} finally {
+		    if (bos != null) {
+				try {
+				    bos.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		    if (stream != null) {
+				try {
+				    stream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		}
+    }
 }

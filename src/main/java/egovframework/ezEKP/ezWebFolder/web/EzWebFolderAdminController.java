@@ -192,7 +192,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	public void saveConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {       
 		logger.debug("saveConfig is running!");
 		
-		LoginVO userInfo     = commonUtil.userInfo(loginCookie);        
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);        
 		String personalLimit = request.getParameter("pLimitVal");
 		String uploadLimit   = request.getParameter("uLimitVal");
 		String companyId     = request.getParameter("companyId");		
@@ -409,8 +409,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		model.addAttribute("subTree", folder);
 
 		return "json";
-	}
-	
+	}	
 	
 	@RequestMapping(value="/admin/ezWebFolder/targetSelect.do")
 	public String selectTarget(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
