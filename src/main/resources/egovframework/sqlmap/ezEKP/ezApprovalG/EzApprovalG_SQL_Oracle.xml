@@ -22657,9 +22657,10 @@
       </select>
            
       <select id ="EzApprovalG.lastHabYuiSN" parameterClass="map" resultClass="String">
-	        SELECT 
+	         SELECT 
 	      		A.APRMEMBERSN
-	      	FROM 
+ 	      	FROM 
+
 	      		(SELECT 
 	      			ROWNUM as NUM, APRMEMBERSN 
 	      		FROM 
@@ -22670,14 +22671,9 @@
 	      			TENANT_ID = #v_TENANTID#
 	      		AND
 	      			COMPANYID = #companyID# ) A
-			WHERE 
-				DOCID = #v_DOCID#
-			AND
-				TENANT_ID = #v_TENANTID#
-			AND
-				COMPANYID = #companyID#
-			AND
-               arownum = (#v_memSN# + 1)	
+ 			WHERE 
+	
+              	A.NUM = (#v_memSN# + 1)	
 
       </select>
             
