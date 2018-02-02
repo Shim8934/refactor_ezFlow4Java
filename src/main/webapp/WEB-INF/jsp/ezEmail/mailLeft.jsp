@@ -28,6 +28,7 @@
 	        var reloadRetryCount = 1;
 	      	var previewSubTree = "${previewSubTree}";
 	      	var usePreviewSubTree = "${usePreviewSubTree}";
+	      	var useBottomFrameOnly = "${useBottomFrameOnly}";
 	        
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
