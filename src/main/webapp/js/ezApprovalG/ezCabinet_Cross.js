@@ -985,7 +985,7 @@ function btnViewRecHistory_onclick() {
 
         viewrechistory_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewRecHistory_Cross", GetOpenWindowfeature(615, 480));
+        var OpenWin = window.open(url, "ViewRecHistory_Cross", GetOpenWindowfeature(1015, 480));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -1048,7 +1048,7 @@ function btnViewCabHistory_onclick() {
 
         viewcabhistory_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewCabHistory_Cross", GetOpenWindowfeature(612, 473));
+        var OpenWin = window.open(url, "ViewCabHistory_Cross", GetOpenWindowfeature(970, 473));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
