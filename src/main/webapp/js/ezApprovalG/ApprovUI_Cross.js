@@ -1159,26 +1159,27 @@ function getApprovInfo() {
         pOrgAprUserName = OrgAprUserName;
         pOrgAprUserName2 = OrgAprUserName2;
         pOrgAprUserDeptID = OrgAprUserDeptID;
-        var pMode = "";
+        var pMode = "APR";
     	var result = "";
     	
- 	   $.ajax({
- 			type : "POST",
- 			dataType : "text",
- 			async : false,
- 			url : "/ezApprovalG/getLineMode.do",
- 			data : {
- 					docID : pDocID
- 					},
- 			success: function(xml){
- 				if (xml == "END") {
- 					pMode = "CHAMJOEND";
- 				} else {
- 					pMode = "CHAMJOAPR";
- 				}
- 			}        			
- 		});
-        
+    	if (docState == "017") {
+	 	   $.ajax({
+	 			type : "POST",
+	 			dataType : "text",
+	 			async : false,
+	 			url : "/ezApprovalG/getLineMode.do",
+	 			data : {
+	 					docID : pDocID
+	 					},
+	 			success: function(xml){
+	 				if (xml == "END") {
+	 					pMode = "CHAMJOEND";
+	 				} else {
+	 					pMode = "CHAMJOAPR";
+	 				}
+	 			}        			
+	 		});
+    	}
     	$.ajax({
     		type : "POST",
     		dataType : "text",
@@ -1389,7 +1390,9 @@ function getCurApproverAprLine(type) {
             		break;
             	} 
             } else {
-            	break;
+            	if (pCurrentAprState != strAprState0) {
+            		break;
+            	}
             }
         }
     }

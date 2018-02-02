@@ -8669,14 +8669,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				break;
 				
 			case "003": // 승인
-				if (rtnVal) {
-					subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
-					
-					if (subSQL.toUpperCase().equals("FALSE")) {
-						rtnVal = false;
-					} 
+				if (!strXML.getElementsByTagName("DOCSTATE").item(0).getTextContent().equals("017")) {
+					if (rtnVal) {
+						subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
+						
+						if (subSQL.toUpperCase().equals("FALSE")) {
+							rtnVal = false;
+						} 
+					}
 				}
-				
 				if (rtnVal) {
 					subSQL = doApprove(docID, userID, aprState, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo, curDocNum, chamState);
 					
@@ -11601,7 +11602,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				break;
 			case "007":
-//				lastState = staATChamJo;
+				lastState = staATChamJo;
 //				
 //				map3.put("v_APRSTATE", staASAprEND);
 //				
@@ -11801,31 +11802,31 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 
                 break;
 			case "017":
-				lastState = staATGongram;
-				
-				map3.put("v_APRSTATE", staASmikyul);
-				
-				ezApprovalGDAO.updateAprLineInfo2(map3);
-				
-				subSQL = doChamjo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(),
-						docXML2.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent(),
-						docXML2.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent(),
-						docXML2.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent(),
-						docXML2.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent(), 
-						docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(),
-						docXML2.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent(),
-						docXML2.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent(), 
-						docXML2.getElementsByTagName("APRMEMBERISDEPTYN").item(k).getTextContent(), 
-						docXML2.getElementsByTagName("APRMEMBERLDAPPATH").item(k).getTextContent(), 
-					dirPath, staDSGongRam, companyID, userInfo.getTenantId());
-				
-				if (subSQL.toUpperCase().equals("FALSE")) {
-					rtnVal = false;
-					whileFlag = false;
-				} else {
-					sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
-					k += 1;
-				}
+//				lastState = staATGongram;
+//				
+//				map3.put("v_APRSTATE", staASmikyul);
+//				
+//				ezApprovalGDAO.updateAprLineInfo2(map3);
+//				
+//				subSQL = doChamjo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(),
+//						docXML2.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent(),
+//						docXML2.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent(),
+//						docXML2.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent(),
+//						docXML2.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent(), 
+//						docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(),
+//						docXML2.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent(),
+//						docXML2.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent(), 
+//						docXML2.getElementsByTagName("APRMEMBERISDEPTYN").item(k).getTextContent(), 
+//						docXML2.getElementsByTagName("APRMEMBERLDAPPATH").item(k).getTextContent(), 
+//					dirPath, staDSGongRam, companyID, userInfo.getTenantId());
+//				
+//				if (subSQL.toUpperCase().equals("FALSE")) {
+//					rtnVal = false;
+//					whileFlag = false;
+//				} else {
+//					sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
+//					k += 1;
+//				}
 				
 				break;
 			case "018":
@@ -12324,27 +12325,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			break;
 			
 		case "017": // 참조
-			subSQL = doApproveEnd(docID, dirPath, deptID, false, companyID, userInfo.getTenantId());
-			
-			if (subSQL.toUpperCase().equals("FALSE")) {
-				rtnVal = false;
-			}
-			
-			if (rtnVal) {
-				subSQL = updateChamjoResult(orgDocID, deptID, userID, orgCompanyID,  userInfo.getTenantId(), userInfo.getCompanyID());
-				
-				if (subSQL.toUpperCase().equals("FALSE")) {
-					rtnVal = false;
-				} 
-			}
-			
-			if (rtnVal) {
-				subSQL = deleteDocInfo(docID, "QUERY", companyID, userInfo.getTenantId());
-				
-				if (subSQL.toUpperCase().equals("FALSE")) {
-					rtnVal = false;
-				} 
-			}
+//			subSQL = doApproveEnd(docID, dirPath, deptID, false, companyID, userInfo.getTenantId());
+//			
+//			if (subSQL.toUpperCase().equals("FALSE")) {
+//				rtnVal = false;
+//			}
+//			
+//			if (rtnVal) {
+//				subSQL = updateChamjoResult(orgDocID, deptID, userID, orgCompanyID,  userInfo.getTenantId(), userInfo.getCompanyID());
+//				
+//				if (subSQL.toUpperCase().equals("FALSE")) {
+//					rtnVal = false;
+//				} 
+//			}
+//			
+//			if (rtnVal) {
+//				subSQL = deleteDocInfo(docID, "QUERY", companyID, userInfo.getTenantId());
+//				
+//				if (subSQL.toUpperCase().equals("FALSE")) {
+//					rtnVal = false;
+//				} 
+//			}
 			
 			break;
 			
