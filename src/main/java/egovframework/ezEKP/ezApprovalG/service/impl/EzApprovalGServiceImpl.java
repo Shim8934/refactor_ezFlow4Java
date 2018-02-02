@@ -1699,7 +1699,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("approvalFlag", approvalFlag);
 		logger.debug("map.toString() : " + map.toString());
-		List<HashMap<String, Object>> docTypes = ezApprovalGDAO.getDocType(map);
+
+		List<ApprGCabCodeVO> docTypes = ezApprovalGDAO.getDocType(map);
+
 		int dlength = docTypes.size();
 		logger.debug("docType.toString() : " + docTypes.toString());
 		logger.debug("dlength : " + dlength);
@@ -1707,16 +1709,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String code2 = "";
 		String name = "";
-		String dbType = globals.getProperty("Globals.DbType"); 
 
 		for (int k = 0; k < dlength; k++) {
-			if(dbType.equals("mysql")){
-				code2 = (String) docTypes.get(k).get("code2");
-				name = (String) docTypes.get(k).get("name");
-			} else if (dbType.equals("oracle")) { 
-				code2 = (String) docTypes.get(k).get("CODE2");
-				name = (String) docTypes.get(k).get("NAME");
-			}
+			code2 = docTypes.get(k).getCode2();
+			name = docTypes.get(k).getName();
 
 			if (code2.equals(selected)) {
 				sb.append("<OPTION value=" + code2 + " selected>" + name + "</OPTION>");

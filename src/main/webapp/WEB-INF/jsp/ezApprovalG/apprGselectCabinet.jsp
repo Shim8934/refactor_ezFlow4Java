@@ -558,7 +558,7 @@
 	                    <tr>
 	                        <td style="width: 190px">
 	                            <div class="listview">
-	                                <div id="TaskList" style="HEIGHT: 300px; WIDTH: 190px; overflow: auto;"></div>
+	                                <div id="TaskList" style="HEIGHT: 300px; WIDTH: 320px; overflow: auto;"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -581,10 +581,10 @@
 	                        <td>
 	                            <div class="listview">
 	                            <c:if test="${initFlag == '1'}">
-	                                <div id="CabinetList" style="border: 0; HEIGHT: 300px; WIDTH: 200px; overflow: auto;"></div>
+	                                <div id="CabinetList" style="border: 0; HEIGHT: 300px; WIDTH: 370px; overflow: auto;"></div>
 	                            </c:if>
 	                            <c:if test="${initFlag != '1'}">
-	                            	<div id="CabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 200px; overflow: auto;"></div>
+	                            	<div id="CabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 370px; overflow: auto;"></div>
 	                            </c:if>
 	                            </div>
 	                        </td>
@@ -605,7 +605,7 @@
 	                    <tr>
 	                        <td colspan="2">
 	                            <div class="listview">
-	                                <div id="SelCabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 220px; overflow: auto;"></div>
+	                                <div id="SelCabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 260px; overflow: auto;"></div>
 	                            </div>
 	                        </td>
 	
