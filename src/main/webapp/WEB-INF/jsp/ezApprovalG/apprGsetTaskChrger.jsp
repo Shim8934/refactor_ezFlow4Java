@@ -423,7 +423,7 @@
         </tr>
 </table>
 
-<div class="btnposition">
+<div class="btnposition btnpositionNew">
 <a class="imgbtn"><span id="btnOK" onClick="return cmdConfirm_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
 <a class="imgbtn"><span id="btnCancel" onClick="return cmdCancel_onclick()" ><spring:message code='ezApprovalG.t119'/></span></a>
 </div>
