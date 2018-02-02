@@ -1081,7 +1081,7 @@ function DocListPrinter_onclick() {
 
     doclistview_cross_dialogArguments[0] = para;
 
-    var OpenWin = window.open(url, "DocListView_Cross", GetOpenWindowfeature(830, 582));
+    var OpenWin = window.open(url, "DocListView_Cross", GetOpenWindowfeature(1395, 582));
     try { OpenWin.focus(); } catch (e) { }
 }
 
