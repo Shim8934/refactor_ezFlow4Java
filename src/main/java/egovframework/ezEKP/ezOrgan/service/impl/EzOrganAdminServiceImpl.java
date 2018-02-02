@@ -734,17 +734,23 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_MOBILE", vo.getMobile() != null ? vo.getMobile() : "");
 		map.put("v_POSTALCODE", vo.getPostalCode() != null ? vo.getPostalCode() : "");
 		map.put("v_ADDRESS", vo.getStreetAddress() != null ? vo.getStreetAddress() : "");
+		
 		if (vo.getExtensionAttribute1() == null || vo.getExtensionAttribute1().equals("")) {
 			map.put("v_EXTATTR1", "c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;");
 		} else {
 			map.put("v_EXTATTR1", vo.getExtensionAttribute1());
 			
 		}
+		
 		map.put("v_EXTATTR6", vo.getExtensionAttribute6() != null ? vo.getExtensionAttribute6() : "");
 		map.put("v_EXTATTR10", vo.getExtensionAttribute10() != null ? vo.getExtensionAttribute10() : "");
 		map.put("v_EXTATTR102", vo.getExtensionAttribute102() != null ? vo.getExtensionAttribute102() : "");
 		map.put("v_EXTATTR14", vo.getExtensionAttribute14() != null ? vo.getExtensionAttribute14() : "");
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15() != null ? vo.getExtensionAttribute15() : "");
+		
+		// 코린도에서 extensionAttribute11 필드를 한국인, 현지인 구분에 사용하여 추가함
+		map.put("v_EXTATTR11", vo.getExtensionAttribute11() != null ? vo.getExtensionAttribute11() : "");
+		
 		map.put("v_LDAPPATH", "");
 		map.put("v_BIRTH", vo.getBirth() != null ? vo.getBirth() : "");		
 		map.put("v_BIRTHTYPE", vo.getBirthType() != null ? vo.getBirthType() : "");
