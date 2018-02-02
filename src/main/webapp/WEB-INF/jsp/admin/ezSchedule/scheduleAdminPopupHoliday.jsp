@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>		
+	    <title><spring:message code='ezSchedule.t4003'/></title>
 	    <script type="text/javascript">
 	    
 		    var holidayid = "<c:out value='${id}'/>";		    

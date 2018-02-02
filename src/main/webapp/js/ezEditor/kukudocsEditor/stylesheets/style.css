@@ -80,7 +80,7 @@ body{
 .kk_editor .kk_editor_toolbar.kk_disabled .kk_editor_toolbar_disabled { display:block; position: absolute; width: 100%; height: 100%; top: 0px; z-index: 101; background-color: #999999; opacity: 0.2; cursor: not-allowed; }
 
 .kk_editor .kk_editor_toolbar .menus { margin: 0 !important; list-style: none !important; line-height: 1 !important; border: none; position: relative; padding: 5px !important; background: #f3f3f3; z-index: 100; }
-.kk_editor .kk_editor_toolbar .menus .menu { vertical-align: top; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ outline: none; list-style: none !important; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; padding : 2px; margin: 0px -2px 4px -1px; /* border : 1px solid #d0cece; box-shadow: 0 2px #eee;*/ }
+.kk_editor .kk_editor_toolbar .menus .menu { vertical-align: top; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ outline: none; list-style: none !important; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; padding : 2px; margin: 0px 2px 4px 2px; border : 1px solid #d0cece; box-shadow: 0 2px #eee; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_line {display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ height: 12px; position: relative; top: -2px; background: #c0c0c0 /* url(../images/bg_toolbar_document.png) repeat-x top left*/; padding: 0 1px 0 0; margin-right: 4px;}
 
 .kk_editor .kk_editor_toolbar.chrome .menus .menu .menu_line {display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ height: 12px; position: relative; top: -2px; background: #c0c0c0 /* url(../images/bg_toolbar_document.png) repeat-x top left*/; padding: 0 1px 0 0; margin-right: 2px;}
@@ -90,7 +90,7 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_custombox,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox,
-.kk_editor .kk_editor_toolbar .menus .menu .menu_button { display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/  position : relative; padding:1px; border: 1px solid #dedede; box-shadow: 0 2px #eee; border-radius: 3px;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button { display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/  position : relative; padding:1px;}
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_colorpicker:hover,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox:hover,
@@ -187,10 +187,10 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker .i_table { background-position: 0px -61px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_symbol { background-position: -30px -60px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .i_find_replace { background-position: -60px -60px; }
-.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_left { background-position: -210px -60px; }
-.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_right { background-position: -240px -60px; }
-.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_top { background-position: -120px -119px; }
-.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_bottom { background-position: -180px -60px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_left { background-position: -240px -60px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_right { background-position: -210px -60px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_top { background-position: -180px -60px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_bottom { background-position: -120px -119px;  }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_remove_row { background-position: -270px -60px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_remove_col { background-position: -300px -60px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_remove_table { background-position: -330px -60px; }
@@ -243,8 +243,8 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox .ui_combobox > li[selected] { background: #B9B9B9; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox.ui_active > .ui_combobox { display: block; }
 
-.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox { display: block; float: left; margin: -2px; padding: 2px; background-color: #ffffff; height:22px; border: 1px solid #dedede; box-shadow: 0 2px #eee; border-radius: 3px;}
-.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox:hover { border: 1px solid #0e0e0e; margin: -2px; padding: 2px;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox { display: block; float: left; margin: -2px; padding: 2px; background-color: #ffffff; height:22px}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox:hover { border: 1px solid #0e0e0e; margin: -3px; padding: 2px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox { position: relative; display: block; height: 23px; line-height: 23px; margin: 0 3px 0 0; background-image: none; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .i-arrow-down { margin-left: -5px; background-position: -150px -120px; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ margin-top: -3px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox label { position: relative; display: block; height: 21px; line-height: 21px; margin: 0; padding: 0 15px 0 5px; font-size: 12px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
@@ -1204,7 +1204,7 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_edit_area .kk_bookmark_edit_area_wrap .kk_bookmark_button { display: inline-block; border: 1px solid #c1bdbd; background-color: #efe8e8; margin-top: 10px; height: 25px; width: 50px; line-height: 25px; margin-left: 5px; margin-right: 5px; cursor: pointer; }
 .kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_edit_area .kk_bookmark_edit_area_wrap .kk_bookmark_button:hover { background-color: #e2e2e2; }
 .kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_edit_area .kk_bookmark_edit_area_wrap .kk_bookmark_button.kk_bookmark_button_disabled,
-.kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_edit_area .kk_bookmark_edit_area_wrap .kk_bookmark_button.kk_bookmark_button_disabled:hover { cursor: not-allowed; background-color: #eaeaea; color: #aaaaaa; border: 1px solid #dcd8d8; }
+.kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_edit_area .kk_bookmark_edit_area_wrap .kk_bookmark_button.kk_bookmark_button_disabled:hover { background-color: #eaeaea; color: #aaaaaa; border: 1px solid #dcd8d8; }
 
 .kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_list_area { height: 175px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px; }
 .kk_editor .kk_editor_dialog .kk_dialog_bookmark .kk_dialog_contents .kk_bookmark_list_area .kk_bookmark_list_area_wrap { border: 1px solid #dedede; background-color: #F6F6F6; }
@@ -1272,9 +1272,13 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_item_main {display:none; width:100%; position:absolute; top:20px; left:0; list-style:none; border:0; margin:0; padding:0; white-space:nowrap; overflow:hidden;border:1px solid #ccc;padding-top:10px;padding-bottom: 10px;text-align:left;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea { border: 1px solid #ccc; border-collapse: collapse; width: 322px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .labelArea,
+.kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .optionLabelArea,
+.kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .directionLabelArea,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .inputArea,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .buttonArea { font-size: 12px; padding:5px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .labelArea{ width:30%; text-align: right;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .directionLabelArea{ width:30%; text-align: left;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .optionLabelArea{ width:30%; text-align: left; padding-left: 70px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .inputArea{ width:50%; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .buttonArea { width:20%; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .labelArea .findLabel,
@@ -1391,10 +1395,10 @@ body{
 .kk_context_menu .context-menu-icon-paragraph_remove_format:before { background-position: -240px -150px;}
 .kk_context_menu .context-menu-icon-layer:before { background-position: -60px -211px;}
 
-.kk_context_menu .context-menu-icon-table_insert_top:before { background-position: -120px -119px;}
-.kk_context_menu .context-menu-icon-table_insert_bottom:before { background-position: -180px -60px;}
-.kk_context_menu .context-menu-icon-table_insert_left:before { background-position: -210px -60px;}
-.kk_context_menu .context-menu-icon-table_insert_right:before { background-position: -240px -60px;}
+.kk_context_menu .context-menu-icon-table_insert_top:before { background-position: -180px -60px; }
+.kk_context_menu .context-menu-icon-table_insert_bottom:before { background-position: -120px -119px;}
+.kk_context_menu .context-menu-icon-table_insert_left:before { background-position: -240px -60px; }
+.kk_context_menu .context-menu-icon-table_insert_right:before { background-position: -210px -60px;}
 
 .kk_context_menu .context-menu-icon-table_remove_row:before { background-position: -270px -60px;}
 .kk_context_menu .context-menu-icon-table_remove_col:before { background-position: -300px -60px;}

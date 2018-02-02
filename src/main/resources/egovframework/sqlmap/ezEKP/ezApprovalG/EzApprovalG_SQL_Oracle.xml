@@ -20719,7 +20719,7 @@
 		WHERE 
 			DocID = #v_DOCID# 
 		AND 
-			AprMemberID = #v_AprMemberID# 
+			AprMemberID = #v_APRMEMBERID# 
 		AND 
 			(AprState = #v_AprState2# OR AprState = #v_AprState3#) 
 		AND 
@@ -22658,9 +22658,18 @@
            
       <select id ="EzApprovalG.lastHabYuiSN" parameterClass="map" resultClass="String">
 	        SELECT 
-	      		ROWNUM, APRMEMBERSN
+	      		A.APRMEMBERSN
 	      	FROM 
-	      		(SELECT ROWNUM AROWNUM, b.* from TBL_APRLINEINFO b) A
+	      		(SELECT 
+	      			ROWNUM as NUM, APRMEMBERSN 
+	      		FROM 
+	      			TBL_APRLINEINFO
+	      		WHERE
+	      			DOCID = #v_DOCID#
+	      		AND
+	      			TENANT_ID = #v_TENANTID#
+	      		AND
+	      			COMPANYID = #companyID# ) A
 			WHERE 
 				DOCID = #v_DOCID#
 			AND
@@ -22669,6 +22678,7 @@
 				COMPANYID = #companyID#
 			AND
                arownum = (#v_memSN# + 1)	
+
       </select>
             
       <select id ="EzApprovalG.lastKyulJeHabYuiYN" parameterClass="map" resultClass="String">

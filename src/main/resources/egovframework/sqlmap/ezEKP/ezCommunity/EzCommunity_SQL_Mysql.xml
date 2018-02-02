@@ -6782,4 +6782,19 @@
       			ITEMID = #itemID#
 		]]>
 	</delete>
+	
+	<select id="EzCommunityDAO.getOneLineReplyCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(replyID)
+        	FROM 
+        		jmocha.tbl_comm_onelinereply 
+       		WHERE  
+       			tenant_id = #tenantID#
+       		AND
+       			boardID = #boardID#
+            AND 
+            	ItemID = #itemID#
+		]]>
+ 	</select>
 </sqlMap>
