@@ -334,7 +334,7 @@
 		<h2 id="trTransExp"><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1"><spring:message code='ezApprovalG.t1102'/></h2>
 		<h2 id="trRejectCab" style="display:none"><input type="checkbox" name="chkRejectCab" id="chkRejectCab" value="1"><spring:message code='ezApprovalG.t1103'/></h2>
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn"><span id="btnReset" onclick="return reset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
 		    <a class="imgbtn"><span id="btnSearch" onclick="return btnSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
 		    <a class="imgbtn"><span id="btnCancel" onclick="return btnCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
