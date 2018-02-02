@@ -710,7 +710,7 @@
 			</isEmpty>
 		</isNotEmpty>
 	</select>
-	
+	<!-- 2018-02-02 김보미 - 50명 제한 삭제(LIMIT 50) -->
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
 		<![CDATA[
 			SELECT  
@@ -739,8 +739,6 @@
 		   							ITEMID = #itemID# )
 		   	ORDER BY 
 		   		ReadDate DESC
-		   	LIMIT
-		   		50
 		]]>
 	</select>
 	
