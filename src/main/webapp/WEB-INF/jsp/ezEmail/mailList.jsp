@@ -700,7 +700,10 @@
 				document.getElementById("MailProgress").style.display = "none";
 			    document.getElementById("cancleProgressBtn").style.display = "none";
 				parent.document.getElementById("left").contentWindow.hideProgress();
-				parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+				
+				if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
+					parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+				} 
 			}
 
 			function ShowMailProgressNew() {
@@ -713,7 +716,10 @@
 			    document.getElementById("MailProgress").style.display = "";
 			    document.getElementById("cancleProgressBtn").style.display = "block";
 			    parent.document.getElementById("left").contentWindow.showProgress();
-			    parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+			    
+			    if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
+					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+				} 
 			}
 
 			function cancleProgress(){

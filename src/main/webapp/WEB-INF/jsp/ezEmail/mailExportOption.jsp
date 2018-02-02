@@ -40,12 +40,10 @@
 			    	 showTobLeftDim();
 			    	 showMailProgressNew();
 					 checkUsePassword(useEncrytZipFileChk); 
-			         CancelFunction = parent.exportOption_cross_dialogArguments[2];
 			         isDivPopUp = true;
 			         rgParams = RetValue;
 			     } catch (e) {
 			         try {
-			             CancelFunction = opener.exportOption_cross_dialogArguments[2];
 			             rgParams = RetValue;
 			         } catch (e) {  }
 			     }	
@@ -97,7 +95,7 @@
 						// 암호 알고리즘 사용 확인
 						var pwd = document.getElementById("securePassword").value;
 						
-						CancelFunction();
+						DivPopUpHiddenForOption();
 						hideTopLeftDim();
 						hideMailProgressNew();
 						
@@ -117,7 +115,7 @@
 					}
 					
 				} else {
-					CancelFunction();
+					DivPopUpHiddenForOption();
 					hideTopLeftDim();
 					hideMailProgressNew();
 					
@@ -148,7 +146,7 @@
 			}
 			
 			function cancel() {
-				CancelFunction();
+				DivPopUpHiddenForOption();
 				hideTopLeftDim();
 				hideMailProgressNew();
 			}
@@ -174,13 +172,27 @@
 			
 			function hideTopLeftDim(){
 				parent.parent.document.getElementById("left").contentWindow.hideProgress();
-				parent.parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+
+				if (window.parent.parent.frames["left"].useBottomFrameOnly == "NO") {
+					parent.parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+				} 
 			}
 			
 			function showTobLeftDim(){
 				parent.parent.document.getElementById("left").contentWindow.showProgress();
-				parent.parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
-			}	
+
+				if (window.parent.parent.frames["left"].useBottomFrameOnly == "NO") {
+					parent.parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+				} 
+			}
+			
+			function DivPopUpHiddenForOption() {
+			    try {
+			        parent.document.getElementById("mailPanel").style.display = "none";
+			        parent.document.getElementById("iFramePanel").style.display = "none";
+			        parent.document.getElementById("iFrameLayer").src = "/blank.htm";
+			    } catch (e) {}
+			}
 		</script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
