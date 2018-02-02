@@ -88,7 +88,7 @@
 		    </td>
 		  </tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 			<a class="imgbtn"><span id="btnReset" onClick="return btnReset_onclick()" style="width:40px;" ><spring:message code='ezApprovalG.t621'/></span></a>
 			<a class="imgbtn"><span id="btnOK" onClick="return btnOK_onclick()" style="width:40px;" ><spring:message code='ezApprovalG.t111'/></span></a>
 			<a class="imgbtn"><span id="btnClose" onClick="return btnClose_onclick()" style="width:40px;" ><spring:message code='ezApprovalG.t64'/></span></a>

@@ -1127,7 +1127,7 @@
 		            var width = window.screen.availWidth;
 		            var left = (parseInt(width) - 525) / 2;
 		            var top = (parseInt(heigth) - 220) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=789px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		
