@@ -22668,7 +22668,7 @@
 			AND
 				COMPANYID = #companyID#
 			AND
-               arownum = (#v_memSN# + 1);	
+               arownum = (#v_memSN# + 1)	
       </select>
             
       <select id ="EzApprovalG.lastKyulJeHabYuiYN" parameterClass="map" resultClass="String">
