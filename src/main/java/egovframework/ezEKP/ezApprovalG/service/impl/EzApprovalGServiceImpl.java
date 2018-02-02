@@ -1706,12 +1706,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String code2 = "";
 		String name = "";
+		String dbType = globals.getProperty("Globals.DbType"); 
 		
 		for (int k = 0; k < dlength; k++) {
-			if(globals.getProperty("Globals.DbType").equals("mysql")){
+			if(dbType.equals("mysql")){
 				code2 = (String) docTypes.get(k).get("code2");
 				name = (String) docTypes.get(k).get("name");
-			} else if (globals.getProperty("Globals.DbType").equals("oracle")) { 
+			} else if (dbType.equals("oracle")) { 
 				code2 = (String) docTypes.get(k).get("CODE2");
 				name = (String) docTypes.get(k).get("NAME");
 			}
