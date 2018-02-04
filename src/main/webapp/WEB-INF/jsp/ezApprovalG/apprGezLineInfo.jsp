@@ -140,7 +140,7 @@
 		            listview.DataBind("lvAprLine");                        
 		
 		            var tr = listview.GetDataRows();
-		
+					
 		            var cnt = tr.length;
 		            var i, j;
 		            var chkVal;
@@ -148,6 +148,12 @@
 		                for (i = 0; i < cnt; i++) {
 		                    tr[i].cells[2].setAttribute("title", tr[i].cells[2].innerHTML);
 		                }
+		            }
+		            
+		            var content = document.getElementById("AprLine_TH_2");
+		            
+		            if (content.innerText == "내용") {
+		            	content.setAttribute("width" , "376px");
 		            }
 		        }
 		        catch (e) {

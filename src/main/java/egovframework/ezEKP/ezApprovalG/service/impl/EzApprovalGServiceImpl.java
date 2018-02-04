@@ -1698,16 +1698,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("approvalFlag", approvalFlag);
-		
-		List<HashMap<String, Object>> docTypes = ezApprovalGDAO.getDocType(map);
-		
+		logger.debug("map.toString() : " + map.toString());
+		List<ApprGCabCodeVO> docTypes = ezApprovalGDAO.getDocType(map);
 		int dlength = docTypes.size();
+		logger.debug("docType.toString() : " + docTypes.toString());
+		logger.debug("dlength : " + dlength);
 		StringBuilder sb = new StringBuilder();
 		
+		String code2 = "";
+		String name = "";
+
 		for (int k = 0; k < dlength; k++) {
-			String code2 = (String) docTypes.get(k).get("code2");
-			String name = (String) docTypes.get(k).get("name");
-			
+			code2 = docTypes.get(k).getCode2();
+			name = docTypes.get(k).getName();
+
 			if (code2.equals(selected)) {
 				sb.append("<OPTION value=" + code2 + " selected>" + name + "</OPTION>");
 			} else {
@@ -22125,15 +22129,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantId);
 		map.put("companyID" , companyID);
 		map.put("v_FLAG", flag);
-		
+		// 마지막 결재 순번 구하기
 		int lastKyulJeCnt = ezApprovalGDAO.lastKyulJeCnt(map);
 		
 		map.put("v_memSN", lastKyulJeCnt - 1);
 		
 		String lastHabYuiSN = ezApprovalGDAO.lastHabYuiSN(map);
-		
+
 		map.put("v_memSN", lastHabYuiSN);
-		
+		// 마지막 결재가 개인, 부서 순차 합의일 경우 aprmembersn 출력
 		String lastKyulJeHabYuiYN = ezApprovalGDAO.lastKyulJeHabYuiYN(map);
 		int result = 0;
 		

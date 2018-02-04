@@ -557,7 +557,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()); 
-		String use_IE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
 		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		String use_oneLineCount = "";
 		String pBoardID = boardPropertyVO.getBoardID();
@@ -585,10 +584,6 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setBoardType("");
 		} else {
 			boardInfo.setBoardType(boardPropertyVO.getBoardType());
-		}
-		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && use_IE11Browser.equals("CK")) {
-			use_IE11Browser = "CK";
 		}
 		
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
@@ -622,7 +617,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("use_ocs", use_ocs);
 		model.addAttribute("use_Editor", use_Editor);
-		model.addAttribute("use_IE11Browser", use_IE11Browser);
 		model.addAttribute("use_oneLineCount", use_oneLineCount);
 		
 		logger.debug("boardItemList ended");
@@ -2961,13 +2955,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String location = "";
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = "";
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
-		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && useIE11Browser.equals("CK")) {
-			useIE11Browser = "CK";
-		}
 		
 		String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
 		String showAdjacent = request.getParameter("showAdjacent");
@@ -3086,7 +3075,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("location", location);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("adjacentItemsEnableFlag", adjacentItemsEnableFlag);
 		model.addAttribute("showAdjacent", showAdjacent);
 		model.addAttribute("boardID", boardID);
@@ -6307,12 +6295,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
 		String noneActiveX = "YES";
-		
-		if (req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0 && useIE11Browser.equals("CK")) {
-			useIE11Browser = "CL";
-		}
 		
 		String pRootBoardID = "top";
 		String pSubFlag = "0";

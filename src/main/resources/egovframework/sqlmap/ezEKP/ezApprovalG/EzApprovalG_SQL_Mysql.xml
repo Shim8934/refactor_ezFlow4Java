@@ -6548,7 +6548,6 @@
                      		A.TENANT_ID = #v_TENANTID#
                      AND
                      		A.COMPANYID = #companyID#  
-                     LIMIT 1
                      
                      UNION ALL 
                      
@@ -6581,7 +6580,7 @@
                             		A.COMPANYID = #companyID#
 	                        ORDER BY 
 	                       			FLAG DESC, DOCID DESC ) D
-            LIMIT 1 ) C 
+            ) C ORDER BY DOCID DESC LIMIT 1 
          ]]>
 		</isNotEqual>
 		</isNotEqual>
@@ -7780,7 +7779,7 @@
 <!-- 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap"> -->
 <!-- 		{CALL EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap" remapResults="true">
+	<select id="EzApprovalG.getDocType" parameterClass="Map" resultClass="ApprGCabCodeVO" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT 

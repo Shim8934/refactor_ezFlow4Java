@@ -28,6 +28,7 @@
 	        var reloadRetryCount = 1;
 	      	var previewSubTree = "${previewSubTree}";
 	      	var usePreviewSubTree = "${usePreviewSubTree}";
+	      	var useBottomFrameOnly = "${useBottomFrameOnly}";
 	        
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -169,12 +170,7 @@
 	                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
 	            }
 	            else {
-	                if (pUse_Editor == "")
-	                    window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
-	                else {
-	
-	                    window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
-	                }
+                    window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
 	            }          
 	        }
 	        function LoadEmailTree() {

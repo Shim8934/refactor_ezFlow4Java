@@ -3996,6 +3996,41 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId}/addressbook/{addressId}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getAddressInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String addressId) {		
+		LOGGER.debug("MOBILE G/W MAIL getAddressInfo started.");
+		LOGGER.debug("userId=" + userId + ",addressId=" + addressId);
+		
+        JSONObject data = new JSONObject();
+        JSONObject result = new JSONObject();
+		
+        try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+										       
+			AddressVO addressInfo = ezAddressService.getAddressInfo(
+										info.getTenantId(),
+										info.getPrimary(),
+										addressId
+										);
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", addressInfo);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "fail");			
+		}
+        
+		LOGGER.debug("MOBILE G/W MAIL getAddressInfo ended.");
+		
+		return result;
+	}
+	
 	/**
 	 * 메일 책갈피 지정 실행 함수
 	 */

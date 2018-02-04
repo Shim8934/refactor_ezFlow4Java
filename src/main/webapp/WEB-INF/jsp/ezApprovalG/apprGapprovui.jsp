@@ -657,7 +657,9 @@
 		        // getDocNumber를 이용한 문서번호 채번
 		        if (pDraftFlag != "SUSIN") {
 		        	if (approvalFlag == "S") {
-			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0) || pAprLineType == strAprType4 || totalMemSN > 0) {
+		        		// '현재진행 중인 결재가 개인순차합의가 아닌 경우' 추가
+		        		// 마지막 결재자가 합의인 경우 totalMemSN 값으로 해당 조건절 사용.
+			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8) || pAprLineType == strAprType4 || totalMemSN > 0) {
 			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 			                    var rtnval;
 			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);

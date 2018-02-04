@@ -19,7 +19,6 @@
 			var compAdmin = "${compAdmin}";
 		    var pFolderID = "${pFolderId}";
 		    var pUse_Editor = "${useEditor}";
-		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "${noneActiveX}";
 		    var getMemo = '${getsMemo}';
 		    

@@ -1101,7 +1101,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo);
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
 		ezCommunityService.boardItemView(userInfo, boardInfo, item, pItemID, pBoardID, showAdjacent, adjacentItemsEnableFlag, model);
+		String commentCount = ezCommunityService.getOneLineReplyCount(pBoardID, pItemID, userInfo.getTenantId()); // 2018-01-10 강민수92 댓글 카운트 세기
 		
+		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("item", item);
 		model.addAttribute("itemID", pItemID);
 		model.addAttribute("boardID", pBoardID);
@@ -1134,8 +1136,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String pItemID = request.getParameter("itemID");
 		
+		String replyID = request.getParameter("replyID");
+		String replyFlag = request.getParameter("replyFlag");
+		
 		String password = ezCommunityService.checkPassword(pItemID, userInfo.getTenantId()).trim();
-
+		
+		model.addAttribute("replyID", replyID);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("itemID", pItemID);
@@ -1143,7 +1149,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("checkPassword ended.");
 		
-		return "ezCommunity/communityCheckPassword";
+		if (replyFlag != null && replyFlag.equals("true")) { // 강민수92 한줄댓글 삭제시 or 비번 체크시
+			return "ezCommunity/deleteCommentPopup";
+		} else {
+			return "ezCommunity/communityCheckPassword";
+		}
 	}
 	
 	/**
@@ -1171,7 +1181,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 한줄답변 목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/readOneLineReply.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezCommunity/readOneLineReply.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	public String readOneLineReply(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pBoardID = request.getParameter("boardID");
@@ -1179,6 +1189,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
 		
+		String totalCommentCount = String.valueOf(oneLineReplyList.size());
+		model.addAttribute("totalCommentCount", totalCommentCount);
 		model.addAttribute("oneLineReplyList", oneLineReplyList);
 		
 		return "json";
@@ -1211,13 +1223,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 한줄답변 삭제 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/deleteOneLineReply.do", method = RequestMethod.POST)
-	public void deleteOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/ezCommunity/deleteOneLineReply.do", produces="text/plain; charset=utf-8")
+	@ResponseBody
+	public String deleteOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pReplyID = request.getParameter("replyID");
 		String gubun = request.getParameter("gubun");
 		
 		ezCommunityService.deleteOneLineReply(userInfo.getId(), pReplyID, gubun, userInfo.getTenantId());
+		return "json";
 	}
 	
 	/**
@@ -1366,14 +1381,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String boardItemPreView(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String useIE11Browser = "";
 		String gubun = request.getParameter("gubun");
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String primary = userInfo.getPrimary();
-		
-		if (commonUtil.checkIE(request) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-                useIE11Browser = "CK";
-		}
 		
 		model.addAttribute("displayName", primary.equals("2") ? userInfo.getDisplayName2() : userInfo.getDisplayName());
 		model.addAttribute("deptName", primary.equals("2") ? userInfo.getDeptName2() : userInfo.getDeptName());
@@ -1382,7 +1392,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("gubun", gubun);
 		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("Use_Editor", useEditor);
-		model.addAttribute("Use_IE11Browser", useIE11Browser);
 		
 		return "ezCommunity/communityBoardItemPreview";
 	}
@@ -3459,11 +3468,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("mainPage started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String useIE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
 		
 		int totalPage = ezCommunityService.mainPage(userInfo);
 		
-		model.addAttribute("useIE11Brower", useIE11Browser);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("primary", userInfo.getPrimary());
@@ -4013,13 +4020,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
-		String useIE11Browser = "";
 		String userLevel = "0", pSortBy = "", showAdjacent = "", strXML = "";
 		int pPage = 1, totalPage = 1, totalCount = 0;
-		
-		if (commonUtil.checkIE(request) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-            useIE11Browser = "CK";
-		}
 		
 		if (request.getParameter("sortBy") != null) {
 			pSortBy = request.getParameter("sortBy");
@@ -4083,7 +4085,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("code", code);
 		model.addAttribute("pSortBy", pSortBy);
 		model.addAttribute("userLevel", userLevel);
@@ -4240,15 +4241,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String oneLineReplyFlag = ezCommonService.getTenantConfig("ONELINE_REPLY_ENABLE", userInfo.getTenantId());
         String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
         
-        String useIE11Browser = "", showAdjacent = "", pReservedItem = "", itemID = "";
+        String showAdjacent = "", pReservedItem = "", itemID = "";
         String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "";
         String gImageUrl = "", gWidth = "", gHeight = "";
         
 		String boardID = request.getParameter("boardID");
-		
-		if (commonUtil.checkIE(request) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-            useIE11Browser = "CK";
-		}
 		
 		if (request.getParameter("itemID") != null) {
 			itemID = request.getParameter("itemID");
@@ -4331,12 +4328,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
+		String commentCount = ezCommunityService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId()); // 2018-01-10 강민수92 댓글 카운트 세기
+		
+		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("oneLineReplyFlag", oneLineReplyFlag);
 		model.addAttribute("adjacentItemsEnableFlag", adjacentItemsEnableFlag);
 		model.addAttribute("showAdjacent", showAdjacent);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("pReservedItem", pReservedItem);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("item", item);
@@ -4558,5 +4557,42 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("sendReplyNoticeMail ended.");
 	}
+	
+    /**
+     * 댓글 팝업화면 조회
+     * 강민수92
+     */
+    @RequestMapping(value = "/ezCommunity/communityCommentPopup.do")
+    public String communityCommentPopup(@CookieValue("loginCookie") String loginCookie, CommunityBoardItemVO boardItemVO, Model model) throws Exception {
+    	logger.debug("comunnityCommentPopup started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    		
+		String pBoardID = boardItemVO.getBoardID();
+		String pItemID = boardItemVO.getItemID();
+		String gubun  = boardItemVO.getGubun();
+//		String userName = "";
+		String publicModulus = egovFileScrty.getPbm();
+        String publicExponent = "10001";
+//		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		
+		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
+
+    	logger.debug("itemID = " + pItemID);
+    	
+    	model.addAttribute("gubun", gubun);
+    	model.addAttribute("boardInfo", boardInfo);
+    	model.addAttribute("publicModulus", publicModulus);
+    	model.addAttribute("publicExponent", publicExponent);
+    	model.addAttribute("boardItemVo", boardItemVO);
+    	model.addAttribute("userInfo", userInfo);
+    	model.addAttribute("boardLineReplyVOList", oneLineReplyList);
+    	
+    	logger.debug("communityCommentPopup ended.");
+    	
+    	return "/ezCommunity/communityCommentPopup";
+    }
 }
 

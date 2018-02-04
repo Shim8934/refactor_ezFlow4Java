@@ -394,23 +394,27 @@ public class EzScheduleController extends EgovFileMngUtil {
             startDay	= scheduleConfigVO.getStartDay();
             startTime	= scheduleConfigVO.getStartTime() / 60;
             endTime		= scheduleConfigVO.getEndTime() / 60;
-
-            switch (defaultView) {
-	            case 0:
-	                defaultTitle = msg.getMessage("ezSchedule.t140", locale);
-	                break;
-	            case 1:
-	                defaultTitle = msg.getMessage("ezSchedule.t141", locale);
-	            	break;
-	            case 2:
-	                defaultTitle = msg.getMessage("ezSchedule.t142", locale);
-	            	break;
-	           	default:
-	                defaultTitle = msg.getMessage("ezSchedule.t142", locale);
-	           		break;
-            }
+            
+            defaultTitle = msg.getMessage("ezSchedule.t133", locale);
+            
+//            switch (defaultView) {
+//	            case 0:
+//	                defaultTitle = msg.getMessage("ezSchedule.t140", locale);
+//	                break;
+//	            case 1:
+//	                defaultTitle = msg.getMessage("ezSchedule.t141", locale);
+//	            	break;
+//	            case 2:
+//	                defaultTitle = msg.getMessage("ezSchedule.t142", locale);
+//	            	break;
+//	           	default:
+//	                defaultTitle = msg.getMessage("ezSchedule.t142", locale);
+//	           		break;
+//            }
         } else {
-        	defaultTitle = msg.getMessage("ezSchedule.t142", locale);
+//        	defaultTitle = msg.getMessage("ezSchedule.t142", locale);
+        	defaultTitle = msg.getMessage("ezSchedule.t133", locale);
+        	
             defaultView	= 2;
             startDay	= 7;
             startTime	= 540 / 60;

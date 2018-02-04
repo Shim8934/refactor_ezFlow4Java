@@ -50,7 +50,7 @@ function confirm(){
 		return;
 	} else {
 		var pwd = document.getElementById("securePassword").value;
-		CancelFunction();
+		DivPopUpHiddenForOption();
 		hideTopLeftDim();
 		hideMailProgressNew();
 		window.parent.mailbox_attach_import(pwd, tempId, userkey);
@@ -60,7 +60,7 @@ function confirm(){
 
 function cancel() {
 	parent.document.importMailboxform.file1.value = "";
-	CancelFunction();
+	DivPopUpHiddenForOption();
 	hideTopLeftDim();
 	hideMailProgressNew();
 	
@@ -94,12 +94,18 @@ function showMailProgressNew(){
 
 function hideTopLeftDim(){
 	parent.parent.document.getElementById("left").contentWindow.hideProgress();
-	parent.parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+	
+	if (window.parent.parent.frames["left"].useBottomFrameOnly == "NO") {
+		parent.parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+	} 
 }
 
 function showTobLeftDim(){
 	parent.parent.document.getElementById("left").contentWindow.showProgress();
-	parent.parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+	
+	if (window.parent.parent.frames["left"].useBottomFrameOnly == "NO") {
+		parent.parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+	} 
 }
 
 function keycheck(event) {
@@ -108,6 +114,14 @@ function keycheck(event) {
 	if (keycode == 13) {
 		confirm();
 	}
+}
+
+function DivPopUpHiddenForOption() {
+    try {
+        parent.document.getElementById("mailPanel").style.display = "none";
+        parent.document.getElementById("iFramePanel").style.display = "none";
+        parent.document.getElementById("iFrameLayer").src = "/blank.htm";
+    } catch (e) {}
 }
 
 </script>

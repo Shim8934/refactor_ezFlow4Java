@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezApprovalG.vo;
 public class ApprGCabCodeVO {
 	private String codeType;
 	private String code;
+	private String code2;
 	private String name;
 	private String name2;
 	
@@ -24,12 +25,16 @@ public class ApprGCabCodeVO {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public String getCode2() {
+		return code2;
+	}
+	public void setCode2(String code2) {
+		this.code2 = code2;
+	}
 	public String getName2() {
 		return name2;
 	}
 	public void setName2(String name2) {
 		this.name2 = name2;
 	}
-
-	
 }

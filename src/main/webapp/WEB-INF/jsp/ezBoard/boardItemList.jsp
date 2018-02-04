@@ -84,7 +84,6 @@
 		    var useRunTime = "${useRunTime}"
 		    var Use_OneLineCount = "${use_oneLineCount}";
 		    var pUse_Editor = "${use_Editor}";
-		    var pUse_IE11Browser = "${use_IE11Browser}";
 		    var SQLPARADATA = "";
 		    var pAdminType = "${boardInfo.adminType}";
 		    var pButtonHidden = "${boardInfo.buttonHidden}";
@@ -524,7 +523,9 @@
 		            alert("<spring:message code='ezBoard.t262' />");
 		            return;
 		        }
-		        var feature = GetOpenWindowfeature(765, 820);
+		        //IE에서 새창 크기 조절 가능하게 수정
+		        //2018.01.29 김기하
+		        var feature = GetOpenWindowfeature(765, 820).replace("resizable=no","resizable=yes"); 
 
 	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 		    }

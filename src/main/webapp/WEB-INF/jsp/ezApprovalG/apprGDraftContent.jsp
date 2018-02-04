@@ -695,6 +695,8 @@
 	                if (isConDoc) {
 	                    parent.Conn_Initial();
 	                }
+	                
+	                parent.isEditorComplete = true;
 	            } catch (e) {
 	            }
 	        }

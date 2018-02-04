@@ -129,14 +129,17 @@
 	        </tr>
 	        <tr>
 	            <td>
-	                <div style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;">
+	                <div class="layout" style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;height:410px;">
 	                	<c:set var="result" value="${fn:split(listImages, '|')}"/>
 	                	<c:set var="imageID" value="${fn:split(imageID, ';')}"/>
 	                	<c:set var="content" value="${fn:split(imageContent, ';')}"/>
 	                	<c:set var="flag" value="${fn:split(mainFg, ';')}"/>
 	                	<c:set var="resultCount" value="${fn:length(result)}"/>
 	                	<c:forEach begin="1" end="${resultCount}" step="1" varStatus="vs">
-		                    <span><input type="checkbox" value="${imageID[vs.count-1]}" id="check${vs.count - 1}" flag="${flag[vs.count-1]}" onclick="checkMainFg(this)" /><img src='${result[vs.count-1]}' width='70px' height ='70px' title='${content[vs.count-1]}' id="image${vs.count - 1}" name='zb_target_resize' style='cursor:pointer;'/></span>
+		                    <div style="display:inline-block">
+		                    	<input type="checkbox" value="${imageID[vs.count-1]}" id="check${vs.count - 1}" flag="${flag[vs.count-1]}" onclick="checkMainFg(this)" style="vertical-align: top; position: relative; z-index: 1; left:8px"/>
+		                    	<img src='${result[vs.count-1]}' width='100px' height ='100px' title='${content[vs.count-1]}' id="image${vs.count - 1}" name='zb_target_resize' style='cursor:pointer; position: relative; right: 13px'/>
+		                    </div>
 	                	</c:forEach>
 	                </div>
 	            </td>

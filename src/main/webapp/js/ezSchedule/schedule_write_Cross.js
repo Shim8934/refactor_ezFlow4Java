@@ -93,19 +93,23 @@ function save_schedule()
 	        }
     	}
     }
-    if(!check_time())
+    //2018.01.30 김기반복설정시 기본 날짜 사용안하고 반복 설정된 날짜 사용
+    if(!timeCheck)
     {
-        alert(timecheckstring);
-        saveCheck = false;
-        
-        return;
-    }
-    
-    if (CheckPreviously()) {
-        alert(strLang272);
-        saveCheck = false;
-        
-        return;
+    	if(!check_time())
+    	{
+    		alert(timecheckstring);
+    		saveCheck = false;
+    		
+    		return;
+    	}
+    	
+    	if (CheckPreviously(timeCheck)) {
+    		alert(strLang272);
+    		saveCheck = false;
+    		
+    		return;
+    	}
     }
     
 	if (scheduleid == "") check_name();
@@ -396,7 +400,7 @@ function save_schedule()
 	}
 }
 
-function CheckPreviously() {
+function CheckPreviously(timeCheck) {
     var rtv = false;
 
     $.ajax({
@@ -409,8 +413,16 @@ function CheckPreviously() {
 		},
 		success: function(text) {
 			if (text == "1") {
-				if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() < utcDate(offSetMin)) {					
-		            rtv = true;
+				//2018.01.31 김기하 반복 일정 처리 시 시작일 기준으로 현재시간과 비교
+				if(!timeCheck) {
+					if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() < utcDate(offSetMin)) {					
+						rtv = true;
+					}
+				}else {
+					if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() < utcDate(offSetMin)) {					
+						rtv = true;
+					}
+					
 				}
 			}
 		}
