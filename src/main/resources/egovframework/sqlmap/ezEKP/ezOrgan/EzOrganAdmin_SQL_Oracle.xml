@@ -680,7 +680,7 @@
           TBL_THEME_GENERAL
             ( UID_,DISPLAYNAME,DISPLAYNAME2,DISPLAYNAME3,DISPLAYNAME4,IMAGEURL,TOPURL,MAINURL,COMPANAYID,CREATORID,CREATORNM,CREATEDATE,MODIFYDATE,TOPHEIGHT,TENANT_ID )
           VALUES
-            ( 'f2de22b9-9a3f-49a9-884b-2e179e564cbf','표준모듈 A 테마 ','표준모듈 A 테마 _en','표준모듈 A 테마 _ja','표준모듈 A 테마 _zh','/files/upload_portal/S907000/Theme/08c5179c-1c9d-46e8-bea3-9c4495fa3704.jpg','/ezPortal/topMenu.do','/ezPortal/portalPage.do',#companyID#,#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH:mi:ss'),TO_DATE(#nowDate#, 'yyyy-MM-dd HH:mi:ss'),100,#tenantID# )
+            ( 'f2de22b9-9a3f-49a9-884b-2e179e564cbf','표준모듈 A 테마 ','표준모듈 A 테마 _en','표준모듈 A 테마 _ja','표준모듈 A 테마 _zh','/files/upload_portal/S907000/Theme/08c5179c-1c9d-46e8-bea3-9c4495fa3704.jpg','/ezPortal/topMenu.do','/ezPortal/portalPage.do',#companyID#,#userID#,#userName#,TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:mi:ss'),100,#tenantID# )
       ]]>
     </insert>
     
@@ -3497,7 +3497,12 @@
 	<select id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
 		<![CDATA[
 			SELECT
-				* 
+				USERID,
+				PROXYUSERID,
+				PROXYUSERNAME,
+				PROXYUSERDEPTID,
+				to_char(STARTDATE + $offsetMin$/(24*60), 'yyyy-MM-dd HH24:mi:ss') as STARTDATE,
+				to_char(ENDDATE + $offsetMin$/(24*60), 'yyyy-MM-dd HH24:mi:ss') as ENDDATE 
       		FROM
       			TBL_PROXYINFO 
       		WHERE

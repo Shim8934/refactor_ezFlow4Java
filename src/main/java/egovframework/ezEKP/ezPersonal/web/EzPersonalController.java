@@ -332,7 +332,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().toLowerCase().indexOf("a=1;") > -1) {
-			result = ezOrganService.getProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
+			result = ezOrganService.getProxyUserInfo(userInfo.getId(), userInfo.getTenantId(), userInfo.getOffset());
 			
 			Document xmlDom = commonUtil.convertStringToDocument(result);
 			
