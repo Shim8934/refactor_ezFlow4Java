@@ -26,12 +26,14 @@
 		<result property="formName"		column="form_name"			columnIndex="2"/>
 	</resultMap>
 
+<!-- 양식함 리스트 세럭트 -->
 	<select id="selectJournalTypeList" resultMap="JournaltypeMap" parameterClass="Map">
 		select type_id, used from tbl_journal_form_type
 		where tenant_id=#tenantId#
 		and company_id=#companyId#
 	</select>
 	
+	<!-- 회사 생성시 초 기 양식함 생성 -->
 	<insert id="insertJournalTypeList" parameterClass="Map">
 		insert into tbl_journal_form_type 
 			(type_id,
@@ -45,6 +47,7 @@
 			#tenantId#)
 	</insert>
 	
+	<!-- 양식함 사용여부 수정 -->
 	<update id="updateJournalTypeList" parameterClass="Map">
 		update 
 			tbl_journal_form_type
@@ -58,6 +61,7 @@
 			tenant_id = #tenantId#
 	</update>
 	
+	<!-- 열람권한 생성 -->
 	<insert id="insertJournalAuthor" parameterClass="Map">
 		insert into tbl_journal_auth
 			(user_id,
@@ -69,6 +73,7 @@
 			#tenantId#)
 	</insert>	
 	
+	<!-- 양식 리스트 세럭트 -->
 	<select id="getFormList" parameterClass="map" resultMap="JournalFormInfoVO">
 			select 
 				form_id,
@@ -88,6 +93,7 @@
 			order by form_id asc
 	</select>
 	
+	<!-- 해당 양식을 사용할 수 있는 부서 리스트 -->
 	<select id="getFormUseDeptList" parameterClass="map" resultClass="String">
 			select 
 				a.DISPLAYNAME
@@ -97,6 +103,7 @@
 				b.form_id = #formId#
 	</select>
 	
+	<!-- 해당 부서에서 쓸 수 있는 양식리스트 -->
 	<select id="getDeptUseFormList" parameterClass="map" resultMap="BasicFormInfoVO">
 		select 
 			a.form_id,
@@ -111,6 +118,7 @@
 			a.tenant_id = #tenantId#
 	</select>
 	
+	<!-- 취합시 기본양식 리스트 가져오는 쿼리 -->
 	<select id="getBasicFormList" parameterClass="map" resultMap="BasicFormInfoVO">
 		select distinct
 			a.form_id,
@@ -123,8 +131,11 @@
 			a.form_status = 'basic'			
 		and
 			a.tenant_id = #tenantId#	
+		and
+			a.company_id = #companyId#
 	</select>
 	
+	<!-- 양식 등록 하기 -->
 	<insert id="insertForm" parameterClass="map">
 		insert into tbl_journal_form (
 			form_id,	tenant_id,		form_name,		form_content,		type_id,		form_date,		form_writer,		form_info,		company_id
@@ -134,6 +145,7 @@
 		)
 	</insert>
 	
+	<!-- 양식을 사용하는 부서 등록 -->
 	<insert id="insertUseDept" parameterClass="map">
 		insert into tbl_journal_form_user_dept (
 			dept_id,	form_id
@@ -143,5 +155,42 @@
 		)
 	</insert>
 	
+	<!-- 조직도 만들기 위한 쿼리 -->
+	<select id="selectDeptList" parameterClass="map" resultClass="">
+		select d.CN as id, 
+		d.extensionattribute1 as parent,
+		d.extensionattribute2 as companyId, 
+		d.displayname as text
+		,case d.CN
+			when d.extensionattribute2 then 'comp'
+			else 'dept'
+			end as isComp
+		 ,case d.CN
+		when u.DEPARTMENT then 'yes'
+		else 'no'
+		end as myDept
+		from tbl_deptmaster d
+		left join tbl_usermaster u on d.tenant_id=u.TENANT_ID  
+		where d.tenant_id=#tenantId#
+		and u.CN=#userId#
+		and u.tenant_id=#tenantId#
+		and (((substr(u.EXTENSIONATTRIBUTE1,3,1)=0 and d.extensionattribute2=u.PHYSICALDELIVERYOFFICENAME))
+		or (substr(u.EXTENSIONATTRIBUTE1,3,1)=1))
+		order by DEPTLEVEL
+	</select>
+	
+	<!-- 회사 리스트를 가져오는 쿼리 -->
+	<select id="selectCompanyList" resultClass="Map" parameterClass="Map">
+		select d.CN as companyId,
+		d.displayname as companyName
+		from jmocha.tbl_deptmaster d
+		left join jmocha.tbl_usermaster u on d.tenant_id=u.TENANT_ID
+		where d.TENANT_ID=#tenantId#
+		and u.CN=#userId#
+		and u.TENANT_ID=#tenantId#
+		and (((substr(u.EXTENSIONATTRIBUTE1,3,1)=0 and d.extensionattribute2=u.PHYSICALDELIVERYOFFICENAME))
+		or (substr(u.EXTENSIONATTRIBUTE1,3,1)=1))
+		and d.extensionattribute2=d.CN
+		order by DEPTLEVEL; 
+	</select>
 </sqlMap>
-

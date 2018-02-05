@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
@@ -139,7 +137,6 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		
 		LOGGER.debug("ezJournal G/W journalFormList ended.");
 		
 		return result;
@@ -704,6 +701,20 @@ public class EzJournalGWController {
 		LOGGER.debug("ezJournal G/W getCompanyList started.");
 		
 		JSONObject result = new JSONObject();
+		
+		String userId = request.getParameter("userId");
+		String tenantId = request.getParameter("tenantId");
+		
+		try {
+			List<Map<String,String>> compList = ezJournalService.getCompanyList(userId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("compList", compList);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
 		
 		LOGGER.debug("ezJournal G/W getCompanyList ended.");
 		return result;
