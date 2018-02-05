@@ -3985,6 +3985,9 @@
 	</select>
 	
 	<select id="EzApprovalG.getRecordList" parameterClass="ApprGRecordListVO" resultClass="ApprGRecordVO" remapResults="true">
+		SELECT
+			*
+		FROM (
 		SELECT 
 			 * 
 		FROM (
@@ -4375,24 +4378,39 @@
 			<isNotEmpty property="isDocPrint">
 				<isEqual property="isDocPrint" compareValue="TRUE">
 					<isLessThan property="start" compareValue="0">
-						) N ) A 
+						) N ) A ) B 
 					</isLessThan>
 					<isGreaterEqual property="start" compareValue="0">
+					<![CDATA[									
 						) N ) A 
 					WHERE 
-						ROWNUM_ BETWEEN #start# AND #end#
+						ROWNUM_ >= #start#
+					) B
+					WHERE 
+						ROWNUM_ <= #end#
+					]]>							
 					</isGreaterEqual>
 				</isEqual>
 				<isNotEqual property="isDocPrint" compareValue="TRUE">
-					) N ) A 
-				WHERE 
-					ROWNUM_ BETWEEN #start# AND #end#
+					<![CDATA[									
+						) N ) A 
+					WHERE 
+						ROWNUM_ >= #start#
+					) B
+					WHERE 
+						ROWNUM_ <= #end#
+					]]>	
 				</isNotEqual>
 			</isNotEmpty>
 			<isEmpty property="isDocPrint">
-				) N ) A 
-			WHERE 
-				ROWNUM_ BETWEEN #start# AND #end#
+					<![CDATA[									
+						) N ) A 
+					WHERE 
+						ROWNUM_ >= #start#
+					) B
+					WHERE 
+						ROWNUM_ <= #end#
+					]]>	
 			</isEmpty>
 	</select>
 	
@@ -15723,6 +15741,9 @@
 	</select>
 			
 	<select id="EzApprovalG.getCabinetList" parameterClass="ApprGCabinetListVO" resultClass="ApprGCabinetVO" remapResults="true">
+		SELECT
+			*
+		FROM (		
 		SELECT 
 			* 
 		FROM 
@@ -16030,24 +16051,39 @@
  		  	<isNotEmpty property="isDocPrint">
 				<isEqual property="isDocPrint" compareValue="TRUE">
 					<isLessThan property="start" compareValue="0">
-						) N ) A 
+						) N ) A ) B
 					</isLessThan>
 					<isGreaterEqual property="start" compareValue="0">
+					<![CDATA[
 						) N ) A 
 					WHERE 
-						ROWNUM_ BETWEEN #start# AND #end#
+						ROWNUM_ >= #start#
+					) B
+					WHERE
+						ROWNUM_ <= #end#
+					]]>						
 					</isGreaterEqual>
 				</isEqual>
 				<isNotEqual property="isDocPrint" compareValue="TRUE">
+				<![CDATA[
 					) N ) A 
 				WHERE 
-					ROWNUM_ BETWEEN #start# AND #end#
+					ROWNUM_ >= #start#
+				) B
+				WHERE
+					ROWNUM_ <= #end#
+				]]>	
 				</isNotEqual>
 			</isNotEmpty>
 			<isEmpty property="isDocPrint">
+			<![CDATA[
 				) N ) A 
 			WHERE 
-				ROWNUM_ BETWEEN #start# AND #end#
+				ROWNUM_ >= #start#
+			) B
+			WHERE
+				ROWNUM_ <= #end#
+			]]>	
 			</isEmpty>
 	</select>
 
