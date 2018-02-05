@@ -138,7 +138,6 @@ public class EzJournalGWController {
 		return result;
 	}
 	
-	
 	@RequestMapping(value = "/ezjournal/test", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public Object journalTest(HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W JOURNAL [GET /ezJournal/types] started.");
