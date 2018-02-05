@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezJournal.web;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -7,6 +8,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +52,14 @@ public class EzJournalSJYController {
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request);
 		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONArray companyList = (JSONArray) result.get("data");
+			
+			model.addAttribute("userInfo", userInfo);
+			model.addAttribute("companyList", companyList);
+		}
 		
 		logger.debug("formMain ended");
 		return "/admin/ezJournal/formMain";

@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezSchedule.t6000' /></title>
+		<title><spring:message code='ezJournal.t3' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">		    
 		    var companylist = "${companyList}";
+		    var companyId = "<c:out value='${userInfo.companyId}' />";
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -23,9 +24,10 @@
 		            return true;
 		    };
 			
-			window.onload = function () {
-				journal_get_formuse();
-			}
+			$(document).ready(function() {
+				$("#SCompID").val = companyId;
+				
+			});
 	
 			function journal_get_formuse() {			    
 			    $.ajax({
@@ -50,9 +52,6 @@
 		    		}
 		        });
 			}			
-		    function Cancel_Click() {
-		        window.location.reload(true);
-		    }
 		    function Change_Click() {	
 		    	var strtype = "";
 		    	for (var i = 0; i < 6; i++) {
@@ -77,6 +76,14 @@
 		    		}
 		        });
 		    }
+		    
+		    function selectCompanyID() {
+		        if (companyID != document.getElementById("SCompID").value) {
+		            companyID = document.getElementById("SCompID").value;
+	
+		            //getGroupTree(1, 1, 0, true);
+		        }
+		    }
 		</script>
 		<style>
 			.content td {
@@ -86,24 +93,46 @@
 	</head>
 	<body class="mainbody"> 
 		<h1><spring:message code='ezJournal.t3' /></h1>
-		<form id="Form1" method="post">
-			<div id="mainmenu">
-				<span><b><spring:message code = 'ezJournal.t11' /></b></span>
-	            <select id="ListCompany" onchange="journal_get_formruse()">
-	            	<option>
-	            </select>
-			</div>
-			<br/>
-			<table class="content" style="width: 260px; margin-left: 15px;">
-			</table>
-			<div class="btnposition" style="width: 260px">
-			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezSchedule.t4' /></span></a>
-			    <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code='ezSchedule.t5' /></span></a>
-			</div>
-		    <script type="text/javascript">
-		    	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-			</script>
-		</form>
+		<div id="mainmenu">
+			<span><b><spring:message code = 'ezJournal.t11' /></b>
+	            <select id="SCompID" name="SCompID" onchange="selectCompanyID()">
+	            	<c:forEach var="company" items="${companyList}">
+	            		<option value="<c:out value='${company.companyId}'/>"><c:out value='${company.companyName}'/></option>
+	            	</c:forEach>
+	            </select><br/><br/>
+            </span>
+            <ul>
+            	<li id="btnInsertForm"><span onclick=""><spring:message code='ezJournal.t17' /></span></li>
+            	<li id="btnModeForm"><span onclick=""><spring:message code='ezJournal.t18' /></span></li>
+            	<li id="btnDeleteForm"><span onclick=""><spring:message code='ezJournal.t19' /></span></li>
+            </ul>
+		</div>
+		
+		<table style="margin-top:5px;width:1005px;height:500px">
+			<tr>
+		    	<td rowspan="2" style="width:200px; vertical-align:top">
+					<div id="divFromTreeView" style="vertical-align:top; padding-top:5px; height:500px; width:100%; overflow-x:auto;overflow-y:auto;BORDER:#b6b6b6 1px solid; BACKGROUND-COLOR:#ffffff" ></div>
+				</td>
+		    	<td style="width:800px; padding-left:5px; padding-right:5px;vertical-align:top">
+			    	<div class="listview">
+			        	<div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 470px;overflow-x:auto;overflow-y:auto; padding:0px"  ></div>
+			    	</div>
+				</td>    
+		  	</tr>
+		    <tr>
+		    	<td style="padding-left:5px; padding-right:5px; padding-top:5px; vertical-align:top">
+		        	<table class="content">
+			            <tr>
+		            		<th><spring:message code = 'ezApprovalG.t1543' /></th>
+		              		<td id="descrip">&nbsp;</td>
+		            	</tr>
+		        	</table>
+		    	</td>
+		  	</tr>   
+		</table>
+	    <script type="text/javascript">
+	    	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		</script>
 	</body>
 </html>
 
