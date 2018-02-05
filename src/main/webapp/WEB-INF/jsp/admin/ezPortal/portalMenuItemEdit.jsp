@@ -141,7 +141,7 @@
 				alert("<spring:message code='ezPortal.t84'/>");
 				g_bSaved = true;
 				
-				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1";
+				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1&parentUID=203";
 			}
 		    
 			function removeNormalImage() {
@@ -245,7 +245,7 @@
 				
 				g_bSaved = true;
 				
-				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2";
+				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2&parentUID=203";
 			}
 			
 			function CheckDuplicate(paramname) {
@@ -284,7 +284,7 @@
 				
 				g_bSaved = true;
 				
-				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2";
+				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2&parentUID=203";
 			}
 			
 			function AddRight() {
@@ -320,7 +320,7 @@
 				
 				g_bSaved = true;
 				
-				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3";
+				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3&parentUID=203";
 			}
 		    var selecttarget_dialogArguments = new Array();
 			function SelectID() {
@@ -363,7 +363,7 @@
 				
 				g_bSaved = true;
 				
-				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3";
+				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3&parentUID=203";
 			}
 			
 			// 지정된 값인 경우에만 작성 가능하도록 설정

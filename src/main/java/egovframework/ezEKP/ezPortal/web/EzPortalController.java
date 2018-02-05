@@ -1127,7 +1127,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		Calendar cal = Calendar.getInstance();
 		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
 		
-		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo.getTenantId());
+		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo);
 		
 		if (result != null) {
 			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
@@ -1253,7 +1253,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		Calendar cal = Calendar.getInstance();
 		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
 		
-		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo.getTenantId());
+		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo);
 		
 		if (result != null) {
 			if (result.getFilePath() != null && !result.getFilePath().equals("")) {

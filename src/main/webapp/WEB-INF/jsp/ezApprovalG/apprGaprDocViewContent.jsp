@@ -8,7 +8,7 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script language="javascript" type="text/javascript">
 	        var XmlBodyATT = createXmlDom();
-	        document.onselectstart = function () { return false; };
+	        document.onselectstart = function () { return true; };
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();

@@ -492,7 +492,8 @@
 
 		                break;
 		        }
-		        DateChange(szCmd);
+		        //주보기, 일보기, 월보기 하는것.
+		        //DateChange(szCmd);
 
 		    }
 
