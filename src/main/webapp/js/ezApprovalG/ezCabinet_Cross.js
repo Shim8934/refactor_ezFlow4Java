@@ -985,7 +985,7 @@ function btnViewRecHistory_onclick() {
 
         viewrechistory_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewRecHistory_Cross", GetOpenWindowfeature(1015, 480));
+        var OpenWin = window.open(url, "ViewRecHistory_Cross", GetOpenWindowfeature(1017, 480));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -1517,7 +1517,7 @@ function SearchCabinet(pInitFlag) {
     searchcab_cross_dialogArguments[1] = SearchCabinet_Complete;
 
     if (pInitFlag == "0") {
-        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(800, 455));
+        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(815, 455));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {

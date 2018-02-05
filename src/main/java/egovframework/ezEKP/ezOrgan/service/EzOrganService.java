@@ -46,7 +46,7 @@ public interface EzOrganService {
 	
 	public String setProxyUserInfo(String userID, String proxyUserID, String proxyUserName, String proxyUserDeptID, String startDate, String endDate, int tenantID, String offset) throws Exception;
 	
-	public String getProxyUserInfo(String userID, int tenantID) throws Exception;
+	public String getProxyUserInfo(String userID, int tenantID, String offset) throws Exception;
 	
 	public String getLastLogin(String userID, int tenantID) throws Exception;
 	

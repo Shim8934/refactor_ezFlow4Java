@@ -40,8 +40,8 @@
 <!-- 	<layout visible="false">レイアウト</layout> -->
 <!-- 	<split/> -->
 <!-- 	<FullScreen visible="false">フルスクリーン</FullScreen> -->
-<!-- 	<split/> -->
-<!-- 	<about visible="false">製品情報</about> -->
+	<split/>
+	<about visible="true">製品情報</about>
 </menu1>
 <menu2>
 	<inserttable visible="true">表の挿入</inserttable>
