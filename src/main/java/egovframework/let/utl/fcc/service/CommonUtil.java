@@ -946,7 +946,7 @@ public class CommonUtil {
 	 */
 	public JSONObject getJsonFromRestApi(String resteUrl, Map<String, String> param,HttpServletRequest request){
 		logger.debug("getJsonFromRestApi started");
-		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String gwServerUrl = config.getProperty("config.journalGWServerURL");
 		String url = gwServerUrl + resteUrl ;
 				
 		HttpHeaders headers = new HttpHeaders();
