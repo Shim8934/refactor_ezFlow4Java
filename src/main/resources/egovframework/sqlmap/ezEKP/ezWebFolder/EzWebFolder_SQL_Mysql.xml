@@ -334,4 +334,41 @@
 		]]>
    </update>
    
+   
+   <select id="EzWebFolderDAO.getFileList" resultMap="fileVO" parameterClass="Map">   
+		<![CDATA[
+			SELECT 
+				FILE_ID 	,
+				FILE_NAME 	,
+				FILE_PATH	,
+				FILE_SIZE	,
+				TYPE_ID		,
+				DOWN_COUNT	,
+				FILE_EXT	,
+				FOLDER_ID	,
+				USE_STATUS 	,
+				CREATE_ID	,
+				CREATE_NAME1,
+				CREATE_NAME2,
+				CREATE_DATE	,
+				UPDATE_ID	,
+				UPDATE_DATE	,        	 
+				TENANT_ID		
+			FROM 
+				TBL_WEBFOLDER_FILE 
+			WHERE  
+				FILE_EXT  LIKE if(#searchExt# != '', CONCAT('%',#searchExt#,'%') ,FILE_EXT)
+			AND 
+				CREATE_NAME1 LIKE if(#searchCreateName# != '', CONCAT('%',#searchCreateName#,'%') , CREATE_NAME1)
+			AND 
+				TYPE_ID LIKE IF ( #searchFileType# != '',CONCAT('%',#searchFileType#,'%'), TYPE_ID)
+			AND 
+				FILE_NAME LIKE IF ( #searchFileName# != '',CONCAT('%',#searchFileName#,'%'), FILE_NAME)
+			AND 
+				FOLDER_ID = #folderId#
+			AND
+				TENANT_ID = #tenantId#	
+					
+		]]>				
+    </select>
 </sqlMap>

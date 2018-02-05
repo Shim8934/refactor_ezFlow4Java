@@ -148,7 +148,13 @@ function renderResult(result) {
 		alert(strErr);
 		return;
 	}
+	// to bao. 
+	// 바오씨 이거 내일 같이 얘기해야할거같아요 
+	// list뿌릴때는 jsonArr = result 가 필요한데 
+	// upload하려면 jsonArr = JSON.parse(result)가 있어야 해요 
+	// 안그러면 에러나요 
 	
+//	var jsonArr = result;
 	var jsonArr = JSON.parse(result);
 	var len = jsonArr.length;
 	var tblElmt = document.getElementById("tblFileList");
