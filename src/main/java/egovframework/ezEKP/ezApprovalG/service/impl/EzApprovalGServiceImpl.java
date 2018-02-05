@@ -11947,14 +11947,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //					if (rtn.toUpperCase().equals("FALSE")) {
 //						rtnVal = false;
 //					} else {
-	                    sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
+	                    sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(m).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
 //					}
 				}
 			}
 		}
 		
 		// 마지막 결재라인인 경우 || 더이상의 추가 작업이 필요없는 AprType인 경우. 문서를 종결
-		if (dlength < 1 || lastState.equals(staATAnHam) || lastState.equals(staATChamJo) || lastState.equals(staATGongram)) {
+		if ((dlength < 1 && !chamState.equals("017")) || lastState.equals(staATAnHam) || lastState.equals(staATChamJo) || lastState.equals(staATGongram)) {
 				if (!ingFlag.equals("END")) {
 					subSQL = doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo, curDocNum);
 					
