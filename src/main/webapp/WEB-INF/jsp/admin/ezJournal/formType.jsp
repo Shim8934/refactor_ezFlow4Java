@@ -38,6 +38,10 @@
 		<style>
 			.content td {
 				text-align: center;
+				width: 100px;
+			}
+			.content th{
+				width:50px;
 			}
 		</style>
 	</head>
@@ -57,29 +61,29 @@
 	            </select>
 			</div>
 			<br/>
-			<table class="content" style="width: 260px; margin-left: 15px;">
+			<table class="content" style="width: 400px; margin-left: 15px;">
 			    <tr>
-			        <th style="text-align: center;" width="100px"><spring:message code='ezJournal.t12' /></th>
-			        <th style="text-align: center;" width="80px"><spring:message code='ezJournal.t13' /></th>
-			        <th style="text-align: center;" width="80px"><spring:message code='ezJournal.t14' /></th>
+			        <th style="text-align: center; width:250px;"><spring:message code='ezJournal.t12' /></th>
+			        <th style="text-align: center; width:50px;"><spring:message code='ezJournal.t13' /></th>
+			        <th style="text-align: center; width:50px;"><spring:message code='ezJournal.t14' /></th>
 			    </tr>
 			    <c:forEach items="${typeList }" var="type">
 			    <tr>
-			    	<td style="text-align: center;" width="100px"><spring:message code="${type.journaltypeId }" /></td>
+			    	<td style="text-align: center;"><spring:message code="${type.journaltypeId }" /></td>
 			    	<c:choose>
 				    	<c:when test="${type.journalUse eq 'use'}">
-					    	<td style="text-align: center;" width="100px">
+					    	<td style="text-align: center;">
 					    	<input type="radio" name="${type.journaltypeId }" value="use" checked/>
 					    	</td>
-					    	<td style="text-align: center;" width="100px">
+					    	<td style="text-align: center;">
 					    	<input type="radio" name="${type.journaltypeId }" value="no"/>
 					    	</td>
 				    	</c:when>
 				    	<c:otherwise>
-					    	<td style="text-align: center;" width="100px">
+					    	<td style="text-align: center;">
 					    	<input type="radio" name="${type.journaltypeId }" value="use" />
 					    	</td>
-					    	<td style="text-align: center;" width="100px">
+					    	<td style="text-align: center;">
 					    	<input type="radio" name="${type.journaltypeId }" value="no" checked/>
 					    	</td>
 				    	</c:otherwise>

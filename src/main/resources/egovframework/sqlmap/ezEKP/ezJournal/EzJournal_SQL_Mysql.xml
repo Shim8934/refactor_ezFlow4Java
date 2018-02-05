@@ -202,4 +202,8 @@
 		and d.extensionattribute2=d.CN
 		order by DEPTLEVEL
 	</select>
+	
+	<select id="selectAuthorList" parameterClass="Map">
+		
+	</select>
 </sqlMap>

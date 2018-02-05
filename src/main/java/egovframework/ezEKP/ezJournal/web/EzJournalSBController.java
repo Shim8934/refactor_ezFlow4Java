@@ -60,7 +60,7 @@ public class EzJournalSBController {
 		param.put("userId", userInfo.getId());
 		param.put("tenantId", userInfo.getTenantId()+"");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/companies", param, request,"get");
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/companies", param, request,"get",null);
 		String status = resultBody.get("status").toString();
 			
 		if (status.equals("ok")) {			
@@ -73,7 +73,7 @@ public class EzJournalSBController {
 		param.put("companyId",companyId );
 		param.put("tenantId", userInfo.getTenantId()+"");
 		
-		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", param, request,"get");
+		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", param, request,"get",null);
 		status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {		
@@ -96,24 +96,72 @@ public class EzJournalSBController {
 		
 		JSONObject parameter = new JSONObject();
 		parameter.put("companyId", request.getParameter("companyId"));
-		parameter.put("tenantId",userInfo.getTenantId());
+		parameter.put("tenantId",userInfo.getTenantId()+"");
 		
 		Map<String, String[]> paramMap = request.getParameterMap();
 		JSONArray journaltypeList = new JSONArray();
 		for(String key : paramMap.keySet()){
 			if (key.contains("ezJournal")) {
 				JSONObject type = new JSONObject();
-				type.put("journaltypeId", key);
-				type.put("journalUse", parameter.get(key));
+				type.put("typeId", key);
+				type.put("used", paramMap.get(key)[0]);
 				journaltypeList.add(type);
 			}
 		}
 		parameter.put("journaltypeList", journaltypeList);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", parameter, request,"put");
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", null, request,"put",parameter);
 		
 		logger.debug("formTypeUpdate ended");
 		
 		return resultBody;
+	}
+	
+	
+	/**
+	 * 관리자 열람 권한 관리
+	 */
+	@RequestMapping(value = "/admin/ezJournal/author.do")
+	public String authorMain(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+		logger.debug("authorMain started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		HashMap<String, String> param = new HashMap<String, String>();
+		String companyId =null;
+		if (request.getParameter("companyId") != null) {
+			companyId = request.getParameter("companyId");
+		} else{
+			companyId = userInfo.getCompanyID();
+		}
+		
+		param.put("companyId",companyId);
+		param.put("userId", userInfo.getId());
+		param.put("tenantId", userInfo.getTenantId()+"");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/companies", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+			
+		if (status.equals("ok")) {			
+			JSONArray compList = (JSONArray) resultBody.get("data");
+			model.addAttribute("compList", compList);
+		}
+		
+		param.clear();
+		
+		param.put("companyId",companyId );
+		param.put("tenantId", userInfo.getTenantId()+"");
+		
+		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", param, request,"get",null);
+		status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {		
+			JSONArray typeList = (JSONArray) resultBody.get("data");
+			model.addAttribute("typeList", typeList);
+		}
+		
+		logger.debug("authorMain ended");
+		
+		return null;
 	}
 }

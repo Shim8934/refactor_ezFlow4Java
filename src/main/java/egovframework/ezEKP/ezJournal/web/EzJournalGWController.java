@@ -81,7 +81,6 @@ public class EzJournalGWController {
 		@SuppressWarnings("unchecked")
 		ArrayList<Map<String, String>> journaltypeList = (ArrayList<Map<String, String>>) jsonParam.get("journaltypeList");
 		
-		
 		try {
 			ezJournalService.updateJournaltype(journaltypeList, companyId, tenantId);
 			
