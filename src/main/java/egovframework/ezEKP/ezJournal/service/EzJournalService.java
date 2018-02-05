@@ -80,8 +80,9 @@ public interface EzJournalService {
 	 * 회사 리스트 가져오기
 	 * @param userId
 	 * @param tenantId
+	 * @param companyId 
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalCompanyVO> getCompanyList (String userId,String tenantId) throws Exception;
+	public List<JournalCompanyVO> getCompanyList (String userId,String tenantId, String companyId) throws Exception;
 }

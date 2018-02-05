@@ -158,11 +158,12 @@ public class EzJournalServiceImpl implements EzJournalService{
 
 	@Override
 	public List<JournalCompanyVO> getCompanyList(String userId,
-			String tenantId) throws Exception {
+			String tenantId,String companyId) throws Exception {
 		logger.debug("getCompanyList started");
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
+		param.put("companyId", companyId);
 		List<JournalCompanyVO> compList = ezJournalDAO.getCompanyList(param);
 		logger.debug("getCompanyList ended");
 		return compList;
