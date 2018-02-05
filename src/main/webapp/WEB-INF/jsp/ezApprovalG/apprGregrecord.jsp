@@ -316,12 +316,12 @@
 
             if (Val == 5) {
                 if (CrossYN())
-                    window.resizeTo(880, 780);
+                    window.resizeTo(1009, 780);
                 InitAVTypeTD(g_NodesPhotoAVType, tdAVType, "");
             }
             else if (Val == 6) {
                 if (CrossYN())
-                    window.resizeTo(880, 810);
+                    window.resizeTo(1009, 810);
                 InitAVTypeTD(g_NodesRcdgAVType, tdAVType, "");
             }
         }
@@ -333,7 +333,7 @@
             if (Val == "1" || Val == "3" || Val == "5" || Val == "6")
             {
                 if (CrossYN())
-                    window.resizeTo(880, 710);
+                    window.resizeTo(1009, 710);
 
                 trDeliveryNo.style.display = "none";
                 trOriginSN.style.display = "none";
@@ -342,7 +342,7 @@
             else if (Val == "2" || Val == "4")
             {
                 if (CrossYN())
-                    window.resizeTo(880, 710);
+                    window.resizeTo(1009, 710);
 
                 trDeliveryNo.style.display = "";
                 trOriginSN.style.display = "";
@@ -350,7 +350,7 @@
             }
             else {
                 if (CrossYN())
-                    window.resizeTo(880, 720);
+                    window.resizeTo(1009, 720);
 
                 trDeliveryNo.style.display = "";
                 trOriginSN.style.display = "";
