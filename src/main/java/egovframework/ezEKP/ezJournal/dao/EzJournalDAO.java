@@ -103,6 +103,6 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Map<String, String>> getCompanyList(Map<String, String> map){
-		return (List<Map<String, String>>) select("selectCompanyList",map);
+		return (List<Map<String, String>>) list("selectCompanyList", map);
 	}
 }

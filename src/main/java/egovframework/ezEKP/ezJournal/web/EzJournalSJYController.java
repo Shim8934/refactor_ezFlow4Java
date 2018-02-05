@@ -1,10 +1,13 @@
 package egovframework.ezEKP.ezJournal.web;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +34,21 @@ public class EzJournalSJYController {
 	 * 관리자 업무일지 양식리스트 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezJournal/form.do")
-	public String formMain(HttpServletRequest req, ModelMap model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp) throws Exception {
+	public String formMain(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse response) throws Exception {
 		logger.debug("formMain started");
 		
 		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("tenantId", tenantId);
+		
+		String restUrl = "/ezjournal/companies";
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request);
 		
 		
 		logger.debug("formMain ended");
