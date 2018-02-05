@@ -64,7 +64,7 @@
 	<body class="popup">
 		<h1><spring:message code = 'ezApprovalG.t808' /></h1>
 		<div id="close"><ul><li><span onClick="window.close()"><spring:message code = 'ezApprovalG.t64' /></span></li></ul></div>
-		<div class="listview" style="overflow:hidden">
+		<div class="listview" style="overflow:hidden; width: 818px;">
 			<div id="lvAprLine" style="border:0;HEIGHT: 240px; WIDTH: 818px;overflow:auto;" ></div>
 		</div>
 	</body>
