@@ -14463,7 +14463,7 @@
 	
 	<select id="EzApprovalG.selectGongRamDocID" parameterClass="Map" resultClass="String">
 		SELECT 
-			DOCID 
+			DISTINCT DOCID 
         FROM 
         	TBL_APRLINEINFO 
         WHERE  
