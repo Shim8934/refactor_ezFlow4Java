@@ -1451,7 +1451,7 @@
 						<tr>
 							<td><a class="imgbtn"><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></a></td>
 						</tr>
-						<tr>
+						<tr style="display:none">
 							<td><a class="imgbtn" id="usermenu2"><span onClick="del_user()"><spring:message code='ezOrgan.t85' /></span></a></td>
 						</tr>
 						<tr>
