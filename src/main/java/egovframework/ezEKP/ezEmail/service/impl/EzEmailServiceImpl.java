@@ -1035,12 +1035,13 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 
 	@Override
-	public String checkIndividualAlias(String individualAlias) throws Exception {
+	public String checkIndividualAlias(String individualAlias,int  tenantId) throws Exception {
 		logger.debug("checkIndividualAlias started. individualAlias=" + individualAlias);
 		
 		String returnValue = "ERROR";
 		
 		String inputParams = "individualAlias=" + URLEncoder.encode(individualAlias, "UTF-8");
+		inputParams += "&tenantId=" + tenantId;
 		logger.debug("inputParams=" + inputParams);
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/checkIndividualAlias";
