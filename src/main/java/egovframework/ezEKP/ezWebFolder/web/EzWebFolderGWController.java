@@ -625,6 +625,43 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		ezWebFolderAdminService.insertFileLog(fileLog);
 	}
 	
+	@RequestMapping(value="/webfolder/file-rename/fileid/{fileid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject fileRename(@PathVariable(value="fileid") String fileId, HttpServletRequest request) {
+		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		String userId	    = request.getParameter("userId")   != null ? request.getParameter("userId")                     : "";
+		String userName1    = request.getParameter("userName1")!= null ? request.getParameter("userName1")                  : "";
+		String userName2    = request.getParameter("userName2")!= null ? request.getParameter("userName2")                  : "";	
+		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
+		String newName 		= request.getParameter("newName")  != null ? request.getParameter("newName") 					: "";
+		JSONObject result   = new JSONObject();
+		
+		if (fileId.equals("") || newName.equals("") || tenantId == -1 || offset.equals("") || userId.equals("") || userName1.equals("") || userName2.equals("") || companyId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
+			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+			String fileExt = fileVO.getFileExt();
+			ezWebFolderService.updateFileName(fileId, newName + "." + fileExt, tenantId);			
+			saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+		} 
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+		}
+		
+		return result;
+	}
+	
+	
 	private String getWebFolderDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
 	}

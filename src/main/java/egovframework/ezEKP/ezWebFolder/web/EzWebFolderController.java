@@ -1,34 +1,16 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.Reader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-import java.util.Map;
-import java.io.InputStreamReader;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -40,27 +22,21 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.HttpMessageConverterExtractor;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -263,10 +239,10 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("fileList", listFileId);
 		
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		
-		RestTemplate rest          		= new RestTemplate();
+		HttpEntity<?> entity = new HttpEntity<>(headers);		
+		RestTemplate rest    = new RestTemplate();
 		
 		rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
 				
@@ -291,48 +267,30 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezWebFolder/renameFile.do", method = RequestMethod.POST)	
 	public void renameFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("Rename File is running!");	
-		LoginVO user = commonUtil.userInfo(loginCookie);
-		String offset = user.getOffset();
-		String fileId = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
-		String newName = request.getParameter("newName") != null ? request.getParameter("newName") : "";
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();	
-		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), user.getOffset(), true);
+		logger.debug("Rename File is running!");
+		LoginVO user 		= commonUtil.userInfo(loginCookie);
+		String fileId   	= request.getParameter("fileId");
+		String newName 		= request.getParameter("newName");
+		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
+		String url          = gwServerUrl + "/webfolder/file-rename/fileid/" + fileId;
 		
-		if (fileId.equals("")) {
-			logger.debug("File Rename Confirm illegal arguments!");
-			return;
-		}
+
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", user.getTenantId())
+										.queryParam("offset", user.getOffset())
+										.queryParam("userId", user.getId())
+										.queryParam("userName1", user.getDisplayName1())
+										.queryParam("userName2", user.getDisplayName2())
+										.queryParam("companyId", user.getCompanyID())
+										.queryParam("newName", newName);
+										
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		
-		//Update file in database
-		try {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, user.getTenantId());
-			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), user.getTenantId());
-			String fileExt = fileVO.getFileExt();
-			ezWebFolderService.updateFileName(fileId, newName + "." + fileExt, user.getTenantId());
-			
-			//Save log to database
-			FileLogVO fileLog = new FileLogVO();			
-			
-			fileLog.setLogType("U");
-			fileLog.setCompanyId(user.getCompanyID());
-			fileLog.setCreateDate(timeUTC);
-			fileLog.setCreateId(user.getId());
-			fileLog.setCreateName1(user.getDisplayName1());
-			fileLog.setCreateName2(user.getDisplayName2());
-			fileLog.setFileName(fileVO.getFileName());
-			fileLog.setFileSize(fileVO.getFileSize());
-			fileLog.setFileExt(fileVO.getFileExt());
-			fileLog.setFileType(fileType.getTypeName());
-			fileLog.setLogId(getMaxLogID(user.getTenantId()));
-			fileLog.setTenantId(user.getTenantId());
-			
-			ezWebFolderAdminService.insertFileLog(fileLog);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		HttpEntity<?> entity = new HttpEntity<>(headers);		
+		RestTemplate rest    = new RestTemplate();
+		
+		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 		
 		logger.debug("Rename File finishes!");		
 	}
