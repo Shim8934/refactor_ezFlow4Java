@@ -985,7 +985,7 @@ function btnViewRecHistory_onclick() {
 
         viewrechistory_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewRecHistory_Cross", GetOpenWindowfeature(1015, 480));
+        var OpenWin = window.open(url, "ViewRecHistory_Cross", GetOpenWindowfeature(1017, 480));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
