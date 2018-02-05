@@ -148,7 +148,9 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
         } 
     }
     Content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + Approv_a + Content +"</td></tr></table>";
-
+    
+    console.log("Approv_a  : "+Approv_a)
+    
     try {
         var Result = "";
         $.ajax({

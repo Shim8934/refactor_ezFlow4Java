@@ -85,8 +85,6 @@
     		$(function () {
     			var xmldoc = loadXMLString('${strXML}');
     			
-    			console.log(xmldoc);
-    			
     			var listXML = '';
     			
     			for (var i = 0; i < SelectNodes(xmldoc,"NODES/NODE").length; i++) {

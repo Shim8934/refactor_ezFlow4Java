@@ -268,7 +268,7 @@
     </table>
 
 
-    <div class="btnposition">
+    <div class="btnposition btnpositionNew">
         <a class="imgbtn" id="reset" onclick="return reset_onclick()"><span><spring:message code='ezApprovalG.t621'/></span></a>
         <a class="imgbtn" id="Submit22223" onclick="return btnSearch_onclick()"><span><spring:message code='ezApprovalG.t111'/></span></a>
         <a class="imgbtn" id="btnClose" name="Submit22223" onclick="return btnCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>

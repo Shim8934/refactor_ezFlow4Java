@@ -527,7 +527,7 @@
 		    <div id= "lvList" style="overflow:auto;border:0;Width:698px; Height:225px; font-size:9pt;"></div>
 		</div>
 		
-		<div class="btnposition" >
+		<div class="btnposition btnpositionNew" >
 		<a class="imgbtn"><span onclick = "return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
 		<a class="imgbtn"><span onclick = "return btnClose_onclick()"> <spring:message code='ezApprovalG.t119'/></span></a>
 		</div>

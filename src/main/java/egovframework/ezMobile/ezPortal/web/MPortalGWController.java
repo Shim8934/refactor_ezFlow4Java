@@ -253,7 +253,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				String tempSDate = nowDate.substring(0, 10) + " 00:00:00";
 				String tempEDate = nowDate.substring(0, 10) + " 23:59:59";
 				
-				List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "");
+				List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "", "", "");
 				
 				for (ScheduleInfoVO scheduleInfoVO : schList) {
 					MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();

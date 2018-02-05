@@ -158,6 +158,8 @@ var strLang271 = "请选择要删除的附件。"
 var strLang272 = "结束时间比今天时间早。";
 var strLang273 = "某些部门可以注册一个部门经理，公司经理。";
 var strLang274 = "公司可以注册只有某些公司经理。";
+/*2018.02.01*/
+var strLang275 = "반복 일정은 시작시간을 현재시간 이전으로 등록할 수 없습니다.";
 var strLang535 = "沒有數據。";
 
 var strLang1000 = "Can not insert company schedule.";
