@@ -1,27 +1,24 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
-import java.io.File;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import java.io.Reader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import java.util.Map;
+import java.io.InputStreamReader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,59 +27,39 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.compress.utils.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.ResourceHttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
-import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
-import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.ClassUtils;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.HttpMessageConverterExtractor;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -215,124 +192,42 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Download attach is running!");
 		
-		LoginVO user = commonUtil.userInfo(loginCookie);	
-		String offset = user.getOffset();
-		String listFileId = request.getParameter("fileList");	
-		String[] fileIDList = listFileId.split(",");
+		LoginVO user        = commonUtil.userInfo(loginCookie);		
+		String listFileId   = request.getParameter("fileList");				
+		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
+		String url          = gwServerUrl + "/webfolder/filemanage/filedownload";
+
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", user.getTenantId())
+										.queryParam("offset", user.getOffset())
+										.queryParam("userId", user.getId())
+										.queryParam("userName1", user.getDisplayName1())
+										.queryParam("userName2", user.getDisplayName2())
+										.queryParam("companyId", user.getCompanyID())
+										.queryParam("fileList", listFileId);
 		
-		logger.debug("FileList: " + fileIDList.toString());
-		
-		//webfolder/filemanage/filedownload
-		
-		
-		/*LoginVO user = commonUtil.userInfo(loginCookie);	
-		String offset = user.getOffset();
-		String listFileId = request.getParameter("fileList");	
-		String[] fileIDList = listFileId.split(",");
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();	
-		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), user.getOffset(), true);
-		
-		if (fileIDList.length <= 0) {
-			logger.debug("downloadAttach illegal arguments!");
-			return;
-		}		
-		
-        //Get absolute path of the application       
-        String realPath = request.getServletContext().getRealPath("");
-        String guid = UUID.randomUUID().toString();
-        String fileName = guid + ".zip";
-		
-		if (fileIDList.length > 1) {
-			ZipOutputStream zipOutputStream = null;
-			FileInputStream fileInputStream = null;
+		RestTemplate rest          		= new RestTemplate();		
+		RequestCallback requestCallback = req -> req.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
+
+		// Streams the response instead of loading it all in memory
+		ResponseExtractor<Void> responseExtractor = res -> {
+
+			response.setHeader("Content-Type", "application/zip");
+			response.setHeader("Content-Disposition", res.getHeaders().get("Content-Disposition").get(0));
 			
-			try {
-				//Setting headers  
-			    response.setStatus(HttpServletResponse.SC_OK);
-			    response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");	
-			    zipOutputStream = new ZipOutputStream(response.getOutputStream());
-			    
-			    //Package files
-			    for (int i = 0; i < fileIDList.length; i++) {
-			    	//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
-			    	FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, user.getTenantId());
-			    	FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), user.getTenantId());
-			    	File file = new File(realPath + fileVO.getFilePath());
-			        zipOutputStream.putNextEntry(new ZipEntry(fileVO.getFileName()));
-			        fileInputStream = new FileInputStream(file);
-		
-			        IOUtils.copy(fileInputStream, zipOutputStream);
-		
-			        fileInputStream.close();
-			        zipOutputStream.closeEntry();
-			        
-					//Save log to database
-					FileLogVO fileLog = new FileLogVO();
-					
-					fileLog.setLogType("D");
-					fileLog.setCompanyId(user.getCompanyID());
-					fileLog.setCreateDate(timeUTC);
-					fileLog.setCreateId(user.getId());
-					fileLog.setCreateName1(user.getDisplayName1());
-					fileLog.setCreateName2(user.getDisplayName2());
-					fileLog.setFileName(fileVO.getFileName());
-					fileLog.setFileSize(fileVO.getFileSize());
-					fileLog.setFileExt(fileVO.getFileExt());
-					fileLog.setFileType(fileType.getTypeName());
-					fileLog.setLogId(getMaxLogID(user.getTenantId()));
-					fileLog.setTenantId(user.getTenantId());
-					
-					ezWebFolderAdminService.insertFileLog(fileLog);
-			    }
-		
-			    zipOutputStream.close();
-			}
-			catch (Exception e) {
-				throw e;			
-			} 
-			finally {
-				if (fileInputStream != null) {
-					try { fileInputStream.close(); } catch (Exception e) {}
-				}
-				
-				if (zipOutputStream != null) {
-					try { zipOutputStream.closeEntry(); } catch (Exception e) {}
-					try { zipOutputStream.close(); } catch (Exception e) {}
-				}			
-			}
-		}		
-		else if (fileIDList.length == 1) {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[0], offset, user.getTenantId());
-			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), user.getTenantId());
-			String _fileName = fileVO.getFileName();
-			String _filePath = realPath + fileVO.getFilePath();
+			IOUtils.copy(res.getBody(), response.getOutputStream());
 			
-			downFile(request, response, _filePath, _fileName);			
+		    response.getOutputStream().flush();
+		    response.getOutputStream().close();
 			
-			//Save log to database
-			FileLogVO fileLog = new FileLogVO();
-			
-			fileLog.setLogType("D");
-			fileLog.setCompanyId(user.getCompanyID());
-			fileLog.setCreateDate(timeUTC);
-			fileLog.setCreateId(user.getId());
-			fileLog.setCreateName1(user.getDisplayName1());
-			fileLog.setCreateName2(user.getDisplayName2());
-			fileLog.setFileName(_fileName);
-			fileLog.setFileSize(fileVO.getFileSize());
-			fileLog.setFileExt(fileVO.getFileExt());
-			fileLog.setFileType(fileType.getTypeName());
-			fileLog.setLogId(getMaxLogID(user.getTenantId()));
-			fileLog.setTenantId(user.getTenantId());
-			
-			ezWebFolderAdminService.insertFileLog(fileLog);
-		}*/
+			return null;
+		};
 		
-		
-		logger.debug("Download attach finishes!");	
-	}
-	
+		rest.execute(builder.build().encode().toUri(), HttpMethod.GET, requestCallback, responseExtractor);
+
+		logger.debug("Download attach finishes!");
+	}	
+
 	@RequestMapping(value="/ezWebFolder/deleteConfirm.do")
 	public String deleteFileConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("Delete File Confirm is running!");		

@@ -1,41 +1,35 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Base64.Decoder;
-
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
@@ -45,7 +39,6 @@ import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @SuppressWarnings("unchecked")
@@ -471,7 +464,152 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		
 		return result;
 	}	
-	
+		
+	@RequestMapping(value = "/webfolder/filemanage/filedownload", method=RequestMethod.GET, produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	public void fileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
+		String listFileId   = request.getParameter("fileList") != null ? request.getParameter("fileList")                   : "";
+		String userId	    = request.getParameter("userId")   != null ? request.getParameter("userId")                     : "";
+		String userName1    = request.getParameter("userName1")!= null ? request.getParameter("userName1")                  : "";
+		String userName2    = request.getParameter("userName2")!= null ? request.getParameter("userName2")                  : "";	
+		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
+		String[] fileIDList = listFileId.split(",");		
+		
+		logger.debug("FileList: " + listFileId);
+		
+		if (fileIDList.length <= 0) {
+			logger.debug("downloadAttach illegal arguments!");
+			return;
+		}
+
+		//Get absolute path of the application       
+        String realPath = request.getServletContext().getRealPath("");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();	
+		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		
+		if (fileIDList.length == 1) {			
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[0], offset, tenantId);
+			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+			String _fileName = fileVO.getFileName();		
+			File file = new File(realPath + fileVO.getFilePath());
+			
+			//downFile(request, response, _filePath, _fileName);
+			BufferedInputStream in = null;
+			
+			try {
+		    	
+		    	in = new BufferedInputStream(new FileInputStream(file));
+		    	
+	    	    String mimetype = "application/octet-stream";	
+
+	    	    response.setBufferSize(BUFF_SIZE);	    	    
+				response.setContentType(mimetype);
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");				
+
+				response.setContentLength((int)file.length());
+
+				FileCopyUtils.copy(in, response.getOutputStream());
+		    }
+		    finally {
+				if (in != null) {
+				    try {
+				    	in.close();
+				    } catch (Exception ignore) {
+				    	logger.debug("IGNORED: {}", ignore.getMessage());
+				    }
+				}
+		    }
+		    
+		    response.getOutputStream().flush();
+		    response.getOutputStream().close();			
+			
+			//Save log to database
+			FileLogVO fileLog = new FileLogVO();
+			
+			fileLog.setLogType("D");
+			fileLog.setCompanyId(companyId);
+			fileLog.setCreateDate(timeUTC);
+			fileLog.setCreateId(userId);
+			fileLog.setCreateName1(userName1);
+			fileLog.setCreateName2(userName2);
+			fileLog.setFileName(_fileName);
+			fileLog.setFileSize(fileVO.getFileSize());
+			fileLog.setFileExt(fileVO.getFileExt());
+			fileLog.setFileType(fileType.getTypeName());
+			fileLog.setLogId(getMaxLogID(tenantId));
+			fileLog.setTenantId(tenantId);
+			
+			ezWebFolderAdminService.insertFileLog(fileLog);
+		}		
+		else {		
+	        String guid = UUID.randomUUID().toString();
+	        String fileName = guid + ".zip";
+			ZipOutputStream zipOutputStream = null;
+			FileInputStream fileInputStream = null;
+			
+			try {
+				//Setting headers  
+			    response.setStatus(HttpServletResponse.SC_OK);
+			    response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");	
+			    zipOutputStream = new ZipOutputStream(response.getOutputStream());
+			    
+			    //Package files
+			    for (int i = 0; i < fileIDList.length; i++) {
+			    	//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
+			    	FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
+			    	FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+			    	File file = new File(realPath + fileVO.getFilePath());
+			        zipOutputStream.putNextEntry(new ZipEntry(fileVO.getFileName()));
+			        fileInputStream = new FileInputStream(file);
+		
+			        IOUtils.copy(fileInputStream, zipOutputStream);
+		
+			        fileInputStream.close();
+			        zipOutputStream.closeEntry();
+			        
+					//Save log to database
+					FileLogVO fileLog = new FileLogVO();
+					
+					fileLog.setLogType("D");
+					fileLog.setCompanyId(companyId);
+					fileLog.setCreateDate(timeUTC);
+					fileLog.setCreateId(userId);
+					fileLog.setCreateName1(userName1);
+					fileLog.setCreateName2(userName2);
+					fileLog.setFileName(fileVO.getFileName());
+					fileLog.setFileSize(fileVO.getFileSize());
+					fileLog.setFileExt(fileVO.getFileExt());
+					fileLog.setFileType(fileType.getTypeName());
+					fileLog.setLogId(getMaxLogID(tenantId));
+					fileLog.setTenantId(tenantId);
+					
+					ezWebFolderAdminService.insertFileLog(fileLog);
+			    }
+		
+			    zipOutputStream.close();
+			}
+			catch (Exception e) {
+				throw e;			
+			} 
+			finally {
+				if (fileInputStream != null) {
+					try { fileInputStream.close(); } catch (Exception e) {}
+				}
+				
+				if (zipOutputStream != null) {
+					try { zipOutputStream.closeEntry(); } catch (Exception e) {}
+					try { zipOutputStream.close(); } catch (Exception e) {}
+				}			
+			}
+			
+		}
+		
+		logger.debug("File Download Finish!");
+		return;
+	}	
+		
 	private String getWebFolderDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
 	}
@@ -517,48 +655,5 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 
 		return Integer.toString(currentMaxLogId);
 	}
-	
-	private void writeUploadFile(String bytearray, String newName, String stordFilePath) throws Exception {    	   	
-		InputStream stream = null;
-		OutputStream bos = null;
-		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
-		
-		try {
-		    File cFile = new File(stordFilePathReal);
-	
-		    if (!cFile.isDirectory()) {
-				boolean _flag = cFile.mkdirs();
-				if (!_flag) {
-				    throw new IOException("Directory creation Failed ");
-				}
-		    }
-	
-		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
-		    Decoder decoder = Base64.getDecoder();
 
-		    bos.write(decoder.decode(bytearray));
-
-		} catch (FileNotFoundException fnfe) {
-			logger.debug("fnfe: {}", fnfe);
-		} catch (IOException ioe) {
-			logger.debug("ioe: {}", ioe);
-		} catch (Exception e) {
-			logger.debug("e: {}", e);
-		} finally {
-		    if (bos != null) {
-				try {
-				    bos.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		    if (stream != null) {
-				try {
-				    stream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		}
-    }
 }
