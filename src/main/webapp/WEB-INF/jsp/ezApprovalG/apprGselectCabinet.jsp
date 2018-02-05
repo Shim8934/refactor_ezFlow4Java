@@ -576,6 +576,9 @@
 		                    <tr id="trCreateCabDummy" style="display: none">
 		                        <td></td>
 		                    </tr>
+		                    <tr style="height:2px;">
+		                    	<td></td>
+		                    </tr>
 	                	</c:if>
 	                    <tr>
 	                        <td>
