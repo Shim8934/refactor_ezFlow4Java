@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -102,7 +103,9 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Map<String, String>> getCompanyList(Map<String, String> map){
-		return (List<Map<String, String>>) list("selectCompanyList", map);
+	public List<JournalCompanyVO> getCompanyList(Map<String, String> map){
+		System.out.println("다오 들어와요?");
+		System.out.println("맵보자"+map.get("userId"));
+		return (List<JournalCompanyVO>) list("selectCompanyList",map);
 	}
 }

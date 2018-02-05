@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 
@@ -81,5 +82,5 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> getCompanyList (String userId,String tenantId) throws Exception;
+	public List<JournalCompanyVO> getCompanyList (String userId,String tenantId) throws Exception;
 }

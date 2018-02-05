@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
+import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezMobile.ezApprovalG.web.MApprovalGGWController;
@@ -706,7 +707,7 @@ public class EzJournalGWController {
 		String tenantId = request.getParameter("tenantId");
 		
 		try {
-			List<Map<String,String>> compList = ezJournalService.getCompanyList(userId, tenantId);
+			List<JournalCompanyVO> compList = ezJournalService.getCompanyList(userId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
