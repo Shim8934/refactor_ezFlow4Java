@@ -6,6 +6,8 @@
 	<typeAlias alias="JournaltypeVO" type="egovframework.ezEKP.ezJournal.vo.JournaltypeVO"/>
 	
 	<typeAlias alias="JournalFormInfoVO" type="egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO"/>
+	
+	<typeAlias alias="companyVO" type="egovframework.ezEKP.ezJournal.vo.JournalCompanyVO"/>
 
 	<resultMap class="JournaltypeVO" id="JournaltypeMap">
 		<result property="journaltypeId" 	column="type_id" columnIndex="1"/>
@@ -180,7 +182,7 @@
 	</select>
 	
 	<!-- 회사 리스트를 가져오는 쿼리 -->
-	<select id="selectCompanyList" resultClass="Map" parameterClass="Map">
+	<select id="selectCompanyList" resultClass="companyVO" parameterClass="Map">
 		select d.CN as companyId,
 		d.displayname as companyName
 		from jmocha.tbl_deptmaster d
@@ -191,6 +193,6 @@
 		and (((substr(u.EXTENSIONATTRIBUTE1,3,1)=0 and d.extensionattribute2=u.PHYSICALDELIVERYOFFICENAME))
 		or (substr(u.EXTENSIONATTRIBUTE1,3,1)=1))
 		and d.extensionattribute2=d.CN
-		order by DEPTLEVEL; 
+		order by DEPTLEVEL
 	</select>
 </sqlMap>
