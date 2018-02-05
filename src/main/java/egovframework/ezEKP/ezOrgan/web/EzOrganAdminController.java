@@ -2431,10 +2431,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 				return returnValue;
 			}
+			int tenantId = userInfo.getTenantId();
 			
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String mail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
-			returnValue = ezEmailService.checkIndividualAlias(mail);
+			returnValue = ezEmailService.checkIndividualAlias(mail,tenantId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
