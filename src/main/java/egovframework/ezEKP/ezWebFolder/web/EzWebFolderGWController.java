@@ -11,11 +11,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -32,9 +30,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
@@ -58,6 +57,9 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzWebFolderService")
 	private EzWebFolderService ezWebFolderService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderGWController.class);
 	
@@ -85,7 +87,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/webfolderadmin/basicstorage/{newValue}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject changeBasicStorage(@PathVariable String newValue, HttpServletRequest request) {	
+	public JSONObject putChangeBasicStorage(@PathVariable String newValue, HttpServletRequest request) {	
 		int tenantId         = Integer.parseInt(request.getParameter("tenantId"));
 		String uploadLimit   = request.getParameter("uploadLimit");
 		String companyId     = request.getParameter("companyId");
@@ -178,7 +180,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/webfolderadmin/basicstorage/{newValue}/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject changePersonalStorage(@PathVariable String newValue, @RequestParam("userList") List<String> userList, HttpServletRequest request) {	
+	public JSONObject putChangePersonalStorage(@PathVariable String newValue, @RequestParam("userList") List<String> userList, HttpServletRequest request) {	
 		int tenantId         = Integer.parseInt(request.getParameter("tenantId"));		
 		String companyId     = request.getParameter("companyId");
 		logger.debug("New Value: " + newValue + " || tenantId: " + tenantId);	
@@ -203,7 +205,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/webfolderadmin/storagereset/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject resetPersonalStorage(@RequestParam("userList") List<String> userList, HttpServletRequest request) {	
+	public JSONObject putResetPersonalStorage(@RequestParam("userList") List<String> userList, HttpServletRequest request) {	
 		int tenantId         = Integer.parseInt(request.getParameter("tenantId"));		
 		String companyId     = request.getParameter("companyId");
 		String totalAmount   = "";
@@ -332,7 +334,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/webfolder/filemanage/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject fileUploadGW2(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile>multiFileLists, HttpServletRequest request) throws Exception {
+	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile>multiFileLists, HttpServletRequest request) throws Exception {
 		JSONParser jp          = new JSONParser();
 		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);	
 		
@@ -453,7 +455,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	}	
 		
 	@RequestMapping(value = "/webfolder/filemanage/file-download", method=RequestMethod.GET, produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE})
-	public void fileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void getFileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
 		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
 		String listFileId   = request.getParameter("fileList") != null ? request.getParameter("fileList")                   : "";
@@ -563,7 +565,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value = "/webfolder/file-delete", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject fileDelate(HttpServletRequest request) {
+	public JSONObject delFileDelete(HttpServletRequest request) {
 		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
 		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
 		String listFileId   = request.getParameter("fileList") != null ? request.getParameter("fileList")                   : "";
@@ -600,33 +602,9 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		
 		return result;
 	}
-	
-	private void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, String fileSize, String fileExt, String fileType, int tenantId) throws Exception {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date                  = new Date();	
-		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-		
-		//Save log to database				
-		FileLogVO fileLog = new FileLogVO();
-		
-		fileLog.setLogType(type);
-		fileLog.setCompanyId(companyId);
-		fileLog.setCreateDate(timeUTC);
-		fileLog.setCreateId(userId);
-		fileLog.setCreateName1(userName1);
-		fileLog.setCreateName2(userName2);
-		fileLog.setFileName(filename);
-		fileLog.setFileSize(fileSize);
-		fileLog.setFileExt(fileExt);
-		fileLog.setFileType(fileType);
-		fileLog.setLogId(getMaxLogID(tenantId));
-		fileLog.setTenantId(tenantId);
-		
-		ezWebFolderAdminService.insertFileLog(fileLog);
-	}
-	
+
 	@RequestMapping(value="/webfolder/file-rename/fileid/{fileid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject fileRename(@PathVariable(value="fileid") String fileId, HttpServletRequest request) {
+	public JSONObject putFileRename(@PathVariable(value="fileid") String fileId, HttpServletRequest request) {
 		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
 		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
 		String userId	    = request.getParameter("userId")   != null ? request.getParameter("userId")                     : "";
@@ -661,7 +639,84 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	@RequestMapping(value="/webfolderadmin/webfolderadmin-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getWebfolderAdminList(HttpServletRequest request) {		
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		String primary	    = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
+		int pageNum         = request.getParameter("pageNum")  != null ? Integer.parseInt(request.getParameter("pageNum"))  : -1;
+		int pageSize        = request.getParameter("pageSize") != null ? Integer.parseInt(request.getParameter("pageSize")) : -1;	
+		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
+		String type 		= request.getParameter("type")     != null ? request.getParameter("type") 					    : "";		
+		JSONObject result   = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		
+		if (companyId.equals("") || type.equals("") || tenantId == -1 || primary.equals("") || pageNum == -1 || pageSize == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			int startRow           = (pageSize * (pageNum - 1)) + 1;
+	        int endRow             = pageSize * pageNum;	                
+	        int cnt                = ezOrganAdminService.getPermissionListCount(companyId, type, primary, tenantId);
+	        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyId, type, primary, startRow, endRow, tenantId);
+	        
+	        logger.debug("List size: " + list.size());
+	        
+	        for (OrganUserVO vo : list) {
+	        	JSONObject fileJson    = new JSONObject();
+	        	fileJson.put("userId", vo.getCn());	        	
+	        	fileJson.put("departmentId", vo.getExtensionAttribute1());
+	        	fileJson.put("userName", vo.getDisplayName());
+	        	fileJson.put("userMail", vo.getMail());
+	        	fileJson.put("jobPositon", vo.getTitle());
+	        	fileJson.put("departmentName", vo.getDescription());
+	        	fileJson.put("phoneNumber", vo.getTelephoneNumber());
+	        	fileJson.put("companyName", vo.getCompany());
+	        	
+	        	jsonArray.add(fileJson);
+	        }
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", jsonArray);
+			result.put("count", cnt);
+		}
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		return result;
+	}
 	
+	private void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, String fileSize, String fileExt, String fileType, int tenantId) throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		
+		//Save log to database				
+		FileLogVO fileLog = new FileLogVO();
+		
+		fileLog.setLogType(type);
+		fileLog.setCompanyId(companyId);
+		fileLog.setCreateDate(timeUTC);
+		fileLog.setCreateId(userId);
+		fileLog.setCreateName1(userName1);
+		fileLog.setCreateName2(userName2);
+		fileLog.setFileName(filename);
+		fileLog.setFileSize(fileSize);
+		fileLog.setFileExt(fileExt);
+		fileLog.setFileType(fileType);
+		fileLog.setLogId(getMaxLogID(tenantId));
+		fileLog.setTenantId(tenantId);
+		
+		ezWebFolderAdminService.insertFileLog(fileLog);
+	}
+		
 	private String getWebFolderDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
 	}
