@@ -25,32 +25,31 @@
 		    };
 			
 			window.onload = function () {
-				journal_get_formuse();
 			}
 	
-			function journal_get_formuse() {			    
-			    $.ajax({
-		    		type : "POST",
-		    		dataType : "json",
-		    		async : true,
-		    		url : "/admin/ezJournal/journalGetFormUse.do",
-		    		data : {
-		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value		    			
-		    		},
-		    		success: function(result) {
+// 			function journal_get_formuse() {			    
+// 			    $.ajax({
+// 		    		type : "POST",
+// 		    		dataType : "json",
+// 		    		async : true,
+// 		    		url : "/admin/ezJournal/journalGetFormUse.do",
+// 		    		data : {
+// 		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value		    			
+// 		    		},
+// 		    		success: function(result) {
 		    			
-		    			var leng = Object.keys(result.typeList).length;
+// 		    			var leng = Object.keys(result.typeList).length;
 		    			
-		    			for(var i = 0; i < leng; i++) {
-		    				if (result.typeList[i].journalUse == "use") {
-		    					document.getElementById("USE" + i).checked = true;
-		    				} else {
-		    					document.getElementById("NUSE" + i).checked = true;
-		    				}
-		    			}
-		    		}
-		        });
-			}			
+// 		    			for(var i = 0; i < leng; i++) {
+// 		    				if (result.typeList[i].journalUse == "use") {
+// 		    					document.getElementById("USE" + i).checked = true;
+// 		    				} else {
+// 		    					document.getElementById("NUSE" + i).checked = true;
+// 		    				}
+// 		    			}
+// 		    		}
+// 		        });
+// 			}			
 		    function Cancel_Click() {
 		        window.location.reload(true);
 		    }
@@ -99,36 +98,7 @@
 			        <th style="text-align: center;" width="80px"><spring:message code='ezJournal.b012' /></th>
 			        <th style="text-align: center;" width="80px"><spring:message code='ezJournal.b013' /></th>
 			    </tr>
-			    <tr>
-			    	<td><spring:message code='ezJournal.b005' /></td>
-			        <td><input style="margin-top: 0px;" type="radio" id="USE0" name="USE0" value="1" /></td>
-			        <td><input style="margin-top: 0px;" type="radio" id="NUSE0" name="USE0" value="2"/></td>
-			    </tr>
-			    <tr>
-			    	<td><spring:message code='ezJournal.b006' /></td>
-			        <td><input style="margin-top: 0px;" type="radio" id="USE1" name="USE1" value="1" /></td>
-			        <td><input style="margin-top: 0px;" type="radio" id="NUSE1" name="USE1" value="2"/></td>
-			    </tr>
-			    <tr>
-			    	<td><spring:message code='ezJournal.b007' /></td>
-			        <td><input style="margin-top: 0px;" type="radio" id="USE2" name="USE2" value="1" /></td>
-			        <td><input style="margin-top: 0px;" type="radio" id="NUSE2" name="USE2" value="2"/></td>
-			    </tr>
-			    <tr>
-			    	<td><spring:message code='ezJournal.b008' /></td>
-			        <td><input style="margin-top: 0px;" type="radio" id="USE3" name="USE3" value="1" /></td>
-			        <td><input style="margin-top: 0px;" type="radio" id="NUSE3" name="USE3" value="2"/></td>
-			    </tr>
-			    <tr>
-			    	<td><spring:message code='ezJournal.b009' /></td>
-			        <td><input style="margin-top: 0px;" type="radio" id="USE4" name="USE4" value="1" /></td>
-			        <td><input style="margin-top: 0px;" type="radio" id="NUSE4" name="USE4" value="2"/></td>
-			    </tr>
-			    <tr>
-			    	<td><spring:message code='ezJournal.b010' /></td>
-			        <td><input style="margin-top: 0px;" type="radio" id="USE5" name="USE5" value="1" /></td>
-			        <td><input style="margin-top: 0px;" type="radio" id="NUSE5" name="USE5" value="2"/></td>
-			    </tr>
+			    
 			</table>
 			<div class="btnposition" style="width: 260px">
 			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezSchedule.t4' /></span></a>

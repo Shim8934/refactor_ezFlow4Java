@@ -710,7 +710,7 @@ public class EzJournalGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("compList", compList);
+			result.put("data", compList);
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");
