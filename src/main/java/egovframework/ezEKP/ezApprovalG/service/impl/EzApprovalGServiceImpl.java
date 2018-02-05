@@ -1312,7 +1312,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String getLineInfo(String docID, String mode, String orderOption1, String companyID, int tenantID) throws Exception {
 		logger.debug("getLineInfo started.");
-
+		
+		if (mode.equals("CHAMJOEND")){
+			mode = "END";
+		} else if (mode.equals("CHAMJOAPR")) {
+			mode = "APR";
+		} 
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);
 		map.put("v_MODE", mode);

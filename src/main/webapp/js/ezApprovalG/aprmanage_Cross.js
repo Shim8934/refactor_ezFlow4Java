@@ -591,7 +591,11 @@ function getAprLine(tr) {
     					docID : pDocID
     					},
     			success: function(xml){
-    				pMode = xml;
+    				if (xml == "APR") {
+    					pMode = "CHAMJOAPR";
+    				} else {
+    					pMode = "CHAMJOEND";
+    				}
     			}        			
     		});
     }
