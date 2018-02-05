@@ -11381,6 +11381,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
 		String ingFlag = "APR";
+		int chamJoCnt = 0;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID.trim());
@@ -11603,6 +11604,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				break;
 			case "007":
 				lastState = staATChamJo;
+				chamJoCnt = chamJoCnt + 1;
 //				
 //				map3.put("v_APRSTATE", staASAprEND);
 //				
@@ -11802,7 +11804,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 
                 break;
 			case "017":
-//				lastState = staATGongram;
+				lastState = staATGongram;
 //				
 //				map3.put("v_APRSTATE", staASmikyul);
 //				
@@ -11924,37 +11926,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					ezApprovalGDAO.updateChamJoLineState(map);
 					
-//					StringBuffer sb3 = new StringBuffer();
-//			        sb3.append("<DATA>");
-//			        
-//			        for (int i = 0; i < getChamJoLineList.size(); i++) {
-//						sb3.append(commonUtil.getQueryResult(getChamJoLineList.get(i)));
-//					}
-//					sb3.append("</DATA>");
-//					
-//					Document docXML3 = commonUtil.convertStringToDocument(sb3.toString());
-//					String rtn = doChamjo(docID, docXML3.getElementsByTagName("APRMEMBERID").item(m).getTextContent(), 
-//							docXML3.getElementsByTagName("APRMEMBERNAME").item(m).getTextContent(),
-//							docXML3.getElementsByTagName("APRMEMBERNAME2").item(m).getTextContent(), 
-//							docXML3.getElementsByTagName("APRMEMBERJOBTITLE").item(m).getTextContent(),
-//							docXML3.getElementsByTagName("APRMEMBERJOBTITLE2").item(m).getTextContent(), 
-//							docXML3.getElementsByTagName("APRMEMBERDEPTID").item(m).getTextContent(), 
-//							docXML3.getElementsByTagName("APRMEMBERDEPTNAME").item(m).getTextContent(),
-//							docXML3.getElementsByTagName("APRMEMBERDEPTNAME2").item(m).getTextContent(), 
-//							docXML3.getElementsByTagName("APRMEMBERISDEPTYN").item(m).getTextContent(), 
-//							docXML3.getElementsByTagName("APRMEMBERLDAPPATH").item(m).getTextContent(), 
-//						dirPath, staDSChamJo, companyID, userInfo.getTenantId());
-//					if (rtn.toUpperCase().equals("FALSE")) {
-//						rtnVal = false;
-//					} else {
 	                    sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(m).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
-//					}
 				}
 			}
 		}
 		
 		// 마지막 결재라인인 경우 || 더이상의 추가 작업이 필요없는 AprType인 경우. 문서를 종결
-		if ((dlength < 1 && !chamState.equals("017")) || lastState.equals(staATAnHam) || lastState.equals(staATChamJo) || lastState.equals(staATGongram)) {
+		if ((dlength - chamJoCnt < 1 && !chamState.equals("017")) || lastState.equals(staATAnHam) || lastState.equals(staATGongram)) {
 				if (!ingFlag.equals("END")) {
 					subSQL = doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo, curDocNum);
 					
