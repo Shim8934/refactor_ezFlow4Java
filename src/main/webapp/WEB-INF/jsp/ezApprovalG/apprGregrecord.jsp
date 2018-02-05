@@ -572,7 +572,7 @@
               </tr>
             </table></td>
           <td style="padding-left:5px;vertical-align:top" ><h2><spring:message code='ezApprovalG.t1071'/></h2>
-            <table style="width:<%if("${userInfo.lang}"=="1"){%>375<%}else{%>420<%}%>px"  class="content">
+            <table style="width:<%if("${userInfo.lang}"=="1"){%>375<%}else{%>484<%}%>px"  class="content">
               <tr>
                 <th ><spring:message code='ezApprovalG.t875'/></th>
                 <td style="width:98%"><input type="checkbox" name="special1" value="checkbox" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top;"><span>&nbsp;<spring:message code='ezApprovalG.t983'/></span><br />
