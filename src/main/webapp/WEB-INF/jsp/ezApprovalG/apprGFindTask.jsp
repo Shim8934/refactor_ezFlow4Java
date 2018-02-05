@@ -76,6 +76,7 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t111'/></h1>
+		<h2>검색할 단위업무를 입력하세요.</h2>
 		<table class="content">
 		  <tr>
 		    <th><spring:message code='ezApprovalG.t649'/></th>
