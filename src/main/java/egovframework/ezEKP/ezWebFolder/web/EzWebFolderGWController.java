@@ -8,12 +8,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -646,9 +650,9 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		int pageNum         = request.getParameter("pageNum")  != null ? Integer.parseInt(request.getParameter("pageNum"))  : -1;
 		int pageSize        = request.getParameter("pageSize") != null ? Integer.parseInt(request.getParameter("pageSize")) : -1;	
 		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
-		String type 		= request.getParameter("type")     != null ? request.getParameter("type") 					    : "";		
+		String type 		= "wf=1";
 		JSONObject result   = new JSONObject();
-		JSONArray jsonArray = new JSONArray();
+		JSONArray jsonArray = new JSONArray();		
 		
 		if (companyId.equals("") || type.equals("") || tenantId == -1 || primary.equals("") || pageNum == -1 || pageSize == -1) {
 			logger.debug("Parameter error!");
@@ -692,6 +696,69 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	@RequestMapping(value="/webfolderadmin/webfolderadmin", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject postWebfolderAdminInsert(HttpServletRequest request) throws Exception {
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		String userId		= request.getParameter("userId")   != null ? request.getParameter("userId")   					: "";
+		String primary	    = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
+		JSONObject result   = new JSONObject();
+		OrganUserVO vo      = null;
+		
+		if (userId.equals("") || primary.equals("") || tenantId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}		
+		
+		logger.debug("UserID: " + userId + " || primary: " + primary + " || TenantId: " + tenantId);
+		
+		vo            = ezOrganAdminService.getUserInfo(userId, primary, tenantId);
+		String extStr = vo.getExtensionAttribute1().toLowerCase();
+		
+	    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        date.setTimeZone(TimeZone.getTimeZone("GMT"));
+        
+        String nowDate = date.format(new Date());		
+		int pos        = extStr.indexOf("wf=1");
+		
+		if (pos > -1) {
+			logger.debug("Already be webfolder admin!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+
+		pos = extStr.indexOf("wf=0;");
+		
+		if (pos > -1) {			
+			extStr = extStr.replace("wf=0", "wf=1");
+		}
+		else {
+			extStr += "wf=1;";
+		}
+		
+		vo.setExtensionAttribute1(extStr);
+		vo.setTenantId(tenantId);
+		vo.setNowDate(nowDate);
+		
+		logger.debug("Extension: " + extStr);
+
+		try {
+			ezOrganAdminService.updateDBData_user(vo);
+
+			result.put("status", "ok");
+			result.put("code", 0);						
+		}
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+		}
+		
+		return result;
+	}
+	
 	
 	private void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, String fileSize, String fileExt, String fileType, int tenantId) throws Exception {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

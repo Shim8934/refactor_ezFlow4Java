@@ -383,8 +383,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pageNum   = request.getParameter("pageNum");
 		String pageSize  = request.getParameter("pageSize");
-		String companyID = request.getParameter("companyID");
-		String type      = request.getParameter("type");
+		String companyID = request.getParameter("companyID");		
 		String primary   = userInfo.getPrimary();
 		
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
@@ -397,8 +396,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("primary", primary)				
-				.queryParam("companyId", companyID)
-				.queryParam("type", type)
+				.queryParam("companyId", companyID)				
 				.queryParam("pageNum", pageNum)
 				.queryParam("pageSize", pageSize);
 		
