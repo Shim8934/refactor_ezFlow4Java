@@ -15,53 +15,21 @@
 	    <script type="text/javascript">		
 	    
 			function journal_get_formuse(val) {			    
-// 			    $.ajax({
-// 		    		type : "POST",
-// 		    		dataType : "json",
-// 		    		async : true,
-// 		    		url : "/admin/ezJournal/journalGetFormUse.do",
-// 		    		data : {
-// 		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value		    			
-// 		    		},
-// 		    		success: function(result) {
-		    			
-// 		    			var leng = Object.keys(result.typeList).length;
-		    			
-// 		    			for(var i = 0; i < leng; i++) {
-// 		    				if (result.typeList[i].journalUse == "use") {
-// 		    					document.getElementById("USE" + i).checked = true;
-// 		    				} else {
-// 		    					document.getElementById("NUSE" + i).checked = true;
-// 		    				}
-// 		    			}
-// 		    		}
-// 		        });
-				window.location.search += "&companyId="+val;
+				var url = "/admin/ezJournal/formType.do";
+				parent.frames["right"].location.href = url+"?companyId="+val;
 			}	
 			
 		    function Cancel_Click() {
 		        window.location.reload(true);
 		    }
-		    function Change_Click() {	
-		    	var strtype = "";
-		    	for (var i = 0; i < 6; i++) {
-			    	if (document.getElementById("USE" + i).checked == true) {
-			    		strtype += "use";
-			    	} else {
-			    		strtype += "no";
-			    	}
-		    	}
+		    function Change_Click() {
+		    	var formData = $("form.journalForm").serialize();
 		    	
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/admin/ezSchedule/journalSaveFormUse.do",
-		    		data : {
-		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value,
-		    			FORMUSE : strtype
-		    		},
-		    		success: function(text) {
+		    		url : "/admin/ezJournal/updatreFormType.do",
+		    		data :formData,
+		    		success: function(result) {
 		    			alert("<spring:message code='ezSchedule.t4012' />");
 		    		}
 		        });
@@ -75,12 +43,16 @@
 	</head>
 	<body class="mainbody"> 
 		<h1><spring:message code='ezJournal.t2' /></h1>
-		<form id="Form1" method="post">
+		<form class="journalForm">
 			<div id="mainmenu">
 				<span><b><spring:message code = 'ezApprovalG.t1512' /></b></span>
-	            <select id="ListCompany" onchange="journal_get_formuse(this.value)">
+	            <select name="companyId" onchange="journal_get_formuse(this.value)">
 	            	<c:forEach items="${compList}" var="company">
-		            	<option value="${company.companyId }">${company.companyName }</option>
+		            	<option value="${company.companyId }"
+	            		<c:if test="${company.selected eq 'selected' }">
+	            			selected
+	            		</c:if>
+		            	>${company.companyName }</option>
 	            	</c:forEach>
 	            </select>
 			</div>

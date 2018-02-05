@@ -52,6 +52,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.ibatis.annotations.Case;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -944,7 +945,7 @@ public class CommonUtil {
 	 * @param request
 	 * @return
 	 */
-	public JSONObject getJsonFromRestApi(String resteUrl, Map<String, String> param,HttpServletRequest request){
+	public JSONObject getJsonFromRestApi(String resteUrl, Map<String, String> param,HttpServletRequest request,String methodType){
 		logger.debug("getJsonFromRestApi started");
 		String gwServerUrl = config.getProperty("config.journalGWServerURL");
 		String url = gwServerUrl + resteUrl ;
@@ -963,7 +964,28 @@ public class CommonUtil {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		HttpMethod method = null;
+		switch (methodType) {
+		case "get":
+			method = HttpMethod.GET;
+			break;
+		case "put":
+			method = HttpMethod.PUT;
+			break;
+		case "post":
+			method = HttpMethod.POST;
+			break;
+		case "delete":
+			method = HttpMethod.DELETE;
+			break;
+		case "patch":
+			method = HttpMethod.PATCH;
+			break;
+		default:
+			method = HttpMethod.GET;
+			break;
+		}
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
 		
 		JSONParser jp = new JSONParser();
 		

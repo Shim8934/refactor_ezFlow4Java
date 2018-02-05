@@ -1,31 +1,22 @@
 package egovframework.ezEKP.ezJournal.web;
 
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.bouncycastle.crypto.macs.HMac;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.let.user.login.vo.LoginVO;
@@ -58,20 +49,6 @@ public class EzJournalSBController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		HashMap<String, String> param = new HashMap<String, String>();
-		param.put("userId", userInfo.getId());
-		param.put("tenantId", userInfo.getTenantId()+"");
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/companies", param, request);
-		String status = resultBody.get("status").toString();
-				
-		if (status.equals("ok")) {			
-			JSONArray compList = (JSONArray) resultBody.get("data");
-			
-			model.addAttribute("compList", compList);
-		}
-		
-		param.clear();
-		
 		String companyId =null;
 		if (request.getParameter("companyId") != null) {
 			companyId = request.getParameter("companyId");
@@ -79,10 +56,24 @@ public class EzJournalSBController {
 			companyId = userInfo.getCompanyID();
 		}
 		
+		param.put("companyId",companyId);
+		param.put("userId", userInfo.getId());
+		param.put("tenantId", userInfo.getTenantId()+"");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/companies", param, request,"get");
+		String status = resultBody.get("status").toString();
+			
+		if (status.equals("ok")) {			
+			JSONArray compList = (JSONArray) resultBody.get("data");
+			model.addAttribute("compList", compList);
+		}
+		
+		param.clear();
+		
 		param.put("companyId",companyId );
 		param.put("tenantId", userInfo.getTenantId()+"");
 		
-		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", param, request);
+		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", param, request,"get");
 		status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {		
@@ -92,5 +83,37 @@ public class EzJournalSBController {
 		
 		logger.debug("formType ended");
 		return "admin/ezJournal/formType";
+	}
+	
+	/**
+	 * 관리자 일지함 사용여부 변경
+	 */
+	@RequestMapping(value = "/admin/ezJournal/updatreFormType.do")
+	public JSONObject formTypeUpdate(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+		logger.debug("formTypeUpdate started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONObject parameter = new JSONObject();
+		parameter.put("companyId", request.getParameter("companyId"));
+		parameter.put("tenantId",userInfo.getTenantId());
+		
+		Map<String, String[]> paramMap = request.getParameterMap();
+		JSONArray journaltypeList = new JSONArray();
+		for(String key : paramMap.keySet()){
+			if (key.contains("ezJournal")) {
+				JSONObject type = new JSONObject();
+				type.put("journaltypeId", key);
+				type.put("journalUse", parameter.get(key));
+				journaltypeList.add(type);
+			}
+		}
+		parameter.put("journaltypeList", journaltypeList);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", parameter, request,"put");
+		
+		logger.debug("formTypeUpdate ended");
+		
+		return resultBody;
 	}
 }
