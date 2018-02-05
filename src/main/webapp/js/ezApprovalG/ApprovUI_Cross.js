@@ -1333,7 +1333,22 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
 }
 function getCurApproverAprLine(type) {
 	var result = "";
-    
+    var pMode = "";
+	if (docState == "017") {
+		  $.ajax({
+	 			type : "POST",
+	 			dataType : "text",
+	 			async : false,
+	 			url : "/ezApprovalG/getLineMode.do",
+	 			data : {
+	 					docID : pDocID
+	 					},
+	 			success: function(xml){
+	 					pMode = xml;
+	 			}        			
+		  });
+	}
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -1344,7 +1359,8 @@ function getCurApproverAprLine(type) {
 				userID 	 : "",
 				formID   : "",
 				deptID   : arr_userinfo[4],
-				isUsed   : type
+				isUsed   : type,
+				mode     : pMode
 				},
 		success: function(xml){
 			result = xml;

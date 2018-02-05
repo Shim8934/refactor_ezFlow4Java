@@ -1315,6 +1315,7 @@
 	<select id ="EzApprovalG.getAprLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
 		<isNotEqual property="isUsed" compareValue="reuse">
 		<isEqual property="v_FLAG" compareValue="1">
+		<isNotEqual property="v_MODE" compareValue="END">
 			<![CDATA[
 				SELECT 
 					TBL_APRLINEINFO.DocID ,
@@ -1366,6 +1367,60 @@
 				ORDER BY 
 					TBL_APRLINEINFO.AprMemberSN DESC 
 			]]>
+		</isNotEqual>
+		
+		<isEqual property="v_MODE" compareValue="END">
+			<![CDATA[
+				SELECT 
+					TBL_ENDAPRLINEINFO.DocID ,
+	                TBL_ENDAPRLINEINFO.AprMemberSN ,
+	                TBL_ENDAPRLINEINFO.AprType ,
+	                TBL_ENDAPRLINEINFO.AprState ,
+	                TBL_ENDAPRLINEINFO.AprMemberID ,
+	                TBL_ENDAPRLINEINFO.AprMemberIsDeptYN ,
+	                TBL_ENDAPRLINEINFO.AprMemberName ,
+	                IFNULL(TBL_ENDAPRLINEINFO.AprMemberName2, TBL_ENDAPRLINEINFO.AprMemberName) APRMEMBERNAME2  ,
+	                TBL_ENDAPRLINEINFO.AprMemberJobTitle ,
+	                TBL_ENDAPRLINEINFO.AprMemberJobTitle2,
+	                TBL_ENDAPRLINEINFO.AprMemberDeptID ,
+	                TBL_ENDAPRLINEINFO.AprMemberDeptName ,
+	                IFNULL(TBL_ENDAPRLINEINFO.AprMemberDeptName2, TBL_ENDAPRLINEINFO.AprMemberDeptName) APRMEMBERDEPTNAME2  ,
+	                TBL_ENDAPRLINEINFO.AprMemberLDAPPath ,
+	                TBL_ENDAPRLINEINFO.ReceivedDate ,
+	                TBL_ENDAPRLINEINFO.ProcessDate ,
+	                TBL_ENDAPRLINEINFO.isProposerYN ,
+	                TBL_ENDAPRLINEINFO.isBriefUserYN ,
+	                TBL_EXPENDAPRLINE.orguserid ,
+	                TBL_EXPENDAPRLINE.proxyuserid ,
+	                TBL_EXPENDAPRLINE.proxyusername ,
+	                IFNULL(TBL_EXPENDAPRLINE.proxyusername2, TBL_EXPENDAPRLINE.proxyusername) PROXYUSERNAME2  ,
+	                TBL_EXPENDAPRLINE.proxyuserjobtitle ,
+	                IFNULL(TBL_EXPENDAPRLINE.proxyuserjobtitle2, TBL_EXPENDAPRLINE.proxyuserjobtitle) PROXYUSERJOBTITLE2  ,
+	                TBL_EXPENDAPRLINE.proxyuserdeptid ,
+	                TBL_EXPENDAPRLINE.proxyuserdeptname ,
+	                IFNULL(TBL_EXPENDAPRLINE.proxyuserdeptname2, TBL_EXPENDAPRLINE.proxyuserdeptname) PROXYUSERDEPTNAME2  
+				FROM 
+					TBL_ENDAPRLINEINFO 
+				JOIN
+					TBL_EXPENDAPRLINE    
+				ON 
+					TBL_ENDAPRLINEINFO.DocID = TBL_EXPENDAPRLINE.docid
+				AND 
+					TBL_ENDAPRLINEINFO.AprMemberSN = TBL_EXPENDAPRLINE.aprmemberSN
+				AND 
+					TBL_ENDAPRLINEINFO.TENANT_ID = TBL_EXPENDAPRLINE.TENANT_ID
+				AND 
+					TBL_ENDAPRLINEINFO.COMPANYID = TBL_EXPENDAPRLINE.COMPANYID
+				WHERE  
+					TBL_ENDAPRLINEINFO.DocID = #v_DOCID#
+				AND 
+					TBL_ENDAPRLINEINFO.TENANT_ID = #v_TENANTID#
+				AND 
+					TBL_ENDAPRLINEINFO.COMPANYID = #companyID#
+				ORDER BY 
+					TBL_ENDAPRLINEINFO.AprMemberSN DESC 
+			]]>
+		</isEqual>
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="2">
 			<![CDATA[

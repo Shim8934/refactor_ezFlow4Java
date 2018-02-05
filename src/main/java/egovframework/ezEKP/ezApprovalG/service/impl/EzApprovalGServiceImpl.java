@@ -2556,7 +2556,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag, String isUsed, String beforeDocID) throws Exception {
+	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag, String isUsed, String beforeDocID, String mode) throws Exception {
 		logger.debug("getAprLineInfo started.");
 		logger.debug("docID = " + docID + " || userID = " + userID + " || formID = " + formID + " || reDraftFlag = " + reDraftFlag + " || lang = " + lang + " || offset = " + offset);
 		
@@ -2580,20 +2580,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		resultXML.append("</HEADERS>");
 		
-		String docList = getAprLineInfoDB(docID, "1", userID, formID, companyID, tenantID, isUsed, beforeDocID);
+		String docList = getAprLineInfoDB(docID, "1", userID, formID, companyID, tenantID, isUsed, beforeDocID, mode);
 		Document docXML = commonUtil.convertStringToDocument(docList);
 
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
 		if (isUsed.equals("reuse")) {
-			docList = getAprLineInfoDB(docID, "3", userID, formID, companyID, tenantID, isUsed, beforeDocID);
+			docList = getAprLineInfoDB(docID, "3", userID, formID, companyID, tenantID, isUsed, beforeDocID, mode);
 			docXML = commonUtil.convertStringToDocument(docList);
 		} else {
 			if (dlength == 0) { //dlength가 0인 경우(즉, 처음 시작하는 문서일 때만 LastAprLine 정보 가져오도록 수정
 				String isLastAprLine = getCode2Name("A44", "001", companyID, lang, tenantID);
 
 				if (isLastAprLine != null && isLastAprLine.equals("1")) {
-					docList = getAprLineInfoDB(docID, "2", userID, formID, companyID, tenantID, "", "");
+					docList = getAprLineInfoDB(docID, "2", userID, formID, companyID, tenantID, "", "", mode);
 					docXML = commonUtil.convertStringToDocument(docList);
 					dlength = docXML.getElementsByTagName("ROW").getLength();
 				}
@@ -5452,7 +5452,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String strSeumyungDate = "";
 		String strSql = "TRUE";
 		
-		String lineResult = getAprLineInfo(docID, orgUID, formID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset(), "DRAFT", "", "");
+		String lineResult = getAprLineInfo(docID, orgUID, formID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset(), "DRAFT", "", "", "");
 		
 		Document lineXml = commonUtil.convertStringToDocument(lineResult);
 		NodeList docListNode = lineXml.getElementsByTagName("ROW");
@@ -8977,7 +8977,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnVal.append(getAttachInfo(docID, mode, "", "", companyID, lang, tenantID, offset));
 		rtnVal.append("</ATTACHINFO>");
 		rtnVal.append("<APRLINEINFO>");
-		rtnVal.append(getAprLineInfo(docID, mode, "", companyID, lang, tenantID, offset, "DRAFT", "", ""));
+		rtnVal.append(getAprLineInfo(docID, "", "", companyID, lang, tenantID, offset, "DRAFT", "", "", mode));
 		rtnVal.append("</APRLINEINFO></APROVEDATA>");
 		
 		return rtnVal.toString();
@@ -17580,9 +17580,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID, String isUsed, String beforeDocID) throws Exception {
+	public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID, String isUsed, String beforeDocID, String mode) throws Exception {
 		logger.debug("getAprLineInfoDB started.");
 		logger.debug("docID = " + docID + " || flag = " + flag + " || userID = " + userID + " || formID = " + formID + " || companyID = " + companyID + " || tenantID = " + tenantID);
+		
+		if (mode.equals("CHAMJOAPR")) {
+			mode = "APR";
+		} else if (mode.equals("CHAMJOEND")){
+			mode = "END";
+		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);
@@ -17593,6 +17599,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("isUsed", isUsed);
 		map.put("beforeDocID", beforeDocID);
+		map.put("v_MODE", mode);
 		// 진행중인 결재 리스트 추출
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getAprLineInfo(map);
 		

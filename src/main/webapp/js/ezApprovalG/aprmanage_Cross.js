@@ -765,6 +765,7 @@ function openApprovUI(allFlag) {
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
     var tr = DocList.GetSelectedRows();
+    var mode = "APR";
     var openLocation;
     if (tr.length > 0) {
         var pArgument = new Array();
@@ -773,6 +774,21 @@ function openApprovUI(allFlag) {
         pArgument[2] = GetAttribute(tr[0], "DATA5");		
         pArgument[3] = GetAttribute(tr[0], "DATA7");	
 
+        if (GetAttribute(tr[0], "DATA12") == "017") {
+        	   $.ajax({
+        			type : "POST",
+        			dataType : "text",
+        			async : false,
+        			url : "/ezApprovalG/getLineMode.do",
+        			data : {
+        					docID : pArgument[0]
+        					},
+        			success: function(xml){
+        				mode = xml;
+        			}        			
+        	  });
+        }
+        
         var formURL = GetAttribute(tr[0], "DATA3");
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "doc") {
             openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?docID=" + encodeURI(pArgument[0]);
@@ -796,7 +812,7 @@ function openApprovUI(allFlag) {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12"));
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode);
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }

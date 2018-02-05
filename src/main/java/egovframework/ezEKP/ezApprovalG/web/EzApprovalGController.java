@@ -540,7 +540,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					boolean checkPermission = true;
 					
 					if (proxyUserArray.length > 0) {
-						String docList = ezApprovalGService.getAprLineInfoDB(docID.trim(), "1", "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+						String docList = ezApprovalGService.getAprLineInfoDB(docID.trim(), "1", "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", mode);
 						Document docXML = commonUtil.convertStringToDocument(docList);
 						
 						for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
@@ -823,7 +823,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			boolean checkPermission = true;
 			
 			if (proxyUserArray.length > 1) {
-				String docList = ezApprovalGService.getAprLineInfoDB(docID.trim(), "1", "", "", userInfo.getCompanyID(), tenantID, isUsed, beforeDocID);
+				String docList = ezApprovalGService.getAprLineInfoDB(docID.trim(), "1", "", "", userInfo.getCompanyID(), tenantID, isUsed, beforeDocID, "");
 				Document docXML = commonUtil.convertStringToDocument(docList);
 				
 				for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
@@ -1069,6 +1069,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String reDraftFlag = "DRAFT";
 		String isUsed = request.getParameter("isUsed");
 		String beforeDocID = request.getParameter("beforeDocID");
+		String mode = request.getParameter("mode");
 		
 		if (isUsed == null) {
 			isUsed = "";
@@ -1082,7 +1083,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			reDraftFlag = request.getParameter("reDraft");
 		}
 		
-		String result = ezApprovalGService.getAprLineInfo(docID.trim(), userID, formID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), reDraftFlag, isUsed, beforeDocID);
+		String result = ezApprovalGService.getAprLineInfo(docID.trim(), userID, formID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), reDraftFlag, isUsed, beforeDocID, mode);
 
 		logger.debug("aprLineRequest ended.");
 		
@@ -3442,6 +3443,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String mailChk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
 		String docState = request.getParameter("docState");
+		String mode = request.getParameter("mode");
 		
 		if (mailChk == null) {
 			mailChk = "";
@@ -3479,7 +3481,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			boolean checkPermission = true;
 			
 			if (proxyUserArray.length > 1) {
-				String docList = ezApprovalGService.getAprLineInfoDB(docID, "1", "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+				String docList = ezApprovalGService.getAprLineInfoDB(docID, "1", "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", mode);
 				
 				Document docXML = commonUtil.convertStringToDocument(docList);
 				
