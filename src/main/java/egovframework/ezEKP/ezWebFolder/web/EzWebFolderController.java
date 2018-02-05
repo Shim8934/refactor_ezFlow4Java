@@ -128,7 +128,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
 		String folderId                = request.getParameter("folderId"); 	    	
 		String gwServerUrl             = config.getProperty("config.webfolderGwServerURL");
-		String url                     = gwServerUrl + "/webfolder/filemanage/fileupload";
+		String url                     = gwServerUrl + "/webfolder/filemanage/file-upload";
 		
 		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
 		requestFactory.setBufferRequestBody(false);	
@@ -195,7 +195,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginVO user        = commonUtil.userInfo(loginCookie);		
 		String listFileId   = request.getParameter("fileList");				
 		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
-		String url          = gwServerUrl + "/webfolder/filemanage/filedownload";
+		String url          = gwServerUrl + "/webfolder/filemanage/file-download";
 
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
@@ -248,51 +248,28 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	public void deleteFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Delete File is running!");	
 		LoginVO user = commonUtil.userInfo(loginCookie);
-		String offset = user.getOffset();
-		String listFileId = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
-		String[] fileIDList = listFileId.split(",");
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();	
-		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), user.getOffset(), true);
 		
-		if (fileIDList.length <= 0) {
-			logger.debug("Delete File illegal arguments!");
-			return ;
-		}
+		String listFileId   = request.getParameter("fileList");				
+		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
+		String url          = gwServerUrl + "/webfolder/file-delete";
+
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", user.getTenantId())
+										.queryParam("offset", user.getOffset())
+										.queryParam("userId", user.getId())
+										.queryParam("userName1", user.getDisplayName1())
+										.queryParam("userName2", user.getDisplayName2())
+										.queryParam("companyId", user.getCompanyID())
+										.queryParam("fileList", listFileId);
 		
-		logger.debug("Number of delete files: " + fileIDList.length);
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		//Delete files in database
-		try {
-			for (int i = 0; i < fileIDList.length; i++) {
-				FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[0], offset, user.getTenantId());
-				FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), user.getTenantId());
-				//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
-				ezWebFolderService.updateFileUseStatus(fileIDList[i], user.getTenantId());
+		RestTemplate rest          		= new RestTemplate();
+		
+		rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
 				
-				//Save log to database				
-				FileLogVO fileLog = new FileLogVO();
-				
-				fileLog.setLogType("R");
-				fileLog.setCompanyId(user.getCompanyID());
-				fileLog.setCreateDate(timeUTC);
-				fileLog.setCreateId(user.getId());
-				fileLog.setCreateName1(user.getDisplayName1());
-				fileLog.setCreateName2(user.getDisplayName2());
-				fileLog.setFileName(fileVO.getFileName());
-				fileLog.setFileSize(fileVO.getFileSize());
-				fileLog.setFileExt(fileVO.getFileExt());
-				fileLog.setFileType(fileType.getTypeName());
-				fileLog.setLogId(getMaxLogID(user.getTenantId()));
-				fileLog.setTenantId(user.getTenantId());
-				
-				ezWebFolderAdminService.insertFileLog(fileLog);
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 		logger.debug("Delete File finishes!");		
 	}
 	
