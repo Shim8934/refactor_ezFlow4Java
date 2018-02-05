@@ -284,9 +284,10 @@
 			        var mType;
 			        
 			        if (mode == "P") {
-			        	mType = "1";
+			        	//2018.02.05 김기하 #11421
+			        	mType = "16";
 			        } else {
-			        	mType = "23456789";
+			        	mType = "2345789";
 			        }			        
 
 			        for (var i = 0; i < xmldom.getElementsByTagName("ROW").length; i++) {
