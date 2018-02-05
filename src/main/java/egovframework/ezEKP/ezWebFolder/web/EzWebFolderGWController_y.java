@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezWebFolder.web;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -25,7 +27,7 @@ public class EzWebFolderGWController_y {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderGWController_y.class);
 	
 	@Autowired
-	private EzWebFolderService service ;
+	private EzWebFolderService_y service ;
 	
 	@Autowired
 	private CommonUtil commonutil;

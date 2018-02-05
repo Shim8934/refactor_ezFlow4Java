@@ -175,32 +175,13 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 			company.setHasSubFolder(0);			
 		}		
 	}
-
+	
 	@Override
-	public List<FileVO> getFileList(String folderId, int tenantId,
-			String companyId, String searchExt, String searchFileName,
-			String searchStartDate, String searchEndDate,
-			String searchCreateName, String searchFileType,
-			String searchPageCount, String searchListCount) throws Exception {
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("folderId",folderId);
-		map.put("tenantId",tenantId);
-		map.put("companyId",companyId);
-		map.put("searchExt", searchExt);
-		map.put("searchFileName", searchFileName);
-		map.put("searchStartDate", searchStartDate);
-		map.put("searchEndDate", searchEndDate);
-		map.put("searchCreateName", searchCreateName);
-		map.put("searchFileType", searchFileType);
-		map.put("searchPageCount", searchPageCount);
-		map.put("searchListCount", searchListCount);
-		
-		List<FileVO> filevo = (List<FileVO>) ezWebFolderDAO.getFileList(map);
-		
-		return filevo;
+	public void updateDownCnt(String fileId, int tenantId) {		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileId", fileId);		
+		map.put("tenantId", tenantId);		
+		ezWebFolderDAO.updateDownCnt(map);
 	}
-
 
 }

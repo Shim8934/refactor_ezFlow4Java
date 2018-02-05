@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezWebFolder_y">
+	<typeAlias  alias="FileVO"          	type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
+	<typeAlias  alias="FileTypeVO"          type="egovframework.ezEKP.ezWebFolder.vo.FileTypeVO"/>
+	<typeAlias  alias="FolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"/>
+	<typeAlias  alias="FolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
+	
+	<!-- File resultMap -->
+    <resultMap id="fileVO" class="FileVO">
+        <result property="fileId"               column="file_id"                columnIndex="1"  />              
+        <result property="fileName"         	column="file_name"              columnIndex="2"  />
+        <result property="filePath"         	column="file_path"              columnIndex="3"  />
+        <result property="fileSize"          	column="file_size"              columnIndex="4"  />
+        <result property="typeId"          		column="type_id"                columnIndex="5"  />
+        <result property="downloadCnt"          column="down_count"             columnIndex="6"  />
+        <result property="fileExt"           	column="file_ext"               columnIndex="7"	 />
+        <result property="folderId"           	column="folder_id"              columnIndex="8"  />
+        <result property="useStatus"        	column="use_status"         	columnIndex="9"	 />
+        <result property="createId"             column="create_id"            	columnIndex="10" />
+        <result property="createName1"          column="create_name1"          	columnIndex="11" />
+        <result property="createName2"          column="create_name2"          	columnIndex="12" />
+        <result property="createDate"           column="create_date"            columnIndex="13" />
+        <result property="updateId"             column="update_id"              columnIndex="14" />
+        <result property="updateDate"           column="update_date"            columnIndex="15" />        
+        <result property="tenantId"         	column="tenant_id"              columnIndex="16" />
+    </resultMap>
+    
+    <!-- FileType resultMap -->
+    <resultMap id="folderSimpleVO" class="FolderSimpleVO">
+        <result property="folderId"             column="FOLDER_ID"               columnIndex="1" />              
+        <result property="folderName"         	column="FOLDER_NAME"             columnIndex="2" />
+		<result property="folderLevel"         	column="FOLDER_LEVEL"            columnIndex="3" />
+    </resultMap>
+    
+    <!-- Folder resultMap -->
+    <resultMap id="folderVO" class="FolderVO">
+        <result property="folderId"             column="FOLDER_ID"                columnIndex="1"  />              
+        <result property="folderName"         	column="FOLDER_NAME"              columnIndex="2"  />
+        <result property="folderType"         	column="FOLDER_TYPE"              columnIndex="3"  />
+        <result property="folderPath"          	column="FOLDER_PATH"              columnIndex="4"  />
+        <result property="folderStep"           column="FOLDER_STEP"              columnIndex="5"  />
+        <result property="folderLevel"          column="FOLDER_LEVEL"             columnIndex="6"  />
+        <result property="folderUpper"          column="FOLDER_UPPER"             columnIndex="7"	 />
+        <result property="useStatus"           	column="USE_STATUS"               columnIndex="8"  />
+        <result property="ownerId"        	    column="OWNER_ID"         	      columnIndex="9"	 />
+        <result property="createId"             column="CREATE_ID"            	  columnIndex="10" />
+        <result property="createDate"           column="CREATE_DATE"          	  columnIndex="11" />
+        <result property="createName1"          column="CREATE_NAME1"          	  columnIndex="12" />
+        <result property="createName2"          column="CREATE_NAME2"             columnIndex="13" />
+        <result property="updateId"             column="UPDATE_ID"                columnIndex="14" />
+        <result property="updateDate"           column="UPDATE_DATE"              columnIndex="15" />
+        <result property="companyId"            column="COMPANY_ID"               columnIndex="16" />      
+        <result property="tenantId"         	column="TENANT_ID"                columnIndex="17" />
+    </resultMap>
+    
+    <!-- FolderSimple resultMap -->
+    <resultMap id="fileTypeVO" class="FileTypeVO">
+        <result property="typeId"               column="TYPE_ID"                columnIndex="1" />              
+        <result property="typeName"         	column="TYPE_NAME"              columnIndex="2" />
+        <result property="fileExt"         	    column="FILE_EXT"               columnIndex="3" />
+        <result property="typeIcon"          	column="TYPE_ICON"              columnIndex="4" />
+        <result property="tenantId"          	column="TENANT_ID"              columnIndex="5" />
+    </resultMap>
+    
+   <select id="EzWebFolderDAO_y.getFileList" resultMap="fileVO" parameterClass="Map">   
+	<![CDATA[
+		SELECT 
+			FILE_ID 	,
+			FILE_NAME 	,
+			FILE_PATH	,
+			FILE_SIZE	,
+			TYPE_ID		,
+			DOWN_COUNT	,
+			FILE_EXT	,
+			FOLDER_ID	,
+			USE_STATUS 	,
+			CREATE_ID	,
+			CREATE_NAME1,
+			CREATE_NAME2,
+			CREATE_DATE	,
+			UPDATE_ID	,
+			UPDATE_DATE	,        	 
+			TENANT_ID		
+		FROM 
+			TBL_WEBFOLDER_FILE 
+		WHERE  
+			FILE_EXT  LIKE if(#searchExt# != '', CONCAT('%',#searchExt#,'%') ,FILE_EXT)
+		AND 
+			CREATE_NAME1 LIKE if(#searchCreateName# != '', CONCAT('%',#searchCreateName#,'%') , CREATE_NAME1)
+		AND 
+			TYPE_ID LIKE IF ( #searchFileType# != '',CONCAT('%',#searchFileType#,'%'), TYPE_ID)
+		AND 
+			FILE_NAME LIKE IF ( #searchFileName# != '',CONCAT('%',#searchFileName#,'%'), FILE_NAME)
+		AND 
+			FOLDER_ID = #folderId#
+		AND
+			TENANT_ID = #tenantId#	
+				
+	]]>				
+   </select>
+
+</sqlMap>

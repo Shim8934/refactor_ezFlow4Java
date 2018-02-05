@@ -154,8 +154,8 @@ function renderResult(result) {
 	// upload하려면 jsonArr = JSON.parse(result)가 있어야 해요 
 	// 안그러면 에러나요 
 	
-//	var jsonArr = result;
-	var jsonArr = JSON.parse(result);
+	var jsonArr = result;
+//	var jsonArr = JSON.parse(result);
 	var len = jsonArr.length;
 	var tblElmt = document.getElementById("tblFileList");
 	var rowsCnt = tblElmt.rows.length - 1;

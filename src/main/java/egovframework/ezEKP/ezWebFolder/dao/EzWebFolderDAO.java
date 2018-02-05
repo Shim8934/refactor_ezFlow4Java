@@ -37,6 +37,10 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public void updateFileUseStatus(Map<String, Object> map) {		
 		update("EzWebFolderDAO.updateFileUseStatus", map);
 	}
+	
+	public void updateDownCnt(Map<String, Object> map) {		
+		update("EzWebFolderDAO.updateDownCnt", map);
+	}
 
 	public void updateFileName(Map<String, Object> map) {
 		update("EzWebFolderDAO.updateFileName", map);
@@ -65,10 +69,5 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 
 	public FolderVO getCompanyFolderId(Map<String, Object> map) {		
 		return (FolderVO)select("EzWebFolderDAO.getCompanyFolderId", map);
-	}
-
-	// fileList 가져오는 메소드
-	public List<FileVO> getFileList(Map<String, Object> map) {
-		return  (List<FileVO>) list("EzWebFolderDAO.getFileList",map);
 	}
 }
