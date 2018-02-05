@@ -10,16 +10,15 @@ function GetDocumentElement(HwpCtrl, CharName)
 	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
-	    if (DocumentInfo.getElementsByTagName("KEYWORD").item(0).childNodes.length == 0) {
-	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONNROOT></CONNROOT>");
-	    }
-	    
+		if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "") {
+			setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONN></CONN>");			
+		}
+		
 		var DocumentKeywordInfo = createXmlDom();
-		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
+		DocumentKeywordInfo.loadXML(getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
-			alert(getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0)));
-		    return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+		    return getNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
 		} else {
 			return "";
 		}
@@ -36,28 +35,27 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 		CharName = "r" + CharName;
 	
 	var DocumentInfo = createXmlDom();
-	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
+	DocumentInfo.loadXML(HwpCtrl.GetDocumentInfo());
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
-	    if (DocumentInfo.getElementsByTagName("KEYWORD").item(0).childNodes.length == 0) {
-	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONNROOT></CONNROOT>");
+	    if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "") {
+	    	setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONN></CONN>");	    	
 	    }
 	    
 		var DocumentKeywordInfo = createXmlDom();
-		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
+		DocumentKeywordInfo.loadXML(getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
 		    setNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0) , value);
-		    
-			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.getElementsByTagName("CONNROOT").item(0)));
-			
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", DocumentKeywordInfo.xml);
 			return true;
 		} else {
 			var objNode;
+			objNode = DocumentKeywordInfo.createNode(1,CharName,"");		
+			setNodeText(objNode , value);
+			DocumentKeywordInfo.documentElement.appendChild(objNode);
 			
-			createNodeAndAppandNodeText(DocumentKeywordInfo, DocumentKeywordInfo.getElementsByTagName("KEYWORD").item(0), objNode, CharName, value);
-			
-			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.getElementsByTagName("CONNROOT").item(0)));
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", DocumentKeywordInfo.xml);
 			return true;
 		}
 	} else {

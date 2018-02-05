@@ -145,20 +145,19 @@
 		                    }
 		                }
 		            } else {
-		                Editor_Complete();
+						setTimeout(function() {
+							Editor_Complete();
+						}, 200);
 		            }
 		        }
 		        
-// 		        onloadflag = true;
 		    });
-// 			}
 		
 		    function Editor_Complete() {
 	            if (formURL != "") {
 	                if (useEditor == "HWP") {
-// 		                    document.getElementById("btn_OpinionSave").style.display = "";
 	                    message.HWP_LoadFile(realPath + formURL);
-		                    
+	                    
 	                    if (message.HWP_GetDocumentElement() != "") {
 	                        var connXML= message.HWP_GetDocumentElement().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
 	                        

@@ -13,9 +13,9 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
-			var pDocID;      
-		    var pDocHref;    
-		    var pFormID;     
+			var pDocID;
+		    var pDocHref;
+		    var pFormID;
 		    var pOpinionFlag;
 		    var pListTypeValue;
 		    var flag = false;
