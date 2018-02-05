@@ -23,8 +23,7 @@ public interface EzJournalService {
 
 	public List<JournalFormInfoVO> getFormList(String typeId, String companyId, String tenantId) throws Exception;
 
-	public List<JournalFormInfoVO> getDeptUseFormList(String typeId, String companyId,
-			String tenantId, String deptId) throws Exception;
+	public List<JournalFormInfoVO> getDeptUseFormList(String typeId, String companyId, String tenantId, String deptId) throws Exception;
 
 	public List<JournalFormInfoVO> getBasicFormList(String companyId, String tenantId) throws Exception;
 

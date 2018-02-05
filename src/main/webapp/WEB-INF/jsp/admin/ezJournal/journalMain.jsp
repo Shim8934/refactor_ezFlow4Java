@@ -13,8 +13,6 @@
 		<frame src="/admin/ezJournal/leftTop.do" name="left" frameborder="no" scrolling="NO" noresize marginwidth="0" marginheight="0">
 		<frame src="/admin/ezJournal/formType.do" name="right" frameborder="no" scrolling="AUTO" marginwidth="0" marginheight="0">
   	</frameset>
-  	<noframes>
-  	</noframes>
 	<noframes>
 		<body>
 		</body>

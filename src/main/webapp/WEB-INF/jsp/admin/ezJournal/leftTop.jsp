@@ -40,11 +40,11 @@
 	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 		<div id="left">
 			
-			<div class="left_admin" title="<spring:message code='ezJournal.b001'/>"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='ezJournal.b001'/></div>
+			<div class="left_admin" title="<spring:message code='ezJournal.t1'/>"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='ezJournal.t1'/></div>
 			
-				<h2><span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.b002'/></span><ul></ul></h2>	
-				<h2><span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.b003'/></span><ul></ul></h2>	
-				<h2><span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.b004'/></span><ul></ul></h2>	
+				<h2><span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t2'/></span><ul></ul></h2>	
+				<h2><span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t3'/></span><ul></ul></h2>	
+				<h2><span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t4'/></span><ul></ul></h2>	
 		</div>
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");

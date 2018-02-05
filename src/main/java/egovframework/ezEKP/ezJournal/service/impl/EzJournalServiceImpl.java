@@ -8,6 +8,7 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezJournal.dao.EzJournalDAO;
@@ -20,7 +21,8 @@ import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 public class EzJournalServiceImpl implements EzJournalService{
 
 	private static final Logger logger = LoggerFactory.getLogger(EzJournalServiceImpl.class);
-	
+
+	@Autowired
 	private EzJournalDAO ezJournalDAO;
 	
 	@Override
@@ -126,7 +128,6 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("formName", journalFormInfoVO.get("formName"));
 		map.put("formInfo", journalFormInfoVO.get("formInfo"));
 		map.put("formContent", journalFormInfoVO.get("content"));
-		//map.put("formDate", commonUtil.getTodayUTCTime(""));
 		map.put("formWriter", journalFormInfoVO.get("formWriter"));
 		map.put("companyId", journalFormInfoVO.get("companyId"));
 		map.put("tenantId", journalFormInfoVO.get("tenantId"));
