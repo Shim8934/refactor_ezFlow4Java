@@ -944,7 +944,7 @@ public class CommonUtil {
 	 * @param request
 	 * @return
 	 */
-	public JSONObject getJsonFromRestApi(String resteUrl, Map<String, String> param,HttpServletRequest request){
+	public JSONObject getJsonFromRestApi(String resteUrl, Map<String, Object> param,HttpServletRequest request){
 		logger.debug("getJsonFromRestApi started");
 		String gwServerUrl = config.getProperty("config.journalGWServerURL");
 		String url = gwServerUrl + resteUrl ;
