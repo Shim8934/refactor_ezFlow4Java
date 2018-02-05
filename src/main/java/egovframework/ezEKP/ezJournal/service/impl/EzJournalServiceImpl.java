@@ -154,4 +154,13 @@ public class EzJournalServiceImpl implements EzJournalService{
 		logger.debug("insertUseDept ended");
 	}
 
+	@Override
+	public List<Map<String, String>> getCompanyList(String userId,
+			String tenantId) throws Exception {
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put("userId", userId);
+		param.put("tenantId", tenantId);
+		return ezJournalDAO.getCompanyList(param);
+	}
+
 }
