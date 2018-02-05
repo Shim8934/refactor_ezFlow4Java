@@ -33,6 +33,9 @@
 		select type_id, used from tbl_journal_form_type
 		where tenant_id=#tenantId#
 		and company_id=#companyId#
+		<isNotEmpty property="used">
+			and used=#used#
+		</isNotEmpty>
 	</select>
 	
 	<!-- 회사 생성시 초 기 양식함 생성 -->

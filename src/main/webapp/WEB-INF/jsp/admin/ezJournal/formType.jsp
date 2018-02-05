@@ -10,24 +10,11 @@
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript">		    
-		    var userlang = "<c:out value='${primary}'/>";
-		    var companylist = "${companyList}";
-		    
-		    document.onselectstart = function () {
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
-		            return false;
-		        else
-		            return true;
-		    };
-			
-			window.onload = function () {
-			}
-	
-// 			function journal_get_formuse() {			    
+	    <script type="text/javascript">		
+	    
+			function journal_get_formuse(val) {			    
 // 			    $.ajax({
 // 		    		type : "POST",
 // 		    		dataType : "json",
@@ -49,7 +36,9 @@
 // 		    			}
 // 		    		}
 // 		        });
-// 			}			
+				window.location.search += "&companyId="+val;
+			}	
+			
 		    function Cancel_Click() {
 		        window.location.reload(true);
 		    }
@@ -85,28 +74,52 @@
 		</style>
 	</head>
 	<body class="mainbody"> 
-		<h1><spring:message code='ezJournal.b002' /></h1>
+		<h1><spring:message code='ezJournal.t2' /></h1>
 		<form id="Form1" method="post">
 			<div id="mainmenu">
 				<span><b><spring:message code = 'ezApprovalG.t1512' /></b></span>
-	            <select id="ListCompany" onchange="journal_get_formruse()">${companySel}</select>
+	            <select id="ListCompany" onchange="journal_get_formuse(this.value)">
+	            	<c:forEach items="${compList}" var="company">
+		            	<option value="${company.companyId }">${company.companyName }</option>
+	            	</c:forEach>
+	            </select>
 			</div>
 			<br/>
 			<table class="content" style="width: 260px; margin-left: 15px;">
 			    <tr>
-			        <th style="text-align: center;" width="100px"><spring:message code='ezJournal.b011' /></th>
-			        <th style="text-align: center;" width="80px"><spring:message code='ezJournal.b012' /></th>
-			        <th style="text-align: center;" width="80px"><spring:message code='ezJournal.b013' /></th>
+			        <th style="text-align: center;" width="100px"><spring:message code='ezJournal.t12' /></th>
+			        <th style="text-align: center;" width="80px"><spring:message code='ezJournal.t13' /></th>
+			        <th style="text-align: center;" width="80px"><spring:message code='ezJournal.t14' /></th>
 			    </tr>
+			    <c:forEach items="${typeList }" var="type">
+			    <tr>
+			    	<td style="text-align: center;" width="100px"><spring:message code="${type.journaltypeId }" /></td>
+			    	<c:choose>
+				    	<c:when test="${type.journalUse eq 'use'}">
+					    	<td style="text-align: center;" width="100px">
+					    	<input type="radio" name="${type.journaltypeId }" value="use" checked/>
+					    	</td>
+					    	<td style="text-align: center;" width="100px">
+					    	<input type="radio" name="${type.journaltypeId }" value="no"/>
+					    	</td>
+				    	</c:when>
+				    	<c:otherwise>
+					    	<td style="text-align: center;" width="100px">
+					    	<input type="radio" name="${type.journaltypeId }" value="use" />
+					    	</td>
+					    	<td style="text-align: center;" width="100px">
+					    	<input type="radio" name="${type.journaltypeId }" value="no" checked/>
+					    	</td>
+				    	</c:otherwise>
+			    	</c:choose>
+			    	</tr>
+			    </c:forEach>
 			    
 			</table>
 			<div class="btnposition" style="width: 260px">
-			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezSchedule.t4' /></span></a>
-			    <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code='ezSchedule.t5' /></span></a>
+			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezJournal.t15' /></span></a>
+			    <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code='ezJournal.t16' /></span></a>
 			</div>
-		    <script type="text/javascript">
-		    	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-			</script>
 		</form>
 	</body>
 </html>

@@ -48,16 +48,16 @@ public class EzJournalGWController {
 		
 		String companyId = request.getParameter("companyId");
 		String tenantId = request.getParameter("tenantId");
+		String used = request.getParameter("used");
 		
 		LOGGER.debug("companyId : " + companyId);
 		LOGGER.debug("tenantId : " + tenantId);
 		
 		try {
-			List<JournaltypeVO> typeList = ezJournalService.getJournaltypeList(companyId, tenantId);
-			
+			List<JournaltypeVO> typeList = ezJournalService.getJournaltypeList(companyId, tenantId,used);
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("typeList", typeList);
+			result.put("data", typeList);
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");

@@ -17,10 +17,11 @@ public interface EzJournalService {
 	 * 양식함 리스트 가져오는 서비스
 	 * @param companyId
 	 * @param tenantId
+	 * @param used 
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournaltypeVO> getJournaltypeList(String companyId, String tenantId) throws Exception;
+	public List<JournaltypeVO> getJournaltypeList(String companyId, String tenantId, String used) throws Exception;
 	
 	/**
 	 * 양식함 사용여부 변경

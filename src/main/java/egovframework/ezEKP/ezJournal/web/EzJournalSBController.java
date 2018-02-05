@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezJournal.web;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -7,6 +8,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.bouncycastle.crypto.macs.HMac;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -55,37 +57,40 @@ public class EzJournalSBController {
 		logger.debug("formType started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezjournal/companies" ;
-				
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put("userId", userInfo.getId());
+		param.put("tenantId", userInfo.getTenantId()+"");
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-		        .queryParam("userId", userInfo.getId())
-		        .queryParam("tenantId", userInfo.getTenantId());
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-				
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/companies", param, request);
 		String status = resultBody.get("status").toString();
 				
 		if (status.equals("ok")) {			
-			JSONArray scheduleList = (JSONArray) resultBody.get("data");
+			JSONArray compList = (JSONArray) resultBody.get("data");
 			
-			model.addAttribute("scheduleListCnt", scheduleList.size());
-			model.addAttribute("scheduleList", scheduleList);
+			model.addAttribute("compList", compList);
+		}
+		
+		param.clear();
+		
+		String companyId =null;
+		if (request.getParameter("companyId") != null) {
+			companyId = request.getParameter("companyId");
+		} else{
+			companyId = userInfo.getCompanyID();
+		}
+		
+		param.put("companyId",companyId );
+		param.put("tenantId", userInfo.getTenantId()+"");
+		
+		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", param, request);
+		status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {		
+			JSONArray typeList = (JSONArray) resultBody.get("data");
+			model.addAttribute("typeList", typeList);
 		}
 		
 		logger.debug("formType ended");
-		return "admin/ezJournal/fromType";
+		return "admin/ezJournal/formType";
 	}
 }

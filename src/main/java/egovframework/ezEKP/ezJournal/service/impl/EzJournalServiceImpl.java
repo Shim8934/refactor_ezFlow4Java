@@ -27,12 +27,13 @@ public class EzJournalServiceImpl implements EzJournalService{
 	private EzJournalDAO ezJournalDAO;
 	
 	@Override
-	public List<JournaltypeVO> getJournaltypeList(String companyId,String tenantId) throws Exception {
+	public List<JournaltypeVO> getJournaltypeList(String companyId,String tenantId,String used) throws Exception {
 		logger.debug("getJournaltypeList started");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("companyId", companyId);
 		param.put("tenantId", tenantId);
+		param.put("used", used);
 		
 		List<JournaltypeVO> list = ezJournalDAO.getJournaltypeList(param);
 		

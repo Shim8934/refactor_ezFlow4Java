@@ -104,8 +104,6 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<JournalCompanyVO> getCompanyList(Map<String, String> map){
-		System.out.println("다오 들어와요?");
-		System.out.println("맵보자"+map.get("userId"));
 		return (List<JournalCompanyVO>) list("selectCompanyList",map);
 	}
 }
