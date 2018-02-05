@@ -143,5 +143,26 @@
 		)
 	</insert>
 	
+	<select id="selectDeptList">
+		select d.CN as id, 
+		d.extensionattribute1 as parent,
+		d.extensionattribute2 as companyId, 
+		d.displayname as text
+		,case d.CN
+			when d.extensionattribute2 then 'comp'
+			else 'dept'
+			end as isComp
+		 ,case d.CN
+		when u.DEPARTMENT then 'yes'
+		else 'no'
+		end as myDept
+		from tbl_deptmaster d
+		left join tbl_usermaster u on d.tenant_id=u.TENANT_ID  
+		where d.tenant_id=#tenant_id#
+		and u.CN=#user_id#
+		and u.tenant_id=#tenant_id#
+		and (((substr(u.EXTENSIONATTRIBUTE1,3,1)=0 and d.extensionattribute2=u.PHYSICALDELIVERYOFFICENAME))
+		or (substr(u.EXTENSIONATTRIBUTE1,3,1)=1))
+		order by DEPTLEVEL
+	</select>
 </sqlMap>
-
