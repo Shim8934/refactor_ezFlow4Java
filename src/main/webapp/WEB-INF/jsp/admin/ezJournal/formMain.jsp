@@ -14,8 +14,8 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">		    
-		    var companylist = "${companyList}";
-		    var companyId = "<c:out value='${userInfo.companyId}' />";
+		    //var companylist = "${companyList}";
+		    var companyId = "<c:out value='${userInfo.companyID}' />";
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -25,30 +25,21 @@
 		    };
 			
 			$(document).ready(function() {
-				$("#SCompID").val = companyId;
-				
+				//alert(companyId)
+				$("#SCompID").val(companyId);
+				journal_get_formuse();
 			});
 	
 			function journal_get_formuse() {			    
 			    $.ajax({
 		    		type : "POST",
 		    		dataType : "json",
-		    		async : true,
-		    		url : "/admin/ezJournal/journalGetFormUse.do",
-		    		data : {
-		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value		    			
-		    		},
+		    		async : false,
+		    		url : "/admin/ezJournal/useType.do",
+		    		data : { companyId  : companyId },
 		    		success: function(result) {
 		    			
-		    			var leng = Object.keys(result.typeList).length;
 		    			
-		    			for(var i = 0; i < leng; i++) {
-		    				if (result.typeList[i].journalUse == "use") {
-		    					document.getElementById("USE" + i).checked = true;
-		    				} else {
-		    					document.getElementById("NUSE" + i).checked = true;
-		    				}
-		    			}
 		    		}
 		        });
 			}			
