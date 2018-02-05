@@ -64,6 +64,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -945,7 +946,7 @@ public class CommonUtil {
 	 * @param request
 	 * @return
 	 */
-	public JSONObject getJsonFromRestApi(String resteUrl, Map<String, String> param,HttpServletRequest request,String methodType){
+	public JSONObject getJsonFromRestApi(String resteUrl, Map<String, String> param,HttpServletRequest request,String methodType,JSONObject jsonParam){
 		logger.debug("getJsonFromRestApi started");
 		String gwServerUrl = config.getProperty("config.journalGWServerURL");
 		String url = gwServerUrl + resteUrl ;
@@ -954,12 +955,14 @@ public class CommonUtil {
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam,headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 		
-		for(String key : param.keySet()){
-			builder.queryParam(key, param.get(key));
+		if (param!=null) {
+			for(String key : param.keySet()){
+				builder.queryParam(key, param.get(key));
+			}
 		}
 		
 		RestTemplate rest = new RestTemplate();
@@ -977,9 +980,6 @@ public class CommonUtil {
 			break;
 		case "delete":
 			method = HttpMethod.DELETE;
-			break;
-		case "patch":
-			method = HttpMethod.PATCH;
 			break;
 		default:
 			method = HttpMethod.GET;
