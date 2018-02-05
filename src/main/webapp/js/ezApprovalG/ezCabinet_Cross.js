@@ -1517,7 +1517,7 @@ function SearchCabinet(pInitFlag) {
     searchcab_cross_dialogArguments[1] = SearchCabinet_Complete;
 
     if (pInitFlag == "0") {
-        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(800, 455));
+        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(815, 455));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
