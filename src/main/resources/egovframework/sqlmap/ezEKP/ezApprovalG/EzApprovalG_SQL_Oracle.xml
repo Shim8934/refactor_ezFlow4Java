@@ -6901,7 +6901,7 @@
 							   	 	WHERE 
 							   	 		ROWNUM <= #v_PAGESIZE#) 
 							   		 WHERE 
-							   		 	rnum <= #v_PAGESIZE2#
+							   		 	rnum BETWEEN #v_PAGESIZE3#+1 AND #v_PAGESIZE#
 							   	 ]]>
 				<isNotEmpty property="v_ORDEROPTION2">
 				<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
