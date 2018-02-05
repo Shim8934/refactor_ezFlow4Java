@@ -912,12 +912,12 @@
 		                var top = "";
 		
 		                if ("${userInfo.lang}" == "1") { 
-			                wWeight = 1005;
+			                wWeight = 1015;
 			                wHeight = 625;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } else { 
-			                wWeight = 1005;
+			                wWeight = 1015;
 			                wHeight = 625;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;

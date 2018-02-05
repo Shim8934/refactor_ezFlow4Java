@@ -504,7 +504,7 @@
 <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 
 <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm">
-  <div class="btnposition">       
+  <div class="btnposition btnpositionNew">       
         <a class="file-btn" style="vertical-align:top">
           <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" /> 
 		          <span for="file" id="btn_AttachAdd" ><spring:message code='ezApprovalG.t268'/></span>
