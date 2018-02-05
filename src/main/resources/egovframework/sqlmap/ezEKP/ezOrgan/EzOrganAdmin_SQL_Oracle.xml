@@ -3497,7 +3497,12 @@
 	<select id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
 		<![CDATA[
 			SELECT
-				* 
+				USERID,
+				PROXYUSERID,
+				PROXYUSERNAME,
+				PROXYUSERDEPTID,
+				to_char(STARTDATE + $offsetMin$/(24*60), 'yyyy-MM-dd HH24:mi:ss') as STARTDATE,
+				to_char(ENDDATE + $offsetMin$/(24*60), 'yyyy-MM-dd HH24:mi:ss') as ENDDATE 
       		FROM
       			TBL_PROXYINFO 
       		WHERE
