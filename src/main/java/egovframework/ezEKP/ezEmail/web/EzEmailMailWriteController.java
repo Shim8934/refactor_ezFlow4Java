@@ -1362,7 +1362,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String bigMaxSizeStr = doc.getElementsByTagName("BIGMAXSIZE").item(0).getTextContent();
-		int bigMaxSize = Integer.parseInt(bigMaxSizeStr);
+		long bigMaxSize = Long.parseLong(bigMaxSizeStr);
 		
 		String changeSizeStr = doc.getElementsByTagName("CHANGESIZE").item(0).getTextContent();	
 		int changeSize = Integer.parseInt(changeSizeStr);
@@ -1417,7 +1417,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 		
 		// 총 파일의 크기가 대용량첨부 제한크기를 넘는지 체크한다.
-		if (bigMaxSize != 0 && totalFileSize > bigMaxSize ) {
+		if (bigMaxSize != 0 && totalFileSize > bigMaxSize) {
 			logger.debug("totalFileSize is over bigMaxSize. Return OVERFLOW.");
 			logger.debug("mailInterUploadCopy ended.");
 			return "OVERSIZE";
