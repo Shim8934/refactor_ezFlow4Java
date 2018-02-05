@@ -6917,9 +6917,9 @@
 							   	<![CDATA[
 							   	 ) A 
 							   	 	WHERE 
-							   	 		ROWNUM <= #v_PAGESIZE#) 
+							   	 		ROWNUM <= #v_PAGESIZE#) X
 							   		 WHERE 
-							   		 	rnum <= #v_PAGESIZE2#
+							   		 	X.rnum >= #v_PAGESIZE3#+1
 							   	 ]]>
 				<isNotEmpty property="v_ORDEROPTION2">
 				<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
