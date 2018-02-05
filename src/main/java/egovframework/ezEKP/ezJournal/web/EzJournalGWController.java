@@ -702,6 +702,20 @@ public class EzJournalGWController {
 		
 		JSONObject result = new JSONObject();
 		
+		String userId = request.getParameter("userId");
+		String tenantId = request.getParameter("tenantId");
+		
+		try {
+			List<Map<String,String>> compList = ezJournalService.getCompanyList(userId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("compList", compList);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
+		
 		LOGGER.debug("ezJournal G/W getCompanyList ended.");
 		return result;
 	}
