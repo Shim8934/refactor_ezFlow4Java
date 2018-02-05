@@ -12,11 +12,9 @@ import java.util.TimeZone;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -33,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -738,6 +735,60 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		else {
 			extStr += "wf=1;";
 		}
+		
+		vo.setExtensionAttribute1(extStr);
+		vo.setTenantId(tenantId);
+		vo.setNowDate(nowDate);
+		
+		logger.debug("Extension: " + extStr);
+
+		try {
+			ezOrganAdminService.updateDBData_user(vo);
+
+			result.put("status", "ok");
+			result.put("code", 0);						
+		}
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/webfolderadmin/webfolderadmin/users/{userid}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deleteWebfolderAdminDelete(@PathVariable String userid, HttpServletRequest request) throws Exception {
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		String primary	    = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
+		JSONObject result   = new JSONObject();
+		OrganUserVO vo      = null;
+		
+		if (userid.equals("") || primary.equals("") || tenantId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}		
+		
+		logger.debug("UserID: " + userid + " || primary: " + primary + " || TenantId: " + tenantId);
+		
+		vo            = ezOrganAdminService.getUserInfo(userid, primary, tenantId);
+		String extStr = vo.getExtensionAttribute1().toLowerCase();
+		
+	    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        date.setTimeZone(TimeZone.getTimeZone("GMT"));
+        
+        String nowDate = date.format(new Date());		
+		int pos        = extStr.indexOf("wf=1;");
+		
+		if (pos == -1) {
+			logger.debug("Cannot find webfolder admin extension!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}		
+				
+		extStr = extStr.replace("wf=1;", "");
 		
 		vo.setExtensionAttribute1(extStr);
 		vo.setTenantId(tenantId);
