@@ -512,6 +512,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		    response.getOutputStream().flush();
 		    response.getOutputStream().close();			
 			
+		    ezWebFolderService.updateDownCnt(fileVO.getFileId(), tenantId);
 		    saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
 		}		
 		else {		
@@ -540,6 +541,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			        fileInputStream.close();
 			        zipOutputStream.closeEntry();
 			        
+			        ezWebFolderService.updateDownCnt(fileVO.getFileId(), tenantId);
 			        saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
 			    }
 		
@@ -627,6 +629,58 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
 			String fileExt = fileVO.getFileExt();
 			ezWebFolderService.updateFileName(fileId, newName + "." + fileExt, tenantId);			
+			saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+		} 
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/webfolder/filemove/fileid/{fileid}/modes/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putFileMove(@PathVariable(value="fileid") String fileId, @PathVariable(value="mode") String mode, HttpServletRequest request) {
+		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		String userId	    = request.getParameter("userId")   != null ? request.getParameter("userId")                     : "";
+		String userName1    = request.getParameter("userName1")!= null ? request.getParameter("userName1")                  : "";
+		String userName2    = request.getParameter("userName2")!= null ? request.getParameter("userName2")                  : "";	
+		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
+		String folderId     = request.getParameter("folderId") != null ? request.getParameter("folderId")                   : "";
+		JSONObject result   = new JSONObject();
+		
+		if (fileId.equals("") || fileId.equals("") || mode.equals("") || tenantId == -1 || offset.equals("") || userId.equals("") || userName1.equals("") || userName2.equals("") || companyId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
+			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+			
+			if (mode.equals("0")) {
+				//move file
+				ezWebFolderService.moveFile(fileId, folderId, tenantId);
+			}
+			else {
+				//copy file
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date date                  = new Date();
+				String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+				
+				fileVO.setFolderId(folderId);				
+				fileVO.setFileId(getMaxFileID(tenantId));
+				fileVO.setCreateDate(timeUTC);
+				fileVO.setUpdateDate(timeUTC);
+				ezWebFolderService.insertFile(fileVO);
+			}
+		
 			saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
 			
 			result.put("status", "ok");

@@ -22,4 +22,5 @@ public interface EzWebFolderService {
 	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId) throws Exception;
 	FolderVO getCompanyFolderId(String companyId, String offset, int tenantId) throws Exception;
 	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i) throws Exception;
+	void updateDownCnt(String fileId, int tenantId);
 }

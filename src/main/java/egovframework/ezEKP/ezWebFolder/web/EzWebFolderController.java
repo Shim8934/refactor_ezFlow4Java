@@ -1,8 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import org.slf4j.Logger;
@@ -42,9 +40,6 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
-import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
-import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
-import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -272,8 +267,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String fileId   	= request.getParameter("fileId");
 		String newName 		= request.getParameter("newName");
 		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
-		String url          = gwServerUrl + "/webfolder/file-rename/fileid/" + fileId;
-		
+		String url          = gwServerUrl + "/webfolder/file-rename/fileid/" + fileId;		
 
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
@@ -313,59 +307,31 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezWebFolder/moveFile.do", method = RequestMethod.POST)	
 	public void moveFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("Move File is running!");	
-		LoginVO user = commonUtil.userInfo(loginCookie);
-		String offset = user.getOffset();
-		String fileId 	= request.getParameter("fileId")   != null ? request.getParameter("fileId")   : "";
-		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
-		String mode 	= request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();	
-		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), user.getOffset(), true);
+		logger.debug("Move File is running!");
+		LoginVO user 		= commonUtil.userInfo(loginCookie);
+		String fileId		= request.getParameter("fileId");
+		String folderId     = request.getParameter("folderId");
+		String mode         = request.getParameter("mode");		
 		
-		if (fileId.equals("") || folderId.equals("") || mode.equals("")) {
-			logger.debug("Move File illegal arguments!");
-			return;
-		}
+		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
+		String url          = gwServerUrl + "/webfolder/filemove/fileid/" + fileId + "/modes/" + mode;
 		
-		//Update file in database
-		try {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, user.getTenantId());
-			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), user.getTenantId());
-			
-			if (mode.equals("move")) {
-				ezWebFolderService.moveFile(fileId, folderId, user.getTenantId());
-			}
-			else {				
-				fileVO.setFolderId(folderId);				
-				fileVO.setFileId(getMaxFileID(user.getTenantId()));
-				fileVO.setCreateDate(commonUtil.getDateStringInUTC(fileVO.getCreateDate(), offset, true));
-				fileVO.setUpdateDate(commonUtil.getDateStringInUTC(fileVO.getUpdateDate(), offset, true));
-				ezWebFolderService.insertFile(fileVO);
-			}
-			
-			//Save log to database
-			FileLogVO fileLog = new FileLogVO();			
-			
-			fileLog.setLogType("U");
-			fileLog.setCompanyId(user.getCompanyID());
-			fileLog.setCreateDate(timeUTC);
-			fileLog.setCreateId(user.getId());
-			fileLog.setCreateName1(user.getDisplayName1());
-			fileLog.setCreateName2(user.getDisplayName2());
-			fileLog.setFileName(fileVO.getFileName());
-			fileLog.setFileSize(fileVO.getFileSize());
-			fileLog.setFileExt(fileVO.getFileExt());
-			fileLog.setFileType(fileType.getTypeName());
-			fileLog.setLogId(getMaxLogID(user.getTenantId()));
-			fileLog.setTenantId(user.getTenantId());
-			
-			ezWebFolderAdminService.insertFileLog(fileLog);
-			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenantId", user.getTenantId())
+				.queryParam("offset", user.getOffset())
+				.queryParam("userId", user.getId())
+				.queryParam("userName1", user.getDisplayName1())
+				.queryParam("userName2", user.getDisplayName2())
+				.queryParam("companyId", user.getCompanyID())
+				.queryParam("folderId", folderId);
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);		
+		RestTemplate rest    = new RestTemplate();
+		
+		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 		
 		logger.debug("Move File finishes!");		
 	}
