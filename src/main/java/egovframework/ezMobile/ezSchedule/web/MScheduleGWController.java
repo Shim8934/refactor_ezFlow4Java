@@ -813,6 +813,60 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 모바일 G/W 일정관리 [POST] 게시판-일정 연동 등록
+	 */	
+	@RequestMapping(value="/mobile/ezschedule/borad-schedules", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject mBoardScheduleInsert(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
+		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/borad-schedules] started.");
+		
+		JSONObject result = new JSONObject();
+						
+		try {
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, jsonParam.get("creatorId").toString());
+						
+			jsonParam.put("creatorName", info.getUserName());
+			jsonParam.put("creatorName2", info.getUserName2());			
+			
+			String startDate = jsonParam.get("startDate").toString();
+			String endDate = jsonParam.get("endDate").toString();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	    	Calendar cal = Calendar.getInstance();
+	    	cal.setTime(sdf.parse(endDate));
+	    	
+	    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+	    		cal.add(Calendar.MINUTE, -1);        		
+	    		endDate = sdf.format(cal.getTime());
+	    	}
+	
+	    	startDate = sdf.format(sdf.parse(startDate));
+	    	endDate = sdf.format(sdf.parse(endDate));
+	    	
+	    	String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
+	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);	        
+	        
+	        String realPath = commonUtil.getRealPath(request);
+	        Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
+	        
+	        int resultScheduleID = mScheduleService.insertBoardSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale); 
+	        
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", resultScheduleID);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/borad-schedules] ended.");
+		
+		return result;
+	}
+	
 }
 
 
