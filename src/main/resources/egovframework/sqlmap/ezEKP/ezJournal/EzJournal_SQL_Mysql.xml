@@ -156,7 +156,7 @@
 	</insert>
 	
 	<!-- 조직도 만들기 위한 쿼리 -->
-	<select id="selectDeptList" parameterClass="map" resultClass="">
+	<select id="selectDeptList" parameterClass="map">
 		select d.CN as id, 
 		d.extensionattribute1 as parent,
 		d.extensionattribute2 as companyId, 
