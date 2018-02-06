@@ -290,7 +290,7 @@
 		</script>
 	
 	</head>
-	<body class="popup">
+	<body class="popup" style="overflow-y:hidden; ">
 		<h1><spring:message code = 'ezApprovalG.t799' /></h1>
 		<div id="close">
 			<ul>

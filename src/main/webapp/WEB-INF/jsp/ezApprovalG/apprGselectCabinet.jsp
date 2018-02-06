@@ -542,7 +542,7 @@
 	                    </tr>
 	                </table>
 	                <div class="listview" style="margin-top: 5px">
-	                    <div id="TaskSCateList" style="border: 0; HEIGHT: 265px; WIDTH: 200px; overflow: auto;"></div>
+	                    <div id="TaskSCateList" style="border: 0; HEIGHT: 265px; WIDTH: 260px; overflow: auto;"></div>
 	                </div>
 	            </td>
 	            <%--단위업무 선택--%>
@@ -558,7 +558,7 @@
 	                    <tr>
 	                        <td style="width: 190px">
 	                            <div class="listview">
-	                                <div id="TaskList" style="HEIGHT: 300px; WIDTH: 228px; overflow: auto;"></div>
+	                                <div id="TaskList" style="HEIGHT: 300px; WIDTH: 260px; overflow: auto;"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -584,10 +584,10 @@
 	                        <td>
 	                            <div class="listview">
 	                            <c:if test="${initFlag == '1'}">
-	                                <div id="CabinetList" style="border: 0; HEIGHT: 300px; WIDTH: 229px; overflow: auto;"></div>
+	                                <div id="CabinetList" style="border: 0; HEIGHT: 300px; WIDTH: 260px; overflow: auto;"></div>
 	                            </c:if>
 	                            <c:if test="${initFlag != '1'}">
-	                            	<div id="CabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 229px; overflow: auto;"></div>
+	                            	<div id="CabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 260px; overflow: auto;"></div>
 	                            </c:if>
 	                            </div>
 	                        </td>
