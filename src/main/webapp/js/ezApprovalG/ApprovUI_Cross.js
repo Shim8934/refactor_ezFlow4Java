@@ -3502,21 +3502,20 @@ function getNextDocInfo() {
         NextDocUserName2 = "";
         NextDocDeptID = "";
         if (result != "") {
-            var objNodes = GetChildNodes(loadXMLString(result).documentElement);
+            var objNodes = loadXMLString(result);
 
-            if (objNodes.length > 0) {
-                NextDocID = getNodeText(objNodes[0]);
-                NextDocUserID = getNodeText(objNodes[1]);
-                NextDocUserName = getNodeText(objNodes[2]);
-                NextDocDeptID = getNodeText(objNodes[3]);
-                NextDocType = getNodeText(objNodes[4]);
-                docState = NextDocState;
-                NextDocState = getNodeText(objNodes[5]);
-                NextDocWriterID = getNodeText(objNodes[6]);
-                NextDocAprType = getNodeText(objNodes[7]);
-                NextDocHref = getNodeText(objNodes[8]);
-                NextDocExtended = getNodeText(objNodes[9]);
-            }
+            NextDocID =  getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "DOCID"));
+            NextDocUserID = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "USERID"));
+            NextDocUserName = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "USERNAME"));
+            NextDocDeptID = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "USERDEPTID"));
+            NextDocType = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "DOCTYPE"));
+            NextDocState = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "DOCSTATE"));
+            docState = NextDocState;
+            NextDocWriterID = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "WRITERID"));
+            NextDocAprType = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "APRTYPE"));
+            NextDocHref = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "HREF"));
+            NextDocExtended = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "EXTENDEDNAME"));
+        }
         }
     } catch (e) { }
 }
