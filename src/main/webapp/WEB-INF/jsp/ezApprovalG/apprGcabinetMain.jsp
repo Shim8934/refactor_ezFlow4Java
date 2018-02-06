@@ -537,7 +537,8 @@
 		                    if (deptcdoenode.length > 0)
 		                        tmpChkDeptID = getNodeText(deptcdoenode);
 		                }
-		                if ("<c:out value = '${userInfo.deptID} '/>" == tmpChkDeptID)
+
+		                if ("<c:out value = '${userInfo.deptID}'/>" == tmpChkDeptID) 
 		                    tmpAuthChk = true;
 		
 		                if (g_DeptInfo != "") {
