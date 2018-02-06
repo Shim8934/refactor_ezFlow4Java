@@ -30,7 +30,7 @@
 						break;
 						
 					case 3:
-						url = "/admin/ezJournal/view.do";
+						url = "/admin/ezJournal/author.do";
 						break;
 				}
 				window.open(url,"right");

@@ -47,8 +47,8 @@ public class EzJournalServiceImpl implements EzJournalService{
 		logger.debug("updateJournaltype started");
 		for (int i = 0; i < journaltypeList.size(); i++) {
 			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("typeId", journaltypeList.get(i).get("journaltypeId"));
-			param.put("used", journaltypeList.get(i).get("journalUse"));
+			param.put("typeId", journaltypeList.get(i).get("typeId"));
+			param.put("used", journaltypeList.get(i).get("used"));
 			param.put("companyId", companyId);
 			param.put("tenantId", tenantId);
 			logger.debug("typeId : "+param.get("typeId"));
@@ -158,11 +158,12 @@ public class EzJournalServiceImpl implements EzJournalService{
 
 	@Override
 	public List<JournalCompanyVO> getCompanyList(String userId,
-			String tenantId) throws Exception {
+			String tenantId,String companyId) throws Exception {
 		logger.debug("getCompanyList started");
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
+		param.put("companyId", companyId);
 		List<JournalCompanyVO> compList = ezJournalDAO.getCompanyList(param);
 		logger.debug("getCompanyList ended");
 		return compList;

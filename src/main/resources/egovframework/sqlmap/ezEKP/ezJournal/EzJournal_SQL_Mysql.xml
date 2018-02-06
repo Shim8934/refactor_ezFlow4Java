@@ -188,6 +188,10 @@
 	<select id="selectCompanyList" resultClass="companyVO" parameterClass="Map">
 		select d.CN as companyId,
 		d.displayname as companyName
+		,case d.CN
+			when #companyId# then 'selected'
+			else 'no'
+			end as selected
 		from jmocha.tbl_deptmaster d
 		left join jmocha.tbl_usermaster u on d.tenant_id=u.TENANT_ID
 		where d.TENANT_ID=#tenantId#
@@ -197,5 +201,9 @@
 		or (substr(u.EXTENSIONATTRIBUTE1,3,1)=1))
 		and d.extensionattribute2=d.CN
 		order by DEPTLEVEL
+	</select>
+	
+	<select id="selectAuthorList" parameterClass="Map">
+		
 	</select>
 </sqlMap>

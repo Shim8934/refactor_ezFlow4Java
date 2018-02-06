@@ -81,7 +81,6 @@ public class EzJournalGWController {
 		@SuppressWarnings("unchecked")
 		ArrayList<Map<String, String>> journaltypeList = (ArrayList<Map<String, String>>) jsonParam.get("journaltypeList");
 		
-		
 		try {
 			ezJournalService.updateJournaltype(journaltypeList, companyId, tenantId);
 			
@@ -705,9 +704,10 @@ public class EzJournalGWController {
 		
 		String userId = request.getParameter("userId");
 		String tenantId = request.getParameter("tenantId");
+		String companyId = request.getParameter("companyId");
 		
 		try {
-			List<JournalCompanyVO> compList = ezJournalService.getCompanyList(userId, tenantId);
+			List<JournalCompanyVO> compList = ezJournalService.getCompanyList(userId, tenantId,companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

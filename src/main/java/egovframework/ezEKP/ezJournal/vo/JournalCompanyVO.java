@@ -4,6 +4,13 @@ public class JournalCompanyVO {
 
 	private String companyId;
 	private String companyName;
+	private String selected;
+	public String getSelected() {
+		return selected;
+	}
+	public void setSelected(String selected) {
+		this.selected = selected;
+	}
 	public String getCompanyId() {
 		return companyId;
 	}
