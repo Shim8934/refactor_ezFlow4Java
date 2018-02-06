@@ -6,8 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-
-import egovframework.ezEKP.ezWebFolder.service.impl.EzWebFolderServiceimpl_m;
 import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 

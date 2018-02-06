@@ -10,11 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
-import egovframework.ezEKP.ezWebFolder.web.EzWebFolderGWController_m;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderService_m")

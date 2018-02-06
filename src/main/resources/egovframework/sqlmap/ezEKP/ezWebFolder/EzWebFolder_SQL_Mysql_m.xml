@@ -17,7 +17,7 @@
         <result property="tenantId"               column="tenant_id"                columnIndex="8"  />              
     </resultMap>
 
-	    <select id="EzWebFolderDAO_m.getShares" resultMap="folderFileVO">   
+	<select id="EzWebFolderDAO_m.getShares" resultMap="folderFileVO">   
 		<![CDATA[
 			SELECT 
 				SEQ_ID AS SEQ_ID,
