@@ -1,7 +1,7 @@
 package egovframework.ezEKP.ezJournal.web;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -14,12 +14,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.JsonUtil;
 
 @Controller
 public class EzJournalSJYController {
@@ -68,8 +71,9 @@ public class EzJournalSJYController {
 	/**
 	 * 관리자 업무일지 사용하는 일지함 정보만 가져오기
 	 */
-	@RequestMapping(value = "/admin/ezJournal/useType.do")
-	public void useType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model) {
+	@RequestMapping(value = "/admin/ezJournal/useType.do", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public String useType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("useType started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -79,6 +83,7 @@ public class EzJournalSJYController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("companyId", companyId);
 		param.put("tenantId", tenantId);
+		param.put("used", "use");
 		
 		String restUrl = "/ezjournal/types";
 		
@@ -87,15 +92,15 @@ public class EzJournalSJYController {
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
-			JSONArray typeList = (JSONArray) result.get("typeList");
-			for(int i = 0; i < typeList.size(); i++) {
-				System.out.println(typeList.get(i));
-			}
-			model.addAttribute("userInfo", userInfo);
+			JSONArray data = (JSONArray) result.get("data");
+			String typeList = JsonUtil.ListToJson(data);
 			model.addAttribute("typeList", typeList);
+			System.out.println(typeList);
+			return typeList;
 		}
 		
 		logger.debug("useType ended");
+		return "";
 	}
 	
 	

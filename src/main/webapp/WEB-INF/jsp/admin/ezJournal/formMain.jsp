@@ -16,6 +16,7 @@
 	    <script type="text/javascript">		    
 		    //var companylist = "${companyList}";
 		    var companyId = "<c:out value='${userInfo.companyID}' />";
+		    var typeList = [];
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -25,8 +26,7 @@
 		    };
 			
 			$(document).ready(function() {
-				//alert(companyId)
-				$("#SCompID").val(companyId);
+				//$("#SCompID").val(companyId);
 				journal_get_formuse();
 			});
 	
@@ -36,13 +36,45 @@
 		    		dataType : "json",
 		    		async : false,
 		    		url : "/admin/ezJournal/useType.do",
-		    		data : { companyId  : companyId },
+		    		data : { "companyId"  : companyId },
 		    		success: function(result) {
+		    			alert(result[0].journalUse);
 		    			
+		    			for (var i = 0; i < result.length; i++) {
+		    				typeList[i] = result[i].journaltypeId;
+		    				alert(result[i].journaltypeId)
+		    			}
+		    			//showUseType(typeList);
 		    			
+		    		},
+		    		error : function(request, status, error) {
+		    			alert("code : " + request.status + "\nerror : " + error);
 		    		}
+		    		
 		        });
 			}			
+			
+			function showUseType(obj) {
+				var $divFromTreeView = $("#divFromTreeView");
+				$divFromTreeView.html("");
+				var typeHtml = "<ol>";
+				for (var j = 0; j < typeList.length; j++) {
+					alert(typeList[j])
+					typeHtml += "<li><spring:message code="${typeList[j]}"/></li>";
+				}
+				typeHtml += "</ol>";
+				$divFromTreeView.html(typeHtml);
+			}
+			
+			function selectObj(x) {
+				var str = "";
+				for (key in x) {
+					str += key + "=" + x[key] + "\n";
+				}
+				console.log(str);
+				return;
+			}
+			
 		    function Change_Click() {	
 		    	var strtype = "";
 		    	for (var i = 0; i < 6; i++) {
@@ -88,6 +120,9 @@
 			<span><b><spring:message code = 'ezJournal.t11' /></b>
 	            <select id="SCompID" name="SCompID" onchange="selectCompanyID()">
 	            	<c:forEach var="company" items="${companyList}">
+	            		<c:if test="${company.companyId == userInfo.companyID}">
+		            		<option value="<c:out value='${company.companyId}'/>" selected><c:out value='${company.companyName}'/></option>
+	            		</c:if>
 	            		<option value="<c:out value='${company.companyId}'/>"><c:out value='${company.companyName}'/></option>
 	            	</c:forEach>
 	            </select><br/><br/>
@@ -102,7 +137,13 @@
 		<table style="margin-top:5px;width:1005px;height:500px">
 			<tr>
 		    	<td rowspan="2" style="width:200px; vertical-align:top">
-					<div id="divFromTreeView" style="vertical-align:top; padding-top:5px; height:500px; width:100%; overflow-x:auto;overflow-y:auto;BORDER:#b6b6b6 1px solid; BACKGROUND-COLOR:#ffffff" ></div>
+					<div id="divFromTreeView" style="vertical-align:top; padding-top:5px; height:500px; width:100%; overflow-x:auto;overflow-y:auto;BORDER:#b6b6b6 1px solid; BACKGROUND-COLOR:#ffffff" >
+						<ol>
+							<%-- <c:forEach items="&{typeList};" var="type">
+								<li><spring:message code='${type}' /></li>
+							</c:forEach> --%>
+						</ol>
+					</div>
 				</td>
 		    	<td style="width:800px; padding-left:5px; padding-right:5px;vertical-align:top">
 			    	<div class="listview">
