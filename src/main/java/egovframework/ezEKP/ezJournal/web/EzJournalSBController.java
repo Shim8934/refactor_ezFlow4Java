@@ -48,7 +48,7 @@ public class EzJournalSBController {
 		logger.debug("formType started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-		HashMap<String, String> param = new HashMap<String, String>();
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		String companyId =null;
 		if (request.getParameter("companyId") != null) {
 			companyId = request.getParameter("companyId");
@@ -127,7 +127,7 @@ public class EzJournalSBController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-		HashMap<String, String> param = new HashMap<String, String>();
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		String companyId =null;
 		if (request.getParameter("companyId") != null) {
 			companyId = request.getParameter("companyId");

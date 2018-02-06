@@ -946,10 +946,10 @@ public class CommonUtil {
 	 * @param request
 	 * @return
 	 */
-	public JSONObject getJsonFromRestApi(String resteUrl, Map<String, String> param,HttpServletRequest request,String methodType,JSONObject jsonParam){
+	public JSONObject getJsonFromRestApi(String restUrl, Map<String, Object> param,HttpServletRequest request,String methodType,JSONObject jsonParam){
 		logger.debug("getJsonFromRestApi started");
 		String gwServerUrl = config.getProperty("config.journalGWServerURL");
-		String url = gwServerUrl + resteUrl ;
+		String url = gwServerUrl + restUrl ;
 				
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

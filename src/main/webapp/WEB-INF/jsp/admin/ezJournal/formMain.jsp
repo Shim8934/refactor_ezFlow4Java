@@ -8,10 +8,9 @@
 		<title><spring:message code='ezJournal.t3' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
+		<link rel="stylesheet" href="/css/main.css" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">		    
 		    //var companylist = "${companyList}";
@@ -26,25 +25,46 @@
 		    };
 			
 			$(document).ready(function() {
-				//$("#SCompID").val(companyId);
-				journal_get_formuse();
+			    var firstType = $("#formType").children("li:first");
+				getFormList(firstType);
 			});
 	
-			function journal_get_formuse() {			    
+			function getFormList(val) {	
+				var typeId = $(val).attr("value");
+				var companyId = $("#SCompID").val();
+				alert(typeId + " " + companyId);
+				
 			    $.ajax({
 		    		type : "POST",
 		    		dataType : "json",
 		    		async : false,
-		    		url : "/admin/ezJournal/useType.do",
-		    		data : { "companyId"  : companyId },
+		    		url : "/admin/ezJournal/getFormList.do",
+		    		data : { "companyId"  : companyId,
+    						"typeId"	: typeId},
 		    		success: function(result) {
-		    			alert(result[0].journalUse);
-		    			
-		    			for (var i = 0; i < result.length; i++) {
-		    				typeList[i] = result[i].journaltypeId;
-		    				alert(result[i].journaltypeId)
+		    			var $formList = $("#formList");
+		    			var listhtml = "";
+		    			$formList.html("");
+		    			alert(result.length);
+		    			if (result.length > 0) {
+			    			$.each(result, function(index, item) {
+				    			alert(item.depts[0]);
+				    			listhtml += "<tr>";
+				    			listhtml += "<td>" + (index + 1) + "</td>";
+				    			listhtml += "<td>" + item.formName + "</td>";
+				    			if (item.depts.length > 1) {
+					    			listhtml += "<td>" + item.depts[0] + " <spring:message code='ezJournal.t124'/> " + (item.depts.length - 1) + "</td>";
+				    			} else {
+					    			listhtml += "<td>" + item.depts[0] + "</td>";
+				    			}
+				    			listhtml += "<td>" + item.formInfo + "</td>";
+				    			listhtml += "<td>" + item.formDate.slice(0, 10) + "</td>";
+				    			listhtml += "</tr>";
+			    			});
+		    			} else {
+		    				listhtml += "<tr><td colspan='5' style='text-align: center;'><spring:message code='ezJournal.t125'/></td></tr>";
 		    			}
-		    			//showUseType(typeList);
+		    			$formList.html(listhtml);
 		    			
 		    		},
 		    		error : function(request, status, error) {
@@ -53,82 +73,65 @@
 		    		
 		        });
 			}			
-			
-			function showUseType(obj) {
-				var $divFromTreeView = $("#divFromTreeView");
-				$divFromTreeView.html("");
-				var typeHtml = "<ol>";
-				for (var j = 0; j < typeList.length; j++) {
-					alert(typeList[j])
-					typeHtml += "<li><spring:message code="${typeList[j]}"/></li>";
-				}
-				typeHtml += "</ol>";
-				$divFromTreeView.html(typeHtml);
-			}
-			
-			function selectObj(x) {
-				var str = "";
-				for (key in x) {
-					str += key + "=" + x[key] + "\n";
-				}
-				console.log(str);
-				return;
-			}
-			
-		    function Change_Click() {	
-		    	var strtype = "";
-		    	for (var i = 0; i < 6; i++) {
-			    	if (document.getElementById("USE" + i).checked == true) {
-			    		strtype += "use";
-			    	} else {
-			    		strtype += "no";
-			    	}
-		    	}
-		    	
-		        $.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/admin/ezSchedule/journalSaveFormUse.do",
-		    		data : {
-		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value,
-		    			FORMUSE : strtype
-		    		},
-		    		success: function(text) {
-		    			alert("<spring:message code='ezSchedule.t4012' />");
-		    		}
-		        });
+		    
+		    function selectCompanyList(val) {
+				var url = "/admin/ezJournal/form.do";
+				parent.frames["right"].location.href = url+ "?companyId=" + val;
 		    }
 		    
-		    function selectCompanyID() {
-		        if (companyID != document.getElementById("SCompID").value) {
-		            companyID = document.getElementById("SCompID").value;
-	
-		            //getGroupTree(1, 1, 0, true);
-		        }
+		    function btnInsForm() {
+		    	
 		    }
 		</script>
 		<style>
+			ul.formType {
+				list-style: none;
+				padding: 0px;
+				margin: 0px;
+				
+				max-width: 200px;
+				width: 100%;
+			}
+			
+			ul.formType li {
+				border-bottom: 1px solid #efefef;
+				font-size: 12px;
+				height: 30px;
+				vertical-align: middle;
+				text-align : center;
+			}
+			
+			ul.formType li span {display: inline-block; vertical-align: middle;  }
+			/* ul.formType li:last-child { border-bottom: 0px; } */
+			
 			.content td {
 				text-align: center;
 			}
+			
+			table td {
+				height: 25px;
+				text-align: center;
+				font-size: 15px;
+			}
+			
 		</style>
 	</head>
 	<body class="mainbody"> 
 		<h1><spring:message code='ezJournal.t3' /></h1>
 		<div id="mainmenu">
 			<span><b><spring:message code = 'ezJournal.t11' /></b>
-	            <select id="SCompID" name="SCompID" onchange="selectCompanyID()">
+	            <select id="SCompID" name="SCompID" onchange="selectCompanyList(this.value)">
 	            	<c:forEach var="company" items="${companyList}">
-	            		<c:if test="${company.companyId == userInfo.companyID}">
-		            		<option value="<c:out value='${company.companyId}'/>" selected><c:out value='${company.companyName}'/></option>
+	            		<option value="<c:out value='${company.companyId}'/>"
+	            		<c:if test="${company.selected eq 'selected'}">
+		            		 selected
 	            		</c:if>
-	            		<option value="<c:out value='${company.companyId}'/>"><c:out value='${company.companyName}'/></option>
+		            		 ><c:out value='${company.companyName}'/></option>
 	            	</c:forEach>
 	            </select><br/><br/>
             </span>
             <ul>
-            	<li id="btnInsertForm"><span onclick=""><spring:message code='ezJournal.t17' /></span></li>
+            	<li id="btnInsertForm"><span onclick="return btnInsForm()"><spring:message code='ezJournal.t17' /></span></li>
             	<li id="btnModeForm"><span onclick=""><spring:message code='ezJournal.t18' /></span></li>
             	<li id="btnDeleteForm"><span onclick=""><spring:message code='ezJournal.t19' /></span></li>
             </ul>
@@ -137,17 +140,41 @@
 		<table style="margin-top:5px;width:1005px;height:500px">
 			<tr>
 		    	<td rowspan="2" style="width:200px; vertical-align:top">
-					<div id="divFromTreeView" style="vertical-align:top; padding-top:5px; height:500px; width:100%; overflow-x:auto;overflow-y:auto;BORDER:#b6b6b6 1px solid; BACKGROUND-COLOR:#ffffff" >
-						<ol>
-							<%-- <c:forEach items="&{typeList};" var="type">
-								<li><spring:message code='${type}' /></li>
-							</c:forEach> --%>
-						</ol>
+		    		<div class="listview">
+						<div style="vertical-align:top; height:500px; width:100%; overflow-x:auto;overflow-y:auto;BORDER:#b6b6b6 1px solid; BACKGROUND-COLOR:#ffffff" >
+							<%-- <ul class="formType" id="formType">
+								<c:forEach items="${typeList}" var="type">
+									<li value="${type.journaltypeId }" onclick="getFormList(this)"><span><spring:message code='${type.journaltypeId}'/></span></li>
+								</c:forEach>
+							</ul> --%>
+							<table class="formType" style="width: 100%; border-width: 0px 0px 1px 0px;">
+								<c:forEach items="${typeList}" var="type">
+									<tr>
+										<td><span value="${type.journaltypeId }" onclick="getFormList(this)"><spring:message code='${type.journaltypeId}'/></span></td>
+									</tr>
+								</c:forEach>
+							</table>
+						</div>
 					</div>
 				</td>
 		    	<td style="width:800px; padding-left:5px; padding-right:5px;vertical-align:top">
 			    	<div class="listview">
-			        	<div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 470px;overflow-x:auto;overflow-y:auto; padding:0px"  ></div>
+			        	<div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 470px;overflow-x:auto;overflow-y:auto; padding:0px"  >
+			        		<table class="mainlist" style="width: 100%;">
+			        			<thead>
+			        				<tr>
+			        					<th style="width: 5%"><spring:message code='ezJournal.t21'/></th>
+			        					<th style="width: 20%"><spring:message code='ezJournal.t22'/></th>
+			        					<th style="width: 20%"><spring:message code='ezJournal.t23'/></th>
+			        					<th style="width: 35%"><spring:message code='ezJournal.t24'/></th>
+			        					<th style="width: 15%"><spring:message code='ezJournal.t25'/></th>
+			        				</tr>
+			        			</thead>
+			        			<tbody id="formList" style="margin: 0; padding: 0;">
+			        			
+			        			</tbody>
+			        		</table>
+			        	</div>
 			    	</div>
 				</td>    
 		  	</tr>
