@@ -39,6 +39,8 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Mysql.xml"/>
     <!-- 웹폴더 _y -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Mysql_y.xml"/>
+    <!-- 웹폴더 강민수79 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Mysql_m.xml"/>
     
     <!-- 2.관리자 모듈관리 SQL쿼리 XML -->
     

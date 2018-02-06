@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ezWebFolder_m">
+
+	<!-- FolderFile typeAlias  -->
+	<typeAlias  alias="FolderFileVO"          	type="egovframework.ezEKP.ezWebFolder.vo.FolderFileVO"/>
+	
+	<!-- FolderFile resultMap -->
+    <resultMap id="folderFileVO" class="FolderFileVO">
+        <result property="seqId"               column="seq_id"                columnIndex="1"  />              
+        <result property="userId"               column="user_id"                columnIndex="2"  />              
+        <result property="userType"               column="user_type"                columnIndex="3"  />              
+        <result property="folderFileId"               column="folderfile_id"                columnIndex="4"  />              
+        <result property="folderFileType"               column="folderfile_type"                columnIndex="5"  />              
+        <result property="createId"               column="create_id"                columnIndex="6"  />              
+        <result property="createDate"               column="create_date"                columnIndex="7"  />              
+        <result property="tenantId"               column="tenant_id"                columnIndex="8"  />              
+    </resultMap>
+
+	    <select id="EzWebFolderDAO_m.getShares" resultMap="folderFileVO">   
+		<![CDATA[
+			SELECT 
+				SEQ_ID AS SEQ_ID,
+				USER_ID AS USER_ID,
+				USER_TYPE AS USER_TYPE,
+				FOLDERFILE_ID AS FOLDERFILE_ID,
+				FOLDERFILE_TYPE AS FOLDERFILE_TYPE,
+				CREATE_ID AS CREATE_ID,
+				CREATE_DATE AS CREATE_DATE,						
+				TENANT_ID AS TENANT_ID
+			FROM 
+				TBL_WEBFOLDER_SHARE
+		]]>				
+    </select>
+
+</sqlMap>
