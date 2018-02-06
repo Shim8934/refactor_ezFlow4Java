@@ -3725,6 +3725,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getOneLineReplyCount(map);
 	}
 	//2018.02.05 김보미
+	@Override
 	public int getReaderListCount(String boardID, String itemID, String userID, String lang, int tenantID) throws Exception {
 		logger.debug("getReaderListCount started");
 

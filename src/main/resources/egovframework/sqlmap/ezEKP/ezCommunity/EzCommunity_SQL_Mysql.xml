@@ -1190,6 +1190,7 @@
 <!-- 	<procedure id="EzCommunityDAO.getReaderList"				parameterClass="Map"		resultClass="CommunityBoardItemReadVO"> -->
 <!-- 		{CALL EZSP_BRDGETREADERLIST(#v_pBoardID#, #v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+<!-- DATE_FORMAT(DATE_ADD(readdate, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS readdate  -->
 	<select id="EzCommunityDAO.getReaderList"					parameterClass="Map"		resultClass="CommunityBoardItemReadVO">
 		<![CDATA[
 			SELECT
@@ -1202,19 +1203,28 @@
 				usercompanyname2,
 				usertitle,
 				usertitle2,
-				DATE_FORMAT(DATE_ADD(readdate, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS readdate
+				DATE_FORMAT(READDATE ,'%Y-%m-%d %H:%i:%s') AS READDATE
 			FROM
 				TBL_COMM_ITEM_READ 
 			WHERE
-				boardid = #v_pBoardID#
+				BOARDID = #boardID#
 			AND
-				itemid = #v_pItemID#
+				ITEMID = #itemID#
 			AND
-				tenant_id = #tenantID#
-			ORDER BY
-				readdate DESC
-			LIMIT
-				50
+				TENANT_ID = #tenantID#
+		   	AND
+		   		USERID <> ( SELECT 
+		   							WRITERID 
+		   						FROM 
+		   							TBL_COMM_ITEM 
+		   						WHERE 
+		   							TENANT_ID = #tenantID#
+		   						AND
+		   							ITEMID = #itemID# )
+		   	ORDER BY 
+		   		READDATE DESC
+ 		   	LIMIT 
+      			#start#, #perCount#
 		]]>
 	</select>
 	
@@ -6791,6 +6801,31 @@
        			boardID = #boardID#
             AND 
             	ItemID = #itemID#
+		]]>
+ 	</select>
+ 	<!-- 2018-02-06 김보미 - 조회자 수 -->
+ 	<select id="EzCommunityDAO.getReaderListCount" parameterClass="Map" resultClass="Integer">
+ 		<![CDATA[
+			SELECT
+				COUNT(USERID)
+			FROM
+				TBL_COMM_ITEM_READ 
+			WHERE
+				BOARDID = #boardID#
+			AND
+				ITEMID = #itemID#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+			   	USERID <> ( SELECT 
+			   						WRITERID 
+			   					FROM 
+			   						TBL_COMM_ITEM 
+			   					WHERE 
+			   						TENANT_ID = #tenantID#
+			   					AND
+			   						ITEMID = #itemID# )
+
 		]]>
  	</select>
 </sqlMap>
