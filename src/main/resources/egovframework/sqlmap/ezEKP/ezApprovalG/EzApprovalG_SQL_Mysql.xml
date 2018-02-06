@@ -5084,7 +5084,9 @@
 		    	APRMEMBERID = #v_USERID#
 		      <isEqual property="v_CHAMSTATE" compareValue="017">
 	      	AND 
-	      	 	APRSTATE = '000'
+	      	 	(APRSTATE = '000' OR APRSTATE = '002') 
+	      	AND
+	      		APRTYPE = '007'
 		      </isEqual> 
 		      <isNotEqual property="v_CHAMSTATE" compareValue="017">
 		    AND 
@@ -6316,14 +6318,29 @@
    		AND
    			COMPANYID = #companyID#
    		AND 
-   			FUNCTIONTYPE IN ('002', '005')
+   			FUNCTIONTYPE IN ('002', '005', '000')
    		AND 
    			APRMEMBERID IN ($v_USERIDS$)
    		<isEqual property="v_FLAG" compareValue="1">
 		<![CDATA[
    		AND
-   			DOCID < #v_DOCID#
-   		]]>
+   			STARTDATE < (SELECT 
+   							STARTDATE
+			   			 FROM 
+			   				VAPRDOINGDOCLIST 
+			   			 WHERE 
+			   				DOCSTATE <> '015' 
+	   ]]>
+			   			 AND
+			   				TENANT_ID = #v_TENANTID#
+			   			 AND
+			   				COMPANYID = #companyID#
+			   			 AND 
+			   				FUNCTIONTYPE IN ('002', '005', '000')
+			   			 AND 
+			   				APRMEMBERID IN ($v_USERIDS$)
+			   			 AND 
+			   				DOCID = #v_DOCID#)
    		</isEqual>
    		<isEqual property="v_FLAG" compareValue="2">
 		<![CDATA[

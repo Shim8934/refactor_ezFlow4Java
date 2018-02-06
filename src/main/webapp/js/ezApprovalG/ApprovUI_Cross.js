@@ -3510,6 +3510,7 @@ function getNextDocInfo() {
                 NextDocUserName = getNodeText(objNodes[2]);
                 NextDocDeptID = getNodeText(objNodes[3]);
                 NextDocType = getNodeText(objNodes[4]);
+                docState = NextDocState;
                 NextDocState = getNodeText(objNodes[5]);
                 NextDocWriterID = getNodeText(objNodes[6]);
                 NextDocAprType = getNodeText(objNodes[7]);
