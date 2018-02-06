@@ -2,12 +2,11 @@ package egovframework.ezEKP.ezWebFolder.service;
 
 import java.util.List;
 
-import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
-import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzWebFolderService {
 	String getFileSequence(int tenantId) throws Exception;
@@ -25,6 +24,5 @@ public interface EzWebFolderService {
 	FolderVO getCompanyFolderId(String companyId, String offset, int tenantId) throws Exception;
 	void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int i) throws Exception;
 	void updateDownCnt(String fileId, int tenantId) throws Exception;
-	List<LoginVO> getFolderUsers(String folderId, int tenantId) throws Exception;
-	List<OrganDeptVO> getFolderDepts(String folderId, int tenantId) throws Exception;	
+	List<FolderUserVO> getFolderUsers(String folderId, int tenantId) throws Exception;
 }

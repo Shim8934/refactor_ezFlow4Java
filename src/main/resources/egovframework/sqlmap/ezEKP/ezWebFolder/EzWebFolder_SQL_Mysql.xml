@@ -6,8 +6,7 @@
 	<typeAlias  alias="FileTypeVO"          type="egovframework.ezEKP.ezWebFolder.vo.FileTypeVO"/>
 	<typeAlias  alias="FolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"/>
 	<typeAlias  alias="FolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
-	<typeAlias  alias="LoginVO"             type="egovframework.let.user.login.vo.LoginVO"/>
-	<typeAlias alias="OrganDeptVO"			type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
+	<typeAlias  alias="FolderUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.FolderUserVO"/>	
 	
 	<!-- File resultMap -->
     <resultMap id="fileVO" class="FileVO">
@@ -33,18 +32,12 @@
     </resultMap>
     
     <!-- 로그인  resultMap -->
-    <resultMap id="loginVO" class="LoginVO">
-        <result property="id"                   column="cn"                     columnIndex="1"/>        
-        <result property="displayName1"         column="displayName1"            columnIndex="2"/>
-        <result property="displayName2"         column="displayName2"           columnIndex="3"      nullValue=""/>        
+    <resultMap id="folderUserVO" class="FolderUserVO">
+        <result property="userId"               column="USER_ID"                 columnIndex="1"/>        
+        <result property="displayName1"         column="DISPLAY_NAME1"           columnIndex="2"/>
+        <result property="displayName2"         column="DISPLAY_NAME2"           columnIndex="3"/>
+        <result property="userType"             column="USER_TYPE"               columnIndex="4"/>   
     </resultMap>
-    
-    <resultMap id="deptVO" class="OrganDeptVO">
-		<result property="cn" 					column="cn" 					columnIndex="1"/>
-		<result property="displayName1" 		column="displayName1" 			columnIndex="2"/>
-		<result property="displayName2" 		column="displayName2"	        columnIndex="3"/>
-				
-	</resultMap>
     
     <!-- FileType resultMap -->
     <resultMap id="folderSimpleVO" class="FolderSimpleVO">
@@ -294,41 +287,32 @@
 		]]>				
     </select>
     
-    <select id="EzWebFolderDAO.getFolderUsers" resultMap="loginVO">             
+    <select id="EzWebFolderDAO.getFolderUsers" resultMap="folderUserVO">             
         <![CDATA[
-            SELECT 
-                a.cn as cn,                            
-                a.displayname as displayName1,
-                a.displayname2 as displayName2
+ 			SELECT            
+            	 CASE 
+					    WHEN USER_TYPE = "user" THEN (select cn from tbl_usermaster where cn = u.USER_ID)
+					    WHEN USER_TYPE = "dept" THEN (select cn from tbl_deptmaster where cn = u.USER_ID)  
+					  END AS USER_ID,                                     
+                CASE 
+					    WHEN USER_TYPE = "user" THEN (select DISPLAYNAME from tbl_usermaster where cn = u.USER_ID)
+					    WHEN USER_TYPE = "dept" THEN (select DISPLAYNAME from tbl_deptmaster where cn = u.USER_ID)
+					  END AS DISPLAY_NAME1,
+				CASE 
+					    WHEN USER_TYPE = "user" THEN (select DISPLAYNAME2 from tbl_usermaster where cn = u.USER_ID)
+					    WHEN USER_TYPE = "dept" THEN (select DISPLAYNAME2 from tbl_deptmaster where cn = u.USER_ID)
+					  END AS DISPLAY_NAME2,
+				USER_TYPE					
             FROM
-                TBL_USERMASTER a JOIN TBL_WEBFOLDER_FOLDERUSER u ON a.CN = u.USER_ID AND a.TENANT_ID = u.TENANT_ID
+                TBL_WEBFOLDER_FOLDERUSER u
             WHERE
-                u.USER_TYPE = "user"
-            AND
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
-		    AND
          		u.FOLDER_ID = #folderId#
             AND
-            	a.TENANT_ID = #tenantId#
+            	TENANT_ID   = #tenantId#
+            ORDER BY
+            	USER_TYPE ASC
         ]]>
-    </select> 
-    
-    <select id="EzWebFolderDAO.getFolderDepts" resultMap="deptVO">             
-        <![CDATA[
-            SELECT 
-                a.cn as cn,                            
-                a.displayname as displayName1,
-                a.displayname2 as displayName2 
-            FROM
-                TBL_DEPTMASTER a JOIN TBL_WEBFOLDER_FOLDERUSER u ON a.CN = u.USER_ID AND a.TENANT_ID = u.TENANT_ID
-            WHERE
-                u.USER_TYPE = "dept"
-			AND
-         		u.FOLDER_ID = #folderId#
-            AND
-            	a.TENANT_ID = #tenantId#
-        ]]>
-    </select>    
+    </select>  
     
     <select id="EzWebFolderDAO.getAllSimpleSubFolders" resultMap="folderSimpleVO">   
 		<![CDATA[

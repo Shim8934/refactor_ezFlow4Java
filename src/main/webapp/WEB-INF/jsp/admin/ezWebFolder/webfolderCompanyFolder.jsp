@@ -15,6 +15,7 @@
 			var g_windowReference = null;
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
+			var primary			  = "<c:out value='${primary}' />";
 			
 			window.onload = function () {
 				getData();
@@ -30,8 +31,7 @@
 						dataType: "JSON",
 						async: true,
 						success : function(data) {
-							var result = data.companyTree;
-							console.log(result);
+							var result = data.companyTree;		
 							renderData(result);
 						},
 		 				error : function(error) {	 					
@@ -75,7 +75,7 @@
 				var spanFolderName = document.createElement("span");
 				spanFolderName.innerHTML = list["folderName"];
 				spanFolderName.setAttribute("class", "spanName");
-				spanFolderName.setAttribute("name", list["folderId"]);
+				spanFolderName.setAttribute("name", list["folderId"]);				
 				spanFolderName.onclick = function() {getSelected(this);};
 				
 				divElmt.appendChild(imgElmt);
@@ -121,6 +121,60 @@
 				
 				selectedFolder = obj.getAttribute("name");
 				obj.style.color = "#e04343";
+				
+			    $.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/getFolderUsers.do",
+					data: {							
+						"folderId" : selectedFolder				
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var result = data.folderUsers;						
+						processUsersList(result, obj.innerHTML);
+					},
+	 				error : function(error) {	 					
+						alert("<spring:message code='ezWebFolder.t134' />" + error);
+					}
+				});
+			}
+			
+			function processUsersList(result, folerName) {
+				document.getElementById("fldName").value = folerName;
+				
+				if(result == null || result.length == 0) {
+					document.getElementById("RangeXMLStr").value = "";				
+				}
+				else {
+					var target   = "";
+					var xmlStr   = "<RANGE>";
+					var xmlUsers = "<MEMBER>";
+					var xmlDepts = "<DEPT>";
+					
+					for (var i = 0; i < result.length; i++) {
+						target = primary == "1" ? (target + result[i]["displayName1"] + ",") : (target + result[i]["displayName2"] + ",");
+						
+						if (result[i]["userType"] == "user") {
+							xmlUsers += "<DATA id=\"" + result[i]["userId"] + "\" nm=\"" + result[i]["displayName1"] + 
+		        			"\" nm2=\"" + result[i]["displayName2"] + "\">" + result[i]["userId"] + "</DATA>";
+						}
+						else {
+							xmlDepts += "<DATA id=\"" + result[i]["userId"] + "\" nm=\"" + result[i]["displayName1"] + 
+		        			"\" nm2=\"" + result[i]["displayName2"] + "\">" + result[i]["userId"] + "</DATA>";
+						}
+						
+					}
+					
+					xmlDepts += "</DEPT>";
+					xmlUsers += "</MEMBER>";			
+					xmlStr	 += xmlDepts;
+					xmlStr	 += xmlUsers;
+					xmlStr   += "</RANGE>";
+					updateTarget(target.slice(0, -1));
+					document.getElementById("RangeXMLStr").value = xmlStr;					
+				}
+				
 			}
 			
 			function getDetailTree(obj) {
@@ -155,7 +209,6 @@
 						async: true,
 						success: function(data) {
 							var result = data.subTree;
-							console.log(result);
 							displaySubTree(result, obj.parentElement);
 							arrSubFolder.push(uniqueId);
 						},
@@ -295,7 +348,7 @@
 	   								<td>
 		   								<div style="margin: 100px 20px 20px 20px;">
 		   									<span>폴더명: </span>
-		   									<input type="text" style="height: 25px; border-radius: 3px; border: 1px solid #666; width: 200px; margin-left: 2px;">
+		   									<input id="fldName" type="text" style="height: 25px; border-radius: 3px; border: 1px solid #666; width: 200px; margin-left: 2px;">
 		   								</div>
 	   								</td>
 	   							</tr>

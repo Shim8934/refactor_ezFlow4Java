@@ -1,26 +1,20 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
-import egovframework.ezEKP.ezWebFolder.web.EzWebFolderGWController;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderService")
@@ -162,7 +156,7 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	public void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int mode) throws Exception {
 		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), primary, tenantId);
 		
-		if (mode == 2) {			
+		/*if (mode == 2) {			
 			Map<String, List<String>> mapFolderUsers = new HashMap<String, List<String>>();			
 			List<LoginVO> listOfUsers                = getFolderUsers(company.getFolderId(), tenantId);
 			
@@ -192,14 +186,14 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 				company.setFolderUsers(mapFolderUsers);
 			}			
 						
-		}
+		}*/
 		
 		if (listSubSimpleFolders.size() > 0) {
 			company.setListSubFolders(listSubSimpleFolders);
 			company.setHasSubFolder(1);
 			
 			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
-				if (mode == 0 || mode == 3) {
+				if (mode == 0) {
 					getAllSubDepts(subFolder, primary, tenantId, mode);
 				}
 				else {
@@ -209,9 +203,8 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 					}
 					else {
 						subFolder.setHasSubFolder(0);
-					}
-					
-					if (mode == 2) {
+					}					
+/*					if (mode == 2) {
 						Map<String, List<String>> mapFolderUsers = new HashMap<String, List<String>>();						
 						List<LoginVO> listOfUsers = getFolderUsers(subFolder.getFolderId(), tenantId);
 						
@@ -240,7 +233,7 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 						if(mapFolderUsers.size() > 0) {
 							subFolder.setFolderUsers(mapFolderUsers);
 						}		
-					}
+					}*/
 				}
 			}
 		}
@@ -258,19 +251,11 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	}
 
 	@Override
-	public List<LoginVO> getFolderUsers(String folderId, int tenantId)	throws Exception {
+	public List<FolderUserVO> getFolderUsers(String folderId, int tenantId)	throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();		
 		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getFolderUsers(map);
-	}
-
-	@Override
-	public List<OrganDeptVO> getFolderDepts(String folderId, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();		
-		map.put("folderId", folderId);
-		map.put("tenantId", tenantId);
-		return ezWebFolderDAO.getFolderDepts(map);
 	}
 
 }

@@ -141,6 +141,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
+		model.addAttribute("primary", userInfo.getPrimary());
 		
 		return "admin/ezWebFolder/webfolderCompanyFolder";
 	}
@@ -449,7 +450,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginVO userInfo   = commonUtil.userInfo(loginCookie);				
 		String folderId    = request.getParameter("folderId");		
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url         = gwServerUrl + "/webfolderadmin/subFolderTree/" + folderId;
+		String url         = gwServerUrl + "/webfolderadmin/subfolder-tree/" + folderId;
 				
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
@@ -470,6 +471,33 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		if (status.equals("ok")) {			
 			JSONObject folderTree = (JSONObject) resultBody.get("data");
 			model.addAttribute("subTree", folderTree);
+		}
+
+		return "json";
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/getFolderUsers.do", method = RequestMethod.POST)	
+	public String getFolderUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
+		LoginVO userInfo   = commonUtil.userInfo(loginCookie);				
+		String folderId    = request.getParameter("folderId");		
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/webfolderadmin/folder-users/" + folderId;
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());		
+		RestTemplate rest             = new RestTemplate();		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();		
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());				
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			JSONArray folderUsers = (JSONArray) resultBody.get("data");
+			model.addAttribute("folderUsers", folderUsers);
 		}
 
 		return "json";

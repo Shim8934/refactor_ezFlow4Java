@@ -44,6 +44,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
@@ -933,7 +934,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
-	@RequestMapping(value="/webfolderadmin/subFolderTree/{folderid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/webfolderadmin/subfolder-tree/{folderid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSubFoldersTree(@PathVariable(value="folderid") String folderId, HttpServletRequest request) {	
 		int tenantId      = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;					
 		String primary    = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
@@ -955,6 +956,36 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", folder);
+		} 
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/webfolderadmin/folder-users/{folderid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFolderUsers(@PathVariable(value="folderid") String folderId, HttpServletRequest request) {	
+		int tenantId      = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("folderId: " + folderId + " || tenantId: " + tenantId);		
+		
+		if (folderId.equals("") || tenantId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}	
+		
+		try {
+			List<FolderUserVO> listUsers = ezWebFolderService.getFolderUsers(folderId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", listUsers);
 		} 
 		catch (Exception e) {
 			result.put("status", "error");

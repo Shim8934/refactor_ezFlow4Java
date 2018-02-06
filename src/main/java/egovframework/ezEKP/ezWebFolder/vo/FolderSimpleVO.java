@@ -8,8 +8,7 @@ public class FolderSimpleVO {
 	private String folderName;
 	private int hasSubFolder;
 	private int folderLevel;
-	private List<FolderSimpleVO> listSubFolders;
-	private Map<String, List<String>> folderUsers;
+	private List<FolderSimpleVO> listSubFolders;	
 	
 	public String getFolderId() {
 		return folderId;
@@ -50,13 +49,5 @@ public class FolderSimpleVO {
 	public void setFolderLevel(int folderLevel) {
 		this.folderLevel = folderLevel;
 	}
-
-	public Map<String, List<String>> getFolderUsers() {
-		return folderUsers;
-	}
-
-	public void setFolderUsers(Map<String, List<String>> folderUsers) {
-		this.folderUsers = folderUsers;
-	}	
 
 }
