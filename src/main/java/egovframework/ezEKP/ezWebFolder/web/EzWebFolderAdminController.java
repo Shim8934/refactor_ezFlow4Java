@@ -3,11 +3,9 @@ package egovframework.ezEKP.ezWebFolder.web;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -419,18 +416,33 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/admin/ezWebFolder/getCompanyFolderTree.do", method = RequestMethod.POST)	
 	public String getCompanyFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
-		String offset    = userInfo.getOffset();				
-		String companyId = request.getParameter("companyId");
-		
-		logger.debug("Company ID: " + companyId);
-		
-		FolderVO folderVO = ezWebFolderService.getCompanyFolderId(companyId, offset, userInfo.getTenantId());
-		FolderSimpleVO company = ezWebFolderService.getSimpleFolder(folderVO.getFolderId(), userInfo.getTenantId());
-		ezWebFolderService.getAllSubDepts(company, userInfo.getTenantId(), 1);
-		
-		model.addAttribute("companyTree", company);
+		LoginVO userInfo   = commonUtil.userInfo(loginCookie);
+		String companyId   = request.getParameter("companyId");
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/webfolderadmin/foldersTree";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("primary", userInfo.getPrimary())
+				.queryParam("companyId", companyId)
+				.queryParam("offset", userInfo.getOffset());
+		
+		RestTemplate rest             = new RestTemplate();		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp         = new JSONParser();		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());				
+		String status         = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			JSONObject folderTree = (JSONObject) resultBody.get("data");
+			model.addAttribute("companyTree", folderTree);
+		}
+		
 		return "json";
 	}
 	
@@ -439,8 +451,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);				
 		String folderId = request.getParameter("folderId");		
 
-		FolderSimpleVO folder = ezWebFolderService.getSimpleFolder(folderId, userInfo.getTenantId());
-		ezWebFolderService.getAllSubDepts(folder, userInfo.getTenantId(), 1);
+		FolderSimpleVO folder = ezWebFolderService.getSimpleFolder(folderId, userInfo.getPrimary(), userInfo.getTenantId());
+		ezWebFolderService.getAllSubDepts(folder, userInfo.getPrimary(), userInfo.getTenantId(), 1);
 		
 		model.addAttribute("subTree", folder);
 

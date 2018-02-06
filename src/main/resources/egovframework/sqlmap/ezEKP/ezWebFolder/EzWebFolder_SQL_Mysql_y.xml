@@ -37,22 +37,23 @@
     <!-- Folder resultMap -->
     <resultMap id="folderVO" class="FolderVO">
         <result property="folderId"             column="FOLDER_ID"                columnIndex="1"  />              
-        <result property="folderName"         	column="FOLDER_NAME"              columnIndex="2"  />
-        <result property="folderType"         	column="FOLDER_TYPE"              columnIndex="3"  />
-        <result property="folderPath"          	column="FOLDER_PATH"              columnIndex="4"  />
-        <result property="folderStep"           column="FOLDER_STEP"              columnIndex="5"  />
-        <result property="folderLevel"          column="FOLDER_LEVEL"             columnIndex="6"  />
-        <result property="folderUpper"          column="FOLDER_UPPER"             columnIndex="7"	 />
-        <result property="useStatus"           	column="USE_STATUS"               columnIndex="8"  />
-        <result property="ownerId"        	    column="OWNER_ID"         	      columnIndex="9"	 />
-        <result property="createId"             column="CREATE_ID"            	  columnIndex="10" />
-        <result property="createDate"           column="CREATE_DATE"          	  columnIndex="11" />
-        <result property="createName1"          column="CREATE_NAME1"          	  columnIndex="12" />
-        <result property="createName2"          column="CREATE_NAME2"             columnIndex="13" />
-        <result property="updateId"             column="UPDATE_ID"                columnIndex="14" />
-        <result property="updateDate"           column="UPDATE_DATE"              columnIndex="15" />
-        <result property="companyId"            column="COMPANY_ID"               columnIndex="16" />      
-        <result property="tenantId"         	column="TENANT_ID"                columnIndex="17" />
+        <result property="folderName1"         	column="FOLDER_NAME1"             columnIndex="2"  />
+        <result property="folderName2"         	column="FOLDER_NAME2"             columnIndex="3"  />
+        <result property="folderType"         	column="FOLDER_TYPE"              columnIndex="4"  />
+        <result property="folderPath"          	column="FOLDER_PATH"              columnIndex="5"  />
+        <result property="folderStep"           column="FOLDER_STEP"              columnIndex="6"  />
+        <result property="folderLevel"          column="FOLDER_LEVEL"             columnIndex="7"  />
+        <result property="folderUpper"          column="FOLDER_UPPER"             columnIndex="8"	 />
+        <result property="useStatus"           	column="USE_STATUS"               columnIndex="9"  />
+        <result property="ownerId"        	    column="OWNER_ID"         	      columnIndex="10"	 />
+        <result property="createId"             column="CREATE_ID"            	  columnIndex="11" />
+        <result property="createDate"           column="CREATE_DATE"          	  columnIndex="12" />
+        <result property="createName1"          column="CREATE_NAME1"          	  columnIndex="13" />
+        <result property="createName2"          column="CREATE_NAME2"             columnIndex="14" />
+        <result property="updateId"             column="UPDATE_ID"                columnIndex="15" />
+        <result property="updateDate"           column="UPDATE_DATE"              columnIndex="16" />
+        <result property="companyId"            column="COMPANY_ID"               columnIndex="17" />      
+        <result property="tenantId"         	column="TENANT_ID"                columnIndex="18" />
     </resultMap>
     
     <!-- FolderSimple resultMap -->

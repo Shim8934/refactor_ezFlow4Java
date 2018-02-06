@@ -347,14 +347,14 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		switch(folderType) {
 			case "1":
 				if (userInfo.getRollInfo().indexOf("c=1") == -1) {
-					FolderSimpleVO folderList = ezWebFolderService.getSimpleFolder(folderId, userInfo.getTenantId());
+					FolderSimpleVO folderList = ezWebFolderService.getSimpleFolder(folderId, userInfo.getPrimary(), userInfo.getTenantId());
 					model.addAttribute("folderList", folderList);
 				}
 				else {
-					List<FolderSimpleVO> companyFolderList = ezWebFolderService.getAllSimpleSubFolders("root", userInfo.getTenantId());
+					List<FolderSimpleVO> companyFolderList = ezWebFolderService.getAllSimpleSubFolders("root", userInfo.getPrimary(), userInfo.getTenantId());
 					
 					for (FolderSimpleVO company: companyFolderList) {
-						ezWebFolderService.getAllSubDepts(company, userInfo.getTenantId(), 0);						
+						ezWebFolderService.getAllSubDepts(company, userInfo.getPrimary(), userInfo.getTenantId(), 0);						
 					}		
 					
 					model.addAttribute("folderList", companyFolderList);
@@ -368,65 +368,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}	
 
 		return "json";
-	}	
-
-	/*private String getFileSize(long fileSize) {
-		String fileSize_ = "";
-		
-        if (fileSize / 1024 / 1024 >= 1) {
-        	fileSize_ = String.format("%.2f", (double)(fileSize / 1024 / 1024 * 10) / 10);
-        	fileSize_ = fileSize_ + "MB";
-        }
-        else if (fileSize / 1024 >= 1) {
-        	fileSize_ = String.format("%.2f", (double)(fileSize / 1024));
-        	fileSize_ = fileSize_ + "KB";
-        }
-        else {
-        	fileSize_ = fileSize + "B";
-        }
-        
-        return fileSize_;
-	}*/
-	
-	private String getMaxFileID(int tenantId) throws Exception {
-		int currentMaxFileId = -1;
-		String result = ezWebFolderService.getFileSequence(tenantId);
-		
-		if (result.equals("")) {
-			currentMaxFileId = 1;
-		} 
-		else {
-			currentMaxFileId = Integer.parseInt(result);			
-		}
-		
-		if (currentMaxFileId == -1) {
-			currentMaxFileId = 1;
-		}
-		else {
-			currentMaxFileId += 1;
-		}
-
-		return Integer.toString(currentMaxFileId);
 	}
 	
-	private String getMaxLogID(int tenantId) throws Exception {
-		int currentMaxLogId = -1;
-		String result = ezWebFolderService.getFileLogSequence(tenantId);
-		
-		if (result.equals("")) {
-			currentMaxLogId = 1;
-		} 
-		else {
-			currentMaxLogId = Integer.parseInt(result);			
-		}
-		
-		if (currentMaxLogId == -1) {
-			currentMaxLogId = 1;
-		}
-		else {
-			currentMaxLogId += 1;
-		}
-
-		return Integer.toString(currentMaxLogId);
-	}
 }

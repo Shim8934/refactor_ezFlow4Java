@@ -2,7 +2,8 @@ package egovframework.ezEKP.ezWebFolder.vo;
 
 public class FolderVO {
 	private String folderId;
-	private String folderName;
+	private String folderName1;
+	private String folderName2;
 	private String folderType;
 	private String folderPath;
 	private int folderStep;
@@ -27,14 +28,22 @@ public class FolderVO {
 		this.folderId = folderId;
 	}
 	
-	public String getFolderName() {
-		return folderName;
+	public String getFolderName1() {
+		return folderName1;
 	}
-	
-	public void setFolderName(String folderName) {
-		this.folderName = folderName;
+
+	public void setFolderName1(String folderName1) {
+		this.folderName1 = folderName1;
 	}
-	
+
+	public String getFolderName2() {
+		return folderName2;
+	}
+
+	public void setFolderName2(String folderName2) {
+		this.folderName2 = folderName2;
+	}
+
 	public String getFolderType() {
 		return folderType;
 	}

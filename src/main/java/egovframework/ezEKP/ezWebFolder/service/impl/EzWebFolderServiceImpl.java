@@ -123,18 +123,20 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	}
 
 	@Override
-	public FolderSimpleVO getSimpleFolder(String folderId, int tenantId) throws Exception {
+	public FolderSimpleVO getSimpleFolder(String folderId, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderId", folderId);		
+		map.put("folderId", folderId);
+		map.put("primary", primary);
 		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getSimpleSubFolder(map);
 		
 	}
 
 	@Override
-	public List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId) throws Exception {
+	public List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderUpper", folderUpperId);		
+		map.put("folderUpper", folderUpperId);
+		map.put("primary", primary);
 		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getAllSimpleSubFolders(map);		
 	}
@@ -149,8 +151,8 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	}
 
 	@Override
-	public void getAllSubDepts(FolderSimpleVO company, int tenantId, int mode) throws Exception {
-		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), tenantId);
+	public void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int mode) throws Exception {
+		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), primary, tenantId);
 		
 		if (listSubSimpleFolders.size() > 0) {			
 			company.setListSubFolders(listSubSimpleFolders);
@@ -158,10 +160,10 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 			
 			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
 				if (mode == 0) {
-					getAllSubDepts(subFolder, tenantId, mode);
+					getAllSubDepts(subFolder, primary, tenantId, mode);
 				}
 				else {
-					List<FolderSimpleVO> subSimpleDepts = getAllSimpleSubFolders(subFolder.getFolderId(), tenantId);
+					List<FolderSimpleVO> subSimpleDepts = getAllSimpleSubFolders(subFolder.getFolderId(), primary, tenantId);
 					if (subSimpleDepts.size() > 0) {
 						subFolder.setHasSubFolder(1);
 					}
