@@ -38,7 +38,7 @@ function DocMove() {
                 for (i = 0; i < SelDocList.GetRowCount() ; i++) {
                     countsel = SelDocList.GetDataRows();
 
-                    if (GetAttribute(countsel[i], "DATA1") == GetAttribute(selRow, "DATA2") && countsel[i].cells[0].innerHTML == selRow.childNodes[5].innerHTML) {
+                    if (GetAttribute(countsel[i], "DATA1") == GetAttribute(selRow, "DATA2") && countsel[i].cells[0].innerHTML == selRow.childNodes[4].innerHTML) {
                         DuplicateFlag = true;
                     }
                 }
@@ -51,7 +51,7 @@ function DocMove() {
                     var GetXml = "<LISTVIEWDATA>";
                     GetXml += "<HEADERS><HEADER><NAME>" + strLang940 + "</NAME><WIDTH>50</WIDTH></HEADER></HEADERS>"
                     GetXml += "<ROWS><ROW><CELL>"
-                    GetXml += "<VALUE><![CDATA[" + GetChildNodes(selRow)[5].textContent + "]]></VALUE>";
+                    GetXml += "<VALUE><![CDATA[" + GetChildNodes(selRow)[4].textContent + "]]></VALUE>";
                     GetXml += "<DATA1>" + MakeXMLString(GetAttribute(selRow, "DATA2")) + "</DATA1>";
                     GetXml += "<DATA2 ></DATA2>";
                     GetXml += "<DATA3>" + MakeXMLString(pDocID) + "</DATA3>";
@@ -61,7 +61,7 @@ function DocMove() {
                     GetXml += "<DATA7>" + MakeXMLString(pDeptName) + "</DATA7>";
                     GetXml += "<DATA8>" + MakeXMLString(pUserName) + "</DATA8>";
                     GetXml += "<DATA9>N</DATA9>";
-                    GetXml += "<DATA10><![CDATA[" + GetChildNodes(selRow)[5].textContent + "]]></DATA10>";
+                    GetXml += "<DATA10><![CDATA[" + GetChildNodes(selRow)[4].textContent + "]]></DATA10>";
                     GetXml += "<DATA11>" + MakeXMLString(arr_userinfo[11]) + "</DATA11>";
                     GetXml += "<DATA12>" + MakeXMLString(arr_userinfo[12]) + "</DATA12>";
                     GetXml += "<DATA13>" + MakeXMLString(arr_userinfo[13]) + "</DATA13>";
@@ -69,7 +69,7 @@ function DocMove() {
                     GetXml += "<DATA15>" + MakeXMLString(arr_userinfo[15]) + "</DATA15>";
                     GetXml += "<DATA16>" + MakeXMLString(arr_userinfo[16]) + "</DATA16>";
                     GetXml += "</CELL></ROW></ROWS></LISTVIEWDATA>";
-
+                    
                     var Resultxml = loadXMLString(GetXml);
                     var RowCount = SelDocList.GetRowCount();
                     var cnTr = SelDocList.GetDataRows();
@@ -82,7 +82,6 @@ function DocMove() {
                     }
                     var objTr = SelDocList.NewAddRow(RowCount, "lvTDocLV" + "_TR_" + eval(MaxID + 1));//InitTr.length			  
                     SelDocList.AddDataRow(objTr, Resultxml); // 우측 리스트에 추가
-
                 }
             }
         }

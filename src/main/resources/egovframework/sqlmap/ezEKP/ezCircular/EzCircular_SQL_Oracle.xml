@@ -168,10 +168,13 @@
             ]]>
         </isEqual>    
         <![CDATA[        
-        )AAA)
+        )AAA
+        WHERE 
+            rownum <= (#limit# + #rowCount#)
+        )
         
         WHERE 
-            rNum between (#limit# + 1) and (#limit# + #rowCount#)
+            rNum >= (#limit# + 1)
         ]]>
     </select>
 	
@@ -470,7 +473,7 @@
 			SELECT 
 				*
 			FROM
-			(SELECT AAA.*, rownum as rNUM FROM
+			(SELECT AAA.*, rownum as rNum FROM
 			(SELECT
 				A.circularid,
 				A.importance,
@@ -590,9 +593,12 @@
 	
 	        
 		<![CDATA[
-	       )AAA)
+	       )AAA
 	       WHERE
-				rNum between (#limit# + 1) and (#limit# + #rowCount#)     
+				rownum <= (#limit# + #rowCount#)     
+	       )
+	       WHERE
+				rNum >= (#limit# + 1)      
         ]]>
 	      
         
@@ -823,9 +829,12 @@
               
         
        	<![CDATA[	
-           )AAA)
+           )AAA
            WHERE
-	            rNum between (#limit# + 1) and (#limit# + #rowCount#)
+	            rownum <= (#limit# + #rowCount#)
+           )
+           WHERE
+	            rNum >= (#limit# + 1) 
        ]]>
     </select>
 
@@ -1022,9 +1031,12 @@
         </isEqual>
 		<![CDATA[ 		
 				
-			)AAA)
+			)AAA
 			WHERE
-				rNum between (#limit# + 1) and (#limit# + #rowCount#)
+				rownum <= (#limit# + #rowCount#)
+			)
+			WHERE
+				rNum >= (#limit# + 1) 
 			
 		]]>
     </select>
@@ -1163,9 +1175,12 @@
        	<![CDATA[		
 				
 				
-		)AAA)
+		)AAA
 		WHERE
-           	rNum between (#limit# + 1) and (#limit# + #rowCount#)
+           	rownum <= (#limit# + #rowCount#)
+        )
+		WHERE
+           	rNum >= (#limit# + 1)
 		
         ]]>
     </select>
@@ -1405,10 +1420,14 @@
         
 		<![CDATA[ 
 				
-			)AAA)
+			)AAA
+			WHERE
+				rownum <= (#limit# + #rowCount#)
+			
+			)
 		
 			WHERE
-				rNum between (#limit# + 1) and (#limit# + #rowCount#)
+				rNum >= (#limit# + 1)
 		]]>
     </select>
 
