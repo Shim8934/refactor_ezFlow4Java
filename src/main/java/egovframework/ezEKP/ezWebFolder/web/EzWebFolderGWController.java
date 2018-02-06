@@ -483,24 +483,19 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
         String realPath = request.getServletContext().getRealPath("");
 		
 		if (fileIDList.length == 1) {			
-			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[0], offset, tenantId);
-			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+			FileVO fileVO    = ezWebFolderService.getFileByFileId(fileIDList[0], offset, tenantId);			
 			String _fileName = fileVO.getFileName();		
-			File file = new File(realPath + fileVO.getFilePath());
-			
-			//downFile(request, response, _filePath, _fileName);
+			File file        = new File(realPath + fileVO.getFilePath());
+
 			BufferedInputStream in = null;
 			
-			try {
-		    	
-		    	in = new BufferedInputStream(new FileInputStream(file));
-		    	
+			try {		    	
+		    	in              = new BufferedInputStream(new FileInputStream(file));		    	
 	    	    String mimetype = "application/octet-stream";	
 
 	    	    response.setBufferSize(BUFF_SIZE);	    	    
 				response.setContentType(mimetype);
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");				
-
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");
 				response.setContentLength((int)file.length());
 
 				FileCopyUtils.copy(in, response.getOutputStream());
@@ -519,7 +514,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		    response.getOutputStream().close();			
 			
 		    ezWebFolderService.updateDownCnt(fileVO.getFileId(), tenantId);
-		    saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+		    saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 		}		
 		else {		
 	        String guid = UUID.randomUUID().toString();
@@ -536,9 +531,9 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			    //Package files
 			    for (int i = 0; i < fileIDList.length; i++) {
 			    	//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
-			    	FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
-			    	FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
-			    	File file = new File(realPath + fileVO.getFilePath());
+			    	FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);			    	
+			    	File file     = new File(realPath + fileVO.getFilePath());
+			    	
 			        zipOutputStream.putNextEntry(new ZipEntry(fileVO.getFileName()));
 			        fileInputStream = new FileInputStream(file);
 		
@@ -548,7 +543,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			        zipOutputStream.closeEntry();
 			        
 			        ezWebFolderService.updateDownCnt(fileVO.getFileId(), tenantId);
-			        saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+			        saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 			    }
 		
 			    zipOutputStream.close();
@@ -595,10 +590,10 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		try {
 			for (int i = 0; i < fileIDList.length; i++) {
 				FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
-				FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+				
 				//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
 				ezWebFolderService.updateFileUseStatus(fileIDList[i], tenantId);				
-				saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+				saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 			}
 			
 			result.put("status", "ok");
@@ -631,11 +626,10 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		}
 		
 		try {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
-			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+			FileVO fileVO  = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);			
 			String fileExt = fileVO.getFileExt();
 			ezWebFolderService.updateFileName(fileId, newName + "." + fileExt, tenantId);			
-			saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+			saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -667,8 +661,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		}
 		
 		try {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
-			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);			
 			
 			if (mode.equals("0")) {
 				//move file
@@ -687,7 +680,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 				ezWebFolderService.insertFile(fileVO);
 			}
 		
-			saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+			saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

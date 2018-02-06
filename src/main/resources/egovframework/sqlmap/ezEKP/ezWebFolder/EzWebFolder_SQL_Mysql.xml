@@ -23,8 +23,11 @@
         <result property="createName2"          column="create_name2"          	columnIndex="12" />
         <result property="createDate"           column="create_date"            columnIndex="13" />
         <result property="updateId"             column="update_id"              columnIndex="14" />
-        <result property="updateDate"           column="update_date"            columnIndex="15" />        
-        <result property="tenantId"         	column="tenant_id"              columnIndex="16" />
+        <result property="updateDate"           column="update_date"            columnIndex="15" />
+        <result property="fileTypeId"           column="filetype_id"            columnIndex="16" />
+        <result property="fileTypeName"         column="filetype_name"          columnIndex="17" />
+        <result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" />
+        <result property="tenantId"         	column="tenant_id"              columnIndex="19" />
     </resultMap>
     
     <!-- FileType resultMap -->
@@ -202,28 +205,31 @@
     <select id="EzWebFolderDAO.getFileByFileId" resultMap="fileVO">   
 		<![CDATA[
 			SELECT 
-				FILE_ID AS FILE_ID,
-				FILE_NAME AS FILE_NAME,
-				FILE_PATH AS FILE_PATH,
-				FILE_SIZE AS FILE_SIZE,
-				TYPE_ID AS TYPE_ID,
-				DOWN_COUNT AS DOWN_COUNT,
-				FILE_EXT AS FILE_EXT,
-				FOLDER_ID AS FOLDER_ID,
-				USE_STATUS AS USE_STATUS,
-				CREATE_ID AS CREATE_ID,
-				CREATE_NAME1 AS CREATE_NAME1,
-				CREATE_NAME2 AS CREATE_NAME2,
-				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,				
+				f.FILE_ID AS FILE_ID,
+				f.FILE_NAME AS FILE_NAME,
+				f.FILE_PATH AS FILE_PATH,
+				f.FILE_SIZE AS FILE_SIZE,
+				f.TYPE_ID AS TYPE_ID,
+				f.DOWN_COUNT AS DOWN_COUNT,
+				f.FILE_EXT AS FILE_EXT,
+				f.FOLDER_ID AS FOLDER_ID,
+				f.USE_STATUS AS USE_STATUS,
+				f.CREATE_ID AS CREATE_ID,
+				f.CREATE_NAME1 AS CREATE_NAME1,
+				f.CREATE_NAME2 AS CREATE_NAME2,
+				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,				
 				UPDATE_ID AS UPDATE_ID,
-				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,				
+				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				t.TYPE_ID AS FILETYPE_ID,
+				t.TYPE_NAME	AS FILETYPE_NAME,
+				t.TYPE_ICON AS FILETYPE_ICON,		
 				TENANT_ID AS TENANT_ID
 			FROM 
-				TBL_WEBFOLDER_FILE
+				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
 			WHERE  
-				FILE_ID = #fileId#
+				f.FILE_ID = #fileId#
 			AND
-				TENANT_ID = #tenantId#	
+				f.TENANT_ID = #tenantId#
 		]]>				
     </select>
     

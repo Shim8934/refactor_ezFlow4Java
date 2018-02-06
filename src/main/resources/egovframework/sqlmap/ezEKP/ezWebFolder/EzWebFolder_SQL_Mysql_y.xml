@@ -23,8 +23,11 @@
         <result property="createName2"          column="create_name2"          	columnIndex="12" />
         <result property="createDate"           column="create_date"            columnIndex="13" />
         <result property="updateId"             column="update_id"              columnIndex="14" />
-        <result property="updateDate"           column="update_date"            columnIndex="15" />        
-        <result property="tenantId"         	column="tenant_id"              columnIndex="16" />
+        <result property="updateDate"           column="update_date"            columnIndex="15" />
+        <result property="fileTypeId"           column="filetype_id"            columnIndex="16" />
+        <result property="fileTypeName"         column="filetype_name"          columnIndex="17" />
+        <result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" />
+        <result property="tenantId"         	column="tenant_id"              columnIndex="19" />
     </resultMap>
     
     <!-- FileType resultMap -->

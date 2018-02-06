@@ -17,6 +17,8 @@ public class FileVO {
 	private String updateId;
 	private String updateDate;	
 	private int tenantId;
+	private String fileTypeId;
+	private String fileTypeName;
 	private String fileIconUrl;
 	private String fileShareStatus;
 	private String favouriteStatus;
@@ -172,5 +174,21 @@ public class FileVO {
 	public void setFileShareStatus(String fileShareStatus) {
 		this.fileShareStatus = fileShareStatus;
 	}
+
+	public String getFileTypeId() {
+		return fileTypeId;
+	}
+
+	public void setFileTypeId(String fileTypeId) {
+		this.fileTypeId = fileTypeId;
+	}
+
+	public String getFileTypeName() {
+		return fileTypeName;
+	}
+
+	public void setFileTypeName(String fileTypeName) {
+		this.fileTypeName = fileTypeName;
+	}	
 	
 }
