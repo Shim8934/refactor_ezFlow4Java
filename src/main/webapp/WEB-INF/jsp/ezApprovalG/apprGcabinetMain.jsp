@@ -912,12 +912,12 @@
 		                var top = "";
 		
 		                if ("${userInfo.lang}" == "1") { 
-			                wWeight = 1005;
+			                wWeight = 1015;
 			                wHeight = 625;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } else { 
-			                wWeight = 1005;
+			                wWeight = 1015;
 			                wHeight = 625;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
@@ -963,7 +963,7 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnRegAttach_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "schedule_select_attendant", GetOpenWindowfeature(705, 350));
+		            var OpenWin = window.open(url, "schedule_select_attendant", GetOpenWindowfeature(705, 400));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		    }
@@ -1218,7 +1218,7 @@
 		            var width = window.screen.availWidth;
 		            var left = (parseInt(width) - 600) / 2;
 		            var top = (parseInt(heigth) - 270) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&pDeptID=&docState=015", "", "height=270px,width=789px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&pDeptID=&docState=015", "", "height=270px,width=770px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    var aprgongramline_cross_dialogArguments = new Array();

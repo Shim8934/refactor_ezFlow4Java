@@ -153,7 +153,7 @@
 		            var content = document.getElementById("AprLine_TH_2");
 		            
 		            if (content.innerText == "내용") {
-		            	content.setAttribute("width" , "376px");
+		            	content.setAttribute("width" , "356px");
 		            }
 		        }
 		        catch (e) {
