@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezJournal.dao.EzJournalDAO;
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
+import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
@@ -169,4 +171,36 @@ public class EzJournalServiceImpl implements EzJournalService{
 		return compList;
 	}
 
+	@Override
+	public List<JournalAuthorVO> getAuthorList(String companyId, String tenantId)throws Exception {
+		logger.debug("getAuthorList started");
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put("tenantId", tenantId);
+		param.put("companyId", companyId);
+		List<JournalAuthorVO> authList = ezJournalDAO.getAuthorList(param);
+		logger.debug("getAuthorList ended");
+		return authList;
+	}
+
+	@Override
+	public List<DeptViewVO> getDeptViewList(String userId, String tenantId) throws Exception {
+		logger.debug("getDeptViewList started");
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put("tenantId", tenantId);
+		param.put("userId", userId);
+		List<DeptViewVO> deptList = ezJournalDAO.getDeptViewVO(param);
+		logger.debug("getDeptViewList ended");
+		return deptList;
+	}
+
+	@Override
+	public List<JournalAuthorVO> getAuthDeptList(String tenantId, String userId) throws Exception {
+		logger.debug("getAuthDeptList started");
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put("tenantId", tenantId);
+		param.put("userId", userId);
+		List<JournalAuthorVO> deptList = ezJournalDAO.getAuthDeptList(param);
+		logger.debug("getAuthDeptList ended");
+		return deptList;
+	}
 }

@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
@@ -85,4 +87,31 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public List<JournalCompanyVO> getCompanyList (String userId,String tenantId, String companyId) throws Exception;
+	
+	/**
+	 * 열람 권한 리스트 가져오기
+	 * @param companyId
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<JournalAuthorVO> getAuthorList (String companyId, String tenantId) throws Exception;
+	
+	/**
+	 * 열람 권한자의 권한 부서 리스트 가져오기
+	 * @param tenantId
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<JournalAuthorVO> getAuthDeptList (String tenantId, String userId) throws Exception;
+	
+	/**
+	 * 조직도에 쓸 부서 리스트 가져오기
+	 * @param userId
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<DeptViewVO> getDeptViewList (String userId,String tenantId) throws Exception;
 }
