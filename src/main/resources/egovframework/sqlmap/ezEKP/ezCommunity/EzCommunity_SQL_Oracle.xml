@@ -1862,50 +1862,60 @@
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.categoryListGet"					parameterClass="Map"		resultClass="CommunityClubVO">
 		<isEqual property="cat" compareValue="A">
+			<![CDATA[
 			SELECT
 				*
 			FROM
 				(SELECT
-					TBL_C_CLUB.c_clubno,
-					c_clubname,
-					c_clubname2,
-					c_logo_thumbnail,
-					c_clubdesc,
-					displayname,
-					displayname2,
-					c_clubconfirmtype,
-					c_membercnt,
-					description,
-					description2,
-					ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_regdate ) ROWNUM_
+					*
 				FROM
-					TBL_C_CLUB
-				JOIN
-					TBL_C_CATEGORY
-				ON
-					TBL_C_CLUB.c_cate_a = TBL_C_CATEGORY.c_code
-				AND
-					TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
-				JOIN
-					TBL_USERMASTER T2
-				ON
-					RTRIM(TBL_C_CLUB.c_sysopid) = RTRIM(T2.cn)
-				AND
-					TBL_C_CLUB.tenant_id = T2.tenant_id
+					(SELECT
+						TBL_C_CLUB.c_clubno,
+						c_clubname,
+						c_clubname2,
+						c_logo_thumbnail,
+						c_clubdesc,
+						displayname,
+						displayname2,
+						c_clubconfirmtype,
+						c_membercnt,
+						description,
+						description2,
+						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_regdate ) ROWNUM_
+					FROM
+						TBL_C_CLUB
+					JOIN
+						TBL_C_CATEGORY
+					ON
+						TBL_C_CLUB.c_cate_a = TBL_C_CATEGORY.c_code
+					AND
+						TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
+					JOIN
+						TBL_USERMASTER T2
+					ON
+						RTRIM(TBL_C_CLUB.c_sysopid) = RTRIM(T2.cn)
+					AND
+						TBL_C_CLUB.tenant_id = T2.tenant_id
+					WHERE
+						c_cate_a = #code#
+					AND
+						TBL_C_CATEGORY.c_cat = LOWER(#cat#)
+					AND
+						TBL_C_CLUB.tenant_id = #tenantID#
+					) T1
 				WHERE
-					c_cate_a = #code#
-				AND
-					TBL_C_CATEGORY.c_cat = LOWER(#cat#)
-				AND
-					TBL_C_CLUB.tenant_id = #tenantID#
-				) T1
-			WHERE
-				ROWNUM_ BETWEEN #v_pStart# AND #v_pEnd#
+					ROWNUM_ <= #v_pEnd#) X
+			WHERE 
+				X.ROWNUM_ >= #v_pStart#
+			]]>
 		</isEqual>
 		
 		<isNotEqual property="cat" compareValue="A">
 			<![CDATA[
-				SELECT
+			SELECT
+				*
+			FROM
+				(SELECT
 					*
 				FROM
 					(SELECT
@@ -1945,7 +1955,9 @@
 						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
 				WHERE
-					ROWNUM_ BETWEEN #v_pStart# AND #v_pEnd#
+					ROWNUM_ <= #v_pEnd#) X
+			WHERE 
+				ROWNUM_ >= #v_pStart#
 			]]>
 		</isNotEqual>
 	</select>
@@ -1956,7 +1968,10 @@
 	<select id="EzCommunityDAO.searchCop"						parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
 		<isEqual property="v_mode" compareValue="SEA">
 			<![CDATA[
-				SELECT
+			SELECT
+				*
+			FROM	
+				(SELECT
 					*
 				FROM
 					(SELECT
@@ -1986,7 +2001,9 @@
 						T1.tenant_id = #tenantID#
 					)
 				WHERE
-					ROWNUM_ BETWEEN #v_pStart# AND #v_pEnd#
+					ROWNUM_ <= #v_pEnd#) X
+			WHERE 
+				ROWNUM_ >= #v_pStart#
 			]]>
 		</isEqual>
 		
@@ -3708,8 +3725,11 @@
 	<select id="EzCommunityDAO.myCommunityGet"					parameterClass="Map"		resultClass="String">
 		<isEqual property="v_MODE" compareValue="LIST">
 			<![CDATA[
-				SELECT
-					c_clubno 
+			SELECT
+				c_clubno
+			FROM
+				(SELECT
+					* 
 				FROM
 					(SELECT
 						T1.c_clubno,
@@ -3756,8 +3776,10 @@
 				WHERE
 					T2.tenant_id = #tenantID# 
 				AND
-					ROWNUM_ BETWEEN #v_PSTART# AND #v_PEND# 
-			]]>
+					ROWNUM_ <= #v_PEND#) X
+			WHERE 
+				X.ROWNUM_ >= #v_PSTART#
+		]]>
 		</isEqual>
 		<isNotEqual property="v_MODE" compareValue="LIST">
 			<![CDATA[
