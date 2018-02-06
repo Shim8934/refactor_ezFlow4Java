@@ -2498,12 +2498,27 @@
 						  <div id="_editVote" onclick="voteEdit()"><span><spring:message code = 'ezEmail.t149'/></span></div>
 					  </c:if>
 	                  <div class="voteBtn">
-	                                <div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber" style="margin-left:3px">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
+	                  				<c:choose>
+	                  					<c:when test="${question.secretVote == 0}">
+	                  						<div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber" style="margin-left:3px">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
+	                  					</c:when>
+	                  					<c:when test="${question.secretVote == 1}">
+	                  						<div><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber" style="margin-left:3px">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
+	                  					</c:when>
+	                                </c:choose>
 	                                <%-- <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div> --%>
 	                                <!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
 	                            </div>
 	                  <div class="questionFont02">
-					  	<a style="display:inline-block;cursor: pointer;" onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/><span style="color:#004896;margin-left:3px" id="seenPeople">(<c:out value='${seenUsers}'/>)</span></a>
+	                  	<c:choose>
+          					<c:when test="${question.secretVote == 0}">
+          						<a style="display:inline-block;cursor: pointer;" onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/><span style="color:#004896;margin-left:3px" id="seenPeople">(<c:out value='${seenUsers}'/>)</span></a>
+          					</c:when>
+          					<c:when test="${question.secretVote == 1}">
+          						<a style="display:inline-block;cursor: pointer;" ><spring:message code = 'ezPoll.t112'/><span style="color:#004896;margin-left:3px" id="seenPeople">(<c:out value='${seenUsers}'/>)</span></a>
+          					</c:when>
+                        </c:choose>
+					  	
 					  </div>
 				</div>
 				<div id="titleAndContent">				
