@@ -418,7 +418,7 @@
 		                createcabinet_cross_dialogArguments[0] = para;
 		                createcabinet_cross_dialogArguments[1] = btnCreateCab_onclick_Complete;
 		
-		                DivPopUpShow(400, 360, url);
+		                DivPopUpShow(400, 440, url);
 		            }
 		            else {
 		                var feature = "dialogWidth:370px;dialogHeight:450px;scroll:no;resizable:yes;status:no; help:no";
@@ -539,7 +539,7 @@
 		        <tr> 
 		          <td>
 				        <div class="listview">
-		                    <div id="CabinetList" style="border:0;HEIGHT: 215px; WIDTH: 200px;overflow:auto;"></div>
+		                    <div id="CabinetList" style="border:0;HEIGHT: 215px; WIDTH: 380px;overflow:auto;"></div>
 		                </div>
 		          </td>
 		        </tr>
@@ -567,7 +567,7 @@
 		    </td>
 		  </tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		<a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
 		<a class="imgbtn"><span id="btnCancel" onclick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a> 
 		</div>

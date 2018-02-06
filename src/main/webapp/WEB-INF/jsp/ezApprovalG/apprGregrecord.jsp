@@ -316,12 +316,12 @@
 
             if (Val == 5) {
                 if (CrossYN())
-                    window.resizeTo(1009, 780);
+                    window.resizeTo(1030, 780);
                 InitAVTypeTD(g_NodesPhotoAVType, tdAVType, "");
             }
             else if (Val == 6) {
                 if (CrossYN())
-                    window.resizeTo(1009, 810);
+                    window.resizeTo(1030, 810);
                 InitAVTypeTD(g_NodesRcdgAVType, tdAVType, "");
             }
         }
@@ -333,7 +333,7 @@
             if (Val == "1" || Val == "3" || Val == "5" || Val == "6")
             {
                 if (CrossYN())
-                    window.resizeTo(1009, 710);
+                    window.resizeTo(1030, 710);
 
                 trDeliveryNo.style.display = "none";
                 trOriginSN.style.display = "none";
@@ -342,7 +342,7 @@
             else if (Val == "2" || Val == "4")
             {
                 if (CrossYN())
-                    window.resizeTo(1009, 710);
+                    window.resizeTo(1030, 710);
 
                 trDeliveryNo.style.display = "";
                 trOriginSN.style.display = "";
@@ -350,7 +350,7 @@
             }
             else {
                 if (CrossYN())
-                    window.resizeTo(1009, 720);
+                    window.resizeTo(1030, 750);
 
                 trDeliveryNo.style.display = "";
                 trOriginSN.style.display = "";
@@ -371,7 +371,7 @@
             inssepattach_cross_dialogArguments[0] = para;
             inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
 
-            DivPopUpShow(730, 630, url);
+            DivPopUpShow(950, 630, url);
         }
         else
         {
@@ -572,7 +572,7 @@
               </tr>
             </table></td>
           <td style="padding-left:5px;vertical-align:top" ><h2><spring:message code='ezApprovalG.t1071'/></h2>
-            <table style="width:<%if("${userInfo.lang}"=="1"){%>375<%}else{%>420<%}%>px"  class="content">
+            <table style="width:<%if("${userInfo.lang}"=="1"){%>375<%}else{%>494<%}%>px"  class="content">
               <tr>
                 <th ><spring:message code='ezApprovalG.t875'/></th>
                 <td style="width:98%"><input type="checkbox" name="special1" value="checkbox" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top;"><span>&nbsp;<spring:message code='ezApprovalG.t983'/></span><br />
@@ -649,7 +649,7 @@
       </table></td>
   </tr>
 </table>
-<div class="btnposition">
+<div class="btnposition btnpositionNew">
 <a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 <a class="imgbtn"><span id="btnCancel" onclick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
 </div>
