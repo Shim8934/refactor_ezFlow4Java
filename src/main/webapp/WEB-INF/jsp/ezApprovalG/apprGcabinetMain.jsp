@@ -536,7 +536,7 @@
 		                    if (deptcdoenode.length > 0)
 		                        tmpChkDeptID = getNodeText(deptcdoenode);
 		                }
-		                if ("<c:out value = '${userInfo.deptID} '/>" == tmpChkDeptID)
+		                if ("<c:out value = '${userInfo.deptID}'/>" == tmpChkDeptID) 
 		                    tmpAuthChk = true;
 		
 		                if (g_DeptInfo != "") {
@@ -912,12 +912,12 @@
 		                var top = "";
 		
 		                if ("${userInfo.lang}" == "1") { 
-			                wWeight = 855;
+			                wWeight = 1005;
 			                wHeight = 625;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } else { 
-			                wWeight = 855;
+			                wWeight = 1005;
 			                wHeight = 625;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
@@ -985,7 +985,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1205, 500));
+		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(971, 500));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
