@@ -3516,7 +3516,6 @@ function getNextDocInfo() {
             NextDocHref = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "HREF"));
             NextDocExtended = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "EXTENDEDNAME"));
         }
-        }
     } catch (e) { }
 }
 function getNextDocOne(tempDocID) {
