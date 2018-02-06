@@ -26,6 +26,7 @@
 	    </style>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -536,7 +537,8 @@
 		                    if (deptcdoenode.length > 0)
 		                        tmpChkDeptID = getNodeText(deptcdoenode);
 		                }
-		                if ("<c:out value = '${userInfo.deptID} '/>" == tmpChkDeptID)
+
+		                if ("<c:out value = '${userInfo.deptID}'/>" == tmpChkDeptID) 
 		                    tmpAuthChk = true;
 		
 		                if (g_DeptInfo != "") {
@@ -985,7 +987,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(971, 500));
+		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1100, 500));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1517,6 +1519,56 @@
 		            }
 		            SortList(OrderCell);
 		        }
+		     var Tab1_SelectID = "";
+			    function Tab1_MouserOver(obj) {
+			        obj.className = "tabover";
+			    }
+		
+			    function Tab1_MouserOut(obj) {
+			        if(Tab1_SelectID != obj.id)
+			            obj.className = "";
+			    }
+		
+			    function Tab1_MouseClick(obj) {		    	
+			        obj.className = "tabon";
+			        if (obj.id != Tab1_SelectID) {
+			            if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
+			                document.getElementById(Tab1_SelectID).className = "";
+		
+			            obj.className = "tabon";
+			            Tab1_SelectID = obj.id;
+			            ChangeTab(obj);
+			        }
+			    }
+			    
+			    function ChangeTab(obj) {
+			        var pSelectTab = obj.id;
+
+			        switch (pSelectTab) {
+			            case "tagsub1": pDocInfoValue='1';Approval_onclick(); break;
+			            case "tagsub2": pDocInfoValue='2';Recipent_onclick(); break;
+			            case "tagsub3": pDocInfoValue='4';Attach_onclick(); break;
+			            case "tagsub4": pDocInfoValue='3';Opinion_onclick(); break;
+			            case "tagsub5": pDocInfoValue='5';Circulation_onclick(); break;
+			        }
+			    }
+			    
+		     function Tab1_NewTabIni(pTabNodeID) {
+			        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
+			            if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
+			                if (document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).nodeName == "SPAN") {
+			                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseover = function () { Tab1_MouserOver(this); };
+			                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };
+			                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onclick = function () { Tab1_MouseClick(this); };
+
+			                    if (i == 1) {
+			                        document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).className = "tabon";
+			                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).id;
+			                    }	
+			                }
+			            }
+			        }
+			    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1607,23 +1659,34 @@
 	    <br>
 	    <div id="tblPageRayer"></div>
 	    <div id="trSubInfoTab">
-	        <div id="tabnav" style="width: 100%">
+	        <%-- <div id="tabnav" style="width: 100%">
 	            <ul>
-	                <li id="tagsub1"><span onclick="MM_swapImagesub('1', event);Approval_onclick()"><spring:message code='ezApprovalG.t1769'/></span></li>
-	                <li id="tagsub2"><span onclick="MM_swapImagesub('2', event);Recipent_onclick()"><spring:message code='ezApprovalG.t950'/></span></li>
-	                <li id="tagsub3"><span onclick="MM_swapImagesub('3', event);Attach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
-	                <li id="tagsub4"><span onclick="MM_swapImagesub('4', event);Opinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+	                <li id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1', event);Approval_onclick()"><spring:message code='ezApprovalG.t1769'/></span></li>
+	                <li id="tagsub2"><span onclick="pDocInfoValue='2';MM_swapImagesub('2', event);Recipent_onclick()"><spring:message code='ezApprovalG.t950'/></span></li>
+	                <li id="tagsub3"><span onclick="pDocInfoValue='3';MM_swapImagesub('3', event);Attach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
+	                <li id="tagsub4"><span onclick="pDocInfoValue='4';MM_swapImagesub('4', event);Opinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+	                <c:if test="${approvalFlag != 'G'}">
+					    <li id="tagsub5"><span onClick="MM_swapImagesub('5', event);Circulation_onclick()" ><spring:message code='ezApprovalG.hyj24'/></span></li>
+				    </c:if>
 	            </ul>
-	        </div>
+	        </div> --%>
+	        <div id="tabnav" class="portlet_tabpart01" style="width:100%">
+				<div class="portlet_tabpart01_top" id="tab1">
+				    <p><span id="tagsub1"><spring:message code='ezApprovalG.t1769'/></span></p>
+				    <p><span id="tagsub2"><spring:message code='ezApprovalG.t950'/></span></p>
+				    <p><span id="tagsub3"><spring:message code='ezApprovalG.t56'/></span></p>
+				    <p><span id="tagsub4"><spring:message code='ezApprovalG.t55'/></span></p>
+			  	</div>	
+			</div>
 	
 	        <div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
-	            <div id="lvtDetail" style="border: 0;" align="center">
+	            <div id="lvtDetail" style="border: 0;"></div>
 	        </div>
 	    </div>
-	
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-	        selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+	        //selToggleList(document.getElementById("tabnav"), "p", "span", "1");
+	        Tab1_NewTabIni("tab1");
 	    </script>
 	
 	    <div id="tdDebug"></div>
