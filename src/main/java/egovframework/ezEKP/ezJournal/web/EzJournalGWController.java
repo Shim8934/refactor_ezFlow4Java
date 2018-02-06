@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
+import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
@@ -232,6 +234,18 @@ public class EzJournalGWController {
 		LOGGER.debug("ezJournal G/W authorsList started.");
 		
 		JSONObject result = new JSONObject();
+		String companyId = request.getParameter("companyId");
+		String tenantId = request.getParameter("tenantId");
+		
+		try {
+			List<JournalAuthorVO> authList = ezJournalService.getAuthorList(companyId, tenantId);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", authList);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
 		
 		LOGGER.debug("ezJournal G/W authorsList ended.");
 		return result;
@@ -246,6 +260,17 @@ public class EzJournalGWController {
 		LOGGER.debug("userId=" + userId);
 		
 		JSONObject result = new JSONObject();
+		String tenantId = request.getParameter("tenantId");
+		
+		try {
+			List<JournalAuthorVO> deptList = ezJournalService.getAuthDeptList(tenantId, userId);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", deptList);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
 		
 		LOGGER.debug("ezJournal G/W authorDepts ended.");
 		return result;
@@ -729,6 +754,20 @@ public class EzJournalGWController {
 		LOGGER.debug("ezJournal G/W getDeptList started.");
 		
 		JSONObject result = new JSONObject();
+		
+		String userId = request.getParameter("userId");
+		String tenantId = request.getParameter("tenantId");
+		
+		try {
+			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", deptList);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
 		
 		LOGGER.debug("ezJournal G/W getDeptList ended.");
 		return result;

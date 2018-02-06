@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
@@ -105,5 +107,35 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<JournalCompanyVO> getCompanyList(Map<String, String> map){
 		return (List<JournalCompanyVO>) list("selectCompanyList",map);
+	}
+	
+	/**
+	 * 열람권한자 리스트 가져오기
+	 * @param map
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<JournalAuthorVO> getAuthorList(Map<String, String> map){
+		return (List<JournalAuthorVO>) list("selectAuthorList",map);
+	}
+	
+	/**
+	 * 권한자의 권한부서 리스트
+	 * @param map
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<JournalAuthorVO> getAuthDeptList(Map<String, String> map){
+		return (List<JournalAuthorVO>) list("selectAuthorDept",map);
+	}
+	
+	/**
+	 * 조직도에 쓸 부서리스트 가져오기
+	 * @param map
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<DeptViewVO> getDeptViewVO(Map<String, String> map){
+		return (List<DeptViewVO>) list("selectDeptList",map);
 	}
 }

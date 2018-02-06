@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezJournal.web;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -152,16 +154,64 @@ public class EzJournalSBController {
 		param.put("companyId",companyId );
 		param.put("tenantId", userInfo.getTenantId()+"");
 		
-		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", param, request,"get",null);
+		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/authors", param, request,"get",null);
 		status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {		
-			JSONArray typeList = (JSONArray) resultBody.get("data");
-			model.addAttribute("typeList", typeList);
+			JSONArray authList = (JSONArray) resultBody.get("data");
+			for (int i = 0; i < authList.size(); i++) {				
+				JSONObject jo = (JSONObject) authList.get(i);
+				String [] authDeptArr = jo.get("authDept").toString().split("%");
+				if (authDeptArr.length>1) {
+					jo.replace("authDept", authDeptArr[0]+" 외 "+(authDeptArr.length-1));
+				}
+			}
+			model.addAttribute("authList", authList);
 		}
 		
 		logger.debug("authorMain ended");
 		
-		return null;
+		return "admin/ezJournal/author";
+	}
+	
+	/**
+	 * 관리자 열람 권한 세부 리스트
+	 */
+	@RequestMapping(value = "/admin/ezJournal/authorDetail.do")
+	public String authorDetail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+		logger.debug("authorDetail started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, String> param = new HashMap<String, String>();
+		String userId =null;
+		if (request.getParameter("userId") != null) {
+			userId = request.getParameter("userId");
+		} else{
+			userId = userInfo.getId();
+		}
+		
+		param.put("userId",userId);
+		param.put("tenantId", userInfo.getTenantId()+"");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/depts", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			JSONArray deptList = (JSONArray) resultBody.get("data");
+			model.addAttribute("deptList", deptList);
+		}
+		
+		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/users/"+userId+"/author-depts", param, request,"get",null);
+		status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {		
+			JSONArray authDeptList = (JSONArray) resultBody.get("data");
+			model.addAttribute("authDeptList", authDeptList);
+		}
+		
+		logger.debug("authorDetail ended");
+		
+		return "admin/ezJournal/authorDetail";
 	}
 }
