@@ -146,6 +146,9 @@ public class EzEditorController extends EgovFileMngUtil{
 			case "TAGFREE":
 				returnPath = "admin/ezEditor/tfxEditor";
 				break;
+			case "KUKUDOCS":
+				returnPath = "admin/ezEditor/kukudocsEditor";
+				break;
 			default :
 				returnPath = "admin/ezEditor/ckEditor";
 				break;

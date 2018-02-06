@@ -536,7 +536,8 @@
 		                    if (deptcdoenode.length > 0)
 		                        tmpChkDeptID = getNodeText(deptcdoenode);
 		                }
-		                if ("<c:out value = '${userInfo.deptID} '/>" == tmpChkDeptID)
+
+		                if ("<c:out value = '${userInfo.deptID}'/>" == tmpChkDeptID) 
 		                    tmpAuthChk = true;
 		
 		                if (g_DeptInfo != "") {
@@ -912,12 +913,12 @@
 		                var top = "";
 		
 		                if ("${userInfo.lang}" == "1") { 
-			                wWeight = 855;
+			                wWeight = 1015;
 			                wHeight = 625;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } else { 
-			                wWeight = 855;
+			                wWeight = 1015;
 			                wHeight = 625;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
@@ -963,7 +964,7 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnRegAttach_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "schedule_select_attendant", GetOpenWindowfeature(565, 350));
+		            var OpenWin = window.open(url, "schedule_select_attendant", GetOpenWindowfeature(705, 400));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		    }
@@ -985,7 +986,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(900, 500));
+		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(971, 500));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1016,7 +1017,7 @@
 		            selectcabinet_cross_dialogArguments[0] = para;
 		            selectcabinet_cross_dialogArguments[1] = btnChangeRecCabinet_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(900, 500));
+		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(980, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		
 		           
@@ -1218,7 +1219,7 @@
 		            var width = window.screen.availWidth;
 		            var left = (parseInt(width) - 600) / 2;
 		            var top = (parseInt(heigth) - 270) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&pDeptID=&docState=015", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&pDeptID=&docState=015", "", "height=270px,width=770px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    var aprgongramline_cross_dialogArguments = new Array();

@@ -524,7 +524,7 @@
 	        <tr>
 	            <%--기능분류선택--%>
 	            <td style="width: 190px; vertical-align: top">
-	                <h2><spring:message code='ezApprovalG.t1039'/></h2>
+	                <h2 style="padding-top:7px;"><spring:message code='ezApprovalG.t1039'/></h2>
 	                <table class="content">
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t592'/></th>
@@ -547,10 +547,10 @@
 	            </td>
 	            <%--단위업무 선택--%>
 	            <td style="padding-left: 5px; width: 190px; vertical-align: top">
-	                <h2><spring:message code='ezApprovalG.t1040'/></h2>
+	                <h2 style="padding-top:7px;"><spring:message code='ezApprovalG.t1040'/></h2>
 	                <table style="width: 100%">
 	                    <tr>
-	                        <th style="height: 23px; text-align: left"><a class="imgbtn"><span onclick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></th>
+	                        <th style="height: 23px; text-align: left; padding-left:3px;"><a class="imgbtn"><span onclick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></th>
 	                    </tr>
 	                    <tr style="height: 2px;">
 	                        <td></td>
@@ -558,7 +558,7 @@
 	                    <tr>
 	                        <td style="width: 190px">
 	                            <div class="listview">
-	                                <div id="TaskList" style="HEIGHT: 300px; WIDTH: 190px; overflow: auto;"></div>
+	                                <div id="TaskList" style="HEIGHT: 300px; WIDTH: 228px; overflow: auto;"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -566,25 +566,28 @@
 	            </td>
 	            <%--기록물철선택--%>
 	            <td style="padding-left: 5px; vertical-align: top">
-	                <h2><spring:message code='ezApprovalG.t711'/></h2>
+	                <h2 style="padding-top:7px;"><spring:message code='ezApprovalG.t711'/></h2>
 	                <table style="width: 200px;">
 	                	<c:if test="${initFlag == '1'}">
 		                    <tr id="trCreateCab">
-		                        <th style="height: 23px; text-align: left"><a class="imgbtn"><span onclick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
+		                        <th style="height: 23px; text-align: left; padding-left:3px;"><a class="imgbtn"><span onclick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
 		                            <a class="imgbtn"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a></th>
 		                    </tr>
 		                    <tr id="trCreateCabDummy" style="display: none">
 		                        <td></td>
+		                    </tr>
+		                    <tr style="height:2px;">
+		                    	<td></td>
 		                    </tr>
 	                	</c:if>
 	                    <tr>
 	                        <td>
 	                            <div class="listview">
 	                            <c:if test="${initFlag == '1'}">
-	                                <div id="CabinetList" style="border: 0; HEIGHT: 300px; WIDTH: 200px; overflow: auto;"></div>
+	                                <div id="CabinetList" style="border: 0; HEIGHT: 300px; WIDTH: 229px; overflow: auto;"></div>
 	                            </c:if>
 	                            <c:if test="${initFlag != '1'}">
-	                            	<div id="CabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 200px; overflow: auto;"></div>
+	                            	<div id="CabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 229px; overflow: auto;"></div>
 	                            </c:if>
 	                            </div>
 	                        </td>
@@ -600,12 +603,12 @@
 	                    onclick="return DelCabList_onclick()" style="cursor: pointer"></td>
 	
 	            <td style="width: 200px; vertical-align: top">
-	                <h2><spring:message code='ezApprovalG.t1120'/></h2>
+	                <h2 style="padding-top:7px;"><spring:message code='ezApprovalG.t1120'/></h2>
 	                <table style="width: 100%">
 	                    <tr>
 	                        <td colspan="2">
 	                            <div class="listview">
-	                                <div id="SelCabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 220px; overflow: auto;"></div>
+	                                <div id="SelCabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 260px; overflow: auto;"></div>
 	                            </div>
 	                        </td>
 	
@@ -621,8 +624,8 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition" style="text-align: right;">
-	        <h2><spring:message code='ezApprovalG.t1090'/>
+	    <div class="btnposition btnpositionNew" style="text-align: right;">
+	        <h2 style="padding-right:10px;"><spring:message code='ezApprovalG.t1090'/>
 	            <input type="text" id="Cabinetkeyword" value="" onkeypress="CabinetSearch_Press(event)" style="cursor: text; padding: 0 0 0 0; border-top: 1px solid #bebebe; border-left: 1px solid #bebebe; background-color: White; width: 150px;color:black;font-weight:normal">
 	            <a class="imgbtn" onclick="return CabinetSearch_onclick()"><span><spring:message code='ezApprovalG.t111'/></span></a>
 	            <a class="imgbtn" onclick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>

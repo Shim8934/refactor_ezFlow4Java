@@ -1680,7 +1680,7 @@ function setbuttonenable() {
         document.getElementById("tbtnApproveALL").style.display = "none";
     }
 
-    if (pListTypeValue == "8" || pListTypeValue == "10")
+    if (pListTypeValue == "8")
         document.getElementById("tbar1").style.display = "none";
     else
         document.getElementById("tbar1").style.display = "";

@@ -219,7 +219,7 @@
 		    	}
 		    	//2018.01-31 김기하 반복 시 시작일자 검사 
 	    	    if (CheckPreviously(true)) {
-	    	    	alert(strLang272);
+	    	    	alert(strLang275);
 	        		return;
 	        	}
 		    	
