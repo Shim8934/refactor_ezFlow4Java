@@ -175,5 +175,13 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 			company.setHasSubFolder(0);			
 		}		
 	}
+	
+	@Override
+	public void updateDownCnt(String fileId, int tenantId) {		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileId", fileId);		
+		map.put("tenantId", tenantId);		
+		ezWebFolderDAO.updateDownCnt(map);
+	}
 
 }

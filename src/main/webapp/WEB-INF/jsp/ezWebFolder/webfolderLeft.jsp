@@ -11,11 +11,12 @@
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/ezWebFolder/treeView.js"></script>
 		<script type="text/javascript" >	        
 		    var companyFolderId = "";
 		    var deptFolderId    = "";
 		    var persFolderId    = "";
+		    var userId = "${userId}";
+			var userName = "${userName}";
 		    
 		    window.onload = function () {
 		
@@ -72,7 +73,6 @@
 					async: true,
 					success : function(data) {				
 						var result = data.folderList;												
-						createTree(data);
 						console.log(result);						
 					},
 	 				error : function(error) {
@@ -80,6 +80,11 @@
 					}
 				});	
 		    }
+		    function getFileList() {
+		    	// + 버튼 누르면 오른쪽 화면 뜨고 오른쪽 화면에서 ajax로 띄움
+		    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do";
+		   		
+		   	}
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -105,7 +110,8 @@
   			</h2>  
     		<ul>
 		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="test()" >영화</span></li>
-		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >문서</span></li>		        
+		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="fileList()" >문서</span></li>		        
+		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="getFileList()" >파일</span></li>		        
 		    </ul>  
 		    
 		    <h2>

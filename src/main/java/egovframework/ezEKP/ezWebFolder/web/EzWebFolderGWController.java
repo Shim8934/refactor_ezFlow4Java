@@ -1,43 +1,40 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Base64.Decoder;
-
+import java.util.TimeZone;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
@@ -45,7 +42,6 @@ import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @SuppressWarnings("unchecked")
@@ -62,6 +58,9 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzWebFolderService")
 	private EzWebFolderService ezWebFolderService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderGWController.class);
 	
@@ -89,7 +88,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/webfolderadmin/basicstorage/{newValue}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject changeBasicStorage(@PathVariable String newValue, HttpServletRequest request) {	
+	public JSONObject putChangeBasicStorage(@PathVariable String newValue, HttpServletRequest request) {	
 		int tenantId         = Integer.parseInt(request.getParameter("tenantId"));
 		String uploadLimit   = request.getParameter("uploadLimit");
 		String companyId     = request.getParameter("companyId");
@@ -182,7 +181,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/webfolderadmin/basicstorage/{newValue}/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject changePersonalStorage(@PathVariable String newValue, @RequestParam("userList") List<String> userList, HttpServletRequest request) {	
+	public JSONObject putChangePersonalStorage(@PathVariable String newValue, @RequestParam("userList") List<String> userList, HttpServletRequest request) {	
 		int tenantId         = Integer.parseInt(request.getParameter("tenantId"));		
 		String companyId     = request.getParameter("companyId");
 		logger.debug("New Value: " + newValue + " || tenantId: " + tenantId);	
@@ -207,7 +206,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/webfolderadmin/storagereset/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject resetPersonalStorage(@RequestParam("userList") List<String> userList, HttpServletRequest request) {	
+	public JSONObject putResetPersonalStorage(@RequestParam("userList") List<String> userList, HttpServletRequest request) {	
 		int tenantId         = Integer.parseInt(request.getParameter("tenantId"));		
 		String companyId     = request.getParameter("companyId");
 		String totalAmount   = "";
@@ -335,8 +334,8 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
-	@RequestMapping(value="/webfolder/filemanage/fileupload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject fileUploadGW2(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile>multiFileLists, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/webfolder/filemanage/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile>multiFileLists, HttpServletRequest request) throws Exception {
 		JSONParser jp          = new JSONParser();
 		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);	
 		
@@ -439,23 +438,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
             		ezWebFolderService.insertFile(fileVO);
             		list.add(fileVO);
             		
-            		//Save log to database
-            		FileLogVO fileLog = new FileLogVO();            		
-            		
-            		fileLog.setLogType("C");
-            		fileLog.setCompanyId(companyId);
-            		fileLog.setCreateDate(timeUTC);
-            		fileLog.setCreateId(userId);
-            		fileLog.setCreateName1(userName1);
-            		fileLog.setCreateName2(userName2);
-            		fileLog.setFileName(pFileName[i]);
-            		fileLog.setFileSize(fileVO.getFileSize());
-            		fileLog.setFileExt(fileVO.getFileExt());
-            		fileLog.setFileType(fileType.getTypeName());
-            		fileLog.setLogId(getMaxLogID(tenantId));
-            		fileLog.setTenantId(tenantId);
-            		
-            		ezWebFolderAdminService.insertFileLog(fileLog);			
+            		saveLog("C", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
 	            }
 	        }
 
@@ -471,7 +454,441 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		
 		return result;
 	}	
+		
+	@RequestMapping(value = "/webfolder/filemanage/file-download", method=RequestMethod.GET, produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	public void getFileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
+		String listFileId   = request.getParameter("fileList") != null ? request.getParameter("fileList")                   : "";
+		String userId	    = request.getParameter("userId")   != null ? request.getParameter("userId")                     : "";
+		String userName1    = request.getParameter("userName1")!= null ? request.getParameter("userName1")                  : "";
+		String userName2    = request.getParameter("userName2")!= null ? request.getParameter("userName2")                  : "";	
+		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
+		String[] fileIDList = listFileId.split(",");		
+		
+		logger.debug("FileList: " + listFileId);
+		
+		if (fileIDList.length <= 0) {
+			logger.debug("downloadAttach illegal arguments!");
+			return;
+		}
+
+		//Get absolute path of the application       
+        String realPath = request.getServletContext().getRealPath("");
+		
+		if (fileIDList.length == 1) {			
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[0], offset, tenantId);
+			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+			String _fileName = fileVO.getFileName();		
+			File file = new File(realPath + fileVO.getFilePath());
+			
+			//downFile(request, response, _filePath, _fileName);
+			BufferedInputStream in = null;
+			
+			try {
+		    	
+		    	in = new BufferedInputStream(new FileInputStream(file));
+		    	
+	    	    String mimetype = "application/octet-stream";	
+
+	    	    response.setBufferSize(BUFF_SIZE);	    	    
+				response.setContentType(mimetype);
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");				
+
+				response.setContentLength((int)file.length());
+
+				FileCopyUtils.copy(in, response.getOutputStream());
+		    }
+		    finally {
+				if (in != null) {
+				    try {
+				    	in.close();
+				    } catch (Exception ignore) {
+				    	logger.debug("IGNORED: {}", ignore.getMessage());
+				    }
+				}
+		    }
+		    
+		    response.getOutputStream().flush();
+		    response.getOutputStream().close();			
+			
+		    ezWebFolderService.updateDownCnt(fileVO.getFileId(), tenantId);
+		    saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+		}		
+		else {		
+	        String guid = UUID.randomUUID().toString();
+	        String fileName = guid + ".zip";
+			ZipOutputStream zipOutputStream = null;
+			FileInputStream fileInputStream = null;
+			
+			try {
+				//Setting headers  
+			    response.setStatus(HttpServletResponse.SC_OK);
+			    response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");	
+			    zipOutputStream = new ZipOutputStream(response.getOutputStream());
+			    
+			    //Package files
+			    for (int i = 0; i < fileIDList.length; i++) {
+			    	//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
+			    	FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
+			    	FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+			    	File file = new File(realPath + fileVO.getFilePath());
+			        zipOutputStream.putNextEntry(new ZipEntry(fileVO.getFileName()));
+			        fileInputStream = new FileInputStream(file);
+		
+			        IOUtils.copy(fileInputStream, zipOutputStream);
+		
+			        fileInputStream.close();
+			        zipOutputStream.closeEntry();
+			        
+			        ezWebFolderService.updateDownCnt(fileVO.getFileId(), tenantId);
+			        saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+			    }
+		
+			    zipOutputStream.close();
+			}
+			catch (Exception e) {
+				throw e;			
+			} 
+			finally {
+				if (fileInputStream != null) {
+					try { fileInputStream.close(); } catch (Exception e) {}
+				}
+				
+				if (zipOutputStream != null) {
+					try { zipOutputStream.closeEntry(); } catch (Exception e) {}
+					try { zipOutputStream.close(); } catch (Exception e) {}
+				}			
+			}
+			
+		}
+		
+		logger.debug("File Download Finish!");
+		return;
+	}
 	
+	@RequestMapping(value = "/webfolder/file-delete", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject delFileDelete(HttpServletRequest request) {
+		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
+		String listFileId   = request.getParameter("fileList") != null ? request.getParameter("fileList")                   : "";
+		String userId	    = request.getParameter("userId")   != null ? request.getParameter("userId")                     : "";
+		String userName1    = request.getParameter("userName1")!= null ? request.getParameter("userName1")                  : "";
+		String userName2    = request.getParameter("userName2")!= null ? request.getParameter("userName2")                  : "";	
+		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
+		String[] fileIDList = listFileId.split(",");
+		JSONObject result   = new JSONObject();
+		
+		if (fileIDList.length == 0 || tenantId == -1 || offset.equals("") || userId.equals("") || userName1.equals("") || userName2.equals("") || companyId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			for (int i = 0; i < fileIDList.length; i++) {
+				FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
+				FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+				//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
+				ezWebFolderService.updateFileUseStatus(fileIDList[i], tenantId);				
+				saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+			}
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+		} 
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		return result;
+	}
+
+	@RequestMapping(value="/webfolder/file-rename/fileid/{fileid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putFileRename(@PathVariable(value="fileid") String fileId, HttpServletRequest request) {
+		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		String userId	    = request.getParameter("userId")   != null ? request.getParameter("userId")                     : "";
+		String userName1    = request.getParameter("userName1")!= null ? request.getParameter("userName1")                  : "";
+		String userName2    = request.getParameter("userName2")!= null ? request.getParameter("userName2")                  : "";	
+		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
+		String newName 		= request.getParameter("newName")  != null ? request.getParameter("newName") 					: "";
+		JSONObject result   = new JSONObject();
+		
+		if (fileId.equals("") || newName.equals("") || tenantId == -1 || offset.equals("") || userId.equals("") || userName1.equals("") || userName2.equals("") || companyId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
+			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+			String fileExt = fileVO.getFileExt();
+			ezWebFolderService.updateFileName(fileId, newName + "." + fileExt, tenantId);			
+			saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+		} 
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/webfolder/filemove/fileid/{fileid}/modes/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putFileMove(@PathVariable(value="fileid") String fileId, @PathVariable(value="mode") String mode, HttpServletRequest request) {
+		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		String userId	    = request.getParameter("userId")   != null ? request.getParameter("userId")                     : "";
+		String userName1    = request.getParameter("userName1")!= null ? request.getParameter("userName1")                  : "";
+		String userName2    = request.getParameter("userName2")!= null ? request.getParameter("userName2")                  : "";	
+		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
+		String folderId     = request.getParameter("folderId") != null ? request.getParameter("folderId")                   : "";
+		JSONObject result   = new JSONObject();
+		
+		if (fileId.equals("") || fileId.equals("") || mode.equals("") || tenantId == -1 || offset.equals("") || userId.equals("") || userName1.equals("") || userName2.equals("") || companyId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
+			FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(fileVO.getFileExt(), tenantId);
+			
+			if (mode.equals("0")) {
+				//move file
+				ezWebFolderService.moveFile(fileId, folderId, tenantId);
+			}
+			else {
+				//copy file
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date date                  = new Date();
+				String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+				
+				fileVO.setFolderId(folderId);				
+				fileVO.setFileId(getMaxFileID(tenantId));
+				fileVO.setCreateDate(timeUTC);
+				fileVO.setUpdateDate(timeUTC);
+				ezWebFolderService.insertFile(fileVO);
+			}
+		
+			saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+		} 
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/webfolderadmin/webfolderadmin-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getWebfolderAdminList(HttpServletRequest request) {		
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		String primary	    = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
+		int pageNum         = request.getParameter("pageNum")  != null ? Integer.parseInt(request.getParameter("pageNum"))  : -1;
+		int pageSize        = request.getParameter("pageSize") != null ? Integer.parseInt(request.getParameter("pageSize")) : -1;	
+		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
+		String type 		= "wf=1";
+		JSONObject result   = new JSONObject();
+		JSONArray jsonArray = new JSONArray();		
+		
+		if (companyId.equals("") || type.equals("") || tenantId == -1 || primary.equals("") || pageNum == -1 || pageSize == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			int startRow           = (pageSize * (pageNum - 1)) + 1;
+	        int endRow             = pageSize * pageNum;	                
+	        int cnt                = ezOrganAdminService.getPermissionListCount(companyId, type, primary, tenantId);
+	        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyId, type, primary, startRow, endRow, tenantId);
+	        
+	        logger.debug("List size: " + list.size());
+	        
+	        for (OrganUserVO vo : list) {
+	        	JSONObject fileJson    = new JSONObject();
+	        	fileJson.put("userId", vo.getCn());	        	
+	        	fileJson.put("departmentId", vo.getExtensionAttribute1());
+	        	fileJson.put("userName", vo.getDisplayName());
+	        	fileJson.put("userMail", vo.getMail());
+	        	fileJson.put("jobPositon", vo.getTitle());
+	        	fileJson.put("departmentName", vo.getDescription());
+	        	fileJson.put("phoneNumber", vo.getTelephoneNumber());
+	        	fileJson.put("companyName", vo.getCompany());
+	        	
+	        	jsonArray.add(fileJson);
+	        }
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", jsonArray);
+			result.put("count", cnt);
+		}
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/webfolderadmin/webfolderadmin", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject postWebfolderAdminInsert(HttpServletRequest request) throws Exception {
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		String userId		= request.getParameter("userId")   != null ? request.getParameter("userId")   					: "";
+		String primary	    = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
+		JSONObject result   = new JSONObject();
+		OrganUserVO vo      = null;
+		
+		if (userId.equals("") || primary.equals("") || tenantId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}		
+		
+		logger.debug("UserID: " + userId + " || primary: " + primary + " || TenantId: " + tenantId);
+		
+		vo            = ezOrganAdminService.getUserInfo(userId, primary, tenantId);
+		String extStr = vo.getExtensionAttribute1().toLowerCase();
+		
+	    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        date.setTimeZone(TimeZone.getTimeZone("GMT"));
+        
+        String nowDate = date.format(new Date());		
+		int pos        = extStr.indexOf("wf=1");
+		
+		if (pos > -1) {
+			logger.debug("Already be webfolder admin!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+
+		pos = extStr.indexOf("wf=0;");
+		
+		if (pos > -1) {			
+			extStr = extStr.replace("wf=0", "wf=1");
+		}
+		else {
+			extStr += "wf=1;";
+		}
+		
+		vo.setExtensionAttribute1(extStr);
+		vo.setTenantId(tenantId);
+		vo.setNowDate(nowDate);
+		
+		logger.debug("Extension: " + extStr);
+
+		try {
+			ezOrganAdminService.updateDBData_user(vo);
+
+			result.put("status", "ok");
+			result.put("code", 0);						
+		}
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/webfolderadmin/webfolderadmin/users/{userid}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deleteWebfolderAdminDelete(@PathVariable String userid, HttpServletRequest request) throws Exception {
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		String primary	    = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
+		JSONObject result   = new JSONObject();
+		OrganUserVO vo      = null;
+		
+		if (userid.equals("") || primary.equals("") || tenantId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}		
+		
+		logger.debug("UserID: " + userid + " || primary: " + primary + " || TenantId: " + tenantId);
+		
+		vo            = ezOrganAdminService.getUserInfo(userid, primary, tenantId);
+		String extStr = vo.getExtensionAttribute1().toLowerCase();
+		
+	    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        date.setTimeZone(TimeZone.getTimeZone("GMT"));
+        
+        String nowDate = date.format(new Date());		
+		int pos        = extStr.indexOf("wf=1;");
+		
+		if (pos == -1) {
+			logger.debug("Cannot find webfolder admin extension!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}		
+				
+		extStr = extStr.replace("wf=1;", "");
+		
+		vo.setExtensionAttribute1(extStr);
+		vo.setTenantId(tenantId);
+		vo.setNowDate(nowDate);
+		
+		logger.debug("Extension: " + extStr);
+
+		try {
+			ezOrganAdminService.updateDBData_user(vo);
+
+			result.put("status", "ok");
+			result.put("code", 0);						
+		}
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+		}
+		
+		return result;
+	}
+	
+	
+	private void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, String fileSize, String fileExt, String fileType, int tenantId) throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		
+		//Save log to database				
+		FileLogVO fileLog = new FileLogVO();
+		
+		fileLog.setLogType(type);
+		fileLog.setCompanyId(companyId);
+		fileLog.setCreateDate(timeUTC);
+		fileLog.setCreateId(userId);
+		fileLog.setCreateName1(userName1);
+		fileLog.setCreateName2(userName2);
+		fileLog.setFileName(filename);
+		fileLog.setFileSize(fileSize);
+		fileLog.setFileExt(fileExt);
+		fileLog.setFileType(fileType);
+		fileLog.setLogId(getMaxLogID(tenantId));
+		fileLog.setTenantId(tenantId);
+		
+		ezWebFolderAdminService.insertFileLog(fileLog);
+	}
+		
 	private String getWebFolderDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
 	}
@@ -517,48 +934,5 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 
 		return Integer.toString(currentMaxLogId);
 	}
-	
-	private void writeUploadFile(String bytearray, String newName, String stordFilePath) throws Exception {    	   	
-		InputStream stream = null;
-		OutputStream bos = null;
-		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
-		
-		try {
-		    File cFile = new File(stordFilePathReal);
-	
-		    if (!cFile.isDirectory()) {
-				boolean _flag = cFile.mkdirs();
-				if (!_flag) {
-				    throw new IOException("Directory creation Failed ");
-				}
-		    }
-	
-		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
-		    Decoder decoder = Base64.getDecoder();
 
-		    bos.write(decoder.decode(bytearray));
-
-		} catch (FileNotFoundException fnfe) {
-			logger.debug("fnfe: {}", fnfe);
-		} catch (IOException ioe) {
-			logger.debug("ioe: {}", ioe);
-		} catch (Exception e) {
-			logger.debug("e: {}", e);
-		} finally {
-		    if (bos != null) {
-				try {
-				    bos.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		    if (stream != null) {
-				try {
-				    stream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		}
-    }
 }

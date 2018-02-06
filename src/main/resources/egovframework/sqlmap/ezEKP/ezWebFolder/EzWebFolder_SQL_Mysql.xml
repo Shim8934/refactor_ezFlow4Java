@@ -334,4 +334,18 @@
 		]]>
    </update>
    
+   <update id="EzWebFolderDAO.updateDownCnt" parameterClass="Map">
+   	   	<![CDATA[
+			UPDATE 
+            	TBL_WEBFOLDER_FILE
+            SET 
+            	DOWN_COUNT = DOWN_COUNT + 1
+            WHERE
+	          	FILE_ID = #fileId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+   </update>   
+   
+
 </sqlMap>
