@@ -251,6 +251,8 @@
 		    			<c:if test="${item.scheduleType == '2'}"><spring:message code='ezSchedule.t12'/></c:if>
 		    			<c:if test="${item.scheduleType == '3'}"><spring:message code='ezSchedule.t11'/></c:if>
 		    			<c:if test="${item.scheduleType == '4'}"><spring:message code='ezSchedule.t282'/></c:if>
+		    			<!-- 2018.02.06 김기하 #11433  -->
+		    			<c:if test="${item.scheduleType == '6'}"><spring:message code='ezSchedule.t281'/></c:if>
 		    			<c:if test="${item.scheduleType == '7'}"><spring:message code='ezSchedule.t282'/></c:if>
 		    			<c:if test="${item.scheduleType == '8'}"><spring:message code='ezSchedule.t12'/></c:if>
 		    		</td>
