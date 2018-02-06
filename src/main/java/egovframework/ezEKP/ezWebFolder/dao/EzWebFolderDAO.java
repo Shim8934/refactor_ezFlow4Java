@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
+
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
@@ -73,5 +75,10 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<LoginVO> getFolderUsers(Map<String, Object> map) {
 		return (List<LoginVO>)list("EzWebFolderDAO.getFolderUsers", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getFolderDepts(Map<String, Object> map) {		
+		return (List<OrganDeptVO>)list("EzWebFolderDAO.getFolderDepts", map);
 	}
 }

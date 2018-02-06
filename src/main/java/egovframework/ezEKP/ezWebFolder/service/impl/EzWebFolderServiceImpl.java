@@ -162,62 +162,115 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	public void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int mode) throws Exception {
 		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), primary, tenantId);
 		
-		if (mode == 2) {
-			Map<String, List<String>> mapFolderUsers = new HashMap<String, List<String>>();
-			List<LoginVO> listOfUsers = getFolderUsers("user", tenantId);
+		if (mode == 2) {			
+			Map<String, List<String>> mapFolderUsers = new HashMap<String, List<String>>();			
+			List<LoginVO> listOfUsers                = getFolderUsers(company.getFolderId(), tenantId);
 			
-			if (listOfUsers != null) {
+			if (listOfUsers != null && listOfUsers.size() > 0) {
 				List<String> list = new ArrayList<String>();
 				
 				for(LoginVO user : listOfUsers) {
-					list.add(user.getId() + "|" + user.getDisplayName1() + "|" + user.getDeptName2());
+					list.add(user.getId() + "|" + user.getDisplayName1() + "|" + user.getDisplayName2());
 				}
 				
-				mapFolderUsers.put("user", list);
+				mapFolderUsers.put("user", list);				
 			}
-
-			//List<OrganDeptVO> listOfDepts = getFolderDepts("dept", tenantId);
-			company.setFolderUsers(mapFolderUsers);
+			
+			List<OrganDeptVO> listOfDepts = getFolderDepts(company.getFolderId(), tenantId);
+			
+			if (listOfDepts != null && listOfDepts.size() > 0) {
+				List<String> list = new ArrayList<String>();
+				
+				for(OrganDeptVO dept : listOfDepts) {
+					list.add(dept.getCn() + "|" + dept.getDisplayName1() + "|" + dept.getDisplayName2());
+				}
+				
+				mapFolderUsers.put("dept", list);				
+			}
+			
+			if(mapFolderUsers.size() > 0) {
+				company.setFolderUsers(mapFolderUsers);
+			}			
+						
 		}
 		
-		if (listSubSimpleFolders.size() > 0) {			
+		if (listSubSimpleFolders.size() > 0) {
 			company.setListSubFolders(listSubSimpleFolders);
 			company.setHasSubFolder(1);
 			
 			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
-				if (mode == 0) {
+				if (mode == 0 || mode == 3) {
 					getAllSubDepts(subFolder, primary, tenantId, mode);
 				}
 				else {
-					List<FolderSimpleVO> subSimpleDepts = getAllSimpleSubFolders(subFolder.getFolderId(), primary, tenantId);
+					List<FolderSimpleVO> subSimpleDepts = getAllSimpleSubFolders(subFolder.getFolderId(), primary, tenantId);					
 					if (subSimpleDepts.size() > 0) {
 						subFolder.setHasSubFolder(1);
 					}
 					else {
 						subFolder.setHasSubFolder(0);
 					}
-				}		
+					
+					if (mode == 2) {
+						Map<String, List<String>> mapFolderUsers = new HashMap<String, List<String>>();						
+						List<LoginVO> listOfUsers = getFolderUsers(subFolder.getFolderId(), tenantId);
+						
+						if (listOfUsers != null && listOfUsers.size() > 0) {
+							List<String> list = new ArrayList<String>();
+							
+							for(LoginVO user : listOfUsers) {
+								list.add(user.getId() + "|" + user.getDisplayName1() + "|" + user.getDisplayName2());
+							}
+							
+							mapFolderUsers.put("user", list);				
+						}
+						
+						List<OrganDeptVO> listOfDepts = getFolderDepts(subFolder.getFolderId(), tenantId);
+						
+						if (listOfDepts != null && listOfDepts.size() > 0) {
+							List<String> list = new ArrayList<String>();
+							
+							for(OrganDeptVO dept : listOfDepts) {
+								list.add(dept.getCn() + "|" + dept.getDisplayName1() + "|" + dept.getDisplayName2());
+							}
+							
+							mapFolderUsers.put("dept", list);				
+						}
+						
+						if(mapFolderUsers.size() > 0) {
+							subFolder.setFolderUsers(mapFolderUsers);
+						}		
+					}
+				}
 			}
 		}
 		else {
-			company.setHasSubFolder(0);			
+			company.setHasSubFolder(0);
 		}		
 	}
 	
 	@Override
-	public void updateDownCnt(String fileId, int tenantId) {		
+	public void updateDownCnt(String fileId, int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("fileId", fileId);		
-		map.put("tenantId", tenantId);		
+		map.put("fileId", fileId);
+		map.put("tenantId", tenantId);
 		ezWebFolderDAO.updateDownCnt(map);
 	}
 
 	@Override
-	public List<LoginVO> getFolderUsers(String type, int tenantId)	throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("type", type);		
-		map.put("tenantId", tenantId);		
+	public List<LoginVO> getFolderUsers(String folderId, int tenantId)	throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getFolderUsers(map);
+	}
+
+	@Override
+	public List<OrganDeptVO> getFolderDepts(String folderId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getFolderDepts(map);
 	}
 
 }

@@ -31,7 +31,7 @@
 						async: true,
 						success : function(data) {
 							var result = data.companyTree;
-							//console.log(result);
+							console.log(result);
 							renderData(result);
 						},
 		 				error : function(error) {	 					
@@ -155,7 +155,7 @@
 						async: true,
 						success: function(data) {
 							var result = data.subTree;
-							//console.log(result);
+							console.log(result);
 							displaySubTree(result, obj.parentElement);
 							arrSubFolder.push(uniqueId);
 						},

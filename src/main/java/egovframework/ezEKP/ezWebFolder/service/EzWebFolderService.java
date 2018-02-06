@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezWebFolder.service;
 
 import java.util.List;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
@@ -24,5 +25,6 @@ public interface EzWebFolderService {
 	FolderVO getCompanyFolderId(String companyId, String offset, int tenantId) throws Exception;
 	void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int i) throws Exception;
 	void updateDownCnt(String fileId, int tenantId) throws Exception;
-	List<LoginVO> getFolderUsers(String type, int tenantId) throws Exception;
+	List<LoginVO> getFolderUsers(String folderId, int tenantId) throws Exception;
+	List<OrganDeptVO> getFolderDepts(String folderId, int tenantId) throws Exception;	
 }
