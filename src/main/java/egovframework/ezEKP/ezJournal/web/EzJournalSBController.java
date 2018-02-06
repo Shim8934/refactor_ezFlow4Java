@@ -183,7 +183,7 @@ public class EzJournalSBController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		HashMap<String, String> param = new HashMap<String, String>();
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		String userId =null;
 		if (request.getParameter("userId") != null) {
 			userId = request.getParameter("userId");
