@@ -1,20 +1,26 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.ezEKP.ezWebFolder.web.EzWebFolderGWController;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderService")
@@ -24,6 +30,8 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderServiceImpl.class);
 	
 	@Override
 	public String getFileSequence(int tenantId) throws Exception {		
@@ -154,6 +162,24 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	public void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int mode) throws Exception {
 		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), primary, tenantId);
 		
+		if (mode == 2) {
+			Map<String, List<String>> mapFolderUsers = new HashMap<String, List<String>>();
+			List<LoginVO> listOfUsers = getFolderUsers("user", tenantId);
+			
+			if (listOfUsers != null) {
+				List<String> list = new ArrayList<String>();
+				
+				for(LoginVO user : listOfUsers) {
+					list.add(user.getId() + "|" + user.getDisplayName1() + "|" + user.getDeptName2());
+				}
+				
+				mapFolderUsers.put("user", list);
+			}
+
+			//List<OrganDeptVO> listOfDepts = getFolderDepts("dept", tenantId);
+			company.setFolderUsers(mapFolderUsers);
+		}
+		
 		if (listSubSimpleFolders.size() > 0) {			
 			company.setListSubFolders(listSubSimpleFolders);
 			company.setHasSubFolder(1);
@@ -184,6 +210,14 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("fileId", fileId);		
 		map.put("tenantId", tenantId);		
 		ezWebFolderDAO.updateDownCnt(map);
+	}
+
+	@Override
+	public List<LoginVO> getFolderUsers(String type, int tenantId)	throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("type", type);		
+		map.put("tenantId", tenantId);		
+		return ezWebFolderDAO.getFolderUsers(map);
 	}
 
 }

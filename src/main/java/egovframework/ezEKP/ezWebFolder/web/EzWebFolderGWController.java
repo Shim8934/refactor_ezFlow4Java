@@ -871,7 +871,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String primary    = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
 		JSONObject result = new JSONObject();
 		
-		if (companyId.equals("") || offset.equals("") || tenantId == -1) {
+		if (companyId.equals("") || primary.equals("") || offset.equals("") || tenantId == -1) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
@@ -906,7 +906,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String primary    = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
 		JSONObject result = new JSONObject();
 		
-		if (companyId.equals("") || offset.equals("") || tenantId == -1) {
+		if (companyId.equals("") || primary.equals("") || offset.equals("") || tenantId == -1) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
@@ -918,7 +918,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		try {
 			FolderVO folderVO = ezWebFolderService.getCompanyFolderId(companyId, offset, tenantId);
 			FolderSimpleVO company = ezWebFolderService.getSimpleFolder(folderVO.getFolderId(), primary, tenantId);
-			ezWebFolderService.getAllSubDepts(company, primary, tenantId, 1);
+			ezWebFolderService.getAllSubDepts(company, primary, tenantId, 2);
 									
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -931,7 +931,39 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		}
 		
 		return result;
-	}	
+	}
+	
+	@RequestMapping(value="/webfolderadmin/subFolderTree/{folderid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getSubFoldersTree(@PathVariable(value="folderid") String folderId, HttpServletRequest request) {	
+		int tenantId      = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;					
+		String primary    = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("folderId: " + folderId + " || tenantId: " + tenantId);		
+		
+		if (folderId.equals("") || primary.equals("") || tenantId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}	
+		
+		try {			
+			FolderSimpleVO folder = ezWebFolderService.getSimpleFolder(folderId, primary, tenantId);
+			ezWebFolderService.getAllSubDepts(folder, primary, tenantId, 2);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", folder);
+		} 
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		return result;
+	}
 	
 	private void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, String fileSize, String fileExt, String fileType, int tenantId) throws Exception {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

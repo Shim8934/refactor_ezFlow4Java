@@ -30,8 +30,6 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
-import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
-import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -83,7 +81,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginVO userInfo     = commonUtil.userInfo(loginCookie);
 
 		//Get list of companies
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> list       = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
@@ -106,7 +104,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		//Get list of companies
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> list       = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
@@ -129,7 +127,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		//Get list of companies
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> list       = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
@@ -162,7 +160,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		//Get list of companies
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> list       = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
@@ -191,18 +189,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String companyId     = request.getParameter("companyId");		
 		
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");		
-		String url = gwServerUrl + "/webfolderadmin/basicstorage/" + personalLimit + "/comp";
+		String url         = gwServerUrl + "/webfolderadmin/basicstorage/" + personalLimit + "/comp";
 				
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("uploadLimit", uploadLimit)
-				.queryParam("companyId", companyId);
-		RestTemplate rest = new RestTemplate();
+										.queryParam("tenantId", userInfo.getTenantId())
+										.queryParam("uploadLimit", uploadLimit)
+										.queryParam("companyId", companyId);
 		
+		RestTemplate rest = new RestTemplate();		
 		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);	
 	
 		logger.debug("saveConfig finishes!");
@@ -215,19 +213,19 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String companyId = request.getParameter("companyId");		
 		
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url = gwServerUrl + "/webfolderadmin/basicstorage/id/" + companyId + "/comp";
+		String url         = gwServerUrl + "/webfolderadmin/basicstorage/id/" + companyId + "/comp";
 				
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());	
-		RestTemplate rest = new RestTemplate();
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());	
+		RestTemplate rest             = new RestTemplate();		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);		
-		JSONParser jp = new JSONParser();		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());				
-		String status = resultBody.get("status").toString();
+		JSONParser jp                 = new JSONParser();		
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());				
+		String status                 = resultBody.get("status").toString();
 				
 		if (status.equals("ok")) {			
 			JSONObject webfolderConfig = (JSONObject) resultBody.get("data");			
@@ -248,24 +246,25 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String companyId = request.getParameter("companyId");
 		
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url = gwServerUrl + "/webfolderadmin/basicstorage/id/" + companyId + "/person";
+		String url         = gwServerUrl + "/webfolderadmin/basicstorage/id/" + companyId + "/person";
 				
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("primary", userInfo.getPrimary())
-				.queryParam("searchStr", searchStr)
-				.queryParam("searchOpt", searchOpt)
-				.queryParam("currentPage", currPage);
-		RestTemplate rest = new RestTemplate();
+										.queryParam("tenantId", userInfo.getTenantId())
+										.queryParam("primary", userInfo.getPrimary())
+										.queryParam("searchStr", searchStr)
+										.queryParam("searchOpt", searchOpt)
+										.queryParam("currentPage", currPage);
 		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);		
-		JSONParser jp = new JSONParser();		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());				
-		String status = resultBody.get("status").toString();
+		RestTemplate rest             = new RestTemplate();		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();		
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());				
+		String status                 = resultBody.get("status").toString();
 				
 		if (status.equals("ok")) {			
 			JSONArray listUserCapacity = (JSONArray) resultBody.get("data");
@@ -286,18 +285,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String companyId       = request.getParameter("companyId");
 		
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");		
-		String url = gwServerUrl + "/webfolderadmin/basicstorage/" + newStorageValue + "/person";
+		String url         = gwServerUrl + "/webfolderadmin/basicstorage/" + newStorageValue + "/person";
 				
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("companyId", companyId)
-				.queryParam("userList", String.join(",", userList));			
-		RestTemplate rest = new RestTemplate();
+										.queryParam("tenantId", userInfo.getTenantId())
+										.queryParam("companyId", companyId)
+										.queryParam("userList", String.join(",", userList));
 		
+		RestTemplate rest = new RestTemplate();		
 		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 	}
 	
@@ -315,13 +314,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("companyId", companyId)
-				.queryParam("userList", String.join(",", userList));
+										.queryParam("tenantId", userInfo.getTenantId())
+										.queryParam("companyId", companyId)
+										.queryParam("userList", String.join(",", userList));
 		
 		RestTemplate rest = new RestTemplate();		
 		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-
 	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)	
@@ -345,23 +343,23 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("primary", primary)
-				.queryParam("offset", offset)
-				.queryParam("companyId", companyId)
-				.queryParam("startDate", startDate)
-				.queryParam("fileExt", fileExt)
-				.queryParam("fileName", fileName)
-				.queryParam("userName", userName)
-				.queryParam("currentPage", currPage)
-				.queryParam("endDate", endDate);
+										.queryParam("tenantId", userInfo.getTenantId())
+										.queryParam("primary", primary)
+										.queryParam("offset", offset)
+										.queryParam("companyId", companyId)
+										.queryParam("startDate", startDate)
+										.queryParam("fileExt", fileExt)
+										.queryParam("fileName", fileName)
+										.queryParam("userName", userName)
+										.queryParam("currentPage", currPage)
+										.queryParam("endDate", endDate);
 		
 		RestTemplate rest             = new RestTemplate();		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		JSONParser jp         = new JSONParser();		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());				
-		String status         = resultBody.get("status").toString();
+		JSONParser jp                 = new JSONParser();		
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());				
+		String status                 = resultBody.get("status").toString();
 				
 		if (status.equals("ok")) {			
 			JSONArray listFileLogs = (JSONArray) resultBody.get("data");
@@ -391,22 +389,22 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("primary", primary)				
-				.queryParam("companyId", companyID)				
-				.queryParam("pageNum", pageNum)
-				.queryParam("pageSize", pageSize);
+										.queryParam("tenantId", userInfo.getTenantId())
+										.queryParam("primary", primary)				
+										.queryParam("companyId", companyID)				
+										.queryParam("pageNum", pageNum)
+										.queryParam("pageSize", pageSize);
 		
-		RestTemplate rest = new RestTemplate();
+		RestTemplate rest             = new RestTemplate();		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);	
 		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);		
-		JSONParser jp = new JSONParser();		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());				
-		String status = resultBody.get("status").toString();
+		JSONParser jp 				  = new JSONParser();		
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());				
+		String status                 = resultBody.get("status").toString();
 				
 		if (status.equals("ok")) {			
-			JSONArray listUsers    = (JSONArray) resultBody.get("data");			
-			long totalRows         = (long) resultBody.get("count");
+			JSONArray listUsers = (JSONArray) resultBody.get("data");			
+			long totalRows      = (long) resultBody.get("count");
 			model.addAttribute("listOfUsers", listUsers);			
 			model.addAttribute("totalRows", totalRows);
 		}	
@@ -426,17 +424,17 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("primary", userInfo.getPrimary())
-				.queryParam("companyId", companyId)
-				.queryParam("offset", userInfo.getOffset());
+										.queryParam("tenantId", userInfo.getTenantId())
+										.queryParam("primary", userInfo.getPrimary())
+										.queryParam("companyId", companyId)
+										.queryParam("offset", userInfo.getOffset());
 		
 		RestTemplate rest             = new RestTemplate();		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		JSONParser jp         = new JSONParser();		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());				
-		String status         = resultBody.get("status").toString();
+		JSONParser jp         		  = new JSONParser();		
+		JSONObject resultBody 		  = (JSONObject) jp.parse(result.getBody());				
+		String status         		  = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {			
 			JSONObject folderTree = (JSONObject) resultBody.get("data");
@@ -448,13 +446,31 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/admin/ezWebFolder/getSubFolderTree.do", method = RequestMethod.POST)	
 	public String getSubFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);				
-		String folderId = request.getParameter("folderId");		
+		LoginVO userInfo   = commonUtil.userInfo(loginCookie);				
+		String folderId    = request.getParameter("folderId");		
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/webfolderadmin/subFolderTree/" + folderId;
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		FolderSimpleVO folder = ezWebFolderService.getSimpleFolder(folderId, userInfo.getPrimary(), userInfo.getTenantId());
-		ezWebFolderService.getAllSubDepts(folder, userInfo.getPrimary(), userInfo.getTenantId(), 1);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", userInfo.getTenantId())
+										.queryParam("primary", userInfo.getPrimary())				
+										.queryParam("offset", userInfo.getOffset());
 		
-		model.addAttribute("subTree", folder);
+		RestTemplate rest             = new RestTemplate();		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();		
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());				
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			JSONObject folderTree = (JSONObject) resultBody.get("data");
+			model.addAttribute("subTree", folderTree);
+		}
 
 		return "json";
 	}	
@@ -463,14 +479,10 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	public String selectTarget(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
 		logger.debug("select target is running!");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userInfoDeptCode="";				
-		String pCompanyID="";
-
-		userInfoDeptCode = userInfo.getDeptID();
-		pCompanyID = userInfo.getCompanyID();
-		
-		String langData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		LoginVO userInfo        = commonUtil.userInfo(loginCookie);
+		String userInfoDeptCode = userInfo.getDeptID();				
+		String pCompanyID       = userInfo.getCompanyID();		
+		String langData         = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 
 		model.addAttribute("pCompanyID", pCompanyID);
 		model.addAttribute("userInfoDeptCode", userInfoDeptCode);
@@ -479,7 +491,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		logger.debug("select target finishes!");
 		return "admin/ezWebFolder/targetSelect";
-	}
-	
+	}	
 	
 }

@@ -6,6 +6,7 @@
 	<typeAlias  alias="FileTypeVO"          type="egovframework.ezEKP.ezWebFolder.vo.FileTypeVO"/>
 	<typeAlias  alias="FolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"/>
 	<typeAlias  alias="FolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
+	<typeAlias  alias="LoginVO"             type="egovframework.let.user.login.vo.LoginVO"/>
 	
 	<!-- File resultMap -->
     <resultMap id="fileVO" class="FileVO">
@@ -28,6 +29,34 @@
         <result property="fileTypeName"         column="filetype_name"          columnIndex="17" />
         <result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" />
         <result property="tenantId"         	column="tenant_id"              columnIndex="19" />
+    </resultMap>
+    
+    <!-- 로그인  resultMap -->
+    <resultMap id="loginVO" class="LoginVO">
+        <result property="id"                   column="cn"                         columnIndex="1"/>
+        <result property="password"             column="password"                   columnIndex="2"/>
+        <result property="displayName1"         column="displayname"                columnIndex="3"/>
+        <result property="displayName2"         column="displayname2"               columnIndex="4"      nullValue=""/>
+        <result property="deptID"               column="department"                 columnIndex="5"/>
+        <result property="deptName1"            column="description"                columnIndex="6"/>
+        <result property="deptName2"            column="description2"               columnIndex="7"      nullValue=""/>
+        <result property="title1"               column="title"                      columnIndex="8"/>
+        <result property="title2"               column="title2"                     columnIndex="9"      nullValue=""/>
+        <result property="companyID"            column="companyid"                  columnIndex="10"/>
+        <result property="companyName1"         column="company"                    columnIndex="11"/>
+        <result property="companyName2"         column="company2"                   columnIndex="12"     nullValue=""/>      
+        <result property="updateDT"             column="updatedt"                   columnIndex="13"/>
+        <result property="rollInfo"             column="rollinfo"                   columnIndex="14"/>
+        <result property="phone"                column="telephonenumber"            columnIndex="15"/>
+        <result property="email"                column="mail"                       columnIndex="16"/>
+        <result property="jikChek"              column="jikchek"                    columnIndex="17"/>
+        <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
+        <result property="deptPathCode"         column="deptPathCode"               columnIndex="19"/>
+        <result property="primary"              column="primaryLang"                columnIndex="20"/>
+        <result property="loginCnt"             column="loginCnt"                	columnIndex="21"/>
+        <result property="gyumJik"              column="gyumJik"                	columnIndex="22"/>
+        <result property="userFileUrl"          column="userFileUrl"                columnIndex="23"/>
+        <result property="sabun"              	column="sabun"                		columnIndex="23"/>
     </resultMap>
     
     <!-- FileType resultMap -->
@@ -277,6 +306,44 @@
 				TENANT_ID = #tenantId#	
 		]]>				
     </select>
+    
+    <select id="EzWebFolderDAO.getFolderUsers" resultMap="loginVO">             
+        <![CDATA[
+            SELECT 
+                cn,
+                password,               
+                displayname,
+                displayname2,
+                department,              
+                description,
+                description2,
+                title,
+                title2,
+                physicaldeliveryofficename as companyid,
+                company,
+                company2,
+                updatedt,
+                extensionattribute1 as rollinfo,
+                telephonenumber,
+                mail,
+                extensionattribute10 as jikchek,
+                tenant_id,
+                (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+                loginCnt,
+                extensionattribute4 as gyumJik,
+                extensionattribute2 as userFileUrl,
+                extensionattribute14 as sabun
+            FROM
+                TBL_USERMASTER a
+            WHERE
+                CN IN (SELECT USER_ID FROM TBL_WEBFOLDER_FOLDERUSER WHERE USER_TYPE = #type# AND TENANT_ID = #tenantId#)
+            AND
+                CN NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+            AND
+            	TENANT_ID = #tenantId#
+        ]]>
+    </select>  
     
     <select id="EzWebFolderDAO.getAllSimpleSubFolders" resultMap="folderSimpleVO">   
 		<![CDATA[

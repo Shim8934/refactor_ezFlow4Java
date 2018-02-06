@@ -31,6 +31,7 @@
 						async: true,
 						success : function(data) {
 							var result = data.companyTree;
+							//console.log(result);
 							renderData(result);
 						},
 		 				error : function(error) {	 					
@@ -153,7 +154,8 @@
 						dataType: "JSON",
 						async: true,
 						success: function(data) {
-							var result = data.subTree;													
+							var result = data.subTree;
+							//console.log(result);
 							displaySubTree(result, obj.parentElement);
 							arrSubFolder.push(uniqueId);
 						},

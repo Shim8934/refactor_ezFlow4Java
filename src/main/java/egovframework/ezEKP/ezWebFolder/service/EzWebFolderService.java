@@ -6,6 +6,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzWebFolderService {
 	String getFileSequence(int tenantId) throws Exception;
@@ -22,5 +23,6 @@ public interface EzWebFolderService {
 	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, String primary, int tenantId) throws Exception;
 	FolderVO getCompanyFolderId(String companyId, String offset, int tenantId) throws Exception;
 	void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int i) throws Exception;
-	void updateDownCnt(String fileId, int tenantId);
+	void updateDownCnt(String fileId, int tenantId) throws Exception;
+	List<LoginVO> getFolderUsers(String type, int tenantId) throws Exception;
 }
