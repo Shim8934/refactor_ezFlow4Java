@@ -707,9 +707,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<BoardReadVO> getReaderList(String boardID, String itemID, String userID, String lang, int tenantID) throws Exception {
+	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception {
 		logger.debug("getReaderList started");
-
+		/* 2018-02-06 김보미 - 페이징 */
+    	if(pageNum == 0){
+    		pageNum = 1;
+    	}
+    	
+    	int startRowNum = ((pageNum - 1) * perCount);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("boardID", boardID);
@@ -717,9 +723,43 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("userID", userID);
 		map.put("lang", lang);
 		map.put("tenantID", tenantID);
-
+		map.put("start", startRowNum);
+		map.put("perCount", perCount);
+		List<BoardReadVO> readerList = ezBoardDAO.getReaderList(map);
+		
+		StringBuffer resultXML = new StringBuffer();
+		
+		resultXML.append("<DOCLIST>");
+		
+		int totalCount = getReaderListCount(boardID, itemID, userID, lang, tenantID);
+		int totalPage = (int) Math.floor(totalCount / perCount);
+		if(totalCount % 10 != 0){
+			totalPage = totalPage + 1;
+		}
+		
+		resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		resultXML.append("<PAGECNT>" + totalPage + "</PAGECNT>");
+		resultXML.append("<PERSONALCNT>" + perCount + "</PERSONALCNT>");
+    	resultXML.append("<LISTVIEWDATA>");
+    	
+		int rlength = readerList.size();
+		
+		resultXML.append("<ROWS>");
+		for (BoardReadVO vo : readerList) {
+			resultXML.append("<ROW>");			
+			resultXML.append("<CELL><USERID>" + vo.getUserID() + "</USERID><VALUE>" + "[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]" + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getUserName() + " (" + vo.getUserID() + ")" + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getUserDeptName() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getUserTitle() + "</VALUE></CELL>");
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		
 		logger.debug("getReaderList ended");
-		return ezBoardDAO.getReaderList(map);
+		return resultXML;
 	}
 
 	@Override
@@ -3683,5 +3723,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("getOneLineReplyCount ended");
 		return ezBoardDAO.getOneLineReplyCount(map);
+	}
+	//2018.02.05 김보미
+	public int getReaderListCount(String boardID, String itemID, String userID, String lang, int tenantID) throws Exception {
+		logger.debug("getReaderListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("userID", userID);
+		map.put("lang", lang);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("getReaderListCount ended");
+		return ezBoardDAO.getReaderListCount(map);
 	}
 }

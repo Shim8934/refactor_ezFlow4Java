@@ -424,9 +424,11 @@ function ListView() {
         if (!oList)
             return;
 
-        RemoveDataBody();
+        //RemoveDataBody();
 
-        var newTBody = GetTableBodyObj();
+        //페이징때문에 주석.
+//        var newTBody = GetTableBodyObj();
+        var newTBody = GetTableBodyObj2();
 
 
        // if (!new RegExp(/MSIE/).test(navigator.userAgent) && !_SetHeightFree)
@@ -1532,4 +1534,171 @@ function getOriginXML(pTagetID)
         xmlBody += "</CELL></ROW>";
     } 
     //alert(xmlHeader + "\r\n" + xmlBody);
+    
+    //페이징 - 보미
+  //리스트뷰 바디 생성
+    function GetTableBodyObj2() {
+        var oTbody = document.createElement("TBODY");
+        oTbody.style.backgroundColor = m_strColorDefault;
+
+        var oRows = _dataSource.getElementsByTagName("ROW");
+        _rowCount = oRows.length;
+        
+        var oHeaders = _dataSource.getElementsByTagName("HEADER");
+        var colCount = oHeaders.length;
+
+       /* if(_rowCount == 0)
+        {
+            var objTr = document.createElement("TR");
+            objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
+            oTbody.appendChild(objTr);
+            var oText = document.createTextNode(strLang535);
+            var objTd = document.createElement("TD");
+            objTd.align = "center";
+            objTd.colSpan = colCount;
+            objTd.appendChild(oText);
+            objTr.appendChild(objTd);
+
+             return oTbody;
+        }*/
+        for (var i = 0; i < oRows.length; i++) {
+            var objTr = document.createElement("TR");
+            objTr.setAttribute("id", _thisID + "_TR_" + i);
+            objTr.style.cursor = "pointer";
+
+            objTr.onmouseover = new Function("tr_mouseover(this)");
+            objTr.onmouseout = new Function("tr_mouseout(this)");
+
+            if (_rowonclick != null)
+                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
+            else
+                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");
+
+            if (_rowondblclick != null)
+                objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
+
+            if (_contextHandler != null)
+                objTr.oncontextmenu = new Function(_contextHandler + "(this.id);");
+
+            var oCells = GetElementsByTagName(oRows[i], "CELL");
+
+            if (_SelectFlag && i == 0) {   //첫번째 row 선택지정 or 특정 row 선택
+                objTr.setAttribute("selected", "true");
+                objTr.style.backgroundColor = m_strColorSelect;
+
+                _firstRowID = _thisID + "_TR_" + i;      
+            }
+            else {
+                objTr.setAttribute("selected", "false");
+                objTr.className = "";
+                objTr.style.backgroundColor = m_strColorDefault;
+            }
+
+            //DATA1, DATA2, DATA3... 등의 값 세팅
+            var oDatas = GetDataElements(oCells[0]);
+            for (var j = 0; j < oDatas.length; j++) {
+                var strData = oDatas[j].tagName;
+                var strValue = "";
+                if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null)
+                    strValue = oDatas[j].firstChild.nodeValue;
+
+                objTr.setAttribute(strData, strValue);
+            }
+
+            oTbody.appendChild(objTr);
+
+            for (var j = 0; j < oCells.length; j++) {
+                var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
+                var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
+                var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
+
+                var oText = document.createTextNode(strValue);
+                var objTd = document.createElement("TD");
+
+                objTd.style.overflow = "hidden";
+                objTd.style.textOverflow = "ellipsis";
+                objTd.style.whiteSpace = "nowrap";
+
+                if (strStyle != "") {
+                    /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+                	if (!CrossYN()) {
+                        objTd.style.setAttribute("cssText", strStyle);
+                    }
+                    else {
+                        strStyle = strStyle.replace(/center/, "-moz-center");
+                        objTd.setAttribute("style", strStyle);
+                    }
+                }               
+                if (strClass != "") {
+                    objTd.className = strClass;
+                }
+                else {
+                    
+                    if(!_SetHeightFree)
+                        objTd.height = "24";                    
+                        
+                    if (_titleIdx == null) { //하단정보탭일경우                       
+                        if (_Align[j] == 0)
+                            objTd.align = "left";//objTd.className = "kt_li_pop_left";
+                        else
+                            objTd.align = "center";//objTd.className = "kt_li_pop_center";
+                    }
+                    else {  //상단 리스트일경우
+                      
+                      //  if (_titleIdx == j) {
+                            objTd.title = strValue;
+                            objTd.style.overflow = "hidden";
+                            objTd.style.textOverflow = "ellipsis";
+                            objTd.style.whiteSpace = "nowrap";                           
+
+                        if (_titleIdx == j) {
+                            if (_UrgentFlag && oDatas[13].textContent == "Y") {   //DATA14값
+                                objTd.style.color = m_UrgentColor;
+                            }
+                            /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+                            if (CrossYN()) {
+                                objTd.setAttribute("width", "80%");// objTd.setAttribute("width", strWidth + "px");
+                            }
+                            else {
+                                objTd.width = "80%";// objTd.width = strWidth + "px";
+                            }
+
+                        }
+                    
+                        if (_Align[j] == 0)
+                            objTd.align = "left";//objTd.className = "kt_li_left";
+                        else
+                            objTd.align = "center";//objTd.className = "kt_li_center";
+                    }
+
+                }
+
+                if (_rowCount < 100) {
+                    if (_SecIdx != j) {
+                        if (_UrgentFlag && _titleIdx == j) {       //2010.05.04 제목 긴급일 경우 붉은색 처리로 추가함.
+                            objTd.onmouseover = new Function("td_mouseover(this, " + _titleIdx + ")");
+                            objTd.onmouseout = new Function("td_mouseout(this, " + _titleIdx + ")");
+                        }
+                        else {
+                            objTd.onmouseover = new Function("td_mouseover(this)");
+                            objTd.onmouseout = new Function("td_mouseout(this)");
+                        }
+                    }
+                }
+
+                objTd.appendChild(oText);
+                objTr.appendChild(objTd);
+
+                objTd = null;
+                oText = null;
+            }
+
+            objTr = null;
+            oCells = null;
+            oDatas = null;
+        }
+        oRows = null;
+
+        return oTbody;
+    }
 }
