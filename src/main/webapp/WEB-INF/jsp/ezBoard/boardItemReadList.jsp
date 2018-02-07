@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<!-- 페이징 -->
 		<script type="text/javascript" src="/js/ezBoard/lang/ezBoardSTD.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 		<script type="text/javascript">
 		    var ReturnFunction;
 		    //2018-02-06 김보미 - 페이징
@@ -27,10 +27,10 @@
 		            ReturnFunction = parent.item_readlist_cross_dialogArguments[1];
 		        } catch (e) {
 		        	
-		        }
+		        }		        
 		    	//사원 이름(아이디) 클릭시 사원 상세보기
-		        $("#lvBoardList").on("click", "td", function () {
-		        	userID = $("#lvBoardList tr td:eq(1)").closest("tr").attr("userid");
+		        $("#lvBoardList").on("click", "td:odd:even", function () {
+		        	userID = $(this).closest("tr").attr("userid");
 		        	show_info(userID);
 		        });
 		    };
@@ -119,7 +119,7 @@
 		            	if((i%4) == 1) {
 		            		listTd[i].style.width = "120px";
 		            		listTd[i].innerHTML = "<b>" + listTd[i].textContent.split("(")[0] + "</b>" + "(" + listTd[i].textContent.split("(")[1];
-		            		
+		            		listTd[i].style.cursor = "pointer";
 		            	}
 		            	if((i%4) == 2) {
 		            		listTd[i].style.width = "130px";
