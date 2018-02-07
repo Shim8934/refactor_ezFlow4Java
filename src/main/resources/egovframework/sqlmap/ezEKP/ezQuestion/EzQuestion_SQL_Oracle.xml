@@ -705,68 +705,80 @@
 		<isEqual property="v_pResYN" compareValue="Y">
 			<![CDATA[
 				SELECT
-					*
+					X.*
 				FROM
-					(SELECT
-						responseuser_id AS user_id, 
-						MAX(responseuser_name$v_pLang$) AS user_name,
-						MAX(responseuser_email) AS user_email,
-						MAX(responseuser_dept_id) AS user_dept_id, 
-						MAX(responseuser_dept_name$v_pLang$) AS user_dept_name,
-						MAX(responseuser_position$v_pLang$) AS user_position, 
-						MAX(responseuser_jikgub$v_pLang$) AS user_jikgub,
-						MAX(responseuser_gender) AS user_gender,
-						MAX(responseuser_age) AS user_age,
-						MAX(response_date) AS RESPONSE_DATE 
-	                FROM
-						TBL_POLL_RESPONSE  
-					WHERE
-						brd_id = #v_pstrBrdID#
-					AND
-						item_no = #v_pItemNo#
-					AND
-						tenant_id = #tenantID#
-					GROUP BY
-						responseuser_id
-					) P
+                    ( SELECT
+                        P.*
+                      FROM
+    					(SELECT
+    						responseuser_id AS user_id, 
+    						MAX(responseuser_name$v_pLang$) AS user_name,
+    						MAX(responseuser_email) AS user_email,
+    						MAX(responseuser_dept_id) AS user_dept_id, 
+    						MAX(responseuser_dept_name$v_pLang$) AS user_dept_name,
+    						MAX(responseuser_position$v_pLang$) AS user_position, 
+    						MAX(responseuser_jikgub$v_pLang$) AS user_jikgub,
+    						MAX(responseuser_gender) AS user_gender,
+    						MAX(responseuser_age) AS user_age,
+    						MAX(response_date) AS RESPONSE_DATE
+    	                FROM
+    						TBL_POLL_RESPONSE  
+    					WHERE
+    						brd_id = #v_pstrBrdID#
+    					AND
+    						item_no = #v_pItemNo#
+    					AND
+    						tenant_id = #tenantID#
+    					GROUP BY
+    						responseuser_id
+    					) P
+                      WHERE
+                        ROWNUM <= #mariaStart# + 1 + #v_pPageSize#  
+                    ) X
 				WHERE
-               		ROWNUM BETWEEN #mariaStart# + 1 AND #mariaStart# + 1 + #v_pPageSize# 
-				ORDER BY
-					P.response_date DESC
+               		ROWNUM >= #mariaStart# + 1  
 			]]>
 		</isEqual>
 		
 		<isNotEqual property="v_pResYN" compareValue="Y">
 			<![CDATA[
 				SELECT
-						*
+						X.*
 				FROM
-					(SELECT
-						user_id,
-						user_nm$v_pLang$ AS user_name,
-						user_email,
-						user_dept_id,	
-						user_dept_nm$v_pLang$ AS user_dept_name,
-						user_pos$v_pLang$ AS user_position,
-						user_jikgub$v_pLang$ AS user_jikgub,
-						user_gender,
-						user_age,
-						response_date
-					FROM
-						TBL_POLL_RESPONSEPERSON 
-					WHERE
-						brd_id = #v_pstrBrdID#
-					AND
-						item_no = #v_pItemNo#
-					AND
-						response_date IS NULL
-					AND
-						tenant_id = #tenantID#
-					) P
+                    ( SELECT 
+                        P.*
+                      FROM
+    					(SELECT
+    						user_id,
+    						user_nm$v_pLang$ AS user_name,
+    						user_email,
+    						user_dept_id,	
+    						user_dept_nm$v_pLang$ AS user_dept_name,
+    						user_pos$v_pLang$ AS user_position,
+    						user_jikgub$v_pLang$ AS user_jikgub,
+    						user_gender,
+    						user_age,
+    						response_date,
+                            rownum as rNum
+    					FROM
+    						TBL_POLL_RESPONSEPERSON 
+    					WHERE
+    						brd_id = #v_pstrBrdID#
+    					AND
+    						item_no = #v_pItemNo#
+    					AND
+    						response_date IS NULL
+    					AND
+    						tenant_id = #tenantID#
+                        ORDER BY
+                            user_id DESC    
+    					) P
+                      WHERE
+                        P.rNum <= #mariaStart# + 1 + #v_pPageSize#                           
+                    ) X
 				WHERE
-               		ROWNUM BETWEEN #mariaStart# + 1 AND #mariaStart# + 1 + #v_pPageSize# 
-               	ORDER BY
-               		P.user_id DESC
+               		X.rNum >= #mariaStart# + 1  
+               	
 			]]>
 		</isNotEqual>
 	</select>
