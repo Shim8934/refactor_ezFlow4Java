@@ -55,6 +55,7 @@ import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
@@ -3666,21 +3667,79 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return bIsMyContent;
 	}
 
+//	@Override
+//	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
+//		logger.debug("getReaderList started.");
+//		logger.debug("pBoardID : " + pBoardID + ", pItemID : " + pItemID + ", tenantID : " + tenantID);
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("v_pBoardID", pBoardID);
+//		map.put("v_pItemID", pItemID);
+//		map.put("tenantID", tenantID);
+//		map.put("offset", offset);
+//		
+//		List<CommunityBoardItemReadVO> list = ezCommunityDAO.getReaderList(map);
+//		
+//		logger.debug("getReaderList started.");
+//		
+//		return list;
+//	}
+	
 	@Override
-	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
-		logger.debug("getReaderList started.");
-		logger.debug("pBoardID : " + pBoardID + ", pItemID : " + pItemID + ", tenantID : " + tenantID);
+	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception {
+		logger.debug("getReaderList started");
+		// 2018-02-06 김보미 
+    	if(pageNum == 0){
+    		pageNum = 1;
+    	}
+    	
+    	int startRowNum = ((pageNum - 1) * perCount);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pBoardID", pBoardID);
-		map.put("v_pItemID", pItemID);
+		
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("userID", userID);
+		map.put("lang", lang);
 		map.put("tenantID", tenantID);
-		map.put("offset", offset);
+		map.put("start", startRowNum);
+		map.put("perCount", perCount);
+		List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
 		
-		List<CommunityBoardItemReadVO> list = ezCommunityDAO.getReaderList(map);
+		StringBuffer resultXML = new StringBuffer();
 		
-		logger.debug("getReaderList started.");
+		resultXML.append("<DOCLIST>");
 		
-		return list;
+		int totalCount = getReaderListCount(boardID, itemID, userID, tenantID);
+		int totalPage = (int) Math.floor(totalCount / perCount);
+		if(totalCount % 10 != 0){
+			totalPage = totalPage + 1;
+		}
+		
+		resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		resultXML.append("<PAGECNT>" + totalPage + "</PAGECNT>");
+		resultXML.append("<PERSONALCNT>" + perCount + "</PERSONALCNT>");
+    	resultXML.append("<LISTVIEWDATA>");
+    	
+		resultXML.append("<ROWS>");
+		for (CommunityBoardItemReadVO vo : readerList) {
+			String userTitle = "";
+			if(vo.getUserTitle() != null){
+				userTitle = vo.getUserTitle();
+			}
+			resultXML.append("<ROW>");			
+			resultXML.append("<CELL><USERID>" + vo.getUserID() + "</USERID><VALUE>" + "[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]" + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getUserName() + " (" + vo.getUserID() + ")" + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getUserDeptName() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + userTitle + "</VALUE></CELL>");
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		
+		logger.debug("getReaderList ended");
+		return resultXML;
 	}
 
 	@Override
@@ -7263,5 +7322,20 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("itemID", pItemID);
 		map.put("tenantID", tenantId);
 		return ezCommunityDAO.getOneLineReplyCount(map);
+	}
+	// 2018-02-06 김보미 - 조회자 수
+	@Override
+	public int getReaderListCount(String boardID, String itemID, String userID, int tenantID) throws Exception {
+		logger.debug("getReaderListCount started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("getReaderListCount ended");
+		return ezCommunityDAO.getReaderListCount(map);
 	}
 }
