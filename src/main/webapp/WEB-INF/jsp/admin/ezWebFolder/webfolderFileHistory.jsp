@@ -38,8 +38,8 @@
 			var userNameStr  = "";
 			
         	window.onresize = function () {
-				var divList = document.getElementById("mainSetting");				
-				var reheight = document.documentElement.clientHeight - 170;	
+				var divList          = document.getElementById("mainSetting");				
+				var reheight         = document.documentElement.clientHeight - 170;	
 				divList.style.height = reheight + "px";
 			};
 			
@@ -69,8 +69,8 @@
 		    }
 			
 			function preProcessing() {
-				var divList = document.getElementById("mainSetting");
-				var reheight = document.documentElement.clientHeight - 170;
+				var divList          = document.getElementById("mainSetting");
+				var reheight         = document.documentElement.clientHeight - 170;
 				divList.style.height = reheight + "px";
 			}	
 		    
@@ -289,7 +289,7 @@
 							</tr>
 		   				</table>
 	  					<div style="margin: 12px 50px 12px 180px;">
-							<a class="webfolderBttn"><span onclick="startSearch();"><spring:message code='ezWebFolder.t123' /></span></a>
+							<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123' /></span></a>
 	 						<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112' /></span></a>
 						</div>
   					</div>
@@ -300,12 +300,12 @@
 	   <div id="mainSetting" style="margin: 10px 0px; height:500px; overflow: auto;">
 	   		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileHistory">
 	   			<tr>	   				
-					<th width="40px" style="text-align: center;"><spring:message code='ezWebFolder.t155' /></th>
+					<th width="40px"  style="text-align: center;"><spring:message code='ezWebFolder.t155' /></th>
 					<th width="160px" style="text-align: center;"><spring:message code='ezWebFolder.t156' /></th>
-					<th width="40px" style="text-align: center;"><spring:message code='ezWebFolder.t157' /></th>
+					<th width="40px"  style="text-align: center;"><spring:message code='ezWebFolder.t157' /></th>
 					<th width="160px" style="text-align: center;"><spring:message code='ezWebFolder.t154' /></th>
-					<th width="60px" style="text-align: center;"><spring:message code='ezWebFolder.t158' /></th>
-					<th width="140px" style="text-align: center;"><spring:message code='ezWebFolder.t159' /></th>					
+					<th width="60px"  style="text-align: center;"><spring:message code='ezWebFolder.t158' /></th>
+					<th width="140px" style="text-align: center;"><spring:message code='ezWebFolder.t159' /></th>			
 	   			</tr>
 	   		</table>
 	   </div>

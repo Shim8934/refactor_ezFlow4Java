@@ -58,15 +58,8 @@ function onDrop(evt) {
         evt.preventDefault();
     }
    
-    var filelist;
-    
-    if (evt == undefined) {    	
-        filelist = document.getElementById("file").files;
-    }
-    else {    	
-        filelist = evt.dataTransfer.files;
-    }
-    
+    var filelist = (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
+     
     if (filelist.length == 0) {
     	return;
     }
@@ -76,22 +69,6 @@ function onDrop(evt) {
     }    
 
     fileupload();
-}
-
-function filedelete(r) {
-/*    var filecnt = document.getElementById("filelist").childNodes.length;
-    var pBoardID = window.parent.pBoardID;
-    var strRet = "";
-    var fileinfo = r.getAttribute("_path");    
-    var isFileDelete = false;    
-    var i = r.parentNode.parentNode.rowIndex;
-    document.getElementById("filelist").deleteRow(i);
-    
-    //Send delete file request to server
-    var fd = new FormData();
-    fd.append("fileToDelete", fileinfo);
-    xhr.open("POST", "/ezPoll/deleteFile.do");
-    xhr.send(fd);*/
 }
 
 function fileupload() {	
@@ -138,7 +115,7 @@ function fileupload() {
     	$(progress_bar_id + " .status").text("0%");
         document.getElementById('progress-wrp').style.display = "none";
         
-        renderResult(res.responseText);
+        renderResult(JSON.parse(res.responseText));
     });
     
 }
@@ -148,22 +125,16 @@ function renderResult(result) {
 		alert(strErr);
 		return;
 	}
-	// to bao. 
-	// 바오씨 이거 내일 같이 얘기해야할거같아요 
-	// list뿌릴때는 jsonArr = result 가 필요한데 
-	// upload하려면 jsonArr = JSON.parse(result)가 있어야 해요 
-	// 안그러면 에러나요 
 	
 	var jsonArr = result;
-//	var jsonArr = JSON.parse(result);
-	var len = jsonArr.length;
+	var len     = jsonArr.length;
 	var tblElmt = document.getElementById("tblFileList");
 	var rowsCnt = tblElmt.rows.length - 1;
 	
 	try { 
 		for (var i = 0; i < len; i++) {
-			var jsObj = jsonArr[i];			
-			var objTr = document.createElement("TR");	
+			var jsObj  = jsonArr[i];			
+			var objTr  = document.createElement("TR");	
 			var objTd1 = document.createElement("TD");
 			var objTd2 = document.createElement("TD");
 			var objTd3 = document.createElement("TD");

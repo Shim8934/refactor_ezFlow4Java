@@ -182,7 +182,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 		// Streams the response instead of loading it all in memory
 		ResponseExtractor<Void> responseExtractor = res -> {
-
 			response.setHeader("Content-Type", "application/zip");
 			response.setHeader("Content-Disposition", res.getHeaders().get("Content-Disposition").get(0));
 			
@@ -269,7 +268,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
 		String url          = gwServerUrl + "/webfolder/file-rename/fileid/" + fileId;		
 
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())
@@ -316,14 +315,14 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
 		String url          = gwServerUrl + "/webfolder/filemove/fileid/" + fileId + "/modes/" + mode;
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("tenantId", user.getTenantId())
-				.queryParam("offset", user.getOffset())
-				.queryParam("userId", user.getId())
-				.queryParam("userName1", user.getDisplayName1())
-				.queryParam("userName2", user.getDisplayName2())
-				.queryParam("companyId", user.getCompanyID())
-				.queryParam("folderId", folderId);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", user.getTenantId())
+										.queryParam("offset", user.getOffset())
+										.queryParam("userId", user.getId())
+										.queryParam("userName1", user.getDisplayName1())
+										.queryParam("userName2", user.getDisplayName2())
+										.queryParam("companyId", user.getCompanyID())
+										.queryParam("folderId", folderId);
 				
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

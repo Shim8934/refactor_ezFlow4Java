@@ -30,8 +30,8 @@
 			var checkedArr	= [];
 			
         	window.onresize = function () {
-				var divList = document.getElementById("mainSetting");				
-				var reheight = document.documentElement.clientHeight - 190;				
+				var divList          = document.getElementById("mainSetting");				
+				var reheight         = document.documentElement.clientHeight - 190;				
 				divList.style.height = reheight + "px";
 			};
 			
@@ -41,14 +41,14 @@
 			}	
 			
 			function preProcessing() {
-				var divList = document.getElementById("mainSetting");
-				var reheight = document.documentElement.clientHeight - 190;
+				var divList          = document.getElementById("mainSetting");
+				var reheight         = document.documentElement.clientHeight - 190;
 				divList.style.height = reheight + "px";
 			}			
 		    
 		    function openSearchPanel() {
 		    	$("#searchPanel").toggle("1000");
-		    	document.getElementById("inputSearch").value = "";
+		    	document.getElementById("inputSearch").value                = "";
 		    	document.getElementById("searchOption").options[0].selected = 'selected';		    			    		    	
 		    }	    	    
 		    
@@ -146,7 +146,7 @@
 		    			tdElmt8.setAttribute("style","white-space:nowrap; text-align:center;");
 		    			
 		    			var span = document.createElement("span");
-				        span.className = "workProgressBar";				 			        
+				        span.className  = "workProgressBar";				 			        
 				        span.innerHTML += "<span class='bar' usedrate='rategrogressBar" + i + "'></span>&nbsp;";			        
 
 						var span2 = document.createElement("span");
