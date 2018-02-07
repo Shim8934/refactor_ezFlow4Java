@@ -306,7 +306,13 @@
 					}					
 				}
 				else {
-					$('#_dateTimePicker').hide();					
+					$('#_dateTimePicker').hide();
+					var NowDate = new Date(new Date().getTime());
+					var NextWeek = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
+					$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+					$("#Sdatepicker").datepicker('setDate', NowDate); 
+					$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+					$("#Edatepicker").datepicker('setDate', NextWeek);
 				}
 			});
 			
@@ -491,7 +497,7 @@
 			}
 			else {
 				$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
-				$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
+				$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
 			}					
 		}
 		
@@ -731,6 +737,12 @@
 	        
 	        if (L_StartDate > L_EndDate) {
 	        	alert('<spring:message code="ezPoll.t236" />');
+	        	var NowDate = new Date(new Date().getTime());
+	        	var NextWeek = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
+	        	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        	$("#Sdatepicker").datepicker('setDate', NowDate); 
+	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        	$("#Edatepicker").datepicker('setDate', NextWeek);
 	            return false;
 	        }
 	        else if (L_StartDate == L_EndDate) {
@@ -848,17 +860,17 @@
 						<ul id="columnsbnk" >
 							<li class="myBorder">
 								<span>1</span>
-								<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option1" name="option1" oninput="checkOptionsList();">
+								<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option1" name="option1" oninput="checkOptionsList();" maxlength="200">
 								<img src="/images/sortIcon.png" class="drag_drop">
 							</li>
 							<li class="myBorder">
 								<span>2</span>
-								<input type="text" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option2" name="option2" oninput="checkOptionsList();">
+								<input type="text" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option2" name="option2" oninput="checkOptionsList();" maxlength="200">
 								<img src="/images/sortIcon.png" class="drag_drop">
 							</li>
 							<li class="myBorder">
 								<span>3</span>
-								<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option3" name="option3" oninput="checkOptionsList();">
+								<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option3" name="option3" oninput="checkOptionsList();" maxlength="200">
 								<img src="/images/sortIcon.png" class="drag_drop">
 							</li>
 						</ul>
