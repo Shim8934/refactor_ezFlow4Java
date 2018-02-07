@@ -557,10 +557,27 @@
 	            window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 	            window.close();
 	        }
+		    var item_readlist_cross_dialogArguments = new Array();
 
 	        function ReaderList() {
-	        	var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-	            GetOpenWindow(szHref, "", 520, 400);
+// 	        	var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+// 	            GetOpenWindow(szHref, "", 520, 400);
+	        	var heigth = window.screen.availHeight;
+		        var width = window.screen.availWidth;
+		        var left = (width - 500) / 2;
+		        var top = (heigth - 400) / 2;
+		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+		        var strFeature = "status:no;dialogHeight: 400px;dialogWidth: 520px;help: no;resizable:yes";
+		        if (CrossYN()) {
+		            item_readlist_cross_dialogArguments[0] = "";
+		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
+		            DivPopUpShow(520, 410, szHref);
+		        }
+		        else
+		            window.open(szHref, "", "width=520, height=400, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		    }
+		    function ReaderList_Complete() {
+		        DivPopUpHidden();
 	        }
 
 	        function btn_Print_Onclick() {

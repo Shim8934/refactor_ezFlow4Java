@@ -429,6 +429,9 @@
 		                        document.getElementById("tdNewVol").style.display = "";
 		                    else
 		                        document.getElementById("tdNewVol").style.display = "none";
+		                    
+		                    // btnCabDel 업무관리자, 기록물관리자만 사용
+		                    document.getElementById("btnCabDel").style.display = "";
 		                }
 		                else {
 		                    document.getElementById("tdRegCabinet").style.display = "none";
@@ -500,6 +503,9 @@
 		                if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
 		                    document.getElementById("tdMoveRec").style.display = "";
 		                    document.getElementById("tdRegSepAtt").style.display = "";
+		                    
+		                    // btnCabDel 업무관리자, 기록물관리자만 사용
+		                    document.getElementById("btnCabDel").style.display = "";		                    
 		                }
 		                else {
 		                    document.getElementById("tdMoveRec").style.display = "none";
@@ -1606,7 +1612,7 @@
 	            <li id="tdModifyCab" style="Display: None"><span id="ModifyCab" onclick="return btnChangeCabinetInfo_onclick()"><spring:message code='ezApprovalG.t269'/></span></li>
 	            <li id="tdSearchCab"><span id="SearchCab" onclick="return SearchCabinet('0')"><spring:message code='ezApprovalG.t111'/></span></li>
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
-	            <li ><span id="btnCabDel" onclick="return DeleteCab();"><spring:message code='ezApprovalG.t266'/></span> </li>
+	            <li ><span id="btnCabDel" onclick="return DeleteCab();" style="Display: None"><spring:message code='ezApprovalG.t266'/></span> </li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
 	            <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>

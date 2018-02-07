@@ -150,6 +150,8 @@
 				
 					if (document.getElementById("ouDoumentReceiveYN").checked){
 						extensionattribute11 = "Y";
+					} else {
+						extensionattribute11 = "N";
 					}
 				}
 				
