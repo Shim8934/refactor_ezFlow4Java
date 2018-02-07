@@ -114,6 +114,16 @@ public class EzWebFolderGWController_y {
 		String searchFileType = request.getParameter("searchFileType") != null ? request.getParameter("searchFileType") : "" ;
 		String searchPageCount = request.getParameter("searchPageCount") != null ? request.getParameter("searchPageCount") : "" ;
 		String searchListCount = request.getParameter("searchListCount") != null ? request.getParameter("searchListCount") : "" ;
+		int totalCount = request.getParameter("totalCount") != null ? Integer.parseInt(request.getParameter("totalCount")) : 0;
+		int listCount = request.getParameter("listCount") != null ? Integer.parseInt(request.getParameter("listCount")) : 10;
+		int currPage = request.getParameter("currPage") != null ? Integer.parseInt(request.getParameter("currPage")) : 1;
+		int totalpages = request.getParameter("totalpages") != null ? Integer.parseInt(request.getParameter("totalpages")) : 1;
+		
+		int pEnd = Integer.parseInt(request.getParameter("pEnd"));
+		int pStart  = Integer.parseInt(request.getParameter("pStart"));
+		
+		
+		
 		// loginVO 같은 쿠키는 request로 받아와야 한다 
 		// test할 용으로 만드는거는 뷰에서 값을 같이 던져줘야 한다. 
 		// 던져야 할 데이터 : tenantId, companyId
@@ -123,9 +133,16 @@ public class EzWebFolderGWController_y {
 		try {
 			fileList = service.getFileList(folderId,tenantId , request.getParameter("companyId"),
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
-					searchPageCount, searchListCount);
-			
+					searchPageCount, searchListCount, pStart, pEnd);
+			totalCount = service.getFileToTalCount(folderId,tenantId , request.getParameter("companyId"),
+					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
+					searchPageCount, searchListCount, pStart, pEnd);
+			totalpages = (totalCount/listCount)+1;
 			jsonObj.put("fileList", fileList);
+			jsonObj.put("totalCount", totalCount);
+			jsonObj.put("totalpages", totalpages );
+			jsonObj.put("listCount", listCount );
+			jsonObj.put("currPage", currPage );
 			jsonObj.put("status", "ok");
 		} catch (Exception e) {			
 			jsonObj.put("status", "error");

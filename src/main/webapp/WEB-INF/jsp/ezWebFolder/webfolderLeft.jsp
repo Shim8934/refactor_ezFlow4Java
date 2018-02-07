@@ -22,23 +22,6 @@
 		
 		    };
 		    
-		    function test() {
-    			var url = "/ezWebFolder/folderList.do";
-    			$.ajax({
-    				type:"GET",
-    				url : url,
-    				dataType: "JSON",
-    				success : function (data) {
-    					var result = data.test;
-    					alert(result);
-    				},
-    				error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134' />" + error);
-					}
-    			})
-		    }
-		    
-		    
 		    function goPage(idx) {
 		    	switch (idx) {
 		    		case 3:
@@ -85,6 +68,9 @@
 		    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do";
 		   		
 		   	}
+		    function treeTest() {
+		    	window.parent.frames["right"].location.href = "/ezWebFolder/treeTest.do";
+		    }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -109,7 +95,7 @@
   				<span style="display:inline-block;width:100%;">개인폴더</span>
   			</h2>  
     		<ul>
-		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="test()" >영화</span></li>
+		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="treeTest()" >영화</span></li>
 		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="fileList()" >문서</span></li>		        
 		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="getFileList()" >파일</span></li>		        
 		    </ul>  

@@ -23,11 +23,14 @@
         <result property="createName2"          column="create_name2"          	columnIndex="12" />
         <result property="createDate"           column="create_date"            columnIndex="13" />
         <result property="updateId"             column="update_id"              columnIndex="14" />
-        <result property="updateDate"           column="update_date"            columnIndex="15" />
-        <result property="fileTypeId"           column="filetype_id"            columnIndex="16" />
-        <result property="fileTypeName"         column="filetype_name"          columnIndex="17" />
-        <result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" />
-        <result property="tenantId"         	column="tenant_id"              columnIndex="19" />
+        <result property="updateDate"           column="update_date"            columnIndex="15" />        
+        <result property="tenantId"         	column="tenant_id"              columnIndex="16" />
+        <result property="fileIconUrl"          column="TYPE_ICON"        		columnIndex="17" />
+<!--         <result property="updateDate"           column="update_date"            columnIndex="15" /> -->
+<!--         <result property="fileTypeId"           column="filetype_id"            columnIndex="16" /> -->
+<!--         <result property="fileTypeName"         column="filetype_name"          columnIndex="17" /> -->
+<!--         <result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" /> -->
+<!--         <result property="tenantId"         	column="tenant_id"              columnIndex="19" /> -->
     </resultMap>
     
     <!-- FileType resultMap -->
@@ -46,9 +49,9 @@
         <result property="folderPath"          	column="FOLDER_PATH"              columnIndex="5"  />
         <result property="folderStep"           column="FOLDER_STEP"              columnIndex="6"  />
         <result property="folderLevel"          column="FOLDER_LEVEL"             columnIndex="7"  />
-        <result property="folderUpper"          column="FOLDER_UPPER"             columnIndex="8"	 />
+        <result property="folderUpper"          column="FOLDER_UPPER"             columnIndex="8"  />
         <result property="useStatus"           	column="USE_STATUS"               columnIndex="9"  />
-        <result property="ownerId"        	    column="OWNER_ID"         	      columnIndex="10"	 />
+        <result property="ownerId"        	    column="OWNER_ID"         	      columnIndex="10" />
         <result property="createId"             column="CREATE_ID"            	  columnIndex="11" />
         <result property="createDate"           column="CREATE_DATE"          	  columnIndex="12" />
         <result property="createName1"          column="CREATE_NAME1"          	  columnIndex="13" />
@@ -68,41 +71,89 @@
         <result property="tenantId"          	column="TENANT_ID"              columnIndex="5" />
     </resultMap>
     
-   <select id="EzWebFolderDAO_y.getFileList" resultMap="fileVO" parameterClass="Map">   
-	<![CDATA[
-		SELECT 
-			FILE_ID 	,
-			FILE_NAME 	,
-			FILE_PATH	,
-			FILE_SIZE	,
-			TYPE_ID		,
-			DOWN_COUNT	,
-			FILE_EXT	,
-			FOLDER_ID	,
-			USE_STATUS 	,
-			CREATE_ID	,
-			CREATE_NAME1,
-			CREATE_NAME2,
-			CREATE_DATE	,
-			UPDATE_ID	,
-			UPDATE_DATE	,        	 
-			TENANT_ID		
-		FROM 
-			TBL_WEBFOLDER_FILE 
-		WHERE  
-			FILE_EXT  LIKE if(#searchExt# != '', CONCAT('%',#searchExt#,'%') ,FILE_EXT)
-		AND 
-			CREATE_NAME1 LIKE if(#searchCreateName# != '', CONCAT('%',#searchCreateName#,'%') , CREATE_NAME1)
-		AND 
-			TYPE_ID LIKE IF ( #searchFileType# != '',CONCAT('%',#searchFileType#,'%'), TYPE_ID)
-		AND 
-			FILE_NAME LIKE IF ( #searchFileName# != '',CONCAT('%',#searchFileName#,'%'), FILE_NAME)
-		AND 
-			FOLDER_ID = #folderId#
-		AND
-			TENANT_ID = #tenantId#	
+    <select id="EzWebFolderDAO_y.getFileList" resultMap="fileVO" parameterClass="Map">   
+   		<![CDATA[
+			SELECT DISTINCT
+				type.TYPE_ICON ,
+				file.FILE_ID 	,
+				file.FILE_NAME 	,
+				file.FILE_PATH	,
+				file.FILE_SIZE	,
+				file.TYPE_ID	,
+				file.DOWN_COUNT	,
+				file.FILE_EXT	,
+				file.FOLDER_ID	,
+				file.USE_STATUS ,
+				file.CREATE_ID	,
+				file.CREATE_NAME1,
+				file.CREATE_NAME2,
+				file.CREATE_DATE  ,
+				file.UPDATE_ID	,
+				file.UPDATE_DATE  ,        	 
+				file.TENANT_ID		
+			FROM 
+				TBL_WEBFOLDER_FILE AS file LEFT OUTER JOIN tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID
+			WHERE  
+				file.FOLDER_ID = #folderId#
 				
-	]]>				
-   </select>
+				
+		]]>		
+		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+			<![CDATA[
+				file.FILE_EXT LIKE CONCAT(CONCAT('%', #searchExt#), '%')
+       		]]> 
+		</isNotEqual>		
+		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+			<![CDATA[
+				file.CREATE_NAME1 LIKE CONCAT(CONCAT('%', #searchCreateName#), '%')
+       		]]> 
+		</isNotEqual>		
+		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+			<![CDATA[
+				type.TYPE_NAME LIKE CONCAT(CONCAT('%', #searchFileType#), '%')
+       		]]> 
+		</isNotEqual>		
+		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+			<![CDATA[
+				file.FILE_NAME LIKE CONCAT(CONCAT('%', #searchFileName#), '%')
+       		]]> 
+		</isNotEqual>		
+			AND
+				file.TENANT_ID = #tenantId#	 LIMIT #pStart#, #pEnd#
+	</select>
+    <select id="EzWebFolderDAO_y.getFileToTalCount" resultClass="Integer" parameterClass="Map">   
+   		<![CDATA[
+			select count(*) from (SELECT DISTINCT
+				file.FILE_ID 	
+			FROM 
+				TBL_WEBFOLDER_FILE AS file right JOIN tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID
+			WHERE  
+				file.FOLDER_ID = #folderId#
+			AND
+				file.TENANT_ID = #tenantId#	
+		]]>		
+		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+			<![CDATA[
+				file.FILE_EXT LIKE CONCAT(CONCAT('%', #searchExt#), '%')
+       		]]> 
+		</isNotEqual>		
+		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+			<![CDATA[
+				file.CREATE_NAME1 LIKE CONCAT(CONCAT('%', #searchCreateName#), '%')
+       		]]> 
+		</isNotEqual>		
+		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+			<![CDATA[
+				type.TYPE_NAME LIKE CONCAT(CONCAT('%', #searchFileType#), '%')
+       		]]> 
+		</isNotEqual>		
+		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+			<![CDATA[
+				file.FILE_NAME LIKE CONCAT(CONCAT('%', #searchFileName#), '%')
+       		]]> 
+		</isNotEqual>		
+			) as fileJoin
+	</select>
 
 </sqlMap>
+

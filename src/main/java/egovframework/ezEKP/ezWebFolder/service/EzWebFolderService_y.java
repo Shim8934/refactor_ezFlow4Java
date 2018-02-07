@@ -9,7 +9,7 @@ public interface EzWebFolderService_y {
 	// 파일 list
 	List<FileVO> getFileList(String folderId, int tenantId, String companyId, String searchExt,
 			String searchFileName, String searchStartDate, String searchEndDate,String searchCreateName,
-			String searchFileType, String searchPageCount,String searchListCount ) throws Exception;
+			String searchFileType, String searchPageCount,String searchListCount, int pStart , int pEnd ) throws Exception;
 	/*
 	// 폴더 전체 리스트 
 	List<FolderVO> getFolderLsit (String folderType , String userId, String companyId , String tenantId) throws Exception; 
@@ -28,6 +28,12 @@ public interface EzWebFolderService_y {
 	
 	// part yeyeun end
 	*/
+
+	int getFileToTalCount(String folderId, int tenantId, String parameter,
+			String searchExt, String searchFileName, String searchStartDate,
+			String searchEndDate, String searchCreateName,
+			String searchFileType, String searchPageCount,
+			String searchListCount, int pStart, int pEnd) throws Exception;
 	
 	
 }

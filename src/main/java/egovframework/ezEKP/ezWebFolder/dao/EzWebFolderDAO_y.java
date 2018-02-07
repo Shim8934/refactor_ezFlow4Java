@@ -13,5 +13,10 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	// fileList 가져오는 메소드
 	public List<FileVO> getFileList(Map<String, Object> map) {
 		return  (List<FileVO>) list("EzWebFolderDAO_y.getFileList",map);
+		
+	}
+	
+	public int getFileTotalCount (Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.getFileToTalCount",map);
 	}
 }

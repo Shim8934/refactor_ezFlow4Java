@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -54,7 +55,7 @@ public class EzWebFolderController_y {
 	
 	
 	// getFolderList /ezwebfolder/users/{userId}/folder-list에 가는 메소드 
-	@RequestMapping(value = "/ezWebFolder/folderList.do")
+	@RequestMapping(value = "/ezWebFolder/folderList.do", method=RequestMethod.POST)
 	public String getFolderList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		
@@ -106,9 +107,24 @@ public class EzWebFolderController_y {
 			HttpServletResponse resp, Model model )throws Exception {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int totalCount = Integer.parseInt(request.getParameter("totalCount"));
+		int currPage  = Integer.parseInt(request.getParameter("currPage"));
+		int listCount = Integer.parseInt(request.getParameter("listCount"));
+		int totalPages = Integer.parseInt(request.getParameter("totalPages"));
+		int pStart = Integer.parseInt(request.getParameter("pStart"));
+		int pEnd = Integer.parseInt(request.getParameter("pEnd"));
+		if ( currPage == 0 ) {
+			currPage = 1;
+		} 
+		if ( listCount == 0 ) {
+			listCount = 10;
+		}
+		if ( totalPages == 0 ) {
+			totalPages = 1;
+		}
+		
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
 		String url = gwServerUrl + "/webfolder/folders/" +request.getParameter("folderId") + "/file-list";
-//		String url = gwServerUrl + "/webfolder/folders/opensol/file-list";
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -159,6 +175,7 @@ public class EzWebFolderController_y {
 		}
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
 				.queryParam("tenantId", request.getParameter("tenantId"))
 				.queryParam("searchExt", searchExt)
 				.queryParam("searchFileName", searchFileName)
@@ -167,9 +184,13 @@ public class EzWebFolderController_y {
 				.queryParam("searchCreateName",searchCreateName)
 				.queryParam("searchFileType", searchFileType)
 				.queryParam("searchPageCount", searchPageCount)
-				.queryParam("searchListCount", searchListCount);
-		
-		
+				.queryParam("totalCount", totalCount)
+				.queryParam("currPage", currPage)
+				.queryParam("listCount", listCount)
+				.queryParam("totalPages", totalPages)
+				.queryParam("pStart", pStart)
+				.queryParam("pEnd", pEnd);
+	
 		
 		// 갔다 돌아옴
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -177,13 +198,19 @@ public class EzWebFolderController_y {
 		JSONParser jp = new JSONParser();
 		JSONObject resultBody = (JSONObject)jp.parse(result.getBody());
 		String status = resultBody.get("status").toString();
+		totalCount = Integer.parseInt(resultBody.get("totalCount").toString());
+		totalPages = Integer.parseInt(resultBody.get("totalpages").toString());
+		listCount = Integer.parseInt(resultBody.get("listCount").toString());
 		
 		JSONObject test = new JSONObject();
 		
 		if (status.equals("ok")) {
 			test.put("userInfo", userInfo);
 			test.put("fileList",resultBody.get("fileList"));
-			LOGGER.debug(test.toJSONString());
+			test.put("totalCount", totalCount );
+			test.put("totalPages", totalPages );
+			test.put("listCount", listCount );
+			test.put("currPage", currPage );
 			model.addAttribute("fileList",test);
 		}
 		
@@ -192,6 +219,13 @@ public class EzWebFolderController_y {
 		
 	}
 	
+	@RequestMapping(value = "/ezWebFolder/treeTest.do")
+	public String treeTest (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse resp, Model model )throws Exception {
+	
+		
+		return "ezWebFolder/treeTest";
+	}
 
 	
 	/*

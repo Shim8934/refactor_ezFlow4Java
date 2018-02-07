@@ -107,28 +107,54 @@
 		var checkedArr	= [];
 		var userId = "${userInfo.userId}";
 		var userName = "${userInfo.userName}";
-		var CurPage = "${boardInfo.page}";
-		var totalPage = "${boardInfo.totalPage}";
+// 		var totalPages  = null;
+		var currPage = 1;
+		var totalPages = 0 ;
+		var totalCount = 0 ;
+		var listCount = 10;
 		var filelist = [];
+		var strLang39	= "<spring:message code = 'ezWebFolder.t135'/>";
+		var strLang40 	= "<spring:message code = 'ezWebFolder.t136'/>";
+		var strLang41   = "<spring:message code = 'ezWebFolder.t137'/>";
+		var strLang42   = "<spring:message code = 'ezWebFolder.t138'/>";
+		var pStart = 0;
+		var pEnd =10;
+		
 		window.onload = function () {
+			pEnd= pStart + listCount;
 			getfileList();
+			
 	    };
 		function getfileList(){
 			$.ajax ({
-				type:"GET",
+				type:"POST",
 				url : "/ezWebFolder/fileList.do",
 				data : { 
-					 "userID" 	 : "yy9320", 
-					 "tenantId"  : '1',
-					 "folderId"  : 'opensol'
+					 "userID" 	  : "yy9320", 
+					 "tenantId"   : '1',
+					 "folderId"   : 'opensol',
+					 "currPage"   : currPage,
+					 "totalPages" : totalPages,
+					 "listCount"  : listCount,
+					 "totalCount" : totalCount,
+					 "pStart" : pStart,
+					 "pEnd" : pEnd,
+					 "searchExt" : $('#searchExt').val(),
+					 "searchFileName" : $('#searchFileName').val(),
+					 "searchCreateName" : $('#searchCreateName').val()
 					},
 				dataType: "JSON",
 				success : function (data) {
-					filelist = data.fileList.fileList;
-					var result = data.fileList.fileList[0].fileName;
+					result = data.fileList;
+					
+					currPage = result.currPage;
+					totalCount = result.totalCount;
+					listCount = result.listCount;
+					totalPages = result.totalPages;
+					filelist = result.fileList;
+					$('#tblFileList tr td').parent().remove();
 					renderResult(filelist);
-					
-					
+					makePageSelPage();
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
@@ -138,7 +164,6 @@
 		};
 		
 	   	$(function () {
-	   		
 	        $("#Sdatepicker").datepicker({
 	            changeMonth: true,
 	            changeYear: true,
@@ -163,20 +188,146 @@
 	        $("#Edatepicker").datepicker('setDate', "");
 // 	        alert(fileList.fileName);
 	     });
+	   	// 날짜 초기화 버튼
 	   	function btn_PostDate_Clear() {
 	        $("#Sdatepicker").datepicker('setDate', "");
 	        $("#Edatepicker").datepicker('setDate', "");
 	
 	    }
-	   	
-	   	
+
+	   	// 페이지 만드는 js
+	    function makePageSelPage(){
+	        var strtext="";
+	        var PagingHTML = "";
+	        document.getElementById("tblPageRayer").innerHTML = "";
+	        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
+	        strtext += "<div class='pagenavi'>";
+	        PagingHTML = strtext;
+	        var pageNum = currPage;
+	        
+	        if (totalPages > 1 && pageNum != 1) {
+	            strtext += "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        else {
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        if (totalPages > listCount) {
+	            if (pageNum > listCount) {
+	                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+	                PagingHTML += strtext;
+	            }
+	            else {
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+	                PagingHTML += strtext;
+	            }
+	        }
+	        else {
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        var MaxNum;
+	        var i;
+	        var startNum = (parseInt((pageNum - 1) / listCount) * listCount) + 1;
+	        
+	        if (totalPages >= (startNum + parseInt(listCount))) {
+	            MaxNum = (startNum + parseInt(listCount)) - 1;
+	        }
+	        else {
+	            MaxNum = totalPages;
+	        }
+	        
+	        for (i = startNum; i <= MaxNum; i++) {
+	            if (i == pageNum) {
+	                strtext = "<span class='on'>" + i + "</span>";
+	                PagingHTML += strtext;
+	            }
+	            else {
+					strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i + "</span>";
+	                PagingHTML += strtext;
+	            }
+	        }
+	        
+	        if (totalPages > listCount) {
+	        	if (totalPages >= parseInt(((parseInt((pageNum - 1) / listCount) + 1) * listCount) + 1)) {
+	        	    strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
+	        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	        	}
+	        	else {
+	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	        	}
+	        }
+	        else {
+	            strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
+	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
+	            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        else {
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        PagingHTML += "</div>";
+	        td_Create1(PagingHTML);
+	    }
+	    
+	    function td_Create1(strtext) {
+	        document.getElementById("tblPageRayer").innerHTML = strtext;
+	    }
+	    
+	    function goToPageByNum(Value){
+	    	currPage = Value;
+	        pStart = (listCount * (currPage))- listCount;
+	        pEnd = listCount;
+	        getfileList();
+	        makePageSelPage();
+	    }
+	    
+	    function selbeforeBlock(){
+	        var pageNum = parseInt(currPage);
+	        pageNum = ((parseInt(pageNum / listCount) - 1) * listCount) + 1;
+	        goToPageByNum(pageNum);
+	    }
+	    
+	    function selbeforeBlock_one(){
+	        var pageNum = parseInt(currPage);
+	        if(parseInt(pageNum - 1) > 0)
+	            goToPageByNum(parseInt(pageNum - 1));
+	        else
+	            return;
+	    }
+	    
+	    function selafterBlock(){
+	        var pageNum = parseInt(currPage);
+	        pageNum = ((parseInt((pageNum - 1) / listCount) + 1) * listCount) + 1;
+	        goToPageByNum(pageNum);
+	    }
+	    
+	    function selafterBlock_one(){
+	        var pageNum = parseInt(currPage);
+	        if(parseInt(pageNum + 1) <= totalPages)
+	            goToPageByNum(parseInt(pageNum + 1));
+	        else
+	            return;
+	    }
 	   	
 	   	
 	   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
    		function search(type) {
 	        if (type == "basic") {
 	
-	            if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	           if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 	                alert("<spring:message code='ezBoard.t192' />");// 검색조건을 입력하세요 
 	                return;
 	            }
@@ -200,17 +351,86 @@
 	                return;
 	            }
 	        }
-	        CurPage = "1";
 	        searchOptionHidden();
-	        MakeSubCondition();
+// 	        MakeSubCondition();
 	        getfileList();
 	    }
-   	   
+   		function clickRow(obj, e) {
+	        e.stopPropagation();
+	        e.preventDefault();
+	    	
+	    	var inputElmt = obj.firstElementChild.firstElementChild;
+	    	var newUser = {};
+		    newUser["userId"]      = obj.getAttribute("userId");
+		    newUser["usedAmount"]  = obj.getAttribute("usedAmount");
+	    	
+	    	if (inputElmt.checked == true) {
+	    		inputElmt.checked = false;
+	    		
+	    		var pos = null;
+    		    checkedArr.map(function(obj, index) { if(obj["userId"] == newUser["userId"]) { pos = index; return true; }}).filter(isFinite);
+
+    		    if (pos != -1) {
+    			   obj.setAttribute("style", "");
+    			   checkedArr.splice(pos, 1);
+    		    }		    		
+	    	}
+	    	else {
+	    		inputElmt.checked = true;
+	    		checkedArr.push(newUser);
+	    		obj.setAttribute("style", "background-color: #e9f1ff;");
+	    	}
+	    }
+	    
+	    function getChecked(obj, event) {		       
+	       event.stopPropagation();
+	       
+	       var newUser = {};
+	       newUser["userId"]      = obj.getAttribute("userId");
+	       newUser["usedAmount"]  = obj.getAttribute("usedAmount");		       
+	        	   
+    	   if (obj.checked == true) {
+    		   checkedArr.push(newUser);
+    		   obj.parentElement.parentElement.setAttribute("style", "background-color: #e9f1ff;");
+    	   }
+    	   else {	    		   
+    		   var pos = null;
+    		   checkedArr.map(function(obj, index) { if(obj["userId"] == newUser["userId"]) { pos = index; return true; }}).filter(isFinite);
+
+    		   if (pos != -1) {
+    			   obj.parentElement.parentElement.setAttribute("style", "");
+    			   checkedArr.splice(pos, 1);
+    		   }
+    	   }
+       }
+	    
+	   function getCheckAll(obj) {
+    	   var listInputs = document.getElementsByClassName("checkBnk");
+    	   
+    	   checkedArr = [];
+    	   if (obj.checked == true) {
+    		   for (var i = 0; i < listInputs.length; i++) {
+	    			listInputs[i].checked = true;
+	    			var newUser = {};
+		 		    newUser["userId"]      = listInputs[i].getAttribute("userId");
+		 		    newUser["usedAmount"]  = listInputs[i].getAttribute("usedAmount");			 		    		
+		 		    listInputs[i].parentElement.parentElement.setAttribute("style", "background-color: #e9f1ff;");
+	    			checkedArr.push(newUser);	    		
+	    		}		    	
+    	   }
+    	   else {
+    		   for (var i = 0; i < listInputs.length; i++) {
+    			    listInputs[i].parentElement.parentElement.setAttribute("style", "");
+	    			listInputs[i].checked = false;	    				    		
+	    		}
+    	   }
+	   }
+	   
    	   function doLayerPopup(obj) {
 	        btn_PostDate_Clear();
-	        document.getElementById("txtTitle").value = "";
-	        document.getElementById("txtWriterName").value = "";
-	        document.getElementById("txtAbstract").value = "";
+	        document.getElementById("searchExt").value = "";
+	        document.getElementById("searchFileName").value = "";
+	        document.getElementById("searchCreateName").value = "";
 	    
 	        if (obj.getAttribute("mode") == "off") {
 	            document.getElementById("layer_popup").style.left = "10px";
@@ -357,7 +577,10 @@
     </script>
 </head>
 <body class="mainbody">
-    <h1>부서 폴더</h1>
+    <h1>
+	   		웹폴더
+	   		<span id="mailBoxInfo"></span>
+	</h1>
 	<div style="margin-bottom: 15px;">
 		<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;">오픈솔루션</span>
 		<img style="height: 25px; width: 25px; display: inline-block; margin-left: 20px;" src="/images/webfolder/favourite.png">
@@ -462,7 +685,7 @@
         <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
     </div>
     
-    
+    <span id="mailBoxInfo"></span>
     <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
           <div class="popupwrap1">
             <div class="popupwrap2">
@@ -477,17 +700,18 @@
 <!-- 			               <img class="ui-datepicker-trigger" src="/images/ImgIcon/calendar-month.gif" alt title>  -->
 			           </td>
 			       </tr>
+			       
 			        <tr>
 			            <th style="text-align:center">확장자</th>
-			            <td><input type="text" id="txtWriterName" style="width:98%" value="" name="searchExt"></td>
+			            <td><input type="text" id="searchExt" style="width:98%" value="" name="searchExt"></td>
 			        </tr>
 			        <tr>
 			            <th style="text-align:center">파일명</th>
-			            <td><input type="text" id="txtTitle" style="width:98%" value="" name="searchFileName"></td>
+			            <td><input type="text" id="searchFileName" style="width:98%" value="" name="searchFileName"></td>
 			        </tr>  
 			         <tr>
 			            <th style="text-align:center">작성자</th>
-			            <td><input type="text" id="txtAbstract" style="width:98%" value="" name="searchCreateName"></td>
+			            <td><input type="text" id="searchCreateName" style="width:98%" value="" name="searchCreateName"></td>
 			        </tr>    
 			       
 		    </table>
@@ -503,8 +727,10 @@
 		    </table>
 	           </div>
 	         </div>
+	        
 	        <div class="shadow">
 	        </div>
 		</div>
+	<div id="tblPageRayer"></div>
 </body>
 </html>
