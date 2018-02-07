@@ -34,7 +34,7 @@ public interface EzBoardService {
 	
 	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID, int tenantID) throws Exception;
 	
-	public List<BoardReadVO> getReaderList(String boardID, String itemID, String userID, String lang, int tenantID) throws Exception;
+	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception;
 	
 	public List<BoardListVO> getAdjacentItems1(String boardID, String parentWriteDate, String upperItemIDTree, int tenantID) throws Exception;
 	
@@ -261,5 +261,6 @@ public interface EzBoardService {
 	public String copyItem(String orgItemIDList, String orgBoardID, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception;
 	//2017.12.29 강민수92
 	public String getOneLineReplyCount(String boardID, String itemID, int tenantID) throws Exception;
-
+	//2018.02.05 김보미
+	public int getReaderListCount(String boardID, String itemID, String userID, String lang, int tenantID) throws Exception;
 }

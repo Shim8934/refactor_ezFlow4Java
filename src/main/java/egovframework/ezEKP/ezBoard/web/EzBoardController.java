@@ -4425,17 +4425,19 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/itemReadList.do")
 	public String itemReadList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("itemReadList started");
-
-		userInfo = commonUtil.userInfo(loginCookie);
 		
+//		userInfo = commonUtil.userInfo(loginCookie);
+//		StringBuffer resultXML = ezBoardService.getReaderList(boardID, itemID, userInfo.getId(), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+//		model.addAttribute("boardReadList", boardReadList);
+//		model.addAttribute("offset", userInfo.getOffset());
+		
+		//2018-02-05 김보미
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		
-		List<BoardReadVO> boardReadList = ezBoardService.getReaderList(boardID, itemID, userInfo.getId(), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("itemID", itemID);
 		
-		model.addAttribute("boardReadList", boardReadList);
-		model.addAttribute("offset", userInfo.getOffset());
-
 		logger.debug("itemReadList ended");
 		return "ezBoard/boardItemReadList";
 	}
@@ -6884,4 +6886,21 @@ public class EzBoardController extends EgovFileMngUtil{
     	logger.debug("deleteCircularComment ended.");
     	return "json";
     }
+    /**
+     * 2018-02-06 김보미 - 리스트 페이징 처리
+     */
+	@RequestMapping(value = "/ezBoard/itemReadPagingList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String itemReadPagingList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, String boardID, String itemID, int pageNum, int perCount) throws Exception {
+		logger.debug("itemReadPagingList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		StringBuffer resultXML = ezBoardService.getReaderList(boardID,itemID,userInfo.getId(),commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()), userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
+
+		logger.debug("itemReadPagingList ended");
+		return resultXML.toString();
+	}
+    
+    
 }

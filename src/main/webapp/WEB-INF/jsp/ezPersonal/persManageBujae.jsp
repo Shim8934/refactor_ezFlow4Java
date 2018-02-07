@@ -175,12 +175,12 @@
 			    type_Complete = type;
 			    if (CrossYN() || NoneActiveX == "YES") {
 			        selectperson_cross_dialogArguments[1] = select_person_Complete;
-			        var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "SelectPerson_cross", GetOpenWindowfeature(660, 535));
+			        var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "SelectPerson_cross", GetOpenWindowfeature(760, 535));
 			        try { OpenWin.focus(); } catch (e) { }
 			    }
 			    else {
 			        var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=" + type, "",
-		                "dialogHeight:535px;dialogwidth:660px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(660, 535));
+		                "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(760, 535));
 		
 			        if (typeof (rtnValue) != "undefined" && type == "") {
 			            userid = rtnValue.split(":")[0];

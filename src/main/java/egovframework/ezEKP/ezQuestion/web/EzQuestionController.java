@@ -198,9 +198,16 @@ public class EzQuestionController extends EgovFileMngUtil {
 			strbuilder = new StringBuilder();
 			
 			if(compareEnd >= 0){
-				strbuilder.append(egovMessageSource.getMessage("ezQuestion.t562", loginVO.getLocale()));
-				strbuilder.append(qst.getTitle()); 
-				qst.setTitle(strbuilder.toString());
+				//설문조사 즉시 완료 후, 완료된 당일에 정보를 수정하는 경우, 목록에서 진행중으로 뜨지 않도록 설정 
+				if (qst.getEndFlg().equals("1")) {
+					strbuilder.append(egovMessageSource.getMessage("ezQuestion.t563", loginVO.getLocale()));
+					strbuilder.append(qst.getTitle());
+					qst.setTitle(strbuilder.toString());
+				} else {
+					strbuilder.append(egovMessageSource.getMessage("ezQuestion.t562", loginVO.getLocale()));
+					strbuilder.append(qst.getTitle()); 
+					qst.setTitle(strbuilder.toString());
+				}
 			}else{
 				strbuilder.append(egovMessageSource.getMessage("ezQuestion.t563", loginVO.getLocale()));
 				strbuilder.append(qst.getTitle());
@@ -3809,7 +3816,14 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPermissionVO.setPublicResultFlg(req.getParameter("hidopenResult"));
 		qstUserPermissionVO.setPublicFlg(req.getParameter("hidanonymity"));
 		qstUserPermissionVO.setMultiResponseFlg(req.getParameter("hidMultiResponse"));
-		qstUserPermissionVO.setEndFlg("1");
+		
+		// 설문 마감 이후에도 정보를 수정할 수 있도록 설정
+		if (req.getParameter("hidendpoll").equals("1")) {
+			qstUserPermissionVO.setEndFlg("1");
+		} else {
+			qstUserPermissionVO.setEndFlg("0");
+		}
+		
 		qstUserPermissionVO.setResponseRange(req.getParameter("hidTarget"));
 		
 		ezQuestionService.changePermission(qstUserPermissionVO, qstUserPollItemVO, loginVO.getTenantId());
