@@ -159,8 +159,17 @@
 	        m_rgParams4PostOption["EachMail"] = iseachMail;
 	        m_rgParams4PostOption["SecurityMail"] = pSecurity;
 	        if (xmpTo.innerHTML != "") {
-	            var splitAddr = getEmailAddressList(xmpTo.innerHTML);
-	            addReceiverFromList(0, splitAddr);
+	        	var moduleType = "<c:out value='${moduleType}'/>";
+	        	
+	        	if (moduleType && moduleType == "poll") {
+	        		var pollSendType = "<c:out value='${pollSendType}'/>";       		
+		            var addrArr = getEmailAddressList2(xmpTo.innerHTML, pollSendType);
+		            addReceiverFromList(0, addrArr);
+	        	}
+	        	else {
+		            var splitAddr = getEmailAddressList(xmpTo.innerHTML);
+		            addReceiverFromList(0, splitAddr);
+	        	}
 	        }
 	        if (xmpCc.innerHTML != "") {
 	            splitAddr = getEmailAddressList(xmpCc.innerHTML);

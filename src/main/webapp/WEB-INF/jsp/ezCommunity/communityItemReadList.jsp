@@ -9,11 +9,279 @@
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		
+		<!-- 페이징 -->
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/ezCommunity/lang/ezCommunity.js"></script>
+		<script type="text/javascript" src="/js/ezCommunity/ListView_list.js"></script>
 		<script type="text/javascript">
+		
+// 		<script type="text/javascript">
+		    //2018-02-06 김보미 - 페이징
+		    var ReturnFunction;
+		    var CurPage = "";
+		    var pBoardID = "${boardID}";
+		    var itemID = "${itemID}";
+		    var perCount = 10;
+		    
+		    window.onload = function () {
+		    	try {
+		            getBoardList();
+		            ReturnFunction = parent.item_readlist_cross_dialogArguments[1];
+		        } catch (e) {
+		        	
+		        }
+		    	//사원 이름(아이디) 클릭시 사원 상세보기
+		        $("#lvBoardList").on("click", "td:odd:even", function (){
+			        userID = $(this).closest("tr").attr("userid");
+			        show_info(userID);
+		        });
+		    };
+		
 			function show_info(userid) {
 	            window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", GetOpenWindowfeature(438, 440));
 	        }
+			
+		    function close_onclick() {
+		        if (ReturnFunction != null)
+		            ReturnFunction();
+		        else
+		            window.close();
+		    }
+		    //2018-02-05 김보미 - 페이징
+		    var xmlhttp = createXMLHttpRequest();
+		    function getBoardList() {
+		        if (CurPage == "") {
+		            CurPage = 1;
+		        }
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/itemReadPagingList.do",
+					data : { 
+							 boardID 	 : pBoardID,
+							 itemID		 : itemID,
+							 pageNum 	 : CurPage,
+							 perCount	 : perCount
+							},
+					success: function(xml){
+						getBoardList_after(loadXMLString(xml));
+					}        			
+				});	
+		    }
+		    var firstFlag = false;
+		    function getBoardList_after(xml) {
+		        try {
+		            var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
+		            var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
+		            var pagenode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
+		            var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
+		
+		            if (listNode == null) return;
+		            var lstCnt = getNodeText(cntNode);//TOTALCNT
+		            var pageCnt = getNodeText(pagenode);//PAGECNT
+		            var perCnt = getNodeText(perNode);//PERSONALCNT
+		
+		            totalPage = pageCnt;
+		            
+		            makePageSelPageReader();
+		            var xmlDoc;
+		            if (CrossYN()) {
+		                var xmlLIST = createXmlDom();
+		                var nodeToImport = xmlLIST.importNode(listNode, true);
+		                xmlLIST.appendChild(nodeToImport);
+		
+		                xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+		            }
+		            else {
+		                xmlDoc = createXmlDom();
+		                xmlDoc.appendChild(listNode);
+		            }
+		            if (document.getElementById("lvBoardList").innerHTML != "")
+		                document.getElementById("lvBoardList").innerHTML = "";
+		            
+		            var DocList = new ListView();
+		            DocList.SetID("lvBoardList");
+		            DocList.SetMulSelectable(false);
+		            DocList.SetTitleIdx(0);
+		            DocList.SetSelectFlag(false);
+		            DocList.DataSource(xmlDoc);
+		            DocList.RowDataBind();
+		            DocList = null;
+		            
+		            //td 너비 조정
+		            var listTbl = document.getElementById("lvBoardList");
+		            var listTd = listTbl.getElementsByTagName("td");
+		            for(var i = 0; i < listTd.length; i++){
+		            	if((i%4) == 0){
+		            		listTd[i].style.width = "170px";
+		            	}
+		            	if((i%4) == 1) {
+		            		listTd[i].style.width = "120px";
+		            		listTd[i].innerHTML = "<b>" + listTd[i].textContent.split("(")[0] + "</b>" + "(" + listTd[i].textContent.split("(")[1];
+		            		listTd[i].style.cursor = "pointer";
+		            	}
+		            	if((i%4) == 2) {
+		            		listTd[i].style.width = "130px";
+		            		listTd[i].style.color = "#168501";
+		            	}
+		            	if((i%4) == 3){
+		            		listTd[i].style.width = "60px";
+		            		listTd[i].style.color = "#737373";
+		            	}
+		            }
+		        }
+		        catch (e) {
+		            alert("getBoardList_after : " + e.description);
+		        }
+		    }
+		    var BlockSize = 10;
+		    function td_Create1(strtext) {
+		        document.getElementById("tblPageRayer").innerHTML = strtext;
+		    }
+		    function goToPageByNum(Value) {
+		        CurPage = Value;
+		        makePageSelPageReader();
+		        movePage(CurPage);
+		    }
+		    function selbeforeBlock() {
+		        var pageNum = parseInt(CurPage);
+		        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+		        goToPageByNum(pageNum);
+		    }
+		    function selbeforeBlock_one() {
+		        var pageNum = parseInt(CurPage);
+		        if (parseInt(pageNum - 1) > 0)
+		            goToPageByNum(parseInt(pageNum - 1));
+		        else
+		            return;
+		    }
+		    function selafterBlock() {
+		        var pageNum = parseInt(CurPage);
+		        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+		        goToPageByNum(pageNum);
+		    }
+		    function selafterBlock_one() {
+		        var pageNum = parseInt(CurPage);
+		        if (parseInt(pageNum + 1) <= totalPage)
+		            goToPageByNum(parseInt(pageNum + 1));
+		        else
+		            return;
+		    }
+		    function movePage(newPage) {
+		        if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
+		            CurPage = newPage;
+		            getBoardList();
+		        }
+		    }
+		    function prevPage_onclick() {
+		        newPage = parseInt(CurPage) - 1;
+		        if (newPage > 0) {
+		            CurPage = newPage;
+		            getBoardList();
+		        }
+		    }
+		    function nextPage_onclick() {
+		        newPage = parseInt(CurPage) + 1;
+		        if (newPage <= parseInt(totalPage)) {
+		            CurPage = newPage;
+		            getBoardList();
+		        }
+		    }
+		    function SortPage(strHeaderName) {
+		        if (strHeaderName != "CHECK") {
+		            if (OrderCell == strHeaderName) {
+		                if (OrderOption == "")
+		                    OrderOption = "DESC";
+		                else
+		                    OrderOption = "";
+		            }
+		            else {
+		                OrderCell = strHeaderName;
+		                OrderOption = "";
+		            }
+		            getBoardList();
+		        }
+		    }
+		  //board 페이징 중복 함수
+		    function makePageSelPageReader() {
+		    	var strtext;
+		        var PagingHTML = "";
+		        document.getElementById("tblPageRayer").innerHTML = "";
+		        
+		        strtext = "<div class='pagenavi'>";
+		        PagingHTML += strtext;
+		        var pageNum = CurPage;
+		        if (totalPage > 1 && pageNum != 1) {
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            PagingHTML += strtext;
+		        }
+		        else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		            PagingHTML += strtext;
+		        }
+		        if (totalPage > BlockSize) {
+		            if (pageNum > BlockSize) {
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                PagingHTML += strtext;
+		            }
+		            else {
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+		                PagingHTML += strtext;
+		            }
+		        }
+		        else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+		            PagingHTML += strtext;
+		        }
+		        var MaxNum;
+		        var i;
+		        var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+		        if (totalPage >= (startNum + parseInt(BlockSize))) {
+		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
+		        }
+		        else {
+		            MaxNum = totalPage;
+		        }
+		        for (i = startNum; i <= MaxNum; i++) {
+		            if (i == pageNum) {
+		                strtext = "<span class='on'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            }
+		            else {
+		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            }
+		        }
+		        if (totalPage > BlockSize) {
+		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		                PagingHTML += strtext;
+		            }
+		            else {
+		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                PagingHTML += strtext;
+		            }
+		        }
+		        else {
+		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        PagingHTML += "</div>";
+		        td_Create1(PagingHTML);
+		    }
 		</script>
 	</head>
 	<body class = "popup">
@@ -21,17 +289,22 @@
 			<h1><spring:message code='ezCommunity.t952' /></h1>
 		    <div id="close">
 		        <ul>
-		            <li><span onclick="window.close()"><spring:message code='ezCommunity.t21' /></span></li>
+		            <li><span onclick="close_onclick()"><spring:message code='ezCommunity.t21' /></span></li>
 		        </ul>
 		    </div>
 		    
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("close"), "ul", "li", "0");
 	        </script>
-	        
-	        <h2><spring:message code='ezCommunity.t1053' /></h2>
-	        
-	        <div class="box" style="height: 290px; overflow: auto">
+	        <!-- 2018-02-06 김보미 -->
+<%-- 	        <h2><spring:message code='ezCommunity.t1053' /></h2> --%>
+<!-- 	        <div class="box" style="height: 290px; overflow: auto"> -->
+	        	<div style="width:100%; overflow:AUTO;" id="divList">
+		            <table id="lvBoardList" class="popuplist" style="width:100%"></table>
+		        </div>
+			<div id='runtime' style="color:#666;padding-top:5px"></div>
+			<div id="tblPageRayer" style="text-align:center"></div>
+        	    <!-- 
         	    <table style="width:100%" class="popuplist">
         	    	<c:forEach items="${readList}" var="item">
         	    		<c:choose>
@@ -53,9 +326,9 @@
         	    			</c:otherwise>
         	    		</c:choose>
         	    	</c:forEach>
-
 	            </table>
-	        </div>
+				 -->
+<!-- 	        </div> -->
 		</form>	
 	</body>
 </html>

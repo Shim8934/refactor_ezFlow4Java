@@ -671,7 +671,7 @@
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
 		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-		            DivPopUpShow(520, 400, szHref);
+		            DivPopUpShow(520, 410, szHref);
 		        }
 		        else
 		            window.open(szHref, "", "width=520, height=400, resizable=yes, scrollbars=yes, top="+top+", left=" + left);

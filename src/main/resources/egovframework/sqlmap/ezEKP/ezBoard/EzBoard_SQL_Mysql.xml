@@ -15,6 +15,7 @@
 	<typeAlias  alias="BoardListHeaderVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
 	<typeAlias  alias="BoardMyFavoriteVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
 	<typeAlias  alias="BoardDeleteItemVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO"/>
+	<typeAlias  alias="BoardPollConfigVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO"/> <!-- baonk added -->
 
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
@@ -111,6 +112,17 @@
         <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="28"/>
         <result property="docNo" 					column="DOCNO" 					columnIndex="29"/>
 	</resultMap>
+	
+	<!-- baonk added -->
+	<resultMap id="pollConfig" class="BoardPollConfigVO">
+		<result property="userId" 					column="USER_ID" 				columnIndex="1"/>
+		<result property="defaultStartTime" 		column="START_TIME" 			columnIndex="2"/>
+		<result property="defaultEndTime" 			column="END_TIME" 				columnIndex="3"/>
+		<result property="targetDepts" 				column="TARGET_DEPTS" 			columnIndex="4"/>
+		<result property="targetUsers" 				column="TARGET_USERS" 			columnIndex="5"/>
+		<result property="tenantId" 				column="TENANT_ID" 				columnIndex="6"/>
+	</resultMap> 
+	<!-- end -->
 	
 	<select id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
 		<![CDATA[
@@ -710,7 +722,7 @@
 			</isEmpty>
 		</isNotEmpty>
 	</select>
-	
+	<!-- 2018-02-02 김보미 - 50명 제한 삭제(LIMIT 50), limit부분 수정. -->
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
 		<![CDATA[
 			SELECT  
@@ -718,8 +730,8 @@
 				USERNAME$lang$ AS USERNAME, 
 				USERDEPTNAME$lang$ AS USERDEPTNAME, 
 				USERCOMPANYNAME$lang$ AS USERCOMPANYNAME, 
-				USERTITLE$lang$ AS USERTITLE, 
-				READDATE 
+				IFNULL(USERTITLE$lang$, '') AS USERTITLE, 
+				DATE_FORMAT(READDATE ,'%Y-%m-%d %H:%i:%s') AS READDATE
 		   	FROM 
 		   		TBL_Board_Item_Read 
 		   	WHERE 
@@ -729,7 +741,7 @@
 		   	AND 
 		   		ItemID =  #itemID#  
 		   	AND
-		   		UserID NOT IN ( SELECT 
+		   		UserID <> ( SELECT 
 		   							WRITERID 
 		   						FROM 
 		   							TBL_BOARD_ITEM 
@@ -739,8 +751,8 @@
 		   							ITEMID = #itemID# )
 		   	ORDER BY 
 		   		ReadDate DESC
-		   	LIMIT
-		   		50
+ 		   	LIMIT 
+      			#start#, #perCount# 
 		]]>
 	</select>
 	
@@ -4458,6 +4470,71 @@
 		]]>
   </delete>
   
+  <!-- baonk added -->
+  <select id="EzBoardDAO.getPollConfig" resultMap="pollConfig">
+		<![CDATA[
+			SELECT
+				*
+			FROM 
+				TBL_VOTE_CONFIGURATION
+			WHERE 
+				USER_ID = #user_id#
+			AND
+				TENANT_ID = #tenant_id#
+		]]>
+	</select>
+	
+	<insert id="EzBoardDAO.saveBoardPollConfig" parameterClass="Map">      	
+        <selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1 
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS (SELECT     								
+     								USER_ID,                               		
+                               		TENANT_ID
+                        			FROM
+                        				TBL_VOTE_CONFIGURATION 
+                         			WHERE
+                                   		USER_ID = #user_id#
+                                   	AND
+                                   		TENANT_ID = #tenant_id#
+								)
+			]]>
+		</selectKey>   
+		<isEqual property="v_temp" compareValue="1">     
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_CONFIGURATION(
+	                USER_ID,          START_TIME,        END_TIME,       	TARGET_DEPTS,      TARGET_USERS,			TENANT_ID
+	            )
+	            VALUES(
+	                #user_id#,        #start_time#,      #end_time#,       #target_depts#,     #target_users#,			#tenant_id#
+            )  
+        	]]>
+        </isEqual>
+        
+        <isNotEqual property="v_temp" compareValue="1">
+        	<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_CONFIGURATION
+	            SET 
+	            	 USER_ID = #user_id#,
+	            	 START_TIME = #start_time#,
+	            	 END_TIME = #end_time#,
+	            	 TARGET_DEPTS = #target_depts#,
+	            	 TARGET_USERS = #target_users#,
+	            	 TENANT_ID = #tenant_id#
+	            WHERE
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+            ]]> 
+        </isNotEqual>        
+    </insert>    
+	
+	<!-- end -->
   <select id="EzBoardDAO.getOneLineReplyCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -4471,6 +4548,30 @@
             AND 
             	ItemID = #itemID#
 		]]>
+  </select>
+  
+  <select id="EzBoardDAO.getReaderListCount" parameterClass="Map" resultClass="Integer">
+	  	<![CDATA[
+	  		SELECT  
+				COUNT(USERID) 
+			FROM 
+			   	TBL_BOARD_ITEM_READ 
+			WHERE 
+			   	TENANT_ID = #tenantID#
+			AND
+			   	BOARDID = #boardID#
+			AND 
+			   	ITEMID =  #itemID# 
+			AND
+			   	USERID <> ( SELECT 
+			   						WRITERID 
+			   					FROM 
+			   						TBL_BOARD_ITEM 
+			   					WHERE 
+			   						TENANT_ID = #tenantID#
+			   					AND
+			   						ITEMID = #itemID# )
+	  	]]>
   </select>
 	
 </sqlMap>
