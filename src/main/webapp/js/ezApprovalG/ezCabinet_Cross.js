@@ -1143,7 +1143,7 @@ function ViewDoc_onclick_Complete(Rtn) {
         OpenAlertUI(pAlertContent);
         return "";
     }
-    else if (Rtn == "True") {
+    else if (Rtn == "True" || Rtn == "TRUE") {
         var DocList = new ListView();          
         DocList.LoadFromID("DocList");
         var tr = DocList.GetSelectedRows();
@@ -1625,6 +1625,10 @@ function makePageSelPage(pTotalCnt) {
     }
     else {
         MaxNum = totalPage;
+    }
+    
+    if(totalPage == "0") {
+    	MaxNum = 1;
     }
     for (i = startNum; i <= MaxNum; i++) {
         if (i == pageNum) {

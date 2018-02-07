@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -240,6 +242,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String mhtToHtml = ezCommonService.getMHTtoHTML(type, itemID, info.getTenantId(), realPath, request, locale, scheme);
 			LOGGER.debug("mhtToHtml: " + mhtToHtml);			
 	        Document doc = Jsoup.parse(mhtToHtml);	        
+	        Elements elems = doc.select("[src]");
+			
+			if (elems.size() > 0) {
+				for (Element element : elems) {
+					element.attr("src", "/mobile/ezCommon/mFileDown.do?filePath=" + element.attr("src") + "&fileName=*.INLINE.*");
+				}
+			}
 	        String bodyHTML = doc.getElementsByTag("BODY").html();
 			vo.setContent(bodyHTML);
 			
