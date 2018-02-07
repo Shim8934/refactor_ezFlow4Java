@@ -129,7 +129,7 @@ function CalendarView(pTagetID) {
                     if (current_day.getDay() == "0" || isholiday)
                         oTh.style.color = "#ee1c25";
                     else if (current_day.getDay() == "6")
-                        oTh.style.color = "#0032cf";
+                        oTh.style.color = "rgb(0, 72, 149)";
 
                 }
                 else
@@ -578,12 +578,7 @@ function Write() {
         window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&brdName=" + encodeURIComponent(brd_NM) + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
     else {
-        if (pUse_Editor == "" || pUse_Editor == "CK") {
-            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&brdName=" + encodeURIComponent(brd_NM) + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-        }
-        else {
-            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&brdName=" + encodeURIComponent(brd_NM) + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-        }
+        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&brdName=" + encodeURIComponent(brd_NM) + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
 
     DragStartItemID = "";

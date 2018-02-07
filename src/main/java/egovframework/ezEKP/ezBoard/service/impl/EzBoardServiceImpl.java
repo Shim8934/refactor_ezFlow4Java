@@ -89,26 +89,37 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardServiceImpl.class);
 
 	@Override
-	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID, int tenantID) throws Exception{
+	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID, int tenantID) throws Exception {
+		logger.debug("getLeft_BoardSTD started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_REDIRECTBOARDID", redirectBoardID);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("getLeft_BoardSTD ended");
 		return ezBoardDAO.getLeft_BoardSTD(map);
 	}	
 
 	@Override
 	public List<BoardVO> get_apprUserList(String boardID, int tenantID) throws Exception {
+		logger.debug("get_apprUserList started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PBOARDID", boardID);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("get_apprUserList ended");
 		return ezBoardDAO.get_apprUserList(map);
 	}
 
 	@Override
-	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, int tenantID) throws Exception{
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, int tenantID) throws Exception {
+		logger.debug("get_favoriteList started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_USERID", userID);
 		map.put("v_MODE", pMode);
 		map.put("v_TENANTID", tenantID);
@@ -121,21 +132,26 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			ezBoardDAO.insertBoardNewBoardOrder(map);
 			
 			BoardMyFavoriteVO boardMyFavoriteVO2 = new BoardMyFavoriteVO();
+			
 			boardMyFavoriteVO2.setTabUsed("Y");
 			boardMyFavoriteVO2.setViewOrder("0");
 			
 			ezBoardDAO.updateMyBoard(boardMyFavoriteVO2);
 		}
-		
+
+		logger.debug("get_favoriteList ended");
 		return ezBoardDAO.get_favoriteList(map);
 	}
 
 	@Override
-	public String get_parentBoardName(String boardIdList, int boardIdListCount, String primary, int tenantID, Locale locale) throws Exception{
+	public String get_parentBoardName(String boardIdList, int boardIdListCount, String primary, int tenantID, Locale locale) throws Exception {
+		logger.debug("get_parentBoardName started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PRIMARY", primary);
 		map.put("v_TENANTID", tenantID);
-
+		
 		String[] boardIDs = boardIdList.split(";");
 		String rtnValue = "";
 		
@@ -152,74 +168,92 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				rtnValue = rtnValue + egovMessageSource.getMessage("ezBoard.hyj01", locale);;
 			}
 		}
-		
+
+		logger.debug("get_parentBoardName ended");
 		return rtnValue;
 	}
 
 	@Override
-	public String getBoardProperty(String pBoardID, BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception{
+	public String getBoardProperty(String pBoardID, BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception {
+		logger.debug("getBoardProperty started");
+
 		BoardPropertyVO strProp = getBoardProperty(pBoardID, userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
+		
+		sb.append("<NODES>");
+		sb.append("<NODE>");
+		sb.append("<ITEMEXPIRES>" + strProp.getItemExpires() + "</ITEMEXPIRES>");
+		sb.append("<ATTACHLIMIT>" + strProp.getAttachSizeLimit() + "</ATTACHLIMIT>");
+		sb.append("<DESCRIPTION><![CDATA[" + strProp.getBoardDescription() + "]]></DESCRIPTION>");
+		sb.append("<BOARDNAME><![CDATA[" + strProp.getBoardName() + "]]></BOARDNAME>");
+		sb.append("<BOARDNAME2><![CDATA[" + strProp.getBoardName2() + "]]></BOARDNAME2>");
+		sb.append("<ALERTPOSTITEM><![CDATA[" + strProp.getAlertPostItem() + "]]></ALERTPOSTITEM>");
+		sb.append("<REPLYNOTIFY><![CDATA[" + strProp.getReplyNotify() + "]]></REPLYNOTIFY>");
+		sb.append("<URL><![CDATA[" + strProp.getUrl() + "]]></URL>");
+		sb.append("<GUBUN><![CDATA[" + strProp.getGuBun() + "]]></GUBUN>");
+		sb.append("<DELETEAFTER><![CDATA[" + strProp.getDeleteAfter() + "]]></DELETEAFTER>");
+		sb.append("<BOARDCOLOR><![CDATA[" + strProp.getBoardColor() + "]]></BOARDCOLOR>");
+		sb.append("<BOARDNO><![CDATA[" + strProp.getBoardNo() + "]]></BOARDNO>");
+		sb.append("<PORTLET><![CDATA[" + strProp.getPortlet() + "]]></PORTLET>");
+		sb.append("<ONELINEREPLY>" + strProp.getOneLineReply() + "</ONELINEREPLY>");
+		sb.append("<BACKGROUND>" + strProp.getBackGround() + "</BACKGROUND>");
+		sb.append("<FORMFLAG>" + strProp.getFormFlag() + "</FORMFLAG>");
+		sb.append("<APPRFLAG>" + strProp.getApprFlag() + "</APPRFLAG>");
+		sb.append("<APPRMAILFLAG>" + strProp.getApprMailFlag() + "</APPRMAILFLAG>");
+		sb.append("</NODE>");
+		sb.append("</NODES>");
 
-        sb.append("<NODES>");
-        sb.append("<NODE>");
-        sb.append("<ITEMEXPIRES>" + strProp.getItemExpires() + "</ITEMEXPIRES>");
-        sb.append("<ATTACHLIMIT>" + strProp.getAttachSizeLimit() + "</ATTACHLIMIT>");
-        sb.append("<DESCRIPTION><![CDATA[" + strProp.getBoardDescription() + "]]></DESCRIPTION>");
-        sb.append("<BOARDNAME><![CDATA[" + strProp.getBoardName() + "]]></BOARDNAME>");
-        sb.append("<BOARDNAME2><![CDATA[" + strProp.getBoardName2() + "]]></BOARDNAME2>");
-        sb.append("<ALERTPOSTITEM><![CDATA[" + strProp.getAlertPostItem() + "]]></ALERTPOSTITEM>");
-        sb.append("<REPLYNOTIFY><![CDATA[" + strProp.getReplyNotify() + "]]></REPLYNOTIFY>");
-        sb.append("<URL><![CDATA[" + strProp.getUrl() + "]]></URL>");
-        sb.append("<GUBUN><![CDATA[" + strProp.getGuBun() + "]]></GUBUN>");
-        sb.append("<DELETEAFTER><![CDATA[" + strProp.getDeleteAfter() + "]]></DELETEAFTER>");
-        sb.append("<BOARDCOLOR><![CDATA[" + strProp.getBoardColor() + "]]></BOARDCOLOR>");
-        sb.append("<BOARDNO><![CDATA[" + strProp.getBoardNo() + "]]></BOARDNO>");
-        sb.append("<PORTLET><![CDATA[" + strProp.getPortlet() + "]]></PORTLET>");
-        sb.append("<ONELINEREPLY>" + strProp.getOneLineReply() + "</ONELINEREPLY>");
-        sb.append("<BACKGROUND>" + strProp.getBackGround() + "</BACKGROUND>");
-        sb.append("<FORMFLAG>" + strProp.getFormFlag() + "</FORMFLAG>");
-        sb.append("<APPRFLAG>" + strProp.getApprFlag() + "</APPRFLAG>");
-        sb.append("<APPRMAILFLAG>" + strProp.getApprMailFlag() + "</APPRMAILFLAG>");
-        sb.append("</NODE>");
-        sb.append("</NODES>");
-        
+		logger.debug("getBoardProperty ended");
         return sb.toString();
 	}
 	
 	@Override
-	public BoardPropertyVO getBoardProperty(String pBoardID, int tenantID) throws Exception{
+	public BoardPropertyVO getBoardProperty(String pBoardID, int tenantID) throws Exception {
+		logger.debug("getBoardProperty started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_BOARDID", pBoardID);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("getBoardProperty ended");
 		return ezBoardDAO.getBoardProperty(map);
 	}
 	
 	@Override
 	public BoardConfigVO getBoardList_Config(String userId, int tenantID) throws Exception {
+		logger.debug("getBoardList_Config started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_USERID", userId);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("getBoardList_Config ended");
 		return ezBoardDAO.getBoardList_Config(map);
 	}
 
 	@Override
 	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception {
+		logger.debug("getListHeader started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_LISTCODE", ezBoardVO.getBoardType());
 		map.put("v_PSTRLANG", ezBoardVO.getLang());
 		map.put("v_TENANTID", ezBoardVO.getTenantID());
-		
+
+		logger.debug("getListHeader ended");
 		return ezBoardDAO.getListHeader(map);
 	}
 
 	@Override
 	public void setListOrder(LoginVO userInfo, String pBoardList, String pDelBoardList) throws Exception {
+		logger.debug("setListOrder started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("userID", userInfo.getId());
 		
@@ -240,25 +274,35 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			ezBoardDAO.setListOrder_D(map);
 		}
+
+		logger.debug("setListOrder ended");
 	}
 
 	@Override
-	public int getNewItemListCount(LoginVO userInfo)  throws Exception{
+	public int getNewItemListCount(LoginVO userInfo)  throws Exception {
+		logger.debug("getNewItemListCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pUserID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getNewItemListCount ended");
 		return ezBoardDAO.getNewItemListCount(map);
 	}
 
 	@Override
 	public BoardConfigVO getPersonalCount(LoginVO userInfo) throws Exception {
+		logger.debug("getPersonalCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_USERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		
 		BoardConfigVO boardConfigVO = new BoardConfigVO();
+		
 		String tempString = ezBoardDAO.getBoardConfig(map);
 		
 		if (tempString != null && !tempString.equals("")) {
@@ -271,12 +315,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardConfigVO.setPreviewHList(50);
 			boardConfigVO.setPreviewHContent(50);
 		}
-		
+
+		logger.debug("getPersonalCount ended");
 		return boardConfigVO;
 	}
 
 	@Override
-	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception{
+	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception {
+		logger.debug("getNewItemList started");
+
 		if (boardListVO.getOrderBySub().length() > 0) {
 			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
 				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
@@ -290,6 +337,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_TENANTID", boardListVO.getTenantID());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
@@ -298,13 +346,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
-		
+
+		logger.debug("getNewItemList ended");
 		return ezBoardDAO.getNewItemList(map);
 	}
 
 	@Override
 	public void setBoardList_Config(BoardConfigVO boardConfigVO) throws Exception {
+		logger.debug("setBoardList_Config started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_USERID", boardConfigVO.getUserId());
 		map.put("v_TENANTID", boardConfigVO.getTenantID());
 		
@@ -315,20 +367,28 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			ezBoardDAO.setBoardList_Config_I(boardConfigVO); 
 		}
+
+		logger.debug("setBoardList_Config ended");
 	}
 
 	@Override
 	public int getBrdNewItemCount(String userID, int tenantID) throws Exception {
+		logger.debug("getBrdNewItemCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pUserID", userID);
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getBrdNewItemCount ended");
 		return ezBoardDAO.getBrdNewItemCount(map);
 	}
 
 	@Override
 	public int getThumbNailCount(BoardMyFavoriteVO myFavoriteVO) throws Exception {
+		logger.debug("getThumbNailCount started");
+
 		String tempString = ezBoardDAO.getBoardApprList(myFavoriteVO);
 		int rtnCount = 0;
 		
@@ -337,12 +397,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			rtnCount = ezBoardDAO.getThumbNailCount2(myFavoriteVO);
 		}
-		
+
+		logger.debug("getThumbNailCount ended");
 		return rtnCount;
 	}
 
 	@Override
 	public int getBrdTotalItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception {
+		logger.debug("getBrdTotalItemCount started");
+
 		String tempString = ezBoardDAO.getBoardApprJoinItem(myFavoriteVO);
 		int rtnCount = 0;
 		
@@ -351,26 +414,34 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			rtnCount = ezBoardDAO.getBrdTotalItemCount2(myFavoriteVO);
 		}
-		
+
+		logger.debug("getBrdTotalItemCount ended");
 		return rtnCount;
 	}
 
 	@Override
 	public int getQNABrdTotalItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception {
+		logger.debug("getQNABrdTotalItemCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
 		map.put("v_PUSERID", myFavoriteVO.getUserId());
 		map.put("v_PTYPE", myFavoriteVO.getType());
 		map.put("v_PADMINTYPE", myFavoriteVO.getBoardAdmin_FG());
 		map.put("v_TENANTID", myFavoriteVO.getTenantID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getQNABrdTotalItemCount ended");
 		return ezBoardDAO.getQNABrdTotalItemCount(map);
 	}
 
 	@Override
 	public void setTabUsed(String pUserID, String pBoardList, String tabUsed, int tenantID) throws Exception {
+		logger.debug("setTabUsed started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_BOARDID", pBoardList);
 		map.put("v_TABUSED", tabUsed);
 		map.put("v_USERID", pUserID);
@@ -382,25 +453,33 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			ezBoardDAO.setTabUsed2(map);
 		}
-		
+
+		logger.debug("setTabUsed ended");
 	}
 	
 	@Override
 	public void setMainImageID(String mainImageID, String itemID, int tenantID) throws Exception {
+		logger.debug("setMainImageID started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_IMAGEID", mainImageID);
 		map.put("v_ITEMID", itemID);
 		map.put("v_TENANTID", tenantID);
 		
 		ezBoardDAO.setMainImageID(map);
+		logger.debug("setMainImageID ended");
 	}
 
 	@Override
 	public String setNotiOrder(String itemID, int tenantID) throws Exception {
+		logger.debug("setNotiOrder started");
+
 		String rtnValue = "";
 		
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
+			
 			map.put("tenantID", tenantID);
 			
 			for (int k = 0; k < itemID.split(";").length; k++) {
@@ -415,13 +494,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnValue = "ERROR";
 		}
-		
+
+		logger.debug("setNotiOrder ended");
 		return rtnValue;
 	}
 
 	@Override
 	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID, String mainFg, String oFileName, int tenantID) throws Exception {
+		logger.debug("photoListUpdate started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_ImageID", imageID);
 		map.put("v_BoardID", boardID);
 		map.put("v_FilePath", file_Path);
@@ -435,20 +518,30 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (mainFg.equals("Y")) {
 			setMainImageID(imageID, itemID, tenantID);
 		}
+
+		logger.debug("photoListUpdate ended");
 	}
 
 	@Override
 	public void updateCopyItem(String destItemID, int tenantID) throws Exception {
+		logger.debug("updateCopyItem started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("destItemID", destItemID);
 		map.put("tenantID", tenantID);
 		
 		ezBoardDAO.updateCopyItem(map);
+
+		logger.debug("updateCopyItem ended");
 	}
 
 	@Override
 	public void updateMoveItem(String destItemID, String orgItemID, int tenantID) throws Exception {
+		logger.debug("updateMoveItem started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("itemID", orgItemID);
 		map.put("destItemID", destItemID);
 		map.put("tenantID", tenantID);
@@ -457,11 +550,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.deleteBoardItem(map);
 		ezBoardDAO.deleteBoardItemRead2(map);
 		ezBoardDAO.deleteBoardReply(map);
+
+		logger.debug("updateMoveItem ended");
 	}
 
 	@Override
 	public void setBoardList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception {
+		logger.debug("setBoardList_Config2 started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_USERID", userID);
 		map.put("v_LISTCNT", listCount);
 		map.put("v_PREVIEWMODE", previewMode);
@@ -476,12 +574,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			ezBoardDAO.setBoardList_Config2_I(map);
 		}
-		
+
+		logger.debug("setBoardList_Config2 ended");
 	}
 
 	@Override
 	public void photoListAlbumEdit(String boardID, String itemID, String title, String content, int tenantID) throws Exception {
+		logger.debug("photoListAlbumEdit started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_BOARDID", boardID);
 		map.put("v_ITEMID", itemID);
 		map.put("v_TITLE", title);
@@ -489,11 +591,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", tenantID);
 		
 		ezBoardDAO.photoListAlbumEdit(map);
+
+		logger.debug("photoListAlbumEdit ended");
 	}
 
 	@Override
 	public void photoListAlbumEditTemp(String boardID, String itemID, String title, String content, int tenantID) throws Exception {
+		logger.debug("photoListAlbumEditTemp started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_BOARDID", boardID);
 		map.put("v_ITEMID", itemID);
 		map.put("v_TITLE", title);
@@ -501,11 +608,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", tenantID);
 		
 		ezBoardDAO.photoListAlbumEditTemp(map);
+
+		logger.debug("photoListAlbumEditTemp ended");
 	}
 
 	@Override
 	public void deleteItem(String mode, String itemID, String boardID, String realPath, int tenantID) throws Exception {
+		logger.debug("deleteItem started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("itemID", itemID);
 		map.put("boardID", boardID);
 		map.put("tenantID", tenantID);
@@ -523,10 +635,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		ezBoardDAO.insertDeleteReservedItem(map);
+
+		logger.debug("deleteItem ended");
 	}
 
 	public void deleteTempItem(String itemID, String boardID, String realPath, int tenantID) throws Exception {
+		logger.debug("deleteTempItem started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("itemID", itemID);
 		map.put("boardID", boardID);
 		map.put("tenantID", tenantID);
@@ -536,21 +653,31 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.deleteBoardItemRead2(map);
 		
 		ezBoardDAO.insertDeleteReservedItem(map);
+
+		logger.debug("deleteTempItem ended");
 	}
 
 	@Override
 	public void photoListDel(String boardID, String imageID, int tenantID) throws Exception {
+		logger.debug("photoListDel started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_BoardID", boardID);
 		map.put("v_ImageID", imageID);
 		map.put("v_TENANTID", tenantID);
 		
 		ezBoardDAO.photoListDel(map);
+
+		logger.debug("photoListDel ended");
 	}
 
 	@Override
 	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception {
+		logger.debug("getListHeaderBoardID started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PBOARDID", ezBoardVO.getBoardId());
 		map.put("v_PSTRLANG", ezBoardVO.getLang());
 		map.put("v_LISTCODE", ezBoardVO.getBoardType());
@@ -559,31 +686,87 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String tempString = ezBoardDAO.getListOptionBoardID(map);
 		
 		if (tempString != null && !tempString.equals("")) {
+			logger.debug("getListHeaderBoardID ended");
 			return ezBoardDAO.getListHeaderBoardID(map);
 		} else {
+			logger.debug("getListHeaderBoardID ended");
 			return ezBoardDAO.getListHeader(map); 
 		}
 	}
 
 	@Override
 	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID, int tenantID) throws Exception {
+		logger.debug("brdGetItemAttachmentInfo started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("itemID", pItemID);
 		map.put("tenantID", tenantID);
-		
+
+		logger.debug("brdGetItemAttachmentInfo ended");
 		return ezBoardDAO.brdGetItemAttachmentInfo(map);
 	}
 
 	@Override
-	public List<BoardReadVO> getReaderList(String boardID, String itemID, String userID, String lang, int tenantID) throws Exception {
+	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception {
+		logger.debug("getReaderList started");
+		/* 2018-02-06 김보미 - 페이징 */
+    	if(pageNum == 0){
+    		pageNum = 1;
+    	}
+    	
+    	int startRowNum = ((pageNum - 1) * perCount);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("boardID", boardID);
 		map.put("itemID", itemID);
 		map.put("userID", userID);
 		map.put("lang", lang);
 		map.put("tenantID", tenantID);
+		map.put("start", startRowNum);
+		map.put("perCount", perCount);
+		List<BoardReadVO> readerList = ezBoardDAO.getReaderList(map);
 		
-		return ezBoardDAO.getReaderList(map);
+		StringBuffer resultXML = new StringBuffer();
+		
+		resultXML.append("<DOCLIST>");
+		
+		int totalCount = getReaderListCount(boardID, itemID, userID, lang, tenantID);
+		int totalPage = (int) Math.floor(totalCount / perCount);
+		if(totalCount % 10 != 0){
+			totalPage = totalPage + 1;
+		}
+		
+		resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		resultXML.append("<PAGECNT>" + totalPage + "</PAGECNT>");
+		resultXML.append("<PERSONALCNT>" + perCount + "</PERSONALCNT>");
+    	resultXML.append("<LISTVIEWDATA>");
+    	
+		resultXML.append("<ROWS>");
+		for (BoardReadVO vo : readerList) {
+			String userTitle = "";
+			String userDeptName = "";
+			if(vo.getUserTitle() != null){
+				userTitle = vo.getUserTitle();
+			}
+			if( vo.getUserDeptName() != null){
+				userDeptName =  vo.getUserDeptName();
+			}
+			resultXML.append("<ROW>");			
+			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><VALUE><![CDATA[" + "[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]" + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + vo.getUserName() + " (" + vo.getUserID() + ")" + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + userTitle + "]]></VALUE></CELL>");
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		
+		logger.debug("getReaderList ended");
+		return resultXML;
 	}
 
 	@Override
@@ -593,24 +776,27 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	@Override
 	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception {
+		logger.debug("getNoticePostItem started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		int start = 0;
-        int end = 0;
-        start = ((ezBoardVO.getPageNum() - 1) * personalCount) + 1;
-        end = (ezBoardVO.getPageNum() * personalCount);
-        
-        BoardMyFavoriteVO boardMyFavoriteVO = new BoardMyFavoriteVO();
-        boardMyFavoriteVO.setBoardId(ezBoardVO.getBoardId());
-        boardMyFavoriteVO.setTenantID(ezBoardVO.getTenantID());
-        
-        String tempString = ezBoardDAO.getBoardApprJoinItem(boardMyFavoriteVO);
-        
-        if (tempString != null && ! tempString.equals("")) {
-        	map.put("v_TEMP", "1");
-        } else {
-        	map.put("v_TEMP", "");
-        }
-        
+		int end = 0;
+		start = ((ezBoardVO.getPageNum() - 1) * personalCount) + 1;
+		end = (ezBoardVO.getPageNum() * personalCount);
+		
+		BoardMyFavoriteVO boardMyFavoriteVO = new BoardMyFavoriteVO();
+		boardMyFavoriteVO.setBoardId(ezBoardVO.getBoardId());
+		boardMyFavoriteVO.setTenantID(ezBoardVO.getTenantID());
+		
+		String tempString = ezBoardDAO.getBoardApprJoinItem(boardMyFavoriteVO);
+		
+		if (tempString != null && ! tempString.equals("")) {
+			map.put("v_TEMP", "1");
+		} else {
+			map.put("v_TEMP", "");
+		}
+		
 		map.put("v_PBOARDID", ezBoardVO.getBoardId());
 		map.put("v_START", start);
 		map.put("v_END", end);
@@ -618,12 +804,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", end - (start - 1));
 		map.put("limit", start - 1);
-		
+
+		logger.debug("getNoticePostItem ended");
 		return ezBoardDAO.getNoticePostItem(map);
 	}
 
 	@Override
 	public List<HashMap<String, Object>> getBoardListItem(String boardID, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception {
+		logger.debug("getBoardListItem started");
+
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
 				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
@@ -637,12 +826,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		BoardMyFavoriteVO boardMyFavoriteVO = new BoardMyFavoriteVO();
-        boardMyFavoriteVO.setBoardId(boardID);
-        boardMyFavoriteVO.setTenantID(tenantID);
-        
-        String tempString = ezBoardDAO.getBoardApprJoinItem(boardMyFavoriteVO);
-        
+		boardMyFavoriteVO.setBoardId(boardID);
+		boardMyFavoriteVO.setTenantID(tenantID);
+		
+		String tempString = ezBoardDAO.getBoardApprJoinItem(boardMyFavoriteVO);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userID);
 		map.put("v_PBOARDID", boardID);
 		map.put("v_TENANTID", tenantID);
@@ -654,12 +844,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("iv_PORDERBYSUB", orderOption1);
 		map.put("rowCount", endRow - (startRow - 1));
 		map.put("limit", startRow - 1);
-		
+
+		logger.debug("getBoardListItem ended");
 		return ezBoardDAO.getBoardListItem(map);
 	}
 
 	@Override
 	public List<HashMap<String, Object>> getQnABoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, String adminType, int tenantID) throws Exception {
+		logger.debug("getQnABoardListItem started");
+
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
 				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
@@ -673,6 +866,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userID);
 		map.put("v_PBOARDID", boardId);
 		map.put("adminType", adminType);
@@ -684,12 +878,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", tenantID);
 		map.put("rowCount", endRow - (startRow - 1));
 		map.put("limit", startRow - 1);
-		
+
+		logger.debug("getQnABoardListItem ended");
 		return ezBoardDAO.getQnABoardListItem(map);
 	}
 
 	@Override
 	public List<HashMap<String, Object>> getSearchBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchBoardItemList started");
+
 		if (boardListVO.getOrderBySub().length() > 0) {
 			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
 				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
@@ -703,6 +900,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_PBOARDID", boardVO.getBoardId());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
@@ -726,6 +924,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
+		
 		myFavoriteVO.setBoardId(boardVO.getBoardId());
 		myFavoriteVO.setTenantID(boardVO.getTenantID());
 		
@@ -735,11 +934,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			map.put("v_TEMP", " AND A.APPRFLAG = 'Y' ");
 		}
 		
+		logger.debug("getSearchBoardItemList ended");
 		return ezBoardDAO.getSearchBoardItemList(map);
 	}
 
 	@Override
 	public List<HashMap<String, Object>> getThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		logger.debug("getThumbnailList started");
+
 		if (boardListVO.getOrderBySub().length() > 0) {
 			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
 				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
@@ -753,12 +955,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		BoardMyFavoriteVO boardMyFavoriteVO = new BoardMyFavoriteVO();
-        boardMyFavoriteVO.setBoardId(boardVO.getBoardId());
-        boardMyFavoriteVO.setTenantID(boardVO.getTenantID());
-        
-        String tempString = ezBoardDAO.getBoardApprJoinItem(boardMyFavoriteVO);
-        
+		
+		boardMyFavoriteVO.setBoardId(boardVO.getBoardId());
+		boardMyFavoriteVO.setTenantID(boardVO.getTenantID());
+		
+		String tempString = ezBoardDAO.getBoardApprJoinItem(boardMyFavoriteVO);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("tempString", tempString);
@@ -770,12 +974,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
-		
+
+		logger.debug("getThumbnailList ended");
 		return ezBoardDAO.getThumbnailList(map);
 	}
 
 	@Override
 	public List<HashMap<String, Object>> getSearchThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchThumbnailList started");
+
 		if (boardListVO.getOrderBySub().length() > 0) {
 			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
 				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
@@ -789,6 +996,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_PBOARDID", boardVO.getBoardId());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
@@ -813,6 +1021,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
+		
 		myFavoriteVO.setBoardId(boardVO.getBoardId());
 		myFavoriteVO.setTenantID(boardVO.getTenantID());
 		
@@ -821,13 +1030,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (tempString != null && !tempString.equals("")) {
 			map.put("v_TEMP", " AND A.APPRFLAG = 'Y' ");
 		}
-		
+
+		logger.debug("getSearchThumbnailList ended");
 		return ezBoardDAO.getSearchThumbnailList(map);
 	}
 
 	@Override
 	public List<HashMap<String, Object>> getMyNoticePostItem(LoginVO userInfo, String type, int start, int end) throws Exception {
+		logger.debug("getMyNoticePostItem started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
@@ -837,12 +1050,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", end - (start - 1));
 		map.put("limit", start - 1);
-		
+
+		logger.debug("getMyNoticePostItem ended");
 		return ezBoardDAO.getMyNoticePostItem(map);
 	}
 
 	@Override
 	public List<HashMap<String, Object>> getMyBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception {
+		logger.debug("getMyBoardListItem started");
+
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
 				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
@@ -856,6 +1072,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
@@ -865,12 +1082,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", endRow - (startRow - 1));
 		map.put("limit", startRow - 1);
-		
+
+		logger.debug("getMyBoardListItem ended");
 		return ezBoardDAO.getMyBoardListItem(map);
 	}
 
 	@Override
 	public List<HashMap<String, Object>> getMyBoardListItemTemp(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception {
+		logger.debug("getMyBoardListItemTemp started");
+
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
 				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
@@ -884,6 +1104,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
@@ -892,12 +1113,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("iv_PORDERBYSUB", orderOption1);
 		map.put("rowCount", endRow - (startRow - 1));
 		map.put("limit", startRow - 1);
-		
+
+		logger.debug("getMyBoardListItemTemp ended");
 		return ezBoardDAO.getMyBoardListItemTemp(map);
 	}
 
 	@Override
 	public List<HashMap<String, Object>> getApprBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception {
+		logger.debug("getApprBoardListItem started");
+
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
 				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
@@ -911,6 +1135,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
@@ -920,12 +1145,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", endRow - (startRow - 1));
 		map.put("limit", startRow - 1);
-		
+
+		logger.debug("getApprBoardListItem ended");
 		return ezBoardDAO.getApprBoardListItem(map);
 	}
 
 	@Override
 	public List<HashMap<String, Object>> getSearchMyBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchMyBoardItemList started");
+
 		if (boardListVO.getOrderBySub().length() > 0) {
 			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
 				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
@@ -939,6 +1167,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
@@ -952,12 +1181,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
-		
+
+		logger.debug("getSearchMyBoardItemList ended");
 		return ezBoardDAO.getSearchMyBoardItemList(map);
 	}
 
 	@Override
 	public List<HashMap<String, Object>> getSearchMyBoardItemListTemp(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchMyBoardItemListTemp started");
+
 		if (boardListVO.getOrderBySub().length() > 0) {
 			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
 				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
@@ -971,6 +1203,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
@@ -984,44 +1217,60 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
 		
+		logger.debug("getSearchMyBoardItemListTemp ended");
 		return ezBoardDAO.getSearchMyBoardItemListTemp(map);
 	}
 
 	@Override
 	public int getCheckItemID(String itemID, String boardType, String userDeptPath, int tenantID) throws Exception {
+		logger.debug("getCheckItemID started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_ITEMID", itemID);
 		map.put("v_BOARDTYPE", boardType);
 		map.put("v_ACCESSID", userDeptPath);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("getCheckItemID ended");
 		return ezBoardDAO.getCheckItemID(map);
 	}
 
 	@Override
 	public BoardListVO getBrdGetItemInfo(String boardID, String itemID, String multiLang, int tenantID) throws Exception {
+		logger.debug("getBrdGetItemInfo started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemID", itemID);
 		map.put("lang", multiLang);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("getBrdGetItemInfo ended");
 		return ezBoardDAO.getBrdGetItemInfo(map);
 	}
 
 	@Override
 	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID, String multiLang, int tenantID) throws Exception {
+		logger.debug("getBrdGetItemInfoTemp started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pBoardID", boardID);
 		map.put("v_pItemID", itemID);
 		map.put("lang", multiLang);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("getBrdGetItemInfoTemp ended");
 		return ezBoardDAO.getBrdGetItemInfoTemp(map);
 	}
 
 	@Override
 	public BoardListVO getItemInfo(String mode, String itemID, String lang, int tenantID) throws Exception {
+		logger.debug("getItemInfo started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("itemID", itemID);
 		map.put("mode", mode);
 		map.put("lang", commonUtil.getMultiData(lang, tenantID));
@@ -1034,46 +1283,62 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			map.put("tempString", "");
 		}
-		
+
+		logger.debug("getItemInfo ended");
 		return ezBoardDAO.getItemInfo(map);
 	}
 
 	@Override
 	public BoardListVO getCopyItem(String orgItemID, String orgBoardID, int tenantID) throws Exception {
+		logger.debug("getCopyItem started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PORGITEMID", orgItemID);
 		map.put("v_PORGBOARDID", orgBoardID);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("getCopyItem ended");
 		return ezBoardDAO.getCopyItem(map);
 	}
 
 	@Override
 	public List<BoardListVO> getAdjacentItems1(String boardID, String parentWriteDate, String upperItemIDTree, int tenantID) throws Exception {
+		logger.debug("getAdjacentItems1 started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PPARENTWRITEDATE", parentWriteDate);
 		map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getAdjacentItems1 ended");
 		return ezBoardDAO.getAdjacentItems1(map);
 	}
 
 	@Override
 	public List<BoardListVO> getAdjacentItems2(String boardID, String parentWriteDate, int tenantID) throws Exception {
+		logger.debug("getAdjacentItems2 started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PPARENTWRITEDATE", parentWriteDate);
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getAdjacentItems2 ended");
 		return ezBoardDAO.getAdjacentItems2(map);
 	}
 
 	@Override
 	public List<BoardListVO> getAdjacentItems3(String boardID, String parentWriteDate, String itemID, String upperItemIDTree, String previousItemID, int tenantID) throws Exception {
+		logger.debug("getAdjacentItems3 started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PPARENTWRITEDATE", parentWriteDate);
 		map.put("v_PITEMID", itemID);
@@ -1081,35 +1346,47 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PREVIOUSITEMID", previousItemID);
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getAdjacentItems3 ended");
 		return ezBoardDAO.getAdjacentItems3(map);
 	}
 
 	@Override
 	public List<BoardListVO> getAdjacentItems2Photo(String boardID, String parentWriteDate, int tenantID) throws Exception {
+		logger.debug("getAdjacentItems2Photo started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PPARENTWRITEDATE", parentWriteDate);
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getAdjacentItems2Photo ended");
 		return ezBoardDAO.getAdjacentItems2Photo(map);
 	}
 
 	@Override
 	public List<BoardListVO> getAdjacentItems3Photo(String boardID, String parentWriteDate, int tenantID) throws Exception {
+		logger.debug("getAdjacentItems3Photo started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PPARENTWRITEDATE", parentWriteDate);
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getAdjacentItems3Photo ended");
 		return ezBoardDAO.getAdjacentItems3Photo(map);
 	}
 
 	@Override
 	public List<BoardAttachVO> photoViewDB(String itemID, String boardID, int pStartRow, int pEndRow, int tenantID) throws Exception {
+		logger.debug("photoViewDB started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemID", itemID);
 		map.put("v_pBoardID", boardID);
 		map.put("v_pStartRow", pStartRow);
@@ -1117,42 +1394,58 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", tenantID);
 		map.put("rowCount", pEndRow - (pStartRow - 1));
 		map.put("limit", pStartRow - 1);
-		
+
+		logger.debug("photoViewDB ended");
 		return ezBoardDAO.photoViewDB(map);
 	}
 
 	@Override
 	public int photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception {
+		logger.debug("photoViewDBCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemID", itemID);
 		map.put("v_pBoardID", boardID);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("photoViewDBCount ended");
 		return ezBoardDAO.photoViewDBCount(map);
 	}
 
 	@Override
 	public List<BoardAttachVO> photoViewDBAll(String itemID, String boardID, int tenantID) throws Exception {
+		logger.debug("photoViewDBAll started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemID", itemID);
 		map.put("v_pBoardID", boardID);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("photoViewDBAll ended");
 		return ezBoardDAO.photoViewDBAll(map);
 	}
 
 	@Override
 	public List<String> getCopyItemAttach(String orgItemID, int tenantID) throws Exception {
+		logger.debug("getCopyItemAttach started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("itemID", orgItemID);
 		map.put("tenantID", tenantID);
-		
+
+		logger.debug("getCopyItemAttach ended");
 		return ezBoardDAO.getCopyItemAttach(map);
 	}
 
 	@Override
 	public void setAsRead(LoginVO userInfo, String boardID, String itemID) throws Exception {
+		logger.debug("setAsRead started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pBoardID", boardID);
 		map.put("v_pItemID", itemID);
 		map.put("v_pUserID", userInfo.getId());
@@ -1178,25 +1471,34 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				ezBoardDAO.setAsRead2(map);
 			}
 		}
+
+		logger.debug("setAsRead ended");
 	}
 
 	@Override
 	public int getCheckApprUserList(String userID, String itemID, int tenantID) throws Exception {
+		logger.debug("getCheckApprUserList started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userID);
 		map.put("v_PITEMID", itemID);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("getCheckApprUserList ended");
 		return ezBoardDAO.getCheckApprUserList(map);
 	}
 
 	@Override
 	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception {
+		logger.debug("getSearchBoardItemCount started");
+
 		if (boardVO.getSearchQuery().length() > 0) {
 			boardVO.setSearchQuery(" AND " + boardVO.getSearchQuery());
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pBoardID", boardVO.getBoardId());
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
@@ -1208,93 +1510,125 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			map.put("v_PWHEREBOARD", " BOARDID = '" + boardVO.getBoardId() + "' ");
 		}
-		
+
+		logger.debug("getSearchBoardItemCount ended");
 		return ezBoardDAO.getSearchBoardItemCount(map);
 	}
 
 	@Override
 	public int checkApprUserList(String userID, String itemID, int tenantID) throws Exception {
+		logger.debug("checkApprUserList started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userID);
 		map.put("v_PITEMID", itemID);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("checkApprUserList ended");
 		return ezBoardDAO.checkApprUserList(map);
 	}
 
 	@Override
 	public int getMyBoardTotalItemCount(LoginVO userInfo) throws Exception {
+		logger.debug("getMyBoardTotalItemCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getMyBoardTotalItemCount ended");
 		return ezBoardDAO.getMyBoardTotalItemCount(map);
 	}
 
 	@Override
 	public int getMyBoardTotalItemCountTemp(LoginVO userInfo) throws Exception {
+		logger.debug("getMyBoardTotalItemCountTemp started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
-		
+
+		logger.debug("getMyBoardTotalItemCountTemp ended");
 		return ezBoardDAO.getMyBoardTotalItemCountTemp(map);
 	}
 
 	@Override
 	public int getMyNoticePostItemCount(LoginVO userInfo) throws Exception {
+		logger.debug("getMyNoticePostItemCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getMyNoticePostItemCount ended");
 		return ezBoardDAO.getMyNoticePostItemCount(map);
 	}
 
 	@Override
 	public int getSearchMyBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchMyBoardItemCount started");
+
 		if (boardVO.getSearchQuery().length() > 0) {
 			boardVO.setSearchQuery(" AND " + boardVO.getSearchQuery());
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getSearchMyBoardItemCount ended");
 		return ezBoardDAO.getSearchMyBoardItemCount(map);
 	}
 
 	@Override
 	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchMyBoardItemCountTemp started");
+
 		if (boardVO.getSearchQuery().length() > 0) {
 			boardVO.setSearchQuery(" AND " + boardVO.getSearchQuery());
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
-		
+
+		logger.debug("getSearchMyBoardItemCountTemp ended");
 		return ezBoardDAO.getSearchMyBoardItemCountTemp(map);
 	}
 
 	@Override
 	public int getApprBoardTotalItemCount(LoginVO userInfo) throws Exception {
+		logger.debug("getApprBoardTotalItemCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("id", userInfo.getId());
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getApprBoardTotalItemCount ended");
 		return ezBoardDAO.getApprBoardTotalItemCount(map);
 	}
 
 	@Override
 	public String checkForm(String boardID, String mode, int tenantID) throws Exception {
+		logger.debug("checkForm started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PMODE", mode);
 		map.put("v_TENANTID", tenantID);
@@ -1307,15 +1641,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			checkForm = "FALSE";
 		}
-		
+
+		logger.debug("checkForm ended");
 		return checkForm;
 	}
 
 	@Override
 	public String checkBackGroundImage(String boardID, int tenantID) throws Exception {
+		logger.debug("checkBackGroundImage started");
+
 		String check = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("boardID", boardID);
 		map.put("tenantID", tenantID);
 		
@@ -1326,13 +1664,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			check = "FALSE";
 		}
-		
+
+		logger.debug("checkBackGroundImage ended");
 		return check;
 	}
 
 	@Override
 	public String brdCheckIfHasReply(String itemID, int tenantID) throws Exception {
+		logger.debug("brdCheckIfHasReply started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemID", itemID);
 		map.put("v_TENANTID", tenantID);
 		
@@ -1344,13 +1686,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			check = "FALSE";
 		}
-		
+
+		logger.debug("brdCheckIfHasReply ended");
 		return check;
 	}
 
 	@Override
 	public String getNoticePostItemAll(String boardID, int tenantID) throws Exception {
+		logger.debug("getNoticePostItemAll started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("boardID", boardID);
 		map.put("tenantID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
@@ -1363,42 +1709,59 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		for (int i = 0; i < resultList.size(); i++) {
 			sb.append(commonUtil.getQueryResult(resultList.get(i)));
 		}
-		sb.append("</DATA>");
 		
+		sb.append("</DATA>");
+
+		logger.debug("getNoticePostItemAll ended");
 		return sb.toString();
 	}
 
 	@Override
 	public String getParentBoardID(String boardID, int tenantID) throws Exception {
+		logger.debug("getParentBoardID started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("boardID", boardID);
 		map.put("tenantID", tenantID);
-		
+
+		logger.debug("getParentBoardID ended");
 		return ezBoardDAO.getParentBoardID(map);
 	}
 
 	@Override
 	public String getDocPassWord(String itemID, int tenantID) throws Exception {
+		logger.debug("getDocPassWord started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("itemID", itemID);
 		map.put("tenantID", tenantID);	
-		
+
+		logger.debug("getDocPassWord ended");
 		return ezBoardDAO.getDocPassWord(map);
 	}
 
 	@Override
 	public String getOneLinePassWord(String replyID, String itemID, int tenantID) throws Exception {
+		logger.debug("getOneLinePassWord started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("replyID", replyID);
 		map.put("itemID", itemID);
 		map.put("tenantID", tenantID);	
-		
+
+		logger.debug("getOneLinePassWord ended");
 		return ezBoardDAO.getOneLinePassWord(map);
 	}
 
 	@Override
 	public String deleteTempItem1(String mode, String strItemID, int tenantID) throws Exception {
+		logger.debug("deleteTempItem1 started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("itemID", strItemID);
 		map.put("tenantID", tenantID);
 		
@@ -1409,12 +1772,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			if (mode != null && mode.equals("PHOTO")) {
 				BoardListVO boardListVO = new BoardListVO();
+				
 				boardListVO.setItemID(strItemID);
 				boardListVO.setTenantID(tenantID);
 				
 				ezBoardDAO.deleteImageItem(boardListVO);
 			}
 			
+			logger.debug("deleteTempItem1 ended");
 			return "OK";
 		} catch (Exception e) {
 			logger.error("EzBoard :: deleteTempItem");
@@ -1425,10 +1790,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	@Override
 	public String getItemXML(String boardID, String itemID, String lang, String offset, int tenantID) throws Exception {
+		logger.debug("getItemXML started");
+
 		StringBuilder sb = new StringBuilder();
 		
 		if (boardID != null) {
 			Map<String, Object> map = new HashMap<String, Object>();
+			
 			map.put("v_pBoardID", boardID);
 			map.put("lang", commonUtil.getMultiData(lang, tenantID));
 			map.put("v_pItemID", itemID);
@@ -1477,21 +1845,25 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("</NODES>");
 		}
 
+		logger.debug("getItemXML ended");
 		return sb.toString();
 	}
 
 	@Override
 	public String getItemTempXML(String boardID, String itemID, String lang, String offset, int tenantID) throws Exception {
+		logger.debug("getItemTempXML started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pBoardID", boardID);
 		map.put("lang", commonUtil.getMultiData(lang, tenantID));
 		map.put("v_pItemID", itemID);
 		map.put("v_TENANTID", tenantID);
 		
 		BoardListVO itemInfo = ezBoardDAO.getBrdGetItemInfoTemp(map);
-
+		
 		StringBuilder sb = new StringBuilder();
-
+		
 		sb.append("<NODES>");
 		sb.append("<NODE>");
 		sb.append("<ItemID>" + itemInfo.getItemID() + "</ItemID>");
@@ -1513,26 +1885,30 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<copiedItem>" + itemInfo.getCopiedItem() + "</copiedItem>");
 		sb.append("<ExtensionAttribute1>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute1()) + "</ExtensionAttribute1>");
 		sb.append("<ExtensionAttribute2>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute2()) + "</ExtensionAttribute2>");
-    	sb.append("<ExtensionAttribute3>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute3()) + "</ExtensionAttribute3>");
-        sb.append("<ExtensionAttribute4>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute4()) + "</ExtensionAttribute4>");
+		sb.append("<ExtensionAttribute3>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute3()) + "</ExtensionAttribute3>");
+		sb.append("<ExtensionAttribute4>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute4()) + "</ExtensionAttribute4>");
 		sb.append("<ExtensionAttribute5>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute5()) + "</ExtensionAttribute5>");
-        sb.append("<MainContent>" + commonUtil.cleanValue(itemInfo.getMainContent()) + "</MainContent>");   
-        //확장값 추가
-        sb.append("<ExtensionAttribute6>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute6()) + "</ExtensionAttribute6>");
-        sb.append("<ExtensionAttribute7>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute7()) + "</ExtensionAttribute7>");
-        sb.append("<ExtensionAttribute8>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute8()) + "</ExtensionAttribute8>");
-        sb.append("<ExtensionAttribute9>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
-        sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
-        sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
+		sb.append("<MainContent>" + commonUtil.cleanValue(itemInfo.getMainContent()) + "</MainContent>");   
+		//확장값 추가
+		sb.append("<ExtensionAttribute6>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute6()) + "</ExtensionAttribute6>");
+		sb.append("<ExtensionAttribute7>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute7()) + "</ExtensionAttribute7>");
+		sb.append("<ExtensionAttribute8>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute8()) + "</ExtensionAttribute8>");
+		sb.append("<ExtensionAttribute9>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
+		sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
+		sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
 		sb.append("</NODE>");
 		sb.append("</NODES>");
 
+		logger.debug("getItemTempXML ended");
 		return sb.toString();
 	}
 
 	@Override
 	public String setBoardConfig(String userID, int listCount, String preView, int tenantID) throws Exception {
+		logger.debug("setBoardConfig started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_USERID", userID);
 		map.put("v_LISTCOUNT", listCount);
 		map.put("v_PREVIEW", preView);
@@ -1547,6 +1923,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				ezBoardDAO.setBoardConfig2(map);
 			}
 			
+			logger.debug("setBoardConfig ended");
 			return "OK";
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
@@ -1556,7 +1933,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	@Override
 	public String apprItem(String userID, String item, String pMod, int tenantID) throws Exception {
+		logger.debug("apprItem started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_ITEMID", item);
 		map.put("v_MODE", pMod);
 		map.put("v_USERID", userID);
@@ -1569,6 +1949,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				ezBoardDAO.apprItem(map);
 			}
 			
+			logger.debug("apprItem ended");
 			return "OK";
 		} catch (Exception e) {
 			logger.error("EzBoard :: apprItem");
@@ -1578,8 +1959,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	@Override
 	public String deleteOneLineReply(String userID, String replyID, String guBun, int tenantID) throws Exception {
+		logger.debug("deleteOneLineReply started");
+
 		String rtnValue = "";
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_USERINFO_USERID", userID);
 		map.put("v_REPLYID", replyID);
 		map.put("v_GUBUN", guBun);
@@ -1600,12 +1985,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			rtnValue = "FAIL";
 		}
 		
+		logger.debug("deleteOneLineReply ended");
 		return rtnValue;
 	}
 
 	@Override
 	public String checkOneLineOwner(String replyID, String userID, int tenantID) throws Exception {
+		logger.debug("checkOneLineOwner started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_ReplyID", replyID);
 		map.put("v_UserID", userID);
 		map.put("v_TENANTID", tenantID);
@@ -1618,17 +2007,21 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else {
 			resultMessage = "FAIL";
 		}
-		
+
+		logger.debug("checkOneLineOwner ended");
 		return resultMessage;
 	}
 
 	@Override
 	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, String offset, int tenantID) throws Exception {
+		logger.debug("getReservedItemList started");
+
 		if(!(endRow > 0)){
 			endRow = 0;
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PENDROW", endRow);
 		map.put("v_PUSERID", userID);
 		map.put("lang", lang);
@@ -1642,33 +2035,44 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVOs.get(k).setStartDate(commonUtil.getDateStringInUTC(boardListVOs.get(k).getStartDate(), offset, false));
 			boardListVOs.get(k).setEndDate(commonUtil.getDateStringInUTC(boardListVOs.get(k).getEndDate(), offset, false));
 		}
-		
+
+		logger.debug("getReservedItemList ended");
 		return boardListVOs;
 	}
 
 	@Override
 	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, int tenantID) throws Exception {
+		logger.debug("readOneLineReply started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_BoardID", boardID);
 		map.put("v_ItemID", itemID);
 		map.put("v_UserName", userName);
 		map.put("v_TENANTID", tenantID);
-		
+
+		logger.debug("readOneLineReply ended");
 		return ezBoardDAO.readOneLineReply(map);
 	}
 
 	@Override
 	public int getReservedItemListCount(String userID, int tenantID) throws Exception {
+		logger.debug("getReservedItemListCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		logger.debug("getReservedItemListCount ended");
 		return ezBoardDAO.getReservedItemListCount(map);
 	}
 
 	@Override
 	public void brdNewItem(BoardListVO boardListVO) throws Exception {
+		logger.debug("brdNewItem started");
+
 		String tempString = ezBoardDAO.getApprFlag(boardListVO);
 		
 		if (tempString != null && tempString.equals("Y")) {
@@ -1678,10 +2082,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		ezBoardDAO.newItem(boardListVO);
+
+		logger.debug("brdNewItem ended");
 	}
 
 	@Override
 	public void brdNewItemPhoto(BoardListVO boardListVO) throws Exception {
+		logger.debug("brdNewItemPhoto started");
+
 		String tempString = ezBoardDAO.getApprFlag(boardListVO);
 		
 		if (tempString != null && tempString.equals("Y")) {
@@ -1692,40 +2100,58 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		photoSaveDB(boardListVO);
 		ezBoardDAO.newItem(boardListVO);
+
+		logger.debug("brdNewItemPhoto ended");
 	}
 
 	@Override
 	public void brdNewItemTemp(BoardListVO boardListVO) throws Exception {
+		logger.debug("brdNewItemTemp started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pIMAGEID", boardListVO.getImageID());
 		map.put("v_TENANTID", boardListVO.getTenantID());
 		
 		ezBoardDAO.deletePhotoImageItem(map);
 		ezBoardDAO.brdNewItemTemp(boardListVO);
 		ezBoardDAO.newItem(boardListVO);
+
+		logger.debug("brdNewItemTemp ended");
 	}
 
 	@Override
 	public void brdNewItemTempPhoto(BoardListVO boardListVO) throws Exception {
+		logger.debug("brdNewItemTempPhoto started");
+
 		ezBoardDAO.deleteItemTempPhoto(boardListVO);
 		ezBoardDAO.deleteImageItem(boardListVO);
 		ezBoardDAO.brdNewItemTempPhoto(boardListVO);
 		photoSaveDB(boardListVO);
 		ezBoardDAO.newItem(boardListVO);
+
+		logger.debug("brdNewItemTempPhoto ended");
 	}
 
 	@Override
 	public void photoListInsert(BoardListVO boardListVO) throws Exception {
+		logger.debug("photoListInsert started");
+
 		ezBoardDAO.photoListInsert(boardListVO);
+
+		logger.debug("photoListInsert ended");
 	}
 
 	@Override
 	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception {
+		logger.debug("brdUpdateItem started");
+
 		ezBoardDAO.brdUpdateItem(boardListVO);
 		
 		if (boardListVO.getReadFlag().equals("Y")) {
 			ezBoardDAO.setInitReadCount(boardListVO);
 		}
+		
 		ezBoardDAO.setApprFlag(boardListVO);
 		ezBoardDAO.deleteBoardItemRead(boardListVO);
 		
@@ -1734,13 +2160,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		ezBoardDAO.newItem(boardListVO);
+
+		logger.debug("brdUpdateItem ended");
 	}
 
-	public void photoSaveDB(BoardListVO boardListVO) throws Exception{
+	public void photoSaveDB(BoardListVO boardListVO) throws Exception {
+		logger.debug("photoSaveDB started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		String strFilePath = "";
 		
-		for(int i = 0; i < boardListVO.getImageCount(); i++){
+		for (int i = 0; i < boardListVO.getImageCount(); i++) {
 			strFilePath = boardListVO.getExtensionAttribute5().split("\\|")[i];
 			File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
 			strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().split("\\|")[i].replace("tempUploadFile", "");
@@ -1757,7 +2188,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			map.put("v_pWriterName", boardListVO.getWriterName());
 			map.put("v_pWriterDeptID", boardListVO.getWriterDeptID());
 			map.put("v_pFilePath", strFilePath);
- 			map.put("v_pWriteDate", boardListVO.getWriteDate());
+			map.put("v_pWriteDate", boardListVO.getWriteDate());
 			map.put("v_TENANTID", boardListVO.getTenantID());
 			map.put("mainImageID", boardListVO.getMainImageID());
 			
@@ -1771,10 +2202,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			ezBoardDAO.deletePhotoImageItem(map);
 			ezBoardDAO.photoSaveDB(map);
 		}
+
+		logger.debug("photoSaveDB ended");
 	}
 
 	public void saveAttachInfo(String strItemID, int seqNum, String filePath, long fileSize, String fileName, int tenantID) throws Exception {
+		logger.debug("saveAttachInfo started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_STRITEMID", strItemID);
 		map.put("seqNum", seqNum);
 		map.put("v_STRATTACHMENTS", filePath);
@@ -1783,11 +2219,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", tenantID);
 		
 		ezBoardDAO.saveAttachInfo(map);
+
+		logger.debug("saveAttachInfo ended");
 	}
 	
 	@Override
 	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception {
+		logger.debug("saveOneLineReply started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("PITEMID", itemID);
 		map.put("PREPLYID", replyID);
 		map.put("PBOARDID", boardID);
@@ -1800,9 +2241,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss.SSS"));
 		
 		ezBoardDAO.saveOneLineReply(map);
+
+		logger.debug("saveOneLineReply ended");
 	}
 	
 	public String getThumbListXML(LoginVO userInfo, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption) throws Exception {
+		logger.debug("getThumbListXML started");
+
 		BoardListVO boardListVO = new BoardListVO();
 		BoardVO ezBoardVO = new BoardVO();
 		ezBoardVO.setBoardType(pBoardType);
@@ -1811,9 +2256,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
 		myFavoriteVO.setBoardId(pBoardID);
 		myFavoriteVO.setUserId(userInfo.getId());
-        myFavoriteVO.setType(pBoardType);
-        myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
-        myFavoriteVO.setTenantID(userInfo.getTenantId());
+		myFavoriteVO.setType(pBoardType);
+		myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
+		myFavoriteVO.setTenantID(userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
 		String orderOption1 = "";
@@ -1829,9 +2274,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		//int boardCount = getThumbNailCount(myFavoriteVO);
 		int boardCount = ezBoardDAO.getPhotoCount(myFavoriteVO);
 		//BoardConfigVO boardConfigVO = getPersonalCount(userInfo);
-        //int personalCount = boardConfigVO.getListCount();
-        int personalCount = 5;
-        
+		//int personalCount = boardConfigVO.getListCount();
+		int personalCount = 5;
+		
 		sb.append("<DOCLIST>");
 		sb.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
 		sb.append("<PAGECNT>" + boardCount + "</PAGECNT>");
@@ -1876,8 +2321,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				
 				if (fieldName.equals("WRITEDATE")) {
 					fieldValue =(String)boardList.get(j).get(fieldName);
-                	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
-                	fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false);
+					fieldValue = fieldValue.substring(0, fieldValue.length()-3);
+					fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false);
 				} else {
 					fieldValue = commonUtil.cleanValue(String.valueOf(boardList.get(j).get(fieldName)));
 				}
@@ -1886,37 +2331,45 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				
 				if (i == 0) {
 					sb.append("<DATA1>" + boardList.get(j).get("BOARDID") + "</DATA1>");
-                	sb.append("<DATA2>" + boardList.get(j).get("ITEMID") + "</DATA2>");
-        			sb.append("<DATA3>" + boardList.get(j).get("WRITERID") + "</DATA3>");
-        			String nowDate = commonUtil.getTodayUTCTime("");
-				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
-				    
+					sb.append("<DATA2>" + boardList.get(j).get("ITEMID") + "</DATA2>");
+					sb.append("<DATA3>" + boardList.get(j).get("WRITERID") + "</DATA3>");
+					String nowDate = commonUtil.getTodayUTCTime("");
+					nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+					
 					if (boardList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
 						sb.append("<DATA4>Y</DATA4>");
 					} else {
 						sb.append("<DATA4>N</DATA4>");
 					}
+					
 					sb.append("<DATA5>" + commonUtil.cleanValue((String)boardList.get(j).get("FILEPATH")) + "</DATA5>");
 					sb.append("<DATA6>" + commonUtil.cleanValue((String)boardList.get(j).get("MAINCONTENT")) + "</DATA6>");
 				}
+				
 				sb.append("</CELL>");
 			}
+			
 			sb.append("</ROW>");
 		}
 		
 		sb.append("</ROWS>");
 		sb.append("</LISTVIEWDATA>");
 		sb.append("</DOCLIST>");
-		
+
+		logger.debug("getThumbListXML ended");
 		return sb.toString();
 	}
 
 	@Override
 	public String portalPageItemEdit(String boardID, int tenantID) throws Exception {
+		logger.debug("portalPageItemEdit started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("boardID", boardID);
 		map.put("tenantID", tenantID);
-		
+
+		logger.debug("portalPageItemEdit ended");
 		return ezBoardDAO.portalPageItemEdit(map);
 	}
 
@@ -1925,131 +2378,141 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	 */
 	@Override
 	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang, int tenantID) throws Exception {
-		int count = 0;
-        String strForbiddenBoardIDList = "";
-        String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
-        
-        if (retValue != null && retValue.length() > 30) {
-    		return retValue;
-        }
-        
-        String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID, tenantID) + ",everyone";
-        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);        
-        List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
-        
-        for (int i = 0; i < pAccessID.split(",").length; i++) {
-            String boardID = "";
-            
-            if (pMode == 0) {
-            	brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, tenantID);            
-            } else {
-            	List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, tenantID);
-            	
-            	if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
-            		for (BoardTreeVO k : tempBrdBoardTreeList) {
-            			if (brdBoardTreeList.size() > 0) {
-            				int tempCnt = 0;
-            				
-            				for (BoardTreeVO h : brdBoardTreeList) {
-            					if (h.equals(k)) {
-            						tempCnt++;
-            					}
-            				}
-            				
-            				if (tempCnt == 0) {
-            					brdBoardTreeList.add(k);
-            				}
-            			} else {
-            				brdBoardTreeList.add(k);
-            			}
-            		}
-            	}
-            }
-            
-            List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID, tenantID);
-            
-            if (boardTreeList.size() > 0) {
-                for (int r = 0; r < boardTreeList.size(); r++) {
-            		boardID = boardTreeList.get(r).getBoardId().split(",")[0];
-        			strForbiddenBoardIDList += boardID.trim();
-                }
-            }
-        }
+		logger.debug("getBoardTree started");
 
-        StringBuilder result = new StringBuilder();
-        
-        if (pSubFlag == 1) {
-        	result.append("<NODES>");
-        } else {
-        	result.append("<TREEVIEWDATA>");
-        }
-        //오름차순으로 정렬!
-        Collections.sort(brdBoardTreeList, new Comparator<BoardTreeVO>() {
+		int count = 0;
+		String strForbiddenBoardIDList = "";
+		String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
+		
+		if (retValue != null && retValue.length() > 30) {
+			return retValue;
+		}
+		
+		String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID, tenantID) + ",everyone";
+		String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
+		
+		List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
+		
+		for (int i = 0; i < pAccessID.split(",").length; i++) {
+			String boardID = "";
+			
+			if (pMode == 0) {
+				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, tenantID);            
+			} else {
+				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, tenantID);
+				
+				if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
+					for (BoardTreeVO k : tempBrdBoardTreeList) {
+						if (brdBoardTreeList.size() > 0) {
+							int tempCnt = 0;
+							
+							for (BoardTreeVO h : brdBoardTreeList) {
+								if (h.equals(k)) {
+									tempCnt++;
+								}
+							}
+							
+							if (tempCnt == 0) {
+								brdBoardTreeList.add(k);
+							}
+						} else {
+							brdBoardTreeList.add(k);
+						}
+					}
+				}
+			}
+			
+			List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID, tenantID);
+			
+			if (boardTreeList.size() > 0) {
+				for (int r = 0; r < boardTreeList.size(); r++) {
+					boardID = boardTreeList.get(r).getBoardId().split(",")[0];
+					strForbiddenBoardIDList += boardID.trim();
+				}
+			}
+		}
+		
+		StringBuilder result = new StringBuilder();
+		
+		if (pSubFlag == 1) {
+			result.append("<NODES>");
+		} else {
+			result.append("<TREEVIEWDATA>");
+		}
+		
+		//오름차순으로 정렬!
+		Collections.sort(brdBoardTreeList, new Comparator<BoardTreeVO>() {
 			@Override
 			public int compare(BoardTreeVO o1, BoardTreeVO o2) {
 				return Integer.parseInt(o1.getTreeViewOrder()) > Integer.parseInt(o2.getTreeViewOrder()) ? 1 : 0;
 			}
 		});
-        
-        for (int i = 0; i < brdBoardTreeList.size(); i++) {
-        	if (strRollInfo != null && strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
-                if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) {
-                	continue;
-                }
-            }
-        	result.append("<NODE>");
-        	if (pRootBoardID.equals("top")) {
-        		if (pStrLang.equals("")) {
-        			result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
-        		} else {
-        			result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
-        		}        	
-        	} else {
-        		if (pStrLang.equals("")) {
-        			result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
-        		} else {
-        			result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
-        		}        	
-        	}
-            result.append("<STYLE><![CDATA[]]></STYLE>");
-            result.append("<DATA1>" + brdBoardTreeList.get(i).getBoardId() + "</DATA1>");
-            
-            if (pRootBoardID.equals("top")) {
-            	if (pStrLang.equals("")) {
-            		result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
-            	} else {
-            		result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
-            	}            
-            } else {
-            	if (pStrLang.equals("")) {
-            		result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
-            	} else {
-            		result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
-            	}            
-            }
-            result.append("<DATA3>" + pRootBoardID + "</DATA3>");
-            result.append("<DATA4>" + brdBoardTreeList.get(i).getBoardColor() + "</DATA4>");
-            result.append("<DATA5>" + brdBoardTreeList.get(i).getGuBun() + "</DATA5>"); //20070228 포토게시판관련으로 추가함
-            result.append("<EXPANDED>FALSE</EXPANDED>");
-            result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID) + "</ISLEAF>");
+		
+		for (int i = 0; i < brdBoardTreeList.size(); i++) {
+			if (strRollInfo != null && strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
+				if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) {
+					continue;
+				}
+			}
+			
+			result.append("<NODE>");
+			
+			if (pRootBoardID.equals("top")) {
+				if (pStrLang.equals("")) {
+					result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
+				} else {
+					result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
+				}        	
+			} else {
+				if (pStrLang.equals("")) {
+					result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
+				} else {
+					result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
+				}        	
+			}
+			
+			result.append("<STYLE><![CDATA[]]></STYLE>");
+			result.append("<DATA1>" + brdBoardTreeList.get(i).getBoardId() + "</DATA1>");
+			
+			if (pRootBoardID.equals("top")) {
+				if (pStrLang.equals("")) {
+					result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
+				} else {
+					result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
+				}            
+			} else {
+				if (pStrLang.equals("")) {
+					result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
+				} else {
+					result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
+				}            
+			}
+			
+			result.append("<DATA3>" + pRootBoardID + "</DATA3>");
+			result.append("<DATA4>" + brdBoardTreeList.get(i).getBoardColor() + "</DATA4>");
+			result.append("<DATA5>" + brdBoardTreeList.get(i).getGuBun() + "</DATA5>"); //20070228 포토게시판관련으로 추가함
+			result.append("<EXPANDED>FALSE</EXPANDED>");
+			result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID) + "</ISLEAF>");
+			
+			if (count == 0 && pSubFlag != 1) {
+				result.append("<SELECT>TRUE</SELECT>");
+			}
+			
+			result.append("</NODE>");
+			
+			count++;
+		}
+		
+		if (pSubFlag == 1) {
+			result.append("</NODES>");
+		} else {
+			result.append("</TREEVIEWDATA>");
+		}
+		
+		ezBoardAdminService.getBoardTree_Set_D(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
+		ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, result.toString(), tenantID);
 
-            if (count == 0 && pSubFlag != 1) {
-            	result.append("<SELECT>TRUE</SELECT>");
-            }
-            result.append("</NODE>");
-            
-            count++;
-        }
-        
-        if (pSubFlag == 1) {
-        	result.append("</NODES>");
-        } else {
-        	result.append("</TREEVIEWDATA>");
-        }
-        
-        ezBoardAdminService.getBoardTree_Set_D(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
-        ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, result.toString(), tenantID);
-
+		logger.debug("getBoardTree ended");
         return result.toString();
 	}
 
@@ -2057,14 +2520,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	 * 게시판 트리하위여부 표출 Method
 	 */
 	public String checkIfLeafBoard(String pBoardID, int tenantID) {
+		logger.debug("checkIfLeafBoard started");
+
 		try {
-	        int ret = ezBoardAdminService.checkIfLeafBoard(pBoardID, tenantID);
-	        
-	        if (ret > 0) {
-	        	return "FALSE";
-	        } else {
-	        	return "TRUE";
-	        }
+			int ret = ezBoardAdminService.checkIfLeafBoard(pBoardID, tenantID);
+			
+			if (ret > 0) {
+				logger.debug("checkIfLeafBoard ended");
+				return "FALSE";
+			} else {
+				logger.debug("checkIfLeafBoard ended");
+				return "TRUE";
+			}
 		} catch(Exception ex) {
 			return "FALSE";
 		}
@@ -2077,6 +2544,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		StringBuilder resultXML = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("itemID", boardItemVO.getItemID());
 		map.put("tenantID", boardItemVO.getTenantID());
 		
@@ -2121,7 +2589,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		resultXML.append("</NODES>");
 
 		logger.debug("getItemAttachmentXMLRetrans ended");
-		
 		return resultXML.toString();
 	}
 
@@ -2139,7 +2606,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 
 		logger.debug("getProperSizeDisplay ended");
-		
 		return resultSize;
 	}
 
@@ -2150,6 +2616,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		StringBuilder resultXML = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("itemID", boardItemVO.getItemID());
 		map.put("tenantID", boardItemVO.getTenantID());
 		
@@ -2170,28 +2637,34 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		resultXML.append("</NODES>");
 
 		logger.debug("getItemAttachmentXML ended");
-		
 		return resultXML.toString();
 	}
 
 	@Override
-	public List<BoardAccessVO> getPostNotiMailUserList(String boardID, String primary, int tenantID)
-			throws Exception {
+	public List<BoardAccessVO> getPostNotiMailUserList(String boardID, String primary, int tenantID) throws Exception {
+		logger.debug("getPostNotiMailUserList started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("boardID", boardID);
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
-		
+
+		logger.debug("getPostNotiMailUserList ended");
 		return ezBoardDAO.getPostNotiMailUserList(map);
 	}
 
 	@Override
 	public int getItemViewNew(String boardID, String itemID, int tenantID) throws Exception {
+		logger.debug("getItemViewNew started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("boardID", boardID);
 		map.put("itemID", itemID);
 		map.put("tenantID", tenantID);
-		
+
+		logger.debug("getItemViewNew ended");
 		return ezBoardDAO.getItemViewNew(map);
 	}
 
@@ -2200,13 +2673,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getReplyNoticeMail started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("boardID", boardID);
 		map.put("itemTreeID", itemTreeID.substring(0, 38));
 		map.put("lang", commonUtil.getMultiData(lang, tenantID));
 		map.put("tenantID", tenantID);
 		
 		logger.debug("getReplyNoticeMail ended");
-		
 		return ezBoardDAO.getReplyNoticeMail(map);
 	}
 
@@ -2215,12 +2688,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getSendApprMailList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("boardID", boardID);
 		map.put("lang", commonUtil.getMultiData(lang, tenantID));
 		map.put("tenantID", tenantID);
 
 		logger.debug("getSendApprMailList ended");
-		
 		return ezBoardDAO.getSendApprMailList(map);
 	}
 
@@ -2283,6 +2756,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				} else {
 					boardListVO.setFileContent(fileContents[k]);
 				}
+				
 				boardListVO.setImageNames(imageName[k].trim());
 				
 				photoListInsert(boardListVO);
@@ -2295,28 +2769,37 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 
 		logger.debug("saveImageItem ended");
-		
 		return resultValue;
 	}
 	
 	@Override
 	public List<BoardListVO> getUnreadItems(String pUserID, String pBoardID, int pMaxCount, int tenantID) throws Exception {
+		logger.debug("getUnreadItems started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PMAXCOUNT", pMaxCount);
 		map.put("v_PUSERID", pUserID);
 		map.put("v_PBOARDID", pBoardID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
+
+		logger.debug("getUnreadItems ended");
 		return ezBoardDAO.getUnreadItems(map);
 	}
 	
 	@Override
 	public int getUnreadItemsCount(String userID, String boardID, int tenantID) throws Exception {
+		logger.debug("getUnreadItemsCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userID);
 		map.put("v_PBOARDID", boardID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
+
+		logger.debug("getUnreadItemsCount ended");
 		return ezBoardDAO.getUnreadItemsCount(map);
 	}
 
@@ -2329,6 +2812,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			BoardListVO boardListVO = new BoardListVO();
 
 			boolean saveMHTResult = false;
+			
 			boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
 			boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
 			boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
@@ -2439,91 +2923,98 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}		
 		
 		logger.debug("newItemPhoto ended");
-		
 		return result;
 	}
 
 	/**
 	 * 게시판 게시물 첨부파일저장 실행 Method
 	 */
-	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath, int tenantID) throws Exception{
-        long fileSize = 0;
-        boolean rtnValue = false;
-        String filePath = "";
-        String filePath2 = "";
-        String fileName = "";
-        
-        try {
-        	if (!strAttachments.substring(strAttachments.length() - 1).equals("|")) {
-        		strAttachments += "|";
-        	}
-        	
-        	for (int i = 0; i < strAttachments.split("\\|").length; i++) {
-        		if (strType.equals("BOARD")) {
-        			if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
-        				filePath = strAttachments.split("\\|")[i];
-        			} else {
-        				filePath = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
-        			}
-        			File file = new File(realPath + filePath);
-        			fileSize = file.length();
-        			
-        			if (strAttachments.split("\\|")[i].indexOf("tempUploadFile") > -1) {
-        				filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split("\\|")[i].replace("tempUploadFile", "");
-        				
-        				File fileinfo = new File(realPath + filePath2);
-        				
-        				if (!fileinfo.exists()) {
-        					FileUtils.moveFile(file, fileinfo);
-        				}
-        			} else if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
-        				filePath2 = strAttachments.split("\\|")[i];
-        			} else {
-        				filePath2 = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
-        			}
-        			file = null;
-        		} else {
-        			File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2]);
-        			fileSize = file.length();
-        			
-        			filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2];
-        			
-        			File fileinfo = new File(realPath + filePath2);
-        			
-        			if (!fileinfo.exists()) {
-        				FileUtils.moveFile(file, fileinfo);
-        				file.delete();
-        			}
-        			file = null;
-        		}
-        		
-        		fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
-        		
-        		saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
-        	}
-        	
-        	rtnValue = true;
+	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath, int tenantID) throws Exception {
+		logger.debug("saveAttachmentsInfo started");
+
+		long fileSize = 0;
+		boolean rtnValue = false;
+		String filePath = "";
+		String filePath2 = "";
+		String fileName = "";
+		
+		try {
+			if (!strAttachments.substring(strAttachments.length() - 1).equals("|")) {
+				strAttachments += "|";
+			}
+			
+			for (int i = 0; i < strAttachments.split("\\|").length; i++) {
+				if (strType.equals("BOARD")) {
+					if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
+						filePath = strAttachments.split("\\|")[i];
+					} else {
+						filePath = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
+					}
+					
+					File file = new File(realPath + filePath);
+					fileSize = file.length();
+					
+					if (strAttachments.split("\\|")[i].indexOf("tempUploadFile") > -1) {
+						filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split("\\|")[i].replace("tempUploadFile", "");
+						
+						File fileinfo = new File(realPath + filePath2);
+						
+						if (!fileinfo.exists()) {
+							FileUtils.moveFile(file, fileinfo);
+						}
+					} else if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
+						filePath2 = strAttachments.split("\\|")[i];
+					} else {
+						filePath2 = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
+					}
+					
+					file = null;
+				} else {
+					File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2]);
+					fileSize = file.length();
+					
+					filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2];
+					
+					File fileinfo = new File(realPath + filePath2);
+					
+					if (!fileinfo.exists()) {
+						FileUtils.moveFile(file, fileinfo);
+						file.delete();
+					}
+					
+					file = null;
+				}
+				
+				fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
+				
+				saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
+			}
+			
+			rtnValue = true;
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnValue = false;
 		}
-        
+
+		logger.debug("saveAttachmentsInfo ended");
         return rtnValue;
 	}
 	
 	/**
 	 * 게시판 mht저장 실행 Method
 	 */
-	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType, String realPath) throws Exception{
+	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType, String realPath) throws Exception {
+		logger.debug("saveMHT started");
+
 		String docPath = "";
 		String mhtFilePath = "";
 		boolean ret = true;
 		
-        if (strType.equals("BOARD")) {
-            strHTML = strHTML.replace("'", "''");
-        }
-        
+		if (strType.equals("BOARD")) {
+			strHTML = strHTML.replace("'", "''");
+		}
+		
 		docPath = strFilePath + commonUtil.separator + strBoardID;
 		mhtFilePath = strMHTFilename + ".mht";
 		
@@ -2537,7 +3028,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			file.mkdirs();
 			
 			if (!_flag) {
-			    throw new IOException("Directory creation Failed ");
+				throw new IOException("Directory creation Failed ");
 			}
 		}
 		
@@ -2562,11 +3053,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			if(bos != null){
 				bos.close();
 			}
+			
 			if(stream != null){
 				stream.close();
 			}
 		}
-		
+
+		logger.debug("saveMHT ended");
 		return ret;
 	}
 	
@@ -2574,6 +3067,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	 * 게시판 9999년도부터 뒤로 날짜계산 표출 Method
 	 */
 	public String getReverseDateNow() {
+		logger.debug("getReverseDateNow started");
+
 		StringBuilder reverseDate = new StringBuilder();
 		Calendar cal = Calendar.getInstance();
 		
@@ -2583,7 +3078,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		reverseDate.append(33 - cal.get(Calendar.HOUR));
 		reverseDate.append(69 - cal.get(Calendar.MINUTE));
 		reverseDate.append(69 - cal.get(Calendar.SECOND));
-		
+
+		logger.debug("getReverseDateNow ended");
 		return reverseDate.toString();
 	}
 
@@ -2592,12 +3088,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getContentInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("type", type);
 		map.put("docID", docID);
 		map.put("tenantID", tenantID);
 
 		logger.debug("getContentInfo ended");
-		
 		return ezBoardDAO.getContentInfo(map);
 	}
 
@@ -2606,12 +3102,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getAttachInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("itemID", itemID);
 		map.put("attID", attID);
 		map.put("tenantID", tenantID);
 
 		logger.debug("getAttachInfo ended");
-		
 		return ezBoardDAO.getAttachInfo(map);
 	}
 
@@ -2665,7 +3161,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			
 			logger.debug("deleteItem ended");
-			
 			return "OK";
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -2680,7 +3175,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		List<BoardDeleteItemVO> expiredItemList = ezBoardDAO.getExpiredItems();
 
 		logger.debug("getExpiredItems ended");
-		
 		return expiredItemList;
 	}
 
@@ -2760,6 +3254,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("deleteReservedBoardItem started");
 
 		List<BoardDeleteItemVO> boardItemList = ezBoardDAO.getDeleteReservedBoardItem();
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		for (BoardDeleteItemVO k : boardItemList) {
@@ -2844,6 +3339,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "move");
 			
 			List<String> attachmentList = getCopyItemAttach(orgItemID, userInfo.getTenantId());
+			
 			String attachments = "";
 			
 			if (attachmentList != null) {
@@ -2896,44 +3392,48 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 
 		logger.debug("moveItem ended");
-		
 		return result;
 	}
 	
-	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode, int tenantID) throws Exception{
+	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode, int tenantID) throws Exception {
+		logger.debug("copyAttachments started");
+
 		String orgFilePath = "";
 		String destFilePath = "";
 		String returnString = "";
 		
-        for (int i = 0; i < attachmentList.size(); i++) {
-            orgFilePath = attachmentList.get(i);
-            orgFilePath = path.replace(commonUtil.getUploadPath("upload_board.ROOT", tenantID), "") + orgFilePath;
-            
-            String fileName = "";
-            fileName = attachmentList.get(i).substring(attachmentList.get(i).lastIndexOf(commonUtil.separator + "uploadFile" + commonUtil.separator) + 12).substring(39);
-            fileName = "{" + UUID.randomUUID() + "}_" + fileName;
+		for (int i = 0; i < attachmentList.size(); i++) {
+			orgFilePath = attachmentList.get(i);
+			orgFilePath = path.replace(commonUtil.getUploadPath("upload_board.ROOT", tenantID), "") + orgFilePath;
+			
+			String fileName = "";
+			fileName = attachmentList.get(i).substring(attachmentList.get(i).lastIndexOf(commonUtil.separator + "uploadFile" + commonUtil.separator) + 12).substring(39);
+			fileName = "{" + UUID.randomUUID() + "}_" + fileName;
+			
+			destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
+			
+			if (returnString.equals("")) {
+				returnString += destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
+			} else {
+				returnString = returnString + "|" + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
+			}
+			//move 이면 지우고 옮기기
+			if (mode.equals("copy")) {
+				FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
+			} else {
+				FileUtils.moveFile(new File(orgFilePath), new File(destFilePath));
+			}
+		}
 
-            destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
-
-            if (returnString.equals("")) {
-            	returnString += destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
-            } else {
-            	returnString = returnString + "|" + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
-            }
-            //move 이면 지우고 옮기기
-            if (mode.equals("copy")) {
-            	FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
-            } else {
-            	FileUtils.moveFile(new File(orgFilePath), new File(destFilePath));
-            }
-        }
-        
+		logger.debug("copyAttachments ended");
         return returnString;
 	}
 	
-	public String insertNewItem(Document doc, String pMode, String realPath, LoginVO userInfo) throws Exception{
-		BoardListVO boardListVO = new BoardListVO();
+	public String insertNewItem(Document doc, String pMode, String realPath, LoginVO userInfo) throws Exception {
+		logger.debug("insertNewItem started");
 
+		BoardListVO boardListVO = new BoardListVO();
+		
 		boolean saveMHTResult = false;
 		boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
 		boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
@@ -2976,8 +3476,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (pMode.equals("reply")) {
 			boardListVO.setUpperItemIDTree(boardListVO.getUpperItemIDTree() + getReverseDateNow() + boardListVO.getItemID());
 		}
+		
 		boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
-
+		
 		if (!pMode.equals("copy")) {
 			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("@r!n@", "\r\n"));
 			
@@ -3057,7 +3558,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		//구분 추가
 		boardListVO.setGuBun(doc.getElementsByTagName("GUBUN").item(0).getTextContent());
-
+		
 		if (pMode.equals("modify")) {
 			brdUpdateItem(boardListVO, "BOARD");
 		} else if (pMode.equals("temp")) {
@@ -3070,34 +3571,41 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath, userInfo.getTenantId())) {
 				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
 			}
+			
 			boardListVO.setHasAttach("1");
 		} else {
 			boardListVO.setHasAttach("0");
 		}
-		
+
+		logger.debug("insertNewItem ended");
 		return "OK";
 	}
 	
-	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path, String mode) throws Exception{
+	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path, String mode) throws Exception {
+		logger.debug("copyFiles started");
+
 		String orgFilePath = "";
-        String destFilePath = "";
+		String destFilePath = "";
+		
+		orgFilePath = path + commonUtil.separator + orgBoardID + commonUtil.separator + "doc" + commonUtil.separator + orgItemID + ".mht";
+		destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "doc" + commonUtil.separator + destItemID + ".mht";
+		
+		File file = new File(path + commonUtil.separator + destBoardID);
+		
+		if (!file.exists()) {
+			file.mkdir();
+			new File(path + commonUtil.separator + destBoardID + commonUtil.separator + "doc").mkdir();
+			new File(path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile").mkdir();
+		}
+		
+		//move 이면 지우고 옮기기
+		if (mode.equals("copy")) {
+			FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
+		} else {
+			FileUtils.moveFile(new File(orgFilePath), new File(destFilePath));
+		}
 
-        orgFilePath = path + commonUtil.separator + orgBoardID + commonUtil.separator + "doc" + commonUtil.separator + orgItemID + ".mht";
-        destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "doc" + commonUtil.separator + destItemID + ".mht";
-
-        File file = new File(path + commonUtil.separator + destBoardID);
-        
-        if (!file.exists()) {
-            file.mkdir();
-            new File(path + commonUtil.separator + destBoardID + commonUtil.separator + "doc").mkdir();
-            new File(path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile").mkdir();
-        }
-        //move 이면 지우고 옮기기
-        if (mode.equals("copy")) {
-        	FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
-        } else {
-        	FileUtils.moveFile(new File(orgFilePath), new File(destFilePath));
-        }
+		logger.debug("copyFiles ended");
 	}
 
 	@Override
@@ -3207,7 +3715,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 
 		logger.debug("copyItem ended");
-		
 		return result;
 	}
 
@@ -3235,4 +3742,36 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}	
 	//end
 	
+	//2017.12.29 강민수92
+	@Override
+	public String getOneLineReplyCount(String boardID, String itemID, int tenantID) throws Exception {
+		logger.debug("getOneLineReplyCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+
+		logger.debug("getOneLineReplyCount ended");
+		return ezBoardDAO.getOneLineReplyCount(map);
+	}
+
+	//2018.02.05 김보미
+	@Override
+	public int getReaderListCount(String boardID, String itemID, String userID, String lang, int tenantID) throws Exception {
+		logger.debug("getReaderListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("userID", userID);
+		map.put("lang", lang);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("getReaderListCount ended");
+		return ezBoardDAO.getReaderListCount(map);
+	}
+
 }

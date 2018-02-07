@@ -248,6 +248,7 @@
 	        	var szUrl = "/ezQuestion/qstList.do?brdID=${brdID}&brdNm=${brdNm}&brdPostterm=${qstReuseQuestionVO.postTerm}"
 	        }
 	        window.location.href = szUrl; 
+	        window.parent.frames["left"].toggleQuestionList();
 	    } 
 	    function menu_SelectRange() {
 	         if (CrossYN()) {

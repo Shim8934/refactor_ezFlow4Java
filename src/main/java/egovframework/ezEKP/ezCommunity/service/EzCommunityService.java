@@ -38,7 +38,7 @@ public interface EzCommunityService {
 
 	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
 	
-	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
+	public StringBuffer getReaderList(String pBoardID, String pItemID, String string, String string2, int tenantID, int pageNum, int perCount, String offset) throws Exception;
 
 	public List<CommunityCPollResponseVO> pollETCTableGet(String questionID, int tenantID) throws Exception;
 	
@@ -357,4 +357,8 @@ public interface EzCommunityService {
 	public void deleteReservedBoardItem(String realPath)throws Exception;
 
 	public void sendReplyNoticeMail(String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception;
+
+	public String getOneLineReplyCount(String pBoardID, String pItemID,int tenantId) throws Exception;
+	
+	public int getReaderListCount(String boardID, String itemID, String userID, int tenantID) throws Exception;
 }

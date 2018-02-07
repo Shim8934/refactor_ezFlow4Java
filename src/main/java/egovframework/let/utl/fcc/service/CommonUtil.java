@@ -84,6 +84,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @Component
 public class CommonUtil {
 	
+	public static final String PT_MAIL = "mail";
 	public static final String PT_BASIC = "basic";
 	public static final String PT_STANDARD = "standard";
 	
@@ -416,7 +417,7 @@ public class CommonUtil {
 	
 	public Document convertStringToDocument(String xmlStr) {
 		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
-		
+														
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
         DocumentBuilder builder;
         Document doc = null;
@@ -853,6 +854,7 @@ public class CommonUtil {
 	 * Package Type을 반환
 	 *   - standard : 모든 모듈 포함
 	 *   - basic : 메일, 주소록, 일정, 게시판, 직원조회만 포함
+	 *   - mail : 메일, 주소록만 포함
 	 * @param tenantId
 	 * @return
 	 * @throws Exception

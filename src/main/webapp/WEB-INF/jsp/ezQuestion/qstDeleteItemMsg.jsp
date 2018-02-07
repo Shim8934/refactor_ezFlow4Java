@@ -33,8 +33,17 @@
  		            }
  		        }
 
+ 		        var originHeight = document.body.scrollHeight;
+ 		       	var changedHeight;
+ 		        
  		        TITLE.innerHTML = RetValue["TITLE"];
  		        WRITER.innerHTML = RetValue["WRITER"];
+ 		        
+ 		        changedHeight = document.body.scrollHeight;
+ 		        
+ 		        if (window.innerHeight < changedHeight) {
+	  		    	window.resizeTo(window.outerWidth, window.outerHeight + (changedHeight - originHeight));
+ 		        }
 		    }
 		    function btn_Delete() {
 		        var xmlHttp = createXMLHttpRequest();

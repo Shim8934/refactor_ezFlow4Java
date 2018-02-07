@@ -280,8 +280,8 @@ function tableListControl_Week()
         var weekStartDatename = datanameweek(weekStartDate.getFullYear(), weekStartDate.getMonth() + 1, weekStartDate.getDate(), "HEARDER");
         var weekEndDatename = datanameweek(weekEndDate.getFullYear(), weekEndDate.getMonth() + 1, weekEndDate.getDate(), "HEARDER");
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
-        document.getElementById("divViewHeader").setAttribute("style", "color:#666;");
-        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " ~ " + weekEndDatename);
+        document.getElementById("divViewHeader").setAttribute("style", "color:#777;");
+        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " - " + weekEndDatename);
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
         var b = 0;
@@ -324,12 +324,12 @@ function tableListControl_Week()
                 
                 if (DefaultView == 0) { //일요일시작
                 	if (countdayname == "0")
-                        _mth.style.color = "#0032cf"; //blue
+                        _mth.style.color = "rgb(0, 72, 149)"; //blue
                     else if (countdayname == "1")
                         _mth.style.color = "#ee1c25"; //red
                 } else { //월요일시작
                 	if (countdayname == "6")
-                        _mth.style.color = "#0032cf";
+                        _mth.style.color = "rgb(0, 72, 149)";
                     else if (countdayname == "0")
                         _mth.style.color = "#ee1c25";
                 }
@@ -410,12 +410,12 @@ function tableListControl_Week()
                 
                 if (DefaultView == 0) { //일요일시작
                 	if (countdayname == "0")
-                        _mth.style.color = "#0032cf";
+                        _mth.style.color = "rgb(0, 72, 149)";
                     else if (countdayname == "1")
                         _mth.style.color = "#ee1c25";
                 } else { //월요일시작
                 	if (countdayname == "6")
-                        _mth.style.color = "#0032cf";
+                        _mth.style.color = "rgb(0, 72, 149)";
                     else if (countdayname == "0")
                         _mth.style.color = "#ee1c25";
                 }
@@ -601,7 +601,7 @@ function tableListControl_Week()
                 _span.style.color = "#0090d0";
 
                 if (alldayevent == "0")
-                    setNodeText(_span, Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " ~ " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
+                    setNodeText(_span, Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " - " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
                 else
                     setNodeText(_span, strLang126);
 
@@ -722,7 +722,7 @@ function makeTable(xmldom, pNum, dayType) {
 
     _td = document.createElement("TD");
     _span.style.color = "#0090d0";
-    setNodeText(_span,Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " ~ " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
+    setNodeText(_span,Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " - " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
     _td.appendChild(_span);
     _tr.appendChild(_td);
     _table.appendChild(_tr);
@@ -795,13 +795,8 @@ function newSchedule_onclick(e) {
         var feature = GetOpenPosition(820, 700);
         window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + GetAttribute(srcEl,"DATA1") + "&brdName=" + encodeURIComponent(GetAttribute(srcEl,"DATA2")), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     } else {
-        if (pUse_Editor == "" || pUse_Editor == "CK") {
-            var feature = GetOpenPosition(770, 700);
-            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + GetAttribute(srcEl,"DATA1") + "&brdName=" + encodeURIComponent(GetAttribute(srcEl,"DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-        } else {
-            var feature = GetOpenPosition(770, 700);
-            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + GetAttribute(srcEl, "DATA1") + "&brdName=" + encodeURIComponent(GetAttribute(srcEl, "DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-        }
+        var feature = GetOpenPosition(770, 700);
+        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + GetAttribute(srcEl,"DATA1") + "&brdName=" + encodeURIComponent(GetAttribute(srcEl,"DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
 }
 
@@ -877,7 +872,7 @@ function tableListControl_today() {
 
         var current_day = new Date(TodayDatename);
         if (current_day.getDay() == "6")
-            document.getElementById("divViewHeader").style.color = "#0032cf";
+            document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
         else if (current_day.getDay() == "0")
             document.getElementById("divViewHeader").style.color = "#ee1c25";
         else
@@ -1309,22 +1304,13 @@ function idCalendarViewer_OnDoubleClickAppointment2(sz_Num, sz_OwnerID, sz_Start
 
     if (sz_Num != "" && sz_Num != null) {
         ////읽기창////
-        //if (pUse_Editor == "TAGFREE")
-        //    window.open("/myoffice/ezResource/ResSch/Schedule_add_TFX.aspx?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
-        //else
-        //    window.open("/myoffice/ezResource/ResSch/Schedule_add_ck.aspx?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
-
         window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
     } else if (p_Type != "MAIN") {
 
         if (CrossYN() || pNoneActiveX == "YES") {
             window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView=&ownerID=" + sz_OwnerID + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
         } else {
-            if (pUse_Editor == "" || pUse_Editor == "CK") {
-                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView=&ownerID=" + sz_OwnerID + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
-            } else {
-                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView=&ownerID=" + sz_OwnerID + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
-            }
+            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView=&ownerID=" + sz_OwnerID + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
         }
     }
 }

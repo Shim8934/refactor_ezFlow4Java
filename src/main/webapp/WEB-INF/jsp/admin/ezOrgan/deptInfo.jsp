@@ -136,7 +136,8 @@
 												
 				var parentCn;
 				var extensionattribute8 = "0";
-				var extensionattribute11 = "N";
+				/* 2017-12-29 장진혁 - 조직도에서 기본적으로 해당 부서를 수신처로 등록할 수 있게 수정 */
+				var extensionattribute11 = "";
 				
 				if (OldDeptName == ""){
 					parentCn = ParentID.value;
@@ -149,6 +150,8 @@
 				
 					if (document.getElementById("ouDoumentReceiveYN").checked){
 						extensionattribute11 = "Y";
+					} else {
+						extensionattribute11 = "N";
 					}
 				}
 				

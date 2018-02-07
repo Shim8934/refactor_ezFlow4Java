@@ -308,7 +308,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("host", auth.getServerName());
-
+		model.addAttribute("lang", auth.getLang());
+		
 		logger.debug("manageQuickLink ended");
 		return "admin/ezPersonal/personalManageQuickLink";
 	}
@@ -322,7 +323,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("getQuickLinkList started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String result = ezPersonalAdminService.getQuickLinkList(userInfo);
+		String result = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang());
 
 		logger.debug("getQuickLinkList ended");
 		return result;
@@ -346,7 +347,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("mode", mode);
 		model.addAttribute("host", userInfo.getServerName());
-
+		model.addAttribute("lang", userInfo.getLang());
+		
 		logger.debug("addQuickLink ended");
 		return "admin/ezPersonal/personalAddQuickLink";
 	}
@@ -908,6 +910,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("setEmployeeMonth started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String userID = "", deptID = "";
 		String type = request.getParameter("type");
 		String term = request.getParameter("term");
@@ -919,10 +922,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			deptID = request.getParameter("deptID");
 		}
 		
-		int tenantID = userInfo.getTenantId();
-		
 		try {
-			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, tenantID);
+			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, userInfo);
 			logger.debug("setEmployeeMonth ended");
 			return "OK";
 		} catch (Exception e) {

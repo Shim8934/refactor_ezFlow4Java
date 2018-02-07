@@ -11,7 +11,6 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" language="javascript">			
 			var pUse_Editor = "<c:out value='${use_Editor}'/>";	        
-	        var p_Use_IE11Browser = "<c:out value='${use_IE11Browser}'/>";
 	        var pBoardID = "<c:out value='${boardID}'/>";
 	        var pBoardName = "${boardName}";
 	        var pBoardType = "<c:out value='${boardType}'/>";

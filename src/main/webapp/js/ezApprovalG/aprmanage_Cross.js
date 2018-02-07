@@ -658,7 +658,7 @@ function openUserInfo() {
             var pDocID = GetAttribute(tr, "DATA3");
             var pDeptID = GetAttribute(tr, "DATA4");
             if (pCheckval == "Y") {
-                window.open("/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=012", "", "height=230px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(580, 200));
+                window.open("/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=012", "", "height=260px,width=655px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + GetOpenPosition(580, 200));
             } else {
                 var heigth = window.screen.availHeight;
                 var width = window.screen.availWidth;
@@ -1680,7 +1680,7 @@ function setbuttonenable() {
         document.getElementById("tbtnApproveALL").style.display = "none";
     }
 
-    if (pListTypeValue == "8" || pListTypeValue == "10")
+    if (pListTypeValue == "8")
         document.getElementById("tbar1").style.display = "none";
     else
         document.getElementById("tbar1").style.display = "";

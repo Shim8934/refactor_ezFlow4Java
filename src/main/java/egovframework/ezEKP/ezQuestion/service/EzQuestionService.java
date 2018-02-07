@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezQuestion.service;
 import java.util.List;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
@@ -182,5 +184,7 @@ public interface EzQuestionService {
 	public void updateTblPollItem(String endDate, int brdID, int itemNo, int tenantID) throws Exception;
 	
 	public void updateTblPollPermission(String endFlag, int brdID, int itemNo, int tenantID) throws Exception;
+
+	public String saveQuestion(String pBrdID, String vItemID, Document doc, String pUserID, LoginVO loginVO) throws Exception;
 	
 }

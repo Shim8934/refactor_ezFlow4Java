@@ -9,6 +9,7 @@
 	        <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 			<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	        <script language="JavaScript" src="/js/ezEmail/js_cross/reademail.js"></script>
+	        <script src="/js/jquery/jquery-1.11.3.min.js"></script>
 	        <style type="text/css">PRE {font-size:x-small;font-family: 'dotum', 'arial', 'verdana';}</style>
 	    	<script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    	<script language="javascript" type="text/javascript">
@@ -231,6 +232,7 @@
 			        function Schedule_btn(pGubun) {
 			            parent.mtg_onClick(pGubun);
 			        }
+
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
@@ -245,7 +247,7 @@
 			<p class="title"><spring:message code='ezEmail.t99000003' />
 				<span>${pAttachListHtmlSub}</span>
 				<span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
-				<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span>
+				<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload(this);"><spring:message code='ezEmail.t99000004' /></span>
 			</p>
 			<ul class="list" id="PreviewAttachList">${pAttachListHtml}</ul>
 		</div>

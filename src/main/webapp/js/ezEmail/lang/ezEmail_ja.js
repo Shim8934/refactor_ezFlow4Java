@@ -299,9 +299,13 @@ var strLangLHM19 = "暗号化メールを削除すると受信者も閲覧でき
 var strLangLHM20 = "暗号化メールを移動すると\nメール閲覧および詳細情報の確認ができなくなります。\n続行しますか？";
 var strLangKMS01 = "添付ファイルが";
 var strLangKMS02 = "添付フォイルのサイズが ";
-var strLangKMS03 = "メールがありません。";
+var strLangKMS03 = "メールがありません";
 var strLangKMS04 = "受信者の数が";
 var strLangKMS05 = "人より多いため、個別送信機能を使用することができません。\n個別送信設定を解除してメールを送信してよろしいですか？";
+var strLangKMS06 = "파일을 업로드하는 동안 오류가 발생했습니다.";
+var strLangKMS07 = "업로드가 사용자에 의해 취소되었거나 브라우저가 연결을 끊었습니다.";
+var strLangKMS08 = "폴더는 업로드 할 수 없습니다."
+	
 
 function GetLocalTime(Offset , pDateTime)
 {

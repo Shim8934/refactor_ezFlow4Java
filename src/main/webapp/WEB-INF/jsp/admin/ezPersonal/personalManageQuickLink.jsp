@@ -74,15 +74,15 @@
 	              //크롬일때 alert창 크기때문에 크롬일때 구별
 		            var agent = navigator.userAgent.toLowerCase();
 		            if (agent.indexOf("chrome") != -1) {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 673));	
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 682));	
 		            } else {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(415, 625));
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(415, 670));
 		            }
 	                
 	                try { AddQuickLink.focus(); } catch (e) {
 	                }
 	            } else {
-	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=new", "", "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(415, 625));
+	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=new", "", "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(415, 670));
 	                window.location.reload();
 	            }
 	        }
@@ -146,12 +146,60 @@
 	</head>
 	<body class="mainbody">
 		<c:choose>
-			<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+			<c:when test="${lang == '1'}">
 				<xml id="listviewheader" style ="display:none">
 					<LISTVIEWDATA>
 						<HEADERS>
 					    	<HEADER>
 					        	<NAME><spring:message code = 'ezPersonal.jjs03' /></NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+					      	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+							<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+					     	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME>URL</NAME>
+					        	<WIDTH>70</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1024' /></NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1025' /></NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1026' /></NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					    </HEADERS>
+					</LISTVIEWDATA>
+				</xml>
+			</c:when>
+			<c:when test="${lang == '2'}">
+				<xml id="listviewheader" style ="display:none">
+					<LISTVIEWDATA>
+						<HEADERS>
+					    	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+					    	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s81' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+							<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
 					        	<WIDTH>40</WIDTH>
 					      	</HEADER>
 					     	<HEADER>
@@ -183,21 +231,17 @@
 					<LISTVIEWDATA>
 						<HEADERS>
 					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' /></NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-							<HEADER>
 					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
 					        	<WIDTH>40</WIDTH>
 					      	</HEADER>
-					      	<%-- <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t304' />(<spring:message code = 'ezPersonal.s85' />)</NAME>
+					    	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s81' />)</NAME>
 					        	<WIDTH>40</WIDTH>
-					      	</HEADER> --%>
+					      	</HEADER>
+							<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
 					     	<HEADER>
 					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
 					        	<WIDTH>50</WIDTH>

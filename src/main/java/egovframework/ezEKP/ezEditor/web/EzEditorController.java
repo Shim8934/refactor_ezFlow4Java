@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Base64;
 import java.util.Iterator;
+import java.util.Base64.Decoder;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.Base64.Decoder;
 
@@ -98,6 +100,9 @@ public class EzEditorController extends EgovFileMngUtil{
 			case "TAGFREE":
 				returnPath = "ezEditor/tfxEditor";
 				break;
+			case "KUKUDOCS":
+				returnPath = "ezEditor/kukudocsEditor";
+				break;
 			default :
 				returnPath = "ezEditor/ckEditor";
 				break;
@@ -146,6 +151,9 @@ public class EzEditorController extends EgovFileMngUtil{
                 break;
 			case "TAGFREE":
 				returnPath = "admin/ezEditor/tfxEditor";
+				break;
+			case "KUKUDOCS":
+				returnPath = "admin/ezEditor/kukudocsEditor";
 				break;
 			default :
 				returnPath = "admin/ezEditor/ckEditor";
@@ -424,12 +432,21 @@ public class EzEditorController extends EgovFileMngUtil{
 			logger.debug("The file size is too big.");
 			resultCode = "1";
 			
-		} else if (fileData.startsWith("data:")) { //이미지 파일이 아닌경우 fileData앞에 data:이 붙음.
-			logger.debug("The file is not image.");
-			resultCode = "2";
-			
 		} else {
 			logger.debug("fileType=" + fileType + ", rootId=" + rootId);
+			
+			if (fileData.startsWith("data:")) { //fileData앞에 data:이 붙어있을 경우
+				logger.debug("The fileData start with data:.");
+				
+				String[] fileDatas = fileData.split(",");
+				if (fileDatas[0].indexOf("image") > -1) {
+					fileData = fileDatas[1];
+				} else {
+					model.addAttribute("resultCode", "2");
+					logger.debug("tfxSimpleUpload ended. resultCode=" + resultCode);
+					return "ezEditor/tfxSimpleUpload";
+				}
+			}
 			
 			String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 			String realPath = commonUtil.getRealPath(request);
@@ -527,12 +544,21 @@ public class EzEditorController extends EgovFileMngUtil{
 			logger.debug("The file size is too big.");
 			resultCode = "1";
 			
-		} else if (fileData.startsWith("data:")) { //이미지 파일이 아닌경우 fileData앞에 data:이 붙음.
-			logger.debug("The file is not image.");
-			resultCode = "2";
-			
 		} else {
 			logger.debug("fileType=" + fileType + ", rootId=" + rootId);
+			
+			if (fileData.startsWith("data:")) { //fileData앞에 data:이 붙어있을 경우
+				logger.debug("The fileData start with data:.");
+				
+				String[] fileDatas = fileData.split(",");
+				if (fileDatas[0].indexOf("image") > -1) {
+					fileData = fileDatas[1];
+				} else {
+					model.addAttribute("resultCode", "2");
+					logger.debug("tfxSimpleUpload ended. resultCode=" + resultCode);
+					return "ezEditor/tfxSimpleUpload";
+				}
+			}
 			
 			String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 			String realPath = commonUtil.getRealPath(request);
@@ -565,9 +591,8 @@ public class EzEditorController extends EgovFileMngUtil{
 				
 				resultCode = "1";
 			} finally {
-				try {
-					fileOuputStream.close();
-				} catch (Exception e2) {
+				if (fileOuputStream != null) {
+					try { fileOuputStream.close(); } catch (Exception e) {}
 				}
 			}
 			
@@ -718,4 +743,120 @@ public class EzEditorController extends EgovFileMngUtil{
 		logger.debug("namoUpload ended. result=" + resultObj.toString());
 		return resultObj.toString();
 	}
+	
+	/**
+	 * 쿠쿠닥스 에디터 업로드 실행 Method
+	 */
+	@RequestMapping(value = "/ezEditor/kukudocsUpload.do")
+	@ResponseBody
+	public String kukudocsUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model, Locale locale) throws Exception{
+		logger.debug("kukudocsUpload started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String result = "";
+		String msg = "";
+		
+		try {
+			MultipartFile multiFile = request.getFile("image_type");
+			String fileData = request.getParameter("image_base64_type");
+			String type = request.getParameter("type");
+			
+			// 메일 부재중설정 또는 커뮤니티 포토게시판일 경우 이미지 업로드되지 않도록 한다.
+			if (type.equals("MAILOUTOFOFFICE") || type.equals("COMMUNITYPHOTO")) { 
+				msg = egovMessageSource.getMessage("ezEmail.lhm29", locale);
+				result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
+				logger.debug("Cannot upload image. kukudocsUpload ended. type=" + type);
+				return result;
+			}
+			
+			// fileData가 넘어왔을 경우의 처리
+			if (fileData != null) {
+				String[] fileDatas = fileData.split(",");
+				
+				if (fileDatas[0].startsWith("data:image/")) {
+					String fileType = fileDatas[0].substring(fileDatas[0].indexOf("/") + 1, fileDatas[0].indexOf(";"));
+					fileData = fileDatas[1];
+					FileOutputStream fileOuputStream = null;
+					
+					try {
+						String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+						
+						if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
+							filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+						}
+						
+						String realPath = commonUtil.getRealPath(request);
+						String today = EgovDateUtil.getToday("");
+						String fileName = UUID.randomUUID() + "." + fileType;
+						
+						filePath = filePath + commonUtil.separator + today;
+						File file = new File(realPath + filePath);
+						
+						if (!file.exists()) {
+							file.mkdirs();
+						}
+						
+						Decoder decoder = Base64.getDecoder();
+						byte[] imageByte = decoder.decode(fileData);
+						fileOuputStream = new FileOutputStream(realPath + filePath + commonUtil.separator + fileName); 
+						fileOuputStream.write(imageByte);
+						fileOuputStream.flush();
+						
+						msg = filePath + commonUtil.separator + fileName;
+						result = "{ \"url\" : \"" + msg + "\" }";
+						
+					} finally {
+						try {
+							fileOuputStream.close();
+						} catch (Exception e) {
+						}
+					}
+				} else {
+					msg = egovMessageSource.getMessage("main.t4000", locale);
+					result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
+				}
+				
+			// multiFile이 넘어왔을 경우의 처리
+			} else if (multiFile != null) {
+				String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+				String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+				
+				if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
+					filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+				}
+				
+				String realPath = commonUtil.getRealPath(request);
+				String today = EgovDateUtil.getToday("");
+				String fileName = UUID.randomUUID() + "." + fileType;
+				
+				filePath = filePath + commonUtil.separator + today;
+				File file = new File(realPath + filePath);
+				
+				if (!file.exists()) {
+					file.mkdirs();
+				}
+				
+				writeUploadedFile(multiFile, fileName, realPath + filePath);
+				msg = filePath + commonUtil.separator + fileName;
+				result = "{ \"url\" : \"" + msg + "\" }";
+			
+			//fileData, multiFile 모두 null일 경우
+			} else {
+				// 이미지가 너무 큰 경우 fileData가 null로 들어올 수 있다.(tomcat server.xml의 maxPostSize설정에 따라 이미지 최대 업로드 사이즈 조절 가능하다.)
+				msg = egovMessageSource.getMessage("ezBoard.hyj02", locale);
+				result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
+				logger.debug("fileData and multiFile are null.");
+			}
+		} catch (Exception e) {
+			msg = egovMessageSource.getMessage("ezBoard.hyj02", locale);
+			result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
+			
+			e.printStackTrace();
+		}
+		
+		logger.debug("kukudocsUpload ended.");
+		return result;
+	}
+	
+	
 }

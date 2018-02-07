@@ -5252,7 +5252,7 @@
         AND
         	 TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID
         AND
-        	 TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.TENANT_ID
+        	 TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID
         WHERE  
         	 TBL_APRDOCINFO.DocID = #v_DOCID#
         AND
@@ -6548,7 +6548,6 @@
                      		A.TENANT_ID = #v_TENANTID#
                      AND
                      		A.COMPANYID = #companyID#  
-                     LIMIT 1
                      
                      UNION ALL 
                      
@@ -6581,7 +6580,7 @@
                             		A.COMPANYID = #companyID#
 	                        ORDER BY 
 	                       			FLAG DESC, DOCID DESC ) D
-            LIMIT 1 ) C 
+            ) C ORDER BY DOCID DESC LIMIT 1 
          ]]>
 		</isNotEqual>
 		</isNotEqual>
@@ -7780,7 +7779,7 @@
 <!-- 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap"> -->
 <!-- 		{CALL EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap" remapResults="true">
+	<select id="EzApprovalG.getDocType" parameterClass="Map" resultClass="ApprGCabCodeVO" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT 
@@ -9804,18 +9803,41 @@
 <!-- 		{CALL EZSP_ReceiverCheck(#v_DEPTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
 		<select id="EzApprovalG.receiverChk" parameterClass="Map" resultClass="int">
-		 		SELECT 
-		 			COUNT(CN)  
-		         FROM 
-		         	TBL_UserMaster
-		       	 WHERE  
-		       	 	Department = #v_DEPTID#
-		         AND 
-		         	extensionAttribute1 LIKE '%a=1%' 
-		         AND
-		         	TENANT_ID = #v_TENANTID#
-		         AND
-		         	PHYSICALDELIVERYOFFICENAME = #companyID#
+			SELECT 
+				SUM(CN) as count 
+			FROM (
+				SELECT 
+					count(cn) as cn
+				FROM 
+					TBL_USERMASTER
+				WHERE 
+					DEPARTMENT = #v_DEPTID#
+				AND 
+					EXTENSIONATTRIBUTE1 like '%a=1%'
+				AND 
+					TENANT_ID = #v_TENANTID#
+				AND 
+					PHYSICALDELIVERYOFFICENAME = #companyID#
+			
+				UNION 
+			
+				SELECT 
+					count(a.cn) as cn
+				FROM 
+					TBL_USERMASTER as a
+				JOIN 
+					TBL_ADDJOBMASTER as b
+				ON 
+					a.CN = b.CN
+				AND 
+					a.TENANT_ID = b.TENANT_ID
+				AND 
+					b.DEPTID = #v_DEPTID#
+				AND 
+					a.EXTENSIONATTRIBUTE1 like '%a=1%'
+				AND 
+					a.TENANT_ID = #v_TENANTID#
+			) as Z;		         	
 		</select>
 	
 <!-- 	<procedure id="EzApprovalG.doProcessCount" parameterClass="Map" resultClass="int"> -->

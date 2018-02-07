@@ -11,18 +11,8 @@
 			<article id="appr_article" class="appr_mail">
 				<div class="tab">
     				<ul>
-    					<%-- <li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li> --%>
-    					<c:choose>
-    						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
-    							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="javascript:alert('<spring:message code='ezPortal.jjs10' />');" width="50" height="115"></li>
-     							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>
-    						</c:when>
-    						<c:otherwise>
-								<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li>
-    							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>		
-    						</c:otherwise>
-    					</c:choose>
-    					
+						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li>
+  						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>		
     				</ul>
     			</div>
     			<!-- graph -->
@@ -90,14 +80,7 @@
               				<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /><span id="draftCNT" class="tab_num">(0)</span></span></dt>
             			</dl>
             			<!-- /tab -->
-            			<c:choose>
-            				<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
-            					<%-- <span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span> --%>
-            				</c:when>
-            				<c:otherwise>
-            				<span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span>
-            				</c:otherwise>
-            			</c:choose>
+           				<span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span>
             		</div>
           			<div id ="ApprList" class="appr_mailcont">            
               			<ul class="listtype_txt">
@@ -111,21 +94,8 @@
     		<article id="mail_article" style="display:none;" class="appr_mail">
 				<div class="tab">
     				<ul>
-     					<%-- <li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="change_article('appr')" width="50" height="115"></li> --%>
-     					<%-- <li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" width="50" height="115"></li>
-     					<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li> --%>    
-     					
-     					<c:choose>
-    						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
-    							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="javascript:alert('<spring:message code='ezPortal.jjs10' />');" width="50" height="115"></li>
-     							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li>
-    						</c:when>
-    						<c:otherwise>
-								<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="change_article('appr')" width="50" height="115"></li>
-    							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li>		
-    						</c:otherwise>
-    					</c:choose>
-     					
+						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="change_article('appr')" width="50" height="115"></li>
+  						<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li>		
     				</ul>
     			</div>
     			<!-- graph -->
@@ -162,540 +132,331 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1' />"></script>
 		<script type="text/javascript">
-	    var arr_userinfo = new Array();
-	    arr_userinfo[0] = "user";
-	    arr_userinfo[1] = "${userInfo.id}";
-	    arr_userinfo[2] = "${userInfo.displayName1}";
-	    arr_userinfo[3] = "${userInfo.title1}";
-	    arr_userinfo[4] = "${userInfo.deptID}";
-	    arr_userinfo[5] = "${userInfo.deptName1}";
-	    arr_userinfo[6] = "${userInfo.jikChek}";
-	    arr_userinfo[8] = "${userInfo.email}";  
-	    var pUserID = arr_userinfo[1];
-	    var companyID = "${userInfo.companyID}";
-	    var pListTypeValue = "1";
-	    var strLang1_NewApprMail = "<spring:message code='main.t00026' />";
-	    var pUse_Editor = "${useEditor}";
-	    var pUse_IE11Browser = "${useIE11Browser}";
-	    var pNoneActiveX = "${noneActiveX}";
-	    var host = "${host}";
-	    document.onselectstart = function () { return false; };
-	    
-	    function window_onload_NewApprMail() {
-	        if (navigator.userAgent.indexOf('Firefox') != -1) {
-	            document.body.style.MozUserSelect = 'none';
-	            document.body.style.WebkitUserSelect = 'none';
-	            document.body.style.khtmlUserSelect = 'none';
-	            document.body.style.oUserSelect = 'none';
-	            document.body.style.UserSelect = 'none';
-	        }
-	        
-	        if (host == 'jgw.cloud.kaoni.com1') {
-	        	//getApprGraph();
-		        change_article("mail");
-		        getMailGraph();	
-	        } else {
-	        	getApprGraph();
-	        }
-	        
-	        try { top.onresize() } catch (e) { }
-	    }
-
-	    function change_article(flag)
-	    {
-	        if (flag == "appr") {
-	            document.getElementById("appr_article").style.display = "";
-	            document.getElementById("mail_article").style.display = "none";
-	            getApprGraph();
-	        }
-	        else {
-	            document.getElementById("appr_article").style.display = "none";
-	            document.getElementById("mail_article").style.display = "";
-	            getMailGraph();
-	        }
-	    }
-
-	    var xmlhttp_getApprGraph_NewApprMail = createXMLHttpRequest();
-	    
- 	    function getApprGraph() {
-        	
-        	      $.ajax({
-      	        	type : "POST",
-      	        	dataType : "text",
-      	        	url : "/ezApprovalG/getPortletAprDocList.do",
-      	        	data : {
-      	        		pListTypeName   : pListTypeValue, 
-      	        		pDocTypeName 	 : "A01000", 
-      	        		pUserID 	 : pUserID, 
-      	        		pUserDeptID 	 : arr_userinfo[4], 
-      	        		pPageSize : "1000",
-      	        		pPageNum : "1",
-      	        		companyID : companyID,
-      	        		orderCell : "",
-      	        		orderOption : "",
-      	        		searchQuery : "",
-      	        		subQuery : ""
-      	        	},
-      	        	success : function(xml){
-      	        		getDocList_after(loadXMLString(xml));
-      	        	},
-      	        	error : function(error){
-      	        		console.log("<spring:message code='ezBoard.t22'/>wpNewApprMail" + error);	
-      	        	}
-      	        });
-        
-	    } 
-
-	    function getDocList_after(xml) {
-	        if (xml == null) return;
-
-	        try {
-	            document.getElementById("ApprList").innerHTML = "";
-	          
-	            var xmldom = createXmlDom();
-	            xmldom = xml;
-
-	                var listHTML = "";
-	                if (pListTypeValue == "1") {
-	                    document.getElementById("doingCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT1").item(0)) + ")";
-	                    document.getElementById("draftCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT2").item(0)) + ")";
-	                    document.getElementById("rejectCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT3").item(0)) + ")";
-
-	                    document.getElementById("SIXHGAP").innerHTML = getNodeText(xmldom.getElementsByTagName("SIXHGAP").item(0));
-	                    document.getElementById("ONEDGAP").innerHTML = getNodeText(xmldom.getElementsByTagName("ONEDGAP").item(0));
-	                    document.getElementById("SEVENDGAP").innerHTML = getNodeText(xmldom.getElementsByTagName("SEVENDGAP").item(0));
-	                    document.getElementById("ONEMGAP").innerHTML = getNodeText(xmldom.getElementsByTagName("ONEMGAP").item(0));
-	                    document.getElementById("OTHER").innerHTML = getNodeText(xmldom.getElementsByTagName("OTHER").item(0));
-	                }
-
-	                if (xmldom.getElementsByTagName("CELL").length > 0)
-	                {
-	                    listHTML = "<ul class=\"listtype_txt \">";
-	                    for (var i = 0; i < xmldom.getElementsByTagName("CELL").length; i++)
-	                    {
-	                        var DOCTITLE = getNodeText(xmldom.getElementsByTagName("DOCTITLE").item(i));
-	                        var WRITERNAME = getNodeText(xmldom.getElementsByTagName("WRITERNAME").item(i));
-	                        var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
-
-	                        var DOCID = getNodeText(xmldom.getElementsByTagName("DOCID").item(i));
-	                        var HREF = getNodeText(xmldom.getElementsByTagName("HREF").item(i));
-	                        var APRMEMBERID = getNodeText(xmldom.getElementsByTagName("APRMEMBERID").item(i));
-	                        var APRMEMBERNAME = getNodeText(xmldom.getElementsByTagName("APRMEMBERNAME").item(i));
-	                        var APRMEMBERDEPTID = getNodeText(xmldom.getElementsByTagName("APRMEMBERDEPTID").item(i));
-	                        var DOCSTATE = getNodeText(xmldom.getElementsByTagName("DOCSTATE").item(i));
-	                        var FUNCTIONTYPE = getNodeText(xmldom.getElementsByTagName("FUNCTIONTYPE").item(i));
-	                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3) + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
-	                     }                                 
-
-
-	                    listHTML += "</ul>";
-	                }
-	                else
-	                {
-	                    listHTML = "<div class='nodata_portlet '>";
-	                    listHTML += "<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_white.gif' width='107' height='70'></p>";
-	                    listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
-	                }
-	                document.getElementById("ApprList").innerHTML = listHTML;
-	          
-	        }
-	        catch (e) {
-	        }
-	    }
-
-	    function opendocview(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
-	        var openLocation = "";
-
-	        if ("${userApprovalG}" == "YES")
-	        {
-	            if (pListTypeValue != "2") {
-	                if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
-	                    if (pDocState == "012" || pDocState == "014" || pDocState == "018") {
-	                        OpenReceiveDraftUI(pDocID, pHref, "REDRAFT");
-	                    }
-	                    else {
-	                        openApprDraftUI("REDRAFT", pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType);
-	                    }
-	                }
-	                else
-	                    openApprovUI(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType);
-	            }
-	            else {
-	                openViewDocInfo(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType);
-
-	            }
-	        }
-	        else {
-	            if (pListTypeValue != "2") {
-	                if (pFunctionType == strAprState4 || pFunctionType == strAprState6 || pFunctionType == strAprState15) {
-	                    if (pDocState == strDocState12 || pDocState == strDocState14 || pDocState == strDocState18) {
-	                        var pDraftFlag = "REDRAFT";
-	                        if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "doc") {
-	                            openLocation = "/myoffice/ezApproval/ezViewWord/ezDeptRecevUI_word.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	                        }
-	                        else if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-	                            openLocation = "/myoffice/ezApproval/ezViewHWP/ezDeptRecevUI_HWP.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	                        }
-	                        else {
-	                            <% if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
-	                               {%>
-	                            var openLocation = "";
-	                            if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO")
-	                                openLocation = "/myoffice/ezApproval/ReceivUI/recev_TFI.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	                            else {
-	                                if(pUse_IE11Browser == "CK")
-	                                    openLocation = "/myoffice/ezApproval/ReceivUI/recev_IE.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	                                else
-	                                    openLocation = "/myoffice/ezApproval/ReceivUI/recev.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	                            }
-	                            <%} else { %>
-	                                openLocation = "/myoffice/ezApproval/ReceivUI/recev_Cross.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	                            <%}%>
-	                        }
-	                    }
-	                    else if (pDocState == strDocState11) {
-	                        if (arr_userinfo[4] != pAprMemberDeptID) {
-	                            var pAlertContent = "<spring:message code='main.t2200' />";
-	                            alert(pAlertContent);
-	                            return;
-	                        }
-
-	                        var pDraftFlag = "REDRAFT";
-	                        var openLocation = "";
-
-	                        if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "doc") {
-	                            openLocation = "/myoffice/ezApproval/ezViewWord/ezRecevUI_word.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	                        }
-	                        else if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-	                            openLocation = "/myoffice/ezApproval/ezViewHWP/ezRecevUI_HWP.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	                        }
-	                        else {
-	                            
-	                            <% if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
-	                               {%>
-	                            if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO")
-	                                openLocation = "/myoffice/ezApproval/ReceivUI/recev_end_TFI.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	                            else {
-	                                if (pUse_IE11Browser == "CK")
-	                                    openLocation = "/myoffice/ezApproval/ReceivUI/recev_end_IE.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	                                else
-	                                    openLocation = "/myoffice/ezApproval/ReceivUI/recev_end.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	                            }
-	                            <%} else { %>
-	                                openLocation = "/myoffice/ezApproval/ReceivUI/Recev_End_Cross.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	                            <%}%>
-	                        }
-	                    }
-	                    else {
-	                        if (arr_userinfo[4] != pAprMemberDeptID) {
-	                            var pAlertContent = "<spring:message code='main.t2200' />";
-	                            alert(pAlertContent);
-	                            return;
-	                        }
-
-	                        var pDraftFlag = "REDRAFT";
-	                        var tempDocState = strDocState1;
-	                        var SusinSn = "0";
-	                        if (pDocState == strDocState11) {
-	                            tempDocState = strDocState11;
-	                            SusinSn = "1";
-	                        }
-
-	                        var AprState = strAprState4;
-	                        if (pFunctionType == strAprState6)
-	                            AprState = strAprState6;
-
-	                        if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "doc") {
-	                            openLocation = "/myoffice/ezApproval/ezViewWord/ezDraftUI_word.aspx?formURL=" + escape(pHref) + "&DraftFlag=" + escape(pDraftFlag) + "&formDocType=";
-	                            openLocation = openLocation + "&susinSN=" + escape(SusinSn) + "&DocState=" + escape(tempDocState) + "&ListType=1&AprState=" + escape(AprState);
-	                            openLocation = openLocation + "&isTmpDoc=";
-	                        }
-	                        else if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-	                            if (CrossYN()) {
-	                                openLocation = "/myoffice/ezApproval/ezViewHWP/ezDraftUI_HWP_Cross.aspx?formURL=" + escape(pHref) + "&DraftFlag=" + escape(pDraftFlag) + "&formDocType=";
-	                                openLocation = openLocation + "&susinSN=" + escape(SusinSn) + "&DocState=" + escape(tempDocState) + "&ListType=1&AprState=" + escape(AprState);
-	                                openLocation = openLocation + "&isTmpDoc=";
-	                            }
-	                            else {
-	                                openLocation = "/myoffice/ezApproval/ezViewHWP/ezDraftUI_HWP.aspx?formURL=" + escape(pHref) + "&DraftFlag=" + escape(pDraftFlag) + "&formDocType=";
-	                                openLocation = openLocation + "&susinSN=" + escape(SusinSn) + "&DocState=" + escape(tempDocState) + "&ListType=1&AprState=" + escape(AprState);
-	                                openLocation = openLocation + "&isTmpDoc=";
-	                            }
-	                        }
-	                        else {
-	                            if (CrossYN() || pNoneActiveX == "YES") {
-	                                openLocation = "/myoffice/ezApproval/DraftUI/Draftui_Cross.aspx?formURL=" + escape(pHref) + "&DraftFlag=" + escape(pDraftFlag) + "&formDocType=";
-	                                openLocation = openLocation + "&susinSN=" + escape(SusinSn) + "&DocState=" + escape(tempDocState) + "&ListType=1&AprState=" + escape(AprState);
-	                                openLocation = openLocation + "&isTmpDoc=";
-	                            }
-	                            else {
-	                                if (pUse_Editor == "")
-	                                    openLocation = "/myoffice/ezApproval/DraftUI/Draftui.aspx?formURL=" + escape(pHref) + "&DraftFlag=" + escape(pDraftFlag) + "&formDocType=";
-	                                else {
-	                                    openLocation = "/myoffice/ezApproval/DraftUI/Draftui_IE.aspx?formURL=" + escape(pHref) + "&DraftFlag=" + escape(pDraftFlag) + "&formDocType=";
-	                                }
-	                                openLocation = openLocation + "&susinSN=" + escape(SusinSn) + "&DocState=" + escape(tempDocState) + "&ListType=1&AprState=" + escape(AprState);
-	                                openLocation = openLocation + "&isTmpDoc=";
-	                            }
-	                        }
-	                    }
-	                }
-	                else {
-	                    if (arr_userinfo[4] != pAprMemberDeptID) {
-	                        var pAlertContent = "<spring:message code='main.t2200' />";
-	                        alert(pAlertContent);
-	                        return;
-	                    }
-
-	                    if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "doc") {
-	                        var openLocation = "/myoffice/ezApproval/ezViewWord/ezAproveUI_word.aspx?DocID=" + escape(pDocID);
-	                        openLocation = openLocation + "&uID=" + escape(pAprMemberID) + "&uName=" + escape(pAprMemberName);
-	                        openLocation = openLocation + "&uDeptID=" + escape(pAprMemberDeptID);
-	                    }
-	                    else if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-	                        var openLocation;
-	                        if (CrossYN())
-	                            openLocation = "/myoffice/ezApproval/ezViewHWP/ezAproveUI_HWP_Cross.aspx?DocID=" + escape(pDocID);
-	                        else
-	                            openLocation = "/myoffice/ezApproval/ezViewHWP/ezAproveUI_HWP.aspx?DocID=" + escape(pDocID);
-	                        openLocation = openLocation + "&uID=" + escape(pAprMemberID) + "&uName=" + escape(pAprMemberName);
-	                        openLocation = openLocation + "&uDeptID=" + escape(pAprMemberDeptID);
-	                    }
-	                    else {
-	                        if (CrossYN() || pNoneActiveX == "YES") {
-	                            var openLocation = "/myoffice/ezApproval/ApprovUI/ApprovUI_Cross.aspx?DocID=" + escape(pDocID);
-	                            openLocation = openLocation + "&uID=" + escape(pAprMemberID) + "&uName=" + escape(pAprMemberName);
-	                            openLocation = openLocation + "&uDeptID=" + escape(pAprMemberDeptID);
-	                        }
-	                        else {
-	                            if (pUse_Editor == "")
-	                                var openLocation = "/myoffice/ezApproval/ApprovUI/Approvui.aspx?DocID=" + escape(pDocID);
-	                            else {
-	                                var openLocation = "/myoffice/ezApproval/ApprovUI/Approvui_IE.aspx?DocID=" + escape(pDocID);
-	                            }
-	                            openLocation = openLocation + "&uID=" + escape(pAprMemberID) + "&uName=" + escape(pAprMemberName);
-	                            openLocation = openLocation + "&uDeptID=" + escape(pAprMemberDeptID);
-	                        }
-	                    }
-	                }
-	            }
-	            else {
-
-
-	                if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "doc") {
-	                    var openLocation = "/myoffice/ezApproval/ezViewWord/ezViewApr_Word.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pHref);
-	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=2";
-	                }
-	                else if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-	                    var openLocation = "/myoffice/ezApproval/ezViewHWP/ezViewApr_HWP.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pHref);
-	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=2";
-	                }
-	                else {
-	                    <% if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)
-	                       {%>
-	                    if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO") {
-	                        var openLocation = "/myoffice/ezApproval/AprDocView_TFI.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pHref);
-	                        openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=2";
-	                    }
-	                    else {
-	                        if (pUse_IE11Browser == "CK")
-	                            var openLocation = "/myoffice/ezApproval/AprDocView_IE.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pHref);
-	                        else
-	                            var openLocation = "/myoffice/ezApproval/AprDocView.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pHref);
-
-	                        openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=2";
-	                    }
-	                    <%} else { %>
-	                    var openLocation = "/myoffice/ezApproval/aprDocView_Cross.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pHref);
-	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=2";
-	                    <%}%>
-	                }
-	            }
-	            openwindow(openLocation);
-	        }
-	        
-	    }
-
-	    function openViewDocInfo(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
-	        var pArgument = new Array();
-	        var formURL = pHref;
-	        var DocID = pDocID;
-	        pArgument[0] = DocID;
-	        pArgument[1] = formURL;
-	        pArgument[2] = "";
-	        pArgument[3] = pDocState;
-	        pArgument[4] = "";
-	        pArgument[5] = "";
-	        pArgument[6] = "OPINION_SHOW";
-	        pArgument[7] = "2";
-
-	        var openLocation;
-	        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "doc") {
-	            openLocation = "/myoffice/ezApprovalG/ezViewWord/ezViewApr_Word_Cross.aspx?DocID=" + escape(pArgument[0]) + "&DocHref=" + escape(pArgument[1]);
-	            openLocation = openLocation + "&OpinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
-	            openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
-	            openLocation = openLocation + "&ListType=" + escape(pArgument[7]);
-	        }
-	        else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	            openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP_Cross.aspx?DocID=" + escape(pArgument[0]) + "&DocHref=" + escape(pArgument[1]);
-	            openLocation = openLocation + "&OpinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
-	            openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
-	            openLocation = openLocation + "&ListType=" + escape(pArgument[7]);
-	        }
-	        else {            
+		    var arr_userinfo = new Array();
+		    
+		    arr_userinfo[0] = "user";
+		    arr_userinfo[1] = "${userInfo.id}";
+		    arr_userinfo[2] = "${userInfo.displayName1}";
+		    arr_userinfo[3] = "${userInfo.title1}";
+		    arr_userinfo[4] = "${userInfo.deptID}";
+		    arr_userinfo[5] = "${userInfo.deptName1}";
+		    arr_userinfo[6] = "${userInfo.jikChek}";
+		    arr_userinfo[8] = "${userInfo.email}";  
+		    
+		    var pUserID = arr_userinfo[1];
+		    var companyID = "${userInfo.companyID}";
+		    var pListTypeValue = "1";
+		    var strLang1_NewApprMail = "<spring:message code='main.t00026' />";
+		    var pUse_Editor = "${useEditor}";
+		    var pNoneActiveX = "${noneActiveX}";
+		    
+		    document.onselectstart = function () { return false; };
+		    
+		    function window_onload_NewApprMail() {
+		        if (navigator.userAgent.indexOf('Firefox') != -1) {
+		            document.body.style.MozUserSelect = 'none';
+		            document.body.style.WebkitUserSelect = 'none';
+		            document.body.style.khtmlUserSelect = 'none';
+		            document.body.style.oUserSelect = 'none';
+		            document.body.style.UserSelect = 'none';
+		        }
+		        
+		        getApprGraph();
+		        
+		        try { top.onresize() } catch (e) { }
+		    }
+	
+		    function change_article(flag) {
+		        if (flag == "appr") {
+		            document.getElementById("appr_article").style.display = "";
+		            document.getElementById("mail_article").style.display = "none";
+		            getApprGraph();
+		        } else {
+		            document.getElementById("appr_article").style.display = "none";
+		            document.getElementById("mail_article").style.display = "";
+		            getMailGraph();
+		        }
+		    }
+	
+		    var xmlhttp_getApprGraph_NewApprMail = createXMLHttpRequest();
+		    
+	 	    function getApprGraph() {
+				$.ajax({
+		 	    	type : "POST",
+		 	        dataType : "text",
+		 	        url : "/ezApprovalG/getPortletAprDocList.do",
+		 	        data : {
+		 	        	pListTypeName   : pListTypeValue, 
+		 	        	pDocTypeName 	 : "A01000", 
+		 	        	pUserID 	 : pUserID, 
+		 	        	pUserDeptID 	 : arr_userinfo[4], 
+		 	        	pPageSize : "1000",
+		 	        	pPageNum : "1",
+		 	        	companyID : companyID,
+		 	        	orderCell : "",
+		 	        	orderOption : "",
+		 	        	searchQuery : "",
+		 	        	subQuery : ""
+					},
+					success : function(xml){
+						getDocList_after(loadXMLString(xml));
+		 	        },
+		 	        error : function(error){
+		 	        	console.log("<spring:message code='ezBoard.t22'/>wpNewApprMail" + error);	
+		 	        }
+				});
+		    } 
+	
+		    function getDocList_after(xml) {
+		        if (xml == null) return;
+	
+		        try {
+		            document.getElementById("ApprList").innerHTML = "";
+		          
+		            var xmldom = createXmlDom();
+		            
+		            xmldom = xml;
+	
+		                var listHTML = "";
+		                
+		                if (pListTypeValue == "1") {
+		                    document.getElementById("doingCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT1").item(0)) + ")";
+		                    document.getElementById("draftCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT2").item(0)) + ")";
+		                    document.getElementById("rejectCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT3").item(0)) + ")";
+	
+		                    document.getElementById("SIXHGAP").innerHTML = getNodeText(xmldom.getElementsByTagName("SIXHGAP").item(0));
+		                    document.getElementById("ONEDGAP").innerHTML = getNodeText(xmldom.getElementsByTagName("ONEDGAP").item(0));
+		                    document.getElementById("SEVENDGAP").innerHTML = getNodeText(xmldom.getElementsByTagName("SEVENDGAP").item(0));
+		                    document.getElementById("ONEMGAP").innerHTML = getNodeText(xmldom.getElementsByTagName("ONEMGAP").item(0));
+		                    document.getElementById("OTHER").innerHTML = getNodeText(xmldom.getElementsByTagName("OTHER").item(0));
+		                }
+	
+		                if (xmldom.getElementsByTagName("CELL").length > 0) {
+		                    listHTML = "<ul class=\"listtype_txt \">";
+		                    for (var i = 0; i < xmldom.getElementsByTagName("CELL").length; i++) {
+		                        var DOCTITLE = getNodeText(xmldom.getElementsByTagName("DOCTITLE").item(i));
+		                        var WRITERNAME = getNodeText(xmldom.getElementsByTagName("WRITERNAME").item(i));
+		                        var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
+	
+		                        var DOCID = getNodeText(xmldom.getElementsByTagName("DOCID").item(i));
+		                        var HREF = getNodeText(xmldom.getElementsByTagName("HREF").item(i));
+		                        var APRMEMBERID = getNodeText(xmldom.getElementsByTagName("APRMEMBERID").item(i));
+		                        var APRMEMBERNAME = getNodeText(xmldom.getElementsByTagName("APRMEMBERNAME").item(i));
+		                        var APRMEMBERDEPTID = getNodeText(xmldom.getElementsByTagName("APRMEMBERDEPTID").item(i));
+		                        var DOCSTATE = getNodeText(xmldom.getElementsByTagName("DOCSTATE").item(i));
+		                        var FUNCTIONTYPE = getNodeText(xmldom.getElementsByTagName("FUNCTIONTYPE").item(i));
+		                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3) + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
+		                     }                                 
+	
+	
+		                    listHTML += "</ul>";
+		                } else {
+		                    listHTML = "<div class='nodata_portlet '>";
+		                    listHTML += "<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_white.gif' width='107' height='70'></p>";
+		                    listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
+		                }
+		                
+		                document.getElementById("ApprList").innerHTML = listHTML;
+		        } catch (e) {
+		        }
+		    }
+	
+		    function opendocview(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
+		        var openLocation = "";
+	
+		        if ("${userApprovalG}" == "YES") {
+		            if (pListTypeValue != "2") {
+		                if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
+		                    if (pDocState == "012" || pDocState == "014" || pDocState == "018") {
+		                        OpenReceiveDraftUI(pDocID, pHref, "REDRAFT");
+		                    } else {
+		                        openApprDraftUI("REDRAFT", pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType);
+		                    }
+		                } else {
+		                    openApprovUI(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType);
+		                }
+		            } else {
+		                openViewDocInfo(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType);
+		            }
+		        } else {
+		            if (pListTypeValue != "2") {
+		                if (pFunctionType == strAprState4 || pFunctionType == strAprState6 || pFunctionType == strAprState15) {
+		                    if (pDocState == strDocState12 || pDocState == strDocState14 || pDocState == strDocState18) {
+		                        var pDraftFlag = "REDRAFT";
+		                        if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "doc") {
+		                            openLocation = "/myoffice/ezApproval/ezViewWord/ezDeptRecevUI_word.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
+		                        }
+		                        else if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
+		                            openLocation = "/myoffice/ezApproval/ezViewHWP/ezDeptRecevUI_HWP.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
+		                        }
+		                    } else if (pDocState == strDocState11) {
+		                        if (arr_userinfo[4] != pAprMemberDeptID) {
+		                            var pAlertContent = "<spring:message code='main.t2200' />";
+		                            alert(pAlertContent);
+		                            return;
+		                        }
+	
+		                        var pDraftFlag = "REDRAFT";
+		                        var openLocation = "";
+	
+		                        if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "doc") {
+		                            openLocation = "/myoffice/ezApproval/ezViewWord/ezRecevUI_word.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
+		                        }
+		                        else if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
+		                            openLocation = "/myoffice/ezApproval/ezViewHWP/ezRecevUI_HWP.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
+		                        }
+		                    } else {
+		                        if (arr_userinfo[4] != pAprMemberDeptID) {
+		                            var pAlertContent = "<spring:message code='main.t2200' />";
+		                            alert(pAlertContent);
+		                            return;
+		                        }
+	
+		                        var pDraftFlag = "REDRAFT";
+		                        var tempDocState = strDocState1;
+		                        var SusinSn = "0";
+		                        
+		                        if (pDocState == strDocState11) {
+		                            tempDocState = strDocState11;
+		                            SusinSn = "1";
+		                        }
+	
+		                        var AprState = strAprState4;
+		                        
+		                        if (pFunctionType == strAprState6) {
+		                            AprState = strAprState6;
+		                        }
+		                    }
+		                } else {
+		                    if (arr_userinfo[4] != pAprMemberDeptID) {
+		                        var pAlertContent = "<spring:message code='main.t2200' />";
+		                        alert(pAlertContent);
+		                        return;
+		                    }
+		                }
+		            }
+		            
+		            openwindow(openLocation);
+		        }
+		    }
+	
+		    function openViewDocInfo(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
+		        var pArgument = new Array();
+		        var formURL = pHref;
+		        var DocID = pDocID;
+		        pArgument[0] = DocID;
+		        pArgument[1] = formURL;
+		        pArgument[2] = "";
+		        pArgument[3] = pDocState;
+		        pArgument[4] = "";
+		        pArgument[5] = "";
+		        pArgument[6] = "OPINION_SHOW";
+		        pArgument[7] = "2";
+	
+		        var openLocation;
+		                
 	            if (CrossYN()) {
 	                openLocation = "/ezApprovalG/aprDocView.do?docID=";
+	            } else {
+	            	openLocation = "/ezApprovalG/aprDocView.do?docID=";
 	            }
-	            else {
-	                if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO")
-	                    openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	                else
-	                {
-	                    if (pUse_IE11Browser == "CK")
-	                        openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	                    else
-	                        openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	                }
-	            }
+	            
 	            openLocation = openLocation + escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
 	            openLocation = openLocation + "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
 	            openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
 	            openLocation = openLocation + "&listType=" + escape(pArgument[7]);
-	        }
-
-	        openwindow(openLocation, "", 880, 570);
-	    }
-
-
-	    function openApprDraftUI(pDraftFlag, pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
-	        var pArgument = new Array();
-	        var formURL = pHref;
-	        pArgument[0] = arr_userinfo[1];
-	        pArgument[1] = pHref;
-	        pArgument[2] = pDraftFlag;
-	        pArgument[3] = "";
-
-	        var openLocation = "";
-	        var tempDocState = "001";
-	        var SusinSn = "0";
-	        if (pDocState == "011") {
-	            tempDocState = "011";
-	            SusinSn = "1";
-	        }
-
-	        var AprState = "004";
-	        if (pFunctionType == "006")
-	            AprState = "006";
-	       
-	        pArgument[4] = SusinSn;
-	        pArgument[5] = tempDocState;
-	        pArgument[6] = AprState;
-	        pArgument[7] = "";
-
-
-	        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "doc") {
-	            openLocation = "/myoffice/ezApprovalG/ezViewWord/ezDraftUI_word_Cross.aspx?formURL=" + escape(pArgument[1]) + "&DraftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-	            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&DocState=" + escape(pArgument[5]) + "&ListType=1&AprState=" + escape(pArgument[6]);
-	            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
-	        }
-	        else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
-	            
-	            if (CrossYN()) {
-	                openLocation = "/ezApprovalG/draftui.do?formURL=";
-	            }
-	            else {
-	                if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO")
-	                    openLocation = "/ezApprovalG/draftui.do?formURL=";
-	                else {
-	                    if (pUse_IE11Browser == "CK")
-	                        openLocation = "/ezApprovalG/draftui.do?formURL=";
-	                    else
-	                        openLocation = "/ezApprovalG/draftui.do?formURL=";
-	                }
-	            }
-
-	            openLocation = openLocation + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-	            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1&aprState=" + escape(pArgument[6]);
-	            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
-	        }
-	        else {
-	            if (CrossYN()) {
-	                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezDraftUI_HWP_Cross.aspx?formURL=" + escape(pArgument[1]) + "&DraftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-	                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&DocState=" + escape(pArgument[5]) + "&ListType=1&AprState=" + escape(pArgument[6]);
-	                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
-	            } else {
-	                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezDraftUI_HWP.aspx?formURL=" + escape(pArgument[1]) + "&DraftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-	                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&DocState=" + escape(pArgument[5]) + "&ListType=1&AprState=" + escape(pArgument[6]);
-	                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
-	            }
-	        }
-
-	        openwindow(openLocation, "", 890, 560);
-	    }
-
-	    function OpenReceiveDraftUI(pDocID, pURL, pDraftFlag) {
-	        var openLocation;
-
-	        if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
-	            openLocation = "/myoffice/ezApprovalG/ezViewWord/ezDeptRecevUI_word_Cross.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	        }
-	        else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-	            openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezDeptRecevUI_HWP_Cross.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	        }
-	        else {
-
-	            if (CrossYN()) {
-	                openLocation = "/myoffice/ezApprovalG/ReceivUI/recev_CK.aspx?DocID=";
-	            }
-	            else {
-	                if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO")
-	                    openLocation = "/myoffice/ezApprovalG/ReceivUI/recev_TFI.aspx?DocID=";
-	                else {
-	                    if (pUse_IE11Browser == "CK")
-	                        openLocation = "/myoffice/ezApprovalG/ReceivUI/recev_IE.aspx?DocID=";
-	                    else
-	                        openLocation = "/myoffice/ezApprovalG/ReceivUI/recev.aspx?DocID=";
-	                }
-	            }
-
-	            openLocation = openLocation + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
-	        }
-	        openwindow(openLocation, "receive", 880, 550);
-	    }
-
-
-	    function openApprovUI(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
-	     
+	
+		        openwindow(openLocation, "", 880, 570);
+		    }
+	
+		    function openApprDraftUI(pDraftFlag, pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
+		        var pArgument = new Array();
+		        var formURL = pHref;
+		        
+		        pArgument[0] = arr_userinfo[1];
+		        pArgument[1] = pHref;
+		        pArgument[2] = pDraftFlag;
+		        pArgument[3] = "";
+	
+		        var openLocation = "";
+		        var tempDocState = "001";
+		        var SusinSn = "0";
+		        
+		        if (pDocState == "011") {
+		            tempDocState = "011";
+		            SusinSn = "1";
+		        }
+	
+		        var AprState = "004";
+		        
+		        if (pFunctionType == "006")
+		            AprState = "006";
+		       
+		        pArgument[4] = SusinSn;
+		        pArgument[5] = tempDocState;
+		        pArgument[6] = AprState;
+		        pArgument[7] = "";
+	
+		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
+					if (CrossYN()) {
+		                openLocation = "/ezApprovalG/draftui.do?formURL=";
+		            } else {
+		            	openLocation = "/ezApprovalG/draftui.do?formURL=";
+		            }
+	
+		            openLocation = openLocation + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+		            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1&aprState=" + escape(pArgument[6]);
+		            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
+		        }
+	
+		        openwindow(openLocation, "", 890, 560);
+		    }
+	
+		    function OpenReceiveDraftUI(pDocID, pURL, pDraftFlag) {
+		        var openLocation;
+	
+		        if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
+		            openLocation = "/myoffice/ezApprovalG/ezViewWord/ezDeptRecevUI_word_Cross.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
+		        }
+		        else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		            openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezDeptRecevUI_HWP_Cross.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
+		        }
+		        else {
+		            if (CrossYN()) {
+		                openLocation = "/myoffice/ezApprovalG/ReceivUI/recev_CK.aspx?DocID=";
+		            } else {
+		            	openLocation = "/myoffice/ezApprovalG/ReceivUI/recev_TFI.aspx?DocID=";
+		            }
+	
+		            openLocation = openLocation + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
+		        }
+		        
+		        openwindow(openLocation, "receive", 880, 550);
+		    }
+	
+		    function openApprovUI(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
 	            var pArgument = new Array();
+	            
 	            pArgument[0] = pDocID;
 	            pArgument[1] = pAprMemberID;
 	            pArgument[2] = pAprMemberName;
 	            pArgument[3] = pAprMemberDeptID;
 
 	            var formURL = pHref;
+	            
 	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "doc") {
 	                openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID=" + escape(pArgument[0]);
 	                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
 	                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
-	            }
-	            else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+	            } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
 	                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?DocID=" + escape(pArgument[0]);
 	                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
 	                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
-	            }
-	            else {                
+	            } else {                
 	                if (CrossYN()) {
 	                    openLocation = "/ezApprovalG/approvui.do?docID=";
-	                }
-	                else {
-	                    if (pUse_Editor == "TAGFREE" || pUse_Editor == "NAMO")
-	                        openLocation = "/ezApprovalG/approvui.do?docID=";
-	                    else {
-	                        if (pUse_IE11Browser == "CK")
-	                            openLocation = "/ezApprovalG/approvui.do?docID=";
-	                        else
-	                            openLocation = "/ezApprovalG/approvui.do?docID=";
-	                    }
+	                } else {
+	                	openLocation = "/ezApprovalG/approvui.do?docID=";
 	                }
 
 	                openLocation = openLocation + escape(pArgument[0]);
@@ -703,204 +464,193 @@
 	                openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0";
 	            }
 	            openwindow(openLocation, "", 880, 550);       
-	    }
-
-	    function openwindow(wfileLocation) {
-	        var height = window.screen.availHeight;
-	        var width = window.screen.availWidth;
-	        var left = 0;
-	        var top = 0;
-
-	        if (window.screen.width > 800) {
-	            var pleftpos;
-	            pleftpos = parseInt(width) - 1150;
-	            height = parseInt(height) - 30;
-	            
-	            if (CrossYN())
-	            	height = parseInt(height) - 25;
-
-	            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
-	            	height = parseInt(height) - 40;
-
-	            width = parseInt(width) - pleftpos;
-	            
-	            left = pleftpos / 2;
-	        }
-	        else {
-	        	height = parseInt(height) - 30;
-	            
-	            if (CrossYN())
-	            	height = parseInt(height) - 25;
-
-	            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
-	            	height = parseInt(height) - 40;
-
-	            
-	            width = parseInt(width) - 10;
-	        }
-	        window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + height + ",width=" + width + ",top=" + top + ",left = " + left);
-	    }
-
-	    function apprChangeTab(obj)
-	    {
-	        switch (obj.id)
-	        {
-	            case "doingTab":
-	                pListTypeValue = "1";
-	                document.getElementById("doingTab").className = "on";
-	                document.getElementById("rejectTab").className = "";
-	                document.getElementById("draftTab").className = "";                
-	                break;
-
-	            case "rejectTab":
-	                pListTypeValue = "4";
-	                document.getElementById("doingTab").className = "";
-	                document.getElementById("rejectTab").className = "on";
-	                document.getElementById("draftTab").className = "";
-	                break;
-
-	            case "draftTab":
-	                pListTypeValue = "2";
-	                document.getElementById("doingTab").className = "";
-	                document.getElementById("rejectTab").className = "";
-	                document.getElementById("draftTab").className = "on";
-	                break;
-	        }
-	        getApprGraph();
-	    }
-
-	    function Appmore_btnClick()
-	    {
-	        if ("${userApprovalG}" == "YES")
-	        {
-	            if (pListTypeValue != "2")
-	                window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
-	            else
-	                window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
-	        }
-	        else
-	        {
-	            if (pListTypeValue != "2")
-	                window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
-	            else
-	                window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
-	        }
-	    }
-
-	    var xmlhttp_getMailGraph_NewApprMail = createXMLHttpRequest();
-	    function getMailGraph() {
-
-	        var xmlpara = createXmlDom();
-
-	        var objNode;
-	        createNodeInsert(xmlpara, objNode, "PARAMETER");
-	        createNodeAndInsertText(xmlpara, objNode, "pMailType", "1");       
-
-	        //DisplayWaitStat();
-
-	        xmlhttp_getMailGraph_NewApprMail = null;
-	        xmlhttp_getMailGraph_NewApprMail = createXMLHttpRequest();
-	        xmlhttp_getMailGraph_NewApprMail.open("POST", "/ezEmail/getPortletMailList.do", true);
-	        xmlhttp_getMailGraph_NewApprMail.onreadystatechange = getMailList_after;
-	        xmlhttp_getMailGraph_NewApprMail.send(xmlpara);
-	    }
-
-	    function getMailList_after() {
-
-	        if (xmlhttp_getMailGraph_NewApprMail == null || xmlhttp_getMailGraph_NewApprMail.readyState != 4) return;
-
-	        try {          
-
-	            document.getElementById("MailList").innerHTML = "";
-	            
-
-	            var xmldom = createXmlDom();
-	            xmldom = xmlhttp_getMailGraph_NewApprMail.responseXML;
-
-	            
-	            document.getElementById("InBoxCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT").item(0)) + ")";
-	            document.getElementById("UseMailBox").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXDETAIL").item(0));// + " " + getNodeText(xmldom.getElementsByTagName("MAILPERCENT").item(0)) +"%";
-	            var MailPercent = getNodeText(xmldom.getElementsByTagName("MAILPERCENT").item(0));
-	            
-	            if (MailPercent.length == 1)
-	                MailPercent = "00" + MailPercent;
-	            else if (MailPercent.length == 2)
-	                MailPercent = "0" + MailPercent;
-
-	            document.getElementById("mailquateimg").src = "/images/<spring:message code='main.t00025' />/main/mailgraph/g" + MailPercent + ".gif";
-	            document.getElementById("MailBoxSize").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXSIZE").item(0));
-
-	            var listHTML = "";
-	            if (xmldom.getElementsByTagName("NODE").length > 0) {
-	                var listHTML = "<ul class=\"listtype_txt \">";
-	                for (var i = 0; i < xmldom.getElementsByTagName("NODE").length; i++) {
-	                    var SUBJECT = getNodeText(xmldom.getElementsByTagName("SUBJECT").item(i));
-	                    var SENDER = getNodeText(xmldom.getElementsByTagName("SENDER").item(i));
-	                    var DATE = getNodeText(xmldom.getElementsByTagName("DATE").item(i));
-	                    var HREF = getNodeText(xmldom.getElementsByTagName("HREF").item(i));
-
-	                    listHTML += "<li onclick=\"open_mail('" + HREF + "')\"><span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
-	                }
-
-	                listHTML += "</ul>";
-	            }
-	            else {
-	                listHTML = "<div class='nodata_portlet '>";
-	                listHTML += "<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_white.gif' width='107' height='70'></p>";
-	                listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
-	            }
-
-	            document.getElementById("MailList").innerHTML = listHTML;
-
-	        }
-	        catch (e) {
-	        }
-	    }
-
-	    function open_mail(url) {        
-	        var pheight = window.screen.availHeight;
-	        var conHeight = pheight * 0.8;
-	        var pwidth = window.screen.availWidth;
-	        var conWidth = pwidth * 0.8;
-	        if (conWidth > 890)
-	            conWidth = 890;
-	        var pTop = (pheight - conHeight) / 2;
-	        var pLeft = (pwidth - 890) / 2;
-
-	        var newwin;
-	        var pURI = "/ezEmail/mailRead.do?URL=" + encodeURIComponent(url) + "&PNFlag=N&CONTENTCLASS=";
-
-	        newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	        newwin.focus();
-	        getMailGraph();
-	    }
-
-	    function ReplaceText(orgStr, findStr, replaceStr) {
-	        var re = new RegExp(findStr, "gi");
-	        return (orgStr.replace(re, replaceStr));
-	    }
-
-	    function Mailmore_btnClick()
-	    {
-	        window.open("/ezEmail/mailMain.do", "main");
-	    }
-	    function refresh_onclick() {
-	        change_article('mail');
-	    }
-	    function openergetDocInfo() {
-	        if (document.getElementById("doingTab").className == "on") {
-	            apprChangeTab(document.getElementById("doingTab"));
-	        }
-	        else if (document.getElementById("rejectTab").className == "on") {
-	            apprChangeTab(document.getElementById("rejectTab"));
-	        }
-	        else {
-	            apprChangeTab(document.getElementById("draftTab"));
-	        }
-	    }
-
-	    window_onload_NewApprMail();
-		
+		    }
+	
+		    function openwindow(wfileLocation) {
+		        var height = window.screen.availHeight;
+		        var width = window.screen.availWidth;
+		        var left = 0;
+		        var top = 0;
+	
+		        if (window.screen.width > 800) {
+		            var pleftpos;
+		            pleftpos = parseInt(width) - 1150;
+		            height = parseInt(height) - 30;
+		            
+		            if (CrossYN())
+		            	height = parseInt(height) - 25;
+	
+		            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		            	height = parseInt(height) - 40;
+	
+		            width = parseInt(width) - pleftpos;
+		            
+		            left = pleftpos / 2;
+		        } else {
+		        	height = parseInt(height) - 30;
+		            
+		            if (CrossYN())
+		            	height = parseInt(height) - 25;
+	
+		            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		            	height = parseInt(height) - 40;
+	
+		            
+		            width = parseInt(width) - 10;
+		        }
+		        window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + height + ",width=" + width + ",top=" + top + ",left = " + left);
+		    }
+	
+		    function apprChangeTab(obj) {
+		        switch (obj.id) {
+		            case "doingTab":
+		                pListTypeValue = "1";
+		                document.getElementById("doingTab").className = "on";
+		                document.getElementById("rejectTab").className = "";
+		                document.getElementById("draftTab").className = "";                
+		                break;
+	
+		            case "rejectTab":
+		                pListTypeValue = "4";
+		                document.getElementById("doingTab").className = "";
+		                document.getElementById("rejectTab").className = "on";
+		                document.getElementById("draftTab").className = "";
+		                break;
+	
+		            case "draftTab":
+		                pListTypeValue = "2";
+		                document.getElementById("doingTab").className = "";
+		                document.getElementById("rejectTab").className = "";
+		                document.getElementById("draftTab").className = "on";
+		                break;
+		        }
+		        getApprGraph();
+		    }
+	
+		    function Appmore_btnClick() {
+		        if ("${userApprovalG}" == "YES") {
+		            if (pListTypeValue != "2")
+		                window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
+		            else
+		                window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
+		        } else {
+		            if (pListTypeValue != "2")
+		                window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
+		            else
+		                window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
+		        }
+		    }
+	
+		    var xmlhttp_getMailGraph_NewApprMail = createXMLHttpRequest();
+		    
+		    function getMailGraph() {
+		        var xmlpara = createXmlDom();
+	
+		        var objNode;
+		        createNodeInsert(xmlpara, objNode, "PARAMETER");
+		        createNodeAndInsertText(xmlpara, objNode, "pMailType", "1");       
+	
+		        //DisplayWaitStat();
+	
+		        xmlhttp_getMailGraph_NewApprMail = null;
+		        xmlhttp_getMailGraph_NewApprMail = createXMLHttpRequest();
+		        xmlhttp_getMailGraph_NewApprMail.open("POST", "/ezEmail/getPortletMailList.do", true);
+		        xmlhttp_getMailGraph_NewApprMail.onreadystatechange = getMailList_after;
+		        xmlhttp_getMailGraph_NewApprMail.send(xmlpara);
+		    }
+	
+		    function getMailList_after() {
+		        if (xmlhttp_getMailGraph_NewApprMail == null || xmlhttp_getMailGraph_NewApprMail.readyState != 4) return;
+	
+		        try {          
+		            document.getElementById("MailList").innerHTML = "";
+	
+		            var xmldom = createXmlDom();
+		            xmldom = xmlhttp_getMailGraph_NewApprMail.responseXML;
+		            
+		            document.getElementById("InBoxCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT").item(0)) + ")";
+		            document.getElementById("UseMailBox").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXDETAIL").item(0));// + " " + getNodeText(xmldom.getElementsByTagName("MAILPERCENT").item(0)) +"%";
+		            var MailPercent = getNodeText(xmldom.getElementsByTagName("MAILPERCENT").item(0));
+		            
+		            if (MailPercent.length == 1)
+		                MailPercent = "00" + MailPercent;
+		            else if (MailPercent.length == 2)
+		                MailPercent = "0" + MailPercent;
+	
+		            document.getElementById("mailquateimg").src = "/images/<spring:message code='main.t00025' />/main/mailgraph/g" + MailPercent + ".gif";
+		            document.getElementById("MailBoxSize").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXSIZE").item(0));
+	
+		            var listHTML = "";
+		            if (xmldom.getElementsByTagName("NODE").length > 0) {
+		                var listHTML = "<ul class=\"listtype_txt \">";
+		                
+		                for (var i = 0; i < xmldom.getElementsByTagName("NODE").length; i++) {
+		                    var SUBJECT = getNodeText(xmldom.getElementsByTagName("SUBJECT").item(i));
+		                    var SENDER = getNodeText(xmldom.getElementsByTagName("SENDER").item(i));
+		                    var DATE = getNodeText(xmldom.getElementsByTagName("DATE").item(i));
+		                    var HREF = getNodeText(xmldom.getElementsByTagName("HREF").item(i));
+	
+		                    listHTML += "<li onclick=\"open_mail('" + HREF + "')\"><span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
+		                }
+	
+		                listHTML += "</ul>";
+		            } else {
+		                listHTML = "<div class='nodata_portlet '>";
+		                listHTML += "<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_white.gif' width='107' height='70'></p>";
+		                listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
+		            }
+	
+		            document.getElementById("MailList").innerHTML = listHTML;
+	
+		        }
+		        catch (e) {
+		        }
+		    }
+	
+		    function open_mail(url) {        
+		        var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var conWidth = pwidth * 0.8;
+		        if (conWidth > 890)
+		            conWidth = 890;
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+	
+		        var newwin;
+		        var pURI = "/ezEmail/mailRead.do?URL=" + encodeURIComponent(url) + "&PNFlag=N&CONTENTCLASS=";
+	
+		        newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		        newwin.focus();
+		        getMailGraph();
+		    }
+	
+		    function ReplaceText(orgStr, findStr, replaceStr) {
+		        var re = new RegExp(findStr, "gi");
+		        return (orgStr.replace(re, replaceStr));
+		    }
+	
+		    function Mailmore_btnClick() {
+		        window.open("/ezEmail/mailMain.do", "main");
+		    }
+		    
+		    function refresh_onclick() {
+		        change_article('mail');
+		    }
+		    
+		    function openergetDocInfo() {
+		        if (document.getElementById("doingTab").className == "on") {
+		            apprChangeTab(document.getElementById("doingTab"));
+		        }
+		        else if (document.getElementById("rejectTab").className == "on") {
+		            apprChangeTab(document.getElementById("rejectTab"));
+		        }
+		        else {
+		            apprChangeTab(document.getElementById("draftTab"));
+		        }
+		    }
+	
+		    window_onload_NewApprMail();
 		</script>
 	</head>	
 </html>

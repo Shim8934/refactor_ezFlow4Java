@@ -78,6 +78,44 @@
         </isNotEqual>
     </select>
     
+    <select id="loginDAO.selectUserWithCnOnly" resultMap="login">
+        <!-- 일반회원 -->       
+        <![CDATA[
+            SELECT 
+                cn,
+                password,               
+                displayname,
+                displayname2,
+                department,              
+                description,
+                description2,
+                title,
+                title2,
+                physicaldeliveryofficename as companyid,
+                company,
+                company2,
+                updatedt,
+                extensionattribute1 as rollinfo,
+                telephonenumber,
+                mail,
+                extensionattribute10 as jikchek,
+                tenant_id,
+                (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+                loginCnt,
+                extensionattribute4 as gyumJik,
+                extensionattribute2 as userFileUrl,
+                extensionattribute14 as sabun
+            FROM 
+                TBL_USERMASTER a
+            WHERE 
+                cn = #id# AND tenant_id = #tenantId#
+        ]]>
+        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+            password = #password#
+        </isNotEqual>
+    </select>
+        
     <select id="loginDAO.getUserIDList" resultClass="String">
         <!-- 모든회원 -->       
         <![CDATA[

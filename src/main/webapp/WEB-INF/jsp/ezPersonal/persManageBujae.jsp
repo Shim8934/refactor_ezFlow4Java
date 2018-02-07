@@ -54,10 +54,10 @@
 		            D2_Temp = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        }
 		        if (startdate != "") {
-		            var nowDate = new Date(startdate.substring(0, 4), startdate.substring(5, 7), startdate.substring(8, 10), startdate.substring(11, 13), startdate.substring(14, 15));
-		            var nowDate2 = new Date(enddate.substring(0, 4), enddate.substring(5, 7), enddate.substring(8, 10), enddate.substring(11, 13), enddate.substring(14, 15));
-		            nowDate.setMonth(nowDate.getMonth() - 1);
-		            nowDate2.setMonth(nowDate2.getMonth() - 1);
+		        	var nowDate = new Date(startdate.substring(0, 4), startdate.substring(5, 7)-1, startdate.substring(8, 10), startdate.substring(11, 13), startdate.substring(14, 15));
+		            var nowDate2 = new Date(enddate.substring(0, 4), enddate.substring(5, 7)-1, enddate.substring(8, 10), enddate.substring(11, 13), enddate.substring(14, 15));
+		            nowDate.setMonth(nowDate.getMonth());
+		            nowDate2.setMonth(nowDate2.getMonth());
 		            $("#Sdatepicker").datepicker('setDate', nowDate);
 		            $("#Edatepicker").datepicker('setDate', nowDate2);
 		            document.getElementById("absentreason").value = BReason;            
@@ -175,12 +175,12 @@
 			    type_Complete = type;
 			    if (CrossYN() || NoneActiveX == "YES") {
 			        selectperson_cross_dialogArguments[1] = select_person_Complete;
-			        var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "SelectPerson_cross", GetOpenWindowfeature(660, 535));
+			        var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "SelectPerson_cross", GetOpenWindowfeature(760, 535));
 			        try { OpenWin.focus(); } catch (e) { }
 			    }
 			    else {
 			        var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=" + type, "",
-		                "dialogHeight:535px;dialogwidth:660px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(660, 535));
+		                "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(760, 535));
 		
 			        if (typeof (rtnValue) != "undefined" && type == "") {
 			            userid = rtnValue.split(":")[0];
@@ -285,7 +285,6 @@
 		        }
 		        else
 		            pProxy = "";
-
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",

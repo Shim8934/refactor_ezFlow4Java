@@ -57,8 +57,18 @@
 // 	        var ch_CommunityAdmin = "<c:out value='${chCommunityAdmin}' />";
 	    	var pUse_Editor = "<c:out value='${useEditor}' />";
 	    	var rsa = new RSAKey();
+	    	var commentCount = "<c:out value='${commentCount}' />";
 	    	
 	    	window.onload = function () {
+	    		$("#message").contents().find("body").css("word-wrap", "break-word");
+	    		$("#message").contents().find("body").css("font-family", "Gulim, arial, verdana");
+				$("#message").contents().find("body").css("font-size", "13px");
+// 	    		if (gubun != 2) {
+// 	    			self.resizeTo(765, 800);
+// 	    		} else {
+// 	    			self.resizeTo(765, 800);
+// 	    		}
+	    		
 	    	    try {
 	    	    	var html = "";
 					$.ajax({
@@ -79,9 +89,11 @@
 					doc.write(html);
 					doc.close();
 					
-					$("#message").contents().find("body").css("word-wrap", "break-word");
-					$("#message").contents().find("body").css("font-family", "Gulim, arial, verdana");
-					$("#message").contents().find("body").css("font-size", "13px");
+// 					if (gubun == "2") {
+// 						$("#messagePad").css("height","460px");
+// 					} else {
+// 						$("#messagePad").contents().find("body").css("height", "430px");
+// 					}
 					
 	    	        AddLinkTarget();
 	    	        SetAttachmentInfo();
@@ -100,7 +112,23 @@
 	    	    
 	    	    rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 	    	}
-
+			
+		    window.onresize = function () {
+		        if (gubun != "3") { 
+		            var contentHeight;
+		            if (gubun == "2") {
+		                contentHeight = document.documentElement.clientHeight - 338;
+		            } else {
+		                contentHeight = document.documentElement.clientHeight - 363;
+		            }
+		            if(contentHeight < 40){
+		            	contentHeight = 40;
+		            }
+		            document.getElementById("messagePad").style.height = contentHeight + "PX";
+		            document.getElementById("message").style.height = contentHeight + "PX";
+		        }
+		    };
+	    	
 	        function AddLinkTarget() {
 	            try {
 	                var objTags = document.getElementById('message').getElementsByTagName("a");
@@ -153,7 +181,6 @@
 		                        alert("<spring:message code = 'ezCommunity.t921' />");
 		                        return;
 		                    } else if (ret == "cancel") {
-		    	            	alert("<spring:message code='ezCommunity.t60'/>");
 		    	                return;
 		    	            }
 		                    
@@ -217,10 +244,8 @@
 	            }
 
 	            if (ret != "OK") {
-                    alert("<spring:message code = 'ezCommunity.t921' />");
                     return;
                 } else if (ret == "cancel") {
-	            	alert("<spring:message code='ezCommunity.t60'/>");
 	                return;
 	            }
 	            
@@ -308,11 +333,7 @@
 	                 if (CrossYN()) {
 	                     window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 	                 } else {
-	                     if (pUse_Editor == "" || pUse_Editor == "CK") {
-	                         window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
-	                     } else {
-	                         window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
-	                     }
+                         window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 	                 }
 	            }
 	        }
@@ -324,7 +345,6 @@
 	            }
 	            
 	            if (ret != "OK") {
-	            	alert("<spring:message code='ezCommunity.t939'/>");
 	                return;
 	            }
 
@@ -537,10 +557,27 @@
 	            window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 	            window.close();
 	        }
+		    var item_readlist_cross_dialogArguments = new Array();
 
 	        function ReaderList() {
-	        	var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-	            GetOpenWindow(szHref, "", 520, 400);
+// 	        	var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+// 	            GetOpenWindow(szHref, "", 520, 400);
+	        	var heigth = window.screen.availHeight;
+		        var width = window.screen.availWidth;
+		        var left = (width - 500) / 2;
+		        var top = (heigth - 400) / 2;
+		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+		        var strFeature = "status:no;dialogHeight: 400px;dialogWidth: 520px;help: no;resizable:yes";
+		        if (CrossYN()) {
+		            item_readlist_cross_dialogArguments[0] = "";
+		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
+		            DivPopUpShow(520, 410, szHref);
+		        }
+		        else
+		            window.open(szHref, "", "width=520, height=400, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		    }
+		    function ReaderList_Complete() {
+		        DivPopUpHidden();
 	        }
 
 	        function btn_Print_Onclick() {
@@ -797,6 +834,12 @@
 	            
 	            return str_temp;
 	        }
+	        
+		 	 //강민수92
+		    function btn_One_Line_Reply_Onclick() {
+		    	openCommunityBoardComment();
+	    		return;
+		    } 
 		</script>
 	</head>
 	<body class = "popup">
@@ -809,6 +852,7 @@
 	            <td style="height: 20px">
 	                <div id="menu">
 	                    <ul>
+	                    	<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
 	                    	<c:choose>
 	                    		<c:when test="${pBoardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
 	                    			<li id='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezCommunity.t207'/></span></li>
@@ -910,92 +954,99 @@
 	        </tr>
 	        <tr>
 	            <td style="height:20px">
-	                <table class="content">
+	                <table class="content" style="width:100%">
 	                    <tr>
-	                        <th><spring:message code='ezCommunity.t138'/></th>
+	                    	<!-- 작성자 -->
+	                        <th style="width:10%"><spring:message code='ezCommunity.t138'/></th>
 	                        <c:choose>
 	                        	<c:when test="${boardInfo.gubun != '2' }">
-	                        		<td id="WriteUserNM" style="white-space: nowrap">
+	                        		<td id="WriteUserNM" style="white-space: nowrap; width:40%;">
 	                            		<div id="Div1" style="vertical-align: middle; overflow-y: auto; cursor: pointer" onclick='OpenUserInfo("${item.writerID}")'><c:out value='${item.writerName}' /></div>
 	                            	</td>
 	                        	</c:when>
 	                        	
 	                        	<c:otherwise>
-	                        		<td id="Td7" style="white-space: nowrap">
+	                        		<td id="Td7" style="white-space: nowrap; width:40%">
 	                            		<div id="Div2" style="vertical-align: middle; height: 16px; overflow-y: auto;"><c:out value='${item.writerName}' /></div>
 	                            	</td>
 	                        	</c:otherwise>
 	                        </c:choose>
-	                        
-	                        <th><spring:message code='ezCommunity.t209'/></th>
-	                        <td id="PostDate" style="padding-right: 15px; white-space: nowrap">
+	                        <!-- 작성자 end -->
+								<!-- 부서명 -->
+		                    <th style="width:10%"><spring:message code='ezCommunity.t959'/></th>
+	                        <c:choose>
+	                        	<c:when test="${boardInfo.gubun != '2' }">
+	                        		<td id="Td1" style="white-space: nowrap; width: 40%;"><span><c:out value='${item.writerDeptName}' /></span></td>
+	                        	</c:when>
+	                        	
+	                        	<c:otherwise>
+	                        		<td id="Td2" style="white-space: nowrap; width: 40%;"><span>&nbsp;</span></td>
+	                        	</c:otherwise>
+	                        </c:choose>
+	                        <!-- 부서명 end -->
+		                </tr>
+		                
+                       	<c:if test="${boardInfo.gubun != '2' }">
+		                    <tr>    
+		                        <!-- 직위 -->
+		                        <th style="width:10%"><spring:message code='ezCommunity.t960'/></th>
+		                        
+		                        <c:choose>
+		                        	<c:when test="${boardInfo.gubun != '2' }">
+		                        		<td id="Td3" style="width:40%"><span><c:out value='${item.extensionAttribute3}' /></span></td>
+		                        	</c:when>
+		                        	
+		                        	<c:otherwise>
+		                        		<td id="Td4" style="width:40%"><span>&nbsp; </span></td>
+		                        	</c:otherwise>
+		                        </c:choose>
+		                        <!-- 직위 end -->
+		                        <!-- 전화번호 -->
+		                        <th style="width:10%"><spring:message code='ezCommunity.t269'/></th>
+		                        
+		                        <c:choose>
+		                        	<c:when test="${boardInfo.gubun != '2' }">
+		                        		<td id="Td5" style="padding-right: 15px; white-space: nowrap; width: 40%;"><span><c:out value='${item.extensionAttribute4}' /></span></td>
+		                        	</c:when>
+		                        	
+		                        	<c:otherwise>
+		                        		<td id="Td6" style="padding-right: 15px; white-space: nowrap; width: 40%;"><span>&nbsp; </span></td>
+		                        	</c:otherwise>
+		                        </c:choose>
+		                        <!-- 전화번호  end-->
+	                        </tr>
+                    	</c:if>
+		                
+	                    <tr>    
+	                        <!-- 게시일 -->
+	                        <th style="width:10%"><spring:message code='ezCommunity.t209'/></th>
+	                        <td id="PostDate" style="padding-right: 15px; white-space: nowrap; width:40%">
 	                        	<div id="Div3" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.writeDate}' /></div>
 	                        </td>
-	                        
-	                        <th><spring:message code='ezCommunity.t931'/></th>
-	                        
+	                        <!-- 게시일 end -->
+	                        <!-- 게시종료일 -->
+	                        <th style="width:10%"><spring:message code='ezCommunity.t931'/></th>
 	                        <c:set var="t930"><spring:message code='ezCommunity.t930'/></c:set>
 	                        
 	                        <c:choose>
 	                        	<c:when test="${item.endDate == t930}">
-	                        		<td id="EndDate" style="padding-right: 15px; white-space: nowrap; width: 100%;">
+	                        		<td id="EndDate" style="padding-right: 15px; white-space: nowrap; width: 40%;">
 			                            <div id="Div4" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><spring:message code='ezCommunity.t930'/></div>
 			                        </td>
 	                        	</c:when>
 	                        	
 	                        	<c:otherwise>
-	                        		<td id="Td8" style="padding-right: 15px; white-space: nowrap; width: 100%;">
+	                        		<td id="Td8" style="padding-right: 15px; white-space: nowrap; width: 40%;">
 	                            		<div id="Div5" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.endDate}' /></div>
 	                        		</td>
 	                        	</c:otherwise>
 	                        </c:choose>
+	                        <!-- 게시종료일  end -->
 	                        
 	                    </tr>
 	                    
-	                   
-                    	<c:if test="${boardInfo.gubun != '2' }">
-							<tr>
-		                        <th><spring:message code='ezCommunity.t959'/></th>
-		                        
-		                        <c:choose>
-		                        	<c:when test="${boardInfo.gubun != '2' }">
-		                        		<td id="Td1" style="white-space: nowrap; width: 100px;"><span><c:out value='${item.writerDeptName}' /></span></td>
-		                        	</c:when>
-		                        	
-		                        	<c:otherwise>
-		                        		<td id="Td2" style="white-space: nowrap; width: 100px;"><span>&nbsp;</span></td>
-		                        	</c:otherwise>
-		                        </c:choose>
-		                        
-		                        <th><spring:message code='ezCommunity.t960'/></th>
-		                        
-		                        <c:choose>
-		                        	<c:when test="${boardInfo.gubun != '2' }">
-		                        		<td id="Td3"><span><c:out value='${item.extensionAttribute3}' /></span></td>
-		                        	</c:when>
-		                        	
-		                        	<c:otherwise>
-		                        		<td id="Td4"><span>&nbsp; </span></td>
-		                        	</c:otherwise>
-		                        </c:choose>
-		                        
-		                        <th><spring:message code='ezCommunity.t269'/></th>
-		                        
-		                        <c:choose>
-		                        	<c:when test="${boardInfo.gubun != '2' }">
-		                        		<td id="Td5" style="padding-right: 15px; white-space: nowrap; width: 100%;"><span><c:out value='${item.extensionAttribute4}' /></span></td>
-		                        	</c:when>
-		                        	
-		                        	<c:otherwise>
-		                        		<td id="Td6" style="padding-right: 15px; white-space: nowrap; width: 100%;"><span>&nbsp; </span></td>
-		                        	</c:otherwise>
-		                        </c:choose>
-		                        
-	                        </tr>
-                    	</c:if>
-
 	                    <tr>
-	                        <th><spring:message code='ezCommunity.t210'/></th>
+	                        <th style="width:10%"><spring:message code='ezCommunity.t210'/></th>
 	                        <td id="cTitle" colspan="6">
 	                            <div id="title" style="WORD-WRAP: break-word; word-break: break-all; OVERFLOW-Y: auto; WIDTH: 100%;"><c:out value='${item.title}' /></div>
 	                        </td>
@@ -1003,57 +1054,65 @@
 	                </table>
 	            </td>
 	        </tr>
-	        <tr>
-	            <td class="pad1" style="height:400px">
-           			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #b6b6b6;"></iframe>
+	        <tr> 
+	        <c:choose>
+	        <c:when test="${boardInfo.gubun == '2'}"> 
+	            <td class="pad1" id="messagePad" style="vertical-align:top; height:460px">
+	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #b6b6b6;"></iframe>
 	            </td>
+            </c:when>
+            <c:otherwise>
+	           	<td class="pad1" id="messagePad" style="vertical-align:top; height:440px">
+	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #b6b6b6;"></iframe>
+	            </td>
+            </c:otherwise>
+			</c:choose>
+
 	        </tr>
 	        
 	        <c:choose>
 	        	<c:when test="${oneLineReplyFlag == '1'}">
 	        		<tr>
-	        			
-	        			<c:choose>
-	        				<c:when test="${boardInfo.gubun != '2' }">
-	        					<td style="height:20px">
-					                <table class="content">
-					                    <tr>
-					                        <td height="50" colspan="3">
-					                            <div align="left" id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white"></div>
-					                        </td>
-					                    </tr>
-					                    <tr>
-					                        <th><spring:message code='ezCommunity.t961'/></th>
-					                        <td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxlength="100" onkeydown="OneLineReply_onkeydown()"></td>
-					                        <td class="pos2"><a class="imgbtn"><span onclick="Save_OneLineReply()" style="width:70px;"><spring:message code='ezCommunity.t958'/></span></a></td>
-					                    </tr>
-					                </table>
-					            </td>
-	        				</c:when>
+<%-- 	        			<c:choose> --%>
+<%-- 	        				<c:when test="${boardInfo.gubun != '2' }"> --%>
+<!-- 	        					<td style="height:20px"> -->
+<!-- 					                <table class="content"> -->
+<!-- 					                    <tr> -->
+<!-- 					                        <td height="50" colspan="3"> -->
+<!-- 					                            <div align="left" id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white"></div> -->
+<!-- 					                        </td> -->
+<!-- 					                    </tr> -->
+<!-- 					                    <tr> -->
+<%-- 					                        <th><spring:message code='ezCommunity.t961'/></th> --%>
+<!-- 					                        <td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxlength="100" onkeydown="OneLineReply_onkeydown()"></td> -->
+<%-- 					                        <td class="pos2"><a class="imgbtn"><span onclick="Save_OneLineReply()" style="width:70px;"><spring:message code='ezCommunity.t958'/></span></a></td> --%>
+<!-- 					                    </tr> -->
+<!-- 					                </table> -->
+<!-- 					            </td> -->
+<%-- 	        				</c:when> --%>
 	        				
-	        				<c:otherwise>
-	        					<td style="height:20px">
-					                <table class="content">
-					                    <tr>
-					                        <td height="50" colspan="5">
-					                            <div align="left" id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white"></div>
-					                        </td>
-					                    </tr>
-					                    <tr>
-					                        <th><spring:message code='ezCommunity.t961'/></th>
-					                        <td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxlength="100" onkeydown="OneLineReply_onkeydown()"></td>
-					                        <th><spring:message code='ezCommunity.t1175'/></th>
-					                        <td><input type="password" id="txtPassWord" style="WIDTH: 80px" maxlength="15"></td>
-					                        <td class="pos2"><a class="imgbtn"><span onclick="Save_OneLineReply()" style="width:70px;"><spring:message code='ezCommunity.t958'/></span></a></td>
-					                    </tr>
-					                </table>
-					            </td>
-	        				</c:otherwise>
-	        			</c:choose>
-			            
+<%-- 	        				<c:otherwise> --%>
+<!-- 	        					<td style="height:20px"> -->
+<!-- 					                <table class="content"> -->
+<!-- 					                    <tr> -->
+<!-- 					                        <td height="50" colspan="5"> -->
+<!-- 					                            <div align="left" id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white"></div> -->
+<!-- 					                        </td> -->
+<!-- 					                    </tr> -->
+<!-- 					                    <tr> -->
+<%-- 					                        <th><spring:message code='ezCommunity.t961'/></th> --%>
+<!-- 					                        <td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxlength="100" onkeydown="OneLineReply_onkeydown()"></td> -->
+<%-- 					                        <th><spring:message code='ezCommunity.t1175'/></th> --%>
+<!-- 					                        <td><input type="password" id="txtPassWord" style="WIDTH: 80px" maxlength="15"></td> -->
+<%-- 					                        <td class="pos2"><a class="imgbtn"><span onclick="Save_OneLineReply()" style="width:70px;"><spring:message code='ezCommunity.t958'/></span></a></td> --%>
+<!-- 					                    </tr> -->
+<!-- 					                </table> -->
+<!-- 					            </td> -->
+<%-- 	        				</c:otherwise> --%>
+<%-- 	        			</c:choose> --%>
 			        </tr>
 			        <tr>
-			            <td class="pad1" style="height:20px">
+			            <td class="pad1" style="height:20px; vertical-align:top">
 			                <table class="file">
 			                    <tr>
 			                        <th><spring:message code='ezCommunity.t141'/></th>
@@ -1074,7 +1133,7 @@
 	        	
 	        	<c:otherwise>
 	        		<tr>
-			            <td class="pad1" style="height:20px">
+			            <td class="pad1"  style="height:20px; vertical-align:top">
 			                <table class="file">
 			                    <tr>
 			                        <th><spring:message code='ezCommunity.t141'/></th>
@@ -1117,5 +1176,10 @@
 	    
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>
 </html>

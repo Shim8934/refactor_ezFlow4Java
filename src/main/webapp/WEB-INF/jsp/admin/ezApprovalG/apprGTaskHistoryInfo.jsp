@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title><spring:message code = 'ezApprovalG.t808' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -64,7 +64,7 @@
 	<body class="popup">
 		<h1><spring:message code = 'ezApprovalG.t808' /></h1>
 		<div id="close"><ul><li><span onClick="window.close()"><spring:message code = 'ezApprovalG.t64' /></span></li></ul></div>
-		<div class="listview" style="overflow:hidden">
+		<div class="listview" style="overflow:hidden; width: 818px;">
 			<div id="lvAprLine" style="border:0;HEIGHT: 240px; WIDTH: 818px;overflow:auto;" ></div>
 		</div>
 	</body>

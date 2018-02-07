@@ -172,68 +172,102 @@
 		</script>
 	</head>
 	<body class="popup" style="background-image:none" onresize="ResizeDiv()">
-		<table class="layout">
-		  <tr>
-		    <td style="height:20px"><table class="content">
-		        <tr>
-		          <th><spring:message code='ezBoard.t207'/></th>
-		          <td id="WriteUserNM" style="white-space:nowrap; width:200px"><div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer"></div></td>
-		          <th><spring:message code='ezBoard.t224'/></th>
-		          <td id="PostDate" style="padding-right:10px; white-space:nowrap; width:300px"><div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;"></div></td>
-		          <th><spring:message code='ezBoard.t288'/></th>
-		          <td id="EndDate" style="padding-right:10px; white-space:nowrap; width:200px"><div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;"></div></td>
-		        </tr>
-		        <c:if test="${guBun != '2'}">
-			        <tr>
-			          <th><spring:message code='ezBoard.t289'/></th>
-			          <td id="User_DeptNM" style="white-space:nowrap; width:200px"></td>
-			          <th><spring:message code='ezBoard.t290'/></th>
-			          <td id="User_JobTitle" style="white-space:nowrap; width:200px"></td>
-			          <th><spring:message code='ezBoard.t38'/></th>
-			          <td id="Telephone" style="width:200px"></td>
-			        </tr>
-		        </c:if>
+		<table class="layout" style="width:100%;">
+			<tr>
+		    	<td style="vertical-align: top; height:20px">
+		    		<!-- 2018-02-01 김보미 - 테이블 컬럼 순서 조정 -->
+		    		<table class="content" style="width:100%;">
+						<!-- 게시자&부서 -->
+						<tr>
+							<th style="width:10%;"><spring:message code='ezBoard.t207'/></th> 
+							<td id="WriteUserNM" style="white-space:nowrap; width:40%">
+								<div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer"></div>
+							</td>
+							<c:if test="${guBun != '2'}">
+								<th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
+								<td id="User_DeptNM" style="white-space:nowrap; width:40%"></td>
+							</c:if>
+						</tr>
+						<!-- 직위&전화번호 -->
+						<c:if test="${guBun != '2'}">
+						<tr>
+							<th style="width:10%;"><spring:message code='ezBoard.t290'/></th>
+							<td id="User_JobTitle" style="white-space:nowrap; width:40%"></td>
+							<th style="width:10%;"><spring:message code='ezBoard.t38'/></th>
+						    <td id="Telephone" style="width:40%"></td>
+						</tr>
+						</c:if>
+						<!-- 게시일&게시종료일 -->
+						<tr>
+							<th style="width:10%;"><spring:message code='ezBoard.t224'/></th>
+							<td id="PostDate" style="padding-right:10px; white-space:nowrap; width:40%"><div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;"></div></td>
+							<th style="width:10%;"><spring:message code='ezBoard.t288'/></th>
+							<td id="EndDate" style="padding-right:10px; white-space:nowrap; width:40%"><div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;"></div></td>
+						</tr>
+
+<!-- 		  <tr> -->
+<!-- 		    <td style="height:20px"><table class="content"> -->
+<!-- 		        <tr> -->
+<%-- 		          <th><spring:message code='ezBoard.t207'/></th> --%>
+<!-- 		          <td id="WriteUserNM" style="white-space:nowrap; width:200px"><div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer"></div></td> -->
+<%-- 		          <th><spring:message code='ezBoard.t224'/></th> --%>
+<!-- 		          <td id="PostDate" style="padding-right:10px; white-space:nowrap; width:300px"><div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;"></div></td> -->
+<%-- 		          <th><spring:message code='ezBoard.t288'/></th> --%>
+<!-- 		          <td id="EndDate" style="padding-right:10px; white-space:nowrap; width:200px"><div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;"></div></td> -->
+<!-- 		        </tr> -->
+<%-- 		        <c:if test="${guBun != '2'}"> --%>
+<!-- 			        <tr> -->
+<%-- 			          <th><spring:message code='ezBoard.t289'/></th> --%>
+<!-- 			          <td id="User_DeptNM" style="white-space:nowrap; width:200px"></td> -->
+<%-- 			          <th><spring:message code='ezBoard.t290'/></th> --%>
+<!-- 			          <td id="User_JobTitle" style="white-space:nowrap; width:200px"></td> -->
+<%-- 			          <th><spring:message code='ezBoard.t38'/></th> --%>
+<!-- 			          <td id="Telephone" style="width:200px"></td> -->
+<!-- 			        </tr> -->
+<%-- 		        </c:if> --%>
 		        <tr>
 		          <th><spring:message code='ezBoard.t291'/></th>
 		          <td id="cTitle" style="WORD-WRAP: break-word" colSpan="5"><div id="txtTitle" style="OVERFLOW-Y: auto; WIDTH: 100%; HEIGHT: 15px; vertical-align: middle"></div></td>
 		        </tr>
-		        <!-- 추가 항목이 있을 경우 -->
-       			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
-       				<tr>
-       					<c:choose>
-       						<c:when test="${extenLang == 1}">
-         						<th>${boardAttributeVO.colName1}</th>
-       						</c:when>
-       						<c:otherwise>
-       							<th>${boardAttributeVO.colName2}</th>
-       						</c:otherwise>
-       					</c:choose>
-       					<c:choose>
-       						<c:when test="${boardAttributeVO.colType == 'radio'}">
-				                <td colspan="5" id="${boardAttributeVO.tableCol}">
-				                </td>
-      						</c:when>
-      						<c:when test="${boardAttributeVO.colType == 'text'}">
-				                <td colspan="5" id="${boardAttributeVO.tableCol}">
-				                </td>
-       						</c:when>
-       						<c:when test="${boardAttributeVO.colType == 'check'}">
-				                <td colspan="5" id="${boardAttributeVO.tableCol}">
-				                </td>
-       						</c:when>
-       					</c:choose>
-       				</tr>
-       			</c:forEach>
-	          <!-- 추가 항목이 있을 경우 끝-->
-		      </table>
+<!-- 		        추가 항목이 있을 경우 -->
+	       			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
+	       				<tr>
+	       					<c:choose>
+	       						<c:when test="${extenLang == 1}">
+	         						<th>${boardAttributeVO.colName1}</th>
+	       						</c:when>
+	       						<c:otherwise>
+	       							<th>${boardAttributeVO.colName2}</th>
+	       						</c:otherwise>
+	       					</c:choose>
+	       					<c:choose>
+	       						<c:when test="${boardAttributeVO.colType == 'radio'}">
+					                <td colspan="5" id="${boardAttributeVO.tableCol}">
+					                </td>
+	      						</c:when>
+	      						<c:when test="${boardAttributeVO.colType == 'text'}">
+					                <td colspan="5" id="${boardAttributeVO.tableCol}">
+					                </td>
+	       						</c:when>
+	       						<c:when test="${boardAttributeVO.colType == 'check'}">
+					                <td colspan="5" id="${boardAttributeVO.tableCol}">
+					                </td>
+	       						</c:when>
+	       					</c:choose>
+	       				</tr>
+	       			</c:forEach>
+	<!-- 	          추가 항목이 있을 경우 끝 -->
+			      </table>
 		      </td>
 		  </tr>
 		  <tr>
-		    <td class="pad1">
-		        <div id="ItemOverflow" class="viewbox" style="overflow: auto; padding:10px 10px 10px 10px; height:510px; width:auto; word-break: break-all;">
+			<td class="pad1">
+			<!-- 2018-02-02 김보미 - height:auto로 변경 -->
+		        <div id="ItemOverflow" class="viewbox" style="overflow: auto; padding:10px 10px 10px 10px; height:auto; width:auto; word-break: break-all;">
 		            <div id="txtContent" class="white" style="overflow-y:auto; height:100%; width: 100%"></div>
 		        </div>
 		    </td>
+			</tr>
 		    <c:if test="${guBun != '3'}">
 			  <tr>
 			    <td style="height:20px">

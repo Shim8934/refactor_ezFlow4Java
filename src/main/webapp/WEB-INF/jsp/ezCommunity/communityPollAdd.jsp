@@ -20,17 +20,15 @@
         <link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 		<!-- time picker -->
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css"/>
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		
-		
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>		
 		<script type="text/javascript">
 			var code = "<c:out value = '${code}' />";
 	        var ExpireDays = "N";
 	        var pSelType = "<c:out value = '${pSelType}' />";
 	        var pSelRes1 = "<c:out value = '${pSelRes1}' />";
 	        var pSelRes2 = "<c:out value = '${pSelRes2}' />";
-	        var StartDateTime = "<c:out value = '${pStartDate}' />";
-	        var EndDateTime = "<c:out value = '${pEndDate}' />";
+	        var StartDateTime = "<c:out value = '${startDate}' />";
+	        var EndDateTime = "<c:out value = '${endDate}' />";
 	            
 	        window.onload = function () {
 	            //initdatepicker();
@@ -46,18 +44,22 @@
 				    }
 	                
 	                var selRes1 = document.getElementById('selRes1');
-	                for (var i = 0; i < selRes1.options.length; i++) {
-	                    if (selRes1.options[i].value == pSelRes1) {
-	                        selRes1.selectedIndex = i;
-	                        break;
-	                    }
-	                }
-	                
-	                if (CrossYN()) {
-	                	document.getElementById('selRes2').textContent = pSelRes2;
+
+	                if (pSelType == 3) {
+	                	selRes1.disabled = true;
+	                	document.getElementById('selRes2').disabled = true;
 	                } else {
-	                    document.getElementById('selRes2').innerText = pSelRes2;
+		                for (var i = 0; i < selRes1.options.length; i++) {
+		                    if (selRes1.options[i].value == pSelRes1) {
+		                        selRes1.selectedIndex = i;
+		                        break;
+		                    }
+		                }        
+		                document.getElementById('selRes2').value = pSelRes2;
 	                }
+	                document.getElementById('Sdatepicker').value = StartDateTime;
+	                document.getElementById('Edatepicker').value = EndDateTime;	                
+	                document.getElementById('pollSubject').value = "<c:out value='${pSubject}' />";
 	            }
 	        }
 	        
@@ -145,7 +147,7 @@
 	        }
 	
 	        function selType_onchange() {
-	            if (poll_add.selType.selectedIndex == 2) {
+	            if (poll_add.selType.selectedIndex == 1) {
 	                poll_add.selRes1.selectedIndex = 0;
 	                poll_add.selRes2.value = "";
 	                document.getElementById("selRes1").disabled = true;
@@ -218,13 +220,8 @@
 	            nowdateDay = nowdateDay < 10 ? "0" + nowdateDay : nowdateDay;
 	            var nowdate2 = nowdate.getFullYear() + "-" + nowmonth + "-" + nowdateDay;
 
-	            if ($("#Edatepicker").datepicker({ dateFormat: 'yy' }).val().substring(0, 10) < nowdate2) {
-	                alert("<spring:message code='ezCommunity.t595' />");
-	                return false;
-	            }
-
 	            if (trim(poll_add.pollSubject.value) == "") {
-                    alert("<spring:message code='ezCommunity.t592' />");
+                    alert("<spring:message code='ezQuestion.t492' />");
                     poll_add.pollSubject.value = "";
                     poll_add.pollSubject.focus();
                     return false;
@@ -241,6 +238,28 @@
                     poll_add.selRes1.focus();
                     return false;
                 }
+  
+                if ($("#selRes2").val() != "" && $("#selRes2").val() < 1) {
+	            	alert("<spring:message code='ezCommunity.t594' />");
+	            	poll_add.selRes2.focus();
+	                return false;
+	            }
+                
+                if ($("#Edatepicker").datepicker({ dateFormat: 'yy' }).val().substring(0, 10) < nowdate2) {
+	                alert("<spring:message code='ezCommunity.t595' />");
+	                return false;
+	            }
+	            
+	            if ($("#Sdatepicker").val() > $("#Edatepicker").val()) {
+	            	alert("<spring:message code='ezCommunity.t595' />");
+	                return false;
+	            }
+	            
+	            if ($("#selRes2").val() >= 100){
+	            	alert("<spring:message code='ezCommunity.csj01' />");
+	            	poll_add.selRes2.focus();
+	            	return false;
+	            }
 
                 return true;
             }
@@ -383,36 +402,34 @@
 		</script>
 		
 	</head>
-	<body class = "cmhome_body">
-		<h1 class="type1_h1"><spring:message code='ezCommunity.t598' /></h1>
-    	<br/>
-    	<br/>
-    	
-	    <table class="content">
-	        <form action="/ezCommunity/pollAddOk.do" method="post" name="poll_add" id="polladd">
-	            <input type="hidden" name="mode" value="write">
-	            <input type="hidden" name="code" value="<c:out value = '${code }' />">
-	            <input type="hidden" name="answerViewType" value="<c:out value = '${answerViewType }' />">
-	            <input type="hidden" name="startPollYear" id="startPollYear" value="">
-	            <input type="hidden" name="startPollMonth" id="startPollMonth" value="">
-	            <input type="hidden" name="startPollDay" id="startPollDay" value="">
-	            <input type="hidden" name="endPollYear" id="endPollYear" value="">
-	            <input type="hidden" name="endPollMonth" id="endPollMonth" value="">
-	            <input type="hidden" name="endPollDay" id="endPollDay" value="">
+	<body class="cmhome_body">		
+    	<h1 class="type1_h1"><spring:message code='ezCommunity.t598' /></h1>		
+		    	
+		<form action="/ezCommunity/pollAddOk.do" method="post" name="poll_add" id="polladd">
+            <input type="hidden" name="mode" value="write">
+            <input type="hidden" name="code" value="<c:out value = '${code }' />">
+            <input type="hidden" name="answerViewType" value="<c:out value = '${answerViewType }' />">
+            <input type="hidden" name="startPollYear" id="startPollYear" value="">
+            <input type="hidden" name="startPollMonth" id="startPollMonth" value="">
+            <input type="hidden" name="startPollDay" id="startPollDay" value="">
+            <input type="hidden" name="endPollYear" id="endPollYear" value="">
+            <input type="hidden" name="endPollMonth" id="endPollMonth" value="">
+            <input type="hidden" name="endPollDay" id="endPollDay" value="">
 	            
+	    	<table class="content" style="margin-top:12px">
 	            <tr>
 	                <th><spring:message code='ezCommunity.t599' /></th>
-	                <td><textarea id="pollSubject" name="pollSubject" style="width: 98%; height: 130px" runat="server" onkeyup="ismaxlength(this)" value = "${pSubject}"></textarea></td>
+	                <td style="padding:3px"><textarea id="pollSubject" name="pollSubject" style="width: 98%; height: 130px" runat="server" onkeyup="ismaxlength(this)" value = "${pSubject}"></textarea></td>
 	            </tr>
 	            <tr>
 	                <th><spring:message code='ezCommunity.t600' /></th>
 	                <td>
-	                    <select id="selType" name="selType" onchange="return selType_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;">
+	                    <select id="selType" name="selType" onchange="return selType_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 20px;cursor: pointer;">
 	                        <option value="1"><spring:message code='ezCommunity.t601' />
-	                        <option value="2"><spring:message code='ezCommunity.t602' />
+	                        <%-- <option value="2"><spring:message code='ezCommunity.t602' /> --%>
 	                        <option value="3"><spring:message code='ezCommunity.t603' />
 	                    </select>
-	                    <select id="selRes1" name="selRes1" onchange="return selRes1_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;">
+	                    <select id="selRes1" name="selRes1" onchange="return selRes1_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 20px;cursor: pointer;">
 	                    	<option value="0"><spring:message code='ezCommunity.t604' />
 	                        <option value="1"><spring:message code='ezCommunity.t605' />
 	                        <option value="2"><spring:message code='ezCommunity.t606' />
@@ -423,17 +440,16 @@
 	                  		<option value="14"><spring:message code='ezCommunity.t610' />
 	                    </select>
 	                    
-	                    <input type="text" id="selRes2" name="selRes2" onkeydown="return selRes2_onkeydown()" onchange="selRes2_onchange(this);" size="5" maxlength="3">
+	                    <input class="inputText" type="text" id="selRes2" name="selRes2" onkeydown="return selRes2_onkeydown()" onchange="selRes2_onchange(this);" size="5" maxlength="3">
 	                    <spring:message code='ezCommunity.t611' />
 					</td>
 	            </tr>
 	            <tr>
 	                <th rowspan="1"><spring:message code='ezCommunity.t612' /></th>
-	                <td><input type="text" id="Sdatepicker" style="width:80px;text-align:center" > ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" ></td>
+	                <td><input class="inputText" type="text" id="Sdatepicker" style="width:80px;text-align:center" > ~ <input class="inputText" type="text" id="Edatepicker" style="width:80px;text-align:center" ></td>
 	            </tr>
-	        </form>
-	    </table>
-    
+	        </table>
+		</form>    
 	    <div class="btnposition">
 	        <a class="imgbtn" name="Submit" id="outok" onclick="poll_send();"><span><spring:message code='ezCommunity.t613' /></span></a>
 	        <a class="imgbtn" name="Submit2" id="outcancel" onclick="cancel_click();"><span><spring:message code='ezCommunity.t246' /></span></a>

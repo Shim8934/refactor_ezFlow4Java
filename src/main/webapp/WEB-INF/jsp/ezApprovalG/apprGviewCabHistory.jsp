@@ -115,11 +115,11 @@
 <div id="close"><ul><li><span onClick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
 
 <h2 id="tdTitle"> <spring:message code='ezApprovalG.t1179'/></h2>
-<div class="listview"  style="width:100%;HEIGHT:200px;WIDTH: 585px; overflow-x:auto;overflow-y:AUTO" id="divList">
+<div class="listview"  style="width:100%;HEIGHT:200px; overflow-x:auto;overflow-y:AUTO" id="divList">
     <div ID="lvtDoclist" style="margin: 1px 1px 1px 1px;"></div>
 </div>
 <h2 style="margin-top:5px" > <spring:message code='ezApprovalG.t626'/></h2>
-<TextArea id="txtChangeReason" Style="Width:97%; height:80px" readonly></TextArea>
+<TextArea id="txtChangeReason" Style="Width:99%; height:80px" readonly></TextArea>
 
 <script type="text/javascript"  >
 	selToggleList(document.getElementById("close"), "ul", "li", "0");

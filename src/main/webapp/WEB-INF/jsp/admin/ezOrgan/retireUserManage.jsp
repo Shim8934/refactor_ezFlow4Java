@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -259,9 +261,13 @@
 		<h1><spring:message code='ezOrgan.t311'/></h1>
 		<div id="mainmenu">
 			<ul>
+				<c:if test="${dotNetIntegration != 'YES'}">
 		    	<li><span onClick="Restore_onclick()"><spring:message code='ezOrgan.t312'/></span></li>
+		    	</c:if>
 		        <li><span onClick="Delete_onclick()"><spring:message code='ezOrgan.t142'/></span></li>
+		        <c:if test="${dotNetIntegration != 'YES'}">
                 <li><span onClick="mod_password()"><spring:message code='ezOrgan.t90'/></span></li>
+                </c:if>
 		  	</ul>
 		</div>
 		<div class="page">
@@ -297,7 +303,7 @@
 							<td><c:out value='${item.title2}'/></td>
 							<td><c:out value='${item.extensionAttribute102}'/></td>
 						</c:if>
-						<td><c:out value='${item.updateDT}'/></td>
+						<td><c:out value='${fn:substring(item.updateDT, 0, 4)}'/>-<c:out value='${fn:substring(item.updateDT, 4, 6)}'/>-<c:out value='${fn:substring(item.updateDT, 6, 8)}'/></td>
 					</tr>	
 				</c:forEach>	   
 			</form>

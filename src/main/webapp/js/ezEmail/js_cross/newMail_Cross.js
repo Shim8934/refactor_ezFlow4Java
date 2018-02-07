@@ -844,7 +844,7 @@ function Save_onClick_Complete(ReturnValue) {
 
             if (m_rgParams4PostOption["SecurityMail"] == "Security")
                 pSecurity = "3";
-
+            
             var xmlDoc = createXmlDom();
             var rootNode;
             createNodeInsert(xmlDoc, rootNode, "DATA");
@@ -853,6 +853,7 @@ function Save_onClick_Complete(ReturnValue) {
             createNodeAndInsertText(xmlDoc, rootNode, "CONNURL", "/exchange/" + g_szUserID);
             createNodeAndInsertText(xmlDoc, rootNode, "CMD", (Save_onClick_Complete.savemode == "sendsave" ? "SEND" : "SAVE"));
             createNodeAndInsertText(xmlDoc, rootNode, "MAILCMD", g_cmd);
+            createNodeAndInsertText(xmlDoc, rootNode, "ORGMAILCMD", gg_cmd);
             createNodeAndInsertText(xmlDoc, rootNode, "AUTHOR", g_szAuthor);
             createNodeAndInsertText(xmlDoc, rootNode, "SUBJECT", Subject.replace(regex, " "));
             createNodeAndInsertText(xmlDoc, rootNode, "TO", GetAddrFormatForSend(MsgToGot));
@@ -3464,6 +3465,7 @@ function deleteMailUser(email, iWhich) {
 var exportOption_cross_dialogArguments = new Array();
 
 function mailExportOption_onClick(type) {
+	
     if (!CrossYN()) {
         EzHTTPTrans.style.display = "none";
     }    
@@ -3474,12 +3476,14 @@ function mailExportOption_onClick(type) {
     
     DivPopUpShow(460, 230, "/ezEmail/mailExportOption.do?exportType=" + type);
 }
+
 function mailExportOption_onClick_Complete(m_rgParams4PostOption) { }
 
 var importOption_cross_dialogArguments = new Array();
 
 function mailImportOption_onClick(tempId, userkey) {
-    if (!CrossYN()) {
+    
+	if (!CrossYN()) {
         EzHTTPTrans.style.display = "none";
     }    
     
@@ -3489,6 +3493,7 @@ function mailImportOption_onClick(tempId, userkey) {
     
     DivPopUpShow(460, 190, "/ezEmail/mailImportOption.do?tempId=" + tempId + "&userkey=" + userkey);
 }
+
 function mailImportOption_onClick_Complete(m_rgParams4PostOption) { }
 
 //baonk added

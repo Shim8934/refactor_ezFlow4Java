@@ -633,13 +633,19 @@
 		        }
 		        
 		        if (addLastKyulJeYN != "0") {
+		        	var hDocID ;
+					if (pDraftFlag == "HABYUI") {
+						hDocID = pOrgDocID;
+		        	} else {
+		        		hDocID = pDocID;
+		        	}
 		        	$.ajax({
                 		type : "POST",
                 		dataType : "text",
                 		async : false,
                 		url : "/ezApprovalG/lastKyulJeHabYuiYN.do",
                 		data : {
-                				docID     : pDocID,
+                				docID     : hDocID,
                 				flag      : "approvUi"
                 				},
                 		success : function(result){
@@ -651,7 +657,9 @@
 		        // getDocNumber를 이용한 문서번호 채번
 		        if (pDraftFlag != "SUSIN") {
 		        	if (approvalFlag == "S") {
-			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0) || pAprLineType == strAprType4 || totalMemSN > 0) {
+		        		// '현재진행 중인 결재가 개인순차합의가 아닌 경우' 추가
+		        		// 마지막 결재자가 합의인 경우 totalMemSN 값으로 해당 조건절 사용.
+			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8) || pAprLineType == strAprType4 || totalMemSN > 0) {
 			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 			                    var rtnval;
 			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
@@ -737,7 +745,6 @@
 		            }
 		        }
 		        if (rtnVal) {
-		        	curDocNum = getCurDocNumber();
 		        	rtnVal = SaveApproveInfo("1");
 		        }
 
@@ -1559,10 +1566,8 @@
 		    			result = xml;
 		    		}
 		    	});
-		    	
-		    	   var dataNodes = GetChildNodes(loadXMLString(result));
-		           var SN = getNodeText(dataNodes[0]);
-		           
+		    	var dataNodes = GetChildNodes(loadXMLString(result));
+		        var SN = getNodeText(dataNodes[0]);
 		    	return SN;
 		    }
 		</script>

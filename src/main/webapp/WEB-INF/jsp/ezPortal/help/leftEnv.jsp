@@ -13,7 +13,18 @@
 			<c:when test="${userInfo.lang != '3'}">
 				<h1>환경설정</h1>
 				<c:choose>
-					<c:when test="${pakageType == 'basic'}">
+					<c:when test="${packageType == 'mail'}">
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_02" target="right"><span>개인정보관리</span></a></h2>
+						<ul>
+						</ul>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_03" target="right"><span>메일환경설정</span></a></h2>
+						<ul>
+						</ul>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_07" target="right"><span>언어및표준시간대설정</span></a></h2>
+						<ul>
+						</ul>
+					</c:when>				
+					<c:when test="${packageType == 'basic'}">
 						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_02" target="right"><span>개인정보관리</span></a></h2>
 						<ul>
 						</ul>
@@ -58,7 +69,7 @@
 			<c:otherwise>
 				<h1>環境設定</h1>
 				<c:choose>
-					<c:when test="${pakageType == 'basic'}">
+					<c:when test="${packageType == 'basic'}">
 						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_02" target="right"><span>個人情報の管理</span></a></h2>
 						<ul>
 						</ul>

@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
-
 import javax.naming.directory.DirContext;
 
 import org.slf4j.Logger;
@@ -28,6 +27,7 @@ import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
+import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -158,7 +158,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	// 퇴직자 포함하여 사용자 아이디 목록을 반환한다.
     @Override
     public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {     
-        return ezOrganAdminDao.getUserCnList(tenantID);
+        
+    	return ezOrganAdminDao.getUserCnList(tenantID);
     }
 
     // 퇴직자 포함하여 사용자 아이디 개수를 반환한다.
@@ -378,6 +379,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			ezOrganAdminDao.changePasswordInAD(ctx, loginVO);
 		}
 	}
+	
+	@Override
+	public void setPasswordExceptAD(String cn, String password, int tenantID) throws Exception {
+		String pwd = EgovFileScrty.encryptPassword(password, cn);
+		
+		LoginVO loginVO = new LoginVO();		
+		loginVO.setId(cn);
+		loginVO.setPassword(pwd);
+		loginVO.setTenantId(tenantID);
+		
+		loginDAO.updatePassword(loginVO);
+
+	}	
 	
 	@Override
 	public void setPasswordWithEmailSystem(String cn, String domain, String password, int tenantID) throws Exception {
@@ -720,17 +734,23 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_MOBILE", vo.getMobile() != null ? vo.getMobile() : "");
 		map.put("v_POSTALCODE", vo.getPostalCode() != null ? vo.getPostalCode() : "");
 		map.put("v_ADDRESS", vo.getStreetAddress() != null ? vo.getStreetAddress() : "");
+		
 		if (vo.getExtensionAttribute1() == null || vo.getExtensionAttribute1().equals("")) {
 			map.put("v_EXTATTR1", "c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;");
 		} else {
 			map.put("v_EXTATTR1", vo.getExtensionAttribute1());
 			
 		}
+		
 		map.put("v_EXTATTR6", vo.getExtensionAttribute6() != null ? vo.getExtensionAttribute6() : "");
 		map.put("v_EXTATTR10", vo.getExtensionAttribute10() != null ? vo.getExtensionAttribute10() : "");
 		map.put("v_EXTATTR102", vo.getExtensionAttribute102() != null ? vo.getExtensionAttribute102() : "");
 		map.put("v_EXTATTR14", vo.getExtensionAttribute14() != null ? vo.getExtensionAttribute14() : "");
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15() != null ? vo.getExtensionAttribute15() : "");
+		
+		// 코린도에서 extensionAttribute11 필드를 한국인, 현지인 구분에 사용하여 추가함
+		map.put("v_EXTATTR11", vo.getExtensionAttribute11() != null ? vo.getExtensionAttribute11() : "");
+		
 		map.put("v_LDAPPATH", "");
 		map.put("v_BIRTH", vo.getBirth() != null ? vo.getBirth() : "");		
 		map.put("v_BIRTHTYPE", vo.getBirthType() != null ? vo.getBirthType() : "");
@@ -1071,4 +1091,42 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		ezOrganAdminDao.syncWithBizmekaTalkAccounts(tenantID);
 	}
 	
+	// 사용자 이름,부서 목록을 반환한다.
+    @Override
+    public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
+    									 String keycode,String keyword) throws Exception {     
+    	logger.debug("getUserList started");
+    	
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	
+    	params.put("tenantID", tenantID);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		
+    	List<OrganUserVO> list = ezOrganAdminDao.getUserList(params);
+    	
+    	logger.debug("getUserList ended");
+    	
+    	return list;
+    }
+
+    // 사용자 이름,부서 목록개수를 반환한다.
+    @Override
+    public int getUserCount(int tenantID, String keycode,String keyword) throws Exception {     
+    	logger.debug("getUserCount started");
+    	
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	
+    	params.put("tenantID", tenantID);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		
+		int userCount = ezOrganAdminDao.getUserCount(params);
+		
+		logger.debug("getUserCount ended. userCount=" + userCount);
+    	
+		return userCount;
+    }	
 }

@@ -132,7 +132,9 @@
         		var xmlHttp = createXMLHttpRequest();
         		var xmlDoc = createXmlDom();
         		var objNode;
-        		xmlDoc = loadXMLString(frmCreate.STEP1DATA.value);
+        		
+        		xmlDoc = loadXMLString("${pStep1DataXML}");
+        		
         		var QuestionNode = createNode(xmlDoc, "QUESTION"); 
 
         		var pQstCnt = document.frmCreate.selQues.length;
@@ -323,7 +325,8 @@
         		} else {
             		var szUrl = "/ezQuestion/qstList.do?brdID=5"
         		}
-        		window.location.href = szUrl;	
+        		window.location.href = szUrl;
+        		window.parent.frames["left"].toggleQuestionList();
     		}
     		function menuQst_FileOpen() {
         		if (window.ActiveXObject && pNoneActiveX == "NO") {

@@ -659,5 +659,13 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		insert("EzBoardDAO.saveBoardPollConfig", map);
 	}	
 	//end
+
+	public String getOneLineReplyCount(Map<String, Object> map) throws Exception{
+		return String.valueOf(select("EzBoardDAO.getOneLineReplyCount", map));
+	}
+
+	public int getReaderListCount(Map<String, Object> map) {
+		return (int) select("EzBoardDAO.getReaderListCount", map);
+	}
 	
 }

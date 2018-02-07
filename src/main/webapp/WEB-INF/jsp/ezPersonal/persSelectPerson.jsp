@@ -344,8 +344,10 @@
 		        }
 		        var selRow = tr[0];
 		        if ("${userInfo.id}" == selRow.getAttribute("DATA2")) {
-		        	alert("<spring:message code='ezPersonal.t16'/>");
-		        	return;
+					if ("${type}" != "EMP") {
+						alert("<spring:message code='ezPersonal.t16'/>");
+						return;
+					}
 		        }		        
 		        if (type == "Proxy") {
 		            if ("${userInfo.deptID}" != selRow.getAttribute("DATA3")) {
@@ -454,7 +456,7 @@
 		  	<tr>
 			    <td style="padding-right:5px"><div class="box" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:235px; HEIGHT:340px;" id="TreeView" ></div></td>
 			    <td class="listview">
-			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 385px; HEIGHT: 340px; BACKGROUND-COLOR: white"></div>
+			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 485px; HEIGHT: 340px; BACKGROUND-COLOR: white"></div>
 				</td>
 		  	</tr>
 		</table>

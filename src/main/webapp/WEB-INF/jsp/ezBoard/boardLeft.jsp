@@ -447,9 +447,6 @@
 		        }
 		    }
 		    function Open_Func(idx) {
-		    	$(".on").attr("class", "off");
-		    	$(".qst h2").attr("class", "on");
-		    	$(".qst").next().attr("class", "on");
 		    	
 		        if (CrossYN()) {
 		            if (idx == 1) {
@@ -466,6 +463,7 @@
 		            SetTreeviewUnSelect("");		            
 		        }		        
 		    }
+
 			function Poll_Open(idx) {
 				$(".on").attr("class", "off");
 				$(".pollDiv h2").attr("class", "on");
@@ -490,6 +488,15 @@
 		            SetTreeviewUnSelect("");
 		        }	    
 		    }
+
+		    function toggleQuestionList() {
+		    	if( prevSelMenu != null )
+		    		prevSelMenu.className = "off";
+		    	
+		    	prevSelMenu = $(".qst").next().children().get(0);
+		    	prevSelMenu.className = "on";
+		    }
+
 		    function WebPartToggle(obj) {
 		        for (var i = 0; i < level1El.length; i++) {
 		            if (i != obj.listNum) {

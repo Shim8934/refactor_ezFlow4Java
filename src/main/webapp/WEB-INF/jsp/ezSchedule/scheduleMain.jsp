@@ -492,7 +492,8 @@
 
 		                break;
 		        }
-		        DateChange(szCmd);
+		        /* 2018-02-01 김보미 - 일정관리 타이틀 고정. */
+		        //DateChange(szCmd);
 
 		    }
 

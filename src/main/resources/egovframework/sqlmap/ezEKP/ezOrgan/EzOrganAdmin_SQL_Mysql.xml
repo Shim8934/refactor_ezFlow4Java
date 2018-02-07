@@ -7,6 +7,8 @@
 	<typeAlias alias="OrganDeptVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganProxyVO" type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>
 	
+	
+	
 	<resultMap id="userAddJobList" class="OrganUserVO">
 		<result property="cn" 									column="CN" 							columnIndex="1"/>
 		<result property="department" 							column="Deptid" 						columnIndex="2"/>
@@ -53,6 +55,19 @@
 			{CALL EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
 		]]>
 	</procedure> -->
+	
+	<sql id="EzOrganAdminDAO.searchQuery">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+					<isEqual property="search_keycode" compareValue="1">
+						DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
 	
 	<insert id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
@@ -101,11 +116,11 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_USERMASTER
-   				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
+   				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
                     DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2
                 )
    			VALUES
-   				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, #nowDate#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
+   				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR11#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, #nowDate#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
                     (SELECT DISPLAYNAME FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
@@ -1042,7 +1057,7 @@
                  ('A15','001','yyyy.mm.dd hh:mm','1','년-월-일','yyyy.mm.dd hh:mm','yyyy.mm.dd hh:mm','yyyy.mm.dd hh:mm',#tenantID#, #companyID#),
                  ('A15','002','.','1','사인일자 형식','.','.','.',#tenantID#, #companyID#),
                  ('A17','0  ','의견종류','1','의견종류','의견종류',null,null,#tenantID#, #companyID#),
-                 ('A17','001','일반의견','1','일반의견','General','一般意見','一般意见',#tenantID#, #companyID#),
+                 ('A17','001','일반의견','1','일반의견','General','一般','一般意见',#tenantID#, #companyID#),
                  ('A17','002','반송의견','1','반송의견','Rejection','差し戻し','退回意见',#tenantID#, #companyID#),
                  ('A17','003','보류의견','1','보류의견','Holding','保留意見','保存意见',#tenantID#, #companyID#),
                  ('A17','004','회송의견','1','회송의견','Returning','差し戻し','退回意见',#tenantID#, #companyID#),
@@ -2866,6 +2881,7 @@
 	  		<isNotNull property="extensionAttribute6" prepend=","> <![CDATA[extensionAttribute6 = #extensionAttribute6#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute14" prepend=","> <![CDATA[extensionAttribute14 = #extensionAttribute14#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute10" prepend=","> <![CDATA[extensionAttribute10 = #extensionAttribute10#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute11" prepend=","> <![CDATA[extensionAttribute11 = #extensionAttribute11#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute1" prepend=","> <![CDATA[extensionAttribute1 = #extensionAttribute1#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute2" prepend=","> <![CDATA[extensionAttribute2 = #extensionAttribute2#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute3" prepend=","> <![CDATA[extensionAttribute3 = #extensionAttribute3#]]></isNotNull>
@@ -3083,6 +3099,34 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
  
+ 	 <select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
+		SELECT 
+			CN,
+			displayName,
+			department,
+			description
+		FROM 
+	    	TBL_USERMASTER	
+        WHERE 
+            tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+			<include refid="EzOrganAdminDAO.searchQuery"/>
+	    ORDER BY 
+	    	displayName
+	    <isNotEqual property="v_start" compareValue="-1">
+	    LIMIT
+			#v_start#, #pageCount#	
+		</isNotEqual>
+	</select>
+	
+	<select id="EzOrganAdminDAO.getUserCount" parameterClass="map" resultClass="int">
+		SELECT 	
+			COUNT(CN) 
+		FROM 
+            TBL_USERMASTER 
+		WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+  		<include refid="EzOrganAdminDAO.searchQuery"/>
+	</select>
+ 	 
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
      </procedure>

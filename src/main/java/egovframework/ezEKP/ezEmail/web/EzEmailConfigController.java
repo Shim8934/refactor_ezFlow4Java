@@ -117,18 +117,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userEditor = "";
-		String userIE11Browser = "";
 		String noneActiveX = "YES";
-
-		if ((request.getHeader("User-Agent").contains("rv:11") || request.getHeader("User-Agent").contains("Trident/7.0"))
-				&& ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-			userIE11Browser = "CK";
-		}
-
+		
 		userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 
 		model.addAttribute("userEditor", userEditor);
-		model.addAttribute("userIE11Browser", userIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
 		
@@ -155,6 +148,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String previewWContentSize = mailGeneralVO.getPreviewWContent() == null ? "50" : mailGeneralVO.getPreviewWContent();
 		String refreshInterval = mailGeneralVO.getRefreshInterval() == null ? "" : mailGeneralVO.getRefreshInterval();
 		String keepDeleteLength = mailGeneralVO.getKeepDeleteLength() == null ? "" : mailGeneralVO.getKeepDeleteLength();
+		String previewSubtree = mailGeneralVO.getPreviewSubTree() == null ? "" : mailGeneralVO.getPreviewSubTree();
 		String mailSendObject = "";
 
 		if (keepDeleteLength.equals("30")) {
@@ -177,11 +171,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		}
 		
 		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId());
+		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", userInfo.getTenantId());
 		
 		logger.debug("listCount=" + listCount + ",previewMode=" + previewMode  + ",previewHListSize=" + previewHListSize
 				 + ",previewHContentSize=" + previewHContentSize + ",previewWListSize=" + previewWListSize + ",previewWContentSize=" + previewWContentSize
 				 + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength + ",mailSendObject=" + mailSendObject
-				 + ",useOnlyInnerMail=" + useOnlyInnerMail);
+				 + ",previewSubtree=" + previewSubtree + ",useOnlyInnerMail=" + useOnlyInnerMail + ",usePreviewSubTree=" + usePreviewSubTree);
 		
 		model.addAttribute("listCount", listCount);
 		model.addAttribute("previewMode", previewMode);
@@ -193,6 +188,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("keepDeleteLength", keepDeleteLength);
 		model.addAttribute("mailSendObject", mailSendObject);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("previewSubTree", previewSubtree);
+		model.addAttribute("usePreviewSubTree", usePreviewSubTree);
 		
 		logger.debug("mailGeneral ended.");
 		
@@ -226,6 +223,13 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String previewHList = doc.getElementsByTagName("PREVIEWHLIST").item(0).getTextContent();
 		String previewHContent = doc.getElementsByTagName("PREVIEWHCONTENT").item(0).getTextContent();
 		String mailSenderNm = "";
+		String previewSubTree = "";
+		
+		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", userInfo.getTenantId());
+
+		if (usePreviewSubTree.equals("YES")) {
+			previewSubTree = doc.getElementsByTagName("PREVIEWSUBTREE").item(0).getTextContent();
+		}
 
 		if (mode != null && mode.equals("ALL")) {
 			mailSenderNm = doc.getElementsByTagName("MAILSENDERNM").item(0).getTextContent();
@@ -235,7 +239,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ ",keepDeleteLength=" + keepDeleteLength + ",previewMode=" + previewMode 
 				+ ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
 				+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent
-				+ ",mailSenderNm=" + mailSenderNm
+				+ ",mailSenderNm=" + mailSenderNm + ",previewSubTree=" + previewSubTree
 				);
 
 		String rtnValue= "OK";
@@ -252,6 +256,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setPreviewHList(previewHList);
 			mailGeneral.setPreviewHContent(previewHContent);	
 			mailGeneral.setMailSenderNm(mailSenderNm);
+			mailGeneral.setPreviewSubTree(previewSubTree);
 			
 			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode);
 		} catch (Exception e) {
@@ -694,11 +699,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 * 메일 자동삭제 조건추가 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailAutoDeleteAdd.do")
-	@ResponseBody
 	public String mailAutoDeleteAdd(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailAutoDeleteAdd started.");
-		
-		String rtnValue = "OK";
 		
 		String path = request.getParameter("path") == null ? "" : request.getParameter("path");
 		String expireTimeStr = request.getParameter("expiretime") == null ? "" : request.getParameter("expiretime");
@@ -713,21 +715,16 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		ezEmailService.setMailDelete(userInfo.getTenantId(), userInfo.getId(), path, expireTime, deleteUnread, folderName);
 		
-		logger.debug("mailAutoDeleteAdd redirect '/ezEmail/mailAutoDelete.do'.");
-		response.sendRedirect("/ezEmail/mailAutoDelete.do");
-		
-		return rtnValue;
+		logger.debug("mailAutoDeleteAdd ended. redirect to /ezEmail/mailAutoDelete.do");
+		return "redirect:/ezEmail/mailAutoDelete.do";
 	}
 
 	/**
-	 * 메일 자동삭제 조건추가 실행 함수
+	 * 메일 자동삭제 조건삭제 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailAutoDeleteDelete.do")
-	@ResponseBody
 	public String mailAutoDeleteDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailAutoDeleteDelete started.");
-		
-		String rtnValue = "OK";
 		
 		String folderPath = request.getParameter("folderPath");
 		logger.debug("folderPath=" + folderPath);
@@ -735,10 +732,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		ezEmailService.deleteMailDelete(userInfo.getTenantId(), userInfo.getId(), folderPath);
 		
-		logger.debug("mailAutoDeleteDelete redirect '/ezEmail/mailAutoDelete.do'.");
-		
-		response.sendRedirect("/ezEmail/mailAutoDelete.do");
-		return rtnValue;
+		logger.debug("mailAutoDeleteDelete ended. redirect to /ezEmail/mailAutoDelete.do");
+		return "redirect:/ezEmail/mailAutoDelete.do";
 	}
 
 	/**
@@ -1376,6 +1371,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailPop3Save.do")
 	@ResponseBody
 	public String mailPop3Save(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String ret) throws Exception{
+		logger.debug("mailPop3Save started.");
+		
 		String rtnVal = "OK";
 		
 		try {
@@ -1387,6 +1384,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
+		logger.debug("mailPop3Save ended.");
 		return rtnVal;
 	}
 

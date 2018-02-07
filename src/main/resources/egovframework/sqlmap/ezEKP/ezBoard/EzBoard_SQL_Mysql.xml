@@ -722,7 +722,7 @@
 			</isEmpty>
 		</isNotEmpty>
 	</select>
-	
+	<!-- 2018-02-02 김보미 - 50명 제한 삭제(LIMIT 50), limit부분 수정. -->
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
 		<![CDATA[
 			SELECT  
@@ -730,8 +730,8 @@
 				USERNAME$lang$ AS USERNAME, 
 				USERDEPTNAME$lang$ AS USERDEPTNAME, 
 				USERCOMPANYNAME$lang$ AS USERCOMPANYNAME, 
-				USERTITLE$lang$ AS USERTITLE, 
-				READDATE 
+				IFNULL(USERTITLE$lang$, '') AS USERTITLE, 
+				DATE_FORMAT(READDATE ,'%Y-%m-%d %H:%i:%s') AS READDATE
 		   	FROM 
 		   		TBL_Board_Item_Read 
 		   	WHERE 
@@ -741,7 +741,7 @@
 		   	AND 
 		   		ItemID =  #itemID#  
 		   	AND
-		   		UserID NOT IN ( SELECT 
+		   		UserID <> ( SELECT 
 		   							WRITERID 
 		   						FROM 
 		   							TBL_BOARD_ITEM 
@@ -751,8 +751,8 @@
 		   							ITEMID = #itemID# )
 		   	ORDER BY 
 		   		ReadDate DESC
-		   	LIMIT
-		   		50
+ 		   	LIMIT 
+      			#start#, #perCount# 
 		]]>
 	</select>
 	
@@ -3324,7 +3324,7 @@
 				writedate ASC
 		]]>                
 	</select>
-	
+		
 	<select id="EzBoardDAO.checkOneLineOwner" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -4535,6 +4535,44 @@
     </insert>    
 	
 	<!-- end -->
+  <select id="EzBoardDAO.getOneLineReplyCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(replyID)
+        	FROM 
+        		tbl_board_onelinereply 
+       		WHERE  
+       			tenant_id = #tenantID#
+       		AND
+       			boardID = #boardID#
+            AND 
+            	ItemID = #itemID#
+		]]>
+  </select>
+  
+  <select id="EzBoardDAO.getReaderListCount" parameterClass="Map" resultClass="Integer">
+	  	<![CDATA[
+	  		SELECT  
+				COUNT(USERID) 
+			FROM 
+			   	TBL_BOARD_ITEM_READ 
+			WHERE 
+			   	TENANT_ID = #tenantID#
+			AND
+			   	BOARDID = #boardID#
+			AND 
+			   	ITEMID =  #itemID# 
+			AND
+			   	USERID <> ( SELECT 
+			   						WRITERID 
+			   					FROM 
+			   						TBL_BOARD_ITEM 
+			   					WHERE 
+			   						TENANT_ID = #tenantID#
+			   					AND
+			   						ITEMID = #itemID# )
+	  	]]>
+  </select>
 	
 </sqlMap>
 

@@ -538,8 +538,12 @@
 			</table>
 		</td>
 
-		<td style="width:25px;text-align:center"><img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" 
-						onClick="return AddUser_onclick()"><a><img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return DelUser_onclick()"></a></td>
+		<td style="width:25px;text-align:center">
+			<a href="#">
+				<img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return AddUser_onclick()">
+				<img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return DelUser_onclick()">
+			</a>
+		</td>
 
 		<td style="width:200px;vertical-align:top"><h2><spring:message code='ezApprovalG.t1167'/></h2>
 		<div class="listview">
@@ -548,7 +552,7 @@
 	</tr>
 </table>
 
-<div class="btnposition">
+<div class="btnposition btnpositionNew">
 <a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 <a class="imgbtn"><span id="btnCancel" onclick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
 </div>

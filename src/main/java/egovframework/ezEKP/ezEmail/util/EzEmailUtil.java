@@ -1,7 +1,11 @@
 package egovframework.ezEKP.ezEmail.util;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -62,6 +66,8 @@ import javax.mail.search.SearchTerm;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -80,6 +86,9 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
 
 /** 
  * @Description [Utility] 메일 관련 유틸리티
@@ -435,7 +444,7 @@ public class EzEmailUtil {
                     if (charSet.equals("ks_c_5601-1987")) {
                         rawHeader = rawHeader.replace(charSet, "ms949");
                         
-                        logger.debug("subject changed ks_c_5601-1987 to ms949.");
+//                        logger.debug("subject changed ks_c_5601-1987 to ms949.");
                         
                         subject = MimeUtility.decodeText(rawHeader);
                     }                        
@@ -552,6 +561,13 @@ public class EzEmailUtil {
 		// 이럴 경우 inline-image가 아닌 attachment로 취급하기로 하여
 		// disposition이 attachment인지 체크하는 조건을 뺐다.
 		//
+		// Content-Type: image/png;
+		//   name=IMG_5729.PNG;
+		//   x-apple-part-url=EB4D7F71-6AF8-40C0-9F14-67B22A5B404E
+		//   Content-Disposition: inline;
+		//   filename=IMG_5729.PNG
+		//   Content-Transfer-Encoding: base64
+		//
 		// 본문인(첨부파일이 아닌) text/plain 혹은 text/html에서 Content-Disposition 헤더가 있는 경우가 있어 
 		// disposition이 attachment인지 체크하는 조건을 다시 추가함
 		// Content-Type: text/plain; charset="UTF-8"
@@ -568,7 +584,9 @@ public class EzEmailUtil {
 		// 예) Content-Type: application/octet-stream;
 		//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
 	    //    Content-Transfer-Encoding: base64	    										
-		if ((part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
+		if ((part.getDisposition() != null
+				&& (part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
+						|| (part.getContentType() != null && part.getContentType().contains("x-apple-part-url")))
 		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null))
 				|| part.isMimeType("application/*")) {
             double size = part.getSize();
@@ -1185,7 +1203,20 @@ public class EzEmailUtil {
             
         return resultList;
     }
-    
+
+	public Message[] searchFolder (
+			Folder folder, 
+			String searchField, 
+			final String searchValue,
+			Date startDate,
+			Date endDate,
+			boolean searchSubFolder,
+			SearchTerm existingSearchTerm,
+			boolean isUnreadOnly,
+			boolean isImportantOnly) throws Exception {		
+		return this.searchFolder(folder, searchField, searchValue, startDate, endDate, searchSubFolder, existingSearchTerm, isUnreadOnly, isImportantOnly, false);
+	}
+	
 	/**
 	 * searches an open folder for messages matching the specified criterion. 
 	 */
@@ -1198,11 +1229,15 @@ public class EzEmailUtil {
 			boolean searchSubFolder,
 			SearchTerm existingSearchTerm,
 			boolean isUnreadOnly,
-			boolean isImportantOnly
+			boolean isImportantOnly,
+			boolean isFromMobile
 			) throws Exception {
+		logger.debug("searchFolder started.");
+		
 		Message[] messages = folder.getMessages();
 		
-		logger.debug("searchField=" + searchField + ", endDate=" + endDate + ", isImportantOnly=" + isImportantOnly );
+		logger.debug("searchField=" + searchField + ",startDate=" + startDate + ",endDate=" + endDate + ",isImportantOnly=" + isImportantOnly);
+		logger.debug("isUnreadOnly=" + isUnreadOnly + ",isFromMobile=" + isFromMobile);
 		
 		SearchTerm sTerm = existingSearchTerm; 
 		
@@ -1228,7 +1263,7 @@ public class EzEmailUtil {
 				sTerm = new SearchTerm() {
 				    public boolean match(Message message) {
 			        	String from = getFullFromAddressOfMessage(message);
-			            if (from != null & from.toLowerCase().contains(searchValue.toLowerCase())) {
+			            if (from != null && from.toLowerCase().contains(searchValue.toLowerCase())) {
 			                return true;
 			            }
 				        
@@ -1451,21 +1486,18 @@ public class EzEmailUtil {
 			messages = folder.search(sTerm);
 			logger.debug("UnRead Message Count : " + messages.length);
 		}
-		
 		else if (isImportantOnly) {
 			sTerm = new FlagTerm(new Flags(Flags.Flag.FLAGGED), true);
 			
 			messages = folder.search(sTerm);
 			logger.debug("Important Message Count : " + messages.length);
 		} 
-		
 		else {
 //			messages = null;
 		}
 		
-		if (endDate != null) {
-			if(sTerm == null) {// filter search 없을 때
-
+		if (isFromMobile && endDate != null && startDate == null) {
+			if (sTerm == null) { // filter search 없을 때
 				ArrayList<Message> arrayList = new ArrayList<>();
 
 				Date from = endDate;       
@@ -1474,46 +1506,49 @@ public class EzEmailUtil {
 				int end = f.getMessageCount();       
 				long lFrom = from.getTime(); //endDate
 
-				Date rDate;//message Date       
-				long lrDate;//message Date long for  comparing endDate
+				Date rDate; //message Date       
+				long lrDate; //message Date long for comparing endDate
 
 				Message orgMsg[] = f.getMessages();
-				if ( orgMsg.length > 0 ) {
+				
+				if (orgMsg.length > 0) {
 					this.sortMessages(folder, orgMsg, "receivedDate", true);
 					
 					int j = 0;
+					
 					do {                
 						Message testMsg = orgMsg[end-1];         
 						rDate = testMsg.getReceivedDate();         
 						lrDate = rDate.getTime();
 						end--;
+						
 						if (lrDate < lFrom) {
 							arrayList.add(testMsg);
 							j++;
 						}
-					} 
-					while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+					} while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
 				}
 				
 				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
 
 				return msg;
-			} else { //filter 있을 때
-				
+			// filter 있을 때				
+			} else {				
 				ArrayList<Message> arrayList = new ArrayList<>();
 				
 				Date from = endDate;       
 				Folder f = folder;
 				
-				int end = f.search(sTerm).length;       
+				Message orgMsg[] = f.search(sTerm);
+				
+				int end = orgMsg.length;       
 				long lFrom = from.getTime(); //endDate
 				
-				Date rDate;//message Date       
-				long lrDate;//message Date long for  comparing endDate       
+				Date rDate; // message Date       
+				long lrDate; // message Date long for comparing endDate       
 				int j = 0;
-				
-				Message orgMsg[] = f.search(sTerm);
-				if ( orgMsg.length > 0 ) {
+								
+				if (orgMsg.length > 0) {
 					this.sortMessages(folder, orgMsg, "receivedDate", true);
 					
 					do {                
@@ -1521,6 +1556,7 @@ public class EzEmailUtil {
 						rDate = testMsg.getReceivedDate();         
 						lrDate = rDate.getTime();
 						end--;
+						
 						if (lrDate < lFrom) {
 							if (isUnreadOnly || isImportantOnly) {
 								if (isUnreadOnly && !testMsg.isSet(Flags.Flag.SEEN)) {
@@ -1535,15 +1571,16 @@ public class EzEmailUtil {
 								j++;
 							}
 						}
-					} 
-					while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+					} while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
 				}
+				
 				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
 				
 				messages = msg;
 			}
 		}
 		
+		logger.debug("searchFolder ended.");
 		return messages;
 	}
 	
@@ -1623,6 +1660,7 @@ public class EzEmailUtil {
 	 * 메일 리스트 정렬 실행 함수
 	 */
 	public void sortMessages(Folder folder, Message[] messages, String sortTypeSpecifier, boolean isAscending) throws Exception {
+		logger.debug("sortMessages started.");
 		logger.debug("sortTypeSpecifier=" + sortTypeSpecifier + ",isAscending=" + isAscending);
 		
 		Comparator<Message> comparator = null;
@@ -1753,6 +1791,8 @@ public class EzEmailUtil {
 		if (comparator != null) {			
 			Arrays.sort(messages, comparator);
 		}
+		
+		logger.debug("sortMessages ended.");
 	}
 	
 	public boolean copyAllPartsInMultipart(Part src, Multipart dest) throws MessagingException, IOException {
@@ -1888,7 +1928,7 @@ public class EzEmailUtil {
 	
 				StringBuilder sb = new StringBuilder();
 				String output;
-	
+				
 				while ((output = br.readLine()) != null) {
 					sb.append(output);
 				}
@@ -2833,6 +2873,7 @@ public class EzEmailUtil {
 			String att = m.group(1);
 			
 			if (att.toLowerCase().indexOf("target=") < 0) {
+				att = att.replaceAll("'", "\"");
 				m.appendReplacement(result, Matcher.quoteReplacement("<a " + att + " target=\"_blank\">"));
 			}
 		}
@@ -2888,13 +2929,110 @@ public class EzEmailUtil {
 			if (sb.toString().toLowerCase().contains(searchValue.toLowerCase())) {
 				return true;
 			}
-		}
-
-		catch (MessagingException e) {					    		
-		}
+			
+		} catch (MessagingException e) {	}
 			
 		return false;
+	}
+	
+	// 2017.11.21 코린도 개발하면서 ZIP관련 메서드 생성 - 압축파일 풀기 
+	public void unzip( InputStream is, File destDir, String encoding) throws IOException {
+		ZipArchiveInputStream zis ;
+		ZipArchiveEntry entry ;
+		String name ;
+		File target ;
+		int nWritten = 0;
+		BufferedOutputStream bos ;
+		byte [] buf = new byte[1024 * 8];
+
+		ensureDestDir(destDir);
+		
+		zis = new ZipArchiveInputStream(is, encoding, false);
+		
+		while ((entry = zis.getNextZipEntry()) != null){
+			name = entry.getName();
+			target = new File (destDir, name);
+			
+			if (entry.isDirectory()) {
+				ensureDestDir(target);
+			} else {
+				target.createNewFile();
+				bos = new BufferedOutputStream(new FileOutputStream(target));
+				
+				while ((nWritten = zis.read(buf)) >= 0 ){
+					bos.write(buf, 0, nWritten);
+				}
+				
+				bos.close();
+			}
 		}
+		
+		zis.close();	
+	}
+	
+	// 디렉토리확인
+	private void ensureDestDir(File dir) throws IOException {
+		if ( ! dir.exists() ) {
+			dir.mkdirs(); 
+		}
+	}
+	
+	// 암호화된 zip파일에 파일들을 넣는 메서드
+	public String encryptZipFile(String filePath, String folderPath, String pwd) throws IOException {
+		unzip(new FileInputStream(filePath), new File(folderPath), "UTF-8");
+		
+		File zipFile = new File(filePath);
+		
+		if (zipFile.delete()) {
+			logger.debug(filePath + ".zip file is deleted.");
+		}
+		
+		String zipFileName = filePath + "_secure.zip";
+		
+		try {
+			File dir = new File(folderPath);
+			ArrayList<String> arrList = new ArrayList<>();
+			File[] fileList = dir.listFiles();
+			
+			for (int i = 0; i < fileList.length; i++) {
+				File file = fileList[i];
+				
+				if (file.isFile()) {
+					arrList.add(file.getAbsolutePath());
+				}
+			}
+		
+			ZipFile zipFiles = new ZipFile(zipFileName);
+			
+			ZipParameters params = new ZipParameters();
+			params.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+			params.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+			params.setEncryptFiles(true);
+			params.setEncryptionMethod(Zip4jConstants.ENC_METHOD_AES);
+			params.setAesKeyStrength(Zip4jConstants.AES_STRENGTH_256);
+			params.setPassword(pwd);
+			
+			for (int i = 0; i < arrList.size(); i++) {
+				zipFiles.addFile(new File(arrList.get(i)), params);
+			}
+			
+			if (dir.isDirectory()) {
+				File[] files = dir.listFiles();
+				
+				for (File file : files) {
+					file.delete();
+				}
+				
+				dir.delete();
+				
+				File dirFile = new File(folderPath + "_secure");
+				dirFile.delete();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return zipFileName;
+	}
+	
 }
-
-

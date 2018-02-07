@@ -410,7 +410,7 @@
 <table>
         <tr> 
           <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t1174'/></h2>
-        <div class="listview"  style="HEIGHT: 235px; WIDTH: 360px; overflow:AUTO" id="divList">
+        <div class="listview"  style="HEIGHT: 235px; WIDTH: 370px; overflow:AUTO" id="divList">
         <div ID="OrgListView"></div></div>
         </td>
           <td style="width:25px;text-align:center"><img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" 
@@ -423,7 +423,7 @@
         </tr>
 </table>
 
-<div class="btnposition">
+<div class="btnposition btnpositionNew">
 <a class="imgbtn"><span id="btnOK" onClick="return cmdConfirm_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
 <a class="imgbtn"><span id="btnCancel" onClick="return cmdCancel_onclick()" ><spring:message code='ezApprovalG.t119'/></span></a>
 </div>

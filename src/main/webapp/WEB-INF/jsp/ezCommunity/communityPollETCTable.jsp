@@ -11,7 +11,7 @@
 	</head>
 	
 	<body style="background-image:none; margin:0" >
-		<table class="popuplist" width="100%">
+		<table class="popuplist" width="100%" style="padding:0px;margin:0px;border-collapse: collapse;">
 			<tr>
 			    <th width="50"><spring:message code = 'ezCommunity.t662' /></th>
 			    <th><spring:message code = 'ezCommunity.t663' /></th>
