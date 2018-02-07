@@ -11938,7 +11938,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		// 마지막 결재라인인 경우 || 더이상의 추가 작업이 필요없는 AprType인 경우. 문서를 종결
-		if ((dlength  < 1 && !docXML.getElementsByTagName("APRSTATE").item(0).getTextContent().equals("000")) || lastState.equals(staATAnHam) || lastState.equals(staATGongram)) {
+		if ((dlength - chamJoCnt < 1 && !docXML.getElementsByTagName("APRSTATE").item(0).getTextContent().equals("000")) || lastState.equals(staATAnHam) || lastState.equals(staATGongram)) {
 				if (!ingFlag.equals("END")) {
 					subSQL = doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo, curDocNum);
 					
