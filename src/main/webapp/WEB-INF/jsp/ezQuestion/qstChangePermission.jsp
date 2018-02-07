@@ -219,9 +219,18 @@
 	        	if (form_check() == false) {
 	            	return;
 	        	} else {
-	            	document.getElementById("hidStartDate").value = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
-	            	document.getElementById("hidEndDate").value = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
-	            	document.frmCreate.submit();
+	        		var StatusEnd = "${qstUserPermissionVO.endFlg}";
+	        		
+	        		//설문조사가 완료된 후, 설문기간을 늘릴 경우에는 이미 설문조사가 마감되었다는 경고창 생성
+	        		if (StatusEnd == "1" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != L_SearchEndDt) {
+	        			alert("<spring:message code='ezQuestion.t203' />");
+	        			return;
+	        		} else {
+		            	document.getElementById("hidStartDate").value = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+		            	document.getElementById("hidEndDate").value = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+		            	document.frmCreate.submit();	        			
+	        		}
+	        		
 	        	}
 	    	}
 	    	function PollEnd() {
