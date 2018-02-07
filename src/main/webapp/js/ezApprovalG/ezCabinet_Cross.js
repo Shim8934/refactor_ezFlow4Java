@@ -1143,7 +1143,7 @@ function ViewDoc_onclick_Complete(Rtn) {
         OpenAlertUI(pAlertContent);
         return "";
     }
-    else if (Rtn == "True") {
+    else if (Rtn == "True" || Rtn == "TRUE") {
         var DocList = new ListView();          
         DocList.LoadFromID("DocList");
         var tr = DocList.GetSelectedRows();

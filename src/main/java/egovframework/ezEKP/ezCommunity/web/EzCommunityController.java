@@ -1360,17 +1360,26 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/itemReadList.do")
 	public String itemReadList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("itemReadList started");
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+//		String pBoardID = request.getParameter("boardID");
+//		String pItemID = request.getParameter("itemID");
+//		String offset = commonUtil.getMinuteUTC(userInfo.getOffset());
+		
+//		List<CommunityBoardItemReadVO> readList = ezCommunityService.getReaderList(pBoardID, pItemID, userInfo.getTenantId(), offset);
+		
+//		model.addAttribute("userInfo", userInfo);
+//		model.addAttribute("readList", readList);
+		
+		//2018-02-06 김보미
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
-		String offset = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		List<CommunityBoardItemReadVO> readList = ezCommunityService.getReaderList(pBoardID, pItemID, userInfo.getTenantId(), offset);
+		model.addAttribute("boardID", pBoardID);
+		model.addAttribute("itemID", pItemID);
 		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("readList", readList);
-		
+		logger.debug("itemReadList ended");
 		return "ezCommunity/communityItemReadList";
 	}
 	
@@ -4594,5 +4603,20 @@ public class EzCommunityController extends EgovFileMngUtil{
     	
     	return "/ezCommunity/communityCommentPopup";
     }
+    /**
+     * 2018-02-06 김보미 - 리스트 페이징 처리
+     */
+	@RequestMapping(value = "/ezCommunity/itemReadPagingList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String itemReadPagingList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, String boardID, String itemID, int pageNum, int perCount) throws Exception {
+		logger.debug("itemReadPagingList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		StringBuffer resultXML = ezCommunityService.getReaderList(boardID,itemID,userInfo.getId(),commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()), userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
+
+		logger.debug("itemReadPagingList ended");
+		return resultXML.toString();
+	}
 }
 

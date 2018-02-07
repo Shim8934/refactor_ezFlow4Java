@@ -198,9 +198,10 @@
 	</head>
 	
 	<body class="popup">
-		<table class="layout" style="height:700px">
+		<table class="layout">
 			<tr>
-		    	<td style="height:20px">
+<!-- 		    	<td style="height:20px"> -->
+		    	<td style="width:100%;">
 					<h1><spring:message code = 'ezCommunity.t982' /></h1>
 					
 			      	<div id="close">
@@ -215,36 +216,70 @@
 					</script>
 				</td>
 		  	<tr>
-		    	<td style="height:20px">
+<!-- 		    	<td style="height:20px"> -->
+		    	<td>
+		    	<!-- 2018-02-05  김보미 - 테이블컬럼 조정 -->
 		    		<table class="content" style="width:100%">
-				        <tr>
-				        	<th><spring:message code = 'ezCommunity.t138' /></th>
-				        	<td id="WriteUserNM" style="CURSOR: pointer;white-space:nowrap;width:120px;"><div id = title style="vertical-align:middle;width:115px;height:17px;overflow-y:auto;" onClick=''><c:out value = '${item.writerName}' /></div></td>
-				          	<th><spring:message code = 'ezCommunity.t209' /></th>
-				          	<td id="PostDate" style="padding-right:15px;width:auto;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><c:out value = '${item.writeDate }' /></div></td>
-				          	<th><spring:message code = 'ezCommunity.t931' /></th>
+		    		<!-- 작성자&부서 -->
+		    		<tr>
+		    			<th style="width:10%;"><spring:message code = 'ezCommunity.t138' /></th> 
+				        <td id="WriteUserNM" style="CURSOR: pointer;white-space:nowrap;width:40%;"><div id = title style="vertical-align:middle;width:115px;height:17px;overflow-y:auto;" onClick=''><c:out value = '${item.writerName}' /></div></td>
+		    			<th style="width:10%;"><spring:message code = 'ezCommunity.t932' /></th> 
+				        <td id="User_DeptNM" style="padding-right:10px;white-space:nowrap;width:40%;"><span><c:out value = '${item.writerDeptName }' /></span></td>
+		    		</tr>
+		    		<!-- 직위&전화번호 -->
+		    		<tr>
+		    			<th style="width:10%;"><spring:message code = 'ezCommunity.t960' /></th> 
+				        <td id="User_JobTitle" style="padding-right:10px;white-space:nowrap;width:40%;"><span><c:out value = '${item.extensionAttribute3}' /></span></td>
+						<th style="width:10%;"><spring:message code = 'ezCommunity.t269' /></th>
+						<td id="Telephone" style="width:40%;"><c:out value = '${item.extensionAttribute4 }' /></td>
+		    		</tr>
+		    		<!-- 게시일&게시종료일 -->
+		    		<tr>
+		    			<th style="width:10%;"><spring:message code = 'ezCommunity.t209' /></th>
+					    <td id="PostDate" style="padding-right:15px;width:40%;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><c:out value = '${item.writeDate }' /></div></td>
+					    <th style="width:10%;"><spring:message code = 'ezCommunity.t931' /></th>
+					    
+					    <c:set var="t930"><spring:message code='ezCommunity.t930'/></c:set>
+					    
+					    <c:choose>
+		                 	<c:when test="${item.endDate == t930}">
+		                 		<td id="EndDate" style="padding-right:15px;width:40%;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><spring:message code = 'ezCommunity.t930' /></div></td>
+		                 	</c:when>
+		                 	
+		                 	<c:otherwise>
+		                 		<td id="EndDate" style="padding-right:15px;width:40%;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><c:out value = '${item.endDate }' /></div></td>
+		                 	</c:otherwise>
+		                 </c:choose>
+		    		</tr>
+<!-- 				        <tr> -->
+<%-- 				        	<th><spring:message code = 'ezCommunity.t138' /></th> --%>
+<%-- 				        	<td id="WriteUserNM" style="CURSOR: pointer;white-space:nowrap;width:120px;"><div id = title style="vertical-align:middle;width:115px;height:17px;overflow-y:auto;" onClick=''><c:out value = '${item.writerName}' /></div></td> --%>
+<%-- 				          	<th><spring:message code = 'ezCommunity.t209' /></th> --%>
+<%-- 				          	<td id="PostDate" style="padding-right:15px;width:auto;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><c:out value = '${item.writeDate }' /></div></td> --%>
+<%-- 				          	<th><spring:message code = 'ezCommunity.t931' /></th> --%>
 				          	
-				          	<c:set var="t930"><spring:message code='ezCommunity.t930'/></c:set>
+<%-- 				          	<c:set var="t930"><spring:message code='ezCommunity.t930'/></c:set> --%>
 				          	
-				          	<c:choose>
-	                        	<c:when test="${item.endDate == t930}">
-	                        		<td id="EndDate" style="padding-right:15px;width:80px;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><spring:message code = 'ezCommunity.t930' /></div></td>
-	                        	</c:when>
+<%-- 				          	<c:choose> --%>
+<%-- 	                        	<c:when test="${item.endDate == t930}"> --%>
+<%-- 	                        		<td id="EndDate" style="padding-right:15px;width:80px;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><spring:message code = 'ezCommunity.t930' /></div></td> --%>
+<%-- 	                        	</c:when> --%>
 	                        	
-	                        	<c:otherwise>
-	                        		<td id="EndDate" style="padding-right:15px;width:80px;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><c:out value = '${item.endDate }' /></div></td>
-	                        	</c:otherwise>
-	                        </c:choose>
+<%-- 	                        	<c:otherwise> --%>
+<%-- 	                        		<td id="EndDate" style="padding-right:15px;width:80px;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><c:out value = '${item.endDate }' /></div></td> --%>
+<%-- 	                        	</c:otherwise> --%>
+<%-- 	                        </c:choose> --%>
 	                        
-				        </tr>
-			        	<tr>
-			        		<th><spring:message code = 'ezCommunity.t932' /></th>
-				          	<td id="User_DeptNM" style="padding-right:10px;white-space:nowrap"><span><c:out value = '${item.writerDeptName }' /></span></td>
-				          	<th><spring:message code = 'ezCommunity.t960' /></th>
-				          	<td id="User_JobTitle" style="padding-right:10px;white-space:nowrap;"><span><c:out value = '${item.extensionAttribute3}' /></span></td>
-							<th style="width:70px"><spring:message code = 'ezCommunity.t269' /></th>
-							<td id="Telephone" style="width:100%"><c:out value = '${item.extensionAttribute4 }' /></td>
-			        	</tr>
+<!-- 				        </tr> -->
+<!-- 			        	<tr> -->
+<%-- 			        		<th><spring:message code = 'ezCommunity.t932' /></th> --%>
+<%-- 				          	<td id="User_DeptNM" style="padding-right:10px;white-space:nowrap"><span><c:out value = '${item.writerDeptName }' /></span></td> --%>
+<%-- 				          	<th><spring:message code = 'ezCommunity.t960' /></th> --%>
+<%-- 				          	<td id="User_JobTitle" style="padding-right:10px;white-space:nowrap;"><span><c:out value = '${item.extensionAttribute3}' /></span></td> --%>
+<%-- 							<th style="width:70px"><spring:message code = 'ezCommunity.t269' /></th> --%>
+<%-- 							<td id="Telephone" style="width:100%"><c:out value = '${item.extensionAttribute4 }' /></td> --%>
+<!-- 			        	</tr> -->
 			        	<tr>
 			          		<th><spring:message code = 'ezCommunity.t210' /></th>
 			          		<td id="cTitle" style="WORD-WRAP: break-word" colspan="5"><div id="title"><c:out value = '${item.title}' /></div></td>
@@ -252,37 +287,40 @@
 					</table>
 				</td>
 		  	</tr>
+		  	<table class="layout">
 		  	<tr>
-		    	<td class="pad1" id="ItemOverflow" style="display:none"  >
-		    		<iframe id="message" class="viewbox" name="message" style="display:none; border:1px solid #b6b6b6;" onload ="displaytable()">
+		    	<td class="pad1" id="ItemOverflow" style="display:none;"  >
+		    		<iframe id="message" class="viewbox" name="message" style="display:none; border:1px solid #b6b6b6;"  onload ="displaytable()">
 		    	</iframe></td> 
 		  	</tr>
 		    <tr>
 		    	<td class="pad1" style="height: 100%;">
-		        	<div id ="contenttable" class ="viewbox" style="height:100%; line-height:20px; letter-spacing: 0.5px; border:1px solid #b6b6b6;"></div>
+		        	<div id ="contenttable" class ="viewbox" style="line-height:20px; letter-spacing: 0.5px; border:1px solid #b6b6b6;"></div>
 		    	</td> 
 		  	</tr>
-		    <tr  id ="onelinereply">
+		  	</table>
+		    <tr id ="onelinereply">
 		    	<td style="height:20px">
 		    		<table class="content">
 					    <tr>
-					        <th><spring:message code = 'ezCommunity.t961' /></th>
-					        <td style="height:50px"><div id="onelinereplylist" style="HEIGHT:auto; background-color:white;text-align:left"></div></td>
+					        <th style="border-bottom: none;"><spring:message code = 'ezBoard.jjh06' /></th>
+					        <td style="height:50px;border-bottom: none;"><div id="onelinereplylist" style="height:auto; background-color:white;text-align:left"></div></td>
 					    </tr>
 				    </table>
 				</td>
 	        </tr>
 		  	<tr>
-		    	<td style="height:20px">
+		    	<td style="height:20px;" >
 		    		<table class="file">
 				        <tr>
-				        	<th><spring:message code = 'ezCommunity.t933' /></th>
-					        <td style="width:100%;height:100%"><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;background-color:white;height:auto;text-align:left "></div></td>
+				        	<th style="border-top: none;"><spring:message code = 'ezCommunity.t933' /></th>
+					        <td style="width:100%;height:100%;border-top: none;"><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;background-color:white;height:auto;text-align:left "></div></td>
 				          	<td id="ItemLevel" style="display:none"></td>
 				        </tr>
 					</table>
 				</td>
 		  	</tr>
+		  	
 		</table>
 	</body>
 </html>
