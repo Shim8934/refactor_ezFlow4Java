@@ -745,14 +745,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		resultXML.append("<ROWS>");
 		for (BoardReadVO vo : readerList) {
 			String userTitle = "";
+			String userDeptName = "";
 			if(vo.getUserTitle() != null){
 				userTitle = vo.getUserTitle();
 			}
+			if( vo.getUserDeptName() != null){
+				userDeptName =  vo.getUserDeptName();
+			}
 			resultXML.append("<ROW>");			
-			resultXML.append("<CELL><USERID>" + vo.getUserID() + "</USERID><VALUE>" + "[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]" + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getUserName() + " (" + vo.getUserID() + ")" + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getUserDeptName() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + userTitle + "</VALUE></CELL>");
+			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><VALUE><![CDATA[" + "[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]" + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + vo.getUserName() + " (" + vo.getUserID() + ")" + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + userTitle + "]]></VALUE></CELL>");
 			resultXML.append("</ROW>");
 		}
 		
