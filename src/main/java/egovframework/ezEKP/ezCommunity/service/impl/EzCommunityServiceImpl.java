@@ -3687,7 +3687,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	@Override
 	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception {
 		logger.debug("getReaderList started");
-		/* 2018-02-06 김보미 - 페이징 */
+		// 2018-02-06 김보미 
     	if(pageNum == 0){
     		pageNum = 1;
     	}
@@ -3720,15 +3720,17 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		resultXML.append("<PERSONALCNT>" + perCount + "</PERSONALCNT>");
     	resultXML.append("<LISTVIEWDATA>");
     	
-//		int rlength = readerList.size();
-		
 		resultXML.append("<ROWS>");
 		for (CommunityBoardItemReadVO vo : readerList) {
+			String userTitle = "";
+			if(vo.getUserTitle() != null){
+				userTitle = vo.getUserTitle();
+			}
 			resultXML.append("<ROW>");			
 			resultXML.append("<CELL><USERID>" + vo.getUserID() + "</USERID><VALUE>" + "[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]" + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getUserName() + " (" + vo.getUserID() + ")" + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getUserDeptName() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getUserTitle() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + userTitle + "</VALUE></CELL>");
 			resultXML.append("</ROW>");
 		}
 		

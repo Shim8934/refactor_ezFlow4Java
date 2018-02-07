@@ -1191,6 +1191,7 @@
 <!-- 		{CALL EZSP_BRDGETREADERLIST(#v_pBoardID#, #v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 <!-- DATE_FORMAT(DATE_ADD(readdate, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS readdate  -->
+	<!-- 2018-02-07 김보미 - 50명 제한 삭제(LIMIT 50), limit부분 수정. -->
 	<select id="EzCommunityDAO.getReaderList"					parameterClass="Map"		resultClass="CommunityBoardItemReadVO">
 		<![CDATA[
 			SELECT
