@@ -353,7 +353,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String userName1       = jsonObject.get("userName1") != null ? (String) jsonObject.get("userName1")           : "";
 		String userName2       = jsonObject.get("userName2") != null ? (String) jsonObject.get("userName2")           : "";
 		String folderId        = jsonObject.get("folderId")  != null ? (String) jsonObject.get("folderId")            : "";
-		String companyId       = jsonObject.get("companyId") != null ? (String) jsonObject.get("companyId")           : "";		
+		String companyId       = jsonObject.get("companyId") != null ? (String) jsonObject.get("companyId")           : "";
 		JSONObject result      = new JSONObject();		
 		
 		if (nameArray == null || tenantId == -1 || offset.equals("") || userId.equals("") || userName1.equals("") || userName2.equals("") || folderId.equals("") || companyId.equals("")) {
@@ -378,12 +378,10 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			String realPath            = request.getServletContext().getRealPath("");
 			String[] pFileName         = new String[cnt];
 	        Long[] fileSize            = new Long[cnt];
-	        String useExtension        = ezCommonService.getTenantConfig("USE_FileExtension", tenantId);	        
+	        String useExtension        = ezCommonService.getTenantConfig("USE_FileExtension", tenantId);
 	        	 
 	        if (((JSONObject)nameArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)nameArray.get(0)).get("originalFilename"))) {	        	
 	            for (int i = 0; i < cnt; i++) {
-	            	//logger.debug("Original File Name: " + ((JSONObject)nameArray.get(i)).get("originalFilename"));
-	            	
 	                String _pFileName = (String)((JSONObject)nameArray.get(i)).get("originalFilename");
 	                
 	                if (_pFileName.indexOf(commonUtil.separator) > 0) {
@@ -392,10 +390,10 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	                
 	                pFileName[i] = _pFileName;
 	            }
-	        }      
+	        }
 	        
 	        String pDirPath = getWebFolderDirPath(tenantId);     		
-	        pDirPath = realPath + pDirPath;
+	        pDirPath        = realPath + pDirPath;
 	        
 	        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
 	        	pDirPath = pDirPath + commonUtil.separator;
@@ -409,16 +407,16 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 
 	        List<FileVO> list = new ArrayList<FileVO>();
 	        
-	        for (int i = 0; i < cnt; i++) {        	
-	        	fileSize[i] = multiFileLists.get(i).getSize();
+	        for (int i = 0; i < cnt; i++) {
+	        	fileSize[i]   = multiFileLists.get(i).getSize();
 	            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
 	            
 	            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {	            	
             		writeUploadedFile(multiFileLists.get(i), pFileName[i], pDirPath);
             		//Save to database           		
             		FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(extend, tenantId);
-            		Date date = new Date();
-            		FileVO fileVO = new FileVO();
+            		Date date           = new Date();
+            		FileVO fileVO       = new FileVO();
             		
             		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
             		
@@ -472,8 +470,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String userName2    = request.getParameter("userName2")!= null ? request.getParameter("userName2")                  : "";	
 		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
 		String[] fileIDList = listFileId.split(",");		
-		
-		logger.debug("FileList: " + listFileId);
 		
 		if (fileIDList.length <= 0) {
 			logger.debug("downloadAttach illegal arguments!");

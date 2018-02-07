@@ -31,7 +31,7 @@
 						dataType: "JSON",
 						async: true,
 						success : function(data) {
-							var result = data.companyTree;
+							var result = data.companyTree;							
 							renderData(result);
 						},
 		 				error : function(error) {	 					
@@ -46,9 +46,10 @@
 					return;
 				} 
 				
-				var divTree  = document.getElementById("folderTree");				
-				var divComp  = document.createElement("div");
-				compFolderId = result["folderId"];
+				var divTree       = document.getElementById("folderTree");				
+				var divComp       = document.createElement("div");
+				compFolderId      = result["folderId"];
+				divTree.innerHTML = "";
 				
 				displaySubFolder(divTree, divComp, result);
 			}
@@ -75,7 +76,8 @@
 				var spanFolderName = document.createElement("span");
 				spanFolderName.innerHTML = list["folderName"];
 				spanFolderName.setAttribute("class", "spanName");
-				spanFolderName.setAttribute("name", list["folderId"]);				
+				spanFolderName.setAttribute("name", list["folderId"]);
+				spanFolderName.setAttribute("level", list["folderLevel"]);				
 				spanFolderName.onclick = function() {getSelected(this);};
 				
 				divElmt.appendChild(imgElmt);
@@ -248,7 +250,12 @@
 				}
 			}	
 			
-			function getUsersPage() {
+			function getUsersPage() {				
+				if (!selectedFolder) {
+					alert("폴더 선택하세요.");
+					return;
+				}
+				
 				if (compFolderId == selectedFolder) {
 					alert("안됩니다.");
 					return;
@@ -316,8 +323,7 @@
 	   					</div>
 	   				</td>
 	   			</tr>	   			
-	   		</table>
-	   		
+	   		</table>	   		
 	   </div>
 	   
 	   <input type="text" name="RangeXMLStr" id="RangeXMLStr" style="display:none">
