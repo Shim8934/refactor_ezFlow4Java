@@ -753,11 +753,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			if( vo.getUserDeptName() != null){
 				userDeptName =  vo.getUserDeptName();
 			}
-			resultXML.append("<ROW>");			
-			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><VALUE><![CDATA[" + "[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]" + "]]></VALUE></CELL>");
-			resultXML.append("<CELL><VALUE><![CDATA[" + vo.getUserName() + " (" + vo.getUserID() + ")" + "]]></VALUE></CELL>");
+			resultXML.append("<ROW>");
+			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><VALUE><![CDATA[" + vo.getUserName() + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + userTitle + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]]></VALUE></CELL>");			
 			resultXML.append("</ROW>");
 		}
 		

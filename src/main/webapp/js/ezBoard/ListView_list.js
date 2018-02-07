@@ -857,7 +857,7 @@ function ListView() {
     //2018-02-07 김보미 
     //헤더 없는 리스트뷰 바디 생성
       function GetTableBodyObj2() {
-          var oTbody = document.createElement("TBODY");
+    	  var oTbody = document.createElement("TBODY");
           oTbody.style.backgroundColor = m_strColorDefault;
 
           var oRows = _dataSource.getElementsByTagName("ROW");
@@ -865,28 +865,13 @@ function ListView() {
           
           var oHeaders = _dataSource.getElementsByTagName("HEADER");
           var colCount = oHeaders.length;
-
-         /* if(_rowCount == 0)
-          {
-              var objTr = document.createElement("TR");
-              objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
-              oTbody.appendChild(objTr);
-              var oText = document.createTextNode(strLang535);
-              var objTd = document.createElement("TD");
-              objTd.align = "center";
-              objTd.colSpan = colCount;
-              objTd.appendChild(oText);
-              objTr.appendChild(objTd);
-
-               return oTbody;
-          }*/
+          
           for (var i = 0; i < oRows.length; i++) {
               var objTr = document.createElement("TR");
               objTr.setAttribute("id", _thisID + "_TR_" + i);
-//              objTr.style.cursor = "pointer";
 
-              /*objTr.onmouseover = new Function("tr_mouseover(this)");
-              objTr.onmouseout = new Function("tr_mouseout(this)");*/
+              objTr.onmouseover = new Function("tr_mouseover(this)");
+              objTr.onmouseout = new Function("tr_mouseout(this)");
 
               if (_rowonclick != null)
                   objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
@@ -900,19 +885,15 @@ function ListView() {
                   objTr.oncontextmenu = new Function(_contextHandler + "(this.id);");
 
               var oCells = GetElementsByTagName(oRows[i], "CELL");
-
+             
               if (_SelectFlag && i == 0) {   //첫번째 row 선택지정 or 특정 row 선택
                   objTr.setAttribute("selected", "true");
                   objTr.style.backgroundColor = m_strColorSelect;
-
                   _firstRowID = _thisID + "_TR_" + i;      
               }
               else {
                   objTr.setAttribute("selected", "false");
-                  objTr.className = "";
-                  objTr.style.backgroundColor = m_strColorDefault;
               }
-
               //DATA1, DATA2, DATA3... 등의 값 세팅
               var oDatas = GetDataElements(oCells[0]);
               for (var j = 0; j < oDatas.length; j++) {
@@ -934,13 +915,8 @@ function ListView() {
                   var oText = document.createTextNode(strValue);
                   var objTd = document.createElement("TD");
 
-                  objTd.style.overflow = "hidden";
-                  objTd.style.textOverflow = "ellipsis";
-                  objTd.style.whiteSpace = "nowrap";
-
                   if (strStyle != "") {
-                      /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
-                  	if (!CrossYN()) {
+                      if (new RegExp(/MSIE/).test(navigator.userAgent)) {
                           objTd.style.setAttribute("cssText", strStyle);
                       }
                       else {
@@ -954,7 +930,7 @@ function ListView() {
                   else {
                       
                       if(!_SetHeightFree)
-                          objTd.height = "24";                    
+                          //objTd.height = "24";                    
                           
                       if (_titleIdx == null) { //하단정보탭일경우                       
                           if (_Align[j] == 0)
@@ -963,8 +939,6 @@ function ListView() {
                               objTd.align = "center";//objTd.className = "kt_li_pop_center";
                       }
                       else {  //상단 리스트일경우
-                        
-                        //  if (_titleIdx == j) {
                               objTd.title = strValue;
                               objTd.style.overflow = "hidden";
                               objTd.style.textOverflow = "ellipsis";
@@ -974,14 +948,13 @@ function ListView() {
                               if (_UrgentFlag && oDatas[13].textContent == "Y") {   //DATA14값
                                   objTd.style.color = m_UrgentColor;
                               }
-                              /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
-                              if (CrossYN()) {
+                              if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
                                   objTd.setAttribute("width", "80%");// objTd.setAttribute("width", strWidth + "px");
                               }
                               else {
                                   objTd.width = "80%";// objTd.width = strWidth + "px";
                               }
-
+                              objTd.className = "title";
                           }
                       
                           if (_Align[j] == 0)
@@ -989,9 +962,7 @@ function ListView() {
                           else
                               objTd.align = "center";//objTd.className = "kt_li_center";
                       }
-
                   }
-
                   if (_rowCount < 100) {
                       if (_SecIdx != j) {
                           if (_UrgentFlag && _titleIdx == j) {       //2010.05.04 제목 긴급일 경우 붉은색 처리로 추가함.
@@ -1004,14 +975,11 @@ function ListView() {
                           }
                       }
                   }
-
                   objTd.appendChild(oText);
                   objTr.appendChild(objTd);
-
                   objTd = null;
                   oText = null;
               }
-
               objTr = null;
               oCells = null;
               oDatas = null;
@@ -1492,18 +1460,19 @@ function tr_unselectedAll(pTableID) {
     if (!oList)
         return;
 
-    if (document.getElementById("HeaderAllCheckBox").checked) {
-    }
-    else {
-
-        var SelList = new ListView();
-        SelList.LoadFromID("BoardList");
-
-        for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
-            strListInfo = "";
-        }
+    if (document.getElementById("HeaderAllCheckBox")) {    
+    	if (!document.getElementById("HeaderAllCheckBox").checked) {
+	        var SelList = new ListView();
+	        SelList.LoadFromID("BoardList");
+	
+	        for (var i = 0; i < SelList.GetRowCount() ; i++) {
+	            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+	            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+	            strListInfo = "";
+	        }
+	    }
+    } else {
+    	strListInfo = "";
     }
 }
 

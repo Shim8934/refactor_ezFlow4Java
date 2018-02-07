@@ -312,7 +312,7 @@
 		        <td style="height:30px">
 		          <table class="file2" style="height:100%;">
 		            <tr>
-		              <th style="height:100%; "><spring:message code='ezBoard.t324'/></th>
+		              <th style="height:100%; "><spring:message code='ezBoard.jjh06'/></th>
 		              <td style="height:100%; width:100%; "><div id="onelinereplylist" style="OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
 		            </tr>
 		          </table>
