@@ -39,10 +39,10 @@ function SelectDept(opentype, CompleteFunction) {
 
     if (opentype == undefined && CompleteFunction == undefined) {
         selectdept_cross_dialogArguments[1] = SelectDept_Complete;
-        DivPopUpShow(330, 360, url);
+        DivPopUpShow(350, 360, url);
     } else if (opentype == undefined && CompleteFunction != undefined) {
         selectdept_cross_dialogArguments[1] = CompleteFunction;
-        DivPopUpShow(330, 360, url);
+        DivPopUpShow(350, 360, url);
     } else if (opentype != undefined && CompleteFunction == undefined) {
         selectdept_cross_dialogArguments[1] = SelectDept_Complete;
         var OpenWin = window.open(url, "SelectDept_Cross", GetOpenWindowfeature(330, 360));

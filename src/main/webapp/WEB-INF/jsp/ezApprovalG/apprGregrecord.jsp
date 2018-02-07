@@ -350,7 +350,7 @@
             }
             else {
                 if (CrossYN())
-                    window.resizeTo(1030, 720);
+                    window.resizeTo(1030, 750);
 
                 trDeliveryNo.style.display = "";
                 trOriginSN.style.display = "";
@@ -371,7 +371,7 @@
             inssepattach_cross_dialogArguments[0] = para;
             inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
 
-            DivPopUpShow(730, 630, url);
+            DivPopUpShow(950, 630, url);
         }
         else
         {
