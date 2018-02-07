@@ -375,21 +375,25 @@
 		<![CDATA[
 			SELECT
                 *
-            FROM (SELECT
-		                A.*,
+            FROM
+                ( SELECT
+                    *
+                  FROM
+                      (SELECT
+                        A.*,
                         ROW_NUMBER() OVER(ORDER BY DISPLAYNAME ASC) AS RNUM
                       FROM
-		                TBL_PORTLET_GENERAL A
+                        TBL_PORTLET_GENERAL A
                       WHERE
-		                 DISPLAYNAME like '%' || #pDisplayName# || '%'
+                         DISPLAYNAME like '%' || #pDisplayName# || '%'
                       
-		]]>
+        ]]>
       
        <isNotEmpty property="pGubunFlag">
           <![CDATA[
-	         AND
+             AND
                 PORTLET_TYPE = #pGubunFlag#
-	 	  ]]>
+          ]]>
        </isNotEmpty>
        
         <isNotEmpty property="pPageGubunFlag">
@@ -406,11 +410,14 @@
           ]]>
        </isNotEmpty>
         <![CDATA[
-	         AND
-                TENANT_ID=#tenantID#) 
+             AND
+                TENANT_ID=#tenantID#) A
+            WHERE
+                A.RNUM <= #pEndRow#                 
+                ) X
              WHERE
-                RNUM BETWEEN #pStartRow# AND #pEndRow#
-		]]>
+                X.RNUM >= #pStartRow#
+        ]]>         
 	</select>
 	
 	<insert id="EzPortalAdminDAO.createNewPortlet" parameterClass="Map">

@@ -187,8 +187,8 @@
 		  </tr>
 		  <tr> 
 			<td>
-		        <div class="listview" style="Width:307px; Height:159px;">
-			    <div id="OrgListView"  STYLE="overflow:auto;Width:306px; Height:159px;margin:1px 1px 1px 1px;"></div></div>
+		        <div class="listview" style="Width:328px; Height:159px;">
+			    <div id="OrgListView"  STYLE="overflow:auto;Width:327px; Height:159px;margin:1px 1px 1px 1px;"></div></div>
 			</td>
 		  </tr>
 		</table>
