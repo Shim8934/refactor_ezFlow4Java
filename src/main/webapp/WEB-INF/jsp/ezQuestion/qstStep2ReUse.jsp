@@ -132,7 +132,9 @@
         		var xmlHttp = createXMLHttpRequest();
         		var xmlDoc = createXmlDom();
         		var objNode;
-        		xmlDoc = loadXMLString(frmCreate.STEP1DATA.value);
+        		
+        		xmlDoc = loadXMLString("${pStep1DataXML}");
+        		
         		var QuestionNode = createNode(xmlDoc, "QUESTION"); 
 
         		var pQstCnt = document.frmCreate.selQues.length;
