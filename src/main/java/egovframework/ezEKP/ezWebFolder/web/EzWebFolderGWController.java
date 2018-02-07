@@ -481,7 +481,8 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		
 		if (fileIDList.length == 1) {			
 			FileVO fileVO    = ezWebFolderService.getFileByFileId(fileIDList[0], offset, tenantId);			
-			String _fileName = fileVO.getFileName();		
+			String _fileName = fileVO.getFileName();
+			_fileName 		 = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), _fileName);
 			File file        = new File(realPath + fileVO.getFilePath());
 
 			BufferedInputStream in = null;
