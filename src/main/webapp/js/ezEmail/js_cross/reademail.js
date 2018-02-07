@@ -1031,7 +1031,6 @@ function mail_link(a){
 		real_href += "/" + link[i];
 	}
 	
-	$("#approv_a").attr("href", real_href);
-	openwindow(real_href, "", 880, 550);
+	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(820, 900));
 }
 
