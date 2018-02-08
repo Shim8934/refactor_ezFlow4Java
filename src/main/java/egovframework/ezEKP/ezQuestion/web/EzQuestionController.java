@@ -121,6 +121,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String currPage = "1";
 		int pageSize = 15;
 		qstListVO.setUserID(loginVO.getId());
+		String adminYN = "N";
 		
 		if(request.getParameter("brdID") != null){
 			brdID = request.getParameter("brdID");
@@ -141,6 +142,10 @@ public class EzQuestionController extends EgovFileMngUtil {
 		}
 		if(request.getParameter("currPage") != null){
 			currPage = request.getParameter("currPage");
+		}
+		
+		if(loginVO.getRollInfo().indexOf("c=1") > -1 || loginVO.getRollInfo().indexOf("k=1") > -1 || loginVO.getRollInfo().indexOf("l=1") > -1){ 
+			adminYN = "Y";
 		}
 		
 		qstListVO.setBrdID(Integer.parseInt(brdID));
@@ -208,6 +213,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		}
 		logger.debug("receve="+receve);
 		model.addAttribute("qstListVO", qstListVO);
+		model.addAttribute("adminYN", adminYN);
 		model.addAttribute("list", list);
 		model.addAttribute("receve", receve);
 		
