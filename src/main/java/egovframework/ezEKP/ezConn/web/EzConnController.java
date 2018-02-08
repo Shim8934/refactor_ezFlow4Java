@@ -52,7 +52,10 @@ public class EzConnController {
     @Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
-	@RequestMapping(value={"/ezConn/mailMain.do", "/ezConn/scheduleMain.do"})
+	@RequestMapping(value={
+						"/ezConn/mailMain.do", "/ezConn/scheduleMain.do",
+						"/ezConn/admin/organMain.do", "/ezConn/admin/scheduleMain.do"
+						})
 	public void mailMain(
 					@RequestParam String id,
 					HttpServletRequest request,
@@ -197,7 +200,11 @@ public class EzConnController {
 					resultPage = "/ezEmail/mailRead.do?URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
 				} else if (requestUri.equals("/ezConn/scheduleMain.do")) {
 					resultPage = "/ezSchedule/scheduleIndex.do?funCode=2";
-				} else {				
+				} else if (requestUri.equals("/ezConn/admin/organMain.do")) {
+					resultPage = "/admin/ezOrgan/organMain.do";
+				} else if (requestUri.equals("/ezConn/admin/scheduleMain.do")) {
+					resultPage = "/admin/ezSchedule/scheduleMain.do";
+				} else {																
 					String subCode = "1";
 					
 					if (request.getParameter("subCode") != null) {
