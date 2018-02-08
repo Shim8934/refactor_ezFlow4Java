@@ -724,9 +724,8 @@
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
 		<![CDATA[
 			SELECT 
-				*
-			FROM (
-				SELECT 
+				* FROM
+				(SELECT 
 					A.*, ROWNUM as RNUM
 				FROM (
 						SELECT  
@@ -4618,6 +4617,6 @@
 			   						ITEMID = #itemID# )
 	  	]]>
   </select>
-  
+
 </sqlMap>
 
