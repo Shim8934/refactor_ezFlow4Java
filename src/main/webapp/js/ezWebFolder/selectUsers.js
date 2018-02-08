@@ -60,7 +60,7 @@
 	
     function updateParent(_element, _value, _Type) {
         var elementRef = document.getElementsByName(_element);
-
+        
         if (elementRef.length > 0) {
             switch (_Type) {
                 case "selectedIndex":
@@ -112,7 +112,7 @@
 	            userArray.push(MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "id")));    	        
             }
             
-            jsonObj["user"] = userArray;        
+            jsonObj["user"] = userArray;
     	}
     	
     	return jsonObj;
@@ -123,5 +123,14 @@
     	str = ReplaceText(str, "&lt;", "<");
     	str = ReplaceText(str, "&gt;", ">");
     	str = ReplaceText(str, "&#039;", "'");
+    	return str;
+	}
+    
+    function MakeXMLString(str) {
+	    str = ReplaceText(str, "&", "&amp;");
+    	str = ReplaceText(str, "<", "&lt;");
+    	str = ReplaceText(str, ">", "&gt;");
+    	str = ReplaceText(str, "'", "&#039;");
+    	str = ReplaceText(str, "\"", "&quot;");
     	return str;
 	}

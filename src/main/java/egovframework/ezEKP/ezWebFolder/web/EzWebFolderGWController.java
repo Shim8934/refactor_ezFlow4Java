@@ -972,7 +972,77 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		}
 		
 		return result;
-	}	
+	}
+	
+	@RequestMapping(value="/webfolderadmin/folders/{folderid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putCompanyFolderUpdate(@RequestBody JSONObject jsonObject, @PathVariable(value="folderid") String folderId, HttpServletRequest request) throws ParseException {
+		JSONParser parser      = new JSONParser();
+		jsonObject             = (JSONObject) parser.parse(jsonObject.toJSONString());
+		
+		int tenantId           = jsonObject.get("tenantId")  != null ? ((Long) jsonObject.get("tenantId")).intValue() : -1;		
+		String offset          = jsonObject.get("offset")    != null ? (String) jsonObject.get("offset")              : "";
+		String userId	       = jsonObject.get("userId")    != null ? (String) jsonObject.get("userId")              : "";		
+		String folderName      = jsonObject.get("fName")     != null ? (String) jsonObject.get("fName")               : "";
+		String folderUsers     = jsonObject.get("fUsers")    != null ? (String) jsonObject.get("fUsers")              : "";
+		JSONObject result      = new JSONObject();
+		
+		if (folderId.equals("") || userId.equals("") || folderUsers.equals("") || folderName.equals("") || offset.equals("") || tenantId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}		
+		
+		logger.debug("TenantId: " + tenantId + " || folderName: " + folderName + " || folderID: " + folderId);
+		
+		try {
+			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			
+			if (folder == null) {
+				logger.debug("Folder not found!");
+				result.put("status", "error");
+				result.put("code", "1");
+				return result;
+			}			
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date           	   = new Date();
+			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);			
+			JSONObject json            = (JSONObject) parser.parse(folderUsers);
+			JSONArray userArray		   = (JSONArray)json.get("user");
+			JSONArray deptArray		   = (JSONArray)json.get("dept");
+			
+			//Delete all folder users
+			ezWebFolderAdminService.deleteFolderUsers(folderId, tenantId);
+			
+			for (int i = 0; i < userArray.size(); i++) {
+				ezWebFolderAdminService.insertFolderUser(getMaxFolderUserSeq(tenantId), (String)userArray.get(i), "user", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
+			}
+			
+			for (int i = 0; i < deptArray.size(); i++) {
+				ezWebFolderAdminService.insertFolderUser(getMaxFolderUserSeq(tenantId), (String)deptArray.get(i), "dept", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
+			}			
+					
+			folder.setFolderName1(folderName);
+			folder.setFolderName2("");			
+			folder.setUpdateId(userId);
+			folder.setTenantId(tenantId);
+			folder.setUpdateDate(timeUTC);		
+			
+			ezWebFolderAdminService.insertFolder(folder);
+									
+			result.put("status", "ok");
+			result.put("code", 0);			
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		return result;
+	}
 	
 	@RequestMapping(value="/webfolderadmin/foldersTree", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyFolderTree(HttpServletRequest request) {	

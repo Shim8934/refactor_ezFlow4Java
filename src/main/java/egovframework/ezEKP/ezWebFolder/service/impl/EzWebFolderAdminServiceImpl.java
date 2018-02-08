@@ -3,12 +3,9 @@ package egovframework.ezEKP.ezWebFolder.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
@@ -137,6 +134,15 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("tenantId", tenantId);
 
 		ezWebFolderAdminDAO.insertFolderUser(map);	
+	}
+
+	@Override
+	public void deleteFolderUsers(String folderId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+
+		ezWebFolderAdminDAO.deleteFolderUsers(map);		
 	}
 
 }

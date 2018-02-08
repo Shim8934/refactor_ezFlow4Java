@@ -46,4 +46,8 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 	public void insertFolderUser(Map<String, Object> map) {
 		insert("EzWebFolderAdminDAO.insertFolderUser", map);
 	}
+
+	public void deleteFolderUsers(Map<String, Object> map) {		
+		delete("EzWebFolderAdminDAO.deleteFolderUsers", map);
+	}
 }

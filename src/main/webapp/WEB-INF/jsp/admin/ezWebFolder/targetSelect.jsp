@@ -453,7 +453,7 @@
     	    		else {
     	    			deptName = arrRows[i].getAttribute("DISPLAYNAME2");
     	    		}
-    	    		listOfTarget += deptName + ", "
+    	    		listOfTarget += deptName + ","
     	    	}
     	    	
     	    	for (var j = 0; j < arrRows2.length; j++) {
@@ -465,7 +465,7 @@
     	    		else {
     	    			userName = arrRows2[j].getAttribute("DATA5");
     	    		}
-    	    		listOfTarget += userName + ", ";
+    	    		listOfTarget += userName + ",";
     	    	}
     	    	
     	    	listOfTarget = listOfTarget.slice(0, -2);

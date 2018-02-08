@@ -122,7 +122,7 @@
 				}		
 			}
 			
-			function getSelected(obj) {				
+			function getSelected(obj) {
 				var previousElmt = document.getElementsByName(selectedFolder)[0];
 				
 				if (previousElmt != null) {
@@ -155,7 +155,7 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var result = data.folderUsers;			
+						var result = data.folderUsers;						
 						processUsersList(result, obj.innerHTML);
 					},
 	 				error : function(error) {	 					
@@ -181,12 +181,12 @@
 						target = primary == "1" ? (target + result[i]["displayName1"] + ",") : (target + result[i]["displayName2"] + ",");
 						
 						if (result[i]["userType"] == "user") {
-							xmlUsers += "<DATA id=\"" + result[i]["userId"] + "\" nm=\"" + result[i]["displayName1"] + 
-		        			"\" nm2=\"" + result[i]["displayName2"] + "\">" + result[i]["userId"] + "</DATA>";
+							xmlUsers += "<DATA id=\"" + MakeXMLString(result[i]["userId"]) + "\" nm=\"" + MakeXMLString(result[i]["displayName1"]) + 
+		        			"\" nm2=\"" + MakeXMLString(result[i]["displayName2"]) + "\">" + MakeXMLString(result[i]["userId"]) + "</DATA>";
 						}
 						else {
-							xmlDepts += "<DATA id=\"" + result[i]["userId"] + "\" nm=\"" + result[i]["displayName1"] + 
-		        			"\" nm2=\"" + result[i]["displayName2"] + "\">" + result[i]["userId"] + "</DATA>";
+							xmlDepts += "<DATA id=\"" + MakeXMLString(result[i]["userId"]) + "\" nm=\"" + MakeXMLString(result[i]["displayName1"]) + 
+		        			"\" nm2=\"" + MakeXMLString(result[i]["displayName2"]) + "\">" + MakeXMLString(result[i]["userId"]) + "</DATA>";
 						}
 						
 					}
@@ -198,7 +198,7 @@
 					xmlStr   += "</RANGE>";
 					updateTarget(target.slice(0, -1));
 					document.getElementById("RangeXMLStr").value = xmlStr;					
-				}
+				}			
 				
 			}
 			
@@ -353,6 +353,47 @@
 				var spanElmt = document.getElementsByName(selectedFolder)[0];
 				selectedFolder = "";
 				getSelected(spanElmt);
+			}
+			
+			function saveChanges() {
+				if (!selectedFolder || compFolderId == selectedFolder) {					
+					return;
+				}
+				
+				var folderName  = document.getElementById("fldName").value;
+				var folderUsers = getJsonData(document.getElementById("RangeXMLStr").value);
+				var target		= document.getElementById("newTargetDiv").innerHTML;				
+				
+		    	if (!folderName.replace(/\s/g,'')) {
+		    		alert("폴더명  입력하세요.");
+		    		document.getElementById("fldName").value = "";
+		    		document.getElementById("fldName").focus;
+		    		return;
+		    	}
+		    	
+		    	if (!target.replace(/\s/g,'')) {
+		    		alert("폴더 구성원 선택하세요.");
+		    		return;
+		    	}
+				
+				$.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/changeCompanyFolder.do",
+					data: {
+						"folderId"	  : selectedFolder,						
+						"folderUsers" : JSON.stringify(folderUsers),
+						"folderName"  : folderName
+					},
+					dataType: "JSON",
+					async: false,
+					success: function(data) {					
+						arrSubFolder = [];
+						getData();						
+					},
+					error: function (xhr, status, e){
+						alert("<spring:message code='ezWebFolder.t134' />");
+					}
+				});
 			}
 	    </script>
 	</head>

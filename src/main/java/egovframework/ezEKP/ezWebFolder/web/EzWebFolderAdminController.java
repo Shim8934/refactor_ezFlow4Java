@@ -539,7 +539,36 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		
 		return "json";
-	}	
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/admin/ezWebFolder/changeCompanyFolder.do", method = RequestMethod.POST)	
+	public String changeCompanyFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
+		LoginVO userInfo      = commonUtil.userInfo(loginCookie);
+		String folderId       = request.getParameter("folderId");		
+		String folderName	  = request.getParameter("folderName");
+		String folderUsers    = request.getParameter("folderUsers");	
+		String gwServerUrl    = config.getProperty("config.webfolderGwServerURL");
+		String url            = gwServerUrl + "/webfolderadmin/folders/" + folderId;
+		JSONObject jsonObject = new JSONObject();
+
+		jsonObject.put("tenantId", userInfo.getTenantId());
+		jsonObject.put("offset", userInfo.getOffset());
+		jsonObject.put("userId", userInfo.getId());		
+		jsonObject.put("fName", folderName);
+		jsonObject.put("fUsers", folderUsers);
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<JSONObject> entity = new HttpEntity<JSONObject>(jsonObject, headers);
+
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);		
+		RestTemplate rest             = new RestTemplate();		
+		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		
+		return "json";
+	}
+	
 	
 	@RequestMapping(value="/admin/ezWebFolder/targetSelect.do")
 	public String selectTarget(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {

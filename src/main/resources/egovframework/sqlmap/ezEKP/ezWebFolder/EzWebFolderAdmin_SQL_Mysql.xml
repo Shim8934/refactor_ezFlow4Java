@@ -462,6 +462,17 @@
         </isNotEqual>
     </insert>
     
+    <delete id="EzWebFolderAdminDAO.deleteFolderUsers" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_FOLDERUSER
+          	WHERE
+          		FOLDER_ID = #folderId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+   </delete>    
+    
 </sqlMap>
 
 

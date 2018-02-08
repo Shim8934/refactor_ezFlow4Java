@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezWebFolder.service;
 
 import java.util.List;
+
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
@@ -15,4 +16,5 @@ public interface EzWebFolderAdminService {
 	void insertFileLog(FileLogVO fileLog) throws Exception;
 	void insertFolder(FolderVO folder) throws Exception;
 	void insertFolderUser(String seq, String userId, String userType, String folderId, String createId, String createDate, String companyId, int tenantId) throws Exception;
+	void deleteFolderUsers(String folderId, int tenantId) throws Exception;
 }
