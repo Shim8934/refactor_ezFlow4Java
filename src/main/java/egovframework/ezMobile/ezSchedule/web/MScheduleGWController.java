@@ -825,9 +825,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 일정관리 [POST] 게시판-일정 연동 등록
 	 */	
-	@RequestMapping(value="/mobile/ezschedule/borad-schedules", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezschedule/board-schedules", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject mBoardScheduleInsert(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/borad-schedules] started.");
+		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/board-schedules] started.");
 		
 		JSONObject result = new JSONObject();
 						
@@ -871,7 +871,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/borad-schedules] ended.");
+		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/board-schedules] ended.");
 		
 		return result;
 	}

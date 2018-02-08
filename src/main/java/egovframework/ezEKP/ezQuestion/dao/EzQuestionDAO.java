@@ -25,10 +25,6 @@ public class EzQuestionDAO extends EgovAbstractDAO {
 		return (List<QstListVO>) list("EzQuestionDAO.getQstList", map);
 	}
 	
-	public String getUserIDAdmin(int brdID) {
-		return (String) select("EzQuestionDAO.getUserIDAdmin", brdID);
-	}
-	
 	@SuppressWarnings("unchecked")
 	public List<QstAttachVO> getAttachInfo(Map<String, Object> map) {
 		return (List<QstAttachVO>) list("EzQuestionDAO.getAttachInfo", map);

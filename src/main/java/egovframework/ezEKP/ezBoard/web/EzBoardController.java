@@ -61,7 +61,6 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
-import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -7081,19 +7080,6 @@ public class EzBoardController extends EgovFileMngUtil{
     	model.addAttribute("userInfo", userInfo);
     	logger.debug("getBoardComment ended.");
     	
-    	return "json";
-    }
-    /**
-     * 게시물 댓글 삭제
-     * 강민수92
-     */
-    @RequestMapping(value = "/ezBoard/deleteBoardComment.do")
-    public String deleteBoardComment(@CookieValue("loginCookie") String loginCookie, BoardLineReplyVO boardLineReplyVO, String guBun) throws Exception {
-    	logger.debug("deleteCircularComment started.");
-    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
-    	String result = ezBoardService.deleteOneLineReply(userInfo.getId(), boardLineReplyVO.getReplyID(), guBun, userInfo.getTenantId());
-    	//익명일 경우
-    	logger.debug("deleteCircularComment ended.");
     	return "json";
     }
 
