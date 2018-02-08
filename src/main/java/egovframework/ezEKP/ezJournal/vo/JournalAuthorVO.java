@@ -7,11 +7,9 @@ public class JournalAuthorVO {
 	private String userName;
 	private String jikwi;
 	private String deptName;
-	private String tenantId;
 	private String authDept;
 	private String deptId;
 	private String mail;
-	private String[] authDeptList;
 	
 	public String getMail() {
 		return mail;
@@ -24,12 +22,6 @@ public class JournalAuthorVO {
 	}
 	public void setDeptId(String deptId) {
 		this.deptId = deptId;
-	}
-	public String[] getAuthDeptList() {
-		return authDeptList;
-	}
-	public void setAuthDeptList(String[] authDeptList) {
-		this.authDeptList = authDeptList;
 	}
 	public String getAuthDept() {
 		return authDept;
@@ -60,11 +52,5 @@ public class JournalAuthorVO {
 	}
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
-	}
-	public String getTenantId() {
-		return tenantId;
-	}
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
 	}
 }

@@ -18,7 +18,13 @@
 			}
 			
 			function insertAuth(userId){
-				window.open(url, windowName, windowFeatures, optionalArg4);
+				var url = "/admin/ezJournal/authorDetail.do";
+				var companyId = document.getElementById("companyId").value;
+				url+="?companyId="+companyId;
+				if (userId) {
+					url+="&userId="+userId;
+				}
+				window.open(url, "authorDetail", "width=1100, height=700");
 			}
 			
 		    function Cancel_Click() {
@@ -46,7 +52,7 @@
 		<form class="journalForm">
 			<div id="mainmenu">
 				<span><b><spring:message code = 'ezApprovalG.t1512' /></b></span>
-	            <select name="companyId" onchange="changeSelectCompany(this.value)">
+	            <select name="companyId" id="companyId" onchange="changeSelectCompany(this.value)">
 	            	<c:forEach items="${compList}" var="company">
 		            	<option value="${company.companyId }"
 	            		<c:if test="${company.selected eq 'selected' }">
@@ -59,7 +65,7 @@
 			<br/>
 			<div id="mainmenu">
 	  			<ul>
-					<li><span onClick=""><spring:message code='ezJournal.t36' /></span></li>
+					<li><span onClick="insertAuth();"><spring:message code='ezJournal.t36' /></span></li>
 					<li><span onClick=""><spring:message code='ezJournal.t37' /></span></li>
 	  			</ul>
 			</div>
@@ -73,7 +79,7 @@
 			    <c:choose>
 				    <c:when test="${fn:length(authList) ne 0}">
 					    <c:forEach items="${authList }" var="auth">
-					    	<tr ondblclick="insertAuth(${auth.userId})">
+					    	<tr ondblclick="insertAuth('${auth.userId}')">
 					    		<td style="text-align: center;">${auth.userName } </td>
 					    		<td style="text-align: center;">${auth.jikwi } </td>
 					    		<td style="text-align: center;">${auth.deptName } </td>
