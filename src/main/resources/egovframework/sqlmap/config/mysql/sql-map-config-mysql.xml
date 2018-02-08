@@ -13,6 +13,8 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrgan_SQL_Mysql.xml"/>
     <!-- 설문조사 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezQuestion/EzQuestion_SQL_Mysql.xml"/>
+    <!-- 투표 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezPoll/EzPoll_SQL_Mysql.xml"/>
     <!-- 이메일 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezEmail/EzEmail_SQL_Mysql.xml"/>
     <!-- 공통 -->

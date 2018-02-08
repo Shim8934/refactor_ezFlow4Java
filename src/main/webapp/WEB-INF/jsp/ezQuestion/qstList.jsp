@@ -31,6 +31,7 @@
 			var totalPage = "<c:out value='${qstListVO.totalPage}'/>";
 		    var totalCount = "<c:out value='${qstListVO.totalCnt}'/>";
 		    var receve = "${receve}";
+		    var adminYN = "${adminYN}";
 		    
 			window.onload = function(){
 				makePageSelPage();
@@ -535,9 +536,9 @@
 				<li><span onClick="menu_Analysis()"><spring:message code="ezQuestion.t304" /></span></li>
 				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
 				<li><span onClick="menu_Search()"><spring:message code="ezQuestion.t34" /></span></li>
-				<li><span onClick="menu_InfoModify()"><spring:message code="ezQuestion.t305" /></span></li>
-				<li><span onClick="menu_Delete()"><spring:message code="ezQuestion.t177" /></span></li>
-				<li><span onClick="menu_reuse()"><spring:message code="ezQuestion.t700" /></span></li>
+				<li><span onClick="menu_InfoModify()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if> ><spring:message code="ezQuestion.t305" /></span></li>
+				<li><span onClick="menu_Delete()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if>><spring:message code="ezQuestion.t177" /></span></li>
+				<li><span onClick="menu_reuse()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if>><spring:message code="ezQuestion.t700" /></span></li>
 			</ul>
 		</div>
 		<script type="text/javascript">
