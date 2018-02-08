@@ -3693,19 +3693,22 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
     	}
     	
     	int startRowNum = ((pageNum - 1) * perCount);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("boardID", boardID);
-		map.put("itemID", itemID);
-		map.put("userID", userID);
-		map.put("lang", lang);
-		map.put("tenantID", tenantID);
-		map.put("start", startRowNum);
-		map.put("perCount", perCount);
-		List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
-		
-		StringBuffer resultXML = new StringBuffer();
+    	int endRowNum = (pageNum * perCount);
+
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	map.put("v_pBoardID", boardID);
+    	map.put("v_pItemID", itemID);
+    	map.put("userID", userID);
+    	map.put("lang", lang);
+    	map.put("tenantID", tenantID);
+    	map.put("startRowNum", startRowNum);
+    	map.put("endRowNum", endRowNum);
+    	map.put("perCount", perCount);
+    	
+    	List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
+    	
+    	StringBuffer resultXML = new StringBuffer();
 		
 		resultXML.append("<DOCLIST>");
 		
