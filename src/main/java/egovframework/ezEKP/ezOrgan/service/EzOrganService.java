@@ -59,6 +59,10 @@ public interface EzOrganService {
 	public String getDeptReceipterIDs(String deptID, int tenantID) throws Exception;
 
 	public OrganProxyVO getProxyInfo(String userID, int tenantID) throws Exception;
+	
+	public List<String> getAllSubDeptId(String deptID, int tenantID) throws Exception;
+	
+	public String getDeptPath(String deptID, int tenantID) throws Exception;
 
 	public String getOrganSubTreeInfo(String strFilter, String strBaseDN, int intScope) throws Exception;
 
