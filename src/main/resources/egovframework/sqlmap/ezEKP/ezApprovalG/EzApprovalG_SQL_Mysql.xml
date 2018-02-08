@@ -14876,6 +14876,8 @@
    			 COMPANYID = #companyID#
         AND   
         	 DOCID = #v_DOCID#
+        AND
+        	 APRSTATE != '007'
         AND 
         	 APRMEMBERSN >= #v_APRMEMBERSN#
 	</update>
