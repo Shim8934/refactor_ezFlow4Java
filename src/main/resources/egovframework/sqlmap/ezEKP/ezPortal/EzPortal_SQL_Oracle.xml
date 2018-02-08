@@ -1795,7 +1795,7 @@
                       		  AA.OWNERPAGEID ,
                       		  AA.DISPLAYNAME ,
                       		  AA.LINKURL ,
-                      		  AA.COLUMNPOS ,
+                      		  NVL(AA.COLUMNPOS, 0) AS COLUMNPOS ,
                       		  AA.VIEW_RIGHT ,
                       		  AA.ACCESSID ,
                       		  AA.ORDERNUM 
@@ -1828,7 +1828,7 @@
        		WHERE
        			AA.FLAG = '1'
         	ORDER BY
-        		AA.COLUMNPOS,
+        		COLUMNPOS,
                 AA.ORDERNUM
 		]]>
 	</select>
