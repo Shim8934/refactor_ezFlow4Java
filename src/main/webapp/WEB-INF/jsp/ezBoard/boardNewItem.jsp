@@ -2039,7 +2039,8 @@
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'text'}">
 						                <td colspan="3">
-						                    <input type="text" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'  style="width:43%"/>
+						                    <!-- 2018.02.08 입력창 최대 길이 제한-->
+						                    <input type="text" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'  style="width:43%" maxlength="100"/>
 						                </td>
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'check'}">
