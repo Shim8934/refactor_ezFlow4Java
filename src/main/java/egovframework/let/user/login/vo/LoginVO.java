@@ -455,12 +455,28 @@ public class LoginVO implements Serializable {
 	public void setGyumJik(String gyumJik) {
 		this.gyumJik = gyumJik;
 	}	
+
 	public String getUserFileUrl() {
 		return userFileUrl;
 	}	
 	public void setUserFileUrl(String userFileUrl) {
 		this.userFileUrl = userFileUrl;
 	}
+	
+	public boolean equals(Object object) {
+		if (object instanceof LoginVO) {
+			LoginVO obj = (LoginVO) object;
+			return id.equals(obj.id) && tenantId == obj.tenantId;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		return id.hashCode() + tenantId;
+	}
+
 	public String getRealPath() {
 		return realPath;
 	}
@@ -473,4 +489,5 @@ public class LoginVO implements Serializable {
 	public void setSabun(String sabun) {
 		this.sabun = sabun;
 	}
+
 }

@@ -198,10 +198,14 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				}
 	        } else {
 	        	logger.debug("No login cookie exists. Redirecting to login page...");
-	        	
-				try {					
-					response.sendRedirect("/user/login/login.do");
-				} catch (IOException e) {
+	        		        	
+				try {
+		        	String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", tenantId);
+					
+		        	if (!dotNetIntegration.equals("YES")) {
+		        		response.sendRedirect("/user/login/login.do");
+		        	}
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				

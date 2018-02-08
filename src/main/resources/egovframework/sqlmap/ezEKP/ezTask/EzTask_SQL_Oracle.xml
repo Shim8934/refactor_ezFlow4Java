@@ -556,7 +556,8 @@
 	<insert id="EzTaskDAO.insertTask" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_TASK
-				(CREATORID,
+				(TASKID,
+				CREATORID,
 				CREATORNAME,
 				CREATORNAME2,
 				CREATORDEPTNAME,
@@ -591,7 +592,8 @@
 		
 		<isNull property="insertType">
 			<![CDATA[
-				(#creatorID#,
+				(SEQ_TBL_TASK.NEXTVAL,
+				#creatorID#,
 				#creatorName#,
 				#creatorName2#,
 				#creatorDeptName#,
