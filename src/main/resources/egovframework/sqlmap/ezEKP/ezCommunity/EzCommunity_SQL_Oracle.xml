@@ -1250,9 +1250,9 @@
 					FROM
 						TBL_COMM_ITEM_READ 
 					WHERE
-						boardid = #v_pBoardID#
+						boardid = #boardID#
 					AND
-						itemid = #v_pItemID#
+						itemid = #itemID#
 					AND
 						tenant_id = #tenantID#
 					AND
@@ -1263,7 +1263,7 @@
 		   							WHERE 
 		   								TENANT_ID = #tenantID#
 		   							AND
-		   								ITEMID = #v_pItemID# )
+		   								ITEMID = #itemID# )
 					ORDER BY
 						readdate DESC
 					) T1 
