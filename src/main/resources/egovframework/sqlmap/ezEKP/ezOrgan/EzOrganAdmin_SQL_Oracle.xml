@@ -3752,7 +3752,7 @@
                 EXTENSIONATTRIBUTE10 ,
                 EXTENSIONATTRIBUTE102 ,
                 EXTENSIONATTRIBUTE14 ,
-                REPLACE(SUBSTR(UpdateDT,1,10),'.','') UPDATEDT  
+                TO_CHAR(UPDATEDT,'YYYYMMDD') UPDATEDT
            FROM
            		TBL_USERMASTER_RETIRE 
           WHERE

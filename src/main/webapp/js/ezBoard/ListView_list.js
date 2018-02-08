@@ -1460,18 +1460,19 @@ function tr_unselectedAll(pTableID) {
     if (!oList)
         return;
 
-    if (document.getElementById("HeaderAllCheckBox").checked) {
-    }
-    else {
-
-        var SelList = new ListView();
-        SelList.LoadFromID("BoardList");
-
-        for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
-            strListInfo = "";
-        }
+    if (document.getElementById("HeaderAllCheckBox")) {    
+    	if (!document.getElementById("HeaderAllCheckBox").checked) {
+	        var SelList = new ListView();
+	        SelList.LoadFromID("BoardList");
+	
+	        for (var i = 0; i < SelList.GetRowCount() ; i++) {
+	            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+	            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+	            strListInfo = "";
+	        }
+	    }
+    } else {
+    	strListInfo = "";
     }
 }
 

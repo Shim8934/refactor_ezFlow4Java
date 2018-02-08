@@ -6907,4 +6907,44 @@
       			ITEMID = #itemID#
 		]]>
 	</delete>
+	
+	<select id="EzCommunityDAO.getOneLineReplyCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(replyID)
+        	FROM 
+        		tbl_comm_onelinereply 
+       		WHERE  
+       			tenant_id = #tenantID#
+       		AND
+       			boardID = #boardID#
+            AND 
+            	ItemID = #itemID#
+		]]>
+ 	</select>
+ 	<!-- 2018-02-06 김보미 - 조회자 수 -->
+ 	<select id="EzCommunityDAO.getReaderListCount" parameterClass="Map" resultClass="Integer">
+ 		<![CDATA[
+			SELECT
+				COUNT(USERID)
+			FROM
+				TBL_COMM_ITEM_READ 
+			WHERE
+				BOARDID = #boardID#
+			AND
+				ITEMID = #itemID#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+			   	USERID <> ( SELECT 
+			   						WRITERID 
+			   					FROM 
+			   						TBL_COMM_ITEM 
+			   					WHERE 
+			   						TENANT_ID = #tenantID#
+			   					AND
+			   						ITEMID = #itemID# )
+
+		]]>
+ 	</select>
 </sqlMap>
