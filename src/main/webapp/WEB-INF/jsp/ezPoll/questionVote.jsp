@@ -2579,7 +2579,7 @@
 						</div>  
 				</div>
 		        </c:if>	
-				<table class="content" style="width:100%; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD;" id="_content1">
+				<table class="content" style="width:100%; min-width:800px; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD;" id="_content1">
 					<c:forEach var="_option" items="${listOptions}" varStatus="loop">
 			        	<tr>
 			        	   <c:if test="${question.status == 1 || question.status == 2}">
