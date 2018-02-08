@@ -9180,13 +9180,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			aprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(1).getTextContent());
 			
-			if (!(aprType.equals(staATGamSaBu) || aprType.equals(staATDekyul) || aprType.equals(staATgumto) || aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATJunGyul) || aprType.equals("007"))) {
+			if (!(aprType.equals(staATGamSaBu) || aprType.equals(staATDekyul) || aprType.equals(staATgumto) || aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATJunGyul))) {
 				rtnVal = false;
 			}
 			
 			String aprState = makeListField(docXML.getElementsByTagName("APRSTATE").item(1).getTextContent());
 			
-			if (!aprState.equals(staASJinHang) && !aprType.equals("007")) {
+			if (!aprState.equals(staASJinHang)) {
 				rtnVal = false;
 			}
 			
@@ -17672,7 +17672,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.checkPermission(map);
 		
 		if (apprGAprLineVOList.size() == 0) {
-			if (docState.equals("017")) {
+			if (docState != null && docState.equals("017")) {
 				apprGAprLineVOList = ezApprovalGDAO.chamJoEndPerMission(map);
 			}
 		}
@@ -20650,7 +20650,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		String rtnVal = "OK";
 			int aprMemberSn = ezApprovalGDAO.selectDoCallBack(map);
-			
+			map.put("v_curAprSN", aprMemberSn);
 			logger.debug("doCancelForce = aprMemberSn =" + aprMemberSn);
 
 			if(aprMemberSn > 0) {

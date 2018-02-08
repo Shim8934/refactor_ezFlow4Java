@@ -5837,6 +5837,8 @@
                                           AND 
                                                 APRSTATE = '003'
                                           AND
+                                          		APRTYPE != '007'
+                                          AND
                                           		TENANT_ID = #v_TENANTID#
                                           AND
                                           		COMPANYID = #companyID#
@@ -5850,6 +5852,8 @@
                           TENANT_ID = #v_TENANTID#
                     AND
                           COMPANYID = #companyID#
+                    AND
+                          APRTYPE != '007'
                     ORDER BY 
                            APRMEMBERSN 
                LIMIT 2
@@ -14826,6 +14830,8 @@
            		APRMEMBERID = #v_USERID#
            	AND 
            		APRSTATE = '003'
+            AND
+            	APRTYPE != '007'
    			ORDER BY 
    				APRMEMBERSN DESC 
    			LIMIT
@@ -14859,6 +14865,8 @@
    			 COMPANYID = #companyID#
          AND 
          	 DOCID = #v_DOCID#
+         AND
+        	 APRTYPE != '007'
          AND 
          	 APRMEMBERSN = #v_APRMEMBERSN#
 	</update>
@@ -14876,8 +14884,10 @@
    			 COMPANYID = #companyID#
         AND   
         	 DOCID = #v_DOCID#
+       	<isNotEqual property="v_curAprSN" compareValue="1">
         AND
-        	 APRSTATE != '007'
+        	 APRTYPE != '007'
+       	</isNotEqual>
         AND 
         	 APRMEMBERSN >= #v_APRMEMBERSN#
 	</update>
