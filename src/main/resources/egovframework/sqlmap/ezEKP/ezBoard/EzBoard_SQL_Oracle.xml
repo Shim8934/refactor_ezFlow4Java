@@ -724,37 +724,43 @@
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
 		<![CDATA[
 			SELECT 
-				* 
+				*
 			FROM (
-					SELECT  
-						UserID, 
-						UserName$lang$ AS UserName, 
-						UserDeptName$lang$ AS UserDeptName, 
-						UserCompanyName$lang$ AS UserCompanyName, 
-						UserTitle$lang$ AS UserTitle, 
-						ReadDate 
-				   	FROM 
-				   		TBL_Board_Item_Read 
-				   	WHERE 
-				   		tenant_id = #tenantID#
-				   	AND
-				   		BoardID = #boardID# 
-				   	AND 
-				   		ItemID =  #itemID#  
-				   	AND
-				   		UserID NOT IN ( SELECT 
-				   							WRITERID 
-				   						FROM 
-				   							TBL_BOARD_ITEM 
-				   						WHERE 
-				   							TENANT_ID = #tenantID#
-				   						AND
-				   							ITEMID = #itemID# )
-				   	ORDER BY
-				   		ReadDate DESC
-			)
-			WHERE
-		   		ROWNUM <= 50 
+				SELECT 
+					A.*, ROWNUM as RNUM
+				FROM (
+						SELECT  
+							UserID, 
+							UserName$lang$ AS UserName, 
+							UserDeptName$lang$ AS UserDeptName, 
+							UserCompanyName$lang$ AS UserCompanyName, 
+							UserTitle$lang$ AS UserTitle, 
+							TO_CHAR(ReadDate, 'YYYY-MM-DD HH24:MI:SS') as ReadDate
+					   	FROM 
+					   		TBL_Board_Item_Read 
+					   	WHERE 
+					   		tenant_id = #tenantID#
+					   	AND
+					   		BoardID = #boardID# 
+					   	AND 
+					   		ItemID =  #itemID#  
+					   	AND
+					   		UserID NOT IN ( SELECT 
+					   							WRITERID 
+					   						FROM 
+					   							TBL_BOARD_ITEM 
+					   						WHERE 
+					   							TENANT_ID = #tenantID#
+					   						AND
+					   							ITEMID = #itemID# )
+					   	ORDER BY
+					   		ReadDate DESC
+				)A
+				WHERE
+			   		ROWNUM <= #start# + #perCount#
+			   	)
+			   	WHERE
+			   		RNUM >= #start# + 1 
 		]]>
 	</select>
 	
@@ -4587,6 +4593,30 @@
             AND 
             	ItemID = #itemID#
 		]]>
+  </select>
+  
+  <select id="EzBoardDAO.getReaderListCount" parameterClass="Map" resultClass="Integer">
+	  	<![CDATA[
+	  		SELECT  
+				COUNT(USERID) 
+			FROM 
+			   	TBL_BOARD_ITEM_READ 
+			WHERE 
+			   	TENANT_ID = #tenantID#
+			AND
+			   	BOARDID = #boardID#
+			AND 
+			   	ITEMID =  #itemID# 
+			AND
+			   	USERID <> ( SELECT 
+			   						WRITERID 
+			   					FROM 
+			   						TBL_BOARD_ITEM 
+			   					WHERE 
+			   						TENANT_ID = #tenantID#
+			   					AND
+			   						ITEMID = #itemID# )
+	  	]]>
   </select>
   
 </sqlMap>
