@@ -7374,7 +7374,7 @@
 		   	NOT
 		   	</isEqual>
 		   	 LIKE 
-		   	 	'ADDRESS%' 
+		   	 	'Address%' 
 		   	 AND 
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
@@ -8283,7 +8283,7 @@
    			WHERE 
    				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
    			AND 
-   				TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'ADDRESS%'
+   				TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'Address%'
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
    			AND 
@@ -8322,7 +8322,7 @@
    			WHERE 
    				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
    			AND 
-   				TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'ADDRESS%'
+   				TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'Address%'
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
    			AND 
@@ -10013,7 +10013,7 @@
          AND 
          	DOCID = #v_DOCID#
          AND
-          	RECEIPTPOINTID LIKE 'ADDRESS%'
+          	RECEIPTPOINTID LIKE 'Address%'
          AND 
          	EXTRECEPTYN = 'Y'
 	</select>
@@ -11196,7 +11196,7 @@
 	   	<isEqual property="v_MODELENGTH" compareValue="2">
 	   	NOT
 	   	</isEqual>
-	   	LIKE 'ADDRESS%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+	   	LIKE 'Address%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 	   	<isEqual property="v_MODELENGTH" compareValue="2">
 	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 	   	</isEqual>
@@ -11720,7 +11720,7 @@
                 WHERE 
                 	TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
                 AND 
-                	TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'ADDRESS%'
+                	TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'Address%'
                 AND 
                 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
                 AND 
@@ -11757,7 +11757,7 @@
                 WHERE 
                		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
                 AND 
-               		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'ADDRESS%'
+               		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'Address%'
                 AND 
                		TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
                 AND 
