@@ -23,21 +23,22 @@
 			
 			function getData() {
 				 $.ajax({
-						type: "POST",
-						url: "/admin/ezWebFolder/getCompanyFolderTree.do",
-						data: {							
-							"companyId" : document.getElementById("companyList").value						
-						},
-						dataType: "JSON",
-						async: true,
-						success : function(data) {
-							var result = data.companyTree;							
-							renderData(result);
-						},
-		 				error : function(error) {	 					
-							alert("<spring:message code='ezWebFolder.t134' />" + error);
-						}
-					});		
+					type: "POST",
+					url: "/admin/ezWebFolder/getCompanyFolderTree.do",
+					data: {							
+						"companyId" : document.getElementById("companyList").value,
+						"folderId"  : selectedFolder
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var result = data.companyTree;							
+						renderData(result);
+					},
+	 				error : function(error) {	 					
+						alert("<spring:message code='ezWebFolder.t134' />" + error);
+					}
+				});		
 			}
 			
 			function renderData(result) {
@@ -46,12 +47,19 @@
 					return;
 				} 
 				
-				var divTree       = document.getElementById("folderTree");				
+				var divTree       = document.getElementById("folderTree");
 				var divComp       = document.createElement("div");
 				compFolderId      = result["folderId"];
-				divTree.innerHTML = "";
+				
+		    	while (divTree.hasChildNodes()) {
+		    		divTree.removeChild(divTree.lastChild);
+		    	}			
 				
 				displaySubFolder(divTree, divComp, result);
+				
+				if (selectedFolder) {
+					cancelAdd();
+				}
 			}
 			
 			function displaySubFolder(divTree, divElmt, list) {
@@ -85,7 +93,7 @@
 				divElmt.appendChild(spanFolderName);
 				divTree.appendChild(divElmt);
 				
-				if (list["hasSubFolder"] == "0") {	
+				if (list["hasSubFolder"] == "0") {					
 					imgElmt.src = "/images/OrganTree_cross/dot_continue.gif";
 					imgElmt.setAttribute("class", "webfolderImg");
 				}
@@ -118,8 +126,10 @@
 				var previousElmt = document.getElementsByName(selectedFolder)[0];
 				
 				if (previousElmt != null) {
-					if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {
+					if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {						
 						previousElmt.style.color = "";
+						document.getElementById("listBttn1").style.display = "";
+						document.getElementById("listBttn2").style.display = "none";
 					}
 					else {
 						return;
@@ -145,7 +155,7 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var result = data.folderUsers;						
+						var result = data.folderUsers;			
 						processUsersList(result, obj.innerHTML);
 					},
 	 				error : function(error) {	 					
@@ -194,9 +204,9 @@
 			
 			function getDetailTree(obj) {
 				//Check if already in arrSubFolder
-				var uniqueId = obj.getAttribute("id");
+				var uniqueId = obj.getAttribute("id");				
 				
-				if (arrSubFolder.indexOf(uniqueId) != -1) {
+				if (arrSubFolder.indexOf(uniqueId) != -1) {					
 					var childElmt = obj.parentElement.lastElementChild;
 					
 					if (obj.className == "webfolderMinus") {
@@ -210,7 +220,7 @@
 						childElmt.style.display = "";
 					}
 				}
-				else {
+				else {										
 					obj.src = "/images/OrganTree_cross/minus_normal.gif";
 					obj.setAttribute("class", "webfolderMinus");
 					
@@ -222,7 +232,7 @@
 						},
 						dataType: "JSON",
 						async: true,
-						success: function(data) {
+						success: function(data) {							
 							var result = data.subTree;
 							displaySubTree(result, obj.parentElement);
 							arrSubFolder.push(uniqueId);
@@ -264,6 +274,86 @@
 				menu_SelectRange();
 			}
 			
+			function saveFolder() {
+				if (!selectedFolder) {
+					alert("폴더 선택하세요.");
+					return;
+				}
+				
+				if (compFolderId == selectedFolder) {
+					alert("안됩니다.");
+					return;
+				}
+			}
+			
+			function newFolder() {
+				if (!selectedFolder) {
+					alert("폴더 선택하세요.");
+					return;
+				}
+				
+				if (compFolderId == selectedFolder) {
+					alert("안됩니다.");
+					return;
+				}
+				
+				document.getElementById("listBttn1").style.display = "none";
+				document.getElementById("listBttn2").style.display = "";
+				
+				document.getElementById("fldName").value     = "";
+				document.getElementById("RangeXMLStr").value = "";
+				updateTarget("");
+			}
+			
+			function cancelAdd() {				
+				refreshView();
+				document.getElementById("listBttn1").style.display = "";
+				document.getElementById("listBttn2").style.display = "none";
+			}
+			
+			function saveNewFolder() {
+				var folderName  = document.getElementById("fldName").value;
+				var folderUsers = getJsonData(document.getElementById("RangeXMLStr").value);
+				var target		= document.getElementById("newTargetDiv").innerHTML;				
+				
+		    	if (!folderName.replace(/\s/g,'')) {
+		    		alert("폴더명  입력하세요.");
+		    		document.getElementById("fldName").value = "";
+		    		document.getElementById("fldName").focus;
+		    		return;
+		    	}
+		    	
+		    	if (!target.replace(/\s/g,'')) {
+		    		alert("폴더 구성원 선택하세요.");
+		    		return;
+		    	}
+				
+				$.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/addCompanyFolder.do",
+					data: {
+						"folderId"	  : selectedFolder,
+						"companyId"   : document.getElementById("companyList").value,
+						"folderUsers" : JSON.stringify(folderUsers),
+						"folderName"  : folderName
+					},
+					dataType: "JSON",
+					async: false,
+					success: function(data) {					
+						arrSubFolder = [];
+						getData();						
+					},
+					error: function (xhr, status, e){
+						alert("<spring:message code='ezWebFolder.t134' />");
+					}
+				});
+			}
+			
+			function refreshView() {								
+				var spanElmt = document.getElementsByName(selectedFolder)[0];
+				selectedFolder = "";
+				getSelected(spanElmt);
+			}
 	    </script>
 	</head>
 	<body class="mainbody">	
@@ -311,11 +401,15 @@
 	   							</tr>
 	   							<tr>
 	   								<td>
-	   									<div style="margin: 0px 96px;">
-	   										<a class="webfolderBttn"><span onclick="">저장</span></a>
-		   									<a class="webfolderBttn"><span onclick="">하위폴더</span></a>
+	   									<div style="margin: 0px 96px;" id="listBttn1">
+	   										<a class="webfolderBttn"><span onclick="saveChanges();">저장</span></a>	   										
+		   									<a class="webfolderBttn"><span onclick="newFolder();">하위폴더</span></a>
 		   									<a class="webfolderBttn"><span onclick="">이동</span></a>
 		   									<a class="webfolderBttn"><span onclick="">삭제</span></a>
+	   									</div>
+	   									<div style="margin: 0px 176px; display: none;" id="listBttn2">
+	   										<a class="webfolderBttn"><span onclick="saveNewFolder();">저장</span></a>	
+	   										<a class="webfolderBttn"><span onclick="cancelAdd();">취소 </span></a>
 	   									</div>
 	   								</td>
 	   							</tr>

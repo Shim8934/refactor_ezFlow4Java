@@ -151,96 +151,6 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		return ezWebFolderDAO.getCompanyFolderId(map);
 	}
-
-	@Override
-	public void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int mode) throws Exception {
-		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), primary, tenantId);
-		
-		/*if (mode == 2) {			
-			Map<String, List<String>> mapFolderUsers = new HashMap<String, List<String>>();			
-			List<LoginVO> listOfUsers                = getFolderUsers(company.getFolderId(), tenantId);
-			
-			if (listOfUsers != null && listOfUsers.size() > 0) {
-				List<String> list = new ArrayList<String>();
-				
-				for(LoginVO user : listOfUsers) {
-					list.add(user.getId() + "|" + user.getDisplayName1() + "|" + user.getDisplayName2());
-				}
-				
-				mapFolderUsers.put("user", list);				
-			}
-			
-			List<OrganDeptVO> listOfDepts = getFolderDepts(company.getFolderId(), tenantId);
-			
-			if (listOfDepts != null && listOfDepts.size() > 0) {
-				List<String> list = new ArrayList<String>();
-				
-				for(OrganDeptVO dept : listOfDepts) {
-					list.add(dept.getCn() + "|" + dept.getDisplayName1() + "|" + dept.getDisplayName2());
-				}
-				
-				mapFolderUsers.put("dept", list);				
-			}
-			
-			if(mapFolderUsers.size() > 0) {
-				company.setFolderUsers(mapFolderUsers);
-			}			
-						
-		}*/
-		
-		if (listSubSimpleFolders.size() > 0) {
-			company.setListSubFolders(listSubSimpleFolders);
-			company.setHasSubFolder(1);
-			
-			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
-				if (mode == 0) {
-					getAllSubDepts(subFolder, primary, tenantId, mode);
-				}
-				else {
-					List<FolderSimpleVO> subSimpleDepts = getAllSimpleSubFolders(subFolder.getFolderId(), primary, tenantId);					
-					if (subSimpleDepts.size() > 0) {
-						subFolder.setHasSubFolder(1);
-					}
-					else {
-						subFolder.setHasSubFolder(0);
-					}					
-/*					if (mode == 2) {
-						Map<String, List<String>> mapFolderUsers = new HashMap<String, List<String>>();						
-						List<LoginVO> listOfUsers = getFolderUsers(subFolder.getFolderId(), tenantId);
-						
-						if (listOfUsers != null && listOfUsers.size() > 0) {
-							List<String> list = new ArrayList<String>();
-							
-							for(LoginVO user : listOfUsers) {
-								list.add(user.getId() + "|" + user.getDisplayName1() + "|" + user.getDisplayName2());
-							}
-							
-							mapFolderUsers.put("user", list);				
-						}
-						
-						List<OrganDeptVO> listOfDepts = getFolderDepts(subFolder.getFolderId(), tenantId);
-						
-						if (listOfDepts != null && listOfDepts.size() > 0) {
-							List<String> list = new ArrayList<String>();
-							
-							for(OrganDeptVO dept : listOfDepts) {
-								list.add(dept.getCn() + "|" + dept.getDisplayName1() + "|" + dept.getDisplayName2());
-							}
-							
-							mapFolderUsers.put("dept", list);				
-						}
-						
-						if(mapFolderUsers.size() > 0) {
-							subFolder.setFolderUsers(mapFolderUsers);
-						}		
-					}*/
-				}
-			}
-		}
-		else {
-			company.setHasSubFolder(0);
-		}		
-	}
 	
 	@Override
 	public void updateDownCnt(String fileId, int tenantId) {
@@ -258,4 +168,82 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		return ezWebFolderDAO.getFolderUsers(map);
 	}
 
+	@Override
+	public String getFolderSequence(int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getFolderSequence(map);
+	}
+
+	@Override
+	public String getMaxFolderStep(String folderId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("tenantId", tenantId);
+		map.put("folderId", folderId);
+		return ezWebFolderDAO.getMaxFolderStep(map);
+	}
+
+	@Override
+	public String getFolderUserSequence(int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getFolderUserSequence(map);
+	}
+
+	@Override
+	public void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int mode) throws Exception {
+		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), primary, tenantId);
+						
+		if (listSubSimpleFolders.size() > 0) {
+			company.setListSubFolders(listSubSimpleFolders);
+			company.setHasSubFolder(1);
+			
+			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
+				if (mode == 0) {
+					getAllSubDepts(subFolder, primary, tenantId, mode);
+				}
+				else {
+					List<FolderSimpleVO> subSimpleDepts = getAllSimpleSubFolders(subFolder.getFolderId(), primary, tenantId);					
+					if (subSimpleDepts.size() > 0) {
+						subFolder.setHasSubFolder(1);
+					}
+					else {
+						subFolder.setHasSubFolder(0);
+					}
+				}
+			}
+		}
+		else {
+			company.setHasSubFolder(0);
+		}		
+	}
+	
+	@Override
+	public void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, String[] fdPath, int order) throws Exception {
+		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), primary, tenantId);
+		
+		if (listSubSimpleFolders.size() > 0) {
+			company.setListSubFolders(listSubSimpleFolders);
+			company.setHasSubFolder(1);
+			
+			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
+				List<FolderSimpleVO> subSimpleDepts = getAllSimpleSubFolders(subFolder.getFolderId(), primary, tenantId);					
+				if (subSimpleDepts.size() > 0) {
+					subFolder.setHasSubFolder(1);
+					
+					if (order < fdPath.length && subFolder.getFolderId().equals(fdPath[order])) {						
+						getAllSubDepts(subFolder, primary, tenantId, fdPath, order + 1);
+					}
+				}
+				else {
+					subFolder.setHasSubFolder(0);
+				}
+				
+			}
+		}
+		else {
+			company.setHasSubFolder(0);
+		}		
+	}
+	
 }

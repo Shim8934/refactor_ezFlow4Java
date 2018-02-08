@@ -117,8 +117,7 @@
         	<![CDATA[
 	            UPDATE 
 	            	TBL_WEBFOLDER_FILE
-	            SET 
-	            	 FILE_ID 		= #fileId#,
+	            SET 	            	 
 	            	 FILE_NAME 		= #fileName#,
 	            	 FILE_PATH		= #filePath#,
 	            	 FILE_SIZE		= #fileSize#,
@@ -132,8 +131,7 @@
 	            	 CREATE_NAME2	= #createName2#,
 	            	 CREATE_DATE	= #createDate#,
 	            	 UPDATE_ID		= #updateId#,
-	            	 UPDATE_DATE	= #updateDate#,	            	 
-	            	 TENANT_ID		= #tenantId#
+	            	 UPDATE_DATE	= #updateDate#	            	 
 	            WHERE
 	            		FILE_ID		= #fileId#
 	            	AND
@@ -152,6 +150,41 @@
 				TENANT_ID = #tenantId#
 		]]>		
     </select>
+    
+    <select id="EzWebFolderDAO.getFolderSequence" resultClass="String">             
+		<![CDATA[
+			SELECT 
+				IFNULL(MAX(CONVERT(FOLDER_ID, UNSIGNED INTEGER)),-1) as maxno
+			FROM 
+				TBL_WEBFOLDER_FOLDER
+			WHERE  
+				TENANT_ID = #tenantId#
+		]]>		
+    </select>
+    
+    <select id="EzWebFolderDAO.getFolderUserSequence" resultClass="String">             
+		<![CDATA[
+			SELECT 
+				IFNULL(MAX(CONVERT(SEQ_ID, UNSIGNED INTEGER)),-1) as maxno
+			FROM 
+				TBL_WEBFOLDER_FOLDERUSER
+			WHERE  
+				TENANT_ID = #tenantId#
+		]]>		
+    </select>    
+    
+    <select id="EzWebFolderDAO.getMaxFolderStep" resultClass="String">             
+		<![CDATA[
+			SELECT
+				IFNULL(MAX(FOLDER_STEP),-1) as maxno
+			FROM
+				TBL_WEBFOLDER_FOLDER
+			WHERE
+				FOLDER_UPPER = #folderId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>		
+    </select>   
     
     <select id="EzWebFolderDAO.getCompanyFolderId" resultMap="folderVO">             
 		<![CDATA[
@@ -283,32 +316,24 @@
 			WHERE  
 				FOLDER_ID = #folderId#
 			AND
-				TENANT_ID = #tenantId#	
+				TENANT_ID = #tenantId#			
 		]]>				
     </select>
     
     <select id="EzWebFolderDAO.getFolderUsers" resultMap="folderUserVO">             
         <![CDATA[
  			SELECT            
-            	 CASE 
-					    WHEN USER_TYPE = "user" THEN (select cn from tbl_usermaster where cn = u.USER_ID)
-					    WHEN USER_TYPE = "dept" THEN (select cn from tbl_deptmaster where cn = u.USER_ID)  
-					  END AS USER_ID,                                     
-                CASE 
-					    WHEN USER_TYPE = "user" THEN (select DISPLAYNAME from tbl_usermaster where cn = u.USER_ID)
-					    WHEN USER_TYPE = "dept" THEN (select DISPLAYNAME from tbl_deptmaster where cn = u.USER_ID)
-					  END AS DISPLAY_NAME1,
-				CASE 
-					    WHEN USER_TYPE = "user" THEN (select DISPLAYNAME2 from tbl_usermaster where cn = u.USER_ID)
-					    WHEN USER_TYPE = "dept" THEN (select DISPLAYNAME2 from tbl_deptmaster where cn = u.USER_ID)
-					  END AS DISPLAY_NAME2,
+            	CASE   WHEN USER_TYPE = "user" THEN a.CN else d.CN                     END AS USER_ID,                                
+                CASE   WHEN USER_TYPE = "user" THEN a.DISPLAYNAME else d.DISPLAYNAME   END AS DISPLAY_NAME1,
+				CASE   WHEN USER_TYPE = "user" THEN a.DISPLAYNAME2 else d.DISPLAYNAME2 END AS DISPLAY_NAME2,
 				USER_TYPE					
             FROM
-                TBL_WEBFOLDER_FOLDERUSER u
+                TBL_WEBFOLDER_FOLDERUSER u LEFT JOIN TBL_USERMASTER a ON u.USER_ID = a.CN and u.TENANT_ID = a.TENANT_ID and u.USER_TYPE = "user"
+                						   LEFT JOIN TBL_DEPTMASTER d ON u.USER_ID = d.CN and u.TENANT_ID = d.TENANT_ID and u.USER_TYPE = "dept"
             WHERE
          		u.FOLDER_ID = #folderId#
             AND
-            	TENANT_ID   = #tenantId#
+            	u.TENANT_ID = #tenantId#
             ORDER BY
             	USER_TYPE ASC
         ]]>
@@ -326,6 +351,9 @@
 				FOLDER_UPPER = #folderUpper#
 			AND
 				TENANT_ID = #tenantId#
+			ORDER BY
+				FOLDER_LEVEL ASC,
+				FOLDER_STEP  ASC
 		]]>				
     </select>     
     
@@ -391,6 +419,5 @@
 				TENANT_ID = #tenantId#
 		]]>
    </update>   
-   
 
 </sqlMap>

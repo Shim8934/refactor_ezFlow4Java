@@ -124,7 +124,7 @@
 		    	if (result == null || result.length == 0) {		    	
 		    		var trElmt = document.createElement("tr");
 		    		var tdElmt = document.createElement("td");
-		    		tdElmt.setAttribute("colspan", "8");
+		    		tdElmt.setAttribute("colspan", "6");
 		    		tdElmt.setAttribute("align", "center");
 		    		tdElmt.setAttribute("bgcolor", "#FFFFFF");
 		    		tdElmt.innerHTML = "<spring:message code='ezWebFolder.t144' />";

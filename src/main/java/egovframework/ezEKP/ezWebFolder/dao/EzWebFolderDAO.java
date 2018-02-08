@@ -2,7 +2,9 @@ package egovframework.ezEKP.ezWebFolder.dao;
 
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.stereotype.Repository;
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -78,5 +80,17 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<OrganDeptVO> getFolderDepts(Map<String, Object> map) {		
 		return (List<OrganDeptVO>)list("EzWebFolderDAO.getFolderDepts", map);
+	}
+
+	public String getFolderSequence(Map<String, Object> map) {
+		return (String)select("EzWebFolderDAO.getFolderSequence", map);
+	}
+
+	public String getMaxFolderStep(Map<String, Object> map) {
+		return (String)select("EzWebFolderDAO.getMaxFolderStep", map);
+	}
+
+	public String getFolderUserSequence(Map<String, Object> map) {
+		return (String)select("EzWebFolderDAO.getFolderUserSequence", map);
 	}
 }

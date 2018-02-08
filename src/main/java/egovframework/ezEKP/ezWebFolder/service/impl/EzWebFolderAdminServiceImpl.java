@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -96,6 +97,46 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("tenantId", fileLog.getTenantId());
 
 		ezWebFolderAdminDAO.insertFileLog(map);		
+	}
+
+	@Override
+	public void insertFolder(FolderVO folder) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("folderId", folder.getFolderId());		
+		map.put("folerName1", folder.getFolderName1());
+		map.put("folerName2", folder.getFolderName2());
+		map.put("folderType", folder.getFolderType());
+		map.put("folderPath", folder.getFolderPath());
+		map.put("folderStep", folder.getFolderStep());
+		map.put("folderLevel", folder.getFolderLevel());
+		map.put("folderUpper", folder.getFolderUpper());
+		map.put("useStatus", folder.getUseStatus());
+		map.put("ownerId", folder.getOwnerId());
+		map.put("createId", folder.getCreateId());				
+		map.put("createDate", folder.getCreateDate());
+		map.put("createName1", folder.getCreateName1());
+		map.put("createName2", folder.getCreateName2());
+		map.put("updateId", folder.getUpdateId());
+		map.put("updateDate", folder.getUpdateDate());
+		map.put("companyId", folder.getCompanyId());
+		map.put("tenantId", folder.getTenantId());
+
+		ezWebFolderAdminDAO.insertFolder(map);		
+	}
+
+	@Override
+	public void insertFolderUser(String seq, String userId, String userType, String folderId, String createId, String createDate, String companyId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("seqId", seq);		
+		map.put("userId", userId);
+		map.put("userType", userType);
+		map.put("folderId", folderId);
+		map.put("createId", createId);
+		map.put("createDate", createDate);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+
+		ezWebFolderAdminDAO.insertFolderUser(map);	
 	}
 
 }

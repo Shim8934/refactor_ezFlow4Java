@@ -23,6 +23,10 @@ public interface EzWebFolderService {
 	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, String primary, int tenantId) throws Exception;
 	FolderVO getCompanyFolderId(String companyId, String offset, int tenantId) throws Exception;
 	void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int i) throws Exception;
+	void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, String[] fdPath, int order) throws Exception;
 	void updateDownCnt(String fileId, int tenantId) throws Exception;
 	List<FolderUserVO> getFolderUsers(String folderId, int tenantId) throws Exception;
+	String getFolderSequence(int tenantId) throws Exception;
+	String getMaxFolderStep(String folderId, int tenantId) throws Exception;
+	String getFolderUserSequence(int tenantId) throws Exception;	
 }

@@ -86,3 +86,42 @@
             g_windowReference = null;
         }
     }
+    
+    function getJsonData(InitData) {   	    	
+    	var xmlDoc   = createXmlDom();
+    	xmlDoc       = loadXMLString(InitData);
+    	var DeptRows = SelectSingleNodeNew(xmlDoc, "RANGE/DEPT");
+    	var jsonObj  = {};
+    	
+    	if (DeptRows != null) {
+        	var DeptLen   = DeptRows.childNodes.length;        	
+        	var deptArray = [];
+        	
+        	for (var i = 0; i < DeptLen; i++) {        		
+            	deptArray.push(MakeUNXMLString(GetAttribute(DeptRows.childNodes[i], "id")));
+            }
+        	jsonObj["dept"] = deptArray;        	
+    	}
+    	var UserRows = SelectSingleNodeNew(xmlDoc, "RANGE/MEMBER");
+    	
+    	if (UserRows != null) {
+            var UserLen   = UserRows.childNodes.length;        	
+        	var userArray = [];
+        	
+            for (var i = 0; i < UserLen; i++) {	            
+	            userArray.push(MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "id")));    	        
+            }
+            
+            jsonObj["user"] = userArray;        
+    	}
+    	
+    	return jsonObj;
+    }
+    
+    function MakeUNXMLString(str) {
+    	str = ReplaceText(str, "&amp;", "&");
+    	str = ReplaceText(str, "&lt;", "<");
+    	str = ReplaceText(str, "&gt;", ">");
+    	str = ReplaceText(str, "&#039;", "'");
+    	return str;
+	}
