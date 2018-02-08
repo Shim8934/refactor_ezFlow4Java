@@ -3058,8 +3058,7 @@ function getDocInfo() {
         tempSecurityDate = SelectSingleNodeValueNew(result, "DATA/SECURITYAPPROVAL");
     }
 }
-function changeEditMode() {
-}
+
 function HabyuiResultOpinion() {
     try {
         var parameter = new Array();

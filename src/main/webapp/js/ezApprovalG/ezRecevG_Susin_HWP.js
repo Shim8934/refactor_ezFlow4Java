@@ -713,7 +713,6 @@ function SetAutoPropertyValue()
 	var CurrentDate;
 	objNodes = xmluserInfo.documentElement.childNodes;
 	  
-	  
     CurrentDate = getGyulJeDate();
     SignInfo = "";
     hapyuiCount = 0;
@@ -721,7 +720,6 @@ function SetAutoPropertyValue()
  
 	var FieldLists = HwpCtrl.GetFieldList();
 	var Fields = FieldLists.split(";");
-  
 	
 	for (i = 0 ; i < Fields.length ; i ++)
 	{

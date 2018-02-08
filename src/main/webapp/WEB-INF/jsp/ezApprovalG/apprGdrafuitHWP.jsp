@@ -5,36 +5,36 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<spring:message code='ezApprovalG.e2'/>
 	    <title><spring:message code='ezApprovalG.t30'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/draft_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezDraft_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/draftG.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/draftG_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/AutoAprLine.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/attachG.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/AutoAprLine_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/attachG_Cross.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CheckLines.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 	    <script type="text/javascript">
-	    	var pNoneActiveX = "<%=NoneActiveX%>";
-	        var FormHref = '<%=_formURL%>';
-	        var DraftFlag = '<%=_DraftFlag%>';
-	        var DocType = '<%=_formDocType%>';
-	        var SusinSN = '<%=_susinSN%>';
-	        var DocState = '<%=_DocState%>';
-	        var ListType = '<%=_ListType%>';
-	        var AprState = '<%=_AprState%>';
-	        var pEndDocHref = '<%=_dirpath%>';
-	        var _connkey_ = "<%=ReplaceXSS(Request.QueryString["_connkey_"])%>";
+	        var FormHref = "${formURL}";
+	        var DraftFlag = "${draftFlag}";
+	        var DocType = "${formDocType}";
+	        var SusinSN = "${susinSN}";
+	        var DocState = "${docState}";
+	        var ListType = "${listType}";
+	        var AprState = "${aprState}";
+	        var pEndDocHref = "${dirPath}";
+	        var _connkey_ = "${connkey}";
 	        var pFormHref = new String();
 	        var pFormID = new String();
 	        var pDocID = new String();
@@ -43,8 +43,8 @@
 	        var CurrentDate
 	        var flag = false;
 	        var fieldflag = false;
-	        var xmldoc = createXmlDom();
-	        var xmluserInfo = createXmlDom();
+	        var xmldoc = new ActiveXObject("Microsoft.XMLDOM");
+	        var xmluserInfo = new ActiveXObject("Microsoft.XMLDOM");
 	        var xmlhttp = createXMLHttpRequest();
 	        var SignCount = 0;
 	        var hapyuiCount = 0;
@@ -72,7 +72,7 @@
 	        var pDocTitle;
 	        var pMaxFileSize = '5';
 	        var isExtDoc = "N";
-	        var isTmpDocID = '<%=_isTmpDoc%>';
+	        var isTmpDocID = "${isTmpDoc}";
 	        var gPublic = "";
 	        var draftFlag = false;
 	        var btnSendDraftEnable = "false"
@@ -87,29 +87,29 @@
 	        var pLCasn, pMCasn, pPer, pLClsn, pMClsn;
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user";
-	        arr_userinfo[1] = "<%=userinfo.UserID%>";
-	        arr_userinfo[2] = "<%=userinfo.DisplayName%>";
-	        arr_userinfo[3] = "<%=userinfo.Title%>";
-	        arr_userinfo[4] = "<%=userinfo.DeptID%>";
-	        arr_userinfo[5] = "<%=userinfo.DeptName%>";
-	        arr_userinfo[6] = "<%=userinfo.Jikchek%>";
+	        arr_userinfo[1] = "${userInfo.id}";
+	        arr_userinfo[2] = "${userInfo.displayName}";
+	        arr_userinfo[3] = "${userInfo.title}";
+	        arr_userinfo[4] = "${userInfo.deptID}";
+	        arr_userinfo[5] = "${userInfo.deptName}";
+	        arr_userinfo[6] = "${userInfo.jikChek}";
 	        arr_userinfo[7] = "N";
-	        arr_userinfo[8] = "<%=userinfo.Email%>";
+	        arr_userinfo[8] = "${userInfo.email}";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "<%=_pSusinAdmin%>";
-	        arr_userinfo[11] = "<%=userinfo.DisplayName1%>";
-	        arr_userinfo[12] = "<%=userinfo.DisplayName2%>";
-	        arr_userinfo[13] = "<%=userinfo.Title1%>";
-	        arr_userinfo[14] = "<%=userinfo.Title2%>";
-	        arr_userinfo[15] = "<%=userinfo.DeptName1%>";
-	        arr_userinfo[16] = "<%=userinfo.DeptName2%>";
-	        var pCompanyID = "<%=userinfo.CompanyID%>";
+	        arr_userinfo[10] = "${susinAdmin}";
+	        arr_userinfo[11] = "${userInfo.displayName1}";
+	        arr_userinfo[12] = "${userInfo.displayName2}";
+	        arr_userinfo[13] = "${userInfo.title1}";
+	        arr_userinfo[14] = "${userInfo.title2}";
+	        arr_userinfo[15] = "${userInfo.deptName1}";
+	        arr_userinfo[16] = "${userInfo.deptName2}";
+	        var pCompanyID = "${userInfo.companyID}";
 	        var pUserID = arr_userinfo[1];
 	        var KuyjeType = "002";
-	        var signDateFormat = "<%=_optSignDateFormat%>";
-	        var isSplit = "<%=_optisSplit%>";
-	        var SplitKind = "<%=_optSplitKind%>";
-	        var sihangURL = "<%=_sihangURL%>";
+	        var signDateFormat = "${optSignDateFormat}";
+	        var isSplit = "${optIsSplit}";
+	        var SplitKind = "${optSplitKind}";
+	        var sihangURL = "${sihangURL}";
 	        var CurAprType = "";
 	        var NextAprType = "";
 	        var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "";
@@ -125,10 +125,10 @@
 	        var CheckGubun = "1";
 	        var HapyuiArea = 0;
 	        var AprLineArea = 0;
-	        var DocSN = '<%=_DocSN %>';
+	        var DocSN = "${DocSN}";
 	        var AutoSave = "save";
 	        var Saveflag = false;
-	        var pUse_Editor = "<%= Use_Editor%>";
+	        var pUse_Editor = "${useEditor}";
 	        var tempSecurity = "";
 	        var tempKeep = "";
 	        var tempUrgent = "N";
@@ -141,7 +141,7 @@
 	        var tempItemName2 = "";
 	        var SummaryOuterReceiverList = "";
 	        var g_szUserID = arr_userinfo[8];
-	        var g_senderinfo = "<%= userinfo.CompanyName + ", " + userinfo.DeptName + ", " + userinfo.Title %>";
+	        var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
 	        window.onload = function () {
 	            try {
 	                window.onresize();
@@ -162,14 +162,14 @@
 	                if (pFormHref != "") {
 	                    var URL;
 	                    showProgress("<spring:message code='ezApprovalG.t368'/>");
-	                    URL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pFormHref);
+	                    URL = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pFormHref);
 	                    var isTrue = HwpCtrl.LoadFile(URL, false);
 	                    FieldsAvailable(isTrue);
 	                } else {
 	                    DraftFlag = "DRAFT";
 	                    pDraftFlag = "DRAFT";
 	                    showProgress("<spring:message code='ezApprovalG.t368'/>");
-	                    var URL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(sihangURL.replace(".mht", ".hwp"));
+	                    var URL = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(sihangURL.replace(".mht", ".hwp"));
 	                    var isTrue = HwpCtrl.LoadFile(URL, false);
 	                    FieldsAvailable(isTrue);
 	                }
@@ -218,7 +218,7 @@
 	                    }
 	
 	                    if (pReadPC) {
-	                        var DocumentInfo = createXmlDom();
+	                        var DocumentInfo = new ActiveXObject("Microsoft.XMLDOM");
 	                        DocumentInfo.loadXML(HwpCtrl.GetDocumentInfo());
 	
 	                        if (GetDocumentElement(HwpCtrl, "CONNROOT") != "") {
@@ -281,7 +281,7 @@
 			function GetFormType(pFormID) {
 			    try {
 			        var Result = "";
-			        var xmlpara = createXmlDom();
+			        var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 			        var xmlhttp = createXMLHttpRequest();
 			        var objNode;
 			        createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -467,7 +467,7 @@
 	
 	        function btnSendDraft_onclick() {
 	            try {
-	                var xmlpara3 = createXmlDom();
+	                var xmlpara3 = new ActiveXObject("Microsoft.XMLDOM");
 	                var objNode;
 	                createNodeInsert(xmlpara3, objNode, "PARAMETER");
 	                createNodeAndInsertText(xmlpara3, objNode, "pDocID", pDocID);
@@ -476,7 +476,7 @@
 	                xmlhttp3.open("Post", "/myoffice/ezApprovalG/ezAPRATTACH/aspx/GetExtTotalAttachSize.aspx", false);
 	                xmlhttp3.send(xmlpara3);
 	
-	                var rtnAttachXML = createXmlDom();
+	                var rtnAttachXML = new ActiveXObject("Microsoft.XMLDOM");
 	                rtnAttachXML.loadXML(loadXMLString(xmlhttp3.responseText).xml);
 	
 	                if (getNodeText(rtnAttachXML.getElementsByTagName("FLAG").item(0)) == "Y") {
@@ -578,7 +578,7 @@
 	                        HwpCtrl.SetFieldText("lastdraftdate", getGyulJeDate());
 	                }
 	
-	                if ("<%=GetApprovalPWD() %>" != "N") {
+	                if ("${approvalPWD}" != "N") {
 	                    var chkpass = chk_Passwd();
 	                    if (chkpass == "False") {
 	                        var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
@@ -952,7 +952,7 @@
 			
 			        if (rtn[0] == "TRUE") {
 			            var g_SelCabXml = rtn[1];
-			            var xmlCab = createXmlDom();
+			            var xmlCab = new ActiveXObject("Microsoft.XMLDOM");
 			            xmlCab.loadXML(g_SelCabXml);
 			            cabinetID = getNodeText(xmlCab.selectSingleNode("CABINETINFO/CABINET/CABINETID"));
 			            TaskCode = getNodeText(xmlCab.selectSingleNode("CABINETINFO/CABINET/TASKCODE"));
@@ -996,12 +996,12 @@
 	
 			function GetSepAttParamXml(g_SepAttachLVXml) {
 			    try {
-			        var rtnXml = createXmlDom();
+			        var rtnXml = new ActiveXObject("Microsoft.XMLDOM");
 			        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
 			        var sepAtt, Data, i;
 			        
 			        if (g_SepAttachLVXml != "") {
-			            var sepLVXml = createXmlDom();
+			            var sepLVXml = new ActiveXObject("Microsoft.XMLDOM");
 			            sepLVXml = loadXMLString(g_SepAttachLVXml);
 			            var rows = SelectNodes(sepLVXml, "LISTVIEWDATA/ROWS/ROW")
 			            for (i = 0; i < rows.length; i++) {
@@ -1095,7 +1095,7 @@
 			
 			            if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
 			                var g_SelCabXml = ret[4];
-			                var xmlCab = createXmlDom();
+			                var xmlCab = new ActiveXObject("Microsoft.XMLDOM");
 			                xmlCab = loadXMLString(g_SelCabXml);
 			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
@@ -1168,7 +1168,7 @@
 			            rtnVal = SaveTMPDocInfo(AutoSave, Saveflag);
 			            if (rtnVal == "TRUE") {
 			                if (AutoSave != "save") {
-			                    var pAlertContent = "<spring:message code='ezApprovalG.t1581") %>";
+			                    var pAlertContent = "<spring:message code='ezApprovalG.t1581'/>";
 			                    OpenAlertUI(pAlertContent);
 			                    Saveflag = true;
 			                    window.close();
@@ -1263,7 +1263,7 @@
 	        <tr>
 	            <td style="padding-bottom: 10px">
 	                <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "2", "1", "<%=_HwpToolbar%>", "1");</script>
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "2", "1", "${hwpToolbar}", "1");</script>
 	                </div>
 	            </td>
 	        </tr>
@@ -1278,7 +1278,6 @@
 	                        </td>
 	                    </tr>
 	                </table>
-	
 	            </td>
 	        </tr>
 	    </table>
