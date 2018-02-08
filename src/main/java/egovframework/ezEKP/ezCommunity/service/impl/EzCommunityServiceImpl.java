@@ -3697,14 +3697,20 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 
     	Map<String, Object> map = new HashMap<String, Object>();
     	
-    	map.put("v_pBoardID", boardID);
-    	map.put("v_pItemID", itemID);
+    	map.put("boardID", boardID);
+    	map.put("itemID", itemID);
     	map.put("userID", userID);
     	map.put("lang", lang);
     	map.put("tenantID", tenantID);
+    	
+    	/* MySQL */
+    	map.put("perCount", perCount);
+    	map.put("start", startRowNum);
+    	
+    	/* Oracle */
     	map.put("startRowNum", startRowNum);
     	map.put("endRowNum", endRowNum);
-    	map.put("perCount", perCount);
+    	
     	
     	List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
     	
