@@ -1,6 +1,7 @@
 ﻿
 
 var m_bPrevNext = false;
+var real_href = "";
 
 function get_mail(flag) {
     var Flag;
@@ -1024,13 +1025,19 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
 }
 
 function mail_link(a){
-	var real_href = "";
-	var link = $("#approv_a").attr("href").split("/");
-	
-	for (var i = 1; i < link.length; i++) {
-		real_href += "/" + link[i];
+	var chk = $("#approv_a").attr("href");
+	if(chk != "" && chk != undefined) {
+		var link = $("#approv_a").attr("href").split("/");
+		
+		for (var i = 1; i < link.length; i++) {
+			real_href += "/" + link[i];
+		}
 	}
 	
+<<<<<<< Updated upstream
 	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(820, 900));
+=======
+	openwindow(real_href, "", 880, 550);
+>>>>>>> Stashed changes
 }
 
