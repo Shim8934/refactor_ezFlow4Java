@@ -1233,30 +1233,44 @@
 			SELECT
 				*
 			FROM
-				(SELECT
-					userid,
-					username,
-					username2,
-					userdeptname,
-					userdeptname2,
-					usercompanyname,
-					usercompanyname2,
-					usertitle,
-					usertitle2,
-					readdate+(#offset# /(60*24)) AS readdate
-				FROM
-					TBL_COMM_ITEM_READ 
-				WHERE
-					boardid = #v_pBoardID#
-				AND
-					itemid = #v_pItemID#
-				AND
-					tenant_id = #tenantID#
-				ORDER BY
-					readdate DESC
-				)
+				( SELECT 
+					* 
+				 FROM 
+					(SELECT
+						userid,
+						username,
+						username2,
+						userdeptname,
+						userdeptname2,
+						usercompanyname,
+						usercompanyname2,
+						usertitle,
+						usertitle2,
+						TO_CHAR(readdate, 'YYYY-MM-DD HH24:MI:SS') AS readdate
+					FROM
+						TBL_COMM_ITEM_READ 
+					WHERE
+						boardid = #v_pBoardID#
+					AND
+						itemid = #v_pItemID#
+					AND
+						tenant_id = #tenantID#
+					AND
+		   				USERID <> ( SELECT 
+		   								WRITERID 
+		   							FROM 
+		   								TBL_COMM_ITEM 
+		   							WHERE 
+		   								TENANT_ID = #tenantID#
+		   							AND
+		   								ITEMID = #v_pItemID# )
+					ORDER BY
+						readdate DESC
+					) T1 
+				WHERE 
+					ROWNUM <= #endRowNum# ) T2
 			WHERE
-				ROWNUM <= 50
+				ROWNUM >= #startRowNum#
 		]]>
 	</select>
 	
