@@ -2654,7 +2654,7 @@
 						<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
 					</div> 
 				</c:if>-->
-				<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; border-bottom: none;">
+				<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
 					<table style="width: 100%;" id="commentListView">
 						<c:forEach var="_comt" items="${listComments}">
 							<tr style="border-bottom: 1px dotted #b6b6b6;">
