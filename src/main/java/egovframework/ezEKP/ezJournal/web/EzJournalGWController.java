@@ -757,9 +757,13 @@ public class EzJournalGWController {
 		
 		String userId = request.getParameter("userId");
 		String tenantId = request.getParameter("tenantId");
+		String companyId = request.getParameter("companyId");
 		
+		LOGGER.debug("userId : "+userId);
+		LOGGER.debug("tenantId : "+tenantId);
+		LOGGER.debug("companyId : "+companyId);
 		try {
-			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, tenantId);
+			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId,companyId,tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -776,15 +780,28 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 사원리스트 
 	 */
-	@RequestMapping(value="/ezjournal/depts/{deptId}/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject getUserList(@PathVariable String deptId, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/ezjournal/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getUserList(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getUserList started.");
-		LOGGER.debug("deptId=" + deptId);
 		
 		JSONObject result = new JSONObject();
+		
+		String tenantId = request.getParameter("tenantId");
+		String key = request.getParameter("key");
+		String value = request.getParameter("value");
+		
+		try {
+			List<JournalAuthorVO> userList = ezJournalService.getDeptUserList(tenantId, key,value);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", userList);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
 		
 		LOGGER.debug("ezJournal G/W getUserList ended.");
 		return result;
 	}
-	
 }
