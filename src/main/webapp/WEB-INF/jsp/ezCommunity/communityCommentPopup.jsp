@@ -117,13 +117,13 @@
 						<tr>
 							<th colspan="2" style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2;
 									 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8f8; padding-bottom:3px">
-								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="300"></textarea>
+								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
 							</th>
 					</c:when>
 					<c:otherwise>
 						<tr>
 							<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
-								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="300"></textarea>
+								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
 							</th>
 					</c:otherwise>	
 				</c:choose>
