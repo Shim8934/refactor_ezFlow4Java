@@ -195,11 +195,6 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public String getUserIDAdmin(int brdID) throws Exception {
-		return ezQuestionDAO.getUserIDAdmin(brdID);
-	}
-	
-	@Override
 	public void callCreateMother(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());

@@ -431,7 +431,8 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		if (recipientList != null) {
 			Locale locale = userInfo.getLocale();
-			String pDivi = (isAdmit ? egovMessageSource.getMessage("ezCommunity.t46", locale) : egovMessageSource.getMessage("ezCommunity.t44", locale));
+			/* 2018-02-08 장진혁 - 아랫쪽 소스에 누가 주석처리 했기때문에 위쪽도 마저 주석처리함 */
+			//String pDivi = (isAdmit ? egovMessageSource.getMessage("ezCommunity.t46", locale) : egovMessageSource.getMessage("ezCommunity.t44", locale));
 			
 			InternetAddress from = new InternetAddress();
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
