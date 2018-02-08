@@ -232,10 +232,7 @@
 			        function Schedule_btn(pGubun) {
 			            parent.mtg_onClick(pGubun);
 			        }
-<<<<<<< Updated upstream
-=======
-			   
->>>>>>> Stashed changes
+
 
 			</script> 
 	</head>

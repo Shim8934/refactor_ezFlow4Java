@@ -1024,20 +1024,19 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
     } catch (e) { }
 }
 
-function mail_link(a){
+function mail_link(){
+	
 	var chk = $("#approv_a").attr("href");
+	$("#approv_a").removeAttr("href");
 	if(chk != "" && chk != undefined) {
-		var link = $("#approv_a").attr("href").split("/");
+		var link = chk.split("/");
 		
 		for (var i = 1; i < link.length; i++) {
 			real_href += "/" + link[i];
 		}
 	}
 	
-<<<<<<< Updated upstream
 	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(820, 900));
-=======
-	openwindow(real_href, "", 880, 550);
->>>>>>> Stashed changes
+
 }
 
