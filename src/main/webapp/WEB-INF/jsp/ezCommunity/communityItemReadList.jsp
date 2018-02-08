@@ -29,12 +29,7 @@
 		            ReturnFunction = parent.item_readlist_cross_dialogArguments[1];
 		        } catch (e) {
 		        	
-		        }
-		    	//사원 이름(아이디) 클릭시 사원 상세보기
-		        $("#lvBoardList").on("click", "td:odd:even", function (){
-			        userID = $(this).closest("tr").attr("userid");
-			        show_info(userID);
-		        });
+		        }		    	
 		    };
 		
 			function show_info(userid) {
@@ -78,57 +73,79 @@
 		            var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
 		
 		            if (listNode == null) return;
+          
 		            var lstCnt = getNodeText(cntNode);//TOTALCNT
-		            var pageCnt = getNodeText(pagenode);//PAGECNT
-		            var perCnt = getNodeText(perNode);//PERSONALCNT
-		
-		            totalPage = pageCnt;
 		            
-		            makePageSelPageReader();
-		            var xmlDoc;
-		            if (CrossYN()) {
-		                var xmlLIST = createXmlDom();
-		                var nodeToImport = xmlLIST.importNode(listNode, true);
-		                xmlLIST.appendChild(nodeToImport);
-		
-		                xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
-		            }
-		            else {
-		                xmlDoc = createXmlDom();
-		                xmlDoc.appendChild(listNode);
-		            }
-		            if (document.getElementById("lvBoardList").innerHTML != "")
-		                document.getElementById("lvBoardList").innerHTML = "";
-		            
-		            var DocList = new ListView();
-		            DocList.SetID("lvBoardList");
-		            DocList.SetMulSelectable(false);
-		            DocList.SetTitleIdx(0);
-		            DocList.SetSelectFlag(false);
-		            DocList.DataSource(xmlDoc);
-		            DocList.RowDataBind();
-		            DocList = null;
-		            
-		            //td 너비 조정
-		            var listTbl = document.getElementById("lvBoardList");
-		            var listTd = listTbl.getElementsByTagName("td");
-		            for(var i = 0; i < listTd.length; i++){
-		            	if((i%4) == 0){
-		            		listTd[i].style.width = "170px";
-		            	}
-		            	if((i%4) == 1) {
-		            		listTd[i].style.width = "120px";
-		            		listTd[i].innerHTML = "<b>" + listTd[i].textContent.split("(")[0] + "</b>" + "(" + listTd[i].textContent.split("(")[1];
-		            		listTd[i].style.cursor = "pointer";
-		            	}
-		            	if((i%4) == 2) {
-		            		listTd[i].style.width = "130px";
-		            		listTd[i].style.color = "#168501";
-		            	}
-		            	if((i%4) == 3){
-		            		listTd[i].style.width = "60px";
-		            		listTd[i].style.color = "#737373";
-		            	}
+		            if (lstCnt != 0) {		            
+			            var pageCnt = getNodeText(pagenode);//PAGECNT
+			            var perCnt = getNodeText(perNode);//PERSONALCNT
+			            
+			            totalPage = pageCnt;
+			            
+			            makePageSelPageReader();
+			            var xmlDoc;
+			            if (CrossYN()) {
+			                var xmlLIST = createXmlDom();
+			                var nodeToImport = xmlLIST.importNode(listNode, true);
+			                xmlLIST.appendChild(nodeToImport);
+			
+			                xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+			            }
+			            else {
+			                xmlDoc = createXmlDom();
+			                xmlDoc.appendChild(listNode);
+			            }
+			            if (document.getElementById("lvBoardList").innerHTML != "")
+			                document.getElementById("lvBoardList").innerHTML = "";
+			            
+			            var DocList = new ListView();
+			            DocList.SetID("lvBoardList");
+			            DocList.SetMulSelectable(false);
+			            DocList.SetTitleIdx(0);
+			            DocList.SetSelectFlag(false);
+			            DocList.DataSource(xmlDoc);
+			            DocList.RowDataBind();
+			            DocList = null;
+			            
+			            //td 너비 조정
+			            var listTbl = document.getElementById("lvBoardList");
+			            var listTd = listTbl.getElementsByTagName("td");
+			            for(var i = 0; i < listTd.length; i++){
+			            	if((i%4) == 0){
+			            		listTd[i].style.width = "130px";
+			            		listTd[i].style.textAlign = "center";
+			            		listTd[i].style.cursor = "pointer";
+			            	}
+			            	if((i%4) == 1) {
+			            		listTd[i].style.width = "130px";
+			            		listTd[i].style.textAlign = "center";
+			            		listTd[i].style.cursor = "pointer";
+			            		listTd[i].innerHTML = listTd[i].textContent.split("(")[0];
+			            	}
+			            	if((i%4) == 2) {
+			            		listTd[i].style.width = "130px";
+			            		listTd[i].style.textAlign = "center";
+			            		listTd[i].style.cursor = "pointer";
+			            	}
+			            	if((i%4) == 3){
+			            		listTd[i].style.width = "130px";
+			            		listTd[i].style.textAlign = "center";
+			            		listTd[i].style.cursor = "pointer";
+			            	}
+			            }		            
+			          
+				        $("#lvBoardList tr").on("click", function () {
+				        	userID = $(this).closest("tr").attr("userid");
+				        	show_info(userID);
+				        });
+			            
+			            $("#lvBoardList tbody tr:odd td").css("background-color", "#f8f8f8");
+		            } else {
+		            	var msg = "<spring:message code='ezBoard.kbm01'/>";
+		            	var htmlContent = "<tr><td style='text-align:center'>" + msg +"</td></tr>";
+		            	$("#lvBoardList").html(htmlContent);
+		            	
+		            	$("#lvBoardList").css("height", "335px");
 		            }
 		        }
 		        catch (e) {
@@ -299,7 +316,7 @@
 	        <!-- 2018-02-06 김보미 -->
 <%-- 	        <h2><spring:message code='ezCommunity.t1053' /></h2> --%>
 <!-- 	        <div class="box" style="height: 290px; overflow: auto"> -->
-	        	<div style="width:100%; overflow:AUTO;" id="divList">
+	        	<div style="width:100%; height:305px" id="divList">
 		            <table id="lvBoardList" class="popuplist" style="width:100%"></table>
 		        </div>
 			<div id='runtime' style="color:#666;padding-top:5px"></div>

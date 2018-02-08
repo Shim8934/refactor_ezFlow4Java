@@ -28,8 +28,6 @@ public interface EzQuestionService {
 	public List<QstAttachVO> getAttachInfo(QstAttachVO qstAttachVO, int tenantID) throws Exception;
 	
 	public List<QstAttachVO> getAttachInfo3(QstAttachVO qstAttachVO, int tenantID) throws Exception;
-
-	public String getUserIDAdmin(int brd) throws Exception;
 	
 	public List<QstAnswerVO> getAnswerAnswerCnt(int brdID, int itemNo, int qstNo, int tenantID) throws Exception;
 	
