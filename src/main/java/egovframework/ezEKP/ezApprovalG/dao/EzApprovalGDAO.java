@@ -493,8 +493,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
-		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
+	public List<ApprGCabCodeVO> getDocType(Map<String, Object> map) throws Exception{
+		return (List<ApprGCabCodeVO>) list("EzApprovalG.getDocType", map);
 	}
 	
 	@SuppressWarnings("unchecked")

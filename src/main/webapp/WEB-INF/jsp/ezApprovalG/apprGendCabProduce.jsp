@@ -122,7 +122,7 @@
 		<div style="font-family:'arial', 'verdana', 'dotum'; FONT-SIZE: 9pt"><spring:message code='ezApprovalG.t1020'/><br>
 				(<spring:message code='ezApprovalG.t1021'/></div>
 		<!---------------------------------------- 확인, 취소버튼 ----------------------------------------------->
-		<div class="btnposition" >
+		<div class="btnposition btnpositionNew" >
 		    <a class="imgbtn"><span name="btnOK" onClick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 		    <a class="imgbtn"><span name="btnCancel" onClick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>

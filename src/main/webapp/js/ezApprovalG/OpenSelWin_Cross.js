@@ -10,20 +10,20 @@ function SelectTask(pDeptCode, pDeptName, pInitFlag, pMultiSelect, opentype, Com
     selecttask_cross_dialogArguments[0] = para;
     if (opentype == undefined && CompleteFunction == undefined) {
         selecttask_cross_dialogArguments[1] = SelectTask_Complete;
-        DivPopUpShow(780, 430, url);
+        DivPopUpShow(790, 430, url);
     }
     else if (opentype == undefined && CompleteFunction != undefined) {
         selecttask_cross_dialogArguments[1] = CompleteFunction;
-        DivPopUpShow(780, 430, url);
+        DivPopUpShow(790, 430, url);
     }
     else if (opentype != undefined && CompleteFunction == undefined) {
         selecttask_cross_dialogArguments[1] = SelectTask_Complete;
-        var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(780, 430));
+        var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(790, 430));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
         selecttask_cross_dialogArguments[1] = CompleteFunction;
-        var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(780, 430));
+        var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(790, 430));
         try { OpenWin.focus(); } catch (e) { }
     }
     return rtn;
@@ -39,10 +39,10 @@ function SelectDept(opentype, CompleteFunction) {
 
     if (opentype == undefined && CompleteFunction == undefined) {
         selectdept_cross_dialogArguments[1] = SelectDept_Complete;
-        DivPopUpShow(330, 360, url);
+        DivPopUpShow(350, 360, url);
     } else if (opentype == undefined && CompleteFunction != undefined) {
         selectdept_cross_dialogArguments[1] = CompleteFunction;
-        DivPopUpShow(330, 360, url);
+        DivPopUpShow(350, 360, url);
     } else if (opentype != undefined && CompleteFunction == undefined) {
         selectdept_cross_dialogArguments[1] = SelectDept_Complete;
         var OpenWin = window.open(url, "SelectDept_Cross", GetOpenWindowfeature(330, 360));
@@ -75,7 +75,7 @@ function SelectUser(pCabClassNo, pDeptCode) {
         selectuser_cross_dialogArguments[0] = para;
         selectuser_cross_dialogArguments[1] = SelectUsert_Complete;
 
-        DivPopUpShow(440, 340, url);
+        DivPopUpShow(600, 340, url);
     } else {
         var feature = "dialogWidth:512px;dialogHeight:415px;scroll:no;resizable:no;status:no;help:no;edge:sunken ";
         feature = feature + GetShowModalPosition(495, 360);

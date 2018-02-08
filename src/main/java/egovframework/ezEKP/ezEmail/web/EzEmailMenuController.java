@@ -124,14 +124,15 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", loginInfo.getTenantId());
-		logger.debug("userEmail=" + userEmail + ",usePreviewSubTree=" + usePreviewSubTree);
+		String useBottomFrameOnly = ezCommonService.getTenantConfig("useBottomFrameOnly", loginInfo.getTenantId());
+		logger.debug("userEmail=" + userEmail + ",usePreviewSubTree=" + usePreviewSubTree + "useBottomFrameOnly=" + useBottomFrameOnly);
 		
 		if (usePreviewSubTree.equals("YES")) {
 			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
 			String previewSubTree = mailGeneralVO.getPreviewSubTree();
 			model.addAttribute("previewSubTree", previewSubTree);
 		}
-
+		
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		StringBuilder rootFolderXML = new StringBuilder();
@@ -266,6 +267,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("subCode", subCode);
 		model.addAttribute("usePreviewSubTree", usePreviewSubTree);
+		model.addAttribute("useBottomFrameOnly", useBottomFrameOnly);
 		
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", loginInfo.getTenantId());
 		

@@ -340,7 +340,7 @@
 	                <h2 style="margin-top:7px"><spring:message code='ezApprovalG.t233'/></h2>
 	                <div class="listview">
 
-	                    <div id="OrganListView" style="border: 0; Width: 280px; Height: 218px; overflow: auto;"></div>
+	                    <div id="OrganListView" style="border: 0; Width: 370px; Height: 218px; overflow: auto;"></div>
 
 	                </div>
 	                <table style="width: 100%;">

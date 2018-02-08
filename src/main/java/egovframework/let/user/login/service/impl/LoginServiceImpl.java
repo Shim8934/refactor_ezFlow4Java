@@ -1,6 +1,8 @@
 package egovframework.let.user.login.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -192,7 +194,31 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
     public int getTenantId(String serverName) throws Exception {
     	return getTenantIdForLocal(serverName);
     }
-    
+
+	@Override
+	public LoginVO selectReceiver(String userID, int tenantID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("id", userID);
+		map.put("tenantId", tenantID);
+		return loginDAO.selectReceiver(map);
+	}
+	
+	@Override
+	public List<LoginVO> selectAllReceivers(String userID, int tenantID) throws Exception {		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("id", userID);
+		map.put("tenantId", tenantID);
+		return loginDAO.selectAllReceivers(map);
+	}
+	
+	@Override
+	public List<LoginVO> selectAllMemberOfCompany(String companyID, int tenantID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("company_id", companyID);
+		map.put("tenantId", tenantID);
+		return loginDAO.selectAllMemberOfCompany(map);		
+	}
+
     /**
      * Active Directory
      * - AD 암호로 그룹웨어 암호 변경

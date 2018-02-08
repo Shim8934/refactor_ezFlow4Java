@@ -14,6 +14,10 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>		
+	    <title>
+	    	<c:if test="${id == null}"><spring:message code='ezSchedule.t4004' /></c:if>
+		    <c:if test="${id != null}"><spring:message code='ezSchedule.t4005' /></c:if>
+	    </title>
 	    <script type="text/javascript">
 	    
 		    var holidayid = "<c:out value='${id}'/>";		    
@@ -131,7 +135,10 @@
 	</head>
 	<body class="popup" style="font-size:12px">
 		<form id="Form1" method="post">
-		    <h1><spring:message code='ezSchedule.t4004' /></h1>
+		    <h1>
+		    	<c:if test="${id == null}"><spring:message code='ezSchedule.t4004' /></c:if>
+		    	<c:if test="${id != null}"><spring:message code='ezSchedule.t4005' /></c:if>
+		    </h1>
 		    <table class="content">
 		    	<tr>
 		        	<th style="width: 80px; text-align:center"><spring:message code='ezSchedule.t9990003' /></th>

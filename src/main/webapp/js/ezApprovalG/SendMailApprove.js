@@ -124,7 +124,7 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     
     if(Subject == strLang1122) {
     	if (Method != "007") {
-    		Approv_a += "<span style='font-size:13pt; font-weight:bold;'>" + Drafter + "</span>"+ "<span style='font-size:13pt;'>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='mail_link(href.this); return false;' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-size:13pt; font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    		Approv_a += "<span style='font-size:13pt; font-weight:bold;'>" + Drafter + "</span>"+ "<span style='font-size:13pt;'>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='mail_link(href.this);' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-size:13pt; font-weight:bold;'>" + strLangjjh04 + "</span><br>";
     	}
     }
     
@@ -148,7 +148,9 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
         } 
     }
     Content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + Approv_a + Content +"</td></tr></table>";
-
+    
+    console.log("Approv_a  : "+Approv_a)
+    
     try {
         var Result = "";
         $.ajax({

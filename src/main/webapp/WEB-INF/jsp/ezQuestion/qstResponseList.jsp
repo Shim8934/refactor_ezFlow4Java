@@ -89,7 +89,7 @@
 			
  			function search_Set(pPage) {
 				if (parseInt(pPage) > 0 && parseInt(pPage) != "" && parseInt(pPage) <= parseInt(pTotalPage)) {
-			    	var szUrl = "/ezQuestion/qstResponseList.do?brdID=" + szBrdID + "&itemNo=" + szItemNo + "&page=" + pPage + "&pageCount=" + "${pageCount}" + "&questionNo=" + szQuestionNo;
+					var szUrl = "/ezQuestion/qstResponseList.do?brdID=" + szBrdID + "&itemNo=" + szItemNo + "&page=" + pPage + "&pageCount=" + "${pageCount}" + "&questionNo=" + szQuestionNo + "&responseYN=" + pResponse_YN;
 					window.location.href = szUrl;
 				}
 			}

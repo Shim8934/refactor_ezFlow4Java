@@ -565,7 +565,8 @@
 		                        //Docinfo_ini();
 		                        
 			                    bool3 = true;
-			                    bool4 = true;
+			                    //bool4주석처리 이유,결재정보창에서 기록물철을 먼저 선택했을 시 문서정보의 쪽수에 디폴트를 찍어주지 못한다. 
+			                    //bool4 = true;
 	                    	} else {
 	                    		Draftinfo_ini();
 			                    bool3 = true;
