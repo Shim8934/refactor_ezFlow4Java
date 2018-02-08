@@ -316,6 +316,7 @@
 		        
 
 		            if (!StateChangeClickFlag) {
+		            	alert("<spring:message code='ezQuestion.yyj1' />");
 		                return;
 		            }
 		            if (hidRType.value == "T") {

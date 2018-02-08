@@ -139,7 +139,7 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		
-		            DivPopUpShow(500, 615, url);
+		            DivPopUpShow(700, 615, url);
 
 		        }
 		        else {
@@ -523,8 +523,8 @@
 		</div>
 		
 		<h2><spring:message code='ezApprovalG.t1034'/></h2>
-		<div id="listviewdiv" class="listview" style="Width:700px; Height:225px;">
-		    <div id= "lvList" style="overflow:auto;border:0;Width:698px; Height:225px; font-size:9pt;"></div>
+		<div id="listviewdiv" class="listview" style="Width:100%; Height:225px;">
+		    <div id= "lvList" style="overflow:auto;border:0;Width:100%; Height:225px; font-size:9pt;"></div>
 		</div>
 		
 		<div class="btnposition btnpositionNew" >

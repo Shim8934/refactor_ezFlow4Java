@@ -24,13 +24,14 @@
 		    var szSelectedItemNo = "";
 		    var szPubFlag = "";
 		    var EndPollYN, ResponseYN, ResultOpenYN;
-			var MultiResYN, WriteYN, AdminYN;
+			var MultiResYN;
 			var TR_Contents_Start = 1;
 			var szSearchParam ="&title=" + "<c:out value='${qstListVO.title}'/>" + "&responseRange=" + "<c:out value='${qstListVO.responseRange}'/>" + "&pollStartDate=" + "<c:out value='${qstListVO.pollStartDate}'/>" + "&pollEndDate=" + "<c:out value='${qstListVO.pollEndDate}'/>";
 			var CurPage = "<c:out value='${qstListVO.currPage}'/>";
 			var totalPage = "<c:out value='${qstListVO.totalPage}'/>";
 		    var totalCount = "<c:out value='${qstListVO.totalCnt}'/>";
 		    var receve = "${receve}";
+		    var adminYN = "${adminYN}";
 		    
 			window.onload = function(){
 				makePageSelPage();
@@ -48,8 +49,6 @@
 						ResponseYN = map.responseYN;
 						ResultOpenYN = map.resultOpenYN;
 						MultiResYN = map.multiResYN;
-						WriteYN = map.writeYN;
-						AdminYN = map.adminYN;
 						var rv;
 
 						switch (pflag) {
@@ -98,14 +97,10 @@
 						return rv;
 					},
 					error: function(xhr, status, e){
-// 						alert(e.message);
-
 						EndPollYN = "";
 						ResponseYN = "";
 						ResultOpenYN = "";
 						MultiResYN = "";
-						WriteYN = "N";
-						AdminYN = "N";
 						       
 						return false;
 					},
@@ -114,7 +109,7 @@
 			}
 			
 			function Chk_Reuse(){
-				if (WriteYN == "Y")
+				if (adminYN == "Y")
 					return true;
 				else{
 					alert(strLang44);
@@ -123,7 +118,7 @@
 			}
 			
 			function Chk_Save(){
-			    if(WriteYN == "Y" || AdminYN == "Y")
+			    if(adminYN == "Y")
 			        return true;
 			    else{
 			        alert('<spring:message code="ezQuestion.t275" />');
@@ -132,7 +127,7 @@
 			}
 			
 		    function Chk_Analysis(){
-		        if(WriteYN == "Y" || AdminYN == "Y")
+		        if(adminYN == "Y")
 		            return true;
 		        else{
 		            alert('<spring:message code="ezQuestion.t276" />');
@@ -141,7 +136,7 @@
 		    }
 		    
 		    function Chk_Delete(){
-		        if(WriteYN == "Y" || AdminYN == "Y")
+		        if(adminYN == "Y")
 		            return true;
 		        else{
 		            alert('<spring:message code="ezQuestion.t278" />');
@@ -172,7 +167,7 @@
 	    	        if(ResultOpenYN == "Y"){
 		                return true;
 		            }else{
-		                if(WriteYN == "Y" || AdminYN == "Y")
+		                if(adminYN == "Y")
 		                    return true;
 	            	    else{
 	            	        alert('<spring:message code="ezQuestion.t284" />');
@@ -183,7 +178,7 @@
 	        	    if(ResultOpenYN == "Y"){
 		                return true;
 		            }else{
-		                if(WriteYN == "Y" || AdminYN == "Y")
+		                if(adminYN == "Y")
 		                    return true;
 		                else{
 		                    alert('<spring:message code="ezQuestion.t284" />');
@@ -195,7 +190,7 @@
 		    }
 		
 		    function Chk_InfoModify(){
-		        if (WriteYN == "Y" || AdminYN == "Y") {
+		        if (adminYN == "Y") {
 		            return true;
 		        }else{
 		            alert('<spring:message code="ezQuestion.t285" />');
@@ -535,9 +530,9 @@
 				<li><span onClick="menu_Analysis()"><spring:message code="ezQuestion.t304" /></span></li>
 				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
 				<li><span onClick="menu_Search()"><spring:message code="ezQuestion.t34" /></span></li>
-				<li><span onClick="menu_InfoModify()"><spring:message code="ezQuestion.t305" /></span></li>
-				<li><span onClick="menu_Delete()"><spring:message code="ezQuestion.t177" /></span></li>
-				<li><span onClick="menu_reuse()"><spring:message code="ezQuestion.t700" /></span></li>
+				<li><span onClick="menu_InfoModify()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if> ><spring:message code="ezQuestion.t305" /></span></li>
+				<li><span onClick="menu_Delete()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if>><spring:message code="ezQuestion.t177" /></span></li>
+				<li><span onClick="menu_reuse()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if>><spring:message code="ezQuestion.t700" /></span></li>
 			</ul>
 		</div>
 		<script type="text/javascript">

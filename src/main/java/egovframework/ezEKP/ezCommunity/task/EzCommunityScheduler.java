@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import egovframework.ezEKP.ezCommunity.service.EzCommunityAdminService;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.let.utl.fcc.service.CommonUtil;

@@ -2331,19 +2331,6 @@
 		]]>		
 	</select>
 	
-	<select id="EzQuestionDAO.getUserIDAdmin" parameterClass="Integer" resultClass="String">
-		<![CDATA[
-			SELECT
-				USER_ID 
-			FROM
-				TBL_QS_BRDMNG 
-			WHERE
-				BRD_ID	=	#brdID#
-			AND 
-				ADMIN_FG = '1'
-		]]>
-	</select>
-	
 	<select id="EzQuestionDAO.getResponseDateCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
