@@ -132,7 +132,7 @@
 		<c:if test="${oneLineReplyFlag == '1'}">
 			<tr>
 			    <th><input id='onl' name ='onl'  type='checkbox' /></th>
-			    <td><span id="ext1">&nbsp;<spring:message code='ezBoard.t486'/></span></td>
+			    <td><span id="ext1">&nbsp;<spring:message code='ezBoard.jjh06'/></span></td>
 			</tr>
 		</c:if>
 		<tr>

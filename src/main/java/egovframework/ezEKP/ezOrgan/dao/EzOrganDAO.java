@@ -344,8 +344,17 @@ public class EzOrganDAO extends EgovAbstractDAO {
 
 	public OrganProxyVO getProxyInfo(Map<String, Object> map) throws Exception {
 		return (OrganProxyVO) select("EzOrganDAO.getProxyInfo", map);
-	}
-	
+	}	
+
+    @SuppressWarnings("unchecked")
+    public List<String> getAllSubDeptId(Map<String, Object> map) {      
+        return (List<String>) list("EzOrganDAO.getAllSubDeptId", map);
+    }
+    
+    public String getDeptPath(Map<String, Object> map) {      
+        return (String) select("EzOrganDAO.getDeptPath", map);
+    }
+
 	@SuppressWarnings("unchecked")
 	public List<OrganDeptVO> getExtension4ID(Map<String, Object> map) throws Exception {
 		return (List<OrganDeptVO>) list("EzOrganDAO.getExtension4ID", map);

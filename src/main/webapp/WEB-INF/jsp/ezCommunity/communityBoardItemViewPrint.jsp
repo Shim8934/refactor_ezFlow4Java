@@ -303,7 +303,7 @@
 		    	<td style="height:20px">
 		    		<table class="content">
 					    <tr>
-					        <th style="border-bottom: none;"><spring:message code = 'ezCommunity.t961' /></th>
+					        <th style="border-bottom: none;"><spring:message code = 'ezBoard.jjh06' /></th>
 					        <td style="height:50px;border-bottom: none;"><div id="onelinereplylist" style="height:auto; background-color:white;text-align:left"></div></td>
 					    </tr>
 				    </table>

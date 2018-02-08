@@ -2147,6 +2147,15 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				String menuitemDisplayName = result2.get(j).getDisplayName();
 				String menuitemImageUID = result2.get(j).getImageUId();
 				String menuitemLinkURL = result2.get(j).getLinkURL();
+				
+				//baonk 추가
+				if (menuitemLinkURL.equals("/ezBoard/boardMain.do?func=3")) {
+					if (!ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+			        	continue;
+			        }
+				}
+				//end
+				
 				String menuitemLinkLocation = result2.get(j).getLinkLocation();
 				String menuitemWindowOption = result2.get(j).getWindowOption();
 				

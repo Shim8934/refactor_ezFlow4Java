@@ -49,6 +49,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
@@ -745,14 +746,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		resultXML.append("<ROWS>");
 		for (BoardReadVO vo : readerList) {
 			String userTitle = "";
+			String userDeptName = "";
 			if(vo.getUserTitle() != null){
 				userTitle = vo.getUserTitle();
 			}
-			resultXML.append("<ROW>");			
-			resultXML.append("<CELL><USERID>" + vo.getUserID() + "</USERID><VALUE>" + "[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]" + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getUserName() + " (" + vo.getUserID() + ")" + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getUserDeptName() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + userTitle + "</VALUE></CELL>");
+			if( vo.getUserDeptName() != null){
+				userDeptName =  vo.getUserDeptName();
+			}
+			resultXML.append("<ROW>");
+			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><VALUE><![CDATA[" + vo.getUserName() + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + userTitle + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]]></VALUE></CELL>");			
 			resultXML.append("</ROW>");
 		}
 		
@@ -3712,6 +3717,31 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("copyItem ended");
 		return result;
 	}
+
+	//baonk added
+	@Override
+	public BoardPollConfigVO getPollConfig(String pUserID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", pUserID);		
+		map.put("tenant_id", tenantId);
+		
+		return ezBoardDAO.getPollConfig(map);
+	}	
+
+	@Override
+	public void saveBoardPollConfig(BoardPollConfigVO boardPollConfigVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", boardPollConfigVO.getUserId());		
+		map.put("start_time", boardPollConfigVO.getDefaultStartTime());	
+		map.put("end_time", boardPollConfigVO.getDefaultEndTime());	
+		map.put("target_depts", boardPollConfigVO.getTargetDepts());	
+		map.put("target_users", boardPollConfigVO.getTargetUsers());	
+		map.put("tenant_id", boardPollConfigVO.getTenantId());
+		
+		ezBoardDAO.saveBoardPollConfig(map);		
+	}	
+	//end
+	
 	//2017.12.29 강민수92
 	@Override
 	public String getOneLineReplyCount(String boardID, String itemID, int tenantID) throws Exception {
@@ -3726,6 +3756,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getOneLineReplyCount ended");
 		return ezBoardDAO.getOneLineReplyCount(map);
 	}
+
 	//2018.02.05 김보미
 	@Override
 	public int getReaderListCount(String boardID, String itemID, String userID, String lang, int tenantID) throws Exception {
@@ -3742,4 +3773,5 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getReaderListCount ended");
 		return ezBoardDAO.getReaderListCount(map);
 	}
+
 }
