@@ -17611,6 +17611,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.checkPermission(map);
 		
+
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
         
