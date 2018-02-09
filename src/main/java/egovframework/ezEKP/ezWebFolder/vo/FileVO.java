@@ -16,12 +16,13 @@ public class FileVO {
 	private String createDate;
 	private String updateId;
 	private String updateDate;	
-	private int tenantId;
+	private String filePosition;
 	private String fileTypeId;
 	private String fileTypeName;
 	private String fileIconUrl;
 	private String fileShareStatus;
 	private String favouriteStatus;
+	private int    tenantId;
 	
 	public String getFavouriteStatus() {
 		return favouriteStatus;
@@ -189,6 +190,14 @@ public class FileVO {
 
 	public void setFileTypeName(String fileTypeName) {
 		this.fileTypeName = fileTypeName;
-	}	
-	
+	}
+
+	public String getFilePosition() {
+		return filePosition;
+	}
+
+	public void setFilePosition(String filePosition) {
+		this.filePosition = filePosition;
+	}
+		
 }

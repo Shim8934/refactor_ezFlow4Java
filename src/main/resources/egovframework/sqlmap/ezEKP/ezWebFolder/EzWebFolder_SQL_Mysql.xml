@@ -275,6 +275,104 @@
 		]]>				
     </select>
     
+    <select id="EzWebFolderDAO.getAllFilesInFolder" resultMap="fileVO">
+		<![CDATA[
+			SELECT 
+				f.FILE_ID AS FILE_ID,
+				f.FILE_NAME AS FILE_NAME,
+				f.FILE_PATH AS FILE_PATH,
+				f.FILE_SIZE AS FILE_SIZE,
+				f.TYPE_ID AS TYPE_ID,
+				f.DOWN_COUNT AS DOWN_COUNT,
+				f.FILE_EXT AS FILE_EXT,
+				f.FOLDER_ID AS FOLDER_ID,
+				f.USE_STATUS AS USE_STATUS,
+				f.CREATE_ID AS CREATE_ID,
+				f.CREATE_NAME1 AS CREATE_NAME1,
+				f.CREATE_NAME2 AS CREATE_NAME2,
+				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,				
+				UPDATE_ID AS UPDATE_ID,
+				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				t.TYPE_ID AS FILETYPE_ID,
+				t.TYPE_NAME	AS FILETYPE_NAME,
+				t.TYPE_ICON AS FILETYPE_ICON,		
+				f.TENANT_ID AS TENANT_ID
+			FROM 
+				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+			WHERE  
+				f.FOLDER_ID  = #folderId#
+			AND
+				f.USE_STATUS = "Y"
+			AND
+				f.TENANT_ID  = #tenantId#		
+		]]>
+		
+		<isEqual property="fileType" compareValue="2" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = "document"
+          	]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="3" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = "music"
+          	]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="4" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = "video"
+          	]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="5" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = "image"
+          	]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="6" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = "zip"
+          	]]>
+		</isEqual>
+		
+		<isEqual property="searchChk" compareValue="1">
+			<isNotEqual property="fileExt" compareValue="" prepend="AND">
+				<![CDATA[
+					f.FILE_EXT LIKE CONCAT(CONCAT('%', #fileExt#), '%')
+           		]]> 
+			</isNotEqual>
+			
+			<isNotEqual property="fileName" compareValue="" prepend="AND">						
+				<![CDATA[
+					f.FILE_NAME LIKE CONCAT(CONCAT('%', #fileName#), '%')
+           		]]> 
+			</isNotEqual>
+			
+			<isNotEqual property="userName" compareValue="" prepend="AND">
+				<isEqual property="primary" compareValue="1">
+		        	<![CDATA[
+	        			f.CREATE_NAME1 LIKE CONCAT(CONCAT('%', #userName#), '%')
+		        	]]>
+        		</isEqual>
+	        	<isEqual property="primary" compareValue="2">
+		        	<![CDATA[
+	        			f.CREATE_NAME2 LIKE CONCAT(CONCAT('%', #userName#), '%')
+		        	]]>
+        		</isEqual> 
+			</isNotEqual>
+			
+			<isNotEqual property="startDate" compareValue="" prepend="AND">
+	        	<![CDATA[
+		        	(f.CREATE_DATE >= #startDate# AND f.CREATE_DATE <= #endDate#)
+	           	]]>
+	        </isNotEqual>
+		</isEqual>
+		
+		<![CDATA[
+			ORDER BY
+				f.UPDATE_DATE DESC,
+				CAST(f.FILE_ID AS INT) DESC				
+		]]>		
+    </select>
+    
     <select id="EzWebFolderDAO.getFolderByFolderId" resultMap="folderVO">   
 		<![CDATA[
 			SELECT 
@@ -314,9 +412,11 @@
 			FROM 
 				TBL_WEBFOLDER_FOLDER
 			WHERE  
-				FOLDER_ID = #folderId#
+				FOLDER_ID  = #folderId#
 			AND
-				TENANT_ID = #tenantId#			
+				USE_STATUS = "Y"
+			AND
+				TENANT_ID  = #tenantId#			
 		]]>				
     </select>
     
@@ -350,7 +450,9 @@
 			WHERE  
 				FOLDER_UPPER = #folderUpper#
 			AND
-				TENANT_ID = #tenantId#
+				USE_STATUS	 = "Y"
+			AND
+				TENANT_ID    = #tenantId#
 			ORDER BY
 				FOLDER_LEVEL ASC,
 				FOLDER_STEP  ASC
@@ -380,6 +482,19 @@
 				TENANT_ID = #tenantId#
 		]]>
    </update>
+   
+   <update id="EzWebFolderDAO.updateFolderUseStatus" parameterClass="Map">
+   	   	<![CDATA[
+			UPDATE 
+            	TBL_WEBFOLDER_FOLDER
+            SET 
+            	USE_STATUS = "N"
+            WHERE
+	          	FOLDER_ID  = #folderId#
+			AND
+				TENANT_ID  = #tenantId#
+		]]>
+   </update>   
    
    <update id="EzWebFolderDAO.updateFileName" parameterClass="Map">
    	   	<![CDATA[

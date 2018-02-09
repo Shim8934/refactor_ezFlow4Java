@@ -12,7 +12,12 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
-		<script type="text/javascript" >	        
+		<script type="text/javascript" >
+			var arrSubFolder      = [];
+			var selectedFolder    = "";
+			var compFolderId	  = null;
+			var companyId	      = null;
+			
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -43,15 +48,213 @@
 		    	}
 		    }
 		    
-		    function companyFolder() {		    	
+		    function companyFolder() {
+		    	clearToggle();
 		    	window.open("/admin/ezWebFolder/webfolderAdminCompanyFolder.do", "right");
 		    }
 		    
-		    function companyFile() {
-		    	window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do", "right");
+		    function displayPersonal() {
+		    	clearToggle();
+		    	goPage(1);
 		    }
 		    
+		    function clearToggle() {		    	
+				arrSubFolder      = [];
+				selectedFolder    = "";
+				compFolderId	  = null;
+				companyId	      = null;				
+				var divTree       = document.getElementById("folderTree");			
+				
+		    	while (divTree.hasChildNodes()) {
+		    		divTree.removeChild(divTree.lastChild);
+		    	}
+		    	
+		    }
+		    
+		    function companyFile() {
+		    	companyId = window.parent.frames["right"].document.getElementById("companyList").value;		    	
+		    	getData(companyId);
+		    }
+		    
+		    function getData(companyId) {
+				 $.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/getCompanyFolderTree.do",
+					data: {							
+						"companyId" : companyId,
+						"folderId"  : selectedFolder
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var result = data.companyTree;						
+						renderData(result);
+					},
+	 				error : function(error) {	 					
+						alert("<spring:message code='ezWebFolder.t134' />" + error);
+					}
+				});		
+			}
+		    
+		    function renderData(result) {
+				if (!result) {
+					alert("<spring:message code='ezWebFolder.t134' />");
+					return;
+				} 
+				
+				var divTree   = document.getElementById("folderTree");
+				var divComp   = document.createElement("div");
+				compFolderId  = result["folderId"];
+				
+		    	while (divTree.hasChildNodes()) {
+		    		divTree.removeChild(divTree.lastChild);
+		    	}	
+				
+				displaySubFolder(divTree, divComp, result);
+				
+				var spanCompany    = document.getElementById(compFolderId).nextSibling.nextSibling;
+				var selectedFolder = "";
+				getSelected(spanCompany);
+			}
+			
+			function displaySubFolder(divTree, divElmt, list) {
+				var level = list["folderLevel"];
+				
+				if (level > 0) {
+					for (var j = 0; j < level; j++) {
+						var imgTag = document.createElement("img");
+						imgTag.setAttribute("class", "webfolderImg");
+						imgTag.src="/images/OrganTree_cross/dot_continue.gif";
+						divElmt.appendChild(imgTag);
+					}
+				}				
+				
+				var imgElmt = document.createElement("img");				
+				imgElmt.setAttribute("id" , list["folderId"]);
+				
+				var imgElmt2 = document.createElement("img");
+				imgElmt2.setAttribute("class", "webfolderImg");
+				imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
+				
+				var spanFolderName = document.createElement("span");
+				spanFolderName.innerHTML = list["folderName"];
+				spanFolderName.setAttribute("class", "spanName");
+				spanFolderName.setAttribute("name", list["folderId"]);
+				spanFolderName.setAttribute("level", list["folderLevel"]);				
+				spanFolderName.onclick = function() {getSelected(this);};
+				
+				divElmt.appendChild(imgElmt);
+				divElmt.appendChild(imgElmt2);
+				divElmt.appendChild(spanFolderName);
+				divTree.appendChild(divElmt);
+				
+				if (list["hasSubFolder"] == "0") {					
+					imgElmt.src = "/images/OrganTree_cross/dot_continue.gif";
+					imgElmt.setAttribute("class", "webfolderImg");
+				}
+				else {
+					imgElmt.onclick = function() {getDetailTree(this);};
+					
+					if (list["listSubFolders"] == null) {
+						imgElmt.src = "/images/OrganTree_cross/plus_normal.gif";
+						imgElmt.setAttribute("class", "webfolderPlus");
+						return;
+					}
+					
+					imgElmt.src = "/images/OrganTree_cross/minus_normal.gif";
+					imgElmt.setAttribute("class", "webfolderMinus");
+					
+					var len = list["listSubFolders"].length;
+					arrSubFolder.push(list["folderId"]);
+					
+					var newDivElmt = document.createElement("div");
+					divElmt.appendChild(newDivElmt);
+					
+					for (var i = 0; i < len; i++) {
+						var subDivElmt = document.createElement("div");
+						displaySubFolder(newDivElmt, subDivElmt, list["listSubFolders"][i]);
+					}
+				}		
+			}
+			
+			function getSelected(obj) {
+				var previousElmt = document.getElementsByName(selectedFolder)[0];
+				
+				if (previousElmt != null) {
+					if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {						
+						previousElmt.style.color = "";
+					}
+					else {
+						return;
+					}					
+				}
+				
+				selectedFolder  = obj.getAttribute("name");
+				obj.style.color = "#e04343";
+				
+				window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&companyId=" + companyId, "right");
+			}
+			
+			function getDetailTree(obj) {
+				//Check if already in arrSubFolder
+				var uniqueId = obj.getAttribute("id");				
+				
+				if (arrSubFolder.indexOf(uniqueId) != -1) {					
+					var childElmt = obj.parentElement.lastElementChild;
+					
+					if (obj.className == "webfolderMinus") {
+						obj.src= "/images/OrganTree_cross/plus_normal.gif";
+						obj.setAttribute("class", "webfolderPlus");						
+						childElmt.style.display = "none";
+					}
+					else {
+						obj.src= "/images/OrganTree_cross/minus_normal.gif";
+						obj.setAttribute("class", "webfolderMinus");
+						childElmt.style.display = "";
+					}
+				}
+				else {										
+					obj.src = "/images/OrganTree_cross/minus_normal.gif";
+					obj.setAttribute("class", "webfolderMinus");
+					
+					$.ajax({
+						type: "POST",
+						url: "/admin/ezWebFolder/getSubFolderTree.do",
+						data: {
+							"folderId"	: uniqueId
+						},
+						dataType: "JSON",
+						async: true,
+						success: function(data) {							
+							var result = data.subTree;
+							displaySubTree(result, obj.parentElement);
+							arrSubFolder.push(uniqueId);
+						},
+						error: function (xhr, status, e){
+							alert("<spring:message code='ezWebFolder.t134' />");
+						}
+					});	
+				}
+			}
+			
+			function displaySubTree(result, divElmt) {				
+				if (result["listSubFolders"] == null) {
+					alert("<spring:message code='ezWebFolder.t134' />");
+					return;
+				}
+				
+				var len = result["listSubFolders"].length;				
+				var newDivElmt = document.createElement("div");
+				divElmt.appendChild(newDivElmt);
+				
+				for (var i = 0; i < len; i++) {
+					var subDiv = document.createElement("div");
+					displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i]);					
+				}
+			}
+		    
 		    function fileTransactionHistory() {
+		    	clearToggle();
 		    	window.open("/admin/ezWebFolder/webfolderAdminFileHistory.do", "right");
 		    }
 	    </script>
@@ -63,7 +266,7 @@
 	        </div>        
 
 		    <h2>
-  				<span style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t101' /></span>
+  				<span style="display:inline-block;width:100%;" onClick="displayPersonal();"><spring:message code='ezWebFolder.t101' /></span>
   			</h2>  
     		<ul>
     			<li><span id="company"  style="width: 100%; display: inline-block;" onClick="goPage(1);" ><spring:message code='ezWebFolder.t102' /></span></li>
@@ -73,14 +276,14 @@
 		    <h2>
   				<span style="display:inline-block;width:100%;" onClick="companyFolder();"><spring:message code='ezWebFolder.t126' /></span>
   			</h2>
-  			<ul>
-  			</ul>
+  			<ul></ul>
   			    
 		   	<h2>
   				<span style="display:inline-block;width:100%;" onClick="companyFile();"><spring:message code='ezWebFolder.t127' /></span>
   			</h2> 
-  			<ul>
+			<ul>
   			</ul>
+  			<div id="folderTree"></div>
 			
 			<h2>
   				<span style="display:inline-block;width:100%;" onClick="fileTransactionHistory();"><spring:message code='ezWebFolder.t128' /></span>

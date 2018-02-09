@@ -3,11 +3,9 @@ package egovframework.ezEKP.ezWebFolder.web;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -152,9 +149,26 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminCompanyFile.do")
 	public String webfolderCompanyFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {       
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-        //Add more function here
+		String folderId	 = request.getParameter("folderId");
+		String companyId = request.getParameter("companyId");
         
-        model.addAttribute("companyID", "S907000");
+		//Get list of companies
+		List<OrganDeptVO> list       = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(j++, vo);
+			}
+		}
+		
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", companyId);
+		model.addAttribute("primary", userInfo.getPrimary());
+		model.addAttribute("folderId", folderId);
         
 		return "admin/ezWebFolder/webfolderCompanyFile";
 	}
@@ -569,6 +583,77 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "json";
 	}
 	
+	@RequestMapping(value="/admin/ezWebFolder/delCompanyFolder.do", method = RequestMethod.POST)	
+	public String deleteCompanyFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
+		LoginVO userInfo    = commonUtil.userInfo(loginCookie);
+		String folderId     = request.getParameter("folderId");		
+		
+		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");		
+		String url          = gwServerUrl + "/webfolderadmin/folders/" + folderId;		
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());
+		RestTemplate rest            = new RestTemplate();		
+		rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		
+		return "json";
+	}	
+	
+	@RequestMapping(value="/admin/ezWebFolder/getFileList.do", method = RequestMethod.POST)	
+	public String getFileList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
+		LoginVO userInfo   = commonUtil.userInfo(loginCookie);
+		String primary     = userInfo.getPrimary();
+		String offset      = userInfo.getOffset();
+		String currPage    = request.getParameter("currentPage");
+		//String companyId   = request.getParameter("companyId");
+		String startDate   = request.getParameter("startDate");
+		String endDate     = request.getParameter("endDate");
+		String fileExt     = request.getParameter("fileExt");
+		String fileName    = request.getParameter("fileName");
+		String userName    = request.getParameter("userName");
+		String fileType    = request.getParameter("fileType");
+		String folderId    = request.getParameter("folderId");
+		
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/webfolderadmin/folders/" + folderId + "/file-list";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", userInfo.getTenantId())
+										.queryParam("primary", primary)
+										.queryParam("offset", offset)
+										//.queryParam("companyId", companyId)
+										.queryParam("startDate", startDate)
+										.queryParam("fileExt", fileExt)
+										.queryParam("fileName", fileName)
+										.queryParam("userName", userName)
+										.queryParam("fileType", fileType)
+										.queryParam("currentPage", currPage)
+										.queryParam("endDate", endDate);		
+		RestTemplate rest             = new RestTemplate();		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();		
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());				
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			JSONArray fileList = (JSONArray) resultBody.get("data");
+			long totalPages    = (long) resultBody.get("totalPages");
+			long totalRows     = (long) resultBody.get("totalRows");
+			model.addAttribute("totalPages", totalPages);
+			model.addAttribute("totalRows", totalRows);
+			model.addAttribute("fileList", fileList);
+		}
+
+		return "json";
+	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/targetSelect.do")
 	public String selectTarget(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {

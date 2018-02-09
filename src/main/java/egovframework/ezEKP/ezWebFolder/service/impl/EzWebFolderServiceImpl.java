@@ -3,11 +3,14 @@ package egovframework.ezEKP.ezWebFolder.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
@@ -190,6 +193,31 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		return ezWebFolderDAO.getFolderUserSequence(map);
 	}
 
+	@Override
+	public void updateFolderUseStatus(String folderId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		ezWebFolderDAO.updateFolderUseStatus(map);	
+	}
+	
+	@Override
+	public List<FileVO> getAllFilesInFolder(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, String offset, int tenantId) throws Exception {		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderId", folderId);
+		map.put("fileType", fileType);
+		map.put("searchChk", searchChk);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("fileExt", fileExt);
+		map.put("fileName", fileName);
+		map.put("userName", userName);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getAllFilesInFolder(map);
+	}
+	
 	@Override
 	public void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int mode) throws Exception {
 		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), primary, tenantId);

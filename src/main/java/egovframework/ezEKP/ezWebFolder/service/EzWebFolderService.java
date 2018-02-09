@@ -28,5 +28,7 @@ public interface EzWebFolderService {
 	List<FolderUserVO> getFolderUsers(String folderId, int tenantId) throws Exception;
 	String getFolderSequence(int tenantId) throws Exception;
 	String getMaxFolderStep(String folderId, int tenantId) throws Exception;
-	String getFolderUserSequence(int tenantId) throws Exception;	
+	String getFolderUserSequence(int tenantId) throws Exception;
+	void updateFolderUseStatus(String folderId, int tenantId) throws Exception;
+	List<FileVO> getAllFilesInFolder(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, String offset, int tenantId) throws Exception;
 }

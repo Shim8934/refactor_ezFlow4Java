@@ -93,4 +93,13 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public String getFolderUserSequence(Map<String, Object> map) {
 		return (String)select("EzWebFolderDAO.getFolderUserSequence", map);
 	}
+
+	public void updateFolderUseStatus(Map<String, Object> map) {		
+		update("EzWebFolderDAO.updateFolderUseStatus", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<FileVO> getAllFilesInFolder(Map<String, Object> map) {		
+		return (List<FileVO>)list("EzWebFolderDAO.getAllFilesInFolder", map);
+	}
 }

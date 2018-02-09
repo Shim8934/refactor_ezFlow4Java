@@ -144,17 +144,14 @@
 		    			var tdElmt6 = document.createElement("td");		    			
 		    			
 		    			trElmt.setAttribute("class", "bnkWebFolder");
-
-		    			tdElmt1.textContent = result[i]["fileType"];
-		    			tdElmt1.setAttribute("style","text-align: center;");
+		    			tdElmt1.textContent = result[i]["fileType"];		    			
 		    			
-		    			tdElmt2.setAttribute("style","text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
-		    			tdElmt2.textContent = result[i]["fileName"];
+		    			tdElmt2.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+		    			tdElmt2.textContent = result[i]["fileName"];		    			
 		    			
-		    			tdElmt3.setAttribute("style","text-align: center;");
 		    			tdElmt3.textContent = result[i]["fileSize"];
 		    			
-		    			tdElmt4.setAttribute("style","text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+		    			tdElmt4.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
 		    			
 		    			if (primary == "1") {
 		    				tdElmt4.textContent = result[i]["createName1"];
@@ -162,8 +159,6 @@
 		    			else {
 		    				tdElmt4.textContent = result[i]["createName2"];
 		    			}	    			
-		    			
-		    			tdElmt5.setAttribute("style","text-align: center;");
 		    			
 		    			switch(result[i]["logType"]) {
 		    				case "C":
@@ -300,11 +295,11 @@
 	   <div id="mainSetting" style="margin: 10px 0px; height:500px; overflow: auto;">
 	   		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileHistory">
 	   			<tr>	   				
-					<th width="40px"  style="text-align: center;"><spring:message code='ezWebFolder.t155' /></th>
-					<th width="160px" style="text-align: center;"><spring:message code='ezWebFolder.t156' /></th>
-					<th width="40px"  style="text-align: center;"><spring:message code='ezWebFolder.t157' /></th>
-					<th width="160px" style="text-align: center;"><spring:message code='ezWebFolder.t154' /></th>
-					<th width="60px"  style="text-align: center;"><spring:message code='ezWebFolder.t158' /></th>
+					<th width="40px"  ><spring:message code='ezWebFolder.t155' /></th>
+					<th width="160px" ><spring:message code='ezWebFolder.t156' /></th>
+					<th width="40px"  ><spring:message code='ezWebFolder.t157' /></th>
+					<th width="160px" ><spring:message code='ezWebFolder.t154' /></th>
+					<th width="60px"  ><spring:message code='ezWebFolder.t158' /></th>
 					<th width="140px" style="text-align: center;"><spring:message code='ezWebFolder.t159' /></th>			
 	   			</tr>
 	   		</table>

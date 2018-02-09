@@ -274,18 +274,6 @@
 				menu_SelectRange();
 			}
 			
-			function saveFolder() {
-				if (!selectedFolder) {
-					alert("폴더 선택하세요.");
-					return;
-				}
-				
-				if (compFolderId == selectedFolder) {
-					alert("안됩니다.");
-					return;
-				}
-			}
-			
 			function newFolder() {
 				if (!selectedFolder) {
 					alert("폴더 선택하세요.");
@@ -395,6 +383,36 @@
 					}
 				});
 			}
+			
+			function deleteFolder() {
+				if (!selectedFolder) {
+					alert("폴더 선택하세요.");
+					return;
+				}
+				
+				if (compFolderId == selectedFolder) {
+					alert("안됩니다.");
+					return;
+				}
+				
+				$.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/delCompanyFolder.do",
+					data: {
+						"folderId" : selectedFolder
+					},
+					dataType: "JSON",
+					async: false,
+					success: function(data) {				
+						arrSubFolder   = [];
+						selectedFolder = "";
+						getData();
+					},
+					error: function (xhr, status, e){
+						alert("<spring:message code='ezWebFolder.t134' />");
+					}
+				});				
+			}
 	    </script>
 	</head>
 	<body class="mainbody">	
@@ -446,7 +464,7 @@
 	   										<a class="webfolderBttn"><span onclick="saveChanges();">저장</span></a>	   										
 		   									<a class="webfolderBttn"><span onclick="newFolder();">하위폴더</span></a>
 		   									<a class="webfolderBttn"><span onclick="">이동</span></a>
-		   									<a class="webfolderBttn"><span onclick="">삭제</span></a>
+		   									<a class="webfolderBttn"><span onclick="deleteFolder();">삭제</span></a>
 	   									</div>
 	   									<div style="margin: 0px 176px; display: none;" id="listBttn2">
 	   										<a class="webfolderBttn"><span onclick="saveNewFolder();">저장</span></a>	

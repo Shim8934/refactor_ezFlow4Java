@@ -198,7 +198,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 
 		try {
 			for (String userId : userList) {
-				ezWebFolderAdminService.updateNewAmount(userId, newValue, companyId, tenantId);		
+				ezWebFolderAdminService.updateNewAmount(userId, newValue, companyId, tenantId);
 			}
 			
 			result.put("status", "ok");
@@ -247,17 +247,17 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/webfolderadmin/filehistorylist", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFileHistory(HttpServletRequest request) {
-		String offset    = request.getParameter("offset");
-		String primary   = request.getParameter("primary");		
-		String companyId = request.getParameter("companyId");
-		String startDate = request.getParameter("startDate");
-		String endDate   = request.getParameter("endDate");
-		String fileExt   = request.getParameter("fileExt");
-		String fileName  = request.getParameter("fileName");
-		String userName  = request.getParameter("userName");
+		String offset    = request.getParameter("offset")      != null ? request.getParameter("offset")                        : "";
+		String primary   = request.getParameter("primary")     != null ? request.getParameter("primary")                       : "";		
+		String companyId = request.getParameter("companyId")   != null ? request.getParameter("companyId")                     : "";
+		String startDate = request.getParameter("startDate")   != null ? request.getParameter("startDate")                     : "";
+		String endDate   = request.getParameter("endDate")     != null ? request.getParameter("endDate")                       : "";
+		String fileExt   = request.getParameter("fileExt")     != null ? request.getParameter("fileExt")                       : "";
+		String fileName  = request.getParameter("fileName")    != null ? request.getParameter("fileName")                      : "";
+		String userName  = request.getParameter("userName")    != null ? request.getParameter("userName")                      : "";
 		String searchChk = "1";
-		int tenantId     = Integer.parseInt(request.getParameter("tenantId"));
-		int currPage     = Integer.parseInt(request.getParameter("currentPage"));
+		int tenantId     = request.getParameter("tenantId")    != null ? Integer.parseInt(request.getParameter("tenantId"))    : -1;
+		int currPage     = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
 		int totalRows    = 0;
 		int totalPages   = 0;
 		int pageSize     = 10;
@@ -1154,6 +1154,141 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	@RequestMapping(value="/webfolderadmin/folders/{folderid}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject delCompanyFolder(@PathVariable(value="folderid") String folderId, HttpServletRequest request) throws Exception {
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		JSONObject result   = new JSONObject();		
+		
+		if (folderId.equals("") || tenantId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		logger.debug("FolderId: " + folderId + " || TenantId: " + tenantId);
+
+		try {
+			ezWebFolderService.updateFolderUseStatus(folderId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/webfolderadmin/folders/{folderid}/file-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFileList(@PathVariable(value="folderid") String folderId, HttpServletRequest request) {	
+		String offset    = request.getParameter("offset")      != null ? request.getParameter("offset")                        : "";
+		String primary   = request.getParameter("primary")     != null ? request.getParameter("primary")                       : "";		
+		//String companyId = request.getParameter("companyId")   != null ? request.getParameter("companyId")                     : "";
+		String startDate = request.getParameter("startDate")   != null ? request.getParameter("startDate")                     : "";
+		String endDate   = request.getParameter("endDate")     != null ? request.getParameter("endDate")                       : "";
+		String fileExt   = request.getParameter("fileExt")     != null ? request.getParameter("fileExt")                       : "";
+		String fileName  = request.getParameter("fileName")    != null ? request.getParameter("fileName")                      : "";
+		String userName  = request.getParameter("userName")    != null ? request.getParameter("userName")                      : "";
+		String fileType  = request.getParameter("fileType")    != null ? request.getParameter("fileType")                      : "";
+		String searchChk = "1";
+		int tenantId     = request.getParameter("tenantId")    != null ? Integer.parseInt(request.getParameter("tenantId"))    : -1;
+		int currPage     = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
+		int totalRows    = 0;
+		int totalPages   = 0;
+		int pageSize     = 10;		
+		
+		JSONObject result = new JSONObject();
+		
+		if (folderId.equals("") || tenantId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		logger.debug("FolderId: " + folderId + " || tenantId: " + tenantId);		
+		
+		try {
+			if (startDate.equals("") && endDate.equals("") && fileExt.equals("") && fileName.equals("") && userName.equals("")) {
+				searchChk = "0";
+			}
+			
+			if (searchChk.equals("1")) {
+				if (startDate.equals("")) {
+					//Get logs in three months
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					Date now = new Date();						 
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(now);	
+					cal.add(Calendar.MONTH, -3);
+					
+					startDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+					endDate = commonUtil.getDateStringInUTC(sdf.format(now), offset, true); 
+				}
+				else {
+					String startDateTmp = startDate + " 00:00:00";
+					String endDateTmp   = endDate + " 23:59:59";
+					
+					startDate = commonUtil.getDateStringInUTC(startDateTmp, offset, true);
+					endDate   = commonUtil.getDateStringInUTC(endDateTmp, offset, true);
+				}
+			}
+			
+			logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
+			
+			List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);
+			
+			//Paging
+			if (fileList != null) {
+				totalRows  = fileList.size();
+			}
+			
+			totalPages = (totalRows + pageSize - 1)/pageSize;
+			List<FileVO> renderList = new ArrayList<FileVO>();
+			
+			logger.debug("totalUsers: " + totalRows + " || TotalPages: " + totalPages + " || CurrPage: " + currPage);
+
+			if (totalPages == 0 || totalPages == 1) {				
+				result.put("data", fileList);
+			}
+			else {
+				if (currPage < totalPages) {				
+					int startPoint = (currPage - 1) * pageSize;
+					int endPoint = currPage * pageSize;
+					renderList = fileList.subList(startPoint, endPoint);					
+					result.put("data", renderList);
+				}
+				else {
+					if (currPage > totalPages) {
+						currPage = totalPages;
+					}
+					int startPoint = (currPage - 1) * pageSize;
+					int endPoint = totalRows;				
+					
+					renderList = fileList.subList(startPoint, endPoint);					
+					result.put("data", renderList);
+				}
+			}
+
+			result.put("totalPages", totalPages);
+			result.put("totalRows", totalRows);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		return result;
+	}	
 	
 	private void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, String fileSize, String fileExt, String fileType, int tenantId) throws Exception {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
