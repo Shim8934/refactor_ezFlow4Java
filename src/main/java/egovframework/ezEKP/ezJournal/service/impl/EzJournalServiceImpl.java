@@ -213,7 +213,6 @@ public class EzJournalServiceImpl implements EzJournalService{
 		param.put("key", key);
 		param.put("value", value);
 		List<JournalAuthorVO> userList = ezJournalDAO.getDeptUserList(param);
-		logger.debug("한명ㅁ만 이름 해보자"+userList.get(0).getUserName());
 		logger.debug("getDeptUserList ended");
 		return userList;
 	}

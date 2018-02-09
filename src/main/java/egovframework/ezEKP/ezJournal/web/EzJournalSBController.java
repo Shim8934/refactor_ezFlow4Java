@@ -236,19 +236,34 @@ public class EzJournalSBController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		
+		String key = request.getParameter("key");
 		param.put("tenantId", userInfo.getTenantId());
-		param.put("key", request.getParameter("key"));
+		param.put("key",key );
 		param.put("value", request.getParameter("value"));
 		logger.debug(request.getParameter("key"));
 		logger.debug(request.getParameter("value"));
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/users", param, request,"get",null);
 		String status = resultBody.get("status").toString();
-		
 		if (status.equals("ok")) {		
 			JSONArray userList = (JSONArray) resultBody.get("data");
 			
 			model.addAttribute("userList", userList);
+			
+			String keyword = "";
+			if (key.equals("DEPARTMENT") && userList.size()!=0) {
+				keyword = (String) ((JSONObject)userList.get(0)).get("deptName");
+			} else{
+				keyword = "검색";
+			}
+			logger.debug("키워드키워드키우드***********"+keyword);
+			int userCount = 0;
+			if (userList.size()==0) {
+				keyword = "결과없음";
+			} else {
+				userCount = userList.size();
+			}
+			model.addAttribute("keyword",keyword);
+			model.addAttribute("userCount",userCount);
 		}
 		
 		logger.debug("userList ended");

@@ -53,6 +53,14 @@
 		</script>
 		<style>
 			tr:hover{background:#eee; color:#fff;}
+			@media screen and (-webkit-min-device-pixel-ratio:0)
+			  and (min-resolution:.001dpcm) {
+				xmp{
+					position:relative;
+					top:-38px;
+					left:20px;
+				}
+			}
 		</style>
 	</head>
 	<body class="popup"> 
@@ -70,10 +78,6 @@
 	                        <table style="margin-top: 3px; width: 100%;">
 	                            <tr>
 	                                <td>
-	                                	<div style="padding-left:60px">
-	                                    	<input type="text" name="Input" id="deptkeyword" style="WIDTH: 110px; margin: 0px;" onkeypress="deptsearch_press()" />
-	                                        <a class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezOrgan.t93'/></span></a>
-	                                	</div>
 	                                </td>
 	                                <td>
 	                                    <div style="float:right">
