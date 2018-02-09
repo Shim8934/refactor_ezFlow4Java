@@ -110,7 +110,8 @@
 						currentPage = pPage;
 						
 						makePageSelPage();							
-						renderData(result);						
+						renderData(result);
+						checkedArr = [];
 					},
 	 				error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134' />" + error);

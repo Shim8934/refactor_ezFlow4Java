@@ -196,7 +196,7 @@
 				obj.style.color = "#e04343";
 								
 				//window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&companyId=" + companyId, "right");
-				window.parent.frames["right"].folderId = selectedFolder;
+				window.parent.frames["right"].folderId   = selectedFolder;				
 				window.parent.frames["right"].search_Set("1");				
 			}
 			
