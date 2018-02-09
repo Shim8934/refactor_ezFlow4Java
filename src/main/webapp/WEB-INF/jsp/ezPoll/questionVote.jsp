@@ -352,7 +352,7 @@
 			        	
 			            if (ret == "ADD") {							
 			            	numberOfUnvotedUsers = numberOfUnvotedUsers - 1;			            	
-			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
+			            	document.getElementById("_unVotedNumber").innerHTML = "(" + numberOfUnvotedUsers + ")";
 			            	
 			            	//if (user != curentUser || sessionId != _sessionid) {
 			            	votedUsers = votedUsers + 1;
@@ -361,7 +361,7 @@
 					    }
 			            else {
 			            	numberOfUnvotedUsers = numberOfUnvotedUsers + 1;			            	
-			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
+			            	document.getElementById("_unVotedNumber").innerHTML = "(" + numberOfUnvotedUsers + ")";
 			            	
 			            	//if (user != curentUser || sessionId != _sessionid) {
 		            		votedUsers = votedUsers - 1;
