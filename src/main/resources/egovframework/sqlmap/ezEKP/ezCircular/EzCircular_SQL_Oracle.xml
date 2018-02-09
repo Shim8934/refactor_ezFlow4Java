@@ -75,7 +75,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmCount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmCount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -95,7 +95,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmtotalcount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -260,7 +260,7 @@
             LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmCount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmCount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -280,7 +280,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmtotalcount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -501,7 +501,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmCount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmCount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -521,7 +521,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmtotalcount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -735,7 +735,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmcount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmcount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -755,7 +755,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmtotalcount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -935,7 +935,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmCount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmCount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -955,7 +955,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmtotalcount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -1090,7 +1090,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmCount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmCount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -1110,7 +1110,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmtotalcount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -1322,7 +1322,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmCount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmCount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
@@ -1342,7 +1342,7 @@
 			LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
-					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, BB.circularid, NULL))) AS confirmtotalcount
+					TO_CHAR(COUNT(decode(AA.memberID, BB.memberID, NULL, BB.circularid))) AS confirmtotalcount
 				FROM
 					TBL_CIRCULAR AA
 				JOIN
