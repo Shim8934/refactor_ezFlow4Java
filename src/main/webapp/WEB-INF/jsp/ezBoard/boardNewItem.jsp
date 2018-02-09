@@ -590,8 +590,9 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(nickname));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(nickname));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", "");
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", "");
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", "");
+		            /* 2018.02.09 김기하 새게시물에서 익명게시판 부서가 null로 나오는 것을 공백처리 */
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", MakeXMLString(" "));
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", MakeXMLString(" "));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYID", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", "");
