@@ -338,11 +338,9 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/getFolderList.do", method = RequestMethod.POST)	
 	public String getFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
 		LoginVO userInfo   = commonUtil.userInfo(loginCookie);
-		String offset	   = userInfo.getOffset();
 		String folderId    = request.getParameter("folderId");
 		String folderType  = request.getParameter("folderType");
 		
-		//FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
 		switch(folderType) {
 			case "1":
 				if (userInfo.getRollInfo().indexOf("c=1") == -1) {

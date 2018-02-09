@@ -70,9 +70,32 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminLeft.do")
 	public String webfolderAdminLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {       
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-        //Add more function here
-        
-        
+		
+		if (userInfo.getRollInfo().indexOf("c=1") > -1) {
+			model.addAttribute("company", userInfo.getCompanyID());
+		}
+		else {
+			//Get list of companies
+			List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());		
+			int check = 0;
+			
+			for (int i = 0; i < list.size(); i++) {
+				OrganDeptVO vo = list.get(i);			
+				
+				if (vo.getCn().equals(userInfo.getCompanyID())) {
+					check = 1;
+					break;
+				}
+			}
+			
+			if (check == 1) {
+				model.addAttribute("company", userInfo.getCompanyID());
+			}
+			else {
+				model.addAttribute("company", list.get(0));
+			}
+		}
+		
 		return "admin/ezWebFolder/webfolderAdminLeft";
 	}
 	
@@ -150,7 +173,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	public String webfolderCompanyFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {       
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String folderId	 = request.getParameter("folderId");
-		String companyId = request.getParameter("companyId");
+		//String companyId = request.getParameter("companyId");
         
 		//Get list of companies
 		List<OrganDeptVO> list       = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
@@ -166,7 +189,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("list", resultList);
-		model.addAttribute("userCompany", companyId);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
 		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("folderId", folderId);
         

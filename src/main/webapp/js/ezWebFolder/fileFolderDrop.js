@@ -73,8 +73,8 @@ function onDrop(evt) {
 
 function fileupload() {	
 	var progress_bar_id = '#progress-wrp';
-    var fd = new FormData();    
-    fd.append("folderId", currFolderId); //baonk 2018/01/16
+    var fd              = new FormData();   
+    fd.append("folderId", folderId); //baonk 2018/02/09
 
     for (var i = 0; i < file.length; i++) {
         fd.append("fileToUpload", file[i]);
@@ -115,7 +115,12 @@ function fileupload() {
     	$(progress_bar_id + " .status").text("0%");
         document.getElementById('progress-wrp').style.display = "none";
         
-        renderResult(JSON.parse(res.responseText));
+        if (folderType == null) {
+        	renderResult(JSON.parse(res.responseText));
+        }
+        else {
+        	renderResult2(JSON.parse(res.responseText));
+        }
     });
     
 }
@@ -128,7 +133,13 @@ function renderResult(result) {
 	
 	var jsonArr = result;
 	var len     = jsonArr.length;
-	var tblElmt = document.getElementById("tblFileList");
+	var tblElmt = document.getElementById("tblFileList");	
+	var noData  = document.getElementById("nodataRow");
+	
+	if (noData != null) {
+		tblElmt.deleteRow(1);
+	}
+	
 	var rowsCnt = tblElmt.rows.length - 1;
 	
 	try { 
@@ -198,6 +209,85 @@ function renderResult(result) {
 			objTr.appendChild(objTd7);
 			objTr.appendChild(objTd8);
 			tblElmt.appendChild(objTr);			
+			rowsCnt = rowsCnt + 1;
+		}
+	}
+    catch (e) {
+    	alert("returnvalue :: " + e.description);
+    }
+}
+
+function renderResult2(result) {	
+	if (!result) {
+		alert(strErr);
+		return;
+	}
+	
+	var jsonArr = result;
+	var len     = jsonArr.length;
+	var tblElmt = document.getElementById("tblFileList");
+	var noData  = document.getElementById("nodataRow");
+	
+	if (noData != null) {
+		tblElmt.deleteRow(1);
+	}
+	
+	var rowsCnt = tblElmt.rows.length - 1;
+	
+	try { 
+		for (var i = 0; i < len; i++) {
+			var jsObj  = jsonArr[i];			
+			var objTr  = document.createElement("TR");	
+			var objTd1 = document.createElement("TD");
+			var objTd2 = document.createElement("TD");
+			var objTd3 = document.createElement("TD");
+			var objTd4 = document.createElement("TD");
+			var objTd5 = document.createElement("TD");
+			var objTd6 = document.createElement("TD");
+			var objTd7 = document.createElement("TD");
+			var objTd8 = document.createElement("TD");
+			var objTd9 = document.createElement("TD");
+			
+			objTr.setAttribute("_fileId", jsObj["fileId"]);
+			objTr.setAttribute("_filePath", jsObj["filePath"]);
+			
+			var inputElmt = document.createElement("INPUT");
+			inputElmt.setAttribute("type", "checkbox");
+			inputElmt.setAttribute("value", jsObj["fileId"]);
+			inputElmt.setAttribute("class", "checkBnk");			
+			inputElmt.onchange = function(e){getChecked(this);};
+			objTd1.appendChild(inputElmt);
+			
+			var fileIconElmt = document.createElement("IMG");
+			fileIconElmt.setAttribute("class", "webFolderImg");
+			fileIconElmt.src = jsObj["fileIconUrl"];
+			
+			objTd2.appendChild(fileIconElmt);			
+			objTd3.textContent = jsObj["fileName"];
+			objTd4.textContent = jsObj["fileSize"];
+			
+			if (primary == "1") {
+				objTd5.textContent = jsObj["createName1"];
+			}
+			else {
+				objTd5.textContent = jsObj["createName2"];
+			}			
+			
+			objTd6.textContent = jsObj["createDate"].substring(0, 10);
+			objTd7.textContent = jsObj["updateDate"].substring(0, 10);
+			objTd8.textContent = jsObj["filePosition"];
+			objTd9.textContent = jsObj["downloadCnt"];
+			
+			objTr.appendChild(objTd1);
+			objTr.appendChild(objTd2);
+			objTr.appendChild(objTd3);
+			objTr.appendChild(objTd4);
+			objTr.appendChild(objTd5);
+			objTr.appendChild(objTd6);
+			objTr.appendChild(objTd7);
+			objTr.appendChild(objTd8);
+			objTr.appendChild(objTd9);
+			tblElmt.appendChild(objTr);
 			rowsCnt = rowsCnt + 1;
 		}
 	}

@@ -273,5 +273,31 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 			company.setHasSubFolder(0);
 		}		
 	}
+
+	@Override
+	public void getAllFiles(List<FileVO> fileList, String originalPath, String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, String offset, int tenantId) throws Exception {
+		List<FileVO> subFilelist = getAllFilesInFolder(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);
+				
+		if (subFilelist != null && subFilelist.size() > 0) {
+			for (FileVO file : subFilelist) {
+				if (primary.equals(1)) {
+					file.setFilePosition(originalPath + file.getCreateName1());
+				}
+				else {
+					file.setFilePosition(originalPath + file.getCreateName2());
+				}
+			}
+			
+			fileList.addAll(subFilelist);
+		}
+		
+		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(folderId, "1", tenantId);
+						
+		if (listSubSimpleFolders.size() > 0) {			
+			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
+				getAllFiles(fileList, originalPath + subFolder.getFolderName(), subFolder.getFolderId(), searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);				
+			}
+		}		
+	}
 	
 }

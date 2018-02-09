@@ -16,7 +16,7 @@
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
 			var compFolderId	  = null;
-			var companyId	      = null;
+			var companyId	      = "<c:out value='${company}'/>";			
 			
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -61,18 +61,15 @@
 		    function clearToggle() {		    	
 				arrSubFolder      = [];
 				selectedFolder    = "";
-				compFolderId	  = null;
-				companyId	      = null;				
+				compFolderId	  = null;							
 				var divTree       = document.getElementById("folderTree");			
 				
 		    	while (divTree.hasChildNodes()) {
 		    		divTree.removeChild(divTree.lastChild);
-		    	}
-		    	
+		    	}		    	
 		    }
 		    
 		    function companyFile() {
-		    	companyId = window.parent.frames["right"].document.getElementById("companyList").value;		    	
 		    	getData(companyId);
 		    }
 		    
@@ -112,8 +109,7 @@
 				
 				displaySubFolder(divTree, divComp, result);
 				
-				var spanCompany    = document.getElementById(compFolderId).nextSibling.nextSibling;
-				var selectedFolder = "";
+				var spanCompany = document.getElementById(compFolderId).nextSibling.nextSibling;				
 				getSelected(spanCompany);
 			}
 			

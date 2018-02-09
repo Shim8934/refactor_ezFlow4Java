@@ -381,6 +381,10 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			String[] pFileName         = new String[cnt];
 	        Long[] fileSize            = new Long[cnt];
 	        String useExtension        = ezCommonService.getTenantConfig("USE_FileExtension", tenantId);
+	        FolderVO folder		  	   = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			String folderPath	       = folder.getFolderPath();
+			folderPath			       = folderPath.substring(1, folderPath.length() - 1);
+			String originalPath	       = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
 	        	 
 	        if (((JSONObject)nameArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)nameArray.get(0)).get("originalFilename"))) {	        	
 	            for (int i = 0; i < cnt; i++) {
@@ -440,6 +444,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
             		fileVO.setCreateName1(userName1);
             		fileVO.setCreateName2(userName2);
             		fileVO.setFileId(getMaxFileID(tenantId));
+            		fileVO.setFilePosition(originalPath + pFileName[i]); //baonk 02-09-2018
             		
             		ezWebFolderService.insertFile(fileVO);
             		list.add(fileVO);
@@ -1240,7 +1245,14 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			
 			logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
 			
-			List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);
+			List<FileVO> fileList = new ArrayList<FileVO>();
+			FolderVO folder		  = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			String folderPath	  = folder.getFolderPath();
+			folderPath			  = folderPath.substring(1, folderPath.length() - 1);
+			String originalPath	  = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
+			
+			ezWebFolderService.getAllFiles(fileList, originalPath, folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);			
+			//List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);
 			
 			//Paging
 			if (fileList != null) {
@@ -1289,6 +1301,17 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		
 		return result;
 	}	
+	
+	private String getFolderPath(String[] path, String offset, int tenantId) throws Exception {
+		String result = "/";
+		
+		for (int i = 0; i < path.length - 1; i++) {
+			FolderVO parentFolder = ezWebFolderService.getFolderByFolderId(path[i], offset, tenantId);
+			result += parentFolder.getFolderName1() + "/";
+		}
+		
+		return result;
+	}
 	
 	private void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, String fileSize, String fileExt, String fileType, int tenantId) throws Exception {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
