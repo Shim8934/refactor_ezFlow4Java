@@ -1,6 +1,7 @@
 ﻿
 
 var m_bPrevNext = false;
+var real_href = "";
 
 function get_mail(flag) {
     var Flag;
@@ -1023,14 +1024,19 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
     } catch (e) { }
 }
 
-function mail_link(a){
-	var real_href = "";
-	var link = $("#approv_a").attr("href").split("/");
+function mail_link(){
 	
-	for (var i = 1; i < link.length; i++) {
-		real_href += "/" + link[i];
+	var chk = $("#approv_a").attr("href");
+	$("#approv_a").removeAttr("href");
+	if(chk != "" && chk != undefined) {
+		var link = chk.split("/");
+		
+		for (var i = 1; i < link.length; i++) {
+			real_href += "/" + link[i];
+		}
 	}
 	
 	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(820, 900));
+
 }
 

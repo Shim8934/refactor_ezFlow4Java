@@ -12,7 +12,7 @@
 	    <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />
 	    <style>
 	    	#iYear {
-	    		width:53px;
+	    		width:60px;
 	    	}
 	    	#iMon {
 	    		width:40px;
