@@ -446,15 +446,15 @@
 	    <form id="Form1" method="post">
 		    <h1><spring:message code='ezOrgan.t00005' /><span id="mailBoxInfo"></span></h1>
 		    <div id="mainmenu">
+		    <span><b><spring:message code='ezOrgan.t00006' /></b></span>
+		    <div style="margin-top:5px;margin-bottom:10px">		           
+	            <select id="ListCompany" onchange="company_change()">
+	            	<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+	            </select>
+            </div>
 	        <ul>
-	            <span><b><spring:message code='ezOrgan.t00006' /></b></span> 
-	            <div style="margin-top:5px;margin-bottom:10px">		           
-		            <select id="ListCompany" onchange="company_change()">
-		            	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-		            	</c:forEach>
-		            </select>
-	            </div>
 	            <li><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
 	            <li><span onClick="Permissions_Del('MOD')"><spring:message code='ezOrgan.t00008' /></span></li>
 	            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
