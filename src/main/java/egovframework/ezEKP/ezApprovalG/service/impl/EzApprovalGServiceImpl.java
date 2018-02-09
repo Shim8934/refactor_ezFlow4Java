@@ -11925,7 +11925,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		List<ApprGAprLineVO> getChamJoLineList = ezApprovalGDAO.getChamJoLineList(map);
 
-		if (docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent().equals("1")) {
 			if (getChamJoLineList.size() > 0) {
 				for (int m = 0; m < getChamJoLineList.size(); m++) {
 					map.put("v_APRSTATE", staASmikyul);
@@ -11935,7 +11934,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	                    sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(m).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
 				}
 			}
-		}
 		
 		// 마지막 결재라인인 경우 || 더이상의 추가 작업이 필요없는 AprType인 경우. 문서를 종결
 		if ((dlength - chamJoCnt < 1 && !docXML.getElementsByTagName("APRSTATE").item(0).getTextContent().equals("000")) || lastState.equals(staATAnHam) || lastState.equals(staATGongram)) {

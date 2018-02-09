@@ -23519,6 +23519,8 @@
 			DOCID = #v_DOCID#
 		AND
 			APRTYPE = '007'
+		AND
+			APRSTATE = '001'
 	</select>
 	
 	<update id="EzApprovalG.updateChamJoLineState" parameterClass="Map">
@@ -23534,6 +23536,8 @@
 			TENANT_ID= #v_TENANTID#
 		AND
    		 	COMPANYID = #companyID#
+   		AND
+			APRSTATE = '001'
    </update>
    
    <select  id="EzApprovalG.getLineAprMode" parameterClass="Map" resultClass="int">
