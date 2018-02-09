@@ -6916,8 +6916,15 @@
 							   	</isEmpty>
 							   	<![CDATA[
 							   	 ) A 
+							   	 ]]>
+							   	 <isNotEqual property="alFlag" compareValue="1">
+							   	 <![CDATA[
 							   	 	WHERE 
-							   	 		ROWNUM <= #v_PAGESIZE#) X
+							   	 		ROWNUM <= #v_PAGESIZE#
+							   	 ]]>	
+							   	 </isNotEqual>
+							   	 <![CDATA[
+							   	 		) X
 							   		 WHERE 
 							   		 	X.rnum >= #v_PAGESIZE3#+1
 							   	 ]]>
