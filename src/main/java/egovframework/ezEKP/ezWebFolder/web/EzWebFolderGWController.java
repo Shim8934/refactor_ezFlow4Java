@@ -1251,8 +1251,16 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			folderPath			  = folderPath.substring(1, folderPath.length() - 1);
 			String originalPath	  = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
 			
-			ezWebFolderService.getAllFiles(fileList, originalPath, folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);			
-			//List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);
+			if (folder.getFolderUpper().equals("root")) {
+				ezWebFolderService.getAllFiles(fileList, originalPath, folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);
+			}
+			else {
+				fileList = ezWebFolderService.getAllFilesInFolder(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);
+				
+				for (FileVO file : fileList) {					
+					file.setFilePosition(originalPath + file.getFileName());
+				}
+			}
 			
 			//Paging
 			if (fileList != null) {

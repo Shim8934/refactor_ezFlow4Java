@@ -279,13 +279,8 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		List<FileVO> subFilelist = getAllFilesInFolder(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);
 				
 		if (subFilelist != null && subFilelist.size() > 0) {
-			for (FileVO file : subFilelist) {
-				if (primary.equals(1)) {
-					file.setFilePosition(originalPath + file.getCreateName1());
-				}
-				else {
-					file.setFilePosition(originalPath + file.getCreateName2());
-				}
+			for (FileVO file : subFilelist) {				
+				file.setFilePosition(originalPath + file.getFileName());
 			}
 			
 			fileList.addAll(subFilelist);

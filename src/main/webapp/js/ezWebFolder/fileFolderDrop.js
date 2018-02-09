@@ -277,6 +277,7 @@ function renderResult2(result) {
 			objTd7.textContent = jsObj["updateDate"].substring(0, 10);
 			objTd8.textContent = jsObj["filePosition"];
 			objTd9.textContent = jsObj["downloadCnt"];
+			objTd9.setAttribute("style","text-align: center;");
 			
 			objTr.appendChild(objTd1);
 			objTr.appendChild(objTd2);

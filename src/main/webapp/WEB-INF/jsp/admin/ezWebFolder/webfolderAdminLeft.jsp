@@ -69,7 +69,11 @@
 		    	}		    	
 		    }
 		    
-		    function companyFile() {
+		    function companyFile() {		    	
+		    	if (selectedFolder) {
+		    		return;
+		    	}
+		    	
 		    	getData(companyId);
 		    }
 		    
@@ -109,8 +113,11 @@
 				
 				displaySubFolder(divTree, divComp, result);
 				
-				var spanCompany = document.getElementById(compFolderId).nextSibling.nextSibling;				
-				getSelected(spanCompany);
+				var spanCompany         = document.getElementById(compFolderId).nextSibling.nextSibling;				
+				selectedFolder          = compFolderId;
+				spanCompany.style.color = "#e04343";
+								
+				window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&companyId=" + companyId, "right");				
 			}
 			
 			function displaySubFolder(divTree, divElmt, list) {
@@ -187,8 +194,10 @@
 				
 				selectedFolder  = obj.getAttribute("name");
 				obj.style.color = "#e04343";
-				
-				window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&companyId=" + companyId, "right");
+								
+				//window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&companyId=" + companyId, "right");
+				window.parent.frames["right"].folderId = selectedFolder;
+				window.parent.frames["right"].search_Set("1");				
 			}
 			
 			function getDetailTree(obj) {
