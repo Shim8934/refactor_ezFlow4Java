@@ -176,7 +176,7 @@ public class EzWebFolderController_y {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("tenantId", request.getParameter("tenantId"))
+				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("searchExt", searchExt)
 				.queryParam("searchFileName", searchFileName)
 				.queryParam("searchStartDate", searchStartDate)

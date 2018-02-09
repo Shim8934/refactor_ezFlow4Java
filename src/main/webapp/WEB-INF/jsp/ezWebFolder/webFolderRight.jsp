@@ -130,8 +130,8 @@
 				type:"POST",
 				url : "/ezWebFolder/fileList.do",
 				data : { 
-					 "userID" 	  : "yy9320", 
-					 "tenantId"   : '1',
+// 					 "userID" 	  : "yy9320", 
+// 					 "tenantId"   : '1',
 					 "folderId"   : 'opensol',
 					 "currPage"   : currPage,
 					 "totalPages" : totalPages,

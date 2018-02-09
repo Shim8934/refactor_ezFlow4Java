@@ -117,9 +117,12 @@
 			<![CDATA[
 				file.FILE_NAME LIKE CONCAT(CONCAT('%', #searchFileName#), '%')
        		]]> 
-		</isNotEqual>		
+		</isNotEqual>	
+		<![CDATA[	
 			AND
-				file.TENANT_ID = #tenantId#	 LIMIT #pStart#, #pEnd#
+				file.TENANT_ID = #tenantId#	 
+			ORDER BY file.CREATE_DATE LIMIT #pStart#, #pEnd#
+		]]> 	
 	</select>
     <select id="EzWebFolderDAO_y.getFileToTalCount" resultClass="Integer" parameterClass="Map">   
    		<![CDATA[
