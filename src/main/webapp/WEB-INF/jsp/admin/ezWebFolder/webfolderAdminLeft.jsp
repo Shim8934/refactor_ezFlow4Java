@@ -74,10 +74,10 @@
 		    		return;
 		    	}
 		    	
-		    	getData(companyId);
+		    	getData(companyId, "");
 		    }
 		    
-		    function getData(companyId) {
+		    function getData(companyId, mode) {
 				 $.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/getCompanyFolderTree.do",
@@ -89,7 +89,7 @@
 					async: true,
 					success : function(data) {
 						var result = data.companyTree;						
-						renderData(result);
+						renderData(result, mode);
 					},
 	 				error : function(error) {	 					
 						alert("<spring:message code='ezWebFolder.t134' />" + error);
@@ -97,7 +97,7 @@
 				});		
 			}
 		    
-		    function renderData(result) {
+		    function renderData(result, mode) {
 				if (!result) {
 					alert("<spring:message code='ezWebFolder.t134' />");
 					return;
@@ -113,11 +113,17 @@
 				
 				displaySubFolder(divTree, divComp, result);
 				
-				var spanCompany         = document.getElementById(compFolderId).nextSibling.nextSibling;				
-				selectedFolder          = compFolderId;
-				spanCompany.style.color = "#e04343";
-								
-				window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&companyId=" + companyId, "right");				
+				var spanCompany = document.getElementById(compFolderId).nextSibling.nextSibling;
+				
+				if (mode == "") {
+					selectedFolder          = compFolderId;
+					spanCompany.style.color = "#e04343";
+					window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&companyId=" + companyId, "right");
+				}
+				else {
+					selectedFolder = "";
+					getSelected(spanCompany);
+				}								
 			}
 			
 			function displaySubFolder(divTree, divElmt, list) {

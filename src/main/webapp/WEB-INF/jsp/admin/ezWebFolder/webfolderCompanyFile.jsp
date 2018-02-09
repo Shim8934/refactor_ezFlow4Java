@@ -198,7 +198,7 @@
 		    	} 
 		    }
 		    
-		    function startSearch() {
+		    function startSearch() {		    	
 		    	var sDateVal    = document.getElementById("Sdatepicker").value;
 		    	var eDateVal    = document.getElementById("Edatepicker").value;
 		    	var fileExtVal  = document.getElementById("fileExtVal").value;
@@ -240,6 +240,7 @@
 				fileExtStr	 = "";
 				fileNameStr	 = "";
 				userNameStr  = "";
+				window.parent.frames["left"].getData(document.getElementById("companyList").value, 1);
 		    	search_Set("1");
 		    }
 		    
@@ -414,7 +415,7 @@
 					</tr>
    				</table>
   					<div style="margin: 12px 50px 12px 180px;">
-						<a class="webfolderBttn"><span onclick="">검색</span></a>
+						<a class="webfolderBttn"><span onclick="startSearch();">검색</span></a>
  						<a class="webfolderBttn"><span onclick="openSearchPanel();">취소</span></a>
 					</div>
   			</div>
