@@ -148,7 +148,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(new Date());
-					cal.add(Calendar.DATE, expireTime *-1);
+					cal.add(Calendar.DATE, expireTime * -1);
 					SearchTerm searchTerm = new ReceivedDateTerm(ComparisonTerm.LT, cal.getTime());
 
 					if (deleteUnread.equals("0")) {
@@ -157,6 +157,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 
 					Message[] messages = f.search(searchTerm);
 
+					logger.debug("messages length=" + messages.length);
+					
 					f.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
 					f.close(true);
 				}
