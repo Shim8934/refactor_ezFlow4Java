@@ -422,6 +422,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			            
 			            message = secureMessage;
 	            		
+			            fis.close();
+				        fis = null;
+			            
 					} else {
 						//보낸편지함에 저장
 						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -459,10 +462,11 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					}
 					
 			        logger.debug("Succeed in sending the reserved message.");
-			        	
+			        
 					//파일시스템의 eml파일 삭제
-					f.delete();
-					logger.debug("Succeed in deleting EML file.");
+					if (f.delete()) {
+						logger.debug("Succeed in deleting EML file.");
+					}
 				} else {
 					logger.error("Cannot find EML file.");
 				}
