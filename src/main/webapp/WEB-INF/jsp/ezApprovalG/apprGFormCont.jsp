@@ -29,14 +29,9 @@
 		    window.onload = function () {
 		        Get_Favoritelist();
 		
-// 		        document.getElementById("LocalloadHwp").style.display = "none";
-// 		        document.getElementById("LocalloadMht").style.display = "none";
 		        DocFileType = DocFileType.toLowerCase();
 		        Tree_setconfig();
-		        if (DocFileType == "mht")
-		            document.getElementById("LocalloadHwp").style.display = "none";
-		        else if (DocFileType == "hwp")
-		            document.getElementById("LocalloadMht").style.display = "none";
+		        
 		        var pFormKind;
 		        pDeptID = "${deptID}";
 		
@@ -59,10 +54,6 @@
 		            select.options[select.options.length] = new Option(strLangDocType4, '004');
 		            document.getElementById('FromList').value = "004";
 		            document.getElementById('Localload').style.display = "none";
-		        }
-		        else if (pFormKind == "999") {
-// 		            document.getElementById("LocalloadHwp").style.display = "none";
-// 		            document.getElementById("LocalloadMht").style.display = "none";
 		        }
 		        InitFormCont();
 		
@@ -320,7 +311,6 @@
 		                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes[i].childNodes[0].id;
 		                        Tab1_flag = false;
 		                    }
-		
 		                }
 		            }
 		        }
@@ -548,9 +538,6 @@
 		        </tr>
 		    </table>
 		<div class="btnposition btnpositionNew" >
-<%-- 		  <input type="button" name="LocalloadHwp" id="LocalloadHwp" value="<spring:message code='ezApprovalG.t1544'/>" onClick="return Localload_onclick('HWP')" style="width:210px;"> --%>
-<%-- 		  <input type="button" name="LocalloadMht" id="LocalloadMht" value="<spring:message code='ezApprovalG.t1545'/>" onClick="return Localload_onclick('MHT')" style="width:210px;"> --%>
-		
 		  <a class="imgbtn"><span onClick="return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
 		  <a class="imgbtn"><span onClick="return btncancel_onclick()" ><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>

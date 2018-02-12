@@ -500,9 +500,8 @@ function SendDraftMappingSign(ret)
 			if(ret != "NAME")
 			{
 				HwpCtrl.SetFieldText(psigncell, "");	
-				HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret), 3, 0, 0, true, 2);
+				HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
 				HwpCtrl.AppendFieldText(psigncell, strLang7 + OpinionText, true);
-
 			  	
 			  	signInfo[signCnt] = psigncell;
 			  	
@@ -564,7 +563,7 @@ function SendDraftMappingSign(ret)
 			if(ret != "NAME")
 			{
 				HwpCtrl.SetFieldText(psigncell, "");	
-				HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret), 3, 0, 0, true, 2);
+				HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
 	
 				if (HwpCtrl.CheckFieldExist(pseumyungdatecell)) {
 				    OpinionText = "";
@@ -663,7 +662,7 @@ function openFormUI()
 		parameter[0] = arr_userinfo[4];
 		parameter[1] = "000";				
 		
-		var url = "/myoffice/ezApprovalG/formContainer/getFormCont.aspx?FileType=hwp";
+		var url = "/ezApprovalG/getFormCont.do?fileType=hwp";
 		var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no"
 		var ret = window.showModalDialog(url,parameter,feature);
 		
@@ -672,39 +671,37 @@ function openFormUI()
 		
 		if(pFormHref == "PC")
 		{
-			
 			pReadPC = true;
-			
 			
 			var rtnval = HwpCtrl.LoadFile("", false);
 			
-				lstAttachLink.innerHTML = "";
-				AppendFileAttach = "";
-				AppenAprDocAttachList = "";
-	  			window_onbeforeunload();
-	  			pFormID = ""
-	  			pDocID = ""
-	  			pDraftFlag = "DRAFT";
+			lstAttachLink.innerHTML = "";
+			AppendFileAttach = "";
+			AppenAprDocAttachList = "";
+  			window_onbeforeunload();
+  			pFormID = ""
+  			pDocID = ""
+  			pDraftFlag = "DRAFT";
 
-				pSummery = "";
-				pSpecialRecordCode = "";
-				pPublicityCode = "";
-				pLimitRange = "";
-				pPageNum = "1";
-				cabinetID = "";
-				TaskCode = "";
-				DocNumCode = "";	  		
-				
-				tempSecurity = "";
-				tempKeep = "";
-				tempUrgent = "N";
-				tempPublic = "Y";
-				tempKeyword = "";
-				tempItemCode = "";
-				tempItemName = "";
-				tempdocnumcode = strLang107;
-				
-				tempSecurityDate = "";
+			pSummery = "";
+			pSpecialRecordCode = "";
+			pPublicityCode = "";
+			pLimitRange = "";
+			pPageNum = "1";
+			cabinetID = "";
+			TaskCode = "";
+			DocNumCode = "";	  		
+			
+			tempSecurity = "";
+			tempKeep = "";
+			tempUrgent = "N";
+			tempPublic = "Y";
+			tempKeyword = "";
+			tempItemCode = "";
+			tempItemName = "";
+			tempdocnumcode = strLang107;
+			
+			tempSecurityDate = "";
 				
 			FieldsAvailable(rtnval);
 		}
@@ -712,7 +709,7 @@ function openFormUI()
 		{
 	  		if(pFormHref != "cancel")
 	  		{
-	  			var isTrue = HwpCtrl.LoadFile(document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pFormHref), false);
+	  			var isTrue = HwpCtrl.LoadFile(document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pFormHref), false);
 	  			
 	  			pReadPC = false;
 		  		
@@ -758,21 +755,20 @@ function openFormUI()
 	}
 }
 
-//삭제 보류
-//function Form_check()
-//{
-//  try{
-//      var url = "/myoffice/ezApprovalG/DraftUI/Form_check_ui.aspx";
-//	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
-//	var ret = window.showModalDialog(url,"",feature);
-//	var pCheck = ret;
-//	if(pCheck == "ok")  
-//		return "OK";
-//  }catch(e){
-//	alert("openFormUI()" + e.description);
-//  }			
-//}
-
+function Form_check()
+{
+  try{
+    var url = "/ezApprovalG/formCheckUI.do";
+	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
+	var ret = window.showModalDialog(url, "", feature);
+	var pCheck = ret;
+	
+	if(pCheck == "ok")
+		return "OK";
+  }catch(e){
+	alert("openFormUI()" + e.description);
+  }
+}
 
 function SetBtnStateFalse()
 {
@@ -1458,7 +1454,7 @@ function putSignXML(SignXML)
 				else if (SignType == "PROXY")
 				{
 					HwpCtrl.SetFieldText(SignName, " ");
-					HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(SignCont), 3, 0, 0, true, 2);
+					HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(SignCont), 3, 0, 0, true, 2);
 					HwpCtrl.AppendFieldText(SignName, strLang17, true);
 				}
 				else if (SignType == "IMAGE")  
@@ -1466,7 +1462,7 @@ function putSignXML(SignXML)
 				    var img = SignCont.split("::"); 
 					HwpCtrl.SetFieldText(SignName, "");
 					if(img.length >= 1)
-					    HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(img[0]), 3, 0, 0, true, 2);
+					    HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(img[0]), 3, 0, 0, true, 2);
 					    
 				    if(img.length >= 2)
 				        HwpCtrl.AppendFieldText(SignName, img[1], true);

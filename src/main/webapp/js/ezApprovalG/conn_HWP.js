@@ -6,7 +6,7 @@ function GetDocumentElement(HwpCtrl, CharName)
 	if( !isNaN(fChar) )
 		CharName = "r" + CharName;
 
-	var DocumentInfo = createXmlDom();
+	var DocumentInfo = new ActiveXObject("Microsoft.XMLDOM");
 	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
@@ -14,11 +14,10 @@ function GetDocumentElement(HwpCtrl, CharName)
 	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONNROOT></CONNROOT>");
 	    }
 	    
-		var DocumentKeywordInfo = createXmlDom();
+		var DocumentKeywordInfo = new ActiveXObject("Microsoft.XMLDOM");
 		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
-			alert(getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0)));
 		    return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
 		} else {
 			return "";
@@ -35,7 +34,7 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 	if( !isNaN(fChar) )
 		CharName = "r" + CharName;
 	
-	var DocumentInfo = createXmlDom();
+	var DocumentInfo = new ActiveXObject("Microsoft.XMLDOM");
 	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
@@ -43,7 +42,7 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONNROOT></CONNROOT>");
 	    }
 	    
-		var DocumentKeywordInfo = createXmlDom();
+		var DocumentKeywordInfo = new ActiveXObject("Microsoft.XMLDOM");
 		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
@@ -93,9 +92,9 @@ function ExcuteInfo(pprocessIdx, currTD) {
         return true;
 
     try {
-        var xmlData = createXmlDom();
+        var xmlData = new ActiveXObject("Microsoft.XMLDOM");
         xmlData.async = false;
-        xmlData.load(document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(ConnRootText));
+        xmlData.load(document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(ConnRootText));
     } catch (e) {
         return true;
     }
@@ -156,7 +155,7 @@ function ExcuteInfo(pprocessIdx, currTD) {
     return rtnVal;
 }
 function callQuery(pconnFlag, pconnString, pqueryString, pkeyNodes) {
-    var xmlpara = createXmlDom();
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
     var i;
     for (i = 0; i < pkeyNodes.length; i++) {
         arr_key[i] = getKeyValue(getNodeText(pkeyNodes(i)), prowNum)
@@ -180,7 +179,7 @@ function callQuery(pconnFlag, pconnString, pqueryString, pkeyNodes) {
     return loadXMLString(xmlhttp.responseText);
 }
 function callNoneUIASP(pqueryString, pkeyNodes) {
-    var xmlpara = createXmlDom();
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 
     var objRoot = makeKeyValue(pkeyNodes, "A")
     xmlpara.appendChild(objRoot);
@@ -191,8 +190,8 @@ function callNoneUIASP(pqueryString, pkeyNodes) {
     return loadXMLString(xmlhttp.responseText);
 }
 function callUIASP(pconnString, pqueryString, pkeyNodes) {
-    var xmlsend = createXmlDom();
-    var xmlpara = createXmlDom();
+    var xmlsend = new ActiveXObject("Microsoft.XMLDOM");
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 
     var objRoot = makeKeyValue(pkeyNodes, "A")
     xmlsend.appendChild(objRoot);
@@ -207,8 +206,8 @@ function callUIASP(pconnString, pqueryString, pkeyNodes) {
     return xmlpara;
 }
 function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
-    var xmlsend = createXmlDom();
-    var xmlpara = createXmlDom();
+    var xmlsend = new ActiveXObject("Microsoft.XMLDOM");
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 
     var objRoot = makeKeyValue(pkeyNodes, "A")
     xmlsend.appendChild(objRoot);
@@ -250,8 +249,8 @@ function HwpCtrl_FieldClickNotify(name, fieldtype, access) {
     rtnVal = ExcuteInfo(name, "");
 }
 function checkValidation(xmlPath) {
-    var XMLURL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(xmlPath);
-    var xmlpara = createXmlDom();
+    var XMLURL = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(xmlPath);
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
     xmlpara.async = false;
     xmlpara.load(XMLURL);
 
@@ -326,7 +325,7 @@ function checkValidation(xmlPath) {
         return "FALSE";
 }
 function chkAprLine(objNodes) {
-    var xmldom = createXmlDom();
+    var xmldom = new ActiveXObject("Microsoft.XMLDOM");
     xmldom.async = false;
     xmldom = loadXMLString(TempsaveAprlineinfo);
 
@@ -410,8 +409,8 @@ function checkValid(pField, pValue, pDesc) {
     return true;
 }
 function makeKeyValue(pkeyNodes, flag) {
-    var xmlpara = createXmlDom();
-    var xmlTbl = createXmlDom();
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+    var xmlTbl = new ActiveXObject("Microsoft.XMLDOM");
     var i, j, k, customData, listCol, fieldVal, tblid, listKeyRow, tabObject
     var fieldName, colidx, tblinfoRow, cellValue, listnode
 
@@ -480,7 +479,7 @@ function setData(pobjXml, currTD) {
     var tblinfoNodes, currTR, currTRidx, cellnode, cellidx, isinsTR;
     flag = "false";
 
-    var xmlTbl = createXmlDom();
+    var xmlTbl = new ActiveXObject("Microsoft.XMLDOM");
     if (pobjXml.documentElement)
         flag = GetAttribute(pobjXml.documentElement,"RESULT")
 

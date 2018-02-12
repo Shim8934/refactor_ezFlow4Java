@@ -2968,7 +2968,6 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
         	Complete_Deaft2();
         }
     }
-
 }
 
 function OpenAlertUI_Complete() {

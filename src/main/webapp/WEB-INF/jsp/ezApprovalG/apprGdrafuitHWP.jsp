@@ -25,6 +25,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		<script type="text/javascript" src="/js/showModalDialog.js"></script>
 	    <script type="text/javascript">
 	        var FormHref = "${formURL}";
 	        var DraftFlag = "${draftFlag}";
