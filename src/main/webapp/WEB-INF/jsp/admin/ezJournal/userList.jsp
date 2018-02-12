@@ -12,11 +12,8 @@
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	   	<script type="text/javascript">
-		   	window.onload=function(){
-		   	}
 		</script>
 		<style>
-			tr:hover{background:#eee; color:#fff;}
 		</style>
 	</head>
 		<table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
@@ -37,7 +34,7 @@
 					<th style="font-weight: bold;"><spring:message code='main.t78'/></th>
 		        </tr>
 		        <c:forEach items="${userList}" var="user">
-			        <tr id="${user.userId }">
+			        <tr id="${user.userId }" onclick="setUserAuthorDept('${user.userId }');" class="hover">
 				        <td style="width: 130px;"><c:out value="${user.deptName }" /></td>
 						<td style="width: 90px;" ><c:out value="${user.userName }" /></td>
 						<td style="width: 90px;" ><c:out value="${user.jikwi }" /></td>

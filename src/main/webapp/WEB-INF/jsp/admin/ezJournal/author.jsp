@@ -24,7 +24,7 @@
 				if (userId) {
 					url+="&userId="+userId;
 				}
-				window.open(url, "authorDetail", "width=1100, height=700");
+				window.open(url, "authorDetail", "width=1100, height=600");
 			}
 			
 		    function Cancel_Click() {

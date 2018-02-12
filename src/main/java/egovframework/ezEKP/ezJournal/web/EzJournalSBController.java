@@ -269,4 +269,30 @@ public class EzJournalSBController {
 		logger.debug("userList ended");
 		return "admin/ezJournal/userList";
 	}
+	
+	/**
+	 * 해당사원이 열람 할 수 있는 부서 리스트
+	 */
+	@RequestMapping(value = "/admin/ezJournal/authorDeptList.do")
+	public String authorDeptList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+		logger.debug("authorDeptList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = request.getParameter("userId");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", userInfo.getTenantId());
+		
+		logger.debug("tenantId : "+userInfo.getTenantId());
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/users/"+userId+"/author-depts", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		if (status.equals("ok")) {		
+			JSONArray authorDeptList = (JSONArray) resultBody.get("data");
+			
+			model.addAttribute("authorDeptList", authorDeptList);
+		}
+		
+		logger.debug("authorDeptList ended");
+		return "admin/ezJournal/authorDeptList";
+	}
 }
