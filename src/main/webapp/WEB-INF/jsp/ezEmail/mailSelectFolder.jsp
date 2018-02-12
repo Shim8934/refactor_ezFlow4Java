@@ -75,7 +75,7 @@
 	            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
 	                nodeIdx = arguments[0].nodeIdx;
 	            }
-	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true, false)
+	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false, false)
 	            PostTreeView.putchildxml(nodeIdx, childxml);
 	        }
 	        function btn_Select_onclick() {
