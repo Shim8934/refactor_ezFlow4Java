@@ -163,14 +163,14 @@
 	                if (pFormHref != "") {
 	                    var URL;
 	                    showProgress("<spring:message code='ezApprovalG.t368'/>");
-	                    URL = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pFormHref);
+	                    URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pFormHref);
 	                    var isTrue = HwpCtrl.LoadFile(URL, false);
 	                    FieldsAvailable(isTrue);
 	                } else {
 	                    DraftFlag = "DRAFT";
 	                    pDraftFlag = "DRAFT";
 	                    showProgress("<spring:message code='ezApprovalG.t368'/>");
-	                    var URL = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(sihangURL.replace(".mht", ".hwp"));
+	                    var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(sihangURL.replace(".mht", ".hwp"));
 	                    var isTrue = HwpCtrl.LoadFile(URL, false);
 	                    FieldsAvailable(isTrue);
 	                }
