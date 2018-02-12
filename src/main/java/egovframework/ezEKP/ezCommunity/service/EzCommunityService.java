@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
-import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
@@ -38,7 +37,7 @@ public interface EzCommunityService {
 
 	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
 	
-	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
+	public StringBuffer getReaderList(String pBoardID, String pItemID, String string, String string2, int tenantID, int pageNum, int perCount, String offset) throws Exception;
 
 	public List<CommunityCPollResponseVO> pollETCTableGet(String questionID, int tenantID) throws Exception;
 	
@@ -359,4 +358,6 @@ public interface EzCommunityService {
 	public void sendReplyNoticeMail(String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception;
 
 	public String getOneLineReplyCount(String pBoardID, String pItemID,int tenantId) throws Exception;
+	
+	public int getReaderListCount(String boardID, String itemID, String userID, int tenantID) throws Exception;
 }

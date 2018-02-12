@@ -25,7 +25,7 @@
 		    
 		    window.onload = function () {
 		        if (CrossYN()) {
-		            document.getElementById("OrgListView").style.width = "220px";
+		            document.getElementById("OrgListView").style.width = "400px";
 		            document.getElementById("OrgListView").style.height = "195px";
 		            document.getElementById("SelUserList").style.width = "150px";
 		            document.getElementById("SelUserList").style.height = "195px";

@@ -203,7 +203,7 @@
 	        	
 	        	if (m_PostDate > m_PollStartDate) {
 		            alert("<spring:message code='ezQuestion.t199' />");
-		            document.getElementById("idDatepicker").focus();
+		            document.getElementById("Sdatepicker").focus();
 	    	        return false;
 	        	}
 	    	}
@@ -219,9 +219,18 @@
 	        	if (form_check() == false) {
 	            	return;
 	        	} else {
-	            	document.getElementById("hidStartDate").value = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
-	            	document.getElementById("hidEndDate").value = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
-	            	document.frmCreate.submit();
+	        		var StatusEnd = "${qstUserPermissionVO.endFlg}";
+	        		
+	        		//설문조사가 완료된 후, 설문기간을 늘릴 경우에는 이미 설문조사가 마감되었다는 경고창 생성
+	        		if (StatusEnd == "1" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != L_SearchEndDt) {
+	        			alert("<spring:message code='ezQuestion.t203' />");
+	        			return;
+	        		} else {
+		            	document.getElementById("hidStartDate").value = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+		            	document.getElementById("hidEndDate").value = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+		            	document.frmCreate.submit();	        			
+	        		}
+	        		
 	        	}
 	    	}
 	    	function PollEnd() {
@@ -242,7 +251,7 @@
 	        	var szSMonth = tempS[1];
 	        	var szSDay = tempS[2];
 	        	m_PollStartDate = szSYear + szSMonth + szSDay;
-
+	        	
 	        	if (m_PollStartDate > m_PostDate) {
 		            alert("<spring:message code='ezQuestion.t204'/>");
 		            return;
@@ -472,7 +481,7 @@
             	<input type="hidden" name="hidEndDate" id="hidEndDate" value="${pollEndDate}" />
             	<input type="hidden" name="hidTarget" id="hidTarget" value="${qstUserPermissionVO.responseRange}" /> 
             	<input type="hidden" name="select_YN" id="select_YN" />
-            	<input type="hidden" name="RangeXMLStr" id="RangeXMLStr" value="<%-- <%= Server.HtmlEncode(_SB.ToString()) %> --%>" />
+            	<input type="hidden" name="RangeXMLStr" id="RangeXMLStr" value="${rangeXML }" />
         	</div>
 		</form> 
     	<form name="frmEndPoll" action="/ezQuestion/callEndPoll.do" method="post"> 

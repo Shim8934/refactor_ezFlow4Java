@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -240,6 +242,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String mhtToHtml = ezCommonService.getMHTtoHTML(type, itemID, info.getTenantId(), realPath, request, locale, scheme);
 			LOGGER.debug("mhtToHtml: " + mhtToHtml);			
 	        Document doc = Jsoup.parse(mhtToHtml);	        
+	        Elements elems = doc.select("[src]");
+			
+			if (elems.size() > 0) {
+				for (Element element : elems) {
+					element.attr("src", "/mobile/ezCommon/mFileDown.do?filePath=" + element.attr("src") + "&fileName=*.INLINE.*");
+				}
+			}
 	        String bodyHTML = doc.getElementsByTag("BODY").html();
 			vo.setContent(bodyHTML);
 			
@@ -809,6 +818,60 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("data", "");
 		}
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/week-list/users/{userId}] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [POST] 게시판-일정 연동 등록
+	 */	
+	@RequestMapping(value="/mobile/ezschedule/board-schedules", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject mBoardScheduleInsert(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
+		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/board-schedules] started.");
+		
+		JSONObject result = new JSONObject();
+						
+		try {
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, jsonParam.get("creatorId").toString());
+						
+			jsonParam.put("creatorName", info.getUserName());
+			jsonParam.put("creatorName2", info.getUserName2());			
+			
+			String startDate = jsonParam.get("startDate").toString();
+			String endDate = jsonParam.get("endDate").toString();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	    	Calendar cal = Calendar.getInstance();
+	    	cal.setTime(sdf.parse(endDate));
+	    	
+	    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+	    		cal.add(Calendar.MINUTE, -1);        		
+	    		endDate = sdf.format(cal.getTime());
+	    	}
+	
+	    	startDate = sdf.format(sdf.parse(startDate));
+	    	endDate = sdf.format(sdf.parse(endDate));
+	    	
+	    	String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
+	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);	        
+	        
+	        String realPath = commonUtil.getRealPath(request);
+	        Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
+	        
+	        int resultScheduleID = mScheduleService.insertBoardSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale); 
+	        
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", resultScheduleID);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/board-schedules] ended.");
 		
 		return result;
 	}

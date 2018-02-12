@@ -185,15 +185,27 @@
             listview.DataBind("lvtDoclist");
         }
     }
+    
     function btnPrint_onclick() {
 
-        document.getElementById("saveExcelData").value = getXmlString(Resultxml);
-        if (!CrossYN())
+		var tmpNodeList = SelectSingleNodeNew(Resultxml,"DOCLIST/TOTALDOCCOUNT");
+		var resultCnt = getNodeText(tmpNodeList);
+		
+    	document.getElementById("saveExcelData").value = getXmlString(Resultxml);
+    	
+        if (!CrossYN()) {
             document.getElementById("userAgent").value = "MSIE";
-        document.getElementById("formAgent").target = "saveExcel";
-        document.getElementById("formAgent").submit();
+        }
+
+        if (resultCnt == 0) {
+			alert("<spring:message code='ezApprovalG.pjg03'/>");
+        } else {
+        	document.getElementById("formAgent").target = "saveExcel";
+        	document.getElementById("formAgent").submit();     	
+        }     
 
     }
+    
     function btnSave_onclick() {
         var csvstring;
         csvstring = mskecsvstr();

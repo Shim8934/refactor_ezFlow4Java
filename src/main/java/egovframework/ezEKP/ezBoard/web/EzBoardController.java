@@ -59,8 +59,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
-import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -134,7 +134,8 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		String func = "";
 		String subFunc = "";
-		
+		String qstId = "";
+
 		if (req.getParameter("func") != null && !req.getParameter("func").equals("")) {
 			func = req.getParameter("func");	
 		}
@@ -142,11 +143,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (req.getParameter("subFunc") != null && !req.getParameter("subFunc").equals("")) {
 			subFunc = req.getParameter("subFunc");	
 		}
+		if (req.getParameter("qstId") != null && !req.getParameter("qstId").equals("")) {
+			qstId = req.getParameter("qstId");	
+		}
 		
 		model.addAttribute("func", func);
-		model.addAttribute("subFunc", subFunc);
-
+		model.addAttribute("subFunc", subFunc);	
+		model.addAttribute("qstId", qstId);	
+									
 		logger.debug("boardMain ended");
+
 		return "ezBoard/boardMain";
 	}
 	
@@ -183,20 +189,31 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("boardLeft started");
 
 		String redirectBoardID = "";
-		String redirectBoardGroupID = "";
-		String func = "";
-		String subFunc = "";
-		String photoType = "";
-		String applyFlag = "";
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String strLang = userInfo.getLang();
+        String redirectBoardGroupID = "";
+        String qstId = "";
+        String func = "";
+        String subFunc = "";
+        String photoType = "";
+        String applyFlag = "";     
+        
+        userInfo = commonUtil.userInfo(loginCookie);        
+        
+        String strLang = userInfo.getLang();
 		String pUserID = userInfo.getId();
 		String pDeptID = userInfo.getDeptID();
 		String pCompanyID = userInfo.getCompanyID();
 		String pRollInfo = userInfo.getRollInfo();
 		int tenantID = userInfo.getTenantId();
+		
+        //baonk 추가
+        String pollFlag = "";
+        if (ezCommonService.getTenantConfig("useBallotSystem", tenantID).equalsIgnoreCase("YES")) {
+        	pollFlag = "YES";
+        }
+        else {
+        	pollFlag = "NO";
+        }
+        //end
 		
 		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
 			photoType  = request.getParameter("photoType");
@@ -216,6 +233,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (request.getParameter("func") != null) {
 			func = request.getParameter("func");
+		}
+		
+		if (request.getParameter("qstId") != null) {
+			qstId = request.getParameter("qstId");
 		}
 		
 		if (request.getParameter("subFunc") != null) {
@@ -261,20 +282,23 @@ public class EzBoardController extends EgovFileMngUtil{
 			useQuestion = "YES";
 		}
 		
-		modelMap.addAttribute("userInfo", userInfo);
-		modelMap.addAttribute("resultCount", resultCount);
-		modelMap.addAttribute("resultXML", resultXML);
-		modelMap.addAttribute("func",func);
-		modelMap.addAttribute("subFunc",subFunc);
-		modelMap.addAttribute("photoType",photoType);
-		modelMap.addAttribute("redirectBoardID",redirectBoardID);
-		modelMap.addAttribute("redirectBoardGroupID",redirectBoardGroupID);
-		modelMap.addAttribute("applyFlag",applyFlag);
-		modelMap.addAttribute("questionAdmin", questionAdmin);
-		modelMap.addAttribute("MyBoardTopFlag", ezCommonService.getTenantConfig("MyBoardTopFlag", tenantID));
-		modelMap.addAttribute("useQuestion", useQuestion);
-
+        modelMap.addAttribute("userInfo", userInfo);
+        modelMap.addAttribute("resultCount", resultCount);
+        modelMap.addAttribute("resultXML", resultXML);
+        modelMap.addAttribute("func",func);
+        modelMap.addAttribute("subFunc",subFunc);
+        modelMap.addAttribute("qstId",qstId);        
+        modelMap.addAttribute("photoType",photoType);
+        modelMap.addAttribute("redirectBoardID",redirectBoardID);
+        modelMap.addAttribute("redirectBoardGroupID",redirectBoardGroupID);
+        modelMap.addAttribute("applyFlag",applyFlag);
+        modelMap.addAttribute("questionAdmin", questionAdmin);
+        modelMap.addAttribute("MyBoardTopFlag", ezCommonService.getTenantConfig("MyBoardTopFlag", tenantID));
+        modelMap.addAttribute("useQuestion", useQuestion);
+        modelMap.addAttribute("pollFlag", pollFlag);
+        
 		logger.debug("boardLeft ended");
+
 		return "ezBoard/boardLeft";
 	}
 	
@@ -330,7 +354,20 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 환경설정 호출 Method
 	 */
 	@RequestMapping(value="/ezBoard/boardConfig.do")
-	public String boardConfig() throws Exception {	
+	public String boardConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+        //baonk 추가
+        String pollFlag = "";
+        if (ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        	pollFlag = "YES";
+        }
+        else {
+        	pollFlag = "NO";
+        }
+        //end
+        
+        modelMap.addAttribute("pollFlag", pollFlag);
+
 		return "ezBoard/boardConfig";
 	}
 	
@@ -393,6 +430,138 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("boardFavorite ended");
 		return "ezBoard/boardFavorite";
 	}
+	
+	//baonk added
+	@RequestMapping(value="/ezBoard/boardPollSetting.do")
+	public String boardPollSetting(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie); 
+		String pUserID = userInfo.getId();
+		String listOfTarget = "";
+		String startTime = "";
+		String endTime = "";
+		StringBuffer strXMLRange = new StringBuffer();
+		strXMLRange.append("<RANGE>"); 
+		
+		BoardPollConfigVO boardPollConfigVO = ezBoardService.getPollConfig(pUserID, userInfo.getTenantId());
+		if (boardPollConfigVO == null) {
+			model.addAttribute("hasConfig", 0);
+		}
+		else {
+			model.addAttribute("hasConfig", 1);
+			
+			//Process time
+			startTime = boardPollConfigVO.getDefaultStartTime();
+			endTime = boardPollConfigVO.getDefaultEndTime();
+			
+			//Process target
+	        String[] departIdList = boardPollConfigVO.getTargetDepts().split(",");
+	        String[] userIdList = boardPollConfigVO.getTargetUsers().split(",");
+	        
+	        if (departIdList.length > 0 && !departIdList[0].equals("")) {
+	        	strXMLRange.append("<DEPT>"); 
+	        	
+		        for (String deptID : departIdList) {
+		        	OrganDeptVO organDeptVO = ezOrganService.getDeptInfo(deptID, userInfo.getPrimary(), userInfo.getTenantId());			        	
+		        	strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(organDeptVO.getCn()) + "\" nm=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName()) + 
+		        			"\" nm2=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName2()) + "\">" + commonUtil.cleanValue(organDeptVO.getCn()) + "</DATA>");
+		        	
+		        	if (userInfo.getPrimary().equals("1")) {
+		        		listOfTarget += organDeptVO.getDisplayName1() + ",";
+		        	}
+		        	else {
+		        		listOfTarget += organDeptVO.getDisplayName2() + ",";
+		        	}
+		        	
+		        }
+		        
+		        strXMLRange.append("</DEPT>"); 
+	        }
+	        
+	        if (userIdList.length > 0 && !userIdList[0].equals("")) {
+	        	strXMLRange.append("<MEMBER>"); 
+	        	
+	        	for (String userID : userIdList) {
+	        		LoginVO user = loginService.selectReceiver(userID, userInfo.getTenantId());
+	        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1()) + 
+		        			"\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\">" + commonUtil.cleanValue(user.getId()) + "</DATA>");
+	        		
+		        	if (userInfo.getPrimary().equals("1")) {
+		        		listOfTarget += user.getDisplayName1() + ",";
+		        	}
+		        	else {
+		        		listOfTarget += user.getDisplayName2() + ",";
+		        	}
+	        		
+	        	}		        	
+	        	
+	        	strXMLRange.append("</MEMBER>");
+	        }
+	        
+	        if (listOfTarget.endsWith(",")) {
+	        	listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 1);
+	        }				
+		}
+		strXMLRange.append("</RANGE>");
+		model.addAttribute("startTime", startTime);
+		model.addAttribute("endTime", endTime);
+		model.addAttribute("listOfTarget", listOfTarget);
+		model.addAttribute("xmlRange", strXMLRange.toString());
+		
+		return "ezBoard/boardPoll";
+	}
+	
+	@RequestMapping(value="/ezBoard/boardPollConfigSave.do", method = RequestMethod.POST)
+	public void boardPollConfigSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		int pDeptCnt = 0;
+		int pUserCnt = 0;
+		String targetDepts = "";
+		String targetUsers = "";
+		BoardPollConfigVO boardPollConfigVO = new BoardPollConfigVO();		
+		String range = request.getParameter("rangeSelect");
+		String startTime = request.getParameter("startTime");
+		String endTime = request.getParameter("endTime");
+		
+		if (range != null && !range.equals("") && !range.equals("<RANGE></RANGE>")) {
+			Document doc = commonUtil.convertStringToDocument(range);
+			
+			if (doc.getElementsByTagName("DEPT").item(0) != null) {
+				pDeptCnt = doc.getElementsByTagName("DEPT").item(0).getChildNodes().getLength();
+			}				
+			
+			for (int j = 0; j < pDeptCnt; j++) {
+				String deptID = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(j).getAttributes().getNamedItem("id").getTextContent();
+				targetDepts += deptID + ",";
+			}	
+			
+			if (doc.getElementsByTagName("MEMBER").item(0) != null) {				
+				pUserCnt = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();			
+			}				
+			
+			for (int i = 0; i < pUserCnt; i++) {
+				String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
+				targetUsers += userID + ",";
+			}
+			
+			if (targetDepts.endsWith(",")) {
+				targetDepts = targetDepts.substring(0, targetDepts.length() - 1);
+			}
+			
+			if (targetUsers.endsWith(",")) {
+				targetUsers = targetUsers.substring(0, targetUsers.length() - 1);
+			}
+		}
+				
+		boardPollConfigVO.setTenantId(userInfo.getTenantId());
+		boardPollConfigVO.setUserId(userInfo.getId());
+		boardPollConfigVO.setTargetDepts(targetDepts);
+		boardPollConfigVO.setTargetUsers(targetUsers);
+		boardPollConfigVO.setDefaultStartTime(startTime);
+		boardPollConfigVO.setDefaultEndTime(endTime);
+
+		ezBoardService.saveBoardPollConfig(boardPollConfigVO);
+	}
+	//end
 	
 	/**
 	 * 게시판 부모게시판명 표출 Method
@@ -4425,17 +4594,19 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/itemReadList.do")
 	public String itemReadList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("itemReadList started");
-
-		userInfo = commonUtil.userInfo(loginCookie);
 		
+//		userInfo = commonUtil.userInfo(loginCookie);
+//		StringBuffer resultXML = ezBoardService.getReaderList(boardID, itemID, userInfo.getId(), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+//		model.addAttribute("boardReadList", boardReadList);
+//		model.addAttribute("offset", userInfo.getOffset());
+		
+		//2018-02-05 김보미
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		
-		List<BoardReadVO> boardReadList = ezBoardService.getReaderList(boardID, itemID, userInfo.getId(), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("itemID", itemID);
 		
-		model.addAttribute("boardReadList", boardReadList);
-		model.addAttribute("offset", userInfo.getOffset());
-
 		logger.debug("itemReadList ended");
 		return "ezBoard/boardItemReadList";
 	}
@@ -6871,17 +7042,22 @@ public class EzBoardController extends EgovFileMngUtil{
     	
     	return "json";
     }
+    
     /**
-     * 게시물 댓글 삭제
-     * 강민수92
+     * 2018-02-06 김보미 - 리스트 페이징 처리
      */
-    @RequestMapping(value = "/ezBoard/deleteBoardComment.do")
-    public String deleteBoardComment(@CookieValue("loginCookie") String loginCookie, BoardLineReplyVO boardLineReplyVO, String guBun) throws Exception {
-    	logger.debug("deleteCircularComment started.");
-    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
-    	String result = ezBoardService.deleteOneLineReply(userInfo.getId(), boardLineReplyVO.getReplyID(), guBun, userInfo.getTenantId());
-    	//익명일 경우
-    	logger.debug("deleteCircularComment ended.");
-    	return "json";
-    }
+	@RequestMapping(value = "/ezBoard/itemReadPagingList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String itemReadPagingList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, String boardID, String itemID, int pageNum, int perCount) throws Exception {
+		logger.debug("itemReadPagingList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		StringBuffer resultXML = ezBoardService.getReaderList(boardID,itemID,userInfo.getId(),commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()), userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
+
+		logger.debug("itemReadPagingList ended");
+		return resultXML.toString();
+	}
+    
+    
 }

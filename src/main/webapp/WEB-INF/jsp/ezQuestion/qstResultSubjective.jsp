@@ -52,6 +52,7 @@
 					tableXml += "<td style='width:40px;text-align:center'>";
 					tableXml += SelectSingleNodeValue(nodes[i], 'NO');
 					tableXml += "</td>";
+					
 					if("${publicFlg}"==0){
 						tableXml += "<td style='width:140px'>";
 						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERDEPTNAME');
@@ -70,7 +71,12 @@
 						tableXml += "</td>";
 						
 						
+					} else {
+						tableXml += "<td style='text-align:left'>";
+						tableXml += SelectSingleNodeValue(nodes[i], 'ANSWERSUBJECTIVITY');
+						tableXml += "</td>";
 					}
+					
 					SelectSingleNodeValue(nodes[i], 'OPTION').replace("\r\n","<br>");
 					tableXml += "</tr>";
 					if("${pTotalCnt}" ==0){
@@ -116,7 +122,12 @@
 						tableXml += "</td>";
 						
 						
+					}  else {
+						tableXml += "<td style='text-align:left'>";
+						tableXml += SelectSingleNodeValue(nodes[i], 'ANSWERSUBJECTIVITY');
+						tableXml += "</td>";
 					}
+					
 					SelectSingleNodeValue(nodes[i], 'OPTION').replace("\r\n","<br>");
 					tableXml += "</tr>";
 					if("${pTotalCnt}" ==0){

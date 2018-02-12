@@ -52,8 +52,6 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
@@ -61,6 +59,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstPollItemACLVO;
 import egovframework.ezEKP.ezQuestion.vo.QstRangeSelectVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
@@ -101,12 +100,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
-	
-	@Autowired
-	private EzOrganService ezOrganService;
-	
-	@Autowired
-	private EzOrganAdminService ezOrganAdminService;	
 
 	@Resource(name="EzQuestionService")
 	private EzQuestionService ezQuestionService;
@@ -123,12 +116,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezQuestion/qstList.do")
 	public String qstList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, QstListVO qstListVO) throws Exception{
 		logger.debug("qstList Start");
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String brdID = "5", title = "", responseRange = "", pollStartDate = "", pollEndDate = "";
 		String currPage = "1";
 		int pageSize = 15;
-		qstListVO.setUserID(loginVO.getId());
+		qstListVO.setUserID(userInfo.getId());
+		String adminYN = "N";
 		
 		if(request.getParameter("brdID") != null){
 			brdID = request.getParameter("brdID");
@@ -151,12 +145,16 @@ public class EzQuestionController extends EgovFileMngUtil {
 			currPage = request.getParameter("currPage");
 		}
 		
+		if(userInfo.getRollInfo().contains("c=1") || userInfo.getRollInfo().contains("k=1") || userInfo.getRollInfo().contains("l=1")){ 
+			adminYN = "Y";
+		}
+		
 		qstListVO.setBrdID(Integer.parseInt(brdID));
 		qstListVO.setTitle(title);
 		qstListVO.setResponseRange(responseRange);
-		qstListVO.setPollStartDate(commonUtil.getDateStringInUTC(pollStartDate, loginVO.getOffset(), true));
-		qstListVO.setPollEndDate(commonUtil.getDateStringInUTC(pollEndDate, loginVO.getOffset(), true));
-		qstListVO.setLang(commonUtil.getMultiData(loginVO.getLang(), loginVO.getTenantId()));
+		qstListVO.setPollStartDate(commonUtil.getDateStringInUTC(pollStartDate, userInfo.getOffset(), true));
+		qstListVO.setPollEndDate(commonUtil.getDateStringInUTC(pollEndDate, userInfo.getOffset(), true));
+		qstListVO.setLang(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		qstListVO.setCurrPage(Integer.parseInt(currPage));
 		qstListVO.setPageSize(pageSize);
 		
@@ -167,13 +165,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 		                "&pollEndDate=" + qstListVO.getPollEndDate() +
 		                "&currPage=" + qstListVO.getCurrPage();
 		
-		qstListVO.setTotalCnt(ezQuestionService.getQstListCnt(qstListVO, loginVO.getTenantId()));
+		qstListVO.setTotalCnt(ezQuestionService.getQstListCnt(qstListVO, userInfo.getTenantId()));
 		
 		if(qstListVO.getTotalPage()==0){
 			qstListVO.setTotalPage((qstListVO.getTotalCnt()+qstListVO.getPageSize()-1)/qstListVO.getPageSize());
 		}
 		
-		List<QstListVO> list = ezQuestionService.getQstList(qstListVO, loginVO.getTenantId());		
+		List<QstListVO> list = ezQuestionService.getQstList(qstListVO, userInfo.getTenantId());		
 		StringBuilder strbuilder;
 		
 		for(QstListVO qst : list){
@@ -193,22 +191,30 @@ public class EzQuestionController extends EgovFileMngUtil {
 		int compareEnd;
 		
 		for(QstListVO qst : list){
-			endDate=formatter.parse(commonUtil.getDateStringInUTC(qst.getPollEndDate(), loginVO.getOffset(), false));
+			endDate=formatter.parse(commonUtil.getDateStringInUTC(qst.getPollEndDate(), userInfo.getOffset(), false));
 			compareEnd = endDate.compareTo(sysDate);
 			strbuilder = new StringBuilder();
 			
 			if(compareEnd >= 0){
-				strbuilder.append(egovMessageSource.getMessage("ezQuestion.t562", loginVO.getLocale()));
-				strbuilder.append(qst.getTitle()); 
-				qst.setTitle(strbuilder.toString());
+				//설문조사 즉시 완료 후, 완료된 당일에 정보를 수정하는 경우, 목록에서 진행중으로 뜨지 않도록 설정 
+				if (qst.getEndFlg().equals("1")) {
+					strbuilder.append(egovMessageSource.getMessage("ezQuestion.t563", userInfo.getLocale()));
+					strbuilder.append(qst.getTitle());
+					qst.setTitle(strbuilder.toString());
+				} else {
+					strbuilder.append(egovMessageSource.getMessage("ezQuestion.t562", userInfo.getLocale()));
+					strbuilder.append(qst.getTitle()); 
+					qst.setTitle(strbuilder.toString());
+				}
 			}else{
-				strbuilder.append(egovMessageSource.getMessage("ezQuestion.t563", loginVO.getLocale()));
+				strbuilder.append(egovMessageSource.getMessage("ezQuestion.t563", userInfo.getLocale()));
 				strbuilder.append(qst.getTitle());
 				qst.setTitle(strbuilder.toString());
 			}				
 		}
 		logger.debug("receve="+receve);
 		model.addAttribute("qstListVO", qstListVO);
+		model.addAttribute("adminYN", adminYN);
 		model.addAttribute("list", list);
 		model.addAttribute("receve", receve);
 		
@@ -258,10 +264,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 		if(qstUserPermissionVO.getEndFlg().equals("1")){
 			endPoll = true;
 		}
-		/**UserIDAdmin*/
-		boolean adminYN = false;
+		
+		String adminYN = "N";
 		String rsUserID = qstUserPollItemVO.getUserID();
-		String userIDAdmin = ezQuestionService.getUserIDAdmin(Integer.parseInt(request.getParameter("brdID")));
+		
+		if(loginVO.getRollInfo().contains("c=1") || loginVO.getRollInfo().contains("k=1") || loginVO.getRollInfo().contains("l=1")){ 
+			adminYN = "Y";
+		}
 		
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");		
@@ -287,15 +296,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 					response.getWriter().flush();
 				}
 			}else{
-				adminYN = false;
-				
-				if(userIDAdmin != null){
-					if(userID == userIDAdmin){
-						adminYN = true;
-					}
-				}
-				
-				if(userID.equals(rsUserID) || adminYN == true){
+				if(userID.equals(rsUserID) || adminYN.equals("Y")){
 					if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
 						response.getWriter().write("<script language='javascript' src='/js/XmlHttpRequest.js'></script>");
 						response.getWriter().write("<script language='javascript'>");
@@ -333,14 +334,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
 			}else{
-				adminYN = false;
-				
-				if(userIDAdmin != null){
-					if(userID == userIDAdmin){
-						adminYN = true;
-					}
-				}
-				if (rsUserID.equals(userID) || adminYN == true){
+				if (rsUserID.equals(userID) || adminYN.equals("Y")){
 					response.getWriter().write("<script language='javascript'>");
 					response.getWriter().write("window.location.href='/ezQuestion/qstResult.do?" + receve + "';");
 					response.getWriter().write("</script>");
@@ -374,7 +368,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String resultOpenYN = "";
 		String multiResYN = "";
 		String writeYN = "";
-		String adminYN = "";
+		String adminYN = "N";
 		int responseCnt = 0;
 		
 		if (request.getParameter("brdID") != null){
@@ -384,16 +378,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			itemNo = request.getParameter("itemNo");
 		}
 		
-		adminYN = "N";
-		String userIDAdmin = ezQuestionService.getUserIDAdmin(Integer.parseInt(brdID));
-		
-		if(userIDAdmin != null){
-			if(loginVO.getId().equals(userIDAdmin)){
-				adminYN = "Y";
-			}
-		}
-		
-		if(loginVO.getRollInfo().indexOf("c=1") > -1 || loginVO.getRollInfo().indexOf("k=1") > -1 || loginVO.getRollInfo().indexOf("l=1") > -1){ 
+		if(loginVO.getRollInfo().contains("c=1") || loginVO.getRollInfo().contains("k=1") || loginVO.getRollInfo().contains("l=1")){ 
 			adminYN = "Y";
 		}
 		
@@ -491,14 +476,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}else{
 				multiResponseOK = true;
 			}
-		}
-		
-		String userIDAdmin = ezQuestionService.getUserIDAdmin(Integer.parseInt(request.getParameter("brdID")));
-		boolean adminYN = false;
-		
-		if(userIDAdmin != null){
-			if(userID.equals(userIDAdmin))
-				adminYN = true;
 		}
 		
 		responseCnt = ezQuestionService.resCount(request.getParameter("brdID"),request.getParameter("itemNo"), userInfo.getTenantId());
@@ -884,15 +861,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				"&pollEndDate=" + pollEndDate +
 				"&currPage=" + currPage;
 		logger.debug("receve="+receve);
-		/** EZSP_GETUSERIDADMIN*/
-		boolean adminYN = false;
-		String userIDAdmin = ezQuestionService.getUserIDAdmin(Integer.parseInt(brdID));
 		
-		if(userIDAdmin != null){
-			if(userID.equals(userIDAdmin)){
-				adminYN = true;
-			}
-		}
 		/** EZSP_RESCOUNT*/
 		if(ezQuestionService.resCount(brdID, itemNo, loginVO.getTenantId()) != null){
 			resCnt = ezQuestionService.resCount(brdID, itemNo, loginVO.getTenantId());
@@ -1209,7 +1178,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			vItemID = callGetItemSeq(pBrdID, loginVO);
 		}
 		
-		String pRtn = SaveQuestion(pBrdID, vItemID, doc, pUserID, loginVO);
+		String pRtn = ezQuestionService.saveQuestion(pBrdID, vItemID, doc, pUserID, loginVO);
 		
 		if(!pRtn.equals("OK")) {
 			DeleteQuestion(pBrdID, vItemID, loginVO);
@@ -1225,293 +1194,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		return strXML;
 	}
 
-
-	public String SaveQuestion(String pBrdID, String vItemID, Document doc, String pUserID, LoginVO loginVO) throws Exception {
-		logger.debug("SaveQuestion Start");
-		NodeList nList = null;
-		int dataCount = 0;
-		dataCount = ezQuestionService.getItemNoCnt(Integer.parseInt(pBrdID), Integer.parseInt(vItemID), loginVO.getTenantId());
-		
-		String startDate = commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), loginVO.getOffset(), true);
-		String endDate = commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), loginVO.getOffset(), true);
-		
-		logger.debug("startDate="+startDate);
-		logger.debug("endDate="+endDate);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("subject", doc.getElementsByTagName("SUBJECT").item(0).getTextContent());
-		map.put("content", doc.getElementsByTagName("CONTENT").item(0).getTextContent());
-		map.put("startdate", startDate);
-		map.put("enddate", endDate);
-		map.put("expiredate", doc.getElementsByTagName("EXPIREDATE").item(0).getTextContent());
-		map.put("anonymity", doc.getElementsByTagName("ANONYMITY").item(0).getTextContent());
-		map.put("openresult", doc.getElementsByTagName("OPENRESULT").item(0).getTextContent());
-		map.put("multiresponse", doc.getElementsByTagName("MULTIRESPONSE").item(0).getTextContent());
-		map.put("importance", doc.getElementsByTagName("IMPORTANT").item(0).getTextContent());
-		map.put("target", doc.getElementsByTagName("TARGET").item(0).getTextContent());
-		map.put("brdID", pBrdID);
-		map.put("itemNo", Integer.parseInt(vItemID));
-		map.put("dataCount", dataCount);
-		map.put("userNm", loginVO.getDisplayName1());
-		map.put("userNm2", loginVO.getDisplayName2());
-		map.put("userEmail", loginVO.getEmail());
-		map.put("tenantID", loginVO.getTenantId());
-		
-		ezQuestionService.stepSave(pUserID, map);
-		
-		Map<String, Object> map2 = new HashMap<String, Object>();
-		map2.put("brdID", pBrdID);
-		map2.put("itemNo", Integer.parseInt(vItemID));
-		map2.put("openresult", doc.getElementsByTagName("OPENRESULT").item(0).getTextContent());
-		map2.put("anonymity", doc.getElementsByTagName("ANONYMITY").item(0).getTextContent());
-		map2.put("multiresponse", doc.getElementsByTagName("MULTIRESPONSE").item(0).getTextContent());
-		map2.put("target", doc.getElementsByTagName("TARGET").item(0).getTextContent());
-		map2.put("dataCount", dataCount);
-		map2.put("tenantID", loginVO.getTenantId());
-		ezQuestionService.stepSave2(map2);
-		//대상범위
-		if(doc.getElementsByTagName("TARGET").item(0).getTextContent().equals("1")) {
-			
-			if(doc.getElementsByTagName("RANGE").item(0).getChildNodes().getLength() > 0) {
-				int pDeptCnt = doc.getElementsByTagName("DEPT").item(0).getChildNodes().getLength();
-				
-				for(int i=0; i<pDeptCnt; i++) {
-					QstCompleteVO qstCompleteVO = new QstCompleteVO();
-					String deptID = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
-		        	String deptNm = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm").getTextContent();
-		        	String deptNm2 = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm2").getTextContent();
-		        	qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
-		        	qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
-		        	qstCompleteVO.setGubunFg("0");
-		        	qstCompleteVO.setGubunID(deptID);
-		        	qstCompleteVO.setGubunNm(deptNm);
-		        	qstCompleteVO.setGubunNm2(deptNm2);
-		        	ezQuestionService.callCreateMother(qstCompleteVO, loginVO.getTenantId());
-						
-					String cellList = "department";
-                    String propList = "department;mail;displayname;title;description;company;title";
-                    String pClass = "all";
-                       
-                    String sXML = ezOrganService.getDeptMemberList(deptID, cellList, propList, pClass, loginVO.getPrimary(), loginVO.getTenantId());
-                    
-             		Document xmlDom = commonUtil.convertStringToDocument(sXML);
-         			for(int j=0; j<xmlDom.getElementsByTagName("CELL").getLength(); j++) {
-         				if(!xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent().equals("") && xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(1).getTextContent().equals("user")) {
-         					String userID = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(2).getTextContent();
-         					String userNm = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
-         					String userNm2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
-         					String userEmail = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
-         					String deptID2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent();
-         					String deptNM = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(14).getTextContent();
-         					String deptNM2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
-         					String userPos = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(18).getTextContent();
-         					String userPos2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(19).getTextContent();
-         					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
-                         	qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
-                         	qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
-                         	qstCompleteVO2.setUserID(userID);
-                         	qstCompleteVO2.setUserNm(userNm);
-                         	qstCompleteVO2.setUserNm2(userNm2);
-                         	qstCompleteVO2.setUserEmail(userEmail);
-                         	qstCompleteVO2.setUserDeptID(deptID2);
-                         	qstCompleteVO2.setUserDeptNm(deptNM);
-                         	qstCompleteVO2.setUserDeptNm2(deptNM2);
-                         	qstCompleteVO2.setUserPOS(userPos);
-                         	qstCompleteVO2.setUserPOS2(userPos2);
-                         	ezQuestionService.callInsertPollResponsep1(qstCompleteVO2, loginVO.getTenantId());
-         				}
-         			}
-				}
-				
-				int pUserCnt = 0;
-				
-				if(doc.getElementsByTagName("MEMBER").item(0) != null) {
-					pUserCnt = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();
-				}
-				
-				for(int i=0; i<pUserCnt; i++) {
-					String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
-		        	String userNm = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm").getTextContent();
-		        	String userNm2 = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm2").getTextContent();
-		        	
-                	QstCompleteVO qstCompleteVO = new QstCompleteVO();
-                	qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
-                	qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
-                	qstCompleteVO.setGubunFg("1");
-                	qstCompleteVO.setGubunID(userID);
-                	qstCompleteVO.setGubunNm(userNm);
-                	qstCompleteVO.setGubunNm2(userNm2);
-                	ezQuestionService.callCreateMother(qstCompleteVO, loginVO.getTenantId());
-                	
-                	String propList = "department;mail;displayName;title;description;company";
-                	String pXML = ezOrganAdminService.getPropertyList(userID, propList, loginVO.getPrimary(), loginVO.getTenantId());
-
-					Document infoXML = commonUtil.convertStringToDocument(pXML);
-					String userDeptId = "";
-					//String userGender = "";
-					//String userAge = "";
-					
-					if(infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals("")) {
-						userDeptId = "TOP";
-					} else {
-						userDeptId = infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
-					}
-					String userEmail = infoXML.getElementsByTagName("MAIL").item(0).getTextContent();
-					String userPos = infoXML.getElementsByTagName("TITLE1").item(0).getTextContent();
-					String userPos2 = infoXML.getElementsByTagName("TITLE2").item(0).getTextContent();
-					String userDeptNm = infoXML.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
-					String userDeptNm2 = infoXML.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
-					/*String userJumin = "1111111111111";*/
-					
-					/*if(userJumin.substring(7, 1).equals("1")) {
-						userGender = "1";
-					} else {
-						userGender = "2";
-					}
-					userAge = userJumin.substring(0, 2);
-					
-					if(userAge.equals("11")) {
-						userAge = "NULL";
-					}*/
-					
-					QstCompleteVO qstCompleteVO3 = new QstCompleteVO();
-					qstCompleteVO3.setStrBrdID(Integer.parseInt(pBrdID));
-					qstCompleteVO3.setItemNo(Integer.parseInt(vItemID));
-					qstCompleteVO3.setGubunID(userID);
-					qstCompleteVO3.setGubunNm(userNm);
-					qstCompleteVO3.setGubunNm2(userNm2);
-					qstCompleteVO3.setUserEmail(userEmail);
-					qstCompleteVO3.setUserDeptID(userDeptId);
-					qstCompleteVO3.setUserDeptNm(userDeptNm);
-					qstCompleteVO3.setUserDeptNm2(userDeptNm2);
-					qstCompleteVO3.setUserPOS(userPos);
-					qstCompleteVO3.setUserPOS2(userPos2);
-					qstCompleteVO3.setUserGender("");
-					qstCompleteVO3.setUserAge(0);
-					ezQuestionService.callInsertPollResponseper(qstCompleteVO3, loginVO.getTenantId());
-				}
-			}
-		}
-		
-		int qstCnt = doc.getElementsByTagName("QUESTION").item(0).getChildNodes().getLength();
-
-		for(int i=0; i<qstCnt; i++) {
-			XPath xpath = XPathFactory.newInstance().newXPath();
-			
-			String qstSubject = doc.getElementsByTagName("QUESTIONCONTENT").item(i).getTextContent();
-			String answerType = doc.getElementsByTagName("ANSWERTYPE").item(i).getTextContent();
-			String multiSelect = doc.getElementsByTagName("MULTISELECT").item(i).getTextContent();
-			/*String selViewStart = doc.getElementsByTagName("SELVIEWSTART").item(i).getTextContent();
-			String selViewEnd = doc.getElementsByTagName("SELVIEWEND").item(i).getTextContent();*/
-			
-			int v_quesNo = 1;
-			
-			v_quesNo = ezQuestionService.getQuestionNo(Integer.parseInt(pBrdID), Integer.parseInt(vItemID), loginVO.getTenantId());
-			
-			if(v_quesNo == 0) {
-				v_quesNo = 1;
-			} else {
-				v_quesNo = v_quesNo + 1;
-			}
-			
-			QstCompleteVO qstCompleteVO = new QstCompleteVO();
-			qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
-			qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
-			qstCompleteVO.setQuesNo(v_quesNo);
-			qstCompleteVO.setQuesContent(qstSubject);
-			qstCompleteVO.setAnswerType(Integer.parseInt(answerType));
-			qstCompleteVO.setMultiSelect(multiSelect);
-			
-			ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
-
-			NodeList qstAttachNodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ATTACH//ROW", doc, XPathConstants.NODESET);
-			
-			if (qstAttachNodes!= null && qstAttachNodes.getLength() > 0) {
-				for (int k=0; k < qstAttachNodes.getLength() ; k++) {
-					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
-					qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
-					qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
-					qstCompleteVO2.setQuesNo(v_quesNo);
-					qstCompleteVO2.setAnswerNo(0);
-					qstCompleteVO2.setAttachNo(k+1);
-					qstCompleteVO2.setAttachType(qstAttachNodes.item(k).getChildNodes().item(0).getTextContent());
-					qstCompleteVO2.setAttachName(qstAttachNodes.item(k).getChildNodes().item(1).getTextContent());
-					qstCompleteVO2.setAttachURL(qstAttachNodes.item(k).getChildNodes().item(2).getTextContent());
-					ezQuestionService.pollSaveAttach(qstCompleteVO2, loginVO.getTenantId());
-				}
-			}
-			
-			NodeList nodes1 = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER_ANSWER", doc, XPathConstants.NODESET);
-			if(nodes1.getLength() > 0) {
-				int ansAnsCnt = nodes1.getLength();
-				for(int iAnsAnsCnt=0; iAnsAnsCnt < ansAnsCnt; iAnsAnsCnt++ ) {
-					qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
-					qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
-					qstCompleteVO.setQuesNo(v_quesNo);
-					qstCompleteVO.setAnswerNo(iAnsAnsCnt+1);
-					qstCompleteVO.setAnswerAnswerContent(nodes1.item(iAnsAnsCnt).getChildNodes().item(0).getTextContent().replace("'", "''"));
-					ezQuestionService.insertAnswerAnswerContent(qstCompleteVO, loginVO.getTenantId());
-					
-				}
-			}
-			
-			NodeList nodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER", doc, XPathConstants.NODESET);
-			//NodeList nodes = (NodeList)xpath.evaluate("//QUESTION/ROW/ANSWER", doc, XPathConstants.NODESET);
-				
-			if(nodes.getLength() > 0) {
-				int ansCnt = nodes.getLength();
-				for(int iAns=0; iAns < ansCnt; iAns++ ) {
-					qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
-					qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
-					qstCompleteVO.setQuesNo(v_quesNo);
-					qstCompleteVO.setAnswerNo(iAns+1);
-					qstCompleteVO.setAnswerContent(nodes.item(iAns).getChildNodes().item(0).getTextContent().replace("'", "\'"));
-					ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
-					
-					NodeList nodes2 = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER/ATTACH", doc, XPathConstants.NODESET);
-					logger.debug("nodes2Length="+nodes2.getLength());
-					if(nodes2.getLength() > 0) {
-						nList = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER", doc, XPathConstants.NODESET);
-						//nList = doc.getElementsByTagName("ANSWER");	
-						
-						if(nList.item(iAns).getChildNodes().item(1) != null){
-							if(nList.item(iAns).getChildNodes().item(1).getNodeName().equals("ATTACH")) {
-								int ansAttachCnt = nList.item(iAns).getChildNodes().item(1).getChildNodes().getLength();
-								
-								logger.debug("ansAttachCnt="+ansAttachCnt);
-								for(int aa=0; aa<ansAttachCnt; aa++) {
-									String ansAttachType = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(0).getTextContent();
-									String ansAttachUrl = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(2).getTextContent();
-									if(ansAttachType.equals("3") || ansAttachType.equals("4") || ansAttachType.equals("6") || ansAttachType.equals("7")) {
-									}
-									QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
-									qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
-									qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
-									qstCompleteVO2.setQuesNo(v_quesNo);
-									qstCompleteVO2.setAnswerNo(iAns+1);
-									qstCompleteVO2.setAttachNo(aa+1);
-									//qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(aa).getTextContent().replace("'", "''"));
-									qstCompleteVO2.setAttachName(nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(1).getTextContent().replace("'", "''"));
-									qstCompleteVO2.setAttachURL(ansAttachUrl);
-									qstCompleteVO2.setAttachType(ansAttachType);
-									ezQuestionService.pollSaveAttach(qstCompleteVO2, loginVO.getTenantId());
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		QstCompleteVO qstCompleteVO = new QstCompleteVO();
-		qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
-		qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
-		ezQuestionService.updatePollItem(qstCompleteVO, loginVO.getTenantId());
-		logger.debug("SaveQuestion End");
-		return "OK";
-	}
-	
 	/**
 	 * 전자설문 설문생성 질문삭제 실행 함수
 	 */
@@ -2243,13 +1925,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezQuestion/callDeleteItem.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	/*@RequestMapping(value="/ezQuestion/callDeleteItem.do")
 	@ResponseBody
 	public String qstDeleteItem(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
 		logger.debug("qstDeleteItem started");
 
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		//Document doc = commonUtil.convertRequestToDocument(req);
 		
 		String pBrdID = "";
 		String itemNo = "";
@@ -2288,6 +1969,24 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 		logger.debug("qstDeleteItem ended");
 		return strXML;
+	}*/
+	
+	/**
+	 * 전자설문 설문생성 삭제 실행 함수
+	 */
+	@RequestMapping(value="/ezQuestion/deleteItemList.do")
+	public String deleteItemList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("deleteItemList started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String itemList = request.getParameter("itemList");
+		
+		ezQuestionService.deleteItemList(itemList, commonUtil.getRealPath(request), userInfo.getTenantId());
+
+		logger.debug("deleteItemList ended");
+		
+		return "json";
 	}
 	
 	/**
@@ -3710,14 +3409,7 @@ public class EzQuestionController extends EgovFileMngUtil {
                 "&pollEndDate=" + qstListVO.getPollEndDate() +
                 "&currPage=" + qstListVO.getCurrPage();
 		
-		/*String curDate = EgovDateUtil.getTodayTime();
-		String curDate1 = EgovDateUtil.getCurrentDate("");*/
-		SimpleDateFormat date = new SimpleDateFormat("yyyyMMdd");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		
-		String dateStr = date.format(new Date());
-		//String curDate1 = EgovDateUtil.getCurrentDate("");
-		String curDate = commonUtil.getDateStringInUTC(dateStr, loginVO.getOffset(), true);
+		String curDate = commonUtil.getTodayUTCTime("");
 		
 		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
 		qstUserPollItemVO.setBrdID(Integer.parseInt(brdID));
@@ -3749,13 +3441,42 @@ public class EzQuestionController extends EgovFileMngUtil {
         } else {
         	resultYN = false;
         }
-		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
-		s.setTimeZone(TimeZone.getTimeZone("GMT"));
+        
 		pollStartDate = commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollStartDate(), loginVO.getOffset(), false);
 		pollEndDate = commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false); 
 		String uploadSDate = pollStartDate;
         String uploadEDate = pollEndDate;
         
+        List<QstPollItemACLVO> pollItemAclList = ezQuestionService.getQstPollItemAcl(itemID, loginVO.getTenantId());
+        
+        StringBuilder memberSb = new StringBuilder();
+        StringBuilder deptSb = new StringBuilder();
+        StringBuilder rangeSb = new StringBuilder();
+        
+        for (QstPollItemACLVO vo : pollItemAclList) {
+        	switch (vo.getGubun()) {
+			case "0":
+				deptSb.append("<DATA id=\'" + vo.getGubunID() + "\' nm=\'" + vo.getGubunNM()+ "\' nm2=\'" + vo.getGubunNM2() + "\'>" + vo.getGubunID() + "</DATA>");
+				break;
+
+			case "1":
+				memberSb.append("<DATA id=\'" + vo.getGubunID() + "\' nm=\'" + vo.getGubunNM()+ "\' nm2=\'" + vo.getGubunNM2() + "\'>" + vo.getGubunID() + "</DATA>");
+				break;
+			}
+        }
+        
+        rangeSb.append("<RANGE>");
+        rangeSb.append("<DEPT>");
+        rangeSb.append(deptSb.toString());
+        rangeSb.append("</DEPT>");
+        rangeSb.append("<MEMBER>");
+        rangeSb.append(memberSb.toString());
+        rangeSb.append("</MEMBER>");
+        rangeSb.append("</RANGE>");
+        
+        logger.debug("rangeSb = " + rangeSb.toString());
+        
+        model.addAttribute("rangeXML", rangeSb.toString());
 		model.addAttribute("uploadSDate", uploadSDate);
 		model.addAttribute("uploadEDate", uploadEDate);
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
@@ -3809,7 +3530,14 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPermissionVO.setPublicResultFlg(req.getParameter("hidopenResult"));
 		qstUserPermissionVO.setPublicFlg(req.getParameter("hidanonymity"));
 		qstUserPermissionVO.setMultiResponseFlg(req.getParameter("hidMultiResponse"));
-		qstUserPermissionVO.setEndFlg("1");
+		
+		// 설문 마감 이후에도 정보를 수정할 수 있도록 설정
+		if (req.getParameter("hidendpoll").equals("1")) {
+			qstUserPermissionVO.setEndFlg("1");
+		} else {
+			qstUserPermissionVO.setEndFlg("0");
+		}
+		
 		qstUserPermissionVO.setResponseRange(req.getParameter("hidTarget"));
 		
 		ezQuestionService.changePermission(qstUserPermissionVO, qstUserPollItemVO, loginVO.getTenantId());
@@ -3932,6 +3660,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 		pStep1DataXML.append("<MULTIRESPONSE>" + req.getParameter("hidMultiResponse")+"</MULTIRESPONSE>");
 		pStep1DataXML.append("<IMPORTANT>" + req.getParameter("importance")+"</IMPORTANT>");
 		pStep1DataXML.append("<TARGET>" + req.getParameter("hidTarget")+"</TARGET>");
+		
+		if(req.getParameter("RangeXMLStr") != null) {
+			pStep1DataXML.append(req.getParameter("RangeXMLStr").trim().replace("&quot;", "\"").replace("\"", "\'"));
+		}
+		
 		pStep1DataXML.append("</PARAMETER>");
 		
 		qstStep1VO.setItemNo(itemID);
