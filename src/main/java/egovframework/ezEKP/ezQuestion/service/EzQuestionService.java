@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstPollItemACLVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
@@ -54,6 +55,8 @@ public interface EzQuestionService {
 	public List<QstTempSaveVO> tempSave(int brdID, int itemNo, int tenantID) throws Exception;
 	
 	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int brdID, int itemNo, int tenantID) throws Exception;
+	
+	public List<QstPollItemACLVO> getQstPollItemAcl(String itemID, int tenantID) throws Exception;
 	
 	public String tableAnswerValue(int brdID, int itemNo, int questionNo, int tenantID) throws Exception;
 	

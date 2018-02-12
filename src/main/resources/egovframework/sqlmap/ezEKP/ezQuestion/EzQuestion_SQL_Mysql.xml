@@ -14,6 +14,7 @@
 	<typeAlias  alias="QstResponseVO"			type="egovframework.ezEKP.ezQuestion.vo.QstResponseVO"/>
 	<typeAlias  alias="QstTempSaveVO"			type="egovframework.ezEKP.ezQuestion.vo.QstTempSaveVO"/>
 	<typeAlias  alias="QstDeleteAttachUrlVO"	type="egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO"/>
+	<typeAlias  alias="QstPollItemACLVO"		type="egovframework.ezEKP.ezQuestion.vo.QstPollItemACLVO"/>
 	
 	<resultMap class="QstListVO" id="qstListVO">
 		<result property="brdID"				column="BRD_ID"				/>
@@ -1547,6 +1548,22 @@
 				item_no = #v_pItemNo#
 			AND
 				tenant_id = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzQuestionDAO.getQstPollItemAcl" parameterClass="Map" resultClass="QstPollItemACLVO">
+		<![CDATA[
+			SELECT
+				gubun,
+				gubun_id as gubunid,
+				gubun_NM as gubunnm,
+				gubun_NM2 as gubunnm2
+			FROM
+				TBL_POLL_ITEMACL
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				item_no = #itemID#
 		]]>
 	</select>
 	

@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstPollItemACLVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
@@ -1332,6 +1333,21 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		updatePollItem(qstCompleteVO, loginVO.getTenantId());
 		logger.debug("SaveQuestion End");
 		return "OK";
+	}
+	
+	@Override
+	public List<QstPollItemACLVO> getQstPollItemAcl(String itemID, int tenantID) throws Exception {
+		logger.debug("getQstPollItemAcl started. itemID = " + itemID + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		
+		List<QstPollItemACLVO> list = ezQuestionDAO.getQstPollItemAcl(map);
+		
+		logger.debug("getQstPollItemAcl ended. listSize = " + list.size());
+		
+		return list;
 	}
 }
 
