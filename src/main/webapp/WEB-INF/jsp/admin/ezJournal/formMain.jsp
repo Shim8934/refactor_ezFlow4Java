@@ -8,15 +8,13 @@
 		<title><spring:message code='ezJournal.t3' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-		<link rel="stylesheet" href="/css/main.css" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">		    
-		    //var companylist = "${companyList}";
-		    var companyId = "<c:out value='${userInfo.companyID}' />";
-		    var typeList = [];
-		    
+		    var companyId = "";
+		    var typeId = "";
+		    var pEditor = "<c:out value = '${useEditor}'/>";
+	    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -25,14 +23,16 @@
 		    };
 			
 			$(document).ready(function() {
-			    var firstType = $("#formType").children("li:first");
+			   	// var firstType = $("#formType").children("li:first");
+				companyId = $("#SCompID").val();
+			   	var firstType = $("#formType").find("span:first");
 				getFormList(firstType);
 			});
 	
 			function getFormList(val) {	
-				var typeId = $(val).attr("value");
-				var companyId = $("#SCompID").val();
-				alert(typeId + " " + companyId);
+				typeId = $(val).attr("value");
+				$(".bold").css("font-weight", "normal");
+				$(val).css("font-weight", "bold");
 				
 			    $.ajax({
 		    		type : "POST",
@@ -45,10 +45,8 @@
 		    			var $formList = $("#formList");
 		    			var listhtml = "";
 		    			$formList.html("");
-		    			alert(result.length);
 		    			if (result.length > 0) {
 			    			$.each(result, function(index, item) {
-				    			alert(item.depts[0]);
 				    			listhtml += "<tr>";
 				    			listhtml += "<td>" + (index + 1) + "</td>";
 				    			listhtml += "<td>" + item.formName + "</td>";
@@ -80,7 +78,17 @@
 		    }
 		    
 		    function btnInsForm() {
+		    	alert(typeId + " " + companyId + " " + pEditor);
+		    	var url = "";
+		    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId);
 		    	
+		    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+		    		url = "/admin/ezJournal/insertFormOther.do"	
+		    	} else {
+			    	url = "/admin/ezJournal/insertForm.do";
+		    	}
+		    	
+		    	GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
 		    }
 		</script>
 		<style>
@@ -110,8 +118,18 @@
 			
 			table td {
 				height: 25px;
-				text-align: center;
 				font-size: 15px;
+			}
+			
+			#formType td {
+				text-align: center;
+				font-style: inherit;
+				cursor: pointer;
+				
+			}
+			
+			#formType td:hover {
+				background-color: silver;
 			}
 			
 		</style>
@@ -139,18 +157,18 @@
 		
 		<table style="margin-top:5px;width:1005px;height:500px">
 			<tr>
-		    	<td rowspan="2" style="width:200px; vertical-align:top">
+		    	<td style="width:200px; vertical-align:top">
 		    		<div class="listview">
-						<div style="vertical-align:top; height:500px; width:100%; overflow-x:auto;overflow-y:auto;BORDER:#b6b6b6 1px solid; BACKGROUND-COLOR:#ffffff" >
+						<div style="vertical-align:top; height:500px; width:100%; overflow-x:auto;overflow-y:auto;/* BORDER:#b6b6b6 1px solid; */ BACKGROUND-COLOR:#ffffff" >
 							<%-- <ul class="formType" id="formType">
 								<c:forEach items="${typeList}" var="type">
 									<li value="${type.journaltypeId }" onclick="getFormList(this)"><span><spring:message code='${type.journaltypeId}'/></span></li>
 								</c:forEach>
 							</ul> --%>
-							<table class="formType" style="width: 100%; border-width: 0px 0px 1px 0px;">
+							<table id="formType" class="mainlist" style="width: 100%; border-width: 0px 0px 1px 0px;">
 								<c:forEach items="${typeList}" var="type">
 									<tr>
-										<td><span value="${type.journaltypeId }" onclick="getFormList(this)"><spring:message code='${type.journaltypeId}'/></span></td>
+										<td><span class="bold" value="${type.journaltypeId }" onclick="getFormList(this)"><spring:message code='${type.journaltypeId}'/></span></td>
 									</tr>
 								</c:forEach>
 							</table>
@@ -159,7 +177,7 @@
 				</td>
 		    	<td style="width:800px; padding-left:5px; padding-right:5px;vertical-align:top">
 			    	<div class="listview">
-			        	<div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 470px;overflow-x:auto;overflow-y:auto; padding:0px"  >
+			        	<div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 500px;overflow-x:auto;overflow-y:auto; padding:0px"  >
 			        		<table class="mainlist" style="width: 100%;">
 			        			<thead>
 			        				<tr>
@@ -171,14 +189,13 @@
 			        				</tr>
 			        			</thead>
 			        			<tbody id="formList" style="margin: 0; padding: 0;">
-			        			
 			        			</tbody>
 			        		</table>
 			        	</div>
 			    	</div>
 				</td>    
 		  	</tr>
-		    <tr>
+		    <%-- <tr>
 		    	<td style="padding-left:5px; padding-right:5px; padding-top:5px; vertical-align:top">
 		        	<table class="content">
 			            <tr>
@@ -187,11 +204,11 @@
 		            	</tr>
 		        	</table>
 		    	</td>
-		  	</tr>   
+		  	</tr>    --%>
 		</table>
-	    <script type="text/javascript">
+	    <!-- <script type="text/javascript">
 	    	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		</script>
+		</script> -->
 	</body>
 </html>
 

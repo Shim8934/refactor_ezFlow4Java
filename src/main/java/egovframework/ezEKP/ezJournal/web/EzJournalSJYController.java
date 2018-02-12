@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.JsonUtil;
@@ -34,6 +35,9 @@ public class EzJournalSJYController {
 	
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
 	
 	/**
 	 * 관리자 업무일지 양식리스트 화면 호출 함수
@@ -61,12 +65,14 @@ public class EzJournalSJYController {
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		if (status.equals("ok")) {
 			JSONArray companyList = (JSONArray) result.get("data");
 			
 			model.addAttribute("userInfo", userInfo);
 			model.addAttribute("companyList", companyList);
+			model.addAttribute("useEditor", useEditor);
 		}
 		
 		param.clear();
@@ -82,7 +88,6 @@ public class EzJournalSJYController {
 		
 		if (status.equals("ok")) {
 			JSONArray typeList = (JSONArray) result.get("data");
-			//String typeList = JsonUtil.ListToJson(data);
 			model.addAttribute("typeList", typeList);
 			System.out.println(typeList);
 		}
@@ -120,27 +125,114 @@ public class EzJournalSJYController {
 			JSONArray list = (JSONArray) data.get("fList");
 			String fList = JsonUtil.ListToJson(list);
 			model.addAttribute("fLit", fList);
-			System.out.println(fList);
 			return fList;
 		}
 		
 		logger.debug("getFormList ended");
-		return "";
+		return "json";
 	}
 	
 	
 	/**
-	 * 관리자 업무일지 양식등록 화면 호출 함수
+	 * 관리자 업무일지 양식등록 양식추가, 양식수정 화면호출함수 (폼프로세서)
 	 */
-	@RequestMapping(value = "/admin/ezJournal/addForm.do")
-	public String addForm(HttpServletRequest req, ModelMap model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp) throws Exception {
+	@RequestMapping(value = "/admin/ezJournal/insertForm.do")
+	public String addForm(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("addForm started");
 		
-		userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		logger.debug("addForm ended");
-		return "/admin/ezJournal/addForm";
+		return "/admin/ezJournal/insertForm";
 	}
 	
+	/**
+	 * 관리자 업무일지 양식등록 양식추가, 양식수정 화면호출함수 (CK, TAGFREE, DEXTER, NAMO)
+	 */
+	@RequestMapping(value = "/admin/ezJournal/insertFormOther.do")
+	public String addFormOther(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("addFormOther started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		String typeId = request.getParameter("typeId");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("companyId", companyId);
+		param.put("tenantId", userInfo.getTenantId());
+		param.put("used", "use");
+		
+		String restUrl = "/ezjournal/types";
+		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONArray typeList = (JSONArray) result.get("data");
+			model.addAttribute("typeList", typeList);
+			System.out.println(typeList);
+		}
+		
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("typeId", typeId);
+		model.addAttribute("useEditor", useEditor);
+		
+		logger.debug("addFormOther ended");
+		return "/admin/ezJournal/insertFormOther";
+	}
+	
+	/**
+	 * 업무일지 양식등록 양식등록,양식수정 양식작성기 저장 실행 함수
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezJournal/formSave.do", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public String formSave (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("formSave started.");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		String typeId = request.getParameter("typeId");
+		//String formID = request.getParameter("formID");
+		String formName = request.getParameter("formName");
+		String formDescript = request.getParameter("formDescript");
+		String formContent = request.getParameter("formContent");
+		//String useDept = request.getParameter("useDept");
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		
+		logger.debug("formName:" + formName + ",formDescript:" + formDescript + ",formContent:" + formContent);
+		
+		JSONObject param = new JSONObject();
+		
+		param.put("companyId", companyId);
+		param.put("typeId", typeId);
+		//param.put("formID", formID);
+		param.put("formName", formName);
+		param.put("formDescript", formDescript);
+		param.put("formContent", formContent);
+		//param.put("useDept", useDept);
+		param.put("formWriter", userId);
+		param.put("tenantId", tenantId);
+		
+		
+		
+		String restUrl = "/ezjournal/types/" + typeId + "/forms";
+		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", param);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		}
+		
+		logger.debug("formSave ended.");         
+		
+		return JsonUtil.OneStringToJson("json");
+	}
 	
 }

@@ -129,9 +129,13 @@
 			a.form_id,
 			a.form_name
 		from 
-			tbl_journal_form a join tbl_journal_form_user_dept b on a.form_id = b.form_id
+			tbl_journal_form a left join tbl_journal_form_user_dept b 
+		on 
+			(a.form_id = b.form_id)
 		where 
-			b.dept_id = #deptId#
+			b.dept_id = #deptId# 
+		or 
+			b.form_id is null
 		and
 			a.type_id = #typeId#
 		and
@@ -156,12 +160,12 @@
 	</select>
 	
 	<!-- 양식 등록 하기 -->
-	<insert id="insertForm" parameterClass="map">
+	<insert id="insertJournalForm" parameterClass="map">
 		insert into tbl_journal_form (
-			form_id,	tenant_id,		form_name,		form_content,		type_id,		form_date,		form_writer,		form_info,		company_id
+			tenant_id,		form_name,		form_content,		type_id,		form_date,		form_writer,		form_info,			company_id
 		)
 		values (
-			#formId#,	#tenantId#,		#formName#,		#formContent#,		#typeId#,		now(),			#formWriter#,		#formInfo#,		#companyId#
+			#tenantId#,		#formName#,		#formContent#,		#typeId#,		now(),			#formWriter#,		#formDescript#,		#companyId#
 		)
 	</insert>
 	

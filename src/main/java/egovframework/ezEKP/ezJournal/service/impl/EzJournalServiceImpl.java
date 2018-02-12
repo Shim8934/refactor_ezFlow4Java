@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +84,14 @@ public class EzJournalServiceImpl implements EzJournalService{
 		for (int i = 0; i < fList.size(); i++) {
 			JournalFormInfoVO vo = fList.get(i);
 			map.put("formId", vo.getFormId());
-			vo.setDepts(ezJournalDAO.getFormUseDeptList(map));
+			
+			List<String> useDept = ezJournalDAO.getFormUseDeptList(map);
+			
+			if (useDept.size() < 1) {
+				useDept.clear();
+				useDept.add("전체");
+			}
+			vo.setDepts(useDept);
 			resultList.add(vo);
 		}
 		
@@ -123,25 +131,27 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void insertForm(JSONObject journalFormInfoVO) throws Exception {
+	public void insertForm(JSONObject jsonParam) throws Exception {
 		logger.debug("insertForm started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("typeId", journalFormInfoVO.get("typeId"));
-		map.put("formId", journalFormInfoVO.get("formId"));
-		map.put("formName", journalFormInfoVO.get("formName"));
-		map.put("formInfo", journalFormInfoVO.get("formInfo"));
-		map.put("formContent", journalFormInfoVO.get("content"));
-		map.put("formWriter", journalFormInfoVO.get("formWriter"));
-		map.put("companyId", journalFormInfoVO.get("companyId"));
-		map.put("tenantId", journalFormInfoVO.get("tenantId"));
+		map.put("typeId", jsonParam.get("typeId"));
+		//map.put("formId", jsonParam.get("formId"));
+		map.put("formName", jsonParam.get("formName"));
+		map.put("formDescript", jsonParam.get("formDescript"));
+		map.put("formContent", jsonParam.get("formContent"));
+		map.put("formWriter", jsonParam.get("formWriter"));
+		map.put("companyId", jsonParam.get("companyId"));
+		map.put("tenantId", jsonParam.get("tenantId"));
 		
 		logger.debug("insertForm map" + map);
 		ezJournalDAO.insertForm(map);
 		
-		List<String> depts = (List<String>) journalFormInfoVO.get("depts");
-		for (int i = 0; i < depts.size(); i++) {
-			insertUseDept((String) journalFormInfoVO.get("formId"), depts.get(i));
+		if (jsonParam.get("depts") != null) {
+			JSONArray depts = (JSONArray) jsonParam.get("useDept");
+			for (int i = 0; i < depts.size(); i++) {
+				insertUseDept((String) jsonParam.get("formId"), (String) depts.get(i));
+			}
 		}
 		
 		logger.debug("insertForm ended");

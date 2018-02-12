@@ -946,20 +946,20 @@ public class CommonUtil {
 	 * @param request
 	 * @return
 	 */
-	public JSONObject getJsonFromRestApi(String restUrl, Map<String, Object> param,HttpServletRequest request,String methodType,JSONObject jsonParam){
+	public JSONObject getJsonFromRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
 		logger.debug("getJsonFromRestApi started");
 		String gwServerUrl = config.getProperty("config.journalGWServerURL");
 		String url = gwServerUrl + restUrl ;
-				
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
-		HttpEntity<?> entity = new HttpEntity<>(jsonParam,headers);
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 		
-		if (param!=null) {
+		if (param != null) {
 			for(String key : param.keySet()){
 				builder.queryParam(key, param.get(key));
 			}

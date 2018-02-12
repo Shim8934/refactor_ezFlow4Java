@@ -88,7 +88,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @param map
 	 */
 	public void insertForm(Map<String, Object> map) {
-		insert("insertForm", map);
+		insert("insertJournalForm", map);
 	}
 
 	/**
