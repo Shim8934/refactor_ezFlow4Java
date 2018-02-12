@@ -40,8 +40,8 @@
 <!-- 	<layout visible="false">Insert Layout</layout> -->
 <!-- 	<split/> -->
 <!-- 	<FullScreen visible="false">Full Screen</FullScreen>	 -->
-<!-- 	<split/> -->
-<!-- 	<about visible="false">About X-free Editor</about> -->
+	<split/>
+	<about visible="true">About X-free Editor</about>
 </menu1>
 <menu2>	
 	<inserttable visible="true">Insert Table</inserttable>

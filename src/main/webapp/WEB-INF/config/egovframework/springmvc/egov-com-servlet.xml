@@ -38,6 +38,9 @@
     <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1"
 	    p:viewClass="org.springframework.web.servlet.view.JstlView"
 	    p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
+	
+	<!-- DispatcherServlet이 찾지 못한 URL 들을 톰캣의 default-servlet 설정으로 넘겨준다 -->
+    <mvc:default-servlet-handler/>    
 
     <!-- DispatcherServlet이 찾지 못한 URL 들을 톰캣의 default-servlet 설정으로 넘겨준다 -->
     <mvc:default-servlet-handler/>
@@ -50,6 +53,7 @@
             <mvc:mapping path="/admin/**"/>
             <mvc:mapping path="/ez*/**"/>
             <mvc:exclude-mapping path="/user/login/actionLogin.do"/>
+            <mvc:exclude-mapping path="/user/login/actionLogoutWithRedirectUri.do"/>            
             <mvc:exclude-mapping path="/user/login/login.do"/>
             <mvc:exclude-mapping path="/user/login/changeExPassword.do"/>
             <mvc:exclude-mapping path="/ezApprovalG/excelExportOut.do"/>
@@ -90,13 +94,16 @@
     
     <mvc:annotation-driven/>
 
-	<websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">
-		<websocket:stomp-endpoint path="/websocket" allowed-origins="/*">
+	<websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">		
+	    <websocket:stomp-endpoint path="/hello" >  	    	 	
+			<websocket:sockjs />
+	    </websocket:stomp-endpoint>
+	    <websocket:stomp-endpoint path="/websocket" allowed-origins="/*">
 			<websocket:handshake-interceptors>
 				<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"></bean>
 			</websocket:handshake-interceptors>
 		</websocket:stomp-endpoint>
-		<websocket:simple-broker prefix="/topic, /message"/>
+	    <websocket:simple-broker prefix="/reply, /topic, /message"/>
 	</websocket:message-broker>
-	
+		
 </beans>

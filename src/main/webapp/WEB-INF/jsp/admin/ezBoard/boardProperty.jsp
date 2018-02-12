@@ -759,7 +759,7 @@
 	        </tr>
 	        <%--2011-04 : 한줄 답변 옵션화 처리.--%>
 	        <tr style="${style}">
-	            <th><spring:message code="ezBoard.t324" /></th>
+	            <th><spring:message code="ezBoard.t81" /></th>
 	            <td>
 	            	<c:if test="${model.oneLineReply == '1'}">	                
 	                	<input type="checkbox" id="chkOneLine" onclick="checkboardtype()" checked />

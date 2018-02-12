@@ -26,6 +26,7 @@
 	    </style>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -428,6 +429,9 @@
 		                        document.getElementById("tdNewVol").style.display = "";
 		                    else
 		                        document.getElementById("tdNewVol").style.display = "none";
+		                    
+		                    // btnCabDel 업무관리자, 기록물관리자만 사용
+		                    document.getElementById("btnCabDel").style.display = "";
 		                }
 		                else {
 		                    document.getElementById("tdRegCabinet").style.display = "none";
@@ -499,6 +503,9 @@
 		                if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
 		                    document.getElementById("tdMoveRec").style.display = "";
 		                    document.getElementById("tdRegSepAtt").style.display = "";
+		                    
+		                    // btnCabDel 업무관리자, 기록물관리자만 사용
+		                    document.getElementById("btnCabDel").style.display = "";		                    
 		                }
 		                else {
 		                    document.getElementById("tdMoveRec").style.display = "none";
@@ -536,7 +543,8 @@
 		                    if (deptcdoenode.length > 0)
 		                        tmpChkDeptID = getNodeText(deptcdoenode);
 		                }
-		                if ("<c:out value = '${userInfo.deptID} '/>" == tmpChkDeptID)
+
+		                if ("<c:out value = '${userInfo.deptID}'/>" == tmpChkDeptID) 
 		                    tmpAuthChk = true;
 		
 		                if (g_DeptInfo != "") {
@@ -912,12 +920,12 @@
 		                var top = "";
 		
 		                if ("${userInfo.lang}" == "1") { 
-			                wWeight = 855;
+			                wWeight = 1015;
 			                wHeight = 625;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } else { 
-			                wWeight = 855;
+			                wWeight = 1015;
 			                wHeight = 625;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
@@ -963,7 +971,7 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnRegAttach_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "schedule_select_attendant", GetOpenWindowfeature(565, 350));
+		            var OpenWin = window.open(url, "schedule_select_attendant", GetOpenWindowfeature(705, 400));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		    }
@@ -985,7 +993,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1205, 500));
+		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1100, 500));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1016,7 +1024,7 @@
 		            selectcabinet_cross_dialogArguments[0] = para;
 		            selectcabinet_cross_dialogArguments[1] = btnChangeRecCabinet_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(1205, 500));
+		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(980, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		
 		           
@@ -1218,7 +1226,7 @@
 		            var width = window.screen.availWidth;
 		            var left = (parseInt(width) - 600) / 2;
 		            var top = (parseInt(heigth) - 270) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&pDeptID=&docState=015", "", "height=270px,width=789px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&pDeptID=&docState=015", "", "height=270px,width=770px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    var aprgongramline_cross_dialogArguments = new Array();
@@ -1517,6 +1525,56 @@
 		            }
 		            SortList(OrderCell);
 		        }
+		     var Tab1_SelectID = "";
+			    function Tab1_MouserOver(obj) {
+			        obj.className = "tabover";
+			    }
+		
+			    function Tab1_MouserOut(obj) {
+			        if(Tab1_SelectID != obj.id)
+			            obj.className = "";
+			    }
+		
+			    function Tab1_MouseClick(obj) {		    	
+			        obj.className = "tabon";
+			        if (obj.id != Tab1_SelectID) {
+			            if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
+			                document.getElementById(Tab1_SelectID).className = "";
+		
+			            obj.className = "tabon";
+			            Tab1_SelectID = obj.id;
+			            ChangeTab(obj);
+			        }
+			    }
+			    
+			    function ChangeTab(obj) {
+			        var pSelectTab = obj.id;
+
+			        switch (pSelectTab) {
+			            case "tagsub1": pDocInfoValue='1';Approval_onclick(); break;
+			            case "tagsub2": pDocInfoValue='2';Recipent_onclick(); break;
+			            case "tagsub3": pDocInfoValue='4';Attach_onclick(); break;
+			            case "tagsub4": pDocInfoValue='3';Opinion_onclick(); break;
+			            case "tagsub5": pDocInfoValue='5';Circulation_onclick(); break;
+			        }
+			    }
+			    
+		     function Tab1_NewTabIni(pTabNodeID) {
+			        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
+			            if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
+			                if (document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).nodeName == "SPAN") {
+			                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseover = function () { Tab1_MouserOver(this); };
+			                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };
+			                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onclick = function () { Tab1_MouseClick(this); };
+
+			                    if (i == 1) {
+			                        document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).className = "tabon";
+			                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).id;
+			                    }	
+			                }
+			            }
+			        }
+			    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1554,7 +1612,7 @@
 	            <li id="tdModifyCab" style="Display: None"><span id="ModifyCab" onclick="return btnChangeCabinetInfo_onclick()"><spring:message code='ezApprovalG.t269'/></span></li>
 	            <li id="tdSearchCab"><span id="SearchCab" onclick="return SearchCabinet('0')"><spring:message code='ezApprovalG.t111'/></span></li>
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
-	            <li ><span id="btnCabDel" onclick="return DeleteCab();"><spring:message code='ezApprovalG.t266'/></span> </li>
+	            <li ><span id="btnCabDel" onclick="return DeleteCab();" style="Display: None"><spring:message code='ezApprovalG.t266'/></span> </li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
 	            <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
@@ -1607,23 +1665,34 @@
 	    <br>
 	    <div id="tblPageRayer"></div>
 	    <div id="trSubInfoTab">
-	        <div id="tabnav" style="width: 100%">
+	        <%-- <div id="tabnav" style="width: 100%">
 	            <ul>
-	                <li id="tagsub1"><span onclick="MM_swapImagesub('1', event);Approval_onclick()"><spring:message code='ezApprovalG.t1769'/></span></li>
-	                <li id="tagsub2"><span onclick="MM_swapImagesub('2', event);Recipent_onclick()"><spring:message code='ezApprovalG.t950'/></span></li>
-	                <li id="tagsub3"><span onclick="MM_swapImagesub('3', event);Attach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
-	                <li id="tagsub4"><span onclick="MM_swapImagesub('4', event);Opinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+	                <li id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1', event);Approval_onclick()"><spring:message code='ezApprovalG.t1769'/></span></li>
+	                <li id="tagsub2"><span onclick="pDocInfoValue='2';MM_swapImagesub('2', event);Recipent_onclick()"><spring:message code='ezApprovalG.t950'/></span></li>
+	                <li id="tagsub3"><span onclick="pDocInfoValue='3';MM_swapImagesub('3', event);Attach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
+	                <li id="tagsub4"><span onclick="pDocInfoValue='4';MM_swapImagesub('4', event);Opinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+	                <c:if test="${approvalFlag != 'G'}">
+					    <li id="tagsub5"><span onClick="MM_swapImagesub('5', event);Circulation_onclick()" ><spring:message code='ezApprovalG.hyj24'/></span></li>
+				    </c:if>
 	            </ul>
-	        </div>
+	        </div> --%>
+	        <div id="tabnav" class="portlet_tabpart01" style="width:100%">
+				<div class="portlet_tabpart01_top" id="tab1">
+				    <p><span id="tagsub1"><spring:message code='ezApprovalG.t1769'/></span></p>
+				    <p><span id="tagsub2"><spring:message code='ezApprovalG.t950'/></span></p>
+				    <p><span id="tagsub3"><spring:message code='ezApprovalG.t56'/></span></p>
+				    <p><span id="tagsub4"><spring:message code='ezApprovalG.t55'/></span></p>
+			  	</div>	
+			</div>
 	
 	        <div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
-	            <div id="lvtDetail" style="border: 0;" align="center">
+	            <div id="lvtDetail" style="border: 0;"></div>
 	        </div>
 	    </div>
-	
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-	        selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+	        //selToggleList(document.getElementById("tabnav"), "p", "span", "1");
+	        Tab1_NewTabIni("tab1");
 	    </script>
 	
 	    <div id="tdDebug"></div>

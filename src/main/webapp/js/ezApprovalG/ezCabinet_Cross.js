@@ -985,7 +985,7 @@ function btnViewRecHistory_onclick() {
 
         viewrechistory_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewRecHistory_Cross", GetOpenWindowfeature(1015, 480));
+        var OpenWin = window.open(url, "ViewRecHistory_Cross", GetOpenWindowfeature(1017, 480));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -1143,7 +1143,7 @@ function ViewDoc_onclick_Complete(Rtn) {
         OpenAlertUI(pAlertContent);
         return "";
     }
-    else if (Rtn == "True") {
+    else if (Rtn == "True" || Rtn == "TRUE") {
         var DocList = new ListView();          
         DocList.LoadFromID("DocList");
         var tr = DocList.GetSelectedRows();
@@ -1375,7 +1375,7 @@ function btnSearchRec_onclick(opnOption,opentype) {
         searchrec_cross_dialogArguments[1] = btnSearchRec_onclick_Complete;
 
         if (opentype == "OPEN") {
-            var OpenWin = window.open(url, "SearchRec_Cross", GetOpenWindowfeature(470, 370));
+            var OpenWin = window.open(url, "SearchRec_Cross", GetOpenWindowfeature(623, 370));
             try { OpenWin.focus(); } catch (e) { }
         }
         else
@@ -1385,11 +1385,11 @@ function btnSearchRec_onclick(opnOption,opentype) {
         var feature;
         if (opnOption == "1") {
             feature = "dialogWidth:470px;dialogHeight:420px;scroll:no;resizable:no;status:no;help:no;edge:sunken";
-            feature = feature + GetShowModalPosition(470, 420);
+            feature = feature + GetShowModalPosition(623, 420);
         }
         else {
             feature = "dialogWidth:470px;dialogHeight:410px;scroll:no;resizable:no;status:no;help:no;edge:sunken";
-            feature = feature + GetShowModalPosition(470, 410);
+            feature = feature + GetShowModalPosition(623, 410);
         }
         var rtnVal = window.showModalDialog(url, para, feature);
 
@@ -1517,7 +1517,7 @@ function SearchCabinet(pInitFlag) {
     searchcab_cross_dialogArguments[1] = SearchCabinet_Complete;
 
     if (pInitFlag == "0") {
-        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(800, 455));
+        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(815, 455));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -1625,6 +1625,10 @@ function makePageSelPage(pTotalCnt) {
     }
     else {
         MaxNum = totalPage;
+    }
+    
+    if(totalPage == "0") {
+    	MaxNum = 1;
     }
     for (i = startNum; i <= MaxNum; i++) {
         if (i == pageNum) {

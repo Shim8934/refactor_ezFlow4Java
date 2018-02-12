@@ -40,8 +40,8 @@
 <!-- 	<layout visible="false">레이아웃</layout> -->
 <!-- 	<split/> -->
 <!-- 	<FullScreen visible="false">전체화면</FullScreen> -->
-<!-- 	<split/> -->
-<!-- 	<about visible="false">제품 정보</about> -->
+	<split/>
+	<about visible="true">제품 정보</about>
 </menu1>
 <menu2>
 	<inserttable visible="true">표 삽입</inserttable>
@@ -131,7 +131,7 @@
 		<Bullets visible="true">글머리 기호</Bullets>
 	</group>
 	<AdminLock visible="true">쓰기영역 설정</AdminLock>
-	<AdminUnlock visible="true">쓰기영역 해제</AdminUnlock>		
+	<AdminUnlock visible="true">쓰기영역 해제</AdminUnlock>
 <!-- 	<Userguide visible="false">사용자 도움말</Userguide> -->
 </menu3>
 </xfeEditor>

@@ -249,18 +249,17 @@
 	  </LISTVIEWDATA>
 	</xml>
 	<form id="Form1" method="post">
-	  <h1><spring:message code='ezEmail.t58' /></h1>
-	  <div id="mainmenu">
-	    <ul>
-	      <span><b> <spring:message code='ezEmail.t59' /></b></span> 
-	      <select name="ListCompany" id="ListCompany" onchange="company_change()">
-	      	${listCompany}
-	      </select>
-	      <br /><br />
-	      <li><span onClick="add_dl()"><spring:message code='ezEmail.t60' /></span></li>
-	      <li><span onClick="mod_dl()"><spring:message code='ezEmail.t61' /></span></li>
-	      <li><span onClick="del_dl()"><spring:message code='ezEmail.t62' /></span></li>
-	    </ul>
+		<h1><spring:message code='ezEmail.t58' /></h1>
+		<div id="mainmenu">
+			<span><b> <spring:message code='ezEmail.t59' /></b></span>
+			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+	      		${listCompany}
+	      	</select>
+			<ul>
+				<li><span onClick="add_dl()"><spring:message code='ezEmail.t60' /></span></li>
+		    	<li><span onClick="mod_dl()"><spring:message code='ezEmail.t61' /></span></li>
+		      	<li><span onClick="del_dl()"><spring:message code='ezEmail.t62' /></span></li>
+		    </ul>
 	  </div>
 	  <script type="text/javascript">
 	      selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

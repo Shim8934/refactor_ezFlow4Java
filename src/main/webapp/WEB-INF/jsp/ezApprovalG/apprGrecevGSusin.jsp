@@ -118,6 +118,7 @@
 		    var pADMIN = "N";
 		    var signImageType = "${signImageType}";
 		    var curDocNum = "";
+		    var isReceived = "${isReceived}";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -126,6 +127,11 @@
 				} else {
 					$(".approvalG").show();
 					$(".approvalS").hide();
+				}
+				
+				if (isReceived != 0) {
+					alert("<spring:message code='ezApprovalG.pjg04'/>");
+					window.close();
 				}
 			});
 		    
@@ -345,6 +351,25 @@
 		    }
 		    function btnSendDraft_onclick() {
 		        try {
+		        	
+			    	//접수된 문서인지 확인하기
+			    	$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/isReceivedDoc.do",
+			    		data : {
+			    			docID : pDocID
+			    		},
+			    		success : function(result) {
+			    			if (result != 0) {
+			    				alert("<spring:message code='ezApprovalG.pjg04'/>");
+			    				window.close();
+			    			}
+			    		}
+			    		
+			    	});		
+			    	
 		            var RecevState = getDocRecevState();
   
 		            if (isReDraft != "Y") {
@@ -812,7 +837,7 @@
 		        ezreceiveassignui_cross_dialogArguments[0] = parameter;
 		        ezreceiveassignui_cross_dialogArguments[1] = btnAssign_onclick_Complete;
 		
-		        DivPopUpShow(510, 375, "/ezApprovalG/ezReceiveAssignUI.do"); //460
+		        DivPopUpShow(605, 375, "/ezApprovalG/ezReceiveAssignUI.do"); //460
 		    }
 		
 		    function btnAssign_onclick_Complete(ret) {
@@ -913,6 +938,7 @@
 		        }
 		    }
 		    function btnRJunkyul_onclick() {
+		    	
 		        var RecevState = getDocRecevState();
 		        if (RecevState != "011" && RecevState != "012" && RecevState != "014") {
 		            if (RecevState == "015") {
@@ -975,7 +1001,7 @@
 		        Resultxml = Resultxml + "<DATA name='SMemberJobTitle'>" + MakeXMLString(arr_userinfo[14]) + "</DATA>";
 		
 		        Resultxml = Resultxml + "</ROW></ROWS></LISTVIEWDATA>";
-		        
+
 		        $.ajax({
             		type : "POST",
             		dataType : "text",
@@ -1196,6 +1222,23 @@
 		    }
 		    var ezapprovalinfo_dialogArguments = new Array();
 		    function btnApprovalInfo() {
+		    	var chkReceivedDoc = 0;
+		    	
+		    	//접수된 문서인지 확인하기
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/isReceivedDoc.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success : function(result) {
+		    			chkReceivedDoc = result;
+		    		}
+		    		
+		    	});
+		    	
 		        isExtDoc = message.DocumentBodyGetAttribute("EXTDOC");
 		
 		        if (isExtDoc != "Y") isExtDoc = "N";
@@ -1244,8 +1287,14 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
-		        try { OpenWin.focus(); } catch (e) { }
+		        if (chkReceivedDoc != 0) {
+		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
+		        	window.close();
+		        } else {
+		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        	try { OpenWin.focus(); } catch (e) { }
+		        }
+
 		    }
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {

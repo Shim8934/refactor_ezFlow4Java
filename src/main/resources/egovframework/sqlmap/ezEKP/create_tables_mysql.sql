@@ -8166,10 +8166,11 @@ DROP TABLE IF EXISTS `tbl_vote_question`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_vote_question` (
-  `ID` mediumint(9) NOT NULL,
+`ID` mediumint(9) NOT NULL,
   `TENANT_ID` mediumint(9) NOT NULL,
   `CONTENT` longtext,
   `MULTI_SELECT` tinyint(4) NOT NULL DEFAULT '0',
+  `CREATE_DATE` varchar(38) NOT NULL,
   `START_DATE` varchar(38) NOT NULL,
   `END_DATE` varchar(38) NOT NULL,
   `TARGET` tinyint(4) NOT NULL DEFAULT '0',
@@ -8239,6 +8240,45 @@ CREATE TABLE `tbl_vote_user_and_question` (
   PRIMARY KEY (`QST_ID`,`USER_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_vote_configuration`
+--
+
+DROP TABLE IF EXISTS `tbl_vote_configuration`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_vote_configuration` (
+  `USER_ID` varchar(100) NOT NULL,
+  `START_TIME` varchar(50) NOT NULL,
+  `END_TIME` varchar(50) NOT NULL,
+  `TARGET_DEPTS` varchar(500) DEFAULT NULL,
+  `TARGET_USERS` varchar(500) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`USER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary view structure for view `v_ajsb_emp`
+--
+
+DROP TABLE IF EXISTS `v_ajsb_emp`;
+/*!50001 DROP VIEW IF EXISTS `v_ajsb_emp`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `v_ajsb_emp` AS SELECT 
+ 1 AS `OLDEMP_ID`,
+ 1 AS `EMP_ID`,
+ 1 AS `DISPLAYNAME`,
+ 1 AS `STATE_CD`,
+ 1 AS `ORG_ID`,
+ 1 AS `ORG_NM`,
+ 1 AS `TITLE`,
+ 1 AS `COMTEL_NO`,
+ 1 AS `TEL_NO`,
+ 1 AS `EMAIL`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Temporary view structure for view `vaprdoingdoclist`
