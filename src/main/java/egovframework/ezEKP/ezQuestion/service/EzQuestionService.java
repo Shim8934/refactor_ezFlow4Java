@@ -54,7 +54,7 @@ public interface EzQuestionService {
 	
 	public List<QstTempSaveVO> tempSave(int brdID, int itemNo, int tenantID) throws Exception;
 	
-	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int brdID, int itemNo, int tenantID) throws Exception;
+	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int itemNo, int tenantID) throws Exception;
 	
 	public List<QstPollItemACLVO> getQstPollItemAcl(String itemID, int tenantID) throws Exception;
 	
@@ -187,5 +187,7 @@ public interface EzQuestionService {
 	public void updateTblPollPermission(String endFlag, int brdID, int itemNo, int tenantID) throws Exception;
 
 	public String saveQuestion(String pBrdID, String vItemID, Document doc, String pUserID, LoginVO loginVO) throws Exception;
+
+	public void deleteItemList(String itemList, String realPath, int tenantID) throws Exception;
 	
 }
