@@ -233,6 +233,7 @@
 			            parent.mtg_onClick(pGubun);
 			        }
 
+
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">

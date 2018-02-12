@@ -1300,6 +1300,7 @@
 		        	OpenUrl +=  "&isUsed=" + isUsed + "&beforeDocID=" +beforeDocID
 		        }
 		        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1140, 750));
+		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		

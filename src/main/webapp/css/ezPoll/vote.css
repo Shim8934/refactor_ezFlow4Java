@@ -81,8 +81,10 @@
 .send_attach{ float:left; overflow:hidden; margin:0px 0px 0px 0px; padding:15px 0px 0px 15px;}
 #_stickerArea{ float:left; overflow:hidden; margin:0px; padding:15px 15px 0px 0px;}
 
-.comment_input_layout{float:left; display:block; min-width:1300px; border-left:1px solid #DDD; margin:16px 0px; padding:0px 0px; height:27px;}
+.comment_input_layout{float:left; display:block; width:74%; border-left:1px solid #DDD; margin:16px 0px; padding:0px 0px; height:27px;}
 #comment_input{ height:27px !important; line-height:27px; padding:0px 0px 0px 10px; outline: none; border:none; resize:none; overflow:hidden; font-size:12px;}
 .commentBtn{ float:right; display:block; width: 96px; height:45px; border:none; margin:0px; padding:6px 6px 0px 0px;}
 
-#sendComment{min-width: 1517px}
+#sendComment{min-width: 800px}
+
+#ballotSystemBody{min-width: 800px}
