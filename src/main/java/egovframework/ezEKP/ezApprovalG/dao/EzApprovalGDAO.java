@@ -1020,6 +1020,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (String) select("EzApprovalG.lastHabYuiSN", map);
 	}
 	
+	public int checkReceivedDoc(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.checkReceivedDoc", map);
+	}
+	
 	public int selectDoCallBack(Map<String, Object> map) throws Exception{
 		return (int) select("EzApprovalG.selectDoCallBack", map);
 	}
