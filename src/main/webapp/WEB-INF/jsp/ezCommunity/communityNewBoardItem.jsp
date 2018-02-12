@@ -317,27 +317,18 @@
 		        return pEndDateTime;
 		    }
 		    
-		 // 버튼 중복클릭 방지
-		    var doubleSubmitFlag = false;
-		    function doubleSubmitCheck() {
-		    	if (doubleSubmitFlag) {
-		    		return doubleSubmitFlag;
-		    	} else {
-		    		doubleSubmitFlag = true;
-		    		return false;
-		    	}
-		    }
-		    
 		    function checkSaveItem() {
 		    	if (saveFlag == true) {
 		    		return ;
 		    	}
 		    }
-	
+			
+		    var saveBtnFlag = true;
+		    
 		    function SaveItem() {
-		    	if (doubleSubmitCheck()){
-	        		return;
-	        	}
+		    	if(!saveBtnFlag){
+		    		return
+		    	}
 		    	
 		    	checkSaveItem();
 		    	
@@ -564,6 +555,7 @@
 		        
 		        xmlhttp = null;
 		        xmldom = null;
+		        saveBtnFlag = false;
 		    }
 	
 		    function JSleep(sTime) {
