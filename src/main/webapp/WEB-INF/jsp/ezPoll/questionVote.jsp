@@ -45,7 +45,8 @@
 			var stickerIndex 			= null;
 			var userNameArr 			= [[]];
 			var stompClient 			= null;
-			var numberOfGroupSticker 	= 4;	
+			/* 스티커 그룹 초기값 현재는 하나만 있기 때문에 1로 처리 */
+			var numberOfGroupSticker 	= 1;	
 			var currentGroupSticker 	= -1;
 			var flagEvent 				= -1;
 			var currentEditingCmt 		= -1;
@@ -956,8 +957,9 @@
 	    		var divSticker = document.getElementById("_stickerArea");
 	    		var cloneOfDivFile = divFile.cloneNode(true);
 	    		var cloneOfDivSticker = divSticker.cloneNode(true);
-	    		var childElemt = cloneOfDivSticker.firstElementChild; //baonk changed
-	    		childElemt.style.marginLeft = "-185px"; //baonk changed
+	    		/* 이모티콘 패널 위치 수정 제거. */
+	    		/* var childElemt = cloneOfDivSticker.firstElementChild; //baonk changed
+	    		childElemt.style.marginLeft = "-39px"; //baonk changed */
 	    		cloneOfDivFile.setAttribute("style", "float:left; display:block; height:25px; width:25px; cursor: pointer; padding-left: 10px;");
 	    		cloneOfDivSticker.setAttribute("style", "float:left; display:block; padding: 0px;");
 	    		innInnerDiv2.appendChild(cloneOfDivFile);
@@ -2031,7 +2033,8 @@
 		    	
 		    	numberOfGroupSticker = document.getElementById("_listG1").getElementsByTagName("table").length;
 		    	
-		    	if (numberOfGroupSticker > 8) {
+		    	/* 스티커 그룹 페이징 처리 영역  이모티콘 그룹이 추가되면 주석 풀어야 함. */
+		    	/* if (numberOfGroupSticker > 8) {
 		    		currentGroupSticker = 8;
 		    		
 		    		for (var i = 9; i <= numberOfGroupSticker; i++) {
@@ -2046,7 +2049,7 @@
 		    		for (var i = numberOfGroupSticker + 1; i <= 8; i++) {
 		    			document.getElementById("_group" + i).style.display = "none";
 		    		}		    		
-		    	}
+		    	} */
 		    }
 		    
 		    function showNextGroupSticker() {
