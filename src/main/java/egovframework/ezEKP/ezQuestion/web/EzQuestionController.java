@@ -3409,7 +3409,11 @@ public class EzQuestionController extends EgovFileMngUtil {
                 "&pollEndDate=" + qstListVO.getPollEndDate() +
                 "&currPage=" + qstListVO.getCurrPage();
 		
-		String curDate = commonUtil.getTodayUTCTime("");
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		String dateStr = date.format(new Date());
+		String curDate = commonUtil.getDateStringInUTC(dateStr, loginVO.getOffset(), true);
 		
 		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
 		qstUserPollItemVO.setBrdID(Integer.parseInt(brdID));
