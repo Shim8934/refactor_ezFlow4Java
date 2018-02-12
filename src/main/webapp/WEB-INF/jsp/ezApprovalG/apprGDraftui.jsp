@@ -1300,6 +1300,7 @@
 		        	OpenUrl +=  "&isUsed=" + isUsed + "&beforeDocID=" +beforeDocID
 		        }
 		        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1140, 750));
+		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1395,6 +1396,7 @@
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
 		                	tempItemName2 = ret[18];
+		                	tempSecurityValue = ret[19];
 		                	pPageNum = "1";
 		                	pLimitRange = "1";
 		                	pSpecialRecordCode = "1";
