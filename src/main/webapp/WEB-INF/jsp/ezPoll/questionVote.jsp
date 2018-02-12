@@ -2524,7 +2524,7 @@
 				<div id="titleAndContent">				
 					<div id="title" class="questionTitle" style="width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
 						<div class="baonkTest" title="<c:out value='${question.title}'/>"><c:out value='${question.title}'/></div>
-						<div style="height: 40px; float:left;">
+						<div style="height: 40px; float:left; display:none;">
 							<span id="status" style="font-weight: bold; color: #FFF;">
 							<c:choose>
 								<c:when test="${question.status == 1}"><spring:message code = 'ezPoll.t116'/></c:when>
