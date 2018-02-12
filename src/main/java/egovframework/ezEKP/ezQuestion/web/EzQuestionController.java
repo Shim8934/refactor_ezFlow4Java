@@ -59,6 +59,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstPollItemACLVO;
 import egovframework.ezEKP.ezQuestion.vo.QstRangeSelectVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
@@ -1924,13 +1925,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezQuestion/callDeleteItem.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	/*@RequestMapping(value="/ezQuestion/callDeleteItem.do")
 	@ResponseBody
 	public String qstDeleteItem(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
 		logger.debug("qstDeleteItem started");
 
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		//Document doc = commonUtil.convertRequestToDocument(req);
 		
 		String pBrdID = "";
 		String itemNo = "";
@@ -1969,6 +1969,24 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 		logger.debug("qstDeleteItem ended");
 		return strXML;
+	}*/
+	
+	/**
+	 * 전자설문 설문생성 삭제 실행 함수
+	 */
+	@RequestMapping(value="/ezQuestion/deleteItemList.do")
+	public String deleteItemList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("deleteItemList started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String itemList = request.getParameter("itemList");
+		
+		ezQuestionService.deleteItemList(itemList, commonUtil.getRealPath(request), userInfo.getTenantId());
+
+		logger.debug("deleteItemList ended");
+		
+		return "json";
 	}
 	
 	/**
@@ -3391,14 +3409,7 @@ public class EzQuestionController extends EgovFileMngUtil {
                 "&pollEndDate=" + qstListVO.getPollEndDate() +
                 "&currPage=" + qstListVO.getCurrPage();
 		
-		/*String curDate = EgovDateUtil.getTodayTime();
-		String curDate1 = EgovDateUtil.getCurrentDate("");*/
-		SimpleDateFormat date = new SimpleDateFormat("yyyyMMdd");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		
-		String dateStr = date.format(new Date());
-		//String curDate1 = EgovDateUtil.getCurrentDate("");
-		String curDate = commonUtil.getDateStringInUTC(dateStr, loginVO.getOffset(), true);
+		String curDate = commonUtil.getTodayUTCTime("");
 		
 		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
 		qstUserPollItemVO.setBrdID(Integer.parseInt(brdID));
@@ -3430,13 +3441,42 @@ public class EzQuestionController extends EgovFileMngUtil {
         } else {
         	resultYN = false;
         }
-		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
-		s.setTimeZone(TimeZone.getTimeZone("GMT"));
+        
 		pollStartDate = commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollStartDate(), loginVO.getOffset(), false);
 		pollEndDate = commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false); 
 		String uploadSDate = pollStartDate;
         String uploadEDate = pollEndDate;
         
+        List<QstPollItemACLVO> pollItemAclList = ezQuestionService.getQstPollItemAcl(itemID, loginVO.getTenantId());
+        
+        StringBuilder memberSb = new StringBuilder();
+        StringBuilder deptSb = new StringBuilder();
+        StringBuilder rangeSb = new StringBuilder();
+        
+        for (QstPollItemACLVO vo : pollItemAclList) {
+        	switch (vo.getGubun()) {
+			case "0":
+				deptSb.append("<DATA id=\'" + vo.getGubunID() + "\' nm=\'" + vo.getGubunNM()+ "\' nm2=\'" + vo.getGubunNM2() + "\'>" + vo.getGubunID() + "</DATA>");
+				break;
+
+			case "1":
+				memberSb.append("<DATA id=\'" + vo.getGubunID() + "\' nm=\'" + vo.getGubunNM()+ "\' nm2=\'" + vo.getGubunNM2() + "\'>" + vo.getGubunID() + "</DATA>");
+				break;
+			}
+        }
+        
+        rangeSb.append("<RANGE>");
+        rangeSb.append("<DEPT>");
+        rangeSb.append(deptSb.toString());
+        rangeSb.append("</DEPT>");
+        rangeSb.append("<MEMBER>");
+        rangeSb.append(memberSb.toString());
+        rangeSb.append("</MEMBER>");
+        rangeSb.append("</RANGE>");
+        
+        logger.debug("rangeSb = " + rangeSb.toString());
+        
+        model.addAttribute("rangeXML", rangeSb.toString());
 		model.addAttribute("uploadSDate", uploadSDate);
 		model.addAttribute("uploadEDate", uploadEDate);
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
