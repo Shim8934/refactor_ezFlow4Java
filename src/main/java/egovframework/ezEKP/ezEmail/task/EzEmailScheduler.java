@@ -148,7 +148,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(new Date());
-					cal.add(Calendar.DATE, expireTime *-1);
+					cal.add(Calendar.DATE, expireTime * -1);
 					SearchTerm searchTerm = new ReceivedDateTerm(ComparisonTerm.LT, cal.getTime());
 
 					if (deleteUnread.equals("0")) {
@@ -157,6 +157,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 
 					Message[] messages = f.search(searchTerm);
 
+					logger.debug("messages length=" + messages.length);
+					
 					f.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
 					f.close(true);
 				}
@@ -420,6 +422,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			            
 			            message = secureMessage;
 	            		
+			            fis.close();
+				        fis = null;
+			            
 					} else {
 						//보낸편지함에 저장
 						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -457,10 +462,11 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					}
 					
 			        logger.debug("Succeed in sending the reserved message.");
-			        	
+			        
 					//파일시스템의 eml파일 삭제
-					f.delete();
-					logger.debug("Succeed in deleting EML file.");
+					if (f.delete()) {
+						logger.debug("Succeed in deleting EML file.");
+					}
 				} else {
 					logger.error("Cannot find EML file.");
 				}
