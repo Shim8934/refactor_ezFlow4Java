@@ -1335,7 +1335,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		ApprGTaskVO vo = ezApprovalGAdminDAO.getTaskName(map);
 		logger.debug("getTaskName ended.");
 		
-		String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj10", userInfo.getLocale()), "Delete the dept", deptCode, deptName, deptName2, companyID, tenantID);
+		String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj10", userInfo.getLocale()), "Delete the dept", deptName, "", deptName2, companyID, tenantID);
 		
 		if (temp.equals("FALSE")) {
 			return "FALSE";
