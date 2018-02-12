@@ -20,17 +20,29 @@
 	        var lang = "${userInfo.lang}";
 	        var ReturnFunction;
 	        var CancelFunction;
+	        var isFolderChanged = false;
+	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
 	            else
 	                return true;
 	        };
+	        
+	        window.onunload = function () {
+                if (isFolderChanged) {
+                	try {
+                    	parent.opener.top.frames["mainFrame"].frames["left"].mailbox_treeview_reload();
+                    } catch (e) {}
+                }
+        	}
+	        
 	        function Window_Close() {
 	            if (ReturnFunction!=null)
 	                CancelFunction();
 	            window.close();
 	        }
+	        
 	        var isDivPopup = false;
 	        function window_onload() {
 	            try {
@@ -125,6 +137,8 @@
 	            
 	            var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false, false);
                 PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
+                
+                isFolderChanged = true;
 	        }
 	        
 	        function LoadAddressTree(SelectIndex) {
