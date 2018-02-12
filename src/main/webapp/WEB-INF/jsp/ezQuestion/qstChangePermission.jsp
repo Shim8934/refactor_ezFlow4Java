@@ -203,7 +203,7 @@
 	        	
 	        	if (m_PostDate > m_PollStartDate) {
 		            alert("<spring:message code='ezQuestion.t199' />");
-		            document.getElementById("idDatepicker").focus();
+		            document.getElementById("Sdatepicker").focus();
 	    	        return false;
 	        	}
 	    	}
@@ -251,7 +251,7 @@
 	        	var szSMonth = tempS[1];
 	        	var szSDay = tempS[2];
 	        	m_PollStartDate = szSYear + szSMonth + szSDay;
-
+	        	
 	        	if (m_PollStartDate > m_PostDate) {
 		            alert("<spring:message code='ezQuestion.t204'/>");
 		            return;
@@ -481,7 +481,7 @@
             	<input type="hidden" name="hidEndDate" id="hidEndDate" value="${pollEndDate}" />
             	<input type="hidden" name="hidTarget" id="hidTarget" value="${qstUserPermissionVO.responseRange}" /> 
             	<input type="hidden" name="select_YN" id="select_YN" />
-            	<input type="hidden" name="RangeXMLStr" id="RangeXMLStr" value="<%-- <%= Server.HtmlEncode(_SB.ToString()) %> --%>" />
+            	<input type="hidden" name="RangeXMLStr" id="RangeXMLStr" value="${rangeXML }" />
         	</div>
 		</form> 
     	<form name="frmEndPoll" action="/ezQuestion/callEndPoll.do" method="post"> 

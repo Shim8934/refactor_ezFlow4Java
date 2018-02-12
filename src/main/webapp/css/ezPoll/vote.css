@@ -62,7 +62,7 @@
 .voteTextTest span.questionFontS{color:#aaa9a9; padding:6px 0px 0px 0px;}
 
 #titleAndContent{ overflow:hidden; border:1px solid #dddddd; margin-bottom:20px;}
-#titleAndContent .baonkTest{ font-size:16px; color:#004896;}
+#titleAndContent .baonkTest{ font-size:16px; color:#004896; white-space:nowrap;}
 .questionTitle{display:inline-block;float:left; width:100%; height:39px; line-height:39px; padding:0px 10px; background:#f9f9f9; border-bottom:1px solid #dddddd; color:#FFF; font-size:18px;}
 
 #_editVote{float:right; display:block; font-size:16px; color:#004896; border:1px solid #e1ebf7; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; height:43px; line-height:43px; background:#f4f9ff; padding:0px 20px; overflow:hidden; cursor:pointer; margin:10px 0px 0px 0px;}

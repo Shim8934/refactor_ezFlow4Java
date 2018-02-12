@@ -4475,6 +4475,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("approvalROOT", approvalRoot);
+		model.addAttribute("approvalFlag", approvalFlag);
 		logger.debug("recevG ended.");
 		
 		return "ezApprovalG/apprGrecevG";
