@@ -336,11 +336,14 @@ form{display:inline;margin:0}
 }
 #mainmenu ul{
 	overflow:hidden;
-	height:28px; 
 	width:100%;
 	padding:0;
 	margin:0;	
 	margin-bottom:3px !important;
+}
+
+#mainmenu ul li img {
+	vertical-align: middle;
 }
 	
 .table_manage{margin-top:10px;}
