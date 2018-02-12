@@ -3,11 +3,14 @@ package egovframework.ezEKP.ezWebFolder.web;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -35,6 +38,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -291,7 +295,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/fileMoveConfirm.do")
 	public String fileMoveConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("File Move Confirm is running!");		
-		String fileId = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
+		String fileId     = request.getParameter("fileId")     != null ? request.getParameter("fileId")     : "";
+		String rootFolder = request.getParameter("rootFolder") != null ? request.getParameter("rootFolder") : "";
 		
 		if (fileId.equals("")) {
 			logger.debug("File Move Confirm illegal arguments!");
@@ -299,6 +304,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("fileId", fileId);
+		model.addAttribute("rootFolder", rootFolder);
 		logger.debug("File Move Confirm finishes!");
 		
 		return "/ezWebFolder/fileMoveTest";		
@@ -335,36 +341,41 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("Move File finishes!");		
 	}
 	
-	@RequestMapping(value="/ezWebFolder/getFolderList.do", method = RequestMethod.POST)	
-	public String getFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
+	@RequestMapping(value="/ezWebFolder/getFolderTree.do", method = RequestMethod.POST)	
+	public String getFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
 		LoginVO userInfo   = commonUtil.userInfo(loginCookie);
-		String folderId    = request.getParameter("folderId");
-		String folderType  = request.getParameter("folderType");
+		String rootFolder  = request.getParameter("rootFolder");
+		String fileId      = request.getParameter("fileId");
 		
-		switch(folderType) {
-			case "1":
-				if (userInfo.getRollInfo().indexOf("c=1") == -1) {
-					FolderSimpleVO folderList = ezWebFolderService.getSimpleFolder(folderId, userInfo.getPrimary(), userInfo.getTenantId());
-					model.addAttribute("folderList", folderList);
-				}
-				else {
-					List<FolderSimpleVO> companyFolderList = ezWebFolderService.getAllSimpleSubFolders("root", userInfo.getPrimary(), userInfo.getTenantId());
-					
-					for (FolderSimpleVO company: companyFolderList) {
-						ezWebFolderService.getAllSubDepts(company, userInfo.getPrimary(), userInfo.getTenantId(), 0);						
-					}		
-					
-					model.addAttribute("folderList", companyFolderList);
-				}
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/webfolder/foldersTree";
 				
-				break;
-			case "2":
-				break;
-			case "3":
-				break;
-		}	
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", userInfo.getTenantId())
+										.queryParam("primary", userInfo.getPrimary())										
+										.queryParam("rootFolder", rootFolder)
+										.queryParam("fileId", fileId)
+										.queryParam("offset", userInfo.getOffset());
+		
+		RestTemplate rest             = new RestTemplate();		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp         		  = new JSONParser();		
+		JSONObject resultBody 		  = (JSONObject) jp.parse(result.getBody());				
+		String status         		  = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			JSONObject folderTree = (JSONObject) resultBody.get("data");
+			String	   currFolder = (String)resultBody.get("currentFolder");
+			model.addAttribute("folderTree", folderTree);
+			model.addAttribute("currentFolder", currFolder);
+		}
+		
 		return "json";
 	}
-	
+			
 }

@@ -173,7 +173,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	public String webfolderCompanyFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {       
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String folderId	 = request.getParameter("folderId");
-		//String companyId = request.getParameter("companyId");
+		String rootFolder = request.getParameter("rootFolder");
         
 		//Get list of companies
 		List<OrganDeptVO> list       = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
@@ -192,6 +192,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		model.addAttribute("userCompany", userInfo.getCompanyID());
 		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("folderId", folderId);
+		model.addAttribute("rootFolder", rootFolder);
         
 		return "admin/ezWebFolder/webfolderCompanyFile";
 	}

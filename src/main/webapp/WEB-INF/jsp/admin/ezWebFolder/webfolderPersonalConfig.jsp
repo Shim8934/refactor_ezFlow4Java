@@ -69,6 +69,7 @@
 						totalRows   = data.totalUsers;
 						totalPages  = data.totalPages;
 						currentPage = pPage;
+						checkedArr  = [];
 						
 						makePageSelPage();							
 						renderData(result);							

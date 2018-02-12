@@ -280,11 +280,6 @@
 					return;
 				}
 				
-				if (compFolderId == selectedFolder) {
-					alert("안됩니다.");
-					return;
-				}
-				
 				document.getElementById("listBttn1").style.display = "none";
 				document.getElementById("listBttn2").style.display = "";
 				

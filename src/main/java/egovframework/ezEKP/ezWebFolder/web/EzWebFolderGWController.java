@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezWebFolder.web;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -440,6 +441,15 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			String _fileName       = fileVO.getFileName();
 			_fileName 		       = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), _fileName);
 			File file              = new File(realPath + fileVO.getFilePath());
+			
+	    	if (!file.exists()) {
+			    throw new FileNotFoundException(fileVO.getFileName());
+			}
+		
+			if (!file.isFile()) {
+			    throw new FileNotFoundException(fileVO.getFileName());
+			}
+			
 			BufferedInputStream in = null;
 			
 			try {		    	
@@ -486,6 +496,14 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			    	//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
 			    	FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);			    	
 			    	File file     = new File(realPath + fileVO.getFilePath());
+			    	
+			    	if (!file.exists()) {
+					    throw new FileNotFoundException(fileVO.getFileName());
+					}
+				
+					if (!file.isFile()) {
+					    throw new FileNotFoundException(fileVO.getFileName());
+					}
 			    	
 			        zipOutputStream.putNextEntry(new ZipEntry(fileVO.getFileName()));
 			        fileInputStream = new FileInputStream(file);
@@ -615,7 +633,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		try {
 			FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);			
 			
-			if (mode.equals("0")) {
+			if (mode.equals("move")) {
 				//move file
 				ezWebFolderService.moveFile(fileId, folderId, tenantId);
 			}
@@ -987,6 +1005,48 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 									
 			result.put("status", "ok");
 			result.put("code", 0);			
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/webfolder/foldersTree", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFolderTree(HttpServletRequest request) {	
+		int tenantId      = request.getParameter("tenantId")   != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
+		String offset     = request.getParameter("offset")     != null ? request.getParameter("offset")                     : "";	
+		String rootFolder = request.getParameter("rootFolder") != null ? request.getParameter("rootFolder")                 : "";
+		String fileId     = request.getParameter("fileId")     != null ? request.getParameter("fileId")                     : "";
+		String primary    = request.getParameter("primary")    != null ? request.getParameter("primary")                    : "";
+		JSONObject result = new JSONObject();
+		
+		if (rootFolder.equals("") || fileId.equals("") || primary.equals("") || offset.equals("") || tenantId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}		
+		
+		logger.debug("RootFolder: " + rootFolder + " || tenantId: " + tenantId + " || Offset: " + offset + " || Primary: " + primary);
+		
+		try {			
+			FolderSimpleVO company  = ezWebFolderService.getSimpleFolder(rootFolder, primary, tenantId);
+			FileVO	file			= ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
+			FolderVO selectedFolder = ezWebFolderService.getFolderByFolderId(file.getFolderId(), offset, tenantId);
+			String folderPath		= selectedFolder.getFolderPath();
+			folderPath				= folderPath.substring(1, folderPath.length() - 1);
+			String[] path			= folderPath.split("\\|");
+			ezWebFolderService.getAllSubDepts(company, primary, tenantId, path, 1);
+									
+			result.put("status", "ok");
+			result.put("currentFolder", file.getFolderId());
+			result.put("code", 0);
+			result.put("data", company);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

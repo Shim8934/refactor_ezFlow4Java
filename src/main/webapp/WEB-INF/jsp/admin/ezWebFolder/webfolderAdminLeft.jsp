@@ -120,7 +120,7 @@
 				if (mode == "") {
 					selectedFolder          = compFolderId;
 					spanCompany.style.color = "#e04343";
-					window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&companyId=" + companyId, "right");
+					window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId, "right");
 				}
 				else {
 					selectedFolder = "";

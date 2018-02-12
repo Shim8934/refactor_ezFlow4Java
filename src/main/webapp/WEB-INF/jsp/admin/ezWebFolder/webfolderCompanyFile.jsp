@@ -38,6 +38,7 @@
 			var folderId	 = "<c:out value='${folderId}'/>";
 			var checkedArr	 = [];
 			var folderType   = "company";
+			var rootFolder   = "<c:out value='${rootFolder}'/>";
 			
         	window.onresize = function () {
 				var divList          = document.getElementById("dragDropArea");				
@@ -118,7 +119,8 @@
 				});			
 			}
 		    
-		    function renderData(result) {		    	
+		    function renderData(result) {
+		    	document.getElementById("_checkAll").checked = false;
 				var tableList = document.getElementById("tblFileList");
 		    	
 		    	while (tableList.rows.length > 1) {
@@ -234,13 +236,7 @@
 		    
 		    function change() {
 		    	refresh();
-				/* startDateStr = "";
-			    endDateStr	 = "";
-				fileExtStr	 = "";
-				fileNameStr	 = "";
-				userNameStr  = ""; */
-				window.parent.frames["left"].getData(document.getElementById("companyList").value, 1);
-		    	//search_Set("1");
+				window.parent.frames["left"].getData(document.getElementById("companyList").value, 1);		    	
 		    }
 		    
 		    function fileDownload() {
@@ -309,7 +305,7 @@
 	    	   
 		       var fileId = checkedArr[0];
 	    	   
-	    	   DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId);
+	    	   DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId + "&rootFolder=" + rootFolder);
 	       }
 	       
 	       function getChecked(obj) {
@@ -350,6 +346,10 @@
 				fileNameStr	 = "";
 				userNameStr  = "";
 		    	search_Set("1");
+	       }
+	       
+	       function refreshView() {
+	    	   search_Set(currentPage);
 	       }
 	    </script>
 	</head>
@@ -437,7 +437,7 @@
 		<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;">	   
 	   		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 	   			<tr>
-	   				<th width="10px"><input type="checkbox" onchange="getCheckAll(this);"></th>
+	   				<th width="10px"><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
 					<th width="40px">유형</th>
 					<th width="160px">이름</th>
 					<th width="60px">파일크기</th>
