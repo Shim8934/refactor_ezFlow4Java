@@ -193,11 +193,12 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public List<DeptViewVO> getDeptViewList(String userId, String tenantId) throws Exception {
+	public List<DeptViewVO> getDeptViewList(String userId,String companyId, String tenantId) throws Exception {
 		logger.debug("getDeptViewList started");
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
+		param.put("companyId", companyId);
 		List<DeptViewVO> deptList = ezJournalDAO.getDeptViewVO(param);
 		logger.debug("getDeptViewList ended");
 		return deptList;
@@ -212,5 +213,17 @@ public class EzJournalServiceImpl implements EzJournalService{
 		List<JournalAuthorVO> deptList = ezJournalDAO.getAuthDeptList(param);
 		logger.debug("getAuthDeptList ended");
 		return deptList;
+	}
+	
+	@Override
+	public List<JournalAuthorVO> getDeptUserList (String tenantId, String key ,String value) throws Exception{
+		logger.debug("getDeptUserList started");
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put("tenantId", tenantId);
+		param.put("key", key);
+		param.put("value", value);
+		List<JournalAuthorVO> userList = ezJournalDAO.getDeptUserList(param);
+		logger.debug("getDeptUserList ended");
+		return userList;
 	}
 }

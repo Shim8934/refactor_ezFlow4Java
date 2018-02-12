@@ -138,4 +138,14 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public List<DeptViewVO> getDeptViewVO(Map<String, String> map){
 		return (List<DeptViewVO>) list("selectDeptList",map);
 	}
+	
+	/**
+	 * 해당부서의 사원 리스트 가져오기
+	 * @param map
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<JournalAuthorVO> getDeptUserList(Map<String, String> map){
+		return (List<JournalAuthorVO>) list("selectUserList",map);
+	}
 }

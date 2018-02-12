@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -60,7 +61,7 @@ public class EzJournalSBController {
 		
 		param.put("companyId",companyId);
 		param.put("userId", userInfo.getId());
-		param.put("tenantId", userInfo.getTenantId()+"");
+		param.put("tenantId", userInfo.getTenantId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/companies", param, request,"get",null);
 		String status = resultBody.get("status").toString();
@@ -73,7 +74,7 @@ public class EzJournalSBController {
 		param.clear();
 		
 		param.put("companyId",companyId );
-		param.put("tenantId", userInfo.getTenantId()+"");
+		param.put("tenantId", userInfo.getTenantId());
 		
 		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", param, request,"get",null);
 		status = resultBody.get("status").toString();
@@ -139,7 +140,7 @@ public class EzJournalSBController {
 		
 		param.put("companyId",companyId);
 		param.put("userId", userInfo.getId());
-		param.put("tenantId", userInfo.getTenantId()+"");
+		param.put("tenantId", userInfo.getTenantId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/companies", param, request,"get",null);
 		String status = resultBody.get("status").toString();
@@ -152,8 +153,9 @@ public class EzJournalSBController {
 		param.clear();
 		
 		param.put("companyId",companyId );
-		param.put("tenantId", userInfo.getTenantId()+"");
-		
+		param.put("tenantId", userInfo.getTenantId());
+		System.out.println("companyId = "+companyId);
+		System.out.println("tenantId = "+userInfo.getTenantId());
 		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/authors", param, request,"get",null);
 		status = resultBody.get("status").toString();
 		
@@ -185,33 +187,86 @@ public class EzJournalSBController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		String userId =null;
-		if (request.getParameter("userId") != null) {
+		if (request.getParameter("userId")!=null) {
 			userId = request.getParameter("userId");
-		} else{
+		}else{
 			userId = userInfo.getId();
 		}
 		
 		param.put("userId",userId);
-		param.put("tenantId", userInfo.getTenantId()+"");
+		param.put("tenantId", userInfo.getTenantId());
+		param.put("companyId", request.getParameter("companyId"));
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/depts", param, request,"get",null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {			
 			JSONArray deptList = (JSONArray) resultBody.get("data");
+			
+			for (int i = 0; i < deptList.size(); i++) {
+				JSONObject dept =  (JSONObject) deptList.get(i);
+				if (dept.get("isComp").equals("comp")) {
+					dept.put("icon", "icon-company");
+				} else{
+					dept.put("icon", "icon-dept");
+				}
+				if (dept.get("myDept").equals("yes")) {
+					JSONObject state = new JSONObject();
+					state.put("opened", "true");
+					state.put("selected", "true");
+					dept.put("state", state);
+				}
+			}
+			
 			model.addAttribute("deptList", deptList);
 		}
-		
-		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/users/"+userId+"/author-depts", param, request,"get",null);
-		status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {		
-			JSONArray authDeptList = (JSONArray) resultBody.get("data");
-			model.addAttribute("authDeptList", authDeptList);
-		}
+		model.addAttribute("selectedUser",request.getParameter("userId"));
 		
 		logger.debug("authorDetail ended");
 		
 		return "admin/ezJournal/authorDetail";
+	}
+	
+	/**
+	 * 사원리스트
+	 */
+	@RequestMapping(value = "/admin/ezJournal/userList.do")
+	public String userList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+		logger.debug("userList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		String key = request.getParameter("key");
+		param.put("tenantId", userInfo.getTenantId());
+		param.put("key",key );
+		param.put("value", request.getParameter("value"));
+		logger.debug(request.getParameter("key"));
+		logger.debug(request.getParameter("value"));
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/users", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		if (status.equals("ok")) {		
+			JSONArray userList = (JSONArray) resultBody.get("data");
+			
+			model.addAttribute("userList", userList);
+			
+			String keyword = "";
+			if (key.equals("DEPARTMENT") && userList.size()!=0) {
+				keyword = (String) ((JSONObject)userList.get(0)).get("deptName");
+			} else{
+				keyword = "검색";
+			}
+			logger.debug("키워드키워드키우드***********"+keyword);
+			int userCount = 0;
+			if (userList.size()==0) {
+				keyword = "결과없음";
+			} else {
+				userCount = userList.size();
+			}
+			model.addAttribute("keyword",keyword);
+			model.addAttribute("userCount",userCount);
+		}
+		
+		logger.debug("userList ended");
+		return "admin/ezJournal/userList";
 	}
 }

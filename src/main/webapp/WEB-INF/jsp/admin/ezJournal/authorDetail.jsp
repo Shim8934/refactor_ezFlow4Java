@@ -1,0 +1,120 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
+		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
+		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
+	   	<script type="text/javascript">
+	   		//조직도 뿌리는 펑션
+	   		function setDeptList(){
+	   			var treeContent = ${deptList};
+				$('#treeview').on('changed.jstree', function (e, data) {
+					 var i, j, r = [];
+				    for(i = 0, j = data.selected.length; i < j; i++) {
+				      r.push(data.instance.get_node(data.selected[i]).id);
+				    }
+					setUserList("DEPARTMENT",r.join(', '));
+				  })
+				.jstree({ 
+					'core' : {'data' : treeContent},
+					'plugins': ["wholerow"],
+					 'themes' : {'responsive' : true}
+				});
+	   		}
+	   		//사원 리스트 뿌리기
+	   		function setUserList(key,value){
+	   			$.ajax({
+	   				type:"post",
+	   				dataType:"html",
+	   				url:"/admin/ezJournal/userList.do",
+	   				data:{"key":key, "value":value},
+	   				success: function(result){
+	   					$("#orglistView").html(result);
+	   				}
+	   			});
+	   		}
+	   		//검색
+	   		function search_click(){
+	   			var key = $("#search_type").val();
+	   			var value = $("#keyword").val();
+	   			setUserList(key,value);
+	   		}
+		   	window.onload=function(){
+		   		setDeptList();
+		   	}
+		</script>
+		<style>
+			tr:hover{background:#eee; color:#fff;}
+			@media screen and (-webkit-min-device-pixel-ratio:0)
+			  and (min-resolution:.001dpcm) {
+				xmp{
+					position:relative;
+					top:-38px;
+					left:20px;
+				}
+			}
+		</style>
+	</head>
+	<body class="popup"> 
+        <h1 style="color:#ffffff; font-size: x-large; font:strong;"><spring:message code='ezJournal.t42'/></h1>
+	    <div id="close">
+	        <ul>
+	            <li><span onclick="close_Click()"><spring:message code='ezOrgan.t143'/></span></li>
+	        </ul>
+	    </div>
+		<table id="TreeViewTD">
+		 	<tr>
+	            <td>
+	                <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
+	                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+	                        <table style="margin-top: 3px; width: 100%;">
+	                            <tr>
+	                                <td>
+	                                </td>
+	                                <td>
+	                                    <div style="float:right">
+	                                        <select id="search_type">
+	                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
+					                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
+					                            <option value="description"><spring:message code='ezOrgan.t68'/></option>
+					                            <option value="title"><spring:message code='ezOrgan.t69'/></option>
+					                            <option value="telephonenumber"><spring:message code='ezOrgan.t95'/></option>
+					                            <option value="mobile"><spring:message code='ezOrgan.t96'/></option>
+					                            <option value="HomePhone"><spring:message code='ezOrgan.t97'/></option>
+					                            <option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98'/></option>
+					                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
+					                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
+	                                        </select>
+	                                        <input type="text" id="keyword" value="" style="width: 130px; margin: 0px;" />
+	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
+	                                    </div>
+	                                </td>    
+	                                <td></td>
+	                            </tr>
+	                        </table>
+	                    </div>
+	                </div>
+					<table style="">
+			            <tr>
+			                <td class="box">
+			                    <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+			                </td>
+			                <td></td>
+			                <td class="listview" style="width: 426px" id="orglistView">
+			                </td>    
+			            </tr>
+			        </table>
+				</td>
+			</tr>
+        </table>
+	</body>
+</html>
+

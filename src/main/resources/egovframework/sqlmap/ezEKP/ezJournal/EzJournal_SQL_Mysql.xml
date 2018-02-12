@@ -13,15 +13,34 @@
 	
 	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO"/>
 
+	<resultMap class="deptViewVO" id="deptViewMap">
+		<result property="id" column="id"/>
+		<result property="parent" column="parent"/>
+		<result property="companyId" column="companyId"/>
+		<result property="text" column="text"/>
+		<result property="isComp" column="isComp"/>
+		<result property="myDept" column="myDept"/>
+	</resultMap>
+	
 	<resultMap class="authorVO" id="authorMap">
 		<result property="userName" column="user_name"/>
 		<result property="userId" column="user_id"/>
 		<result property="jikwi" column="jikwi"/>
 		<result property="deptName" column="dept_name"/>
-		<result property="tenantId" column="tenant_id"/>
 		<result property="authDept" column="auth_dept"/>
-		<result property="deptId" column="dept_id"/>
+	</resultMap>
+
+	<resultMap class="authorVO" id="userMap">
+		<result property="userName" column="user_name"/>
+		<result property="userId" column="user_id"/>
+		<result property="jikwi" column="jikwi"/>
 		<result property="mail" column="mail"/>
+		<result property="deptName" column="dept_name"/>
+	</resultMap>
+	
+	<resultMap class="authorVO" id="deptMap">
+		<result property="deptName" column="dept_name"/>
+		<result property="deptId" column="dept_id"/>
 	</resultMap>
 	
 	<resultMap class="JournaltypeVO" id="JournaltypeMap">
@@ -180,9 +199,13 @@
 	</insert>
 	
 	<!-- 조직도 만들기 위한 쿼리 -->
-	<select id="selectDeptList" parameterClass="map" resultClass="deptViewVO">
+	<select id="selectDeptList" parameterClass="map" resultMap="deptViewMap">
 		select d.CN as id, 
-		d.extensionattribute1 as parent,
+		IF(d.extensionattribute1=null 
+		<isNotEmpty property="companyId">
+		or d.CN=#companyId#
+		</isNotEmpty>
+		,'##',d.EXTENSIONATTRIBUTE1) as parent,
 		d.extensionattribute2 as companyId, 
 		d.displayname as text
 		,case d.CN
@@ -200,6 +223,9 @@
 		and u.tenant_id=#tenantId#
 		and (((substr(u.EXTENSIONATTRIBUTE1,3,1)=0 and d.extensionattribute2=u.PHYSICALDELIVERYOFFICENAME))
 		or (substr(u.EXTENSIONATTRIBUTE1,3,1)=1))
+		<isNotEmpty property="companyId">
+			and d.EXTENSIONATTRIBUTE2=#companyId#
+		</isNotEmpty>
 		order by DEPTLEVEL
 	</select>
 	
@@ -229,19 +255,18 @@
 		u.DISPLAYNAME as user_name,
 		u.title as jikwi,
 		du.DISPLAYNAME as dept_name,
-		group_concat(d.DISPLAYNAME separator '%') as auth_dept,
-		u.TENANT_ID as tenant_id
+		group_concat(d.DISPLAYNAME separator '%') as auth_dept
 		from jmocha.tbl_usermaster u inner join
 		jmocha.tbl_journal_auth a on (u.CN=a.user_id and u.TENANT_ID=a.tenant_id)
 		inner join jmocha.tbl_deptmaster d on (a.dept_id=d.CN and a.tenant_id=d.TENANT_ID)
 		inner join jmocha.tbl_deptmaster du on (du.CN = u.DEPARTMENT and u.TENANT_ID=du.TENANT_ID)
 		where a.tenant_id=#tenantId#
 		and d.EXTENSIONATTRIBUTE2=#companyId#
-		group by user_id;
+		group by user_id
 	</select>
 	
 	<!-- 권한자의 권한 부서 리스트 --> 
-	<select id="selectAuthorDept" resultMap="authorMap" parameterClass="Map">
+	<select id="selectAuthorDept" resultMap="deptMap" parameterClass="Map">
 		select 
 		d.DISPLAYNAME dept_name,
 		d.CN dept_id
@@ -251,14 +276,16 @@
 		and a.tenant_id = #tenantId#
 	</select>
 	
-	<select id="selectUserList">
+	<!-- 해당부서의 사원리스트 -->
+	<select id="selectUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
 		select 
-		u.DISPLAYNAME as user_name,
-		u.CN as user_id,
-		u.TITLE as jikwi,
-		u.MAIL as mail
-		from jmocha.tbl_usermaster u
-		where u.DEPARTMENT=#deptId#
-		and u.TENANT_ID=#tenantId#
+		DISPLAYNAME as user_name,
+		CN as user_id,
+		TITLE as jikwi,
+		MAIL as mail,
+		DESCRIPTION as dept_name
+		from tbl_usermaster
+		where TENANT_ID=#tenantId#
+		and $key$ like concat('%',#value#,'%')
 	</select>
 </sqlMap>

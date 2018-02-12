@@ -113,5 +113,14 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DeptViewVO> getDeptViewList (String userId,String tenantId) throws Exception;
+	public List<DeptViewVO> getDeptViewList (String userId,String companyId,String tenantId) throws Exception;
+	
+	/**
+	 * 해당부서의 사원리스트
+	 * @param tenantId
+	 * @param deptId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<JournalAuthorVO> getDeptUserList (String tenantId, String key,String value) throws Exception;
 }
