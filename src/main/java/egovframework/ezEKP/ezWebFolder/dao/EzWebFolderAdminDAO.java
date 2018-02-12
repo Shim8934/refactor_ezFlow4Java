@@ -50,4 +50,12 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 	public void deleteFolderUsers(Map<String, Object> map) {		
 		delete("EzWebFolderAdminDAO.deleteFolderUsers", map);
 	}
+
+	public int getTotalFileLogs(Map<String, Object> map) {		
+		return (int)select("EzWebFolderAdminDAO.getTotalFileLogs", map);
+	}
+
+	public int getTotalListUserCapacity(Map<String, Object> map) {
+		return (int)select("EzWebFolderAdminDAO.getTotalListUserCapacity", map);
+	}
 }

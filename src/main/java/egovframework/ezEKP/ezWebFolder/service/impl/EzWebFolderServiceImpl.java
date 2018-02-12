@@ -198,13 +198,14 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
-		ezWebFolderDAO.updateFolderUseStatus(map);	
+		ezWebFolderDAO.updateFolderUseStatus(map);
 	}
 	
 	@Override
-	public List<FileVO> getAllFilesInFolder(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, String offset, int tenantId) throws Exception {		
+	public List<FileVO> getAllFilesInFolder(String folderId, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
+		map.put("originalPath", originalPath);
 		map.put("fileType", fileType);
 		map.put("searchChk", searchChk);
 		map.put("startDate", startDate);
@@ -212,11 +213,69 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("fileExt", fileExt);
 		map.put("fileName", fileName);
 		map.put("userName", userName);
+		map.put("startPoint", startPoint);
+		map.put("pageSize", pageSize);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("primary", primary);
 		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getAllFilesInFolder(map);
 	}
+	
+	@Override
+	public List<FileVO> getAllFiles(String folderPath, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName,	String userName, String fileType, int startPoint, int pageSize,	String primary, String offset, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderPath", folderPath);
+		map.put("originalPath", originalPath);
+		map.put("fileType", fileType);
+		map.put("searchChk", searchChk);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("fileExt", fileExt);
+		map.put("fileName", fileName);
+		map.put("userName", userName);
+		map.put("startPoint", startPoint);
+		map.put("pageSize", pageSize);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getAllFiles(map);
+	}
+
+	@Override
+	public int getTotalFileCnt(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderId", folderId);		
+		map.put("fileType", fileType);
+		map.put("searchChk", searchChk);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("fileExt", fileExt);
+		map.put("fileName", fileName);
+		map.put("userName", userName);
+		map.put("startPoint", startPoint);
+		map.put("pageSize", pageSize);		
+		map.put("primary", primary);
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getTotalFileCnt(map);
+	}	
+
+	@Override
+	public int getTotalFileCnt2(String folderPath, String searchChk, String startDate, String endDate, String fileExt, String fileName,	String userName, String fileType, int startPoint, int pageSize, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderPath", folderPath);		
+		map.put("fileType", fileType);
+		map.put("searchChk", searchChk);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("fileExt", fileExt);
+		map.put("fileName", fileName);
+		map.put("userName", userName);
+		map.put("startPoint", startPoint);
+		map.put("pageSize", pageSize);		
+		map.put("primary", primary);
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getTotalFileCnt2(map);		
+	}	
 	
 	@Override
 	public void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int mode) throws Exception {
@@ -271,27 +330,6 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		}
 		else {
 			company.setHasSubFolder(0);
-		}		
-	}
-
-	@Override
-	public void getAllFiles(List<FileVO> fileList, String originalPath, String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, String offset, int tenantId) throws Exception {
-		List<FileVO> subFilelist = getAllFilesInFolder(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);
-				
-		if (subFilelist != null && subFilelist.size() > 0) {
-			for (FileVO file : subFilelist) {				
-				file.setFilePosition(originalPath + file.getFileName());
-			}
-			
-			fileList.addAll(subFilelist);
-		}
-		
-		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(folderId, "1", tenantId);
-						
-		if (listSubSimpleFolders.size() > 0) {			
-			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
-				getAllFiles(fileList, originalPath + subFolder.getFolderName(), subFolder.getFolderId(), searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);				
-			}
 		}		
 	}
 	

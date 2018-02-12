@@ -3,9 +3,12 @@ package egovframework.ezEKP.ezWebFolder.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
@@ -41,14 +44,30 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	@Override
-	public List<UserCapacityVO> getListUserCapacity(String companyId, String searchStr, String searchOpt, int tenantId, String primary) throws Exception {
+	public List<UserCapacityVO> getListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("searchStr", searchStr);
 		map.put("searchOpt", searchOpt);
+		map.put("startPoint", startPoint);
+		map.put("pageSize", pageSize);
 		map.put("tenantId", tenantId);
 		map.put("primary", primary);
 		return ezWebFolderAdminDAO.getListUserCapacity(map);
+	}
+	
+
+	@Override
+	public int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("searchStr", searchStr);
+		map.put("searchOpt", searchOpt);
+		map.put("startPoint", startPoint);
+		map.put("pageSize", pageSize);
+		map.put("tenantId", tenantId);
+		map.put("primary", primary);
+		return ezWebFolderAdminDAO.getTotalListUserCapacity(map);
 	}
 
 	@Override
@@ -62,7 +81,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	@Override
-	public List<FileLogVO> getListFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String primary, String offset, int tenantId) throws Exception {
+	public List<FileLogVO> getListFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();		
 		map.put("companyId", companyId);
 		map.put("searchChk", searchChk);
@@ -71,10 +90,30 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("fileExt", fileExt);
 		map.put("fileName", fileName);
 		map.put("userName", userName);
+		map.put("startPoint", startPoint);
+		map.put("pageSize", pageSize);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("primary", primary);
 		map.put("tenantId", tenantId);		
 		return ezWebFolderAdminDAO.getListFileLogs(map);
+	}
+	
+
+	@Override
+	public int getTotalFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, int startPoint, int endPoint, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();		
+		map.put("companyId", companyId);
+		map.put("searchChk", searchChk);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("fileExt", fileExt);
+		map.put("fileName", fileName);
+		map.put("userName", userName);
+		map.put("startPoint", startPoint);
+		map.put("endPoint", endPoint);		
+		map.put("primary", primary);
+		map.put("tenantId", tenantId);
+		return ezWebFolderAdminDAO.getTotalFileLogs(map);
 	}
 	
 	@Override
@@ -144,5 +183,4 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 
 		ezWebFolderAdminDAO.deleteFolderUsers(map);		
 	}
-
 }

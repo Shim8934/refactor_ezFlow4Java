@@ -30,6 +30,8 @@ public interface EzWebFolderService {
 	String getMaxFolderStep(String folderId, int tenantId) throws Exception;
 	String getFolderUserSequence(int tenantId) throws Exception;
 	void updateFolderUseStatus(String folderId, int tenantId) throws Exception;
-	List<FileVO> getAllFilesInFolder(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, String offset, int tenantId) throws Exception;
-	void getAllFiles(List<FileVO> fileList, String originalPath, String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, String offset, int tenantId) throws Exception;
+	List<FileVO> getAllFilesInFolder(String folderId, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception;
+	List<FileVO> getAllFiles(String folderPath, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception;
+	int getTotalFileCnt(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, int tenantId) throws Exception;
+	int getTotalFileCnt2(String folderPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, int tenantId) throws Exception;
 }

@@ -102,4 +102,17 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public List<FileVO> getAllFilesInFolder(Map<String, Object> map) {		
 		return (List<FileVO>)list("EzWebFolderDAO.getAllFilesInFolder", map);
 	}
+
+	public int getTotalFileCnt(Map<String, Object> map) {
+		return (int)select("EzWebFolderDAO.getTotalFileCnt1", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<FileVO> getAllFiles(Map<String, Object> map) {
+		return (List<FileVO>)list("EzWebFolderDAO.getAllFiles", map);
+	}
+
+	public int getTotalFileCnt2(Map<String, Object> map) {
+		return (int)select("EzWebFolderDAO.getTotalFileCnt2", map);
+	}
 }

@@ -52,7 +52,7 @@
 		    	document.getElementById("searchOption").options[0].selected = 'selected';		    			    		    	
 		    }	    	    
 		    
-		    function search_Set(pPage) {		    	
+		    function search_Set(pPage) {	    	
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/getCapacities.do",
@@ -80,6 +80,7 @@
 			}
 		    
 		    function renderData(result) {
+		    	document.getElementById("_checkAll").checked = false;
 				var tableList = document.getElementById("tblFileStorage");
 		    	
 		    	while (tableList.rows.length > 1) {
@@ -210,7 +211,7 @@
 				}
 			}
 		    
-		    function change() {
+		    function change() {		    	
 		    	searchStr = "";
 		    	searchOpt = "";
 		    	search_Set("1");
@@ -464,7 +465,7 @@
 	   <div id="mainSetting" style="margin: 10px 0px; height:500px; overflow: auto;">
 	   		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileStorage">
 	   			<tr>
-	   				<th width="10px"><input type="checkbox" onchange="getCheckAll(this);"></th>
+	   				<th width="10px"><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
 					<th width="80px" style=""><spring:message code='ezWebFolder.t146' /></th>
 					<th width="80px" style=""><spring:message code='ezWebFolder.t142' /></th>
 					<th width="200px" style=""><spring:message code='ezWebFolder.t143' /></th>

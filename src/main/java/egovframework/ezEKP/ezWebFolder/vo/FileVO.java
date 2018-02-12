@@ -22,6 +22,8 @@ public class FileVO {
 	private String fileIconUrl;
 	private String fileShareStatus;
 	private String favouriteStatus;
+	private String folderName;
+	private String folderPath;
 	private int    tenantId;
 	
 	public String getFavouriteStatus() {
@@ -199,5 +201,21 @@ public class FileVO {
 	public void setFilePosition(String filePosition) {
 		this.filePosition = filePosition;
 	}
+
+	public String getFolderName() {
+		return folderName;
+	}
+
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
+	}
+
+	public String getFolderPath() {
+		return folderPath;
+	}
+
+	public void setFolderPath(String folderPath) {
+		this.folderPath = folderPath;
+	}	
 		
 }

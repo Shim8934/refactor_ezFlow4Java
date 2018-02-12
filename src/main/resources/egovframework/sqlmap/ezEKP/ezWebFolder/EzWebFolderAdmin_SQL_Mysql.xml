@@ -6,6 +6,98 @@
 	<typeAlias  alias="UserCapacityVO"      		type="egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO"/>
 	<typeAlias  alias="FileLogVO"      				type="egovframework.ezEKP.ezWebFolder.vo.FileLogVO"/>
 	
+	<sql id="userCapacityCondition">
+    	WHERE
+				U.TENANT_ID = #tenantId#
+			AND
+				 U.PHYSICALDELIVERYOFFICENAME = #companyId#
+			<isNotNull property="searchOpt">
+				<isEqual property="primary" compareValue="1" prepend="AND">
+					<isEqual property="searchOpt" compareValue="userName">
+						<![CDATA[
+							U.DISPLAYNAME LIKE CONCAT(CONCAT('%', #searchStr#), '%')
+						]]>
+					</isEqual>
+					
+					<isEqual property="searchOpt" compareValue="deptName">				
+						<![CDATA[
+							U.DESCRIPTION LIKE CONCAT(CONCAT('%', #searchStr#), '%')
+						]]>
+					</isEqual>
+				</isEqual>
+				
+				<isEqual property="primary" compareValue="2" prepend="AND">
+					<isEqual property="searchOpt" compareValue="userName">
+						<![CDATA[
+							U.DISPLAYNAME2 LIKE CONCAT(CONCAT('%', #searchStr#), '%')
+						]]>
+					</isEqual>
+					
+					<isEqual property="searchOpt" compareValue="deptName">				
+						<![CDATA[
+							U.DESCRIPTION2 LIKE CONCAT(CONCAT('%', #searchStr#), '%')
+						]]>
+					</isEqual>
+				</isEqual>
+			</isNotNull>
+		
+			<isEqual property="primary" compareValue="1" >
+				<![CDATA[
+					ORDER BY
+						U.DESCRIPTION ASC,
+						U.DISPLAYNAME ASC
+				]]>
+			</isEqual>
+			
+			<isEqual property="primary" compareValue="2">
+				<![CDATA[
+					ORDER BY
+						U.DESCRIPTION2 ASC,
+						U.DISPLAYNAME2 ASC
+				]]>
+			</isEqual>
+    </sql>
+	
+	<sql id="fileHistoryCondition">
+		WHERE 
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+						
+		<isEqual property="searchChk" compareValue="1">
+			<isNotEqual property="fileExt" compareValue="" prepend="AND">
+				<![CDATA[
+					FILE_EXT LIKE CONCAT(CONCAT('%', #fileExt#), '%')
+           		]]> 
+			</isNotEqual>
+			
+			<isNotEqual property="fileName" compareValue="" prepend="AND">						
+				<![CDATA[
+					FILE_NAME LIKE CONCAT(CONCAT('%', #fileName#), '%')
+           		]]> 
+			</isNotEqual>
+			
+			<isNotEqual property="userName" compareValue="" prepend="AND">
+				<isEqual property="primary" compareValue="1">
+		        	<![CDATA[
+	        			CREATE_NAME1 LIKE CONCAT(CONCAT('%', #userName#), '%')
+		        	]]>
+        		</isEqual>
+	        	<isEqual property="primary" compareValue="2">
+		        	<![CDATA[
+	        			CREATE_NAME2 LIKE CONCAT(CONCAT('%', #userName#), '%')
+		        	]]>
+        		</isEqual> 
+			</isNotEqual>
+			
+			<isNotEqual property="startDate" compareValue="" prepend="AND">
+	        	<![CDATA[
+		        	(CREATE_DATE >= #startDate# AND CREATE_DATE <= #endDate#)
+	           	]]>
+	        </isNotEqual>
+		</isEqual>
+	</sql>
+	
 	<!-- WebfolderConfig resultMap -->
     <resultMap id="webfolderConfigVO" class="WebfolderConfigVO">
         <result property="tenantId"             column="TENANT_ID"              columnIndex="1" />              
@@ -89,17 +181,17 @@
         </isNotEqual>  
     </insert>
     
-    <select id="EzWebFolderAdminDAO.getWebfolderConfig" resultMap="webfolderConfigVO">             
+    <select id="EzWebFolderAdminDAO.getWebfolderConfig" resultMap="webfolderConfigVO">
 		<![CDATA[
-			SELECT 
+			SELECT
 				*
-			FROM 
+			FROM
 				TBL_WEBFOLDER_CONFIG
-			WHERE  
+			WHERE
 				COMPANY_ID = #companyId#
 			AND
 				TENANT_ID  = #tenantId#
-		]]>		
+		]]>
     </select>
     
     <select id="EzWebFolderAdminDAO.getListUserCapacity" resultMap="userCapacityVO">
@@ -130,58 +222,26 @@
 			FROM 
 				TBL_USERMASTER U 
 								  LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN AND U.TENANT_ID = W.TENANT_ID
-								  LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID AND U.TENANT_ID = C.TENANT_ID
-			WHERE
-				U.TENANT_ID = #tenantId#
-			AND
-				 U.PHYSICALDELIVERYOFFICENAME = #companyId#
+								  LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID AND U.TENANT_ID = C.TENANT_ID					
 		]]>
-		
-		<isNotNull property="searchOpt">
-			<isEqual property="primary" compareValue="1" prepend="AND">
-				<isEqual property="searchOpt" compareValue="userName">
-					<![CDATA[
-						U.DISPLAYNAME LIKE CONCAT(CONCAT('%', #searchStr#), '%')
-					]]>
-				</isEqual>
-				
-				<isEqual property="searchOpt" compareValue="deptName">				
-					<![CDATA[
-						U.DESCRIPTION LIKE CONCAT(CONCAT('%', #searchStr#), '%')
-					]]>
-				</isEqual>
-			</isEqual>
-			
-			<isEqual property="primary" compareValue="2" prepend="AND">
-				<isEqual property="searchOpt" compareValue="userName">
-					<![CDATA[
-						U.DISPLAYNAME2 LIKE CONCAT(CONCAT('%', #searchStr#), '%')
-					]]>
-				</isEqual>
-				
-				<isEqual property="searchOpt" compareValue="deptName">				
-					<![CDATA[
-						U.DESCRIPTION2 LIKE CONCAT(CONCAT('%', #searchStr#), '%')
-					]]>
-				</isEqual>
-			</isEqual>
-		</isNotNull>
-		
-		<isEqual property="primary" compareValue="1" >
-			<![CDATA[
-				ORDER BY
-					U.DISPLAYNAME ASC
-			]]>
-		</isEqual>
-		
-		<isEqual property="primary" compareValue="2">
-			<![CDATA[
-				ORDER BY
-					U.DISPLAYNAME2 ASC
-			]]>
-		</isEqual>
-			
-    </select> 
+		<include refid="userCapacityCondition"/>
+		<![CDATA[
+			LIMIT 
+				#startPoint#, #pageSize#
+		]]>
+    </select>
+    
+    <select id="EzWebFolderAdminDAO.getTotalListUserCapacity" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM 
+				TBL_USERMASTER U 
+								  LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN AND U.TENANT_ID = W.TENANT_ID
+								  LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID AND U.TENANT_ID = C.TENANT_ID					
+		]]>
+		<include refid="userCapacityCondition"/>
+    </select>    
     
     <insert id="EzWebFolderAdminDAO.updateNewAmount" parameterClass="Map">      	
         <selectKey keyProperty="v_temp" resultClass="Integer">
@@ -244,50 +304,23 @@
 				TENANT_ID AS TENANT_ID				
 			FROM 
 				TBL_WEBFOLDER_LOG
-			WHERE 
-				COMPANY_ID = #companyId#
-			AND
-				TENANT_ID = #tenantId#
 		]]>
-		
-		<isEqual property="searchChk" compareValue="1">
-			<isNotEqual property="fileExt" compareValue="" prepend="AND">
-				<![CDATA[
-					FILE_EXT LIKE CONCAT(CONCAT('%', #fileExt#), '%')
-           		]]> 
-			</isNotEqual>
-			
-			<isNotEqual property="fileName" compareValue="" prepend="AND">						
-				<![CDATA[
-					FILE_NAME LIKE CONCAT(CONCAT('%', #fileName#), '%')
-           		]]> 
-			</isNotEqual>
-			
-			<isNotEqual property="userName" compareValue="" prepend="AND">
-				<isEqual property="primary" compareValue="1">
-		        	<![CDATA[
-	        			CREATE_NAME1 LIKE CONCAT(CONCAT('%', #userName#), '%')
-		        	]]>
-        		</isEqual>
-	        	<isEqual property="primary" compareValue="2">
-		        	<![CDATA[
-	        			CREATE_NAME2 LIKE CONCAT(CONCAT('%', #userName#), '%')
-		        	]]>
-        		</isEqual> 
-			</isNotEqual>
-			
-			<isNotEqual property="startDate" compareValue="" prepend="AND">
-	        	<![CDATA[
-		        	(CREATE_DATE >= #startDate# AND CREATE_DATE <= #endDate#)
-	           	]]>
-	        </isNotEqual>
-		</isEqual>
+		<include refid="fileHistoryCondition"/>
 		<![CDATA[
 			ORDER BY
 				CREATE_DATE DESC,
 				CAST(LOG_ID AS INT) DESC
+			LIMIT 
+				#startPoint#, #pageSize#
 		]]>
     </select>
+    
+    <select id="EzWebFolderAdminDAO.getTotalFileLogs" resultClass="Integer">
+		<![CDATA[
+			SELECT COUNT(*) FROM TBL_WEBFOLDER_LOG
+		]]>
+		<include refid="fileHistoryCondition"/>		
+    </select>  
     
     <insert id="EzWebFolderAdminDAO.insertFileLog" parameterClass="Map">
         <selectKey keyProperty="v_temp" resultClass="Integer">

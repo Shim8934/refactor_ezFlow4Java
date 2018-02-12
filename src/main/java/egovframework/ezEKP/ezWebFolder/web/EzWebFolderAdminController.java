@@ -630,8 +630,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginVO userInfo   = commonUtil.userInfo(loginCookie);
 		String primary     = userInfo.getPrimary();
 		String offset      = userInfo.getOffset();
-		String currPage    = request.getParameter("currentPage");
-		//String companyId   = request.getParameter("companyId");
+		String currPage    = request.getParameter("currentPage");		
 		String startDate   = request.getParameter("startDate");
 		String endDate     = request.getParameter("endDate");
 		String fileExt     = request.getParameter("fileExt");
@@ -650,8 +649,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", userInfo.getTenantId())
 										.queryParam("primary", primary)
-										.queryParam("offset", offset)
-										//.queryParam("companyId", companyId)
+										.queryParam("offset", offset)										
 										.queryParam("startDate", startDate)
 										.queryParam("fileExt", fileExt)
 										.queryParam("fileName", fileName)

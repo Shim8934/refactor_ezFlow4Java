@@ -7,7 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
@@ -125,17 +127,21 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		int totalPages   = 0;
 		int pageSize     = 10;
 		int tenantId     = Integer.parseInt(request.getParameter("tenantId"));
-		int currPage     = Integer.parseInt(request.getParameter("currentPage"));
+		int currPage     = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : 1;
 		String searchStr = request.getParameter("searchStr");
 		String searchOpt = request.getParameter("searchOpt");
 		String primary   = request.getParameter("primary");
+		int startPoint   = (currPage - 1) * pageSize;		
 		
 		logger.debug("CompanyId: " + companyid + " || tenantId: " + tenantId);
 		
 		JSONObject result = new JSONObject();
 		
-		try {			
-			List<UserCapacityVO> listUserCapacity = ezWebFolderAdminService.getListUserCapacity(companyid, searchStr, searchOpt, tenantId, primary);			
+		try {
+			List<UserCapacityVO> listUserCapacity = ezWebFolderAdminService.getListUserCapacity(companyid, searchStr, searchOpt, startPoint, pageSize, tenantId, primary);
+			totalUsers	 				          = ezWebFolderAdminService.getTotalListUserCapacity(companyid, searchStr, searchOpt, startPoint, pageSize, tenantId, primary);
+			totalPages 					          = (totalUsers + pageSize - 1)/pageSize;
+			
 			for(UserCapacityVO capacity: listUserCapacity) {
 				if (capacity.getTotalUsed().equals("0")) {
 					capacity.setUsedRate(0);
@@ -144,37 +150,9 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 					double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10737418.24;
 					capacity.setUsedRate((int)(Integer.parseInt(capacity.getTotalUsed())/totalCapByBytes));
 				}
-			}
-			
-			//Paging
-			totalUsers = listUserCapacity.size();
-			totalPages = (totalUsers + pageSize - 1)/pageSize;
-			List<UserCapacityVO> renderList = new ArrayList<UserCapacityVO>();
-			
-			logger.debug("totalUsers: " + totalUsers + " || TotalPages: " + totalPages + " || CurrPage: " + currPage);
-
-			if (totalPages == 0 || totalPages == 1) {
-				result.put("data", listUserCapacity);				
-			}
-			else {
-				if (currPage < totalPages) {				
-					int startPoint = (currPage - 1) * pageSize;
-					int endPoint = currPage * pageSize;
-					renderList = listUserCapacity.subList(startPoint, endPoint);					
-					result.put("data", renderList);
-				}
-				else {
-					if (currPage > totalPages) {
-						currPage = totalPages;
-					}
-					int startPoint = (currPage - 1) * pageSize;
-					int endPoint = totalUsers;				
+			}		
 					
-					renderList = listUserCapacity.subList(startPoint, endPoint);
-					result.put("data", renderList);
-				}
-			}			
-								
+			result.put("data", listUserCapacity);			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("totalPages", totalPages);
@@ -257,17 +235,17 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String userName  = request.getParameter("userName")    != null ? request.getParameter("userName")                      : "";
 		String searchChk = "1";
 		int tenantId     = request.getParameter("tenantId")    != null ? Integer.parseInt(request.getParameter("tenantId"))    : -1;
-		int currPage     = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
+		int currPage     = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : 1;
 		int totalRows    = 0;
 		int totalPages   = 0;
 		int pageSize     = 10;
+		int startPoint   = (currPage - 1) * pageSize;
 		
 		logger.debug("StartDate: " + startDate + " || EndDate: " + endDate + " || FileExt: " + fileExt + " || FileName: " + fileName + " || Username: " + userName);
 		
 		JSONObject result = new JSONObject();
 		
-		try {
-			
+		try {			
 			if (startDate.equals("") && endDate.equals("") && fileExt.equals("") && fileName.equals("") && userName.equals("")) {
 				searchChk = "0";
 			}
@@ -295,46 +273,18 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			
 			logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
 			
-			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, primary, offset, tenantId);
+			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, startPoint, pageSize, primary, offset, tenantId);
+			totalRows	 				 = ezWebFolderAdminService.getTotalFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, startPoint, pageSize, primary, tenantId);
+			totalPages 					 = (totalRows + pageSize - 1)/pageSize;			
 			
-			//Paging
-			if (listFileLogs != null) {
-				totalRows  = listFileLogs.size();
-			}
-			
-			totalPages = (totalRows + pageSize - 1)/pageSize;
-			List<FileLogVO> renderList = new ArrayList<FileLogVO>();
-			
-			logger.debug("totalUsers: " + totalRows + " || TotalPages: " + totalPages + " || CurrPage: " + currPage);
-
-			if (totalPages == 0 || totalPages == 1) {				
-				result.put("data", listFileLogs);
-			}
-			else {
-				if (currPage < totalPages) {				
-					int startPoint = (currPage - 1) * pageSize;
-					int endPoint = currPage * pageSize;
-					renderList = listFileLogs.subList(startPoint, endPoint);					
-					result.put("data", renderList);
-				}
-				else {
-					if (currPage > totalPages) {
-						currPage = totalPages;
-					}
-					int startPoint = (currPage - 1) * pageSize;
-					int endPoint = totalRows;				
-					
-					renderList = listFileLogs.subList(startPoint, endPoint);					
-					result.put("data", renderList);
-				}
-			}
-
+			result.put("data", listFileLogs);
 			result.put("totalPages", totalPages);
 			result.put("totalRows", totalRows);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1192,7 +1142,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	public JSONObject getFileList(@PathVariable(value="folderid") String folderId, HttpServletRequest request) {	
 		String offset    = request.getParameter("offset")      != null ? request.getParameter("offset")                        : "";
 		String primary   = request.getParameter("primary")     != null ? request.getParameter("primary")                       : "";		
-		//String companyId = request.getParameter("companyId")   != null ? request.getParameter("companyId")                     : "";
 		String startDate = request.getParameter("startDate")   != null ? request.getParameter("startDate")                     : "";
 		String endDate   = request.getParameter("endDate")     != null ? request.getParameter("endDate")                       : "";
 		String fileExt   = request.getParameter("fileExt")     != null ? request.getParameter("fileExt")                       : "";
@@ -1201,10 +1150,11 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String fileType  = request.getParameter("fileType")    != null ? request.getParameter("fileType")                      : "";
 		String searchChk = "1";
 		int tenantId     = request.getParameter("tenantId")    != null ? Integer.parseInt(request.getParameter("tenantId"))    : -1;
-		int currPage     = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
+		int currPage     = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) :  1;
 		int totalRows    = 0;
 		int totalPages   = 0;
-		int pageSize     = 10;		
+		int pageSize     = 10;
+		int startPoint   = (currPage - 1) * pageSize;
 		
 		JSONObject result = new JSONObject();
 		
@@ -1245,58 +1195,49 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			
 			logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
 			
-			List<FileVO> fileList = new ArrayList<FileVO>();
+			List<FileVO> fileList = new ArrayList<FileVO>();			
 			FolderVO folder		  = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			String folderPath	  = folder.getFolderPath();
-			folderPath			  = folderPath.substring(1, folderPath.length() - 1);
-			String originalPath	  = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
+			folderPath			  = folderPath.substring(1, folderPath.length() - 1);		
+			String originalPath   = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
 			
 			if (folder.getFolderUpper().equals("root")) {
-				ezWebFolderService.getAllFiles(fileList, originalPath, folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);
-			}
-			else {
-				fileList = ezWebFolderService.getAllFilesInFolder(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, offset, tenantId);
+				Map<String, String> filePathMap = new LinkedHashMap<String, String>();				
+				fileList  = ezWebFolderService.getAllFiles(folder.getFolderPath(), originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
+				totalRows = ezWebFolderService.getTotalFileCnt2(folder.getFolderPath(), searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, tenantId);
+				String []rootPath = folderPath.split("\\|");
 				
-				for (FileVO file : fileList) {					
-					file.setFilePosition(originalPath + file.getFileName());
-				}
-			}
-			
-			//Paging
-			if (fileList != null) {
-				totalRows  = fileList.size();
-			}
-			
-			totalPages = (totalRows + pageSize - 1)/pageSize;
-			List<FileVO> renderList = new ArrayList<FileVO>();
-			
-			logger.debug("totalUsers: " + totalRows + " || TotalPages: " + totalPages + " || CurrPage: " + currPage);
-
-			if (totalPages == 0 || totalPages == 1) {				
-				result.put("data", fileList);
-			}
-			else {
-				if (currPage < totalPages) {				
-					int startPoint = (currPage - 1) * pageSize;
-					int endPoint = currPage * pageSize;
-					renderList = fileList.subList(startPoint, endPoint);					
-					result.put("data", renderList);
-				}
-				else {
-					if (currPage > totalPages) {
-						currPage = totalPages;
+				for (FileVO file : fileList) {
+					if (file.getFilePosition().equals("")) {
+						String file_path	= originalPath;
+						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
+						String[] fldPathArr = fldPath.split("\\|");
+						
+						for (int i = rootPath.length; i < fldPathArr.length - 1; i++) {
+							if (filePathMap.containsKey(fldPathArr[i])) {
+								file_path += filePathMap.get(fldPathArr[i]) + "/";
+							}
+							else {
+								FolderVO _folder = ezWebFolderService.getFolderByFolderId(fldPathArr[i], offset, tenantId);
+								file_path += _folder.getFolderName1() + "/";								
+								filePathMap.put(fldPathArr[i], _folder.getFolderName1());
+							}
+						}
+				
+						file.setFilePosition(file_path + file.getFileName());
 					}
-					int startPoint = (currPage - 1) * pageSize;
-					int endPoint = totalRows;				
-					
-					renderList = fileList.subList(startPoint, endPoint);					
-					result.put("data", renderList);
 				}
 			}
-
-			result.put("totalPages", totalPages);
-			result.put("totalRows", totalRows);
+			else {				
+				fileList  = ezWebFolderService.getAllFilesInFolder(folderId, originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
+				totalRows = ezWebFolderService.getTotalFileCnt(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, tenantId);
+			}
 			
+			totalPages  = (totalRows + pageSize - 1)/pageSize;
+			
+			result.put("data", fileList);
+			result.put("totalPages", totalPages);
+			result.put("totalRows", totalRows);			
 			result.put("status", "ok");
 			result.put("code", 0);			
 		} 
@@ -1319,7 +1260,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		}
 		
 		return result;
-	}
+	}	
 	
 	private void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, String fileSize, String fileExt, String fileType, int tenantId) throws Exception {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
