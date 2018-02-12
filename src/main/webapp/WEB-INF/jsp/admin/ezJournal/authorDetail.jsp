@@ -41,6 +41,18 @@
 	   				}
 	   			});
 	   		}
+	   		//선택된 사원의 권한 부서 보여주기
+	   		function setUserAuthorDept(userId){
+	   			$.ajax({
+	   				type:"post",
+	   				dataType:"html",
+	   				url:"/admin/ezJournal/authorDeptList.do",
+	   				data:{"userId":userId},
+	   				success: function(result){
+	   					$("#authorDeptList").html(result);
+	   				}
+	   			});
+	   		}
 	   		//검색
 	   		function search_click(){
 	   			var key = $("#search_type").val();
@@ -49,10 +61,11 @@
 	   		}
 		   	window.onload=function(){
 		   		setDeptList();
+		   		setUserAuthorDept("${selectedUser}");
 		   	}
 		</script>
 		<style>
-			tr:hover{background:#eee; color:#fff;}
+			tr.hover:hover{background:#eee; color:#fff;}
 			@media screen and (-webkit-min-device-pixel-ratio:0)
 			  and (min-resolution:.001dpcm) {
 				xmp{
@@ -113,6 +126,24 @@
 			            </tr>
 			        </table>
 				</td>
+				<td style="vertical-align:top; padding-top:4px; padding-left:3px;">
+	                <table>
+					<tbody>
+						<tr>
+							<td>
+								<h2 class="receiver_tltype01" >
+									<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t41'/> </span>
+								</h2>
+								<div class="receiver_borderbox">
+									<div id="authorDeptList" style="width: 250px; Height: 465px; overflow-x: auto; overflow-y: auto;">
+										
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
 			</tr>
         </table>
 	</body>
