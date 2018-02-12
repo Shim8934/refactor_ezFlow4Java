@@ -38,16 +38,19 @@
 	   				data:{"key":key, "value":value},
 	   				success: function(result){
 	   					$("#orglistView").html(result);
+	   					initSelectedUser();
 	   				}
 	   			});
 	   		}
 	   		//선택된 사원의 권한 부서 보여주기
-	   		function setUserAuthorDept(userId){
+	   		function setUserAuthorDept(elem){
+	   			$("*").removeClass("selectTR");
+	   			$(elem).addClass("selectTR");
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/authorDeptList.do",
-	   				data:{"userId":userId},
+	   				data:{"userId":$(elem).attr("id")},
 	   				success: function(result){
 	   					$("#authorDeptList").html(result);
 	   				}
@@ -59,9 +62,15 @@
 	   			var value = $("#keyword").val();
 	   			setUserList(key,value);
 	   		}
+	   		function initSelectedUser(){
+	   			var selectedUser = "<c:out value='${selectedUser}'/>" ;
+	   			if(selectedUser !="" ){
+			   		var elem = document.getElementById(selectedUser);
+			   		setUserAuthorDept(elem,selectedUser);
+	   			}
+	   		}
 		   	window.onload=function(){
 		   		setDeptList();
-		   		setUserAuthorDept("${selectedUser}");
 		   	}
 		</script>
 		<style>
@@ -73,6 +82,10 @@
 					top:-38px;
 					left:20px;
 				}
+			}
+			
+			.selectTR{
+				background-color: rgb(233, 241, 255);
 			}
 		</style>
 	</head>
@@ -128,24 +141,25 @@
 				</td>
 				<td style="vertical-align:top; padding-top:4px; padding-left:3px;">
 	                <table>
-					<tbody>
-						<tr>
-							<td>
-								<h2 class="receiver_tltype01" >
-									<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t41'/> </span>
-								</h2>
-								<div class="receiver_borderbox">
-									<div id="authorDeptList" style="width: 250px; Height: 465px; overflow-x: auto; overflow-y: auto;">
-										
+						<tbody>
+							<tr>
+								<td>
+									<h2 class="receiver_tltype01" >
+										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t41'/> </span>
+									</h2>
+									<div class="receiver_borderbox">
+										<div id="authorDeptList" style="width: 250px; Height: 465px; overflow-x: auto; overflow-y: auto;">
+										</div>
 									</div>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</td>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
 			</tr>
         </table>
+        <div id = "insertAuthorDeptPopup">
+        </div>
 	</body>
 </html>
 
