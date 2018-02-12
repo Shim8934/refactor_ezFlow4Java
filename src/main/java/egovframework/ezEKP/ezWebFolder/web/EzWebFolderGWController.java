@@ -513,8 +513,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 					try { zipOutputStream.closeEntry(); } catch (Exception e) {}
 					try { zipOutputStream.close(); } catch (Exception e) {}
 				}			
-			}
-			
+			}			
 		}
 		
 		logger.debug("File Download Finish!");
@@ -1223,7 +1222,8 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 								filePathMap.put(fldPathArr[i], _folder.getFolderName1());
 							}
 						}
-				
+						
+						file_path += file.getFolderName() + "/";				
 						file.setFilePosition(file_path + file.getFileName());
 					}
 				}

@@ -59,14 +59,15 @@
 		    }
 		    
 		    function clearToggle() {		    	
-				arrSubFolder      = [];
-				selectedFolder    = "";
-				compFolderId	  = null;							
-				var divTree       = document.getElementById("folderTree");			
+				arrSubFolder          = [];
+				selectedFolder        = "";
+				compFolderId	      = null;							
+				var divTree           = document.getElementById("folderTree");
+				divTree.style.display = "none";
 				
 		    	while (divTree.hasChildNodes()) {
 		    		divTree.removeChild(divTree.lastChild);
-		    	}		    	
+		    	}	
 		    }
 		    
 		    function companyFile() {		    	
@@ -107,6 +108,7 @@
 				var divComp   = document.createElement("div");
 				compFolderId  = result["folderId"];
 				
+				
 		    	while (divTree.hasChildNodes()) {
 		    		divTree.removeChild(divTree.lastChild);
 		    	}	
@@ -123,7 +125,9 @@
 				else {
 					selectedFolder = "";
 					getSelected(spanCompany);
-				}								
+				}
+				
+				divTree.style.display = "";
 			}
 			
 			function displaySubFolder(divTree, divElmt, list) {
@@ -294,7 +298,7 @@
   			</h2> 
 			<ul>
   			</ul>
-  			<div id="folderTree"></div>
+  			<div id="folderTree" style="min-height: 200px; display: none;"></div>
 			
 			<h2>
   				<span style="display:inline-block;width:100%;" onClick="fileTransactionHistory();"><spring:message code='ezWebFolder.t128' /></span>

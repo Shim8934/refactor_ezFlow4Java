@@ -182,7 +182,7 @@ function renderResult(result) {
 			objTd2.appendChild(faImgElmt);
 			objTd3.appendChild(fileIconElmt);
 			objTd4.textContent = jsObj["fileName"];
-			objTd5.textContent = jsObj["fileSize"];
+			objTd5.textContent = getFileSize(jsObj["fileSize"]);
 			
 			if (primary == "1") {
 				objTd6.textContent = jsObj["createName1"];
@@ -264,7 +264,7 @@ function renderResult2(result) {
 			
 			objTd2.appendChild(fileIconElmt);			
 			objTd3.textContent = jsObj["fileName"];
-			objTd4.textContent = jsObj["fileSize"];
+			objTd4.textContent = getFileSize(jsObj["fileSize"]);
 			
 			if (primary == "1") {
 				objTd5.textContent = jsObj["createName1"];
@@ -295,4 +295,20 @@ function renderResult2(result) {
     catch (e) {
     	alert("returnvalue :: " + e.description);
     }
+}
+
+function getFileSize(fileSize) {
+	var fileSize_ = "";
+	
+    if (fileSize / 1024 / 1024 > 1) {
+    	fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
+    }
+    else if (fileSize / 1024 > 1) {
+    	fileSize_ = parseInt(fileSize / 1024) + "KB";
+    }
+    else {
+    	fileSize_ = fileSize + "B";
+    }		
+    
+    return fileSize_;
 }

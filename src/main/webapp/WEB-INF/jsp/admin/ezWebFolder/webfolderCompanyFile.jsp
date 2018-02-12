@@ -34,8 +34,7 @@
 			var endDateStr	 = "";
 			var fileExtStr	 = "";
 			var fileNameStr	 = "";
-			var userNameStr  = "";
-			var fileTypeStr  = "";
+			var userNameStr  = "";			
 			var folderId	 = "<c:out value='${folderId}'/>";
 			var checkedArr	 = [];
 			var folderType   = "company";
@@ -87,7 +86,7 @@
 		        document.getElementById("fileCreatorVal").value = "";
 		    }
 		    
-		    function search_Set(pPage) {	    	
+		    function search_Set(pPage) {
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/getFileList.do",
@@ -98,7 +97,7 @@
 						"fileExt"     : fileExtStr,
 						"fileName"    : fileNameStr,
 						"userName"    : userNameStr,
-						"fileType"	  : fileTypeStr,
+						"fileType"	  : document.getElementById("fileTypeSelect").value,
 						"folderId"    : folderId
 					},
 					dataType: "JSON",
@@ -169,7 +168,7 @@
 						tdElmt2.appendChild(fileIconElmt);
 						
 						tdElmt3.textContent = result[i]["fileName"];
-						tdElmt4.textContent = result[i]["fileSize"];
+						tdElmt4.textContent = getFileSize(result[i]["fileSize"]);
 						
 						if (primary == "1") {
 							tdElmt5.textContent = result[i]["createName1"];
@@ -204,7 +203,7 @@
 		    	var fileExtVal  = document.getElementById("fileExtVal").value;
 		    	var fileNameVal = document.getElementById("fileNameVal").value;
 		    	var userNameVal = document.getElementById("fileCreatorVal").value;
-		    	var fileTypeVal = document.getElementById("fileTypeSelect").value;
+		    	//var fileTypeVal = document.getElementById("fileTypeSelect").value;
 		    	
 		    	if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) {
 		    		alert("<spring:message code='ezWebFolder.t163' />");					
@@ -227,21 +226,21 @@
 			    endDateStr	 = eDateVal;
 				fileExtStr	 = fileExtVal;
 				fileNameStr	 = fileNameVal;
-				userNameStr  = userNameVal;
-				fileTypeStr  = fileTypeVal;
+				userNameStr  = userNameVal;				
 		    	
 		    	openSearchPanel();
 		    	search_Set("1");
 		    }
 		    
 		    function change() {
-				startDateStr = "";
+		    	refresh();
+				/* startDateStr = "";
 			    endDateStr	 = "";
 				fileExtStr	 = "";
 				fileNameStr	 = "";
-				userNameStr  = "";
+				userNameStr  = ""; */
 				window.parent.frames["left"].getData(document.getElementById("companyList").value, 1);
-		    	search_Set("1");
+		    	//search_Set("1");
 		    }
 		    
 		    function fileDownload() {
@@ -343,6 +342,15 @@
 		    		}
 	    	   }
 	       }
+	       
+	       function refresh() {
+				startDateStr = "";
+			    endDateStr	 = "";
+				fileExtStr	 = "";
+				fileNameStr	 = "";
+				userNameStr  = "";
+		    	search_Set("1");
+	       }
 	    </script>
 	</head>
 	<body class="mainbody">	
@@ -367,9 +375,10 @@
 				<li id=""><a onClick="fileRename()"   	 style="margin-top: 3px;"><span>파일명변경</span></a></li>
 				<li id=""><a onClick="fileMove()"     	 style="margin-top: 3px;"><span>파일이동/복사</span></a></li>
 				<li id=""><a onClick="openSearchPanel()" style="margin-top: 3px;"><span>검색</span></a></li>
+				<li id=""><a onClick="refresh()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139' /></span></a></li>				
 			</ul>
 			<div style="position: absolute; top: 0px; right: 10px;">
-				<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect">
+				<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect" onchange="refresh();">
 					<option value="1">전체 </option>
 					<option value="2">문서 </option>
 					<option value="3">음악</option>
