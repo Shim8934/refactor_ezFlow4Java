@@ -11,6 +11,70 @@ public class FolderFileVO {
 	String createDate;
 	String tenantId;
 	
+	String folderfileName;
+	String filePath;
+	String fileSize;
+	String typeId;
+	String folderType;
+	String folderPath;
+	String useStatus;
+	String ownerId;
+	String companyId;
+	
+	public String getFolderfileName() {
+		return folderfileName;
+	}
+	public void setFolderfileName(String folderfileName) {
+		this.folderfileName = folderfileName;
+	}
+	public String getFilePath() {
+		return filePath;
+	}
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+	public String getFileSize() {
+		return fileSize;
+	}
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
+	}
+	public String getTypeId() {
+		return typeId;
+	}
+	public void setTypeId(String typeId) {
+		this.typeId = typeId;
+	}
+	public String getFolderType() {
+		return folderType;
+	}
+	public void setFolderType(String folderType) {
+		this.folderType = folderType;
+	}
+	public String getFolderPath() {
+		return folderPath;
+	}
+	public void setFolderPath(String folderPath) {
+		this.folderPath = folderPath;
+	}
+	public String getUseStatus() {
+		return useStatus;
+	}
+	public void setUseStatus(String useStatus) {
+		this.useStatus = useStatus;
+	}
+	public String getOwnerId() {
+		return ownerId;
+	}
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
+	}
+	public String getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
 	public String getSeqId() {
 		return seqId;
 	}

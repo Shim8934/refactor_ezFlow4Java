@@ -19,7 +19,9 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		
 		LOGGER.debug("getShares in dao");
 		
-		return (List<FolderFileVO>)list("EzWebFolderDAO_m.getShares", map);
+		//return (List<FolderFileVO>)list("EzWebFolderDAO_m.getShares", map);
+		//return (List<FolderFileVO>)list("EzWebFolderDAO_m.getShareGive", map);
+		return (List<FolderFileVO>)list("EzWebFolderDAO_m.getShareGet", map);
 	}
 	
 }

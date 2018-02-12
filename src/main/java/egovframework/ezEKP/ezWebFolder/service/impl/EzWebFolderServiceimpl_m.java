@@ -33,6 +33,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		Map<String, Object> map = new HashMap<String, Object>(); 
 		
+		map.put("companyId", "S907000");
+		map.put("deptId", "opensol");
+		map.put("userId", "naman79");
+		
 		return ezWebFolderDAO.getShares(map);
 	}
 	
