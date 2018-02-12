@@ -24,7 +24,7 @@
 		    var szSelectedItemNo = "";
 		    var szPubFlag = "";
 		    var EndPollYN, ResponseYN, ResultOpenYN;
-			var MultiResYN, WriteYN, AdminYN;
+			var MultiResYN;
 			var TR_Contents_Start = 1;
 			var szSearchParam ="&title=" + "<c:out value='${qstListVO.title}'/>" + "&responseRange=" + "<c:out value='${qstListVO.responseRange}'/>" + "&pollStartDate=" + "<c:out value='${qstListVO.pollStartDate}'/>" + "&pollEndDate=" + "<c:out value='${qstListVO.pollEndDate}'/>";
 			var CurPage = "<c:out value='${qstListVO.currPage}'/>";
@@ -49,8 +49,6 @@
 						ResponseYN = map.responseYN;
 						ResultOpenYN = map.resultOpenYN;
 						MultiResYN = map.multiResYN;
-						WriteYN = map.writeYN;
-						AdminYN = map.adminYN;
 						var rv;
 
 						switch (pflag) {
@@ -71,7 +69,7 @@
 						            window.location.href = szUrl;
 								}
 								break;
-							case "Delete":
+							/* case "Delete":
 								if(Chk_Delete()){
 									var Qst_Delete_ItemMsg = GetOpenWindow("qstDeleteItemMsg.do?brdID=" + g_BrdID + "&itemNo=" + p_SelectedItemNo, "qstDeleteItemMsg", 400, 230);
 						            try{
@@ -79,7 +77,7 @@
 						            }catch (e){
 						            }
 								}
-								break;
+								break; */
 							case "Analysis":
 								if(Chk_Analysis() == true){
 									var szUrl = "/ezQuestion/qstAnalysis.do?"+receve+"&itemNo=" + szSelectedItemNo + "&pubFlag=" + szPubFlag;
@@ -99,14 +97,10 @@
 						return rv;
 					},
 					error: function(xhr, status, e){
-// 						alert(e.message);
-
 						EndPollYN = "";
 						ResponseYN = "";
 						ResultOpenYN = "";
 						MultiResYN = "";
-						WriteYN = "N";
-						AdminYN = "N";
 						       
 						return false;
 					},
@@ -115,7 +109,7 @@
 			}
 			
 			function Chk_Reuse(){
-				if (WriteYN == "Y")
+				if (adminYN == "Y")
 					return true;
 				else{
 					alert(strLang44);
@@ -124,7 +118,7 @@
 			}
 			
 			function Chk_Save(){
-			    if(WriteYN == "Y" || AdminYN == "Y")
+			    if(adminYN == "Y")
 			        return true;
 			    else{
 			        alert('<spring:message code="ezQuestion.t275" />');
@@ -133,7 +127,7 @@
 			}
 			
 		    function Chk_Analysis(){
-		        if(WriteYN == "Y" || AdminYN == "Y")
+		        if(adminYN == "Y")
 		            return true;
 		        else{
 		            alert('<spring:message code="ezQuestion.t276" />');
@@ -142,7 +136,7 @@
 		    }
 		    
 		    function Chk_Delete(){
-		        if(WriteYN == "Y" || AdminYN == "Y")
+		        if(adminYN == "Y")
 		            return true;
 		        else{
 		            alert('<spring:message code="ezQuestion.t278" />');
@@ -173,7 +167,7 @@
 	    	        if(ResultOpenYN == "Y"){
 		                return true;
 		            }else{
-		                if(WriteYN == "Y" || AdminYN == "Y")
+		                if(adminYN == "Y")
 		                    return true;
 	            	    else{
 	            	        alert('<spring:message code="ezQuestion.t284" />');
@@ -184,7 +178,7 @@
 	        	    if(ResultOpenYN == "Y"){
 		                return true;
 		            }else{
-		                if(WriteYN == "Y" || AdminYN == "Y")
+		                if(adminYN == "Y")
 		                    return true;
 		                else{
 		                    alert('<spring:message code="ezQuestion.t284" />');
@@ -196,7 +190,7 @@
 		    }
 		
 		    function Chk_InfoModify(){
-		        if (WriteYN == "Y" || AdminYN == "Y") {
+		        if (adminYN == "Y") {
 		            return true;
 		        }else{
 		            alert('<spring:message code="ezQuestion.t285" />');
@@ -268,9 +262,38 @@
 		        } 
 		    }
 		    
-		    var qst_delete_itemmsg_dialogArguments = new Array();
 		    function menu_Delete(){
-		        var szCheckCnt = 0;
+		    	itemList = "";
+		    	$("input:checkbox:checked").each(function(index) {
+		    		if (index == 0) {
+		    			itemList = this.value;
+		    		} else {
+		    			itemList += ";" + this.value;
+		    		}
+		    	});
+		    	
+		    	if (itemList == "") {
+		    		alert('<spring:message code="ezQuestion.t294" />');
+		            return;
+		    	} else {
+		    		if (confirm('<spring:message code="ezQuestion.t267" />')) {
+		    			$.ajax({
+							type : "POST",
+							url : "/ezQuestion/deleteItemList.do",
+							dataType : "json",
+							data : {
+								itemList : itemList
+							},
+							success : function(result) {
+								window.location.reload(true);
+							},error : function(jqXHR, textStatus, errorThrown) {
+								
+							}
+						});
+		    		}
+		    	}
+		    	
+		        /* var szCheckCnt = 0;
 		        var table = document.getElementById("QstList");
 		        var szLen = table.rows.length;
 		        for(var i = TR_Contents_Start; i < szLen; i++){
@@ -324,12 +347,12 @@
 		        }else{
 		            alert('<spring:message code="ezQuestion.t290" />');
 		            return;
-		        }
+		        } */
 		    }
 		    
-		    function menu_Delete_Complete(){
+		    /* function menu_Delete_Complete(){
 		        window.location.reload(true);
-		    }
+		    } */
 		    
 		    function menu_Analysis(){
 		       if(menu_Checking()){

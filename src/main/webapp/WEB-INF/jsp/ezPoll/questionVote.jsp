@@ -352,7 +352,7 @@
 			        	
 			            if (ret == "ADD") {							
 			            	numberOfUnvotedUsers = numberOfUnvotedUsers - 1;			            	
-			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
+			            	document.getElementById("_unVotedNumber").innerHTML = "(" + numberOfUnvotedUsers + ")";
 			            	
 			            	//if (user != curentUser || sessionId != _sessionid) {
 			            	votedUsers = votedUsers + 1;
@@ -361,7 +361,7 @@
 					    }
 			            else {
 			            	numberOfUnvotedUsers = numberOfUnvotedUsers + 1;			            	
-			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
+			            	document.getElementById("_unVotedNumber").innerHTML = "(" + numberOfUnvotedUsers + ")";
 			            	
 			            	//if (user != curentUser || sessionId != _sessionid) {
 		            		votedUsers = votedUsers - 1;
@@ -2477,7 +2477,7 @@
 	<body class="mainbody"  id="mainbodytag">
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
-			<div>
+			<div id="ballotSystemBody">
 				<div id="mainmenu3" style="overflow: hidden; margin:29px 0px 12px 0px">
 					  <div style="float: left; display: block;" class="voteInfo">
 					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
@@ -2579,7 +2579,7 @@
 						</div>  
 				</div>
 		        </c:if>	
-				<table class="content" style="width:100%; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD;" id="_content1">
+				<table class="content" style="width:100%; min-width:800px; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD;" id="_content1">
 					<c:forEach var="_option" items="${listOptions}" varStatus="loop">
 			        	<tr>
 			        	   <c:if test="${question.status == 1 || question.status == 2}">
@@ -2654,7 +2654,7 @@
 						<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
 					</div> 
 				</c:if>-->
-				<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; border-bottom: none;">
+				<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
 					<table style="width: 100%;" id="commentListView">
 						<c:forEach var="_comt" items="${listComments}">
 							<tr style="border-bottom: 1px dotted #b6b6b6;">

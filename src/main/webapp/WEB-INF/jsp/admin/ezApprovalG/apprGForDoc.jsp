@@ -824,15 +824,15 @@
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
-	        <ul>
-	        	<c:if test="${type == 'admin' }">
+	    	<c:if test="${type == 'admin' }">
 	            <b><spring:message code = 'ezApprovalG.t1276' /></b>
 	            <select id="SCompID" name="SCompID" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 		        </select><br /><br />
-		        </c:if>
+			</c:if>
+	        <ul>
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
 	            <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>	            
 	            <li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>

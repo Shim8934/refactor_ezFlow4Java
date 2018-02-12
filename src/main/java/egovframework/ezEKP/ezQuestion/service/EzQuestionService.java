@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstPollItemACLVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
@@ -28,8 +29,6 @@ public interface EzQuestionService {
 	public List<QstAttachVO> getAttachInfo(QstAttachVO qstAttachVO, int tenantID) throws Exception;
 	
 	public List<QstAttachVO> getAttachInfo3(QstAttachVO qstAttachVO, int tenantID) throws Exception;
-
-	public String getUserIDAdmin(int brd) throws Exception;
 	
 	public List<QstAnswerVO> getAnswerAnswerCnt(int brdID, int itemNo, int qstNo, int tenantID) throws Exception;
 	
@@ -55,7 +54,9 @@ public interface EzQuestionService {
 	
 	public List<QstTempSaveVO> tempSave(int brdID, int itemNo, int tenantID) throws Exception;
 	
-	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int brdID, int itemNo, int tenantID) throws Exception;
+	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int itemNo, int tenantID) throws Exception;
+	
+	public List<QstPollItemACLVO> getQstPollItemAcl(String itemID, int tenantID) throws Exception;
 	
 	public String tableAnswerValue(int brdID, int itemNo, int questionNo, int tenantID) throws Exception;
 	
@@ -186,5 +187,7 @@ public interface EzQuestionService {
 	public void updateTblPollPermission(String endFlag, int brdID, int itemNo, int tenantID) throws Exception;
 
 	public String saveQuestion(String pBrdID, String vItemID, Document doc, String pUserID, LoginVO loginVO) throws Exception;
+
+	public void deleteItemList(String itemList, String realPath, int tenantID) throws Exception;
 	
 }

@@ -4197,6 +4197,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
+		// 접수된 문서인지 확인하기.
+		// return 값이 1 이상이면 접수된 문서로 판단.
+		
+		int isReceived = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("docID", docID);
 		model.addAttribute("orgDocID", orgDocID);
@@ -4213,10 +4218,33 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("signImageType", signImageType);
+		model.addAttribute("isReceived", isReceived);
 
 		logger.debug("recevGSusin ended.");
 		
 		return "ezApprovalG/apprGrecevGSusin";
+	}
+	
+	/**
+	 * 전자결재G 접수된 문서인지 확인하는 Method
+	 * */
+	@RequestMapping(value = "/ezApprovalG/isReceivedDoc.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String isReceivedDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("isReceivedDoc started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		
+		int isReceived = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("docID : " + docID);
+		logger.debug("isReceived : " + isReceived);
+		
+		logger.debug("isReceivedDoc ended.");
+		
+		return String.valueOf(isReceived);
 	}
 	
 	/**
@@ -4447,6 +4475,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("approvalROOT", approvalRoot);
+		model.addAttribute("approvalFlag", approvalFlag);
 		logger.debug("recevG ended.");
 		
 		return "ezApprovalG/apprGrecevG";

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezQuestion.dao.EzQuestionDAO;
@@ -25,6 +26,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstPollItemACLVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
@@ -34,10 +36,9 @@ import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzQuestionService")
-public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements EzQuestionService{
+public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestionService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzQuestionServiceImpl.class);
 	
@@ -195,11 +196,6 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public String getUserIDAdmin(int brdID) throws Exception {
-		return ezQuestionDAO.getUserIDAdmin(brdID);
-	}
-	
-	@Override
 	public void callCreateMother(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
@@ -345,6 +341,36 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		ezQuestionDAO.deleteItem_D6(map);
 		ezQuestionDAO.deleteItem_D7(map);
 		ezQuestionDAO.deleteItem(map);
+	}
+	
+	@Override
+	public void deleteItemList(String itemList, String realPath, int tenantID) throws Exception {
+		logger.debug("deleteItemList started. itemList = " + itemList + ", tenantID = " + tenantID);
+		
+		for (String itemNo : itemList.split(";")) {
+			int itemNO = Integer.parseInt(itemNo);
+			
+			List<QstDeleteAttachUrlVO> tempList = getDeleteAttachUrl(itemNO, tenantID);
+			for(QstDeleteAttachUrlVO vo : tempList) {
+				if(vo.getAttachType().equals("1") || vo.getAttachType().equals("2")) {
+					String url = vo.getAttachUrl().toString();
+					
+					if (!url.equals("")) {
+						deleteFile(realPath + commonUtil.separator + url);
+					}
+				}
+			}
+			
+			QstCompleteVO qstCompleteVO = new QstCompleteVO();
+			qstCompleteVO.setStrBrdID(5);
+			qstCompleteVO.setItemNo(itemNO);
+			
+			deleteItem(qstCompleteVO, tenantID);
+			
+			deletePollAttach(5, itemNO, tenantID);
+		}
+		
+		logger.debug("deleteItemList ended.");
 	}
 
 	@Override
@@ -935,9 +961,8 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int brdID, int itemNo, int tenantID) throws Exception {
+	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getDeleteAttachUrl(map);
@@ -1337,6 +1362,21 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		updatePollItem(qstCompleteVO, loginVO.getTenantId());
 		logger.debug("SaveQuestion End");
 		return "OK";
+	}
+	
+	@Override
+	public List<QstPollItemACLVO> getQstPollItemAcl(String itemID, int tenantID) throws Exception {
+		logger.debug("getQstPollItemAcl started. itemID = " + itemID + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		
+		List<QstPollItemACLVO> list = ezQuestionDAO.getQstPollItemAcl(map);
+		
+		logger.debug("getQstPollItemAcl ended. listSize = " + list.size());
+		
+		return list;
 	}
 }
 

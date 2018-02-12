@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
-import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
