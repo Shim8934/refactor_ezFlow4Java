@@ -243,9 +243,11 @@
 	                return;
 	            }
 
-	            if (ret != "OK") {
+	            if (ret != "OK" && ret == "FALSE") {
+                    alert("<spring:message code = 'ezCommunity.t921' />");
                     return;
                 } else if (ret == "cancel") {
+	            	alert("<spring:message code='ezCommunity.t60'/>");
 	                return;
 	            }
 	            
@@ -344,7 +346,11 @@
 	                return;
 	            }
 	            
-	            if (ret != "OK") {
+	            if (ret != "OK" && ret == "FALSE") {
+                    alert("<spring:message code = 'ezCommunity.t921' />");
+                    return;
+                } else if (ret == "cancel") {
+	            	alert("<spring:message code='ezCommunity.t60'/>");
 	                return;
 	            }
 
