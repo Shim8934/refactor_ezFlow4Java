@@ -1734,6 +1734,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String userName2 = "";
 
 		String title = list.get(0).getTitle();
+		title = title.replaceAll("\"", "\\\\" + "\"");
 		
 		for (int i=0; i<list.size(); i++) {
 			if (list.size() == 1) {
