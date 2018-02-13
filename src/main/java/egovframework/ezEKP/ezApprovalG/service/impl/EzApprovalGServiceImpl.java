@@ -17628,6 +17628,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return doc;
 	}
 	
+	public int checkReceivedDoc(String docID, String companyID, int tenantID) throws Exception {
+	
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_DOCID", docID);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		int result = ezApprovalGDAO.checkReceivedDoc(map);		
+		
+		return result;
+	}
+	
 	
 	@Override
 	public String sendOfferCheck(String docID, String userID, String string, String companyID, String lang, int tenantID) throws Exception {

@@ -352,7 +352,7 @@
 			        	
 			            if (ret == "ADD") {							
 			            	numberOfUnvotedUsers = numberOfUnvotedUsers - 1;			            	
-			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
+			            	document.getElementById("_unVotedNumber").innerHTML = "(" + numberOfUnvotedUsers + ")";
 			            	
 			            	//if (user != curentUser || sessionId != _sessionid) {
 			            	votedUsers = votedUsers + 1;
@@ -361,7 +361,7 @@
 					    }
 			            else {
 			            	numberOfUnvotedUsers = numberOfUnvotedUsers + 1;			            	
-			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
+			            	document.getElementById("_unVotedNumber").innerHTML = "(" + numberOfUnvotedUsers + ")";
 			            	
 			            	//if (user != curentUser || sessionId != _sessionid) {
 		            		votedUsers = votedUsers - 1;
@@ -2477,7 +2477,7 @@
 	<body class="mainbody"  id="mainbodytag">
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
-			<div>
+			<div id="ballotSystemBody">
 				<div id="mainmenu3" style="overflow: hidden; margin:29px 0px 12px 0px">
 					  <div style="float: left; display: block;" class="voteInfo">
 					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
@@ -2524,7 +2524,7 @@
 				<div id="titleAndContent">				
 					<div id="title" class="questionTitle" style="width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
 						<div class="baonkTest" title="<c:out value='${question.title}'/>"><c:out value='${question.title}'/></div>
-						<div style="height: 40px; float:left;">
+						<div style="height: 40px; float:left; display:none;">
 							<span id="status" style="font-weight: bold; color: #FFF;">
 							<c:choose>
 								<c:when test="${question.status == 1}"><spring:message code = 'ezPoll.t116'/></c:when>

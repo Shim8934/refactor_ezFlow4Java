@@ -249,7 +249,7 @@
 
 				<c:forEach var = "club" items = "${clubList }" varStatus="status">
 					<tr>
-						<td style="width:50px; height:23px">${status.count }</td>
+						<td style="width:50px; height:23px"><c:out value='${totalCount - ((curPage -1) * 10) - status.index }' /></td>
 						<!--// 20100108 : 보안 처리, 관련 추가작업(XSS)-->
 						<td style="cursor:pointer; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><nobr ><c:out value = '${club.c_ClubName }' /></nobr></td>
 						<td style="cursor:pointer; width:300px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><c:out value = '${club.c_ClubDesc}' /></td>

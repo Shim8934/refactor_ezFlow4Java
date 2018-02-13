@@ -69,7 +69,7 @@
 						            window.location.href = szUrl;
 								}
 								break;
-							case "Delete":
+							/* case "Delete":
 								if(Chk_Delete()){
 									var Qst_Delete_ItemMsg = GetOpenWindow("qstDeleteItemMsg.do?brdID=" + g_BrdID + "&itemNo=" + p_SelectedItemNo, "qstDeleteItemMsg", 400, 230);
 						            try{
@@ -77,7 +77,7 @@
 						            }catch (e){
 						            }
 								}
-								break;
+								break; */
 							case "Analysis":
 								if(Chk_Analysis() == true){
 									var szUrl = "/ezQuestion/qstAnalysis.do?"+receve+"&itemNo=" + szSelectedItemNo + "&pubFlag=" + szPubFlag;
@@ -262,9 +262,38 @@
 		        } 
 		    }
 		    
-		    var qst_delete_itemmsg_dialogArguments = new Array();
 		    function menu_Delete(){
-		        var szCheckCnt = 0;
+		    	itemList = "";
+		    	$("input:checkbox:checked").each(function(index) {
+		    		if (index == 0) {
+		    			itemList = this.value;
+		    		} else {
+		    			itemList += ";" + this.value;
+		    		}
+		    	});
+		    	
+		    	if (itemList == "") {
+		    		alert('<spring:message code="ezQuestion.t294" />');
+		            return;
+		    	} else {
+		    		if (confirm('<spring:message code="ezQuestion.t267" />')) {
+		    			$.ajax({
+							type : "POST",
+							url : "/ezQuestion/deleteItemList.do",
+							dataType : "json",
+							data : {
+								itemList : itemList
+							},
+							success : function(result) {
+								window.location.reload(true);
+							},error : function(jqXHR, textStatus, errorThrown) {
+								
+							}
+						});
+		    		}
+		    	}
+		    	
+		        /* var szCheckCnt = 0;
 		        var table = document.getElementById("QstList");
 		        var szLen = table.rows.length;
 		        for(var i = TR_Contents_Start; i < szLen; i++){
@@ -318,12 +347,12 @@
 		        }else{
 		            alert('<spring:message code="ezQuestion.t290" />');
 		            return;
-		        }
+		        } */
 		    }
 		    
-		    function menu_Delete_Complete(){
+		    /* function menu_Delete_Complete(){
 		        window.location.reload(true);
-		    }
+		    } */
 		    
 		    function menu_Analysis(){
 		       if(menu_Checking()){
