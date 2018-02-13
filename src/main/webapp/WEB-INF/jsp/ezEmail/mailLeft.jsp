@@ -340,6 +340,17 @@
 	                previewSubTreeCall();
 	            }
 	        }
+	        
+	        /**
+	        	메일함 트리뷰 reload 함수
+	        */
+	        function mailbox_treeview_reload() {
+	        	PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+                PostTreeView.update();
+                
+                previewSubTreeCall();
+	        }
+	        
 	        function Function_Flag(v_data) {
 	            v_data = parseInt(v_data);
 	

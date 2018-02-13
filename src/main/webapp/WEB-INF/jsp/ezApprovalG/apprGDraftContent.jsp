@@ -191,7 +191,7 @@
 	                        Div_.style.width = "99%";
 	                        Div_.style.overflow = "hidden";
         					Div_.setAttribute("contentEditable", true);
-	                        Div_.style.textAlign = "left";
+	                        //Div_.style.textAlign = "left";
 	                        if (navigator.userAgent.indexOf('Firefox') != -1)
 	                            Div_.onkeypress = function (event) { var ret = onKeyDownEvent_Element(event, this); if (!ret) return false; };
 	                        Div_.innerHTML = TDRows.item(i).innerHTML;
@@ -206,7 +206,7 @@
 	                        Div_.style.marginLeft = "2px";
 	                        Div_.style.overflow = "hidden";
 	                        Div_.setAttribute("contentEditable", true);
-	                        Div_.style.textAlign = "left";
+	                        //Div_.style.textAlign = "left";
 	                        Div_.onkeypress = function (event) { var ret = onKeyDownEvent(event, this, 127); if (!ret) return false; };
  							Div_.innerHTML = TDRows.item(i).innerHTML;
 	                        TDRows.item(i).innerHTML = "";

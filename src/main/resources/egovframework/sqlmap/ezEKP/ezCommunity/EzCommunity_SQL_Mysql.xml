@@ -2913,6 +2913,8 @@
 			WHERE
 				boardadmin_fg = 'true'
 			AND
+				boardid = #v_pBoardID#
+			AND
 				(	accessid = #v_pUserID#
 				OR
 					accessid = #v_pDeptID#

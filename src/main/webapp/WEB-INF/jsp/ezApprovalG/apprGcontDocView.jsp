@@ -676,7 +676,7 @@
 		        }
 		        openLocation += "&beforeDocID=" + pDocID;
 		        pListTypeValue = temppListTypeValue;
-		        var result = GetOpenWindow(openLocation, "", 1000, 950, "YES");
+		        var result = GetOpenWindow(openLocation, "", 1150, 950, "YES");
 		        window.close();
 		    }
 		    
