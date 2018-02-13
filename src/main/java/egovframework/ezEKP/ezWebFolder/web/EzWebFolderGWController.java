@@ -1526,11 +1526,24 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	private void copyFolder(FolderVO folder, List<FolderVO> listSubFolder, String destFolderId, String userId , String offset, int tenantId) throws Exception {
 		FolderVO parentFolder 	   = ezWebFolderService.getFolderByFolderId(destFolderId, offset, tenantId);
 		String oldPath		  	   = folder.getFolderPath();
-		String newPath		  	   = parentFolder.getFolderPath() + folder.getFolderId() + "|";
+		String newId			   = getMaxFolderID(tenantId);
+		String newPath		  	   = parentFolder.getFolderPath() + newId + "|";
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date           	   = new Date();
 		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 		int levelDistance		   = parentFolder.getFolderLevel() + 1 - folder.getFolderLevel();
+		
+		if (folder.getFolderLevel() + levelDistance == 1) {
+			String folderPath = folder.getFolderPath();
+			folderPath	      = folderPath.substring(1, folderPath.length() - 1);
+			String ancestorId = folderPath.split("\\|")[1];
+			
+			List<FolderUserVO> listUsers = ezWebFolderService.getFolderUsers(ancestorId, tenantId);
+			
+			for (FolderUserVO folderUser: listUsers) {
+				ezWebFolderAdminService.insertFolderUser(getMaxFolderUserSeq(tenantId), folderUser.getUserId(), folderUser.getUserType(), folder.getFolderId(), userId, timeUTC, folder.getCompanyId(), tenantId);
+			}		
+		}		
 		
 		folder.setFolderPath(newPath);
 		folder.setUpdateId(userId);
@@ -1538,18 +1551,28 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		folder.setFolderUpper(destFolderId);
 		folder.setFolderLevel(folder.getFolderLevel() + levelDistance);
 		folder.setFolderStep(getMaxFolderStep(destFolderId, tenantId));
-		folder.setFolderId(getMaxFolderID(tenantId));
+		folder.setFolderId(newId);
 		
 		ezWebFolderAdminService.insertFolder(folder);	
 		
-		for (FolderVO subFld : listSubFolder) {
+		for (int i = 0; i < listSubFolder.size(); i++) {
+			FolderVO subFld	  = listSubFolder.get(i);			
+			String newSubId   = getMaxFolderID(tenantId);
 			String folderPath = subFld.getFolderPath();
 			folderPath        = folderPath.replace(oldPath, newPath);
+			folderPath        = folderPath.replace("|" + subFld.getFolderId() + "|", "|" + newSubId + "|");
+
 			subFld.setFolderPath(folderPath);
 			subFld.setUpdateDate(timeUTC);
 			subFld.setUpdateId(userId);
 			subFld.setFolderLevel(subFld.getFolderLevel() + levelDistance);
-			subFld.setFolderId(getMaxFolderID(tenantId));
+			subFld.setFolderId(newSubId);
+			
+			folderPath	         = folderPath.substring(1, folderPath.length() - 1);
+			String[] folderArry  = folderPath.split("\\|");
+			String upperFolderId = folderArry[folderArry.length - 2];
+			
+			subFld.setFolderUpper(upperFolderId);			
 			
 			//Update Folder
 			ezWebFolderAdminService.insertFolder(subFld);
