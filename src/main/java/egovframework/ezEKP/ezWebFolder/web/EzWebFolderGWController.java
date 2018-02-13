@@ -972,32 +972,38 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		logger.debug("TenantId: " + tenantId + " || folderName: " + folderName + " || folderID: " + folderId);
 		
 		try {
-			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
-			
+			FolderVO folder   = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);	
+
 			if (folder == null) {
 				logger.debug("Folder not found!");
 				result.put("status", "error");
 				result.put("code", "1");
 				return result;
-			}			
+			}
 			
+			String folderPath          = folder.getFolderPath();
+			folderPath	               = folderPath.substring(1, folderPath.length() - 1);
+			String ancestorId          = folderPath.split("\\|")[1];			
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date           	   = new Date();
 			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);			
-			JSONObject json            = (JSONObject) parser.parse(folderUsers);
-			JSONArray userArray		   = (JSONArray)json.get("user");
-			JSONArray deptArray		   = (JSONArray)json.get("dept");
 			
-			//Delete all folder users
-			ezWebFolderAdminService.deleteFolderUsers(folderId, tenantId);
-			
-			for (int i = 0; i < userArray.size(); i++) {
-				ezWebFolderAdminService.insertFolderUser(getMaxFolderUserSeq(tenantId), (String)userArray.get(i), "user", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
+			if (ancestorId.equals(folderId)) {			
+				JSONObject json            = (JSONObject) parser.parse(folderUsers);
+				JSONArray userArray		   = (JSONArray)json.get("user");
+				JSONArray deptArray		   = (JSONArray)json.get("dept");
+				
+				//Delete all folder users
+				ezWebFolderAdminService.deleteFolderUsers(folderId, tenantId);
+				
+				for (int i = 0; i < userArray.size(); i++) {
+					ezWebFolderAdminService.insertFolderUser(getMaxFolderUserSeq(tenantId), (String)userArray.get(i), "user", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
+				}
+				
+				for (int i = 0; i < deptArray.size(); i++) {
+					ezWebFolderAdminService.insertFolderUser(getMaxFolderUserSeq(tenantId), (String)deptArray.get(i), "dept", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
+				}
 			}
-			
-			for (int i = 0; i < deptArray.size(); i++) {
-				ezWebFolderAdminService.insertFolderUser(getMaxFolderUserSeq(tenantId), (String)deptArray.get(i), "dept", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
-			}			
 					
 			folder.setFolderName1(folderName);
 			folder.setFolderName2("");			
@@ -1185,6 +1191,34 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	public JSONObject delCompanyFolder(@PathVariable(value="folderid") String folderId, HttpServletRequest request) throws Exception {
 		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
 		JSONObject result   = new JSONObject();		
+		
+		if (folderId.equals("") || tenantId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		logger.debug("FolderId: " + folderId + " || TenantId: " + tenantId);
+
+		try {
+			ezWebFolderService.updateFolderUseStatus(folderId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/webfolderadmin/folders/{folderid}/folder-move", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putCompanyFolderMove(@PathVariable(value="folderid") String folderId, HttpServletRequest request) throws Exception {
+		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		JSONObject result   = new JSONObject();
 		
 		if (folderId.equals("") || tenantId == -1) {
 			logger.debug("Parameter error!");
