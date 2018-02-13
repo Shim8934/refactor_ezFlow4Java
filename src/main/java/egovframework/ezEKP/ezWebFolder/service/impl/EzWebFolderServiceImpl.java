@@ -143,8 +143,17 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("folderUpper", folderUpperId);
 		map.put("primary", primary);
 		map.put("tenantId", tenantId);
-		return ezWebFolderDAO.getAllSimpleSubFolders(map);		
-	}
+		return ezWebFolderDAO.getAllSimpleSubFolders(map);
+	}	
+
+	@Override
+	public List<FolderVO> getAllSubFolders(String folderId, String offset, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderUpper", folderId);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("tenantId", tenantId);
+		return ezWebFolderDAO.getAllSubFolders(map);
+	}	
 
 	@Override
 	public FolderVO getCompanyFolderId(String companyId, String offset, int tenantId) throws Exception {
@@ -332,5 +341,5 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 			company.setHasSubFolder(0);
 		}		
 	}
-	
+
 }

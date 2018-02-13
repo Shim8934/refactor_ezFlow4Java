@@ -115,4 +115,9 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public int getTotalFileCnt2(Map<String, Object> map) {
 		return (int)select("EzWebFolderDAO.getTotalFileCnt2", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<FolderVO> getAllSubFolders(Map<String, Object> map) {
+		return (List<FolderVO>)list("EzWebFolderDAO.getAllSubFolders", map);
+	}
 }

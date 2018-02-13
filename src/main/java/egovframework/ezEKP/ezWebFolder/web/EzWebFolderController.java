@@ -96,7 +96,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezWebFolder/uploadFile.do")
 	@ResponseBody
-	public String uploadFile2(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {
+	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {
 		logger.debug("Upload file is running!");
 		
 		LoginVO userInfo               = commonUtil.userInfo(loginCookie);
@@ -345,7 +345,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	public String getFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {     			
 		LoginVO userInfo   = commonUtil.userInfo(loginCookie);
 		String rootFolder  = request.getParameter("rootFolder");
-		String fileId      = request.getParameter("fileId");
+		String fileId      = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
 		
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
 		String url         = gwServerUrl + "/webfolder/foldersTree";
@@ -371,8 +371,11 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		if (status.equals("ok")) {			
 			JSONObject folderTree = (JSONObject) resultBody.get("data");
 			String	   currFolder = (String)resultBody.get("currentFolder");
+			
+			if (!currFolder.equals("")) {
+				model.addAttribute("currentFolder", currFolder);
+			}
 			model.addAttribute("folderTree", folderTree);
-			model.addAttribute("currentFolder", currFolder);
 		}
 		
 		return "json";

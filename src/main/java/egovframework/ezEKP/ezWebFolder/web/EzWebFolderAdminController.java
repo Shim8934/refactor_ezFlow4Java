@@ -3,9 +3,11 @@ package egovframework.ezEKP.ezWebFolder.web;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -97,6 +100,19 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		return "admin/ezWebFolder/webfolderAdminLeft";
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/folderMoveConfirm.do")
+	public String folderMoveConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("File Move Confirm is running!");		
+		String folderId   = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
+		String rootFolder = request.getParameter("rootFolder") != null ? request.getParameter("rootFolder") : "";
+
+		model.addAttribute("folderId", folderId);
+		model.addAttribute("rootFolder", rootFolder);
+		logger.debug("Folder Move Confirm finishes!");
+		
+		return "admin/ezWebFolder/folderMove";		
 	}
 	
 	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminRight.do")
@@ -676,6 +692,43 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			model.addAttribute("fileList", fileList);
 		}
 
+		return "json";
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/moveFolder.do", method = RequestMethod.POST)	
+	public String moveFolder(@CookieValue("loginCookie") String loginCookie,  Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("Move Folder is running!");
+		LoginVO user 		= commonUtil.userInfo(loginCookie);
+		String folderId		= request.getParameter("folderId");
+		String parentFld    = request.getParameter("parentFldId");
+		String mode         = request.getParameter("mode");
+		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
+		String url          = gwServerUrl + "/webfolderadmin/folders/" + folderId + "/modes/" + mode+ "/folder-move";
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", user.getTenantId())
+										.queryParam("offset", user.getOffset())
+										.queryParam("userId", user.getId())									
+										.queryParam("parentFld", parentFld);
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		
+		HttpEntity<?> entity          = new HttpEntity<>(headers);		
+		RestTemplate rest             = new RestTemplate();		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();		
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());				
+		String status                 = resultBody.get("status").toString();
+		
+		if (!status.equals("ok")) {			
+			String reason      = resultBody.get("reason").toString();			
+			model.addAttribute("reason", reason);
+		}
+		
+		logger.debug("Move Folder finishes!");
+		
 		return "json";
 	}
 	

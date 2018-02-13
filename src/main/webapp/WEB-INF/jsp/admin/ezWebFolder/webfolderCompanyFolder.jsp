@@ -342,6 +342,11 @@
 				getSelected(spanElmt);
 			}
 			
+			function refreshView2() {
+				arrSubFolder = [];
+				getData();	
+			}
+			
 			function saveChanges() {
 				if (!selectedFolder) {
 					alert("폴더 선택하세요.");
@@ -380,8 +385,7 @@
 					dataType: "JSON",
 					async: false,
 					success: function(data) {					
-						arrSubFolder = [];
-						getData();						
+						refreshView2();					
 					},
 					error: function (xhr, status, e){
 						alert("<spring:message code='ezWebFolder.t134' />");
@@ -400,23 +404,7 @@
 					return;
 				}
 				
-				$.ajax({
-					type: "POST",
-					url: "/admin/ezWebFolder/.do",
-					data: {
-						"folderId" : selectedFolder
-					},
-					dataType: "JSON",
-					async: false,
-					success: function(data) {				
-						arrSubFolder   = [];
-						selectedFolder = "";
-						getData();
-					},
-					error: function (xhr, status, e){
-						alert("<spring:message code='ezWebFolder.t134' />");
-					}
-				});
+				DivPopUpShow(450, 480, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId);
 			}
 			
 			function deleteFolder() {
@@ -512,6 +500,11 @@
 	   				</td>
 	   			</tr>	   			
 	   		</table>	   		
+	   </div>
+	   
+	   <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	   <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	       <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	   </div>
 	   
 	   <input type="text" name="RangeXMLStr" id="RangeXMLStr" style="display:none">
