@@ -13,7 +13,7 @@
 		
 		<script type="text/javascript">
 			var lang = "<c:out value = '${lang}' />";
-			var sCurPage = "<c:out value = '${curpage}' />";
+			var sCurPage = "<c:out value = '${curPage}' />";
 			var sTotalPage = "<c:out value = '${totalPage}' />";
 			var totalCount = "<c:out value = '${keywordCount}' />";
 			
