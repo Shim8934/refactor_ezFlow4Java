@@ -311,41 +311,4 @@ public class MScheduleController extends EgovFileMngUtil {
 		
 		return "/mobile/ezSchedule/mScheduleInsert";
 	}
-	
-	/**
-	 * 코린도 게시판 - 일정 API 테스트용
-	 */
-	/*@RequestMapping(value="/mobile/ezSchedule/mScheduleBoardInsert.do")
-	public void mScheduleBoardInsert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ScheduleInfoVO scheduleInfoVO) throws Exception {
-		LOGGER.debug("mScheduleBoardInsert started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		scheduleInfoVO.setCreatorId(userInfo.getId());
-		
-		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/mobile/ezschedule/board-schedules";
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		Gson gson = new Gson();
-		JSONObject jsonParam = gson.fromJson(gson.toJson(scheduleInfoVO), JSONObject.class);
-		
-		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<JSONObject> result = rest.postForEntity(url, entity, JSONObject.class);
-		
-		JSONObject resultBody = result.getBody();
-		
-		String status = resultBody.get("status").toString();
-		
-System.out.println(status);
-System.out.println(resultBody.get("code").toString());
-System.out.println(resultBody.get("data").toString());
-
-		LOGGER.debug("mScheduleBoardInsert ended.");
-	}*/
 }
