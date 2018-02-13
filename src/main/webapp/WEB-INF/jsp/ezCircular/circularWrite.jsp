@@ -66,8 +66,8 @@
 		        	var nameList = userName.split(", ");
 		        	var nameList2 = userName2.split(", ");
 
-		        	// circularID 값이 있으면 작성자는 회람자로 무조건 추가되기때문에 -1
-		        	if (oldCircularID != 0) {
+		        	// 수정이나 임시저장일경우 작성자는 회람자로 무조건 추가되기때문에 -1
+		        	if (mode != "write") {
 		        		listSize = listSize - 1;
 		        	}
 
@@ -437,14 +437,7 @@
   			</tr>
   			<tr>
   				<td>
-  					<c:choose>
-   						<c:when test="${mode eq 'temp'}">
-   							<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do?mode=temp&circularID=${circularID}"></iframe>
-   						</c:when>
-   						<c:otherwise>
-	       					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do"></iframe>	
-   						</c:otherwise>
-   					</c:choose>
+   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do?mode=${mode}&circularID=${circularID}"></iframe>
   				</td>
   			</tr>
 		</table>
