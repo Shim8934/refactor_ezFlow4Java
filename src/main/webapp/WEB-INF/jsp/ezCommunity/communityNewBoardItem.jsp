@@ -103,6 +103,7 @@
 		    var rsa = new RSAKey();
 			var flag = false;
 			var saveFlag = false;
+			var clickFlag = false;
 			
 			<c:if test="${isCrossBrowser != true}">
 			    var objMHT = new ActiveXObject("MhtFormat.Convert");
@@ -322,15 +323,27 @@
 		    		return ;
 		    	}
 		    }
-			
-		    var saveBtnFlag = true;
-		    
+	    
+		    // 2018-02-13 천성준
+		    function checkDoubleClick() {
+		    	if (clickFlag) {
+		    		return true;
+		    	} else {
+		    		clickFlag = true;
+		    		return false;
+		    	}
+		    }	
+
 		    function SaveItem() {
 		    	if(!saveBtnFlag){
 		    		return
 		    	}
 		    	
 		    	checkSaveItem();
+		    	
+		    	if(checkDoubleClick()){
+		    		return;
+		    	}
 		    	
 		    	saveFlag == true;
 		    	
