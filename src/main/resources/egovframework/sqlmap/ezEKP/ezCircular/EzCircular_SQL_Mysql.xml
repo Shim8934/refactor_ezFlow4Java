@@ -83,7 +83,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -101,7 +101,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -260,7 +260,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -278,7 +278,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -490,7 +490,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -508,7 +508,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -706,7 +706,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -724,7 +724,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -889,7 +889,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -907,7 +907,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -1027,7 +1027,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -1045,7 +1045,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -1241,7 +1241,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) E
 			ON
@@ -1259,7 +1259,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) F
 			ON
