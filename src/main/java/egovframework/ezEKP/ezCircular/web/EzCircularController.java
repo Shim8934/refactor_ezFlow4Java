@@ -861,7 +861,11 @@ public class EzCircularController extends EgovFileMngUtil {
     	logger.debug("getMyCircularList started");
     	
     	userInfo = commonUtil.userInfo(loginCookie);
+    	//2018-02-13 김보미
     	String pageNum = req.getParameter("pageNum");
+    	if(Integer.parseInt(pageNum) == 0) {
+    		pageNum = "1";
+    	}
     	String searchType = req.getParameter("searchType");
     	String searchValue = req.getParameter("searchValue");
     	String sdate = req.getParameter("sdate");
