@@ -124,6 +124,7 @@
 			
 			function getSelected(obj) {
 				var previousElmt = document.getElementsByName(selectedFolder)[0];
+				var level		 = obj.getAttribute("level");
 				
 				if (previousElmt != null) {
 					if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {						
@@ -143,8 +144,14 @@
 					document.getElementById("fldName").value = obj.innerHTML;
 					document.getElementById("RangeXMLStr").value = "";
 					updateTarget("");
+					document.getElementById("usersSelect").style.display  = "none";
+					document.getElementById("displayUsers").style.display = "none";
 					return;
 				}
+				
+				document.getElementById("usersSelect").style.display  = (level != 1) ? "none" : "";
+				document.getElementById("displayUsers").style.display = (level == 0) ? "none" : "";
+				
 				
 			    $.ajax({
 					type: "POST",
@@ -264,12 +271,7 @@
 				if (!selectedFolder) {
 					alert("폴더 선택하세요.");
 					return;
-				}
-				
-				if (compFolderId == selectedFolder) {
-					alert("안됩니다.");
-					return;
-				}
+				}				
 				
 				menu_SelectRange();
 			}
@@ -280,8 +282,10 @@
 					return;
 				}
 				
-				document.getElementById("listBttn1").style.display = "none";
-				document.getElementById("listBttn2").style.display = "";
+				document.getElementById("usersSelect").style.display  = (compFolderId == selectedFolder) ? "" : "none";
+				document.getElementById("displayUsers").style.display = (compFolderId == selectedFolder) ? "" : "none";
+				document.getElementById("listBttn1").style.display   = "none";
+				document.getElementById("listBttn2").style.display   = "";
 				
 				document.getElementById("fldName").value     = "";
 				document.getElementById("RangeXMLStr").value = "";
@@ -306,7 +310,7 @@
 		    		return;
 		    	}
 		    	
-		    	if (!target.replace(/\s/g,'')) {
+		    	if (compFolderId == selectedFolder && !target.replace(/\s/g,'')) {
 		    		alert("폴더 구성원 선택하세요.");
 		    		return;
 		    	}
@@ -339,7 +343,13 @@
 			}
 			
 			function saveChanges() {
-				if (!selectedFolder || compFolderId == selectedFolder) {					
+				if (!selectedFolder) {
+					alert("폴더 선택하세요.");
+					return;
+				}
+				
+				if (compFolderId == selectedFolder) {
+					alert("안됩니다.");
 					return;
 				}
 				
@@ -440,16 +450,16 @@
 	   							</tr>
 	   							<tr>
 	   								<td>
-	   									<div style="margin: 10px 20px;">
-	   										<span>구성원:</span>
+	   									<div style="margin: 10px 20px; min-height: 36px;">
+	   										<span id="displayUsers">구성원:</span>
 	   										<span id="newTargetDiv"></span>
 	   									</div>
 	   								</td>
 	   							</tr>
 	   							<tr>
 	   								<td>
-	   									<div style="margin: 20px 20px 100px 20px;">
-	   										<a class="webfolderBttn2"><span onclick="getUsersPage();">조직도</span></a>
+	   									<div style="margin: 20px 20px 100px 20px; min-height: 80px;" >
+	   										<a class="webfolderBttn2"><span onclick="getUsersPage();" id="usersSelect">조직도</span></a>
 	   									</div>
 	   								</td>
 	   							</tr>

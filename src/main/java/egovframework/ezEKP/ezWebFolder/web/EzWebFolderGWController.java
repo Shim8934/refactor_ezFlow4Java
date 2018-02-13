@@ -901,15 +901,19 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			String folderId			   = getMaxFolderID(tenantId);
 			JSONObject json            = (JSONObject) parser.parse(folderUsers);
-			JSONArray userArray		   = (JSONArray)json.get("user");
-			JSONArray deptArray		   = (JSONArray)json.get("dept");
+			JSONArray userArray	       = (JSONArray)json.get("user");
+			JSONArray deptArray	       = (JSONArray)json.get("dept");
 			
-			for (int i = 0; i < userArray.size(); i++) {
-				ezWebFolderAdminService.insertFolderUser(getMaxFolderUserSeq(tenantId), (String)userArray.get(i), "user", folderId, userId, timeUTC, companyId, tenantId);
+			if (userArray != null) {
+				for (int i = 0; i < userArray.size(); i++) {
+					ezWebFolderAdminService.insertFolderUser(getMaxFolderUserSeq(tenantId), (String)userArray.get(i), "user", folderId, userId, timeUTC, companyId, tenantId);
+				}
 			}
 			
-			for (int i = 0; i < deptArray.size(); i++) {
-				ezWebFolderAdminService.insertFolderUser(getMaxFolderUserSeq(tenantId), (String)deptArray.get(i), "dept", folderId, userId, timeUTC, companyId, tenantId);
+			if (deptArray != null) {
+				for (int i = 0; i < deptArray.size(); i++) {					
+					ezWebFolderAdminService.insertFolderUser(getMaxFolderUserSeq(tenantId), (String)deptArray.get(i), "dept", folderId, userId, timeUTC, companyId, tenantId);
+				}
 			}
 			
 			folder.setFolderId(folderId);
@@ -1140,7 +1144,8 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/webfolderadmin/folder-users/{folderid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFolderUsers(@PathVariable(value="folderid") String folderId, HttpServletRequest request) {	
-		int tenantId      = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;		
+		int tenantId      = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
+		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("folderId: " + folderId + " || tenantId: " + tenantId);		
@@ -1152,8 +1157,15 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			return result;
 		}	
 		
-		try {			
-			List<FolderUserVO> listUsers = ezWebFolderService.getFolderUsers(folderId, tenantId);
+		try {
+			FolderVO folder   = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			String folderPath = folder.getFolderPath();
+			folderPath	      = folderPath.substring(1, folderPath.length() - 1);
+			String ancestorId = folderPath.split("\\|")[1];
+			
+			logger.debug("AncestorID: " + ancestorId);
+			
+			List<FolderUserVO> listUsers = ezWebFolderService.getFolderUsers(ancestorId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

@@ -458,7 +458,7 @@
                         			FROM
                         				TBL_WEBFOLDER_FOLDERUSER
                          			WHERE
-                         				SEQ_ID = #folderId#
+                         				SEQ_ID    = #seqId#
                                    	AND
                                    		TENANT_ID = #tenantId#
 								)
@@ -488,7 +488,7 @@
 	            	 CREATE_DATE  	= #createDate#,
 	            	 COMPANY_ID	  	= #companyId#
 	            WHERE
-	            		FOLDER_ID	= #seqId#
+	            		SEQ_ID	    = #seqId#
 	            	AND
 	            		TENANT_ID	= #tenantId#
             ]]>

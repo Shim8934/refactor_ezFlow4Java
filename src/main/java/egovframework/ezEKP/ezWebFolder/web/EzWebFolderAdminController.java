@@ -530,7 +530,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+				                         .queryParam("offset", userInfo.getOffset())
+										 .queryParam("tenantId", userInfo.getTenantId());		
 		RestTemplate rest             = new RestTemplate();		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
