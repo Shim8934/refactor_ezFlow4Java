@@ -9699,7 +9699,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		if (allApproveYN.equals("Y")) {
-			map.put("v_FLAG", "0");
+			map.put("v_FLAG", "2");
 		} else {
 			map.put("v_FLAG", "1");
 		}
