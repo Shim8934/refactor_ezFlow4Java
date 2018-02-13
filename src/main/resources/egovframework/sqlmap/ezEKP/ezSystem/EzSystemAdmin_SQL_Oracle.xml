@@ -34,7 +34,7 @@
 	<sql id="EzSystemAdminDAO.searchQuery">
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
-				<isEqual property="lang" compareValue="1" >
+				<isEqual property="lang" compareValue="primary" >
 					<isEqual property="search_keycode" compareValue="1">
 						USERNM LIKE '%'||#search_keyword#||'%'
 					</isEqual>
@@ -42,7 +42,7 @@
 						DEPTNM LIKE '%'||#search_keyword#||'%'
 					</isEqual>
 				</isEqual>
-				<isNotEqual property="lang" compareValue="1">
+				<isNotEqual property="lang" compareValue="primary">
 					<isEqual property="search_keycode" compareValue="1">
 						USERNM2 LIKE '%'||#search_keyword#||'%'
 					</isEqual>
