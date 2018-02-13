@@ -2089,7 +2089,7 @@
 	                        		</c:otherwise>
 	                        	</c:choose>
 	                            <span id="reservation_date">
-		                            <input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+		                            <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                   &nbsp;<a class="imgbtn"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
 	                            </span>
 	                    </tr>
@@ -2103,7 +2103,7 @@
 			                                    <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t433' /></span>
 			                            </span>
 			                            <span id="Makedate">
-			                                <input type="text" id="Sdatepicker2" style="width:80px;text-align:center">
+			                                <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center">
 			                            </span>
 	                        		</c:when>
 	                        		<c:otherwise>
@@ -2112,7 +2112,7 @@
 			                                    <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t433' /></span>
 			                            </span>
 			                            <span id="Makedate">
-			                                <input type="text" id="Sdatepicker2" style="width:80px;text-align:center">
+			                                <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center">
 			                            </span>
 	                        		</c:otherwise>
 	                        	</c:choose>
@@ -2174,7 +2174,7 @@
 	                                    	</c:choose>
 	                                    </td>
 	                                    <td id="reservation_date">
-	                                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	                                        <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center" ><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                        &nbsp;<img src="/images/btn_date.gif" border="0" style="CURSOR: pointer; width: 75px; height: 20px; vertical-align: middle" onclick="btn_PostDate_Clear()" popuplocation='topright'>
 	                                    </td>
 	                                </tr>
@@ -2191,14 +2191,14 @@
 			                                    <td style="width: 90px; white-space: nowrap" id="Chkbox">
 			                                        <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked><spring:message code='ezBoard.t433' /></td>
 			                                    <td id="Makedate">
-			                                        <input type="text" id="Sdatepicker2" style="width:80px;text-align:center">&nbsp;&nbsp;
+			                                        <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center">&nbsp;&nbsp;
 			                                    </td>
 	                                		</c:when>
 	                                		<c:otherwise>
 			                                    <td style="width: 90px; white-space: nowrap" id="Chkbox">
 			                                        <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()"><spring:message code='ezBoard.t433' /></td>
 			                                    <td id="Makedate">
-			                                        <input type="text" id="Sdatepicker2" style="width:80px;text-align:center">&nbsp;&nbsp; </td>
+			                                        <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center">&nbsp;&nbsp; </td>
 	                                		</c:otherwise>
 	                                	</c:choose>
 	                                    <td>&nbsp;</td>
