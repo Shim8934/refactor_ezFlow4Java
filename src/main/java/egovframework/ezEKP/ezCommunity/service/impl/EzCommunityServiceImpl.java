@@ -2887,11 +2887,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		item.setWriterName(URLDecoder.decode(xmlData.getElementsByTagName("WRITERNAME").item(0).getTextContent(), "utf-8").trim());
 		item.setWriterName2(URLDecoder.decode(xmlData.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), "utf-8").trim());
 		item.setWriterDeptID(xmlData.getElementsByTagName("DEPTID").item(0).getTextContent());
-		item.setWriterDeptName(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent());
-		item.setWriterDeptName2(xmlData.getElementsByTagName("DEPTNAME2").item(0).getTextContent());
+		item.setWriterDeptName(URLDecoder.decode(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
+		item.setWriterDeptName2(URLDecoder.decode(xmlData.getElementsByTagName("DEPTNAME2").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
 		item.setWriterCompanyID(xmlData.getElementsByTagName("COMPANYID").item(0).getTextContent());
-		item.setWriterCompanyName(xmlData.getElementsByTagName("COMPANYNAME").item(0).getTextContent());
-		item.setWriterCompanyName2(xmlData.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
+		item.setWriterCompanyName(URLDecoder.decode(xmlData.getElementsByTagName("COMPANYNAME").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
+		item.setWriterCompanyName2(URLDecoder.decode(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
 		item.setWriteDate(dateStr);
 		item.setImportance(Integer.parseInt(xmlData.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
 		item.setTitle(URLDecoder.decode(xmlData.getElementsByTagName("TITLE").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&"), "utf-8").trim());
