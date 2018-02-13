@@ -385,7 +385,7 @@
                 
                 if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
                 	var str = "<spring:message code = 'ezCommunity.t926' />";
-                	document.getElementById("mycommunity").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='border:1px solid #ddd;height:200px;text-align:center;border-radius:3px;background-color:#f8f8f8'><div style='margin-top:92px;color:#777'>" + str + "</div></div>";
+                	document.getElementById("mycommunity").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='border:1px solid #ddd;height:200px;text-align:center;border-radius:3px;background-color:#f8f8f8'><img style='margin-top:57px' src='/images/nocomunitydata.png' /><div style='margin-top:10px;color:#777'>" + str + "</div></div>";
                 }
                 //document.getElementById("tblPageRayer").style.display = "none";
 	        }
@@ -862,6 +862,39 @@
 					success: function(result){
 						if (result["clubVO"] != null) {
 							event_get_todaycop(result);
+						} else {
+							var h1 = document.createElement("H1");
+			                var img = document.createElement("IMG");
+			                img.style.width = "156px";
+			                img.style.height = "28px";
+			                
+			                if ('${userInfo.lang}' == '3') {
+			                	img.src = "/images/jp/community/title_todayCommunity_jp.png";
+			                } else {
+			                	img.src = "/images/kr/community/title_todayCommunity.png";
+			                }
+			                img.alt = "today Community";
+
+			                h1.appendChild(img);
+
+			                var div = document.createElement("DIV");
+			                div.className = "todayCommunity";			                
+
+			                var div2 = document.createElement("DIV");
+			                div2.className = "todayCommunityLayout";			                
+			                div2.innerHTML = "<div><img style='margin-top:30px;' src='/images/nocomunity.png' />&nbsp;<div style='margin-top:10px'>"+strLang88+"</div></div>";
+			                div2.style.borderColor = "#ccc";
+			                div2.style.borderRadius = "5px";
+			                div2.style.textAlign = "center";
+			                div2.style.height = "142px";
+			                
+			                div.appendChild(div2);
+
+			                document.getElementById("todaycop").appendChild(h1);
+			                document.getElementById("todaycop").appendChild(div);
+							
+							conts = "<div style='border:1px solid #ccc; height:172px; text-align:center;'><div><img style='margin-top:45px;' src='/images/nocomunity.png' /><div style='margin-top:10px'>"+strLang88+"</div></div></div>";							
+							$(".newCommunity_listLayout").html(conts);
 						}
 					}
 				});

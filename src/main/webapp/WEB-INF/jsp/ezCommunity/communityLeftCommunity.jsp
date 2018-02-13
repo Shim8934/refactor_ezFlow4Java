@@ -9,6 +9,7 @@
 		<title>left_community</title>
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -91,7 +92,11 @@
 					url : "/ezCommunity/getLeftCommunity.do",
 					dataType : "json",
 					success : function(result) {
-						getCommunityList_after(result["list"]);
+						if (result["list"] != "") {
+							getCommunityList_after(result["list"]);
+						} else {
+							$("#MyCopList").html("<div style='height:200px;text-align:center;'><img style='margin-top:40px' src='/images/signcommunity.png' /><div style='margin-top:15px'><div>"+strLang86+"</div><div style='margin-top:5px'>"+strLang87+"</div></div></div>");
+						}
 					}
 				});
 			}
