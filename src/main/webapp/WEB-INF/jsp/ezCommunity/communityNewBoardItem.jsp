@@ -335,10 +335,6 @@
 		    }	
 
 		    function SaveItem() {
-		    	if(!saveBtnFlag){
-		    		return
-		    	}
-		    	
 		    	checkSaveItem();
 		    	
 		    	if(checkDoubleClick()){
@@ -568,7 +564,6 @@
 		        
 		        xmlhttp = null;
 		        xmldom = null;
-		        saveBtnFlag = false;
 		    }
 	
 		    function JSleep(sTime) {
