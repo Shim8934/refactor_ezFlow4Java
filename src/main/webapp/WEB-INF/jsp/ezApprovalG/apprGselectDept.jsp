@@ -187,13 +187,13 @@
 		  </tr>
 		  <tr> 
 			<td>
-		        <div class="listview" style="Width:307px; Height:159px;">
-			    <div id="OrgListView"  STYLE="overflow:auto;Width:306px; Height:159px;margin:1px 1px 1px 1px;"></div></div>
+		        <div class="listview" style="Width:328px; Height:159px;">
+			    <div id="OrgListView"  STYLE="overflow:auto;Width:327px; Height:159px;margin:1px 1px 1px 1px;"></div></div>
 			</td>
 		  </tr>
 		</table>
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" name="btnOK"><span onClick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 			<a class="imgbtn" name="btnCancel"><span onClick="return cmdCancel_onclick()" ><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>

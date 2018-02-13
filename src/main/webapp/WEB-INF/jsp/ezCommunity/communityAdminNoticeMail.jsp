@@ -21,6 +21,9 @@
 				var titleStr	= document.mail.subject.value.trim();
 				var contentStr	= document.mail.memo.value.trim();
 				
+				// 2018-02-13 천성준
+				contentStr = contentStr.replace(/(\n|\r\n)/g, '<br>').replace(/ /g, '&nbsp;');
+				
 				if( titleStr == "") {
 					alert("<spring:message code='ezCommunity.t554' />");
 					return;

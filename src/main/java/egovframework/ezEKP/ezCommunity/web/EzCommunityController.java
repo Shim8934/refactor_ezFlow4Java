@@ -42,7 +42,6 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
-import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
@@ -1101,7 +1100,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo);
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
 		ezCommunityService.boardItemView(userInfo, boardInfo, item, pItemID, pBoardID, showAdjacent, adjacentItemsEnableFlag, model);
+		String commentCount = ezCommunityService.getOneLineReplyCount(pBoardID, pItemID, userInfo.getTenantId()); // 2018-01-10 강민수92 댓글 카운트 세기
 		
+		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("item", item);
 		model.addAttribute("itemID", pItemID);
 		model.addAttribute("boardID", pBoardID);
@@ -1134,8 +1135,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String pItemID = request.getParameter("itemID");
 		
+		String replyID = request.getParameter("replyID");
+		String replyFlag = request.getParameter("replyFlag");
+		
 		String password = ezCommunityService.checkPassword(pItemID, userInfo.getTenantId()).trim();
-
+		
+		model.addAttribute("replyID", replyID);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("itemID", pItemID);
@@ -1143,7 +1148,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("checkPassword ended.");
 		
-		return "ezCommunity/communityCheckPassword";
+		if (replyFlag != null && replyFlag.equals("true")) { // 강민수92 한줄댓글 삭제시 or 비번 체크시
+			return "ezCommunity/deleteCommentPopup";
+		} else {
+			return "ezCommunity/communityCheckPassword";
+		}
 	}
 	
 	/**
@@ -1171,7 +1180,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 한줄답변 목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/readOneLineReply.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezCommunity/readOneLineReply.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	public String readOneLineReply(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pBoardID = request.getParameter("boardID");
@@ -1179,6 +1188,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
 		
+		String totalCommentCount = String.valueOf(oneLineReplyList.size());
+		model.addAttribute("totalCommentCount", totalCommentCount);
 		model.addAttribute("oneLineReplyList", oneLineReplyList);
 		
 		return "json";
@@ -1211,13 +1222,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 한줄답변 삭제 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/deleteOneLineReply.do", method = RequestMethod.POST)
-	public void deleteOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/ezCommunity/deleteOneLineReply.do", produces="text/plain; charset=utf-8")
+	@ResponseBody
+	public String deleteOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pReplyID = request.getParameter("replyID");
 		String gubun = request.getParameter("gubun");
 		
 		ezCommunityService.deleteOneLineReply(userInfo.getId(), pReplyID, gubun, userInfo.getTenantId());
+		return "json";
 	}
 	
 	/**
@@ -1345,17 +1359,26 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/itemReadList.do")
 	public String itemReadList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("itemReadList started");
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+//		String pBoardID = request.getParameter("boardID");
+//		String pItemID = request.getParameter("itemID");
+//		String offset = commonUtil.getMinuteUTC(userInfo.getOffset());
+		
+//		List<CommunityBoardItemReadVO> readList = ezCommunityService.getReaderList(pBoardID, pItemID, userInfo.getTenantId(), offset);
+		
+//		model.addAttribute("userInfo", userInfo);
+//		model.addAttribute("readList", readList);
+		
+		//2018-02-06 김보미
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
-		String offset = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		List<CommunityBoardItemReadVO> readList = ezCommunityService.getReaderList(pBoardID, pItemID, userInfo.getTenantId(), offset);
+		model.addAttribute("boardID", pBoardID);
+		model.addAttribute("itemID", pItemID);
 		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("readList", readList);
-		
+		logger.debug("itemReadList ended");
 		return "ezCommunity/communityItemReadList";
 	}
 	
@@ -4313,6 +4336,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
+		String commentCount = ezCommunityService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId()); // 2018-01-10 강민수92 댓글 카운트 세기
+		
+		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("oneLineReplyFlag", oneLineReplyFlag);
@@ -4538,6 +4564,58 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ezCommunityService.sendReplyNoticeMail(boardID, itemID, itemTreeID, loginCookie);
 		
 		logger.debug("sendReplyNoticeMail ended.");
+	}
+	
+    /**
+     * 댓글 팝업화면 조회
+     * 강민수92
+     */
+    @RequestMapping(value = "/ezCommunity/communityCommentPopup.do")
+    public String communityCommentPopup(@CookieValue("loginCookie") String loginCookie, CommunityBoardItemVO boardItemVO, Model model) throws Exception {
+    	logger.debug("comunnityCommentPopup started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    		
+		String pBoardID = boardItemVO.getBoardID();
+		String pItemID = boardItemVO.getItemID();
+		String gubun  = boardItemVO.getGubun();
+//		String userName = "";
+		String publicModulus = egovFileScrty.getPbm();
+        String publicExponent = "10001";
+//		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		
+		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
+
+    	logger.debug("itemID = " + pItemID);
+    	
+    	model.addAttribute("gubun", gubun);
+    	model.addAttribute("boardInfo", boardInfo);
+    	model.addAttribute("publicModulus", publicModulus);
+    	model.addAttribute("publicExponent", publicExponent);
+    	model.addAttribute("boardItemVo", boardItemVO);
+    	model.addAttribute("userInfo", userInfo);
+    	model.addAttribute("boardLineReplyVOList", oneLineReplyList);
+    	
+    	logger.debug("communityCommentPopup ended.");
+    	
+    	return "/ezCommunity/communityCommentPopup";
+    }
+    /**
+     * 2018-02-06 김보미 - 리스트 페이징 처리
+     */
+	@RequestMapping(value = "/ezCommunity/itemReadPagingList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String itemReadPagingList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, String boardID, String itemID, int pageNum, int perCount) throws Exception {
+		logger.debug("itemReadPagingList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		StringBuffer resultXML = ezCommunityService.getReaderList(boardID,itemID,userInfo.getId(),commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()), userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
+
+		logger.debug("itemReadPagingList ended");
+		return resultXML.toString();
 	}
 }
 

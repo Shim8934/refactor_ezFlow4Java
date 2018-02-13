@@ -8204,7 +8204,7 @@
 <!-- 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap"> -->
 <!-- 		{CALL EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap" remapResults="true">
+	<select id="EzApprovalG.getDocType" parameterClass="Map" resultClass="ApprGCabCodeVO" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT 
@@ -15233,6 +15233,23 @@
         	TENANT_ID = #v_TENANTID# 
         AND
    			COMPANYID = #companyID#
+	</select>
+	
+	<select id="EzApprovalG.checkReceivedDoc" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_APRRECEIPTPROCESSINFO
+		WHERE
+			DOCSTATE = '011'
+		AND
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			APRSTATE = '013'	
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.doCallBack" parameterClass="Map"> -->

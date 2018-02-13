@@ -1035,6 +1035,10 @@
 		        else {
 		            MaxNum = totalPage;
 		        }
+		        
+		        if(totalPage == "0") {
+		        	MaxNum = 1;
+		        }
 		        for (i = startNum; i <= MaxNum; i++) {
 		            if (i == pageNum) {
 		                strtext = "<span class='on'>" + i + "</span>";
@@ -1127,7 +1131,7 @@
 		            var width = window.screen.availWidth;
 		            var left = (parseInt(width) - 525) / 2;
 		            var top = (parseInt(heigth) - 220) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=789px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		
@@ -1388,7 +1392,7 @@
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
 	            </c:if>
-	             <img src="/images/i_bar.gif">
+	            <!-- <img src="/images/i_bar.gif"> -->
 	            <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
 	            </select>  

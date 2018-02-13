@@ -17,7 +17,7 @@
 				 	<strong id="personName" style="position:absolute; width:240px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${displayName} ${mailAddress } </strong>
 				 </p>
 				<div class="info">
-    				<p class="pic">${userPhoto }</p>
+    				<p class="pic">${userPhoto}</p>
     				<dl class="info_txt">
         				<dt>${companyNm }<br></dt>
 			 			<dd><strong>${department} ${title}</strong></dd>
@@ -284,9 +284,10 @@
 			        var mType;
 			        
 			        if (mode == "P") {
-			        	mType = "1";
+			        	//2018.02.05 김기하 #11421
+			        	mType = "16";
 			        } else {
-			        	mType = "23456789";
+			        	mType = "2345789";
 			        }			        
 
 			        for (var i = 0; i < xmldom.getElementsByTagName("ROW").length; i++) {

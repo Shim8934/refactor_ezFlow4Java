@@ -92,21 +92,21 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     var Content = "";
     //메일에서 문서 볼 수 있는 문서 생성 변수
     var Approv_a = "";
-    Content = "<span style='font-size:13pt;'>" + strLang1124 + "</span>: " + eSubject + "<br>";
+    Content = "<span style='font-size:13pt;'>" + strLang1124 + ": " + eSubject + "</span><br>";
     if (type == "SIHANG") {
-        Content += "<span style='font-size:13pt;'>" + strLang1107 + "</span>: " + Drafter + "<br>";
+        Content += "<span style='font-size:13pt;'>" + strLang1107 + ": " + Drafter + "</span><br>";
     }
     else if (type == "SIMSABANSONG") {
-        Content += "<span style='font-size:13pt;'>" + strLang1108 + "</span>: " + Drafter + "<br>";
+        Content += "<span style='font-size:13pt;'>" + strLang1108 + ": " + Drafter + "</span><br>";
     }
     else {
-        Content += "<span style='font-size:13pt;'>" + strLang1109 + "</span>: " + Drafter + "<br>";
+        Content += "<span style='font-size:13pt;'>" + strLang1109 + ": " + Drafter + "</span><br>";
     }
     if (pDraftDate != "") {
     	if (pDraftDate.slice(-2) == ".0") {
     		pDraftDate = pDraftDate.substring(0, pDraftDate.length - 2);
     	}
-    	Content += "<span style='font-size:13pt;'>" + strLang332 + "</span>: " + pDraftDate + "<br>";
+    	Content += "<span style='font-size:13pt;'>" + strLang332 + ": " + pDraftDate + "</span><br>";
     }
 
     if (type == "callback") Subject = strLang1111;
@@ -125,7 +125,7 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     
     if(Subject == strLang1122) {
     	if (Method != "007") {
-    		Approv_a += "<span style='font-size:13pt; font-weight:bold;'>" + Drafter + "</span>"+ "<span style='font-size:13pt;'>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='mail_link(href.this); return false;' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-size:13pt; font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    		Approv_a += "<span style='font-size:13pt; font-weight:bold;'>" + Drafter + "</span>"+ "<span style='font-size:13pt;'>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol+window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+to.split(",")[0]+"&deptID="+deptid+"&allFlag=0&mailchk=Y' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-size:13pt; font-weight:bold;'>" + strLangjjh04 + "</span><br>";
     	}
     }
     
@@ -149,7 +149,9 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
         } 
     }
     Content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + Approv_a + Content +"</td></tr></table>";
-
+    
+    console.log("Approv_a  : "+Approv_a)
+    
     try {
         var Result = "";
         $.ajax({

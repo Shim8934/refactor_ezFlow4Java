@@ -227,8 +227,8 @@
 		    function showKeyCode(event) {
 				event = event || window.event;
 				var keyID = (event.which) ? event.which : event.keyCode;
-				//숫자패드 모두, 방향키, 백슬러쉬, 딜리트, Teb만 포함
-				if( ( keyID >=48 && keyID <= 57 ) || ( keyID >=96 && keyID <= 105 ) || ( keyID >=37 && keyID <= 40 ) || keyID == 46 || keyID == 8 || keyID == 19) {
+				//숫자패드 모두(48~57, 96~105), 방향키(37~40), 백슬러쉬(8), 딜리트(46), Tab(9)만 포함
+				if( ( keyID >=48 && keyID <= 57 ) || ( keyID >=96 && keyID <= 105 ) || ( keyID >=37 && keyID <= 40 ) || keyID == 46 || keyID == 8 || keyID == 9) {
 					return;
 				} else {
 					return false;

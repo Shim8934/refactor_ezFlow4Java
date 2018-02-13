@@ -2887,11 +2887,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		item.setWriterName(URLDecoder.decode(xmlData.getElementsByTagName("WRITERNAME").item(0).getTextContent(), "utf-8").trim());
 		item.setWriterName2(URLDecoder.decode(xmlData.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), "utf-8").trim());
 		item.setWriterDeptID(xmlData.getElementsByTagName("DEPTID").item(0).getTextContent());
-		item.setWriterDeptName(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent());
-		item.setWriterDeptName2(xmlData.getElementsByTagName("DEPTNAME2").item(0).getTextContent());
+		item.setWriterDeptName(URLDecoder.decode(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
+		item.setWriterDeptName2(URLDecoder.decode(xmlData.getElementsByTagName("DEPTNAME2").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
 		item.setWriterCompanyID(xmlData.getElementsByTagName("COMPANYID").item(0).getTextContent());
-		item.setWriterCompanyName(xmlData.getElementsByTagName("COMPANYNAME").item(0).getTextContent());
-		item.setWriterCompanyName2(xmlData.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
+		item.setWriterCompanyName(URLDecoder.decode(xmlData.getElementsByTagName("COMPANYNAME").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
+		item.setWriterCompanyName2(URLDecoder.decode(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
 		item.setWriteDate(dateStr);
 		item.setImportance(Integer.parseInt(xmlData.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
 		item.setTitle(URLDecoder.decode(xmlData.getElementsByTagName("TITLE").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&"), "utf-8").trim());
@@ -3666,21 +3666,83 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return bIsMyContent;
 	}
 
+//	@Override
+//	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
+//		logger.debug("getReaderList started.");
+//		logger.debug("pBoardID : " + pBoardID + ", pItemID : " + pItemID + ", tenantID : " + tenantID);
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("v_pBoardID", pBoardID);
+//		map.put("v_pItemID", pItemID);
+//		map.put("tenantID", tenantID);
+//		map.put("offset", offset);
+//		
+//		List<CommunityBoardItemReadVO> list = ezCommunityDAO.getReaderList(map);
+//		
+//		logger.debug("getReaderList started.");
+//		
+//		return list;
+//	}
+	
 	@Override
-	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
-		logger.debug("getReaderList started.");
-		logger.debug("pBoardID : " + pBoardID + ", pItemID : " + pItemID + ", tenantID : " + tenantID);
+	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception {
+		logger.debug("getReaderList started");
+		// 2018-02-06 김보미 
+    	if(pageNum == 0){
+    		pageNum = 1;
+    	}
+    	
+    	int startRowNum = ((pageNum - 1) * perCount);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pBoardID", pBoardID);
-		map.put("v_pItemID", pItemID);
+		
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("userID", userID);
+		map.put("lang", lang);
 		map.put("tenantID", tenantID);
-		map.put("offset", offset);
+		map.put("start", startRowNum);
+		map.put("perCount", perCount);
+		List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
 		
-		List<CommunityBoardItemReadVO> list = ezCommunityDAO.getReaderList(map);
+		StringBuffer resultXML = new StringBuffer();
 		
-		logger.debug("getReaderList started.");
+		resultXML.append("<DOCLIST>");
 		
-		return list;
+		int totalCount = getReaderListCount(boardID, itemID, userID, tenantID);
+		int totalPage = (int) Math.floor(totalCount / perCount);
+		if(totalCount % 10 != 0){
+			totalPage = totalPage + 1;
+		}
+		
+		resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		resultXML.append("<PAGECNT>" + totalPage + "</PAGECNT>");
+		resultXML.append("<PERSONALCNT>" + perCount + "</PERSONALCNT>");
+    	resultXML.append("<LISTVIEWDATA>");
+    	
+		resultXML.append("<ROWS>");
+		for (CommunityBoardItemReadVO vo : readerList) {
+			String userTitle = "";
+			String userDeptName = "";
+			if(vo.getUserTitle() != null){
+				userTitle = vo.getUserTitle();
+			}
+			if( vo.getUserDeptName() != null){
+				userDeptName =  vo.getUserDeptName();
+			}
+			resultXML.append("<ROW>");
+			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><VALUE><![CDATA[" + vo.getUserName() + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + userTitle + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]]></VALUE></CELL>");
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		
+		logger.debug("getReaderList ended");
+		return resultXML;
 	}
 
 	@Override
@@ -7252,5 +7314,31 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		String result = ezCommunityDAO.sendPostNoticeMailGet1(map);
 		
 		return result;
+	}
+	// 2018-01-10 강민수92 한줄댓글 개수
+	@Override
+	public String getOneLineReplyCount(String pBoardID, String pItemID, int tenantId) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("boardID", pBoardID);
+		map.put("itemID", pItemID);
+		map.put("tenantID", tenantId);
+		return ezCommunityDAO.getOneLineReplyCount(map);
+	}
+	// 2018-02-06 김보미 - 조회자 수
+	@Override
+	public int getReaderListCount(String boardID, String itemID, String userID, int tenantID) throws Exception {
+		logger.debug("getReaderListCount started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("getReaderListCount ended");
+		return ezCommunityDAO.getReaderListCount(map);
 	}
 }

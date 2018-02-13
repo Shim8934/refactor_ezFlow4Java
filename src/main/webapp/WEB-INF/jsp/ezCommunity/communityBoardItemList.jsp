@@ -85,8 +85,6 @@
     		$(function () {
     			var xmldoc = loadXMLString('${strXML}');
     			
-    			console.log(xmldoc);
-    			
     			var listXML = '';
     			
     			for (var i = 0; i < SelectNodes(xmldoc,"NODES/NODE").length; i++) {
@@ -299,7 +297,7 @@
 		            return;
 		        }
 
-		        if (ret != "OK") {
+		        if (ret != "OK" && ret == "FALSE") {
                     alert("<spring:message code = 'ezCommunity.t921' />");
                     return;
                 } else if (ret == "cancel") {

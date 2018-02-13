@@ -1140,4 +1140,13 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.sendPostNoticeMailGet1", map);
 	}
 
+	public String getOneLineReplyCount(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		return String.valueOf(select("EzCommunityDAO.getOneLineReplyCount", map));
+	}
+	// 2018-02-06 김보미 - 조회자 수
+	public int getReaderListCount(Map<String, Object> map) {
+		return (int) select("EzCommunityDAO.getReaderListCount", map);
+	}
+
 }

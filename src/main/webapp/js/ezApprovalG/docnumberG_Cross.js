@@ -39,13 +39,15 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
         	if (approvalFlag == "S") {
         		var tempNumString = SN;
         		var i = 0;
-        		var templen = tempNumString.length;
-        		for (i = 0; i < 6 - templen; i++)
-        			tempNumString = "0" + tempNumString;
-        		DocNumCode = pDeptID + tempNumString;
-        		
-        		field.textContent = fractionsymbol + tempNumString.substring(6 - docNumZeroCnt);
-        		
+        		if (tempNumString < Math.pow(10, docNumZeroCnt)) {
+	        			for (i = 0; i < docNumZeroCnt-SN.length; i++) {
+	        				tempNumString = "0" + tempNumString;
+	        			}
+        			field.textContent = fractionsymbol + tempNumString;
+        		} else {
+        			field.textContent = fractionsymbol + tempNumString
+        		}
+        		 
         		message.DocumentBodySetAttribute("regnumbercode", tempNumString);
         		message.DocumentBodySetAttribute("deptid", pDeptID);
         		
