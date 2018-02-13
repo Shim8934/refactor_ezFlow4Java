@@ -34,7 +34,7 @@
 					<th style="font-weight: bold;"><spring:message code='main.t78'/></th>
 		        </tr>
 		        <c:forEach items="${userList}" var="user">
-			        <tr id="${user.userId }" onclick="setUserAuthorDept(this);" ondblclick="insertAuthDept();" style="cursor: pointer;" class="hover">
+			        <tr id="${user.userId }" onclick="setUserAuthorDept(this);" ondblclick="ShowInsertAuthDept('${user.userId }');" style="cursor: pointer;" class="hover">
 				        <td style="width: 130px;"><c:out value="${user.deptName }" /></td>
 						<td style="width: 90px;" ><c:out value="${user.userName }" /></td>
 						<td style="width: 90px;" ><c:out value="${user.jikwi }" /></td>
