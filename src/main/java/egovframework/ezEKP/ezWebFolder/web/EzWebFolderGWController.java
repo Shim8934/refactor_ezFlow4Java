@@ -15,9 +15,11 @@ import java.util.TimeZone;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -1220,6 +1223,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	public JSONObject putCompanyFolderMove(@PathVariable(value="folderid") String folderId, @PathVariable(value="mode") String mode, HttpServletRequest request) throws Exception {
 		int tenantId        = request.getParameter("tenantId")  != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
 		String offset       = request.getParameter("offset")    != null ? request.getParameter("offset")                     : "";
+		String primary      = request.getParameter("primary")   != null ? request.getParameter("primary")                    : "";
 		String userId       = request.getParameter("userId")    != null ? request.getParameter("userId")                     : "";		
 		String destFolderId = request.getParameter("parentFld") != null ? request.getParameter("parentFld")                  : "";
 		JSONObject result   = new JSONObject();
@@ -1261,7 +1265,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 				moveFolder(folder, listSubFolder, destFolderId, userId, offset, tenantId);
 			}
 			else {
-				copyFolder(folder, listSubFolder, destFolderId, userId, offset, tenantId);
+				copyFolder(folder, listSubFolder, destFolderId, userId, primary, offset, tenantId);
 			}
 			
 			result.put("status", "ok");
@@ -1474,7 +1478,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return Integer.toString(currentMaxolderUserId);
 	}
 	
-	private void moveFolder(FolderVO folder, List<FolderVO> listSubFolder, String destFolderId, String userId , String offset, int tenantId) throws Exception {
+	private void moveFolder(FolderVO folder, List<FolderVO> listSubFolder, String destFolderId, String userId, String offset, int tenantId) throws Exception {
 		FolderVO parentFolder 	   = ezWebFolderService.getFolderByFolderId(destFolderId, offset, tenantId);
 		String oldPath		  	   = folder.getFolderPath();
 		String newPath		  	   = parentFolder.getFolderPath() + folder.getFolderId() + "|";
@@ -1523,15 +1527,16 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		}
 	}
 
-	private void copyFolder(FolderVO folder, List<FolderVO> listSubFolder, String destFolderId, String userId , String offset, int tenantId) throws Exception {
+	private void copyFolder(FolderVO folder, List<FolderVO> listSubFolder, String destFolderId, String userId, String primary, String offset, int tenantId) throws Exception {
 		FolderVO parentFolder 	   = ezWebFolderService.getFolderByFolderId(destFolderId, offset, tenantId);
+		String folderId			   = folder.getFolderId();
 		String oldPath		  	   = folder.getFolderPath();
 		String newId			   = getMaxFolderID(tenantId);
 		String newPath		  	   = parentFolder.getFolderPath() + newId + "|";
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date           	   = new Date();
 		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-		int levelDistance		   = parentFolder.getFolderLevel() + 1 - folder.getFolderLevel();
+		int levelDistance		   = parentFolder.getFolderLevel() + 1 - folder.getFolderLevel();		
 		
 		if (folder.getFolderLevel() + levelDistance == 1) {
 			String folderPath = folder.getFolderPath();
@@ -1543,7 +1548,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			for (FolderUserVO folderUser: listUsers) {
 				ezWebFolderAdminService.insertFolderUser(getMaxFolderUserSeq(tenantId), folderUser.getUserId(), folderUser.getUserType(), folder.getFolderId(), userId, timeUTC, folder.getCompanyId(), tenantId);
 			}		
-		}		
+		}
 		
 		folder.setFolderPath(newPath);
 		folder.setUpdateId(userId);
@@ -1553,10 +1558,12 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		folder.setFolderStep(getMaxFolderStep(destFolderId, tenantId));
 		folder.setFolderId(newId);
 		
-		ezWebFolderAdminService.insertFolder(folder);	
-		
+		ezWebFolderAdminService.insertFolder(folder);		
+		copyFile(folderId, userId, newId, timeUTC, primary, offset, tenantId);		
+				
 		for (int i = 0; i < listSubFolder.size(); i++) {
-			FolderVO subFld	  = listSubFolder.get(i);			
+			FolderVO subFld	  = listSubFolder.get(i);
+			String oldId	  = subFld.getFolderId();
 			String newSubId   = getMaxFolderID(tenantId);
 			String folderPath = subFld.getFolderPath();
 			folderPath        = folderPath.replace(oldPath, newPath);
@@ -1576,6 +1583,22 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			
 			//Update Folder
 			ezWebFolderAdminService.insertFolder(subFld);
+			copyFile(oldId, userId, newSubId, timeUTC, primary, offset, tenantId);
+		}
+	}
+	
+	private void copyFile(String folderId, String userId, String newId, String timeUTC, String primary, String offset, int tenantId) throws Exception {
+		List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder(folderId, "", "0", "", "", "", "", "", "1", 0, 0, primary, offset, tenantId);
+		
+		if (fileList != null && fileList.size() > 0) {
+			for (FileVO file : fileList) {
+				file.setDownloadCnt(0);
+				file.setFolderId(newId);
+				file.setUpdateDate(timeUTC);
+				file.setUpdateId(userId);
+				file.setFileId(getMaxFileID(tenantId));
+				ezWebFolderService.insertFile(file);
+			}
 		}
 	}
 }

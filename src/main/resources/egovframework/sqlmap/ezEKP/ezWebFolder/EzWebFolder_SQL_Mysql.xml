@@ -403,10 +403,14 @@
 		<![CDATA[
 			ORDER BY
 				f.UPDATE_DATE DESC,
-				CAST(f.FILE_ID AS INT) DESC
-			LIMIT
-				#startPoint#, #pageSize#			
-		]]>		
+				CAST(f.FILE_ID AS INT) DESC					
+		]]>
+		<isGreaterThan property="pageSize" compareValue="0">
+			<![CDATA[
+				LIMIT
+				#startPoint#, #pageSize#
+          	]]>
+		</isGreaterThan>	
     </select>
     
     <select id="EzWebFolderDAO.getAllFiles" resultMap="fileVO2">

@@ -707,6 +707,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
+										.queryParam("primary", user.getPrimary())
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())									
 										.queryParam("parentFld", parentFld);
