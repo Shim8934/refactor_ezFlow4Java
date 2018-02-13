@@ -17,7 +17,7 @@
 				parent.frames["right"].location.href = url+"?companyId="+val;
 			}
 			
-			function insertAuth(userId){
+			function insertAuth(userId){				
 				var url = "/admin/ezJournal/authorDetail.do";
 				var companyId = document.getElementById("companyId").value;
 				url+="?companyId="+companyId;
@@ -25,6 +25,11 @@
 					url+="&userId="+userId;
 				}
 				window.open(url, "authorDetail", "width=1100, height=600");
+			}
+			
+			function selectedTR(elem){
+				$("*").removeClass("selectTR");
+	   			$(elem).addClass("selectTR");
 			}
 			
 		    function Cancel_Click() {
@@ -43,8 +48,11 @@
 		        });
 		    }
 		</script>
-		<style>
+		<style>	
 			tr:hover{background:#eee; color:#fff;}
+			.selectTR{
+				background-color: rgb(233, 241, 255);
+			}
 		</style>
 	</head>
 	<body class="mainbody"> 
@@ -79,7 +87,7 @@
 			    <c:choose>
 				    <c:when test="${fn:length(authList) ne 0}">
 					    <c:forEach items="${authList }" var="auth">
-					    	<tr ondblclick="insertAuth('${auth.userId}')">
+					    	<tr ondblclick="insertAuth('${auth.userId}')" onclick="selectedTR(this);" style="cursor: pointer;">
 					    		<td style="text-align: center;">${auth.userName } </td>
 					    		<td style="text-align: center;">${auth.jikwi } </td>
 					    		<td style="text-align: center;">${auth.deptName } </td>

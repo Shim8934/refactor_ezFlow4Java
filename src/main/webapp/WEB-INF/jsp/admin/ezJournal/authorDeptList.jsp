@@ -19,15 +19,13 @@
 		</style>
 	</head>
 		<table class="mainlist_free">
-			<tbody style="background-color: rgb(255, 255, 255);">
-				<c:if test="${authorDeptList ne null }">
-					<c:forEach items="${authorDeptList}" var="dept">
-						<tr id="${dept.deptId }" style="cursor: pointer;" class="hover">
-							<td align="left" style="width:250px;">${dept.deptName }</td>
-						</tr>
-					</c:forEach>
-				</c:if>
-			</tbody>
+			<c:if test="${authorDeptList ne null }">
+				<c:forEach items="${authorDeptList}" var="dept">
+					<tr targetId="${dept.deptId }" style="cursor: pointer;" class="hover">
+						<td align="left" style="width:250px;">${dept.deptName }</td>
+					</tr>
+				</c:forEach>
+			</c:if>
 		</table>
 </html>
 

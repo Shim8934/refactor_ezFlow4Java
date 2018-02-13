@@ -189,6 +189,8 @@ public class EzJournalSBController {
 		String userId =null;
 		if (request.getParameter("userId")!=null) {
 			userId = request.getParameter("userId");
+			logger.debug("유저 아이디 넘어야놈ㄴ래ㅑ오ㅓ;ㅁㅇㄴ리ㅏㅓㅁㄴ이;ㅏㄹ"+userId);
+			model.addAttribute("selectedUser",userId.trim());
 		}else{
 			userId = userInfo.getId();
 		}
@@ -220,7 +222,6 @@ public class EzJournalSBController {
 			
 			model.addAttribute("deptList", deptList);
 		}
-		model.addAttribute("selectedUser",request.getParameter("userId"));
 		
 		logger.debug("authorDetail ended");
 		
