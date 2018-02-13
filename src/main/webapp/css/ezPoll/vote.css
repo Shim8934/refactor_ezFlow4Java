@@ -89,4 +89,9 @@
 
 #ballotSystemBody{min-width: 800px}
 
-#toolCmt5{margin-left: 11px}
+#commentArea table tbody tr [id *= toolCmt]{margin-left: 11px}
+
+/* vote popup css */
+
+#menu1{width: 88%}
+#menu1 h1{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
