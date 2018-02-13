@@ -10,7 +10,8 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">			
+		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">		
+		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">		
 		<script type="text/javascript">
 			window.onresize = function () {
 				var height = document.documentElement.clientHeight;				

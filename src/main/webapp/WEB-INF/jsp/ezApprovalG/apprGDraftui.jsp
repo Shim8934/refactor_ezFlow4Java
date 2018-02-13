@@ -1396,6 +1396,7 @@
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
 		                	tempItemName2 = ret[18];
+		                	tempSecurityValue = ret[19];
 		                	pPageNum = "1";
 		                	pLimitRange = "1";
 		                	pSpecialRecordCode = "1";
