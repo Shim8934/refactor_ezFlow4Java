@@ -240,10 +240,39 @@
 	            if (_funCode == 2)
 	                parent.frames["right"].WriteDateSchedule_left(obj)
 	        }
+	        
+	        /* 코린도 게시판-일정 API 테스트용 - 곧 지울꺼임 */ 
+	        /* function goAPI() {
+	        	$.ajax({
+	    			type : "POST",
+	    			dataType : "text",
+	    			async: false,
+	    			url : "/mobile/ezSchedule/mScheduleBoardInsert.do",
+	    			data : {
+	    				ownerId : "fomace",
+	    				ownerName : "코린도일",
+	    				ownerName2 : "peter won",	
+	    				scheduleType : "1",
+	    				importance : 2,
+	    				isPublic : "Y",
+	    				dateType : "1",
+	    				startDate :"2018-02-13 14:00",
+	    				endDate : "2018-02-15 18:00",		
+	    				title : "행사 공지",
+	    				location : "",
+	    				contentPath : "/Upload_BoardSTD/{81c6d165-11fd-dd12-1936-3b9601d7a6d5}/doc/{18722C69-0B40-4229-9FDE-0EF4DC81536E}.mht",
+	    				creatorId : "fomace"	    				
+	    			},
+	    			success: function(text) {		
+	    		
+	    			}
+	    		});
+	        } */
 		</script>
 	</head>
 
-	<body class="leftbody">	    
+	<body class="leftbody">
+		<!-- <a href = "javascript:goAPI()">클릭</a> -->	    
         <div class="left_pims" title="<spring:message code='ezSchedule.t1010'/>"></div>
 	        
 	    <div id="left">
