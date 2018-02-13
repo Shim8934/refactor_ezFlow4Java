@@ -1882,7 +1882,7 @@ function openFormUI() {
         getformcont_cross_dialogArguments[0] = parameter;
         getformcont_cross_dialogArguments[1] = openFormUI_Complete;
 
-        DivPopUpShow(713, 570, "/ezApprovalG/getFormCont.do");
+        DivPopUpShow(713, 570, "/ezApprovalG/getFormCont.do?fileType=mht");
     } catch (e) {
         alert("openFormUI()" + e.description);
     }

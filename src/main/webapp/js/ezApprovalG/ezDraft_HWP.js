@@ -661,11 +661,11 @@ function openFormUI()
 		var parameter = new Array();
 		parameter[0] = arr_userinfo[4];
 		parameter[1] = "000";				
-		
+
 		var url = "/ezApprovalG/getFormCont.do?fileType=hwp";
 		var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no"
 		var ret = window.showModalDialog(url,parameter,feature);
-		
+
 		pFormHref = ret[0];
 		pDocType  = ret[1];
 		

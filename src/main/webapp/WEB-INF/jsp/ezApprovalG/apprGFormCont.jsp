@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/getFormCont_Cross.js"></script>
+		<script type="text/javascript" src="/js/showModalDialogCallee.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var xmlhttp = createXMLHttpRequest();	
 		    var xmldoc = createXmlDom();
@@ -46,7 +47,7 @@
 		                RetValue = window.dialogArguments;
 		            }
 		        }
-		
+
 		        pFormKind = RetValue[1];
 		        if (pFormKind == "004") {
 		            document.getElementById('FromList').innerHTML = "";
@@ -59,7 +60,7 @@
 		
 		        Rtnval[0] = "cancel";
 		        Rtnval[1] = "cancel";
-		        if (!CrossYN()) {
+		        if (!CrossYN() || DocFileType == "hwp") {
 		            window.returnValue = Rtnval;
 		        }
 		    };
@@ -164,26 +165,23 @@
 		                
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(Rtnval);
-		                }
-		                else {
+		                } else {
 		                    window.returnValue = Rtnval;
 		                }
+		                
 		                window.close();
-		            }
-		            else {
+		            } else {
 		                if (DocFileType == "doc") {
 		                    var pAlertContent = "<spring:message code='ezApprovalG.t1528'/>" + "<br>MHT, HWP " + "<spring:message code='ezApprovalG.t1529'/>";
-		                }
-		                else if (DocFileType == "hwp") {
+		                } else if (DocFileType == "hwp") {
 		                    var pAlertContent = "<spring:message code='ezApprovalG.t1530'/>" + "<br>MHT," + "<spring:message code='ezApprovalG.t1531'/>";
-		                }
-		                else {
+		                } else {
 		                    var pAlertContent = "MHT " + "<spring:message code='ezApprovalG.t1532'/>" + "<br>HWP, " + "<spring:message code='ezApprovalG.t1531'/>";
 		                }
+		                
 		                OpenAlertUI(pAlertContent);
 		            }
-		        }
-		        else {
+		        } else {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
 		            OpenAlertUI(pAlertContent);
 		        }
