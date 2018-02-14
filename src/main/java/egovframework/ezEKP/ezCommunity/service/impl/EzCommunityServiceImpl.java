@@ -3806,7 +3806,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			String destAttach = itemAttachment.getFilePath().replace(pOrgBoardID.substring(1, pOrgBoardID.length()-1), pDestBoardID.substring(1, pDestBoardID.length()-1));
 			
 			copyAttachments(orgAttach, destAttach, pDestBoardID, pUploadFilePath);
-			attachments.append(destAttach + ";");
+			attachments.append(destAttach + "|");
 		}
 
 		item.setAttachments(attachments.toString());
@@ -3877,7 +3877,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         sb.append("<STARTDATE>" + item.getStartDate() + "</STARTDATE>");
         sb.append("<ENDDATE>" + item.getEndDate() + "</ENDDATE>");
         sb.append("<ABSTRACT>" + item.getAbsTract() + "</ABSTRACT>");
-        sb.append("<ATTACHMENTS>" + item.getAttachments() + "</ATTACHMENTS>");
+        sb.append("<ATTACHMENTS>" + URLEncoder.encode(item.getAttachments(), "UTF-8") + "</ATTACHMENTS>");
         sb.append("<UPPERITEMIDTREE>" + item.getUpperItemIDTree() + "</UPPERITEMIDTREE>");
         sb.append("<ITEMLEVEL>" + item.getItemLevel() + "</ITEMLEVEL>");
         sb.append("<EXTENSIONATTRIBUTE1>" + item.getExtensionAttribute1() + "</EXTENSIONATTRIBUTE1>");

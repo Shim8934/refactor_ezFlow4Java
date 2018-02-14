@@ -469,6 +469,7 @@
 		        }
 		    }
 		    
+		    // 2018-02-24 주홍선 수정 및 재사용에 대한 액션 뒤 창이 닫히지 않는 것 수정
 		    function getLeftCount() {
 		    	if (typeof (window.parent.frames.left) != "undefined") {
 		    		parent.frames["left"].getNewCircularCount();

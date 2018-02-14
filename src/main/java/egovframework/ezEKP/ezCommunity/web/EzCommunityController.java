@@ -4514,7 +4514,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			for(CommunityClubVO vo : list) {
 				if (vo.getEmail() != null) {
 		        	InternetAddress to1 = new InternetAddress();
-		        	to1.setPersonal(vo.getDisplayName(), "UTF-8");
+		        	to1.setPersonal(vo.getUserName(), "UTF-8");
 		        	to1.setAddress(vo.getEmail());
 		        	
 		        	to.add(to1);
