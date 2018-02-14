@@ -274,33 +274,39 @@
 
                 var _Th = document.createElement("TH");
                 _Th.innerHTML = "<spring:message code='ezStatistics.t1015'/>";
+                _Th.setAttribute( 'title', "<spring:message code='ezStatistics.t1015'/>" );
                 _Tr.appendChild(_Th);
 
                 _Th = document.createElement("TH");
                 _Th.innerHTML = "<spring:message code='ezStatistics.t1026'/>";
+                _Th.setAttribute( 'title', "<spring:message code='ezStatistics.t1026'/>" );
                 _Tr.appendChild(_Th);
 
                 _Th = document.createElement("TH");
                 _Th.innerHTML = "<spring:message code='ezStatistics.t1027'/>";
+                _Th.setAttribute( 'title', "<spring:message code='ezStatistics.t1027'/>" );
                 _Tr.appendChild(_Th);
 
                 _Th = document.createElement("TH");
                 _Th.innerHTML = "<spring:message code='ezStatistics.t1028'/>";
+                _Th.setAttribute( 'title', "<spring:message code='ezStatistics.t1028'/>" );
                 _Tr.appendChild(_Th);
 
                 _Th = document.createElement("TH");
                 _Th.innerHTML = "<spring:message code='ezStatistics.t1029'/>";
+                _Th.setAttribute( 'title', "<spring:message code='ezStatistics.t1029'/>" );
                 _Tr.appendChild(_Th);
 
                 _Th = document.createElement("TH");
                 _Th.innerHTML = "<spring:message code='ezStatistics.t1035'/>";
+                _Th.setAttribute( 'title', "<spring:message code='ezStatistics.t1035'/>" );
                 _Tr.appendChild(_Th);
 
                 _Table.appendChild(_Tr);
 
                 for (var i = 0; i < SelectNodes(resultxml, "DATA/ROW").length; i++) {
-                    var _Tr2 = document.createElement("TR")
-                    ;
+                    var _Tr2 = document.createElement("TR");
+
                     var _Td = document.createElement("TD");
                     _Td.innerHTML = getnodetext(SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[i], "DISPLAYNAME"));
                     _Tr2.appendChild(_Td);

@@ -2766,7 +2766,7 @@
 						<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:20px; width:20px; padding-left:20px; padding-top:3px; cursor: pointer;" onclick="addSticker()">
 					</div >				
 					<div class="comment_input_layout">
-						<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)"></textarea>
+						<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
 					</div>
 					<div class="commentBtn">
 						<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
