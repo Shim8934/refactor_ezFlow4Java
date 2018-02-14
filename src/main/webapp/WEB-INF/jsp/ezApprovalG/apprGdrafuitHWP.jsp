@@ -1026,7 +1026,7 @@
 			    getHistory();
 			}
 			function btnApprovalInfo(pGubun) {
-			    try {
+// 			    try {
 			        var onlydocinfiview = false;
 			        var parameter = new Array();
 			        parameter[0] = pDocID;
@@ -1066,7 +1066,7 @@
 			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun;
 			        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			        var ret = window.showModalDialog(url, parameter, feature);
-			
+
 			        if (ret != undefined && ret[0] == "OK") {
 			            if (ret[1] != false) {
 			            	$.ajax({
@@ -1085,8 +1085,9 @@
 			                btnSendDraftEnable = "true";
 			                GetDraftAprLineInfo(ret);
 			            }
-			
-			            if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
+			console.log(pSuSinFlag);
+			console.log(ret[2]);
+			            if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
 			            	$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",
@@ -1123,11 +1124,10 @@
 			            tempSecurityDate = ret[14];
 			            setPublicFlag();
 			            SummaryFlag = true;
-			            savexmlhttp = null;
 			        }
-			    } catch (e) {
-			        alert("ezdraftui_hwp.aspx.GetSepAttParamXml()::" + e.description);
-			    }
+// 			    } catch (e) {
+// 			        alert("ezdraftui_hwp.aspx.GetSepAttParamXml()::" + e.description);
+// 			    }
 			}
 	
 			function btnSaveServer_onclick(AutoSave) {
