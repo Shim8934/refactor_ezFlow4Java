@@ -816,6 +816,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("item", item);
 		
 		logger.debug("item.endDate: " + item.getEndDate());
 		
@@ -4514,7 +4515,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			for(CommunityClubVO vo : list) {
 				if (vo.getEmail() != null) {
 		        	InternetAddress to1 = new InternetAddress();
-		        	to1.setPersonal(vo.getDisplayName(), "UTF-8");
+		        	to1.setPersonal(vo.getUserName(), "UTF-8");
 		        	to1.setAddress(vo.getEmail());
 		        	
 		        	to.add(to1);

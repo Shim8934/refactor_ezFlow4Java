@@ -144,6 +144,10 @@
 		        if( pMode == "modify") {
 		            document.getElementById("txtTitle").value  = ConvMakeXMLString("<c:out value = '${item.title}' />");
 		            document.getElementById("txtAbstract").value = ConvMakeXMLString("<c:out value = '${item.absTract}' />");
+		            
+					if (strEndDate.substring(0,4) != "9999") {		        
+		         		document.getElementById("Edatepicker").value = ConvMakeXMLString("<c:out value = '${item.endDate}' />").substring(0,10);   	
+		            }
 		        }
 							
 		        if (pMode == "reply") {

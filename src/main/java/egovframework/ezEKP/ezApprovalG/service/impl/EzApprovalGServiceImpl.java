@@ -15838,7 +15838,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							
 							map.put("v_APRSTATE", staDSPumYui);
 							map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-							map.put("v_FUNCTIONTYPE", staASBanSong);
+							map.put("v_FUNCTIONTYPE", staASWheSong);
 							//다른 곳에 있는것 가져다 써서 두개 선언. 추후 변경
 							map.put("v_DOCID", docID);
 							map.put("v_DocID", docID);
@@ -15869,7 +15869,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							ezApprovalGDAO.insertSetHesongExpLineInfoS(map);
 							
 							map.put("v_APRTYPE", staATSuSin);
-							map.put("v_APRSTATE", staASBanSong);
+							map.put("v_APRSTATE", staASWheSong);
 							map.put("v_USERID", userID);
 							map.put("v_USERNAME", userName);
 							map.put("v_USERNAME2", userName2);
@@ -17065,7 +17065,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		// 결재문서 리스트 추출
 		String docList = getAprDocList(listType, userID, userIDs, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, searchQuery, dueryData, companyID, tenantID);
-	
+		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
@@ -17147,7 +17147,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</DOCLIST>");
 		
 		logger.debug("aprDocList ended.");
-
 		return resultXML.toString();
 	}
 

@@ -32,12 +32,14 @@
 						
 						circularDeptList = "<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>";
 						
+						// 2018-02-13 주홍선 String replaceAll function 선언
 						String.prototype.replaceAll = function (search, replacement) {
 							var target = this;
 							return target.split(search).join(replacement);
 						}
 						
 						list.forEach(function(vo, index) {
+							// 2018-02-13 주홍선 title '<', '>' html entity로 변환
 							var title = vo.title.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 							
 							circularDeptList += "<tr id=" + vo.circularBMID + " style='cursor:pointer' onclick='event_click(this);' ondblclick='modify_circularDept(this);'>";
