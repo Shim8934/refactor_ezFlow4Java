@@ -51,6 +51,9 @@
 	    	} 
 
 		    window.onload = function () {
+		    	if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
+		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
+		    	}
 				if (listSize != 0) {
 		        	document.getElementById("title").value = '${result.title}';
 		        	document.getElementById("receiverlist").innerHTML = "${userName}";
