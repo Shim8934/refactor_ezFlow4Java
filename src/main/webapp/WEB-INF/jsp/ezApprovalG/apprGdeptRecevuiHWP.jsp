@@ -612,7 +612,7 @@
 			}
 	
 			function btnOrgDocInfo_onclick() {
-			    var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezviewApr_hwp.aspx?DocID=" + escape(pDocID) + "&mode=APR&DocHref=" + pFormHref;
+			    var openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(pDocID) + "&mode=APR&docHref=" + pFormHref;
 			    openwindow(openLocation, "", 880, 570);
 			}
 	

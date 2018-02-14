@@ -455,4 +455,18 @@ public class EzCommonController extends EgovFileMngUtil{
 
 		logger.debug("convertSaveImage ended");
 	}
+	
+	/**
+	 * 로딩 표시
+	 */
+	@RequestMapping(value = "/ezCommon/show_progress.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String show_progress(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, ModelMap model) throws Exception{
+		logger.debug("show_progress started");
+		String fileInfo = request.getParameter("fileInfo");
+
+		model.addAttribute("fileInfo", fileInfo);
+		logger.debug("show_progress ended");
+		return "/ezCommon/showProgress";
+	}
 }

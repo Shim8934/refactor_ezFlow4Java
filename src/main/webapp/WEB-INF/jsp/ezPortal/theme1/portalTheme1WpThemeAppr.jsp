@@ -247,10 +247,10 @@
 	                    openLocation = openLocation + "&ListType=" + escape(pArgument[7]);
 	                }
 	                else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP_Cross.aspx?DocID=" + escape(pArgument[0]) + "&DocHref=" + escape(pArgument[1]);
-	                    openLocation = openLocation + "&OpinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
+	                    openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
+	                    openLocation = openLocation + "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&listSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
 	                    openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
-	                    openLocation = openLocation + "&ListType=" + escape(pArgument[7]);
+	                    openLocation = openLocation + "&listType=" + escape(pArgument[7]);
 	                }
 	                else {
 	                    if (CrossYN()) {
@@ -435,8 +435,8 @@
 	                            openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=2";
 	                        }
 	                        else if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-	                            var openLocation = "/myoffice/ezApproval/ezViewHWP/ezViewApr_HWP.aspx?DocID=" + escape(pDocID) + "&DocHref=" + escape(pHref);
-	                            openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=2";
+	                            var openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(pDocID) + "&docHref=" + escape(pHref);
+	                            openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&odoc=&isOpinion=&listType=2";
 	                        }
 	                        else {
 	                            <% if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1)

@@ -912,16 +912,18 @@ function openViewDocInfo(type) {
         pArgument[5] = GetAttribute(tr, "DATA7");
         pArgument[6] = "OPINION_SHOW";
         pArgument[7] = pListTypeValue;
-    }
-    else if (pListTypeValue != "7" && pListTypeValue != "8" && pListTypeValue != "9") {
+    } else if (pListTypeValue != "7" && pListTypeValue != "8" && pListTypeValue != "9") {
         pArgument[2] = GetAttribute(tr, "DATA11").trim();
         pArgument[3] = GetAttribute(tr, "DATA12").trim();
         pArgument[4] = GetAttribute(tr, "DATA4").trim();
         pArgument[5] = GetAttribute(tr, "DATA2").trim();
-        if (pListTypeValue != "5")
+        
+        if (pListTypeValue != "5") {
             pArgument[6] = "OPINION_SHOW";
-        else
+        } else {
             pArgument[6] = "OPINION_HIDE";
+        }
+        
         pArgument[7] = pListTypeValue;
     }
 
@@ -946,7 +948,8 @@ function openViewDocInfo(type) {
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
         	//hwp 사용안함
             if (CrossYN()) {
-                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP_Cross.aspx";
+//                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP_Cross.aspx";
+            	openLocation = "/ezApprovalG/ezviewAprHWP.do";
             }
             else {
                 openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP.aspx";

@@ -18,16 +18,17 @@
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		
 	    <script type="text/javascript">
-	    	var pNoneActiveX = "<%=NoneActiveX%>";
-	        var DocID = '<%=_DocID%>'
-	        var DocHref = '<%=_DocHref%>'
-	        var OpinionFlag = '<%=_OpinionFlag%>'
-	        var ListTypeValue = '<%=_ListTypeValue%>'
-	        var ListSusin = '<%=_ListSusin%>'
-	        var pDocState = '<%=_docState%>'
-	        var pOrgDocID = '<%=_orgDocID%>'
-	        var isOpinion = '<%=_showOpinion%>'
+	        var DocID = "${docID}";
+	        var DocHref = "${docHref}";
+	        var OpinionFlag = "${opinionFlag}";
+	        var ListTypeValue = "${listTypeValue}";
+	        var ListSusin = "${listSusin}";
+	        var pDocState = "${docState}";
+	        var pOrgDocID = "${orgDocID}";
+	        var isOpinion = "${showOpinion}";
 	        var pDocID;
 	        var pDocHref;
 	        var pOpinionFlag;
@@ -42,27 +43,30 @@
 	        var AppenAprDocAttachList = "";
 	
 	        var arr_userinfo = new Array();
-	        arr_userinfo[0] = "user";
-	        arr_userinfo[1] = "<%=userinfo.UserID%>";
-			arr_userinfo[2] = "<%=userinfo.DisplayName%>";
-	        arr_userinfo[3] = "<%=userinfo.Title%>";
-	        arr_userinfo[4] = "<%=userinfo.DeptID%>";
-	        arr_userinfo[5] = "<%=userinfo.DeptName%>";
-	        arr_userinfo[6] = "<%=userinfo.Jikchek%>";
-	        arr_userinfo[8] = "<%=userinfo.Email%>";
-	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "<%=_pSusinAdmin%>";
-			arr_userinfo[11] = "<%=userinfo.DisplayName1%>";
-	        arr_userinfo[12] = "<%=userinfo.DisplayName2%>";
-	        arr_userinfo[13] = "<%=userinfo.Title1%>";
-	        arr_userinfo[14] = "<%=userinfo.Title2%>";
-	        arr_userinfo[15] = "<%=userinfo.DeptName1%>";
-	        arr_userinfo[16] = "<%=userinfo.DeptName2%>";
+	        arr_userinfo[0]  = "user";
+		    arr_userinfo[1]  = "${userInfo.id}";
+		    arr_userinfo[2]  = "${userInfo.displayName}";
+		    arr_userinfo[3]  = "${userInfo.title}";
+		    arr_userinfo[4]  = "${userInfo.deptID}";
+		    arr_userinfo[5]  = "${userInfo.deptName}";
+		    arr_userinfo[6]  = "${userInfo.jikChek}";
+		    arr_userinfo[7]  = "N";
+		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[9]  = "";
+		    arr_userinfo[10] = "${susinAdmin}";
+		    var pCompanyID = "${userInfo.companyID}";
+		    arr_userinfo[11]  = "${userInfo.displayName1}";
+		    arr_userinfo[12]  = "${userInfo.displayName2}";
+		    arr_userinfo[13]  = "${userInfo.title1}";
+		    arr_userinfo[14]  = "${userInfo.title2}";
+		    arr_userinfo[15]  = "${userInfo.deptName1}";
+		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    
 	        pUserID = arr_userinfo[1];
 	
-	        var pHasOpinion = "<%=HASOPINIONYN%>";
+	        var pHasOpinion = "${hasOpinionYN}";
 			var pOpinionType = "Show";
-			var pUse_Editor = "<%= Use_Editor%>";
+			var pUse_Editor = "${useEditor}";
 			
 			function btnOpinion_onclick() {
 			    openOpinionViewUI();
@@ -85,7 +89,7 @@
 				    return;
 				}
 			
-			    if (pDocState == "015" && pOrgDocID.length >= 20 && "<%=_ListTypeValue%>" == "99") {
+			    if (pDocState == "015" && pOrgDocID.length >= 20 && "${listTypeValue}" == "99") {
 			        btnGongRam.style.display = "";
 			        pOpinionType = "";
 			    }
@@ -98,7 +102,7 @@
 			
 			    if (pDocHref != "") {
 			        showProgress("<spring:message code='ezApprovalG.t368'/>");
-				    var URL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pDocHref);
+				    var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref);
 				    var isTrue = HwpCtrl.LoadFile(URL, false);
 			
 				    if (isTrue) {
@@ -143,8 +147,8 @@
 			}
 			
 			function btnMail_onclick() {
-			    window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=<%=_DocHref%>&cmd=docsend&DocID=<%=_DocID%>" + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
-			}
+			    window.open("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + docID + "&target=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+			}	
 	
 			function btnhistory_onclick() {
 			    getHistory();
@@ -213,7 +217,7 @@
 	        <tr>
 	            <td style="padding-bottom: 10px">
 	                <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<%=_HwpToolbar%>", "");</script>
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "");</script>
 	                </div>
 	            </td>
 	        </tr>

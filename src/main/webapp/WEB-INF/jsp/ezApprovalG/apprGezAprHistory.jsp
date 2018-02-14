@@ -41,10 +41,11 @@
 		        else if (pUrl.substr(pUrl.length - 3, pUrl.length).toLowerCase() == "hwp") {
 		        	//hwp사용안함
 		            if (CrossYN()) {
-		                pUrl = "DocViewerHWP_Cross.aspx?DocHref=" + escapenew(Arguments[0]);
+// 		                pUrl = "DocViewerHWP_Cross.aspx?DocHref=" + escapenew(Arguments[0]);
+		                pUrl = "DocViewerHWP.aspx?DocHref=" + escapenew(Arguments[0]);
 		            }
 		            else {
-		                pUrl = "DocViewerHWP.aspx?DocHref=" + escapenew(Arguments[0]);
+		                pUrl = "/ezApprovalG/docViewerHWP.do?docHref=" + escapenew(Arguments[0]);
 		            }
 		        }
 		        else {
