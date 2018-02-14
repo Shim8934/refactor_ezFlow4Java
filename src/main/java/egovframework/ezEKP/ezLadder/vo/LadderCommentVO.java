@@ -1,5 +1,63 @@
 package egovframework.ezEKP.ezLadder.vo;
 
 public class LadderCommentVO {
+	
+	private int tenant_id;
+	/** 댓글 아이디 */
+	private int id;
+	/** 댓글 내용 */
+	private String comment;
+	/** 댓글 작성자 아이디 */
+	private String userId;
+	/** 댓글 작성자 이름 */
+	private String userName;
+	/** 댓글 작성자 이름(다국어) */
+	private String userName2;
+	/** 댓글 작성 날짜 */
+	private String writeDate;
+	
+	
+	public int getTenant_id() {
+		return tenant_id;
+	}
+	public void setTenant_id(int tenant_id) {
+		this.tenant_id = tenant_id;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserName2() {
+		return userName2;
+	}
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
+	}
+	public String getWriteDate() {
+		return writeDate;
+	}
+	public void setWriteDate(String writeDate) {
+		this.writeDate = writeDate;
+	}
 
 }
