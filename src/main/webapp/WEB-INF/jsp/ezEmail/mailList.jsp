@@ -640,7 +640,7 @@
 				}
 				
 				if (result == "ERROR") { // 에러발생
-					alert("<spring:message code='ezEmail.lhm33' />");
+					alert("<spring:message code='ezEmail.lhm35' />");
 					document.importMailboxform.file1.value = "";
 					MailListRefresh();
 				}
