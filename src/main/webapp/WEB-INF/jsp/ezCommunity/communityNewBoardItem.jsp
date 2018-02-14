@@ -148,6 +148,11 @@
 					if (strEndDate.substring(0,4) != "9999") {		        
 		         		document.getElementById("Edatepicker").value = ConvMakeXMLString("<c:out value = '${item.endDate}' />").substring(0,10);   	
 		            }
+					
+					if(pReservedItem == "true") {
+						document.getElementById("Sdatepicker").value = ConvMakeXMLString("<c:out value = '${item.startDate}' />").substring(0,10);
+						document.getElementById("Stimepicker").value = ConvMakeXMLString("<c:out value = '${item.startDate}' />").substring(11,16);
+					}
 		        }
 							
 		        if (pMode == "reply") {
