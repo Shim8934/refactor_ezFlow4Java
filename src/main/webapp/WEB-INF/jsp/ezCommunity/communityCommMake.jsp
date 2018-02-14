@@ -315,7 +315,7 @@
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1529' /><spring:message code='ezCommunity.t18' /></th>
 	                <td colspan="2">
-	                    <textarea name="intro" style="height: 120px; width: 99.5%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none;margin:5px"></textarea>
+	                    <textarea name="intro" maxlength="2000" style="height: 120px; width: 99.5%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none;margin:5px"></textarea>
 					</td>
 	            </tr>
 			</table> 
