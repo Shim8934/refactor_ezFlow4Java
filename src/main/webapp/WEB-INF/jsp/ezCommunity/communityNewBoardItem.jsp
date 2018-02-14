@@ -333,7 +333,6 @@
 		    	if (clickFlag) {
 		    		return true;
 		    	} else {
-		    		clickFlag = true;
 		    		return false;
 		    	}
 		    }
@@ -568,6 +567,7 @@
 		        
 		        xmlhttp = null;
 		        xmldom = null;
+		        clickFlag = true;
 		    }
 	
 		    function JSleep(sTime) {
