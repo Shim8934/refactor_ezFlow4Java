@@ -816,6 +816,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("item", item);
 		
 		logger.debug("item.endDate: " + item.getEndDate());
 		
