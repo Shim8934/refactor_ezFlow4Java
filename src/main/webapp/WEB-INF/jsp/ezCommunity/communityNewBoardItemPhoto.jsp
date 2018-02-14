@@ -844,12 +844,15 @@
 		        if (getXmlString(pAttachListXml) == "") {
 		            return "";
 		        }
-		        
-		        var xmldomNodes = GetElementsByTagName(pAttachListXml, "DATA1");
-		        
-	            strRet += getNodeText(xmldomNodes.item(0));
-		        
-		        return strRet;
+		        // 2018-02-14 천성준
+		        if (pMode != "modify"){
+			        var xmldomNodes = GetElementsByTagName(pAttachListXml, "DATA1");
+		            strRet += getNodeText(xmldomNodes.item(0));
+			        return strRet;
+		        } else {
+		        	strRet = document.getElementById("txtPhotoFile").value;
+		        	return strRet;
+		        }
 		    }
 		</script>
 		
