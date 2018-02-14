@@ -1063,29 +1063,40 @@
 			        if (pGubun == undefined)
 			            pGubun = CheckGubun;
 			
-			        var url = "/myoffice/ezApprovalG/ezLINE/ezApprovalInfo.aspx?initFlag=1&Gubun=" + pGubun;
-			        var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;help:no;scroll:no;;edge:sunken;";
+			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun;
+			        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			        var ret = window.showModalDialog(url, parameter, feature);
 			
 			        if (ret != undefined && ret[0] == "OK") {
-			            var savexmlhttp = createXMLHttpRequest();
-			
 			            if (ret[1] != false) {
-			                savexmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/aprlinesave.aspx", false);
-			                savexmlhttp.send(ret[1]);
+			            	$.ajax({
+	                    		type : "POST",
+	                    		dataType : "text",
+	                    		async : false,
+	                    		url : "/ezApprovalG/aprLineSave.do",
+	                    		data : {
+	                    				ret : ret[1]
+	                    				},
+	                    		success : function(text){
+	                    		}
+	                    	});
 			
-			                var dataNodes = GetChildNodes(loadXMLString(savexmlhttp.responseText));
 			                IsSkipDrafter = "FALSE";
 			                btnSendDraftEnable = "true";
 			                GetDraftAprLineInfo(ret);
 			            }
 			
-			            savexmlhttp = null;
-			
 			            if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
-			                savexmlhttp = createXMLHttpRequest();
-			                savexmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/AprDeptSave.aspx", false);
-			                savexmlhttp.send(ret[2]);
+			            	$.ajax({
+	                    		type : "POST",
+	                    		dataType : "text",
+	                    		async : false,
+	                    		url : "/ezApprovalG/aprDeptSave.do",
+	                    		data : {
+	                    				aprDeptInfo : ret[2]
+	                    		}
+	                    	});
+			            	
 			                btnReceivLineEnable = false;
 			                SummaryOuterReceiverList = ret[15];
 			                setRecevInfo(ret[3]);

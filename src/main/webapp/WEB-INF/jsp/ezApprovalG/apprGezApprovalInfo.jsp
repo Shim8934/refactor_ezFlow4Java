@@ -1515,15 +1515,19 @@
 	                            <table style="width:99.5%;table-layout: fixed">
 	                            <c:if test="${approvalFlag == 'G'}">
 									 <tr>
-	                                    <td style="vertical-align: top;">	                                    	
-	                                        <span>	                                        	
-	                                            <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 247px; width: 387px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 1px;"></div>
-	                                            <div class="border_gray" style="Width: 388px; Height: 273px;">
-	                                                <div id="UserList" style="margin: 0px 1px 1px 1px; Width: 386px; Height: 100%; overflow: auto;"></div>
-	                                            </div>
-	                                        </span>
-	                                    </td>
-	                                </tr>
+                                    <td style="vertical-align: top;">                                    	
+                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+                                        </div>
+                                    </td>
+                               	 	</tr>
+                                	<tr>
+                                    <td style="border: 1px solid #b6b6b6;">
+                                        <div class="border_gray" style="border: 0px;">
+                                            <div id="UserList" style="border: 0px; margin: 0px 1px 1px 1px; Width: 386px; Height: 229px; overflow: auto;">
+                                            </div>
+                                        </div>
+                                    </td>
+                                	</tr>
 	                            </c:if>
 	                            <c:if test="${approvalFlag =='S'}">
 	                               <tr>
@@ -1541,7 +1545,6 @@
                                     </td>
                                 	</tr>
                                 </c:if>
-
 	                                <tr>
 	                                <c:if test="${approvalFlag == 'S'}">
 	                                    <td style="background-color: transparent; height: 28px; padding-top: 5px; vertical-align: top;">
@@ -1551,13 +1554,12 @@
 	                                    </td>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'G'}">
-	                                    <td style="background-color: transparent; height: 38px; padding-right: 5px;" >
+	                                    <td style="background-color: transparent; height: 28px; padding-top: 5px; vertical-align: top;">
 	                                    <input id="textUser" style="width: 150px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
 	                                        <a class="imgbtn"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
 	                                        <a class="imgbtn" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
 	                                    </td>
 	                                </c:if>
-	                                        
 	                                </tr>
 	                            </table>
 	                        </div>
@@ -1690,7 +1692,7 @@
 	        <table>
 	            <tr>
 	            	<c:if test= "${approvalFlag eq 'G'}">
-	                <td style="vertical-align: top">
+	                <td style="border: 0px solid red; height: 580px; width: 390px; margin-left: 5px; vertical-align: top;">
 	                </c:if>
 	                <c:if test= "${approvalFlag eq 'S'}">
 	                <td style="border: 0px solid red; height: 580px; width: 390px; margin-left: 5px; vertical-align: top;">
@@ -1710,7 +1712,7 @@
 	                            <tr>
 	                                <td style="vertical-align: top;">
 	                                	<c:if test="${approvalFlag =='G' }">
-		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 523px; width: 388px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 386px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 		                                    </div>
 	                                    </c:if>
 	                                    <c:if test="${approvalFlag == 'S' }">
@@ -1850,7 +1852,7 @@
 	                                <h2 class="h2_dot"> <c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t253'/></c:if> <c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t220'/></c:if></h2>
 	                                <div class="border_gray" style="margin-top: 7px">
 	                                <c:if test="${approvalFlag == 'G'}">
-	                                    <div id="RECEPTLIST" style="Width: 723px; Height: 524px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                    <div id="RECEPTLIST" style="Width: 710px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                    </div>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'S'}">
