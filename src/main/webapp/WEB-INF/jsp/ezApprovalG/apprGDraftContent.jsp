@@ -616,7 +616,7 @@
 	                    //}
 	                    if (DocTitleObj.getAttribute("free") != null) {
 	                        titleObj.innerHTML = GetDocTitle();
-	                        titleObj.style.textAlign = "left";
+	                        //titleObj.style.textAlign = "left";
 	                    }
 	                }
 	                return HTML.outerHTML;
