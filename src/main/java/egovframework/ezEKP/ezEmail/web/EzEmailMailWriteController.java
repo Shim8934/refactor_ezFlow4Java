@@ -1085,7 +1085,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			Model model) throws Exception{
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		
 		return "ezEmail/mailDragAndDrop";
 	}
 

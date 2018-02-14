@@ -104,6 +104,7 @@
 			var flag = false;
 			var saveFlag = false;
 			var clickFlag = false;
+			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			
 			<c:if test="${isCrossBrowser != true}">
 			    var objMHT = new ActiveXObject("MhtFormat.Convert");

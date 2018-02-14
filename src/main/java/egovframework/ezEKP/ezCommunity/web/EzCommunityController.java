@@ -797,7 +797,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
 		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
@@ -816,6 +820,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		logger.debug("item.endDate: " + item.getEndDate());
 		
@@ -4131,6 +4136,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 			url = request.getParameter("url");
 		}
 		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
 		// 20100119 보안처리 관련 추가작업(권한체크)
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response, userInfo)) {
 			return "cmm/error/egovError";
@@ -4197,6 +4208,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("endDateTime", endDateTime);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		return "ezCommunity/communityNewBoardItemPhoto";
 	}
