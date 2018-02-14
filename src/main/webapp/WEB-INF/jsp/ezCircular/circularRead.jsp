@@ -391,6 +391,8 @@
 		            	imagePath = "/images/pdf.png";
 		            } else if (filetype == "ecm") {
 		            	imagePath = "/images/ecm.png";
+		            } else {
+		            	imagePath = "/images/file.gif";
 		            }
 
 		            strAttach[i] = "<img src='" + imagePath + "'/>&nbsp;" + filename + "&nbsp;(" + filesize + ")<br>";
