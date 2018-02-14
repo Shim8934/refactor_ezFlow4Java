@@ -779,7 +779,7 @@
 		    }
 		
 		    function btn_OK() {
-// 		        try {
+		        try {
 		            if (!onlydocinfiview) {
 		                var line = Checkline();
 		                if (line == false) {
@@ -987,11 +987,11 @@
 		            	
                         window.close();
 		            }
-// 		        }
-// 		        catch (e) {
-// 		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
-// 		            ret[0] = "FALSE";
-// 		        }
+		        }
+		        catch (e) {
+		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
+		            ret[0] = "FALSE";
+		        }
 		    }
 		    
 		    function setCabInfoXML() {
@@ -1913,7 +1913,7 @@
 		                                        	</c:if>
 		                                        </span>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
-		                                <span  style="vertical-align: middle; margin-left: 247px;">
+		                                <span  style="vertical-align: middle; margin-left: 240px;">
 		                                    <select id="selSearchOption" style="vertical-align: none;">
 		                                        <option>
 		                                            <spring:message code='ezApprovalG.t10026'/>
@@ -1923,8 +1923,8 @@
 		                                        </option>
 		                                    </select>
 		                                    <input type="text" id="Cabinetkeyword" value="" onkeypress="CabinetSearch_Press(event)" style="vertical-align:baseline;">
-		                                    <a class="imgbtn" style="margin-top: 4px"><span name="btnSearch" onclick="return CabinetSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
-		                                    <a class="imgbtn" style="margin-top: 4px"><span name="btnSearch" onclick="return Cabinetinfo_ini()"><spring:message code='ezApprovalG.t165'/></span></a>
+		                                    <a class="imgbtn" style="margin-top: 3px"><span name="btnSearch" onclick="return CabinetSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
+		                                    <a class="imgbtn" style="margin-top: 3px"><span name="btnSearch" onclick="return Cabinetinfo_ini()"><spring:message code='ezApprovalG.t165'/></span></a>
 		                                </span>
 		                            </td>
 		                        </tr>
