@@ -466,6 +466,11 @@
 		            search("new");
 		        }
 		    }
+		    
+		    //2018-02-14 김보미 - 새로고침
+		    function refresh_onclick() {
+		    	search('new');
+		    }
 		</script>
 	</head>
 	<body class="mainbody"> 
