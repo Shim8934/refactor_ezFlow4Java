@@ -31,6 +31,8 @@
 	        var result = ""
 			var startdate = "";
 			var enddate = "";
+			var pageCnt = "";
+			var strListInfo = "";
 
 		    document.onselectstart = function () { return false; };
 		    
@@ -246,7 +248,7 @@
                 if (listNode == null) return;
             	
                 var lstCnt = getNodeText(cntNode);
-                var pageCnt = getNodeText(pageNode);
+                pageCnt = getNodeText(pageNode);
                 var perCnt = getNodeText(perNode);
 
                 if (lstCnt != "" && lstCnt != "0") {
@@ -467,10 +469,23 @@
 		        }
 		    }
 		    
-		    //2018-02-14 김보미 - 새로고침
-		    function refresh_onclick() {
-		    	search('new');
+		    function getLeftCount() {
+		    	if (typeof (window.parent.frames.left) != "undefined") {
+		    		parent.frames["left"].getNewCircularCount();
+		    	}
 		    }
+		    
+		    function refresh_onclick() {
+		    	var strListArr = new Array();
+	        	strListArr = strListInfo.split(";");
+
+	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
+					CurPage = CurPage - 1;
+				}
+
+	        	search();
+	        }
+
 		</script>
 	</head>
 	<body class="mainbody"> 
