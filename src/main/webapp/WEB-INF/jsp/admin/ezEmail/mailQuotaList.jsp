@@ -249,8 +249,8 @@
 			    						html += "   <td>" + j						   + "</td>";
 			    						html += "	<td title=\'" + i[1] + "'>" + i[1] + "</td>";
 			    						html += "	<td>" 		  + i[2] 			   + "</td>";
-			    						html += "	<td>"         + i[3] 			   + "</td>"; //사용량
-			    						html += "	<td>"         + i[4] 			   + "</td>"; //총용량 
+			    						html += "	<td>"         + Math.floor(i[3]/1024) 			   + "</td>"; //사용량
+			    						html += "	<td>"         + Math.floor(i[4]/1024) 			   + "</td>"; //총용량 
 			    						
 			    						if (result >= 90) {				    							
 			    							html += "<td><div id='myProgress'><div id='myBar_red' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";

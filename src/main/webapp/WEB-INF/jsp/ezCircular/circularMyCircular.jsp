@@ -689,7 +689,7 @@
 	    <span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
 	        <span id="previewmail_bar_h" class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
 	            <p class="hbar_dotted">
-	                <img src="/images/prevview_hbar_dotted.gif">
+	                <img src="/images/prevview_hbar_dotted.gif" draggable="false">
 	            </p>
 	        </span>
 	        <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
@@ -717,7 +717,7 @@
 	
 	    <span id="PreviewRayerW" style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
 	        <span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
-	            <img src="/images/prevview_bar_dotted.gif">
+	            <img src="/images/prevview_bar_dotted.gif" draggable="false">
 	        </span>
 	        <span id="PreContent_RayerW" style="display: block;">
 	            <span style="width: 100%; height: 100px; display: block;">

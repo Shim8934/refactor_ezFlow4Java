@@ -218,13 +218,13 @@
 	                        <tr class="primary">
 	                            <th><c:out value='${langPrimary }' /></th>
 	                            <td>
-	                                <input type="text" class="inputText" name="clubName" size="80" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;">
+	                                <input type="text" class="inputText" name="clubName" size="80" maxlength="50" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;">
 								</td>
 	                        </tr>
 	                        <tr class="secondary">
 	                            <th><c:out value='${langSecondary} ' /></th>
 	                            <td>
-	                                <input type="text" class="inputText" name="clubName2" style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;">
+	                                <input type="text" class="inputText" name="clubName2" maxlength="50" style="WIDTH: 100%;box-sizing:border-box;-moz-box-sizing:border-box;">
 								</td>
 	                        </tr>
 	                    </table>
@@ -315,7 +315,7 @@
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1529' /><spring:message code='ezCommunity.t18' /></th>
 	                <td colspan="2">
-	                    <textarea name="intro" style="height: 120px; width: 99.5%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none;margin:5px"></textarea>
+	                    <textarea name="intro" maxlength="2000" style="height: 120px; width: 99.5%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none;margin:5px"></textarea>
 					</td>
 	            </tr>
 			</table> 
