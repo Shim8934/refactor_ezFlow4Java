@@ -6629,6 +6629,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
+		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", userInfo.getTenantId());
+		
+		logger.debug("dotNetIntegration=" + dotNetIntegration);
+		
+		// 닷넷 게시판으로 연동하는 경우에는 닷넷 URL을 반환한다.
+		if (dotNetIntegration.equals("YES")) {			
+			return dotNetUrl;
+		}
+		
 		int result = ezBoardService.getItemViewNew(boardID, itemID, userInfo.getTenantId());
 		
 		logger.debug("getItemViewNew ended.");
