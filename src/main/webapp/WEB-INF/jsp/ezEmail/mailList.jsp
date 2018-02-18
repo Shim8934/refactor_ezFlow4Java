@@ -263,7 +263,7 @@
 		    
 		    function setMailListRefreshTimer() { 
 		        if (pSaveInterval != 0) {
-		            refreshIntervalTimerId = setInterval(function() {
+		        	refreshIntervalTimerId = setInterval(function() {
 		            	/* 수아 재은 수정 (메일 검색시 자동 새로고침 X) */
 		            	if (!searchMode) {
 			                MailListRefresh();
@@ -283,7 +283,8 @@
 		    
 		    function onVisibilityChange() {
                 var remainingTime = nextMailListRefreshTime - getCurrentTime();
-                
+              
+                console.log(remainingTime/1000);
 		        // 메일 목록 페이지 상태가 보임으로 변경될 때의 처리
  		        if (!document.hidden) { 		            
  		           console.log('remainingTime=' + remainingTime + ',showing...');
@@ -292,7 +293,10 @@
  		            if (remainingTime <= 0) {
  		                console.log('refresh time already passed. Refresing...')
  		                
- 		                MailListRefresh();
+ 		                // 수정 재은 
+ 		                if (!searchMode) {
+ 		                	MailListRefresh();
+ 		                }
  		                
                         // 다음 자동 갱신 시간을 기록한다.
                         recordNextMailListRefreshTime();
@@ -303,7 +307,11 @@
  		               console.log('refresh time not yet passed. Registering Timer...')
  		               
  		               refreshTimeoutTimerId = setTimeout(function() {
- 		                   MailListRefresh();
+ 		            	   
+ 		            	   // 수정 재은
+ 		            	   if (!searchMode) {
+ 		            		   MailListRefresh();
+ 		            	   }
  		                   
  	                       // 다음 자동 갱신 시간을 기록한다.
  	                       recordNextMailListRefreshTime();
@@ -314,7 +322,7 @@
  		            }
  	            // 메일 목록 페이지 상태가 숨김으로 변경될 때의 처리     
 		        } else {
-	                console.log('remainingTime=' + remainingTime + ',hiding...');
+		        	console.log('remainingTime=' + remainingTime + ',hiding...');
 		            
 		            // 목록 갱신 타이머를 제거한다.
 		            if (refreshIntervalTimerId != 0) {
