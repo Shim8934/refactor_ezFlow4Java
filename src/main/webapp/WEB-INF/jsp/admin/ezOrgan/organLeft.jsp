@@ -73,13 +73,15 @@
 				    case 13:
 				        url = "/admin/ezOrgan/addJobList.do";
 				        break;
+			        case 14:
+			        	url = "/admin/ezSystem/systemMainMenu.do";
+			        	break;			            				        
 		            case 20:
 		                url = "/myoffice/ezEmail/Admin/mail_DLMailConfig.aspx";
 		                break;
 		            case 21:
 		                url = "/myoffice/ezEmail/DLmail_list.aspx";
 		                break;
-
 		            case 22:
 		            	url = "/admin/ezEmail/mailQuotaList.do";
 		                break;
@@ -153,7 +155,12 @@
 			<h2>
 				<span onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
 			    <ul></ul>
-			</h2>			
+			</h2>
+			<c:if test="${dotNetIntegration == 'YES'}">
+            <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(14)" ><spring:message code='main.kms1' /></span>
+            <ul class="on"></ul>
+            </h2>						
+            </c:if>						
 		</div>
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");
