@@ -314,6 +314,13 @@ function CheckBeforeSave()
 				return false;
 			}
 		}
+		/*2018.02.19 김기하 #11634 */
+		if(!timeCheck())
+		{
+			alert("" + strLang139 + "");
+			
+			return false;
+		}	
 	}
 	else
 	{
@@ -326,6 +333,13 @@ function CheckBeforeSave()
 				return false;
 			}
 		}
+		/*2018.02.19 김기하 #11634 */
+		if(!timeCheck())
+		{
+			alert("" + strLang139 + "");
+			
+			return false;
+		}	
 	}
 	
 	return true;
@@ -1152,4 +1166,22 @@ function getLocalDateObjFromGMTTime(szDtTime) {
     objD.setUTCHours(szHr, szMin);
 
     return (objD);
+}
+
+/*2018.02.19 김기하 #11634 */
+function timeCheck(){
+	
+	var etime = $('#Etimepicker').val()
+	var stime = $('#Stimepicker').val()
+
+	shour = stime.split(":")[0];
+	sminute = stime.split(":")[1];
+	ehour = etime.split(":")[0];
+	eminute = etime.split(":")[1];
+	
+	if (shour > ehour || (shour == ehour && sminute >= eminute)) {
+		return false;
+	}
+	
+	return true;
 }

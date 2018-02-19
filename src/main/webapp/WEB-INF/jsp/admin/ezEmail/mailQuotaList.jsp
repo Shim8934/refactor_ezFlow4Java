@@ -389,8 +389,8 @@
 					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
 					<th width="15%;"><spring:message code="ezStatistics.t1068"></spring:message></th>
 					<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
-					<th width="15%;"><spring:message code="ezStatistics.t1022"></spring:message>(MB)</th>
-					<th width="15%;"><spring:message code="ezStatistics.t1024"></spring:message>(MB)</th>
+					<th width="15%;"><spring:message code="ezEmail.lsd02"></spring:message></th>
+					<th width="15%;"><spring:message code="ezEmail.lsd03"></spring:message></th>
 					<th><spring:message code="main.t00011"></spring:message></th>
 					<th><spring:message code="ezOrgan.t92"></spring:message></th>
 				</tr>
