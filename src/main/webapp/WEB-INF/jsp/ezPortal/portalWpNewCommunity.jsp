@@ -94,7 +94,7 @@
                 	<img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />" >
             	</span>
         	</div>
-        	<div id="tblBest" class="communitycont">
+        	<div id="tblBest" class="communitycont" style="overflow-y: auto;">
         		<c:if test="${strHTML != ''}">${strHTML}</c:if>
         		<c:if test="${strHTML == ''}">
         			<div class="nodata_portlet">
