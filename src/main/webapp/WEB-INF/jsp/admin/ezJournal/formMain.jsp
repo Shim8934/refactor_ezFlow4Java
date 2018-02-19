@@ -17,29 +17,23 @@
 		    var selFormId = "";
 		    var pEditor = "<c:out value = '${useEditor}'/>";
 	    
-		    document.onselectstart = function () {
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
-		            return false;
-		        else
-		            return true;
-		    };
-			
 			$(document).ready(function() {
-			   	// var firstType = $("#formType").children("li:first");
 				companyId = $("#SCompID").val();
 			   	var firstType = $("#formType").find("span:first");
 				getFormList(firstType);
 				
 			});
 	
-			function listClick(elem) {
-		    	selFormId = $(elem).attr("formId");
+			// 양식리스트 중 하나가 선택되었을 때 스타일 지정 및 선택된 양식 아이디 저장
+			function listClick(val) {
+		    	selFormId = $(val).attr("formId");
 		    	
 				$(".formList tr").removeClass("active");
-				$(elem).addClass("active");
+				$(val).addClass("active");
 		    	
 		    }
 			
+			// 선택된 일지양식함에 따른 양식리스트를 얻어옴
 			function getFormList(val) {	
 				typeId = $(val).attr("value");
 				$(".bold").css("font-weight", "normal");
@@ -84,11 +78,13 @@
 			    
 			}			
 		    
+			// 회사선택시 각 회사에서 사용하는 양식함 로드
 		    function selectCompanyList(val) {
 				var url = "/admin/ezJournal/form.do";
 				parent.frames["right"].location.href = url+ "?companyId=" + val;
 		    }
 		    
+			// 양식추가버튼
 		    function btnInsForm() {
 		    	alert(typeId + " " + companyId + " " + pEditor);
 		    	var url = "";
@@ -103,6 +99,7 @@
 		    	GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
 		    }
 		    
+			// 양식수정버튼
 		    function btnModForm() {
 		    	var url = "";
 		    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
@@ -117,6 +114,7 @@
 		    	GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
 		    }
 		    
+			// 양식삭제버튼
 		    function btnDelForm() {
 		    	
 		    	if (selFormId != null) {
@@ -162,7 +160,6 @@
 			}
 			
 			ul.formType li span {display: inline-block; vertical-align: middle;  }
-			/* ul.formType li:last-child { border-bottom: 0px; } */
 			
 			.content td {
 				text-align: center;
@@ -210,11 +207,6 @@
 		    	<td style="width:200px; vertical-align:top">
 		    		<div class="listview">
 						<div style="vertical-align:top; height:500px; width:100%; overflow-x:auto;overflow-y:auto;/* BORDER:#b6b6b6 1px solid; */ BACKGROUND-COLOR:#ffffff" >
-							<%-- <ul class="formType" id="formType">
-								<c:forEach items="${typeList}" var="type">
-									<li value="${type.journaltypeId }" onclick="getFormList(this)"><span><spring:message code='${type.journaltypeId}'/></span></li>
-								</c:forEach>
-							</ul> --%>
 							<table id="formType" class="mainlist" style="width: 100%; border-width: 0px 0px 1px 0px;">
 								<c:forEach items="${typeList}" var="type">
 									<tr>
@@ -245,16 +237,6 @@
 			    	</div>
 				</td>    
 		  	</tr>
-		    <%-- <tr>
-		    	<td style="padding-left:5px; padding-right:5px; padding-top:5px; vertical-align:top">
-		        	<table class="content">
-			            <tr>
-		            		<th><spring:message code = 'ezApprovalG.t1543' /></th>
-		              		<td id="descrip">&nbsp;</td>
-		            	</tr>
-		        	</table>
-		    	</td>
-		  	</tr>    --%>
 		</table>
 	</body>
 </html>

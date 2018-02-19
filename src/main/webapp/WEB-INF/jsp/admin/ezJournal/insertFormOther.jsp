@@ -21,33 +21,17 @@
 		    var useEditor = "<c:out value='${useEditor}'/>";
 		    var formId = "<c:out value='${formId}'/>";
 		    var isFree = false;
-		    var selDeptId = "";
+		    // 선택된 부서 아이디
+		    var selDeptId = "";		
+		    // 선택된 부서 배열 (양식을 사용할 부서)
 		    var useDeptList = [];
+		    // 부서정보가 변했는지 확인하기 위한 flag
 		    var isDeptChanged = "N";
+		    // 수정시 해당 양식을 사용하는 부서정보와 양식내용을 받음
 		    var useDepts = "<c:out value='${useDepts}'/>";		    	
         	var selFormContent = "<c:out value='${formContent}'/>";
 		    
-		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
-		        window.onblur = function () {
-		            window.focus();
-		        }
-		    }
-		
-		    document.onselectstart = function () {
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
-		            return false;
-		        else
-		            return true;
-		    };
-		    
 		    $(document).ready(function() {
-		        if (navigator.userAgent.indexOf('Firefox') != -1) {
-		            document.body.style.MozUserSelect = 'none';
-		            document.body.style.WebkitUserSelect = 'none';
-		            document.body.style.khtmlUserSelect = 'none';
-		            document.body.style.oUserSelect = 'none';
-		            document.body.style.UserSelect = 'none';
-		        }
 		        
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        Tab1_SelectID = "1tab1";
@@ -84,6 +68,7 @@
 			    }
 		    });
 		    
+		    // 사용부서 라디오 선택유무에 따라 부서리스트 보여주는 부분
 		    function checkUseDept() {
 			    if ($("selDeptUseA:checked")) {
 			        $("#setUseDeptList").hide();
@@ -93,10 +78,12 @@
 			    }
 		    }
 		    
+		    // 일지함 선택
 		    function selectTypeList(val) {
 		    	typeId = val;
 		    }
 		    
+		    // 양식내용에 정보 넣는 부분(부서명, 작성자, 작성일)
 		    function clickFormInfo(val) {
 		    	var info = $(val).attr("value");
 		    	alert(info);
@@ -111,6 +98,7 @@
 		    	}
 		    }
 		    
+		    // 부서리스트 그려주는 부분
 		    function setDeptList() {
 		    	var treeContent = ${deptList};
 		    	$("#deptTreeView").on('changed.jstree', function (e, data) {
@@ -130,10 +118,12 @@
 		    	});
 		    }
 		    
+		    // 선택한 부서를 배열에 넣어주기
 		    function insertDept() {
 		    	var deptId = selDeptId;
-		    	var nodeText = $("#deptTreeView").jstree().get_node(deptId).text;
-		    	var deptName = nodeText.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+		    	var deptName = $("#deptTreeView").jstree().get_node(deptId).text;
+		    	console.log(deptName);
+		    //	var deptName = nodeText.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
 		    //	var deptName = nodeText.slice(5, -6);
 		    	var chkFlag = true;
 		    	isDeptChanged = "Y";
@@ -151,6 +141,7 @@
 		    	drawUseDeptList();
 		    } 
 		    
+		    // 선택된 부서배열에서 특정 부서 삭제
 		    function deleteDept() {
 		    	isDeptChanged = "Y";
 		     	for(var j = 0; j < useDeptList.length; j++) {
@@ -161,6 +152,7 @@
 		    	drawUseDeptList();
 		    }
 		    
+		    // 선택된 부서 배열을 토대로 화면에 그리는 곳
 		    function drawUseDeptList() {
 		    	console.log(useDeptList);
 		    	
@@ -176,24 +168,27 @@
 		    	$useFormDept.html(useListHtml);
 		    }
 		    
+		    // 선택된 부서리스트에서 부서 선택시 스타일주기
 		    function listClick(val) {
-		    	var $this = $(val);
-		    	selDeptId = $this.closest("tr").attr("deptId");
+		    	selDeptId = $(val).attr("deptId");
+		    	
+		    	$(".mainlist tr").removeClass("active");
+				$(val).addClass("active");
 		    }
 		    
+		    // 저장버튼
 		    function btnSave() {
 		    	var formName = $("#tbFormName").val();
 		    	var formDescript = $("#tbDescript").val();
 		    	var formContent = message.GetEditorContent();
 		    	
 		    	if (formName == "") {
-		    		alert("양식명을 입력해주세요.");
+		    		alert("<spring:message code='ezJournal.t130'/>");
 		    		return false;
 		    	}
 		    	
 		    	//if ($("#selDeptUseP").is("checked")) {
 		    	if ($(":input:radio[name=setUseDept]:checked").val() == "P") {
-		    		alert("부서체크인지")
 		    		var useDept = JSON.stringify(useDeptList);	
 		    	} else if (($(":input:radio[name=setUseDept]:checked").val() == "A") && formId != null) {
 		    		isDeptChanged = "Y";
@@ -224,6 +219,7 @@
 		    	}); 
 		    }
 		    
+		    // 닫기버튼
 		    function btnClose() {
 		    	window.close();
 		    }
@@ -238,14 +234,8 @@
 				cursor: pointer;
 			}
 			
-			@media screen and (-webkit-min-device-pixel-ratio:0)
-			  and (min-resolution:.001dpcm) {
-				xmp{
-					position:relative;
-					top:-38px;
-					left:20px;
-				}
-			}
+			.active {background: rgb(233, 241, 255);}
+			
 		</style>
 	</head>
 	<body class="popup">
@@ -261,12 +251,12 @@
         </div>
         <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
-                <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezJournal.t28'/></span></p>
-                <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezJournal.t29'/></span></p>
+                <p><span divname="JournalForm_div1" id="1tab1"><spring:message code='ezJournal.t28'/></span></p>
+                <p><span divname="JournalForm_div2" id="1tab2"><spring:message code='ezJournal.t29'/></span></p>
 	        </div>
         </div>
         
-        <div id="ApvForm_content1" style="width:100%;height:90%; padding-top:10px; display:none">
+        <div id="JournalForm_content1" style="width:100%;height:90%; padding-top:10px; display:none">
 			
 			<table class="content" style="width:100%;">
 				<tr>                
@@ -335,7 +325,7 @@
             </table>
         </div>
         
-        <div id="ApvForm_content2" style="width:100%;display:none; padding-top:10px;">
+        <div id="JournalForm_content2" style="width:100%;display:none; padding-top:10px;">
 			<div id="editor_content" style="padding-top:5px;">
 				<%-- <div id="mainmenu">
 					<ul>
