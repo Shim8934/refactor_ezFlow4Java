@@ -5993,7 +5993,14 @@
           ) AS B
      ]]>
           WHERE
+          	1 = 1
+          <isNotNull property="v_CHAMSTATE">
+          <isNotEmpty property="v_CHAMSTATE">
+          AND
           		DOCSTATE = #v_CHAMSTATE#
+          </isNotEmpty>
+          </isNotNull>
+         
 	        LIMIT 1
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSignInfo" parameterClass="Map" resultClass="ApprGSignInfoVO"> -->
