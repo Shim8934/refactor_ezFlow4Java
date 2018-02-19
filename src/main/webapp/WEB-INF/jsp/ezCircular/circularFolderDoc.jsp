@@ -468,10 +468,14 @@
 		    function refresh_onclick() {
 		    	var strListArr = new Array();
 	        	strListArr = strListInfo.split(";");
-
-	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
+	        	
+	        	//2018-02-19 김보미
+	        	if ((pageCnt - strListArr.length + 1) % perCnt == 0 && CurPage != 1) {						
 					CurPage = CurPage - 1;
 				}
+// 	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
+// 					CurPage = CurPage - 1;
+// 				}
 
 		    	getBoardList();
 		    }

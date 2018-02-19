@@ -210,6 +210,7 @@
 		            }
 		        }
 		        
+		      	//2018-02-13 주홍선 주석제거
  		        if (mode == "temp") {
  		        	url = "/ezCircular/tempUploadFileDelete.do?mode=temp&circularID=" + circularID;
  		        } else {

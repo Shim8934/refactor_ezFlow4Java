@@ -1408,15 +1408,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", userInfo.getTenantId());
 		
 		for (int i = 0; i < fileCnt; i++) {
-			filePath[i] = realPath + doc.getElementsByTagName("DATA2").item(i).getTextContent();
+			String filePathValue = doc.getElementsByTagName("DATA2").item(i).getTextContent();		
+			filePathValue = filePathValue != null ? filePathValue : "";
+			
+			if (!filePathValue.startsWith("/")) {
+				filePathValue = "/" + filePathValue;
+			}
+			
+			filePath[i] = realPath + filePathValue;
 			
 			if (dotNetIntegration.equals("YES")) {
 				try {
 					File f = new File(filePath[i]);
 					
 					// 닷넷 연동 시 첨부 파일이 존재하지 않으면 암호화된 파일일 수 있으므로 복호화 URL을 호출하여 다운로드를 시도해 본다.
-					if (!f.exists()) {
-						String filePathValue = doc.getElementsByTagName("DATA2").item(i).getTextContent();
+					if (!f.exists()) {						
 						String downloadUrl = dotNetUrl + "/myoffice/Common/DownloadAttach_java.aspx?filename=placeholder"
 									+ "&filepath=" + URLEncoder.encode(filePathValue, "UTF-8");
 						
@@ -1471,6 +1477,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		// 총 파일의 크기가 대용량첨부 제한크기를 넘는지 체크한다.
 		if (bigMaxSize != 0 && totalFileSize > bigMaxSize) {
 			logger.debug("totalFileSize is over bigMaxSize. Return OVERFLOW.");
+			
+			if (dotNetIntegration.equals("YES")) {
+				for (int i = 0; i < fileCnt; i++) {
+					// 복호화 URL을 통해 다운로드한 임시 파일들을 삭제한다.
+					if (downloadedFlags[i]) {
+						logger.debug("deleting " + filePath[i]);
+						
+						File localFile = new File(filePath[i]);
+						
+						localFile.delete();
+					}
+				}
+			}
+			
 			logger.debug("mailInterUploadCopy ended.");
 			
 			return "OVERSIZE";
