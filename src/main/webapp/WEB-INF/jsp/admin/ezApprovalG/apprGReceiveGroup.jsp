@@ -81,6 +81,7 @@
 		        document.getElementById('lvtDept').innerHTML = "";
 		        lvtDept.DataSource(xmlRtn);
 		        lvtDept.DataBind("lvtDept");
+		        $("#lvtDeptForm_THEAD").remove();
 		    }
 		    
 		    function lvtDept_SelChange() {
@@ -115,6 +116,7 @@
 		        document.getElementById('lvtDeptSelect').innerHTML = "";
 		        lvtDeptSelect.DataSource(xmlRtn);
 		        lvtDeptSelect.DataBind("lvtDeptSelect");
+		        
 		    }
 		    
 		    function DuplicateAprDeptCheck(DeptID) {

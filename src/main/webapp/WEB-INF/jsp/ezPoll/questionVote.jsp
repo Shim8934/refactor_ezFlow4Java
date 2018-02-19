@@ -2480,7 +2480,7 @@
 		    	var emoticonPanel = document.getElementById('emoticonPanel');
 		        $(document).click(function(e){
 		            var target = e.target;
-		            var onOff = emoticonPanel.getAttribute('style').indexOf('display: block')==0?true:false;
+		            var onOff = emoticonPanel.getAttribute('style').indexOf('display: block')!=-1?true:false;
 		            
 		            if(onOff && target.id != "_addEmoticon"){
                         addSticker();
