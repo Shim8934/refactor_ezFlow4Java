@@ -717,7 +717,7 @@
 		     <div id='myProgress' style='margin-left:20px;'>
 		    	<div id='myBar'></div>
 		    </div>
-		    <div style='text-align:center; margin-top:10px; font-weight:bold;' class="volumes"></div>
+		    <div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div>
 	        
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>
