@@ -5974,8 +5974,6 @@
           		TENANT_ID = #v_TENANTID#
           AND
               	COMPANYID = #companyID#
-          AND
-          		APRMEMBERID = #v_USERID#
           		
           UNION ALL
           		
@@ -5992,8 +5990,7 @@
           		TENANT_ID = #v_TENANTID#
           AND
               	COMPANYID = #companyID#
-          AND
-          		APRMEMBERID = #v_USERID#) AS B
+          ) AS B
      ]]>
           WHERE
           		DOCSTATE = #v_CHAMSTATE#
