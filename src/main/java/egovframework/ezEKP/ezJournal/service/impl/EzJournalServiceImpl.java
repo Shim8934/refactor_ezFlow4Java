@@ -14,11 +14,13 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezJournal.dao.EzJournalDAO;
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
+import egovframework.ezEKP.ezJournal.vo.DeptInfoVO;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
+import egovframework.let.utl.fcc.service.JsonUtil;
 
 
 @Service("EzJournalService")
@@ -85,11 +87,13 @@ public class EzJournalServiceImpl implements EzJournalService{
 			JournalFormInfoVO vo = fList.get(i);
 			map.put("formId", vo.getFormId());
 			
-			List<String> useDept = ezJournalDAO.getFormUseDeptList(map);
+			List<DeptInfoVO> useDept = ezJournalDAO.getFormUseDeptList(map);
 			
 			if (useDept.size() < 1) {
 				useDept.clear();
-				useDept.add("전체");
+				DeptInfoVO deptVO = new DeptInfoVO();
+				deptVO.setDeptName("전체");
+				useDept.add(deptVO);
 			}
 			vo.setDepts(useDept);
 			resultList.add(vo);
@@ -136,7 +140,6 @@ public class EzJournalServiceImpl implements EzJournalService{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("typeId", jsonParam.get("typeId"));
-		//map.put("formId", jsonParam.get("formId"));
 		map.put("formName", jsonParam.get("formName"));
 		map.put("formDescript", jsonParam.get("formDescript"));
 		map.put("formContent", jsonParam.get("formContent"));
@@ -145,24 +148,37 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("tenantId", jsonParam.get("tenantId"));
 		
 		logger.debug("insertForm map" + map);
-		ezJournalDAO.insertForm(map);
 		
-		if (jsonParam.get("depts") != null) {
-			JSONArray depts = (JSONArray) jsonParam.get("useDept");
-			for (int i = 0; i < depts.size(); i++) {
-				insertUseDept((String) jsonParam.get("formId"), (String) depts.get(i));
+		String tenantId = jsonParam.get("tenantId").toString();
+		String formId = ezJournalDAO.insertForm(map) + "";
+		String isDeptChanged = (String) jsonParam.get("isDeptChanged");
+		
+		if (isDeptChanged.equals("Y")) {
+			logger.debug((String)jsonParam.get("useDept"));
+			
+			List<Map<String, Object>> depts = JsonUtil.JsonToList((String) jsonParam.get("useDept")); 
+			
+			if (depts != null) {
+				for (int i = 0; i < depts.size(); i++) {
+					try {
+						insertUseDept(formId, depts.get(i).get("deptId").toString(), tenantId);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		
 		logger.debug("insertForm ended");
 	}
 	
-	public void insertUseDept(String formId, String deptId) throws Exception {
+	public void insertUseDept(String formId, String deptId, String tenantId) throws Exception {
 		logger.debug("insertUseDept started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("formId", formId);
 		map.put("deptId", deptId);
+		map.put("tenantId", tenantId);
 		
 		ezJournalDAO.insertUseDept(map);
 		logger.debug("insertUseDept ended");
@@ -225,5 +241,83 @@ public class EzJournalServiceImpl implements EzJournalService{
 		List<JournalAuthorVO> userList = ezJournalDAO.getDeptUserList(param);
 		logger.debug("getDeptUserList ended");
 		return userList;
+	}
+
+	@Override
+	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, String tenantId) {
+		logger.debug("getJournalFormInfo started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("formId", formId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		JournalFormInfoVO journalFormInfoVO = ezJournalDAO.getJournalFormInfo(map);
+		
+		List<DeptInfoVO> deptList = ezJournalDAO.getFormUseDeptList(map);
+		if (deptList.size() > 0) {
+			journalFormInfoVO.setDepts(deptList);
+		}
+		
+		logger.debug("getJournalFormInfo ended");
+		return journalFormInfoVO;
+	}
+
+	@Override
+	public void updateJournalForm(JSONObject jsonParam) {
+		logger.debug("updateJournalForm started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("typeId", jsonParam.get("typeId"));
+		map.put("formId", jsonParam.get("formId"));
+		map.put("formName", jsonParam.get("formName"));
+		map.put("formDescript", jsonParam.get("formDescript"));
+		map.put("formContent", jsonParam.get("formContent"));
+		map.put("formWriter", jsonParam.get("formWriter"));
+		map.put("companyId", jsonParam.get("companyId"));
+		map.put("tenantId", jsonParam.get("tenantId"));
+		
+		logger.debug("updateForm map" + map);
+		String tenantId = jsonParam.get("tenantId").toString();
+		String isDeptChanged = (String) jsonParam.get("isDeptChanged");
+		
+		logger.debug("isDeptChanged : " + isDeptChanged);
+		ezJournalDAO.updateJournalForm(map);
+		
+		if (isDeptChanged.equals("Y")) {
+			logger.debug((String)jsonParam.get("useDept"));
+			
+			ezJournalDAO.deleteFormUseDept(map);
+			List<Map<String, Object>> depts = JsonUtil.JsonToList((String) jsonParam.get("useDept")); 
+			
+			if (depts != null) {
+				for (int i = 0; i < depts.size(); i++) {
+					try {
+						insertUseDept(jsonParam.get("formId").toString(), depts.get(i).get("deptId").toString(), tenantId);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
+		logger.debug("updateJournalForm ended");
+	}
+
+	@Override
+	public void deleteJournalForm(String formId, String companyId, String tenantId) {
+		logger.debug("deleteJournalForm started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("formId", formId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezJournalDAO.deleteJournalForm(map);
+		ezJournalDAO.deleteFormUseDept(map);
+		
+		logger.debug("deleteJournalForm ended");
+		
 	}
 }

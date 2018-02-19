@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezJournal.vo.DeptInfoVO;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
@@ -59,8 +60,8 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<String> getFormUseDeptList(Map<String, Object> map) {
-		return (List<String>) list("getFormUseDeptList", map);
+	public List<DeptInfoVO> getFormUseDeptList(Map<String, Object> map) {
+		return (List<DeptInfoVO>) list("getFormUseDeptList", map);
 	}
 
 	/**
@@ -87,8 +88,8 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * 양식 등록
 	 * @param map
 	 */
-	public void insertForm(Map<String, Object> map) {
-		insert("insertJournalForm", map);
+	public int insertForm(Map<String, Object> map) {
+		return (int) insert("insertJournalForm", map);
 	}
 
 	/**
@@ -148,4 +149,41 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public List<JournalAuthorVO> getDeptUserList(Map<String, String> map){
 		return (List<JournalAuthorVO>) list("selectUserList",map);
 	}
+
+	/**
+	 * 양식 상세정보 가져오기
+	 * @param map
+	 * @return
+	 */
+	public JournalFormInfoVO getJournalFormInfo(Map<String, Object> map) {
+		return (JournalFormInfoVO) select("getJournalFormInfo", map);
+	}
+
+	/**
+	 * 양식 수정
+	 * @param map
+	 * @return
+	 */
+	public void updateJournalForm(Map<String, Object> map) {
+		update("updateJournalForm", map);
+	}
+
+	/**
+	 * 양식 사용부서 삭제
+	 * @param map
+	 * @return
+	 */
+	public void deleteFormUseDept(Map<String, Object> map) {
+		delete("deleteFormUseDept", map);
+	}
+
+	/**
+	 * 양식 삭제
+	 * @param map
+	 * @return
+	 */
+	public void deleteJournalForm(Map<String, Object> map) {
+		delete("deleteJournalForm", map);
+	}
+
 }

@@ -63,7 +63,7 @@ public class EzJournalSBController {
 		param.put("userId", userInfo.getId());
 		param.put("tenantId", userInfo.getTenantId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/companies", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/companies", param, request,"get",null);
 		String status = resultBody.get("status").toString();
 			
 		if (status.equals("ok")) {			
@@ -76,7 +76,7 @@ public class EzJournalSBController {
 		param.put("companyId",companyId );
 		param.put("tenantId", userInfo.getTenantId());
 		
-		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", param, request,"get",null);
+		resultBody = commonUtil.getJsonFromRestApi("/restezjournal/types", param, request,"get",null);
 		status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {		
@@ -113,7 +113,7 @@ public class EzJournalSBController {
 		}
 		parameter.put("journaltypeList", journaltypeList);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/types", null, request,"put",parameter);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/types", null, request,"put",parameter);
 		
 		logger.debug("formTypeUpdate ended");
 		
@@ -142,7 +142,7 @@ public class EzJournalSBController {
 		param.put("userId", userInfo.getId());
 		param.put("tenantId", userInfo.getTenantId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/companies", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/companies", param, request,"get",null);
 		String status = resultBody.get("status").toString();
 			
 		if (status.equals("ok")) {			
@@ -156,7 +156,7 @@ public class EzJournalSBController {
 		param.put("tenantId", userInfo.getTenantId());
 		System.out.println("companyId = "+companyId);
 		System.out.println("tenantId = "+userInfo.getTenantId());
-		resultBody = commonUtil.getJsonFromRestApi("/ezjournal/authors", param, request,"get",null);
+		resultBody = commonUtil.getJsonFromRestApi("/restezjournal/authors", param, request,"get",null);
 		status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {		
@@ -197,7 +197,7 @@ public class EzJournalSBController {
 		param.put("tenantId", userInfo.getTenantId());
 		param.put("companyId", request.getParameter("companyId"));
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/depts", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/depts", param, request,"get",null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {			
@@ -242,7 +242,7 @@ public class EzJournalSBController {
 		param.put("value", request.getParameter("value"));
 		logger.debug(request.getParameter("key"));
 		logger.debug(request.getParameter("value"));
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/ezjournal/users", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/users", param, request,"get",null);
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {		
 			JSONArray userList = (JSONArray) resultBody.get("data");

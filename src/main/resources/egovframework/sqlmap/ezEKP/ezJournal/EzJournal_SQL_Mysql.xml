@@ -4,14 +4,11 @@
 <sqlMap namespace="ezJournal">
 
 	<typeAlias alias="JournaltypeVO" type="egovframework.ezEKP.ezJournal.vo.JournaltypeVO"/>
-	
 	<typeAlias alias="JournalFormInfoVO" type="egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO"/>
-	
 	<typeAlias alias="companyVO" type="egovframework.ezEKP.ezJournal.vo.JournalCompanyVO"/>
-	
 	<typeAlias alias="authorVO" type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO"/>
-	
 	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO"/>
+	<typeAlias alias="deptInfoVO" type="egovframework.ezEKP.ezJournal.vo.DeptInfoVO"/>	
 
 	<resultMap class="deptViewVO" id="deptViewMap">
 		<result property="id" column="id"/>
@@ -62,6 +59,18 @@
 		<result property="formName"		column="form_name"			columnIndex="2"/>
 	</resultMap>
 
+ 	<resultMap class="JournalFormInfoVO" id="getJournalFormInfoVO">
+		<result property="formId"		column="form_id"			columnIndex="1"/>
+		<result property="formName"		column="form_name"			columnIndex="2"/>
+		<result property="formInfo"		column="form_info"			columnIndex="3"/>
+		<result property="formContent"	column="form_content"		columnIndex="4"/>
+	</resultMap> 
+	
+	<resultMap class="deptInfoVO" id="deptInfoVO">
+		<result property="deptId"		column="dept_id"/>
+		<result property="deptName"		column="dept_name"/>			
+	</resultMap>
+	
 <!-- 양식함 리스트 세럭트 -->
 	<select id="selectJournalTypeList" resultMap="JournaltypeMap" parameterClass="Map">
 		select type_id, used from tbl_journal_form_type
@@ -114,32 +123,35 @@
 	
 	<!-- 양식 리스트 세럭트 -->
 	<select id="getFormList" parameterClass="map" resultMap="JournalFormInfoVO">
-			select 
-				form_id,
-				form_name,
-				form_info,
-				form_date,
-				form_writer,
-				form_status
-			from 
-				tbl_journal_form 
-			where
-				type_id = #typeId#
-			and
-				company_id = #companyId#
-			and
-				tenant_id = #tenantId#
-			order by form_id asc
+		select 
+			form_id,
+			form_name,
+			form_info,
+			form_date,
+			form_writer,
+			form_status
+		from 
+			tbl_journal_form 
+		where
+			type_id = #typeId#
+		and
+			company_id = #companyId#
+		and
+			tenant_id = #tenantId#
+		order by form_id asc
 	</select>
 	
 	<!-- 해당 양식을 사용할 수 있는 부서 리스트 -->
-	<select id="getFormUseDeptList" parameterClass="map" resultClass="String">
-			select 
-				a.DISPLAYNAME
-			from
-				tbl_deptmaster a join tbl_journal_form_user_dept b on a.CN = b.dept_id
-			where
-				b.form_id = #formId#
+	<select id="getFormUseDeptList" parameterClass="map" resultMap="deptInfoVO">
+		select 
+			b.dept_id,
+			a.DISPLAYNAME as dept_name
+		from
+			tbl_deptmaster a join tbl_journal_form_user_dept b on a.CN = b.dept_id
+		where
+			b.form_id = #formId#
+		and
+			b.tenant_id = #tenantId#
 	</select>
 	
 	<!-- 해당 부서에서 쓸 수 있는 양식리스트 -->
@@ -186,15 +198,18 @@
 		values (
 			#tenantId#,		#formName#,		#formContent#,		#typeId#,		now(),			#formWriter#,		#formDescript#,		#companyId#
 		)
+		<selectKey keyProperty="id" resultClass="Integer">
+			select last_insert_id()
+		</selectKey>
 	</insert>
 	
 	<!-- 양식을 사용하는 부서 등록 -->
 	<insert id="insertUseDept" parameterClass="map">
 		insert into tbl_journal_form_user_dept (
-			dept_id,	form_id
+			dept_id,	form_id,	tenant_id
 		)
 		values (
-			#deptId#,	#formId#
+			#deptId#,	#formId#,	#tenantId#
 		)
 	</insert>
 	
@@ -288,4 +303,57 @@
 		where TENANT_ID=#tenantId#
 		and $key$ like concat('%',#value#,'%')
 	</select>
+	
+	<!-- 양식 상세정보 -->
+	<select id="getJournalFormInfo" parameterClass="map" resultMap="getJournalFormInfoVO">
+		select
+			form_id,
+			form_name,
+			form_info,
+			form_content
+		from
+			tbl_journal_form
+		where
+			tenant_id = #tenantId#
+		and
+			company_id = #companyId#
+		and
+			form_id = #formId#
+	</select>
+	
+	<!-- 양식 수정 -->
+	<update id="updateJournalForm" parameterClass="map">
+		update
+			tbl_journal_form
+		set
+			form_name = #formName#,
+			form_info = #formDescript#,
+			form_content = #formContent#
+		where
+			form_id = #formId#
+		and
+			tenant_id = #tenantId#
+	</update>
+	
+	<!-- 양식 사용부서 삭제 -->
+	<delete id="deleteFormUseDept" parameterClass="map">
+		delete from
+			tbl_journal_form_user_dept
+		where
+			form_id = #formId#
+		and
+			tenant_id = #tenantId#
+	</delete>
+	
+	<!-- 양식 삭제 -->
+	<delete id="deleteJournalForm" parameterClass="map">
+		delete from
+			tbl_journal_form
+		where
+			form_id = #formId#
+		and
+			company_id = #companyId#
+		and
+			tenant_id = #tenantId#
+	</delete>
 </sqlMap>

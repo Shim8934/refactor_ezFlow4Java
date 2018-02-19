@@ -21,7 +21,7 @@ public class JournalFormInfoVO {
 	/** 양식Flag(기본양식유무) */
 	private String formStatus;
 	/** 양식사용부서아이디 */
-	private List<String> depts;
+	private List<DeptInfoVO> depts;
 	/** 회사아이디 */
 	private String companyId;
 	/** 테넌트아이디 */
@@ -87,10 +87,10 @@ public class JournalFormInfoVO {
 	public void setFormStatus(String formStatus) {
 		this.formStatus = formStatus;
 	}
-	public List<String> getDepts() {
+	public List<DeptInfoVO> getDepts() {
 		return depts;
 	}
-	public void setDepts(List<String> depts) {
+	public void setDepts(List<DeptInfoVO> depts) {
 		this.depts = depts;
 	}
 	

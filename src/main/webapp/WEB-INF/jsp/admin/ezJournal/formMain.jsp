@@ -13,6 +13,8 @@
 	    <script type="text/javascript">		    
 		    var companyId = "";
 		    var typeId = "";
+		    var formId = "";
+		    var selFormId = "";
 		    var pEditor = "<c:out value = '${useEditor}'/>";
 	    
 		    document.onselectstart = function () {
@@ -27,8 +29,17 @@
 				companyId = $("#SCompID").val();
 			   	var firstType = $("#formType").find("span:first");
 				getFormList(firstType);
+				
 			});
 	
+			function listClick(elem) {
+		    	selFormId = $(elem).attr("formId");
+		    	
+				$(".formList tr").removeClass("active");
+				$(elem).addClass("active");
+		    	
+		    }
+			
 			function getFormList(val) {	
 				typeId = $(val).attr("value");
 				$(".bold").css("font-weight", "normal");
@@ -47,13 +58,13 @@
 		    			$formList.html("");
 		    			if (result.length > 0) {
 			    			$.each(result, function(index, item) {
-				    			listhtml += "<tr>";
+				    			listhtml += "<tr formId=" + item.formId + " onclick='listClick(this)'>";
 				    			listhtml += "<td>" + (index + 1) + "</td>";
 				    			listhtml += "<td>" + item.formName + "</td>";
 				    			if (item.depts.length > 1) {
-					    			listhtml += "<td>" + item.depts[0] + " <spring:message code='ezJournal.t124'/> " + (item.depts.length - 1) + "</td>";
+					    			listhtml += "<td>" + item.depts[0].deptName + " <spring:message code='ezJournal.t124'/> " + (item.depts.length - 1) + "</td>";
 				    			} else {
-					    			listhtml += "<td>" + item.depts[0] + "</td>";
+					    			listhtml += "<td>" + item.depts[0].deptName + "</td>";
 				    			}
 				    			listhtml += "<td>" + item.formInfo + "</td>";
 				    			listhtml += "<td>" + item.formDate.slice(0, 10) + "</td>";
@@ -70,6 +81,7 @@
 		    		}
 		    		
 		        });
+			    
 			}			
 		    
 		    function selectCompanyList(val) {
@@ -90,6 +102,46 @@
 		    	
 		    	GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
 		    }
+		    
+		    function btnModForm() {
+		    	var url = "";
+		    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
+		    			+ "&formId=" + encodeURIComponent(selFormId);
+		    	
+		    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+		    		url = "/admin/ezJournal/insertFormOther.do"	
+		    	} else {
+			    	url = "/admin/ezJournal/insertForm.do";
+		    	}
+		    	
+		    	GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
+		    }
+		    
+		    function btnDelForm() {
+		    	
+		    	if (selFormId != null) {
+		    		if (confirm("<spring:message code = 'ezApprovalG.t999933' />") == true) {
+		    			
+		    			$.ajax({
+		    				type : "POST",
+		    				url : "/admin/ezJournal/deleteForm.do",
+		    				asnyc : false,
+		    				data : {"formId"	 : selFormId,
+		    						"companyId"  : companyId,
+		    						"typeId" 	 : typeId},
+		    				success : function (result) {
+		    					alert("<spring:message code='ezJournal.t129'/>");
+		    					parent.frames["right"].location.reload();
+		    				},
+		    				error : function(request, status, error) {
+		    					alert("code : " + request.status + "\nerror : " + error);
+		    				}
+		    			});
+		    		}
+		    	}
+		    	
+		    }
+		    
 		</script>
 		<style>
 			ul.formType {
@@ -124,13 +176,11 @@
 			#formType td {
 				text-align: center;
 				font-style: inherit;
-				cursor: pointer;
 				
 			}
 			
-			#formType td:hover {
-				background-color: silver;
-			}
+			#formType tr:hover,  #formList tr:hover {background:#eee; color:#fff; cursor: pointer;}
+			.active {background: rgb(233, 241, 255);}
 			
 		</style>
 	</head>
@@ -150,8 +200,8 @@
             </span>
             <ul>
             	<li id="btnInsertForm"><span onclick="return btnInsForm()"><spring:message code='ezJournal.t17' /></span></li>
-            	<li id="btnModeForm"><span onclick=""><spring:message code='ezJournal.t18' /></span></li>
-            	<li id="btnDeleteForm"><span onclick=""><spring:message code='ezJournal.t19' /></span></li>
+            	<li id="btnModForm"><span onclick="return btnModForm()"><spring:message code='ezJournal.t18' /></span></li>
+            	<li id="btnDeleteForm"><span onclick="return btnDelForm()"><spring:message code='ezJournal.t19' /></span></li>
             </ul>
 		</div>
 		
@@ -188,7 +238,7 @@
 			        					<th style="width: 15%"><spring:message code='ezJournal.t25'/></th>
 			        				</tr>
 			        			</thead>
-			        			<tbody id="formList" style="margin: 0; padding: 0;">
+			        			<tbody id="formList" class="formList" style="margin: 0; padding: 0;" ondblclick="btnModForm()">
 			        			</tbody>
 			        		</table>
 			        	</div>
@@ -206,9 +256,6 @@
 		    	</td>
 		  	</tr>    --%>
 		</table>
-	    <!-- <script type="text/javascript">
-	    	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		</script> -->
 	</body>
 </html>
 

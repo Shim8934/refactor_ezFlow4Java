@@ -123,4 +123,32 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public List<JournalAuthorVO> getDeptUserList (String tenantId, String key,String value) throws Exception;
+
+	/**
+	 * 양식 상세정보
+	 * @param formId
+	 * @param tenantId
+	 * @param companyId
+	 * @return
+	 * @throws Exception
+	 */
+	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, String tenantId);
+
+	/**
+	 * 양식 수정
+	 * @param jsonParam
+	 * @return
+	 * @throws Exception
+	 */
+	public void updateJournalForm(JSONObject jsonParam);
+
+	/**
+	 * 양식 수정
+	 * @param formId
+	 * @param companyId
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public void deleteJournalForm(String formId, String companyId, String tenantId);
 }
