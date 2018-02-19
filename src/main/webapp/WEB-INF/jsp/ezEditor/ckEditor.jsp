@@ -47,7 +47,7 @@
 			
 			function SetEditorContent(Data) {
 				try {
-	              	  CKEDITOR.instances.editor1.editable().setHtml(Data);
+	              	  CKEDITOR.instances.editor1.setData(Data);
 	                	if (type == "APPROVAL" || type == "APPROVALG") {
 	                		if ("${isUsed}" != "reuse") {
 	                    		Set_CellLocked();
