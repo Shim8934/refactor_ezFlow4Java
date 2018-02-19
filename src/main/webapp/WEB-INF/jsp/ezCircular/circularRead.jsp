@@ -391,6 +391,7 @@
 		            	imagePath = "/images/pdf.png";
 		            } else if (filetype == "ecm") {
 		            	imagePath = "/images/ecm.png";
+		            //2018-02-13 주홍선 mht파일 아이콘 표시되지 않던 것 수정
 		            } else {
 		            	imagePath = "/images/file.gif";
 		            }

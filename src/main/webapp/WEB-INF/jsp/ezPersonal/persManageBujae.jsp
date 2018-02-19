@@ -269,9 +269,12 @@
 		        } else if (document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
 		        	pBujae = "" + ":" + "" + ":" + "" + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val() + ":" + document.getElementById("absentreason").value;
 		            gIsAppoint = "2";
+		        } else if($("#TextName").attr("check") == "clear") {
+		        	pBujae = "";
+		        	gIsAppoint = "3";
 		        } else {
 		            pBujae = "";
-		            gIsAppoint = "3";
+		            gIsAppoint = "4";
 		        }
 		
 		        // 대리 수신 담당자 지정
@@ -304,6 +307,9 @@
 			            else if (gIsAppoint == "3") {
 			                alert("<spring:message code='ezPersonal.t41'/>"); // 설정 해제 
 			            }
+			            else if (gIsAppoint == "4") {
+			            	alert("<spring:message code='ezPersonal.t191'/>");// 아무것도 지정 않았을 때
+			            }
 			            window.location.reload(false);
 		    		},
 		    		error: function(){
@@ -315,6 +321,9 @@
 			            }
 			            else if (gIsAppoint == "3") {
 			                alert("<spring:message code='ezPersonal.t39'/>");
+			            }
+			            else if (gIsAppoint == "4") {
+			            	alert("<spring:message code='ezEmail.t133'/>");
 			            }
 		    		}
 		    	});
@@ -365,7 +374,7 @@
 					<td>
 						<input type="text" name="TextName" id="TextName" Width="120" value="${textName}" ReadOnly />
 						&nbsp;<a class="imgbtn" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('')"><spring:message code='ezPersonal.t32'/></span></a> 
-		                <a class="imgbtn" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName').value='';"><spring:message code='ezPersonal.t33'/></span></a>
+		                <a class="imgbtn" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName').value=''; $('#TextName').attr('check','clear')"><spring:message code='ezPersonal.t33'/></span></a>
 					</td>
 				</tr>
 				<c:if test="${fn:indexOf(fn:toLowerCase(userInfo.rollInfo), 'a=1;') > -1}">

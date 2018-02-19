@@ -16,6 +16,8 @@
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
+	    <!-- 재은 수정 -->
+	    <script type="text/javascript" src="/js/ezEmail/js_cross/NewMailList.js"></script>
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 	    <script type="text/javascript">
@@ -43,15 +45,15 @@
 	        }
 	        
 	        //수정 수아 재은
-	        var xmlhttp;
+	        var xml_http;
 	        
 	        window.onload = function () {
 		    	
 		    	//수정 수아 재은
-		        xmlhttp = createXMLHttpRequest();
-                xmlhttp.open("POST", "/ezEmail/mailGetUse.do", true);
-                xmlhttp.onreadystatechange = detailbox_info;
-                xmlhttp.send();
+		        xml_http = createXMLHttpRequest();
+                xml_http.open("POST", "/ezEmail/mailGetUse.do", true);
+                xml_http.onreadystatechange = detailbox_info;
+                xml_http.send();
 	        	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
@@ -73,6 +75,30 @@
 	            LoadAddressTree(true);
 	            previewSubTreeCall();
 	        }
+	        
+	        // 수정 수아 재은
+	        function detailView(totalVolume, useVolume, percent) {
+	        	var colorClass = "myBar_green";
+	        	
+	        	//뿌려주기
+	            $("#myBar").css({
+	            	"width" : percent + "%"
+	            });
+	            $(".volumes").text(useVolume + " / " + totalVolume + " (" + percent + "%)");                
+
+	            //용량 체크(색깔로)
+	            if (percent > 90) {
+	            	colorClass = "myBar_red";
+	            } else if (percent > 70) {
+	            	colorClass = "myBar_orange";
+	            } else if (percent > 60) {
+	            	colorClass = "myBar_yellow";
+	            }
+	            
+	            $("#myBar").addClass(colorClass);
+	        	
+	        }
+	        
 	        
         	// 2017.12.27 단암 시스템 트리 열기 
             // plus 이미지의 갯수를 확인 한 후 하위 트리를 재귀적으로 호출하여 오픈시킨다. 오픈된 하위트리는 minus 이미지로 바꿔준다.
@@ -117,45 +143,7 @@
 	            } 
 
 	        }
-		    
-		    //수정 수아 재은
-		    function detailbox_info() { 
-		    	if (xmlhttp == null || xmlhttp.readyState != 4) return;
-		    	
-                var result = xmlhttp.responseXML; 
-                var totalVolume = ""; 
-                var useVolume = "";
-                var percent = "";
-                var colorClass = "myBar_green";
-                
-                if (CrossYN()) { 
-                    totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent;
-                    useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent; 
-                    percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent;                    
-                } else { 
-                    totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].text;
-                    useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text; 
-                    percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text;
-                }
-                                
-                //뿌려주기
-                $("#myBar").css({
-                	"width" : percent + "%"
-                });
-                $(".volumes").text(useVolume + " / " + totalVolume + " (" + percent + "%)");                
-                
-                //용량 체크(색깔로)
-                if (percent > 90) {
-                	colorClass = "myBar_red";
-                } else if (percent > 70) {
-                	colorClass = "myBar_orange";
-                } else if (percent > 60) {
-                	colorClass = "myBar_yellow";
-                }
-                
-                $("#myBar").addClass(colorClass);
-		    }
-	        
+        	
 	        function write_Letter() {
 	            var pheight = window.screen.availHeight;
 	            var conHeight = pheight * 0.8;

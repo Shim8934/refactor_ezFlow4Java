@@ -1815,7 +1815,8 @@
 		        Td.style.height = imgHeight + "px";
 		        Td.style.backgroundSize = "cover";
 		        
-	        	Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
+	        	//Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
+	        	Td.style.backgroundImage = "URL(" + imgSrc + ")";
 	        	
 		        Table.style.width = "auto";
 		        Table.style.height = "auto";
