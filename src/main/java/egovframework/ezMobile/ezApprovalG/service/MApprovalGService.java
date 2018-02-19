@@ -37,6 +37,8 @@ public interface MApprovalGService {
 
 	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String companyId, int tenantId, String aprMemberSN) throws Exception;
 
+	public MApprovalGDocInfoVO getAprMemberSn(String docId, String type, String companyId, int tenantId) throws Exception;
+
 	public String getDocState(String docId, String companyId, int tenantId) throws Exception;
 
 	public MApprovalGLeftVO getLeftCount(String userId, MCommonVO userInfo) throws Exception;

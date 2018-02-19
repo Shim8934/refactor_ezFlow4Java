@@ -3806,7 +3806,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			String destAttach = itemAttachment.getFilePath().replace(pOrgBoardID.substring(1, pOrgBoardID.length()-1), pDestBoardID.substring(1, pDestBoardID.length()-1));
 			
 			copyAttachments(orgAttach, destAttach, pDestBoardID, pUploadFilePath);
-			attachments.append(destAttach + ";");
+			attachments.append(destAttach + "|");
 		}
 
 		item.setAttachments(attachments.toString());
@@ -3863,21 +3863,21 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         sb.append("<ITEMID>" + pDestItemID + "</ITEMID>");
         sb.append("<BOARDID>" + pDestBoardID + "</BOARDID>");
         sb.append("<WRITERID>" + item.getWriterID() + "</WRITERID>");
-        sb.append("<WRITERNAME>" + item.getWriterName() + "</WRITERNAME>");
-        sb.append("<WRITERNAME2>" + item.getWriterName2() + "</WRITERNAME2>");
+        sb.append("<WRITERNAME>" + commonUtil.cleanValue(item.getWriterName()) + "</WRITERNAME>");
+        sb.append("<WRITERNAME2>" + commonUtil.cleanValue(item.getWriterName2()) + "</WRITERNAME2>");
         sb.append("<DEPTID>" + item.getWriterDeptID() + "</DEPTID>");
-        sb.append("<DEPTNAME>" + item.getWriterDeptName() + "</DEPTNAME>");
-        sb.append("<DEPTNAME2>" + item.getWriterDeptName2() + "</DEPTNAME2>");
+        sb.append("<DEPTNAME>" + commonUtil.cleanValue(item.getWriterDeptName()) + "</DEPTNAME>");
+        sb.append("<DEPTNAME2>" + commonUtil.cleanValue(item.getWriterDeptName2()) + "</DEPTNAME2>");
         sb.append("<COMPANYID>" + item.getWriterCompanyID() + "</COMPANYID>");
-        sb.append("<COMPANYNAME>" + item.getWriterCompanyName() + "</COMPANYNAME>");
-        sb.append("<COMPANYNAME2>" + item.getWriterCompanyName2() + "</COMPANYNAME2>");
+        sb.append("<COMPANYNAME>" + commonUtil.cleanValue(item.getWriterCompanyName()) + "</COMPANYNAME>");
+        sb.append("<COMPANYNAME2>" + commonUtil.cleanValue(item.getWriterCompanyName2()) + "</COMPANYNAME2>");
         sb.append("<IMPORTANCE>" + item.getImportance() + "</IMPORTANCE>");
         sb.append("<TITLE>" + URLEncoder.encode(item.getTitle(), "UTF-8") + "</TITLE>");
         sb.append("<CONTENTLOCATION>" + item.getContentLocation() + "</CONTENTLOCATION>"); //복사의 경우만
         sb.append("<STARTDATE>" + item.getStartDate() + "</STARTDATE>");
         sb.append("<ENDDATE>" + item.getEndDate() + "</ENDDATE>");
         sb.append("<ABSTRACT>" + item.getAbsTract() + "</ABSTRACT>");
-        sb.append("<ATTACHMENTS>" + item.getAttachments() + "</ATTACHMENTS>");
+        sb.append("<ATTACHMENTS>" + URLEncoder.encode(item.getAttachments(), "UTF-8") + "</ATTACHMENTS>");
         sb.append("<UPPERITEMIDTREE>" + item.getUpperItemIDTree() + "</UPPERITEMIDTREE>");
         sb.append("<ITEMLEVEL>" + item.getItemLevel() + "</ITEMLEVEL>");
         sb.append("<EXTENSIONATTRIBUTE1>" + item.getExtensionAttribute1() + "</EXTENSIONATTRIBUTE1>");

@@ -22,6 +22,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.mail.Flags;
+import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -584,6 +585,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						try {
 							inputStream = multiFile.get(i).getInputStream();
 							message = sa.readMimeMessage(inputStream);
+							message.setFlag(Flags.Flag.SEEN, true);
 							logger.debug("subject=" + message.getSubject());
 						} finally {
 							try {
@@ -666,6 +668,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				InputStream inputStream = request.getInputStream();
 				MimeMessage message = sa.readMimeMessage(inputStream);
 				inputStream.close();
+				
+				message.setFlag(Flags.Flag.SEEN, true);
 				
 				folder.appendMessages(new Message[]{message});
 				folder.close(true);
@@ -853,6 +857,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						}
 	
 						message = sa.readMimeMessage(zis);
+						message.setFlag(Flags.Flag.SEEN, true);
 						messageList.add(message);
 						emlCount ++;
 					} catch (Exception e) {

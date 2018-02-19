@@ -152,7 +152,8 @@
 							circularIDList : circularID + ";"
 						},
 						success: function() {
-							window.opener.getLeftCount();
+							//2018-02-14 김보미 - 사용안해서 주석.
+							//window.opener.getLeftCount();
 							window.opener.refresh_onclick();
 			                closing();
 						},
@@ -390,6 +391,8 @@
 		            	imagePath = "/images/pdf.png";
 		            } else if (filetype == "ecm") {
 		            	imagePath = "/images/ecm.png";
+		            } else {
+		            	imagePath = "/images/file.gif";
 		            }
 
 		            strAttach[i] = "<img src='" + imagePath + "'/>&nbsp;" + filename + "&nbsp;(" + filesize + ")<br>";

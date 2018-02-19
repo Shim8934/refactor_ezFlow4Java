@@ -210,11 +210,11 @@
 		            }
 		        }
 		        
-// 		        if (mode == "temp") {
-// 		        	url = "/ezCircular/tempUploadFileDelete.do?mode=temp&circularID=" + circularID;
-// 		        } else {
-		        url = "/ezCircular/tempUploadFileDelete.do";
-// 		        }
+ 		        if (mode == "temp") {
+ 		        	url = "/ezCircular/tempUploadFileDelete.do?mode=temp&circularID=" + circularID;
+ 		        } else {
+		        	url = "/ezCircular/tempUploadFileDelete.do";
+ 		        }
 
 		        // upload된 파일 tempUploadFile에서 삭제
 		        $.ajax({
@@ -263,12 +263,8 @@
 		        xhr.addEventListener("load", uploadComplete, false);
 		        xhr.addEventListener("error", uploadFailed, false);
 		        xhr.addEventListener("abort", uploadCanceled, false);
-		        
-// 		        if (mode != "") {
-// 		        	url = "/ezCircular/uploadItemAttach.do?mode=temp&circularID=" + circularID;
-// 		        } else {
-		        url = "/ezCircular/uploadItemAttach.do";
-// 		        }
+ 		        
+ 		        url = "/ezCircular/uploadItemAttach.do?mode=" + mode + "&circularID=" + circularID;
 
 		        xhr.open("POST", url);
 		        xhr.send(fd);

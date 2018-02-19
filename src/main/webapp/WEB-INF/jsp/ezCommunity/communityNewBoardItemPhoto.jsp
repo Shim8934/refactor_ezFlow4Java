@@ -92,6 +92,7 @@
 // 		    var _hasattach = "<c:out value = '${_hasattach}' />";
 // 		    var NewGuid = "<c:out value = '${NewGuid}' />";
 		    var flag = false;
+		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 		    
 		    window.onresize = function () {
 		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 160 + "PX";
@@ -844,12 +845,15 @@
 		        if (getXmlString(pAttachListXml) == "") {
 		            return "";
 		        }
-		        
-		        var xmldomNodes = GetElementsByTagName(pAttachListXml, "DATA1");
-		        
-	            strRet += getNodeText(xmldomNodes.item(0));
-		        
-		        return strRet;
+		        // 2018-02-14 천성준
+		        if (pMode != "modify"){
+			        var xmldomNodes = GetElementsByTagName(pAttachListXml, "DATA1");
+		            strRet += getNodeText(xmldomNodes.item(0));
+			        return strRet;
+		        } else {
+		        	strRet = document.getElementById("txtPhotoFile").value;
+		        	return strRet;
+		        }
 		    }
 		</script>
 		
