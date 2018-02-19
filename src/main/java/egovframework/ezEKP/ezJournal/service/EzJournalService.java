@@ -123,4 +123,19 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public List<JournalAuthorVO> getDeptUserList (String tenantId, String key,String value) throws Exception;
+	
+	/**
+	 * 해당사원의 열람권한 리스트를 등록 해줌
+	 * @param jsonParam
+	 * @throws Exception
+	 */
+	public void saveAuthDeptList (JSONObject jsonParam) throws Exception;
+	
+	/**
+	 * 해당사원의 열람권한 리스트 삭제
+	 * @param userId
+	 * @param tenantId
+	 * @throws Exception
+	 */
+	public void deleteAuthor(String userId,String tenantId) throws Exception;
 }

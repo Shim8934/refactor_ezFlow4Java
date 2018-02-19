@@ -41,9 +41,9 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 일지함 조회 / 사용하는 일지함 조회
 	 */
-	@RequestMapping(value = "/ezjournal/types", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/restezjournal/types", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public Object journalTypeList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W JOURNAL [GET /ezJournal/types] started.");
+		LOGGER.debug("G/W JOURNAL [GET /restezjournal/types] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -64,7 +64,7 @@ public class EzJournalGWController {
 			result.put("status", "error");
 		}
 
-		LOGGER.debug("G/W JOURNAL [GET /ezJournal/types] ended.");
+		LOGGER.debug("G/W JOURNAL [GET /restezjournal/types] ended.");
 		
 		return result;
 	}
@@ -72,9 +72,9 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [POST] 일지함 사용여부 수정
 	 */
-	@RequestMapping(value = "/ezjournal/types", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/restezjournal/types", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public Object journalTypeUpdate(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W JOURNAL [PUT /ezJournal/types] started.");
+		LOGGER.debug("G/W JOURNAL [PUT /restezjournal/types] started.");
 		JSONObject result = new JSONObject();
 
 		String tenantId = (String) jsonParam.get("tenantId");
@@ -92,7 +92,7 @@ public class EzJournalGWController {
 			result.put("status", "error");
 		}
 
-		LOGGER.debug("G/W JOURNAL [PUT /ezJournal/types] ended.");
+		LOGGER.debug("G/W JOURNAL [PUT /restezjournal/types] ended.");
 		
 		return result;
 	}	
@@ -101,7 +101,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 양식 리스트 조회 / 부서사용가능 양식리스트 조회 / 취합가능 양식리스트 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezjournal/types/{typeId}/forms", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/forms", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object journalFormList(HttpServletRequest request, @PathVariable String typeId) throws Exception {
 		LOGGER.debug("ezJournal G/W journalFormList started.");
 		LOGGER.debug("typeId=" + typeId);
@@ -147,7 +147,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [POST] 양식 저장
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezjournal/types/{typeId}/forms", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/forms", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject insertForm(@PathVariable String typeId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W insertForm started.");
 		LOGGER.debug("typeId=" + typeId);
@@ -186,7 +186,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [PUT] 양식 수정
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/forms/{formId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/forms/{formId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateForm(@PathVariable String typeId, @PathVariable String formId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W updateForm started.");
 		LOGGER.debug("typeId=" + typeId + ",formId=" + formId);
@@ -200,7 +200,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [DELETE] 양식 삭제
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/forms/{formId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/forms/{formId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteForm(@PathVariable String typeId, @PathVariable String formId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W deleteForm started.");
 		LOGGER.debug("typeId=" + typeId + ",formId=" + formId);
@@ -214,7 +214,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 양식 상세 보기
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/forms/{formId}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/forms/{formId}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject viewForm(@PathVariable String typeId, @PathVariable String formId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W viewForm started.");
 		LOGGER.debug("typeId=" + typeId + ",formId=" + formId);
@@ -228,7 +228,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 열람권한 리스트
 	 */
-	@RequestMapping(value="/ezjournal/authors", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/authors", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject authorsList(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W authorsList started.");
 		
@@ -253,7 +253,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 열람권한 상세정보
 	 */
-	@RequestMapping(value="/ezjournal/users/{userId}/author-depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/users/{userId}/author-depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject authorDepts(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W authorDepts started.");
 		LOGGER.debug("userId=" + userId);
@@ -278,12 +278,21 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [POST] 열람권한 저장
 	 */
-	@RequestMapping(value="/ezjournal/authors", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/authors", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject insertAuthorDepts(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W insertAuthorDepts started.");
-		
 		JSONObject result = new JSONObject();
 		
+		try {
+			ezJournalService.saveAuthDeptList(jsonParam);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		}
 		LOGGER.debug("ezJournal G/W insertAuthorDepts ended.");
 		return result;
 	}
@@ -291,11 +300,22 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [DELETE] 열람권한 삭제
 	 */
-	@RequestMapping(value="/ezjournal/authors", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/authors", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteAuthorDepts(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W deleteAuthorDepts started.");
 		
 		JSONObject result = new JSONObject();
+		LOGGER.debug(request.getParameter("userId")+request.getParameter("tenantId"));
+		try {
+			ezJournalService.deleteAuthor(request.getParameter("userId"), request.getParameter("tenantId"));
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		}
 		
 		LOGGER.debug("ezJournal G/W deleteAuthorDepts ended.");
 		return result;
@@ -304,7 +324,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 업무일지 리스트 (일일,주간,월간,분기,반기,연간,다른일지가져오기)
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject typeJournalList(@PathVariable String typeId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W typeJournalList started.");
 		LOGGER.debug("typeId=" + typeId);
@@ -318,7 +338,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 업무일지 리스트 (수신일지함, 임시보관함)
 	 */
-	@RequestMapping(value="/ezjournal/journals", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/journals", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject folderJournalList(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W folderJournalList started.");
 		
@@ -331,7 +351,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [POST] 업무일지 저장
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject insertJournal(@PathVariable String typeId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W insertJournal started.");
 		LOGGER.debug("typeId=" + typeId);
@@ -345,7 +365,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 일지 취합 후 내용 리턴 (금일, 익일 부분)
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals-sum", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals-sum", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject journalsSumContent(@PathVariable String typeId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W journalsSumContent started.");
 		LOGGER.debug("typeId=" + typeId);
@@ -359,7 +379,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 업무일지 조회
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject viewJournal(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W viewJournal started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -373,7 +393,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [PUT] 업무일지 수정
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateJournal(@PathVariable String typeId, @PathVariable String journalId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W updateJournal started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -387,7 +407,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [DELETE] 업무일지 삭제
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteJournal(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W deleteJournal started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -401,7 +421,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [POST] 업무일지 읽음 처리
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/readers/{userId}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/readers/{userId}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject readJournal(@PathVariable String typeId, @PathVariable String journalId, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W readJournal started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId + ",userId=" + userId);
@@ -415,7 +435,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [PUT] 수신 확인 처리
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/receivers/{userId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/receivers/{userId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject receiveOKJournal(@PathVariable String typeId, @PathVariable String journalId, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W receiveOKJournal started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId + ",userId=" + userId);
@@ -429,7 +449,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [POST] 첨부파일 업로드
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject uploadFile(@PathVariable String typeId, @PathVariable String journalId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W uploadFile started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -443,7 +463,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 첨부파일 리스트
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject attachList(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W attachList started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -457,7 +477,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [DELETE] 첨부파일 삭제
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteFile(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W deleteFile started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -471,7 +491,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 첨부파일 다운로드
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/attachfiles/{fileId}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/attachfiles/{fileId}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject downloadFile(@PathVariable String typeId, @PathVariable String journalId, @PathVariable String fileId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W downloadFile started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId + ",fileId=" + fileId);
@@ -485,7 +505,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [POST] 일지 수신자 저장
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/receivers", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/receivers", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject saveReceiver(@PathVariable String typeId, @PathVariable String journalId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W saveReceiver started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -499,7 +519,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 일지 수신자 리스트 
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/receivers", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/receivers", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getReceiverList(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getReceiverList started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -513,7 +533,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [DELETE] 일지 수신자 삭제
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/receivers", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/receivers", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteReceiver(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W deleteReceiver started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -527,7 +547,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 수신자 즐겨찾기 리스트
 	 */
-	@RequestMapping(value="/ezjournal/users/{userId}/favorites", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/users/{userId}/favorites", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getFavoriteList(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getFavoriteList started.");
 		LOGGER.debug("userId=" + userId);
@@ -541,7 +561,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [POST] 수신자 즐겨찾기 저장
 	 */
-	@RequestMapping(value="/ezjournal/users/{userId}/favorites", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/users/{userId}/favorites", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject saveFavorite(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W saveFavorite started.");
 		LOGGER.debug("userId=" + userId);
@@ -555,7 +575,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [PUT] 수신자 즐겨찾기 수정
 	 */
-	@RequestMapping(value="/ezjournal/users/{userId}/favorites/{favoriteId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/users/{userId}/favorites/{favoriteId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateFavorite(@PathVariable String userId, @PathVariable String favoriteId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W updateFavorite started.");
 		LOGGER.debug("userId=" + userId + ",favoriteId=" + favoriteId);
@@ -569,7 +589,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [DELETE] 수신자 즐겨찾기 삭제
 	 */
-	@RequestMapping(value="/ezjournal/users/{userId}/favorites/{favoriteId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/users/{userId}/favorites/{favoriteId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteFavorite(@PathVariable String userId, @PathVariable String favoriteId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W deleteFavorite started.");
 		LOGGER.debug("userId=" + userId + ",favoriteId=" + favoriteId);
@@ -583,7 +603,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 수신자 즐겨찾기 유저 리스트
 	 */
-	@RequestMapping(value="/ezjournal/users/{userId}/favorites/{favoriteId}/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/users/{userId}/favorites/{favoriteId}/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getFavoriteUserList(@PathVariable String userId, @PathVariable String favoriteId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getFavoriteUserList started.");
 		LOGGER.debug("userId=" + userId + ",favoriteId=" + favoriteId);
@@ -597,7 +617,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 댓글 리스트 조회
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/replies", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/replies", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getReplies(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getReplies started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -611,7 +631,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [POST] 댓글 저장
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/replies", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/replies", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject saveReply(@PathVariable String typeId, @PathVariable String journalId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W saveReply started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -625,7 +645,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [PUT] 댓글 수정
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/replies/{replyId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/replies/{replyId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateReply(@PathVariable String typeId, @PathVariable String journalId, @PathVariable String replyId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W updateReply started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId + ",replyId=" + replyId);
@@ -639,7 +659,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [DELETE] 댓글 삭제
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/replies/{replyId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/replies/{replyId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteReply(@PathVariable String typeId, @PathVariable String journalId, @PathVariable String replyId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W deleteReply started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId + ",replyId=" + replyId);
@@ -653,7 +673,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 댓글 수 카운트
 	 */
-	@RequestMapping(value="/ezjournal/types/{typeId}/journals/{journalId}/replies-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/types/{typeId}/journals/{journalId}/replies-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getReplyCount(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getReplyCount started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -667,7 +687,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 일지 수 카운트
 	 */
-	@RequestMapping(value="/ezjournal/journals-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/journals-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getJournalsCount(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getJournalsCount started.");
 		
@@ -680,7 +700,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [POST] 환경설정 정보 저장
 	 */
-	@RequestMapping(value="/ezjournal/users/{userId}/options", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/users/{userId}/options", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject saveOption(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W saveOption started.");
 		
@@ -693,7 +713,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [PUT] 환경설정 정보 수정
 	 */
-	@RequestMapping(value="/ezjournal/users/{userId}/options", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/users/{userId}/options", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateOption(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W updateOption started.");
 		
@@ -706,7 +726,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 환경설정 정보 조회
 	 */
-	@RequestMapping(value="/ezjournal/users/{userId}/options", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/users/{userId}/options", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getOption(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getOption started.");
 		
@@ -720,7 +740,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 회사리스트 
 	 */
-	@RequestMapping(value="/ezjournal/companies", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/companies", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getCompanyList(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getCompanyList started.");
 		
@@ -748,7 +768,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 부서리스트 
 	 */
-	@RequestMapping(value="/ezjournal/depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getDeptList(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getDeptList started.");
 		
@@ -779,7 +799,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 사원리스트 
 	 */
-	@RequestMapping(value="/ezjournal/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getUserList(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getUserList started.");
 		

@@ -10,7 +10,14 @@ public class JournalAuthorVO {
 	private String authDept;
 	private String deptId;
 	private String mail;
+	private String mine;
 	
+	public String getMine() {
+		return mine;
+	}
+	public void setMine(String mine) {
+		this.mine = mine;
+	}
 	public String getMail() {
 		return mail;
 	}
