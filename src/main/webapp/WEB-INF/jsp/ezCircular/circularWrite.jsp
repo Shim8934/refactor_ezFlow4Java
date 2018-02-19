@@ -51,6 +51,7 @@
 	    	} 
 
 		    window.onload = function () {
+		    	//2018-02-13 주홍선 IE10에서 창이 정상적으로 열리지 않던 것 수정
 		    	if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
 		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
 		    	}
@@ -439,6 +440,7 @@
       			</td>
   			</tr>
   			<tr>
+  			<!-- 2018-02-13 주홍선 mode와 circularID 항상 보내도록 수정 -->
   				<td>
    					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do?mode=${mode}&circularID=${circularID}"></iframe>
   				</td>

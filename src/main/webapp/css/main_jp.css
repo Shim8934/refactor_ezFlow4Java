@@ -292,10 +292,10 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 /*------------ poll ------------*/
 .pollbox {width:258px; background:#FFF; float:left;}
-.pollcont{position:relative; padding:0px 0px 0px; height:181px; vertical-align:top;}
-.qusetion { margin:0px 0px 10px 0px; padding:5px 5px; height:auto; border-bottom:1px solid #b8b7b7; overflow:hidden;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size:12px; vertical-align:middle; color:#333;}
+.pollcont{position:relative; padding:15px 15px 10px; height:155px; vertical-align:top;}
+.qusetion { margin:0px 0px 10px 0px; padding:0px 0px 5px 0px; height:auto; border-bottom:1px solid #b8b7b7; overflow:hidden;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size:12px; vertical-align:middle; color:#333;}
 
-.poll_list { margin:0px 10px; padding:0px; font-size:12px;}
+.poll_list { margin:15px 0px; padding:0px; font-size:12px;}
 .poll_list dt { margin:0px; padding:0px ;color:#333; line-height:10px;}
 .poll_list .graphbar{ margin:5px 0px 10px 0px; padding:0px ;border:1px solid #c9c9c9;height:7px; width:230px; background:url(../images/kr/main/garphbar_bg.gif) repeat-x;}
 .poll_list .graphbar .gx_bar1 {background:#68bbef; height:7px; margin:0px; padding:0px;}
@@ -303,7 +303,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 /*------------ birth ------------*/
 .birthbox { width:328px; float:right; background:#fff;}
-.birthcont {padding:15px 15px 10px; height:100px; overflow:hidden; background:url(../images/kr/main/birthbg.gif) no-repeat right bottom;}
+.birthcont {padding:12px 15px 13px; height:100px; overflow:hidden; background:url(../images/kr/main/birthbg.gif) no-repeat right bottom;}
 .birthcont .fl { float:left; list-style:none; margin:0px; padding:0px; color:#333; font-size:12px;}
 .birthcont .fl li { float:left ;height:20px; background:url(../images/kr/main/point-black.gif) no-repeat 0px 5px; padding:0px 0px 0px 8px;
 width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
@@ -311,7 +311,7 @@ width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-
 
 /*------------ photogallery ------------*/
 .photobox {position:relative; float:left;  width:536px; background:#fff;}
-.photocont {position:relative;padding:7px 5px 21px; height:100px; overflow:hidden;}
+.photocont {position:relative;padding:12px 5px 13px; height:100px; overflow:hidden;}
 .photocont ul {margin:0px 0px 0px 2px; padding:0px; white-space:nowrap; overflow:hidden; height:110px;}
 .photocont ul li {display:inline-block; float:left;width:82px;margin:0px 9px;padding:0px;text-align:center;list-style:none; color:#333; cursor: pointer;}
 .photocont ul .photo {display:block;margin-bottom:10px;border: 1px solid #999;}
@@ -395,10 +395,15 @@ width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-
 .nodata_portlet img { margin:10px;}
 .nodata_portlet p {margin:0px; padding:0px; color:#a7a3a3;}
 
-
+.appr_mailcont .nodata_portlet { margin-top:15px; }
+.boardcont .nodata_portlet { margin-top:15px; }
+.pollcont .nodata_portlet { margin-top:15px; }
+.graphcont .nodata_portlet { margin-top:15px; }
+.communitycont .nodata_portlet { margin-top:15px; }
+#BoardList_NewBoard .nodata_portlet { margin-top:25px; }
 
 /* v_graph */
-.v_graph {position:relative;padding:0px; margin-top:15px}
+.v_graph {position:relative;padding:0px;margin-top:10px}
 .v_graph .maxtxt {position:absolute; top:-15px; right:-10px;  color:#666; font-size:11px;}
 .v_graph .r_arrow {position:absolute; top:-1px; right:0px; width:5px; height:4px;}
 .v_graph .l_arrow {position:absolute; top:-1px; left:-4px; width:5px; height:4px;}
