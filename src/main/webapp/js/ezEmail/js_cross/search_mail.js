@@ -55,7 +55,7 @@ function start_search() {
         var sDate = new Date(startDate.split(' ')[0].split('-')[0], startDate.split(' ')[0].split('-')[1], startDate.split(' ')[0].split('-')[2]);
         var eDate = new Date(endDate.split(' ')[0].split('-')[0], endDate.split(' ')[0].split('-')[1], endDate.split(' ')[0].split('-')[2]);
 
-        if (sDate > eDate) {
+        if (startDate > endDate) {
             alert(strLang312);
             return;
         }
