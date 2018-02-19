@@ -797,7 +797,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
 		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
@@ -816,6 +820,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		logger.debug("item.endDate: " + item.getEndDate());
 		
@@ -4131,6 +4136,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 			url = request.getParameter("url");
 		}
 		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
 		// 20100119 보안처리 관련 추가작업(권한체크)
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response, userInfo)) {
 			return "cmm/error/egovError";
@@ -4197,6 +4208,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("endDateTime", endDateTime);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		return "ezCommunity/communityNewBoardItemPhoto";
 	}
@@ -4428,9 +4440,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 				sb.append("<NODE>");
 				sb.append("<ItemID>" + itemVO.getItemID() + "</ItemID>");
 				sb.append("<WriterID>" + ( itemVO.getWriterID() == null ? "" : itemVO.getWriterID() ) + "</WriterID>");
-				sb.append("<WriterName>" + itemVO.getWriterName() + "</WriterName>");
-				sb.append("<WriterDeptName>" + ( itemVO.getWriterDeptName() == null ? "" : itemVO.getWriterDeptName() ) + "</WriterDeptName>");
-				sb.append("<WriterCompanyName>" + ( itemVO.getWriterCompanyName() == null ? "" : itemVO.getWriterCompanyName() ) + "</WriterCompanyName>");
+				sb.append("<WriterName>" + commonUtil.cleanValue(itemVO.getWriterName()) + "</WriterName>");
+				sb.append("<WriterDeptName>" + ( itemVO.getWriterDeptName() == null ? "" : commonUtil.cleanValue(itemVO.getWriterDeptName()) ) + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + ( itemVO.getWriterCompanyName() == null ? "" : commonUtil.cleanValue(itemVO.getWriterCompanyName()) ) + "</WriterCompanyName>");
 				sb.append("<WriteDate>" + itemVO.getWriteDate() + "</WriteDate>");
 				sb.append("<ParentWriteDate>" + itemVO.getParentWriteDate() + "</ParentWriteDate>");
 				sb.append("<Importance>" + itemVO.getImportance() + "</Importance>");
@@ -4439,7 +4451,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				sb.append("<StartDate>" + itemVO.getStartDate() + "</StartDate>");
 				sb.append("<EndDate>" + itemVO.getEndDate() + "</EndDate>");
 				sb.append("<Abstract>" + itemVO.getAbsTract() + "</Abstract>");
-				sb.append("<Attachments>" + itemVO.getAttachments() + "</Attachments>");
+				sb.append("<Attachments>" + commonUtil.cleanValue(itemVO.getAttachments()) + "</Attachments>");
 				sb.append("<UpperItemIDTree>" + itemVO.getUpperItemIDTree() + "</UpperItemIDTree>");
 				sb.append("<ItemLevel>" + itemVO.getItemLevel() + "</ItemLevel>");
 				sb.append("<copiedItem>" + itemVO.getCopiedItem() + "</copiedItem>");
