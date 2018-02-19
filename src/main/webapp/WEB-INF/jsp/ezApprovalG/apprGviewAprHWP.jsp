@@ -21,11 +21,11 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 	    <script type="text/javascript">
-	        var DocID = "${docID}";
-	        var DocHref = "${docHref}";
-	        var OpinionFlag = "${opinionFlag}";
-	        var ListTypeValue = "${listTypeValue}";
-	        var ListSusin = "${listSusin}";
+	        var docID = "${docID}";
+	        var docHref = "${docHref}";
+	        var opinionFlag = "${opinionFlag}";
+	        var listTypeValue = "${listTypeValue}";
+	        var listSusin = "${listSusin}";
 	        var pDocState = "${docState}";
 	        var pOrgDocID = "${orgDocID}";
 	        var isOpinion = "${showOpinion}";
@@ -82,7 +82,7 @@
 			
 			    HwpCtrl.SetSaveMode(1);
 			
-			    if (DocHref == "") {
+			    if (docHref == "") {
 			        var pAlertContent = "<spring:message code='ezApprovalG.t1439'/><br><spring:message code='ezApprovalG.t1440'/>";
 				    OpenAlertUI(pAlertContent);
 				    btnClose_onclick();
@@ -93,12 +93,12 @@
 			        btnGongRam.style.display = "";
 			        pOpinionType = "";
 			    }
-			    pDocID = DocID;
-			    pDocHref = DocHref;
-			    pOpinionFlag = OpinionFlag;
-			    pListTypeValue = ListTypeValue;
+			    pDocID = docID;
+			    pDocHref = docHref;
+			    pOpinionFlag = opinionFlag;
+			    pListTypeValue = listTypeValue;
 			    if (pListTypeValue == "4")
-			        pListSusin = ListSusin;
+			        pListSusin = listSusin;
 			
 			    if (pDocHref != "") {
 			        showProgress("<spring:message code='ezApprovalG.t368'/>");
@@ -159,8 +159,8 @@
 			    var xmlpara = createXmlDom();
 			    var objNode;
 			    createNodeInsert(xmlpara, objNode, "PARAMETER");
-			    createNodeAndInsertText(xmlpara, objNode, "DocID", DocID);
-			    createNodeAndInsertText(xmlpara, objNode, "UserID", ListSusin);
+			    createNodeAndInsertText(xmlpara, objNode, "docID", docID);
+			    createNodeAndInsertText(xmlpara, objNode, "userID", listSusin);
 			
 			    xmlhttp.open("Post", "/myoffice/ezApprovalG/ReceivUI/aspx/GongRamUpdate.aspx", false);
 			    xmlhttp.send(xmlpara);
@@ -183,7 +183,7 @@
 			}
 	
 			function btnDocInfo_onclick() {
-			    var url = "/myoffice/ezApprovalG/ezDocInfo/ezDocInfoG_View.aspx?DocID=" + DocID + "&IngFlag=APR";
+			    var url = "/ezApprovalG/ezDocInfoG_View.do?docID=" + docID + "&ingFlag=APR";
 			    var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
 			    var RtnVal = window.showModalDialog(url, "", feature);
 			}

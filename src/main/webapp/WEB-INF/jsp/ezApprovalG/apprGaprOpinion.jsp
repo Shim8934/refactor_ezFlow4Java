@@ -57,14 +57,8 @@
 		    
 		    var move_on, frameLeft, frameTop;
 		    var layerStartX, layerStartY;
+		    
 		    var iFramePanel = window.parent.document.getElementById("iFramePanel");
-		    var height = window.parent.document.documentElement.clientHeight;
-		    if (height== 0)
-		    	height = window.parent.document.body.clientHeight;
-
-		    var width = window.parent.document.documentElement.clientWidth;
-		    if (width == 0)
-		        width = window.parent.document.body.clientWidth;
 		    
 		    window.onload = function () {
 		        try {
@@ -83,13 +77,18 @@
 		                    RetValue = window.dialogArguments;
 		                }
 		            }
-		            if (RetValue == undefined && opener.apropinion_cross_dialogArguments[0] != undefined) {
-		                try {
-		                    RetValue = opener.apropinion_cross_dialogArguments[0];
-		                    ReturnFunction = opener.apropinion_cross_dialogArguments[1];
-		                } catch (e) {
-		                    RetValue = window.dialogArguments;
-		                }
+		            
+		            try {
+			            if (RetValue == undefined && opener.apropinion_cross_dialogArguments[0] != undefined) {
+			                try {
+			                    RetValue = opener.apropinion_cross_dialogArguments[0];
+			                    ReturnFunction = opener.apropinion_cross_dialogArguments[1];
+			                } catch (e) {
+			                    RetValue = window.dialogArguments;
+			                }
+			            } 
+		            } catch (e) {
+		                RetValue = window.dialogArguments;
 		            }
 		            pDocID = RetValue[0];
 		            pDisplay = RetValue[1];

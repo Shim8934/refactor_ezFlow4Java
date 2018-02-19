@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import java.util.UUID;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -165,4 +169,165 @@ public class EzApprovalGHwpController {
 		
 		return "ezApprovalG/apprGviewAprHWP";
 	}
+	
+	/**
+	 * 한글기안기 결재문서 메일발송 시 첨부파일로 떨구기
+	 */	
+	@RequestMapping(value = "/ezApprovalG/mail_interuploadX_Server.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String mail_interuploadX_Server(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception {
+		LOGGER.debug("mail_interuploadX_Server started");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String sGUID = xmlDom.getElementsByTagName("guid").item(0).getTextContent();
+		String sFileTitle = xmlDom.getElementsByTagName("name").item(0).getTextContent();
+		String sFileData = xmlDom.getElementsByTagName("filedata").item(0).getTextContent();
+		String sExt = xmlDom.getElementsByTagName("ext").item(0).getTextContent();
+		String sFolder = xmlDom.getElementsByTagName("dir").item(0).getTextContent();
+		String sPrefix = xmlDom.getElementsByTagName("prefix").item(0).getTextContent();
+		
+		String pBigFileUpload = sFileData;
+		String filename = sFileTitle;
+		String newguid = UUID.randomUUID().toString();
+		String newfilename = newguid + "." + sExt;
+		String newwindowid = xmlDom.getElementsByTagName("newwindowid").item(0).getTextContent();
+		
+		if (newwindowid == null) {
+			newwindowid = "";
+		}
+		
+		String pDirTempPath = "";
+//		String _UseExtension = GetSystemConfigValue("USE_FileExtension").ToString();
+		String extResult = "";
+		String pDate = "";
+		String sFileHref = xmlDom.getElementsByTagName("filehref").item(0).getTextContent(); 
+
+		
+		 if (pBigFileUpload == "Y") {
+//			 String pDirPath = Server.MapPath("/Upload_Mail");
+//             pDate = System.DateTime.Now.ToString("yyyy") + System.DateTime.Now.ToString("MM") + System.DateTime.Now.ToString("dd");
+//             pDirTempPath = pDirPath + Path.DirectorySeparatorChar.ToString() + pDate;
+         } else {
+//             pDirTempPath = Server.MapPath("/Upload_Mail/TempFileUpload");
+         }
+
+//         if (!Directory.Exists(pDirTempPath)) {
+//             Directory.CreateDirectory(pDirTempPath);
+//         }
+
+//         String SaveLocalPath = Path.Combine(pDirTempPath, newfilename);
+//         if (_UseExtension.ToLower().IndexOf(sExt.ToLower()) == -1 && _UseExtension != "*") {
+//             extResult = "denied";
+//         } else {
+//             String base64orgfilename = Convert.ToBase64String(Encoding.UTF8.GetBytes(sFileTitle + "." + sExt));
+//             if (pBigFileUpload == "Y") {
+//                 File.WriteAllText(Path.Combine(pDirTempPath, newfilename + "__.txt"), base64orgfilename);
+//             }
+//
+//             byte[] buffer = new byte[64 * 1024];
+//             int count = buffer.Length;
+//
+//             FileInfo f1 = new FileInfo(Server.MapPath(sFileHref));
+//             if (f1.Exists) {
+//                 f1.CopyTo(pDirTempPath + System.IO.Path.DirectorySeparatorChar.ToString() + newfilename, true);
+//             }
+//
+//             extResult = "OK";
+//         }
+
+         LOGGER.debug("mail_interuploadX_Server ended");
+         if (pBigFileUpload == "Y") {
+        	 return pDate + "|!|" + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
+         } else {
+        	 return newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
+         }
+	}
+	
+	/**
+	 * 전자결재 한글양식 정보 버튼 
+	 */	
+	@RequestMapping(value = "/ezApprovalG/ezDocInfoG_View.do")
+	public String ezDocInfoG_View(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezDocInfoG_View started");
+
+		String urgentApproval = "";
+		String summary = "";
+		String specialRecordCode = "";
+		String publicityCode = "";
+		String limitRange = "";
+		String pageNum = "";
+		String securityCode = "";
+        String securityDate = "";
+        String NoneActiveX = "";
+        
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
+//        NoneActiveX = GetSystemConfigValue("NONEACTIVEX").ToString();
+        String docID = request.getParameter("docID");
+        String pIngFlag = request.getParameter("ingFlag");
+
+        String strXML = ezApprovalGService.getDocInfo(docID, pIngFlag, "UrgentApproval;SpecialRecordCode;PublicityCode;LimitRange;PageNum;Summary;SecurityCode;SecurityApproval", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+
+		Document xmlDom = commonUtil.convertStringToDocument(strXML);
+		
+		if (xmlDom.getElementsByTagName("SUMMARY").getLength() > 0) {
+			summary = xmlDom.getElementsByTagName("SUMMARY").item(0).getTextContent();
+		}
+		
+		if (xmlDom.getElementsByTagName("PAGENUM").getLength() > 0) {
+			pageNum = xmlDom.getElementsByTagName("PAGENUM").item(0).getTextContent();
+		}
+		
+		if (xmlDom.getElementsByTagName("LIMITRANGE").getLength() > 0) {
+			limitRange = xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent();
+		}
+		
+		if (xmlDom.getElementsByTagName("PUBLICITYCODE").getLength() > 0) {
+			publicityCode = xmlDom.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent();
+		}
+		
+		if (xmlDom.getElementsByTagName("SPECIALRECORDCODE").getLength() > 0) {
+			specialRecordCode = xmlDom.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent();
+		}
+		
+		if (xmlDom.getElementsByTagName("URGENTAPPROVAL").getLength() > 0) {
+			urgentApproval = xmlDom.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent();
+		}
+		
+		if (xmlDom.getElementsByTagName("SECURITYCODE").getLength() > 0) {
+			securityCode = xmlDom.getElementsByTagName("SECURITYCODE").item(0).getTextContent();
+		}
+		
+		if (xmlDom.getElementsByTagName("SECURITYAPPROVAL").getLength() > 0) {
+			securityDate = xmlDom.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent();
+		}
+                
+        if (securityDate.isEmpty()) {
+        	securityDate = "N";
+        }
+
+        String securityNode = ezApprovalGService.getSecurityType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag );
+		
+        model.addAttribute("urgentApproval", urgentApproval);
+        model.addAttribute("summary", summary);
+        model.addAttribute("specialRecordCode", specialRecordCode);
+        model.addAttribute("publicityCode", publicityCode);
+        model.addAttribute("limitRange", limitRange);
+        model.addAttribute("pageNum", pageNum);
+        model.addAttribute("securityCode", securityCode);
+        model.addAttribute("securityDate", securityDate);
+        model.addAttribute("docID", docID);
+        model.addAttribute("pIngFlag", pIngFlag);
+        model.addAttribute("securityNode", securityNode);
+        
+		LOGGER.debug("ezDocInfoG_View ended");
+		
+		return "ezApprovalG/apprGezDocInfoGView";
+	}
+	
+	
 }

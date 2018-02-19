@@ -1,21 +1,19 @@
 
-function openOpinionViewUI()
-{
+function openOpinionViewUI() {
 	var parameter = new Array();
 	parameter[0]  = pDocID;
 	parameter[1]  = pOpinionType;   
 	parameter[2]  = "";
 	parameter[3]  = ""; 
-	  
-	var url = "/myoffice/ezApprovalG/ezAPROPINION/AprOpinion.aspx";
+	
+	var url = "/ezApprovalG/aprOpinion.do";
 	var feature = "status:no;dialogWidth:530px;dialogHeight:520px;scroll:no;edge:sunken"
 	var ret = window.showModalDialog(url,parameter,feature);
 }
 
-function OpenInformationUI(pInformationContent)
-{
-	var parameter = pInformationContent;
-	var url = "/myoffice/ezApprovalG/ezAPROPINION.aspx";
+function OpenInformationUI(pInformationContent) { 
+    var parameter = pInformationContent;
+	var url = "/ezApprovalG/ezAprOpinion.do";
 	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 	var RtnVal = window.showModalDialog(url,parameter,feature);
 
@@ -44,9 +42,8 @@ function setMenuBar(id,flag)
 	eval(strCmd); 
 }
 
-function getHistory()
-{	
-    var URL = "/myoffice/ezApprovalG/ezAPRHISTORY/ezAPRHISTORY_Cross.aspx?DocID=" + pDocID;
+function getHistory() {	
+    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
 	centerOpenWindow(URL, 730, 430);
 }
 
