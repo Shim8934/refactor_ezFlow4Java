@@ -29,8 +29,23 @@
 		
 		        window.location.href = "/ezEmail/mailAutoDeleteDelete.do?itemseq=" + encodeURIComponent(seqno) + "&folderPath=" + encodeURIComponent(path);
 		    }
+
 		    function add_condition() {
-		        if (document.getElementById("folderpath").value == "") {
+		    var addedFolders = new Array();
+		    <c:forEach var="item" items="${list}">
+		   		addedFolders.push("${item.path}"); 
+		    </c:forEach>
+		    
+		    for (var i = 0; i < folders.length; i++){
+		        	
+		        if (document.getElementById("folderpath").lealfolderPath.value == addedFolders[i].value) {
+			            alert("<spring:message code='ezQuestion.t18' />");
+			            return;
+			    }
+		        
+		    }
+		 
+		    if (document.getElementById("folderpath").value == "") {
 		            alert("<spring:message code='ezEmail.t114' />");
 		            return;
 		        }
@@ -108,7 +123,7 @@
 						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;" ><input type="checkbox" disabled ${item.deleteUnread} name="checkbox2"></td> 
 						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;">
 							<a class="imgbtn"><span onClick="delete_condition('${item.itemSeq}', '${item.path}')"><spring:message code='ezEmail.t95' /></span></a>
-						</td> 
+						</td>
 					</tr>
 				</c:forEach>
 			</table>
