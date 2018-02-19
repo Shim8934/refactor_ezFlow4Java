@@ -19,11 +19,9 @@
     						</p>
       						${pPollResultContent}
   						</c:when>
-  						<c:otherwise>
-	  						<br />
-    						<br />
+  						<c:otherwise>	  						
     						<div class="nodata_portlet">
-	    						<p	><img src="/images/kr/main/nodata_white.gif" width="107" height="70"></p>
+	    						<p><img src="/images/kr/main/nodata_white.gif" width="107" height="70"></p>
     							<p><spring:message code='main.t260' /></p>
     						</div>
   						</c:otherwise>

@@ -1,7 +1,9 @@
 ﻿function getAutoAprLine(type, beforeDocID) {
-	if(pDraftFlag != "SUSIN")
+	
+	if (pDraftFlag != "SUSIN" && pDraftFlag != "REDRAFT") {
         getFormRecv();
-    
+	}
+	
     var retvalue = new Array();
     retvalue[0] = "NONE";
     retvalue[1] = "NONE";

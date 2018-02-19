@@ -339,8 +339,11 @@ function DocTotalMove() {
     length = listview.GetRowCount();
     length2 = listview2.GetRowCount();
     var rows = listview.GetDataRows();
+    var checknodata = $("#lvSDocForm_TR_noItems").text();
     
-    if (length <= 0) {
+    //기존의 length만으로는 삭제할 데이터의 유무를 알 수가 없다.
+    //그렇기에 checknodata를 통해 삭제할 문서가 있는지 없는지를 다시 한번 검사한다.
+    if (length <= 0 || checknodata == strLang944) {
         alert(strLang804);
     }
     else {        

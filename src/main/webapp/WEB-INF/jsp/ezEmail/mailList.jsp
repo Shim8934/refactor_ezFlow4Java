@@ -89,6 +89,7 @@
 			var uploading = "uploading";
 		    var enc = "encrypt";
 		    var dec = "decrypt";
+		    var xmlhttp;
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -108,6 +109,13 @@
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onload = function () {
+		    	
+		    	//수정 수아 재은
+		        xmlhttp = createXMLHttpRequest();
+                xmlhttp.open("POST", "/ezEmail/mailGetUse.do", true);
+                xmlhttp.onreadystatechange = detailbox_info;
+                xmlhttp.send();
+                
 		    	// 웹소켓 지원을 안할 경우 '편지함 내려받기/가져오기' 버튼 숨김
 		        if ('WebSocket' in window) {
 	           	} else if ('MozWebSocket' in window) {
@@ -734,7 +742,7 @@
 	        	HiddenMailProgressNew();
 	        	webSocket.close();
 	        	location.reload();
-			}			
+			}
 			
 		</script>	
 	</head>
@@ -770,7 +778,7 @@
           <li id="deleteone"><span onClick="deleteWork(true)"><spring:message code="ezEmail.t156" /></span></li>
           <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
           <li onClick="MailListRefresh()"><span class="img_Newbtn"><spring:message code="ezEmail.t515" /></span></li>
-		  <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
+          <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
           <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
 		  <c:if test="${ useMailBoxBackUp eq 'YES' }">
 		 	<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
