@@ -155,14 +155,14 @@ function toggleList() {
         //하위 게시판트리가 보이지 않고, 리스트페이지도 변경되지 안는것 패치.
         //if(level1El.item(this.listNum).children(0) != undefined)
         //2011.01.25 cop 관리자메뉴 두번 호출되는 오류 처리
-        if (level1El.item(this.listNum).children.length > 0 && level1El.item(this.listNum).children[0].id != undefined && level1El.item(this.listNum).children[0].id != "") {
-            //window.event.srcElement.id = level1El.item(this.listNum).children[0].id;
-            if (!CrossYN()){
-                //level1El.item(this.listNum).children[0].onclick();
-            }else{
-                //level1El.item(this.listNum).children[0].onclick;
-            }
-        }
+//        if (level1El.item(this.listNum).children.length > 0 && level1El.item(this.listNum).children[0].id != undefined && level1El.item(this.listNum).children[0].id != "") {
+//            //window.event.srcElement.id = level1El.item(this.listNum).children[0].id;
+//            if (!CrossYN()){
+//                //level1El.item(this.listNum).children[0].onclick();
+//            }else{
+//                //level1El.item(this.listNum).children[0].onclick;
+//            }
+//        }
         level2El.item(this.listNum).className = "on";
     }
 
