@@ -5,19 +5,21 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezSchedule.t6000' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">		
+	    	var selectedUser ;
+	    
 	    
 			function changeSelectCompany(val) {			    
 				var url = "/admin/ezJournal/author.do";
 				parent.frames["right"].location.href = url+"?companyId="+val;
 			}
 			
-			function insertAuth(userId){				
+			function insertAuth(){			
+				var userId = selectedUser;
 				var url = "/admin/ezJournal/authorDetail.do";
 				var companyId = document.getElementById("companyId").value;
 				url+="?companyId="+companyId;
@@ -28,25 +30,27 @@
 			}
 			
 			function selectedTR(elem){
+				selectedUser = $(elem).attr("id");
 				$("*").removeClass("selectTR");
 	   			$(elem).addClass("selectTR");
 			}
 			
-		    function Cancel_Click() {
-		        window.location.reload(true);
+		    function deleteAuthor() {
+		    	var flag =confirm("<spring:message code='ezResource.t351' />");
+		    	if(flag){
+			    	$.ajax({
+		   				type:"post",
+		   				dataType:"html",
+		   				url:"/admin/ezJournal/deleteAuthor.do",
+		   				data:{"userId":selectedUser},
+		   				success: function(result){
+		   					alert(result);
+					        window.location.reload(true);
+		   				}
+		   			});
+		    	}
 		    }
-		    function Change_Click() {
-		    	var formData = $("form.journalForm").serialize();
-		    	
-		        $.ajax({
-		    		type : "POST",
-		    		url : "/admin/ezJournal/updatreFormType.do",
-		    		data :formData,
-		    		success: function(result) {
-		    			alert("<spring:message code='ezSchedule.t4012' />");
-		    		}
-		        });
-		    }
+		    
 		</script>
 		<style>	
 			tr:hover{background:#eee; color:#fff;}
@@ -74,7 +78,7 @@
 			<div id="mainmenu">
 	  			<ul>
 					<li><span onClick="insertAuth();"><spring:message code='ezJournal.t36' /></span></li>
-					<li><span onClick=""><spring:message code='ezJournal.t37' /></span></li>
+					<li><span onClick="deleteAuthor();"><spring:message code='ezJournal.t37' /></span></li>
 	  			</ul>
 			</div>
 			<table class="mainlist" style="width:80%;">
@@ -87,7 +91,7 @@
 			    <c:choose>
 				    <c:when test="${fn:length(authList) ne 0}">
 					    <c:forEach items="${authList }" var="auth">
-					    	<tr ondblclick="insertAuth('${auth.userId}')" onclick="selectedTR(this);" style="cursor: pointer;">
+					    	<tr ondblclick="insertAuth();" id="${auth.userId}" onclick="selectedTR(this);" style="cursor: pointer;">
 					    		<td style="text-align: center;">${auth.userName } </td>
 					    		<td style="text-align: center;">${auth.jikwi } </td>
 					    		<td style="text-align: center;">${auth.deptName } </td>
@@ -97,7 +101,7 @@
 				    </c:when>
 				    <c:otherwise>
 				    	<tr>
-				    		<td style="text-align: center;" colspan="4"><spring:message code='ezJournal.t124' /></td>
+				    		<td style="text-align: center;" colspan="4"><spring:message code='ezJournal.t125' /></td>
 				    	</tr>
 				    </c:otherwise>
 			    </c:choose>

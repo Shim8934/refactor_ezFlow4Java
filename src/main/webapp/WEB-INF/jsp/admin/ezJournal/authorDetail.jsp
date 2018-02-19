@@ -20,12 +20,15 @@
 	   		//레이어팝업의 부서 정보
 	   		var lpDeptId;
 	   		var lpDeptName;
-	   		//레이어팝업의 오른쪽의 클릭된 부서정보
+	   		//레이어팝업의 오른쪽의 부서정보
 	   		var lpDepts=[];
-	   		//오른쪽에서 없앨 부서 아이디
-	   		var targetDeptId;
+	   		//오른쪽에서 없앨 부서
+	   		var targetDept;
+	   		//현재 레이어팝업에 선택된 유저
+	   		var updateUserId;
 	   	
 	   		function close_Click(){
+	   			opener.location.reload();
 	   			window.close();
 	   		}
 	   		//조직도 뿌리는 펑션
@@ -64,7 +67,7 @@
 					}
 				}
 	   			if(flag){
-		   			$(".mainlist_free").append("<tr targetId="+lpDeptId+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
+		   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
 		   			lpDepts.push(lpDeptId);
 	   			}
 	   		}
@@ -115,6 +118,7 @@
 	   		//레이어 팝업 안에 초기화
 	   		function ShowInsertAuthDept(userId){
 	   			journal_layer_popup("#insertAuthorDeptPopup");
+	   			updateUserId=userId;
 				$.ajax({
 	   				type:"post",
 	   				dataType:"html",
@@ -132,9 +136,27 @@
 	   		
 	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
 	   		function delTargetDept(elem){
-	   			targetDeptId = $(elem).attr("targetId");
+	   			var targetDeptId = $(elem).attr("targetId");
    				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
    				$(elem).remove();
+	   		}
+	   		
+	   		//열람궎란정보 저장
+	   		function insertAuthDept(){
+	   			var jsonString = JSON.stringify({"userId":updateUserId,"depts":lpDepts});
+				$.ajax({
+	   				type:"post",
+	   				dataType:"html",
+	   				url:"/admin/ezJournal/saveAuthor.do",
+	   				contentType:"application/json;",
+	   				data:jsonString,
+	   				success: function(result){
+	   					alert(result);
+   						$('.journal-layer').fadeOut();
+   						opener.location.reload();
+   						location.reload(true);
+	   				}
+	   			});
 	   		}
 	   		
 	   		$(document).ready(function(){
@@ -144,8 +166,11 @@
 	   			$(function () {
 		   			$(document).on({
 		   				"dblclick":function(){delTargetDept(this);},
-		   				"click":function(){targetDeptId = $(this).attr("targetId");}
-	   			},"#lplistView tr");
+		   				"click":function(){targetDept = this;
+			   				$("*").removeClass("selectTR");
+				   			$(this).addClass("selectTR");
+		   				}
+	   				},"#lplistView tr");
 	   			});
    			});
 		</script>
@@ -229,13 +254,23 @@
         <div class="journal-layer">
         	<div class="dimBg"></div>
 	        <div id = "insertAuthorDeptPopup" class="pop-layer">
+	        	<h1 style="color:#000000; font-size: x-large; font:strong;"><spring:message code='ezJournal.t42'/></h1>
+			    <div id="close">
+			        <ul>
+			            <li><span onclick="insertAuthDept();"><spring:message code='ezJournal.t26'/></span></li>
+			            <li class="journal-layerClose"><span><spring:message code='ezOrgan.t143'/></span></li>
+			        </ul>
+			    </div>
 	        	<table>
 		            <tr>
 		                <td class="box">
 		                    <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="lptreeview"></div>
 		                </td>
-		                <td></td>
-		                <td class="listview" style="width: 426px" id="lplistView">
+		                <td style="width: 30px; text-align: center;">                            
+                        <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
+                        <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept(targetDept)">
+                   		</td>
+		                <td class="listview" style="width: 250px" id="lplistView">
 		                </td>    
 		            </tr>
 		        </table>
