@@ -1699,7 +1699,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("approvalFlag", approvalFlag);
 		logger.debug("map.toString() : " + map.toString());
+
 		List<ApprGCabCodeVO> docTypes = ezApprovalGDAO.getDocType(map);
+
 		int dlength = docTypes.size();
 		logger.debug("docType.toString() : " + docTypes.toString());
 		logger.debug("dlength : " + dlength);
@@ -1863,7 +1865,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 	if (approvalFlag.equals("S")) {
                 		rtnXML.append("<DATA6> </DATA6>");
                 	} else {
-                		rtnXML.append("<DATA6>" + commonUtil.cleanValue(makeListField(ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().toUpperCase(), "DisplayName", tenantID).toString())) + "</DATA6>");
+                		//ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().toUpperCase() -> toUpperCase() 삭제, 오라클 버전 개발 시 오라클은 mysql과 다르게 대소문자를 구분하기 때문
+                		rtnXML.append("<DATA6>" + commonUtil.cleanValue(makeListField(ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent(), "DisplayName", tenantID).toString())) + "</DATA6>");
                 	}
 				}
                 
@@ -13092,7 +13095,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String rtnVal = "TRUE";
 		
 		String companyID = objParam.getElementsByTagName("COMPANYID").item(0).getTextContent();
-		String cabID = objParam.getElementsByTagName("CABINETID").item(0).getTextContent();
+		String cabID = objParam.getElementsByTagName("CABINETID").item(0).getTextContent().trim();
 		String manualFlag = objParam.getElementsByTagName("MANUALFLAG").item(0).getTextContent();
 		String deptCode = objParam.getElementsByTagName("DEPTCODE").item(0).getTextContent();
 		String deptName = objParam.getElementsByTagName("DEPTNAME").item(0).getTextContent();
@@ -18845,7 +18848,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DocType", docType);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
-
+		
 		 // 기록물 테이블에 저장하는 쿼리.
 		ezApprovalGDAO.insertRegRecord(map);
 		
@@ -18982,7 +18985,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						if(globals.getProperty("Globals.DbType").equals("mysql")){
 							extraSelectClause += ",DATE_ADD(DATE_FORMAT(" + utcDate[0] + ",'%Y-%m-%d %H:%i'), INTERVAL " + cabinetListVO.getOffsetMin() + " MINUTE) AS" + utcDate[1] ;
 						} else { 
-							extraSelectClause += "," + utcDate[0] + "+ '" + cabinetListVO.getOffsetMin() + "'/(12*60) AS" + utcDate[1] ;
+							extraSelectClause += "," + utcDate[0] + "+ '" + cabinetListVO.getOffsetMin() + "'/(24*60) AS" + utcDate[1] ;
 						}
 					} else {
 						extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(i).getTextContent().trim();
@@ -19078,7 +19081,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 } 
 		 
 		 List<ApprGCabinetVO> apprGCabinetList = ezApprovalGDAO.getCabinetList(cabinetListVO);
-		 
 		 StringBuffer sb = new StringBuffer();
 		 sb.append("<DATA>");
         
@@ -20686,7 +20688,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantId);
 		map.put("companyID", companyID);
 		map.put("v_DEPTID", deptID);
-		
+		logger.debug("lang : "+lang+"/ tenantid : "+tenantId+"/ companyid : "+companyID +"deptdi : "+deptID );
 		List<ApprGTaskVO> CodeContainerList = ezApprovalGDAO.getCodeContainer(map);
 		
 		return CodeContainerList;
@@ -21647,29 +21649,60 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			whereStr = whereStr + " AND DOCSTATE ='" + docState + "'";
 		}
 
-		if (draftfrom != null && !draftfrom.equals("")) {
-			whereStr = whereStr + " AND STARTDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(draftfrom + " 00:00:01", offSet, true) + "','%Y-%m-%d %H:%i:%s')";
-		}
-		if (draftto != null && !draftto.equals("")) {
-			whereStr = whereStr + " AND STARTDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(draftto + " 23:59:59", offSet, true) + "','%Y-%m-%d %H:%i:%s')";
-		}
-
-		if (apprfrom != null && !apprfrom.equals("")) {
-			whereStr = whereStr + " AND ENDDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(apprfrom + " 00:00:01", offSet, true) + "','%Y-%m-%d %H:%i:%s')";
-		}
-		
-		if (apprto != null && !apprto.equals("")) {
-			whereStr = whereStr + " AND ENDDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(apprto + " 23:59:59", offSet, true) + "','%Y-%m-%d %H:%i:%s')";
-		}
-		
-		if (mypapprfrom != null && !mypapprfrom.equals("")) {
-			whereStr = whereStr + " AND TBL_ENDAPRLINEINFO.PROCESSDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(mypapprfrom, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
-			aprFlag = "INMYAPPRSEARCH";
-		}
-		
-		if (mypapprto != null && !mypapprto.equals("")) {
-			whereStr = whereStr + " AND TBL_ENDAPRLINEINFO.PROCESSDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(mypapprto, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
-			aprFlag = "INMYAPPRSEARCH";
+		if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle")) {
+			
+			if (draftfrom != null && !draftfrom.equals("")) {
+				whereStr = whereStr + " AND STARTDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(draftfrom + " 00:00:01", offSet, true) + "','YYYY-MM-DD HH24:MI:SS')";
+			}
+			if (draftto != null && !draftto.equals("")) {
+				whereStr = whereStr + " AND STARTDATE <= TO_DATE('" + commonUtil.getDateStringInUTC(draftto + " 23:59:59", offSet, true) + "','YYYY-MM-DD HH24:MI:SS')";
+			}
+	
+			if (apprfrom != null && !apprfrom.equals("")) {
+				whereStr = whereStr + " AND ENDDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(apprfrom + " 00:00:01", offSet, true) + "','YYYY-MM-DD HH24:MI:SS')";
+			}
+			
+			if (apprto != null && !apprto.equals("")) {
+				whereStr = whereStr + " AND ENDDATE <= TO_DATE('" + commonUtil.getDateStringInUTC(apprto + " 23:59:59", offSet, true) + "','YYYY-MM-DD HH24:MI:SS')";
+			}
+			
+			if (mypapprfrom != null && !mypapprfrom.equals("")) {
+				whereStr = whereStr + " AND TBL_ENDAPRLINEINFO.PROCESSDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(mypapprfrom, offSet, true) + "','YYYY-MM-DD HH24:MI:SS')";
+				aprFlag = "INMYAPPRSEARCH";
+			}
+			
+			if (mypapprto != null && !mypapprto.equals("")) {
+				whereStr = whereStr + " AND TBL_ENDAPRLINEINFO.PROCESSDATE <= TO_DATE('" + commonUtil.getDateStringInUTC(mypapprto, offSet, true) + "','YYYY-MM-DD HH24:MI:SS')";
+				aprFlag = "INMYAPPRSEARCH";
+			}
+			
+		} else if (commonUtil.getDatabaseType().equalsIgnoreCase("mysql")) {
+			
+			if (draftfrom != null && !draftfrom.equals("")) {
+				whereStr = whereStr + " AND STARTDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(draftfrom + " 00:00:01", offSet, true) + "','%Y-%m-%d %H:%i:%s')";
+			}
+			if (draftto != null && !draftto.equals("")) {
+				whereStr = whereStr + " AND STARTDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(draftto + " 23:59:59", offSet, true) + "','%Y-%m-%d %H:%i:%s')";
+			}
+	
+			if (apprfrom != null && !apprfrom.equals("")) {
+				whereStr = whereStr + " AND ENDDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(apprfrom + " 00:00:01", offSet, true) + "','%Y-%m-%d %H:%i:%s')";
+			}
+			
+			if (apprto != null && !apprto.equals("")) {
+				whereStr = whereStr + " AND ENDDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(apprto + " 23:59:59", offSet, true) + "','%Y-%m-%d %H:%i:%s')";
+			}
+			
+			if (mypapprfrom != null && !mypapprfrom.equals("")) {
+				whereStr = whereStr + " AND TBL_ENDAPRLINEINFO.PROCESSDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(mypapprfrom, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
+				aprFlag = "INMYAPPRSEARCH";
+			}
+			
+			if (mypapprto != null && !mypapprto.equals("")) {
+				whereStr = whereStr + " AND TBL_ENDAPRLINEINFO.PROCESSDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(mypapprto, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
+				aprFlag = "INMYAPPRSEARCH";
+			}	
+			
 		}
 		
 		if (pApprovUser != null && !pApprovUser.equals("")) {

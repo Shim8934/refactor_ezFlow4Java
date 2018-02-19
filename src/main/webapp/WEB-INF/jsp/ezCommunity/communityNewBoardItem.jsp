@@ -332,7 +332,7 @@
 		    		return ;
 		    	}
 		    }
-		    
+	    
 		    // 2018-02-13 천성준
 		    function checkDoubleClick() {
 		    	if (clickFlag) {
@@ -340,8 +340,8 @@
 		    	} else {
 		    		return false;
 		    	}
-		    }
-	
+		    }	
+
 		    function SaveItem() {
 		    	checkSaveItem();
 		    	

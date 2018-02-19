@@ -590,8 +590,9 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(nickname));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(nickname));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", "");
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", "");
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", "");
+		            /* 2018.02.09 김기하 새게시물에서 익명게시판 부서가 null로 나오는 것을 공백처리 */
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", MakeXMLString(" "));
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", MakeXMLString(" "));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYID", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", "");
@@ -2039,7 +2040,8 @@
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'text'}">
 						                <td colspan="3">
-						                    <input type="text" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'  style="width:43%"/>
+						                    <!-- 2018.02.08 입력창 최대 길이 제한-->
+						                    <input type="text" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'  style="width:43%" maxlength="100"/>
 						                </td>
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'check'}">

@@ -375,7 +375,7 @@
 	            pheigth = pheigth - 200;
 	            pwidth = pwidth - 127;
 
-	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=656,width=440px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 
 	        function btnClose_onclick() {

@@ -3692,19 +3692,28 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
     	}
     	
     	int startRowNum = ((pageNum - 1) * perCount);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("boardID", boardID);
-		map.put("itemID", itemID);
-		map.put("userID", userID);
-		map.put("lang", lang);
-		map.put("tenantID", tenantID);
-		map.put("start", startRowNum);
-		map.put("perCount", perCount);
-		List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
-		
-		StringBuffer resultXML = new StringBuffer();
+    	int endRowNum = (pageNum * perCount);
+
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	map.put("boardID", boardID);
+    	map.put("itemID", itemID);
+    	map.put("userID", userID);
+    	map.put("lang", lang);
+    	map.put("tenantID", tenantID);
+    	
+    	/* MySQL */
+    	map.put("perCount", perCount);
+    	map.put("start", startRowNum);
+    	
+    	/* Oracle */
+    	map.put("startRowNum", startRowNum);
+    	map.put("endRowNum", endRowNum);
+    	
+    	
+    	List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
+    	
+    	StringBuffer resultXML = new StringBuffer();
 		
 		resultXML.append("<DOCLIST>");
 		
@@ -3872,7 +3881,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         sb.append("<COMPANYNAME>" + commonUtil.cleanValue(item.getWriterCompanyName()) + "</COMPANYNAME>");
         sb.append("<COMPANYNAME2>" + commonUtil.cleanValue(item.getWriterCompanyName2()) + "</COMPANYNAME2>");
         sb.append("<IMPORTANCE>" + item.getImportance() + "</IMPORTANCE>");
-        sb.append("<TITLE>" + URLEncoder.encode(item.getTitle(), "UTF-8") + "</TITLE>");
+        sb.append("<TITLE>" + URLEncoder.encode(item.getTitle(), "UTF-8").replace('+', ' ') + "</TITLE>");
         sb.append("<CONTENTLOCATION>" + item.getContentLocation() + "</CONTENTLOCATION>"); //복사의 경우만
         sb.append("<STARTDATE>" + item.getStartDate() + "</STARTDATE>");
         sb.append("<ENDDATE>" + item.getEndDate() + "</ENDDATE>");

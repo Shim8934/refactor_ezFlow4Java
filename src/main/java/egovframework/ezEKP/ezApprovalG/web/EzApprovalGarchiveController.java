@@ -1686,18 +1686,35 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
                         ReturnQuery += " AND WRITERNAME LIKE '%'WRITERNAME'%' ";
                     }
                 }
-                if (TempQuery.indexOf("STARTDATEAF;") != -1) {
-                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'%Y-%m-%d %H:%i:%s') ";
+                
+                if (commonUtil.getDatabaseType().equalsIgnoreCase("mysql")) {
+	                if (TempQuery.indexOf("STARTDATEAF;") != -1) {
+	                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'%Y-%m-%d %H:%i:%s') ";
+	                }
+	                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
+	                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'%Y-%m-%d %H:%i:%s')";
+	                }
+	                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
+	                    ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
+	                }
+	                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
+	                    ReturnQuery += " AND ENDDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'%Y-%m-%d %H:%i:%s')";
+	                }
+                } else if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle")) {
+                	if (TempQuery.indexOf("STARTDATEAF;") != -1) {
+ 	                    ReturnQuery += " AND LINKDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'YYYY-MM-DD HH24:MI:SS') ";
+ 	                }
+ 	                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
+ 	                    ReturnQuery += " AND LINKDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'YYYY-MM-DD HH24:MI:SS')";
+ 	                }
+ 	                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
+ 	                    ReturnQuery += " AND ENDDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'YYYY-MM-DD HH24:MI:SS')";
+ 	                }
+ 	                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
+ 	                    ReturnQuery += " AND ENDDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'YYYY-MM-DD HH24:MI:SS')";
+ 	                }
                 }
-                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
-                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'%Y-%m-%d %H:%i:%s')";
-                }
-                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
-                    ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
-                }
-                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
-                    ReturnQuery += " AND ENDDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'%Y-%m-%d %H:%i:%s')";
-                }
+                
                 if (TempQuery.indexOf("FORMID;") != -1) {
                     ReturnQuery += " AND TBL_ENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
                 }
@@ -1793,18 +1810,35 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
                         ReturnQuery += " AND WRITERNAME LIKE '%'WRITERNAME'%' ";
                     }
                 }
-                if (TempQuery.indexOf("STARTDATEAF;") != -1) {
-                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s') ";
+               
+                if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle")) {
+	                if (TempQuery.indexOf("STARTDATEAF;") != -1) {
+	                    ReturnQuery += " AND LINKDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'YYYY-MM-DD HH24:MI:SS') ";
+	                }
+	                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
+	                    ReturnQuery += " AND LINKDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'YYYY-MM-DD HH24:MI:SS')";
+	                }
+	                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
+	                    ReturnQuery += " AND ENDDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'YYYY-MM-DD HH24:MI:SS')";
+	                }
+	                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
+	                    ReturnQuery += " AND ENDDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'YYYY-MM-DD HH24:MI:SS')";
+	                }
+                } else if (commonUtil.getDatabaseType().equalsIgnoreCase("mysql")) {
+                	if (TempQuery.indexOf("STARTDATEAF;") != -1) {
+ 	                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s') ";
+ 	                }
+ 	                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
+ 	                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
+ 	                }
+ 	                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
+ 	                    ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
+ 	                }
+ 	                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
+ 	                    ReturnQuery += " AND ENDDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'%Y-%m-%d %H:%i:%s')";
+ 	                }
                 }
-                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
-                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
-                }
-                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
-                    ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
-                }
-                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
-                    ReturnQuery += " AND ENDDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'%Y-%m-%d %H:%i:%s')";
-                }
+                
                 if (TempQuery.indexOf("FORMID;") != -1) {
                     ReturnQuery += " AND TBENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
                 }

@@ -75,7 +75,7 @@
 		<result property="accessName" 				column="ACCESSNAME" 				columnIndex="10"/>		
 		<result property="accessName2" 				column="ACCESSNAME2" 				columnIndex="11"/>		
 		<result property="boardGroupACL" 			column="BOARDGROUPACL" 				columnIndex="12"/>				
-		<result property="displayName" 				column="DISPLAYNAME" 				columnIndex="13"/>				
+		<result property="displayName" 				column="DISPLAYNAME3" 				columnIndex="13"/>				
 		<result property="boardAdmin_FG" 			column="BOARDADMIN_FG" 				columnIndex="14"/>		
 		<result property="access_" 					column="ACCESS_" 					columnIndex="15"/>		
 		<result property="listView_FG" 				column="LISTVIEW_FG" 				columnIndex="16"/>		
@@ -88,8 +88,7 @@
 	
 	<select id="EzBoardAdminDAO.getBoardTree_Get1" resultClass="String" parameterClass="Map" remapResults="true">
          SELECT 
-            <isEqual property="v_STRLANG" compareValue="2"> result2 </isEqual> 
-            <isEqual property="v_STRLANG" compareValue=""> result </isEqual>
+            result$v_STRLANG$
          FROM 
             TBL_Board_TreeCache 
          WHERE 
@@ -156,7 +155,11 @@
 					SELECT 
 						DISTINCT A.boardid BoardID,
 	                    A.boardname BoardName,
-	                    A.boardname2 BoardName2,
+	                    CASE
+							WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+							THEN A.boardname
+							ELSE A.boardname2
+						END BoardName2,
 	                    A.treevieworder TreeViewOrder,
 	                    A.boardcolor BoardColor,
 	                    A.gubun,
@@ -202,7 +205,11 @@
 					SELECT 
 						DISTINCT A.BoardID BoardID  ,
 	                    A.BoardName BoardName  ,
-	                    A.BoardName2 BoardName2  ,
+	                    CASE
+							WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+							THEN A.boardname
+							ELSE A.boardname2
+						END BoardName2 ,
 	                    A.TreeViewOrder TreeViewOrder  ,
 	                    A.BoardColor BoardColor  ,
 	                    A.Gubun ,
@@ -251,7 +258,11 @@
 				SELECT 
 					DISTINCT A.BoardID ,
                     A.BoardName ,
-                    A.BoardName2 ,
+                    CASE
+						WHEN (A.Boardname2 = '' OR A.Boardname2 IS NULL)
+						THEN A.Boardname
+						ELSE A.Boardname2
+					END BoardName2 ,
                     A.TreeViewOrder ,
                     A.BoardColor BoardColor,
                     A.Gubun ,
@@ -560,7 +571,7 @@
 				BACKGROUNDID, ORGFILENAME, SAVEFILENAME, REGUSERID, REGDATE, ISUSE, SN, WIDTH, HEIGHT, TENANT_ID 
 			)
            	VALUES ( 
-           		#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, CASE WHEN (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) IS NULL THEN 1 ELSE (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) END, ( SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# ) + 1, #v_WIDTH#, #v_HEIGHT#, #v_TENANTID# 
+           		#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, CASE WHEN (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) IS NULL THEN 1 ELSE (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) END, ( SELECT MAX(SN) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# ) + 1, #v_WIDTH#, #v_HEIGHT#, #v_TENANTID# 
            	)
 		]]>
 	</insert>
@@ -590,6 +601,9 @@
       		AND  
       			BoardID = #v_pBoardID#
 		]]>
+		<isNotEmpty property="tempCopyList" prepend="AND">
+			ACCESSID IN ($tempCopyList$)
+		</isNotEmpty>
 	</delete>
 	
 	<delete id="EzBoardAdminDAO.deleteBoardInfo" parameterClass="Map" >
@@ -653,13 +667,13 @@
 			UPDATE TBL_Board_BoardInfo
       		SET 
       			BOARDDESCRIPTION = #v_PDESCRIPTION#,
-          		ITEMEXPIRES = #v_PEXPIRES#,
+          		ITEMEXPIRES = TO_NUMBER(#v_PEXPIRES#) ,
 	          	ATTACHSIZELIMIT = #v_PATTACHMAX#,
 	          	URL = #v_PURL#,
-	          	REPLYNOTIFY = #v_PREPLYNOTIFY#,
-	          	GUBUN = #v_PGUBUN#,
+	          	REPLYNOTIFY = TO_NUMBER(#v_PREPLYNOTIFY#),
+	          	GUBUN = (CASE WHEN (#v_PGUBUN# IS NULL OR #v_PGUBUN# = '') THEN 0 ELSE TO_NUMBER(#v_PGUBUN#) END) ,
 	          	BOARDNAME = #v_PBOARDNAME#,
-	          	DELETEAFTER = #v_PDELETEAFTER#,
+	          	DELETEAFTER = TO_NUMBER(#v_PDELETEAFTER#) ,
 	          	BOARDCOLOR = #v_PBOARDCOLOR#,
 	          	BOARDNAME2 = #v_PBOARDNAME2#,
 	          	PORTLET = #v_PPORTLET#,
@@ -823,6 +837,8 @@
                              FROM 
                              	TBL_Board_MyTree 
                              WHERE  
+                             	TENANT_ID = #tenantID#
+                             AND
                              	TREEUPPER = #moveTreeID#
                              AND 
                              	USERID = #userId# )
@@ -1046,7 +1062,10 @@
           	  WHERE  
           	  	TENANT_ID = #v_TENANTID#
           	  AND
-          	  	BOARDID = #v_PDEFAULTBOARDID# )
+          	  	BOARDID = #v_PDEFAULTBOARDID# 
+          	  AND
+          	  	ACCESSID IN ($tempCopyList$) 	
+          	  )
 		]]>
 	</insert>
 	
