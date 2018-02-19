@@ -31,19 +31,19 @@
 		    }
 
 		    function add_condition() {
-		    var addedFolders = new Array();
-		    <c:forEach var="item" items="${list}">
-		   		addedFolders.push("${item.path}"); 
-		    </c:forEach>
-		    
-		    for (var i = 0; i < folders.length; i++){
-		        	
-		        if (document.getElementById("folderpath").lealfolderPath.value == addedFolders[i].value) {
-			            alert("<spring:message code='ezQuestion.t18' />");
-			            return;
-			    }
-		        
-		    }
+			var addedFolders = new Array();
+			<c:forEach var="item" items="${list}">
+				addedFolders.push("${item.path}"); 
+			</c:forEach>
+			    
+			for (var i = 0; i < addedFolders.length; i++){
+
+				if (document.getElementById("folderpath").lealfolderPath == addedFolders[i]) {
+					alert("<spring:message code='ezQuestion.t18' />");
+				    return;
+				}
+			        
+			}
 		 
 		    if (document.getElementById("folderpath").value == "") {
 		            alert("<spring:message code='ezEmail.t114' />");
