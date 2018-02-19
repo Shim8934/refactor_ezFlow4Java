@@ -1995,6 +1995,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                
                 if(approvalFlag == "G") {
                 	document.getElementById("tbtnRegList").style.display = "";
                 } else {
@@ -2069,6 +2070,11 @@ function setbuttonenable() {
 	        document.getElementById("tbtnReturn").style.display = "none";
 	        document.getElementById("tbtnViewDoc").style.display = "none";
 	        document.getElementById("tbtnReceipt").style.display = "";
+	        
+	        if (pFunctionType == "015") {
+	            // 회송된 문서일 경우 접수버튼 display none 처리
+	            document.getElementById("tbtnReceipt").style.display = "none";	   	        	
+	        }     
 	    }
 	    if (pListTypeValue == "3") {
             document.getElementById("tbtnDraft").style.display = "";   

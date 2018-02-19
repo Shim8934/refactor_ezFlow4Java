@@ -174,7 +174,9 @@
 							}
 						}
 					}					
-				}				
+				}
+				
+				emoticonPanelClose();
 			}
 			
 			function updateGraph() {				
@@ -2472,6 +2474,19 @@
 		        var pLeft = (pwidth - 890) / 2;
 		        window.open("/ezPoll/mailWrite.do?type=group&state=voted&qstId=" + pQstID + "&optId=" + pOptID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);		       
 		    }
+		    
+		    //이모티콘 패널이 아닌 영역을 선택하면 패널이 닫힘
+		    function emoticonPanelClose(){
+		    	var emoticonPanel = document.getElementById('emoticonPanel');
+		        $(document).click(function(e){
+		            var target = e.target;
+		            var onOff = emoticonPanel.getAttribute('style').indexOf('display: block')==0?true:false;
+		            
+		            if(onOff && target.id != "_addEmoticon"){
+                        addSticker();
+		            }
+		        });
+		    }
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -2501,22 +2516,22 @@
 	                  <div class="voteBtn">
 	                  				<c:choose>
 	                  					<c:when test="${question.secretVote == 0}">
-	                  						<div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber" style="margin-left:3px">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
+	                  						<div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
 	                  					</c:when>
 	                  					<c:when test="${question.secretVote == 1}">
-	                  						<div><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber" style="margin-left:3px">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
+	                  						<div><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
 	                  					</c:when>
 	                                </c:choose>
 	                                <%-- <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div> --%>
 	                                <!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
 	                            </div>
-	                  <div class="questionFont02">
+	                  <div class="voteBtn">
 	                  	<c:choose>
           					<c:when test="${question.secretVote == 0}">
-          						<a style="display:inline-block;cursor: pointer;" onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/><span style="color:#004896;margin-left:3px" id="seenPeople">(<c:out value='${seenUsers}'/>)</span></a>
+          						<div onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/><span id="seenPeople">(<c:out value='${seenUsers}'/>)</span></div>
           					</c:when>
           					<c:when test="${question.secretVote == 1}">
-          						<a style="display:inline-block;cursor: pointer;" ><spring:message code = 'ezPoll.t112'/><span style="color:#004896;margin-left:3px" id="seenPeople">(<c:out value='${seenUsers}'/>)</span></a>
+          						<div><spring:message code = 'ezPoll.t112'/><span id="seenPeople">(<c:out value='${seenUsers}'/>)</span></div>
           					</c:when>
                         </c:choose>
 					  	
@@ -2674,7 +2689,7 @@
 									
 									<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >
 										<c:if test="${_comt.textContent != ''}">
-											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;"><c:out value ="${_comt.textContent}" /></p>
+											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;"><c:out value ="${_comt.textContent}" /></p>
 										</c:if>
 										<c:if test="${_comt.imageAttach != ''}">
 											<div style="padding-top: 5px;">
@@ -2766,7 +2781,7 @@
 						<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:20px; width:20px; padding-left:20px; padding-top:3px; cursor: pointer;" onclick="addSticker()">
 					</div >				
 					<div class="comment_input_layout">
-						<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)"></textarea>
+						<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
 					</div>
 					<div class="commentBtn">
 						<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">

@@ -31,7 +31,7 @@
 					return;	
 				}
 				
-				if (document.frmCommunityBasicInfo.txt_CommunityName.value.length > 100) {
+				if (document.frmCommunityBasicInfo.txt_CommunityName.value.length > 50) {
 					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
 					//OpenAlertUI("<spring:message code = 'ezCommunity.t3' />");
 					alert("<spring:message code = 'ezCommunity.t3' />");
@@ -135,7 +135,7 @@
 				</tr>
 				<tr>
 					<th><spring:message code = 'ezCommunity.t9991' /></th>
-					<td><input type="text" style="width:100%" name="txt_CommunityName" value="${club.c_ClubName}"></td>
+					<td><input type="text" style="width:100%" name="txt_CommunityName" maxlength="50" value="${club.c_ClubName}"></td>
 				</tr>
 				<tr>
 					<th><spring:message code = 'ezCommunity.t11' />					</th>

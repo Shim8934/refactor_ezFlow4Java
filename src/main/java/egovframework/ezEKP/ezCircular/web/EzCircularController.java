@@ -861,7 +861,11 @@ public class EzCircularController extends EgovFileMngUtil {
     	logger.debug("getMyCircularList started");
     	
     	userInfo = commonUtil.userInfo(loginCookie);
+    	//2018-02-13 김보미
     	String pageNum = req.getParameter("pageNum");
+    	if(Integer.parseInt(pageNum) == 0) {
+    		pageNum = "1";
+    	}
     	String searchType = req.getParameter("searchType");
     	String searchValue = req.getParameter("searchValue");
     	String sdate = req.getParameter("sdate");
@@ -1197,8 +1201,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("saveCircular started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String fileList = "";
 		String pDirPath = "";
 
@@ -1207,7 +1212,9 @@ public class EzCircularController extends EgovFileMngUtil {
 			
 			pDirPath = commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
 
-	        pDirPath = realPath + pDirPath;
+			logger.debug("realPath : " + realPath + " | pDirPath = " + pDirPath);
+			
+	        pDirPath = realPath + pDirPath;	        
         
 	        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
 	        	pDirPath = pDirPath + commonUtil.separator;
@@ -1225,7 +1232,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		String receiverIDs = request.getParameter("receiverID");
 		String receiverList = request.getParameter("receiverList");
 		String receiverList2 = request.getParameter("receiverList2");
-//		String realPath = commonUtil.getRealPath(request);
 
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
@@ -1265,8 +1271,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("saveCircular started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String mode = request.getParameter("mode");
 		String fileList = "";
 		String pDirPath = "";
@@ -1476,18 +1483,18 @@ public class EzCircularController extends EgovFileMngUtil {
         
         String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
         
-//      String mode = "";
-//		String circularID = "";
-//
-//		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
-//			mode = request.getParameter("mode");
-//		}
-//		
-//		if (request.getParameter("circularID") != null && !request.getParameter("circularID").equals("")) {
-//			circularID = request.getParameter("circularID");		
-//		}
-//
-//		logger.debug("mode : " + mode + " | circularID : " + circularID);
+        String mode = "";
+		String circularID = "";
+
+		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
+			mode = request.getParameter("mode");
+		}
+		
+		if (request.getParameter("circularID") != null && !request.getParameter("circularID").equals("")) {
+			circularID = request.getParameter("circularID");		
+		}
+
+		logger.debug("mode : " + mode + " | circularID : " + circularID);
 
         for (int i = 0; i < cnt; i++) {
             resultUpload[i] = "false";
@@ -1543,9 +1550,9 @@ public class EzCircularController extends EgovFileMngUtil {
 				strXML.append("<DATA5><![CDATA[denied]]></DATA5>");
             } else {
 //            	if (mode.equals("temp")) {
-//            		writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
-//            	} else {
             	writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");            		
+//            	} else {
+//            		writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
 //            	}
             	
 				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
@@ -1567,29 +1574,34 @@ public class EzCircularController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezCircular/tempUploadFileDelete.do")
 	public String tempUploadFileDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		
 		logger.debug("tempUploadFileDelete started");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 
 		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
 		String fileList = request.getParameter("fileList");
-//		String mode = "";
-//		String circularID = "";
+		String mode = "";
+		String circularID = "";
 		String filePath = "";
 		
 		logger.debug("fileList : " + fileList);
 		
-//		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
-//			mode = request.getParameter("mode");
-//		}
-//		
-//		if (request.getParameter("circularID") != null && !request.getParameter("circularID").equals("")) {
-//			circularID = request.getParameter("circularID");
-//		}
-//
-//		if (mode.equals("temp")) {
-//			filePath = "uploadFile" + commonUtil.separator + circularID + "_uploadFile";
-//		} else {
-		filePath = "tempUploadFile";
-//		}
+		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
+			mode = request.getParameter("mode");
+		}
+		
+		if (request.getParameter("circularID") != null && !request.getParameter("circularID").equals("")) {
+			circularID = request.getParameter("circularID");
+		}
+
+		if (mode.equals("temp")) {
+			filePath = "uploadFile" + commonUtil.separator + circularID + "_uploadFile";
+		} else {
+			filePath = "tempUploadFile";
+		}
+		
+		logger.debug("filePath : " + filePath);
 
 		if (fileList.length() != 0) {
 			String[] data = fileList.split(","); 
@@ -1599,6 +1611,7 @@ public class EzCircularController extends EgovFileMngUtil {
 				String fileName = data[i].split(";")[1];
 				
 				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+				logger.debug(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
 				
 				file.delete();
 			}			
@@ -1725,6 +1738,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String userName2 = "";
 
 		String title = list.get(0).getTitle();
+		title = title.replaceAll("\"", "\\\\" + "\"");
 		
 		for (int i=0; i<list.size(); i++) {
 			if (list.size() == 1) {

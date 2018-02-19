@@ -247,7 +247,7 @@
 		    }
 		
 		    function getBoardList() {
-		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + ReplaceString(pOrgBoardParameters) + "&page=" + CurPage + "&sortBy=" + pSortBy;
+		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + escape(pOrgBoardParameters) + "&page=" + CurPage + "&sortBy=" + pSortBy;
 		    }
 		
 		    function ReplaceString(pOrgString) {
