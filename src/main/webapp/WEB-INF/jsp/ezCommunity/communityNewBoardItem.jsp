@@ -775,8 +775,8 @@
             function InitializeSettings() {
             	
                 document.getElementById('tdBoardName').innerHTML = "${boardInfo.boardName}";
-				
-                if (ExpireDays == "-1" && strEndDate.substring(0,4) == "9999") {
+                
+                if (ExpireDays == "-1" && strEndDate.substring(0,4) == "9999" || ExpireDays == "-1" && pMode == "new") {
                     document.getElementById('ChkPermanence').checked = true;
                     document.getElementById('Makedate').style.display = "none";
                 } else {
