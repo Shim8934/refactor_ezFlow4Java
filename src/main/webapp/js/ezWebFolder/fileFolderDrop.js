@@ -39,93 +39,91 @@ dropzone.addEventListener("drop", function(event) {
 }, false);*/
 
 function onDragEnter(evt) {
-    evt.dataTransfer.dropEffect = "copy";
-    evt.stopPropagation();
-    evt.preventDefault();
+	evt.dataTransfer.dropEffect = "copy";
+	evt.stopPropagation();
+	evt.preventDefault();
 }
 
 function onDragOver(evt) {
-    evt.dataTransfer.dropEffect = "copy";
-    evt.stopPropagation();
-    evt.preventDefault();
+	evt.dataTransfer.dropEffect = "copy";
+	evt.stopPropagation();
+	evt.preventDefault();
 }
 
-function onDrop(evt) {	
-    file = new Array();
-    
-    if (evt != undefined) {    	
-        evt.stopPropagation();
-        evt.preventDefault();
-    }
-   
-    var filelist = (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
-     
-    if (filelist.length == 0) {
-    	return;
-    }
-   
-    for (var i = 0; i < filelist.length; i++) {
-    	file[i] = filelist[i];
-    }    
-
-    fileupload();
+function onDrop(evt) {
+	file = new Array();
+	
+	if (evt != undefined) {
+		evt.stopPropagation();
+		evt.preventDefault();
+	}
+	
+	var filelist = (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
+	
+	if (filelist.length == 0) {
+		return;
+	}
+	
+	for (var i = 0; i < filelist.length; i++) {
+		file[i] = filelist[i];
+	}
+	
+	fileupload();
 }
 
 function fileupload() {	
 	var progress_bar_id = '#progress-wrp';
-    var fd              = new FormData();   
-    fd.append("folderId", folderId); //baonk 2018/02/09
-
-    for (var i = 0; i < file.length; i++) {
-        fd.append("fileToUpload", file[i]);
-    }
-
-    $.ajax({
-        url : "/ezWebFolder/uploadFile.do",
-        type: "POST",
-        data : fd,
-        contentType: false,
-        dataType: "JSON",
-        cache: false,
-        processData:false,
-        xhr: function(){
-            //upload Progress
-        	document.getElementById('progress-wrp').style.display = "";
-            var xhr = $.ajaxSettings.xhr();
-            if (xhr.upload) {
-                xhr.upload.addEventListener('progress', function(event) {
-                    var percent = 0;
-                    var position = event.loaded || event.position;
-                    var total = event.total;
-                    if (event.lengthComputable) {
-                        percent = Math.ceil(position / total * 100);
-                    }
-                    //update progressbar
-                    $(progress_bar_id + " .progress-bar").css("width", + percent +"%");
-                    $(progress_bar_id + " .status").text(percent +"%");
-                }, true);
-            }
-            return xhr;
-        },
-        mimeType:"multipart/form-data"
-    }).complete(function(res){
-    	console.log("Done!");
-    	
-    	$(progress_bar_id + " .progress-bar").css("width", "0%");        
-    	$(progress_bar_id + " .status").text("0%");
-        document.getElementById('progress-wrp').style.display = "none";
-        
-        if (folderType == null) {
-        	renderResult(JSON.parse(res.responseText));
-        }
-        else {
-        	renderResult2(JSON.parse(res.responseText));
-        }
-    });
-    
+	var fd              = new FormData();
+	fd.append("folderId", folderId); //baonk 2018/02/09
+	
+	for (var i = 0; i < file.length; i++) {
+		fd.append("fileToUpload", file[i]);
+	}
+	
+	$.ajax({
+		url : "/ezWebFolder/uploadFile.do",
+		type: "POST",
+		data : fd,
+		contentType: false,
+		dataType: "JSON",
+		cache: false,
+		processData:false,
+		xhr: function(){
+			//upload Progress
+			document.getElementById('progress-wrp').style.display = "";
+			var xhr = $.ajaxSettings.xhr();
+			if (xhr.upload) {
+				xhr.upload.addEventListener('progress', function(event) {
+					var percent  = 0;
+					var position = event.loaded || event.position;
+					var total    = event.total;
+					if (event.lengthComputable) {
+						percent = Math.ceil(position / total * 100);
+					}
+					//update progressbar
+					$(progress_bar_id + " .progress-bar").css("width", + percent +"%");
+					$(progress_bar_id + " .status").text(percent +"%");
+				}, true);
+			}
+			return xhr;
+		},
+		mimeType:"multipart/form-data"
+	}).complete(function(res){
+		$(progress_bar_id + " .progress-bar").css("width", "0%");
+		$(progress_bar_id + " .status").text("0%");
+		document.getElementById('progress-wrp').style.display = "none";
+		
+		if (folderType == null) {
+			renderResult(JSON.parse(res.responseText));
+		}
+		else {
+			renderResult2(JSON.parse(res.responseText));
+		}
+	});
+	
 }
 
-function renderResult(result) {	
+function renderResult(result) {
 	if (!result) {
 		alert(strErr);
 		return;
@@ -133,7 +131,7 @@ function renderResult(result) {
 	
 	var jsonArr = result;
 	var len     = jsonArr.length;
-	var tblElmt = document.getElementById("tblFileList");	
+	var tblElmt = document.getElementById("tblFileList");
 	var noData  = document.getElementById("nodataRow");
 	
 	if (noData != null) {
@@ -142,10 +140,10 @@ function renderResult(result) {
 	
 	var rowsCnt = tblElmt.rows.length - 1;
 	
-	try { 
+	try {
 		for (var i = 0; i < len; i++) {
-			var jsObj  = jsonArr[i];			
-			var objTr  = document.createElement("TR");	
+			var jsObj  = jsonArr[i];
+			var objTr  = document.createElement("TR");
 			var objTd1 = document.createElement("TD");
 			var objTd2 = document.createElement("TD");
 			var objTd3 = document.createElement("TD");
@@ -161,7 +159,7 @@ function renderResult(result) {
 			var inputElmt = document.createElement("INPUT");
 			inputElmt.setAttribute("type", "checkbox");
 			inputElmt.setAttribute("value", jsObj["fileId"]);
-			inputElmt.setAttribute("class", "checkBnk");			
+			inputElmt.setAttribute("class", "checkBnk");
 			inputElmt.onchange = function(e){getChecked(this);};
 			objTd1.appendChild(inputElmt);
 			
@@ -189,7 +187,7 @@ function renderResult(result) {
 			}
 			else {
 				objTd6.textContent = jsObj["createName2"];
-			}			
+			}
 			
 			objTd7.textContent = jsObj["createDate"].substring(0, 10);
 			
@@ -208,16 +206,16 @@ function renderResult(result) {
 			objTr.appendChild(objTd6);
 			objTr.appendChild(objTd7);
 			objTr.appendChild(objTd8);
-			tblElmt.appendChild(objTr);			
+			tblElmt.appendChild(objTr);
 			rowsCnt = rowsCnt + 1;
 		}
 	}
-    catch (e) {
-    	alert("returnvalue :: " + e.description);
-    }
+	catch (e) {
+		alert("returnvalue :: " + e.description);
+	}
 }
 
-function renderResult2(result) {	
+function renderResult2(result) {
 	if (!result) {
 		alert(strErr);
 		return;
@@ -236,8 +234,8 @@ function renderResult2(result) {
 	
 	try { 
 		for (var i = 0; i < len; i++) {
-			var jsObj  = jsonArr[i];			
-			var objTr  = document.createElement("TR");	
+			var jsObj  = jsonArr[i];
+			var objTr  = document.createElement("TR");
 			var objTd1 = document.createElement("TD");
 			var objTd2 = document.createElement("TD");
 			var objTd3 = document.createElement("TD");
@@ -254,7 +252,7 @@ function renderResult2(result) {
 			var inputElmt = document.createElement("INPUT");
 			inputElmt.setAttribute("type", "checkbox");
 			inputElmt.setAttribute("value", jsObj["fileId"]);
-			inputElmt.setAttribute("class", "checkBnk");			
+			inputElmt.setAttribute("class", "checkBnk");
 			inputElmt.onchange = function(e){getChecked(this);};
 			objTd1.appendChild(inputElmt);
 			
@@ -262,7 +260,7 @@ function renderResult2(result) {
 			fileIconElmt.setAttribute("class", "webFolderImg");
 			fileIconElmt.src = jsObj["fileIconUrl"];
 			
-			objTd2.appendChild(fileIconElmt);			
+			objTd2.appendChild(fileIconElmt);
 			objTd3.textContent = jsObj["fileName"];
 			objTd4.textContent = getFileSize(jsObj["fileSize"]);
 			
@@ -271,7 +269,7 @@ function renderResult2(result) {
 			}
 			else {
 				objTd5.textContent = jsObj["createName2"];
-			}			
+			}
 			
 			objTd6.textContent = jsObj["createDate"].substring(0, 10);
 			objTd7.textContent = jsObj["updateDate"].substring(0, 10);
@@ -292,23 +290,23 @@ function renderResult2(result) {
 			rowsCnt = rowsCnt + 1;
 		}
 	}
-    catch (e) {
-    	alert("returnvalue :: " + e.description);
-    }
+	catch (e) {
+		alert("returnvalue :: " + e.description);
+	}
 }
 
 function getFileSize(fileSize) {
 	var fileSize_ = "";
 	
-    if (fileSize / 1024 / 1024 > 1) {
-    	fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
-    }
-    else if (fileSize / 1024 > 1) {
-    	fileSize_ = parseInt(fileSize / 1024) + "KB";
-    }
-    else {
-    	fileSize_ = fileSize + "B";
-    }		
-    
-    return fileSize_;
+	if (fileSize / 1024 / 1024 > 1) {
+		fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
+	}
+	else if (fileSize / 1024 > 1) {
+		fileSize_ = parseInt(fileSize / 1024) + "KB";
+	}
+	else {
+		fileSize_ = fileSize + "B";
+	}
+	
+	return fileSize_;
 }

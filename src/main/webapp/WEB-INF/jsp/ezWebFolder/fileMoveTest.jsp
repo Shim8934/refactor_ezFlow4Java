@@ -11,25 +11,25 @@
 	<script src="/js/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>	
-    <script type="text/javascript">
-    	var fileId         = "<c:out value='${fileId}' />";
-    	var selectedFolder = null;
-    	var rootFld        = "<c:out value='${rootFolder}'/>";
-    	var currentFolder  = null;
-    	var arrSubFolder   = [];
-    	
-    	window.onload = function () {
-			getData();			
-	    };
-	    
-	    function getData() {
-	    	$.ajax({
+	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
+	<script type="text/javascript">
+		var fileId         = "<c:out value='${fileId}' />";
+		var selectedFolder = null;
+		var rootFld        = "<c:out value='${rootFolder}'/>";
+		var currentFolder  = null;
+		var arrSubFolder   = [];
+		
+		window.onload = function () {
+			getData();
+		};
+		
+		function getData() {
+			$.ajax({
 				type: "POST",
 				url: "/ezWebFolder/getFolderTree.do",
 				data: {
 					"rootFolder" : rootFld,
-					"fileId"	 : fileId
+					"fileId"     : fileId
 				},
 				dataType: "JSON",
 				async: true,
@@ -38,25 +38,25 @@
 					currentFolder = data.currentFolder;
 					renderData(result);
 				},
- 				error : function(error) {	 					
+				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
 				}
-			});	
-	    }
-	    
-	    function renderData(result) {
+			});
+		}
+		
+		function renderData(result) {
 			if (!result) {
 				alert("<spring:message code='ezWebFolder.t134' />");
 				return;
-			} 
+			}
 			
 			var divTree   = document.getElementById("folderTree");
 			var divComp   = document.createElement("div");
-			compFolderId  = result["folderId"];			
+			compFolderId  = result["folderId"];
 			
-	    	while (divTree.hasChildNodes()) {
-	    		divTree.removeChild(divTree.lastChild);
-	    	}	
+			while (divTree.hasChildNodes()) {
+				divTree.removeChild(divTree.lastChild);
+			}	
 			
 			displaySubFolder(divTree, divComp, result);
 			
@@ -74,9 +74,9 @@
 					imgTag.src="/images/OrganTree_cross/dot_continue.gif";
 					divElmt.appendChild(imgTag);
 				}
-			}				
+			}
 			
-			var imgElmt = document.createElement("img");				
+			var imgElmt = document.createElement("img");
 			imgElmt.setAttribute("id" , list["folderId"]);
 			
 			var imgElmt2 = document.createElement("img");
@@ -87,7 +87,7 @@
 			spanFolderName.innerHTML = list["folderName"];
 			spanFolderName.setAttribute("class", "spanName");
 			spanFolderName.setAttribute("name", list["folderId"]);
-			spanFolderName.setAttribute("level", list["folderLevel"]);				
+			spanFolderName.setAttribute("level", list["folderLevel"]);
 			spanFolderName.onclick = function() {getSelected(this);};
 			
 			divElmt.appendChild(imgElmt);
@@ -95,7 +95,7 @@
 			divElmt.appendChild(spanFolderName);
 			divTree.appendChild(divElmt);
 			
-			if (list["hasSubFolder"] == "0") {					
+			if (list["hasSubFolder"] == "0") {
 				imgElmt.src = "/images/OrganTree_cross/dot_continue.gif";
 				imgElmt.setAttribute("class", "webfolderImg");
 			}
@@ -121,19 +121,19 @@
 					var subDivElmt = document.createElement("div");
 					displaySubFolder(newDivElmt, subDivElmt, list["listSubFolders"][i]);
 				}
-			}		
+			}
 		}
 		
 		function getSelected(obj) {
 			var previousElmt = document.getElementsByName(selectedFolder)[0];
 			
 			if (previousElmt != null) {
-				if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {						
+				if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {
 					previousElmt.style.color = "";
 				}
 				else {
 					return;
-				}					
+				}
 			}
 			
 			selectedFolder  = obj.getAttribute("name");
@@ -142,14 +142,14 @@
 		
 		function getDetailTree(obj) {
 			//Check if already in arrSubFolder
-			var uniqueId = obj.getAttribute("id");				
+			var uniqueId = obj.getAttribute("id");
 			
-			if (arrSubFolder.indexOf(uniqueId) != -1) {					
+			if (arrSubFolder.indexOf(uniqueId) != -1) {
 				var childElmt = obj.parentElement.lastElementChild;
 				
 				if (obj.className == "webfolderMinus") {
 					obj.src= "/images/OrganTree_cross/plus_normal.gif";
-					obj.setAttribute("class", "webfolderPlus");						
+					obj.setAttribute("class", "webfolderPlus");
 					childElmt.style.display = "none";
 				}
 				else {
@@ -158,7 +158,7 @@
 					childElmt.style.display = "";
 				}
 			}
-			else {										
+			else {
 				obj.src = "/images/OrganTree_cross/minus_normal.gif";
 				obj.setAttribute("class", "webfolderMinus");
 				
@@ -170,7 +170,7 @@
 					},
 					dataType: "JSON",
 					async: true,
-					success: function(data) {							
+					success: function(data) {
 						var result = data.subTree;
 						displaySubTree(result, obj.parentElement);
 						arrSubFolder.push(uniqueId);
@@ -178,35 +178,35 @@
 					error: function (xhr, status, e){
 						alert("<spring:message code='ezWebFolder.t134' />");
 					}
-				});	
+				});
 			}
 		}
 		
-		function displaySubTree(result, divElmt) {				
+		function displaySubTree(result, divElmt) {
 			if (result["listSubFolders"] == null) {
 				alert("<spring:message code='ezWebFolder.t134' />");
 				return;
 			}
 			
-			var len = result["listSubFolders"].length;				
+			var len = result["listSubFolders"].length;
 			var newDivElmt = document.createElement("div");
 			divElmt.appendChild(newDivElmt);
 			
 			for (var i = 0; i < len; i++) {
 				var subDiv = document.createElement("div");
-				displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i]);					
+				displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i]);
 			}
 		}
-    	
+		
 		function wClose() {
-	        parent.DivPopUpHidden();               
-	        window.close();
+			parent.DivPopUpHidden();
+			window.close();
 		}
 		
 		function afterSuccess() {
 			parent.refreshView();
-	        parent.DivPopUpHidden();            
-	        window.close();
+			parent.DivPopUpHidden();
+			window.close();
 		}
 		
 		function fileCopy() {
@@ -226,14 +226,14 @@
 				data: {
 					"fileId"   : fileId,
 					"folderId" : selectedFolder,
-					"mode"	   : "copy"
+					"mode"     : "copy"
 				},
 				dataType: "text",
 				async: true,
-				success : function(data, textStatus, jqXHR) {				
+				success : function(data, textStatus, jqXHR) {
 					afterSuccess();
 				},
- 				error : function(jqXHR, textStatus, errorThrown) {
+				error : function(jqXHR, textStatus, errorThrown) {
 					alert("Error: " + jqXHR.status + ", " + textStatus);
 				}
 			});
@@ -256,38 +256,38 @@
 				data: {
 					"fileId"   : fileId,
 					"folderId" : selectedFolder,
-					"mode"	   : "move"
+					"mode"     : "move"
 				},
 				dataType: "text",
 				async: true,
-				success : function(data, textStatus, jqXHR) {					
+				success : function(data, textStatus, jqXHR) {
 					afterSuccess();
 				},
- 				error : function(jqXHR, textStatus, errorThrown) {
+				error : function(jqXHR, textStatus, errorThrown) {
 					alert("Error: " + jqXHR.status + ", " + textStatus);
 				}
 			});
 		}
-    </script>
+	</script>
 </head>
-<body class="popup"> 
+<body class="popup">
 	<div id="menu">
-		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t120' /></div>	
-    </div>
-    <div id="close">
-    	<ul>
-            <li><span onclick="wClose();"><spring:message code='ezWebFolder.t110' /></span></li>
-        </ul>
-    </div>
-    
-    <div style="margin: 10px; border: 1px solid #666666; min-height: 380px;" id="folderTree">
-	
-    </div>	
-    
-	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
-	    <a id="btnSave" class="webfolderBttn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121' /></span></a>
-	    <a id="btnCancel"class="webfolderBttn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122' /></span></a>
+		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t120' /></div>
 	</div>
-    
+	<div id="close">
+		<ul>
+			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110' /></span></li>
+		</ul>
+	</div>
+	
+	<div style="margin: 10px; border: 1px solid #666666; min-height: 380px;" id="folderTree">
+	
+	</div>	
+	
+	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
+		<a id="btnSave" class="webfolderBttn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121' /></span></a>
+		<a id="btnCancel"class="webfolderBttn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122' /></span></a>
+	</div>
+	
 </body>
 </html>

@@ -8,9 +8,9 @@
 	</head>
 	<frameset rows="0,*" frameborder="0" border="0">
 		<frame src="about:blank" name="white" marginwidth="0" marginheight="0" scrolling="no" frameborder="0">
-		    <frameset cols="220,*" frameborder="0" border="0">
-			    <frame src="/ezWebFolder/webfolderLeft.do" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
-	            <frame src="/ezWebFolder/main.do" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
-		    </frameset>
-    </frameset>
+			<frameset cols="220,*" frameborder="0" border="0">
+				<frame src="/ezWebFolder/webfolderLeft.do" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
+				<frame src="/ezWebFolder/main.do" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
+			</frameset>
+	</frameset>
 </html>

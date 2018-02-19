@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.service;
 
 import java.util.List;
-
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;

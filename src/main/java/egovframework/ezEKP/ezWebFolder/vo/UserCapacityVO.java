@@ -10,37 +10,37 @@ public class UserCapacityVO {
 	private String companyName;
 	private String jobTitle;
 	private String totalUsed;
-	private int usedRate;
-	private int tenantId;
-	
+	private int    usedRate;
+	private int    tenantId;
+
 	public String getUserId() {
 		return userId;
 	}
-	
+
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
+
 	public String getTotalCapacity() {
 		return totalCapacity;
 	}
-	
+
 	public void setTotalCapacity(String totalCapacity) {
 		this.totalCapacity = totalCapacity;
 	}
-	
+
 	public String getCompanyId() {
 		return companyId;
 	}
-	
+
 	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
 	}
-	
+
 	public int getTenantId() {
 		return tenantId;
 	}
-	
+
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
 	}
@@ -99,6 +99,5 @@ public class UserCapacityVO {
 
 	public void setUsedRate(int usedRate) {
 		this.usedRate = usedRate;
-	}	
-	
+	}
 }

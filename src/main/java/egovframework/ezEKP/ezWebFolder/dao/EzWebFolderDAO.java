@@ -2,9 +2,7 @@ package egovframework.ezEKP.ezWebFolder.dao;
 
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.stereotype.Repository;
-
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -18,12 +16,12 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public String getFileSequence(Map<String, Object> map) {
 		return (String)select("EzWebFolderDAO.getFileSequence", map);
 	}
-	
+
 	public void insertFile(Map<String, Object> map) {
 		insert("EzWebFolderDAO.insertFile", map);
 	}
 
-	public FileVO getFileByFileId(Map<String, Object> map) {		
+	public FileVO getFileByFileId(Map<String, Object> map) {
 		return (FileVO)select("EzWebFolderDAO.getFileByFileId", map);
 	}
 
@@ -31,14 +29,14 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 		return (FileTypeVO)select("EzWebFolderDAO.getFileTypeByFileExt", map);
 	}
 
-	public void deleteFileByFileId(Map<String, Object> map) {		
+	public void deleteFileByFileId(Map<String, Object> map) {
 		delete("EzWebFolderDAO.deleteFileByFileId", map);
 	}
 
-	public void updateFileUseStatus(Map<String, Object> map) {		
+	public void updateFileUseStatus(Map<String, Object> map) {
 		update("EzWebFolderDAO.updateFileUseStatus", map);
 	}
-	
+
 	public void updateDownCnt(Map<String, Object> map) {		
 		update("EzWebFolderDAO.updateDownCnt", map);
 	}
@@ -48,7 +46,7 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	}
 
 	public void moveFile(Map<String, Object> map) {
-		update("EzWebFolderDAO.moveFile", map);		
+		update("EzWebFolderDAO.moveFile", map);
 	}
 
 	public String getFileLogSequence(Map<String, Object> map) {
@@ -64,11 +62,11 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<FolderSimpleVO> getAllSimpleSubFolders(Map<String, Object> map) {		
+	public List<FolderSimpleVO> getAllSimpleSubFolders(Map<String, Object> map) {
 		return (List<FolderSimpleVO>)list("EzWebFolderDAO.getAllSimpleSubFolders", map);
 	}
 
-	public FolderVO getCompanyFolderId(Map<String, Object> map) {		
+	public FolderVO getCompanyFolderId(Map<String, Object> map) {
 		return (FolderVO)select("EzWebFolderDAO.getCompanyFolderId", map);
 	}
 
@@ -78,7 +76,7 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<OrganDeptVO> getFolderDepts(Map<String, Object> map) {		
+	public List<OrganDeptVO> getFolderDepts(Map<String, Object> map) {
 		return (List<OrganDeptVO>)list("EzWebFolderDAO.getFolderDepts", map);
 	}
 
@@ -94,12 +92,12 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 		return (String)select("EzWebFolderDAO.getFolderUserSequence", map);
 	}
 
-	public void updateFolderUseStatus(Map<String, Object> map) {		
+	public void updateFolderUseStatus(Map<String, Object> map) {
 		update("EzWebFolderDAO.updateFolderUseStatus", map);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<FileVO> getAllFilesInFolder(Map<String, Object> map) {		
+	public List<FileVO> getAllFilesInFolder(Map<String, Object> map) {
 		return (List<FileVO>)list("EzWebFolderDAO.getAllFilesInFolder", map);
 	}
 

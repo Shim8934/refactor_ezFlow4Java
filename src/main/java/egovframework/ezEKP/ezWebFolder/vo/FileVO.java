@@ -15,7 +15,7 @@ public class FileVO {
 	private String createName2;
 	private String createDate;
 	private String updateId;
-	private String updateDate;	
+	private String updateDate;
 	private String filePosition;
 	private String fileTypeId;
 	private String fileTypeName;
@@ -25,7 +25,7 @@ public class FileVO {
 	private String folderName;
 	private String folderPath;
 	private int    tenantId;
-	
+
 	public String getFavouriteStatus() {
 		return favouriteStatus;
 	}
@@ -37,83 +37,83 @@ public class FileVO {
 	public String getFileId() {
 		return fileId;
 	}
-	
+
 	public void setFileId(String fileId) {
 		this.fileId = fileId;
 	}
-	
+
 	public String getFileName() {
 		return fileName;
 	}
-	
+
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	
+
 	public String getFilePath() {
 		return filePath;
 	}
-	
+
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
-	
+
 	public String getFileSize() {
 		return fileSize;
 	}
-	
+
 	public void setFileSize(String fileSize) {
 		this.fileSize = fileSize;
 	}
-	
+
 	public String getTypeId() {
 		return typeId;
 	}
-	
+
 	public void setTypeId(String typeId) {
 		this.typeId = typeId;
 	}
-	
+
 	public int getDownloadCnt() {
 		return downloadCnt;
 	}
-	
+
 	public void setDownloadCnt(int downloadCnt) {
 		this.downloadCnt = downloadCnt;
 	}
-	
+
 	public String getFileExt() {
 		return fileExt;
 	}
-	
+
 	public void setFileExt(String fileExt) {
 		this.fileExt = fileExt;
 	}
-	
+
 	public String getFolderId() {
 		return folderId;
 	}
-	
+
 	public void setFolderId(String folderId) {
 		this.folderId = folderId;
 	}
-	
+
 	public String getUseStatus() {
 		return useStatus;
 	}
-	
+
 	public void setUseStatus(String useStatus) {
 		this.useStatus = useStatus;
 	}
-	
+
 	public String getCreateId() {
 		return createId;
 	}
-	
+
 	public void setCreateId(String createId) {
 		this.createId = createId;
 	}
-	
+
 	public String getCreateName1() {
 		return createName1;
 	}
@@ -133,47 +133,47 @@ public class FileVO {
 	public String getCreateDate() {
 		return createDate;
 	}
-	
+
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
-	
+
 	public String getUpdateId() {
 		return updateId;
 	}
-	
+
 	public void setUpdateId(String updateId) {
 		this.updateId = updateId;
 	}
-	
+
 	public String getUpdateDate() {
 		return updateDate;
 	}
-	
+
 	public void setUpdateDate(String updateDate) {
 		this.updateDate = updateDate;
 	}
-	
+
 	public int getTenantId() {
 		return tenantId;
 	}
-	
+
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
 	}
-	
+
 	public String getFileIconUrl() {
 		return fileIconUrl;
 	}
-	
+
 	public void setFileIconUrl(String fileIconUrl) {
 		this.fileIconUrl = fileIconUrl;
 	}
-	
+
 	public String getFileShareStatus() {
 		return fileShareStatus;
 	}
-	
+
 	public void setFileShareStatus(String fileShareStatus) {
 		this.fileShareStatus = fileShareStatus;
 	}
@@ -216,6 +216,5 @@ public class FileVO {
 
 	public void setFolderPath(String folderPath) {
 		this.folderPath = folderPath;
-	}	
-		
+	}
 }

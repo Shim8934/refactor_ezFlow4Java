@@ -17,63 +17,63 @@ public class FileLogVO {
 	public String getLogId() {
 		return logId;
 	}
-	
+
 	public void setLogId(String logId) {
 		this.logId = logId;
 	}
-	
+
 	public String getFileType() {
 		return fileType;
 	}
-	
+
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
 	}
-	
+
 	public String getFileName() {
 		return fileName;
 	}
-	
+
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	
+
 	public String getFileSize() {
 		return fileSize;
 	}
-	
+
 	public void setFileSize(String fileSize) {
 		this.fileSize = fileSize;
 	}
-	
+
 	public String getLogType() {
 		return logType;
 	}
-	
+
 	public void setLogType(String logType) {
 		this.logType = logType;
 	}
-	
+
 	public String getCreateId() {
 		return createId;
 	}
-	
+
 	public void setCreateId(String createId) {
 		this.createId = createId;
 	}
-	
+
 	public String getCreateDate() {
 		return createDate;
 	}
-	
+
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
-	
+
 	public String getCompanyId() {
 		return companyId;
 	}	
-	
+
 	public String getCreateName1() {
 		return createName1;
 	}
@@ -93,11 +93,11 @@ public class FileLogVO {
 	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
 	}
-	
+
 	public int getTenantId() {
 		return tenantId;
 	}
-	
+
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
 	}
@@ -109,5 +109,4 @@ public class FileLogVO {
 	public void setFileExt(String fileExt) {
 		this.fileExt = fileExt;
 	}
-	
 }
