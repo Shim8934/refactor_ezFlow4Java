@@ -1163,4 +1163,46 @@
 	    		USERID = #userID#
 		]]>
    </delete>
+   
+   <select id="MApprovalG.getAprMemberSn" parameterClass="Map" resultClass="MApprGDocInfoVO">
+		
+			<![CDATA[
+				SELECT
+					DOCID,
+					ORGDOCID,
+					FORMID,
+					HREF,
+					HASATTACHYN,
+					APRMEMBERID,
+					APRMEMBERNAME,
+					APRMEMBERNAME2,
+					APRMEMBERDEPTID,
+					DOCSTATE,
+					DOCTITLE,
+					APRMEMBERSN,
+					CASE 
+	   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+	   					ELSE WRITERNAME$lang$
+	   				END WRITERNAME,
+	   				CASE 
+	   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+	   					ELSE WRITERDEPTNAME$lang$
+	   				END WRITERDEPTNAME,
+	   				CASE 
+	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+	   					ELSE WRITERJOBTITLE$lang$
+	   				END WRITERJOBTITLE
+				FROM
+					VAPRDOINGDOCLIST
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+			]]>
+				LIMIT
+					1
+		
+		</select>
 </sqlMap>

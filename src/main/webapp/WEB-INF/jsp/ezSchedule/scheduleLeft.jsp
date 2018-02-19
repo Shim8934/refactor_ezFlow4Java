@@ -243,7 +243,7 @@
 		</script>
 	</head>
 
-	<body class="leftbody">	    
+	<body class="leftbody">
         <div class="left_pims" title="<spring:message code='ezSchedule.t1010'/>"></div>
 	        
 	    <div id="left">

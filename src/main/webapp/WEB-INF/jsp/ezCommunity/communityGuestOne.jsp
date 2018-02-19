@@ -68,6 +68,14 @@
 		        }
 		        
 		        document.getElementById("formDel").innerHTML = document.getElementById("formDel").innerHTML + html; 
+		        
+		        // 2018-02-14 천성준
+		        $(document).keydown(function(e) {
+		        	// input 박스를 제외한 나머지에서 backspace 입력을 막는다.(IE뒤로가기 방지)
+		            if(e.target.nodeName != "INPUT") {
+		                if(e.keyCode === 8) {return false;}
+		            }
+		        });
 		    }
 		    
 		    function keyword_onkeydown(e) {

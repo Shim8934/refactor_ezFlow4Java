@@ -30,7 +30,7 @@
 				var pwidth = window.screen.availWidth;
 				var pTop = (pheight - 760) / 2;
 				var pLeft = (pwidth - 765) / 2;
-				window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=380,width=480,top=" + pTop + ",left=" + pLeft, "");
+				window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
 			}
 			
 			function prevPage_onclick() {
@@ -249,7 +249,7 @@
 
 				<c:forEach var = "club" items = "${clubList }" varStatus="status">
 					<tr>
-						<td style="width:50px; height:23px">${status.count }</td>
+						<td style="width:50px; height:23px"><c:out value='${totalCount - ((curPage -1) * 10) - status.index }' /></td>
 						<!--// 20100108 : 보안 처리, 관련 추가작업(XSS)-->
 						<td style="cursor:pointer; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><nobr ><c:out value = '${club.c_ClubName }' /></nobr></td>
 						<td style="cursor:pointer; width:300px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><c:out value = '${club.c_ClubDesc}' /></td>
