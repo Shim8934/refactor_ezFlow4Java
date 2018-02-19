@@ -663,7 +663,7 @@
 		        }
 		        
 		        try {
-			        leftCountRf();
+					leftCountRf();
 				} catch (e) {
 				}
 		    }

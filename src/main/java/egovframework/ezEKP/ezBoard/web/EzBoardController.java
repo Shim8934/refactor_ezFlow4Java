@@ -5974,7 +5974,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("reservedList", reservedList);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("isVpn", isVpn);
-
+		
 		logger.debug("boardReservedItemList ended");
 		return "ezBoard/boardReservedItemList";
 	}

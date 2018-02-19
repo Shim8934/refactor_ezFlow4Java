@@ -94,7 +94,15 @@
                 	<img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />" >
             	</span>
         	</div>
-        	<div id="tblBest" class="communitycont">${strHTML}</div>
+        	<div id="tblBest" class="communitycont">
+        		<c:if test="${strHTML != ''}">${strHTML}</c:if>
+        		<c:if test="${strHTML == ''}">
+        			<div class="nodata_portlet">
+ 						<p><img src="/images/kr/main/nodata_white.gif" width="107" height="70"></p>
+						<p><spring:message code='main.t00026' /></p>
+					</div>
+        		</c:if>
+        	</div>
         	<div class="guide"><span class="lb"></span><span class="rb"></span></div>
     	</article>
 	</body>	
