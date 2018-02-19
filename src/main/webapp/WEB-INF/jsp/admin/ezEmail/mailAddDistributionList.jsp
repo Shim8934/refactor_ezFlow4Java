@@ -511,8 +511,16 @@
 	            createNodeAndInsertText(xmlDom, objNode, "NAME", document.all("TextName").value);
 	            createNodeAndInsertText(xmlDom, objNode, "ID", document.all("TextId").value);
 	            
-	            for (var i = 0; i < document.getElementById("ListViewMsgTo").children.item(0).children.item(1).childNodes.length; i++) {
-	                createNodeAndInsertText(xmlDom, objNode, "MEMBERID", document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children.item(i).getAttribute("data1"));
+	            var memberList = document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children;
+	            var memberListLength = memberList.length;
+	            
+	            if (memberListLength <= 0) {
+	            	alert("<spring:message code='ezSchedule.t197' />");
+	            	return;
+	            }
+	            
+	            for (var i = 0; i < memberListLength; i++) {
+	                createNodeAndInsertText(xmlDom, objNode, "MEMBERID", memberList.item(i).getAttribute("data1"));
 	
 	            }
 	            xmlHTTP.open("POST", "/admin/ezEmail/mailSaveDistributionList.do", false);

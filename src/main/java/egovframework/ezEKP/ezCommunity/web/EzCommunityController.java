@@ -1496,9 +1496,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String ret = "";
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
+		
 		if (boardInfo.getGubun() != null) {
 			if (boardInfo.getGubun().equals("2") || boardInfo.getUrl() != null || boardInfo.getGubun().equals("3")){
-				ret = "anonyboard";
+				//게시판 정보를 수정하고 나면 URL은 ""(empty string)으로 db에 업데이트 되기 때문에 이를 수정해줘야함
+				if (boardInfo.getUrl().equals("")) {
+					ret = "normalboard";
+				} else {
+					ret = "anonyboard";
+				}
 			} else {
 				ret = "normalboard";
 			}

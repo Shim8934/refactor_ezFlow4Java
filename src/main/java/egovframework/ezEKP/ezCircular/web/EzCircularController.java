@@ -1201,8 +1201,10 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("saveCircular started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		//2018-02-13 주홍선 loginSimpleVO 쿠키에서 가져오도록 변경
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 
+		//2018-02-13 주홍선 realPath 가져오는 메소드 commonUtil에 있는 것으로 변경
 		String realPath = commonUtil.getRealPath(request);
 		String fileList = "";
 		String pDirPath = "";
@@ -1212,8 +1214,6 @@ public class EzCircularController extends EgovFileMngUtil {
 			
 			pDirPath = commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
 
-			logger.debug("realPath : " + realPath + " | pDirPath = " + pDirPath);
-			
 	        pDirPath = realPath + pDirPath;	        
         
 	        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
@@ -1271,8 +1271,10 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("saveCircular started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		//2018-02-13 주홍선 loginSimpleVO 쿠키에서 가져오도록 변경
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
+		//2018-02-13 주홍선 realPath 가져오는 메소드 commonUtil에 있는 것으로 변경
 		String realPath = commonUtil.getRealPath(request);
 		String mode = request.getParameter("mode");
 		String fileList = "";
@@ -1483,6 +1485,7 @@ public class EzCircularController extends EgovFileMngUtil {
         
         String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
         
+        //2018-02-13 주홍선 mode와 circularID 가져오도록 주석 제거
         String mode = "";
 		String circularID = "";
 
@@ -1577,10 +1580,12 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("tempUploadFileDelete started");
 		
+		//2018-02-13 주홍선 loginSimpleVO 쿠키에서 가져오도록 변경
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 
 		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
 		String fileList = request.getParameter("fileList");
+		//2018-02-13 주홍선 주석제거
 		String mode = "";
 		String circularID = "";
 		String filePath = "";
@@ -1611,7 +1616,6 @@ public class EzCircularController extends EgovFileMngUtil {
 				String fileName = data[i].split(";")[1];
 				
 				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
-				logger.debug(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
 				
 				file.delete();
 			}			
@@ -1738,6 +1742,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String userName2 = "";
 
 		String title = list.get(0).getTitle();
+		//2018-02-13 주홍선 title 쌍따옴표 처리
 		title = title.replaceAll("\"", "\\\\" + "\"");
 		
 		for (int i=0; i<list.size(); i++) {
