@@ -2729,10 +2729,10 @@ function checkdisabled()
 	            else {
 	                var curaprsn = false;;
 	                for (var y = 0; y < i; y++) {
-	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "A04002")
+	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "002") // aprType이 진행인 경우
 	                        curaprsn = true;
 
-	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "A04003" || curaprsn)
+	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "003" || curaprsn) // aprType이 승인인 경우
 	                        pAprLineRow[y].cells[4].childNodes[0].disabled = true;
 	                    else
 	                        pAprLineRow[y].cells[4].childNodes[0].disabled = false;

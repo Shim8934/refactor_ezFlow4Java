@@ -558,6 +558,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
 	    model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("serverName", serverName);
@@ -568,6 +574,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("docID", docID);
 		model.addAttribute("dirPath", dirPath);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		logger.debug("regRecordAttach ended");
 		
