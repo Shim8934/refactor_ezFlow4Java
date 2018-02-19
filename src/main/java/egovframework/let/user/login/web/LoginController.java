@@ -586,6 +586,7 @@ public class LoginController {
     	    }
     	}
     	
+    	request.getSession().invalidate();
     	response.sendRedirect(redirectUri);
     }
     
