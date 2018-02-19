@@ -480,7 +480,7 @@
 		    	var strListArr = new Array();
 	        	strListArr = strListInfo.split(";");
 
-	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
+	        	if ((pageCnt - strListArr.length + 1) % 20 == 0 && CurPage != 1) {						
 					CurPage = CurPage - 1;
 				}
 
