@@ -1406,7 +1406,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         boolean flag;
 		StringBuilder bodyContent = new StringBuilder();
         
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 13px; FONT-FAMILY: " + messageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
+        bodyContent.append("<DIV id=\"msgBody\" style=\"font-size: 13px; font-family: " + messageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
         bodyContent.append(Content);
         bodyContent.append("</DIV>");
     	InternetAddress from = new InternetAddress();
