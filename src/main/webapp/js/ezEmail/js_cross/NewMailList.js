@@ -19,7 +19,6 @@ var GroupminImg ="/images/ImgIcon/groupmin.gif";
 var GroupSenderImg ="/images/ImgIcon/groupsender.gif";
 var GroupSubjectImg ="/images/ImgIcon/groupsubject.gif";
 var GroupColor = "#666666";
-var xml_http;
 
 
 function HeaderIni(HeaderObject) {
@@ -838,11 +837,8 @@ function MailListRefreshByTimeout() {
 }
 
 function MailListRefresh() {
-	//수정 수아 재은
-	xml_http = createXMLHttpRequest();
-    xml_http.open("POST", "/ezEmail/mailGetUse.do", true);
-    xml_http.onreadystatechange = detailbox_info;
-    xml_http.send();
+	
+	parent.frames["left"].detailView();
     
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
         goToPageByNum(MailList.getAttribute("curPage"));
@@ -1660,28 +1656,4 @@ function GetContentClassImg(ContentClass, isRead) {
             }
     }
     return "<IMG style='cursor:pointer' draggable='false' src='" + Rvalue + "'/>";
-}
-
-//수정 수아 재은
-function detailbox_info() {
-	
-	if (xml_http == null || xml_http.readyState != 4) return;
-	
-	var result = xml_http.responseXML; 
-    var totalVolume = ""; 
-    var useVolume = "";
-    var percent = "";
-    
-    if (CrossYN()) { 
-        totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent;
-        useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent; 
-        percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent;                    
-    } else { 
-        totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].text;
-        useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text; 
-        percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text;
-    }
-    
-    parent.frames["left"].detailView(totalVolume, useVolume, percent);
-  
 }
