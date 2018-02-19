@@ -326,9 +326,18 @@ public class EzJournalGWController {
 	@RequestMapping(value="/restezjournal/authors", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject insertAuthorDepts(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W insertAuthorDepts started.");
-		
 		JSONObject result = new JSONObject();
 		
+		try {
+			ezJournalService.saveAuthDeptList(jsonParam);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		}
 		LOGGER.debug("ezJournal G/W insertAuthorDepts ended.");
 		return result;
 	}
@@ -341,6 +350,17 @@ public class EzJournalGWController {
 		LOGGER.debug("ezJournal G/W deleteAuthorDepts started.");
 		
 		JSONObject result = new JSONObject();
+		LOGGER.debug(request.getParameter("userId")+request.getParameter("tenantId"));
+		try {
+			ezJournalService.deleteAuthor(request.getParameter("userId"), request.getParameter("tenantId"));
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		}
 		
 		LOGGER.debug("ezJournal G/W deleteAuthorDepts ended.");
 		return result;

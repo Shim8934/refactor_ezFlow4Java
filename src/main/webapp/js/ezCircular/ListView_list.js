@@ -920,7 +920,7 @@ function ListView() {
             objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\", " + _rowonclick + ");");
         else
             objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\");");
-
+        
         var oCells = GetElementsByTagName(addXml, "CELL");
 
         var oDatas = GetDataElements(oCells[0]);
@@ -1340,7 +1340,7 @@ function tr_select(pRowID, pTableID, callbackFunc) {
             oSourceTr.childNodes[0].childNodes[0].checked = true;
             oSourceTr.style.backgroundColor = m_strColorSelect;
             strListInfo += oSourceTr.childNodes[0].childNodes[0].id + ";";
-            strMemberListInfo += oSourceTr.childNodes[0].childNodes[0].getAttribute("memberID") + ";";
+            strMemberListInfo += oSourceTr.getAttribute("memberID") + ";";
         }
 
         //각 리스트마다 마지막으로 선택한 ID를 보관한다.

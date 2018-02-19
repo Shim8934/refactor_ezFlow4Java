@@ -27,10 +27,20 @@
 		            window.close();
 		        }
 		    } */
+		    //2018-02-14 김보미 - 닫기
+			function closing() {
+	          	window.close();
+			}
 		</script>
 	</head>	
 	<body class="popup"> 
 		<h1><spring:message code='ezCircular.t82' /></h1>
+		<!-- 2018-02-14 김보미 - 닫기 -->
+		<div id="close">
+			<ul>
+				<li><span onclick="closing();"><spring:message code='ezCircular.t84' /></span></li>
+			</ul>
+		</div>
 		<div class="listview" style="height:220px; overflow:auto;">
 			<table id="List" class="mainlist" style="width:100%">
 				<thead id="List_THEAD">

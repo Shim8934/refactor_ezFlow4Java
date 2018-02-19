@@ -557,7 +557,10 @@ console.log("prevpageid="+prevpageid);
 			    var Event = e ? e : window.event;
 			    var Element = Event.target ? Event.target : Event.srcElement;
 			    if (Element.getAttribute("id") == "") return;
-			    if (Element.getAttribute("id").indexOf("sub") > -1) return;
+			    if (Element.getAttribute("id").indexOf("sub") > -1) {
+			    	document.getElementById("txtHeight").value = Element.style.height.replace("px", "");
+			    	return;
+			    }
 			    //selectedCell = Element.getAttribute("id");
 			    selectedCell = GetAttribute(Element, "id");
 				if (previousCell != null) previousCell.style.backgroundColor = "white";

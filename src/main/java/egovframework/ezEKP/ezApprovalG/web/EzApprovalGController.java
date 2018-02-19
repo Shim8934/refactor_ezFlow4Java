@@ -1866,6 +1866,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String poptExt = ezApprovalGService.getOptionInfo("A39", "001", userInfo, "CODE");
 		// 첨부파일의 maxSize 설정(단위 MB)
 		String maxSize = ezApprovalGService.getOptionInfo("A39", "002", userInfo, "CODE");
+		
+		// 첨부파일명 최대길이
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
 		String isBody = "";
 
 		if (!formList.replace(formID, "").equals(formList)) {
@@ -1884,6 +1892,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		//2017-11-09 장진혁 전자결재 총 첨부용량 제한 기능 추가
 		model.addAttribute("apprTotalAttachLimit", apprTotalAttachLimit);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		logger.debug("aprAttach ended");
 		
@@ -4197,6 +4206,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
+		// 접수된 문서인지 확인하기.
+		// return 값이 1 이상이면 접수된 문서로 판단.
+		
+		int isReceived = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("docID", docID);
 		model.addAttribute("orgDocID", orgDocID);
@@ -4213,10 +4227,33 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("signImageType", signImageType);
+		model.addAttribute("isReceived", isReceived);
 
 		logger.debug("recevGSusin ended.");
 		
 		return "ezApprovalG/apprGrecevGSusin";
+	}
+	
+	/**
+	 * 전자결재G 접수된 문서인지 확인하는 Method
+	 * */
+	@RequestMapping(value = "/ezApprovalG/isReceivedDoc.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String isReceivedDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("isReceivedDoc started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		
+		int isReceived = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("docID : " + docID);
+		logger.debug("isReceived : " + isReceived);
+		
+		logger.debug("isReceivedDoc ended.");
+		
+		return String.valueOf(isReceived);
 	}
 	
 	/**
@@ -4447,6 +4484,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("approvalROOT", approvalRoot);
+		model.addAttribute("approvalFlag", approvalFlag);
 		logger.debug("recevG ended.");
 		
 		return "ezApprovalG/apprGrecevG";
@@ -5671,7 +5709,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		listType = request.getParameter("listType");
 		response.setContentType("application/ms-excel");
 		response.setCharacterEncoding("utf-8");
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), messageSource.getMessage("ezApprovalG.t1750", locale)) + ".xls\"");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), messageSource.getMessage("ezApprovalG.kms01", locale)) + ".xls\"");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String allFG = request.getParameter("allFG");
 		

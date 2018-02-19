@@ -5,12 +5,20 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezQuestion.dao.EzQuestionDAO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
@@ -18,6 +26,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstCompleteVO;
 import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstPollItemACLVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
@@ -27,15 +36,20 @@ import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzQuestionService")
-public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements EzQuestionService{
+public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestionService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzQuestionServiceImpl.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Resource(name="EzQuestionDAO")
 	private EzQuestionDAO ezQuestionDAO;
@@ -179,11 +193,6 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_puserID", userID);
 		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getUserResponseCnt(map);
-	}
-	
-	@Override
-	public String getUserIDAdmin(int brdID) throws Exception {
-		return ezQuestionDAO.getUserIDAdmin(brdID);
 	}
 	
 	@Override
@@ -332,6 +341,36 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		ezQuestionDAO.deleteItem_D6(map);
 		ezQuestionDAO.deleteItem_D7(map);
 		ezQuestionDAO.deleteItem(map);
+	}
+	
+	@Override
+	public void deleteItemList(String itemList, String realPath, int tenantID) throws Exception {
+		logger.debug("deleteItemList started. itemList = " + itemList + ", tenantID = " + tenantID);
+		
+		for (String itemNo : itemList.split(";")) {
+			int itemNO = Integer.parseInt(itemNo);
+			
+			List<QstDeleteAttachUrlVO> tempList = getDeleteAttachUrl(itemNO, tenantID);
+			for(QstDeleteAttachUrlVO vo : tempList) {
+				if(vo.getAttachType().equals("1") || vo.getAttachType().equals("2")) {
+					String url = vo.getAttachUrl().toString();
+					
+					if (!url.equals("")) {
+						deleteFile(realPath + commonUtil.separator + url);
+					}
+				}
+			}
+			
+			QstCompleteVO qstCompleteVO = new QstCompleteVO();
+			qstCompleteVO.setStrBrdID(5);
+			qstCompleteVO.setItemNo(itemNO);
+			
+			deleteItem(qstCompleteVO, tenantID);
+			
+			deletePollAttach(5, itemNO, tenantID);
+		}
+		
+		logger.debug("deleteItemList ended.");
 	}
 
 	@Override
@@ -922,9 +961,8 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int brdID, int itemNo, int tenantID) throws Exception {
+	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getDeleteAttachUrl(map);
@@ -1039,5 +1077,306 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezQuestionDAO.getQstResponse(map);
 	}
 	
+	@Override
+	public String saveQuestion(String pBrdID, String vItemID, Document doc, String pUserID, LoginVO loginVO) throws Exception {
+		logger.debug("SaveQuestion Start");
+		NodeList nList = null;
+		int dataCount = 0;
+		dataCount = getItemNoCnt(Integer.parseInt(pBrdID), Integer.parseInt(vItemID), loginVO.getTenantId());
+		
+		String startDate = commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), loginVO.getOffset(), true);
+		String endDate = commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), loginVO.getOffset(), true);
+		
+		logger.debug("startDate="+startDate);
+		logger.debug("endDate="+endDate);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("subject", doc.getElementsByTagName("SUBJECT").item(0).getTextContent());
+		map.put("content", doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+		map.put("startdate", startDate);
+		map.put("enddate", endDate);
+		map.put("expiredate", doc.getElementsByTagName("EXPIREDATE").item(0).getTextContent());
+		map.put("anonymity", doc.getElementsByTagName("ANONYMITY").item(0).getTextContent());
+		map.put("openresult", doc.getElementsByTagName("OPENRESULT").item(0).getTextContent());
+		map.put("multiresponse", doc.getElementsByTagName("MULTIRESPONSE").item(0).getTextContent());
+		map.put("importance", doc.getElementsByTagName("IMPORTANT").item(0).getTextContent());
+		map.put("target", doc.getElementsByTagName("TARGET").item(0).getTextContent());
+		map.put("brdID", pBrdID);
+		map.put("itemNo", Integer.parseInt(vItemID));
+		map.put("dataCount", dataCount);
+		map.put("userNm", loginVO.getDisplayName1());
+		map.put("userNm2", loginVO.getDisplayName2());
+		map.put("userEmail", loginVO.getEmail());
+		map.put("tenantID", loginVO.getTenantId());
+		
+		stepSave(pUserID, map);
+		
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("brdID", pBrdID);
+		map2.put("itemNo", Integer.parseInt(vItemID));
+		map2.put("openresult", doc.getElementsByTagName("OPENRESULT").item(0).getTextContent());
+		map2.put("anonymity", doc.getElementsByTagName("ANONYMITY").item(0).getTextContent());
+		map2.put("multiresponse", doc.getElementsByTagName("MULTIRESPONSE").item(0).getTextContent());
+		map2.put("target", doc.getElementsByTagName("TARGET").item(0).getTextContent());
+		map2.put("dataCount", dataCount);
+		map2.put("tenantID", loginVO.getTenantId());
+		stepSave2(map2);
+		//대상범위
+		if(doc.getElementsByTagName("TARGET").item(0).getTextContent().equals("1")) {
+			
+			if(doc.getElementsByTagName("RANGE").item(0).getChildNodes().getLength() > 0) {
+				int pDeptCnt = doc.getElementsByTagName("DEPT").item(0).getChildNodes().getLength();
+				
+				for(int i=0; i<pDeptCnt; i++) {
+					QstCompleteVO qstCompleteVO = new QstCompleteVO();
+					String deptID = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
+		        	String deptNm = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm").getTextContent();
+		        	String deptNm2 = doc.getElementsByTagName("DEPT").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm2").getTextContent();
+		        	qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+		        	qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+		        	qstCompleteVO.setGubunFg("0");
+		        	qstCompleteVO.setGubunID(deptID);
+		        	qstCompleteVO.setGubunNm(deptNm);
+		        	qstCompleteVO.setGubunNm2(deptNm2);
+		        	callCreateMother(qstCompleteVO, loginVO.getTenantId());
+						
+					String cellList = "department";
+                    String propList = "department;mail;displayname;title;description;company;title";
+                    String pClass = "all";
+                       
+                    String sXML = ezOrganService.getDeptMemberList(deptID, cellList, propList, pClass, loginVO.getPrimary(), loginVO.getTenantId());
+                    
+             		Document xmlDom = commonUtil.convertStringToDocument(sXML);
+         			for(int j=0; j<xmlDom.getElementsByTagName("CELL").getLength(); j++) {
+         				if(!xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent().equals("") && xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(1).getTextContent().equals("user")) {
+         					String userID = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(2).getTextContent();
+         					String userNm = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
+         					String userNm2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
+         					String userEmail = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
+         					String deptID2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent();
+         					String deptNM = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(14).getTextContent();
+         					String deptNM2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
+         					String userPos = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(18).getTextContent();
+         					String userPos2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(19).getTextContent();
+         					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
+                         	qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
+                         	qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
+                         	qstCompleteVO2.setUserID(userID);
+                         	qstCompleteVO2.setUserNm(userNm);
+                         	qstCompleteVO2.setUserNm2(userNm2);
+                         	qstCompleteVO2.setUserEmail(userEmail);
+                         	qstCompleteVO2.setUserDeptID(deptID2);
+                         	qstCompleteVO2.setUserDeptNm(deptNM);
+                         	qstCompleteVO2.setUserDeptNm2(deptNM2);
+                         	qstCompleteVO2.setUserPOS(userPos);
+                         	qstCompleteVO2.setUserPOS2(userPos2);
+                         	callInsertPollResponsep1(qstCompleteVO2, loginVO.getTenantId());
+         				}
+         			}
+				}
+				
+				int pUserCnt = 0;
+				
+				if(doc.getElementsByTagName("MEMBER").item(0) != null) {
+					pUserCnt = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();
+				}
+				
+				for(int i=0; i<pUserCnt; i++) {
+					String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
+		        	String userNm = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm").getTextContent();
+		        	String userNm2 = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm2").getTextContent();
+		        	
+                	QstCompleteVO qstCompleteVO = new QstCompleteVO();
+                	qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+                	qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+                	qstCompleteVO.setGubunFg("1");
+                	qstCompleteVO.setGubunID(userID);
+                	qstCompleteVO.setGubunNm(userNm);
+                	qstCompleteVO.setGubunNm2(userNm2);
+                	callCreateMother(qstCompleteVO, loginVO.getTenantId());
+                	
+                	String propList = "department;mail;displayName;title;description;company";
+                	String pXML = ezOrganAdminService.getPropertyList(userID, propList, loginVO.getPrimary(), loginVO.getTenantId());
+
+					Document infoXML = commonUtil.convertStringToDocument(pXML);
+					String userDeptId = "";
+					//String userGender = "";
+					//String userAge = "";
+					
+					if(infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals("")) {
+						userDeptId = "TOP";
+					} else {
+						userDeptId = infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
+					}
+					String userEmail = infoXML.getElementsByTagName("MAIL").item(0).getTextContent();
+					String userPos = infoXML.getElementsByTagName("TITLE1").item(0).getTextContent();
+					String userPos2 = infoXML.getElementsByTagName("TITLE2").item(0).getTextContent();
+					String userDeptNm = infoXML.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
+					String userDeptNm2 = infoXML.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
+					/*String userJumin = "1111111111111";*/
+					
+					/*if(userJumin.substring(7, 1).equals("1")) {
+						userGender = "1";
+					} else {
+						userGender = "2";
+					}
+					userAge = userJumin.substring(0, 2);
+					
+					if(userAge.equals("11")) {
+						userAge = "NULL";
+					}*/
+					
+					QstCompleteVO qstCompleteVO3 = new QstCompleteVO();
+					qstCompleteVO3.setStrBrdID(Integer.parseInt(pBrdID));
+					qstCompleteVO3.setItemNo(Integer.parseInt(vItemID));
+					qstCompleteVO3.setGubunID(userID);
+					qstCompleteVO3.setGubunNm(userNm);
+					qstCompleteVO3.setGubunNm2(userNm2);
+					qstCompleteVO3.setUserEmail(userEmail);
+					qstCompleteVO3.setUserDeptID(userDeptId);
+					qstCompleteVO3.setUserDeptNm(userDeptNm);
+					qstCompleteVO3.setUserDeptNm2(userDeptNm2);
+					qstCompleteVO3.setUserPOS(userPos);
+					qstCompleteVO3.setUserPOS2(userPos2);
+					qstCompleteVO3.setUserGender("");
+					qstCompleteVO3.setUserAge(0);
+					callInsertPollResponseper(qstCompleteVO3, loginVO.getTenantId());
+				}
+			}
+		}
+		
+		int qstCnt = doc.getElementsByTagName("QUESTION").item(0).getChildNodes().getLength();
+
+		for(int i=0; i<qstCnt; i++) {
+			XPath xpath = XPathFactory.newInstance().newXPath();
+			
+			String qstSubject = doc.getElementsByTagName("QUESTIONCONTENT").item(i).getTextContent();
+			String answerType = doc.getElementsByTagName("ANSWERTYPE").item(i).getTextContent();
+			String multiSelect = doc.getElementsByTagName("MULTISELECT").item(i).getTextContent();
+			/*String selViewStart = doc.getElementsByTagName("SELVIEWSTART").item(i).getTextContent();
+			String selViewEnd = doc.getElementsByTagName("SELVIEWEND").item(i).getTextContent();*/
+			
+			int v_quesNo = 1;
+			
+			v_quesNo = getQuestionNo(Integer.parseInt(pBrdID), Integer.parseInt(vItemID), loginVO.getTenantId());
+			
+			if(v_quesNo == 0) {
+				v_quesNo = 1;
+			} else {
+				v_quesNo = v_quesNo + 1;
+			}
+			
+			QstCompleteVO qstCompleteVO = new QstCompleteVO();
+			qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+			qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+			qstCompleteVO.setQuesNo(v_quesNo);
+			qstCompleteVO.setQuesContent(qstSubject);
+			qstCompleteVO.setAnswerType(Integer.parseInt(answerType));
+			qstCompleteVO.setMultiSelect(multiSelect);
+			
+			insertQuestion(qstCompleteVO, loginVO.getTenantId());
+
+			NodeList qstAttachNodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ATTACH//ROW", doc, XPathConstants.NODESET);
+			
+			if (qstAttachNodes!= null && qstAttachNodes.getLength() > 0) {
+				for (int k=0; k < qstAttachNodes.getLength() ; k++) {
+					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
+					qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
+					qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
+					qstCompleteVO2.setQuesNo(v_quesNo);
+					qstCompleteVO2.setAnswerNo(0);
+					qstCompleteVO2.setAttachNo(k+1);
+					qstCompleteVO2.setAttachType(qstAttachNodes.item(k).getChildNodes().item(0).getTextContent());
+					qstCompleteVO2.setAttachName(qstAttachNodes.item(k).getChildNodes().item(1).getTextContent());
+					qstCompleteVO2.setAttachURL(qstAttachNodes.item(k).getChildNodes().item(2).getTextContent());
+					pollSaveAttach(qstCompleteVO2, loginVO.getTenantId());
+				}
+			}
+			
+			NodeList nodes1 = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER_ANSWER", doc, XPathConstants.NODESET);
+			if(nodes1.getLength() > 0) {
+				int ansAnsCnt = nodes1.getLength();
+				for(int iAnsAnsCnt=0; iAnsAnsCnt < ansAnsCnt; iAnsAnsCnt++ ) {
+					qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+					qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+					qstCompleteVO.setQuesNo(v_quesNo);
+					qstCompleteVO.setAnswerNo(iAnsAnsCnt+1);
+					qstCompleteVO.setAnswerAnswerContent(nodes1.item(iAnsAnsCnt).getChildNodes().item(0).getTextContent().replace("'", "''"));
+					insertAnswerAnswerContent(qstCompleteVO, loginVO.getTenantId());
+					
+				}
+			}
+			
+			NodeList nodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER", doc, XPathConstants.NODESET);
+			//NodeList nodes = (NodeList)xpath.evaluate("//QUESTION/ROW/ANSWER", doc, XPathConstants.NODESET);
+				
+			if(nodes.getLength() > 0) {
+				int ansCnt = nodes.getLength();
+				for(int iAns=0; iAns < ansCnt; iAns++ ) {
+					qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+					qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+					qstCompleteVO.setQuesNo(v_quesNo);
+					qstCompleteVO.setAnswerNo(iAns+1);
+					qstCompleteVO.setAnswerContent(nodes.item(iAns).getChildNodes().item(0).getTextContent().replace("'", "\'"));
+					insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
+					
+					NodeList nodes2 = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER/ATTACH", doc, XPathConstants.NODESET);
+					logger.debug("nodes2Length="+nodes2.getLength());
+					if(nodes2.getLength() > 0) {
+						nList = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER", doc, XPathConstants.NODESET);
+						//nList = doc.getElementsByTagName("ANSWER");	
+						
+						if(nList.item(iAns).getChildNodes().item(1) != null){
+							if(nList.item(iAns).getChildNodes().item(1).getNodeName().equals("ATTACH")) {
+								int ansAttachCnt = nList.item(iAns).getChildNodes().item(1).getChildNodes().getLength();
+								
+								logger.debug("ansAttachCnt="+ansAttachCnt);
+								for(int aa=0; aa<ansAttachCnt; aa++) {
+									String ansAttachType = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(0).getTextContent();
+									String ansAttachUrl = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(2).getTextContent();
+									if(ansAttachType.equals("3") || ansAttachType.equals("4") || ansAttachType.equals("6") || ansAttachType.equals("7")) {
+									}
+									QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
+									qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
+									qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
+									qstCompleteVO2.setQuesNo(v_quesNo);
+									qstCompleteVO2.setAnswerNo(iAns+1);
+									qstCompleteVO2.setAttachNo(aa+1);
+									//qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(aa).getTextContent().replace("'", "''"));
+									qstCompleteVO2.setAttachName(nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(1).getTextContent().replace("'", "''"));
+									qstCompleteVO2.setAttachURL(ansAttachUrl);
+									qstCompleteVO2.setAttachType(ansAttachType);
+									pollSaveAttach(qstCompleteVO2, loginVO.getTenantId());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		QstCompleteVO qstCompleteVO = new QstCompleteVO();
+		qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+		qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+		updatePollItem(qstCompleteVO, loginVO.getTenantId());
+		logger.debug("SaveQuestion End");
+		return "OK";
+	}
+	
+	@Override
+	public List<QstPollItemACLVO> getQstPollItemAcl(String itemID, int tenantID) throws Exception {
+		logger.debug("getQstPollItemAcl started. itemID = " + itemID + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		
+		List<QstPollItemACLVO> list = ezQuestionDAO.getQstPollItemAcl(map);
+		
+		logger.debug("getQstPollItemAcl ended. listSize = " + list.size());
+		
+		return list;
+	}
 }
 

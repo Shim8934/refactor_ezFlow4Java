@@ -3,13 +3,19 @@ package egovframework.ezEKP.ezPortal.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -41,6 +47,9 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.ezEKP.ezPoll.service.EzPollService;
+import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
@@ -116,6 +125,8 @@ public class EzPortalController extends EgovFileMngUtil {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+	@Resource(name = "EzPollService")
+	private EzPollService ezPollService;
 	/**
 	 * 포탈 메인 화면 호출 함수
 	 */
@@ -1345,7 +1356,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 설문참여 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
+/*	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
 	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("wpNewPoll Start");
 		
@@ -1445,7 +1456,196 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		logger.debug("wpNewPoll End");
 		return "/ezPortal/portalWpNewPoll";
+	}*/
+	
+	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
+	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("wpNewVote is running!");
+		userInfo = commonUtil.userInfo(loginCookie);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		int qstId = -1;
+		String qstTitle = "";
+		int totalVoteToday = 0;
+		int seeResultBefore = -1;
+		int compareEnd = 0;
+		int compareStart = 0;
+		Date nowTime = new Date();
+		String votePoll = "";
+		int pPollItemSeq = 0;
+		String pPollTitle = "";
+		String pPollResultContent = "";
+		
+		String checkFlag = ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId());
+		
+		if (checkFlag.equalsIgnoreCase("YES")) {
+			//Get list of questions for user
+			Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();
+			ezPollService.getAllQuestionForUser2(userInfo, setOfQuestions, "", "");
+			List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);		
+			
+			if (!listTotalQuestions.isEmpty()) {
+				//Get only processing poll
+				for (Iterator<PollQuestionVO> iterator = listTotalQuestions.iterator(); iterator.hasNext(); ) {
+					PollQuestionVO pollQstVO = iterator.next();
+					Date endDate = formatter.parse(pollQstVO.getEndDate());				
+					compareEnd = endDate.compareTo(nowTime);				
+					
+				    if (compareEnd <= 0) {
+				        iterator.remove();
+				    }
+				    else {
+				    	//baonk added 20180109
+				    	Date startDate = formatter.parse(pollQstVO.getStartDate());
+				    	compareStart = startDate.compareTo(nowTime);
+				    	
+				    	if (compareStart > 0) {
+				    		iterator.remove();
+				    	}
+				    	//end
+				    }
+				}
+				
+				//Get list of modifying question
+				List<PollQuestionVO> listOfModifyingQst = new ArrayList<PollQuestionVO>();
+				
+				for (PollQuestionVO pollQstVO : listTotalQuestions) {
+					if (pollQstVO.getIsMofifying() == 1) {
+						listOfModifyingQst.add(pollQstVO);
+					}
+				}
+				
+				//Remove all modifying questions
+				listTotalQuestions.removeAll(listOfModifyingQst);
+				
+				if (!listTotalQuestions.isEmpty()) {
+					//Sort listQuestions by question id					
+					Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) -> {
+				        return Integer.valueOf(qst1.getQstId()).compareTo(qst2.getQstId());
+					});		
+					
+					PollQuestionVO question = listTotalQuestions.get(listTotalQuestions.size() - 1);
+					qstTitle = question.getTitle();
+					qstId = question.getQstId();			
+					seeResultBefore = question.getResultFirst();			
+					
+					//Get list of Options		
+					List<PollAnswerVO> listOptions = ezPollService.getListOptionsOfQst(qstId, userInfo.getTenantId());
+					
+					//Sort list of options by number of votes
+					Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) -> {
+				        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
+					});
+			
+					totalVoteToday = listTotalQuestions.size();
+					
+					model.addAttribute("listOptions", listOptions);
+					model.addAttribute("numberOfOptions", listOptions.size());				
+				}
+			}
+			
+			model.addAttribute("qstTitle", qstTitle);		
+			model.addAttribute("qstId", qstId);	
+			model.addAttribute("tenantId", userInfo.getTenantId());			
+			model.addAttribute("seeResultBefore", seeResultBefore);
+			model.addAttribute("totalVoteToday", totalVoteToday);
+			
+			logger.debug("wpNewVote finishes");
+			return "/ezPortal/portalWpNewVote";
+		}
+		else {			
+			PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
+			
+			if (result != null) {
+				if (result.getResult() > 0) {
+					if (result.getResult() != 0) {
+						votePoll = Integer.toString(result.getResult());
+					}
+				} else {
+					votePoll = "";
+				}	
+				
+				if (result.getItemSeq() > 0) {
+					if (result.getItemSeq() != 0) {
+						pPollItemSeq = result.getItemSeq();
+						int maxAns = Integer.parseInt(result.getPollSelectionCount());
+						pPollTitle = userInfo.getPrimary().equals("1") ? result.getPollTitle() : result.getPollTitle2();
+						
+						List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq, userInfo.getTenantId());
+						
+						int pTotalCnt = 0;
+						
+						for (int i=0; i<list.size(); i++) {
+							pTotalCnt = pTotalCnt + list.get(i).getCount();
+						}
+						
+						List<Integer> pPollResultList = new ArrayList<Integer>();
+						int resultPrintCnt = 0;
+						
+						for (int i=0; i<list.size(); i++) {
+							if (i >= 4) {
+								break;
+							} else {
+								float poolRstCnt = list.get(i).getCount();
+								float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
+								String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
+								String titleString = strAnswer;
+								if (strAnswer.length() > 11) {
+									strAnswer = strAnswer.substring(0, 11) + "…";
+								}
+								pPollResultList.add(list.get(i).getResult());
+								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
+								"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
+								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
+								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
+								"</dl>";
+		                        resultPrintCnt++;
+							}
+						}
+						
+						if (resultPrintCnt < 4) {
+							for (int i=1; i<=maxAns; i++) {
+								boolean isDuplication = false;
+								for (int j=0; j<pPollResultList.size(); j++) {
+									if (i == pPollResultList.get(j)) {
+										isDuplication = true;
+										break;
+									}
+								}
+								
+								if (!isDuplication) {
+									String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
+									String titleString = strAnswer;
+									if (strAnswer.length() > 13) {
+										strAnswer = strAnswer.substring(0, 13) + "...";
+									}
+									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
+		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
+		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
+																	resultPrintCnt++;
+									if (resultPrintCnt == 4) {
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			model.addAttribute("pPollTitle", pPollTitle);
+			model.addAttribute("votePoll", votePoll);
+			model.addAttribute("pPollItemSeq", pPollItemSeq);
+			model.addAttribute("pPollResultContent", pPollResultContent);
+			model.addAttribute("userLang", userInfo.getLang());
+			
+			logger.debug("wpNewPoll End");
+			return "/ezPortal/portalWpNewPoll";
+		}	
+		
 	}
+	
 	
 	/**
 	 * 포탈 - webPart 결재 통계 화면 호출 함수

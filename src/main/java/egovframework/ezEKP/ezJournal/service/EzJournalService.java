@@ -143,7 +143,7 @@ public interface EzJournalService {
 	public void updateJournalForm(JSONObject jsonParam);
 
 	/**
-	 * 양식 수정
+	 * 양식 삭제
 	 * @param formId
 	 * @param companyId
 	 * @param tenantId
@@ -151,4 +151,20 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public void deleteJournalForm(String formId, String companyId, String tenantId);
+	
+	/**
+	 * 해당사원의 열람권한 리스트를 등록 해줌
+	 * @param jsonParam
+	 * @throws Exception
+	 */
+	public void saveAuthDeptList (JSONObject jsonParam) throws Exception;
+	
+	/**
+	 * 해당사원의 열람권한 리스트 삭제
+	 * @param userId
+	 * @param tenantId
+	 * @throws Exception
+	 */
+	public void deleteAuthor(String userId,String tenantId) throws Exception;
+	
 }

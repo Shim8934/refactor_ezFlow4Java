@@ -37,14 +37,6 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	}
 	
 	/**
-	 * 열람권한 등록
-	 * @param param
-	 */
-	public void insertJournalAuthor(Map<String, Object> param){
-		insert("insertJournalAuthor",param);
-	}
-
-	/**
 	 * 양식 리스트 세럭트
 	 * @param map
 	 * @return
@@ -186,4 +178,20 @@ public class EzJournalDAO extends EgovAbstractDAO{
 		delete("deleteJournalForm", map);
 	}
 
+	/**
+	 * 해당사원에게 열람권한 부서를 등록
+	 * @param insertMap
+	 */
+	public void insertAuthDept(Map<String, Object> insertMap){
+		insert("insertAuthDept",insertMap);
+	}
+	
+	/**
+	 * 해당사원의 열람권한 부서 리스트를 삭제
+	 * @param map
+	 */
+	public void deleteAuthDept(Map<String, Object> map){
+		delete("deleteAuthDept", map);
+	}
+	
 }

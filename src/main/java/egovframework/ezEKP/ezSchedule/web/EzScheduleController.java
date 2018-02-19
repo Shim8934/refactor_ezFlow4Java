@@ -394,7 +394,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             startDay	= scheduleConfigVO.getStartDay();
             startTime	= scheduleConfigVO.getStartTime() / 60;
             endTime		= scheduleConfigVO.getEndTime() / 60;
-            
+            /* 2018-02-01 김보미 - 일정관리 타이틀 고정 */
             defaultTitle = msg.getMessage("ezSchedule.t133", locale);
             
 //            switch (defaultView) {
@@ -412,6 +412,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 //	           		break;
 //            }
         } else {
+        	/* 2018-02-01 김보미 - 일정관리 타이틀 고정 */
 //        	defaultTitle = msg.getMessage("ezSchedule.t142", locale);
         	defaultTitle = msg.getMessage("ezSchedule.t133", locale);
         	
@@ -2089,7 +2090,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 
         loginVO = commonUtil.userInfo(loginCookie);
 		
+        String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", loginVO.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+        
 		model.addAttribute("userInfo", loginVO);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		return "ezSchedule/scheduleDragAndDrop";
 	}	

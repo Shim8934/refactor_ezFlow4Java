@@ -140,7 +140,7 @@
 		        if (Val == 5 || Val == 6) {
 		            window.dialogHeight = "596px";
 		            if (CrossYN())
-		                window.resizeTo(565, 690);
+		                window.resizeTo(705, 690);
 		
 		            divAudioVisualDummy.style.display = "none";
 		            divAudioVisual.style.display = "";
@@ -158,7 +158,7 @@
 		        else {
 		            window.dialogHeight = "420px";
 		            if (CrossYN())
-		                window.resizeTo(565, 460);
+		                window.resizeTo(705, 550);
 		
 		            document.getElementById("divAudioVisualDummy").style.display = "";
 		            document.getElementById("divAudioVisual").style.display = "none";
@@ -445,7 +445,7 @@
 		            selectcabinetintask_cross_dialogArguments[0] = para;
 		            selectcabinetintask_cross_dialogArguments[1] = btnChangeCabinet_onclick_Complete;
 		
-		            DivPopUpShow(510, 380, url);
+		            DivPopUpShow(675, 450, url);
 		        }
 		        else {
 		            var feature = "dialogWidth:475px;dialogHeight:425px;scroll:no;resizable:no;status:no; help:no;edge:sunken";

@@ -5853,7 +5853,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				        }
 				    }
 				    
-					docNO = numHeader + getNDigitNum(getNDigitNum(cabinetSN, 6).substring(getNDigitNum(cabinetSN, 6).length()-Integer.parseInt(docNumZeroCnt)), Integer.parseInt(docNumZeroCnt));
+					docNO = numHeader + createDocNO(cabinetSN , docNumZeroCnt);
 					doc.getElementById("docnumber").text(docNO);
 					
 					if (doc.getElementById("enforcedate") != null) {
@@ -12659,14 +12659,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						Document xmlDom = commonUtil.convertStringToDocument(getCabinetNum(orgDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset()));
 						cabinetSN = xmlDom.getElementsByTagName("RESULT").item(0).getTextContent();
 						
-						map.put("v_DOCNO", doc.getElementById("docnumber").html() + getNDigitNum(getNDigitNum(cabinetSN, 6).substring(getNDigitNum(cabinetSN, 6).length()-Integer.parseInt(docNumZeroCnt)), Integer.parseInt(docNumZeroCnt)));
+						map.put("v_DOCNO", doc.getElementById("docnumber").html() + createDocNO(cabinetSN, docNumZeroCnt));
 						map.put("v_MODE", "APR");
 						ezApprovalGDAO.updateDocNumber(map);
 						map.put("v_MODE", "END");
 						map.put("v_DOCID", orgDocID);
 						ezApprovalGDAO.updateDocNumber(map);
 					}
-					doc.getElementById("docnumber").html(doc.getElementById("docnumber").html() + getNDigitNum(getNDigitNum(cabinetSN, 6).substring(getNDigitNum(cabinetSN, 6).length()-Integer.parseInt(docNumZeroCnt)), Integer.parseInt(docNumZeroCnt)));					
+					doc.getElementById("docnumber").html(doc.getElementById("docnumber").html() + createDocNO(cabinetSN, docNumZeroCnt));					
 				}
 			}   
 		}
@@ -15838,7 +15838,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							
 							map.put("v_APRSTATE", staDSPumYui);
 							map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-							map.put("v_FUNCTIONTYPE", staASBanSong);
+							map.put("v_FUNCTIONTYPE", staASWheSong);
 							//다른 곳에 있는것 가져다 써서 두개 선언. 추후 변경
 							map.put("v_DOCID", docID);
 							map.put("v_DocID", docID);
@@ -15869,7 +15869,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							ezApprovalGDAO.insertSetHesongExpLineInfoS(map);
 							
 							map.put("v_APRTYPE", staATSuSin);
-							map.put("v_APRSTATE", staASBanSong);
+							map.put("v_APRSTATE", staASWheSong);
 							map.put("v_USERID", userID);
 							map.put("v_USERNAME", userName);
 							map.put("v_USERNAME2", userName2);
@@ -17065,7 +17065,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		// 결재문서 리스트 추출
 		String docList = getAprDocList(listType, userID, userIDs, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, searchQuery, dueryData, companyID, tenantID);
-	
+		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
@@ -17147,7 +17147,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</DOCLIST>");
 		
 		logger.debug("aprDocList ended.");
-
 		return resultXML.toString();
 	}
 
@@ -17608,6 +17607,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.checkPermission(map);
 		
+
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
         
@@ -17622,6 +17622,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("checkPermission ended.");
 		
 		return doc;
+	}
+	
+	public int checkReceivedDoc(String docID, String companyID, int tenantID) throws Exception {
+	
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_DOCID", docID);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		int result = ezApprovalGDAO.checkReceivedDoc(map);		
+		
+		return result;
 	}
 	
 	
@@ -24051,5 +24064,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		logger.debug("getOrgDraftDeptID ended.");
 		return draftDeptID;
+	}
+	
+	private String createDocNO(String cabinetSN, String docNumZeroCnt) {
+		if (Integer.parseInt(cabinetSN) <= Math.pow(10.0, Double.parseDouble(docNumZeroCnt))) {
+			cabinetSN = String.format("%0"+ docNumZeroCnt +"d",Integer.parseInt(cabinetSN)).toString();
+		} 
+		return cabinetSN;
 	}
 }

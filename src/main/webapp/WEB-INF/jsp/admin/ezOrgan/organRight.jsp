@@ -1407,7 +1407,14 @@
 				</HEADERS>
 			</LISTVIEWDATA>
 		</xml>
-		<h1><spring:message code='ezOrgan.t72' /></h1>
+		<h1>
+		<c:if test="${dotNetIntegration != 'YES'}">
+		<spring:message code='ezOrgan.t72' />
+		</c:if>
+		<c:if test="${dotNetIntegration == 'YES'}">
+		<spring:message code='main.t24' />
+		</c:if>
+		</h1>
 		<table style="margin-top:10px">
 			<tr>
 				<th><spring:message code='ezOrgan.t73' /></th>
@@ -1451,7 +1458,7 @@
 						<tr>
 							<td><a class="imgbtn"><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></a></td>
 						</tr>
-						<tr>
+						<tr style="display:none">
 							<td><a class="imgbtn" id="usermenu2"><span onClick="del_user()"><spring:message code='ezOrgan.t85' /></span></a></td>
 						</tr>
 						<tr>

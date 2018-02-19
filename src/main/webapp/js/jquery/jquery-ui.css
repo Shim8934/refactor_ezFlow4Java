@@ -632,6 +632,7 @@ button.ui-button::-moz-focus-inner {
 	display: block;
 }
 .ui-selectmenu-button {
+	margin-top:2px;
 	display: inline-block;
 	overflow: hidden;
 	position: relative;
@@ -647,9 +648,9 @@ button.ui-button::-moz-focus-inner {
 }
 .ui-selectmenu-button span.ui-selectmenu-text {
 	text-align: left;
-	padding: 0.4em 2.1em 0.4em 1em;
+	padding: 0.25em 2.1em 0.25em 1em;
 	display: block;
-	line-height: 1.4;
+	line-height: 1.2;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

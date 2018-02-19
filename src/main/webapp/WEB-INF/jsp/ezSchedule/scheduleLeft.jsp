@@ -12,7 +12,7 @@
 	    <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />
 	    <style>
 	    	#iYear {
-	    		width:53px;
+	    		width:60px;
 	    	}
 	    	#iMon {
 	    		width:40px;
@@ -243,7 +243,7 @@
 		</script>
 	</head>
 
-	<body class="leftbody">	    
+	<body class="leftbody">
         <div class="left_pims" title="<spring:message code='ezSchedule.t1010'/>"></div>
 	        
 	    <div id="left">
@@ -252,8 +252,8 @@
 		    <div class="left_pims3" title="<spring:message code='ezSchedule.t1011'/>" id='pims3' style="display:none"></div>
 		    <h2><span id='Schedule' onClick="Function_Flag(2)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1010'/></span></h2>
 		    <ul>
-		    	<div id="CalendarMini" style="padding-top:5px;font-family: arial"></div>
-			    <li evt="0"><span id='Schedule_Main' onClick="Function_Flag(2)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1010'/></span></li>
+		    	<div id="CalendarMini" style="padding-top:5px;margin-bottom:15px;font-family: arial"></div>
+			    <li style="border-top:1px solid #dedede" evt="0"><span id='Schedule_Main' onClick="Function_Flag(2)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1010'/></span></li>
 	            <li evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
 			    <li evt="0"><span id='Schedule_Search' onClick="Function_Flag(6)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1018'/></span></li>
 			    <li evt="0"><span id='Schedule_Public_Search' onClick="Function_Flag(10)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1021'/></span></li>

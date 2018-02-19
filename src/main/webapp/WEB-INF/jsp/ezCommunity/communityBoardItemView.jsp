@@ -243,9 +243,11 @@
 	                return;
 	            }
 
-	            if (ret != "OK") {
+	            if (ret != "OK" && ret == "FALSE") {
+                    alert("<spring:message code = 'ezCommunity.t921' />");
                     return;
                 } else if (ret == "cancel") {
+	            	alert("<spring:message code='ezCommunity.t60'/>");
 	                return;
 	            }
 	            
@@ -344,7 +346,11 @@
 	                return;
 	            }
 	            
-	            if (ret != "OK") {
+	            if (ret != "OK" && ret == "FALSE") {
+                    alert("<spring:message code = 'ezCommunity.t921' />");
+                    return;
+                } else if (ret == "cancel") {
+	            	alert("<spring:message code='ezCommunity.t60'/>");
 	                return;
 	            }
 
@@ -406,7 +412,7 @@
 	                if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
 	                    strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
 	                    strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
-	                    strFileExt == ".xlsx" || strFileExt == ".rtf") {
+	                    strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mht") {
 	                    strTarget = "target=''";
 	                }
 
@@ -426,6 +432,8 @@
 	                    fileImage = "/images/pdf.png";
 	                else if (strFileExt.indexOf(".ecm") != -1)
 	                    fileImage = "/images/ecm.png";
+	                else if (strFileExt.indexOf(".mht") != -1)
+	                    fileImage = "/images/mht.png";
 	                else
 	                    fileImage = "/images/email/mail_006.gif";
 
@@ -557,10 +565,27 @@
 	            window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 	            window.close();
 	        }
+		    var item_readlist_cross_dialogArguments = new Array();
 
 	        function ReaderList() {
-	        	var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-	            GetOpenWindow(szHref, "", 520, 400);
+// 	        	var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+// 	            GetOpenWindow(szHref, "", 520, 400);
+	        	var heigth = window.screen.availHeight;
+		        var width = window.screen.availWidth;
+		        var left = (width - 500) / 2;
+		        var top = (heigth - 400) / 2;
+		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+		        var strFeature = "status:no;dialogHeight: 400px;dialogWidth: 520px;help: no;resizable:yes";
+		        if (CrossYN()) {
+		            item_readlist_cross_dialogArguments[0] = "";
+		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
+		            DivPopUpShow(520, 410, szHref);
+		        }
+		        else
+		            window.open(szHref, "", "width=520, height=400, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		    }
+		    function ReaderList_Complete() {
+		        DivPopUpHidden();
 	        }
 
 	        function btn_Print_Onclick() {

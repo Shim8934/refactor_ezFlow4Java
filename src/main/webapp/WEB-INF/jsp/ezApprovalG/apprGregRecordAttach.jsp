@@ -58,6 +58,7 @@
     var pServerName = "${serverName}";
     var _hasattach = "${hasattach}";
     var approvalFlag = "${approvalFlag}";
+    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
     function getDocInfo() {
         try {
             if (isBody == "YES") {
@@ -161,8 +162,8 @@
     var g_progresswin;
     function btn_AttachAdd_onclick() {
         if (document.form.file1.value != "") {
-        	if (document.form.file1.files[0].name.length > 104) {
-				alert("<spring:message code='main.jjh08' />");
+        	if (document.form.file1.files[0].name.length > attachFileNameMaxLength) {
+        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
 				document.form.file1.value = "";
 				return;
 			} else {
@@ -504,7 +505,7 @@
 <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 
 <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm">
-  <div class="btnposition">       
+  <div class="btnposition btnpositionNew">       
         <a class="file-btn" style="vertical-align:top">
           <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" /> 
 		          <span for="file" id="btn_AttachAdd" ><spring:message code='ezApprovalG.t268'/></span>

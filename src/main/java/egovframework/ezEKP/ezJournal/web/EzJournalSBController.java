@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezJournal.web;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -115,6 +117,11 @@ public class EzJournalSBController {
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/types", null, request,"put",parameter);
 		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {		
+		}
+		
 		logger.debug("formTypeUpdate ended");
 		
 		return resultBody;
@@ -189,6 +196,8 @@ public class EzJournalSBController {
 		String userId =null;
 		if (request.getParameter("userId")!=null) {
 			userId = request.getParameter("userId");
+			logger.debug("유저 아이디 넘어야놈ㄴ래ㅑ오ㅓ;ㅁㅇㄴ리ㅏㅓㅁㄴ이;ㅏㄹ"+userId);
+			model.addAttribute("selectedUser",userId.trim());
 		}else{
 			userId = userInfo.getId();
 		}
@@ -220,7 +229,6 @@ public class EzJournalSBController {
 			
 			model.addAttribute("deptList", deptList);
 		}
-		model.addAttribute("selectedUser",request.getParameter("userId"));
 		
 		logger.debug("authorDetail ended");
 		
@@ -268,5 +276,97 @@ public class EzJournalSBController {
 		
 		logger.debug("userList ended");
 		return "admin/ezJournal/userList";
+	}
+	
+	/**
+	 * 해당사원이 열람 할 수 있는 부서 리스트
+	 */
+	@RequestMapping(value = "/admin/ezJournal/authorDeptList.do")
+	public String authorDeptList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+		logger.debug("authorDeptList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = request.getParameter("userId");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", userInfo.getTenantId());
+		
+		logger.debug("tenantId : "+userInfo.getTenantId());
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/users/"+userId+"/author-depts", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		if (status.equals("ok")) {		
+			JSONArray authorDeptList = (JSONArray) resultBody.get("data");
+			
+			model.addAttribute("authorDeptList", authorDeptList);
+		}
+		
+		logger.debug("authorDeptList ended");
+		return "admin/ezJournal/authorDeptList";
+	}
+	
+	/**
+	 * 열람 권한 저장
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @param response
+	 * @throws IOException 
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezJournal/saveAuthor.do")
+	public void saveAuthor(@RequestBody JSONObject jsonString,HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException{
+		logger.debug("saveAuthor started");
+		
+		String result = "";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		jsonString.put("tenantId",userInfo.getTenantId()+"");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/authors", null, request,"post",jsonString);
+		
+		String status = resultBody.get("status").toString();
+		if (status.equals("ok")) {	
+			result="save complete";
+		} else {
+			result="save failed";
+		}
+		
+		logger.debug("saveAuthor ended");
+		response.getWriter().println(result);
+	}
+	
+	/**
+	 * 선택된 유저의 열람권한 부서 리스트 삭제
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/admin/ezJournal/deleteAuthor.do")
+	public void deleteAuthor(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException{
+		logger.debug("deleteAuthor started");
+		
+		String result = "";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("tenantId", userInfo.getTenantId());
+		param.put("userId", request.getParameter("userId"));
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/authors", param, request,"delete",null);
+		
+		String status = resultBody.get("status").toString();
+		if (status.equals("ok")) {	
+			result="delete complete";
+		} else {
+			result="delete failed";
+		}
+		
+		logger.debug("deleteAuthor ended");
+		response.getWriter().println(result);
 	}
 }

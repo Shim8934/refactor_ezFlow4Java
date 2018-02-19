@@ -391,7 +391,7 @@ width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-
 .nodata_schedule p { margin:0px;padding:0px; color:#666;}
 
 
-.nodata_portlet { font-size:12px; font-weight:bold; color:#999;width:155px; margin:0px auto; text-align:center; vertical-align:middle;overflow:hidden;}
+.nodata_portlet { font-size:12px; font-weight:bold; color:#999;width:165px; margin:0px auto; text-align:center; vertical-align:middle;overflow:hidden;}
 .nodata_portlet img { margin:10px;}
 .nodata_portlet p {margin:0px; padding:0px; color:#a7a3a3;}
 

@@ -1688,7 +1688,7 @@ function setbuttonenable() {
     if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 10 && pListTypeValue != 99) {
     	document.getElementById("tbtnRedraft").style.display = "none";		
         //SwapImage(document.getElementById("btnRedraft"), "dis");
-        document.getElementById("tbtnRemoveDoc").style.display = "none";		
+        document.getElementById("tbtnRemoveDoc").style.display = "none";
         document.getElementById("tbtnApprove").style.display = "none";		
         document.getElementById("tbtnApprove1").style.display = "none";
         document.getElementById("tbtnApprove2").style.displayd = "none";
@@ -1734,6 +1734,19 @@ function setbuttonenable() {
             document.getElementById("tbtnTotalSave").style.display = "none";
         } else
             document.getElementById("tbtnTotalSave").style.display = "";
+        
+        if (pListTypeValue == "2") {
+        	if (oArrRows.length > 0) {
+        		pFunctionType = GetAttribute(tr, "DATA10");
+                if (pFunctionType == "004" || pFunctionType == "015" || pFunctionType == "006") {
+                    document.getElementById("tbtnRemoveDoc").style.display = "";
+                } else {
+                    document.getElementById("tbtnRemoveDoc").style.display = "none";
+                }
+            } else {
+                document.getElementById("tbtnRemoveDoc").style.display = "none";
+            }
+        }
     } else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99) {
         document.getElementById("tbtnTotalSave").style.display = "";
         document.getElementById("tbtnSimsa").style.display = "none";
@@ -1888,6 +1901,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                
                 if(approvalFlag == "G") {
                 	document.getElementById("tbtnRegList").style.display = "";
                 } else {
@@ -1962,6 +1976,11 @@ function setbuttonenable() {
 	        document.getElementById("tbtnReturn").style.display = "none";
 	        document.getElementById("tbtnViewDoc").style.display = "none";
 	        document.getElementById("tbtnReceipt").style.display = "";
+	        
+	        if (pFunctionType == "015") {
+	            // 회송된 문서일 경우 접수버튼 display none 처리
+	            document.getElementById("tbtnReceipt").style.display = "none";	   	        	
+	        }     
 	    }
 	    if (pListTypeValue == "3") {
             document.getElementById("tbtnDraft").style.display = "";   

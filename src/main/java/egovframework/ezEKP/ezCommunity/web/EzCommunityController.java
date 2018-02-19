@@ -42,7 +42,6 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
-import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
@@ -798,7 +797,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
 		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
@@ -817,6 +820,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("endDate", item.getEndDate());
 		
 		logger.debug("item.endDate: " + item.getEndDate());
 		
@@ -1360,17 +1365,26 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/itemReadList.do")
 	public String itemReadList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("itemReadList started");
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+//		String pBoardID = request.getParameter("boardID");
+//		String pItemID = request.getParameter("itemID");
+//		String offset = commonUtil.getMinuteUTC(userInfo.getOffset());
+		
+//		List<CommunityBoardItemReadVO> readList = ezCommunityService.getReaderList(pBoardID, pItemID, userInfo.getTenantId(), offset);
+		
+//		model.addAttribute("userInfo", userInfo);
+//		model.addAttribute("readList", readList);
+		
+		//2018-02-06 김보미
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
-		String offset = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		List<CommunityBoardItemReadVO> readList = ezCommunityService.getReaderList(pBoardID, pItemID, userInfo.getTenantId(), offset);
+		model.addAttribute("boardID", pBoardID);
+		model.addAttribute("itemID", pItemID);
 		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("readList", readList);
-		
+		logger.debug("itemReadList ended");
 		return "ezCommunity/communityItemReadList";
 	}
 	
@@ -4123,6 +4137,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 			url = request.getParameter("url");
 		}
 		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
 		// 20100119 보안처리 관련 추가작업(권한체크)
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response, userInfo)) {
 			return "cmm/error/egovError";
@@ -4189,6 +4209,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("endDateTime", endDateTime);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		return "ezCommunity/communityNewBoardItemPhoto";
 	}
@@ -4420,9 +4441,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 				sb.append("<NODE>");
 				sb.append("<ItemID>" + itemVO.getItemID() + "</ItemID>");
 				sb.append("<WriterID>" + ( itemVO.getWriterID() == null ? "" : itemVO.getWriterID() ) + "</WriterID>");
-				sb.append("<WriterName>" + itemVO.getWriterName() + "</WriterName>");
-				sb.append("<WriterDeptName>" + ( itemVO.getWriterDeptName() == null ? "" : itemVO.getWriterDeptName() ) + "</WriterDeptName>");
-				sb.append("<WriterCompanyName>" + ( itemVO.getWriterCompanyName() == null ? "" : itemVO.getWriterCompanyName() ) + "</WriterCompanyName>");
+				sb.append("<WriterName>" + commonUtil.cleanValue(itemVO.getWriterName()) + "</WriterName>");
+				sb.append("<WriterDeptName>" + ( itemVO.getWriterDeptName() == null ? "" : commonUtil.cleanValue(itemVO.getWriterDeptName()) ) + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + ( itemVO.getWriterCompanyName() == null ? "" : commonUtil.cleanValue(itemVO.getWriterCompanyName()) ) + "</WriterCompanyName>");
 				sb.append("<WriteDate>" + itemVO.getWriteDate() + "</WriteDate>");
 				sb.append("<ParentWriteDate>" + itemVO.getParentWriteDate() + "</ParentWriteDate>");
 				sb.append("<Importance>" + itemVO.getImportance() + "</Importance>");
@@ -4431,7 +4452,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				sb.append("<StartDate>" + itemVO.getStartDate() + "</StartDate>");
 				sb.append("<EndDate>" + itemVO.getEndDate() + "</EndDate>");
 				sb.append("<Abstract>" + itemVO.getAbsTract() + "</Abstract>");
-				sb.append("<Attachments>" + itemVO.getAttachments() + "</Attachments>");
+				sb.append("<Attachments>" + commonUtil.cleanValue(itemVO.getAttachments()) + "</Attachments>");
 				sb.append("<UpperItemIDTree>" + itemVO.getUpperItemIDTree() + "</UpperItemIDTree>");
 				sb.append("<ItemLevel>" + itemVO.getItemLevel() + "</ItemLevel>");
 				sb.append("<copiedItem>" + itemVO.getCopiedItem() + "</copiedItem>");
@@ -4506,7 +4527,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			for(CommunityClubVO vo : list) {
 				if (vo.getEmail() != null) {
 		        	InternetAddress to1 = new InternetAddress();
-		        	to1.setPersonal(vo.getDisplayName(), "UTF-8");
+		        	to1.setPersonal(vo.getUserName(), "UTF-8");
 		        	to1.setAddress(vo.getEmail());
 		        	
 		        	to.add(to1);
@@ -4594,5 +4615,20 @@ public class EzCommunityController extends EgovFileMngUtil{
     	
     	return "/ezCommunity/communityCommentPopup";
     }
+    /**
+     * 2018-02-06 김보미 - 리스트 페이징 처리
+     */
+	@RequestMapping(value = "/ezCommunity/itemReadPagingList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String itemReadPagingList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, String boardID, String itemID, int pageNum, int perCount) throws Exception {
+		logger.debug("itemReadPagingList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		StringBuffer resultXML = ezCommunityService.getReaderList(boardID,itemID,userInfo.getId(),commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()), userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
+
+		logger.debug("itemReadPagingList ended");
+		return resultXML.toString();
+	}
 }
 

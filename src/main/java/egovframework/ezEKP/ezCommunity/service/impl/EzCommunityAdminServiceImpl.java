@@ -95,17 +95,21 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public String communityCloseCom(List<CommunityCComCloseVO> clubList, int curPage, int comNoPerPage, LoginVO userInfo) throws Exception {
 		StringBuilder sb = new StringBuilder();
-		int iOutputCount = 1, iList = 0;
+		int iOutputCount = 0, iList = 0;
 		
 		for (CommunityCComCloseVO cComClose : clubList) {
 			iList++;
 			
 			if (iList <= (curPage - 1) * comNoPerPage) {
+				continue;
+			}
+			
+			if (iOutputCount + 1 > comNoPerPage) {
 				break;
 			}
 			
 			sb.append("<tr>");
-			sb.append("<td>" + (iOutputCount + (curPage - 1) * comNoPerPage) + "</td>");
+			sb.append("<td>" + (clubList.size() - ((curPage - 1) * comNoPerPage) - iOutputCount) + "</td>");
 			sb.append("<td style='width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;><nobr style='width:400px;overflow:hidden;text-overflow:ellipsis;'>");
 			
 			String[] compare = egovMessageSource.getMessage("ezCommunity.st1", userInfo.getLocale()).split(";");
@@ -232,17 +236,21 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public String admitCom(List<CommunityClubVO> clubList, int curPage, int comNoPerPage) throws Exception {
 		StringBuilder sb = new StringBuilder();
-		int iOutputCount = 1, iList = 0;
+		int iOutputCount = 0, iList = 0;
 		
 		for (CommunityClubVO club : clubList) {
 			iList++;
 			
 			if (iList <= (curPage - 1) * comNoPerPage) {
+				continue;
+			}
+			
+			if (iOutputCount + 1 > comNoPerPage) {
 				break;
 			}
 			
 			sb.append("<tr>");
-			sb.append("<td>" + (iOutputCount + (curPage - 1) * comNoPerPage) + "</td>");
+			sb.append("<td>" + (clubList.size() - ((curPage - 1) * comNoPerPage) - iOutputCount) + "</td>");
 			sb.append("<td style='width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;><nobr style='width:400px;overflow:hidden;text-overflow:ellipsis;'>");
 			sb.append("<a href=\"javascript:open_info('" + club.getC_ClubNo().trim() + "')\">" + club.getC_ClubName() + "</a>");
 			sb.append("</nobr></td>");
@@ -431,7 +439,8 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		if (recipientList != null) {
 			Locale locale = userInfo.getLocale();
-			String pDivi = (isAdmit ? egovMessageSource.getMessage("ezCommunity.t46", locale) : egovMessageSource.getMessage("ezCommunity.t44", locale));
+			/* 2018-02-08 장진혁 - 아랫쪽 소스에 누가 주석처리 했기때문에 위쪽도 마저 주석처리함 */
+			//String pDivi = (isAdmit ? egovMessageSource.getMessage("ezCommunity.t46", locale) : egovMessageSource.getMessage("ezCommunity.t44", locale));
 			
 			InternetAddress from = new InternetAddress();
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");

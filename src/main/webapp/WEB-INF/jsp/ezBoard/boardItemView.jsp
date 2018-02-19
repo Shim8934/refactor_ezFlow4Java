@@ -91,6 +91,9 @@
 	                }
 	                
 	                $(doc).find(".contentDiv").css("zoom",nowZoom + "%");
+	                $(doc).find("#curZoomSize").text(nowZoom + "%");
+	                $(doc).find("#curZoomSize").show();
+	                setTimeout(function(){$(doc).find("#curZoomSize").css("display","none")}, 1000);
 	            }
 	        }
 	        
@@ -112,14 +115,18 @@
 	                }
 
 	                $(doc).find(".contentDiv").css("zoom",nowZoom + "%");
+	                $(doc).find("#curZoomSize").text(nowZoom + "%");
+	                $(doc).find("#curZoomSize").show();
+	                setTimeout(function(){$(doc).find("#curZoomSize").css("display","none")}, 1000);
 	            }
-	        }		    		    
-		    
+	        }
+	        
 		    window.onload = function () {
 		        try {
 		        	// 수정 수아 재은
-		        	var html = "<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer;' />";
+		        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer;' />"
 						html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-left: -4px;' />";
+						html += "<span id='curZoomSize' style='display:none; float:right;'></span></div>"
 						html += "<br><br>";
 						
 					$.ajax({
@@ -671,7 +678,7 @@
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
 		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-		            DivPopUpShow(520, 400, szHref);
+		            DivPopUpShow(520, 410, szHref);
 		        }
 		        else
 		            window.open(szHref, "", "width=520, height=400, resizable=yes, scrollbars=yes, top="+top+", left=" + left);

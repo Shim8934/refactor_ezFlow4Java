@@ -38,6 +38,7 @@
 	<resultMap class="authorVO" id="deptMap">
 		<result property="deptName" column="dept_name"/>
 		<result property="deptId" column="dept_id"/>
+		<result property="mine" column="mine"/>
 	</resultMap>
 	
 	<resultMap class="JournaltypeVO" id="JournaltypeMap">
@@ -71,7 +72,7 @@
 		<result property="deptName"		column="dept_name"/>			
 	</resultMap>
 	
-<!-- 양식함 리스트 세럭트 -->
+	<!-- 양식함 리스트 세럭트 -->
 	<select id="selectJournalTypeList" resultMap="JournaltypeMap" parameterClass="Map">
 		select type_id, used from tbl_journal_form_type
 		where tenant_id=#tenantId#
@@ -108,18 +109,6 @@
 		and
 			tenant_id = #tenantId#
 	</update>
-	
-	<!-- 열람권한 생성 -->
-	<insert id="insertJournalAuthor" parameterClass="Map">
-		insert into tbl_journal_auth
-			(user_id,
-			dept_id,
-			tenant_id)
-		values
-			(#userId#,
-			#deptId#,
-			#tenantId#)
-	</insert>	
 	
 	<!-- 양식 리스트 세럭트 -->
 	<select id="getFormList" parameterClass="map" resultMap="JournalFormInfoVO">
@@ -284,11 +273,21 @@
 	<select id="selectAuthorDept" resultMap="deptMap" parameterClass="Map">
 		select 
 		d.DISPLAYNAME dept_name,
-		d.CN dept_id
-		from jmocha.tbl_journal_auth a 
-		inner join jmocha.tbl_deptmaster d on (d.CN=a.dept_id and a.tenant_id=d.TENANT_ID)
+		d.CN dept_id,
+        'no' as mine
+		from jmocha.tbl_deptmaster d
+		left join jmocha.tbl_journal_auth a  on (d.CN=a.dept_id and a.tenant_id=d.TENANT_ID)
 		where a.user_id = #userId#
 		and a.tenant_id = #tenantId#
+        union
+        select 
+		d.DISPLAYNAME dept_name,
+		d.CN dept_id,
+        'yes' as mine
+        from jmocha.tbl_deptmaster d
+        left join jmocha.tbl_usermaster u on (d.CN=u.DEPARTMENT and u.TENANT_ID=d.TENANT_ID)
+        where u.CN=#userId#
+        and u.TENANT_ID=#tenantId#
 	</select>
 	
 	<!-- 해당부서의 사원리스트 -->
@@ -356,4 +355,23 @@
 		and
 			tenant_id = #tenantId#
 	</delete>
+
+	<!-- 사원의 열람권한을 저장하는 쿼리 -->
+	<insert id="insertAuthDept" parameterClass="Map">
+		 insert into jmocha.tbl_journal_auth
+		(user_id,	dept_id,	tenant_id)
+		select 
+		#userId#,	#deptId#,	#tenantId#
+        from dual
+		where not exists(
+         select 
+        DISPLAYNAME
+        from jmocha.tbl_usermaster where CN=#userId# and DEPARTMENT=#deptId# and tenant_id=#tenantId#)
+	</insert>
+	
+	<!-- 권한 리스트 삭제 -->
+	<delete id="deleteAuthDept" parameterClass="Map">
+		delete from jmocha.tbl_journal_auth where user_id=#userId# and tenant_id=#tenantId#
+	</delete>
+	
 </sqlMap>
