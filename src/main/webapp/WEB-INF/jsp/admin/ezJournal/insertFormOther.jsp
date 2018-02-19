@@ -72,7 +72,6 @@
 		    function checkUseDept() {
 			    if ($("selDeptUseA:checked")) {
 			        $("#setUseDeptList").hide();
-			       
 			    } else {
 			        $("#setUseDeptList").show();
 			    }
@@ -87,15 +86,28 @@
 		    function clickFormInfo(val) {
 		    	var info = $(val).attr("value");
 		    	alert(info);
-		    	if (useEditor == "HWP") {
-		    		message.SetAttribute(info);
+		    	
+		    	if ($(val).hasClass("active")) {
+			    	if ($("#" + info).length) {
+			    		alert("있음?")
+			    		$("#" + info).removeAttr("id");
+			    	}
+			    	$(val).toggleClass("active");
 		    	} else {
-		    		if (isFree) {
-		    			message.SetAttribute("LOCK", "", "");
-		    		} else {
-		    			message.SetAttribute("INIS", info, "FIELD");
-		    		}
+					if (useEditor == "HWP") {
+			    		message.SetAttribute(info);
+			    	} else {
+			    		if (isFree) {
+			    			message.SetAttribute("LOCK", "", "");
+			    		} else {
+			    			message.SetAttribute("INIS", info, "FIELD");
+			    		}
+			    	}
+			    	$(val).toggleClass("active");
 		    	}
+		    	//$(".infoTbl tr").removeClass("active");
+				//$(val).addClass("active");
+		    	
 		    }
 		    
 		    // 부서리스트 그려주는 부분
@@ -122,9 +134,8 @@
 		    function insertDept() {
 		    	var deptId = selDeptId;
 		    	var deptName = $("#deptTreeView").jstree().get_node(deptId).text;
+		    	//var deptName = nodeText.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
 		    	console.log(deptName);
-		    //	var deptName = nodeText.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-		    //	var deptName = nodeText.slice(5, -6);
 		    	var chkFlag = true;
 		    	isDeptChanged = "Y";
 		    	for(var j = 0; j < useDeptList.length; j++) {
@@ -161,7 +172,7 @@
 		    	for (var i = 0; i < useDeptList.length; i++) {
 		    		useListHtml += "<tr deptId=" + useDeptList[i].deptId + " onclick='listClick(this)' ondblclick='deleteDept()'>";
 		    		useListHtml += "<td>";
-		    		useListHtml += useDeptList[i].deptName;
+		    		useListHtml += useDeptList[i].deptName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
 		    		useListHtml += "</td>";
 		    		useListHtml += "</tr>";
 		    	}
@@ -348,12 +359,12 @@
                         	</c:choose>
                         </td>
                         <td id="infoTD" name="infoTD" style="width:100%; vertical-align:top; padding-left:10px;">
-                        	<table width="100%" cellpadding="0" cellspacing="0">
+                        	<table width="100%" cellpadding="0" cellspacing="0" class="infoTbl">
                         		<tbody>
                         			<tr><th><spring:message code='ezJournal.t32'/></th></tr>
-                        			<tr><td><span value="deptId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33'/></span></td></tr>
-                        			<tr><td><span value="writer" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34'/></span></td></tr>
-                        			<tr><td><span value="writeDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35'/></span></td></tr>
+                        			<tr><td value="deptId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t33'/></span></td></tr>
+                        			<tr><td value="writer" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t34'/></span></td></tr>
+                        			<tr><td value="writeDate" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t35'/></span></td></tr>
                         		</tbody>
                         	</table>
                         </td>

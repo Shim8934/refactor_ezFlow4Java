@@ -47,7 +47,10 @@ function Tab1_NewTabIni(pTabNodeID) {
                 document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseover = function () { Tab1_MouserOver(this); };;
                 document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };;
                 document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onclick = function () { Tab1_MouseClick(this); };;
-
+  
+                 
+                
+                
                 if (i == 0) {
                     document.getElementById(pTabNodeID).childNodes.item(0).childNodes.item(0).className = "tabon";
                     Tab1_SelectID = document.getElementById(pTabNodeID).childNodes.item(0).childNodes.item(0).id;

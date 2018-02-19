@@ -41,12 +41,14 @@
 				
 			    $.ajax({
 		    		type : "POST",
-		    		dataType : "json",
+		    		dataType : "html",
 		    		async : false,
 		    		url : "/admin/ezJournal/getFormList.do",
 		    		data : { "companyId"  : companyId,
     						"typeId"	: typeId},
 		    		success: function(result) {
+		    			$("#formList").html(result);
+		    			/*
 		    			var $formList = $("#formList");
 		    			var listhtml = "";
 		    			$formList.html("");
@@ -68,7 +70,7 @@
 		    				listhtml += "<tr><td colspan='5' style='text-align: center;'><spring:message code='ezJournal.t125'/></td></tr>";
 		    			}
 		    			$formList.html(listhtml);
-		    			
+		    			*/
 		    		},
 		    		error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);
@@ -90,7 +92,7 @@
 		    	var url = "";
 		    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId);
 		    	
-		    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+		    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 		    		url = "/admin/ezJournal/insertFormOther.do"	
 		    	} else {
 			    	url = "/admin/ezJournal/insertForm.do";
@@ -105,7 +107,7 @@
 		    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
 		    			+ "&formId=" + encodeURIComponent(selFormId);
 		    	
-		    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+		    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 		    		url = "/admin/ezJournal/insertFormOther.do"	
 		    	} else {
 			    	url = "/admin/ezJournal/insertForm.do";

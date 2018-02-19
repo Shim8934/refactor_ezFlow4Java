@@ -102,8 +102,7 @@ public class EzJournalSJYController {
 	/**
 	 * 관리자 업무일지 일지함의 양식리스트 가져오기
 	 */
-	@RequestMapping(value = "/admin/ezJournal/getFormList.do", produces = "application/json;charset=utf-8")
-	@ResponseBody
+	@RequestMapping(value = "/admin/ezJournal/getFormList.do")
 	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("getFormList started");
 		
@@ -125,14 +124,14 @@ public class EzJournalSJYController {
 		
 		if (status.equals("ok")) {
 			JSONObject data =  (JSONObject) result.get("data");
-			JSONArray list = (JSONArray) data.get("fList");
-			String fList = JsonUtil.ListToJson(list);
-			model.addAttribute("fLit", fList);
-			return fList;
+			JSONArray formList = (JSONArray) data.get("fList");
+			//String formList = JsonUtil.ListToJson(list);
+			model.addAttribute("formList", formList);
+			logger.debug("formList : " + formList);
 		}
 		
 		logger.debug("getFormList ended");
-		return JsonUtil.OneStringToJson("json");
+		return "/admin/ezJournal/formList";
 	}
 	
 	
@@ -240,7 +239,7 @@ public class EzJournalSJYController {
 	/**
 	 * 업무일지 양식등록 양식등록,양식수정 양식작성기 저장 실행 함수
 	 */
-	@SuppressWarnings({ "unchecked", "unused" })
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezJournal/formSave.do", produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public String formSave (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
