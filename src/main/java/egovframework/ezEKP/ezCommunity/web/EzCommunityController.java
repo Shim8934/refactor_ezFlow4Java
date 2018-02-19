@@ -821,6 +821,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("endDate", item.getEndDate());
 		
 		logger.debug("item.endDate: " + item.getEndDate());
 		
