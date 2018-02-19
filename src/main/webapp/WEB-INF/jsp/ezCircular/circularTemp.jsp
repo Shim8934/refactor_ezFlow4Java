@@ -560,9 +560,13 @@
 							memberIDList : strMemberListInfo
 						},
 						success: function() {
-							if ((pageCnt - strListArr.length + 1) % 10 == 0) {
+				        	//2018-02-19 김보미
+				        	if ((pageCnt - strListArr.length + 1) % perCnt == 0 && CurPage != 1) {						
 								CurPage = CurPage - 1;
 							}
+// 							if ((pageCnt - strListArr.length + 1) % 10 == 0) {
+// 								CurPage = CurPage - 1;
+// 							}
 
 							refresh_onclick();
 						},
