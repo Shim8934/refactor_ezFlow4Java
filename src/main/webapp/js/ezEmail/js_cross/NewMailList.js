@@ -19,6 +19,8 @@ var GroupminImg ="/images/ImgIcon/groupmin.gif";
 var GroupSenderImg ="/images/ImgIcon/groupsender.gif";
 var GroupSubjectImg ="/images/ImgIcon/groupsubject.gif";
 var GroupColor = "#666666";
+var xml_http;
+
 
 function HeaderIni(HeaderObject) {
     MakeHeaderHTML(HeaderObject);
@@ -836,6 +838,12 @@ function MailListRefreshByTimeout() {
 }
 
 function MailListRefresh() {
+	//수정 수아 재은
+	xml_http = createXMLHttpRequest();
+    xml_http.open("POST", "/ezEmail/mailGetUse.do", true);
+    xml_http.onreadystatechange = detailbox_info;
+    xml_http.send();
+    
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
         goToPageByNum(MailList.getAttribute("curPage"));
     }
@@ -1558,92 +1566,92 @@ function GetContentClassImg(ContentClass, isRead) {
         case "REPORT.IPM.Note.Relayed.DR":
             {
                 Rvalue = "/images/ImgIcon/icon-report-dr.gif";
-                break
+                break;
             }
         case "REPORT.IPM.Note.DR":
             {
                 Rvalue = "/images/ImgIcon/icon-report-dr.gif";
-                break
+                break;
             }
         case "IPM.Note.Microsoft.Voicemail":
             {
                 Rvalue = "/images/ImgIcon/icon-msg-voicemail.gif";
-                break
+                break;
             }
         case "IPM.Note.Microsoft.Voicemail.UM.CA":
             {
                 Rvalue = "/images/ImgIcon/icon-msg-voicemail.gif";
-                break
+                break;
             }
         case "IPM.Note.Microsoft.Missed.Voice":
             {
                 Rvalue = "/images/ImgIcon/icon-msg-missedvoice.gif";
-                break
+                break;
             }
         case "IPM.Schedule.Meeting.Request":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq.png";
-                break
+                break;
             }
         case "IPM.Schedule.Meeting.Canceled":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq-cancel.png";
-                break
+                break;
             }
         case "IPM.Schedule.Meeting.Resp.Pos":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq-accept.png";
-                break
+                break;
             }
         case "IPM.Schedule.Meeting.Resp.Neg":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq-decline.png";
-                break
+                break;
             }
         case "IPM.Schedule.Meeting.Resp.Tent":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq-tentative.png";
-                break
+                break;
             }
         case "REPORT.IPM.Schedule.Meeting.Request.NDR":
             {
                 Rvalue = "/images/ImgIcon/icon-report-ndr.png";
-                break
+                break;
             }
         case "IPM.Contact":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq-tentative.gif";
-                break
+                break;
             }
         case "IPM.Appointment":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq-decline.gif";
-                break
+                break;
             }
         case "IPM.Sharing":
             {
                 Rvalue = "/images/ExchWeb/img/icon-appt.gif";
-                break
+                break;
             }
         case "REPORT.IPM.Note.Delayed.DR":
             {
                 Rvalue = "/images/ImgIcon/icon-report-ndr.gif";
-                break
+                break;
             }
         case "REPLY":
             {
                 Rvalue = "/images/ImgIcon/icon-msg-read4.gif";
-                break
+                break;
             }
         case "FORWARD":
             {
                 Rvalue = "/images/ImgIcon/icon-msg-read2.gif";
-                break
+                break;
             }
         case "IPM.Note.StorageQuotaWarning.SendReceive":
             {
                 Rvalue = "/images/ImgIcon/icon-report-ndr.gif";
-                break
+                break;
             }
         default:
             {
@@ -1652,4 +1660,28 @@ function GetContentClassImg(ContentClass, isRead) {
             }
     }
     return "<IMG style='cursor:pointer' draggable='false' src='" + Rvalue + "'/>";
+}
+
+//수정 수아 재은
+function detailbox_info() {
+	
+	if (xml_http == null || xml_http.readyState != 4) return;
+	
+	var result = xml_http.responseXML; 
+    var totalVolume = ""; 
+    var useVolume = "";
+    var percent = "";
+    
+    if (CrossYN()) { 
+        totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent;
+        useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent; 
+        percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent;                    
+    } else { 
+        totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].text;
+        useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text; 
+        percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text;
+    }
+    
+    parent.frames["left"].detailView(totalVolume, useVolume, percent);
+  
 }
