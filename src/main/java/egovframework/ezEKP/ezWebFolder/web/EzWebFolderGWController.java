@@ -119,7 +119,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		}
 		
 		try {
-			ezWebFolderAdminService.saveConfig(newValue,  uploadLimit, companyId, tenantId);
+			ezWebFolderAdminService.saveConfig(newValue, uploadLimit, companyId, tenantId);
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
@@ -338,7 +338,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value="/webfolder/filemanage/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile>multiFileLists, HttpServletRequest request) throws Exception {
+	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, HttpServletRequest request) throws Exception {
 		JSONParser jp          = new JSONParser();
 		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);
 		
@@ -764,7 +764,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/webfolderadmin", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/webfolderadmin/webfolderadmin-insert", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postWebfolderAdminInsert(HttpServletRequest request) throws Exception {
 		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
 		String userId       = request.getParameter("userId")   != null ? request.getParameter("userId")                     : "";
@@ -827,7 +827,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/webfolderadmin/users/{userid}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/webfolderadmin/webfolderadmin-delete/users/{userid}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject deleteWebfolderAdminDelete(@PathVariable String userid, HttpServletRequest request) throws Exception {
 		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
 		String primary      = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
