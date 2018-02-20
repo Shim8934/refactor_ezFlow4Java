@@ -843,7 +843,7 @@
 		        }
 
 		        if (CheckIfHasReplies()) {
-		            alert("<spring:message code='ezBoard.t196'/>");
+		            alert("<spring:message code='ezBoard.bhs01'/>");
 		            return;
 		        }
 		        var arrList = new Array();
