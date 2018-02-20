@@ -1209,7 +1209,9 @@
 	      	FROM	
 				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
             $strSQLForMySQL$ AND A.TENANT_ID = #v_TENANT_ID#
-            order by extensionattribute15
+            <isNotEqual property="class" compareValue="all">
+            order by DISPLAYNAME asc , cast(extensionAttribute15 as unsigned) asc
+            </isNotEqual>
             $strSizeForMySQL$
 				
 			<isEqual property="class" compareValue="all">

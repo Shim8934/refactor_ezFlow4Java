@@ -2919,7 +2919,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		item.setEndDate(commonUtil.getDateStringInUTC(xmlData.getElementsByTagName("ENDDATE").item(0).getTextContent(), offset, true));
-		item.setAbsTract(URLDecoder.decode(xmlData.getElementsByTagName("ABSTRACT").item(0).getTextContent(), "utf-8"));
+		item.setAbsTract(URLDecoder.decode(xmlData.getElementsByTagName("ABSTRACT").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&"), "utf-8").trim());
 		item.setAttachments(URLDecoder.decode(xmlData.getElementsByTagName("ATTACHMENTS").item(0).getTextContent(), "utf-8"));
 		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
 		
@@ -3885,7 +3885,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         sb.append("<CONTENTLOCATION>" + item.getContentLocation() + "</CONTENTLOCATION>"); //복사의 경우만
         sb.append("<STARTDATE>" + item.getStartDate() + "</STARTDATE>");
         sb.append("<ENDDATE>" + item.getEndDate() + "</ENDDATE>");
-        sb.append("<ABSTRACT>" + item.getAbsTract() + "</ABSTRACT>");
+        sb.append("<ABSTRACT>" + commonUtil.cleanValue(item.getAbsTract()) + "</ABSTRACT>");
         sb.append("<ATTACHMENTS>" + URLEncoder.encode(item.getAttachments(), "UTF-8") + "</ATTACHMENTS>");
         sb.append("<UPPERITEMIDTREE>" + item.getUpperItemIDTree() + "</UPPERITEMIDTREE>");
         sb.append("<ITEMLEVEL>" + item.getItemLevel() + "</ITEMLEVEL>");
