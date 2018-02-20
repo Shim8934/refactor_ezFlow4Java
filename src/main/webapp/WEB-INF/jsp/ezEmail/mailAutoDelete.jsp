@@ -65,16 +65,26 @@
 		    var mail_selectfolder_cross_dialogArguments = new Array();
 		    function getFolder() {
 		        mail_selectfolder_cross_dialogArguments[1] = getFolder_Complete;
-		        mail_selectfolder_cross_dialogArguments[2] = getFolder_Complete;
 		        var OpenWin = window.open("/ezEmail/mailSelectFolder.do", "mail_selectfolder_Cross", GetOpenWindowfeature(400, 355));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function getFolder_Complete(mailBoxInfo) {
 		        if (typeof (mailBoxInfo) == "undefined")
 		            return;
-		
-		        document.getElementById("folderpath").value = mailBoxInfo["name"];
-		        document.getElementById("folderpath").lealfolderPath = mailBoxInfo["url"];
+				
+		        if (mailBoxInfo["isFolderChanged"]) {
+	        		try {
+	        			parent.parent.frames["left"].mailbox_treeview_reload();
+	        		} catch (e) {
+	        		}
+	        	}
+		        
+		        if (typeof (mailBoxInfo["name"]) == "undefined" || typeof (mailBoxInfo["url"]) == "undefined") {
+		        	return;
+		        }
+		        
+	        	document.getElementById("folderpath").value = mailBoxInfo["name"];
+	        	document.getElementById("folderpath").lealfolderPath = mailBoxInfo["url"];
 		    }
 		</script>
 	</head>
