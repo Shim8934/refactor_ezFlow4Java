@@ -96,7 +96,7 @@ function goToPageByNum(Value){
 
 function selbeforeBlock(){
 	var pageNum = parseInt(currentPage);
-	pageNum     = ((parseInt(pageNum / blockSize) - 1) * blockSize) + 1;
+	pageNum     = parseInt((pageNum - 1)/ blockSize) * blockSize;
 	goToPageByNum(pageNum);
 }
 
