@@ -20,7 +20,7 @@
     background-size: 100px;
 }
 
-.poll_list1 {margin:0px 10px; margin-left: 16px; padding:0px; font-size:12px;}
+.poll_list1 {margin:0px; padding:0px; font-size:12px;}
 .poll_list1 .graphbar1{margin:5px 0px 10px 0px; padding:0px; border:1px solid #c9c9c9; height:7px; width:220px; background-color:#E8E8E8;}
 .poll_list1 .graphbar1 .gx_bar11 {background:#68bbef; height:7px; margin:0px; padding:0px;}
 
@@ -49,10 +49,10 @@
 
 
 /* 20171214 */
-.questionFont02{float: right; display: block; padding:0px 10px; height:43px; line-height:41px; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; margin:10px 5px 0px 0px; text-align:center; color:#000; font-size:14px;}
+/* .questionFont02{float: right; display: block; padding:0px 10px; height:43px; line-height:41px; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; margin:10px 5px 0px 0px; text-align:center; color:#000; font-size:14px;}
 .questionFont02 a{height:45px;}
 .questionFont02 a:hover{ color:#000;}
-.questionFont02 a span{font-size:16px;}
+.questionFont02 a span{font-size:16px;} */
 
 .voteInfoP{ margin:5px 10px;border-radius:25px; -moz-border-radius:25px; -webkit-border-radius:25px; width:48px; height:48px; padding:0px; float:left;}
 .voteInfoP img{ border-radius:25px; -moz-border-radius:25px; -webkit-border-radius:25px; width:48px; height:48px;}
@@ -62,7 +62,7 @@
 .voteTextTest span.questionFontS{color:#aaa9a9; padding:6px 0px 0px 0px;}
 
 #titleAndContent{ overflow:hidden; border:1px solid #dddddd; margin-bottom:20px;}
-#titleAndContent .baonkTest{ font-size:16px; color:#004896;}
+#titleAndContent .baonkTest{ font-size:16px; color:#004896; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .questionTitle{display:inline-block;float:left; width:100%; height:39px; line-height:39px; padding:0px 10px; background:#f9f9f9; border-bottom:1px solid #dddddd; color:#FFF; font-size:18px;}
 
 #_editVote{float:right; display:block; font-size:16px; color:#004896; border:1px solid #e1ebf7; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; height:43px; line-height:43px; background:#f4f9ff; padding:0px 20px; overflow:hidden; cursor:pointer; margin:10px 0px 0px 0px;}
@@ -71,7 +71,7 @@
 .voteTdBg{background:#f9f9f9 !important; margin:0px !important; padding:0px !important; height:68px !important; border:1px solid #dddddd !important;}
 .voteTdBg .voteTdBg_layout{margin:0; text-align:center;}
 .voteBtn{height:43px; float:right; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 10px; margin:10px 5px 0px 0px; line-height:41px; font-size:14px; display:inline-block; cursor:pointer;}
-.voteBtn #_unVotedNumber{font-size:16px; color:#004896;}
+.voteBtn span{font-size:16px; color:#004896; margin-left:3px;}
 #_finish{height:45px; margin:0px; background:#004896; border:none; color:#FFF; border-radius:5px; line-height:45px; padding:0px 26px; text-align:center; cursor: pointer; font-size:14px;display:inline-block;}
 
 .userName{display: block; color:#004896; font-size:14px; padding:7px 0px 0px 20px;}
@@ -88,3 +88,10 @@
 #sendComment{min-width: 800px}
 
 #ballotSystemBody{min-width: 800px}
+
+#commentArea table tbody tr [id *= toolCmt]{margin-left: 11px}
+
+/* vote popup css */
+
+#menu1{width: 88%}
+#menu1 h1{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}

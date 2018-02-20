@@ -1603,6 +1603,7 @@
 		</script>
 	</head>
 	<body class="popup"  style="overflow:hidden;height:100%;">
+	    <object classid="clsid:80009476-666B-4869-8C04-AB03492561CD" id="ObjGPKI" style="DISPLAY: none; HEIGHT: 86px; WIDTH: 243px"></object>
 		<table class="layout">
 			<tr> 
 				<td style="height:20px;"> 

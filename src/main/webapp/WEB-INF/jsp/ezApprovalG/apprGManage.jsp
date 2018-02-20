@@ -96,6 +96,8 @@
 		    var forceCallBackYN = "${forceCallBackYN}";
 		    var SubQuery = "${SubQuery}";
 		    var condition = new Array();
+		    var nowDate = "${nowDateUTC}";
+		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;

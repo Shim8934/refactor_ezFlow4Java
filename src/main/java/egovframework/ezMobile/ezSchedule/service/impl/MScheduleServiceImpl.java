@@ -200,7 +200,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 			String filePath = jsonParam.get("contentPath").toString();
 			
-			fis = new FileInputStream(filePath);
+			fis = new FileInputStream(realPath + filePath);
 			fos = new FileOutputStream(contentPath);
 	
 			int bytesRead = 0;
