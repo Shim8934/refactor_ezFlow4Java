@@ -70,7 +70,7 @@ public class EzConnController {
 			
 			String[] params = id.split(":");
 			
-			String orgId = params[0];
+			String orgId = params[0].toLowerCase();
 			String orgPw = params[1];
 			
 			String userType = "user";

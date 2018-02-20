@@ -2557,8 +2557,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			String fileExtension = boardItemVO.getConLocation().substring(boardItemVO.getConLocation().lastIndexOf("."));
 			//tempUploadFile을 저장할 때 게시판의 제목으로 저장합니다. 이때 파일명으로 사용할 수 없는 특수문자(8개)가 게시판 제목으로 있을 경우 file을 저장할 수 없어 오류가 발생 
-			String boardItemTitle = boardItemVO.getTitle().replaceAll(":", "_").replaceAll("/", "_").replaceAll("[*]", "_")
-					.replaceAll("[?]", "_").replaceAll("\"", "_").replaceAll("<", "_").replaceAll(">", "_").replaceAll("[|]", "_");
+			String boardItemTitle = boardItemVO.getTitle().replaceAll("[/*?\"<>|:]","_");
 			String newFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", boardItemVO.getTenantID()) + 
 					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}_" + boardItemTitle + fileExtension;
 			long mhtSize = file.length();

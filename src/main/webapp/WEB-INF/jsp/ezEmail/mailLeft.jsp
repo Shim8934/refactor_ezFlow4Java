@@ -141,7 +141,11 @@
     		        	    var idx = getSubtree.split('PostTreeView_img_');
     		        	    
     		        	    if (typeof idx[1] != "undefined") {
+    		        	    	var attr = $('#PostTreeView_img_' + idx[1]).attr("src").split('/');
+    		        	    	
+    		        	    	if (attr[3] != "plus.gif") {
     			        	    	PostTreeView.toggle(idx[1]);
+    		        	    	}
     		        	    }
     		        	    
     	        	    	treeArrNum = $('.plusTreeImg').length;
@@ -717,7 +721,7 @@
 		     <div id='myProgress' style='margin-left:20px;'>
 		    	<div id='myBar'></div>
 		    </div>
-		    <div style='text-align:center; margin-top:10px; font-weight:bold;' class="volumes"></div>
+		    <div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div>
 	        
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>
