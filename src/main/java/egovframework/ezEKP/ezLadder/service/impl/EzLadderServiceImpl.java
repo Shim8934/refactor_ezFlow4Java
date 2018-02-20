@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezLadder.dao.EzLadderDAO;
 import egovframework.ezEKP.ezLadder.service.EzLadderService;
+import egovframework.ezEKP.ezLadder.vo.LadderBmUserVO;
+import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
+import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
+import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 
 @Service("EzLadderService")
@@ -26,6 +30,93 @@ public class EzLadderServiceImpl implements EzLadderService {
 		List<LadderVO> list = ezLadderDAO.getLadderList();
 		
 		return list;
+	}
+
+	/** boh */
+	
+	@Override
+	public void insertLadder(LadderVO lad, LadderLineVO ladLine)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<LadderBmVO> selectBMGroup(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<LadderBmUserVO> selectBMUser(String userId, int ladderBMId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void insertBMGroup(LadderBmVO bmGroup, LadderBmUserVO bmUser)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateBMGroup(LadderBmVO bmGroup, LadderBmUserVO bmUser)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteBMGroup(String userId, int ladderBMId) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<LadderCommentVO> selectComment(int ladderId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void insertComment(LadderCommentVO ladCmt) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateComment(LadderCommentVO ladCmt) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteComment(String userId, LadderCommentVO ladCmt)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<LadderVO> selectPreLadderList(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LadderLineVO selectPreLadder(String userId, int ladderId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void changePreLadderList(String userId, String ladderId_1,
+			String ladderId_2) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
