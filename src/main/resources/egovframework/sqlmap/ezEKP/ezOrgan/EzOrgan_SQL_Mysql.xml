@@ -1188,7 +1188,7 @@
 			SELECT 
 				cn,
 				department as displayName,
-				'' as extensionAttribute15,
+				extensionAttribute15,
 				'user' as type				
 			FROM 
 	    		TBL_USERMASTER A 
@@ -1204,11 +1204,14 @@
 	      	SELECT 
 	      		A.cn,
 	      		deptid as displayName,
-	      		'' as extensionAttribute15,
+	      		extensionAttribute15,
 	      		'user' as type
 	      	FROM	
 				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
             $strSQLForMySQL$ AND A.TENANT_ID = #v_TENANT_ID#
+            <isNotEqual property="class" compareValue="all">
+            order by DISPLAYNAME asc , cast(extensionAttribute15 as unsigned) asc
+            </isNotEqual>
             $strSizeForMySQL$
 				
 			<isEqual property="class" compareValue="all">
