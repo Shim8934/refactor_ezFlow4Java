@@ -471,58 +471,19 @@
 			}
 					
 			function btnSumming_click(objThis) {
-				switch (objThis.id) {
-					case "NewMail" : 
-						window.open("/ezEmail/mailMain.do?funCode=1", "main");
-						break;						
-										
-					case "AprSign" : 		
-						var listType;
-						listType = 1;
-						if ("${userApprovalG}" == ("YES"))
-							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
-						else
-							window.open("/ezApproval/apprMain.do?listType=" + listType, "main");
-						break;
-					case "aprnum" : 
-						// 문서Type 선택 1=결재할문서 2=기안할문서  3=결재진행문서  4=수신문서처리(접수기)
-						var listType;
-						listType = 1;
-						if ("${userApprovalG}" == ("YES"))
-							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
-						else
-							window.open("/ezApproval/apprMain.do?listType=" + listType, "main");
-						break;
-						
-					// 표준모듈 (2007.03.23) 수정 : 메모보고 
-					case "Memo" : 					
-						window.open("/myoffice/ezMemo/index_memo.aspx?listType=1", "main");
-						break;
-						
-					case "Schedule" : 
-						window.open("/ezSchedule/scheduleIndex.do?funCode=2","main");
-						break;
-						
-					case "Poll" :
-						window.open("/ezBoard/boardMain.do?func=1","main");
-						break;
-						
-					case "pollnum" : 
-						window.open("/ezBoard/boardMain.do?func=1","main");
-						break;
-					
-					case "Env" :
-						window.open("/myoffice/main/index_environment.htm","main");
-						break;
-					case "My_Board" :
-						window.open("/ezBoard/boardMain.do","main");
-						break;
-					case "Address" : 
-						window.open("/myoffice/main/index_myoffice.aspx?funCode=4", "main");
-						break;
-				    case "ModInfo":
-				        window.open("/ezPortal/environmentMain.do?funCode=1", "main");
-				        break;
+				var ifr = window.parent.parent.frames['topFrame'];
+				var ifrw = (ifr.contentWindow) ? ifr.contentWindow : ifr
+				
+				if (objThis.id == "AprSign") {
+					if ("${userApprovalG}" == ("YES")) {
+						ifrw.topMenuToggle('ApprG');
+					} else {
+						ifrw.topMenuToggle('Appr');
+					}
+				} else if (objThis.id == "ModInfo") {
+					window.open("/ezPortal/environmentMain.do?funCode=1", "main");
+				} else {
+					ifrw.topMenuToggle(objThis.id);
 				}
 			}
 
