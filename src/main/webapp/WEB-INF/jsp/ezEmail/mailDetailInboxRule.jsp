@@ -18,6 +18,7 @@
 		    var _OpenerObject;
 		    var RuleItemID;
 		    var RulePriority;
+		    var isFolderChanged = false;
 		    var ReturnFunction;
 		    window.onload = function () {
 		        try{
@@ -28,6 +29,14 @@
 		        }
 		
 		        Make_RuleDetail();
+		    }
+		    window.onunload = function () {
+		    	if (isFolderChanged) {
+            		try {
+            			opener.parent.parent.frames["left"].mailbox_treeview_reload();
+            		} catch (e) {
+            		}
+            	}
 		    }
 		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();
@@ -385,23 +394,30 @@
 		    }
 		    function getFolder() {
 		        mail_selectfolder_cross_dialogArguments[1] = getFolder_Complete;
-		        mail_selectfolder_cross_dialogArguments[2] = getFolder_Complete;
 		        DivPopUpShow(400, 355, "/ezEmail/mailSelectFolder.do");
 		    }
 		    function getFolder_Complete(mailBoxInfo) {
 		        try {
 		            DivPopUpHidden();
+		            
 		            if (typeof (mailBoxInfo) == "undefined") {
 		                _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' style='vertical-align:middle;margin-top-10px;'><u>" + strLang219 + "</u></span>";
 		                return;
 		            }
-		
+		            
+		            if (typeof (mailBoxInfo["url"]) == "undefined" || typeof (mailBoxInfo["name"]) == "undefined") {
+		            	_curCellObj.innerHTML = "<span onclick='getFoldercell(this);' style='vertical-align:middle;margin-top-10px;'><u>" + strLang219 + "</u></span>";
+		            	isFolderChanged = mailBoxInfo["isFolderChanged"];
+		                return;
+		            }
+		            
 		            var url = mailBoxInfo["url"];
 		            var name = folderdisnameChange(mailBoxInfo["name"]);
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
 		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' style='font-family:dotum' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
+		            isFolderChanged = mailBoxInfo["isFolderChanged"];
 		        } catch (e) {
 		
 		        }
@@ -410,8 +426,7 @@
 		        _curCellObj = obj.parentNode;
 		        _RuleKind = obj.parentNode.getAttribute("RuleKind");
 		        mail_selectfolder_cross_dialogArguments[1] = getFolder_Complete;
-		        mail_selectfolder_cross_dialogArguments[2] = getFolder_Complete;
-		        mail_selectfolder_cross_dialogArguments[3] = obj.parentNode;
+		        mail_selectfolder_cross_dialogArguments[2] = obj.parentNode;
 		        DivPopUpShow(400, 355, "/ezEmail/mailSelectFolder.do");
 		    }
 		    function getFoldercell_Complete(mailBoxInfo) {
@@ -424,7 +439,7 @@
 		
 		            var url = mailBoxInfo["url"];
 		            var name = folderdisnameChange(mailBoxInfo["name"]);
-		            //mail_selectfolder_cross_dialogArguments[3].parentNode.setAttribute("RuleKind", "MOVE");
+		            //mail_selectfolder_cross_dialogArguments[2].parentNode.setAttribute("RuleKind", "MOVE");
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
 		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' style='font-family:dotum' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";

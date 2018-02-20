@@ -1726,6 +1726,8 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
             }
         }
         eSubject.value = strLang117 + getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]);
+        document.title = getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]);
+        
         var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");
         var pstrXML = "";
         if (AttachRows.length > 0) {
