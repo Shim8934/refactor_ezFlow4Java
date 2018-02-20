@@ -241,13 +241,48 @@
       				success : function(result) {
       					xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
+		                /* 2018.02.20 김기하 #11639 코드 위치 이동*/		                
+		                if (adCount == 0) {
+				            alert("<spring:message code='ezResource.t130'/>");
+				            return;
+				        } else if (adCount == 1) {
+				            g_xmlHTTP = createXMLHttpRequest();
+				            var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2").item(0)) +
+									"</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+				            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+				            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+				            g_xmlHTTP.send(strQuery);
+				        } else {
+				            var rgParams = new Array();
+				            rgParams["addrBook"] = xmlDOM;
+				            rgParams["deptid"] = "";
+
+				            if (CrossYN()) {
+				                checkname2_cross_dialogArguments[0] = rgParams;
+				                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
+
+				                DivPopUpShow(600, 320, "/admin/ezOrgan/checkName2.do");
+				            } else {
+				                var feature = GetShowModalPosition(600, 320);
+				                window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken" + feature);
+
+				                if (rgParams["deptid"] != "") {
+				                    g_xmlHTTP = createXMLHttpRequest();
+				                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+				                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+				                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+				                    g_xmlHTTP.send(strQuery);
+				                }
+				            }
+				        }
+		                
   					},
   					error : function(jqXHR, textStatus, errorThrown) {
   						alert('Error:'+textStatus);
   						alert('Error:'+errorThrown);
   						alert('Error:'+jqXHR.status);
   					}
-  				});  
+  				}); 
 		       /*  var xmlHTTP = createXMLHttpRequest();
 		        var xmlDOM = createXmlDom();
 
@@ -277,39 +312,7 @@
 		            xmlHTTP = null;
 		        } */
 
-		        if (adCount == 0) {
-		            alert("<spring:message code='ezResource.t130'/>");
-		            return;
-		        } else if (adCount == 1) {
-		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2").item(0)) +
-							"</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
-		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-		            g_xmlHTTP.send(strQuery);
-		        } else {
-		            var rgParams = new Array();
-		            rgParams["addrBook"] = xmlDOM;
-		            rgParams["deptid"] = "";
-
-		            if (CrossYN()) {
-		                checkname2_cross_dialogArguments[0] = rgParams;
-		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-
-		                DivPopUpShow(600, 320, "/admin/ezOrgan/checkName2.do");
-		            } else {
-		                var feature = GetShowModalPosition(600, 320);
-		                window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken" + feature);
-
-		                if (rgParams["deptid"] != "") {
-		                    g_xmlHTTP = createXMLHttpRequest();
-		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-		                    g_xmlHTTP.send(strQuery);
-		                }
-		            }
-		        }
+		        
 		    }
 		    function deptsearch_click_Complete(retVal) {
 		        if (retVal["deptid"] != "") {

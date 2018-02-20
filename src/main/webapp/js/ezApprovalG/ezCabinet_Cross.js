@@ -89,7 +89,7 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (selRow.getAttribute("DATA6") == "0") {
                 if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-                    if (GetCabChargerRight() == "true" && ListTypeFlag == "8") {
+					if (GetCabChargerRight() == "true") {                    	
                         document.getElementById("tdbtnEndProduce").style.display = "";
                         //SwapImage(btnEndProduce, "");
                     }
@@ -111,7 +111,7 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
 
                 if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
-                    if (GetCabChargerRight() == "true" && ListTypeFlag == "8") {
+					if (GetCabChargerRight() == "true") {                    	
                         document.getElementById("tdbtnCancelEndProd").style.display = "";
                         //SwapImage(btnCancelEndProd, "");
                     }

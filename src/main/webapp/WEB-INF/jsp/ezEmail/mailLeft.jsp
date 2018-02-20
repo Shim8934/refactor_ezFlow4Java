@@ -141,7 +141,11 @@
     		        	    var idx = getSubtree.split('PostTreeView_img_');
     		        	    
     		        	    if (typeof idx[1] != "undefined") {
+    		        	    	var attr = $('#PostTreeView_img_' + idx[1]).attr("src").split('/');
+    		        	    	
+    		        	    	if (attr[3] != "plus.gif") {
     			        	    	PostTreeView.toggle(idx[1]);
+    		        	    	}
     		        	    }
     		        	    
     	        	    	treeArrNum = $('.plusTreeImg').length;
