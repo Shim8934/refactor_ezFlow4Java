@@ -489,23 +489,9 @@
 		        }	    
 		    }
 			
-			 function ladder_Func(idx) {
-			    	
-			        if (CrossYN()) {
-			            if (idx == 1) {
-			                window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
-			            }
-			            else {
-			                window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brdID=5";
-			            }
-			        } else {
-			            if (idx == 1)
-			                window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
-			            else
-							window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brdID=5";
-			            SetTreeviewUnSelect("");		            
-			        }		        
-			    }
+			function ladderFunc() {
+				window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
+			}
 
 		    function toggleQuestionList() {
 		    	if( prevSelMenu != null )
@@ -653,8 +639,8 @@
 		    <div class="pollDiv" onclick="Poll_Open(1)" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
 	        	<h2><span><spring:message code="ezBoard.t371" /></span></h2>
 	        </div>
-	        <div class="ladderDiv" onclick="ladder_Func(1)" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
-	        	<h2><span><spring:message code="ezBoard.ladder" /></span></h2>
+	        <div class="ladder" onclick="ladderFunc()">
+	        	<h2><span><spring:message code="ezBoard.l001" /></span></h2>
 	        </div>
 	        <ul>
 	            <%-- <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
