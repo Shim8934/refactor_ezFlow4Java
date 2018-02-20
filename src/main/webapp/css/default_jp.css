@@ -250,8 +250,9 @@ form{display:inline;margin:0}
 #left ul.on, #TopBoards ul.on {display: block;}
 #left ul.off, #TopBoards ul.off {display: none;}
 #left ul li.on, #TopBoards ul li.on{
-	font-weight:bold;
-	color:#333333;
+	/* font-weight:bold; */
+	background-color: rgb(245, 247, 255);	
+	color:black;
 }
 #left ul li.off, #TopBoards ul li.off{font-weight:normal;}
 #left ol{margin:0}

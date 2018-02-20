@@ -89,7 +89,6 @@
 			var uploading = "uploading";
 		    var enc = "encrypt";
 		    var dec = "decrypt";
-		    var xmlhttp;
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -109,12 +108,6 @@
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onload = function () {
-		    	
-		    	//수정 수아 재은
-		        xmlhttp = createXMLHttpRequest();
-                xmlhttp.open("POST", "/ezEmail/mailGetUse.do", true);
-                xmlhttp.onreadystatechange = detailbox_info;
-                xmlhttp.send();
                 
 		    	// 웹소켓 지원을 안할 경우 '편지함 내려받기/가져오기' 버튼 숨김
 		        if ('WebSocket' in window) {
