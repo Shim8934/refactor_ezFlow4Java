@@ -14697,20 +14697,6 @@
 	</select>
 	
 	<select id="EzApprovalG.checkReceivedDoc" parameterClass="Map" resultClass="int">
-<!-- 		SELECT
-			COUNT(*)
-		FROM
-			TBL_APRRECEIPTPROCESSINFO
-		WHERE
-			DOCSTATE = '011'
-		AND
-			DOCID = #v_DOCID#
-		AND
-			TENANT_ID = #v_TENANTID#
-		AND
-			COMPANYID = #companyID#
-		AND
-			APRSTATE = '013'	 -->
 		SELECT 
 			COUNT(*) 
 		FROM 
