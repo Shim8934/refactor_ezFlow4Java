@@ -412,7 +412,7 @@
 	                if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
 	                    strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
 	                    strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
-	                    strFileExt == ".xlsx" || strFileExt == ".rtf") {
+	                    strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mht") {
 	                    strTarget = "target=''";
 	                }
 
@@ -432,6 +432,8 @@
 	                    fileImage = "/images/pdf.png";
 	                else if (strFileExt.indexOf(".ecm") != -1)
 	                    fileImage = "/images/ecm.png";
+	                else if (strFileExt.indexOf(".mht") != -1)
+	                    fileImage = "/images/mht.png";
 	                else
 	                    fileImage = "/images/email/mail_006.gif";
 

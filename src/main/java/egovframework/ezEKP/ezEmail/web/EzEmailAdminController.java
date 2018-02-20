@@ -866,7 +866,7 @@ public class EzEmailAdminController {
 			String userId = organUser.getCn();
 			String department = organUser.getDescription();
 			String displayname = organUser.getDisplayName();
-
+			
 			quaList.add(0, userId);
 			quaList.add(1, displayname);
 			quaList.add(2, department);
@@ -880,8 +880,8 @@ public class EzEmailAdminController {
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 	
 				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
-				long mailboxUsage = storageUsageAndLimit[0]/1024; // KBs to MB
-				long mailboxQuota = storageUsageAndLimit[1]/1024; // KBs to MB
+				long mailboxUsage = storageUsageAndLimit[0]; // KBs
+				long mailboxQuota = storageUsageAndLimit[1]; // KBs
 			
 				quaList.add(3, String.valueOf(mailboxUsage));
 				quaList.add(4, String.valueOf(mailboxQuota));
@@ -1027,10 +1027,10 @@ public class EzEmailAdminController {
 		cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t113"));
 		cell.setCellStyle(headerStyle);
 		cell = row.createCell(2);
-		cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1022"));
+		cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd02"));
 		cell.setCellStyle(headerStyle);
 		cell = row.createCell(3);
-		cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1024"));
+		cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd03"));
 		cell.setCellStyle(headerStyle);
 
 		for (int i = 2; i < userList.size() + 2; i++) {

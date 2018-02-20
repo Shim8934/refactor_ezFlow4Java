@@ -2091,7 +2091,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	if (numOfPage.equals("")) {
         		numOfPage = "1";
         	}
-        	
+
         	rtnVal = regDocToCabinet("0", newDocID, docSN, apprGDocListVO2.getCabinetID(), apprGDocListVO2.getDocTitle(), apprGDocListVO2.getWriterDeptID(), apprGDocListVO2.getWriterDeptName(), apprGDocListVO2.getWriterDeptName2(),
         			"1", apprGDocListVO2.getAprMemberJobTitle(), apprGDocListVO2.getAprMemberJobTitle2(), "", "", apprGDocListVO2.getWriterName(), apprGDocListVO2.getWriterName2(), EgovDateUtil.getTodayTime().substring(0, 10),
         			"", "", "", "1", apprGDocListVO2.getOrgDocNumCode(), apprGDocListVO2.getSpecialRecordCode(), apprGDocListVO2.getPublicityCode(), apprGDocListVO2.getLimitRange(), "1", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet, locale);
@@ -12869,7 +12869,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim(),
                     writerDeptID, writerDeptName, writerDeptName2, "2", ezOrganService.getPropertyValue(userID, "title", tenantID), ezOrganService.getPropertyValue(userID, "title2", tenantID),
-                    docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(), "", "",
+                    docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(), "", docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
                     docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim(),
                     commonUtil.getTodayUTCTime("yyyy-MM-dd"), userName, userName2, deliverySN, "1", 
 					docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim(), 
@@ -12995,7 +12995,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (numOfPage.trim().equals("")) {
 				numOfPage = "1";
 			}
-			
+
 			strSQL = regDocToCabinet("0", docID, docSN, 
 					docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim(), 
@@ -15841,7 +15841,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							
 							map.put("v_APRSTATE", staDSPumYui);
 							map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-							map.put("v_FUNCTIONTYPE", staASBanSong);
+							map.put("v_FUNCTIONTYPE", staASWheSong);
 							//다른 곳에 있는것 가져다 써서 두개 선언. 추후 변경
 							map.put("v_DOCID", docID);
 							map.put("v_DocID", docID);
@@ -15872,7 +15872,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							ezApprovalGDAO.insertSetHesongExpLineInfoS(map);
 							
 							map.put("v_APRTYPE", staATSuSin);
-							map.put("v_APRSTATE", staASBanSong);
+							map.put("v_APRSTATE", staASWheSong);
 							map.put("v_USERID", userID);
 							map.put("v_USERNAME", userName);
 							map.put("v_USERNAME2", userName2);
@@ -17068,7 +17068,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		// 결재문서 리스트 추출
 		String docList = getAprDocList(listType, userID, userIDs, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, searchQuery, dueryData, companyID, tenantID);
-	
+		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
@@ -17150,7 +17150,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</DOCLIST>");
 		
 		logger.debug("aprDocList ended.");
-
 		return resultXML.toString();
 	}
 
@@ -22146,7 +22145,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	if (numOfPage.equals("")) {
         		numOfPage = "1";
         	}
-        	
+
         	rtnVal = regDocToCabinet("0", newDocID, docSN, apprGDocListVO2.getCabinetID(), apprGDocListVO2.getDocTitle(), deptID, deptName, deptName2,
         			"2", apprGDocListVO2.getAprMemberJobTitle(), apprGDocListVO2.getAprMemberJobTitle2(), "", "", userName, userName2, EgovDateUtil.getTodayTime().substring(0, 10),
         			"", "", "", "1", apprGDocListVO2.getOrgDocNumCode(), apprGDocListVO2.getSpecialRecordCode(), apprGDocListVO2.getPublicityCode(), apprGDocListVO2.getLimitRange(), "1", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet, locale);

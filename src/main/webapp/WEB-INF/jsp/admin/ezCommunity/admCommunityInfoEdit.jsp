@@ -135,7 +135,7 @@
 				</tr>
 				<tr>
 					<th><spring:message code = 'ezCommunity.t9991' /></th>
-					<td><input type="text" style="width:100%" name="txt_CommunityName" value="${club.c_ClubName}"></td>
+					<td><input type="text" style="width:100%" name="txt_CommunityName" maxlength="50" value="${club.c_ClubName}"></td>
 				</tr>
 				<tr>
 					<th><spring:message code = 'ezCommunity.t11' />					</th>

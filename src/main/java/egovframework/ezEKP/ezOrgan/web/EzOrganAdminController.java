@@ -132,7 +132,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 왼쪽화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/organLeft.do")
-	public String organLeft() throws Exception{        
+	public String organLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
+		
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		
 		return "admin/ezOrgan/organLeft";
 	}
 	

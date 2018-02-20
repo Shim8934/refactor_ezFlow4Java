@@ -191,7 +191,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
 		if (fileList != null && !fileList.equals("")) {
-			File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
+			//2018-02-13 주홍선 파일경로 잘못되어있던 것 수정
+			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
 
 			if (!file.exists()) {
 	        	file.mkdir();

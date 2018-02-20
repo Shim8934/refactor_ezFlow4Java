@@ -117,9 +117,9 @@
 	                            p.className = "title";
 	                            
 	                            if (primary == "1") {
-	                                p.innerHTML=infoVO.boardName;
+	                                p.innerHTML=length_check(infoVO.boardName);
 	                            } else {
-	                            	p.innerHTML=infoVO.boardName2;
+	                            	p.innerHTML=length_check(infoVO.boardName2);
 	                            }
 	                            
 	                            var span = document.createElement("span");
@@ -749,6 +749,18 @@
 		    
 		    function reload() {
 		        window.location.reload();
+		    }
+		    
+		    // 2018-02-13 천성준
+		    function length_check(txt) {
+		    	var temp = txt;
+		    	// 커뮤니티 팝업 메인화면 게시판 이름이 22자를 넘길시 자르고 뒤에...을 붙인다.
+		    	if(temp.length >= 22) {
+		    		temp = temp.substring(0,22)+"...";
+		    		return temp;
+		    	}else{
+		    		return temp;
+		    	}
 		    }
 		</script>
 	</head>

@@ -19,8 +19,8 @@
 	    <script>
 	        var lang = "${userInfo.lang}";
 	        var ReturnFunction;
-	        var CancelFunction;
-	        var isFolderChanged = false;
+	        var retVal = new Array();
+	        retVal["isFolderChanged"] = false;
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -29,17 +29,9 @@
 	                return true;
 	        };
 	        
-	        window.onunload = function () {
-                if (isFolderChanged) {
-                	try {
-                    	parent.opener.top.frames["mainFrame"].frames["left"].mailbox_treeview_reload();
-                    } catch (e) {}
-                }
-        	}
-	        
 	        function Window_Close() {
-	            if (ReturnFunction!=null)
-	                CancelFunction();
+	            if (ReturnFunction != null)
+	            	ReturnFunction(retVal);
 	            window.close();
 	        }
 	        
@@ -47,11 +39,9 @@
 	        function window_onload() {
 	            try {
 	                ReturnFunction = parent.mail_selectfolder_cross_dialogArguments[1];
-	                CancelFunction = parent.mail_selectfolder_cross_dialogArguments[2];
 	                isDivPopup = true;
 	            } catch (e) {
 	                ReturnFunction = opener.mail_selectfolder_cross_dialogArguments[1];
-	                CancelFunction = opener.mail_selectfolder_cross_dialogArguments[2];
 	            }
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.getElementById("headerH1").style.marginTop = "0px";
@@ -95,10 +85,14 @@
 	                alert("<spring:message code='ezEmail.t158' />");
 	                return;
 	            }
-	            var retVal = new Array();
+	            
 	            retVal["name"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption");
 	            retVal["url"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-	            ReturnFunction(retVal);
+	            
+	            if (ReturnFunction != null) {
+	            	ReturnFunction(retVal);
+	            }
+	            
 	            if (!isDivPopup)
 	                window.close();
 	        }
@@ -138,7 +132,7 @@
 	            var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false, false);
                 PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
                 
-                isFolderChanged = true;
+                retVal["isFolderChanged"] = true;
 	        }
 	        
 	        function LoadAddressTree(SelectIndex) {

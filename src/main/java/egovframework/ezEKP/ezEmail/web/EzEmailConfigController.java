@@ -306,28 +306,31 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 			if (mailboxUsage < mailboxQuota) {
 				mailPercent = (int)((mailboxUsage/mailboxQuota) * 100);
-			}
-			else {
+			} else {
 				mailPercent = 100;
 			}
-			
-			if (mailboxUsage >= 1024) {
-				mailboxDetail = (int)(mailboxUsage/1024) + "MB";
-			}
-			else {
-				mailboxDetail = (int)mailboxUsage + "KB";
+						
+			// 분자
+			if (mailboxUsage >= 1024*1024 ) {
+				mailboxDetail = String.format("%.1fG", mailboxUsage/(1024*1024));
+			} else if (mailboxUsage >= 1024) {
+				mailboxDetail = String.format("%.1fM", mailboxUsage/1024);
+			} else {
+				mailboxDetail = String.format("%.1fK", mailboxUsage);
 			}
 	
+			// 분모
 			if (mailboxQuota >= 1024*1024) {
-				mailboxQuotaStr = String.format("%.2fG", mailboxQuota/(1024*1024));
-			}
-			else if (mailboxQuota >= 1024) {
-				mailboxQuotaStr = (int)(mailboxQuota/1024) + "MB";
-			}
-			else {
-				mailboxQuotaStr = (int)mailboxQuota + "KB";
-			}
-		
+				mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
+				
+				if (mailboxQuotaStr.contains(".0")) {
+					mailboxQuotaStr = mailboxQuotaStr.substring(0, mailboxQuotaStr.indexOf(".")) + "G";
+				}
+			} else if (mailboxQuota >= 1024) {
+				mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
+			} else {
+				mailboxQuotaStr = (int)mailboxQuota + "K";
+			}		
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			e.printStackTrace();

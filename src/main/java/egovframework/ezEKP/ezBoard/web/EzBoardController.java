@@ -3542,8 +3542,15 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
 		model.addAttribute("userInfo",userInfo);
-
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		
 		logger.debug("dragAndDrop ended");
 		return "ezBoard/boardDragAndDrop";
 	}
@@ -6007,7 +6014,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("reservedList", reservedList);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("isVpn", isVpn);
-
+		
 		logger.debug("boardReservedItemList ended");
 		return "ezBoard/boardReservedItemList";
 	}
@@ -6661,6 +6668,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
+		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
+		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", userInfo.getTenantId());
+		
+		logger.debug("dotNetIntegration=" + dotNetIntegration);
+		
+		// 닷넷 게시판으로 연동하는 경우에는 닷넷 URL을 반환한다.
+		if (dotNetIntegration.equals("YES")) {			
+			return dotNetUrl;
+		}
 		
 		int result = ezBoardService.getItemViewNew(boardID, itemID, userInfo.getTenantId());
 		

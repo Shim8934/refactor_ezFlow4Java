@@ -6,15 +6,14 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<section  class="body_bg1">
-			<article class="portletbox graphbox ">
+			<article class="portletbox graphbox">
 				<div class="title_nb"><span class="tl_nb"></span><span class="tr_nb"></span><span class="title_txt"><spring:message code='main.t00002' /></span></div>
 				<div class="graphcont">
     				<!-- 그래프영역 -->
-    				<!-- UI Object -->
-        			<div class="v_graph">
-        				<%-- <% if(xmldom.SelectNodes("DATA/ROW").Count > 0 ){ %> --%>
-        				<c:choose>
-        					<c:when test="${not empty list}">
+    				<!-- UI Object -->        				
+       				<c:choose>
+       					<c:when test="${not empty list}">
+       						<div class="v_graph">
         						<span class="r_arrow"> ^</span>
 	        					<span class="l_arrow"> ^</span>
     	    					<span class="maxtxt">${dMaxCount } max</span>
@@ -27,17 +26,17 @@
 										</li> 
 				               		</c:forEach>
 	        					</ul>
-        					</c:when>
-        					<c:otherwise>
-        						<div class="nodata_portlet">
-        							<p><img src="/images/kr/main/nodata_white.gif" width="107" height="70"></p>
-        							<p><spring:message code='main.t00026' /></p>
-        						</div>
-        					</c:otherwise>
-        				</c:choose>
-        			</div>
-					<!-- //UI Object -->
-    			</div>
+	        				</div>	
+       					</c:when>
+       					<c:otherwise>
+       						<div class="nodata_portlet">
+       							<p><img src="/images/kr/main/nodata_white.gif" width="107" height="70"></p>
+       							<p><spring:message code='main.t00026' /></p>
+       						</div>
+       					</c:otherwise>
+       				</c:choose>
+				</div>
+				<!-- //UI Object -->    			
 				<div class="guide"><span class="lb"></span><span class="rb"></span></div>
 			</article>
 		</section>
