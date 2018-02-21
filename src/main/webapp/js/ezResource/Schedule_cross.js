@@ -320,9 +320,18 @@ function Schedule_Repetition_onclick_Complete(retVal) {
         var eDate = retVal["endTime"];
         var SeteTime = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
         
+        var ssDate = new Date();
+        var eeDate = new Date();
+        ssDate.setHours(sDate.getHours(),sDate.getMinutes(),0,0);
+        eeDate.setHours(eDate.getHours(),eDate.getMinutes(),0,0);
+        /*2018.02.20 김기하 #11633 */
+        
         $("#Sdatepicker").datepicker('setDate', SetsTime);
         $("#Edatepicker").datepicker('setDate', SeteTime);
-
+   
+        $("#Stimepicker").timepicker('setTime', ssDate);
+        $("#Etimepicker").timepicker('setTime', eeDate);
+        
         document.getElementById("tr_STime").style.display = "none";
         
         document.getElementById("tr_Recur").style.display = "";

@@ -57,6 +57,7 @@
 			var pDraftFlag = "${draftFlag}";
 			var approvalFlag = "${approvalFlag}";
 			var apprTotalAttachLimit = "${apprTotalAttachLimit}";
+			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			var totalSize = 0;
 			
 			// 문서정보를 가져오는 함수
@@ -219,8 +220,8 @@
 			function btn_AttachAdd_onclick() 
 			{
 			    if (document.form.file1.value != "") {
-					if (document.form.file1.files[0].name.length > 104) {
-						alert("<spring:message code='main.jjh08' />");
+					if (document.form.file1.files[0].name.length > attachFileNameMaxLength) {
+						alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
 						document.form.file1.value = "";
 						return;
 					} else {
@@ -744,8 +745,8 @@
 		        for (var i = 0; i < file.length; i++) {
 					var fnl = file[i].name.length;
 		        	
-		        	if (fnl > 104) {
-		        		alert("<spring:message code='main.jjh08' />");
+		        	if (fnl > attachFileNameMaxLength) {
+		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
 		        		isfileup = false;
 		        		
 		        		return;

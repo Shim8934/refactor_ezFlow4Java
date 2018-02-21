@@ -592,7 +592,7 @@
 		                }
 		            }
 		            else {
-		                OpenAlertUI("<spring:message code='ezApprovalG.t1518'/>");
+		                OpenAlertUI("<spring:message code='ezApprovalG.t1518'/>","OPEN");
 		                return "";
 		            }
 		        }
@@ -1392,7 +1392,7 @@
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
 	            </c:if>
-	             <img src="/images/i_bar.gif">
+	            <!-- <img src="/images/i_bar.gif"> -->
 	            <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
 	            </select>  

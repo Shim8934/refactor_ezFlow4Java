@@ -152,7 +152,8 @@
 							circularIDList : circularID + ";"
 						},
 						success: function() {
-							window.opener.getLeftCount();
+							//2018-02-14 김보미 - 사용안해서 주석.
+							//window.opener.getLeftCount();
 							window.opener.refresh_onclick();
 			                closing();
 						},
@@ -390,6 +391,9 @@
 		            	imagePath = "/images/pdf.png";
 		            } else if (filetype == "ecm") {
 		            	imagePath = "/images/ecm.png";
+		            //2018-02-13 주홍선 mht파일 아이콘 표시되지 않던 것 수정
+		            } else {
+		            	imagePath = "/images/file.gif";
 		            }
 
 		            strAttach[i] = "<img src='" + imagePath + "'/>&nbsp;" + filename + "&nbsp;(" + filesize + ")<br>";

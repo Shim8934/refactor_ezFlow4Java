@@ -228,12 +228,16 @@
 				        <td id="User_DeptNM" style="padding-right:10px;white-space:nowrap;width:40%;"><span><c:out value = '${item.writerDeptName }' /></span></td>
 		    		</tr>
 		    		<!-- 직위&전화번호 -->
-		    		<tr>
-		    			<th style="width:10%;"><spring:message code = 'ezCommunity.t960' /></th> 
-				        <td id="User_JobTitle" style="padding-right:10px;white-space:nowrap;width:40%;"><span><c:out value = '${item.extensionAttribute3}' /></span></td>
-						<th style="width:10%;"><spring:message code = 'ezCommunity.t269' /></th>
-						<td id="Telephone" style="width:40%;"><c:out value = '${item.extensionAttribute4 }' /></td>
-		    		</tr>
+		    		<c:choose>
+		    			<c:when test="${boardInfo.gubun != 2 }">
+		    				<tr>
+		    					<th style="width:10%;"><spring:message code = 'ezCommunity.t960' /></th> 
+				       			<td id="User_JobTitle" style="padding-right:10px;white-space:nowrap;width:40%;"><span><c:out value = '${item.extensionAttribute3}' /></span></td>
+								<th style="width:10%;"><spring:message code = 'ezCommunity.t269' /></th>
+								<td id="Telephone" style="width:40%;"><c:out value = '${item.extensionAttribute4 }' /></td>
+		    				</tr>
+		    			</c:when>
+		    		</c:choose>
 		    		<!-- 게시일&게시종료일 -->
 		    		<tr>
 		    			<th style="width:10%;"><spring:message code = 'ezCommunity.t209' /></th>

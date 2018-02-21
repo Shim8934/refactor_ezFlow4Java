@@ -76,11 +76,11 @@
 						<table style="width:100%">
 							<tr class="primary">
 								<th><c:out value = '${lang_Primary}' /></th>
-								<td><input type="text" name="c_ClubName" value="<c:out value = '${club.c_ClubName}' />" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
+								<td><input type="text" name="c_ClubName" maxlength="50" value="<c:out value = '${club.c_ClubName}' />" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
 							</tr>
 							<tr class="secondary">
 								<th><c:out value = '${lang_Secondary}' /></th>
-								<td><input type="text" name="c_ClubName2" value="<c:out value = '${club.c_ClubName2}' />" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
+								<td><input type="text" name="c_ClubName2" maxlength="50" value="<c:out value = '${club.c_ClubName2}' />" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
 							</tr>
 						</table>
 					</td>
@@ -199,7 +199,7 @@
 					<th colspan="2"><spring:message code ='ezCommunity.t1529' /> <spring:message code ='ezCommunity.t461' /></th>
 				</tr>
 				<tr>
-					<td colspan="2" style="padding:3px"><textarea name="c_ClubDesc" style="height:120px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none"><c:out value = '${club.c_ClubDesc}' /></textarea></td>
+					<td colspan="2" style="padding:3px"><textarea name="c_ClubDesc" maxlength="2000" style="height:120px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none"><c:out value = '${club.c_ClubDesc}' /></textarea></td>
 				</tr>
 			</table>
 		  

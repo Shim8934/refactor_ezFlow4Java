@@ -15,6 +15,8 @@
 	        var SignImageSize = "${signImageSize}";
 	        var SignPath = "${signPath}";
 	        var pNoneActiveX = "YES";
+	        var extension;
+	        
 	        window.onload = function () {
 	            GetSignInfo();
 	        };
@@ -146,13 +148,21 @@
 					}
 				});
 		    }
-		
+		    
 		    function btn_AttachAdd_onclick(obj) {
 		        if (document.form.file1.value != "") {
 		            var frm = new FormData();
 		            
 		            frm.append("file1", document.getElementById("form").file1.files[0]);
 		            
+		            extension = document.getElementById("file1").value.split('.');
+				    var check = false;
+				    check = compareExtension(check, extension[1]);
+				    
+				    if (!check || extension == null) {
+		    		    alert("<spring:message code='ezPersonal.t206'/>" + " <spring:message code='ezPersonal.t200'/>");
+		        		document.getElementById("file1").value = "";
+		    		} else {
 		            xhr = new XMLHttpRequest();
 		            xhr.addEventListener("load", returnvalue, false);
 		            
@@ -164,6 +174,7 @@
 		            
 		            xhr.open("POST", "/admin/ezOrgan/signImageUpload.do?mode="+mode+"&userID=" + userid);
 		            xhr.send(frm);
+		    		}
 		        }
 		    }
 		
@@ -172,6 +183,19 @@
 		            document.form.file1.click();
 		        }
 		    }
+
+			function compareExtension(check, extension) {
+	    		var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
+	    		for (var i = 0; i < filterExtension.length; i++) {
+	    			if (extension != null) {
+		        		if (extension.toLowerCase() == filterExtension[i]) {
+		            		check = true;
+		            		break;
+		        		}
+	    			}
+	    		}
+	    		return check;
+			}
 		
 		    function returnvalue() {
 		        if (xhr.responseText != "UPLOAD_ERROR") {

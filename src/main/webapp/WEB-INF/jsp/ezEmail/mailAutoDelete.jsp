@@ -29,8 +29,23 @@
 		
 		        window.location.href = "/ezEmail/mailAutoDeleteDelete.do?itemseq=" + encodeURIComponent(seqno) + "&folderPath=" + encodeURIComponent(path);
 		    }
+
 		    function add_condition() {
-		        if (document.getElementById("folderpath").value == "") {
+			var addedFolders = new Array();
+			<c:forEach var="item" items="${list}">
+				addedFolders.push("${item.path}"); 
+			</c:forEach>
+			    
+			for (var i = 0; i < addedFolders.length; i++){
+
+				if (document.getElementById("folderpath").lealfolderPath == addedFolders[i]) {
+					alert("<spring:message code='ezQuestion.t18' />");
+				    return;
+				}
+			        
+			}
+		 
+		    if (document.getElementById("folderpath").value == "") {
 		            alert("<spring:message code='ezEmail.t114' />");
 		            return;
 		        }
@@ -50,16 +65,26 @@
 		    var mail_selectfolder_cross_dialogArguments = new Array();
 		    function getFolder() {
 		        mail_selectfolder_cross_dialogArguments[1] = getFolder_Complete;
-		        mail_selectfolder_cross_dialogArguments[2] = getFolder_Complete;
 		        var OpenWin = window.open("/ezEmail/mailSelectFolder.do", "mail_selectfolder_Cross", GetOpenWindowfeature(400, 355));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function getFolder_Complete(mailBoxInfo) {
 		        if (typeof (mailBoxInfo) == "undefined")
 		            return;
-		
-		        document.getElementById("folderpath").value = mailBoxInfo["name"];
-		        document.getElementById("folderpath").lealfolderPath = mailBoxInfo["url"];
+				
+		        if (mailBoxInfo["isFolderChanged"]) {
+	        		try {
+	        			parent.parent.frames["left"].mailbox_treeview_reload();
+	        		} catch (e) {
+	        		}
+	        	}
+		        
+		        if (typeof (mailBoxInfo["name"]) == "undefined" || typeof (mailBoxInfo["url"]) == "undefined") {
+		        	return;
+		        }
+		        
+	        	document.getElementById("folderpath").value = mailBoxInfo["name"];
+	        	document.getElementById("folderpath").lealfolderPath = mailBoxInfo["url"];
 		    }
 		</script>
 	</head>
@@ -108,7 +133,7 @@
 						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;" ><input type="checkbox" disabled ${item.deleteUnread} name="checkbox2"></td> 
 						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;">
 							<a class="imgbtn"><span onClick="delete_condition('${item.itemSeq}', '${item.path}')"><spring:message code='ezEmail.t95' /></span></a>
-						</td> 
+						</td>
 					</tr>
 				</c:forEach>
 			</table>

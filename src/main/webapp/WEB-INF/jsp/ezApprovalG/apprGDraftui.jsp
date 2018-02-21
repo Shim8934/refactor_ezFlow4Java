@@ -207,14 +207,20 @@
 		                }
 		            }
 		            process_AfterOpen();
-		            
+		            /*
+		            * 재기안인 경우
+		            * 1. 임시보관함에서는 기존에 저장된 내용이 있어서 수신처 값을 초기화하지 않는다.
+		            * 2. 반송된 문서를 재기안할 때는 고정수신처 값을 불러온다.
+		            */
 		            if (pDraftFlag == "REDRAFT") {
 		            	if (ListType == "21") {
-		            		//임시보관함일경우 사인 초기화
+		            		//임시보관함일경우 사인 초기화??
 		            		setFirstDrafter(isUsed, "");
+		            	} else {
+		            		getFormRecv();	
 		            	}
 		            	
-		                getFormRecv();
+		                //getFormRecv();
 		                message.SetEditable(true);
 		            }
 		
@@ -558,9 +564,14 @@
 			            	pDocType = DocType;
 			            }
 			            if (pDocType == "003" && pSuSinFlag == "Y" && !btnReceivLineEnable) {
-			                var pAlertContent = "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
-			                OpenInformationUI(pAlertContent, check_btnSendDraft3);
-			                return;
+					        var fields = message.GetFieldsList();
+					        
+							if (getNodeText(message.GetListItem(fields, "recipient")) == "") {
+				                var pAlertContent = "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
+				                OpenInformationUI(pAlertContent, check_btnSendDraft3);
+				                return;								
+							} 
+
 			            }
 			            
 			            if (isUsed ==  "reuse") {
@@ -1396,6 +1407,7 @@
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
 		                	tempItemName2 = ret[18];
+		                	tempSecurityValue = ret[19];
 		                	pPageNum = "1";
 		                	pLimitRange = "1";
 		                	pSpecialRecordCode = "1";

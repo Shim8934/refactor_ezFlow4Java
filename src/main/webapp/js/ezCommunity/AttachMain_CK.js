@@ -11,8 +11,8 @@ function btn_AttachAdd_onclick() {
     	var formData = new FormData();
        	
        	$.each($('#file1')[0].files, function(i, file) {
-       		if (file.name.length > 104) {
-       			alert(strLang84);
+       		if (file.name.length > attachFileNameMaxLength) {
+       			alert(strLang84 + attachFileNameMaxLength + strLangLHM01);
        			return;
        		} else {
        			formData.append('file-' + i, file);

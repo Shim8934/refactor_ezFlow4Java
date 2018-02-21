@@ -32,10 +32,19 @@
 						
 						circularDeptList = "<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>";
 						
+						// 2018-02-13 주홍선 String replaceAll function 선언
+						String.prototype.replaceAll = function (search, replacement) {
+							var target = this;
+							return target.split(search).join(replacement);
+						}
+						
 						list.forEach(function(vo, index) {
+							// 2018-02-13 주홍선 title '<', '>' html entity로 변환
+							var title = vo.title.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+							
 							circularDeptList += "<tr id=" + vo.circularBMID + " style='cursor:pointer' onclick='event_click(this);' ondblclick='modify_circularDept(this);'>";
 							circularDeptList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' value=" + vo.circularBMID + " type='checkbox' onclick='selectRow(this)'></td>";
-							circularDeptList += "<td style='color:gray;' title=" + vo.title + ">" + vo.title + "</td>";
+							circularDeptList += "<td style='color:gray;' title=" + title + ">" + title + "</td>";
 							circularDeptList += "<td style='color:gray;'>" + vo.regDate.substring(0,16) + "</td>";
 							
 							if (vo.memberNameCount == 0) {

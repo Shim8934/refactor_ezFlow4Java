@@ -73,13 +73,15 @@
 				    case 13:
 				        url = "/admin/ezOrgan/addJobList.do";
 				        break;
+			        case 14:
+			        	url = "/admin/ezSystem/systemMainMenu.do";
+			        	break;			            				        
 		            case 20:
 		                url = "/myoffice/ezEmail/Admin/mail_DLMailConfig.aspx";
 		                break;
 		            case 21:
 		                url = "/myoffice/ezEmail/DLmail_list.aspx";
 		                break;
-
 		            case 22:
 		            	url = "/admin/ezEmail/mailQuotaList.do";
 		                break;
@@ -90,15 +92,31 @@
 	</head>
 	<body class="leftbody" style="margin:0px 0px 0px 0px">
 		<div id="left">
-  			<div class="left_admin" title="<spring:message code='main.t23' />"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='main.t23' /></div>   
+  			<div class="left_admin" title="<spring:message code='main.t23' />"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;
+  			<c:if test="${dotNetIntegration != 'YES'}">
+  			<spring:message code='main.t23' />
+  			</c:if>
+  			<c:if test="${dotNetIntegration == 'YES'}">
+  			<spring:message code='main.t24' />
+  			</c:if>
+  			</div>   
   			<h2>
-  				<span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
+  				<span onClick="goPage(1)" style="display:inline-block;width:100%;">
+  				<c:if test="${dotNetIntegration != 'YES'}">
+  				<spring:message code='main.t56' />
+  				</c:if>
+  				<c:if test="${dotNetIntegration == 'YES'}">
+  				<spring:message code='main.t24' />
+  				</c:if>
+  				</span>
   			</h2>  
+  			<c:if test="${dotNetIntegration != 'YES'}">
     		<ul>
 		        <li><span id="Organ" style="width: 100%; display: inline-block;" onClick="goPage(1)" ><spring:message code='main.t56' /></span></li>
 		        <li><span id="CheckAdmin" style="width: 100%; display: inline-block;" onClick="goPage(12)" ><spring:message code='main.t00062' /></span></li>
 		        <li><span id="Addjob" style="width: 100%; display: inline-block;" onClick="goPage(13)" ><spring:message code='main.t00063' /></span></li>
 		    </ul>   
+		    </c:if>
   			<h2>
   				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
     			<ul></ul>    			
@@ -137,7 +155,12 @@
 			<h2>
 				<span onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
 			    <ul></ul>
-			</h2>			
+			</h2>
+			<c:if test="${dotNetIntegration == 'YES'}">
+            <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(14)" ><spring:message code='main.kms1' /></span>
+            <ul class="on"></ul>
+            </h2>						
+            </c:if>						
 		</div>
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");

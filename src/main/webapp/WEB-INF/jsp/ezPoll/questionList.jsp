@@ -475,9 +475,14 @@
 					<label for="btnRadio2"><spring:message code='ezPoll.t146' /></label>					
 				</li>
 				<li style="float:right; font-weight:normal; color:black;">
+					<input id="btnRadio4" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="4" ${pollType == '4'? 'checked' : ''}>
+					<label for="btnRadio4"><spring:message code='ezPoll.t251' /></label>		
+				</li>
+				<li style="float:right; font-weight:normal; color:black;">
 					<input id="btnRadio3" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="1" ${pollType == '1'? 'checked' : ''}>
 					<label for="btnRadio3"><spring:message code='ezPoll.t237' /></label>		
 				</li>
+				
 			</ul>
 		</div>
 		<script type="text/javascript">

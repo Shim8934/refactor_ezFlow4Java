@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title></title>
+	    <title><spring:message code='ezBoard.t1003'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>

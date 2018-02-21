@@ -210,11 +210,12 @@
 		            }
 		        }
 		        
-// 		        if (mode == "temp") {
-// 		        	url = "/ezCircular/tempUploadFileDelete.do?mode=temp&circularID=" + circularID;
-// 		        } else {
-		        url = "/ezCircular/tempUploadFileDelete.do";
-// 		        }
+		      	//2018-02-13 주홍선 주석제거
+ 		        if (mode == "temp") {
+ 		        	url = "/ezCircular/tempUploadFileDelete.do?mode=temp&circularID=" + circularID;
+ 		        } else {
+		        	url = "/ezCircular/tempUploadFileDelete.do";
+ 		        }
 
 		        // upload된 파일 tempUploadFile에서 삭제
 		        $.ajax({
@@ -263,12 +264,8 @@
 		        xhr.addEventListener("load", uploadComplete, false);
 		        xhr.addEventListener("error", uploadFailed, false);
 		        xhr.addEventListener("abort", uploadCanceled, false);
-		        
-// 		        if (mode != "") {
-// 		        	url = "/ezCircular/uploadItemAttach.do?mode=temp&circularID=" + circularID;
-// 		        } else {
-		        url = "/ezCircular/uploadItemAttach.do";
-// 		        }
+ 		        
+ 		        url = "/ezCircular/uploadItemAttach.do?mode=" + mode + "&circularID=" + circularID;
 
 		        xhr.open("POST", url);
 		        xhr.send(fd);
@@ -289,7 +286,7 @@
         </div>
         <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
-        <input id="file" type="file" onchange="filechange(event)" multiple style="width:1px;height:1px"/>
+        <input id="file" type="file" onchange="filechange(event)" multiple style="width:1px;height:1px;display:none;"/>
         <input type="hidden" value="upload" onclick ="fileupload()" />
     </body>
 </html>

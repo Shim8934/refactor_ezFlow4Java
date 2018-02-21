@@ -243,9 +243,11 @@
 	                return;
 	            }
 
-	            if (ret != "OK") {
+	            if (ret != "OK" && ret == "FALSE") {
+                    alert("<spring:message code = 'ezCommunity.t921' />");
                     return;
                 } else if (ret == "cancel") {
+	            	alert("<spring:message code='ezCommunity.t60'/>");
 	                return;
 	            }
 	            
@@ -344,7 +346,11 @@
 	                return;
 	            }
 	            
-	            if (ret != "OK") {
+	            if (ret != "OK" && ret == "FALSE") {
+                    alert("<spring:message code = 'ezCommunity.t921' />");
+                    return;
+                } else if (ret == "cancel") {
+	            	alert("<spring:message code='ezCommunity.t60'/>");
 	                return;
 	            }
 
@@ -369,7 +375,7 @@
 	            pheigth = pheigth - 200;
 	            pwidth = pwidth - 127;
 
-	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=656,width=440px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 
 	        function btnClose_onclick() {
@@ -406,7 +412,7 @@
 	                if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
 	                    strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
 	                    strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
-	                    strFileExt == ".xlsx" || strFileExt == ".rtf") {
+	                    strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mht") {
 	                    strTarget = "target=''";
 	                }
 
@@ -426,6 +432,8 @@
 	                    fileImage = "/images/pdf.png";
 	                else if (strFileExt.indexOf(".ecm") != -1)
 	                    fileImage = "/images/ecm.png";
+	                else if (strFileExt.indexOf(".mht") != -1)
+	                    fileImage = "/images/mht.png";
 	                else
 	                    fileImage = "/images/email/mail_006.gif";
 

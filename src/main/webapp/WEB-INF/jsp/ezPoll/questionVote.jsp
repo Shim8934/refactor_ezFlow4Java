@@ -45,7 +45,8 @@
 			var stickerIndex 			= null;
 			var userNameArr 			= [[]];
 			var stompClient 			= null;
-			var numberOfGroupSticker 	= 4;	
+			/* 스티커 그룹 초기값 현재는 하나만 있기 때문에 1로 처리 */
+			var numberOfGroupSticker 	= 1;	
 			var currentGroupSticker 	= -1;
 			var flagEvent 				= -1;
 			var currentEditingCmt 		= -1;
@@ -173,7 +174,9 @@
 							}
 						}
 					}					
-				}				
+				}
+				
+				emoticonPanelClose();
 			}
 			
 			function updateGraph() {				
@@ -853,7 +856,7 @@
  		    		window_open3.close();
 		    	}
 		    	
-		    	window_open3 = window.open("/ezPoll/showVotedUsersInfo.do?qstId=" + pQstID + "&optId=" + pOptId, "", "height=384px,width=390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    	window_open3 = window.open("/ezPoll/showVotedUsersInfo.do?qstId=" + pQstID + "&optId=" + pOptId, "", "height=384px,width=390px, status = no, toolbar=no, menubar=no,location=no, resizable=no" + feature);
 		    }
 		    
 		    function finishVote() {	    	
@@ -956,8 +959,9 @@
 	    		var divSticker = document.getElementById("_stickerArea");
 	    		var cloneOfDivFile = divFile.cloneNode(true);
 	    		var cloneOfDivSticker = divSticker.cloneNode(true);
-	    		var childElemt = cloneOfDivSticker.firstElementChild; //baonk changed
-	    		childElemt.style.marginLeft = "-185px"; //baonk changed
+	    		/* 이모티콘 패널 위치 수정 제거. */
+	    		/* var childElemt = cloneOfDivSticker.firstElementChild; //baonk changed
+	    		childElemt.style.marginLeft = "-39px"; //baonk changed */
 	    		cloneOfDivFile.setAttribute("style", "float:left; display:block; height:25px; width:25px; cursor: pointer; padding-left: 10px;");
 	    		cloneOfDivSticker.setAttribute("style", "float:left; display:block; padding: 0px;");
 	    		innInnerDiv2.appendChild(cloneOfDivFile);
@@ -1964,18 +1968,13 @@
 		    	document.getElementById("_listG" + stickerIndex).style.display = "none";
 		    	var imageTag = obj.firstElementChild;
 		    	
-		    	if (imageTag.src.indexOf("hackerGirl.png") !== -1) {		    		
+		    	/* 이모티콘 추가 시 사용가능성 있음.*/
+		    	/* if (imageTag.src.indexOf("girl.png") !== -1) {		    		
 		    		stickerIndex = 1;		    		
-		    	}
-		    	else if (imageTag.src.indexOf("crayonShin.png") !== -1) {
-		    		stickerIndex = 2;
-		    	}
-		    	else if (imageTag.src.indexOf("catEmoticon.png") !== -1) {
-		    		stickerIndex = 3;
-		    	}
-		    	else {
-		    		stickerIndex = 4;
-		    	}
+		    	} */
+		    	
+		    	stickerIndex = 1;	
+		    	
 		    	document.getElementById("_listG" + stickerIndex).style.display = "block";
 		    	checkScrollBars();
 		    }
@@ -2033,7 +2032,11 @@
 		    }
 		    
 		    function processGroupStickers() {				
-		    	if (numberOfGroupSticker > 8) {
+		    	
+		    	numberOfGroupSticker = document.getElementById("_listG1").getElementsByTagName("table").length;
+		    	
+		    	/* 스티커 그룹 페이징 처리 영역  이모티콘 그룹이 추가되면 주석 풀어야 함. */
+		    	/* if (numberOfGroupSticker > 8) {
 		    		currentGroupSticker = 8;
 		    		
 		    		for (var i = 9; i <= numberOfGroupSticker; i++) {
@@ -2044,11 +2047,11 @@
 		    		document.getElementById("nextEmoticon").style.cursor = "pointer";
 		    		document.getElementById("nextEmoticon").onclick = function () { showNextGroupSticker(); };
 		    	}
-		    	else {
+		    	else if(numberOfGroupSticker > 4) {	    		
 		    		for (var i = numberOfGroupSticker + 1; i <= 8; i++) {
 		    			document.getElementById("_group" + i).style.display = "none";
 		    		}		    		
-		    	}
+		    	} */
 		    }
 		    
 		    function showNextGroupSticker() {
@@ -2471,6 +2474,19 @@
 		        var pLeft = (pwidth - 890) / 2;
 		        window.open("/ezPoll/mailWrite.do?type=group&state=voted&qstId=" + pQstID + "&optId=" + pOptID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);		       
 		    }
+		    
+		    //이모티콘 패널이 아닌 영역을 선택하면 패널이 닫힘
+		    function emoticonPanelClose(){
+		    	var emoticonPanel = document.getElementById('emoticonPanel');
+		        $(document).click(function(e){
+		            var target = e.target;
+		            var onOff = emoticonPanel.getAttribute('style').indexOf('display: block')!=-1?true:false;
+		            
+		            if(onOff && target.id != "_addEmoticon"){
+                        addSticker();
+		            }
+		        });
+		    }
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -2500,22 +2516,22 @@
 	                  <div class="voteBtn">
 	                  				<c:choose>
 	                  					<c:when test="${question.secretVote == 0}">
-	                  						<div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber" style="margin-left:3px">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
+	                  						<div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
 	                  					</c:when>
 	                  					<c:when test="${question.secretVote == 1}">
-	                  						<div><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber" style="margin-left:3px">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
+	                  						<div><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
 	                  					</c:when>
 	                                </c:choose>
 	                                <%-- <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div> --%>
 	                                <!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
 	                            </div>
-	                  <div class="questionFont02">
+	                  <div class="voteBtn">
 	                  	<c:choose>
           					<c:when test="${question.secretVote == 0}">
-          						<a style="display:inline-block;cursor: pointer;" onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/><span style="color:#004896;margin-left:3px" id="seenPeople">(<c:out value='${seenUsers}'/>)</span></a>
+          						<div onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/><span id="seenPeople">(<c:out value='${seenUsers}'/>)</span></div>
           					</c:when>
           					<c:when test="${question.secretVote == 1}">
-          						<a style="display:inline-block;cursor: pointer;" ><spring:message code = 'ezPoll.t112'/><span style="color:#004896;margin-left:3px" id="seenPeople">(<c:out value='${seenUsers}'/>)</span></a>
+          						<div><spring:message code = 'ezPoll.t112'/><span id="seenPeople">(<c:out value='${seenUsers}'/>)</span></div>
           					</c:when>
                         </c:choose>
 					  	
@@ -2673,7 +2689,7 @@
 									
 									<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >
 										<c:if test="${_comt.textContent != ''}">
-											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;"><c:out value ="${_comt.textContent}" /></p>
+											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;"><c:out value ="${_comt.textContent}" /></p>
 										</c:if>
 										<c:if test="${_comt.imageAttach != ''}">
 											<div style="padding-top: 5px;">
@@ -2722,14 +2738,14 @@
 									<img id="previousEmoticon" src="/images/previous1.png" height=40 width=30 style="padding-top: 3px; ">
 								</div>
 								<div id="_ePresentors" style="float:left; display:block; ">
-									<div id="_group1" style="background-color: #d9d9d9; float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-									<div id="_group2" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+									<div id="_group1" style="background-color: #d9d9d9; float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/girl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+									<!-- <div id="_group2" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
 									<div id="_group3" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
 									<div id="_group4" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
 									<div id="_group5" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
 									<div id="_group6" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
 									<div id="_group7" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-									<div id="_group8" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+									<div id="_group8" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div> -->
 							   <!-- <div id="_group9" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
 									<div id="_group10" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>  -->
 								</div>
@@ -2741,226 +2757,22 @@
 								<div id="_listG1" style="height:310px; overflow-y: auto; overflow-x: hidden; display: block;">
 									<table id="_listG1Table">
 										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/45.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/65.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/75.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/85.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set001.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set002.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set003.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set004.png);" onclick="displaySticker(this);"></div></td>
 										</tr>
 										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/95.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/105.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/118.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/119.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set005.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set006.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set007.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set008.png);" onclick="displaySticker(this);"></div></td>
 										</tr>
 										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/125.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/135.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/145.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/155.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/165.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/172.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/182.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/192.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/202.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/215.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/216.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/222.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/232.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/242.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/252.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/262.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/272.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/282.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/292.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/302.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/314.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/315.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/322.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/332.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/341.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/351.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/361.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/371.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/381.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/391.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/401.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/431.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-									</table>
-								</div>
-								<div id="_listG2" style="height:310px; overflow-y: auto; overflow-x: hidden; display: none;">
-									<table id="_listG2Table">
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/2.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/3.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/4.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/5.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/6.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/7.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/8.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/9.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/10.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/11.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/12.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/13.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/14.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/15.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/16.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/17.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/18.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/19.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/20.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/21.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/22.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/23.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/24.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/25.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/26.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/27.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/28.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/29.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/30.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/31.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/32.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/shin/33.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-									</table>
-								</div>
-								<div id="_listG3" style="height:310px; overflow-y: auto; overflow-x: hidden; display: none;">
-									<table id="_listG3Table">
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/1.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/2.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/3.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/4.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/5.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/6.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/7.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/8.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/9.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/10.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/11.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/12.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/13.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/14.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/15.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/16.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/17.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/18.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/19.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/20.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/21.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/22.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/23.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/cat/24.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-									</table>
-								</div>
-								<div id="_listG4" style="height:310px; overflow-y: auto; overflow-x: hidden; display: none;">
-									<table id="_listG4Table">
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/1.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/2.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/3.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/4.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/5.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/6.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/7.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/8.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/9.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/10.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/11.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/12.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/13.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/14.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/15.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/16.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/17.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/18.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/19.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/20.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/21.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/22.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/23.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/24.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/25.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/26.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/27.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/28.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/29.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/30.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/31.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/32.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/33.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/34.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/35.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/36.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/37.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/38.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/39.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/40.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/41.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/42.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/43.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/boy/44.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set009.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set010.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set011.png);" onclick="displaySticker(this);"></div></td>
+											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set012.png);" onclick="displaySticker(this);"></div></td>
 										</tr>
 									</table>
 								</div>
@@ -2969,7 +2781,7 @@
 						<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:20px; width:20px; padding-left:20px; padding-top:3px; cursor: pointer;" onclick="addSticker()">
 					</div >				
 					<div class="comment_input_layout">
-						<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)"></textarea>
+						<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
 					</div>
 					<div class="commentBtn">
 						<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">

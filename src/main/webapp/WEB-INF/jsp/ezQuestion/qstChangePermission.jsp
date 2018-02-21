@@ -195,11 +195,6 @@
 
 	    	    var m_PostDate = "${mPostDate}";
 	        	var m_PollStartDate = L_SearchStartDt;
-	        	var tempS = m_PollStartDate.split("-");
-	        	var szSYear = tempS[0];
-	        	var szSMonth = tempS[1];
-	        	var szSDay = tempS[2];
-	        	m_PollStartDate = szSYear + szSMonth + szSDay
 	        	
 	        	if (m_PostDate > m_PollStartDate) {
 		            alert("<spring:message code='ezQuestion.t199' />");
@@ -246,11 +241,6 @@
 	        	}
 
 	        	var m_PollStartDate = L_SearchStartDt;
-	        	var tempS = m_PollStartDate.split("-");
-	        	var szSYear = tempS[0];
-	        	var szSMonth = tempS[1];
-	        	var szSDay = tempS[2];
-	        	m_PollStartDate = szSYear + szSMonth + szSDay;
 	        	
 	        	if (m_PollStartDate > m_PostDate) {
 		            alert("<spring:message code='ezQuestion.t204'/>");

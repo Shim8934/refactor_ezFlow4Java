@@ -513,34 +513,15 @@ function ListView() {
                 }        
 
                 // 리스트 제목부분 width 제거
-                if (strWidth != "") {
-                    if (i != _titleIdx) {
-                        if (OrderCell == strName) {
-                            objTd.width = strWidth + "px";
-                        }
-                        else {
-                            if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
-                                objTd.setAttribute("width", strWidth + "px");
-                            }
-                            else {
-                                objTd.width = strWidth + "px";
-                            }
-                        }
-                    }
-                    else {
-                        if (_WidthFlag) {
-                            if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
-                               objTd.setAttribute("width", "80%");
-                            }
-                            else {
-                               objTd.width = "80%";
-                            }
-                        }
-                        else
-                            objTd.width = strWidth + "px";
-                    }
-                    _TableWidth = _TableWidth + parseInt(strWidth);
-                }
+            	if (OrderCell == strName) {
+              		objTd.width = strWidth + "px";
+		        } else {
+		        	if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
+		        		objTd.setAttribute("width", strWidth + "px");
+		            } else {
+		                  objTd.width = strWidth + "px";
+		            }
+		        }  
 
                 try{
             	   if (_HeaderNode == "COLNAME") {
