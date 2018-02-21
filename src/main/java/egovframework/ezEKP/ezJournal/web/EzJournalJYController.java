@@ -45,7 +45,7 @@ public class EzJournalJYController {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
-	@RequestMapping(value="/ezJournal/journalList.do")
+	@RequestMapping(value="/ezJournal/journalList12.do")
 	public String journalList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("journalList started");
 		

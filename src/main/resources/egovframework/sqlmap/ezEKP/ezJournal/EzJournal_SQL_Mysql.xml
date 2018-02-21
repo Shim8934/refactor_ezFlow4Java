@@ -9,7 +9,15 @@
 	<typeAlias alias="authorVO" type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO"/>
 	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO"/>
 	<typeAlias alias="deptInfoVO" type="egovframework.ezEKP.ezJournal.vo.DeptInfoVO"/>	
-
+	<typeAlias alias="journalEnvVO" type="egovframework.ezEKP.ezJournal.vo.JournalEnvVO"/>	
+	
+	<resultMap class="journalEnvVO" id="journalEnvMap">
+		<result property="listCnt" column="list_cnt"/>
+		<result property="viewenv" column="viewenv"/>
+		<result property="recieveAlert" column="recieve_alert"/>
+		<result property="replyAlert" column="reply_alert"/>
+	</resultMap>
+	
 	<resultMap class="deptViewVO" id="deptViewMap">
 		<result property="id" column="id"/>
 		<result property="parent" column="parent"/>
@@ -288,6 +296,7 @@
         left join jmocha.tbl_usermaster u on (d.CN=u.DEPARTMENT and u.TENANT_ID=d.TENANT_ID)
         where u.CN=#userId#
         and u.TENANT_ID=#tenantId#
+        order by dept_name
 	</select>
 	
 	<!-- 해당부서의 사원리스트 -->
@@ -301,6 +310,7 @@
 		from tbl_usermaster
 		where TENANT_ID=#tenantId#
 		and $key$ like concat('%',#value#,'%')
+		order by  lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME
 	</select>
 	
 	<!-- 양식 상세정보 -->
@@ -373,6 +383,15 @@
 	<delete id="deleteAuthDept" parameterClass="Map">
 		delete from jmocha.tbl_journal_auth where user_id=#userId# and tenant_id=#tenantId#
 	</delete>
+	
+	<!-- 수신일지 수 -->
+	<select id="selectRecvJournalCount" parameterClass="Map" resultClass="String">
+		select count(*)
+		from jmocha.tbl_journal_recv 
+		where user_id=#userId#
+		and TENANT_ID=#tenantId#
+		and isnull(recieve_date)
+	</select>
 	
 	<!-- 일지 리스트 페이징하기! -->
 	<select id="selectJournalListCount" parameterClass="Map">
@@ -481,6 +500,17 @@
 		group by 1,2,3,4,5,6,7,8
 		order by $orderNum$ $orderHow$
 		limit #startCount#,#listCnt#
+	</select>
+	
+	<!-- 환경설정을 가져오기 -->
+	<select id="selectUserEnv" parameterClass="Map" resultMap="journalEnvMap">
+		select count(user_id),ifnull(list_cnt,20) as list_cnt
+			,ifnull(viewenv,'normal') as viewenv
+		    ,ifnull(recieve_alert,'yes') as recieve_alert
+		    ,ifnull(reply_alert,'yes') as reply_alert
+		from jmocha.tbl_journal_env
+		where user_id=#userId#
+		and tenant_id=#tenantId#
 	</select>
 	
 </sqlMap>

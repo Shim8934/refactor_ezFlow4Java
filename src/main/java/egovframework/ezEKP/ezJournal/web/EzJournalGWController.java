@@ -20,6 +20,7 @@ import egovframework.ezEKP.ezJournal.service.EzJournalService;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
+import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezMobile.ezApprovalG.web.MApprovalGGWController;
@@ -777,6 +778,19 @@ public class EzJournalGWController {
 		
 		JSONObject result = new JSONObject();
 		
+		String tenantId = request.getParameter("tenantId");
+		
+		try {
+			JournalEnvVO journalOpt = ezJournalService.getUserJournalEnv(userId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", journalOpt);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
+		
 		LOGGER.debug("ezJournal G/W getOption ended.");
 		return result;
 	}
@@ -866,6 +880,31 @@ public class EzJournalGWController {
 		}
 		
 		LOGGER.debug("ezJournal G/W getUserList ended.");
+		return result;
+	}
+	
+	/**
+	 * 업무일지 G/W [GET] 수신일지개수 
+	 */
+	@RequestMapping(value="/restezjournal/users/{userId}/recv-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getRecvJournalCount(@PathVariable String userId,HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezJournal G/W getRecvJournalCount started.");
+		
+		JSONObject result = new JSONObject();
+		
+		String tenantId = request.getParameter("tenantId");
+		
+		try {
+			String recvCount = ezJournalService.getRecvJournalCount(userId,tenantId);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", recvCount);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
+		
+		LOGGER.debug("ezJournal G/W getRecvJournalCount ended.");
 		return result;
 	}
 }

@@ -62,13 +62,23 @@ public class EzJournalSBController {
 
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		param.put("companyId",userInfo.getCompanyID());
-		param.put("used", "use");
 		param.put("tenantId", userInfo.getTenantId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/types", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/users/"+userInfo.getId()+"/recv-count", param, request,"get",null);
 		String status = resultBody.get("status").toString();
-			
+		
+		if (status.equals("ok")) {			
+			String recvCount = (String) resultBody.get("data");
+			model.addAttribute("recvCount", recvCount);
+			logger.debug("recvCount = ********"+recvCount);
+		}
+		
+		param.put("companyId",userInfo.getCompanyID());
+		param.put("used", "use");
+		
+		resultBody = commonUtil.getJsonFromRestApi("/restezjournal/types", param, request,"get",null);
+		status = resultBody.get("status").toString();
+		
 		if (status.equals("ok")) {			
 			JSONArray typeList = (JSONArray) resultBody.get("data");
 			model.addAttribute("typeList", typeList);
@@ -77,5 +87,49 @@ public class EzJournalSBController {
 		logger.debug("journalLeft ended");
 		
 		return "/ezJournal/journalLeft";
+	}
+	
+	/**
+	 * 업무일지 리스트 화면
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezJournal/journalListMain.do")
+	public String journalListMain(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("journalListMain started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String listType = request.getParameter("listType");
+		String typeId = request.getParameter("typeId");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("tenantId", userInfo.getTenantId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/users/"+userInfo.getId()+"/author-depts", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			//셀렉트박스 부서명
+			JSONArray deptList = (JSONArray) resultBody.get("data");
+			model.addAttribute("deptList", deptList);
+			model.addAttribute("listType",listType);
+			model.addAttribute("typeId",typeId);
+		}
+		
+		resultBody = commonUtil.getJsonFromRestApi("/restezjournal/users/"+userInfo.getId()+"/options", param, request,"get",null);
+		status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			//업무일지 환경설정
+			JSONObject journalEnv =  (JSONObject) resultBody.get("data");
+			model.addAttribute("journalEnv", journalEnv);
+		}
+		logger.debug("journalListMain ended");
+		
+		return "/ezJournal/journalListMain";
 	}
 }

@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezJournal.vo.DeptInfoVO;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
+import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -193,5 +194,21 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public void deleteAuthDept(Map<String, Object> map){
 		delete("deleteAuthDept", map);
 	}
+
+	/**
+	 * 해당사원의 수신일지 갯수
+	 * @param map
+	 */
+	public String selectRecvCount(Map<String, Object> map) {
+		return (String) select("selectRecvJournalCount",map);
+	}
 	
+	/**
+	 * 해당사원의 업무일지 환경설정
+	 * @param map
+	 * @return
+	 */
+	public JournalEnvVO selectUserEnv(Map<String, Object> map){
+		return (JournalEnvVO) select("selectUserEnv",map);
+	}
 }

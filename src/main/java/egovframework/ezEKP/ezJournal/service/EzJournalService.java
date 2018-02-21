@@ -9,6 +9,7 @@ import org.json.simple.JSONObject;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
+import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 
@@ -166,5 +167,20 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public void deleteAuthor(String userId,String tenantId) throws Exception;
+
+	/**
+	 * 해당사원의 수신일지 개수
+	 * @param userId
+	 * @param tenantId
+	 * @return
+	 */
+	public String getRecvJournalCount(String userId, String tenantId);
 	
+	/**
+	 * 해당사원의 업무일지 환경설정
+	 * @param userId
+	 * @param tenantId
+	 * @return
+	 */
+	public JournalEnvVO getUserJournalEnv(String userId, String tenantId);
 }
