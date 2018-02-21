@@ -52,6 +52,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -1341,36 +1342,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo, oriPass);
 							
-							// UseInitMailSign이 YES일 경우 메일 서명 등록
-							String useInitMailSign = ezCommonService.getTenantConfig("UseInitMailSign", tenantID);
-							if (useInitMailSign.equals("YES")) {
-								ezEmailService.setInitMailSignature(tenantID, cn);
-							}
 							
-							// UseInitInboxRule이 YES일 경우 메일 자동분류 등록
-							String useInitInboxRule = ezCommonService.getTenantConfig("UseInitInboxRule", tenantID);
-							if (useInitInboxRule.equals("YES")) {
-								//자동분류에 등록된 메일함이 존재하지 않으면 메일함을 생성한다.
-								List<String> mailboxList = ezEmailService.getInitInboxRuleMailbox(tenantID);
-								String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
-								
-								IMAPAccess ia = null;
-						        try {
-									ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-											mailAddr, password, egovMessageSource, locale);
-									
-									for (int i = 0; i < mailboxList.size(); i++) {
-										ia.createFolder(mailboxList.get(i));
-									}
-								} finally {
-									if (ia != null) {
-										ia.close();
-										ia = null;
-									}
-								}
-								
-								ezEmailService.setInitInboxRule(tenantID, cn);
-							}
 							
 							result = "OK";
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
@@ -1392,6 +1364,67 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+        if (result.equals("OK")) {
+	        // UseInitMailSign이 YES일 경우 메일 서명 등록
+			String useInitMailSign = ezCommonService.getTenantConfig("UseInitMailSign", tenantID);
+			if (useInitMailSign.equals("YES")) {
+				MailSignatureVO mailSignatureVO = ezEmailService.getInitMailSignature(tenantID);
+				
+				if (mailSignatureVO != null) {
+					vo = ezOrganAdminService.getUserInfo(vo.getCn(), "1", tenantID);
+					
+					String content1 = mailSignatureVO.getContent1() == null ? "" : mailSignatureVO.getContent1();
+					String content2 = mailSignatureVO.getContent2() == null ? "" : mailSignatureVO.getContent2();
+					String content3 = mailSignatureVO.getContent3() == null ? "" : mailSignatureVO.getContent3();
+					
+					content1 = content1.replace("${company}", vo.getCompany()).replace("${name}", vo.getDisplayName()).replace("${department}", vo.getDescription()).replace("${email}", vo.getMail())
+							.replace("${title}", vo.getTitle() == null ? "" : vo.getTitle()).replace("${position}", vo.getExtensionAttribute10() == null ? "" : vo.getExtensionAttribute10())
+							.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
+							.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
+							.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
+				
+					content2 = content2.replace("${company}", vo.getCompany()).replace("${name}", vo.getDisplayName()).replace("${department}", vo.getDescription()).replace("${email}", vo.getMail())
+							.replace("${title}", vo.getTitle() == null ? "" : vo.getTitle()).replace("${position}", vo.getExtensionAttribute10() == null ? "" : vo.getExtensionAttribute10())
+							.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
+							.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
+							.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
+				
+					content3 = content3.replace("${company}", vo.getCompany()).replace("${name}", vo.getDisplayName()).replace("${department}", vo.getDescription()).replace("${email}", vo.getMail())
+							.replace("${title}", vo.getTitle() == null ? "" : vo.getTitle()).replace("${position}", vo.getExtensionAttribute10() == null ? "" : vo.getExtensionAttribute10())
+							.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
+							.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
+							.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
+					
+					ezEmailService.setMailSignature(tenantID, vo.getCn(), mailSignatureVO.getUseFlag(), content1, content2, content3);
+				}
+			}
+			
+			// UseInitInboxRule이 YES일 경우 메일 자동분류 등록
+			String useInitInboxRule = ezCommonService.getTenantConfig("UseInitInboxRule", tenantID);
+			if (useInitInboxRule.equals("YES")) {
+				//자동분류에 등록된 메일함이 존재하지 않으면 메일함을 생성한다.
+				List<String> mailboxList = ezEmailService.getInitInboxRuleMailbox(tenantID);
+				String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+				
+				IMAPAccess ia = null;
+		        try {
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							vo.getMail(), password, egovMessageSource, locale);
+					
+					for (int i = 0; i < mailboxList.size(); i++) {
+						ia.createFolder(mailboxList.get(i));
+					}
+				} finally {
+					if (ia != null) {
+						ia.close();
+						ia = null;
+					}
+				}
+				
+				ezEmailService.setInitInboxRule(tenantID, vo.getCn());
+			}
+        }
+        
 		logger.debug("saveUserInfo ended. result=" + result);
 		
 		return result;
