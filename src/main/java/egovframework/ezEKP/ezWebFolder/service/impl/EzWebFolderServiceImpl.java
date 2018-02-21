@@ -199,9 +199,9 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	}
 
 	@Override
-	public void updateFolderUseStatus(String folderId, int tenantId) throws Exception {
+	public void updateFolderUseStatus(String folderPath, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderId", folderId);
+		map.put("folderPath", folderPath);
 		map.put("tenantId", tenantId);
 		ezWebFolderDAO.updateFolderUseStatus(map);
 	}

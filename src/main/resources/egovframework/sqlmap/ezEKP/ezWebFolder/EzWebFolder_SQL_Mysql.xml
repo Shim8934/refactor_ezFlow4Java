@@ -639,11 +639,11 @@
 			UPDATE
 				TBL_WEBFOLDER_FOLDER
 			SET
-				USE_STATUS = "N"
+				USE_STATUS = "T"
 			WHERE
-				FOLDER_ID  = #folderId#
+				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
 			AND
-				TENANT_ID  = #tenantId#
+				TENANT_ID = #tenantId#
 		]]>
 	</update>
 	

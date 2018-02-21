@@ -1244,8 +1244,9 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 
 	@RequestMapping(value="/webfolderadmin/folders/{folderid}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject delCompanyFolder(@PathVariable(value="folderid") String folderId, HttpServletRequest request) throws Exception {
-		int tenantId        = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
-		JSONObject result   = new JSONObject();
+		int tenantId      = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
+		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
+		JSONObject result = new JSONObject();
 		
 		if (folderId.equals("") || tenantId == -1) {
 			logger.debug("Parameter error!");
@@ -1257,7 +1258,8 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		logger.debug("FolderId: " + folderId + " || TenantId: " + tenantId);
 		
 		try {
-			ezWebFolderService.updateFolderUseStatus(folderId, tenantId);
+			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			ezWebFolderService.updateFolderUseStatus(folder.getFolderPath(), tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
