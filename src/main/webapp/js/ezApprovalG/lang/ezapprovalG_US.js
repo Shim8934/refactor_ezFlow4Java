@@ -507,6 +507,7 @@ var strLang713 = "Can not find the documentary information."
 var strLang714 = "Additional information initialization"
 var strLang715 = "Classification information initialization"
 var strLang716 = "Failed loading documentary classification information!"
+var strLang717 = "The opinion about contents of body is follow.]\15"
 // ezDocInfo\setL
 // ezStatistics\_vti_cnf\ezStatistics.js
 // ezStatistics\ezStatistics.js

@@ -507,6 +507,7 @@ var strLang713 = "기록물 정보를 찾을 수 없습니다."
 var strLang714 = "부가정보 초기화"
 var strLang715 = "분류정보 초기화"
 var strLang716 = "기록물 분류정보를 가져오는데 실패하였습니다!"
+var strLang717 = "본문 내용에 대한 의견은 다음과 같습니다.]\15"
 // ezDocInfo\setLogData.js
 // ezStatistics\_vti_cnf\ezStatistics.js
 // ezStatistics\ezStatistics.js

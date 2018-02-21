@@ -980,12 +980,10 @@
 				    para[0] = g_SepAttachLVXml;
 				    para[1] = cabinetID;
 				
-				    var url = "/myoffice/ezApprovalG/ezCabinet/InsSepAttach.aspx";
-				    var feature = "dialogWidth:730px;dialogHeight:353px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
-				
-				    if (url != "")
-				        var rtn = window.showModalDialog(url, para, feature);
-				
+				    var url = "/ezApprovalG/insSepAttach.do";
+				    var feature = "dialogWidth:730px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
+			        var rtn = window.showModalDialog(url, para, feature);
+
 				    if (rtn[0] == "TRUE") {
 				        g_SepAttachLVXml = rtn[1];
 				        SetDocumentElement(HwpCtrl, "SepAttachLVXml", g_SepAttachLVXml);
@@ -1085,8 +1083,7 @@
 			                btnSendDraftEnable = "true";
 			                GetDraftAprLineInfo(ret);
 			            }
-			console.log(pSuSinFlag);
-			console.log(ret[2]);
+			            
 			            if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
 			            	$.ajax({
 	                    		type : "POST",

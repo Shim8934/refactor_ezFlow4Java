@@ -36,7 +36,7 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 	
 	var DocumentInfo = new ActiveXObject("Microsoft.XMLDOM");
 	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
-	
+alert(DocumentInfo.getElementsByTagName("KEYWORD").item(0).textContent);	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
 	    if (DocumentInfo.getElementsByTagName("KEYWORD").item(0).childNodes.length == 0) {
 	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONNROOT></CONNROOT>");
@@ -53,10 +53,9 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 			return true;
 		} else {
 			var objNode;
-			
 			createNodeAndAppandNodeText(DocumentKeywordInfo, DocumentKeywordInfo.getElementsByTagName("KEYWORD").item(0), objNode, CharName, value);
-			
 			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.getElementsByTagName("CONNROOT").item(0)));
+			
 			return true;
 		}
 	} else {

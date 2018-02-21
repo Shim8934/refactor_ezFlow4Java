@@ -46,6 +46,7 @@
 		            document.getElementById("listviewdiv").style.height = "500px";
 		            document.getElementById("lvList").style.height = "500px";
 		        }
+alert(RetValue[0]);
 		        g_SepAttchLVXml = RetValue[0];
 		        g_CabinetID = RetValue[1];
 		        if (RetValue[2])
@@ -489,6 +490,7 @@
 		            ReturnFunction(rtnVal);
 		        }
 		        else {
+		        	window.returnValue = rtnVal;
 		            window.close();
 		        }
 		    }
@@ -498,6 +500,7 @@
 		        }
 		        else {
 		            rtnVal[0] = "FALSE";
+		            window.returnValue = rtnVal;
 		            window.close();
 		        }
 		    }
@@ -512,14 +515,14 @@
 	</head>
 	<body class="popup">
 		<div id="menu">
-		        <ul id="trModify" style="display:none">
-		          <li id="btnAddList"><span onClick="return btnAddList_onclick()"><spring:message code='ezApprovalG.t268'/></span></li>
-		          <li id="btnModList" ><span onClick="return btnModList_onclick()"><spring:message code='ezApprovalG.t1033'/></span></li>
-				  <li id="btnDelList"><span onClick="return btnDelList_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
-		        </ul>
-				<ul id="trChangeCabinet" style="display:none">
-		          <li id="btnSelectCabinet"><span onClick="return btnSelectCabinet_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
-		        </ul>
+	        <ul id="trModify" style="display:none">
+	          <li id="btnAddList"><span onClick="return btnAddList_onclick()"><spring:message code='ezApprovalG.t268'/></span></li>
+	          <li id="btnModList" ><span onClick="return btnModList_onclick()"><spring:message code='ezApprovalG.t1033'/></span></li>
+			  <li id="btnDelList"><span onClick="return btnDelList_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
+	        </ul>
+			<ul id="trChangeCabinet" style="display:none">
+	          <li id="btnSelectCabinet"><span onClick="return btnSelectCabinet_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
+	        </ul>
 		</div>
 		
 		<h2><spring:message code='ezApprovalG.t1034'/></h2>
@@ -528,8 +531,8 @@
 		</div>
 		
 		<div class="btnposition btnpositionNew" >
-		<a class="imgbtn"><span onclick = "return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
-		<a class="imgbtn"><span onclick = "return btnClose_onclick()"> <spring:message code='ezApprovalG.t119'/></span></a>
+			<a class="imgbtn"><span onclick = "return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
+			<a class="imgbtn"><span onclick = "return btnClose_onclick()"> <spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

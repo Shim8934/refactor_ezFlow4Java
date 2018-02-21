@@ -2951,14 +2951,19 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN()) {
-        ezapralert_cross_dialogArguments[0] = parameter;
-        if (CompleteFunction != undefined)
-            ezapralert_cross_dialogArguments[1] = CompleteFunction;
-        else
-            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-        DivPopUpShow(330, 205, url);
-    }
-    else {
+    	if (isIE() && !document.getElementById("iFrameLayer")) {
+    		var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+    		feature = feature + GetShowModalPosition(330, 205);
+			var rtn = window.showModalDialog(url, parameter, feature);
+    	} else {
+    		ezapralert_cross_dialogArguments[0] = parameter;
+    		if (CompleteFunction != undefined)
+    			ezapralert_cross_dialogArguments[1] = CompleteFunction;
+    		else
+    			ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+    		DivPopUpShow(330, 205, url);
+    	}
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
         if (url != "")

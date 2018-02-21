@@ -1131,6 +1131,43 @@ function SetAutoPropFinal()
   }
 }
 
+function openOpinionUI(pOpinionFlag)
+{
+  try{
+    var parameter = new Array();
+    parameter[0]	= pDocID;
+    parameter[1]	= pOpinionFlag;
+    parameter[2]	= KuyjeType;
+    parameter[3]	= pDraftFlag;
+  
+    var url = "/ezApprovalG/aprOpinion.do";
+	var feature = "status:no;dialogWidth:530px;dialogHeight:495px;edge:sunken;scroll:no"
+	var ret = window.showModalDialog(url,parameter,feature);
+	
+	if (ret != "cancel") {
+	    var NodeList;
+	    var objXML = new ActiveXObject("Microsoft.XMLDOM");
+	    
+	    objXML.loadXML(ret);
+	    NodeList = objXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
+	
+	    if (NodeList.length != 0) {
+			pHasOpinionYN = "Y";
+	    } else {
+			pHasOpinionYN = "N";
+			ret = "cancel";
+	    }
+	    
+	    makeOpinionList(objXML);
+    }
+	
+    return ret;
+  }catch(e){
+    alert("openOpinionUI(pOpinionFlag)" + e.description);
+  }
+}
+
+
 function makeOpinionList(OpinionXML)
 {
 	if (!HwpCtrl.CheckFieldExist("opinions"))
@@ -1168,6 +1205,44 @@ function makeOpinionList(OpinionXML)
 	{
 		HwpCtrl.SetFieldText("opinions", "");
 	}
+}
+
+
+function openFileAttachUI()
+{
+  try{
+	var parameter = pDocID;
+	var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag;
+	var feature	= "status:no;dialogWidth:540px;dialogHeight:390px;edge:sunken;scroll:no"; 
+	var ret = window.showModalDialog(url, parameter, feature);
+
+	if (ret != "cancel") {
+		setAttachInfo(pDocID, "APR", lstAttachLink);
+	}
+	
+	return ret;
+  }catch(e){
+	alert("openFileAttachUI()" + e.description);
+  }
+}
+
+
+function openAaprDocAttachUI()
+{
+  try{
+	var parameter = pDocID;
+	var url = "/ezApprovalG/aprCabinetAttach.do?draftFlag=" + pDraftFlag;
+	var feature	= "status:no;dialogWidth:850px;dialogHeight:500px;edge:sunken;scroll:no;help:no"; 
+	var ret = window.showModalDialog(url,parameter,feature);
+
+	if(ret != "cancel")
+	{
+		setAttachInfo(pDocID, "APR", lstAttachLink);	
+	}
+	return ret;
+  }catch(e){
+	alert("openAaprDocAttachUI()" + e.description);
+  }
 }
 
 //애매해서 나둠

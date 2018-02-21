@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezViewApr_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/attachG.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>

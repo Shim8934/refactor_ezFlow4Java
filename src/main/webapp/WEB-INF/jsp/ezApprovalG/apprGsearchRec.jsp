@@ -158,9 +158,7 @@
 		
 		            if (ReturnFunction != null) {
 		                ReturnFunction(rtnVal);
-		                window.close();
-		            }
-		            else {
+		            } else {
 		                window.returnValue = rtnVal;
 		                window.close();
 		            }
@@ -236,9 +234,7 @@
 		        rtnVal[0] = "FALSE";
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
-		            window.close();
-		        }
-		        else {
+		        } else {
 		            window.returnValue = rtnVal;
 		            window.close();
 		        }

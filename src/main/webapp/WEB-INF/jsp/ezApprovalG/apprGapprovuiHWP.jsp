@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_HWP.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezAprove_HWP.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/attachG.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>

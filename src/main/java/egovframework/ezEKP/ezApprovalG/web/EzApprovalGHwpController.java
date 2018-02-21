@@ -39,6 +39,14 @@ public class EzApprovalGHwpController {
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
 	
+	/**
+	 * @param loginCookie
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 * 전자결재 한글기안기 오픈
+	 */
 	@RequestMapping(value = "/ezApprovalG/drafuitHWP.do", produces = "text/xml;charset=utf-8")
 	public String drafuitHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("drafuitHWP started");

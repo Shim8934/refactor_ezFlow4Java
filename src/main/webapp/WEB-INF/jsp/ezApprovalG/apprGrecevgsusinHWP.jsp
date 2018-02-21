@@ -16,7 +16,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/ezRecevG_Susin_HWP.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezRecevG_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/CheckLines.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/AutoAprLine.js"></script>
