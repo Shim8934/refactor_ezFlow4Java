@@ -102,7 +102,7 @@
 		                    ConObj.selectedIndex = 1;
 		                    ConObj.item(1).checked = true;
 		                    var _exp = "\"" + spltRuleVal[i].replace(/;/g, "" + strLang236 + "") + "\"";
-		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + spltRuleVal[i] + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + spltRuleVal[i] + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
 		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
 		                    break;
@@ -110,7 +110,7 @@
 		                    ConObj.selectedIndex = 2;
 		                    ConObj.item(2).checked = true;
 		                    var _exp = "\"" + spltRuleVal[i].replace(/;/g, "" + strLang236 + "") + "\"";
-		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + spltRuleVal[i] + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + spltRuleVal[i] + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
 		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
 		                    break;
@@ -118,7 +118,7 @@
 		                    ConObj.selectedIndex = 3;
 		                    ConObj.item(3).checked = true;
 		                    var _exp = "\"" + MakeXMLString(spltRuleVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
 		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
 		                    break;
@@ -126,7 +126,7 @@
 		                    ConObj.selectedIndex = 4;
 		                    ConObj.item(4).checked = true;
 		                    var _exp = "\"" + MakeXMLString(spltRuleVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
 		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
 		                    break;
@@ -134,7 +134,7 @@
 		                    ConObj.selectedIndex = 5;
 		                    ConObj.item(5).checked = true;
 		                    var _exp = "\"" + MakeXMLString(spltRuleVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
 		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
 		                    break;
@@ -142,14 +142,14 @@
 		                    ConObj.selectedIndex = 6;
 		                    ConObj.item(6).checked = true;
 		                    var _exp = "\"" + MakeXMLString(spltRuleVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
 		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
 		                    break;
 		                default:
 		                    ConObj.selectedIndex = 7;
 		                    ConObj.item(7).checked = true;
-		                    ConObj.nextSibling.innerHTML = "<span style='font-family:dotum'><nobr><u>" + strLang340 + "</u></nobr></span>";
+		                    ConObj.nextSibling.innerHTML = "<span><nobr><u>" + strLang340 + "</u></nobr></span>";
 		                    ConObj.nextSibling.setAttribute("value", "ALLMESSAGES");
 		                    ConObj.nextSibling.setAttribute("RuleKind", "ALLMESSAGES");
 		                    document.getElementById("tb_AddRuleCon").style.display = "none";
@@ -175,7 +175,7 @@
 		                case "MOVE":
 		                    ActObj.selectedIndex = 1;
 		                    ActObj.item(1).checked = true;
-		                    ActObj.nextSibling.innerHTML = "<span onclick='getFoldercell(this, \"" + spltAct[i] + "\");' style='font-family:dotum' value='" + spltActFid[ActFcnt] + "'><nobr>\"<u>" + spltActFnm[ActFcnt] + "" + strLang220 + "</u></nobr></span>";
+		                    ActObj.nextSibling.innerHTML = "<span onclick='getFoldercell(this, \"" + spltAct[i] + "\");' value='" + spltActFid[ActFcnt] + "'><nobr>\"<u>" + spltActFnm[ActFcnt] + "" + strLang220 + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("url", spltActFid[ActFcnt]);
 		                    ActObj.nextSibling.setAttribute("fordername", spltActFnm[ActFcnt]);
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
@@ -184,21 +184,21 @@
 		                case "DELETE":
 		                    ActObj.selectedIndex = 2;
 		                    ActObj.item(2).checked = true;
-		                    ActObj.nextSibling.innerHTML = "<span style='font-family:dotum'><nobr><u>" + strLang212 + "</u></nobr></span>";
+		                    ActObj.nextSibling.innerHTML = "<span><nobr><u>" + strLang212 + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
 		                    break;
 		                case "REDIRECTION":
 		                    ActObj.selectedIndex = 3;
 		                    ActObj.item(3).checked = true;
 		                    var _exp = "\"" + MakeXMLString(spltActVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ActObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltActVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ActObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltActVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
 		                    ActObj.nextSibling.setAttribute("value", spltActVal[i]);
 		                    break;
 		                case "COPY":
 		                    ActObj.selectedIndex = 4;
 		                    ActObj.item(4).checked = true;
-		                    ActObj.nextSibling.innerHTML = "<span onclick='getFoldercell(this, \"" + spltAct[i] + "\");' style='font-family:dotum' value='" + spltActFid[ActFcnt] + "'><nobr>\"<u>" + spltActFnm[ActFcnt] + "" + strLang342 + "</u></nobr></span>";
+		                    ActObj.nextSibling.innerHTML = "<span onclick='getFoldercell(this, \"" + spltAct[i] + "\");' value='" + spltActFid[ActFcnt] + "'><nobr>\"<u>" + spltActFnm[ActFcnt] + "" + strLang342 + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("url", spltActFid[ActFcnt]);
 		                    ActObj.nextSibling.setAttribute("fordername", spltActFnm[ActFcnt]);
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
@@ -207,14 +207,14 @@
 		                case "READ":
 		                    ActObj.selectedIndex = 5;
 		                    ActObj.item(5).checked = true;
-		                    ActObj.nextSibling.innerHTML = "<span style='font-family:dotum'><nobr><u>" + strLang341 + "</u></nobr></span>";
+		                    ActObj.nextSibling.innerHTML = "<span><nobr><u>" + strLang341 + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
 		                    ActObj.nextSibling.setAttribute("value", spltAct[i]);
 		                    break;
 		                case "IMPORTANCE":
 		                    ActObj.selectedIndex = 5;
 		                    ActObj.item(5).checked = true;
-		                    ActObj.nextSibling.innerHTML = "<span style='font-family:dotum'><nobr><u>" + strLang343 + "</u></nobr></span>";
+		                    ActObj.nextSibling.innerHTML = "<span><nobr><u>" + strLang343 + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
 		                    ActObj.nextSibling.style.width = "auto";
 		                    ActObj.nextSibling.nextSibling.nextSibling.style.display = "";
@@ -235,7 +235,7 @@
 		                    ActObj.selectedIndex = 7;
 		                    ActObj.item(7).checked = true;
 		                    var _exp = "\"" + MakeXMLString(spltActVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ActObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltActVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ActObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltActVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
 		                    ActObj.nextSibling.setAttribute("value", spltActVal[i]);
 		                    break; */
@@ -257,7 +257,7 @@
 		                    ExptObj.selectedIndex = 1;
 		                    ExptObj.item(1).checked = true;
 		                    var _exp = "\"" + spltExptVal[i].replace(/;/g, "" + strLang236 + "") + "\"";
-		                    ExptObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltExptVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ExptObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltExptVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ExptObj.nextSibling.setAttribute("value", spltExptVal[i]);
 		                    ExptObj.nextSibling.setAttribute("RuleKind", spltExpt[i]);
 		                    break;
@@ -265,7 +265,7 @@
 		                    ExptObj.selectedIndex = 2;
 		                    ExptObj.item(2).checked = true;
 		                    var _exp = "\"" + MakeXMLString(spltExptVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ExptObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltExptVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ExptObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltExptVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ExptObj.nextSibling.setAttribute("value", spltExptVal[i]);
 		                    ExptObj.nextSibling.setAttribute("RuleKind", spltExpt[i]);
 		                    break;
@@ -273,7 +273,7 @@
 		                    ExptObj.selectedIndex = 3;
 		                    ExptObj.item(3).checked = true;
 		                    var _exp = "\"" + MakeXMLString(spltExptVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ExptObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltExptVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ExptObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltExptVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ExptObj.nextSibling.setAttribute("value", spltExptVal[i]);
 		                    ExptObj.nextSibling.setAttribute("RuleKind", spltExpt[i]);
 		                    break;
@@ -281,7 +281,7 @@
 		                    ExptObj.selectedIndex = 4;
 		                    ExptObj.item(4).checked = true;
 		                    var _exp = "\"" + MakeXMLString(spltExptVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ExptObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltExptVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ExptObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltExptVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ExptObj.nextSibling.setAttribute("value", spltExptVal[i]);
 		                    ExptObj.nextSibling.setAttribute("RuleKind", spltExpt[i]);
 		                    break;
@@ -289,7 +289,7 @@
 		                    ExptObj.selectedIndex = 5;
 		                    ExptObj.item(5).checked = true;
 		                    var _exp = "\"" + MakeXMLString(spltExptVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ExptObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltExptVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+		                    ExptObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltExptVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ExptObj.nextSibling.setAttribute("value", spltExptVal[i]);
 		                    ExptObj.nextSibling.setAttribute("RuleKind", spltExpt[i]);
 		                    break;
@@ -416,7 +416,7 @@
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
-		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' style='font-family:dotum' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
+		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
 		            isFolderChanged = mailBoxInfo["isFolderChanged"];
 		        } catch (e) {
 		
@@ -442,7 +442,7 @@
 		            //mail_selectfolder_cross_dialogArguments[2].parentNode.setAttribute("RuleKind", "MOVE");
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
-		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' style='font-family:dotum' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
+		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
 		        } catch (e) {
 		
 		        }
@@ -505,7 +505,7 @@
 		                    ConCellRow = null;
 		                }
 		                else {
-		                    Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
 		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  nobr").text(inboxRuleCon1.value);
 		                    inboxRuleCon1.value = "";
 		                    inboxRuleCon1.focus();
@@ -525,14 +525,14 @@
 		            if (RuleKind == "SENDER" || RuleKind == "RECEIVER" || _RuleKind == "FORWARD" || _RuleKind == "REDIRECTION") {
 		                if (value.split("<").length > 1) {
 		                    var mailaddress = value.split("<")[1].replace(">", "");
-		                    Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + mailaddress + "'><nobr>" + MakeXMLString(value) + "</nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + mailaddress + "'><nobr>" + MakeXMLString(value) + "</nobr><div>";
 		                }
 		                else {
-		                    Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr>" + value + "</nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr>" + value + "</nobr><div>";
 		                }
 		            }
 		            else {
-		                Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr></nobr><div>";
+		                Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr></nobr><div>";
 		                $("div#Conitems div:nth-child(" + i + ")  nobr").text(value);
 		            }
 		        }
@@ -657,7 +657,7 @@
 		            }
 		        }
 		        if (_curCellObj != null) {
-		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + _value + "'><nobr><u></u></nobr></span>";
+		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + _value + "'><nobr><u></u></nobr></span>";
 		            $(_curCellObj).find("span nobr u").text(_exp);
 		            _curCellObj.setAttribute("value", _value);
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
@@ -950,7 +950,7 @@
 		                }
 		            }
 		            if (ischeck) {
-		                Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + Email + "'><nobr>" + Email + "</nobr><div>";
+		                Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + Email + "'><nobr>" + Email + "</nobr><div>";
 		            }
 		        }
 		    }
@@ -1075,7 +1075,7 @@
 	  </tr>
 	</table>
 	<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f2f2f2;">
-	       <div id="Conitems" name="Conitems" style="border:1px solid #dbdbda;width:370px;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
+	       <div id="Conitems" name="Conitems" style="font-family:<spring:message code='main.t246' />;border:1px solid #dbdbda;width:370px;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
 	       </div>
 	</div>
 	<div id="mainmenu" style="margin-left:150px;">
