@@ -136,7 +136,7 @@
 			b.dept_id,
 			a.DISPLAYNAME as dept_name
 		from
-			tbl_deptmaster a join tbl_journal_form_user_dept b on a.CN = b.dept_id
+			tbl_deptmaster a join tbl_journal_form_use_dept b on a.CN = b.dept_id
 		where
 			b.form_id = #formId#
 		and
@@ -149,7 +149,7 @@
 			a.form_id,
 			a.form_name
 		from 
-			tbl_journal_form a left join tbl_journal_form_user_dept b 
+			tbl_journal_form a left join tbl_journal_form_use_dept b 
 		on 
 			(a.form_id = b.form_id)
 		where 
@@ -194,7 +194,7 @@
 	
 	<!-- 양식을 사용하는 부서 등록 -->
 	<insert id="insertUseDept" parameterClass="map">
-		insert into tbl_journal_form_user_dept (
+		insert into tbl_journal_form_use_dept (
 			dept_id,	form_id,	tenant_id
 		)
 		values (
@@ -337,7 +337,7 @@
 	<!-- 양식 사용부서 삭제 -->
 	<delete id="deleteFormUseDept" parameterClass="map">
 		delete from
-			tbl_journal_form_user_dept
+			tbl_journal_form_use_dept
 		where
 			form_id = #formId#
 		and

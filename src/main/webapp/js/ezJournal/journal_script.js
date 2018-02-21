@@ -8,9 +8,14 @@ function journal_layer_popup(el) {
 
 	$('.journal-layer').fadeIn()
 
-	var $elWidth = ~~($el.outerWidth()), $elHeight = ~~($el.outerHeight()), docWidth = $(
-			document).width(), docHeight = $(document).height();
+	var $elWidth = ~~($el.outerWidth()), 
+		$elHeight = ~~($el.outerHeight()), 
+		docWidth = $(document).width(), 
+		docHeight = $(document).height();
 
+	console.log("elWidth=" + $elWidth + ", elHeight=" + $elHeight + ", docWidth=" + docWidth + ", docHeight=" + docHeight);
+	
+	
 	// 화면의 중앙에 레이어를 띄운다.
 	if ($elHeight < docHeight || $elWidth < docWidth) {
 		$el.css({

@@ -17,21 +17,21 @@
 	        }
 	        
 	        function goPage(idx) {
-// 				var url = "";
-// 				switch(idx) {
-// 					case 1:
-// 						url = "/admin/ezJournal/formType.do";
-// 						break;
+ 				var url = "";
+ 				switch(idx) {
+ 					case 1:
+ //						url = "/admin/ezJournal/formType.do";
+ 						break;
 					
-// 					case 2:
-// 						url = "/admin/ezJournal/form.do";
-// 						break;
+ 					case 2:
+ 						url = "/ezJournal/journalList.do";
+ 						break;
 						
-// 					case 3:
-// 						url = "/admin/ezJournal/author.do";
-// 						break;
-// 				}
-// 				window.open(url,"right");
+ 					case 3:
+ //						url = "/admin/ezJournal/author.do";
+ 						break;
+ 				}
+ 				window.open(url, "right");
 			}
 
 	    </script>
@@ -63,13 +63,14 @@
 		    <h2><span id='recive' onClick="" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t51'/></span></h2>
 		    <ul>
 		    </ul>
-		    <h2><span id='temp' onClick="" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>
+		    <h2><span id='temp' onClick="goPage(2)" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>
 		    <ul>
 		    </ul>
 	        <h3><span id='journalEnv' onClick="" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t53'/></span></h3>
 		</div>		
 	    <script type="text/javascript">
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
+		    $(".on").attr("class", "off");
 	    </script>
 	    
 	</body>

@@ -29,9 +29,9 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.JsonUtil;
 
 @Controller
-public class EzJournalSJYController {
+public class EzJournalAdminJYController {
 
-	private static final Logger logger = LoggerFactory.getLogger(EzJournalSJYController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzJournalAdminJYController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -125,7 +125,6 @@ public class EzJournalSJYController {
 		if (status.equals("ok")) {
 			JSONObject data =  (JSONObject) result.get("data");
 			JSONArray formList = (JSONArray) data.get("fList");
-			//String formList = JsonUtil.ListToJson(list);
 			model.addAttribute("formList", formList);
 			logger.debug("formList : " + formList);
 		}

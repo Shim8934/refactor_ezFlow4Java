@@ -91,16 +91,22 @@ public class EzJournalServiceImpl implements EzJournalService{
 			JournalFormInfoVO vo = fList.get(i);
 			map.put("formId", vo.getFormId());
 			
-			List<DeptInfoVO> useDept = ezJournalDAO.getFormUseDeptList(map);
-			
-			if (useDept.size() < 1) {
-				useDept.clear();
-				DeptInfoVO deptVO = new DeptInfoVO();
-				deptVO.setDeptName("전체");
-				useDept.add(deptVO);
+			try {
+				List<DeptInfoVO> useDept = ezJournalDAO.getFormUseDeptList(map);
+
+				if (useDept.size() < 1) {
+					useDept.clear();
+					DeptInfoVO deptVO = new DeptInfoVO();
+					deptVO.setDeptName("전체");
+					useDept.add(deptVO);
+				}
+				vo.setDepts(useDept);
+				resultList.add(vo);
+				
+			} catch (Exception e) { 
+				e.printStackTrace();
 			}
-			vo.setDepts(useDept);
-			resultList.add(vo);
+			
 		}
 		
 		logger.debug("getFormList ended");

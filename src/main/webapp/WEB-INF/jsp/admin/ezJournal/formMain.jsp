@@ -33,7 +33,7 @@
 		    	
 		    }
 			
-			// 선택된 일지양식함에 따른 양식리스트를 얻어옴
+			// 선택된 일지양식함의 양식리스트 가져오기
 			function getFormList(val) {	
 				typeId = $(val).attr("value");
 				$(".bold").css("font-weight", "normal");

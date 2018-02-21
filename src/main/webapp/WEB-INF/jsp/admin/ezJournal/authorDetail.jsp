@@ -183,7 +183,7 @@
 		</style>
 	</head>
 	<body class="popup"> 
-        <h1 style="color:#ffffff; font-size: x-large; font:strong;"><spring:message code='ezJournal.t42'/></h1>
+        <h1><spring:message code='ezJournal.t42'/></h1>
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="close_Click()"><spring:message code='ezOrgan.t143'/></span></li>
@@ -254,7 +254,7 @@
         <div class="journal-layer">
         	<div class="dimBg"></div>
 	        <div id = "insertAuthorDeptPopup" class="pop-layer">
-	        	<h1 style="color:#000000; font-size: x-large; font:strong;"><spring:message code='ezJournal.t42'/></h1>
+	        	<h1><spring:message code='ezJournal.t42'/></h1>
 			    <div id="close">
 			        <ul>
 			            <li><span onclick="insertAuthDept();"><spring:message code='ezJournal.t26'/></span></li>

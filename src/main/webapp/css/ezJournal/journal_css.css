@@ -27,9 +27,21 @@
   left: 50%;
   width: auto;
   height: auto;
-  background-color: #fff;
-  border: 5px solid #3571B5;
   z-index: 10;
+  border-radius: 4px;
+  background: url('/images/kr/cm/popup_bg.gif') #ffffff repeat-x left top ;
+  padding: 5px 10px 10px;
+  margin: 0
+}
+
+.pop-layer h1 {
+	font-size: 11pt;
+	font-weight: bold;
+	color: #fff;
+	height: 44px;
+	margin-left: 1px;
+	margin-bottom: 8px;
+	line-height: 36px;
 }
 
 .journal-layer .pop-layer {
