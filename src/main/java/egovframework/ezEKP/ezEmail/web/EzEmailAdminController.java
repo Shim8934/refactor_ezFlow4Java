@@ -866,6 +866,7 @@ public class EzEmailAdminController {
 			String userId = organUser.getCn();
 			String department = organUser.getDescription();
 			String displayname = organUser.getDisplayName();
+			displayname = displayname + "(" + userId + ")";		
 			
 			quaList.add(0, userId);
 			quaList.add(1, displayname);
@@ -953,6 +954,7 @@ public class EzEmailAdminController {
 				String userId = organUser.getCn();
 				String department = organUser.getDescription();
 				String displayname = organUser.getDisplayName();
+				displayname = displayname + "(" + userId + ")";	
 				
 				quaList.add(0, userId);
 				quaList.add(1, displayname);
@@ -1021,7 +1023,7 @@ public class EzEmailAdminController {
 
 		row = sheet.createRow(1);
 		cell = row.createCell(0);
-		cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068"));
+		cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd04"));
 		cell.setCellStyle(headerStyle);
 		cell = row.createCell(1);
 		cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t113"));
