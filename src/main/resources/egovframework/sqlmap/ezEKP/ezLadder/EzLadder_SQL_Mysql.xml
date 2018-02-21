@@ -88,12 +88,7 @@
 	<select id="EzLadderDAO.getLadderList" resultClass="LadderVO">
 		<![CDATA[
 			SELECT 
-				LADDERID,
-				TITLE,
-				STATUS,
-				SECRETFLAG,
-				WRITERNAME,
-				DEPTNAME
+				*
 			FROM 
 				TBL_LADDER
 			ORDER BY
