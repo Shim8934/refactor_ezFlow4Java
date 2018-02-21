@@ -15,8 +15,9 @@
 	        };
 	        
 	        function Tab_init_select(obj) {
-	        	obj.className = "tabon";
-	        	Tab1_SelectID = obj.id;
+	        	obj.setAttribute("class", "tabon");
+                Tab1_SelectID = obj.id;
+                ChangeTab(obj);
 	        }
 	        
 	        function Tab1_MouseClick_more(obj, displayFlag) {
@@ -62,7 +63,7 @@
 	        	 
 	        	 switch (pSelectTab) {
 		            case "tagsub1": 
-		            	document.getElementById("Letter_ifrm").src = "";
+		            	document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterBoxManager.do";
 		            	break;
 		            case "tagsub2":
 		            	document.getElementById("Letter_ifrm").src = "";

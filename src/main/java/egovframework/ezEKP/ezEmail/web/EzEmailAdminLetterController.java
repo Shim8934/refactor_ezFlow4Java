@@ -45,6 +45,8 @@ public class EzEmailAdminLetterController {
 	@RequestMapping(value="/admin/ezEmail/letterlMain.do")
 	public ModelAndView letterMainView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		
+		//user가 superAdmin인지 그냥 admin인지 구별하는 조건 수정해야됨
+		
 		logger.debug("letterMainView started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -60,8 +62,13 @@ public class EzEmailAdminLetterController {
 		return mav;
 	}
 	
+	@RequestMapping(value="/admin/ezEmail/letterBoxManager.do")
 	public List<MailLetterBoxVO> letterBoxManagerView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		
+		logger.debug("letterBoxManagerView started.");
+		
 		List<MailLetterBoxVO> list = new ArrayList<MailLetterBoxVO>();
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		return list;
 		
