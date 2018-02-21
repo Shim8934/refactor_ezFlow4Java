@@ -205,3 +205,6 @@ var strLangLHM01 = "default_jp";
 var strLangLHM02 = "印刷プレビュー";
 var strLangLHM03 = "印刷";
 var strLangLHM04 = "キャンセル";
+
+//2018.2.21 강민수92 추가
+var strLangKMS1 = "100회 이하만 반복가능합니다.";

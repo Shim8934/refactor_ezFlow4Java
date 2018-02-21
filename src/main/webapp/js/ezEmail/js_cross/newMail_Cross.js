@@ -1726,6 +1726,8 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
             }
         }
         eSubject.value = strLang117 + getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]);
+        document.title = getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]);
+        
         var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");
         var pstrXML = "";
         if (AttachRows.length > 0) {
@@ -2177,7 +2179,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
     }
 
     if (isBigFile) {
-        var TempText = "<div id='_BigAttachListHtml' style='width:100%;'><table width='100%' border='0' cellspacing='0' cellpadding='0' style='font-size:x-small;font-family:dotum,arial,verdana;margin-bottom:10px;'>" +
+        var TempText = "<div id='_BigAttachListHtml' style='width:100%;'><table width='100%' border='0' cellspacing='0' cellpadding='0' style='font-size:x-small;margin-bottom:10px;'>" +
                         "<tr>" +
                         "<td colspan='2' style='color:#333;font-weight:bold; padding:0px; margin:0px 0px 1px 0px; height:20px;border-bottom:1px solid #dadada;font-size:12px;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_addfile.gif' width='7' height='12' style='margin-right:5px;'>" + strLang245 + "</td>" +
                         "</tr>";

@@ -834,7 +834,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		try {
 			
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, jsonParam.get("creatorId").toString());
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("creatorId").toString());
 						
 			jsonParam.put("creatorName", info.getUserName());
 			jsonParam.put("creatorName2", info.getUserName2());			

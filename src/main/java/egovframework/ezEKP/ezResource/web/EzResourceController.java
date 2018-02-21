@@ -2092,8 +2092,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String startDateTime = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
 		String endDateTime = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
 		
-		startDateTime = commonUtil.getDateStringInUTC(startDateTime, userInfo.getOffset(), false);
-		endDateTime = commonUtil.getDateStringInUTC(endDateTime, userInfo.getOffset(), false);
+		//startDateTime = commonUtil.getDateStringInUTC(startDateTime, userInfo.getOffset(), false);
+		//endDateTime = commonUtil.getDateStringInUTC(endDateTime, userInfo.getOffset(), false);
 		
 		logger.debug("ownerID=" + ownerID + ",title=" + title + ",startDateTime=" + startDateTime + ",endDateTime=" + endDateTime);
 		

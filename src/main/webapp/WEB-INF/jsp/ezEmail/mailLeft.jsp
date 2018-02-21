@@ -361,10 +361,12 @@
 	        	메일함 트리뷰 reload 함수
 	        */
 	        function mailbox_treeview_reload() {
-	        	PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-                PostTreeView.update();
-                
-                previewSubTreeCall();
+	        	setTimeout(function() {
+	        		PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+	                PostTreeView.update();
+	                
+	                previewSubTreeCall();
+	        	}, 100);
 	        }
 	        
 	        function Function_Flag(v_data) {
