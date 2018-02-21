@@ -57,7 +57,6 @@
 		    
 		    var move_on, frameLeft, frameTop;
 		    var layerStartX, layerStartY;
-		    
 		    var iFramePanel = window.parent.document.getElementById("iFramePanel");
 		    
 		    window.onload = function () {
@@ -221,8 +220,6 @@
 		    	layerStartX = event.clientX;
 		    	layerStartY = event.clientY;
 		    	move_on = true;
-// 		    	alert(iFramePanel.offsetWidth);
-// 		    	alert(iFramePanel.offsetHeight);
 		    }
 
 		    function layerMove() {

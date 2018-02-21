@@ -995,10 +995,15 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                 
                 openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
                 openLocation = openLocation + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
-            }
-            else {
-                alert(strLang1103);
-                return;
+            } else {
+                if (/chrome/i.test(navigator.userAgent)) {
+                     alert(strLang1103);
+                     return;
+            	 } else {
+            		 if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+                         openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag);
+                     }
+            	 }
             }
             openwindow(openLocation, "receive", 880, 550);
         }

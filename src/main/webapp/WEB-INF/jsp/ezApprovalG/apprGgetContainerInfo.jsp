@@ -625,9 +625,8 @@
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
 		            var openLocation;
 		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
-		            }
-		            else {
+		                openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+		            } else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
 		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState;

@@ -15,15 +15,16 @@
 		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 	    <script type="text/javascript">
-	    	var pNoneActiveX = "<%=NoneActiveX%>";
-	        var pDocID = '<%=_DocID%>';
-	        var pDocHref = '<%=_DocHref%>';
-	        var pListSusin = '<%=_ListSusin%>';
-	        var porgDocID = '<%=_orgDocID%>';
-	        var pFormID = '<%=_formID%>';
-	        var pTitle = '<%=_Doctitle%>';
+<%-- 	    	var pNoneActiveX = "<%=NoneActiveX%>"; --%>
+	        var pDocID = "${docID}";
+	        var docHref = "${docHref}";
+	        var pListSusin = "${listSusin}";
+	        var porgDocID = "${orgDocID}";
+	        var pFormID = "${formID}";
+	        var pTitle = "${docTitle}";
 	        var pOpinionFlag;
 	        var pListTypeValue = 4;
 	        var flag = false;
@@ -31,29 +32,29 @@
 	        var NextOpinionFlag = true;
 	        var doctitle = "";
 	        var pOrgAttach = "";
-	        var pendDir = "<%=_endDir%>"
+	        var pendDir = "${endDir}";
 			var xmlhttp = createXMLHttpRequest();
 			var arr_userinfo = new Array();
 			arr_userinfo[0] = "user";
-			arr_userinfo[1] = "<%=userinfo.UserID%>";
-			arr_userinfo[2] = "<%=userinfo.DisplayName%>";
-	        arr_userinfo[3] = "<%=userinfo.Title%>";
-	        arr_userinfo[4] = "<%=userinfo.DeptID%>";
-	        arr_userinfo[5] = "<%=userinfo.DeptName%>";
-	        arr_userinfo[6] = "<%=userinfo.Jikchek%>";
-	        arr_userinfo[8] = "<%=userinfo.Email%>";
+		    arr_userinfo[1]  = "${userInfo.id}";
+		    arr_userinfo[2]  = "${userInfo.displayName}";
+		    arr_userinfo[3]  = "${userInfo.title}";
+		    arr_userinfo[4]  = "${userInfo.deptID}";
+		    arr_userinfo[5]  = "${userInfo.deptName}";
+		    arr_userinfo[6]  = "${userInfo.jikChek}";
+		    arr_userinfo[8]  = "${userInfo.email}";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "<%=_pSusinAdmin%>";
-			arr_userinfo[11] = "<%=userinfo.DisplayName1%>";
-	        arr_userinfo[12] = "<%=userinfo.DisplayName2%>";
-	        arr_userinfo[13] = "<%=userinfo.Title1%>";
-	        arr_userinfo[14] = "<%=userinfo.Title2%>";
-	        arr_userinfo[15] = "<%=userinfo.DeptName1%>";
-	        arr_userinfo[16] = "<%=userinfo.DeptName2%>";
-	        var companyID = "<%=userinfo.CompanyID%>";
+	        arr_userinfo[10] = "${susinAdmin}";
+	        arr_userinfo[11]  = "${userInfo.displayName1}";
+		    arr_userinfo[12]  = "${userInfo.displayName2}";
+		    arr_userinfo[13]  = "${userInfo.title1}";
+		    arr_userinfo[14]  = "${userInfo.title2}";
+		    arr_userinfo[15]  = "${userInfo.deptName1}";
+		    arr_userinfo[16]  = "${userInfo.deptName2}";
+	        var companyID = "${userInfo.companyID}";
 	        var pUserID = arr_userinfo[1];
-	        var SignCheckFlag = "<%=SignCheck%>";
-	        var pUse_Editor = "<%= Use_Editor%>";
+	        var SignCheckFlag = "${SignCheck}";
+	        var pUse_Editor = "${useEditor}";
 	
 	        window.onresize = function () {
 	            HwpCtrl.style.height = null;
@@ -71,21 +72,30 @@
 	        }
 	
 	        function CheckOpinionInfo() {
-	            var xmlpara = createXmlDom();
-	            var objNode;
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-	
-	            xmlhttp.open("POST", "/myoffice/ezApprovalG/formContainer/aspx/getEndOpinionInfo.aspx", false);
-	            xmlhttp.send(xmlpara);
-	
-	            Resultxml = loadXMLString(xmlhttp.responseText);
-	
-	            var NodeList = Resultxml.selectNodes("LISTVIEWDATA/ROWS/ROW");
-	            if (NodeList.length > 0)
-	                return true;
-	            else
-	                return false;
+				var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getEndOpinionInfo.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		}
+		    	});
+		
+		        Resultxml = result;
+		
+		        var NodeList = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
+		
+		        if (NodeList.length != "0") {
+		            return true;
+		        } else {
+		            return false;
+		        }
 	        }
 	
 	        function window_onload() {
@@ -93,16 +103,14 @@
 	
 	            HwpCtrl.SetSaveMode(1);
 	
-	            if ("<%=PASS%>" != "<RESULT>TRUE</RESULT>") {
+	            if ("${pass}" != "<RESULT>TRUE</RESULT>") {
 	                QuitWindow();
-	            }
-	            else if (pDocHref != "") {
+	            } else if (docHref != "") {
 	                showProgress("<spring:message code='ezApprovalG.t368'/>");
-	                var URL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pDocHref);
+	                var URL = document.location.protocol + "//" + document.location.hostname +  ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(docHref);
 	                var isTrue = HwpCtrl.LoadFile(URL, false);
 	
 	                if (isTrue) {
-	
 	                    if (pFormID == "") {
 	                        btnSave.style.display = "none";
 	                    }
@@ -145,13 +153,18 @@
 			    window.close();
 			}
 	
-			function OpenAlertUI(pAlertContent) {
+			var ezapralert_cross_dialogArguments = new Array();
+			function OpenAlertUI(pAlertContent, CompleteFunction) {
 			    var parameter = pAlertContent;
-			    var url = "/myoffice/ezApprovalG/ezAPRALERT.aspx";
-			    var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-			    var RtnVal = window.showModalDialog(url, parameter, feature);
+			    var url = "/ezApprovalG/ezAprAlert.do";
+
+		        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		        feature = feature + GetShowModalPosition(330, 205);
+		        var RtnVal = window.showModalDialog(url, parameter, feature);
 			}
-	
+			
+			
+			var ezapralert_cross_dialogArguments = new Array();
 			function btnPrint_onclick() {
 			    HwpCtrl.PrintDocument("", true);
 			}
@@ -170,7 +183,7 @@
 			}
 	
 			function btnSave_onclick() {
-			    HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+			    HwpCtrl.RegisterModule("FilePathCheckDLL", "FilePathCheck");
 			    HwpCtrl.SetDocumentInfo(pFormID);
 			    var hwpDoctitle = HwpCtrl.GetFieldText("doctitle").replace("\r\n", "");
 			    hwpDoctitle = hwpDoctitle.replace(/\\/ig, '').replace(/\//ig, '').replace(/:/ig, '').replace(/\*/ig, '').replace(/\?/ig, '').replace(/“/ig, '').replace(/</ig, '').replace(/>/ig, '').replace(/|/ig, '').replace("“", "").replace("|", "");
@@ -178,7 +191,7 @@
 			}
 	
 			function btnMail_onclick() {
-			    window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=<%=_DocHref%>&cmd=docsend&DocID=<%=_DocID%>" + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+			    window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=" + docHref +"&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
 			}
 	
 			function btnBoard_onclick() {
@@ -210,10 +223,10 @@
 			        }
 			        else {
 			            if (pUse_Editor == "" || pUse_Editor == "CK") {
-			                window.open("/myoffice/ezBoardSTD/NewBoardItem.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + pDocHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
+			                window.open("/myoffice/ezBoardSTD/NewBoardItem.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + docHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
 			            }
 			            else {
-			                window.open("/myoffice/ezBoardSTD/NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + pDocHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
+			                window.open("/myoffice/ezBoardSTD/NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + docHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
 			            }
 			        }
 			    }
@@ -224,8 +237,8 @@
 			}
 	
 			function getHistory() {
-			    var URL = "/myoffice/ezApprovalG/ezAPRHISTORY/ezAPRHISTORY_Cross.aspx?DocID=" + pDocID;
-			    centerOpenWindow(URL, 730, 430);
+				 var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
+					centerOpenWindow(URL, 730, 430);
 			}
 	
 			function centerOpenWindow(wfileLocation, wWeight, wHeight) {
@@ -244,42 +257,48 @@
 			}
 	
 			function btnDocInfo_onclick() {
-			    var url = "/myoffice/ezApprovalG/ezDocInfo/ezDocInfoG_View.aspx?DocID=" + pDocID + "&IngFlag=END";
+				var url = "/ezApprovalG/ezDocInfoG_View.do?docID=" + pDocID + "&ingFlag=END";
 			    var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
 			    var RtnVal = window.showModalDialog(url, "", feature);
 			}
 	
 			function SignCheck() {
-			    var SignXML = createXmlDom();
-			    var xmlhttp = createXMLHttpRequest();
-			    var xmlpara = createXmlDom();
-			    var objNode;
-			    createNodeInsert(xmlpara, objNode, "PARAMETER");
-			    createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-			
-			    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezAPRSIGN/aspx/getSignInfo.aspx", false);
-			    xmlhttp.send(xmlpara);
-			
-			    if (loadXMLString(xmlhttp.responseText).xml == "") {
-			        SaveSignCheck();
-			        return;
-			    }
-			
-			    var NodeList;
-			    NodeList = loadXMLString(xmlhttp.responseText).selectNodes("SIGNINFOS/SIGNINFO");
-			    if (NodeList.length <= 0) {
-			        SaveSignCheck();
-			        return;
-			    }
-			
-			    SignXML = loadXMLString(xmlhttp.responseText);
-			    var rtnVal = putSignXML(SignXML);
-			    if (rtnVal) {
-			        SaveFile();
-			
-			        SaveSignCheck();
-			    }
-			}
+				var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getSignInfo.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(xml){
+		    			result = xml;
+		    		}
+		    	});
+		        var SignXML = createXmlDom();
+		        
+		        if (result == "") {
+		            SaveSignCheck();
+		            return;
+		        }
+		        result = loadXMLString(result);
+		        var NodeList;
+		        NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
+
+		        if (NodeList.length <= 0) {
+		            SaveSignCheck();
+		            return;
+		        }
+		        return;
+		        SignXML = result;
+		        var rtnVal = putSignXML(SignXML);
+		        if (rtnVal) {
+		            SaveFile();
+		            SaveSignCheck();
+		        }
+		    }
 	
 			function putSignXML(SignXML) {
 			    var retVal = false;
@@ -361,8 +380,8 @@
 	            <td height="20">
 	                <div id="menu">
 	                    <ul>
-	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t1436'/></span></li>
-	                        <li id="btnBoard"><span onclick="return btnBoard_onclick()"><spring:message code='ezApprovalG.t1445'/></span></li>
+	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        <li id="btnBoard"><span onclick="return btnBoard_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 	                        <li id="btnSave"><span onclick="return btnSave_onclick()">PC<spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
@@ -383,7 +402,7 @@
 	        <tr>
 	            <td style="padding-bottom: 10px">
 	                <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<%=_HwpToolbar%>", "");</script>
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "");</script>
 	                </div>
 	            </td>
 	        </tr>

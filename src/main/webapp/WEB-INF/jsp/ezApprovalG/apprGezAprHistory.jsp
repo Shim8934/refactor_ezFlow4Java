@@ -15,6 +15,7 @@
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var pDocID = "${docID}";
 		    var OrderCell = "";
+		    var isHWP = "${isHWP}";
 		    window.onload = function () {
 		        var rtnVal = new Array();
 		        getDocHistory();
@@ -28,7 +29,6 @@
 		        window.returnValue = rtnVal;
 		    };
 		    function lvDocList_DBSelChange() {
-		        var pUrl;
 		        var Arguments = new Array();
 		        var listview = new ListView();
 		        listview.LoadFromID("lvDocList");
@@ -149,6 +149,7 @@
 		        listview.SetSelectFlag(false);
 		        listview.DataSource(result);
 		        listview.DataBind("divAprLine");
+		        
 		    }
 		    function getAttachHistory() {
 		    	var result = "";
@@ -272,10 +273,9 @@
 		    }
 		
 		    function close_Click() {
-		        if (CrossYN()) {
+		        if (CrossYN() && isHWP != "Y") {
 		            parent.DivPopUpHidden();
-		        }
-		        else {
+		        } else {
 		            window.close();
 		        }
 		    }		    

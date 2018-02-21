@@ -1367,7 +1367,7 @@ End Function
 	                        <li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
 	                        <li id="btnEdit"><span onclick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
-	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t1436'/></span></li>
+	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
 	                        <li id="btnRefresh" style="display: none"><span onclick="return RefreshRecvDoc()"><spring:message code='ezApprovalG.t00013'/></span></li>
 	                    </ul>
 	                </div>

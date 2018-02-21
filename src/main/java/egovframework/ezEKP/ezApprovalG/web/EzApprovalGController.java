@@ -348,6 +348,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String subQuery = request.getParameter("SubQuery");
 		OrganProxyVO proxyInfo = ezOrganService.getProxyInfo(userInfo.getId(), userInfo.getTenantId());
 		
+		//문서유통 문서 타입
 		String relayG_type = ezCommonService.getTenantConfig("UserInfo_RelayG_Type", userInfo.getTenantId()); 
 		
 		nowDate = nowDate.substring(0, 16);
@@ -2828,7 +2829,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("ezAprHistory started");
 		
 		String docID = request.getParameter("docID");
+		String isHWP = request.getParameter("isHWP");
 		model.addAttribute("docID", docID);
+		model.addAttribute("isHWP", isHWP);
 		
 		logger.debug("ezAprHistory ended");
 		

@@ -337,5 +337,163 @@ public class EzApprovalGHwpController {
 		return "ezApprovalG/apprGezDocInfoGView";
 	}
 	
+	/**
+	 * 전자결재 한글양식 결재완료 문서 보기
+	 */	
+	@RequestMapping(value = "/ezApprovalG/ezViewEnd_HWP.do")
+	public String ezViewEnd_HWP(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezViewEnd_HWP started");
+
+		String docID = request.getParameter("docID");
+		String docHref = request.getParameter("docHref");
+		String listSusin = request.getParameter("listSusin");
+		String orgDocID = request.getParameter("orgDocID");
+		String formID = request.getParameter("formID");
+		String endDir = "";
+		String docTitle = request.getParameter("title");
+		String susinAdmin = "";
+        String SignCheck = "N";
+        String NoneActiveX = "";
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+        String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+//                NoneActiveX = GetSystemConfigValue("NONEACTIVEX").ToString();
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+ 
+		if (orgDocID != null  && !orgDocID.equals("")) {
+			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
+		}
+
+		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
+
+		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		
+		if (!pass.equals("<RESULT>TRUE</RESULT>")) {
+           if (docHref.trim().equals("") || docHref.indexOf("/1000/") >= 0) {
+                String strXML = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+
+        		Document xmlDom = commonUtil.convertStringToDocument(strXML);
+
+                if (xmlDom.getElementsByTagName("HREF").getLength() > 0) {
+                	if (!xmlDom.getElementsByTagName("HREF").item(0).getTextContent().trim().equals("")) {
+                		docHref = xmlDom.getElementsByTagName("HREF").item(0).getTextContent().trim();
+                	}
+                }
+            }
+
+            String readRecXML = "<PARAMETER><DOCID>" + makeXMLString(docID) + "</DOCID><USERID>" + makeXMLString(userInfo.getId()) +
+                "</USERID><USERNAME>" + makeXMLString(userInfo.getDisplayName()) + "</USERNAME><USERTITLE>" + makeXMLString(userInfo.getTitle()) +
+                "</USERTITLE><DEPTCODE>" + makeXMLString(userInfo.getDeptID()) + "</DEPTCODE><DEPTNAME>" + makeXMLString(userInfo.getDeptName()) +
+                "</DEPTNAME><COMPANYID>" + makeXMLString(userInfo.getCompanyID()) + "</COMPANYID></PARAMETER>";
+
+            ezApprovalGService.saveRecReadHist(readRecXML, userInfo.getTenantId());
+
+            String rtnXML = ezApprovalGService.getDocInfo(docID, "END", "SignCheck", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+
+    		Document xmlDom2 = commonUtil.convertStringToDocument(rtnXML);
+
+            if (xmlDom2.getElementsByTagName("SIGNCHECK").getLength() > 0) {
+            	SignCheck = xmlDom2.getElementsByTagName("SIGNCHECK").item(0).getTextContent().trim();
+            }
+        }
+		
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("listSusin", listSusin);
+		model.addAttribute("orgDocID", orgDocID);
+		model.addAttribute("formID", formID);
+		model.addAttribute("endDir", endDir);
+		model.addAttribute("docTitle", docTitle);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("SignCheck", SignCheck);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("pass", pass);
+		
+		LOGGER.debug("ezViewEnd_HWP ended");
+		return "ezApprovalG/apprGviewEndHWP";
+	}
 	
+	
+	
+	@RequestMapping(value = "/ezApprovalG/ezRecevGSusinHWP.do")
+	public String ezRecevGSusinHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezRecevGSusinHWP started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
+		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+
+		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
+
+		String docID = request.getParameter("docID");
+		String orgDocID = request.getParameter("uOrgID");
+		String isReDraft = "";
+		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String draftFlag = request.getParameter("draftFlag");
+		String retFlag = request.getParameter("retFlag");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        String NoneActiveX = "";
+        
+    	
+		
+
+//                if (Request.QueryString["isReDraft"] != null)
+//                    _isReDraft = ReplaceXSS(Request.QueryString["isReDraft"]);
+//
+//                
+//                
+//                string dirPath = Server.MapPath("/Upload_ApprovalG");
+//                if (dirPath.Substring(dirPath.Length - 1, 1) != "\\")
+//                    dirPath = dirPath + "\\";
+//
+//                
+//                SqlCommand comd = new SqlCommand("EZSP_GETORGDOCINFO");
+//                comd.CommandType = CommandType.StoredProcedure;
+//                comd.Parameters.Add("@PDOCID", SqlDbType.Char, 20).Value = _DocID;
+//
+//                string rtnval = GetQueryResultSP(ref comd, false, userinfo.CompanyID);
+//                XmlDocument xmldom = new XmlDocument();
+//                xmldom = GetXmlReaderString(rtnval);
+//
+//                if (xmldom.GetElementsByTagName("ORGHREF").Count > 0)
+//                {
+//                    string OrgDocFile = xmldom.GetElementsByTagName("ORGHREF").Item(0).InnerText;
+//                    string DocFile = xmldom.GetElementsByTagName("HREF").Item(0).InnerText;
+//                    OrgDocFile = dirPath + OrgDocFile.Replace("/Upload_ApprovalG/", "/").Replace("/", "\\");
+//                    DocFile = dirPath + DocFile.Replace("/Upload_ApprovalG/", "/").Replace("/", "\\");
+//
+//                    xmldom = null;
+//
+//                    string Dir = DocFile.Substring(0, DocFile.LastIndexOf("\\") + 1);
+//                    if (!System.IO.Directory.Exists(Dir))
+//                        System.IO.Directory.CreateDirectory(Dir);
+//
+//
+//                    FileInfo f1 = new FileInfo(DocFile);
+//                    if (!f1.Exists)
+//                    {
+//                        FileInfo org = new FileInfo(OrgDocFile);
+//
+//                        org.CopyTo(f1.FullName, false);
+//
+//                    }
+//                }
+		LOGGER.debug("ezRecevGSusinHWP ended");
+		
+		return "ezApprovalG/apprGrecevgsusinHWP";
+	}	
+		
+	public String makeXMLString(String orgString) throws Exception{
+		return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+	}
 }
