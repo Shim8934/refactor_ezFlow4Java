@@ -119,8 +119,7 @@
 		    var mail_selectfolder_cross_dialogArguments = new Array();
 		    function search_mailbox(idx) {
 		        mail_selectfolder_cross_dialogArguments[1] = search_mailbox_complete;
-		        mail_selectfolder_cross_dialogArguments[2] = search_mailbox_complete;
-		        mail_selectfolder_cross_dialogArguments[3] = idx;
+		        mail_selectfolder_cross_dialogArguments[2] = idx;
 		
 		        var OpenWin = GetOpenWindow("/ezEmail/mailSelectFolder.do", "mail_selectfolder_cross", 400, 355);
 		        try { OpenWin.focus(); } catch (e) { }
@@ -128,13 +127,24 @@
 		    function search_mailbox_complete(mailBoxInfo) {
 		        if (typeof (mailBoxInfo) == "undefined")
 		            return;
-		
+				
+		        if (mailBoxInfo["isFolderChanged"]) {
+	        		try {
+	        			parent.parent.frames["left"].mailbox_treeview_reload();
+	        		} catch (e) {
+	        		}
+	        	}
+	        	
+		        if (typeof (mailBoxInfo["url"]) == "undefined" || typeof (mailBoxInfo["url"]) == "undefined") {
+		        	return;
+		        }
+		        
 		        if (!CrossYN()) {
-		            svElem = document.body.all("popBox" + mail_selectfolder_cross_dialogArguments[3]);
+		            svElem = document.body.all("popBox" + mail_selectfolder_cross_dialogArguments[2]);
 		
 		        }
 		        else if (CrossYN()) {
-		            svElem = document.getElementById("popBox" + mail_selectfolder_cross_dialogArguments[3]);
+		            svElem = document.getElementById("popBox" + mail_selectfolder_cross_dialogArguments[2]);
 		        }
 		        svElem.innerHTML = mailBoxInfo.name;
 		        svElem.setAttribute("url", mailBoxInfo.url);
