@@ -16,24 +16,6 @@
 	        	
 	        }
 	        
-<<<<<<< HEAD
-	        function goPage(idx) {
- 				var url = "";
- 				switch(idx) {
- 					case 1:
- //						url = "/admin/ezJournal/formType.do";
- 						break;
-					
- 					case 2:
- 						url = "/ezJournal/journalList.do";
- 						break;
-						
- 					case 3:
- //						url = "/admin/ezJournal/author.do";
- 						break;
- 				}
- 				window.open(url, "right");
-=======
 	        function goJournalList(elem) {
 				var url = "";
 				switch(idx) {
@@ -50,7 +32,6 @@
 						break;
 				}
 				window.open(url,"right");
->>>>>>> business-dev
 			}
 
 	    </script>
