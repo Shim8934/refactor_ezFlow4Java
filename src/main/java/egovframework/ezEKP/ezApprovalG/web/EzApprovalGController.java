@@ -2829,9 +2829,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("ezAprHistory started");
 		
 		String docID = request.getParameter("docID");
-		String isHWP = request.getParameter("isHWP");
+		String ext = request.getParameter("ext");
 		model.addAttribute("docID", docID);
-		model.addAttribute("isHWP", isHWP);
+		model.addAttribute("ext", ext);
 		
 		logger.debug("ezAprHistory ended");
 		

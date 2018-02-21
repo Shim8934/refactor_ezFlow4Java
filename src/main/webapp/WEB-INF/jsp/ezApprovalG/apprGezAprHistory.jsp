@@ -15,7 +15,7 @@
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var pDocID = "${docID}";
 		    var OrderCell = "";
-		    var isHWP = "${isHWP}";
+		    var ext = "${ext}";
 		    window.onload = function () {
 		        var rtnVal = new Array();
 		        getDocHistory();
@@ -273,7 +273,7 @@
 		    }
 		
 		    function close_Click() {
-		        if (CrossYN() && isHWP != "Y") {
+		        if (CrossYN() && ext != "hwp") {
 		            parent.DivPopUpHidden();
 		        } else {
 		            window.close();

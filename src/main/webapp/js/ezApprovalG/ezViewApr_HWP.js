@@ -43,11 +43,7 @@ function setMenuBar(id,flag)
 }
 
 function getHistory() {
-	var isHWP = "N";
-	if (docHref.substr(docHref.length - 3, docHref.length).toLowerCase() == "hwp") {
-		isHWP = "Y"
-	}
-    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&isHWP=" + isHWP;
+    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + docHref.substr(docHref.length - 3, docHref.length).toLowerCase();
 	centerOpenWindow(URL, 730, 430);
 }
 
