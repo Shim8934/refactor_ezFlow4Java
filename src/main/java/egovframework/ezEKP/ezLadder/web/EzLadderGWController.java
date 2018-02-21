@@ -61,7 +61,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [GET /ladder/list/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [GET /ladder/ladder-list/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -320,5 +320,100 @@ public class EzLadderGWController {
 		
 		return result;
 	}
-
+	
+	/** hyh	*/
+	
+	
+	/**
+	 * 사디리 게임 조회 
+	 */
+	@RequestMapping(value = "ladder/ladders/{ladderId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
+	public JSONObject gwGetLadderGame(@PathVariable String ladderId , @PathVariable String userId) {
+		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId+ "users/" + userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", null);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId + "users/" + userId + "] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 사디리 삭제 
+	 */
+	@RequestMapping(value = "ladder/ladders/{ladderId}/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8") 
+	public JSONObject gwDeleteLadderList(@PathVariable String ladderId , @PathVariable String userId) {
+		logger.debug("web G/W LADDER [DELETE /ladder/ladders/" + ladderId+ "users/" + userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", null);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		logger.debug("web G/W LADDER [DELETE /ladder/ladders/" + ladderId + "users/" + userId + "] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 참여자 순서 바꾸기
+	 */
+	@RequestMapping(value = "ladder/ladders/{ladderId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
+	public JSONObject gwSetUserOrder(@PathVariable String ladderId , @PathVariable String userId) {
+		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId+ "users/" + userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", null);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId + "users/" + userId + "] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 사다리게임 시작
+	 */
+	@RequestMapping(value = "ladder/ladders/{ladderId}/users/{writerId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
+	public JSONObject gwSetLadderStart(@PathVariable String ladderId , @PathVariable String writerId) {
+		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId+ "users/" + writerId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", null);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId + "users/" + writerId + "] ended.");
+		
+		return result;
+	}
+	
 }

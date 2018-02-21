@@ -119,4 +119,32 @@ public class EzLadderServiceImpl implements EzLadderService {
 		
 	}
 
+	/** hyh */
+	
+	@Override
+	public LadderVO getLadderGame(String userId, int ladderId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteLadder(String userId, int ladderId) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setUserOrder(int LadderId, String userName1, String userName2)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setLadderStart(int LadderId, String userId, String lineArray)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

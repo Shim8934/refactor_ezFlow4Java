@@ -31,4 +31,10 @@ public interface EzLadderService {
 	public LadderLineVO selectPreLadder(String userId, int ladderId) throws Exception; // 이전 사다리 조회
 	public void changePreLadderList(String userId, String ladderId_1, String ladderId_2) throws Exception; // 이전 사다리 목록 바꾸기
 	
+	/** hyh	*/
+
+	public LadderVO getLadderGame(String userId, int ladderId) throws Exception; // 사다리 게임 조회
+	public void deleteLadder(String userId, int ladderId) throws Exception; // 사다리 삭제
+	public void setUserOrder(int LadderId, String userName1, String userName2) throws Exception; // 사용자 위치 바꾸기
+	public void setLadderStart(int LadderId, String userId, String lineArray) throws Exception;	// 사다리 게임 시작
 }
