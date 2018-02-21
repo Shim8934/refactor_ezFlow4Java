@@ -3624,16 +3624,25 @@ function getSignDate() {
 
     return result;
 }
+
 function getHistory() {
     var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
     centerOpenWindow(URL, 740, 450);
 }
+
 function centerOpenWindow(wfileLocation, wWeight, wHeight) {
     try {
         if (CrossYN()) {
-            DivPopUpShow(wWeight, wHeight, wfileLocation);
-        }
-        else {
+        	if (isIE() && !document.getElementById("iFrameLayer")) {
+        		var heigth = window.screen.availHeight;
+        		var width = window.screen.availWidth;
+        		var left = (width - wWeight) / 2;
+        		var top = (heigth - wHeight) / 2;
+        		window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+        	} else {
+        		DivPopUpShow(wWeight, wHeight, wfileLocation);
+        	}
+        } else {
             var heigth = window.screen.availHeight;
             var width = window.screen.availWidth;
             var left = (width - wWeight) / 2;

@@ -46,7 +46,7 @@
 		            document.getElementById("listviewdiv").style.height = "500px";
 		            document.getElementById("lvList").style.height = "500px";
 		        }
-alert(RetValue[0]);
+
 		        g_SepAttchLVXml = RetValue[0];
 		        g_CabinetID = RetValue[1];
 		        if (RetValue[2])
@@ -465,13 +465,12 @@ alert(RetValue[0]);
 		
 		        var totalRows = pLvList.GetDataRows();
 		        var pAttachCurSel = pLvList.GetSelectedRows();
-			    if (pAttachCurSel.length > 0)
-			    	{
-		        var i;
-		        for (i = 0; i < totalRows.length; i++) {
-		            totalRows[i].cells[0].innerHTML = i + 1;
-		        }
-			    	} 
+			    if (pAttachCurSel.length > 0) {
+			        var i;
+			        for (i = 0; i < totalRows.length; i++) {
+			            totalRows[i].cells[0].innerHTML = i + 1;
+			        }
+			    } 
 		    }
 		    
 		    function btnOK_onclick() {
@@ -505,8 +504,7 @@ alert(RetValue[0]);
 		        }
 		    }
 		    window.onbeforeunload = function () {
-		        if (!CrossYN())
-		            window.returnValue = rtnVal;
+	            window.returnValue = rtnVal;
 		    }
 		</script>
 		<style>

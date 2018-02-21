@@ -272,10 +272,15 @@
 		    }
 		
 		    function close_Click() {
+		    	try {
+					if (opener.ifrmDownload) {
+			            window.close();
+					}
+				} catch (e) {}
+				
 		        if (CrossYN()) {
 		            parent.DivPopUpHidden();
-		        }
-		        else {
+		        } else {
 		            window.close();
 		        }
 		    }		    

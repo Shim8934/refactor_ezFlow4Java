@@ -13,7 +13,6 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/draft_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezDraft_HWP.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/draftG_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
@@ -26,6 +25,7 @@
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/showModalDialog.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/ezDraft_HWP.js"></script>
 	    <script type="text/javascript">
 	        var FormHref = "${formURL}";
 	        var DraftFlag = "${draftFlag}";
@@ -467,18 +467,25 @@
 	        }
 	
 	        function btnSendDraft_onclick() {
-	            try {
-	                var xmlpara3 = new ActiveXObject("Microsoft.XMLDOM");
-	                var objNode;
-	                createNodeInsert(xmlpara3, objNode, "PARAMETER");
-	                createNodeAndInsertText(xmlpara3, objNode, "pDocID", pDocID);
-	
-	                var xmlhttp3 = createXMLHttpRequest();
-	                xmlhttp3.open("Post", "/myoffice/ezApprovalG/ezAPRATTACH/aspx/GetExtTotalAttachSize.aspx", false);
-	                xmlhttp3.send(xmlpara3);
-	
+// 	            try {
+	            	var result = "";
+		        	
+			    	$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/getExtTotalAttachSize.do",
+			    		data : {
+			    			docID : pDocID
+			    			////////
+			    		},
+			    		success: function(text){
+			    			result = text;
+			    		}        			
+			    	});
+			    	
 	                var rtnAttachXML = new ActiveXObject("Microsoft.XMLDOM");
-	                rtnAttachXML.loadXML(loadXMLString(xmlhttp3.responseText).xml);
+	                rtnAttachXML.loadXML(loadXMLString(result).xml);
 	
 	                if (getNodeText(rtnAttachXML.getElementsByTagName("FLAG").item(0)) == "Y") {
 	                    OpenAlertUI("외부발송문서 총 첨부용량은 최대 6MB 입니다" + "<br>" + "첨부용량을 줄여주시기 바랍니다.");
@@ -523,15 +530,13 @@
 	                }
 	
 	                if (btnSendDraftEnable == "false") {
-	                    btnApprovalInfo(1);
-	                }
-	
-	                if (btnSendDraftEnable == "false") {
 	                    var pAlertContent = "<spring:message code='ezApprovalG.t1398'/>" + "<br>" + "<spring:message code='ezApprovalG.t1399'/>";
 	                    OpenAlertUI(pAlertContent);
+	                    btnApprovalInfo(1);
+	                    
 	                    return;
 	                }
-	
+	                
 	                if (!checkLines())
 	                    return;
 	
@@ -793,9 +798,9 @@
 	                        return;
 	                    }
 	                }
-	            } catch (e) {
-	                alert("ezdraftui_hwp.aspx.btnSendDraft_onclick()::" + e.description);
-	            }
+// 	            } catch (e) {
+// 	                alert("ezdraftui_hwp.aspx.btnSendDraft_onclick()::" + e.description);
+// 	            }
 	        }
 	
 	        function btnFileAttach_onclick() {
@@ -1024,7 +1029,7 @@
 			    getHistory();
 			}
 			function btnApprovalInfo(pGubun) {
-// 			    try {
+			    try {
 			        var onlydocinfiview = false;
 			        var parameter = new Array();
 			        parameter[0] = pDocID;
@@ -1122,9 +1127,9 @@
 			            setPublicFlag();
 			            SummaryFlag = true;
 			        }
-// 			    } catch (e) {
-// 			        alert("ezdraftui_hwp.aspx.GetSepAttParamXml()::" + e.description);
-// 			    }
+			    } catch (e) {
+			        alert("ezdraftui_hwp.aspx.GetSepAttParamXml()::" + e.description);
+			    }
 			}
 	
 			function btnSaveServer_onclick(AutoSave) {

@@ -654,6 +654,23 @@ function ConvertDocType(pDocType) {
     return SelectSingleNodeValue(loadXMLString(result), "RESULT");
 }
 
+function chk_Passwd() {
+	var parameter = pUserID;
+	var url = "/ezApprovalG/ezchkPasswd.do";
+	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
+	var ret = window.showModalDialog(url,parameter,feature);
+
+	return ret;
+}
+
+function setDrafterAddress() {
+	SetDocumentElement(HwpCtrl, "drafter", arr_userinfo[2]);
+	SetDocumentElement(HwpCtrl, "address", arr_userinfo[8]);
+	SetDocumentElement(HwpCtrl, "drafterdept",arr_userinfo[4]);
+	SetDocumentElement(HwpCtrl, "lastKyulName", lastKyulName);
+	SetDocumentElement(HwpCtrl, "lastKyuljikwee", lastKyuljiwee);
+}
+
 function openFormUI()
 {
 	try
@@ -824,7 +841,7 @@ function SetBtnStateTrue()
 
 function SetAutoPropertyValue()
 {
-  try{
+//  try{
 	var fieldname;
 	var field;
 	var pSusinNextSN;
@@ -1099,9 +1116,9 @@ function SetAutoPropertyValue()
 	}
 	
 	pChamJoFlag = "Y";
-  }catch(e){	
-	alert("SetAutoPropertyValue()" + e.description);
-  }
+//  }catch(e){	
+//	alert("SetAutoPropertyValue()" + e.description);
+//  }
 }
 
 function SetAutoPropFinal()
@@ -1705,5 +1722,40 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         return getNodeText(loadXMLString(xmlhttp.responseText));
     } catch (e) {
         OpenAlertUI("SaveTMPDocInfo()" + e.description);
+    }
+    
+    function openSignUI() {
+      try{
+    	var SignNodeList;
+    	var result = "";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/getSignRequest.do",
+    		data : {
+    			userID : pUserID
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+    	
+        SignNodeList = loadXMLString(result).selectNodes("LISTVIEWDATA/ROWS/ROW"); 
+      
+        if (SignNodeList.length != 0) { 
+    		var parameter	= pUserID;
+    		var url = "/ezApprovalG/aprSign.do";
+    		var feature	= "status:no;dialogWidth:350px;dialogHeight:310px;help:no;scroll:no;edge:sunken";
+    	    var ret = window.showModalDialog(url, parameter, feature);
+        } else {
+    		var ret = "NAME";
+        }
+        
+    	return ret;
+      }catch(e){
+        alert("openSignUI()" + e.description);
+      }
     }
 }
