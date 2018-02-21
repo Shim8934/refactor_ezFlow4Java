@@ -651,7 +651,15 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
                 pTime = oAppointment2.oDtstart.replace('T', ' ').substring(0, 16) + " - " + oAppointment.oDtend.replace('T', ' ').substring(0, 16);
             else
                 pTime = oAppointment.oDtstart.replace('T', ' ').substring(0, 16) + " - " + oAppointment.oDtend.replace('T', ' ').substring(0, 16);
-            pSubject.innerHTML = oAppointment.odtstartDisplay + " - " + oAppointment.odtendDisplay + "<p style='display:inline-block; width:10px; margin:0; padding:0;'></P>" + oAppointment.oSubject;
+          
+            /*2018.02.21 김기하 #11638*/
+            //pSubject.innerHTML = oAppointment.odtstartDisplay + " - " + oAppointment.odtendDisplay + "<p style='display:inline-block; width:10px; margin:0; padding:0;'></P>" + oAppointment.oSubject;
+            
+            var timesSplit = oAppointment.odtstartDisplay.split(":");
+            var timeeSplit = oAppointment.odtendDisplay.split(":");
+            var timeofStart = timesSplit[0]+ ":" + ((timesSplit[1].length == 1)?("0" + timesSplit[1]):timesSplit[1]); 
+            var timeofEnd = timeeSplit[0] + ":" + ((timeeSplit[1].length == 1)?("0" + timeeSplit[1]):timeeSplit[1]); 
+            pSubject.innerHTML = timeofStart + " - " + timeofEnd + "<p style='display:inline-block; width:10px; margin:0; padding:0;'></P>" + oAppointment.oSubject;
         }
         else {
             pTime = strLang126;
