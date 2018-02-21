@@ -47,6 +47,13 @@ public class EzJournalSBController {
 		return "/ezJournal/journalMain";
 	}
 	
+	/**
+	 * 업무일지 왼쪽 메뉴 화면
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
 	@RequestMapping(value="/ezJournal/journalLeft.do")
 	public String journalLeft(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("journalLeft started");

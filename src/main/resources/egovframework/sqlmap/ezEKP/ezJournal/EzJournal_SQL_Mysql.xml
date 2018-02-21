@@ -374,4 +374,113 @@
 		delete from jmocha.tbl_journal_auth where user_id=#userId# and tenant_id=#tenantId#
 	</delete>
 	
+	<!-- 일지 리스트 페이징하기! -->
+	<select id="selectJournalListCount" parameterClass="Map">
+		select count(j.journal_id)
+		from jmocha.tbl_journal j
+		inner join jmocha.tbl_journal_form f on (j.form_id=f.form_id and j.tenant_id = f.tenant_id)
+		inner join jmocha.tbl_journal_form_type ft on (f.type_id=ft.type_id and f.tenant_id=ft.tenant_id)
+		inner join jmocha.tbl_deptmaster d on (j.journal_dept=d.CN and d.TENANT_ID=j.tenant_id)
+		left join jmocha.tbl_journal_recv r on (r.journal_id=j.journal_id and j.tenant_id=r.tenant_id)
+		where j.tenant_id=#tenantId#
+		and ft.company_id=#companyId#
+		<isNotEmpty property="typeId">
+		and ft.type_id=#typeId#
+		</isNotEmpty>
+		<isNotEmpty property="journalWriter">
+		and j.journal_writer=#journalWriter#
+		</isNotEmpty>
+		<isNotEmpty property="deptId">
+		and d.CN=#deptId#
+		</isNotEmpty>
+		<isNotEmpty property="reciveUser">
+		and r.user_id=#reciveUser#
+		</isNotEmpty>
+		<isNotEmpty property="status">
+		and j.journal_status=#status#
+		</isNotEmpty>
+		<isNotEmpty property="writerName">
+		and u.DISPLAYNAME like concat('%',#"writerName"#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="journalTitle">
+		and j.journal_title like concat('%',#"journalTitle"#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="formName">
+		and f.form_name like concat('%',#"formName"#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="startDate">
+			<isNotEmpty property="endDate">
+				and (date(j.journal_date) between #startDate# and #endDate#)
+			</isNotEmpty>
+			<isEmpty property="endDate">
+				and (date(j.journal_date) like #startDate#)
+			</isEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="endDate">
+			<isEmpty property="startDate">
+				and (date(j.journal_date) like #endDate#)
+			</isEmpty>
+		</isNotEmpty>
+	</select>
+	
+	<!-- 일지 리스트 가져오기 -->
+	<select id="selectJournalList" parameterClass="Map">
+		select j.journal_id as journal_id, j.journal_title as journal_title, j.journal_date as journal_date, j.dept_share as dept_share, 
+				u.DISPLAYNAME as writer_name, d.DISPLAYNAME as dept_name, f.form_name as form_name, ft.type_id as type_id,
+		        count(jr.reply_id) as reply_count, count(jf.file_id) as file_count, count(v.view_date) as view_count,
+		        count(r.user_id) as total_recv, count(r.recieve_date) as check_recv 
+		from jmocha.tbl_journal j
+		inner join jmocha.tbl_journal_form f on (j.form_id=f.form_id and j.tenant_id = f.tenant_id)
+		inner join jmocha.tbl_journal_form_type ft on (f.type_id=ft.type_id and f.tenant_id=ft.tenant_id)
+		inner join jmocha.tbl_deptmaster d on (j.journal_dept=d.CN and d.TENANT_ID=j.tenant_id)
+		inner join jmocha.tbl_usermaster u on (j.journal_writer=u.CN and u.TENANT_ID=j.tenant_id)
+		left join jmocha.tbl_journal_view v on (v.journal_id=j.journal_id and v.tenant_id=j.tenant_id)
+		left join jmocha.tbl_journal_file jf on (jf.journal_id=j.journal_id and jf.tenant_id=j.tenant_id)
+		left join jmocha.tbl_journal_recv r on (r.journal_id=j.journal_id and r.tenant_id=j.tenant_id)
+		left join jmocha.tbl_usermaster ru on (ru.CN=r.user_id and ru.TENANT_ID=r.tenant_id)
+		left join jmocha.tbl_journal_reply jr on (jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id)
+		where j.tenant_id=#tenantId#
+		and ft.company_id=#companyId#
+		<isNotEmpty property="typeId">
+		and ft.type_id=#typeId#
+		</isNotEmpty>
+		<isNotEmpty property="journalWriter">
+		and j.journal_writer=#journalWriter#
+		</isNotEmpty>
+		<isNotEmpty property="deptId">
+		and d.CN=#deptId#
+		</isNotEmpty>
+		<isNotEmpty property="reciveUser">
+		and r.user_id=#reciveUser#
+		</isNotEmpty>
+		<isNotEmpty property="status">
+		and j.journal_status=#status#
+		</isNotEmpty>
+		<isNotEmpty property="writerName">
+		and u.DISPLAYNAME like concat('%',#"writerName"#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="journalTitle">
+		and j.journal_title like concat('%',#"journalTitle"#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="formName">
+		and f.form_name like concat('%',#"formName"#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="startDate">
+			<isNotEmpty property="endDate">
+				and (date(j.journal_date) between #startDate# and #endDate#)
+			</isNotEmpty>
+			<isEmpty property="endDate">
+				and (date(j.journal_date) like #startDate#)
+			</isEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="endDate">
+			<isEmpty property="startDate">
+				and (date(j.journal_date) like #endDate#)
+			</isEmpty>
+		</isNotEmpty>
+		group by 1,2,3,4,5,6,7,8
+		order by $orderNum$ $orderHow$
+		limit #startCount#,#listCnt#
+	</select>
+	
 </sqlMap>
