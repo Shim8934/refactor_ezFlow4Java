@@ -83,6 +83,10 @@
 		            case 22:
 		            	url = "/admin/ezEmail/mailQuotaList.do";
 		                break;
+		                
+		            case 23:
+		            	url = "/admin/ezEmail/letterlMain.do";
+		                break;
 				}
 				window.open(url,"right");
 			}
@@ -118,6 +122,12 @@
     			<ul></ul>
   			</h2>  			
   			<!-- 2016-04-05 장진혁 편지지등록 / REQUEST에 MSIE 또는 TRIDENT가 포함될 시에만 메뉴 보여줌으로 되어있었음  -->
+  			
+  			<!-- 2018-02-20 재은 수정 (편지지 등록) -->
+  			<h2>
+				<span onClick="goPage(23)" style="display:inline-block;width:100%;"><spring:message code='main.t374' /></span>
+			    <ul></ul>
+			</h2>
   			<!--							
 			<h2>
 				<span onClick="goPage(5)" style="display:inline-block;width:100%;"><spring:message code='main.t374' /></span>
