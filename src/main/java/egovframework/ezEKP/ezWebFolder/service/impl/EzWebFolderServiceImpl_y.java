@@ -32,16 +32,21 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	@Autowired
 	private CommonUtil commonUtil;
 	
-	public List<FileVO> getFileList(String folderId, int tenantId,
+	// fileList출력
+	public List<FileVO> getFileList(String folderId,String folderType, int tenantId,
 			String companyId, String searchExt, String searchFileName,
 			String searchStartDate, String searchEndDate,
 			String searchCreateName, String searchFileType,
 			String searchPageCount, String searchListCount, int pStart , int pEnd) throws Exception {
 		
+		String parentId = "";
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("folderId",folderId);
 		map.put("tenantId",tenantId);
+		parentId = ezWebFolderDAO.getparentId (map);
+		
+		map.put("parentId", parentId);
+		map.put("folderType",folderType);
 		map.put("companyId",companyId);
 		map.put("searchExt", searchExt);
 		map.put("searchFileName", searchFileName);
@@ -57,7 +62,9 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		List<FileVO> filevo = (List<FileVO>) ezWebFolderDAO.getFileList(map);
 		return filevo;
 	}
-	public int getFileToTalCount (String folderId, int tenantId,
+	
+	// fileTotalCount
+	public int getFileToTalCount (String folderId,String folderType, int tenantId,
 			String companyId, String searchExt, String searchFileName,
 			String searchStartDate, String searchEndDate,
 			String searchCreateName, String searchFileType,
@@ -67,6 +74,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		map.put("folderId",folderId);
 		map.put("tenantId",tenantId);
+		map.put("folderType",folderType);
 		map.put("companyId",companyId);
 		map.put("searchExt", searchExt);
 		map.put("searchFileName", searchFileName);
@@ -84,5 +92,26 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		LOGGER.debug(test_totalCnt);
 		
 		return totalCnt;
+	}
+	@Override
+	public List<Map<String, Object>> getFolderList(String userId,String deptId, String comId ,
+			String folderId, String folderType, int tenantId) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userId", userId);
+		map.put("deptId", deptId);
+		map.put("comId", comId);
+		map.put("folderId", folderId);
+		map.put("folderType", folderType);
+		map.put("tenantId", tenantId);
+		
+		List<Map<String, Object>> folderList = ezWebFolderDAO.getFolderList(map);
+//		System.out.println(folderList.get(0).get("id"));
+		System.out.println(folderList.size());
+		
+		
+		
+		return folderList;
 	}
 }

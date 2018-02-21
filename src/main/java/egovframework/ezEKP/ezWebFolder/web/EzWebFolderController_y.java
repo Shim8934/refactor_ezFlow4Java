@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,13 @@ public class EzWebFolderController_y {
 	public String main (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String folderType = request.getParameter("folderType")!=null? request.getParameter("folderType") : "";
         //Add more function here
-        
+		LOGGER.debug(request.getParameter("folderId"));
+		LOGGER.debug("folderType"+ folderType+"은 이거임");
+		System.out.println("main.do 에 들어오는 folderId = "+ request.getParameter("folderId"));
+		model.addAttribute("folderType", folderType);
+        model.addAttribute("folderId", request.getParameter("folderId"));
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("userName", userInfo.getName());
         model.addAttribute("primary", userInfo.getPrimary());
@@ -55,11 +61,14 @@ public class EzWebFolderController_y {
 	
 	
 	// getFolderList /ezwebfolder/users/{userId}/folder-list에 가는 메소드 
-	@RequestMapping(value = "/ezWebFolder/folderList.do", method=RequestMethod.POST)
+	@RequestMapping(value = "/ezWebFolder/folderList.do")
 	public String getFolderList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
-			HttpServletResponse resp, Model model )throws Exception {
+			HttpServletResponse resp, Model model ){
 		
+		// tenantID, companyId, userId, folderType, folderId
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String folderType = request.getParameter("folderType") != null ? request.getParameter("folderType") : "";
+		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
 		
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
 		
@@ -69,33 +78,38 @@ public class EzWebFolderController_y {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
 		
 		HttpEntity<?> entity = new HttpEntity<>( headers );
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("deptId", userInfo.getDeptID())
+				.queryParam("comId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("folderType", folderType)
+				.queryParam("folderId", folderId);
+		
 						
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
 		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject)jp.parse(result.getBody());
-		LOGGER.debug(resultBody.get("status").toString());		
-		LOGGER.debug(resultBody.get("id").toString());		
-		LOGGER.debug(resultBody.get("test_GW").toString());		
+		JSONObject resultBody = null;
+		try {
+			resultBody = (JSONObject)jp.parse(result.getBody());
+		} catch (ParseException e) {
+			System.out.println("에러라구");
+			e.printStackTrace();
+		}
 		
-		
-//		JSONObject resultBody = result.getBody();
-	
 		String status = resultBody.get("status").toString();
 		
 		JSONObject test = new JSONObject();
 		
 		if (status.equals("ok")) {
-			LOGGER.debug(resultBody.get("test_GW").toString());	
-			test.put("test",resultBody.get("test_GW").toString());
-			model.addAttribute("test", test);
-			
+			test.put("userInfo", userInfo);
+			test.put("folderList",resultBody.get("folderList"));
+			model.addAttribute("folderList",test);
 		}
-		
+
 		return "json";
 		
 	}
@@ -107,6 +121,9 @@ public class EzWebFolderController_y {
 			HttpServletResponse resp, Model model )throws Exception {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String folderId = request.getParameter("folderId")!=null? request.getParameter("folderId") : "";
+		String folderType = request.getParameter("folderType")!=null? request.getParameter("folderType") : "";
+		System.out.println("folderType"+folderType);
 		int totalCount = Integer.parseInt(request.getParameter("totalCount"));
 		int currPage  = Integer.parseInt(request.getParameter("currPage"));
 		int listCount = Integer.parseInt(request.getParameter("listCount"));
@@ -124,7 +141,7 @@ public class EzWebFolderController_y {
 		}
 		
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
-		String url = gwServerUrl + "/webfolder/folders/" +request.getParameter("folderId") + "/file-list";
+		String url = gwServerUrl + "/webfolder/folders/" + folderId + "/file-list";
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -176,6 +193,7 @@ public class EzWebFolderController_y {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
+				.queryParam("folderType", folderType)
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("searchExt", searchExt)
 				.queryParam("searchFileName", searchFileName)
@@ -193,11 +211,17 @@ public class EzWebFolderController_y {
 	
 		
 		// 갔다 돌아옴
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+ 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
 		JSONParser jp = new JSONParser();
 		JSONObject resultBody = (JSONObject)jp.parse(result.getBody());
-		String status = resultBody.get("status").toString();
+		String status = null;
+		if( resultBody.get("status") == null ) {
+			System.out.println("값이 없습니다.");
+			LOGGER.debug("status == null");
+		}else {
+			status = resultBody.get("status").toString();
+		}
 		totalCount = Integer.parseInt(resultBody.get("totalCount").toString());
 		totalPages = Integer.parseInt(resultBody.get("totalpages").toString());
 		listCount = Integer.parseInt(resultBody.get("listCount").toString());
@@ -226,6 +250,7 @@ public class EzWebFolderController_y {
 		
 		return "ezWebFolder/treeTest";
 	}
+	
 
 	
 	/*

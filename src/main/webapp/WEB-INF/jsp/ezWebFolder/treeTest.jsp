@@ -3,109 +3,127 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="/js/jsTree/src/themes/default/style.css" />
 <title>Insert title here</title>
 <%-- <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css"> --%>
-<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"
-	type="text/css">
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-<!-- date Picker -->
+<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+<!-- <link rel="stylesheet" href="/jstree/themes/proton/style.min.css"> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 
 <script type="text/javascript">
-	// 	$(function() {
-	// 		$('#tree-container').jstree();
-	// 		$('#jstree_demo_div').on("changed.jstree", function (e, data) {
-	// 			  console.log(data.selected);
-	// 			});
-	// 	})
-	$(function() {
-		//$('#jstree_demo_div').jstree();
-// 		$('#html1').jstree();
-
-		$('#jstree_demo_div').on("changed.jstree", function(e, data) {
-			console.log(data.selected);
+	window.onload = function () {
+		folderList();
+		
+	};
+	function folderList () {
+		$.ajax ({
+			type:"POST",
+			url : "/ezWebFolder/folderList.do",
+			data : { 
+				"folderType" : 'C'
+				},
+			dataType: "JSON",
+			success : function (data) {
+				$('#html1').jstree({
+					'core' : {
+						'data' : data.folderList.folderList
+					},
+					'themes' : {
+						'responsive' : true
+					},
+					"types" : {
+						"default": {
+							"icon" :"/images/OrganTree_cross/fldr.gif" 
+						}
+					},
+					'plugins': ["wholerow","types","json_data","core","conditionalselect"]
+				})
+				
+			},
+			error : function(error) {
+				alert("<spring:message code='ezWebFolder.t134' />" + error);
+			}
 		});
-
-		$('button').on('click', function() {
-			$('#jstree').jstree(true).select_node('child_node_1');
-			$('#jstree').jstree('select_node', 'child_node_1');
-			$.jstree.reference('#jstree').select_node('child_node_1');
+		$('#html1').on("changed.jstree", function (e, data) {
+		   console.log("The selected nodes are:");
+		   alert(data.selected);
 		});
-		$('#jstree').jstree({
-			"plugins" : [ "wholerow", "checkbox" ]
-		});
-// 		$('#html1').jstree({
-// 			"themes" : {
-// 				"dots" : false
-// 			},
-// 			"core" : {
-// 				"themes" : {
-// 					"dots" : false
-// 					'responsive' : false,
-// 					'variant' : 'small',
-// 					'stripes' : true
+	}
+	
+	
+	
+// 	$(function() {
+// // 		$.ajax({
+// // 			"url" : 
+			
+			
+			
+// 			$('#html1').jstree({
+	
+// 				'plugins': ["wholerow","types","json_data"],
+				 
+	
+// 				'themes' : {
+				
+// 					'responsive' : true
+// 				},
+// 				"types" : {
+// 					"default": {
+// 						"icon" :"/images/OrganTree_cross/fldr.gif" 
+// 					}
 // 				}
-// 			}
-// 			"checkbox" : {
-// 				"keep_selected_style" : false
-// 			}
-// 			"plugins" : [ "wholerow", "checkbox" ]
-// 			 "plugins" : [ "themes", "html_data" ],
-//                 "themes" : {
-//                     "theme" : "default",
-//                     "dots" : false,
-//                     "icons" : false
-//                 }
-			$('#html1').jstree({
-				  "core" : { // core options go here
-				    "multiple" : false, // no multiselection
-				    "themes" : {
-				      "dots" : false // no connecting dots between dots
-				    }
-				  },
-				  "plugins" : ["state"] // activate the state plugin on this instance
-				});
-                
+// 			}).bind("select_node.jstree", function (e, data) { alert(data.rslt.obj.data("id")); });
+			
+// 		})
+		
+// // 		$('#html1 li').addClass('class',);
+	
+// 	});
+
+
+
+
 			
 // 		})
 // 		 .bind("__ready.jstree", function (event, data) {
 // 	            $("#html1").jstree("hide_dots");
 // 	            $("#html1").jstree("hide_icons");
 // 	        });
-	});
+	
+	
+	
+	
 </script>
 </head>
 <body>
 
 	<div id="html1">
 		<ul>
-			<li data-jstree='{"icon":"/images/OrganTree_cross/fldr.gif"}'>Electronics
-				<ul>
-					<li data-jstree='{"icon":"/images/OrganTree_cross/fldr.gif"}'>Mobile
-						<ul>
-							<li data-jstree='{"icon":"/images/OrganTree_cross/fldr.gif"}'>Samsung</li>
-							<li data-jstree='{"icon":"/images/OrganTree_cross/fldr.gif"}'>Apple</li>
-						</ul>
-					</li>
-					<li>
-						<ul>
-							<li data-jstree='{"icon":"/images/OrganTree_cross/fldr.gif"}'>Dell</li>
-							<li data-jstree='{"icon":"/images/OrganTree_cross/fldr.gif"}'>Computer Peripherals
-								<ul>
-									<li data-jstree='{"icon":"/images/OrganTree_cross/fldr.gif"}'>Printers</li>
-									<li data-jstree='{"icon":"/images/OrganTree_cross/fldr.gif"}'>Monitor</li>
-								</ul>
-							</li>
-							<li data-jstree='{"icon":"/images/OrganTree_cross/fldr.gif"}'>Keyboard</li>
-						</ul>
-					</li>
-				</ul>
-			</li>
+<!-- 			<li >Electronics -->
+<!-- 				<ul> -->
+<!-- 					<li>Mobile -->
+<!-- 						<ul> -->
+<!-- 							<li>Samsung</li> -->
+<!-- 							<li >Apple</li> -->
+<!-- 						</ul> -->
+<!-- 					</li> -->
+<!-- 					<li> -->
+<!-- 						<ul> -->
+<!-- 							<li >Dell</li> -->
+<!-- 							<li >Computer Peripherals -->
+<!-- 								<ul> -->
+<!-- 									<li >Printers</li> -->
+<!-- 									<li >Monitor</li> -->
+<!-- 								</ul> -->
+<!-- 							</li> -->
+<!-- 							<li >Keyboard</li> -->
+<!-- 						</ul> -->
+<!-- 					</li> -->
+<!-- 				</ul> -->
+<!-- 			</li> -->
 		</ul>
 	</div>
 </body>

@@ -119,6 +119,8 @@
 		var strLang42   = "<spring:message code = 'ezWebFolder.t138'/>";
 		var pStart = 0;
 		var pEnd =10;
+		var folderId = "${folderId}";
+		var folderType = "${folderType}";
 		
 		window.onload = function () {
 			pEnd= pStart + listCount;
@@ -130,9 +132,8 @@
 				type:"POST",
 				url : "/ezWebFolder/fileList.do",
 				data : { 
-// 					 "userID" 	  : "yy9320", 
-// 					 "tenantId"   : '1',
-					 "folderId"   : 'opensol',
+					 "folderId"   : folderId,
+					 "folderType" : folderType,
 					 "currPage"   : currPage,
 					 "totalPages" : totalPages,
 					 "listCount"  : listCount,

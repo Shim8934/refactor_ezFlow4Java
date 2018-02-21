@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezWebFolder.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,13 +36,30 @@ public class EzWebFolderGWController_y {
 	
 	// 전체 폴더 조회
 	@RequestMapping ( value="/webfolder/users/{userId}/folder-list" , method=RequestMethod.GET , produces="application/json;charset=utf-8")
-	public JSONObject folderList (@PathVariable String userId ,HttpServletRequest request) throws Exception{
-		System.out.println(userId);
+	public JSONObject folderList (@PathVariable String userId ,HttpServletRequest request) {
 		JSONObject jsonObj = new JSONObject();
 		
-		jsonObj.put("id", userId);
-		jsonObj.put("status", "ok");
-		jsonObj.put("test_GW", "결과 ");
+		String deptId = request.getParameter("deptId") != null ? request.getParameter("deptId") : "";
+		String comId = request.getParameter("comId") != null ? request.getParameter("comId") : "";
+		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
+		String folderType = request.getParameter("folderType") != null ? request.getParameter("folderType") : "";
+		int tenantId = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : 0;
+
+		List<Map<String, Object>> folderList = new ArrayList< Map<String,Object>>();
+		try {
+			folderList = service.getFolderList(userId,deptId,comId, folderId, folderType, tenantId);
+//			LOGGER.debug(folderList.get(0).get("id").toString());
+			jsonObj.put ("listTest",folderList.size());
+			jsonObj.put("id", userId);
+			jsonObj.put("folderId", folderId);
+			jsonObj.put("folderType", folderType);
+			jsonObj.put("tenantId", tenantId);
+			jsonObj.put("status", "ok");
+			jsonObj.put("folderList", folderList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			jsonObj.put("status", "fail");
+		}
 		return jsonObj;
 	}
 	
@@ -77,7 +95,6 @@ public class EzWebFolderGWController_y {
 	public JSONObject folderMove (@PathVariable String folderId, HttpServletRequest request ) {
 		JSONObject jsonObj = new JSONObject();
 		
-		
 		return jsonObj;
 		
 	}
@@ -105,8 +122,8 @@ public class EzWebFolderGWController_y {
 		JSONObject jsonObj = new JSONObject();
 		int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 		
+		String folderType = request.getParameter("folderType") != null ? request.getParameter("folderType") : "" ;
 		String searchExt = request.getParameter("searchExt") != null ? request.getParameter("searchExt") : "" ;
-		
 		String searchFileName = request.getParameter("searchFileName") != null ? request.getParameter("searchFileName") : "" ;
 		String searchStartDate = request.getParameter("searchStartDate") != null ? request.getParameter("searchStartDate") : "" ;
 		String searchEndDate = request.getParameter("searchEndDate") != null ? request.getParameter("searchEndDate") : "" ;
@@ -114,6 +131,7 @@ public class EzWebFolderGWController_y {
 		String searchFileType = request.getParameter("searchFileType") != null ? request.getParameter("searchFileType") : "" ;
 		String searchPageCount = request.getParameter("searchPageCount") != null ? request.getParameter("searchPageCount") : "" ;
 		String searchListCount = request.getParameter("searchListCount") != null ? request.getParameter("searchListCount") : "" ;
+		
 		int totalCount = request.getParameter("totalCount") != null ? Integer.parseInt(request.getParameter("totalCount")) : 0;
 		int listCount = request.getParameter("listCount") != null ? Integer.parseInt(request.getParameter("listCount")) : 10;
 		int currPage = request.getParameter("currPage") != null ? Integer.parseInt(request.getParameter("currPage")) : 1;
@@ -122,7 +140,7 @@ public class EzWebFolderGWController_y {
 		int pEnd = Integer.parseInt(request.getParameter("pEnd"));
 		int pStart  = Integer.parseInt(request.getParameter("pStart"));
 		
-		
+		System.out.println("folderType " + folderType);
 		
 		// loginVO 같은 쿠키는 request로 받아와야 한다 
 		// test할 용으로 만드는거는 뷰에서 값을 같이 던져줘야 한다. 
@@ -131,10 +149,10 @@ public class EzWebFolderGWController_y {
 		List<FileVO> fileList = new ArrayList<FileVO>();
 		
 		try {
-			fileList = service.getFileList(folderId,tenantId , request.getParameter("companyId"),
+			fileList = service.getFileList(folderId,folderType, tenantId , request.getParameter("companyId"),
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, searchListCount, pStart, pEnd);
-			totalCount = service.getFileToTalCount(folderId,tenantId , request.getParameter("companyId"),
+			totalCount = service.getFileToTalCount(folderId,folderType,tenantId , request.getParameter("companyId"),
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, searchListCount, pStart, pEnd);
 			totalpages = (totalCount/listCount)+1;

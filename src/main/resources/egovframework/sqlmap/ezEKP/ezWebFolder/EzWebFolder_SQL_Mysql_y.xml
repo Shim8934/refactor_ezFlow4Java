@@ -71,6 +71,16 @@
         <result property="tenantId"          	column="TENANT_ID"              columnIndex="5" />
     </resultMap>
     
+    <select id="EzWebFolderDAO_y.getParentId" resultClass="String" parameterClass="Map">
+    	SELECT FOLDER_UPPER
+			FROM 
+				tbl_webfolder_folder  
+			WHERE  
+                FOLDER_ID = #folderId#
+                and tenant_id = #tenantId#
+    </select>
+    
+    
     <select id="EzWebFolderDAO_y.getFileList" resultMap="fileVO" parameterClass="Map">   
    		<![CDATA[
 			SELECT DISTINCT
@@ -92,12 +102,20 @@
 				file.UPDATE_DATE  ,        	 
 				file.TENANT_ID		
 			FROM 
-				TBL_WEBFOLDER_FILE AS file LEFT OUTER JOIN tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID
+				(TBL_WEBFOLDER_FILE AS file LEFT OUTER JOIN tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID )
+                left join tbl_webfolder_folder folder on file.folder_id = folder.folder_Id
 			WHERE  
-				file.FOLDER_ID = #folderId#
-				
-				
-		]]>		
+					folder.TENANT_ID = #tenantId#
+				AND folder.FOLDER_TYPE = #folderType#  
+				AND folder.COMPANY_ID = #companyId#
+		]]>	
+		<isNotEqual property="parentId" compareValue="" >
+			<isNotEqual property="parentId" compareValue="root" prepend="AND">
+				<![CDATA[
+					file.FOLDER_ID = #folderId#
+		   		]]>	
+			</isNotEqual>		
+		</isNotEqual>	
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
 			<![CDATA[
 				file.FILE_EXT LIKE CONCAT(CONCAT('%', #searchExt#), '%')
@@ -119,22 +137,32 @@
        		]]> 
 		</isNotEqual>	
 		<![CDATA[	
-			AND
-				file.TENANT_ID = #tenantId#	 
-			ORDER BY file.CREATE_DATE LIMIT #pStart#, #pEnd#
+			
+			ORDER BY file.CREATE_DATE 
+			LIMIT #pStart#, #pEnd#
 		]]> 	
 	</select>
+	
     <select id="EzWebFolderDAO_y.getFileToTalCount" resultClass="Integer" parameterClass="Map">   
    		<![CDATA[
 			select count(*) from (SELECT DISTINCT
 				file.FILE_ID 	
-			FROM 
-				TBL_WEBFOLDER_FILE AS file right JOIN tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID
+			FROM (TBL_WEBFOLDER_FILE AS file LEFT OUTER JOIN tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID )
+                left join tbl_webfolder_folder folder on file.folder_id = folder.folder_Id
 			WHERE  
-				file.FOLDER_ID = #folderId#
-			AND
-				file.TENANT_ID = #tenantId#	
-		]]>		
+				file.TENANT_ID = #tenantId#	 
+				
+			AND folder.FOLDER_TYPE = #folderType#
+			
+		]]>	
+		
+		<isNotEqual property="parentId" compareValue="" >
+			<isNotEqual property="parentId" compareValue="root" prepend="AND">
+				<![CDATA[
+ 					file.FOLDER_ID = #folderId# 
+	 		   	]]>	 
+			</isNotEqual>		
+		</isNotEqual>		
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
 			<![CDATA[
 				file.FILE_EXT LIKE CONCAT(CONCAT('%', #searchExt#), '%')
@@ -154,9 +182,35 @@
 			<![CDATA[
 				file.FILE_NAME LIKE CONCAT(CONCAT('%', #searchFileName#), '%')
        		]]> 
-		</isNotEqual>		
-			) as fileJoin
+		</isNotEqual>	
+		<![CDATA[	
+			ORDER BY file.CREATE_DATE 
+			LIMIT #pStart#, #pEnd#
+		]]> 	) as fileJoin
 	</select>
+	
+	<select id="EzWebFolderDAO_y.getFolderList" resultClass="HashMap" parameterClass="Map" >
+		<![CDATA[
+	      
+	      
+	      SELECT distinct
+				folder.folder_id as id ,if( folder.folder_upper = 'root', '##', folder.folder_upper )  as parent, folder.folder_name1 as text
+			FROM TBL_WEBFOLDER_FOLDER folder left join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id 
+			WHERE   SUBSTRING_INDEX(SUBSTRING_INDEX(folder.FOLDER_PATH, '|' ,3), '|', -1) in (                          
+				SELECT DISTINCT folder.FOLDER_ID as id
+					FROM TBL_WEBFOLDER_FOLDER folder left join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
 
+					WHERE     folder.TENANT_ID = #tenantId#
+						AND folder.COMPANY_ID = #comId#
+						AND  folder.FOLDER_TYPE = #folderType#
+						AND SUBSTRING_INDEX(SUBSTRING_INDEX(folder.FOLDER_PATH, '|' ,3), '|', -1) = user.FOLDER_ID
+				        AND (user.USER_ID = #userId# || user.USER_ID =#deptId# || user.USER_ID = #comId#)
+				        AND (folder.OWNER_ID = #userId# || folder.OWNER_ID =  #deptId# || folder.OWNER_ID = #comId# )
+						AND folder.USE_STATUS = 'Y'
+		        ) 
+	        AND folder.USE_STATUS ='Y'  
+	        or(folder.FOLDER_UPPER = 'root' and folder.folder_type = #folderType# AND folder.TENANT_ID = #tenantId# AND folder.COMPANY_ID = #comId#);               
+		]]>
+	</select>
 </sqlMap>
 
