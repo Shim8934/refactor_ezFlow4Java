@@ -205,3 +205,6 @@ var strLangLHM01 = "default_kr";
 var strLangLHM02 = "인쇄 미리보기";
 var strLangLHM03 = "인쇄";
 var strLangLHM04 = "취소";
+
+//2018.2.21 강민수92 추가
+var strLangKMS1 = "100회 이하만 반복가능합니다.";
