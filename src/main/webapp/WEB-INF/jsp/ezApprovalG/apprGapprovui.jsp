@@ -149,6 +149,7 @@
 			var agreeReturnType = "${agreeReturnType}";
 			var curDocNum = "";
 			var draftDeptID = "${draftDeptID}";
+			var isHWP = "";
 			
 		    window.onload = function () {
 		        if (allFlag == "2") {

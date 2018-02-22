@@ -143,6 +143,9 @@
 	        var SummaryOuterReceiverList = "";
 	        var g_szUserID = arr_userinfo[8];
 	        var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
+	        var approvalFlag = "${approvalFlag}";
+	        var isHWP = "${isHWP}";
+	        
 	        window.onload = function () {
 	            try {
 	                window.onresize();

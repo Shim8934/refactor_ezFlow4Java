@@ -154,6 +154,7 @@
 			var agreeResultType = "${agreeResultType}";
 			var curDocNum = "";
 			var isEditorComplete = false;
+			var isHWP = "";
 			
 		    window.onload = function ()
 		    {

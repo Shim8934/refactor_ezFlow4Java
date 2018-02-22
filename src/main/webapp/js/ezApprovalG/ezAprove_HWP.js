@@ -1783,11 +1783,12 @@ function OpenAlertUI(pAlertContent)
 
 function chk_Passwd(pPwd)
 {
-	var parameter	= pPwd
+	var parameter = pPwd
 	var url = "/myoffice/ezApprovalG/ezchkPasswd.aspx";
-	var feature		= "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
-	var ret			= window.showModalDialog(url,parameter,feature);
-	return ret
+	var feature	= "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
+	var ret	= window.showModalDialog(url,parameter,feature);
+	
+	return ret;
 }
 
 function getLastOpinon()

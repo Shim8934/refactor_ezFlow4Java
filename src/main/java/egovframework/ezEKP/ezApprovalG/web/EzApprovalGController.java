@@ -3017,13 +3017,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/doDraft.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = {"/ezApprovalG/doDraft.do", "/ezApprovalG/doDraftHWP.do"}, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String doDraft(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("doDraft started.");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		String extension = ".mht";
 		
+		if (requestURL.indexOf("HWP") > -1) {
+			extension = ".hwp";
+		}
+		
+		logger.debug("requestURL = " + requestURL);
 		logger.debug("xmlPara = " + xmlPara);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
@@ -3033,7 +3040,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		// <HERF></HERF>에 저장된 .htm 파일의 위치를 .mht 파일이 저장될 위치로 변경해준다.
 		xmlDom.getDocumentElement().getChildNodes().item(6).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + 
-				commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent() + ".mht");
+				commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent() + extension);
 		String aprState = "003"; // 003 승인
 		
 		if (xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent().equals("000")) {
@@ -3041,7 +3048,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} else if (xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent().equals("001")) {
 			aprState = "001"; // 001 대기
 			xmlDom.getDocumentElement().getChildNodes().item(6).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + 
-				commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + "TMP" + commonUtil.separator + xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent() + ".mht");
+				commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + "TMP" + commonUtil.separator + xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent() + extension);
 		}
 		
 		userInfo.setRealPath(commonUtil.getRealPath(request));
@@ -3202,12 +3209,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 파일저장 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/saveFile.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = {"/ezApprovalG/saveFile.do", "/ezApprovalG/saveFileHWP.do"}, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String saveFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("saveFile started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		String extension = ".mht";
+		
+		if (requestURL.indexOf("HWP") > -1) {
+			extension = ".hwp";
+		}
 		
 		String docID = request.getParameter("docID");
 		String formText = request.getParameter("html");
@@ -3220,7 +3234,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		InputStream stream = null;
 		OutputStream bos = null;
 		
-		saveFileName = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".mht"; 
+		saveFileName = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + extension; 
 		saveDir = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
 		
 		logger.debug("<<<realPath : " + realPath);

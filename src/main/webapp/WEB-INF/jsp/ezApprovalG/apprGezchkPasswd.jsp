@@ -44,18 +44,16 @@
 					if (rtnVal != "FALSE") {
 				        if (ReturnFunction != null) {
 				            ReturnFunction(rtnVal);
-				            window.close();
-				        }
-				        else {
+				        } else {
 				            window.returnValue = rtnVal;
 				            window.close();
 				        }
 					} else {
-							flag = true;
-				            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
-				            alert(pAlertContent); // 추가
-				            //OpenAlertUI(pAlertContent);
-				            return;
+						flag = true;
+			            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+			            alert(pAlertContent); // 추가
+			            //OpenAlertUI(pAlertContent);
+			            return;
 					}
 			    }
 		    }
@@ -81,7 +79,6 @@
 		    
 		    function btn_OpinionCANCEL_onclick() {
 		        if (ReturnFunction != null) {
-		            window.close();
 		            ReturnFunction("cancel");            
 		        }
 		        else {

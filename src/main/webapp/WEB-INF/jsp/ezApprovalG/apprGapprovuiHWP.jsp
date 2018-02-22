@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_HWP.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezAprove_HWP.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/attachG.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
@@ -127,6 +127,7 @@
 		    var pUse_Editor = "<%= Use_Editor%>";
 	        var g_szUserID = arr_userinfo[8];
 	        var g_senderinfo = "<%= userinfo.CompanyName + ", " + userinfo.DeptName + ", " + userinfo.Title %>";
+	        var isHWP = "${isHWP}";
 	        
 		    function getNextDocList() {
 		        NextDocID = "";

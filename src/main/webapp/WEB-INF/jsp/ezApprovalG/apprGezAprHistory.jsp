@@ -278,7 +278,7 @@
 		        } else {
 		            window.close();
 		        }
-		    }		    
+		    }
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}

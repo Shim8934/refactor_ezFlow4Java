@@ -659,7 +659,7 @@ function chk_Passwd() {
 	var url = "/ezApprovalG/ezchkPasswd.do";
 	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
 	var ret = window.showModalDialog(url,parameter,feature);
-
+	
 	return ret;
 }
 
@@ -1262,52 +1262,51 @@ function openAaprDocAttachUI()
   }
 }
 
-//애매해서 나둠
-//function SaveDraftDocInfo()
-//{
-//	var rtnVal;
-//	if (SaveFile() != "TRUE")
-//		return "FALSE";
-//		
-//    SignSave();         
-//	rtnVal = SaveDraftDocInfo_ilban("002");
-//	if (rtnVal.toUpperCase() != "TRUE")
-//	{
-//		SaveOrgFile();
-//	}
-//	return rtnVal;
-//}
+function SaveDraftDocInfo() {
+	var rtnVal;
+	if (SaveFile() != "TRUE")
+		return "FALSE";
+		
+    SignSave();
+	rtnVal = SaveDraftDocInfo_ilban("002");
+	
+	if (rtnVal.toUpperCase() != "TRUE")	{
+		SaveOrgFile();
+	}
+	
+	return rtnVal;
+}
 
 function SaveDraftDocInfo_ilban(pState)
 {
   try{
 	var objRoot;
 	var objNode;
-	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");;
+	var xmlpara = createXmlDom();
 	var xmlhttp = createXMLHttpRequest();
 
 	createNodeInsert(xmlpara, objNode, "PARAMETER");
-	createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-	createNodeAndInsertText(xmlpara, objNode, "FormID", pFormID);
+	createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+	createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
 
 	if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI") {
-	    createNodeAndInsertText(xmlpara, objNode, "OrgDocID", pOrgDocID);
-	    createNodeAndInsertText(xmlpara, objNode, "DocType", pDocType);
-	    createNodeAndInsertText(xmlpara, objNode, "DocState", pDocState);
+	    createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
+	    createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", pDocType);
+	    createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", pDocState);
 	}
 	else {
-	    createNodeAndInsertText(xmlpara, objNode, "OrgDocID", "");
-	    createNodeAndInsertText(xmlpara, objNode, "DocType", "");
-	    createNodeAndInsertText(xmlpara, objNode, "DocState", "");
+	    createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", "");
+	    createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", "");
+	    createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", "");
 	}
 
-	createNodeAndInsertText(xmlpara, objNode, "FunctionType", pState);
-	createNodeAndInsertText(xmlpara, objNode, "Href", "/document/doc/" + pDocID + ".hwp");
+	createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", pState);
+	createNodeAndInsertText(xmlpara, objNode, "HREF", "/document/doc/" + pDocID + ".hwp");
 
 	if (HwpCtrl.CheckFieldExist("doctitle"))
-	    createNodeAndInsertText(xmlpara, objNode, "DocTitle", HwpCtrl.GetFieldText("doctitle"));
+	    createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", HwpCtrl.GetFieldText("doctitle"));
 	else
-	    createNodeAndInsertText(xmlpara, objNode, "DocTitle", "");
+	    createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", "");
 
 	var field = "";
 	if (HwpCtrl.CheckFieldExist("docnumber"))
@@ -1319,39 +1318,39 @@ function SaveDraftDocInfo_ilban(pState)
 	else
 	    field = "";
 
-	createNodeAndInsertText(xmlpara, objNode, "DocNo", field);
-	createNodeAndInsertText(xmlpara, objNode, "HasAttachYN", pHasAttachYN);
-	createNodeAndInsertText(xmlpara, objNode, "HasOpinionYN", pHasOpinionYN);
+	createNodeAndInsertText(xmlpara, objNode, "DOCNO", field);
+	createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
+	createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
 
 	var startdate;
 	if (pState == "000")
 	    startdate = "DRAFTSAVE";
 	else
 	    startdate = "DRAFT";
-	createNodeAndInsertText(xmlpara, objNode, "StartDate", startdate);
-	createNodeAndInsertText(xmlpara, objNode, "EndDate", "DRAFT");
-	createNodeAndInsertText(xmlpara, objNode, "WriterID", arr_userinfo[1]);
-	createNodeAndInsertText(xmlpara, objNode, "WriterName", arr_userinfo[11]);
-	createNodeAndInsertText(xmlpara, objNode, "WriterJobTitle", arr_userinfo[13]);
-	createNodeAndInsertText(xmlpara, objNode, "WriterDeptID", arr_userinfo[4]);
-	createNodeAndInsertText(xmlpara, objNode, "WriterDeptName", arr_userinfo[15]);
-	createNodeAndInsertText(xmlpara, objNode, "Html", "");
-	createNodeAndInsertText(xmlpara, objNode, "OrgHtml", "");
-	createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
-	createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
-	createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
+	createNodeAndInsertText(xmlpara, objNode, "STARTDATE", startdate);
+	createNodeAndInsertText(xmlpara, objNode, "ENDDATE", "DRAFT");
+	createNodeAndInsertText(xmlpara, objNode, "WRITERID", arr_userinfo[1]);
+	createNodeAndInsertText(xmlpara, objNode, "WRITERNAME", arr_userinfo[11]);
+	createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE", arr_userinfo[13]);
+	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTID", arr_userinfo[4]);
+	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME", arr_userinfo[15]);
+	createNodeAndInsertText(xmlpara, objNode, "HTML", "");
+	createNodeAndInsertText(xmlpara, objNode, "ORGHTML", "");
+	createNodeAndInsertText(xmlpara, objNode, "PUSERID", arr_userinfo[1]);
+	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME", arr_userinfo[11]);
+	createNodeAndInsertText(xmlpara, objNode, "PDEPTID", arr_userinfo[4]);
 
-	createNodeAndInsertText(xmlpara, objNode, "security", tempSecurity);
-	createNodeAndInsertText(xmlpara, objNode, "keepperiod", tempKeep);
-	createNodeAndInsertText(xmlpara, objNode, "publication", tempPublic);
+	createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
+	createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
+	createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", tempPublic);
 
-	createNodeAndInsertText(xmlpara, objNode, "public", tempPublic);
-	createNodeAndInsertText(xmlpara, objNode, "ItemCode", tempItemCode);
-	createNodeAndInsertText(xmlpara, objNode, "ItemName", tempItemName);
+	createNodeAndInsertText(xmlpara, objNode, "PUBLIC", tempPublic);
+	createNodeAndInsertText(xmlpara, objNode, "ITEMCODE", tempItemCode);
+	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME", tempItemName);
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
-	createNodeAndInsertText(xmlpara, objNode, "UrgentApproval", tempUrgent);
-	createNodeAndInsertText(xmlpara, objNode, "KeyWord", tempKeyword);
-	createNodeAndInsertText(xmlpara, objNode, "Xdocid", "");
+	createNodeAndInsertText(xmlpara, objNode, "URGENTAPPROVAL", tempUrgent);
+	createNodeAndInsertText(xmlpara, objNode, "KEYWORD", tempKeyword);
+	createNodeAndInsertText(xmlpara, objNode, "XDOCID", "");
 
 	createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
 	createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
@@ -1379,12 +1378,19 @@ function SaveDraftDocInfo_ilban(pState)
 	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
 	
-	xmlhttp.open("POST","aspx/dodraft_HWP.aspx",false);
+	xmlhttp.open("POST","/ezApprovalG/doDraftHWP.do",false);
 	xmlhttp.send(xmlpara);
 	
 	if(pState != "000")		
 		SetBtnStateFalse();
-	return getNodeText(loadXMLString(xmlhttp.responseText));
+	
+	if (xmlhttp.statusText == "OK") {
+		var dataNodes = GetChildNodes(xmlhttp.responseXML);
+		
+        return getNodeText(dataNodes[0]);
+	} else {
+		return "FALSE";
+	}
   }catch(e){
     alert("SaveDraftDocInfo_ilban(pState)" + e.description);
   }
@@ -1482,8 +1488,9 @@ function setDocNumFormat(pPrefix)
 }
 
 //구현해야하는부분
-function SaveFile()
-{
+function SaveFile() {
+	var result = "";
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -1497,10 +1504,13 @@ function SaveFile()
 			result = text;
 		}        			
 	});
+    
+    return result;
 }
 
-function SaveOrgFile()
-{
+function SaveOrgFile() {
+	var result = "";
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -1516,6 +1526,41 @@ function SaveOrgFile()
 	});
     
     return result;
+}
+
+function openSignUI() {
+    try {
+	  	var SignNodeList;
+	  	var result = "";
+	  	
+	  	$.ajax({
+	  		type : "POST",
+	  		dataType : "text",
+	  		async : false,
+	  		url : "/ezApprovalG/getSignRequest.do",
+	  		data : {
+	  			userID : pUserID
+	  		},
+	  		success: function(xml){
+	  			result = xml;
+	  		}        			
+	  	});
+	  	
+	  	SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
+	    
+	    if (SignNodeList.length != 0) { 
+	  		var parameter	= pUserID;
+	  		var url = "/ezApprovalG/aprSign.do";
+	  		var feature	= "status:no;dialogWidth:350px;dialogHeight:310px;help:no;scroll:no;edge:sunken";
+	  	    var ret = window.showModalDialog(url, parameter, feature);
+	    } else {
+	  		var ret = "NAME";
+	    }
+	      
+	  	return ret;
+    } catch(e) {
+      alert("openSignUI()" + e.description);
+    }
 }
 
 function putSignXML(SignXML)
@@ -1622,38 +1667,38 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
     try {
         var objRoot;
         var objNode;
-        var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+        var xmlpara = createXmlDom();
         var xmlhttp = createXMLHttpRequest();
 
         var objNode;
         createNodeInsert(xmlpara, objNode, "PARAMETER");
 
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "FormID", pFormID);
+        createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+        createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
-            createNodeAndInsertText(xmlpara, objNode, "OrgDocID", pOrgDocID);
+            createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
         else
-            createNodeAndInsertText(xmlpara, objNode, "OrgDocID", "");
-
-        if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
-            createNodeAndInsertText(xmlpara, objNode, "DocType", pDocType);
-        else
-            createNodeAndInsertText(xmlpara, objNode, "DocType", "");
+            createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", "");
 
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
-            createNodeAndInsertText(xmlpara, objNode, "DocState", pDocState);
+            createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", pDocType);
+        else
+            createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", "");
+
+        if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
+            createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", pDocState);
 
         else
-            createNodeAndInsertText(xmlpara, objNode, "DocState", "");
+            createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", "");
 
-        createNodeAndInsertText(xmlpara, objNode, "FunctionType", strAprState1);
-        createNodeAndInsertText(xmlpara, objNode, "Href", "/document/doc/" + pDocID + ".htm");
+        createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", strAprState1);
+        createNodeAndInsertText(xmlpara, objNode, "HREF", "/document/doc/" + pDocID + ".htm");
 
 
         if (HwpCtrl.CheckFieldExist("doctitle"))
-            createNodeAndInsertText(xmlpara, objNode, "doctitle", HwpCtrl.GetFieldText("doctitle"));
+            createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", HwpCtrl.GetFieldText("doctitle"));
         else
-            createNodeAndInsertText(xmlpara, objNode, "doctitle", "");
+            createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", "");
 
         var field
         if (HwpCtrl.CheckFieldExist("docnumber"))
@@ -1665,30 +1710,30 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         else
             field = "";
 
-        createNodeAndInsertText(xmlpara, objNode, "doctitle", field);
-        createNodeAndInsertText(xmlpara, objNode, "HasAttachYN", pHasAttachYN);
-        createNodeAndInsertText(xmlpara, objNode, "HasOpinionYN", pHasOpinionYN);
-        createNodeAndInsertText(xmlpara, objNode, "StartDate", "DRAFTSAVE");
-        createNodeAndInsertText(xmlpara, objNode, "EndDate", "DRAFT");
-        createNodeAndInsertText(xmlpara, objNode, "WriterID", arr_userinfo[1]);
-        createNodeAndInsertText(xmlpara, objNode, "WriterName", arr_userinfo[11]);
-        createNodeAndInsertText(xmlpara, objNode, "WriterJobTitle", arr_userinfo[13]);
-        createNodeAndInsertText(xmlpara, objNode, "WriterDeptID", arr_userinfo[4]);
-        createNodeAndInsertText(xmlpara, objNode, "WriterDeptName", arr_userinfo[15]);
-        createNodeAndInsertText(xmlpara, objNode, "Html", "");
-        createNodeAndInsertText(xmlpara, objNode, "OrgHtml", "");
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
-        createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
-        createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-        createNodeAndInsertText(xmlpara, objNode, "security", tempSecurity);
-        createNodeAndInsertText(xmlpara, objNode, "keepperiod", tempKeep);
-        createNodeAndInsertText(xmlpara, objNode, "publication", tempPublic);
-        createNodeAndInsertText(xmlpara, objNode, "public", tempPublic);
-        createNodeAndInsertText(xmlpara, objNode, "ItemCode", tempItemCode);
-        createNodeAndInsertText(xmlpara, objNode, "ItemName", tempItemName);
-        createNodeAndInsertText(xmlpara, objNode, "UrgentApproval", tempUrgent);
-        createNodeAndInsertText(xmlpara, objNode, "KeyWord", tempKeyword);
-        createNodeAndInsertText(xmlpara, objNode, "Xdocid", "");
+        createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", field);
+        createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
+        createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
+        createNodeAndInsertText(xmlpara, objNode, "STARTDATE", "DRAFTSAVE");
+        createNodeAndInsertText(xmlpara, objNode, "ENDDATE", "DRAFT");
+        createNodeAndInsertText(xmlpara, objNode, "WRITERID", arr_userinfo[1]);
+        createNodeAndInsertText(xmlpara, objNode, "WRITERNAME", arr_userinfo[11]);
+        createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE", arr_userinfo[13]);
+        createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTID", arr_userinfo[4]);
+        createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME", arr_userinfo[15]);
+        createNodeAndInsertText(xmlpara, objNode, "HTML", "");
+        createNodeAndInsertText(xmlpara, objNode, "ORGHTML", "");
+        createNodeAndInsertText(xmlpara, objNode, "PUSERID", arr_userinfo[1]);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERNAME", arr_userinfo[11]);
+        createNodeAndInsertText(xmlpara, objNode, "PDEPTID", arr_userinfo[4]);
+        createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
+        createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
+        createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", tempPublic);
+        createNodeAndInsertText(xmlpara, objNode, "PUBLIC", tempPublic);
+        createNodeAndInsertText(xmlpara, objNode, "ITEMCODE", tempItemCode);
+        createNodeAndInsertText(xmlpara, objNode, "ITEMNAME", tempItemName);
+        createNodeAndInsertText(xmlpara, objNode, "URGENTAPPROVAL", tempUrgent);
+        createNodeAndInsertText(xmlpara, objNode, "KEYWORD", tempKeyword);
+        createNodeAndInsertText(xmlpara, objNode, "XDOCID", "");
         createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
         createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
         createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
@@ -1712,50 +1757,16 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME2", arr_userinfo[16]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
-        if (Saveflag)
-            xmlhttp.open("POST", "aspx/dodraftTmp_hwp.aspx", false);
-        else
-            xmlhttp.open("POST", "aspx/dodraft_hwp.aspx", false);
-
+        //수상하지만 일단 지움
+//        if (Saveflag)
+//            xmlhttp.open("POST", "/ezApprovalG/doDraftTmpHWP.do", false);
+//        else
+        
+        xmlhttp.open("POST", "/ezApprovalG/doDraftHWP.do", false);
         xmlhttp.send(xmlpara);
 
         return getNodeText(loadXMLString(xmlhttp.responseText));
     } catch (e) {
         OpenAlertUI("SaveTMPDocInfo()" + e.description);
-    }
-    
-    function openSignUI() {
-      try{
-    	var SignNodeList;
-    	var result = "";
-    	
-    	$.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/getSignRequest.do",
-    		data : {
-    			userID : pUserID
-    		},
-    		success: function(xml){
-    			result = xml;
-    		}        			
-    	});
-    	
-        SignNodeList = loadXMLString(result).selectNodes("LISTVIEWDATA/ROWS/ROW"); 
-      
-        if (SignNodeList.length != 0) { 
-    		var parameter	= pUserID;
-    		var url = "/ezApprovalG/aprSign.do";
-    		var feature	= "status:no;dialogWidth:350px;dialogHeight:310px;help:no;scroll:no;edge:sunken";
-    	    var ret = window.showModalDialog(url, parameter, feature);
-        } else {
-    		var ret = "NAME";
-        }
-        
-    	return ret;
-      }catch(e){
-        alert("openSignUI()" + e.description);
-      }
     }
 }

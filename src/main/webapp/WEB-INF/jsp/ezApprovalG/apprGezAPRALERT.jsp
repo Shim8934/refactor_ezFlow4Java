@@ -28,9 +28,6 @@
 	            } else {
 		        	window.returnValue = true;
 		            window.close();
-	            } else {
-	            	 window.returnValue = true;
-			         window.close();
 	            }
 		    }
 		    var ReturnFunction;
