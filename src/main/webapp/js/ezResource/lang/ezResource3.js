@@ -53,7 +53,7 @@ var strLang91 = "削除する権限がありません。";
 var strLang92 = "予約の削除に失敗しました。";
 var strLang93 = "削除する予約を選択してください。";
 var strLang94 = "自分の登録した予約のみ削除できます。";
-var strLang95 = "繰り返しの設定方法が正しくありません。";
+var strLang95 = "繰り返し回数を正しく入力してください。";
 var strLang97 = "毎月";
 var strLang98 = "毎年";
 var strLang100 = "期間の設定が正しくありません。確かめてください。";
@@ -207,4 +207,4 @@ var strLangLHM03 = "印刷";
 var strLangLHM04 = "キャンセル";
 
 //2018.2.21 강민수92 추가
-var strLangKMS1 = "100회 이하만 반복가능합니다.";
+var strLangKMS1 = "繰り返し設定は100回まで可能です。";
