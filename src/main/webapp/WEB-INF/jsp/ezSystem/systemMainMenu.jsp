@@ -13,7 +13,6 @@
 			var timeZone = "${configMap.PrimaryTimeZone}";
 			var list = [];
 			var confirmChange = "";
-			var test = "${configMap.useEditApprDoc}";
 			window.onload = window_onload;
 			
 			function window_onload() {
