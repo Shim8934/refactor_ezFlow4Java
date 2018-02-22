@@ -84,17 +84,23 @@
 	        var mail_selectfolder_cross_dialogArguments = new Array();
 	        function selectFolder() {
 	            mail_selectfolder_cross_dialogArguments[1] = selectFolder_Complete;
-	            mail_selectfolder_cross_dialogArguments[2] = DivPopUpHidden;
 	            DivPopUpShow(400, 355, "/ezEmail/mailSelectFolder.do");
 	        }
 	        function selectFolder_Complete(mailBoxInfo) {
 	            DivPopUpHidden();
-	            if (typeof (mailBoxInfo) == "undefined")
+	            
+	            if (typeof (mailBoxInfo) == "undefined") {
 	                return;
-	
-	            foldername.value = mailBoxInfo["name"];
-	            folderpath = mailBoxInfo["url"];
-	            document.getElementById("folderid").value = mailBoxInfo["url"];
+	            }
+	            
+	            if (typeof (mailBoxInfo["name"]) != "undefined") {
+	            	foldername.value = mailBoxInfo["name"];
+	            }
+	            
+	            if (typeof (mailBoxInfo["url"]) != "undefined") {
+	            	folderpath = mailBoxInfo["url"];
+		            document.getElementById("folderid").value = folderpath;
+	            }
 	        }
 	        function mailIn() {
 	            if (foldername.value == "") {

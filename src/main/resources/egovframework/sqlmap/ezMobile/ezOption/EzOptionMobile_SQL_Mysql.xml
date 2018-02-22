@@ -191,6 +191,35 @@
 		]]>
   	</select>
   	
+  	<select id="EzOptionDAO.commonInfoWeb" parameterClass="Map" resultMap="MCommonVO">
+    	<![CDATA[
+	    	SELECT
+	    		b.tenant_id,
+	    		a.lang,    	
+				a.timeZone,		    
+			    b.department,
+			    b.description,
+			    b.description2,
+			    b.physicaldeliveryofficename,
+			    b.company,
+			    b.company2,
+			    b.cn,
+			    b.displayName,
+			    b.displayName2,
+			    b.title,
+			    b.title2,
+                b.extensionattribute1 as rollinfo,
+                b.extensionattribute2 as userFileUrl,
+                b.mail as email
+			FROM
+				TBL_USERLOCALINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
+			WHERE
+				b.cn = #userId#
+			AND
+				b.tenant_id = (select tenant_id from TBL_TENANT_SERVERNAME WHERE server_name = #serverName#)
+		]]>		
+  	</select>
+  	
   	<insert id="EzOptionDAO.insertOption" parameterClass="Map">
   		<![CDATA[
 			INSERT INTO TBL_USERMOBILEINFO(

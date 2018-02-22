@@ -255,10 +255,12 @@
 		    });
 		    
 		    var xmlhttp = createXMLHttpRequest();
+		    var viewtypeChangeFlag = false;
 		    function getBoardList(type) {
 		        if (type == "1") {
 		            SQLPARADATA = "";
 		            CurPage = 1;
+		            viewtypeChangeFlag = true;
 		        }
 		        starttime = new Date().getTime();
 		        if(document.getElementById("viewtype") != null){
@@ -375,6 +377,39 @@
 		                    }
 		                }
 		                firstFlag = true;
+		            }
+		            //viewtype(기본보기, 안읽은게시물, 만료된게시물)이 바뀔때마다 실행되는 조건
+		            if (viewtypeChangeFlag) {
+		            	document.getElementById("Preview_HeaderW").style.display = "none"; 
+	            		document.getElementById("ifrmPreViewW").src = "/blank.htm";
+	            		document.getElementById("ifrmPreViewW").onload = function(){
+	            			if (CrossYN()) {
+			                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null){
+			                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022' />";
+			                    }
+			                } else {
+			                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null){
+			                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+			                    }
+			                }
+	            		}
+	            		document.getElementById("Preview_HeaderH").style.display = "none"; 
+	            		document.getElementById("ifrmPreViewH").src = "/blank.htm";
+	            		document.getElementById("ifrmPreViewH").onload = function(){
+	            			if (CrossYN()) {
+			                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+			                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
+			                    }
+			                } else {
+			                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+			                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+			                    }
+			                }
+	            		}
+	            		//preview를 컨트롤하는 변수들 초기화
+		            	viewtypeChangeFlag = false;
+		            	selobj = null;
+		            	onclickFlag = false;
 		            }
 		            endtime = new Date().getTime();
 		            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
@@ -843,7 +878,7 @@
 		        }
 
 		        if (CheckIfHasReplies()) {
-		            alert("<spring:message code='ezBoard.t196'/>");
+		            alert("<spring:message code='ezBoard.bhs01'/>");
 		            return;
 		        }
 		        var arrList = new Array();

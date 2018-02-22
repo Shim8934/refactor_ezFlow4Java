@@ -134,7 +134,7 @@ function MakeAddressList() {
         if (document.getElementById("ListViewType").value == "list") {
             var _TR = document.createElement("TR");
             _TR.style.verticalAlign = "middle";
-            _TR.style.height = "25px";
+            _TR.style.height = "31px";
             _TR.style.width = "100%";
             _TR.setAttribute("id", "Maillist_" + Cnt);
             _TR.style.cursor = "pointer";
@@ -448,7 +448,7 @@ function MakeNoDateList() {
         document.getElementById("MailList").style.width = "100%";
         var _TR = document.createElement("TR");
         _TR.style.verticalAlign = "middle";
-        _TR.style.height = "25px";
+        _TR.style.height = "31px";
 
         var _TD = document.createElement("TD");
         _TD.style.textAlign = "center";
@@ -459,8 +459,8 @@ function MakeNoDateList() {
     else {
         var DivLayer = document.createElement("DIV");
         DivLayer.style.textAlign = "center";
-        DivLayer.style.paddingTop = "40px";
-        DivLayer.innerHTML = strLang100;
+        DivLayer.className = "emptyDiv";
+        DivLayer.innerHTML = "<img src='/images/alert.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";
         document.getElementById("MailListCard").appendChild(DivLayer);
     }
 }

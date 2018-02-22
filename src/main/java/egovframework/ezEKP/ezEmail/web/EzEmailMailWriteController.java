@@ -737,7 +737,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 			            StringBuilder sb = new StringBuilder();
 			            sb.append("<hr tabindex=\"-1\">");
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage).replaceAll("<a@a.com>", ""))));
+			            sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
+			            sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage).replaceAll("<a@a.com>", ""))));
+			            sb.append("</p>");
+			            
 			            //set received date
 			            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( z )");
 			            String offset = loginInfo.getOffset();
@@ -747,11 +750,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    			String[] offsetArr = offset.split("\\|");
 			    			sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
 			    		}
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
+			            sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
+			            sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
+			            sb.append("</p>");
 			            //to-do
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo.replaceAll("<a@a.com>", ""))));
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc.replaceAll("<a@a.com>", ""))));
-
+			            sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
+			            sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo.replaceAll("<a@a.com>", ""))));
+			            sb.append("</p>");
+			            
+			            sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
+			            sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc.replaceAll("<a@a.com>", ""))));
+			            sb.append("</p>");
+			            
 			            String orgMessageSubject = ezEmailUtil.getSubject(orgMessage);	
 						if (orgMessageSubject != null && !orgMessageSubject.equals("")) {
 							rawHeaders = orgMessage.getHeader("subject");
@@ -765,8 +775,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								orgMessageSubject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
 							}
 						}			            
-			            sb.append(String.format("<B>%s : </B> %s<BR><BR>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
-						
+						sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
+				        sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
+				        sb.append("</p>");
+				        sb.append("<BR><BR>");
+				            
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
 						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
@@ -1408,15 +1421,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", userInfo.getTenantId());
 		
 		for (int i = 0; i < fileCnt; i++) {
-			filePath[i] = realPath + doc.getElementsByTagName("DATA2").item(i).getTextContent();
+			String filePathValue = doc.getElementsByTagName("DATA2").item(i).getTextContent();		
+			filePathValue = filePathValue != null ? filePathValue : "";
+			
+			if (!filePathValue.startsWith("/")) {
+				filePathValue = "/" + filePathValue;
+			}
+			
+			filePath[i] = realPath + filePathValue;
 			
 			if (dotNetIntegration.equals("YES")) {
 				try {
 					File f = new File(filePath[i]);
 					
 					// 닷넷 연동 시 첨부 파일이 존재하지 않으면 암호화된 파일일 수 있으므로 복호화 URL을 호출하여 다운로드를 시도해 본다.
-					if (!f.exists()) {
-						String filePathValue = doc.getElementsByTagName("DATA2").item(i).getTextContent();
+					if (!f.exists()) {						
 						String downloadUrl = dotNetUrl + "/myoffice/Common/DownloadAttach_java.aspx?filename=placeholder"
 									+ "&filepath=" + URLEncoder.encode(filePathValue, "UTF-8");
 						
@@ -1471,6 +1490,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		// 총 파일의 크기가 대용량첨부 제한크기를 넘는지 체크한다.
 		if (bigMaxSize != 0 && totalFileSize > bigMaxSize) {
 			logger.debug("totalFileSize is over bigMaxSize. Return OVERFLOW.");
+			
+			if (dotNetIntegration.equals("YES")) {
+				for (int i = 0; i < fileCnt; i++) {
+					// 복호화 URL을 통해 다운로드한 임시 파일들을 삭제한다.
+					if (downloadedFlags[i]) {
+						logger.debug("deleting " + filePath[i]);
+						
+						File localFile = new File(filePath[i]);
+						
+						localFile.delete();
+					}
+				}
+			}
+			
 			logger.debug("mailInterUploadCopy ended.");
 			
 			return "OVERSIZE";

@@ -44,17 +44,10 @@
 	            }
 	        }
 	        
-	        //수정 수아 재은
-	        var xml_http;
-	        
 	        window.onload = function () {
-		    	
-		    	//수정 수아 재은
-		        xml_http = createXMLHttpRequest();
-                xml_http.open("POST", "/ezEmail/mailGetUse.do", true);
-                xml_http.onreadystatechange = detailbox_info;
-                xml_http.send();
 	        	
+	        	detailView();
+		    	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
 	                document.body.style.WebkitUserSelect = 'none';
@@ -76,27 +69,58 @@
 	            previewSubTreeCall();
 	        }
 	        
+	        
 	        // 수정 수아 재은
-	        function detailView(totalVolume, useVolume, percent) {
-	        	var colorClass = "myBar_green";
+	        function detailView() {
 	        	
-	        	//뿌려주기
-	            $("#myBar").css({
-	            	"width" : percent + "%"
-	            });
-	            $(".volumes").text(useVolume + " / " + totalVolume + " (" + percent + "%)");                
+	        	/* xml_http = createXMLHttpRequest();
+                xml_http.open("POST", "/ezEmail/mailGetUse.do", true);
+                xml_http.onreadystatechange = test;
+                xml_http.send(); */
+              
+                $.ajax({
+                    url: "/ezEmail/mailGetUse.do",
+                    type: "POST",
+                    dataType: "xml",
+                    error : function(error) {
+                        console.log(error);
+                    },
+                    success : function(xml_http) {
+                       var result = xml_http;
+                 	   var totalVolume = ""; 
+                 	   var useVolume = "";
+                 	   var percent = "";
+                 	   var colorClass = "myBar_green";
+                 	            
+                 	   if (CrossYN()) { 
+                 	        totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent;
+                 	        useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent; 
+                 	        percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent;                    
+                 	   } else { 
+                 	        totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].text;
+                 	        useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text; 
+                 	        percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text;
+                 	   }
+                 	        	
+                 	   //뿌려주기
+                 	   $("#myBar").css({
+                 	       "width" : percent + "%"
+                 	   });
+                 	   $(".volumes").text(useVolume + " / " + totalVolume + " (" + percent + "%)");                
 
-	            //용량 체크(색깔로)
-	            if (percent > 90) {
-	            	colorClass = "myBar_red";
-	            } else if (percent > 70) {
-	            	colorClass = "myBar_orange";
-	            } else if (percent > 60) {
-	            	colorClass = "myBar_yellow";
-	            }
-	            
-	            $("#myBar").addClass(colorClass);
-	        	
+                 	   //용량 체크(색깔로)
+                 	   if (percent > 90) {
+                 	        colorClass = "myBar_red";
+                 	   } else if (percent > 70) {
+                 	        colorClass = "myBar_orange";
+                 	   } else if (percent > 60) {
+                 	         colorClass = "myBar_yellow";
+                 	   }
+                 	            
+                 	   $("#myBar").addClass(colorClass);
+                    }
+                });
+        	    
 	        }
 	        
 	        
@@ -117,7 +141,11 @@
     		        	    var idx = getSubtree.split('PostTreeView_img_');
     		        	    
     		        	    if (typeof idx[1] != "undefined") {
+    		        	    	var attr = $('#PostTreeView_img_' + idx[1]).attr("src").split('/');
+    		        	    	
+    		        	    	if (attr[3] != "plus.gif") {
     			        	    	PostTreeView.toggle(idx[1]);
+    		        	    	}
     		        	    }
     		        	    
     	        	    	treeArrNum = $('.plusTreeImg').length;
@@ -333,10 +361,12 @@
 	        	메일함 트리뷰 reload 함수
 	        */
 	        function mailbox_treeview_reload() {
-	        	PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-                PostTreeView.update();
-                
-                previewSubTreeCall();
+	        	setTimeout(function() {
+	        		PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+	                PostTreeView.update();
+	                
+	                previewSubTreeCall();
+	        	}, 100);
 	        }
 	        
 	        function Function_Flag(v_data) {
@@ -693,7 +723,7 @@
 		     <div id='myProgress' style='margin-left:20px;'>
 		    	<div id='myBar'></div>
 		    </div>
-		    <div style='text-align:center; margin-top:10px; font-weight:bold;' class="volumes"></div>
+		    <div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div>
 	        
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>

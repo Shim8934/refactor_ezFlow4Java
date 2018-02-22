@@ -23,6 +23,18 @@
 		<!-- time picker-->		
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>		
 	    <script type="text/javascript">
+   	    	$(document).ready(function() {
+   		    		// 반복이 100회 초과일때 알러트  
+   		    	if ($('input:radio[name=optRangeEnd]').is(':checked')) {
+   			    		$('#list_ReCount').blur(function() {
+   			    		if ($('#list_ReCount').val() > 100 ) {
+   			    			alert(strLangKMS1);
+   			    			$('#list_ReCount').val("");
+   			    		}
+   			    	});
+   			    }		
+   		    });
+	    	
 		    var RetValue;
 		    var ReturnFunction;
 		    //2018.01.31 김기하 함수 사용을 위해 부모로부터 변수 가져옴

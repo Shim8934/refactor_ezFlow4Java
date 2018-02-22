@@ -9,7 +9,6 @@
         <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
         <script language="JavaScript" src="/js/ezEmail/js_cross/reademail.js"></script>
-        <style type="text/css">PRE {font-size:x-small;font-family: 'dotum', 'arial', 'verdana';}</style>
     	<script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     	<script language="javascript" type="text/javascript">
 		    var objLink = document.all("BigSizeFileLink");
@@ -119,7 +118,7 @@
 			<img src='/images/mtgrsp-tent.gif' width="20" height="20" title="<spring:message code='ezEmail.t903' />" onclick="Schedule_btn('TENT');" style='cursor:pointer;' />
 			<img src='/images/mtgrsp-decline.gif' width="20" height="20" title="<spring:message code='ezEmail.t902' />" onclick="Schedule_btn('DECLINE');" style='cursor:pointer;' />
 		</span>
-		<div class="previewmail_addfile" id="ifrmPreViewRayer" style="display:none;margin-bottom:10px;">
+		<div class="previewmail_addfile" id="ifrmPreViewRayer" style="display:none;margin-bottom:10px;font-family:<spring:message code='main.t246' />">
 			<p class="title"><spring:message code='ezEmail.t99000003' />
 				<span>${pAttachListHtmlSub}</span>
 				<span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
