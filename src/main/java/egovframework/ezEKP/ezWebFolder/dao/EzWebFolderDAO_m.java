@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
 import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -15,13 +16,31 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderDAO_m.class);
 	
 	@SuppressWarnings("unchecked")
-	public List<FolderFileVO> getShares(Map<String, Object> map) {
+	public List<FolderFileVO> getShareGet(Map<String, Object> map) {
 		
-		LOGGER.debug("getShares in dao");
+		LOGGER.debug("getShareGet in dao");
 		
-		//return (List<FolderFileVO>)list("EzWebFolderDAO_m.getShares", map);
-		//return (List<FolderFileVO>)list("EzWebFolderDAO_m.getShareGive", map);
 		return (List<FolderFileVO>)list("EzWebFolderDAO_m.getShareGet", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<FolderFileVO> getShareGive(Map<String, Object> map) {
+		
+		LOGGER.debug("getShareGive in dao");
+		
+		return (List<FolderFileVO>)list("EzWebFolderDAO_m.getShareGive", map);
+	}
+	
+	public int getShareSeq(Map<String, Object> map) {
+		return (int)select("EzWebFolderDAO_m.getShareSeq", map);
+	}
+	
+	public void delShare(Map<String, Object> map) {
+		delete("EzWebFolderDAO_m.delShare", map);
+	}
+	
+	public void insertShare(Map<String, Object> map) {
+		insert("EzWebFolderDAO_m.insertShare", map);
 	}
 	
 }
