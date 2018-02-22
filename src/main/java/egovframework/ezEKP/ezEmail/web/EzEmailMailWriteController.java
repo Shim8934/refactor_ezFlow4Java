@@ -737,7 +737,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 			            StringBuilder sb = new StringBuilder();
 			            sb.append("<hr tabindex=\"-1\">");
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage).replaceAll("<a@a.com>", ""))));
+			            sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
+			            sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage).replaceAll("<a@a.com>", ""))));
+			            sb.append("</p>");
+			            
 			            //set received date
 			            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( z )");
 			            String offset = loginInfo.getOffset();
@@ -747,11 +750,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    			String[] offsetArr = offset.split("\\|");
 			    			sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
 			    		}
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
+			            sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
+			            sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
+			            sb.append("</p>");
 			            //to-do
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo.replaceAll("<a@a.com>", ""))));
-			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc.replaceAll("<a@a.com>", ""))));
-
+			            sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
+			            sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo.replaceAll("<a@a.com>", ""))));
+			            sb.append("</p>");
+			            
+			            sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
+			            sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc.replaceAll("<a@a.com>", ""))));
+			            sb.append("</p>");
+			            
 			            String orgMessageSubject = ezEmailUtil.getSubject(orgMessage);	
 						if (orgMessageSubject != null && !orgMessageSubject.equals("")) {
 							rawHeaders = orgMessage.getHeader("subject");
@@ -765,8 +775,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								orgMessageSubject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
 							}
 						}			            
-			            sb.append(String.format("<B>%s : </B> %s<BR><BR>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
-						
+						sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
+				        sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
+				        sb.append("</p>");
+				        sb.append("<BR><BR>");
+				            
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
 						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					

@@ -2593,15 +2593,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			List<String> deletedDateStrList = getDeletedRepScheduleDate(schedule.getNum(), companyID, pOwnerID, tenantID);
 			logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
 			
+			List<String> deletedDateStrListConvertedInUTC  = new ArrayList<String>();
 			for (String date : deletedDateStrList) {
 				date = commonUtil.getDateStringInUTC(date, offset, false);
+				deletedDateStrListConvertedInUTC.add(date);
 			}
 			
 			if (dateList2.size() == 0) {
 				continue;
 			}
 
-			isDup = chkTableRepeat(dateList, dateList2, deletedDateStrList, offset);
+			isDup = chkTableRepeat(dateList, dateList2, deletedDateStrListConvertedInUTC, offset);
 			
 			if (isDup) {
 				break;
