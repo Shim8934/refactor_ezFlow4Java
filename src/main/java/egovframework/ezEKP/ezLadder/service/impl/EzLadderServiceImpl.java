@@ -29,7 +29,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	public List<LadderVO> getLadderList(String userId) throws Exception {
 		logger.debug("getLadderList started.");
 		Map<String,Object> map = new HashMap<String, Object>();	
-		map.put("usderId", userId);
+		map.put("userId", userId);
 		List<LadderVO> list = ezLadderDAO.getLadderList(map);
 		
 		return list;
