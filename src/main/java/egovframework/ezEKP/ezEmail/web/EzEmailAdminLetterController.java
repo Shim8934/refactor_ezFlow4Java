@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
 import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezEmail.vo.MailLetterVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -48,27 +51,37 @@ public class EzEmailAdminLetterController {
 	@Autowired
 	private EzEmailAdminLetterService EzEmailAdminLetterService;
 	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+	
 	/**
 	 * 편지지 메인화면 호출 함수
 	 */
 	@RequestMapping(value="/admin/ezEmail/letterlMain.do")
-	public ModelAndView letterMainView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		
-		//user가 superAdmin인지 그냥 admin인지 구별하는 조건 수정해야됨
-		
+	public String letterMainView(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("letterMainView started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		ModelAndView mav = new ModelAndView();
 		
-		String companyID = userInfo.getCompanyID();
-		String companyName = userInfo.getCompanyName();
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
-		mav.addObject("companyID", companyID);
-		mav.addObject("companyName", companyName);
-		mav.setViewName("/admin/ezEmail/letterMain");
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+			
+		}
 		
-		return mav;
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
+		logger.debug("letterMainView ended.");
+		
+		return "admin/ezEmail/letterMain";
+		
 	}
 	
 	@RequestMapping(value="/admin/ezEmail/letterBoxManager.do")
@@ -91,15 +104,15 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping("/admin/ezEmail/createLetter")
 	@ResponseBody
-	public String createLetter(@ModelAttribute MailLetterVO letter) throws Exception{
+	public String createLetter(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterVO letter) throws Exception{
 		logger.debug("createLetter started.");
 		logger.debug("letter=" + letter);
 		
-		// 관리자 권한체크     @CookieValue("loginCookie") String loginCookie, 
-		/*LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		// 관리자 권한체크      
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		if (auth == null) {
 			return "cmm/error/adminDenied";
-		}*/
+		}
 		
 		String displayname = letter.getDisplayname();
 		String displayname2 = letter.getDisplayname2();
@@ -124,9 +137,15 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping("/admin/ezEmail/updateDisplaynameLetter")
 	@ResponseBody
-	public String updateDisplayNameLetter(@ModelAttribute MailLetterVO letter) throws Exception{
+	public String updateDisplayNameLetter(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterVO letter) throws Exception{
 		logger.debug("updateDisplayNameLetter started.");
 		logger.debug("letter=" + letter);
+		
+		// 관리자 권한체크      
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String displayname = letter.getDisplayname();
 		String displayname2 = letter.getDisplayname2();
@@ -151,9 +170,15 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping("/admin/ezEmail/updateOrderLetter")
 	@ResponseBody
-	public String updateOrderLetter(String letterNo, String letterOrder) throws Exception{
+	public String updateOrderLetter(@CookieValue("loginCookie") String loginCookie, String letterNo, String letterOrder) throws Exception{
 		logger.debug("updateOrderLetter started.");
 		logger.debug("letterNo=" + letterNo + ", letterOrder=" + letterOrder);
+
+		// 관리자 권한체크      
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String returnStr = "OK";
 		
@@ -175,9 +200,15 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping("/admin/ezEmail/updateBoxLetter")
 	@ResponseBody
-	public String updateBoxLetter(String letterNo, String letterBoxNo) throws Exception{
+	public String updateBoxLetter(@CookieValue("loginCookie") String loginCookie, String letterNo, String letterBoxNo) throws Exception{
 		logger.debug("updateBoxLetter started.");
 		logger.debug("letterNo=" + letterNo + ", letterBoxNo=" + letterBoxNo);
+		
+		// 관리자 권한체크      
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String returnStr = "OK";
 		
@@ -199,9 +230,15 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping("/admin/ezEmail/deleteLetter")
 	@ResponseBody
-	public String deleteLetter(String letterNo) throws Exception{
+	public String deleteLetter(@CookieValue("loginCookie") String loginCookie, String letterNo) throws Exception{
 		logger.debug("deleteLetter started.");
 		logger.debug("letterNo=" + letterNo);
+		
+		// 관리자 권한체크      
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String returnStr = "OK";
 		
