@@ -85,6 +85,13 @@
 	            Get_AddressList();
 	
 	        }
+	        
+	        $(window).on("resize", function(){
+				var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+	        	$("#addpopup").css("left", popupX);
+	        	$("#srarchpopup").css("left", popupX);	        	
+	        });
+	        
 	        function new_address() {
 	        	if (useAnyoneEdit != "YES") {
 	        		if (deptAdmin != "Y" && pFolderType == "D") {
@@ -524,7 +531,8 @@
 	            	}
 	            }
 	            else {
-	            	window.location.href = window.location.href;
+	            	$.modal.close();
+	            	window.location.href = window.location.href;	            	
 	            }	            
 	        }
 	        function address_inout(which) {
@@ -538,6 +546,14 @@
 	            }
 	        }	
 	        function doLayerPopup() {
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        	
+	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	        	
+	        	$("#srarchpopup").css("left", popupX);
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	
 	        	$("#srarchpopup").modal();
 	        }	        
 	        function SearchOptionHidden() {
@@ -553,10 +569,19 @@
 		                alert("<spring:message code='ezAddress.t999900004' />");
 		                return;
 		            }
-	        	}
+	        	}	        	
+	        	
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        	
+	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	        	
+	        	$("#addpopup").css("left", popupX);
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 	        	
 	        	$("#addpopup").modal();
-	        }	
+	        }	        
+	        
 	        function search_start() {
 	        	
 	        	var searchText = document.getElementById("search_text").value.trim();
@@ -831,7 +856,7 @@
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 			<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>		
-		<div id="addpopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px">
+		<div id="addpopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
 			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
