@@ -20,7 +20,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 		<script src="/js/jquery-ui/jquery-ui.js"></script>
-		<script type="text/javascript" >
+		<script type="text/javascript">
 			var blockSize    = 10;
 			var currentPage  = null;
 			var totalRows    = null;
@@ -114,7 +114,7 @@
 						checkedArr = [];
 					},
 					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134' />" + error);
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
 					}
 				});
 			}
@@ -208,18 +208,18 @@
 				//var fileTypeVal = document.getElementById("fileTypeSelect").value;
 				
 				if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) {
-					alert("<spring:message code='ezWebFolder.t163' />");
+					alert("<spring:message code='ezWebFolder.t163'/>");
 					return;
 				}
 				
 				if ((!sDateVal && eDateVal) || (sDateVal && !eDateVal)) {
-					alert("You must provide both start date and end date!");
+					alert("<spring:message code='ezWebFolder.t184'/>");
 					return;
 				}
 				
 				if (sDateVal && eDateVal) {
 					if (sDateVal > eDateVal) {
-						alert("<spring:message code='ezWebFolder.t164' />");
+						alert("<spring:message code='ezWebFolder.t164'/>");
 						return;
 					}
 				}
@@ -241,7 +241,7 @@
 			
 			function fileDownload() {
 				if (checkedArr.length <= 0) {
-					alert("<spring:message code = 'ezWebFolder.t108'/>");
+					alert("<spring:message code='ezWebFolder.t108'/>");
 					return;
 				}
 				
@@ -263,7 +263,7 @@
 			
 			function fileDelete() {
 				if (checkedArr.length <= 0) {
-					alert("<spring:message code = 'ezWebFolder.t108'/>");
+					alert("<spring:message code='ezWebFolder.t108'/>");
 					return;
 				}
 				
@@ -278,12 +278,12 @@
 			
 			function fileRename() {
 				if (checkedArr.length <= 0) {
-					alert("<spring:message code = 'ezWebFolder.t108'/>");
+					alert("<spring:message code='ezWebFolder.t108'/>");
 					return;
 				}
 				
 				if (checkedArr.length > 1) {
-					alert("<spring:message code = 'ezWebFolder.t115'/>");
+					alert("<spring:message code='ezWebFolder.t115'/>");
 					return;
 				}
 				
@@ -294,12 +294,12 @@
 			
 			function fileMove() {
 				if (checkedArr.length <= 0) {
-					alert("<spring:message code = 'ezWebFolder.t108'/>");
+					alert("<spring:message code='ezWebFolder.t108'/>");
 					return;
 				}
 				
 				if (checkedArr.length > 1) {
-					alert("<spring:message code = 'ezWebFolder.t115'/>");
+					alert("<spring:message code='ezWebFolder.t115'/>");
 					return;
 				}
 				
@@ -359,7 +359,7 @@
 			<span id="mailBoxInfo"></span>
 		</h1>
 		<div id="companySelect" style="margin: 10px 0px;">
-			<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b>회사 선택: </b></span>
+			<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
 			<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
 				<c:forEach var="item" items="${list}">
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
@@ -369,22 +369,22 @@
 		
 		<div id="mainmenu" style="position: relative;">
 			<ul>
-				<li id=""><a onClick="fileDownload()"    style="margin-top: 3px;"><span>파일다운로드</span></a></li>
-				<li id=""><a onClick="fileUpload()"      style="margin-top: 3px;"><span>파일업로드</span></a></li>
-				<li id=""><a onClick="fileDelete()"      style="margin-top: 3px;"><span>파일삭제</span></a></li>
-				<li id=""><a onClick="fileRename()"      style="margin-top: 3px;"><span>파일명변경</span></a></li>
-				<li id=""><a onClick="fileMove()"        style="margin-top: 3px;"><span>파일이동/복사</span></a></li>
-				<li id=""><a onClick="openSearchPanel()" style="margin-top: 3px;"><span>검색</span></a></li>
-				<li id=""><a onClick="refresh()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139' /></span></a></li>
+				<li id=""><a onClick="fileDownload()"    style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
+				<li id=""><a onClick="fileUpload()"      style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+				<li id=""><a onClick="fileDelete()"      style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t117'/></span></a></li>
+				<li id=""><a onClick="fileRename()"      style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t118'/></span></a></li>
+				<li id=""><a onClick="fileMove()"        style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>
+				<li id=""><a onClick="openSearchPanel()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
+				<li id=""><a onClick="refresh()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 			</ul>
 			<div style="position: absolute; top: 0px; right: 10px;">
 				<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect" onchange="refresh();">
-					<option value="1">전체 </option>
-					<option value="2">문서 </option>
-					<option value="3">음악</option>
-					<option value="4">영상</option>
-					<option value="5">그림</option>
-					<option value="6">압축파일</option>
+					<option value="1"><spring:message code='ezWebFolder.t191'/></option>
+					<option value="2"><spring:message code='ezWebFolder.t192'/></option>
+					<option value="3"><spring:message code='ezWebFolder.t193'/></option>
+					<option value="4"><spring:message code='ezWebFolder.t194'/></option>
+					<option value="5"><spring:message code='ezWebFolder.t195'/></option>
+					<option value="6"><spring:message code='ezWebFolder.t196'/></option>
 				</select>
 			</div>
 		</div>
@@ -397,7 +397,7 @@
 			<div style="margin: 10px;">
 				<table class="content" style="border-collapse: collapse; width: 100%;">
 					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;">검색 기간</th>
+						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t151'/></th>
 						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
 							<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
 							~
@@ -405,27 +405,27 @@
 						</td>
 					</tr>
 					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;">확장자</th>
+						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t152'/></th>
 						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
 							<input id="fileExtVal" type="text" style="height: 23px; width: 200px;">
 						</td>
 					</tr>
 					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;">파일명</th>
+						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t153'/></th>
 						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
 							<input id="fileNameVal" type="text" style="height: 23px; width: 200px;">
 						</td>
 					</tr>
 					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;">작성자</th>
+						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t197'/></th>
 						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
 							<input id="fileCreatorVal" type="text" style="height: 23px; width: 200px;">
 						</td>
 					</tr>
 				</table>
 					<div style="margin: 12px 50px 12px 180px;">
-						<a class="webfolderBttn"><span onclick="startSearch();">검색</span></a>
-						<a class="webfolderBttn"><span onclick="openSearchPanel();">취소</span></a>
+						<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
+						<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
 					</div>
 			</div>
 		</div>
@@ -437,15 +437,15 @@
 		<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;">
 			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 				<tr>
-					<th width="10px"><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
-					<th width="40px">유형</th>
-					<th width="160px">이름</th>
-					<th width="60px">파일크기</th>
-					<th width="120px">게시자</th>
-					<th width="80px">등록일</th>
-					<th width="80px">갱신일</th>
-					<th width="160px">위치</th>
-					<th width="60px">다운로드횟수</th>
+					<th width="10px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
+					<th width="40px" ><spring:message code='ezWebFolder.t188'/></th>
+					<th width="160px"><spring:message code='ezWebFolder.t156'/></th>
+					<th width="60px" ><spring:message code='ezWebFolder.t157'/></th>
+					<th width="120px"><spring:message code='ezWebFolder.t189'/></th>
+					<th width="80px" ><spring:message code='ezWebFolder.t190'/></th>
+					<th width="80px" ><spring:message code='ezWebFolder.t198'/></th>
+					<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
+					<th width="60px" ><spring:message code='ezWebFolder.t200'/></th>
 				</tr>
 				
 			</table>

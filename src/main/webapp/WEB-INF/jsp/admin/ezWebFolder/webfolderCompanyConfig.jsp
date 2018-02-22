@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/TreeView.js"></script>
-		<script type="text/javascript" >
+		<script type="text/javascript">
 			var currPersonalLimit = "";
 			var currUploadLimit   = "";
 			
@@ -46,7 +46,7 @@
 						
 					},
 					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134' />" + error);
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
 					}
 				});
 			}
@@ -55,7 +55,7 @@
 				var uploadLimitVal = document.getElementById("uploadLimit").value;
 				
 				if (!isValid(uploadLimitVal)) {
-					alert("Please enter a valid numeric value!");
+					alert("<spring:message code='ezWebFolder.t183'/>");
 					document.getElementById("uploadLimit").focus();
 					return;
 				}
@@ -63,13 +63,13 @@
 				var personalLimitVal = document.getElementById("personalLimit").value;
 				
 				if (!isValid(personalLimitVal)) {
-					alert("Please enter a valid numeric value!");
+					alert("<spring:message code='ezWebFolder.t183'/>");
 					document.getElementById("personalLimit").focus();
 					return;
 				}
 				
 				if (parseInt(uploadLimitVal) > parseInt(personalLimitVal)) {
-					alert("You can not set the upload limit amount greater than personal limit amount");
+					alert("<spring:message code='ezWebFolder.t185'/>");
 					return;
 				}
 				
@@ -84,12 +84,12 @@
 					dataType: "text",
 					async: true,
 					success : function(data) {
-						alert("Save successfully!");
+						alert("spring:message code='ezWebFolder.t182'/>");
 						currPersonalLimit = personalLimitVal;
 						currUploadLimit   = uploadLimitVal;
 					},
 					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134' />" + error);
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
 					}
 				});
 			}
@@ -111,9 +111,9 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezWebFolder.t102' /></h1>
+		<h1><spring:message code='ezWebFolder.t102'/></h1>
 		<div id="companySelect" style="margin: 10px 0px;">
-			<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129' /></b></span>
+			<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
 			<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
 				<c:forEach var="item" items="${list}">
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
@@ -124,14 +124,14 @@
 		<div id="mainSetting" style="margin: 10px 0px;">
 			<table class="content">
 				<tr style="height: 40px;">
-					<th><spring:message code='ezWebFolder.t130' /></th>
+					<th><spring:message code='ezWebFolder.t130'/></th>
 					<th>
 						<input id="uploadLimit" type="text" style="height: 30px; padding: 0px 5px;" value="<c:out value='${upLimit}'/>" />
 						<span><spring:message code='ezWebFolder.t132' /></span>
 					</th>
 				</tr>
 				<tr style="height: 40px;">
-					<th><spring:message code='ezWebFolder.t131' /></th>
+					<th><spring:message code='ezWebFolder.t131'/></th>
 					<th>
 						<input id="personalLimit" type="text" style="height: 30px; padding: 0px 5px;" value="<c:out value='${persLimit}'/>" />
 						<span><spring:message code='ezWebFolder.t132' /></span>
@@ -140,8 +140,8 @@
 			</table>
 		</div>
 		<div style="margin: 10px 70px;">
-			<a class="webfolderBttn"><span onclick="save();"><spring:message code='ezWebFolder.t133' /></span></a>
-			<a class="webfolderBttn"><span onclick="cancel();"><spring:message code='ezWebFolder.t112' /></span></a>
+			<a class="webfolderBttn"><span onclick="save();"  ><spring:message code='ezWebFolder.t133'/></span></a>
+			<a class="webfolderBttn"><span onclick="cancel();"><spring:message code='ezWebFolder.t112'/></span></a>
 		</div>
 	</body>
 </html>

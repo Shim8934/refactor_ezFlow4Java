@@ -93,14 +93,14 @@
 						renderData(result, mode);
 					},
 					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134' />" + error);
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
 					}
 				});
 			}
 			
 			function renderData(result, mode) {
 				if (!result) {
-					alert("<spring:message code='ezWebFolder.t134' />");
+					alert("<spring:message code='ezWebFolder.t134'/>");
 					return;
 				}
 				
@@ -244,7 +244,7 @@
 							arrSubFolder.push(uniqueId);
 						},
 						error: function (xhr, status, e){
-							alert("<spring:message code='ezWebFolder.t134' />");
+							alert("<spring:message code='ezWebFolder.t134'/>");
 						}
 					});
 				}
@@ -252,7 +252,7 @@
 			
 			function displaySubTree(result, divElmt) {
 				if (result["listSubFolders"] == null) {
-					alert("<spring:message code='ezWebFolder.t134' />");
+					alert("<spring:message code='ezWebFolder.t134'/>");
 					return;
 				}
 				
@@ -274,32 +274,32 @@
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
 		<div id="left" style="overflow: auto">
-			<div class="left_admin" title="<spring:message code='ezWebFolder.t10' />">
-				<img src="/images/admin/first.png" width="16px" height="16px">&nbsp;<spring:message code="main.t29" />
+			<div class="left_admin" title="<spring:message code='ezWebFolder.t10'/>">
+				<img src="/images/admin/first.png" width="16px" height="16px">&nbsp;<spring:message code="main.t29"/>
 			</div>
 			
 			<h2>
-				<span style="display:inline-block;width:100%;" onClick="displayPersonal();"><spring:message code='ezWebFolder.t101' /></span>
+				<span style="display:inline-block;width:100%;" onClick="displayPersonal();"><spring:message code='ezWebFolder.t101'/></span>
 			</h2>
 			<ul>
-				<li><span id="company"  style="width: 100%; display: inline-block;" onClick="goPage(1);" ><spring:message code='ezWebFolder.t102' /></span></li>
-				<li><span id="personal" style="width: 100%; display: inline-block;" onClick="goPage(2);" ><spring:message code='ezWebFolder.t103' /></span></li>
+				<li><span id="company"  style="width: 100%; display: inline-block;" onClick="goPage(1);" ><spring:message code='ezWebFolder.t102'/></span></li>
+				<li><span id="personal" style="width: 100%; display: inline-block;" onClick="goPage(2);" ><spring:message code='ezWebFolder.t103'/></span></li>
 			</ul>
 			
 			<h2>
-				<span style="display:inline-block;width:100%;" onClick="companyFolder();"><spring:message code='ezWebFolder.t126' /></span>
+				<span style="display:inline-block;width:100%;" onClick="companyFolder();"><spring:message code='ezWebFolder.t126'/></span>
 			</h2>
 			<ul></ul>
 			
 			<h2>
-				<span style="display:inline-block;width:100%;" onClick="companyFile();"><spring:message code='ezWebFolder.t127' /></span>
+				<span style="display:inline-block;width:100%;" onClick="companyFile();"><spring:message code='ezWebFolder.t127'/></span>
 			</h2>
 			<ul>
 			</ul>
 			<div id="folderTree" style="min-height: 200px; display: none;"></div>
 			
 			<h2>
-				<span style="display:inline-block;width:100%;" onClick="fileTransactionHistory();"><spring:message code='ezWebFolder.t128' /></span>
+				<span style="display:inline-block;width:100%;" onClick="fileTransactionHistory();"><spring:message code='ezWebFolder.t128'/></span>
 			</h2>
 			<ul>
 			</ul>
