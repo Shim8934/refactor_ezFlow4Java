@@ -392,7 +392,7 @@
 		        	
 		        	alert(strLang139);
 		        	return;
-	        	}
+	        	} */
 	        	
 	        	for (var i = 0 ; i < ItemArray[0].length ; i++) {
 	            	if (DupCheck(ItemArray[0][i]) == false) {
@@ -408,7 +408,7 @@
 	    	    }
 	        	return check;
 	    	}
- */
+
 	    	function window_onUnload() {
 	        	if (m_Arguments == undefined) {
 		            if (window.opener != null && g_fromStr == "schedule" && trim(s_userID) != "") {
