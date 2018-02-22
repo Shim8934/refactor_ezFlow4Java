@@ -86,6 +86,21 @@
 		        document.getElementById("divList").style.height = height + "px";
 		        getBoardList();
 		    }
+		    
+		    $(document).ready(function() {
+		    	$($(window.parent.parent.parent.frames['mainFrame'].document)).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	$(window.parent.parent.parent.frames['topFrame'].document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	$(parent.document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	$(document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    });
 		
 		    function getBoardList() {
 		        starttime = new Date().getTime();

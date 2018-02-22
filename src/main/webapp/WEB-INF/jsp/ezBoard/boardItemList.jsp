@@ -160,6 +160,22 @@
 		        
 		        window_onunload_Event = true;
 		    };
+		    
+		    $(document).ready(function() {
+		    	$($(window.parent.parent.parent.frames['mainFrame'].document)).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	$(window.parent.parent.parent.frames['topFrame'].document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	$(parent.document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	$(document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    });
+		    
 		    var Save_unloadSave = false;
 		    function Window_onunload() {
 		        if (window_onunload_Event && !Save_unloadSave) {
