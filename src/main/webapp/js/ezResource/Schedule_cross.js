@@ -247,7 +247,20 @@ function Schedule_Repetition_onclick()
 		g_data["startTime"] = startDateRepeat;
 		g_data["endTime"] = endDateRepeat;
 	} else {
-	    if (repetitionFlag) {
+		/* 2018.02.22 김기하  #11624 */
+		var ssDate = $("#Sdatepicker").datepicker().val();
+    	var eeDate = $("#Edatepicker").datepicker().val();
+    	var ssTime = $("#Stimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+    	var eeTime = $("#Etimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+    	
+    	if(ssDate == "" || eeDate == "" || ssTime == "" || eeTime == ""){
+    		$("#Sdatepicker").datepicker("setDate", SdateNow);
+    		$("#Edatepicker").datepicker("setDate", EdateNow);
+    		$("#Stimepicker").timepicker("setTime", SdateNow);
+    		$("#Etimepicker").timepicker("setTime", EdateNow);
+    	}
+		
+		if (repetitionFlag) {
 	    	if(reStartDate == null)
 	            g_data["startTime"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 	        else
