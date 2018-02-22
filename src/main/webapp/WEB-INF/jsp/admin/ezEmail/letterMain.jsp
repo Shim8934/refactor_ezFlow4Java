@@ -1,18 +1,33 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html style="height: 99%;">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/FormCont.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 	    	var Tab1_SelectID = "";
+	    	var companyID = "";
+	    	
 	        window.onload = function () {
 	        	Tab_init_select(document.getElementById("tagsub1"));
 	        	Tab1_NewTabIni("tab1");
+
+	        	companyID = document.getElementById("ListCompany").value;
+	        	
 	        };
+	        
+	        function selectCompanyID() {
+	        	if (selectID != document.getElementById("ListCompany").value ) {
+	        		companyID = document.getElementById("ListCompany").value;
+	        	}
+	        }
 	        
 	        function Tab_init_select(obj) {
 	        	obj.setAttribute("class", "tabon");
@@ -122,9 +137,13 @@
 	</head>
 	<body class="mainbody" style="height: 95%; overflow:hidden;">
 	    <h1><spring:message code='main.t374'/><span></span></h1>
-	    <b><spring:message code='ezOrgan.t00006'/>:</b> 
-		    <select id="ListCompany" onChange="selectCompanyID()">
-		    	<option value="${companyID}">${companyName}</option>
+		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+			    <select id="ListCompany" onChange="selectCompanyID()">
+		        	<c:forEach var="item" items="${list}">
+		        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select>
+		    </span>
 	        	
 		    </select><br>
 	    <div class="portlet_tabpart01">
