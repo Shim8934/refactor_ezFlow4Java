@@ -68,7 +68,7 @@
 						<td>${vo.writeDate.substring(0,16) }</td>
 						<td>${vo.status }</td>
 						<td>${vo.secretFlag }</td>
-						<td>휴지통</td>
+						<td>${vo.deleteFlag }</td>
 					</tr>
 				</c:forEach>
 		        

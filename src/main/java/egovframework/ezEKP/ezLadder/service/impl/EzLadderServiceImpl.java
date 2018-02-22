@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezLadder.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -24,10 +26,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 	private EzLadderDAO ezLadderDAO;
 	
 	@Override
-	public List<LadderVO> getLadderList() throws Exception {
+	public List<LadderVO> getLadderList(String userId) throws Exception {
 		logger.debug("getLadderList started.");
-		
-		List<LadderVO> list = ezLadderDAO.getLadderList();
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("usderId", userId);
+		List<LadderVO> list = ezLadderDAO.getLadderList(map);
 		
 		return list;
 	}

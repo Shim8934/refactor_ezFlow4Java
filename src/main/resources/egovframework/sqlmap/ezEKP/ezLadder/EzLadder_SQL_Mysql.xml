@@ -87,13 +87,14 @@
 	
 	<select id="EzLadderDAO.getLadderList" resultClass="LadderVO">
 		<![CDATA[
-			SELECT 
-				*
-			FROM 
-				TBL_LADDER
-			ORDER BY
-				LADDERID
-			DESC
+			SELECT TYPE, TITLE, WRITERNAME, WRITEDATE, STATUS, SECRETFLAG, DELETEFLAG
+			FROM TBL_LADDER
+			WHERE SECRETFLAG = 0 or LADDERID = ANY(
+										SELECT TBL_LADDER.LADDERID 
+                                        FROM TBL_LADDER 
+                                        JOIN TBL_LADDER_LINE ON TBL_LADDER.LADDERID = TBL_LADDER_LINE.LADDERID
+										WHERE TBL_LADDER_LINE.USERID = #userId#) 
+			ORDER BY LADDERID DESC;
 		]]>
 	</select>
 </sqlMap>

@@ -51,7 +51,7 @@ public class EzLadderGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			List<LadderVO> list = ezLadderService.getLadderList();
+			List<LadderVO> list = ezLadderService.getLadderList(userId);
 		
 			result.put("status", "ok");
 			result.put("code", "0");
