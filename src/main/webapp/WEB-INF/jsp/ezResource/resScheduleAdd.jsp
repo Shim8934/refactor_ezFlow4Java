@@ -376,7 +376,7 @@
 	        	}
 	        	/* 2018.02.22 김기하  #11624 */
     			
-	        	var ssDate = $("#Sdatepicker").datepicker().val();
+	        	/* var ssDate = $("#Sdatepicker").datepicker().val();
 	        	var eeDate = $("#Edatepicker").datepicker().val();
 	        	var ssTime = $("#Stimepicker").timepicker().val();
 	        	var eeTime = $("#Etimepicker").timepicker().val();
@@ -408,7 +408,7 @@
 	    	    }
 	        	return check;
 	    	}
-
+ */
 	    	function window_onUnload() {
 	        	if (m_Arguments == undefined) {
 		            if (window.opener != null && g_fromStr == "schedule" && trim(s_userID) != "") {
