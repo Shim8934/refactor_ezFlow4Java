@@ -14,6 +14,7 @@
 			var list = [];
 			var confirmChange = "";
 			window.onload = window_onload;
+			var editorFontStyle = "";
 			
 			function window_onload() {
 				
@@ -22,7 +23,7 @@
 				} else {
 					document.getElementById("PrimaryTimeZone").value = "235|+09:00";
 				}
-		
+				
 			}
 			
 			function update_Sys_Param() {
@@ -40,7 +41,8 @@
 						{ name : "USE_FileExtension", value : document.getElementById("USE_FileExtension").value.trim() },
 						{ name : "LicenseKey", value : document.getElementById("LicenseKey").value.trim() },
 						{ name : "Use_FromAddress", value : document.getElementById("Use_FromAddress").value.trim() },
-						{ name : "USE_HTMLMODE", value : document.getElementById("Use_HTMLMode").value.trim() } 
+						{ name : "USE_HTMLMODE", value : document.getElementById("Use_HTMLMode").value.trim() },
+						{ name : "editorFontStyle", value : editorFontStyle } 
 					  ];
 				
 				if (!paramArray[0].value.match(/^\d+$/)) {
@@ -204,6 +206,35 @@
 	            <tr><th><spring:message code="ezSystem.x0016"/></th><td><input id="LicenseKey" size="60" maxlength="60" type="text" value="${configMap.LicenseKey}"> (<spring:message code="ezSystem.x0017"/>: ${licensedUserCount}, <spring:message code="ezSystem.x0018"/>: ${userCount})</td></tr>
 	            <tr><th><spring:message code="ezSystem.x0020"/></th><td><select id="Use_FromAddress"><option <c:if test="${configMap.Use_FromAddress == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.Use_FromAddress == null or configMap.Use_FromAddress == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
 	            <tr><th><spring:message code="ezSystem.lhj1"/></th><td><select id="Use_HTMLMode"><option <c:if test="${configMap.USE_HTMLMODE == null or configMap.USE_HTMLMODE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.USE_HTMLMODE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
+	            
+	            <c:if test="${configMap.PrimaryLang == '1' and configMap.editorFontStyle != null}">
+	            	<tr>
+		            	<th><spring:message code="ezSystem.lhm1"/></th>
+		            	<td>
+		            		<select id="editorFontFamily">
+		            			<c:forEach items="${defaultFontFamilyList}" var="item">
+		            				<option value="${item.trim()}">${item.trim()}</option>
+		            			</c:forEach>
+		            		</select>
+		            		<select id="editorFontSize">
+		            			<c:forEach items="${defaultFontSizeList}" var="item">
+		            				<option value="${item}">${item}</option>
+		            			</c:forEach>
+		            		</select>
+		            	</td>
+		            </tr>
+		            <script>
+		            	var editorFontStyle = "${configMap.editorFontStyle}";
+		            	var editorFontFamily = document.getElementById("editorFontFamily");
+		            	var editorFontSize = document.getElementById("editorFontSize");
+		            	
+		            	editorFontFamily.value = editorFontStyle.split("|")[0];
+		            	editorFontSize.value = editorFontStyle.split("|")[1];
+		            	
+		            	editorFontFamily.addEventListener("change", function () {editorFontStyle = document.getElementById("editorFontFamily").value + "|" + document.getElementById("editorFontSize").value;});
+		            	editorFontSize.addEventListener("change", function () {editorFontStyle = document.getElementById("editorFontFamily").value + "|" + document.getElementById("editorFontSize").value;});
+		            </script>
+		    	</c:if>
 	        </tbody>
 	    </table> 
 	    <div class="btnposition">
