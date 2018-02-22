@@ -2831,7 +2831,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (int k = rowNode.getLength() - 1; k >= 0; k--) {
 				receiptPointID = rowNode.item(k).getChildNodes().item(3).getTextContent();
 				
-				if (!receiptPointID.substring(0, susinGroupIcon.length()).equals(susinGroupIcon) || !susinGroupUseFlag.equals("Y")) {
+				if (receiptPointID.indexOf(susinGroupIcon.trim()) < 0 || !susinGroupUseFlag.equals("Y")) {
 					if (approvalFlag.equals("G")) {
 						map.put("v_DOCID", strDocID);
 						map.put("v_ReceiptPointID", rowNode.item(k).getChildNodes().item(3).getTextContent());
@@ -8801,7 +8801,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnVal.append("<RESULT>");
 		
 		for (int k = 0; k < resultXML.getElementsByTagName("ROW").getLength(); k++) {
-			if (!resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(1).getTextContent().trim().substring(0, susinGroupIcon.length()).equals(susinGroupIcon)) {
+			if (resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(1).getTextContent().trim().indexOf(susinGroupIcon.trim()) < 0) {
 				if (resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(3).getTextContent().trim().equals("N")) {
 					rtnVal.append(chkAprLine(resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(1).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(0).getTextContent().trim(), "", 
 							resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(0).getTextContent().trim(), "", resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(1).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(0).getTextContent().trim(), "", 
@@ -13553,7 +13553,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				 *  수신처ID의 앞부분이 수신그룹의 이름과 같은 경우 -> 수신처가 그룹인 경우
 				 *  코드리스트에 있는 수신처 관련 '이름'이 receiptPointID에 포함된 경우.
 				 */
-				if (receiptPointID.substring(0, susinGroupIcon.length()).equals(susinGroupIcon)) {
+				if (receiptPointID.indexOf(susinGroupIcon.trim()) > -1) {
 					Map<String, Object> map2 = new HashMap<String, Object>();
 					map2.put("companyID", companyID);
 					map2.put("v_MAINID", receiptPointID.substring(susinGroupIcon.length()));
@@ -13736,7 +13736,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				isGroup = false;
 				groupCount = 1;
 				
-				if (receiptPointID.substring(0, susinGroupIcon.length()).equals(susinGroupIcon)) {
+				if (receiptPointID.indexOf(susinGroupIcon.trim()) > -1) {
 					Map<String, Object> map2 = new HashMap<String, Object>();
 					map2.put("companyID", companyID);
 					map2.put("v_MAINID", receiptPointID.substring(susinGroupIcon.length(),receiptPointID.length() - susinGroupIcon.length()));
@@ -20302,7 +20302,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			   strReceiptCompanyID = makeListField(docXML.getElementsByTagName("EXTRECEPTEMAIL").item(j).getTextContent());
 			   isGroup = false;
 			   GroupCount = 1;
-				if( strReceiptPointID.substring(0, SusinGroupIcon.length()).equals(SusinGroupIcon)) {
+				if( strReceiptPointID.indexOf(SusinGroupIcon.trim()) > -1) {
 					map.put("v_MAINID", strReceiptPointID.substring(SusinGroupIcon.length() , strReceiptPointID.length() - SusinGroupIcon.length()));
                     List<ApprGRecordVO> rList = ezApprovalGDAO.doSendDoc_ReceiptGroupSub(map);
 
