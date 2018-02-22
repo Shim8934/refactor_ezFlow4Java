@@ -212,11 +212,12 @@
         				</SELECT>
 					</td>
     			</tr>
+    			<tr>
+    				<td colspan="2" style="text-align: center;border:0px">
+    					<a style="margin-top:15px" class="imgbtn" onclick="save_onclick()"><span id="ButtonChangePassword"><spring:message code='ezPersonal.t34'/></span></a>
+    				</td>
+    			</tr>
   			</table>
-    		<br />
-			<div style="margin-left:280px;">
-    			<a class="imgbtn" onclick="save_onclick()"><span id="ButtonChangePassword"><spring:message code='ezPersonal.t34'/></span></a>
-			</div>
 		</form>
 	</body>
 </html>
