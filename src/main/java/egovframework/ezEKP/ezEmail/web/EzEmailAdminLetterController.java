@@ -112,7 +112,8 @@ public class EzEmailAdminLetterController {
 			returnStr = "ERROR";
 			//e.printStackTrace();
 		}
-		
+
+		logger.debug("createLetter ended.");
 		return returnStr;
 	}
 	
@@ -124,7 +125,7 @@ public class EzEmailAdminLetterController {
 	@RequestMapping("/admin/ezEmail/updateDisplaynameLetter")
 	@ResponseBody
 	public String updateDisplayNameLetter(@ModelAttribute MailLetterVO letter) throws Exception{
-		logger.debug("createLetter started.");
+		logger.debug("updateDisplayNameLetter started.");
 		logger.debug("letter=" + letter);
 		
 		String displayname = letter.getDisplayname();
@@ -139,6 +140,7 @@ public class EzEmailAdminLetterController {
 			//e.printStackTrace();
 		}
 		
+		logger.debug("updateDisplayNameLetter ended.");
 		return returnStr;
 	}
 	
@@ -150,6 +152,9 @@ public class EzEmailAdminLetterController {
 	@RequestMapping("/admin/ezEmail/updateOrderLetter")
 	@ResponseBody
 	public String updateOrderLetter(String letterNo, String letterOrder) throws Exception{
+		logger.debug("updateOrderLetter started.");
+		logger.debug("letterNo=" + letterNo + ", letterOrder=" + letterOrder);
+		
 		String returnStr = "OK";
 		
 		try {
@@ -158,7 +163,8 @@ public class EzEmailAdminLetterController {
 			returnStr = "ERROR";
 			//e.printStackTrace();
 		}
-		
+
+		logger.debug("updateOrderLetter ended.");
 		return returnStr;
 	}
 	
@@ -170,6 +176,9 @@ public class EzEmailAdminLetterController {
 	@RequestMapping("/admin/ezEmail/updateBoxLetter")
 	@ResponseBody
 	public String updateBoxLetter(String letterNo, String letterBoxNo) throws Exception{
+		logger.debug("updateBoxLetter started.");
+		logger.debug("letterNo=" + letterNo + ", letterBoxNo=" + letterBoxNo);
+		
 		String returnStr = "OK";
 		
 		try {
@@ -178,7 +187,8 @@ public class EzEmailAdminLetterController {
 			returnStr = "ERROR";
 			//e.printStackTrace();
 		}
-		
+
+		logger.debug("updateBoxLetter ended.");
 		return returnStr;
 	}
 	
@@ -190,6 +200,9 @@ public class EzEmailAdminLetterController {
 	@RequestMapping("/admin/ezEmail/deleteLetter")
 	@ResponseBody
 	public String deleteLetter(String letterNo) throws Exception{
+		logger.debug("deleteLetter started.");
+		logger.debug("letterNo=" + letterNo);
+		
 		String returnStr = "OK";
 		
 		try {
@@ -198,7 +211,8 @@ public class EzEmailAdminLetterController {
 			returnStr = "ERROR";
 			//e.printStackTrace();
 		}
-		
+
+		logger.debug("deleteLetter ended.");
 		return returnStr;
 	}
 	
@@ -210,6 +224,9 @@ public class EzEmailAdminLetterController {
 	@RequestMapping("/admin/ezEmail/readLetterList")
 	@ResponseBody
 	public JSONArray readLetterList(String letterBoxNo) throws Exception{
+		logger.debug("readLetterList started.");
+		logger.debug("letterBoxNo=" + letterBoxNo);
+		
 		JSONArray returnJsonArr = new JSONArray();
 		
 		try {
@@ -217,6 +234,8 @@ public class EzEmailAdminLetterController {
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}
+		
+		logger.debug("readLetterList ended.");
 		return returnJsonArr;
 	}
 	
@@ -227,6 +246,9 @@ public class EzEmailAdminLetterController {
 	@RequestMapping("/admin/ezEmail/readLetter")
 	@ResponseBody
 	public JSONObject readLetter(String letterNo) throws Exception{
+		logger.debug("readLetter started.");
+		logger.debug("letterNo=" + letterNo);
+		
 		JSONObject returnJson = new JSONObject();
 		
 		try {
@@ -234,6 +256,8 @@ public class EzEmailAdminLetterController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		logger.debug("readLetter ended.");
 		return returnJson;
 	}
 }
