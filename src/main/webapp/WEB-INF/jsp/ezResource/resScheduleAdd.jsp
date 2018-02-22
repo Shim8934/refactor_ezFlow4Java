@@ -71,6 +71,8 @@
 	    	var ItemArray = new Array();
 	    	var m_Arguments;
 	    	var msgRtn = "";
+	    	var SdateNow = ""; 
+	    	var EdateNow = ""; 
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -233,7 +235,10 @@
 		        EDate.setHours(eHour, eMin, 0, 0);
 	        	//var EDate = new Date("${endDateTime2}");
 	        	//EDate.setHours(EDate.getHours() - 9);
-
+				
+	        	SdateNow = SDate;
+	        	EdateNow = EDate;
+	        	
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
 	    	   	$('#Stimepicker').timepicker();
@@ -369,6 +374,26 @@
 	            	alert(strLang252);
 	            	return;
 	        	}
+	        	/* 2018.02.22 김기하  #11624 */
+    			
+	        	/* var ssDate = $("#Sdatepicker").datepicker().val();
+	        	var eeDate = $("#Edatepicker").datepicker().val();
+	        	var ssTime = $("#Stimepicker").timepicker().val();
+	        	var eeTime = $("#Etimepicker").timepicker().val();
+	        	
+	        	if(ssDate == "" || eeDate == "" || ssTime == "" || eeTime == ""){
+	        		$("#Sdatepicker").datepicker("setDate", SdateNow);
+	        		$("#Edatepicker").datepicker("setDate", EdateNow);
+	        		$("#Stimepicker").timepicker("setTime", SdateNow);
+	        		$("#Etimepicker").timepicker("setTime", EdateNow);
+	        		
+		        	$('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        	$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        	
+		        	alert(strLang139);
+		        	return;
+	        	} */
+	        	
 	        	for (var i = 0 ; i < ItemArray[0].length ; i++) {
 	            	if (DupCheck(ItemArray[0][i]) == false) {
 	                	alert("[" + ItemArray[1][i] + "] " + strLang248);
