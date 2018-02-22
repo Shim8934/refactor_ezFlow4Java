@@ -293,6 +293,8 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String companyId = info.getCompanyId();
 			String langStr = request.getParameter("langStr");
 			String dept = info.getDeptId();
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
  
 			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId, langStr);
 
@@ -309,15 +311,21 @@ public class MResourceGWController extends EgovFileMngUtil {
 	        content = doc.toString();
 			
 	        resVO.setContent(content);
-			String reFlag = resVO.getReFlag();
+	        
+			//String reFlag = resVO.getReFlag();
 			
-			if(reFlag.equals("1")){
+/*			if(reFlag.equals("1")){
 				resVO.setStartDate(commonUtil.getDateStringInUTC(repDate + resVO.getStartDate().substring(10), offset, false));
 				resVO.setEndDate(commonUtil.getDateStringInUTC(repDate + resVO.getEndDate().substring(10), offset, false));
 			} else {
 				resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
 				resVO.setEndDate(commonUtil.getDateStringInUTC(resVO.getEndDate(), offset, false));
-			}
+			}*/
+			
+	        resVO.setWriteDay(commonUtil.getDateStringInUTC(resVO.getWriteDay(), offset, false));
+	        
+			resVO.setStartDate(startDate);
+			resVO.setEndDate(endDate);
 
 			String authYn = "N";
 			
