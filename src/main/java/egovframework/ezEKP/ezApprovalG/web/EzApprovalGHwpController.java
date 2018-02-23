@@ -47,9 +47,9 @@ public class EzApprovalGHwpController {
 	 * @throws Exception
 	 * 전자결재 한글기안기 오픈
 	 */
-	@RequestMapping(value = "/ezApprovalG/drafuitHWP.do", produces = "text/xml;charset=utf-8")
-	public String drafuitHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("drafuitHWP started");
+	@RequestMapping(value = "/ezApprovalG/draftuiHWP.do", produces = "text/xml;charset=utf-8")
+	public String draftuiHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("draftuiHWP started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -103,9 +103,87 @@ public class EzApprovalGHwpController {
 		model.addAttribute("connkey", connkey);
 		model.addAttribute("isHWP", "Y");
 		
-		LOGGER.debug("drafuitHWP ended");
+		LOGGER.debug("draftuiHWP ended");
 		
-		return "ezApprovalG/apprGdrafuitHWP";
+		return "ezApprovalG/apprGdraftuiHWP";
+	}
+	
+	/**
+	 * @param loginCookie
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 * 전자결재 한글결재 오픈
+	 */
+	@RequestMapping(value = "/ezApprovalG/approvuiHWP.do")
+	public String approvuiHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("approvuiHWP started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String susinAdmin = "";
+		String orgAprUserID = request.getParameter("ID");
+		String orgAprUserName = request.getParameter("name");
+        String orgAprUserName2 = request.getParameter("name2");
+		String orgAprUserDeptID = request.getParameter("deptID");
+		String docID = request.getParameter("docID");
+		String tempUserID = userInfo.getId();
+
+		String allFlag = request.getParameter("allFlag");
+		//hwp 툴바가 6줄인데 맨윗줄 부터 '1' 이면 사용 '0' 이면 사용하지 않는다. ex)'100001' 맨위랑 맨아래 툴바만 표시
+        String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+        
+        if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+        	susinAdmin = "YES";
+        } else {
+        	susinAdmin = "NO";
+        }
+                
+        String docDir = docID.substring(docID.length() - 3);
+                
+        if (docDir.substring(0, 1).equals("0")) {
+        	docDir = docDir.substring(docDir.length() - 2, 2);
+        } else if (docDir.substring(0, 2).equals("00")) {
+        	docDir = docDir.substring(docDir.length() - 1, 1);
+        } else if (docDir.equals("000")) {
+        	docDir = "0";
+        }
+
+        String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+        String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + docDir + "." + docID + ".hwp" ;
+
+        if (!allFlag.equals("1") && !allFlag.equals("2")) {
+        	allFlag = "0";
+        }
+                
+        String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
+        String optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+        String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+        String optjunKyukInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
+             
+        model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("orgAprUserID", orgAprUserID);
+		model.addAttribute("orgAprUserName", orgAprUserName);
+		model.addAttribute("orgAprUserName2", orgAprUserName2);
+		model.addAttribute("orgAprUserDeptID", orgAprUserDeptID);
+		model.addAttribute("docID", docID);
+        model.addAttribute("tempUserID", tempUserID);
+        model.addAttribute("optSignDateFormat", optSignDateFormat);
+        model.addAttribute("optisSplit", optisSplit);
+        model.addAttribute("optSplitKind", optSplitKind);
+        model.addAttribute("optjunKyukInfo", optjunKyukInfo);
+        model.addAttribute("userInfo", userInfo);
+        model.addAttribute("allFlag", allFlag);
+        model.addAttribute("oldYear", oldYear);
+        model.addAttribute("dirPath", dirPath);
+        model.addAttribute("hwpToolbar", hwpToolbar);
+        model.addAttribute("susinAdmin", susinAdmin);
+        
+        
+		LOGGER.debug("approvuiHWP ended");
+		
+		return "/ezApprovalG/apprGapprovuiHWP";
 	}
 	
 	/**

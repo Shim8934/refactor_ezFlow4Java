@@ -449,16 +449,11 @@
 	                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
 	                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
 	            } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?DocID=" + escape(pArgument[0]);
+	                openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
 	                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
 	                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
 	            } else {                
-	                if (CrossYN()) {
-	                    openLocation = "/ezApprovalG/approvui.do?docID=";
-	                } else {
-	                	openLocation = "/ezApprovalG/approvui.do?docID=";
-	                }
-
+                    openLocation = "/ezApprovalG/approvui.do?docID=";
 	                openLocation = openLocation + escape(pArgument[0]);
 	                openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]);
 	                openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0";
