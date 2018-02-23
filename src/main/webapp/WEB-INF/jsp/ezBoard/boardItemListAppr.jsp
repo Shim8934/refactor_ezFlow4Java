@@ -125,7 +125,7 @@
 			    		MailOptionHiddenOutside(e);
 			    	});
 			    	
-			    	$($(window.parent.parent.frames['left'].document)).mouseup(function (e) {
+			    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
 			    		MailOptionHiddenOutside(e);
 			    	});
 			    	
