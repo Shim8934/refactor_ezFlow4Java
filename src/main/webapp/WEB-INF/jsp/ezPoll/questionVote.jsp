@@ -50,6 +50,7 @@
 			var currentGroupSticker 	= -1;
 			var flagEvent 				= -1;
 			var currentEditingCmt 		= -1;
+			var selectedList 			= ${listSelectedOptions};
 			var colors 					= ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",		
 											"#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",     
 			           						"#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"];
@@ -187,6 +188,12 @@
 					var percentTdId = "_resultPercentage" + _optId; 
 					var optionID = "optionContent" + _optId;		
 					var emailElmt = document.getElementById("mailSend" + _optId);
+					
+					var selectedFlag = 0;
+					for(var j = 0; j < selectedList.length; j++){
+						selectedFlag = selectedList.indexOf(_optId) != -1 ? true : false;
+					}
+					
  					document.getElementById(optionID).style.color = colors[i % 30];
 					
 					if (totalVotes > 0 && (seeResultBeforVote == 1 || _status == 0)) {				
@@ -263,7 +270,7 @@
 							
 							//Check if the poll is allowed see result before vote														
 							if (_status != 0) {							
-								if (seeResultBeforVote != 0) {
+								/* if (seeResultBeforVote != 0) {
 									var showVotes = document.getElementById("voterNumber_" + _optId);																	
 					   				showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";	
 				   					showVotes.style.color = colors[i % 30];
@@ -271,7 +278,13 @@
 									
 									document.getElementById(graphId).style.display = "none";
 									//document.getElementById(voteInfo).style.display = "block";
-								}
+								} */
+									var showVotes = document.getElementById("voterNumber_" + _optId);																	
+					   				showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";	
+				   					showVotes.style.color = colors[i % 30];
+									showVotes.style.display = "block";
+									
+									document.getElementById(graphId).style.display = "none";
 							}
 							else {
 								var showVotes = document.getElementById("voterNumber_" + _optId);
@@ -300,7 +313,16 @@
 						
 						//Check if the poll is allowed see result before vote
 						if (_status != 0) {							
-							if (seeResultBeforVote != 0) {
+							/* if (seeResultBeforVote != 0) {
+								var showVotes = document.getElementById("voterNumber_" + _optId);																	
+				   				showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";	
+			   					showVotes.style.color = colors[i % 30];
+								showVotes.style.display = "block";
+								
+								document.getElementById(graphId).style.display = "none";
+								//document.getElementById(voteInfo).style.display = "block";
+							} */
+							if (!selectedFlag) {
 								var showVotes = document.getElementById("voterNumber_" + _optId);																	
 				   				showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";	
 			   					showVotes.style.color = colors[i % 30];
@@ -756,6 +778,8 @@
  	    		var optId = votesArr[voteId][0]; 	    		
  	    		
 	 	    	if (obj.src.indexOf("/images/poll/unchecked_vote.png") !== -1) { 	    		   		
+	 	    		modifySelectedList(optId, 'add');
+	 	    		
 	 	    		if (votePrivilege == 0) {
 	 	    			alert("<spring:message code = 'ezPoll.t172'/>");
 	 					return;
@@ -795,6 +819,8 @@
 					});   		
 		    	}
 	 	    	else {
+	 	    		modifySelectedList(optId, 'remove');
+	 	    		
 	 	    		obj.onclick = null;
 	 	    		
 	 	    		$.ajax({
@@ -2486,6 +2512,16 @@
                         addSticker();
 		            }
 		        });
+		    }
+		    
+		    //투표 버튼 누를 때 선택한 리스트의 정보를 바꾸어 줌.
+		    function modifySelectedList(optId, mode){
+		    	var optIdIdxInArr = selectedList.indexOf(optId);
+		    	if(mode == 'add'){
+		    		selectedList.push(optId);
+		    	}else{
+		    		selectedList.splice(optIdIdxInArr,1);
+		    	}
 		    }
 		</script>
 	</head>
