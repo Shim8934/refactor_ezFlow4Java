@@ -10,7 +10,7 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
-
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 	        window.onload = function () {
 	        	
@@ -30,9 +30,16 @@
 					case 3:
 						url = "/admin/ezJournal/author.do";
 						break;
+						
 				}
 				window.open(url,"right");
 			}
+	        
+	        function writejournal() {
+	        	var feature = GetOpenWindowfeature(765, 820).replace("resizable=no","resizable=yes"); 
+				var typeId = "ezJournal.t05";
+	            window.open("/ezJournal/journalNewItem.do?typeId=" + typeId + "&mode=new", "", feature, "");
+	        }
 
 	    </script>
 	</head>
@@ -64,6 +71,9 @@
 		    <ul>
 		    </ul>
 		    <h2><span class='temp' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>
+		    <ul>
+		    </ul>
+		    <h2><span class='write' onClick="writejournal();" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>
 		    <ul>
 		    </ul>
 	        <h3><span class='recive'='journalEnv' onClick="" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t53'/></span></h3>
