@@ -69,7 +69,9 @@
 	<body>
 		<textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>
 		<script type="text/javascript">
-			
+			var defaultFontFamily = "${defaultFontFamily}";
+			var defaultFontSize = "${defaultFontSize}";
+		
 			// TODO: 언어 설정
 			var lang = "kr"; // 언어
 			var userLang = "${userInfo.lang}"; // 사용자 언어

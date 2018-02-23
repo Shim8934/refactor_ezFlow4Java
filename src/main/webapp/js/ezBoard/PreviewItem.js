@@ -1,6 +1,6 @@
 ﻿function MailOptionView(obj) {
     if (obj.getAttribute("mode") == "off") {
-        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
         if(pAdminType == "y")
             document.getElementById("layer_Viewpopup").style.top = "50px";
         else
@@ -18,7 +18,17 @@ function MailOptionHidden() {
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
     document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
 }
-
+//레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
+function MailOptionHiddenOutside(e) {
+	var container = $('#layer_Viewpopup');
+	var btncontainer = $('#maillistoptiondiv');
+	var maillistoptionmode = $('#maillistoptiondiv').attr('mode');
+	if (maillistoptionmode == "on") {
+		if (container.has(e.target).length === 0 && !$(e.target).hasClass("maillistoptiondivbtn")) {
+			MailOptionHidden();
+		}
+	}
+}
 function PreviewRayerChange(pGubun) {
     pGubun = pGubun.trim();
     if (selobj != null && pGubun != "NONE" && selobj.childNodes.length != 0)
