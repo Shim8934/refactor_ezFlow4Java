@@ -39,14 +39,14 @@
 					renderData(result);
 				},
 				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134' />" + error);
+					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			});
 		}
 		
 		function renderData(result) {
 			if (!result) {
-				alert("<spring:message code='ezWebFolder.t134' />");
+				alert("<spring:message code='ezWebFolder.t134'/>");
 				return;
 			}
 			
@@ -148,12 +148,12 @@
 				var childElmt = obj.parentElement.lastElementChild;
 				
 				if (obj.className == "webfolderMinus") {
-					obj.src= "/images/OrganTree_cross/plus_normal.gif";
+					obj.src = "/images/OrganTree_cross/plus_normal.gif";
 					obj.setAttribute("class", "webfolderPlus");
 					childElmt.style.display = "none";
 				}
 				else {
-					obj.src= "/images/OrganTree_cross/minus_normal.gif";
+					obj.src = "/images/OrganTree_cross/minus_normal.gif";
 					obj.setAttribute("class", "webfolderMinus");
 					childElmt.style.display = "";
 				}
@@ -166,7 +166,7 @@
 					type: "POST",
 					url: "/admin/ezWebFolder/getSubFolderTree.do",
 					data: {
-						"folderId"	: uniqueId
+						"folderId" : uniqueId
 					},
 					dataType: "JSON",
 					async: true,
@@ -176,7 +176,7 @@
 						arrSubFolder.push(uniqueId);
 					},
 					error: function (xhr, status, e){
-						alert("<spring:message code='ezWebFolder.t134' />");
+						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
 			}
@@ -184,7 +184,7 @@
 		
 		function displaySubTree(result, divElmt) {
 			if (result["listSubFolders"] == null) {
-				alert("<spring:message code='ezWebFolder.t134' />");
+				alert("<spring:message code='ezWebFolder.t134'/>");
 				return;
 			}
 			
@@ -211,12 +211,12 @@
 		
 		function fileCopy() {
 			if (selectedFolder == null) {
-				alert("Please select a folder!");
+				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
 			}
 			
 			if (selectedFolder == currentFolder) {
-				alert("File already in this folder!");
+				alert("<spring:message code='ezWebFolder.t210'/>");
 				return;
 			}
 			
@@ -234,19 +234,19 @@
 					afterSuccess();
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
-					alert("Error: " + jqXHR.status + ", " + textStatus);
+					alert("<spring:message code='ezWebFolder.t134'/>" + jqXHR.status + ", " + textStatus);
 				}
 			});
 		}
 		
 		function fileMove() {
 			if (selectedFolder == null) {
-				alert("Please select a folder!");
+				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
 			}
 			
 			if (selectedFolder == currentFolder) {
-				alert("File already in this folder!");
+				alert("<spring:message code='ezWebFolder.t210'/>");
 				return;
 			}
 			
@@ -264,7 +264,7 @@
 					afterSuccess();
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
-					alert("Error: " + jqXHR.status + ", " + textStatus);
+					alert("<spring:message code='ezWebFolder.t134'/>" + jqXHR.status + ", " + textStatus);
 				}
 			});
 		}
@@ -272,7 +272,7 @@
 </head>
 <body class="popup">
 	<div id="menu">
-		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t120' /></div>
+		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t120'/></div>
 	</div>
 	<div id="close">
 		<ul>
@@ -282,11 +282,11 @@
 	
 	<div style="margin: 10px; border: 1px solid #666666; min-height: 380px;" id="folderTree">
 	
-	</div>	
+	</div>
 	
 	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
-		<a id="btnSave" class="webfolderBttn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121' /></span></a>
-		<a id="btnCancel"class="webfolderBttn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122' /></span></a>
+		<a id="btnSave"   class="webfolderBttn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
+		<a id="btnCancel" class="webfolderBttn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
 	</div>
 	
 </body>

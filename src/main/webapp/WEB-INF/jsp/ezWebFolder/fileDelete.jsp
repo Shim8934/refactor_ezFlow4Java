@@ -13,7 +13,7 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript">
-		var fileList = "<c:out value="${fileList}" />";
+		var fileList = "<c:out value="${fileList}"/>";
 		function wClose() {
 			parent.DivPopUpHidden();
 			window.close();
@@ -35,11 +35,11 @@
 				dataType: "text",
 				async: true,
 				success : function(data, textStatus, jqXHR) {
-					alert("<spring:message code='ezWebFolder.t113' />");
+					alert("<spring:message code='ezWebFolder.t113'/>");
 					afterDeleteSuccess();
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
-					alert("<spring:message code='ezWebFolder.t114' />" + jqXHR.status + ", " + textStatus);
+					alert("<spring:message code='ezWebFolder.t114'/>" + jqXHR.status + ", " + textStatus);
 				}
 			});
 		}
@@ -47,21 +47,21 @@
 </head>
 <body class="popup"> 
 	<div id="menu">
-		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t117' /></div>	
+		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t117'/></div>
 	</div>
 	<div id="close">
 		<ul>
-			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110' /></span></li>
+			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110'/></span></li>
 		</ul>
 	</div>
 	
-	<div style="margin: 10px;"><spring:message code='ezWebFolder.t109' /></div>
+	<div style="margin: 10px;"><spring:message code='ezWebFolder.t109'/></div>
 	
 	<div style="margin-top: 15px;"><hr size="0" style="color:#fff; background-color:#fff; margin: 0px 10px; border-top: 1px solid #304D7F;"></div>
 	
 	<div style="margin: 6px 0px 6px 140px; position:fixed; bottom: 0px;">
-		<a id="btnSave" class="webfolderBttn" onClick="ok_Click();"><span><spring:message code='ezWebFolder.t111' /></span></a>
-		<a id="btnCancel"class="webfolderBttn" onClick="wClose();"><span><spring:message code='ezWebFolder.t112' /></span></a>
+		<a id="btnSave"  class="webfolderBttn" onClick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
+		<a id="btnCancel"class="webfolderBttn" onClick="wClose();"  ><span><spring:message code='ezWebFolder.t112'/></span></a>
 	</div>
 	
 </body>
