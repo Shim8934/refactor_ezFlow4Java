@@ -10,14 +10,23 @@
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
 	   	<script type="text/javascript">
 	   		//트리조직도 JSON
 	   		var treeContent;
-	   	
+	   		// 선택된 수신자 배열
+	   		var receiverList = [];
+	   		// 선택된 수신자 이름
+	   		var userName = "";
+	   		// 선택된 수신자 아이디
+	   		var selUserId = "";
+	   		// 현재 로그인된 사용자 아이디
+	   		var userId = "<c:out value='${userId}'/>";
+	   		console.log(userId);
+	   		
 	   		function close_Click(){
 	   			window.close();
 	   		}
@@ -48,35 +57,122 @@
 	   		}
 	   		
 	   		//검색
-	   		function search_click(){
+	   		function search_click() {
 	   			var key = $("#search_type").val();
 	   			var value = $("#keyword").val();
 	   			setUserList(key, value);
 	   		}
 	   		
-	   		//열람궎란정보 저장
-	   		function insertAuthDept(){
-	   			var jsonString = JSON.stringify({"userId":updateUserId,"depts":lpDepts});
-				$.ajax({
-	   				type:"post",
-	   				dataType:"html",
-	   				url:"/admin/ezJournal/saveAuthor.do",
-	   				contentType:"application/json;",
-	   				data:jsonString,
-	   				success: function(result){
-	   					alert(result);
-   						$('.journal-layer').fadeOut();
-   						opener.location.reload();
-   						location.reload(true);
-	   				}
-	   			});
+	   		// 리스트에서 클릭이벤트 적용
+	   		function setUserAuthorDept(elem) {
+	   			$("*").removeClass("selectTR");
+	   			$(elem).addClass("selectTR");
+	   			selUserId = $(elem).attr("userId");
+	   			console.log("selUserId : " + selUserId)
 	   		}
 	   		
-	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
-	   		function delTargetDept(elem){
-	   			var targetDeptId = $(elem).attr("targetId");
-   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
-   				$(elem).remove();
+	   		// 선택한 사람을 수신자에 추가
+	   		function showInsertAuthDept(elem) {
+	   			console.log("여기서" + $(elem).attr("id"));
+	   			var userId = $(elem).attr("id");
+	   			userName = $(elem).children().eq(1).text();
+	   			console.log(userName);
+	   			var chkFlag = true;
+	   			for(var i = 0; i < receiverList.length; i++) {
+	   				if (receiverList[i].userId == userId) {
+	   					chkFlag = false;
+	   				}
+	   			}
+	   			
+	   			if (chkFlag) {
+					receiverList.push({"userName" : userName, "userId" : userId});
+					console.log(receiverList);
+	   			} else {
+	   				alert("<spring:message code='ezJournal.t127'/>");
+	   			}
+	   			drawReceiverList()
+	   		}
+	   		
+	   		// 선택된 수신자배열에서 특정 사원 삭제
+		    function deleteReceiver() {
+		     	for(var j = 0; j < receiverList.length; j++) {
+		    		if (receiverList[j].userId === selUserId) {
+		    			console.log(selUserId);
+		    			receiverList.splice(j, 1);
+		    		}
+		    	} 
+		     	drawReceiverList();
+		    }
+	   		
+	   		// 선택된 수신자 배열을 토대로 화면에 그리는 곳
+	   		function drawReceiverList() {
+		    	console.log(receiverList);
+		    	
+		    	var $receiverList = $("#receiverList");
+		    	var strHTML = "";     
+		    	for (var i = 0; i < receiverList.length; i++) {
+		    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
+		    		strHTML += "<tr userId=" + receiverList[i].userId + " onclick='setUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
+		    		strHTML += "<td>";
+		    		strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+		    		strHTML += "</td>";
+		    		strHTML += "</tr>";
+		    		strHTML += "</table>";
+		    	}
+		    	$receiverList.html(strHTML);
+		    }
+	   		
+	   		// 선택된 수신자리스트 즐겨찾기 저장
+	   		function saveFavoriteLine() {
+	   			if (receiverList.length > 0) {
+		   		 	DivPopUpShow(360, 185, "/ezJournal/receiverLineName.do");
+	   			} else {
+	   				
+	   			}
+	   		}
+	   		
+	   		// 즐겨찾기 리스트 가져오기
+	   		function getFavoriteList() {
+	   			
+	   			$.ajax({
+	   				type : "post",
+	   				dataType : "html",
+	   				url : "/ezJournal/getFavoriteList.do",
+	   				data : {"userId" : userId },
+	   				success : function(result){
+	   					$("#List_TBODY").html(result);
+	   				},
+	   				error : function(request, status, error) {
+		    			alert("code : " + request.status + "\nerror : " + error);
+	   				}
+	   			});
+	   			getFavoriteUser();
+	   		}
+			
+	   		// 즐겨찾기 아이디에 해당하는 수신자리스트 가져오기
+	   		function getFavoriteUser(elem) {
+	   			$("*").removeClass("selectTR");
+	   			$(elem).addClass("selectTR");
+	   			var favoriteId = $(elem).attr("favoriteId");
+	   			if (elem == null || elem == "") {
+	   				var check = $("#List_TBODY tr").first().attr("favoriteid");
+	   				console.log(check);
+	   			//	favoriteId = $("#favoriteList tr").children().eq(1).attr("favoriteid");
+	   				console.log(favoriteId);
+	   			}
+	   			$.ajax({
+	   				type : "post",
+	   				dataType : "html",
+	   				url : "/ezJournal/getFavoriteUser.do",
+	   				data : {"userId" : userId,
+	   						"favoriteId" : favoriteId},
+	   				success : function(result){
+	   					$("#List_TBODY2").html(result);
+	   				},
+	   				error : function(request, status, error) {
+		    			alert("code : " + request.status + "\nerror : " + error);
+	   				}
+	   			});
 	   		}
 	   		
 	   		$(document).ready(function(){
@@ -84,6 +180,7 @@
 	   			$("#1tab1").click();
 	            ChangeTab(document.getElementById("1tab1"));
 		   		setDeptList();
+	   			getFavoriteList();
 		   		
 	   			$(function () {
 		   			$(document).on({
@@ -94,6 +191,9 @@
 		   				}
 	   				},"#lplistView tr");
 	   			});
+	   			
+	   			
+	   			
    			});
 	   		
 	   		var Tab1_SelectID = "1tab1";
@@ -142,9 +242,13 @@
         <h1 style="height: 20px;"><spring:message code='ezJournal.t88'/></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="close_Click()"><spring:message code='ezOrgan.t143'/></span></li>
+	            <li><span onclick=""><spring:message code='ezJournal.t15'/></span></li>
+	            <li><span onclick="close_Click()"><spring:message code='ezJournal.t16'/></span></li>
 	        </ul>
 	    </div>
+	    <script type="text/javascript">
+            selToggleList(document.getElementById("close"), "ul", "li", "0");
+        </script>
 	    <table style="width:100%">
 			<tr>
 				<td>
@@ -162,7 +266,7 @@
 				                        <table style="margin-top: 3px; width: 100%;">
 				                            <tr>
 				                                <td>
-				                                    <div style="float:right">
+				                                    <div style="float:left">
 				                                        <select id="search_type">
 				                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
 								                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
@@ -178,6 +282,9 @@
 				                                        <input type="text" id="keyword" value="" style="width: 130px; margin: 0px;" />
 				                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 				                                    </div>
+				                                    <div style="float:right">
+				                                        <a class="imgbtn"><span onclick="saveFavoriteLine()"><spring:message code='ezJournal.t92'/></span></a>
+				                                    </div>
 				                                </td> 
 				                                <td></td>   
 				                            </tr>
@@ -187,7 +294,7 @@
 								<table style="margin-top: 3px;">
 						            <tr>
 						                <td class="box" style="border-right: 0px;">
-						                    <div style="width: 250px; height: 500px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+						                    <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
 						                </td>
 						                <td></td>
 						                <td class="listview" style="width: 426px" id="orglistView">
@@ -195,21 +302,23 @@
 						            </tr>
 						        </table>
 		                  	</td>   
-		                  	<td id="journalFavorite_content" style="display:none; width:750px;">
+		                  	<td id="journalFavorite_content" style="display:none; width:806px;">
 	                        	<table style="width:100%">
 	                                <tr>
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
-	                                        <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezJournal.t95'/></h2>
+                                        	<h2 class="h2_dot" style="padding-top: 2px; display: inline-block;"><spring:message code='ezJournal.t95'/></h2>
+		                                    <div style="float:right; margin-top: 1px;">
+		                                        <a class="imgbtn"><span onclick=""><spring:message code='ezJournal.t96'/></span></a>
+		                                        <a class="imgbtn"><span onclick=""><spring:message code='ezJournal.t97'/></span></a>
+		                                    </div>
 	                                        <div class="border_gray">
-	                                            <div id="circularDept" style="Width: 100%; Height: 182px; OVERFLOW: AUTO; padding-top: 0px;">
-	                                            	<table class="mainlist" style="width: 100%;">
+	                                            <div id="journalFavorite" style="Width: 100%; Height: 173px; OVERFLOW: AUTO; padding-top: 0px;">
+	                                            	<table class="mainlist" id="favoriteList" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
-									                        	<th style="width: 5%;"><span><spring:message code='ezCircular.t31' /></span></th>
-									                            <th style="width: 35%; "><span><spring:message code='ezCircular.t32' /></span></th>
-									                            <th style="width: 27%; "><span><spring:message code='ezCircular.t33' /></span></th>
-									                            <th style="width: 19%; "><span><spring:message code='ezCircular.t34' /></span></th>
-									                            <th style="width: 13%; "></th>
+									                        	<th style="width: 10%;"><span><spring:message code='ezJournal.t101' /></span></th>
+									                            <th style="width: 50%; "><span><spring:message code='ezJournal.t98' /></span></th>
+									                            <th style="width: 40%; "><span><spring:message code='ezJournal.t99' /></span></th>
 									                        </tr>
 								                        </thead>
 								                        <tbody id="List_TBODY">					                        
@@ -222,16 +331,15 @@
 	                                <tr>
 	                                    <td style="vertical-align: top;">
 	                                        <div class="border_gray">
-	                                            <div id="circularTemp" style="Width: 100%; Height: 329px; OVERFLOW: AUTO; padding-top: 0px;">
+	                                            <div id="journalFavList" style="Width: 100%; Height: 300px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table id="List" class="mainlist" style="width:100%">
 														<thead id="List_THEAD2">
 															<tr>
-																<th id="TH_0" style="width:5%"><spring:message code='ezCircular.t31' /></th>
-																<th id="TH_1" style="width:15%"><spring:message code='ezCircular.t76' /></th>
-																<th id="TH_2" style="width:17%"><spring:message code='ezCircular.t78' /></th>
-																<th id="TH_3" style="width:12%"><spring:message code='ezCircular.t79' /></th>
-																<th id="TH_4" style="width:13%"><spring:message code='ezCircular.t80' /></th>
-																<th id="TH_5" style="width:38%"><spring:message code='ezCircular.t81' /></th>
+																<th id="TH_0" style="width:5%"><spring:message code='ezJournal.t101' /></th>
+																<th id="TH_1" style="width:20%"><spring:message code='ezJournal.t38' /></th>
+																<th id="TH_2" style="width:17%"><spring:message code='ezJournal.t39' /></th>
+																<th id="TH_3" style="width:20%"><spring:message code='ezJournal.t40' /></th>
+																<th id="TH_4" style="width:38%"><spring:message code='ezJournal.t100' /></th>
 															</tr>
 														</thead>
 														<tbody id="List_TBODY2">
@@ -244,15 +352,15 @@
 	                            </table>
 	                        </td>
 	                        <td style="width: 30px; text-align: center;">                            
-	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver(ListViewMsgTo)"><br>
-	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
+	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="showInsertAuthDept(${selUserId})"><br>
+	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver()">
 	                        </td>
 	                        <td style="vertical-align: top;">
 	                            <h2 class="receiver_tltype01" style="margin-top:4px;">
 									<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
 								</h2>
 								<div class="receiver_borderbox">
-									<div id="authorDeptList" style="width: 250px; Height: 500px; overflow-x: auto; overflow-y: auto;">
+									<div id="receiverList" style="width: 250px; Height: 473px; overflow-x: auto; overflow-y: auto;">
 									</div>
 								</div>
 	                        </td>
@@ -261,6 +369,10 @@
 	      		</td> 
 			</tr>
         </table>
+        <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
+		</div> 
 	</body>
 </html>
 

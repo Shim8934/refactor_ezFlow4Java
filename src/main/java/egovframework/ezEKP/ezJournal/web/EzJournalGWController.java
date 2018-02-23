@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezJournal.web;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -22,6 +23,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
+import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 import egovframework.ezMobile.ezApprovalG.web.MApprovalGGWController;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -113,23 +115,9 @@ public class EzJournalGWController {
 			String tenantId = request.getParameter("tenantId");
 			String deptId = request.getParameter("deptId");
 
-			JSONObject data = new JSONObject();
+			List<JournalFormInfoVO> formList = ezJournalService.getFormList(typeId, deptId, companyId, tenantId);
 			
-			// deptId가 없으면 각 양식함에서 사용가능한 리스트조회, deptId 있으면 각 양식함별 부서에서 사용가능한 리스트 조회
-			if (deptId == "" || deptId == null) {
-				List<JournalFormInfoVO> fList = ezJournalService.getFormList(typeId, companyId, tenantId);
-				data.put("fList", fList);
-
-			} else {
-				List<JournalFormInfoVO> fList = ezJournalService.getDeptUseFormList(typeId, companyId, tenantId, deptId);
-				data.put("fList", fList);
-			}
-			
-			// 취합가능 기본양식 리스트 조회
-			List<JournalFormInfoVO> basicList = ezJournalService.getBasicFormList(companyId, tenantId);
-			data.put("basicList", basicList);
-			
-			result.put("data", data);
+			result.put("data", formList);
 			result.put("status", "ok");
 			result.put("code", 0);
 			
@@ -155,19 +143,6 @@ public class EzJournalGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-//			String content = jsonParam.get("formContent").toString();
-//			content = content.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
-//			content = content.replaceAll("\\+", "%2B");
-//			content = URLDecoder.decode(content, "utf-8");
-			
-//			String scheme = "http://";
-//			if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
-//				scheme = "https://";
-//			}
-//
-//			content = content.replace("replace_" + scheme, scheme);
-			
-//			jsonParam.put("content", content);
 			
 			ezJournalService.insertForm(jsonParam);
 			
@@ -598,6 +573,19 @@ public class EzJournalGWController {
 		LOGGER.debug("userId=" + userId);
 		
 		JSONObject result = new JSONObject();
+		String tenantId = request.getParameter("tenantId");
+		
+		try {
+			List<ReceiverFavoriteVO> favoriteList = ezJournalService.getFavoriteList(userId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", favoriteList);
+			
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
 		
 		LOGGER.debug("ezJournal G/W getFavoriteList ended.");
 		return result;
@@ -612,6 +600,17 @@ public class EzJournalGWController {
 		LOGGER.debug("userId=" + userId);
 		
 		JSONObject result = new JSONObject();
+
+		try {
+			ezJournalService.saveFavorite(jsonParam);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		}
 		
 		LOGGER.debug("ezJournal G/W saveFavorite ended.");
 		return result;
@@ -654,6 +653,19 @@ public class EzJournalGWController {
 		LOGGER.debug("userId=" + userId + ",favoriteId=" + favoriteId);
 		
 		JSONObject result = new JSONObject();
+		String tenantId = request.getParameter("tenantId");
+		
+		try {
+			List<JournalAuthorVO> userList = ezJournalService.getFavoriteUserList(favoriteId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", userList);
+			
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
 		
 		LOGGER.debug("ezJournal G/W getFavoriteUserList ended.");
 		return result;

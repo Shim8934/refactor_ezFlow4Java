@@ -36,8 +36,7 @@
 	    			dataType : "html",
 	    			async : false,
 	    			url : "/ezJournal/getFormList.do",
-	    			data : {"companyId" : companyId,
-	    					"typeId"	: typeId},
+	    			data : {"typeId"	: typeId},
 	    			success : function(result) {
 	    				$("#optForm").html(result);
 	    			}
@@ -47,7 +46,7 @@
 	    	function selectReceiver(){			
 				var url = "/ezJournal/selectReceiver.do";
 				url += "?companyId=" + companyId;
-				window.open(url, "selectReceiver", "width=1100, height=680");
+				window.open(url, "selectReceiver", "width=1100, height=600");
 			}
 			
 	    	$(document).ready(function() {

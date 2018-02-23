@@ -24,6 +24,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
+import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 import egovframework.let.utl.fcc.service.JsonUtil;
 
 
@@ -76,72 +77,47 @@ public class EzJournalServiceImpl implements EzJournalService{
 	
 
 	@Override
-	public List<JournalFormInfoVO> getFormList(String typeId, String companyId, String tenantId) throws Exception {
+	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String tenantId) throws Exception {
 		logger.debug("getFormList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+	//	map.put("listType", listType);
 		map.put("typeId", typeId);
-		map.put("companyId", companyId);
-		map.put("tenantId", tenantId);
-		
-		List<JournalFormInfoVO> fList = ezJournalDAO.getFormList(map);
-		List<JournalFormInfoVO> resultList = new ArrayList<JournalFormInfoVO>();
-		
-		for (int i = 0; i < fList.size(); i++) {
-			JournalFormInfoVO vo = fList.get(i);
-			map.put("formId", vo.getFormId());
-			
-			try {
-				List<DeptInfoVO> useDept = ezJournalDAO.getFormUseDeptList(map);
-
-				if (useDept.size() < 1) {
-					useDept.clear();
-					DeptInfoVO deptVO = new DeptInfoVO();
-					deptVO.setDeptName("전체");
-					useDept.add(deptVO);
-				}
-				vo.setDepts(useDept);
-				resultList.add(vo);
-				
-			} catch (Exception e) { 
-				e.printStackTrace();
-			}
-			
-		}
-		
-		logger.debug("getFormList ended");
-		return resultList;
-	}
-
-	@Override
-	public List<JournalFormInfoVO> getDeptUseFormList(String typeId,
-			String companyId, String tenantId, String deptId) throws Exception {
-		logger.debug("getDeptUseFormList started");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("typeId", typeId);
-		map.put("companyId", companyId);
-		map.put("tenantId", tenantId);
 		map.put("deptId", deptId);
-		
-		List<JournalFormInfoVO> fList = ezJournalDAO.getDeptUseFormList(map);
-		
-		logger.debug("getDeptUseFormList ended");
-		return fList;
-	}
-
-	@Override
-	public List<JournalFormInfoVO> getBasicFormList(String companyId, String tenantId) throws Exception {
-		logger.debug("getBasicFormList started");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
+		logger.debug("deptId확인:" + deptId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		List<JournalFormInfoVO> basicList = ezJournalDAO.getBasicFormList(map);
+		List<JournalFormInfoVO> formList = ezJournalDAO.getFormList(map);
 		
-		logger.debug("getBasicFormList ended");
-		return basicList;
+		if ((deptId == null || deptId.equals("")) && !typeId.equals("basic")) {
+			List<JournalFormInfoVO> resultList = new ArrayList<JournalFormInfoVO>();
+			
+			for (int i = 0; i < formList.size(); i++) {
+				JournalFormInfoVO vo = formList.get(i);
+				map.put("formId", vo.getFormId());
+				
+				try {
+					List<DeptInfoVO> useDept = ezJournalDAO.getFormUseDeptList(map);
+	
+					if (useDept.size() < 1) {
+						useDept.clear();
+						DeptInfoVO deptVO = new DeptInfoVO();
+						deptVO.setDeptName("전체");
+						useDept.add(deptVO);
+					}
+					vo.setDepts(useDept);
+					resultList.add(vo);
+					
+				} catch (Exception e) { 
+					e.printStackTrace();
+				}
+				
+			}
+			return resultList;
+		}
+		logger.debug("getFormList ended");
+		return formList;
 	}
 
 	@Override
@@ -364,5 +340,77 @@ public class EzJournalServiceImpl implements EzJournalService{
 		ezJournalDAO.deleteAuthDept(map);
 		
 		logger.debug("deleteAuthor ended");
+	}
+
+	@Override
+	public void saveFavorite(JSONObject jsonParam) throws Exception {
+		logger.debug("saveFavorite started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", jsonParam.get("userId"));
+		map.put("tenantId", jsonParam.get("tenantId"));
+		map.put("favoriteName", jsonParam.get("favoriteName"));
+		
+		logger.debug("saveFavorite map" + map);
+		
+		String tenantId = jsonParam.get("tenantId").toString();
+		
+		logger.debug((String)jsonParam.get("receiverList"));
+		
+		List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
+		if (receivers != null) {
+			String favoriteId = ezJournalDAO.saveReceiverFavorite(map) + "";
+			for (int i = 0; i < receivers.size(); i++) {
+				try {
+					insertFavoriteUserList(favoriteId, receivers.get(i).get("userId").toString(), tenantId);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		logger.debug("saveFavorite ended");
+	}
+
+	private void insertFavoriteUserList(String favoriteId, String receiver, String tenantId) {
+		logger.debug("insertFavoriteUserList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("favoriteId", favoriteId);
+		map.put("userId", receiver);
+		map.put("tenantId", tenantId);
+		
+		ezJournalDAO.insertFavoriteUser(map);
+		
+		logger.debug("insertFavoriteUserList ended");
+	}
+
+	@Override
+	public List<ReceiverFavoriteVO> getFavoriteList(String userId, String tenantId) {
+		logger.debug("getFavoriteList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		
+		List<ReceiverFavoriteVO> favoriteList = ezJournalDAO.getFavoriteList(map);
+		logger.debug("즐겨찾기 : " + favoriteList);
+		
+		logger.debug("getFavoriteList ended");
+		return favoriteList;
+	}
+
+	@Override
+	public List<JournalAuthorVO> getFavoriteUserList(String favoriteId, String tenantId) { 
+		logger.debug("getFavoriteUserList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("favoriteId", favoriteId);
+		map.put("tenantId", tenantId);
+		
+		List<JournalAuthorVO> userList = ezJournalDAO.getFavoriteUserList(map);
+		logger.debug("유저리스트 : " + userList);
+		
+		logger.debug("getFavoriteUserList ended");
+		return userList;
 	}
 }

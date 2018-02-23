@@ -5,7 +5,7 @@
 	<c:choose>
 		<c:when test="${fn:length(formList) > 0}">
 			<c:forEach items="${formList}" var="fList" varStatus="status">
-				<tr formId="${fList.formId}" onclick="listClick(this)">
+				<tr formid="${fList.formId}" onclick="listClick(this)">
 					<td>${status.count }</td>
 					<td>${fList.formName }</td>
 					<c:choose>

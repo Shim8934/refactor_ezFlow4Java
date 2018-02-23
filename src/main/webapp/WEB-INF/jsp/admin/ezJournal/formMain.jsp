@@ -26,7 +26,7 @@
 	
 			// 양식리스트 중 하나가 선택되었을 때 스타일 지정 및 선택된 양식 아이디 저장
 			function listClick(val) {
-		    	selFormId = $(val).attr("formId");
+		    	selFormId = $(val).attr("formid");
 		    	
 				$(".formList tr").removeClass("active");
 				$(val).addClass("active");
@@ -45,7 +45,7 @@
 		    		async : false,
 		    		url : "/admin/ezJournal/getFormList.do",
 		    		data : { "companyId"  : companyId,
-    						"typeId"	: typeId},
+    						"typeId"	  : typeId},
 		    		success: function(result) {
 		    			$("#formList").html(result);
 		    			/*

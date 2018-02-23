@@ -9,6 +9,7 @@
 	<typeAlias alias="authorVO" type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO"/>
 	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO"/>
 	<typeAlias alias="deptInfoVO" type="egovframework.ezEKP.ezJournal.vo.DeptInfoVO"/>	
+	<typeAlias alias="favoriteVO" type="egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO"/>	
 
 	<resultMap class="deptViewVO" id="deptViewMap">
 		<result property="id" column="id"/>
@@ -72,6 +73,12 @@
 		<result property="deptName"		column="dept_name"/>			
 	</resultMap>
 	
+	<resultMap class="favoriteVO" id="favoriteVO">
+		<result property="favoriteId"		column="favorite_id"/>
+		<result property="favoriteName"		column="favorite_name"/>			
+		<result property="favoriteDate"		column="favorite_date"/>			
+	</resultMap>
+	
 	<!-- 양식함 리스트 세럭트 -->
 	<select id="selectJournalTypeList" resultMap="JournaltypeMap" parameterClass="Map">
 		select type_id, used from tbl_journal_form_type
@@ -110,24 +117,74 @@
 			tenant_id = #tenantId#
 	</update>
 	
-	<!-- 양식 리스트 세럭트 -->
+	<!-- 양식 리스트 셀렉트 -->
 	<select id="getFormList" parameterClass="map" resultMap="JournalFormInfoVO">
-		select 
-			form_id,
-			form_name,
-			form_info,
-			form_date,
-			form_writer,
-			form_status
-		from 
-			tbl_journal_form 
-		where
-			type_id = #typeId#
-		and
-			company_id = #companyId#
-		and
-			tenant_id = #tenantId#
-		order by form_id asc
+		<isEmpty property="deptId">
+			<isEqual property="typeId" compareValue="basic">
+				<![CDATA[
+					select distinct
+						a.form_id,
+						a.form_name,
+						a.form_info,
+						a.form_date,
+						a.form_writer,
+						a.form_status
+					from 
+						tbl_journal_form a join tbl_journal_form_type b on a.company_id = b.company_id
+					where 
+						b.used = 'use'
+					and
+						a.form_status = 'basic'			
+					and
+						a.tenant_id = #tenantId#	
+					and
+						a.company_id = #companyId#
+				]]>
+			</isEqual>
+			<isNotEqual property="typeId" compareValue="basic">
+				<![CDATA[
+					select
+						form_id,
+						form_name,
+						form_info,
+						form_date,
+						form_writer,
+						form_status
+					from 
+						tbl_journal_form 
+					where
+						type_id = #typeId#
+					and
+						company_id = #companyId#
+					and
+						tenant_id = #tenantId#
+					order by form_id asc
+				]]>
+			</isNotEqual>
+		</isEmpty>
+		<isNotEmpty property="deptId">
+			<![CDATA[
+				select
+					a.form_id,
+					a.form_name,
+					a.form_info,
+					a.form_date,
+					a.form_writer,
+					a.form_status
+				from 
+					tbl_journal_form a left join tbl_journal_form_use_dept b 
+				on 
+					(a.form_id = b.form_id)
+				where 
+					b.dept_id = #deptId# 
+				or 
+					b.form_id is null
+				and
+					a.type_id = #typeId#
+				and
+					a.tenant_id = #tenantId#
+			]]>
+		</isNotEmpty>
 	</select>
 	
 	<!-- 해당 양식을 사용할 수 있는 부서 리스트 -->
@@ -141,42 +198,6 @@
 			b.form_id = #formId#
 		and
 			b.tenant_id = #tenantId#
-	</select>
-	
-	<!-- 해당 부서에서 쓸 수 있는 양식리스트 -->
-	<select id="getDeptUseFormList" parameterClass="map" resultMap="BasicFormInfoVO">
-		select 
-			a.form_id,
-			a.form_name
-		from 
-			tbl_journal_form a left join tbl_journal_form_use_dept b 
-		on 
-			(a.form_id = b.form_id)
-		where 
-			b.dept_id = #deptId# 
-		or 
-			b.form_id is null
-		and
-			a.type_id = #typeId#
-		and
-			a.tenant_id = #tenantId#
-	</select>
-	
-	<!-- 취합시 기본양식 리스트 가져오는 쿼리 -->
-	<select id="getBasicFormList" parameterClass="map" resultMap="BasicFormInfoVO">
-		select distinct
-			a.form_id,
-			a.form_name
-		from 
-			tbl_journal_form a join tbl_journal_form_type b on a.company_id = b.company_id
-		where 
-			b.used = 'use'
-		and
-			a.form_status = 'basic'			
-		and
-			a.tenant_id = #tenantId#	
-		and
-			a.company_id = #companyId#
 	</select>
 	
 	<!-- 양식 등록 하기 -->
@@ -373,5 +394,59 @@
 	<delete id="deleteAuthDept" parameterClass="Map">
 		delete from jmocha.tbl_journal_auth where user_id=#userId# and tenant_id=#tenantId#
 	</delete>
+	
+	<!-- 수신자 즐겨찾기 추가 -->
+	<insert id="saveReceiverFavorite" parameterClass="map">
+		insert into tbl_journal_recv_favorite (
+			tenant_id,		user_id,		favorite_name,		favorite_date
+		)
+		values (
+			#tenantId#,		#userId#,		#favoriteName#,		now()
+		)
+		<selectKey keyProperty="id" resultClass="Integer">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+	
+	<!-- 즐겨찾기아이디에 수신자 추가 -->
+	<insert id="insertFavoriteUser" parameterClass="map">
+		insert into tbl_journal_recv_favorite_list (
+			favorite_id,	user_id,	tenant_id
+		)
+		values (
+			#favoriteId#,	#userId#,	#tenantId#
+		)
+	</insert>
+	
+	<!-- 즐겨찾기 리스트 가져오기 -->
+	<select id="getReceiverFavoriteList" parameterClass="map" resultMap="favoriteVO">
+		select 
+			favorite_id,
+			favorite_name,
+			favorite_date
+		from 
+			tbl_journal_recv_favorite
+		where
+			user_id = #userId#
+		and
+			tenant_id = #tenantId#
+		order by favorite_id asc
+	</select>
+	
+	<!-- 즐겨찾기 아이디에 해당되는 수신자리스트 가져오기 -->
+	<select id="getFavoriteUserList" parameterClass="map" resultMap="userMap">
+		select 
+			a.DISPLAYNAME as user_name,
+			a.CN as user_id,
+			a.TITLE as jikwi,
+			a.MAIL as mail,
+			a.DESCRIPTION as dept_name
+		from 
+			tbl_usermaster a join tbl_journal_recv_favorite_list b on a.CN = b.user_id
+		where 
+			b.favorite_id = #favoriteId#
+		and
+			a.tenant_id = #tenantId#
+	</select>
 	
 </sqlMap>

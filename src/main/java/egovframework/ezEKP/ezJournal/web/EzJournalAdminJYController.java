@@ -111,7 +111,7 @@ public class EzJournalAdminJYController {
 		String typeId = request.getParameter("typeId");
 		String companyId = request.getParameter("companyId");
 		int tenantId = userInfo.getTenantId();
-		
+	
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("companyId", companyId);
 		param.put("tenantId", tenantId);
@@ -123,8 +123,7 @@ public class EzJournalAdminJYController {
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
-			JSONObject data =  (JSONObject) result.get("data");
-			JSONArray formList = (JSONArray) data.get("fList");
+			JSONArray formList = (JSONArray) result.get("data");
 			model.addAttribute("formList", formList);
 			logger.debug("formList : " + formList);
 		}
@@ -132,7 +131,6 @@ public class EzJournalAdminJYController {
 		logger.debug("getFormList ended");
 		return "/admin/ezJournal/formList";
 	}
-	
 	
 	/**
 	 * 관리자 업무일지 양식등록 양식추가, 양식수정 화면호출함수 (폼프로세서)

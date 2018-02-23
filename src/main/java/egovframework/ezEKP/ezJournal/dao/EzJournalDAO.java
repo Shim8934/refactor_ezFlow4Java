@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
+import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzJournalDAO")
@@ -192,6 +193,40 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 */
 	public void deleteAuthDept(Map<String, Object> map){
 		delete("deleteAuthDept", map);
+	}
+
+	/**
+	 * 수신자 즐겨찾기 추가
+	 * @param map
+	 */
+	public int saveReceiverFavorite(Map<String, Object> map) {
+		return (int) insert("saveReceiverFavorite", map);
+	}
+
+	/**
+	 * 수신자 즐겨찾기에 수신자리스트 추가
+	 * @param map
+	 */
+	public void insertFavoriteUser(Map<String, Object> map) {
+		insert("insertFavoriteUser", map);
+	}
+
+	/**
+	 * 즐겨찾기 리스트 가져오기
+	 * @param map
+	 */
+	@SuppressWarnings("unchecked")
+	public List<ReceiverFavoriteVO> getFavoriteList(Map<String, Object> map) {
+		return (List<ReceiverFavoriteVO>) list("getReceiverFavoriteList", map);
+	}
+
+	/**
+	 * 즐겨찾기아이디에 해당하는 수신자 리스트 가져오기
+	 * @param map
+	 */
+	@SuppressWarnings("unchecked")
+	public List<JournalAuthorVO> getFavoriteUserList(Map<String, Object> map) {
+		return (List<JournalAuthorVO>) list("getFavoriteUserList", map);
 	}
 	
 }

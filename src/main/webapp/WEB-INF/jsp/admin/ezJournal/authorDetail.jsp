@@ -116,9 +116,10 @@
 	   		}
 	   		
 	   		//레이어 팝업 안에 초기화
-	   		function ShowInsertAuthDept(userId){
+	   		function showInsertAuthDept(elem){
 	   			journal_layer_popup("#insertAuthorDeptPopup");
-	   			updateUserId=userId;
+	   			userId = $(elem).attr("id");
+	   			updateUserId = userId;
 				$.ajax({
 	   				type:"post",
 	   				dataType:"html",

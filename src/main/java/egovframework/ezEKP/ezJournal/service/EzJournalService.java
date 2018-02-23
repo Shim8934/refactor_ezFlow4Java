@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
+import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 
 
 public interface EzJournalService {
@@ -31,7 +32,7 @@ public interface EzJournalService {
 	 * @param companyId
 	 * @param tenantId
 	 */
-	public void updateJournaltype(ArrayList<Map<String, String>> journaltypeList,String companyId,String tenantId);
+	public void updateJournaltype(ArrayList<Map<String, String>> journaltypeList,String companyId,String tenantId) throws Exception;
 	
 	/**
 	 * 양식함 초기 등록
@@ -39,37 +40,18 @@ public interface EzJournalService {
 	 * @param tenantId
 	 * @param journaltypeList
 	 */
-	public void insertJournaltype(String companyId, String tenantId, ArrayList<JournaltypeVO> journaltypeList);
+	public void insertJournaltype(String companyId, String tenantId, ArrayList<JournaltypeVO> journaltypeList) throws Exception;
 
 	/**
 	 * 양식 리스트 가져오기
 	 * @param typeId
-	 * @param companyId
-	 * @param tenantId
-	 * @return
-	 * @throws Exception
-	 */
-	public List<JournalFormInfoVO> getFormList(String typeId, String companyId, String tenantId) throws Exception;
-
-	/**
-	 * 부서에서 사용가능한 양식 리스트
-	 * @param typeId
-	 * @param companyId
-	 * @param tenantId
 	 * @param deptId
-	 * @return
-	 * @throws Exception
-	 */
-	public List<JournalFormInfoVO> getDeptUseFormList(String typeId, String companyId, String tenantId, String deptId) throws Exception;
-
-	/**
-	 * 기본양식 리스트
 	 * @param companyId
 	 * @param tenantId
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalFormInfoVO> getBasicFormList(String companyId, String tenantId) throws Exception;
+	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String tenantId) throws Exception;
 
 	/**
 	 * 양식 등록
@@ -132,7 +114,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, String tenantId);
+	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, String tenantId) throws Exception;
 
 	/**
 	 * 양식 수정
@@ -140,7 +122,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public void updateJournalForm(JSONObject jsonParam);
+	public void updateJournalForm(JSONObject jsonParam) throws Exception;
 
 	/**
 	 * 양식 삭제
@@ -150,7 +132,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public void deleteJournalForm(String formId, String companyId, String tenantId);
+	public void deleteJournalForm(String formId, String companyId, String tenantId) throws Exception;
 	
 	/**
 	 * 해당사원의 열람권한 리스트를 등록 해줌
@@ -166,5 +148,28 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public void deleteAuthor(String userId,String tenantId) throws Exception;
+
+	/**
+	 * 수신자 즐겨찾기 저장
+	 * @param jsonParam
+	 * @throws Exception
+	 */
+	public void saveFavorite(JSONObject jsonParam) throws Exception;
+
+	/**
+	 * 수신자 즐겨찾기 리스트 가져오기
+	 * @param userId
+	 * @param tenantId
+	 * @throws Exception
+	 */
+	public List<ReceiverFavoriteVO> getFavoriteList(String userId, String tenantId);
+
+	/**
+	 * 수신자 즐겨찾기 유저리스트 가져오기
+	 * @param favoriteId
+	 * @param tenantId
+	 * @throws Exception
+	 */
+	public List<JournalAuthorVO> getFavoriteUserList(String favoriteId, String tenantId);
 	
 }

@@ -20,7 +20,7 @@
 			<tbody>
 				<tr>
 			    	<th style="white-space:normal">
-			    		<span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">${keyword }-[<span style="color:#017BEC;">${userCount }명</span>]</span>
+			    		<span id="selectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">${keyword }-[<span style="color:#017BEC;">${userCount }명</span>]</span>
 			        </th>
 			    </tr>
 			</tbody>
@@ -34,7 +34,7 @@
 					<th style="font-weight: bold;"><spring:message code='main.t78'/></th>
 		        </tr>
 		        <c:forEach items="${userList}" var="user">
-			        <tr id="${user.userId }" onclick="setUserAuthorDept(this);" ondblclick="ShowInsertAuthDept('${user.userId }');" style="cursor: pointer;" class="hover">
+			        <tr id="${user.userId }" onclick="setUserAuthorDept(this);" ondblclick="showInsertAuthDept(this);" style="cursor: pointer;" class="hover">
 				        <td style="width: 130px;"><c:out value="${user.deptName }" /></td>
 						<td style="width: 90px;" ><c:out value="${user.userName }" /></td>
 						<td style="width: 90px;" ><c:out value="${user.jikwi }" /></td>
