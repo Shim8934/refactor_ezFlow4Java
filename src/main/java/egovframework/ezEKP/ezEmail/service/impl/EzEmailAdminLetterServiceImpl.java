@@ -33,7 +33,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 	public JSONArray selectAllLetterBox() throws Exception {
 		logger.debug("selectAllLeterBox started.");
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/getAllLetterBoxGeneral", "");
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/getAllLetterBoxGeneral", "");
 		logger.debug("strJson=" + strJson);
 		
 		JSONArray json = new JSONArray();
@@ -65,7 +65,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String letterBoxNoStr = "letterbox_no=" + URLEncoder.encode(letterbox_no, "UTF-8");
 		String inputParams = letterBoxNoStr;
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/getOneLetterBoxGeneral", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/getOneLetterBoxGeneral", inputParams);
 		logger.debug("strJson=" + strJson);
 		
 		JSONObject json = new JSONObject();
@@ -103,7 +103,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String inputParams = parentLetterBoxNoStr + "&" + displayNameStr + "&" + displayName2Str + "&" + companyIdStr;
 		logger.debug(inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/insertLetterBoxGeneral", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/insertLetterBoxGeneral", inputParams);
 		logger.debug("strJson=" + strJson);
 		
 		if (!strJson.equals("")){
@@ -130,7 +130,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String letterBoxNoStr = "letterbox_no=" + URLEncoder.encode(letterbox_no, "UTF-8");
 		String inputParams = letterBoxNoStr;
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/deleteLetterBoxGeneral", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/deleteLetterBoxGeneral", inputParams);
 		logger.debug("strJson=" + strJson);
 		
 		if (!strJson.equals("")){
@@ -167,7 +167,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String inputParams = letterBoxNoStr + "&" + parentLetterBoxNoStr + "&" + displayNameStr + "&" + displayName2Str + "&" + companyIdStr;
 		logger.debug(inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/setLetterBoxGeneral", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/setLetterBoxGeneral", inputParams);
 		logger.debug("strJson=" + strJson);
 		
 		if (!strJson.equals("")){
@@ -190,7 +190,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 	public JSONArray selectLetterOrder() throws Exception {
 		logger.debug("selectLetterOrder started.");
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/getLetterOrder", "");
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/getLetterOrder", "");
 		logger.debug("strJson=" + strJson);
 		
 		JSONArray json = new JSONArray();
@@ -224,7 +224,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String inputParams = searchStr;
 		logger.debug("inputParams="+inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/getLetterSearch", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/getLetterSearch", inputParams);
 		logger.debug("strJson=" + strJson);
 		
 		JSONArray json = new JSONArray();
@@ -262,7 +262,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String inputParams = displaynameStr + "&" + displayname2Str + "&" + letterBoxNoStr;
 		logger.debug("inputParams="+inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/setLetter", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/setLetter", inputParams);
 		logger.debug("strJson="+strJson);
 		
 		if (!strJson.equals("")){
@@ -293,7 +293,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String inputParams = displaynameStr + "&" + displayname2Str + "&" + letterNoStr;
 		logger.debug("inputParams="+inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/updateDisplayNameLetter", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/updateDisplayNameLetter", inputParams);
 		logger.debug("strJson="+strJson);
 		
 		if (!strJson.equals("")){
@@ -322,7 +322,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String inputParams = letterOrderStr + "&" + letterNoStr;
 		logger.debug("inputParams="+inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/updateOrderLetter", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/updateOrderLetter", inputParams);
 		logger.debug("strJson="+strJson);
 		
 		if (!strJson.equals("")){
@@ -351,7 +351,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String inputParams = letterBoxNoStr + "&" + letterNoStr;
 		logger.debug("inputParams="+inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/updateBoxLetter", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/updateBoxLetter", inputParams);
 		logger.debug("strJson="+strJson);
 		
 		if (!strJson.equals("")){
@@ -378,7 +378,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String inputParams = letterNoStr;
 		logger.debug("inputParams="+inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/deleteLetter", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/deleteLetter", inputParams);
 		logger.debug("strJson="+strJson);
 		
 		if (!strJson.equals("")){
@@ -405,7 +405,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String inputParams = letterBoxNoStr;
 		logger.debug("inputParams="+inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/selectAllLetter", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/selectAllLetter", inputParams);
 		logger.debug("strJson="+strJson);
 		
 		JSONArray test = new JSONArray();
@@ -438,7 +438,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String inputParams = letterNoStr;
 		logger.debug("inputParams="+inputParams);
 		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaLetter/selectDetailLetter", inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/selectDetailLetter", inputParams);
 		logger.debug("strJson="+strJson);
 		
 		JSONObject test = new JSONObject();
