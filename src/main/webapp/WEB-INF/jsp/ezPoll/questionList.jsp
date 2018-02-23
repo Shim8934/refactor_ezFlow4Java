@@ -188,6 +188,7 @@
 		    	var _params = getParameters();
 		    	var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + _params; 
 		    	window.location.href = szUrl;
+		    	goToPageByNum(1); //필터 라디오버튼을 누를 경우 1페이지로 선택하게 함.
 		    }
 		    
 		    function getParameters() {

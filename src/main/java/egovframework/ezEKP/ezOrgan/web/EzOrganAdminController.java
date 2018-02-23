@@ -1377,20 +1377,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					String content2 = mailSignatureVO.getContent2() == null ? "" : mailSignatureVO.getContent2();
 					String content3 = mailSignatureVO.getContent3() == null ? "" : mailSignatureVO.getContent3();
 					
-					content1 = content1.replace("${company}", vo.getCompany()).replace("${name}", vo.getDisplayName()).replace("${department}", vo.getDescription()).replace("${email}", vo.getMail())
-							.replace("${title}", vo.getTitle() == null ? "" : vo.getTitle()).replace("${position}", vo.getExtensionAttribute10() == null ? "" : vo.getExtensionAttribute10())
+					content1 = content1.replace("${company}", vo.getCompany1()).replace("${engCompany}", vo.getCompany2()).replace("${name}", vo.getDisplayName1()).replace("${engName}", vo.getDisplayName2())
+							.replace("${department}", vo.getDescription1()).replace("${engDepartment}", vo.getDescription2()).replace("${email}", vo.getMail())
+							.replace("${title}", vo.getTitle1() == null ? "" : vo.getTitle1()).replace("${engTitle}", vo.getTitle2() == null ? "" : vo.getTitle2())
+							.replace("${position}", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101()).replace("${engPosition}", vo.getExtensionAttribute102() == null ? "" : vo.getExtensionAttribute102())
 							.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
 							.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
 							.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
 				
-					content2 = content2.replace("${company}", vo.getCompany()).replace("${name}", vo.getDisplayName()).replace("${department}", vo.getDescription()).replace("${email}", vo.getMail())
-							.replace("${title}", vo.getTitle() == null ? "" : vo.getTitle()).replace("${position}", vo.getExtensionAttribute10() == null ? "" : vo.getExtensionAttribute10())
+					content2 = content2.replace("${company}", vo.getCompany1()).replace("${engCompany}", vo.getCompany2()).replace("${name}", vo.getDisplayName1()).replace("${engName}", vo.getDisplayName2())
+							.replace("${department}", vo.getDescription1()).replace("${engDepartment}", vo.getDescription2()).replace("${email}", vo.getMail())
+							.replace("${title}", vo.getTitle1() == null ? "" : vo.getTitle1()).replace("${engTitle}", vo.getTitle2() == null ? "" : vo.getTitle2())
+							.replace("${position}", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101()).replace("${engPosition}", vo.getExtensionAttribute102() == null ? "" : vo.getExtensionAttribute102())
 							.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
 							.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
 							.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
 				
-					content3 = content3.replace("${company}", vo.getCompany()).replace("${name}", vo.getDisplayName()).replace("${department}", vo.getDescription()).replace("${email}", vo.getMail())
-							.replace("${title}", vo.getTitle() == null ? "" : vo.getTitle()).replace("${position}", vo.getExtensionAttribute10() == null ? "" : vo.getExtensionAttribute10())
+					content3 = content3.replace("${company}", vo.getCompany1()).replace("${engCompany}", vo.getCompany2()).replace("${name}", vo.getDisplayName1()).replace("${engName}", vo.getDisplayName2())
+							.replace("${department}", vo.getDescription1()).replace("${engDepartment}", vo.getDescription2()).replace("${email}", vo.getMail())
+							.replace("${title}", vo.getTitle1() == null ? "" : vo.getTitle1()).replace("${engTitle}", vo.getTitle2() == null ? "" : vo.getTitle2())
+							.replace("${position}", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101()).replace("${engPosition}", vo.getExtensionAttribute102() == null ? "" : vo.getExtensionAttribute102())
 							.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
 							.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
 							.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());

@@ -376,20 +376,17 @@
 	        	}
 	        	/* 2018.02.22 김기하  #11624 */
     			
-	        	/* var ssDate = $("#Sdatepicker").datepicker().val();
+	        	var ssDate = $("#Sdatepicker").datepicker().val();
 	        	var eeDate = $("#Edatepicker").datepicker().val();
-	        	var ssTime = $("#Stimepicker").timepicker().val();
-	        	var eeTime = $("#Etimepicker").timepicker().val();
+	        	var ssTime = $("#Stimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+	        	var eeTime = $("#Etimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
 	        	
 	        	if(ssDate == "" || eeDate == "" || ssTime == "" || eeTime == ""){
 	        		$("#Sdatepicker").datepicker("setDate", SdateNow);
 	        		$("#Edatepicker").datepicker("setDate", EdateNow);
 	        		$("#Stimepicker").timepicker("setTime", SdateNow);
 	        		$("#Etimepicker").timepicker("setTime", EdateNow);
-	        		
-		        	$('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
-		        	$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
-		        	
+	        			        	
 		        	alert(strLang139);
 		        	return;
 	        	}
@@ -408,7 +405,7 @@
 	    	    }
 	        	return check;
 	    	}
- */
+
 	    	function window_onUnload() {
 	        	if (m_Arguments == undefined) {
 		            if (window.opener != null && g_fromStr == "schedule" && trim(s_userID) != "") {
