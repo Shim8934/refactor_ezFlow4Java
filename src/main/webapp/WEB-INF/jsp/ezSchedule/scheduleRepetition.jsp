@@ -40,6 +40,8 @@
 		    //2018.01.31 김기하 함수 사용을 위해 부모로부터 변수 가져옴
 		    var companyID = window.parent.companyID;
 		    var offSetMin = window.parent.offSetMin;
+		    var sTimeTemp = "";
+		    var eTimeTemp = "";
 		    window.onload = function()
 		    {   
 		        try {
@@ -136,6 +138,7 @@
 		    				}
 		    		}
 		    	}
+		    	allDayTime();
 		    }
 		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();
@@ -160,9 +163,11 @@
 		    function ok_click()
 		    {
 		    	var rtn = new Array();
+
+	    		
 		    	rtn["SDATE"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 		    	rtn["EDATE"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
-		    					
+		    
 		    	var repetition = "";
 		    	
 		    	var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
@@ -818,6 +823,9 @@
 		        $('#Etimepicker').timepicker();
 		        $('#Etimepicker').timepicker('setTime', EDate);
 		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+		    
+		        sTimeTemp = $('#Stimepicker').val();
+		        eTimeTemp = $('#Etimepicker').val();
 		    }
 		    		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
@@ -890,6 +898,22 @@
 		        
 		        return true;
 		    } */
+		    function allDayTime(){
+		    	/* 2018.02.23 김기하  */
+	    		if(document.getElementById("alldaycheck").checked == true){
+	    			sTimeTemp = $('#Stimepicker').val();
+		    		eTimeTemp = $('#Etimepicker').val();
+		    		$('#Stimepicker').timepicker("setTime", "00:00");
+		    		$('#Etimepicker').timepicker("setTime", "23:59");
+		    		$('#Stimepicker').css("display","none");
+		    		$('#Etimepicker').css("display","none");
+		    	}else{
+		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
+		    		$('#Etimepicker').timepicker("setTime", eTimeTemp);
+		    		$('#Stimepicker').css("display","");
+		    		$('#Etimepicker').css("display","");
+		    	}
+		    }
 		</script>
 	</head>
 	<body class="popup">
@@ -903,7 +927,7 @@
 		      			<div>
 		          			<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
 		        			<label for="btnT1" accesskye="T"></label>
-		        			<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" />
+		        			<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" onChange="allDayTime()"/>
 		        			<spring:message code='ezSchedule.t69' />
 		        		</div>
 		        	</td>
