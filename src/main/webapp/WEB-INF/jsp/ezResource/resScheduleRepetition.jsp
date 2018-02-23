@@ -147,6 +147,19 @@
 					}
 	    		}
 			}
+	    	
+	    	$(document).ready(function() {
+	    		// 반복이 100회 초과일때 알러트  
+	    		if ($('input:radio[name=optRangeEnd]').is(':checked')) {
+		    		$('#list_ReCount').blur(function() {
+		    			if ($('#list_ReCount').val() > 100 ) {
+		    				alert(strLangKMS1);
+		    				$('#list_ReCount').val("");
+		    			}
+		    		});
+		    	}		
+	    	});
+	    	
 		</script>
 	</head>
 	<body class="popup">

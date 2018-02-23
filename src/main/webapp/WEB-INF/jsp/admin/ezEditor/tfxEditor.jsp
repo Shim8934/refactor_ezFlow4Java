@@ -367,6 +367,8 @@
 	</head>
 	<body style="margin: 0px; padding: 0px; overflow: hidden;" id="xfe">
 	    <script type="text/javascript">
+	    	var defaultFontFamily = "${defaultFontFamily}";
+			var defaultFontSize = "${defaultFontSize}";
 	    	var userLang = "${userInfo.lang}";
 	    	var lang = "";
 	    	
@@ -400,8 +402,8 @@
 // 	            height : (document.documentElement.clientHeight) + "px",
 	            height : parseInt("${height}") - 8 + "px",
 	            initFontFamilyMenu : initFontFamilyMenu,
-	            initFontFamily : "<spring:message code='main.t246' />",
-	            initFontSize : "13px",
+	            initFontFamily : defaultFontFamily,
+	            initFontSize : defaultFontSize,
 	            skin : "classic",
 	            uploadFilePath : uploadFilePath,
 	            uploadPasteContentsPath : uploadPasteContentsPath,

@@ -199,7 +199,13 @@
 		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
 
 		        var NowDate2 = new Date();
-		        NowDate2.setMonth(NowDate2.getMonth() + 1);
+		        
+		        if (ExpireDays != -1) { //영구만료가 아닌 경우에는 지정된 만료일을 더한 날짜가 기본으로 새로 게시될때 만료일이 나와야함
+		        	NowDate2.setDate(NowDate2.getDate() + parseInt(ExpireDays));
+		        } else {
+		        	NowDate2.setMonth(NowDate2.getMonth() + 1);
+		        }
+		        
 		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Edatepicker").datepicker('setDate', NowDate2);
 		        

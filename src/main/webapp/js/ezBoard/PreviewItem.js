@@ -1,6 +1,6 @@
 ﻿function MailOptionView(obj) {
     if (obj.getAttribute("mode") == "off") {
-        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
         if(pAdminType == "y")
             document.getElementById("layer_Viewpopup").style.top = "50px";
         else
@@ -18,7 +18,17 @@ function MailOptionHidden() {
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
     document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
 }
-
+//레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
+function MailOptionHiddenOutside(e) {
+	var container = $('#layer_Viewpopup');
+	var btncontainer = $('#maillistoptiondiv');
+	var maillistoptionmode = $('#maillistoptiondiv').attr('mode');
+	if (maillistoptionmode == "on") {
+		if (container.has(e.target).length === 0 && !$(e.target).hasClass("maillistoptiondivbtn")) {
+			MailOptionHidden();
+		}
+	}
+}
 function PreviewRayerChange(pGubun) {
     pGubun = pGubun.trim();
     if (selobj != null && pGubun != "NONE" && selobj.childNodes.length != 0)
@@ -880,15 +890,26 @@ function Set_BoardConfig() {
 
 //레프트 메뉴카운트 업뎃용
 function leftCountRf() {
-	var pDiv, pId, pValue;
+	var pDiv, pId, pValue, pNodeID, pTreeID;
     var h2 = window.parent.frames["left"].document.getElementsByTagName("h2");
-
+    var span = window.parent.frames["left"].document.getElementsByTagName("span");
+    
+    // 2018-02-23 천성준 
+    /* 게시판  게시물 등록, 삭제, 복사, 이동시 왼쪽 게시판 폴더 볼드 해제되는 버그 수정 */
+    for (var j = 0; j < span.length; j++) {
+    	if (span[j].className == "node_selected") {
+    		pNodeID = span[j].id.replace("spn_","");
+    		pTreeID = pNodeID.split("_")[0];
+    	}
+    }
+    
     for (var i = 0; i < h2.length; i++) {
         if (h2[i].className == "on") {
             pId = h2[i].getElementsByTagName("div")[0].id;
             pId = pId.replace("TreeCtr", "TreeCtrl");
             pValue = h2[i].getElementsByTagName("div")[0].getAttribute("value");
             window.parent.frames["left"].TopBoard_onclick(pId, pValue);
+            window.parent.frames["left"].node_select(pNodeID, "", pTreeID, "");
             break;
         }
     }

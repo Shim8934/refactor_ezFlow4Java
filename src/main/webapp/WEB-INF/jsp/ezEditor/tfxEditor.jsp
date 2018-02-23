@@ -141,7 +141,9 @@
 	    	var userLang = "${userInfo.lang}";
 	    	var lang = "";
 	    	var useHTMLMode = "${useHTMLMode}";
-	    	
+	    	var defaultFontFamily = "${defaultFontFamily}";
+			var defaultFontSize = "${defaultFontSize}";
+			
 	    	switch (userLang) {
 		    	case "1": 
 		    		lang = "korean";
@@ -178,8 +180,8 @@
 	            width : "100%",
 	            height : (document.documentElement.clientHeight) + "px",
 	            initFontFamilyMenu : initFontFamilyMenu,
-	            initFontFamily : "<spring:message code='main.t246' />",
-	            initFontSize : "13px",
+	            initFontFamily : defaultFontFamily,
+	            initFontSize : defaultFontSize,
 	            skin : "classic",
 	            uploadFilePath : uploadFilePath,
 	            uploadPasteContentsPath : uploadPasteContentsPath

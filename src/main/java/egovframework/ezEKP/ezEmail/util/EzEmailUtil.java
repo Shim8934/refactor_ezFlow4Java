@@ -21,6 +21,7 @@ import java.nio.charset.CharsetDecoder;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPublicKeySpec;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -74,6 +75,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -84,6 +86,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import net.lingala.zip4j.core.ZipFile;
@@ -118,6 +121,8 @@ public class EzEmailUtil {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	
     
 	/**
 	 * returns a string containing size with a size unit(MB or KB or B) 
@@ -3034,5 +3039,42 @@ public class EzEmailUtil {
 		
 		return zipFileName;
 	}
-	
-}
+	//메일, 메일함 저장시 파일 이름 : 보낸사람이름_[보낸사람 메일주소]_[보낸 날짜]_메일제목.eml 이 되도록 만들어주는 메서드
+	public String saveFilenameForm(LoginVO loginInfo , Locale locale , Message message) throws Exception {
+		EzEmailUtil ezEmailUtil = new EzEmailUtil();
+		String subject = ezEmailUtil.getSubject(message);
+		
+		if (subject.trim().equals("")) {
+			subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
+		}
+		
+		String senderAddress = ezEmailUtil.getFromEmailAddressOfMessage(message);
+		
+		if  (senderAddress.trim().equals("")) {
+			senderAddress = egovMessageSource.getMessage("ezQuestion.t56", locale);
+		}
+		
+		String senderName = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+		
+		if (senderName.trim().equals("")) {
+			senderName = egovMessageSource.getMessage("ezQuestion.t56", locale);
+		}
+		
+		Date sentDate = message.getSentDate();
+		String dateStrExceptTime = "";
+		
+		if (sentDate == null) {
+			dateStrExceptTime = egovMessageSource.getMessage("ezQuestion.t56", locale);
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+			String sentDateStr = sdf.format(sentDate);
+			sentDateStr = commonUtil.getDateStringInUTC(sentDateStr,loginInfo.getOffset(), false);		
+			dateStrExceptTime = sentDateStr.substring(0, 10);
+		}
+		
+		subject = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f]", "");
+		String fileName = senderName + "_[" + senderAddress + "]_" + "[" + dateStrExceptTime + "]_" + subject ;
+		return fileName;
+	}
+	}

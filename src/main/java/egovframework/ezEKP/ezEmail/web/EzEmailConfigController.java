@@ -574,17 +574,29 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userInfo.getTenantId(), userInfo.getId());
 		
-		String defalutFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+		
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+			}
+		}
 		
 		if (mailSignatureVO != null) {
 			signState = mailSignatureVO.getUseFlag().trim();
-			signature1 = EgovStringUtil.isEmpty(mailSignatureVO.getContent1()) ? "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent1();
-			signature2 = EgovStringUtil.isEmpty(mailSignatureVO.getContent2()) ? "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent2();
-			signature3 = EgovStringUtil.isEmpty(mailSignatureVO.getContent3()) ? "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent3();
+			signature1 = EgovStringUtil.isEmpty(mailSignatureVO.getContent1()) ? "<div><p " + defaultFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent1();
+			signature2 = EgovStringUtil.isEmpty(mailSignatureVO.getContent2()) ? "<div><p " + defaultFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent2();
+			signature3 = EgovStringUtil.isEmpty(mailSignatureVO.getContent3()) ? "<div><p " + defaultFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent3();
 		} else {
-			signature1 = "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>";
-			signature2 = "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>";
-			signature3 = "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>";
+			signature1 = "<div><p " + defaultFontAndSize + ">&nbsp;</p></div>";
+			signature2 = "<div><p " + defaultFontAndSize + ">&nbsp;</p></div>";
+			signature3 = "<div><p " + defaultFontAndSize + ">&nbsp;</p></div>";
 		}
 
 		serverName = userInfo.getServerName();

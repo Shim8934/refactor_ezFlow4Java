@@ -37,7 +37,7 @@
 	    </script>
 	</head>
 	<body>    
-	    <table cellpadding="0" cellspacing="0" style="margin:5px 5px 5px 5px; border-collapse:collapse; font-family:Gulim, Verdana, Geneva, sans-serif;" >
+	    <table cellpadding="0" cellspacing="0" style="margin:5px 5px 5px 5px; border-collapse:collapse;" >
 	        <tr>
 	            <th style="white-space:nowrap; text-align:left; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t161' /></th>
 	            <td style="width:60%; font-size:12px; color:#393939; border:1px solid #b6b6b6; vertical-align:middle; padding:7px 7px 7px 7px;">
