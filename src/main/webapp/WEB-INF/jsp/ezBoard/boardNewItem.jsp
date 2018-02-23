@@ -116,6 +116,7 @@
 		    var SelBoard = false;
 		    var pcheckForm = "${checkForm}";
 		    var pUseBackGround = "${useBackGround}";
+		    var defaultFontAndSize  = "${defaultFontAndSize}";
 		    var FirstFlag = false;
 		    var rsa = new RSAKey();
 		    window.onload = function () {		    	
@@ -1343,7 +1344,7 @@
 		                        document.getElementById("txtTitle").focus();
 		                    }
 		                    
-		                    message.SetEditorContent("<p style='font-size:13px;font-family:Gulim'></p>");
+		                    message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
 		                }
 		            } else {
 		                if (pUrl == "") {
@@ -1553,7 +1554,7 @@
 		                else {
 		                    if (OpenWin == null)
 		                        document.getElementById("txtTitle").focus();
-		                    message.SetEditorContent("<p style='font-size:13px;font-family:Gulim'></p>");
+		                    message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
 		                }
 		
 		                if (pUseBackGround.toUpperCase() == "TRUE") {
@@ -1614,7 +1615,7 @@
 	                else {
 	                    if (OpenWin == null)
 	                        document.getElementById("txtTitle").focus();
-	                    message.SetEditorContent("<p style='font-size:13px;font-family:Gulim'></p>");
+	                    message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
 	                }
 	
 	                if (pUseBackGround.toUpperCase() == "TRUE") {

@@ -12,6 +12,11 @@
 		<link href="/css/login.css" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="<spring:message code='main.e15'/>" type="text/css">
 		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+		<style>
+			.blocker {
+				text-align: center;
+			} 
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>

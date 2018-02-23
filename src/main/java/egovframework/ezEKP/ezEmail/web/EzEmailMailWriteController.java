@@ -271,7 +271,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
 		String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", loginInfo.getTenantId());
-		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",useSecureMail=" + useSecureMail);
+		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+		
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (loginInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", loginInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+			}
+		}
+		
+		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",useSecureMail=" + useSecureMail + ",defaultFontAndSize=" + defaultFontAndSize);
 		
 		//메일 색상 관련 설정
 		String inMailColor = "#808080";
@@ -737,8 +751,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 			            StringBuilder sb = new StringBuilder();
 			            sb.append("<hr tabindex=\"-1\">");
-			            sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
-			            sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage).replaceAll("<a@a.com>", ""))));
+			            sb.append("<p " + defaultFontAndSize + ">");
+			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage).replaceAll("<a@a.com>", ""))));
 			            sb.append("</p>");
 			            
 			            //set received date
@@ -750,16 +764,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    			String[] offsetArr = offset.split("\\|");
 			    			sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
 			    		}
-			            sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
-			            sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
+			            sb.append("<p " + defaultFontAndSize + ">");
+			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
 			            sb.append("</p>");
 			            //to-do
-			            sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
-			            sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo.replaceAll("<a@a.com>", ""))));
+			            sb.append("<p " + defaultFontAndSize + ">");
+			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo.replaceAll("<a@a.com>", ""))));
 			            sb.append("</p>");
 			            
-			            sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
-			            sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc.replaceAll("<a@a.com>", ""))));
+			            sb.append("<p " + defaultFontAndSize + ">");
+			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc.replaceAll("<a@a.com>", ""))));
 			            sb.append("</p>");
 			            
 			            String orgMessageSubject = ezEmailUtil.getSubject(orgMessage);	
@@ -774,11 +788,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								
 								orgMessageSubject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
 							}
-						}			            
-						sb.append(String.format("<p style='margin-top: 0mm; margin-bottom: 0mm; font-size: 13px; font-family:%s';>", egovMessageSource.getMessage("main.t246", locale)));
-				        sb.append(String.format("<B>%s : </B> %s", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
+						}
+						
+						sb.append("<p " + defaultFontAndSize + ">");
+				        sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
 				        sb.append("</p>");
-				        sb.append("<BR><BR>");
+				        sb.append("<br/><br/>");
 				            
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
@@ -1035,6 +1050,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("fromAddressHtml", fromAddressHtml);
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		
 		response.setHeader("X-XSS-Protection", "0");
 		
