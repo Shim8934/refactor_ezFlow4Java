@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
 import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
@@ -56,6 +55,8 @@ public class EzEmailAdminLetterController {
 	
 	/**
 	 * 편지지 메인화면 호출 함수
+	 * @param String loginCookie, Model model
+	 * @return String
 	 */
 	@RequestMapping(value="/admin/ezEmail/letterlMain.do")
 	public String letterMainView(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
@@ -84,18 +85,215 @@ public class EzEmailAdminLetterController {
 		
 	}
 	
+	/**
+	 * 편지지함 화면 호출, 편지지함 목록 가져오기
+	 * @param String loginCookie, Model model
+	 * @return : JSONArray
+	 */
 	@RequestMapping(value="/admin/ezEmail/letterBoxManager.do")
-	public List<MailLetterBoxVO> letterBoxManagerView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		
+	public JSONArray letterBoxManagerView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("letterBoxManagerView started.");
 		
-		List<MailLetterBoxVO> list = new ArrayList<MailLetterBoxVO>();
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		JSONArray returnJsonArr = new JSONArray();
 		
-		return list;
+		try {
+			returnJsonArr = EzEmailAdminLetterService.selectAllLetterBox();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("letterBoxManagerView ended.");
+		
+		return returnJsonArr;
 		
 	}
-	// su==========================================
+	
+	/**
+	 * 편지지함 추가
+	 * @param String loginCookie, Model model
+	 * @return : "OK" or "ERROR"
+	 */
+	@RequestMapping(value="/admin/ezEmail/createLetterBox.do")
+	@ResponseBody
+	public String createLetterBox(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterBoxVO letterBox) throws Exception {
+		logger.debug("createLetterBox started.");
+		logger.debug("letter=" + letterBox);
+		
+		// 관리자 권한체크      
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		Integer parentNo = letterBox.getParentLetterBoxNo();
+		String parent_letterbox_no = Integer.toString(parentNo);
+		String displayname = letterBox.getDisplayname();
+		String displayname2 = letterBox.getDisplayname2();
+		String company_id = letterBox.getCompanyID();
+		String returnStr = "OK";
+		
+		try {
+			EzEmailAdminLetterService.insertLetterBox(parent_letterbox_no, displayname, displayname2, company_id);
+		} catch (Exception e) {
+			returnStr = "ERROR";
+		}
+
+		logger.debug("createLetterBox ended.");
+		
+		return returnStr;
+		
+	}
+	
+	/**
+	 * 편지지함 조회 (개별)
+	 * @param String loginCookie, MailLetterBoxVO letterBox
+	 * @return : JSONObject
+	 */
+	@RequestMapping(value="/admin/ezEmail/readLetterBox.do")
+	@ResponseBody
+	public JSONObject readLetterBox(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterBoxVO letterBox) throws Exception {
+		logger.debug("readLetterBox started.");
+		logger.debug("letterBox=" + letterBox);
+		
+		JSONObject json = null;
+		
+		Integer boxNo = letterBox.getLetterBoxNo();
+		String letterbox_no = Integer.toString(boxNo);
+		
+		try {
+			json = EzEmailAdminLetterService.selectOneLetterBox(letterbox_no);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("readLetterBox ended.");
+		if (json != null) {
+			return json;
+		}
+		
+		return null;
+		
+	}
+	
+	/**
+	 * 편지지함 수정
+	 * @param String loginCookie, Model model
+	 * @return : String loginCookie, MailLetterBoxVO letterBox
+	 */
+	@RequestMapping(value="/admin/ezEmail/updateLetterBox.do")
+	@ResponseBody
+	public String updateLetterBox(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterBoxVO letterBox) throws Exception {
+		logger.debug("updateLetterBox started.");
+		logger.debug("letter=" + letterBox);
+		
+		// 관리자 권한체크      
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		Integer boxNo = letterBox.getLetterBoxNo();
+		String letterbox_no = Integer.toString(boxNo);
+		Integer parentNo = letterBox.getParentLetterBoxNo();
+		String parent_letterbox_no = Integer.toString(parentNo);
+		String displayname = letterBox.getDisplayname();
+		String displayname2 = letterBox.getDisplayname2();
+		String company_id = letterBox.getCompanyID();
+		String returnStr = "OK";
+		
+		try {
+			EzEmailAdminLetterService.updateLetterBox(letterbox_no, parent_letterbox_no, displayname, displayname2, company_id);
+		} catch (Exception e) {
+			returnStr = "ERROR";
+		}
+
+		logger.debug("updateLetterBox ended.");
+		return returnStr;
+	}
+	
+	/**
+	 * 편지지함 삭제
+	 * @param String loginCookie, Model model
+	 * @return : int letterBoxNo
+	 */
+	@RequestMapping(value="/admin/ezEmail/deleteLetterBox.do")
+	@ResponseBody
+	public String deleteLetterBox(@CookieValue("loginCookie") String loginCookie, int letterBoxNo) throws Exception {
+		logger.debug("deleteLetterBox started.");
+		logger.debug("letterBoxNo=" + letterBoxNo);
+		
+		// 관리자 권한체크      
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String letterbox_no = Integer.toString(letterBoxNo);
+		String returnStr = "OK";
+		
+		try {
+			EzEmailAdminLetterService.deleteLetterBox(letterbox_no);
+		} catch (Exception e) {
+			returnStr = "ERROR";
+		}
+
+		logger.debug("deleteLetterBox ended.");
+		return returnStr;
+	}
+	
+	/**
+	 * 편지지 순서 조회 (재은)
+	 * @param String loginCookie, HttpServletRequest request
+	 * @return : int letterBoxNo
+	 */
+	@RequestMapping(value="/admin/ezEmail/orderLetter.do")
+	@ResponseBody
+	public JSONArray orderLetter(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("orderLetter started.");
+		
+		JSONArray json = null;
+		
+		try {
+			json = EzEmailAdminLetterService.selectLetterOrder();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("orderLetter ended.");
+		if (json != null) {
+			return json;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 편지지 검색 (재은)
+	 * @param String loginCookie, String searchStr
+	 * @return : int letterBoxNo
+	 */
+	@RequestMapping(value="/admin/ezEmail/readLetterSearch.do")
+	@ResponseBody
+	public JSONArray readLetterSearch(@CookieValue("loginCookie") String loginCookie, String search) throws Exception {
+		logger.debug("readLetterSearch started.");
+		logger.debug("search="+search);
+		
+		JSONArray json = null;
+		
+		try {
+			json = EzEmailAdminLetterService.searchLetter(search);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("readLetterSearch ended.");
+		if (json != null) {
+			return json;
+		}
+		
+		return null;
+	}
+	
 	
 	/**
 	 * 편지지 작성 (수아)
