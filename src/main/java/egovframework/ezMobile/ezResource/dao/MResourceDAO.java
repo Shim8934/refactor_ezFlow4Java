@@ -94,6 +94,11 @@ public class MResourceDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public void delResSchRepet(Map<String, Object> map){
+		delete("MResourceDAO.delResSchRemRepet", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public void delResSch_I(Map<String, Object> map){
 		delete("MResourceDAO.delResSch_I", map);
 	}

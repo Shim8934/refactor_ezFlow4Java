@@ -387,7 +387,7 @@
 			<thead style="">
 				<tr>
 					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
-					<th width="15%;"><spring:message code="ezStatistics.t1068"></spring:message></th>
+					<th width="15%;"><spring:message code="ezEmail.lsd04"></spring:message></th>
 					<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
 					<th width="15%;"><spring:message code="ezEmail.lsd02"></spring:message></th>
 					<th width="15%;"><spring:message code="ezEmail.lsd03"></spring:message></th>

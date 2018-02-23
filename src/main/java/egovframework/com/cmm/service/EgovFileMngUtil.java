@@ -422,8 +422,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 //	    	    response.setBufferSize(fSize);
 	    	    response.setBufferSize(BUFF_SIZE);	    	    
 				response.setContentType(mimetype);
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + orgFileName + "\"");
-				LOGGER.debug("orgFileName = " + orgFileName);
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + orgFileName + "\"");				
 //				response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(orgFileName, "UTF-8").replaceAll("\\+","\\ ") + ";");
 				response.setContentLength(fSize);
 //				response.setHeader("Content-Transfer-Encoding","binary");

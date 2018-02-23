@@ -2445,16 +2445,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 			
-			List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID, tenantID);
-			
-			if (boardTreeList.size() > 0) {
-				for (int r = 0; r < boardTreeList.size(); r++) {
-					boardID = boardTreeList.get(r).getBoardId().split(",")[0];
-					strForbiddenBoardIDList += boardID.trim();
+			if (pMode != 0) {
+				List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID, tenantID);
+				
+				if (boardTreeList.size() > 0) {
+					for (int r = 0; r < boardTreeList.size(); r++) {
+						boardID = boardTreeList.get(r).getBoardId().split(",")[0];
+						strForbiddenBoardIDList += boardID.trim();
+					}
 				}
 			}
 		}
-		
 		StringBuilder result = new StringBuilder();
 		
 		if (pSubFlag == 1) {

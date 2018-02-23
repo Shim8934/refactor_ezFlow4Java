@@ -618,11 +618,14 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String endDate = request.getParameter("endDate");
 			String dateType = request.getParameter("dateType");
 			
-			if(dateType.equals("3")) {
+/*			if(dateType.equals("3")) {
 				mScheduleService.insertScheduleRepeDel(scheduleId, startDate, info.getTenantId());
 			} else {
 				mScheduleService.deleteSchedule(scheduleId, info.getTenantId());
-			}
+			}*/
+			
+			//모바일 반복일정삭제 기능변경(단일삭제 -> 전체삭제)2018.02.22
+			mScheduleService.deleteSchedule(scheduleId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

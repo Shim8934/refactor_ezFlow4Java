@@ -1701,20 +1701,18 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return distributionList;
 	}
-
+	
 	@Override
-	public boolean setInitMailSignature(int tenantId, String userId) throws Exception {
-		logger.debug("setInitMailSignature started.");
-		logger.debug("tenantId=" + tenantId + ",userId=" + userId);
+	public MailSignatureVO getInitMailSignature(int tenantId) throws Exception {
+		logger.debug("getInitMailSignature started. tenantId=" + tenantId);
 		
-		boolean returnValue = false;
+		MailSignatureVO mailSignatureVO = null;
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
-		String userAccount = userId + "@" + domain;
 		
-		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
+		String inputParams = "userId=" + URLEncoder.encode(domain, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 		
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setInitMailSignature";			
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailSignature";
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 		
 		if (response != null) {
@@ -1722,14 +1720,23 @@ public class EzEmailServiceImpl implements EzEmailService {
 			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
 			
 			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
-				returnValue = true;
+				JSONObject obj = (JSONObject)responseObj.get("result");
+	        	
+	        	if (obj != null) {
+	        		mailSignatureVO = new MailSignatureVO();
+	        		
+	        		mailSignatureVO.setUseFlag((String)obj.get("useFlag"));
+	        		mailSignatureVO.setContent1((String)obj.get("content1"));
+	        		mailSignatureVO.setContent2((String)obj.get("content2"));
+	        		mailSignatureVO.setContent3((String)obj.get("content3"));
+	        	}
 			}
 		}
 		
-		logger.debug("setInitMailSignature ended. returnValue=" + returnValue);
-		return returnValue;
+		logger.debug("getInitMailSignature ended.");
+		return mailSignatureVO;
 	}
-
+	
 	@Override
 	public boolean setInitInboxRule(int tenantId, String userId) throws Exception {
 		logger.debug("setInitInboxRule started.");

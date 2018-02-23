@@ -1109,7 +1109,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			strAttach.append("<ROOT><NODES>");
 			
 			for (CircularAttachVO attach : attachList) {				
-				strAttach.append("<DATA><![CDATA[" + commonUtil.cleanPropertyValue(attach.getFilePath().split("/")[2]) + "]]></DATA>");
+				strAttach.append("<DATA><![CDATA[" + attach.getFilePath().split("/")[2] + "]]></DATA>");
 				strAttach.append("<DATA2><![CDATA[" + attach.getFileName() + "]]></DATA2>");
 				strAttach.append("<DATA3><![CDATA[" + attach.getFileSize() + "]]></DATA3>");
 				strAttach.append("<DATA4><![CDATA[]]></DATA4>");

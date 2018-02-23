@@ -2179,7 +2179,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
     }
 
     if (isBigFile) {
-        var TempText = "<div id='_BigAttachListHtml' style='width:100%;'><table width='100%' border='0' cellspacing='0' cellpadding='0' style='font-size:x-small;font-family:dotum,arial,verdana;margin-bottom:10px;'>" +
+        var TempText = "<div id='_BigAttachListHtml' style='width:100%;'><table width='100%' border='0' cellspacing='0' cellpadding='0' style='font-size:x-small;margin-bottom:10px;'>" +
                         "<tr>" +
                         "<td colspan='2' style='color:#333;font-weight:bold; padding:0px; margin:0px 0px 1px 0px; height:20px;border-bottom:1px solid #dadada;font-size:12px;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_addfile.gif' width='7' height='12' style='margin-right:5px;'>" + strLang245 + "</td>" +
                         "</tr>";
@@ -2307,7 +2307,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         }
     } catch (e) { }
 
-    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div style='font-size:13px;font-family:" + defaultFont + "'>" + tempDiv.innerHTML + "</div>";
+    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div " + defaultFontAndSize + ">" + tempDiv.innerHTML + "</div>";
     
     try {
         // 본문에 <![CDATA[]]> 부분이 있으면 XML 파싱 에러가 발생하여 제거 코드 추가함.
