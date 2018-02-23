@@ -163,6 +163,13 @@
 		    
 		    $(document).ready(function() {
 		    	var clickOutside;
+		    	var leftDocument;
+		    	
+		    	if ($(window.parent.parent.frames['left'].document) == undefined) {
+		    		leftDocument = $(window.parent.parent.parent.frames['left'].document);
+		    	} else {
+		    		leftDocument = $(window.parent.parent.frames['left'].document);
+		    	}
 		    	
 		    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
 		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
@@ -174,7 +181,7 @@
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
-		    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
+		    	leftDocument.mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
