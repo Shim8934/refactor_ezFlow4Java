@@ -145,20 +145,19 @@
 		                    }
 		                }
 		            } else {
-		                Editor_Complete();
+						setTimeout(function() {
+							Editor_Complete();
+						}, 200);
 		            }
 		        }
 		        
-// 		        onloadflag = true;
 		    });
-// 			}
 		
 		    function Editor_Complete() {
 	            if (formURL != "") {
 	                if (useEditor == "HWP") {
-// 		                    document.getElementById("btn_OpinionSave").style.display = "";
 	                    message.HWP_LoadFile(realPath + formURL);
-		                    
+	                    
 	                    if (message.HWP_GetDocumentElement() != "") {
 	                        var connXML= message.HWP_GetDocumentElement().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
 	                        
@@ -917,7 +916,7 @@
                         </td>
                         <td id="rootTD" name="rootTD" style="width:100%; vertical-align:top; text-align:left; padding-left:10px; display:none"></td>
                     </tr>
-                </table>  
+                </table>
 			</div>
 		</div>
         <div id="ApvForm_content3" style="width:100%;height:90%;display:none; padding-top:10px;">
@@ -937,9 +936,9 @@
                     <th>
                         <a class="imgbtn" id="btn_OpinionAdd"><span onclick="btn_FormConnInfo_onclick()"><spring:message code='ezApprovalG.t268'/></span></a><br>
                         
-<%--                         <c:if test="${useEditor == 'HWP' }"> --%>
-<%--                         	<a class="imgbtn" id="btn_OpinionSave" style="display:none"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApprovalG.t1767'/></span></a><br> --%>
-<%--                         </c:if> --%>
+                        <c:if test="${useEditor == 'HWP' }">
+                       		<a class="imgbtn" id="btn_OpinionSave"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApprovalG.t1767'/></span></a><br>
+                        </c:if>
                         
                     </th>
                 </tr>
