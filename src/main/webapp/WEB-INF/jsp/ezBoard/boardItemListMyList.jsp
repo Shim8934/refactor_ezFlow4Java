@@ -125,16 +125,35 @@
 	        };
 	        
 		    $(document).ready(function() {
-		    	$($(window.parent.parent.parent.frames['mainFrame'].document)).mouseup(function (e) {
+		    	var clickOutside;
+		    	
+		    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
+		    	} else {
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
+		    	}	    	
+		    	
+		    	clickOutside.mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
-		    	$(window.parent.parent.parent.frames['topFrame'].document).mouseup(function (e) {
+		    	
+		    	$($(window.parent.parent.frames['left'].document)).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
+		    	
 		    	$(parent.document).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
+		    	
 		    	$(document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.frames['ifrmPreViewH']).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    });
