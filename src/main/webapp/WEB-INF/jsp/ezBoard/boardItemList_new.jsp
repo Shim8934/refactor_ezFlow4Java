@@ -86,6 +86,21 @@
 		        document.getElementById("divList").style.height = height + "px";
 		        getBoardList();
 		    }
+		    
+		    $(document).ready(function() {
+		    	$($(window.parent.parent.parent.frames['mainFrame'].document)).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	$(window.parent.parent.parent.frames['topFrame'].document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	$(parent.document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	$(document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    });
 		
 		    function getBoardList() {
 		        starttime = new Date().getTime();
@@ -606,7 +621,12 @@
 				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 			    <li><span onClick="refresh_onclick()"><spring:message code="ezBoard.t205"/></span></li>
 			    <li><span onClick="ReservationItem_onclick()"><spring:message code="ezBoard.t276"/></span></li>  
-			    <li id="right"><spring:message code="ezBoard.t10020"/>&nbsp;<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>      
+			    <li id="right">
+	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
+	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
+					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
+					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" class="maillistoptiondivbtn" onclick="MailOptionView(this);" />
+				</li>      
 			  </ul>
 			</div>
 			<script type="text/javascript">
@@ -618,7 +638,7 @@
 		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t00010'/>" + " " + "${boardName}" + "<span id='mailBoxInfo'></span>";
 		    </script>
 		</c:if>
-		    <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
+		    <div id="layer_Viewpopup" style="width: 150px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
 		        <div class="popupwrap1">
 		            <div class="popupwrap2">
 		                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
@@ -638,13 +658,6 @@
 		                                <option value="50">50</option>
 		                            </select>    
 		                        </td>
-		                    </tr>
-		                    <tr>
-		                        <th><spring:message code="ezBoard.t431"/></th>
-		                        <td>
-		                            <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
-		                            <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
-		                            <img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')"></td>
 		                    </tr>
 		                </table>
 		            </div>
