@@ -160,9 +160,11 @@
 		    function ok_click()
 		    {
 		    	var rtn = new Array();
+
+	    		
 		    	rtn["SDATE"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 		    	rtn["EDATE"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
-		    					
+		    
 		    	var repetition = "";
 		    	
 		    	var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
