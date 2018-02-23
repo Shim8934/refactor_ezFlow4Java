@@ -114,7 +114,7 @@
 	    var pDocID = "${docID}";
 	    var uploadCommonPath = "${uploadCommonPath}";
 	    var uploadCommunityPath = "${uploadCommunityPath}";
-	    var defaultFont = "<spring:message code='main.t246' />";
+	    var defaultFontAndSize = "${defaultFontAndSize}";
 	    var isCrossBrowser = "${isCrossBrowser}";
 	    var useSecureMail = "${useSecureMail}";
 	    var isSecureMail = "${isSecureMail}";
@@ -367,8 +367,6 @@
 	        return "<span><P>&nbsp;</P><P>&nbsp;</P>" + BodyHtml + "</span>"
 	    }
 	    function Rebody() {
-	        var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
-	        
 	    	if (gg_cmd == "RESEND" && document.getElementById("bodyValue").innerHTML != "") { //재전송 시
 	    		document.getElementById("bodyValue").innerHTML = document.getElementById("bodyValue").innerHTML.replace("id=\"MailSignSent\"", "id=\"MailSign\"");
 	    		var indexSignValue = document.getElementById("bodyValue").innerHTML.indexOf("id=\"MailSign\"");
@@ -848,7 +846,6 @@
 	    	} else {
 	    		var texts = document.getElementById("plainTextArea").value.split("\n");
 	            var textData = "";
-	            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
 	            for (var i=0; i<texts.length; i++) {
 	            	if (i == 0 && $.trim(texts[i]) == ""  && (pUse_Editor == "NAMO" || pUse_Editor == "CK")) {
 	            		textData = "<br/>";

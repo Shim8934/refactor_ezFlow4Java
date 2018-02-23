@@ -96,6 +96,8 @@
 		    var forceCallBackYN = "${forceCallBackYN}";
 		    var SubQuery = "${SubQuery}";
 		    var condition = new Array();
+		    var nowDate = "${nowDateUTC}";
+		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -1290,8 +1292,15 @@
 		        }
 		        else
 		            pDocID = tr[0].getAttribute("DATA1");
-		
-		        var url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
+				
+		        //직인의뢰함에서 타입을 END로 주기위해
+		        var url;
+		        if (pListTypeValue == 7) {
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END";	
+		        } else {
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
+		        }
+		        
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=600px,height=450px";
 		        feature = feature + GetOpenPosition(600, 450);
 		        window.open(url, "", feature);

@@ -312,10 +312,10 @@
 		  </tr>
 		  <tr id="HisLine"> 
 		    <td>
-		    	<div class="listview" style="overflow-x:hidden;">
+		    	<div class="listview" style="overflow-x:hidden;width:718px;">
 		      		<div id=divAprLine style="border:0; width:716px; Height:165px;margin:1px 1px 1px 1px;"></div>
 		      	</div>
-			  	<div class="listview" style="margin-top:5px;overflow-y:auto;overflow-x:hidden">
+			  	<div class="listview" style="margin-top:5px;overflow-y:auto;overflow-x:hidden;width:718px;">
 			  		<div id=divAprLineInfo style="border:0; width:716px; Height:165px;margin:1px 1px 1px 1px;"></div>
 			  	</div>
 			</td>

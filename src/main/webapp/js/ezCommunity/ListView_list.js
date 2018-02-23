@@ -585,9 +585,9 @@ function ListView() {
                 oHeaders = _dataSource.getElementsByTagName("HEADER");
                 colCount = oHeaders.length;
             }
-        }
-       if(_rowCount == 0)
-        {
+        }*/
+        
+       if (_rowCount == 0) {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
             oTbody.appendChild(objTr);
@@ -599,7 +599,7 @@ function ListView() {
             objTr.appendChild(objTd);
 
              return oTbody;
-        }*/
+        }
         
         for (var i = 0; i < oRows.length; i++) {
             var objTr = document.createElement("TR");

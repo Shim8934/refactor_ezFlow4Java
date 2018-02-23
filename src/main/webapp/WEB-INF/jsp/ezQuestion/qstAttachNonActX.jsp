@@ -225,7 +225,11 @@
 			                dialogArguments["m_DelAttach"] = pDelAttachList;
 			                dialogArguments["m_AttachInfo"] = GetInfoList_IE();
 			            }
+			            
+			            window.close();
 			        } else {
+			        	alert("<spring:message code='ezQuestion.lhj2' />");
+			        	
 			            if (CrossYN()) {
 			                window.opener.AttachComplete_NonIE(pAttachType, pAttachMode, "", pAttachModeIndex);
 			            } else {
@@ -235,7 +239,8 @@
 			            }
 			        }
 			        
-			        window.close();
+			        //첨부파일 추가하지 않고 저장버튼 클릭시  alert만 띄우고 창은 닫지 않음
+			        /* window.close(); */
 			    }
 			    
 			    function GetInfoList_IE() {

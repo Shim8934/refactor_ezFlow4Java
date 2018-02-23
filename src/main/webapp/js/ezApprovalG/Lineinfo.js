@@ -860,16 +860,16 @@ function APRLINESNDownFunction() {
     			var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
     			
     			if(p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
-    				OpenAlertUI(strLangS576);    
+    				OpenAlertUI(strLangS576);
     				return;
     			} 
     			
-    			if(pSelectedRow[0].getAttribute("DATA5") == "N") {
+    			if(pSelectedRow[0].getAttribute("DATA5") == "N") { 
 //    				if(pSelectedRow[0].cells[4].childNodes[0].options[2].selected == true || pSelectedRow[0].cells[4].childNodes[0].options[3].selected == true) {
 //    					OpenAlertUI(strLang552);    
 //    					return;
 //    				}
-    				
+//    				
 //    				if(p_NextSelRow.getAttribute("DATA5") == "N") {
 //    					if(p_NextSelRow.cells[4].childNodes[0].options[2].selected == true || p_NextSelRow.cells[4].childNodes[0].options[3].selected == true) {
 //    						OpenAlertUI(strLang551);    
@@ -878,10 +878,10 @@ function APRLINESNDownFunction() {
 //    				}
     			} else {
     				if(p_NextSelRow.getAttribute("DATA5") == "N") {
-    					if(p_NextSelRow.cells[4].childNodes[0].options[2].selected == true || p_NextSelRow.cells[4].childNodes[0].options[3].selected == true) {
-    						OpenAlertUI(strLangS576);    
-    						return;
-    					}
+//    					if(p_NextSelRow.cells[4].childNodes[0].options[2].selected == true || p_NextSelRow.cells[4].childNodes[0].options[3].selected == true) {
+//    						OpenAlertUI(strLangS576); 
+//    						return;
+//    					}
     				}
     			}
     			
@@ -2729,10 +2729,10 @@ function checkdisabled()
 	            else {
 	                var curaprsn = false;;
 	                for (var y = 0; y < i; y++) {
-	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "A04002")
+	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "002") // aprType이 진행인 경우
 	                        curaprsn = true;
 
-	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "A04003" || curaprsn)
+	                    if (GetAttribute(pAprLineRow[y], "DATA12") == "003" || curaprsn) // aprType이 승인인 경우
 	                        pAprLineRow[y].cells[4].childNodes[0].disabled = true;
 	                    else
 	                        pAprLineRow[y].cells[4].childNodes[0].disabled = false;

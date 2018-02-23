@@ -108,6 +108,7 @@
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onload = function () {
+                
 		    	// 웹소켓 지원을 안할 경우 '편지함 내려받기/가져오기' 버튼 숨김
 		        if ('WebSocket' in window) {
 	           	} else if ('MozWebSocket' in window) {
@@ -263,7 +264,7 @@
 		    
 		    function setMailListRefreshTimer() { 
 		        if (pSaveInterval != 0) {
-		            refreshIntervalTimerId = setInterval(function() {
+		        	refreshIntervalTimerId = setInterval(function() {
 		            	/* 수아 재은 수정 (메일 검색시 자동 새로고침 X) */
 		            	if (!searchMode) {
 			                MailListRefresh();
@@ -283,7 +284,8 @@
 		    
 		    function onVisibilityChange() {
                 var remainingTime = nextMailListRefreshTime - getCurrentTime();
-                
+              
+                console.log(remainingTime/1000);
 		        // 메일 목록 페이지 상태가 보임으로 변경될 때의 처리
  		        if (!document.hidden) { 		            
  		           console.log('remainingTime=' + remainingTime + ',showing...');
@@ -292,7 +294,10 @@
  		            if (remainingTime <= 0) {
  		                console.log('refresh time already passed. Refresing...')
  		                
- 		                MailListRefresh();
+ 		                // 수정 재은 
+ 		                if (!searchMode) {
+ 		                	MailListRefresh();
+ 		                }
  		                
                         // 다음 자동 갱신 시간을 기록한다.
                         recordNextMailListRefreshTime();
@@ -303,7 +308,11 @@
  		               console.log('refresh time not yet passed. Registering Timer...')
  		               
  		               refreshTimeoutTimerId = setTimeout(function() {
- 		                   MailListRefresh();
+ 		            	   
+ 		            	   // 수정 재은
+ 		            	   if (!searchMode) {
+ 		            		   MailListRefresh();
+ 		            	   }
  		                   
  	                       // 다음 자동 갱신 시간을 기록한다.
  	                       recordNextMailListRefreshTime();
@@ -314,7 +323,7 @@
  		            }
  	            // 메일 목록 페이지 상태가 숨김으로 변경될 때의 처리     
 		        } else {
-	                console.log('remainingTime=' + remainingTime + ',hiding...');
+		        	console.log('remainingTime=' + remainingTime + ',hiding...');
 		            
 		            // 목록 갱신 타이머를 제거한다.
 		            if (refreshIntervalTimerId != 0) {
@@ -640,7 +649,7 @@
 				}
 				
 				if (result == "ERROR") { // 에러발생
-					alert("<spring:message code='ezEmail.lhm33' />");
+					alert("<spring:message code='ezEmail.lhm35' />");
 					document.importMailboxform.file1.value = "";
 					MailListRefresh();
 				}
@@ -726,7 +735,7 @@
 	        	HiddenMailProgressNew();
 	        	webSocket.close();
 	        	location.reload();
-			}			
+			}
 			
 		</script>	
 	</head>
@@ -762,7 +771,7 @@
           <li id="deleteone"><span onClick="deleteWork(true)"><spring:message code="ezEmail.t156" /></span></li>
           <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
           <li onClick="MailListRefresh()"><span class="img_Newbtn"><spring:message code="ezEmail.t515" /></span></li>
-		  <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
+          <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
           <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
 		  <c:if test="${ useMailBoxBackUp eq 'YES' }">
 		 	<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>

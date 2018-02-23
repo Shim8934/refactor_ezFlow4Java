@@ -575,7 +575,12 @@
 		
 		function fun_Cancel() {
     		var compTemp = "";
-    		compTemp = confirm("<spring:message code='ezPoll.t209' />");
+    		
+    		if (mode == 'modify'){
+    			compTemp = confirm("<spring:message code='ezPoll.t255' />");
+    		}else{
+    			compTemp = confirm("<spring:message code='ezPoll.t254' />");
+    		}
     		
     		if (compTemp == true) {        		
         		menuQst_List();
@@ -904,7 +909,7 @@
 					
 					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 						<input id="anonymousVote" type="checkbox">
-						<span><spring:message code="ezPoll.t158"/></span>
+						<span><spring:message code="ezPoll.t253"/></span>
 						
 						<input id="endDate" type="checkbox">
 						<span><spring:message code="ezPoll.t159"/></span>

@@ -810,6 +810,21 @@
 		]]>
 	</delete>
 	
+		<delete id="MResourceDAO.delResSchRemRepet" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_RS_SCHEDULEREPETITION
+            WHERE  
+            	COMPANYID = #v_PCOMPANYID#
+            AND
+            	OWNERID = #v_POWNERID#
+            AND
+            	NUM = #v_PNUM#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
 	<insert id="MResourceDAO.delResSch_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_RS_SCHEDULE ( 

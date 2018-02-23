@@ -340,7 +340,6 @@ function event_ItemPreviewRead_photo() {
             var Title = SelectSingleNodeValueNew(xmldom, "NODES/NODE/Title");
             var ContentLocation = SelectSingleNodeValueNew(xmldom, "NODES/NODE/ContentLocation");
 
-
             if (pPreviewShow_HOW.trim() == "W") {
                 PreviewRayerChange_photo("H");
                 document.getElementById("Preview_HeaderW").style.display = "none";
@@ -411,7 +410,7 @@ function event_ItemPreviewRead() {
             WriteDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriteDate");
             Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
             ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
-
+           
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("Preview_HeaderH").style.display = "none";
