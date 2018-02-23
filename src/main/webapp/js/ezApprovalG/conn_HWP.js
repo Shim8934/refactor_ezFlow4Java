@@ -35,10 +35,10 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 		CharName = "r" + CharName;
 	
 	var DocumentInfo = createXmlDom();
-	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
+	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo());
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
-	    if (SelectSingleNode(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "CONN") == null) {
+	    if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "") {
 	    	setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONN></CONN>");	    	
 	    }
 	    
