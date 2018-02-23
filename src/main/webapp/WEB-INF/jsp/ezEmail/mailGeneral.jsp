@@ -426,7 +426,7 @@
 		</table>  
 		<br />
 		<div align="center" style="width:623px;">
-		    <a class="imgbtn" onClick="Change_Click('1')"><span><spring:message code='ezEmail.t48' /></span></a>
+		    <a class="imgbtn" onClick="Change_Click('1')"><span><spring:message code='main.sp09' /></span></a>
 		    <a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
 		</div> 
 		<div  id="inboxRuleConbtn1" style="position:absolute; left:100px; top:65px;border:3px solid gray;width:415px;background-color:#F9F9F9; display:none;">
