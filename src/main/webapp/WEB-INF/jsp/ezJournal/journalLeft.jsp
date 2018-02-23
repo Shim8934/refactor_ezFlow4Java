@@ -63,11 +63,7 @@
 		    <h2><span class='recive' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t51'/></span></h2>
 		    <ul>
 		    </ul>
-<<<<<<< HEAD
-		    <h2><span id='temp' onClick="goPage(2)" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>
-=======
 		    <h2><span class='temp' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>
->>>>>>> business-dev
 		    <ul>
 		    </ul>
 	        <h3><span class='recive'='journalEnv' onClick="" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t53'/></span></h3>
