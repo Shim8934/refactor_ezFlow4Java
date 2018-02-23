@@ -52,7 +52,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	private Properties config;
 	
 	@Resource(name = "egovMessageSource")
-    private EgovMessageSource egovMessageSource;
+	private EgovMessageSource egovMessageSource;
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
@@ -67,7 +67,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 	@RequestMapping(value = "/ezWebFolder/webfolderMain.do")
 	public String webfolderMain(HttpServletRequest req, Model model) {
-		
 		return "ezWebFolder/webfolderMain";
 	}
 
@@ -151,7 +150,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		logger.debug("Upload file finishes!");
 		
-		return listFileVO.toString();	
+		return listFileVO.toString();
 	}
 
 	@RequestMapping(value="/ezWebFolder/downloadAttach.do", produces="application/zip")
@@ -206,7 +205,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		model.addAttribute("fileList", listFileId);
 		logger.debug("Delete File Confirm finishes!");
 		
-		return "/ezWebFolder/fileDeleteTest";
+		return "/ezWebFolder/fileDelete";
 	}
 
 	@RequestMapping(value="/ezWebFolder/deleteFile.do", method = RequestMethod.POST)
@@ -251,7 +250,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		model.addAttribute("fileId", fileId);
 		logger.debug("File Rename Confirm finishes!");
 		
-		return "/ezWebFolder/fileRenameTest";
+		return "/ezWebFolder/fileRename";
 	}
 
 	@RequestMapping(value="/ezWebFolder/renameFile.do", method = RequestMethod.POST)
@@ -298,7 +297,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		model.addAttribute("rootFolder", rootFolder);
 		logger.debug("File Move Confirm finishes!");
 		
-		return "/ezWebFolder/fileMoveTest";
+		return "/ezWebFolder/fileMove";
 	}
 
 	@RequestMapping(value="/ezWebFolder/moveFile.do", method = RequestMethod.POST)

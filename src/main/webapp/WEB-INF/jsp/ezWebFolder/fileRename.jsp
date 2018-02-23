@@ -13,7 +13,8 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript">
-		var fileList = "<c:out value="${fileList}" />";
+		var fileId = "<c:out value="${fileId}"/>";
+		
 		function wClose() {
 			parent.DivPopUpHidden();
 			window.close();
@@ -25,21 +26,33 @@
 			window.close();
 		}
 		
+		function isValid(str){
+			var regex = /[*:"\\|<>\/?]/g;
+			return regex.test(str);
+		}
+		
 		function ok_Click() {
+			var newName = document.getElementById("nameInput").value;
+			
+			if (isValid(newName) == true) {
+				alert("<spring:message code='ezWebFolder.t211'/>");
+				return;
+			}
+			
 			$.ajax({
 				type: "POST",
-				url: "/ezWebFolder/deleteFile.do",
+				url: "/ezWebFolder/renameFile.do",
 				data: {
-					"fileList" : fileList
+					"fileId"  : fileId,
+					"newName" : newName
 				},
 				dataType: "text",
 				async: true,
 				success : function(data, textStatus, jqXHR) {
-					alert("<spring:message code='ezWebFolder.t113' />");
 					afterDeleteSuccess();
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
-					alert("<spring:message code='ezWebFolder.t114' />" + jqXHR.status + ", " + textStatus);
+					alert("<spring:message code='ezWebFolder.t134'/>" + jqXHR.status + ", " + textStatus);
 				}
 			});
 		}
@@ -47,21 +60,26 @@
 </head>
 <body class="popup"> 
 	<div id="menu">
-		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t117' /></div>	
+		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t118'/></div>
 	</div>
 	<div id="close">
 		<ul>
-			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110' /></span></li>
+			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110'/></span></li>
 		</ul>
 	</div>
 	
-	<div style="margin: 10px;"><spring:message code='ezWebFolder.t109' /></div>
+	<div style="margin: 10px;">
+		<div style="text-align: center;"><spring:message code='ezWebFolder.t119'/></div>
+		<div style="height: 40px; line-height: 40px; margin-top: 5px;">
+			<input id="nameInput" type="text" placeholder="<spring:message code='ezWebFolder.t212'/>" style="margin-left: 15px; margin-right: 15px; width: 380px; height: 35px; line-height: 35px; font-size: 14px; padding: 0px 10px; border-radius: 5px; border: 1px solid #666666;">
+		</div>
+	</div>
 	
 	<div style="margin-top: 15px;"><hr size="0" style="color:#fff; background-color:#fff; margin: 0px 10px; border-top: 1px solid #304D7F;"></div>
 	
-	<div style="margin: 6px 0px 6px 140px; position:fixed; bottom: 0px;">
-		<a id="btnSave" class="webfolderBttn" onClick="ok_Click();"><span><spring:message code='ezWebFolder.t111' /></span></a>
-		<a id="btnCancel"class="webfolderBttn" onClick="wClose();"><span><spring:message code='ezWebFolder.t112' /></span></a>
+	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
+		<a id="btnSave"   class="webfolderBttn" onClick="ok_Click();"><span><spring:message code='ezWebFolder.t116'/></span></a>
+		<a id="btnCancel" class="webfolderBttn" onClick="wClose();"  ><span><spring:message code='ezWebFolder.t112'/></span></a>
 	</div>
 	
 </body>

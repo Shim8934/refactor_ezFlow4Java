@@ -36,14 +36,14 @@
 					renderData(result);
 				},
  				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134' />" + error);
+					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			});	
 		}
 		
 		function renderData(result) {
 			if (!result) {
-				alert("<spring:message code='ezWebFolder.t134' />");
+				alert("<spring:message code='ezWebFolder.t134'/>");
 				return;
 			} 
 			
@@ -170,7 +170,7 @@
 						arrSubFolder.push(uniqueId);
 					},
 					error: function (xhr, status, e){
-						alert("<spring:message code='ezWebFolder.t134' />");
+						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});	
 			}
@@ -178,7 +178,7 @@
 		
 		function displaySubTree(result, divElmt) {
 			if (result["listSubFolders"] == null) {
-				alert("<spring:message code='ezWebFolder.t134' />");
+				alert("<spring:message code='ezWebFolder.t134'/>");
 				return;
 			}
 			
@@ -211,12 +211,12 @@
 		
 		function folderCopy() {
 			if (selectedFolder == null) {
-				alert("Please select a folder!");
+				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
 			}
 			
 			if (folderId == selectedFolder) {
-				alert("안됩니다.");
+				alert("<spring:message code='ezWebFolder.t210'/>");
 				return;
 			}
 			
@@ -226,7 +226,7 @@
 				data: {
 					"folderId"    : folderId,
 					"parentFldId" : selectedFolder,
-					"mode"	      : "copy"
+					"mode"        : "copy"
 				},
 				dataType: "JSON",
 				async: true,
@@ -235,14 +235,14 @@
 					afterSuccess(reason);
 				},
 				error : function(error) {
-					alert("Error: " + error);
+					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			});
 		}
 		
 		function folderMove() {
 			if (selectedFolder == null) {
-				alert("Please select a folder!");
+				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
 			}
 			
@@ -266,7 +266,7 @@
 					afterSuccess(reason);
 				},
  				error : function(error) {
-					alert("Error: " + error);
+					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			});
 		}
@@ -274,11 +274,11 @@
 </head>
 <body class="popup">
 	<div id="menu">
-		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t120' /></div>
+		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t120'/></div>
 	</div>
 	<div id="close">
 		<ul>
-			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110' /></span></li>
+			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110'/></span></li>
 		</ul>
 	</div>
 	
@@ -287,8 +287,8 @@
 	</div>	
 	
 	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
-		<a id="btnSave" class="webfolderBttn"  onClick="folderMove();"><span><spring:message code='ezWebFolder.t121' /></span></a>
-		<a id="btnCancel"class="webfolderBttn" onClick="folderCopy();"><span><spring:message code='ezWebFolder.t122' /></span></a>
+		<a id="btnSave"  class="webfolderBttn" onClick="folderMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
+		<a id="btnCancel"class="webfolderBttn" onClick="folderCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
 	</div>
 	
 </body>

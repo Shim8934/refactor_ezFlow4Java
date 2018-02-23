@@ -17,22 +17,6 @@
         <result property="tenantId"               column="TENANT_ID"                columnIndex="8"  />              
     </resultMap>
 
-	<select id="EzWebFolderDAO_m.getShares" resultMap="folderFileVO">   
-		<![CDATA[
-			SELECT 
-				SEQ_ID AS SEQ_ID,
-				USER_ID AS USER_ID,
-				USER_TYPE AS USER_TYPE,
-				FOLDERFILE_ID AS FOLDERFILE_ID,
-				FOLDERFILE_TYPE AS FOLDERFILE_TYPE,
-				CREATE_ID AS CREATE_ID,
-				CREATE_DATE AS CREATE_DATE,						
-				TENANT_ID AS TENANT_ID
-			FROM 
-				TBL_WEBFOLDER_SHARE
-		]]>				
-    </select>
-    
     <select id="EzWebFolderDAO_m.getShareGive" resultMap="folderFileVO">   
 		<![CDATA[
 					SELECT 
@@ -238,5 +222,50 @@
 						) U ;	
 		]]>				
     </select>
+
+	<delete id="EzWebFolderDAO_m.delShare">
+		<![CDATA[
+			DELETE FROM tbl_webfolder_share 
+			WHERE 1 = 1 
+			AND FOLDERFILE_ID = #folderFileId#
+			AND FOLDERFILE_TYPE = #folderFileType#
+			AND TENANT_ID = #tenantId#
+		]]>
+	</delete>
+	
+	<select id="EzWebFolderDAO_m.getShareSeq" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(IFNULL(MAX(CONVERT(SEQ_ID, UNSIGNED INTEGER)) , 0) + 1)
+			FROM
+				TBL_WEBFOLDER_SHARE
+			WHERE
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+
+	<insert id="EzWebFolderDAO_m.insertShare" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_WEBFOLDER_SHARE(
+				SEQ_ID, 
+				USER_ID, 
+				USER_TYPE, 
+				FOLDERFILE_ID, 
+				FOLDERFILE_TYPE,
+				CREATE_ID,
+				CREATE_DATE,
+				TENANT_ID
+				)VALUES(
+				#seqId#,
+				#userId#,
+				#userType#,
+				#folderFileId#,
+				#folderFileType#,
+				#createId#,
+				NOW(),
+				#tenantId#
+				)
+		]]>
+	</insert>
 
 </sqlMap>

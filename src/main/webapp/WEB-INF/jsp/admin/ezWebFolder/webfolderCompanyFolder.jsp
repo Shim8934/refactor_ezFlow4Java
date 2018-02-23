@@ -14,7 +14,7 @@
 		<script type="text/javascript" >
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
-			var primary           = "<c:out value='${primary}' />";
+			var primary           = "<c:out value='${primary}'/>";
 			var compFolderId      = null;
 			
 			window.onload = function () {
@@ -36,14 +36,14 @@
 						renderData(result);
 					},
 					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134' />" + error);
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
 					}
 				});
 			}
 			
 			function renderData(result) {
 				if (!result) {
-					alert("<spring:message code='ezWebFolder.t134' />");
+					alert("<spring:message code='ezWebFolder.t134'/>");
 					return;
 				} 
 				
@@ -165,7 +165,7 @@
 						processUsersList(result, obj.innerHTML);
 					},
 					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134' />" + error);
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
 					}
 				});
 			}
@@ -244,7 +244,7 @@
 							arrSubFolder.push(uniqueId);
 						},
 						error: function (xhr, status, e){
-							alert("<spring:message code='ezWebFolder.t134' />");
+							alert("<spring:message code='ezWebFolder.t134'/>");
 						}
 					});	
 				}
@@ -252,7 +252,7 @@
 			
 			function displaySubTree(result, divElmt) {
 				if (result["listSubFolders"] == null) {
-					alert("<spring:message code='ezWebFolder.t134' />");
+					alert("<spring:message code='ezWebFolder.t134'/>");
 					return;
 				}
 				
@@ -268,7 +268,7 @@
 			
 			function getUsersPage() {
 				if (!selectedFolder) {
-					alert("폴더 선택하세요.");
+					alert("<spring:message code='ezWebFolder.t181'/>");
 					return;
 				}
 				
@@ -277,7 +277,7 @@
 			
 			function newFolder() {
 				if (!selectedFolder) {
-					alert("폴더 선택하세요.");
+					alert("<spring:message code='ezWebFolder.t181'/>");
 					return;
 				}
 				
@@ -302,14 +302,14 @@
 				var target      = document.getElementById("newTargetDiv").innerHTML;
 				
 				if (!folderName.replace(/\s/g,'')) {
-					alert("폴더명  입력하세요.");
+					alert("<spring:message code='ezWebFolder.t201'/>");
 					document.getElementById("fldName").value = "";
 					document.getElementById("fldName").focus;
 					return;
 				}
 				
 				if (compFolderId == selectedFolder && !target.replace(/\s/g,'')) {
-					alert("폴더 구성원 선택하세요.");
+					alert("<spring:message code='ezWebFolder.t202'/>");
 					return;
 				}
 				
@@ -329,7 +329,7 @@
 						getData();
 					},
 					error: function (xhr, status, e){
-						alert("<spring:message code='ezWebFolder.t134' />");
+						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
 			}
@@ -347,12 +347,12 @@
 			
 			function saveChanges() {
 				if (!selectedFolder) {
-					alert("폴더 선택하세요.");
+					alert("<spring:message code='ezWebFolder.t181'/>");
 					return;
 				}
 				
 				if (compFolderId == selectedFolder) {
-					alert("안됩니다.");
+					alert("<spring:message code='ezWebFolder.t203'/>");
 					return;
 				}
 				
@@ -361,14 +361,14 @@
 				var target      = document.getElementById("newTargetDiv").innerHTML;
 				
 				if (!folderName.replace(/\s/g,'')) {
-					alert("폴더명  입력하세요.");
+					alert("<spring:message code='ezWebFolder.t201'/>");
 					document.getElementById("fldName").value = "";
 					document.getElementById("fldName").focus;
 					return;
 				}
 				
 				if (!target.replace(/\s/g,'')) {
-					alert("폴더 구성원 선택하세요.");
+					alert("<spring:message code='ezWebFolder.t202'/>");
 					return;
 				}
 				
@@ -386,19 +386,19 @@
 						refreshView2();
 					},
 					error: function (xhr, status, e){
-						alert("<spring:message code='ezWebFolder.t134' />");
+						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
 			}
 			
 			function moveFolder() {
 				if (!selectedFolder) {
-					alert("폴더 선택하세요.");
+					alert("<spring:message code='ezWebFolder.t181'/>");
 					return;
 				}
 				
 				if (compFolderId == selectedFolder) {
-					alert("안됩니다.");
+					alert("<spring:message code='ezWebFolder.t203'/>");
 					return;
 				}
 				
@@ -407,12 +407,12 @@
 			
 			function deleteFolder() {
 				if (!selectedFolder) {
-					alert("폴더 선택하세요.");
+					alert("<spring:message code='ezWebFolder.t181'/>");
 					return;
 				}
 				
 				if (compFolderId == selectedFolder) {
-					alert("안됩니다.");
+					alert("<spring:message code='ezWebFolder.t203'/>");
 					return;
 				}
 				
@@ -430,7 +430,7 @@
 						getData();
 					},
 					error: function (xhr, status, e){
-						alert("<spring:message code='ezWebFolder.t134' />");
+						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
 			}
@@ -467,7 +467,7 @@
 								<tr>
 									<td>
 										<div style="margin: 10px 20px; min-height: 36px;">
-											<span id="displayUsers">구성원:</span>
+											<span id="displayUsers"><spring:message code='ezWebFolder.t204'/></span>
 											<span id="newTargetDiv"></span>
 										</div>
 									</td>
@@ -475,21 +475,21 @@
 								<tr>
 									<td>
 										<div style="margin: 20px 20px 100px 20px; min-height: 80px;" >
-											<a class="webfolderBttn2"><span onclick="getUsersPage();" id="usersSelect">조직도</span></a>
+											<a class="webfolderBttn2"><span onclick="getUsersPage();" id="usersSelect"><spring:message code='ezWebFolder.t205'/></span></a>
 										</div>
 									</td>
 								</tr>
 								<tr>
 									<td>
 										<div style="margin: 0px 96px;" id="listBttn1">
-											<a class="webfolderBttn"><span onclick="saveChanges();">저장</span></a>
-											<a class="webfolderBttn"><span onclick="newFolder();">하위폴더</span></a>
-											<a class="webfolderBttn"><span onclick="moveFolder();">이동</span></a>
-											<a class="webfolderBttn"><span onclick="deleteFolder();">삭제</span></a>
+											<a class="webfolderBttn"><span onclick="saveChanges();" ><spring:message code='ezWebFolder.t133'/></span></a>
+											<a class="webfolderBttn"><span onclick="newFolder();"   ><spring:message code='ezWebFolder.t206'/></span></a>
+											<a class="webfolderBttn"><span onclick="moveFolder();"  ><spring:message code='ezWebFolder.t121'/></span></a>
+											<a class="webfolderBttn"><span onclick="deleteFolder();"><spring:message code='ezWebFolder.t111'/></span></a>
 										</div>
 										<div style="margin: 0px 176px; display: none;" id="listBttn2">
-											<a class="webfolderBttn"><span onclick="saveNewFolder();">저장</span></a>	
-											<a class="webfolderBttn"><span onclick="cancelAdd();">취소 </span></a>
+											<a class="webfolderBttn"><span onclick="saveNewFolder();"><spring:message code='ezWebFolder.t133'/></span></a>
+											<a class="webfolderBttn"><span onclick="cancelAdd();"    ><spring:message code='ezWebFolder.t112'/></span></a>
 										</div>
 									</td>
 								</tr>
@@ -502,7 +502,7 @@
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		
 		<input type="text" name="RangeXMLStr" id="RangeXMLStr" style="display:none">

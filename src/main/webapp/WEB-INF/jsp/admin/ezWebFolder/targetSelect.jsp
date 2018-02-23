@@ -701,22 +701,22 @@
 			</LISTVIEWDATA>
 		</xml>
 		<xml id="listviewheader2" style="display:none">
-		<LISTVIEWDATA>
-			<HEADERS>
-			<HEADER>
-				<NAME><spring:message code='ezWebFolder.t175' /></NAME>
-				<WIDTH>50</WIDTH>
-			</HEADER>
-			<HEADER>
-				<NAME><spring:message code='ezWebFolder.t176' /></NAME>
-				<WIDTH>70</WIDTH>
-			</HEADER>
-			<HEADER>
-				<NAME><spring:message code='ezWebFolder.t142' /></NAME>
-				<WIDTH>60</WIDTH>
-			</HEADER>
-			</HEADERS>
-		</LISTVIEWDATA>
+			<LISTVIEWDATA>
+				<HEADERS>
+				<HEADER>
+					<NAME><spring:message code='ezWebFolder.t175' /></NAME>
+					<WIDTH>50</WIDTH>
+				</HEADER>
+				<HEADER>
+					<NAME><spring:message code='ezWebFolder.t176' /></NAME>
+					<WIDTH>70</WIDTH>
+				</HEADER>
+				<HEADER>
+					<NAME><spring:message code='ezWebFolder.t142' /></NAME>
+					<WIDTH>60</WIDTH>
+				</HEADER>
+				</HEADERS>
+			</LISTVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezWebFolder.t165' /></h1>
 		<table> 
@@ -757,7 +757,7 @@
 			<tr>
 				<td>
 					<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="WIDTH:130px" />
-					<a class="imgbtn btnSearch"  = "cnkeybtn" onclick="cnsearch_click()"  ><span><spring:message code='ezWebFolder.t123' /></span></a>
+					<a class="imgbtn btnSearch" id="cnkeybtn" onclick="cnsearch_click()" ><span><spring:message code='ezWebFolder.t123' /></span></a>
 				</td>
 				<td></td>
 				<td>
