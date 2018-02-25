@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,4 +103,114 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 	}
 
+	public List<String> userDeptList(String userId, int tenantId)
+			throws Exception {
+		
+		List<String> result = new ArrayList<String>();
+		List<String> temp = new ArrayList<String>();
+		Map<String,Object> map = new HashMap<String, Object>();
+		String notInDept = "";
+		
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		
+		result = chiefDeptList(userId, tenantId);
+		
+		LOGGER.debug("result of chiefDeptList in userDeplist: " + result);
+		
+		if(result.size() >0) {
+			notInDept = makeDeptString(result);
+			
+			LOGGER.debug("notInDept in userDeptList: " + notInDept);
+			
+			map.put("notInDept", notInDept);
+		}
+		
+		temp = ezWebFolderDAO.userDeptList(map);
+		result.addAll(temp);
+		
+		LOGGER.debug("userDeptList result: " + result);
+		
+		return result;
+	}
+
+	public List<String> chiefDeptPath(String userId, int tenantId)
+			throws Exception {
+		
+		List<String> result = new ArrayList<String>();
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		
+		result = ezWebFolderDAO.chiefDeptPath(map);
+		
+		LOGGER.debug("chiefDeptPath result: " + result);
+		
+		return result;
+	}
+	
+	public List<String> chiefDeptList(String userId, int tenantId)
+			throws Exception {
+		
+		List<String> result = new ArrayList<String>();
+		List<String> temp = new ArrayList<String>();
+		List<String> path = new ArrayList<String>();
+		Map<String,Object> map = new HashMap<String, Object>();
+		String notInDept = "";
+		
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		
+		path = chiefDeptPath(userId, tenantId);
+		
+		if(path.size() >0) {
+		
+			for (int i = 0; i < path.size(); i++) {
+				map.put("deptCdPath", path.get(i));
+				map.put("notInDept", notInDept);
+				
+				LOGGER.debug("chiefDeptList map : " + map);
+				
+				temp = ezWebFolderDAO.chiefDeptList(map);
+				
+				LOGGER.debug("chiefDeptList temp: " + temp);
+				
+				if(temp.size() >0) {
+					
+					if(notInDept.isEmpty()) {
+						notInDept = notInDept + makeDeptString(temp);
+					} else {
+						notInDept = notInDept + "," + makeDeptString(temp);
+					}
+				
+				}
+				
+				result.addAll(temp);
+			}
+
+		}
+				
+		LOGGER.debug("chiefDeptList result: " + result);
+		
+		return result;
+	}
+
+	public String makeDeptString(List<String> deptList) {
+		
+		String result = "";
+		
+		for (int i = 0; i < deptList.size(); i++) {
+			
+			result = result + ",'" + deptList.get(i) + "'";
+			
+		}
+		
+		result = result.substring(1);
+		
+		LOGGER.debug("makeDeptString result: " + result);
+		
+		return result;
+	}
+	
 }

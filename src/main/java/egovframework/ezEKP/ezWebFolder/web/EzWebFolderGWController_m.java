@@ -87,18 +87,16 @@ public class EzWebFolderGWController_m {
 	}
 	
 	/*
-	 * 공유 폴더 및 파일 조회
+	 * 공유 폴더 및 파일 수정
 	 * 
 	 * @author 강민수79
-	 * @date 2018.02.05.
-	 * @param userId
+	 * @date 2018.02.21.
 	 * @param tenantId
 	 * @param companyId
-	 * @param startDate
-	 * @param endDate
-	 * @param extendName
-	 * @param fileName
-	 * @param createName
+	 * @param creatId
+	 * @param folderFileId
+	 * @param folderFileType
+	 * @param userList
 	 * @return JSONObject
 	 */
 	@RequestMapping(value="/ezwebfolder/folder-files/{folderFileId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
@@ -136,6 +134,45 @@ public class EzWebFolderGWController_m {
 		try {			
 			
 									
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+			
+		} 
+		catch (Exception e) {
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		
+		}
+		
+		return result;
+	}
+	
+	/*
+	 * 즐겨찾기 대상 조회
+	 * 
+	 * @author 강민수79
+	 * @date 2018.02.22.
+	 * @param userId
+	 * @param tenantId
+	 * @param companyId
+	 * @return JSONObject
+	 */
+	@RequestMapping(value="/ezwebfolder/users/{userId}/favorites", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFavoriteList(@PathVariable String userId, HttpServletRequest request) {	
+		
+		String companyId = request.getParameter("companyId");
+		int tenantId = Integer.parseInt(request.getParameter("tenantId"));	
+		
+		LOGGER.debug("userId: " + userId);
+		
+		JSONObject result = new JSONObject();
+		
+		try {			
+			
+						
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");
