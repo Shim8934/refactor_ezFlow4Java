@@ -174,13 +174,15 @@
 			}
 	
 			function OpenInformationUI(pInformationContent) {
-			    var parameter = pInformationContent;
-			    var url = "/myoffice/ezApprovalG/ezAPROPINION.aspx";
-			    var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-			    var RtnVal = window.showModalDialog(url, parameter, feature);
-			
-			    return RtnVal;
+				var parameter = pInformationContent;
+				var url = "/ezApprovalG/ezAprOpinion.do";
+				var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+// 				feature =  feature + GetShowModalPosition(330, 205);
+				
+				var RtnVal = window.showModalDialog(url,parameter,feature);	
+				return RtnVal;
 			}
+			
 	
 			function btnSave_onclick() {
 			    HwpCtrl.RegisterModule("FilePathCheckDLL", "FilePathCheck");
