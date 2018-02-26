@@ -7,16 +7,21 @@ function GetDocumentElement(HwpCtrl, CharName)
 		CharName = "r" + CharName;
 	
 	var DocumentInfo = new ActiveXObject("Microsoft.XMLDOM");
-	DocumentInfo.loadXML(HwpCtrl.GetDocumentInfo());
+	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
+console.log(getXmlString(DocumentInfo.childNodes[0]));
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
-		if (SelectSingleNode(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "CONN") == null) {
-			setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONN></CONN>");
+		if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD")[0]) == "") {
+			if (typeof (DocumentInfo.getElementsByTagName("KEYWORD")[0].innerText) == "undefined") {
+				DocumentInfo.getElementsByTagName("KEYWORD")[0].text = "<CONN></CONN>";
+	        } else {
+	        	DocumentInfo.getElementsByTagName("KEYWORD")[0].innerText = "<CONN></CONN>";
+	        }
 		}
 		
-		var DocumentKeywordInfo = createXmlDom();
-		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("CONN").item(0)));
-		
+		var DocumentKeywordInfo = new ActiveXObject("Microsoft.XMLDOM");
+		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
+console.log(getXmlString(DocumentKeywordInfo.childNodes[0]));
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
 		    return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
 		} else {
@@ -34,35 +39,41 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 	if( !isNaN(fChar) )
 		CharName = "r" + CharName;
 	
-	var DocumentInfo = createXmlDom();
-	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo());
+	var DocumentInfo = new ActiveXObject("Microsoft.XMLDOM");
+	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
+console.log(getXmlString(DocumentInfo.childNodes[0]));
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
-	    if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "") {
-	    	setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONN></CONN>");	    	
+		if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD")[0]) == "") {
+			if (typeof (DocumentInfo.getElementsByTagName("KEYWORD")[0].innerText) == "undefined") {
+				DocumentInfo.getElementsByTagName("KEYWORD")[0].text = "<CONN></CONN>";
+	        } else {
+	        	DocumentInfo.getElementsByTagName("KEYWORD")[0].innerText = "<CONN></CONN>";
+	        }
 	    }
 	    
-		var DocumentKeywordInfo = createXmlDom();
-		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD").childNodes[0]));
+		var DocumentKeywordInfo = new ActiveXObject("Microsoft.XMLDOM");
+		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
-		    setNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0) , value);
+			if (typeof (DocumentInfo.getElementsByTagName(CharName)[0].innerText) == "undefined") {
+				DocumentInfo.getElementsByTagName(CharName)[0].text = value;
+	        } else {
+	        	DocumentInfo.getElementsByTagName(CharName)[0].innerText = value;
+	        }
+console.log(getXmlString(DocumentKeywordInfo.childNodes[0]));
 			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.childNodes[0]));
 			return true;
-		}
-		else
-		{
+		} else {
 			var objNode;
 			objNode = document.createElement(CharName);
 			setNodeText(objNode , value);
 			DocumentKeywordInfo.documentElement.appendChild(objNode);
-			
+console.log(getXmlString(DocumentKeywordInfo.childNodes[0]));
 			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.childNodes[0]));
 			return true;
 		}
-	}
-	else
-	{
+	} else {
 		return true;
 	}
 }
