@@ -233,7 +233,7 @@
 		]]>
 	</delete>
 	
-	<select id="EzWebFolderDAO_m.getShareSeq" resultClass="Integer">
+	<select id="EzWebFolderDAO_m.getShareSeq" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
 				(IFNULL(MAX(CONVERT(SEQ_ID, UNSIGNED INTEGER)) , 0) + 1)
@@ -267,5 +267,54 @@
 				)
 		]]>
 	</insert>
+	
+	<select id="EzWebFolderDAO_m.userDeptList" parameterClass="Map" resultClass="String">
+			SELECT
+			TU.DEPARTMENT 
+			FROM
+			TBL_USERMASTER TU 
+			WHERE 1=1
+			AND TU.CN = #userId#
+			AND TU.TENANT_ID = #tenantId#
+		<isNotEmpty property="notInDept">
+			AND TU.DEPARTMENT NOT IN ($notInDept$)	
+		</isNotEmpty>	
 
+			UNION
+			
+			SELECT
+			TA.DEPTID
+			FROM
+			TBL_ADDJOBMASTER TA
+			WHERE 1=1
+			AND TA.CN = #userId#
+			AND TA.TENANT_ID = #tenantId#
+		<isNotEmpty property="notInDept">
+			AND TA.CN NOT IN ($notInDept$)	
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.chiefDeptPath" parameterClass="Map" resultClass="String">
+			SELECT
+			TD.DEPT_CD_PATH
+			FROM
+			TBL_DEPTMASTER TD
+			WHERE 1=1
+			AND TD.EXTENSIONATTRIBUTE9 = #userId#
+			AND TD.TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzWebFolderDAO_m.chiefDeptList" parameterClass="Map" resultClass="String">
+			SELECT
+			TD.CN
+			FROM
+			TBL_DEPTMASTER TD
+			WHERE 1=1
+			AND TD.DEPT_CD_PATH LIKE CONCAT(#deptCdPath#,'%')
+			AND TD.TENANT_ID = #tenantId#
+		<isNotEmpty property="notInDept">
+			AND TD.CN NOT IN ($notInDept$)	
+		</isNotEmpty>
+	</select>
+	
 </sqlMap>

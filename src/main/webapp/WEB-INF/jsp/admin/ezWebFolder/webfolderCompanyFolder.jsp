@@ -101,12 +101,12 @@
 					imgElmt.onclick = function() {getDetailTree(this);};
 					
 					if (list["listSubFolders"] == null) {
-						imgElmt.src = "/images/OrganTree_cross/plus_normal.gif";
+						imgElmt.src = "/images/OrganTree_cross/plus.gif";
 						imgElmt.setAttribute("class", "webfolderPlus");
 						return;
 					}
 					
-					imgElmt.src = "/images/OrganTree_cross/minus_normal.gif";
+					imgElmt.src = "/images/OrganTree_cross/minus.gif";
 					imgElmt.setAttribute("class", "webfolderMinus");
 					
 					var len = list["listSubFolders"].length;
@@ -216,18 +216,18 @@
 					var childElmt = obj.parentElement.lastElementChild;
 					
 					if (obj.className == "webfolderMinus") {
-						obj.src= "/images/OrganTree_cross/plus_normal.gif";
+						obj.src= "/images/OrganTree_cross/plus.gif";
 						obj.setAttribute("class", "webfolderPlus");
 						childElmt.style.display = "none";
 					}
 					else {
-						obj.src= "/images/OrganTree_cross/minus_normal.gif";
+						obj.src= "/images/OrganTree_cross/minus.gif";
 						obj.setAttribute("class", "webfolderMinus");
 						childElmt.style.display = "";
 					}
 				}
 				else {
-					obj.src = "/images/OrganTree_cross/minus_normal.gif";
+					obj.src = "/images/OrganTree_cross/minus.gif";
 					obj.setAttribute("class", "webfolderMinus");
 					
 					$.ajax({

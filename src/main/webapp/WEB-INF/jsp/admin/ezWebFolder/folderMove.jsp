@@ -13,7 +13,7 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript">
-		var folderId       = "<c:out value='${folderId}' />";
+		var folderId       = "<c:out value='${folderId}'/>";
 		var selectedFolder = null;
 		var rootFld        = "<c:out value='${rootFolder}'/>";
 		var arrSubFolder   = [];
@@ -97,12 +97,12 @@
 				imgElmt.onclick = function() {getDetailTree(this);};
 				
 				if (list["listSubFolders"] == null) {
-					imgElmt.src = "/images/OrganTree_cross/plus_normal.gif";
+					imgElmt.src = "/images/OrganTree_cross/plus.gif";
 					imgElmt.setAttribute("class", "webfolderPlus");
 					return;
 				}
 				
-				imgElmt.src = "/images/OrganTree_cross/minus_normal.gif";
+				imgElmt.src = "/images/OrganTree_cross/minus.gif";
 				imgElmt.setAttribute("class", "webfolderMinus");
 				
 				var len = list["listSubFolders"].length;
@@ -142,18 +142,18 @@
 				var childElmt = obj.parentElement.lastElementChild;
 				
 				if (obj.className == "webfolderMinus") {
-					obj.src= "/images/OrganTree_cross/plus_normal.gif";
+					obj.src= "/images/OrganTree_cross/plus.gif";
 					obj.setAttribute("class", "webfolderPlus");
 					childElmt.style.display = "none";
 				}
 				else {
-					obj.src= "/images/OrganTree_cross/minus_normal.gif";
+					obj.src= "/images/OrganTree_cross/minus.gif";
 					obj.setAttribute("class", "webfolderMinus");
 					childElmt.style.display = "";
 				}
 			}
 			else {
-				obj.src = "/images/OrganTree_cross/minus_normal.gif";
+				obj.src = "/images/OrganTree_cross/minus.gif";
 				obj.setAttribute("class", "webfolderMinus");
 				
 				$.ajax({
@@ -247,7 +247,7 @@
 			}
 			
 			if (folderId == selectedFolder) {
-				alert("안됩니다.");
+				alert("<spring:message code='ezWebFolder.t210'/>");
 				return;
 			}
 			

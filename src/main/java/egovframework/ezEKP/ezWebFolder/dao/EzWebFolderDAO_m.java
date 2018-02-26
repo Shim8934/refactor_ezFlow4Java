@@ -43,4 +43,28 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		insert("EzWebFolderDAO_m.insertShare", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<String> userDeptList(Map<String, Object> map) {
+		
+		LOGGER.debug("userDeptList in dao");
+		
+		return (List<String>)list("EzWebFolderDAO_m.userDeptList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> chiefDeptPath(Map<String, Object> map) {
+		
+		LOGGER.debug("ciefDeptPath in dao");
+		
+		return (List<String>)list("EzWebFolderDAO_m.chiefDeptPath", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> chiefDeptList(Map<String, Object> map) {
+		
+		LOGGER.debug("ciefDeptList in dao");
+		
+		return (List<String>)list("EzWebFolderDAO_m.chiefDeptList", map);
+	}
+	
 }
