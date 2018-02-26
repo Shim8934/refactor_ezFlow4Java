@@ -274,41 +274,41 @@
 			WHERE
 				FOLDER_UPPER = #folderId#
 			AND
-				TENANT_ID = #tenantId#
+				TENANT_ID    = #tenantId#
 		]]>
 	</select>
 	
 	<select id="EzWebFolderDAO.getCompanyFolderId" resultMap="folderVO">
 		<![CDATA[
 			SELECT
-				FOLDER_ID AS FOLDER_ID,
-				FOLDER_NAME1 AS FOLDER_NAME1,
-				FOLDER_NAME2 AS FOLDER_NAME2,
-				FOLDER_TYPE AS FOLDER_TYPE,
-				FOLDER_PATH AS FOLDER_PATH,
-				FOLDER_STEP AS FOLDER_STEP,
-				FOLDER_LEVEL AS FOLDER_LEVEL,
-				FOLDER_UPPER AS FOLDER_UPPER,
-				USE_STATUS AS USE_STATUS,
-				OWNER_ID AS OWNER_ID,
-				CREATE_ID AS CREATE_ID,
+				FOLDER_ID                                       AS FOLDER_ID,
+				FOLDER_NAME1                                    AS FOLDER_NAME1,
+				FOLDER_NAME2                                    AS FOLDER_NAME2,
+				FOLDER_TYPE                                     AS FOLDER_TYPE,
+				FOLDER_PATH                                     AS FOLDER_PATH,
+				FOLDER_STEP                                     AS FOLDER_STEP,
+				FOLDER_LEVEL                                    AS FOLDER_LEVEL,
+				FOLDER_UPPER                                    AS FOLDER_UPPER,
+				USE_STATUS                                      AS USE_STATUS,
+				OWNER_ID                                        AS OWNER_ID,
+				CREATE_ID                                       AS CREATE_ID,
 				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				CREATE_NAME1 AS CREATE_NAME1,
-				CREATE_NAME2 AS CREATE_NAME2,
-				UPDATE_ID AS UPDATE_ID,
+				CREATE_NAME1                                    AS CREATE_NAME1,
+				CREATE_NAME2                                    AS CREATE_NAME2,
+				UPDATE_ID                                       AS UPDATE_ID,
 				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				COMPANY_ID AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID
+				COMPANY_ID                                      AS COMPANY_ID,
+				TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE
-				COMPANY_ID = #companyId#
+				COMPANY_ID   = #companyId#
 			AND
-				FOLDER_TYPE = 'C'
+				FOLDER_TYPE  = 'C'
 			AND
 				FOLDER_UPPER = 'root'
 			AND
-				TENANT_ID = #tenantId#
+				TENANT_ID    = #tenantId#
 		]]>
 	</select>
 	
@@ -339,29 +339,29 @@
 	<select id="EzWebFolderDAO.getFileByFileId" resultMap="fileVO">
 		<![CDATA[
 			SELECT
-				f.FILE_ID AS FILE_ID,
-				f.FILE_NAME AS FILE_NAME,
-				f.FILE_PATH AS FILE_PATH,
-				f.FILE_SIZE AS FILE_SIZE,
-				f.TYPE_ID AS TYPE_ID,
-				f.DOWN_COUNT AS DOWN_COUNT,
-				f.FILE_EXT AS FILE_EXT,
-				f.FOLDER_ID AS FOLDER_ID,
-				f.USE_STATUS AS USE_STATUS,
-				f.CREATE_ID AS CREATE_ID,
-				f.CREATE_NAME1 AS CREATE_NAME1,
-				f.CREATE_NAME2 AS CREATE_NAME2,
+				f.FILE_ID                                         AS FILE_ID,
+				f.FILE_NAME                                       AS FILE_NAME,
+				f.FILE_PATH                                       AS FILE_PATH,
+				f.FILE_SIZE                                       AS FILE_SIZE,
+				f.TYPE_ID                                         AS TYPE_ID,
+				f.DOWN_COUNT                                      AS DOWN_COUNT,
+				f.FILE_EXT                                        AS FILE_EXT,
+				f.FOLDER_ID                                       AS FOLDER_ID,
+				f.USE_STATUS                                      AS USE_STATUS,
+				f.CREATE_ID                                       AS CREATE_ID,
+				f.CREATE_NAME1                                    AS CREATE_NAME1,
+				f.CREATE_NAME2                                    AS CREATE_NAME2,
 				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				UPDATE_ID AS UPDATE_ID,
+				UPDATE_ID                                         AS UPDATE_ID,
 				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				t.TYPE_ID AS FILETYPE_ID,
-				t.TYPE_NAME	AS FILETYPE_NAME,
-				t.TYPE_ICON AS FILETYPE_ICON,
-				f.TENANT_ID AS TENANT_ID
+				t.TYPE_ID                                         AS FILETYPE_ID,
+				t.TYPE_NAME                                       AS FILETYPE_NAME,
+				t.TYPE_ICON                                       AS FILETYPE_ICON,
+				f.TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
 			WHERE
-				f.FILE_ID = #fileId#
+				f.FILE_ID   = #fileId#
 			AND
 				f.TENANT_ID = #tenantId#
 		]]>
@@ -370,28 +370,28 @@
 	<select id="EzWebFolderDAO.getAllFilesInFolder" resultMap="fileVO2">
 		<![CDATA[
 			SELECT
-				f.FILE_ID AS FILE_ID,
-				f.FILE_NAME AS FILE_NAME,
-				f.FILE_PATH AS FILE_PATH,
-				f.FILE_SIZE AS FILE_SIZE,
-				f.TYPE_ID AS TYPE_ID,
-				f.DOWN_COUNT AS DOWN_COUNT,
-				f.FILE_EXT AS FILE_EXT,
-				f.FOLDER_ID AS FOLDER_ID,
-				f.USE_STATUS AS USE_STATUS,
-				f.CREATE_ID AS CREATE_ID,
-				f.CREATE_NAME1 AS CREATE_NAME1,
-				f.CREATE_NAME2 AS CREATE_NAME2,
+				f.FILE_ID                                         AS FILE_ID,
+				f.FILE_NAME                                       AS FILE_NAME,
+				f.FILE_PATH                                       AS FILE_PATH,
+				f.FILE_SIZE                                       AS FILE_SIZE,
+				f.TYPE_ID                                         AS TYPE_ID,
+				f.DOWN_COUNT                                      AS DOWN_COUNT,
+				f.FILE_EXT                                        AS FILE_EXT,
+				f.FOLDER_ID                                       AS FOLDER_ID,
+				f.USE_STATUS                                      AS USE_STATUS,
+				f.CREATE_ID                                       AS CREATE_ID,
+				f.CREATE_NAME1                                    AS CREATE_NAME1,
+				f.CREATE_NAME2                                    AS CREATE_NAME2,
 				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				UPDATE_ID AS UPDATE_ID,
+				UPDATE_ID                                         AS UPDATE_ID,
 				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				t.TYPE_ID AS FILETYPE_ID,
-				t.TYPE_NAME	AS FILETYPE_NAME,
-				t.TYPE_ICON AS FILETYPE_ICON,
-				CONCAT(#originalPath#, f.FILE_NAME) AS FILE_POSITION,
-				"" AS FOLDER_NAME,
-				"" AS FOLDER_PATH,
-				f.TENANT_ID AS TENANT_ID
+				t.TYPE_ID                                         AS FILETYPE_ID,
+				t.TYPE_NAME                                       AS FILETYPE_NAME,
+				t.TYPE_ICON                                       AS FILETYPE_ICON,
+				CONCAT(#originalPath#, f.FILE_NAME)               AS FILE_POSITION,
+				""                                                AS FOLDER_NAME,
+				""                                                AS FOLDER_PATH,
+				f.TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
 		]]>
@@ -416,32 +416,34 @@
 	<select id="EzWebFolderDAO.getAllFiles" resultMap="fileVO2">
 		<![CDATA[
 			SELECT
-				f.FILE_ID AS FILE_ID,
-				f.FILE_NAME AS FILE_NAME,
-				f.FILE_PATH AS FILE_PATH,
-				f.FILE_SIZE AS FILE_SIZE,
-				f.TYPE_ID AS TYPE_ID,
-				f.DOWN_COUNT AS DOWN_COUNT,
-				f.FILE_EXT AS FILE_EXT,
-				f.FOLDER_ID AS FOLDER_ID,
-				f.USE_STATUS AS USE_STATUS,
-				f.CREATE_ID AS CREATE_ID,
-				f.CREATE_NAME1 AS CREATE_NAME1,
-				f.CREATE_NAME2 AS CREATE_NAME2,
+				f.FILE_ID                                         AS FILE_ID,
+				f.FILE_NAME                                       AS FILE_NAME,
+				f.FILE_PATH                                       AS FILE_PATH,
+				f.FILE_SIZE                                       AS FILE_SIZE,
+				f.TYPE_ID                                         AS TYPE_ID,
+				f.DOWN_COUNT                                      AS DOWN_COUNT,
+				f.FILE_EXT                                        AS FILE_EXT,
+				f.FOLDER_ID                                       AS FOLDER_ID,
+				f.USE_STATUS                                      AS USE_STATUS,
+				f.CREATE_ID                                       AS CREATE_ID,
+				f.CREATE_NAME1                                    AS CREATE_NAME1,
+				f.CREATE_NAME2                                    AS CREATE_NAME2,
 				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				f.UPDATE_ID AS UPDATE_ID,
+				f.UPDATE_ID                                       AS UPDATE_ID,
 				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				t.TYPE_ID AS FILETYPE_ID,
-				t.TYPE_NAME	AS FILETYPE_NAME,
-				t.TYPE_ICON AS FILETYPE_ICON,
-				(CASE
-					WHEN u.FOLDER_LEVEL = 0 THEN CONCAT(#originalPath#, f.FILE_NAME)
-					WHEN u.FOLDER_LEVEL = 1 THEN CONCAT(CONCAT(CONCAT(#originalPath#, u.FOLDER_NAME1), "/"), f.FILE_NAME)
-					ELSE ""
-				END) AS FILE_POSITION,
-				u.FOLDER_NAME1 AS FOLDER_NAME,
-				u.FOLDER_PATH AS FOLDER_PATH,
-				f.TENANT_ID AS TENANT_ID
+				t.TYPE_ID                                         AS FILETYPE_ID,
+				t.TYPE_NAME                                       AS FILETYPE_NAME,
+				t.TYPE_ICON                                       AS FILETYPE_ICON,
+				(
+					CASE
+						WHEN u.FOLDER_LEVEL = 0 THEN CONCAT(#originalPath#, f.FILE_NAME)
+						WHEN u.FOLDER_LEVEL = 1 THEN CONCAT(CONCAT(CONCAT(#originalPath#, u.FOLDER_NAME1), "/"), f.FILE_NAME)
+						ELSE "" 
+					END
+				)                                                 AS FILE_POSITION,
+				u.FOLDER_NAME1                                    AS FOLDER_NAME,
+				u.FOLDER_PATH                                     AS FOLDER_PATH,
+				f.TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
 									 LEFT JOIN TBL_WEBFOLDER_FOLDER u ON f.TENANT_ID = u.TENANT_ID AND f.FOLDER_ID = u.FOLDER_ID
@@ -492,24 +494,24 @@
 	<select id="EzWebFolderDAO.getFolderByFolderId" resultMap="folderVO">
 		<![CDATA[
 			SELECT
-				FOLDER_ID AS FOLDER_ID,
-				FOLDER_NAME1 AS FOLDER_NAME1,
-				FOLDER_NAME2 AS FOLDER_NAME2,
-				FOLDER_TYPE AS FOLDER_TYPE,
-				FOLDER_PATH AS FOLDER_PATH,
-				FOLDER_STEP AS FOLDER_STEP,
-				FOLDER_LEVEL AS FOLDER_LEVEL,
-				FOLDER_UPPER AS FOLDER_UPPER,
-				USE_STATUS AS USE_STATUS,
-				OWNER_ID AS OWNER_ID,
-				CREATE_ID AS CREATE_ID,
+				FOLDER_ID                                       AS FOLDER_ID,
+				FOLDER_NAME1                                    AS FOLDER_NAME1,
+				FOLDER_NAME2                                    AS FOLDER_NAME2,
+				FOLDER_TYPE                                     AS FOLDER_TYPE,
+				FOLDER_PATH                                     AS FOLDER_PATH,
+				FOLDER_STEP                                     AS FOLDER_STEP,
+				FOLDER_LEVEL                                    AS FOLDER_LEVEL,
+				FOLDER_UPPER                                    AS FOLDER_UPPER,
+				USE_STATUS                                      AS USE_STATUS,
+				OWNER_ID                                        AS OWNER_ID,
+				CREATE_ID                                       AS CREATE_ID,
 				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				CREATE_NAME1 AS CREATE_NAME1,
-				CREATE_NAME2 AS CREATE_NAME2,
-				UPDATE_ID AS UPDATE_ID,
+				CREATE_NAME1                                    AS CREATE_NAME1,
+				CREATE_NAME2                                    AS CREATE_NAME2,
+				UPDATE_ID                                       AS UPDATE_ID,
 				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				COMPANY_ID AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID
+				COMPANY_ID                                      AS COMPANY_ID,
+				TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE
@@ -522,9 +524,9 @@
 	<select id="EzWebFolderDAO.getSimpleSubFolder" resultMap="folderSimpleVO">
 		<![CDATA[
 			SELECT
-				FOLDER_ID AS FOLDER_ID,
+				FOLDER_ID                                                         AS FOLDER_ID,
 				CASE WHEN #primary# = '1' THEN FOLDER_NAME1 ELSE FOLDER_NAME2 END AS FOLDER_NAME,
-				FOLDER_LEVEL AS FOLDER_LEVEL
+				FOLDER_LEVEL                                                      AS FOLDER_LEVEL
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE
@@ -539,9 +541,9 @@
 	<select id="EzWebFolderDAO.getFolderUsers" resultMap="folderUserVO">
 		<![CDATA[
 			SELECT
-				CASE   WHEN USER_TYPE = "user" THEN a.CN else d.CN                     END AS USER_ID,
-				CASE   WHEN USER_TYPE = "user" THEN a.DISPLAYNAME else d.DISPLAYNAME   END AS DISPLAY_NAME1,
-				CASE   WHEN USER_TYPE = "user" THEN a.DISPLAYNAME2 else d.DISPLAYNAME2 END AS DISPLAY_NAME2,
+				CASE  WHEN USER_TYPE = "user" THEN a.CN else d.CN                     END AS USER_ID,
+				CASE  WHEN USER_TYPE = "user" THEN a.DISPLAYNAME else d.DISPLAYNAME   END AS DISPLAY_NAME1,
+				CASE  WHEN USER_TYPE = "user" THEN a.DISPLAYNAME2 else d.DISPLAYNAME2 END AS DISPLAY_NAME2,
 				USER_TYPE
 			FROM
 				TBL_WEBFOLDER_FOLDERUSER u LEFT JOIN TBL_USERMASTER a ON u.USER_ID = a.CN and u.TENANT_ID = a.TENANT_ID and u.USER_TYPE = "user"
@@ -558,9 +560,9 @@
 	<select id="EzWebFolderDAO.getAllSimpleSubFolders" resultMap="folderSimpleVO">
 		<![CDATA[
 			SELECT
-				FOLDER_ID AS FOLDER_ID,
+				FOLDER_ID                                                         AS FOLDER_ID,
 				CASE WHEN #primary# = '1' THEN FOLDER_NAME1 ELSE FOLDER_NAME2 END AS FOLDER_NAME,
-				FOLDER_LEVEL AS FOLDER_LEVEL
+				FOLDER_LEVEL                                                      AS FOLDER_LEVEL
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE
@@ -578,24 +580,24 @@
 	<select id="EzWebFolderDAO.getAllSubFolders" resultMap="folderVO">
 		<![CDATA[
 			SELECT
-				FOLDER_ID AS FOLDER_ID,
-				FOLDER_NAME1 AS FOLDER_NAME1,
-				FOLDER_NAME2 AS FOLDER_NAME2,
-				FOLDER_TYPE AS FOLDER_TYPE,
-				FOLDER_PATH AS FOLDER_PATH,
-				FOLDER_STEP AS FOLDER_STEP,
-				FOLDER_LEVEL AS FOLDER_LEVEL,
-				FOLDER_UPPER AS FOLDER_UPPER,
-				USE_STATUS AS USE_STATUS,
-				OWNER_ID AS OWNER_ID,
-				CREATE_ID AS CREATE_ID,
+				FOLDER_ID                                       AS FOLDER_ID,
+				FOLDER_NAME1                                    AS FOLDER_NAME1,
+				FOLDER_NAME2                                    AS FOLDER_NAME2,
+				FOLDER_TYPE                                     AS FOLDER_TYPE,
+				FOLDER_PATH                                     AS FOLDER_PATH,
+				FOLDER_STEP                                     AS FOLDER_STEP,
+				FOLDER_LEVEL                                    AS FOLDER_LEVEL,
+				FOLDER_UPPER                                    AS FOLDER_UPPER,
+				USE_STATUS                                      AS USE_STATUS,
+				OWNER_ID                                        AS OWNER_ID,
+				CREATE_ID                                       AS CREATE_ID,
 				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				CREATE_NAME1 AS CREATE_NAME1,
-				CREATE_NAME2 AS CREATE_NAME2,
-				UPDATE_ID AS UPDATE_ID,
+				CREATE_NAME1                                    AS CREATE_NAME1,
+				CREATE_NAME2                                    AS CREATE_NAME2,
+				UPDATE_ID                                       AS UPDATE_ID,
 				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				COMPANY_ID AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID	
+				COMPANY_ID                                      AS COMPANY_ID,
+				TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE

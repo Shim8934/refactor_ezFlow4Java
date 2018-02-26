@@ -1,24 +1,19 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
 
@@ -46,9 +41,8 @@ public class EzWebFolderGWController_m {
 	 * @param createName
 	 * @return JSONObject
 	 */
-	@RequestMapping(value="/ezwebfolder/users/{userId}/folder-files", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getShares(@PathVariable String userId, HttpServletRequest request) {	
-		
+	@RequestMapping(value="/ezwebfolder/users/{userId}/folder-files", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getShares(@PathVariable String userId, HttpServletRequest request) {
 		String companyId = request.getParameter("companyId");
 		String deptId = request.getParameter("deptId");
 		String startDate = request.getParameter("startDate");
@@ -60,25 +54,24 @@ public class EzWebFolderGWController_m {
 		String pageNum = request.getParameter("pageNum");
 		String fileType = request.getParameter("fileType");
 		int tenantId = Integer.parseInt(request.getParameter("tenantId"));
-		String type = "GET";	
+		String type = "GET";
 		
 		LOGGER.debug("userId: " + userId);
 		
 		JSONObject result = new JSONObject();
 		
-		try {			
-			
+		try {
 			List<FolderFileVO> shares = ezWebFolderService.getShares(companyId, deptId, userId, startDate, endDate, fileExt, fileName, createName, pageSize, pageNum, fileType, tenantId, type);
-									
+			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", shares);
 			
 		} 
 		catch (Exception e) {
-			
+			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		
 		}
@@ -100,8 +93,7 @@ public class EzWebFolderGWController_m {
 	 * @return JSONObject
 	 */
 	@RequestMapping(value="/ezwebfolder/folder-files/{folderFileId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject updateShareUser(@PathVariable String folderFileId, HttpServletRequest request) throws Exception {	
-		
+	public JSONObject updateShareUser(@PathVariable String folderFileId, HttpServletRequest request) throws Exception {
 		Map map = new HashMap<String,Object>();
 		String companyId = request.getParameter("companyId");
 		String createId = request.getParameter("createId");
@@ -114,7 +106,7 @@ public class EzWebFolderGWController_m {
 		map.put("companyId", companyId);
 		map.put("createId", createId);
 		map.put("tenantId", tenantId);
-			
+		
 		JSONParser jparser = new JSONParser();
 		Object obj = jparser.parse(userList);
 		JSONArray jarray = (JSONArray) obj;
@@ -131,20 +123,16 @@ public class EzWebFolderGWController_m {
 		
 		JSONObject result = new JSONObject();
 		
-		try {			
-			
-									
+		try {
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
-			
-		} 
+		}
 		catch (Exception e) {
-			
+			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
-		
 		}
 		
 		return result;
