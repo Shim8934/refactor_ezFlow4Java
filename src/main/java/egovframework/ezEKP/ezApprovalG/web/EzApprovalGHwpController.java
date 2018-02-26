@@ -1,10 +1,12 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import java.io.File;
 import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -351,12 +353,9 @@ public class EzApprovalGHwpController {
 		String pageNum = "";
 		String securityCode = "";
         String securityDate = "";
-        String NoneActiveX = "";
         
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-
-//        NoneActiveX = GetSystemConfigValue("NONEACTIVEX").ToString();
         String docID = request.getParameter("docID");
         String pIngFlag = request.getParameter("ingFlag");
 
@@ -435,11 +434,9 @@ public class EzApprovalGHwpController {
 		String docTitle = request.getParameter("title");
 		String susinAdmin = "";
         String SignCheck = "N";
-        String NoneActiveX = "";
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
         String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-//                NoneActiveX = GetSystemConfigValue("NONEACTIVEX").ToString();
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -516,60 +513,62 @@ public class EzApprovalGHwpController {
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
 		String docID = request.getParameter("docID");
 		String orgDocID = request.getParameter("uOrgID");
-		String isReDraft = "";
+		String isReDraft = request.getParameter("isReDraft");
 		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String draftFlag = request.getParameter("draftFlag");
 		String retFlag = request.getParameter("retFlag");
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-        String NoneActiveX = "";
-        
-    	
 		
+		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 
-//                if (Request.QueryString["isReDraft"] != null)
-//                    _isReDraft = ReplaceXSS(Request.QueryString["isReDraft"]);
-//
-//                
-//                
-//                string dirPath = Server.MapPath("/Upload_ApprovalG");
-//                if (dirPath.Substring(dirPath.Length - 1, 1) != "\\")
-//                    dirPath = dirPath + "\\";
-//
-//                
-//                SqlCommand comd = new SqlCommand("EZSP_GETORGDOCINFO");
-//                comd.CommandType = CommandType.StoredProcedure;
-//                comd.Parameters.Add("@PDOCID", SqlDbType.Char, 20).Value = _DocID;
-//
-//                string rtnval = GetQueryResultSP(ref comd, false, userinfo.CompanyID);
-//                XmlDocument xmldom = new XmlDocument();
-//                xmldom = GetXmlReaderString(rtnval);
-//
-//                if (xmldom.GetElementsByTagName("ORGHREF").Count > 0)
-//                {
-//                    string OrgDocFile = xmldom.GetElementsByTagName("ORGHREF").Item(0).InnerText;
-//                    string DocFile = xmldom.GetElementsByTagName("HREF").Item(0).InnerText;
-//                    OrgDocFile = dirPath + OrgDocFile.Replace("/Upload_ApprovalG/", "/").Replace("/", "\\");
-//                    DocFile = dirPath + DocFile.Replace("/Upload_ApprovalG/", "/").Replace("/", "\\");
-//
-//                    xmldom = null;
-//
-//                    string Dir = DocFile.Substring(0, DocFile.LastIndexOf("\\") + 1);
-//                    if (!System.IO.Directory.Exists(Dir))
-//                        System.IO.Directory.CreateDirectory(Dir);
-//
-//
-//                    FileInfo f1 = new FileInfo(DocFile);
-//                    if (!f1.Exists)
-//                    {
-//                        FileInfo org = new FileInfo(OrgDocFile);
-//
-//                        org.CopyTo(f1.FullName, false);
-//
-//                    }
-//                }
+		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+                
+		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
+		
+		if (xmlDom.getElementsByTagName("ORGHREF").getLength() > 0) {
+			String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
+			String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
+			
+			orgDocFile = dirPath + orgDocFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			
+			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
+			File file = new File(dir);
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			File newFile = new File(docFile);
+			
+			if (!newFile.exists()) {
+				File orgFile = new File(orgDocFile);
+				
+				FileUtils.copyFile(orgFile, newFile);
+			}
+		}
+		
+		model.addAttribute("optSignDateFormat", optSignDateFormat);
+		model.addAttribute("optIsSplit", optIsSplit);
+		model.addAttribute("optSplitKind", optSplitKind);
+		model.addAttribute("sihangURL", sihangURL);
+		model.addAttribute("docID", docID);
+		model.addAttribute("orgDocID", orgDocID);
+		model.addAttribute("isReDraft", isReDraft);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		model.addAttribute("draftFlag", draftFlag);
+		model.addAttribute("retFlag", retFlag);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
 		LOGGER.debug("ezRecevGSusinHWP ended");
 		
 		return "ezApprovalG/apprGrecevgsusinHWP";
