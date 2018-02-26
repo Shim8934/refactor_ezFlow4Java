@@ -14720,7 +14720,9 @@
 		AND 
 			TBL_APRRECEIPTPROCESSINFO.APRSTATE = '013'
 		AND 
-			TBL_APRDOCINFO.FUNCTIONTYPE != '006';			
+			TBL_APRDOCINFO.FUNCTIONTYPE != '006'
+		AND
+			TBL_APRDOCINFO.FUNCTIONTYPE != '004'
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.doCallBack" parameterClass="Map"> -->
