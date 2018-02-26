@@ -353,14 +353,16 @@
 <body style="margin: 0px; padding: 0px;">
     <script type="text/javascript">
         var CrossEditor = new NamoSE("Namo");
-        
+        var defaultFontFamily = "${defaultFontFamily}";
+		var defaultFontSize = "${defaultFontSize}";
+		
 		CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
 		CrossEditor.params.Height = (height - 10) + "px";
 		
 		CrossEditor.params.FullScreen = true;
         CrossEditor.params.PutStyleInBody = true;
         CrossEditor.params.Font = "<spring:message code='main.t0620' />".split(";");
-        CrossEditor.params.ParagraphTagStyle = {"font-size":"13px;", "font-family":"<spring:message code='main.t246' />"};
+        CrossEditor.params.ParagraphTagStyle = {"font-size":defaultFontSize, "font-family":defaultFontFamily};
 
         if (userLang == "1") {
         	CrossEditor.params.UserLang = "kor";

@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezSystem.web;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -146,10 +147,15 @@ public class EzSystemAdminController {
 			}			
 		}
 		
+		List<String> defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", Locale.KOREA).split(";"));
+		List<String> defaultFontSizeList = Arrays.asList("8px,9px,10px,11px,12px,13px,14px,16px,18px,20px,24px,30px,36px,54px,72px".split(","));
+		
 		model.addAttribute("configMap", configMap);
 		model.addAttribute("licensedUserCount", licensedUserCount);
 		model.addAttribute("userCount", userCount);
 		model.addAttribute("isDotNetAdmin", isDotNetAdmin);
+		model.addAttribute("defaultFontFamilyList", defaultFontFamilyList);
+		model.addAttribute("defaultFontSizeList", defaultFontSizeList);
 		
 		logger.debug("systemMainMenu ended");
 		
