@@ -5,9 +5,12 @@
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
+	    <script src="/js/dist/jstree.min.js"></script>
 	    
 	    <style>
-	    #divBox {
+	    #divTree {
 	    	height:350px;
 	    	width:250px;
 	    	background-color:#f5f6f6;
@@ -25,7 +28,49 @@
 	    </style>
 	    
 	    <script type="text/javascript">
+	    var result = ${result};
+	    var treeCollection = [];
+	    var xmlhttp;
+
+	    window.onload = function() {
+	    	treeSet();
+	    	treeView();
 	    	
+	    	xmlhttp = createXMLHttpRequest();
+	        xmlhttp.open("POST", "/admin/ezEmail/readLetterBox.do", true);
+	        xmlhttp.onreadystatechange = detailbox_info;
+	        xmlhttp.send();
+	    }
+	    
+	    function detailbox_info() { 
+	    	if (xmlhttp == null || xmlhttp.readyState != 4) return;
+	    	
+            var result = xmlhttp.responseXML; 
+            console.log(result);
+            
+	    }
+	    
+	    function treeSet() {
+	    	for(var i = 0; i < result.length; i++) {
+	    		var treeId = "tree_" + result[i].letterbox_no; //각 tree의 아이디는 tree_(고유번호)
+	    		var treeParent = "tree_" + result[i].parent_letterbox_no;
+	    		var treeText = result[i].displayname;
+	    		
+	    		if (treeParent == "tree_null") {
+	    			treeParent = '#'; //최상위폴더(루트노드)
+	    		}
+	    		
+	    		treeCollection.push({id:treeId, parent:treeParent, text:treeText});
+	    	}
+	    }
+	    
+	    function treeView() {
+	    	console.log(treeCollection);
+	    	$('#divTree').jstree({ 'core' : {
+	    	    'data' : treeCollection
+	    	} });
+	    }
+	    
 	    function addLetterBox() {
 	    	alert("편지지함 추가 입니다");
 	    }
@@ -44,8 +89,7 @@
 		        <li><span onclick="deleteLetterBox()">&nbsp;&nbsp;- 편지지함 <spring:message code='ezQuestion.t177'/>&nbsp;&nbsp;</span></li>
 		    </ul>
 		</div>
-		<div id="divBox">
-			<!-- 여기에 jstree 넣을 것 -->
+		<div id="divTree">
 		</div>
 		<div id="divInput">
 			<form action=""><br>
