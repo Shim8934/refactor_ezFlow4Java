@@ -241,25 +241,6 @@
 	                    }
 	                    document.getElementById('div_Content').innerHTML = _DocContentHtml; //.replace(/(<p)/igm, '<div').replace(/<\/p>/igm, '</div>');	                    
 	                    
-	                    var Document_Ptag = document.getElementById('div_Content').getElementsByTagName("P");
-	                    if (Document_Ptag.length > 0) {
-	                        for (var i = 0 ; i < Document_Ptag.length; i++) {
-	                            if (Document_Ptag[i].style.marginBottom == "")
-	                                Document_Ptag[i].style.marginBottom = "0px";
-	                            if (Document_Ptag[i].style.marginTop == "")
-	                                Document_Ptag[i].style.marginTop = "0px";
-	                            if ("${userInfo.lang}" == "3") {
-	                            	Document_Ptag[i].style.fontFamily = "メイリオ";
-	                            } else {
-	                            	Document_Ptag[i].style.fontFamily = "Gulim";
-	                            }
-	                            
-	                            if(Document_Ptag[i].innerHTML == "&nbsp;") {
-	                            	Document_Ptag[i].innerHTML = "<br/>";
-	                            }
-	                        }
-	                    }
-	                    
 	                    _htmlcontent = document.getElementById('div_Content').innerHTML;
 	                    var TDRows = document.getElementById('div_Content').getElementsByTagName("TD");
 	                    for (var i = 0; i < TDRows.length; i++) {
@@ -616,7 +597,7 @@
 	                    //}
 	                    if (DocTitleObj.getAttribute("free") != null) {
 	                        titleObj.innerHTML = GetDocTitle();
-	                        titleObj.style.textAlign = "left";
+	                        //titleObj.style.textAlign = "left";
 	                    }
 	                }
 	                return HTML.outerHTML;

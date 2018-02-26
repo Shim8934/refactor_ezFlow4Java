@@ -32,7 +32,7 @@
 		<style type="text/css">
 			.warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
-			.warnintxt01 { position:relative ;padding-bottom:10px;}
+			.warnintxt01 { position:relative ;padding-bottom:10px;margin-top:15px}
 			.warningimg { position:absolute; top:0px; left:0px;}
 			.warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}
 			.warningdl dt { height:40px; margin-top:10px;text-align:left;}
@@ -259,6 +259,15 @@
 	        	window.parent.right.location.reload();
 	    	}
 	    	
+	 		$(window).on("resize", function(){
+				var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+     			$("#ResourceInfo").css("left", popupX);
+     		});
+	 		
+	 		function SearchOptionHidden() {
+	        	$.modal.close();
+	        }
+	    	
 	    	function showRes(val01) {
 	    		$.ajax({
 					type : "POST",
@@ -294,12 +303,20 @@
 						
 						$("#brdExplain").html(resbrdExc);
 						
+						/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+			        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+			        	
+			        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			        	
+			        	$("#ResourceInfo").css("left", popupX);
+			        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+						
 						$("#ResourceInfo").modal();
 					}, 
 					error: function() {
 						
 					}
-				});	        	
+				});	    		
 	        }
 		</script>
 	</head>
@@ -370,7 +387,7 @@
         	<div class="warningbox01" style="margin-top:100px;">
           		<div class="warningbox02">
   	        		<div class="warnintxt01" >
-	        			<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="136" height="112"></span>
+	        			<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style='margin:18px'></span>
 	        			<dl class="warningdl">
 	        				<dt><img src="/images/notify/warning01.gif" width="183" height="27"></dt>
 	        				<dd>

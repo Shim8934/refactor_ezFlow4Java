@@ -63,6 +63,10 @@
 					$('#btnUpForm').hide();
 					$('#btnFormListView').hide();
 				}
+				
+				if (!isIE) {
+					$('#btnInsForm2').hide();
+				}
 		    	
 				companyID = document.getElementById("ListCompany").value;
 				Tree_setconfig();
@@ -320,9 +324,7 @@
 									url = "/admin/ezApprovalG/formMain.do";
 								}
 							} else {
-// 								if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
 								if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
-
 									url = "/admin/ezApprovalG/formMainOther.do";
 								} else {
 									url = "/admin/ezApprovalG/formMain.do";
@@ -527,7 +529,7 @@
 		        ID = treeNode.GetNodeData("DATA1");
 
 		        if (TreeIdx != "") {
-		            if (document.getElementById('forminfo').value == "") {
+		            if (document.getElementById('forminfo').value.trim() == "") {
 		                alert("<spring:message code = 'ezApprovalG.t1160' />");
 						return;
 		        	}
@@ -656,7 +658,7 @@
 		        <li id="btnDelFcont"><span onclick="return btnDelFcont_onclick()"><spring:message code = 'ezApprovalG.t1628' /></span></li>
 		        <li style="background: none;"><img src="/images/i_bar.gif" style="vertical-align: middle"></li>
 		        <li id="btnInsForm1"><span onclick="return btnInsForm_onclick('MHT')"><spring:message code = 'ezApprovalG.t1667' /></span></li>
-<%--             	<li id="btnInsForm2"><span onclick="return btnInsForm_onclick('HWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li> --%>
+            	<li id="btnInsForm2" <c:if test="${useHWP != 'YES'}">style = 'display:none;'</c:if>><span onclick="return btnInsForm_onclick('HWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li>
 		        <li id="btnUpForm"><span onclick="return UpdateForm()"><spring:message code = 'ezApprovalG.t1668' /></span></li>
 		        <li id="btnDelForm"><span onclick="return DelForm()"><spring:message code = 'ezApprovalG.t1619' /></span></li>
 				<li id="btnModeForm"><span onclick="return MoveForm()"><spring:message code = 'ezApprovalG.t25000' /></span></li>

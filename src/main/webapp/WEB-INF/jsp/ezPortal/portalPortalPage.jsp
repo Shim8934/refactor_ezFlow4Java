@@ -611,7 +611,10 @@
 			    
 			    if (Element.getAttribute("id") == "") return;
 			    
-			    if (Element.getAttribute("id").indexOf("sub") > -1) return;
+			    if (Element.getAttribute("id").indexOf("sub") > -1) {
+			    	document.getElementById("txtHeight").value = Element.style.height.replace("px", "");
+			    	return;
+			    }
 			    
 			    //selectedCell = Element.getAttribute("id");
 			    selectedCell = GetAttribute(Element, "id");

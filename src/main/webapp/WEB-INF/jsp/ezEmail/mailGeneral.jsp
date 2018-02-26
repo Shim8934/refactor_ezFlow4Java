@@ -190,7 +190,7 @@
 			    for (var i = 0; i < document.getElementById("ExtSenderNM").childNodes.length; i++) {
 			        if (document.getElementById("ExtSenderNM").childNodes.item(i).nodeName == "OPTION") {
 			            var pOptionValue = document.getElementById("ExtSenderNM").childNodes.item(i).value;
-			            Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + pOptionValue + "'><nobr>" + pOptionValue + "</nobr><div>";
+			            Conitems.innerHTML += "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + pOptionValue + "'><nobr>" + pOptionValue + "</nobr><div>";
 			        }
 			    }  
 			    inboxRuleConbtn1.style.display = "";
@@ -254,14 +254,14 @@
 			        }
 			        if (ischeck) {
 			            if (ConCellRow != null) {
-			                ConCellRow.outerHTML = "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
+			                ConCellRow.outerHTML = "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
 			                inboxRuleCon1.value = "";
 			                inboxRuleCon1.focus();
 			                inputBtn.innerText = strLang239;
 			                ConCellRow = null;
 			            }
 			            else {
-			                Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
+			                Conitems.innerHTML += "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
 			                inboxRuleCon1.value = "";
 			                inboxRuleCon1.focus();
 			            }

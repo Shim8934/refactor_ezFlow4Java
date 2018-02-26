@@ -2090,7 +2090,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 
         loginVO = commonUtil.userInfo(loginCookie);
 		
+        String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", loginVO.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+        
 		model.addAttribute("userInfo", loginVO);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		return "ezSchedule/scheduleDragAndDrop";
 	}	

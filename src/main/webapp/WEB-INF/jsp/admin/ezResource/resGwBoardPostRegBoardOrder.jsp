@@ -14,7 +14,7 @@
 		<style type="text/css">
     		.warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
     		.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
-    		.warnintxt01 { position:relative ;padding-bottom:10px;}
+    		.warnintxt01 { position:relative ;padding-bottom:10px;margin-top:15px}
     		.warningimg { position:absolute; top:0px; left:0px;}
     		.warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}
     		.warningdl dt { height:40px; margin-top:10px;text-align:left;}
@@ -157,7 +157,7 @@
     				<div class="warningbox01" style="margin-top:100px;">
         				<div class="warningbox02" style="height:130px;width:auto">
   	        				<div class="warnintxt01" style="text-align:left">
-	        					<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="136" height="112"></span>
+	        					<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style='margin:18px'></span>
 	        					<dl class="warningdl">
 	        						<dd><spring:message code="ezResource.t103" /> </dd>
 	        					</dl>

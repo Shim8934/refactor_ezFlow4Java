@@ -18,6 +18,8 @@
 		</style>
 		<script type="text/javascript">
 		    var lstAttachLink = document.getElementById("lstAttachLink");
+		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
+		    
 		    function onDragEnter(evt) {
 		        evt.dataTransfer.dropEffect = "copy";
 		        evt.stopPropagation();
@@ -415,8 +417,8 @@
 		        for (var i = 0; i < filelist.length; i++) {
 					var fnl = filelist[i].name.length;
 		        	
-		        	if (fnl > 104) {
-		        		alert("<spring:message code='main.jjh08' />");
+		        	if (fnl > attachFileNameMaxLength) {
+		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
 		        		isfileup = false;
 		        		return;
 		        	} else {

@@ -3424,6 +3424,20 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
+		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "'";
+		
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+			}
+		}
+		
 		ZoneId utc = ZoneId.ofOffset("UTC", ZoneOffset.of(userInfo.getOffset().split("\\|")[1]));
 		ZonedDateTime getTime = ZonedDateTime.of(LocalDateTime.now(utc), utc);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
@@ -3488,6 +3502,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -3502,8 +3517,15 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
 		model.addAttribute("userInfo",userInfo);
-
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		
 		logger.debug("dragAndDrop ended");
 		return "ezBoard/boardDragAndDrop";
 	}
@@ -5967,7 +5989,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("reservedList", reservedList);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("isVpn", isVpn);
-
+		
 		logger.debug("boardReservedItemList ended");
 		return "ezBoard/boardReservedItemList";
 	}
@@ -6621,6 +6643,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
+		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
+		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", userInfo.getTenantId());
+		
+		logger.debug("dotNetIntegration=" + dotNetIntegration);
+		
+		// 닷넷 게시판으로 연동하는 경우에는 닷넷 URL을 반환한다.
+		if (dotNetIntegration.equals("YES")) {			
+			return dotNetUrl;
+		}
 		
 		int result = ezBoardService.getItemViewNew(boardID, itemID, userInfo.getTenantId());
 		
