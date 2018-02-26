@@ -180,9 +180,8 @@
 	
 	                HwpCtrl.SetFieldFocus("doctitle");
 	                HwpCtrl.ezSetScrollPosInfo(0);
-	            }
-	            catch (e) {
-	                alert("ezdraftui_hwp.aspx.window.onload::" + e.description);
+	            } catch (e) {
+	                alert("ezdraftui_hwp.window.onload::" + e.description);
 	                hideProgress();
 	            }
 	        }
@@ -203,7 +202,7 @@
 	                    return false;
 	                }
 	            } catch (e) {
-	                alert("ezdraftui_hwp.aspx.dragNdrapNo()::" + e.description);
+	                alert("ezdraftui_hwp.dragNdrapNo()::" + e.description);
 	            }
 	        }
 	
@@ -278,7 +277,7 @@
 	                    HwpCtrl.ClearDocument();
 	                }
 	            } catch (e) {
-	                alert("ezdraftui_hwp.aspx.FieldsAvailable()::" + e.description);
+	                alert("ezdraftui_hwp.FieldsAvailable()::" + e.description);
 	            }
 	        }
 	
@@ -306,7 +305,7 @@
 			        return Result;
 			
 			    } catch (e) {
-			        alert("ezdraftui_hwp.aspx.GetFormType()::" + e.description);
+			        alert("ezdraftui_hwp.GetFormType()::" + e.description);
 			    }
 			}
 	
@@ -414,7 +413,7 @@
 			            }
 					}
 				} catch (e) {
-				    alert("ezdraftui_hwp.aspx.process_AfterOpen()::" + e.description);
+				    alert("ezdraftui_hwp.process_AfterOpen()::" + e.description);
 				}
 			}
 	
@@ -452,7 +451,7 @@
 			        
 			        return false;
 		        } catch (e) {
-		            alert("ezdraftui_hwp.aspx.btnSetAprLine_onclick()::" + e.description);
+		            alert("ezdraftui_hwp.btnSetAprLine_onclick()::" + e.description);
 		        }
 			}
 	
@@ -465,7 +464,7 @@
 	                    setRecevInfo(ret);
 	                }
 	            } catch (e) {
-	                alert("ezdraftui_hwp.aspx.btnSetReceivLine_onclick()::" + e.description);
+	                alert("ezdraftui_hwp.btnSetReceivLine_onclick()::" + e.description);
 	            }
 	        }
 	
@@ -765,12 +764,6 @@
 	
 	                        UpdateLineHistory();
 	
-	                        if (LastSignSN == 1) {
-	                            SendAckForExch("approval", "END");
-	                        } else {
-	                            SendAckForExch("submit", "ING");
-	                        }
-	
 	                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
 	                        OpenAlertUI(pAlertContent);
 	                        draftFlag = true;
@@ -802,7 +795,7 @@
 	                    }
 	                }
 // 	            } catch (e) {
-// 	                alert("ezdraftui_hwp.aspx.btnSendDraft_onclick()::" + e.description);
+// 	                alert("ezdraftui_hwp.btnSendDraft_onclick()::" + e.description);
 // 	            }
 	        }
 	
@@ -810,7 +803,7 @@
 	            try {
 	                var ret = openFileAttachUI();
 	            } catch (e) {
-	                alert("ezdraftui_hwp.aspx.btnFileAttach_onclick()::" + e.description);
+	                alert("ezdraftui_hwp.btnFileAttach_onclick()::" + e.description);
 	            }
 	        }
 	
@@ -893,7 +886,7 @@
 			        setPublicFlag();
 			        SummaryFlag = true;
 			    } catch (e) {
-			        alert("ezdraftui_hwp.aspx.btnDocInfo_onclick()::" + e.description);
+			        alert("ezdraftui_hwp.btnDocInfo_onclick()::" + e.description);
 			    }
 			}
 			
@@ -921,7 +914,7 @@
 				    HwpCtrl.SetFieldText("publication", PublicText);
 			
 				} catch (e) {
-				    alert("ezdraftui_hwp.aspx.setPublicFlag()::" + e.description);
+				    alert("ezdraftui_hwp.setPublicFlag()::" + e.description);
 				}
 			}
 	
@@ -945,7 +938,7 @@
 			                    
 			        return strRtn;
 			    } catch (e) {
-			        alert("ezdraftui_hwp.aspx.getPublicLevel()::" + e.description);
+			        alert("ezdraftui_hwp.getPublicLevel()::" + e.description);
 			    }
 			}
 	
@@ -967,7 +960,7 @@
 			            TaskCode = getNodeText(xmlCab.selectSingleNode("CABINETINFO/CABINET/TASKCODE"));
 			        }
 			    } catch (e) {
-			        alert("ezdraftui_hwp.aspx.btnSetTaskCode_onclick()::" + e.description);
+			        alert("ezdraftui_hwp.btnSetTaskCode_onclick()::" + e.description);
 			    }
 			}
 	
@@ -997,7 +990,7 @@
 				        SetDocumentElement(HwpCtrl, "SepAttachLVXml", g_SepAttachLVXml);
 				    }
 				} catch (e) {
-				    alert("ezdraftui_hwp.aspx.btnAddSepAttach_onclick()::" + e.description);
+				    alert("ezdraftui_hwp.btnAddSepAttach_onclick()::" + e.description);
 				}
 			}
 	
@@ -1024,7 +1017,7 @@
 			        }
 			        return getXmlString(rtnXml);
 			    } catch (e) {
-			        alert("ezdraftui_hwp.aspx.GetSepAttParamXml()::" + e.description);
+			        alert("ezdraftui_hwp.GetSepAttParamXml()::" + e.description);
 			    }
 			}
 	
@@ -1131,7 +1124,7 @@
 			            SummaryFlag = true;
 			        }
 			    } catch (e) {
-			        alert("ezdraftui_hwp.aspx.GetSepAttParamXml()::" + e.description);
+			        alert("ezdraftui_hwp.GetSepAttParamXml()::" + e.description);
 			    }
 			}
 	
@@ -1204,7 +1197,7 @@
 			            return false;
 			        }
 			    } catch (e) {
-			        alert("ezdraftui_hwp.aspx.btnSaveServer_onclick()::" + e.description);
+			        alert("ezdraftui_hwp.btnSaveServer_onclick()::" + e.description);
 			    }
 			}
 	

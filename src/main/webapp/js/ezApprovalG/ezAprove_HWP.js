@@ -510,30 +510,24 @@ function openFileAttachUI()
 	return ret;
 }
 
-//한글버전만
-function getNodeText(node) {
-    return trim_Cross(node.text);
-}
-
 function SaveApproveInfo(pApproveFlag)
 {
 	if (SaveFile() != "TRUE")
 		return "FALSE";
 	
 	SignSave();
-	var objNodes = xmldoc.documentElement.childNodes;
 	
-	var xmlpara = createXmlDom;
+	var xmlpara = createXmlDom();
 
 	var objNode;
 	createNodeInsert(xmlpara, objNode, "PARAMETER");
-	createNodeAndInsertText(xmlpara, objNode, "DOCID", getNodeText(objNodes(0)));
-	createNodeAndInsertText(xmlpara, objNode, "FORMID", getNodeText(objNodes(1)));
-	createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", getNodeText(objNodes(2)));
-	createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", getNodeText(objNodes(3)));
-	createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", getNodeText(objNodes(4)));
+	createNodeAndInsertText(xmlpara, objNode, "DOCID", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[0]));
+	createNodeAndInsertText(xmlpara, objNode, "FORMID", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[1]));
+	createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[2]));
+	createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[3]));
+	createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[4]));
 	createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", "002");
-	createNodeAndInsertText(xmlpara, objNode, "HREF", getNodeText(objNodes(6)));
+	createNodeAndInsertText(xmlpara, objNode, "HREF", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[6]));
 
 	pDocTitle = HwpCtrl.GetFieldText("doctitle");
 	createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
@@ -548,25 +542,25 @@ function SaveApproveInfo(pApproveFlag)
 	    createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
 
 	if (pHasAttachYN == "")
-	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", getNodeText(objNodes(9)));
+	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[9]));
 	else
 	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
 
 	var objNode;
 
 	if (pHasOpinionYN == "")
-	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", getNodeText(objNodes(10)));
+	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[10]));
 	else
 	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
 
 
 	createNodeAndInsertText(xmlpara, objNode, "STARTDATE", "");
 	createNodeAndInsertText(xmlpara, objNode, "ENDDATE", "");
-	createNodeAndInsertText(xmlpara, objNode, "WRITERID", getNodeText(objNodes(13)));
-	createNodeAndInsertText(xmlpara, objNode, "WRITERNAME", getNodeText(objNodes(14)));
-	createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE", getNodeText(objNodes(15)));
-	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTID", getNodeText(objNodes(16)));
-	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME", getNodeText(objNodes(17)));
+	createNodeAndInsertText(xmlpara, objNode, "WRITERID", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[13]));
+	createNodeAndInsertText(xmlpara, objNode, "WRITERNAME", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[14]));
+	createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[15]));
+	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTID", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[16]));
+	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[17]));
 	createNodeAndInsertText(xmlpara, objNode, "HTML", "");
 	createNodeAndInsertText(xmlpara, objNode, "PUSERID", pOrgAprUserID);
 	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME", pOrgAprUserName);
@@ -1078,13 +1072,11 @@ function openSingUI(parameter)
 			userID : pingUserID
 		},
 		success: function(xml){
-			result = loadXMLString(xml);
+			result = xml;
 		}
 	});
 
-    Resultxml = result;
-	
-	var SignNodeList = Resultxml.selectNodes("LISTVIEWDATA/ROWS/ROW"); 
+	var SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
   
 	if (SignNodeList.length != 0) { 
 		var parameter = pingUserID;

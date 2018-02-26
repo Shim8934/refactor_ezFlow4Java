@@ -41,10 +41,10 @@
 	        var arrPrevDoc = new Array();
 	        var arrNextDoc = new Array();
 	        var xmlhttp = createXMLHttpRequest();
-	        var xmldoc = new ActiveXObject("Microsoft.XMLDOM");
-	        var xmlaprline = new ActiveXObject("Microsoft.XMLDOM");
-	        var xmlattach = new ActiveXObject("Microsoft.XMLDOM");
-	        var Resultxml = new ActiveXObject("Microsoft.XMLDOM");
+	        var xmldoc = createXmlDom();
+	        var xmlaprline = createXmlDom();
+	        var xmlattach = createXmlDom();
+	        var Resultxml = createXmlDom();
 	        var hapyuiCount = 0;
 	        var gongramCount = 0;
 	        var pSuSinFlag;
@@ -722,12 +722,6 @@
 						            process_AfterApprove("4");
 						        }
 						        else {
-						            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-						                SendAckForExch("approval", "END");
-						            }
-						            else {
-						                SendAckForExch("approval", "ING");
-						            }
 						            process_AfterApprove("1");
 						        }
 						    }
@@ -787,7 +781,6 @@
 						        OpenAlertUI(pAlertContent);
 						        return;
 						    }
-			                SendAckForExch("approval", "ING");
 			                process_AfterApprove("2");
 			            }
 			        }

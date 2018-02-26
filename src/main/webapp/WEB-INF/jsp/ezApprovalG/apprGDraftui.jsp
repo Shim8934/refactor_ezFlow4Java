@@ -794,12 +794,6 @@
 	                        sendAlertMail("APR", 1, "DRAFT");
 		                }
 		                UpdateLineHistory();
-		                if (LastSignSN == 1) {
-		                    SendAckForExch("approval", "END");
-		                }
-		                else {
-		                    SendAckForExch("submit", "ING");
-		                }
 		
 		                pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
 		                OpenAlertUI(pAlertContent, Complete_Deaft2);
