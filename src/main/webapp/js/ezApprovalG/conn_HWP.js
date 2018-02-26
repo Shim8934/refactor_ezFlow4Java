@@ -108,7 +108,7 @@ function ExcuteInfo(pprocessIdx, currTD) {
     try {
         var xmlData = new ActiveXObject("Microsoft.XMLDOM");
         xmlData.async = false;
-        xmlData.load(document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ConnRootText));
+        xmlData.load(document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(ConnRootText));
     } catch (e) {
         return true;
     }
