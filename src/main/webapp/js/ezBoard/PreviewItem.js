@@ -63,10 +63,11 @@ function PreviewRayerChange(pGubun) {
             CurrentHeight = document.documentElement.clientHeight - 110;
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = "100%";
-            if (navigator.userAgent.indexOf('Firefox') != -1)
+            if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-            else
+            } else {
                 document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
+            }
             g_bPrevShow = false;
         }
         else if (pGubun == "W") {
@@ -88,16 +89,18 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("MailListRayer").style.width = "100%";
             document.getElementById("PreviewRayerW").style.width = "100%";
             document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-            if (navigator.userAgent.indexOf('Firefox') != -1)
+            if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
-            else
+            } else {
                 document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
+            }
             document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
-            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
+            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
-            else
+            } else {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
+            }
             pPreviewShow_HOW = "W";
             pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
             pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
@@ -164,8 +167,10 @@ function PreviewRayerChange(pGubun) {
         }
         MailOptionHidden();
         PreviewMode_ChangeBtn();
-        if (pAdminType != "y" && firstFlag)
+        if ( firstFlag) {
             Set_BoardConfig();
+        
+        }
         isPreviewChange = false;
     } catch (e) { }
 }
@@ -874,7 +879,7 @@ function ListCount(pCount) {
 }
 
 function Set_BoardConfig() {
-    $.ajax({
+     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : true,
