@@ -122,9 +122,8 @@ public class EzApprovalGHwpController {
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String susinAdmin = "";
-		String orgAprUserID = request.getParameter("ID");
+		String orgAprUserID = request.getParameter("id");
 		String orgAprUserName = request.getParameter("name");
-        String orgAprUserName2 = request.getParameter("name2");
 		String orgAprUserDeptID = request.getParameter("deptID");
 		String docID = request.getParameter("docID");
 		String tempUserID = userInfo.getId();
@@ -133,6 +132,7 @@ public class EzApprovalGHwpController {
 		//hwp 툴바가 6줄인데 맨윗줄 부터 '1' 이면 사용 '0' 이면 사용하지 않는다. ex)'100001' 맨위랑 맨아래 툴바만 표시
         String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
         
         if (userInfo.getRollInfo().indexOf("a=1") > -1) {
         	susinAdmin = "YES";
@@ -156,16 +156,18 @@ public class EzApprovalGHwpController {
         if (!allFlag.equals("1") && !allFlag.equals("2")) {
         	allFlag = "0";
         }
-                
+
+        String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
         String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
         String optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
         String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
         String optjunKyukInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
              
         model.addAttribute("approvalFlag", approvalFlag);
+        model.addAttribute("approvalPWD", approvalPWD);
+        model.addAttribute("useEditor", useEditor);
 		model.addAttribute("orgAprUserID", orgAprUserID);
 		model.addAttribute("orgAprUserName", orgAprUserName);
-		model.addAttribute("orgAprUserName2", orgAprUserName2);
 		model.addAttribute("orgAprUserDeptID", orgAprUserDeptID);
 		model.addAttribute("docID", docID);
         model.addAttribute("tempUserID", tempUserID);
@@ -179,7 +181,7 @@ public class EzApprovalGHwpController {
         model.addAttribute("dirPath", dirPath);
         model.addAttribute("hwpToolbar", hwpToolbar);
         model.addAttribute("susinAdmin", susinAdmin);
-        
+        model.addAttribute("isHWP", "Y");
         
 		LOGGER.debug("approvuiHWP ended");
 		

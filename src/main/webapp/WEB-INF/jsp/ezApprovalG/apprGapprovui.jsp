@@ -1326,7 +1326,6 @@
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
 		            try {
-		                var savexmlhttp = createXMLHttpRequest();
 		                //결재선 저장
 		                if (approvalFlag == "S") {
 			                if (pGubun != "14" && pGubun != "10") {
@@ -1350,8 +1349,6 @@
 			                        SaveFile();
 			                        getCurApproverAprLine("${isUsed}");
 			                    }
-			                    savexmlhttp = null;
-			                    savexmlhttp = createXMLHttpRequest();
 			                }
 		                } else {
 			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
@@ -1375,8 +1372,6 @@
 			                        SaveFile();
 			                        getCurApproverAprLine("${isUsed}");
 			                    }
-			                    savexmlhttp = null;
-			                    savexmlhttp = createXMLHttpRequest();
 			                }
 		                }
 		
@@ -1460,7 +1455,6 @@
 		
 		                SummaryFlag = true;
 		
-		                savexmlhttp = null;
 		            }
 		            catch (e) {
 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
