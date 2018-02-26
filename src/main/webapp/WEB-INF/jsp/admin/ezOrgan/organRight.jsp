@@ -1424,10 +1424,10 @@
 				</th>
 				<th style="width:80px;text-align:center" rowspan="3">
 					<table>
-						<c:if test="${dotNetIntegration != 'YES'}">
                         <tr id="companybutton3">
                             <td><a class="imgbtn"><span onClick="info_company()"><spring:message code='ezCommunity.t1070' /></span></a></td>
                         </tr>     
+						<c:if test="${dotNetIntegration != 'YES'}">
 						<tr id="companybutton1">
 							<td><a class="imgbtn"><span onClick="add_company()"><spring:message code='ezOrgan.t76' /></span></a></td>
 						</tr>

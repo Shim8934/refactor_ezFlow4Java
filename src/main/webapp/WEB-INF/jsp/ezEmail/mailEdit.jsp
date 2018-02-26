@@ -104,7 +104,7 @@
 		    var folderDate = "${folderDate}";
 		    var _pBigAttachDownloadDay = "${pBigAttachDownloadDay}";
 		    var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
-		    var defaultFont = "<spring:message code='main.t246' />";
+		    var defaultFontAndSize = "${defaultFontAndSize}";
 		    var useSecureMail = "${useSecureMail}";
 		    var isCrossBrowser = "${isCrossBrowser}";
 		    var isSecureMail = "${isSecureMail}";
@@ -706,7 +706,6 @@
 		    	} else {
 		    		var texts = document.getElementById("plainTextArea").value.split("\n");
 		            textData = "";
-		            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
 		            for (var i=0; i<texts.length; i++) {
 		            	if (texts[i] != "") {
 		            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";

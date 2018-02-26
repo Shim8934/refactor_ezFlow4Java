@@ -141,7 +141,11 @@
     		        	    var idx = getSubtree.split('PostTreeView_img_');
     		        	    
     		        	    if (typeof idx[1] != "undefined") {
+    		        	    	var attr = $('#PostTreeView_img_' + idx[1]).attr("src").split('/');
+    		        	    	
+    		        	    	if (attr[3] != "plus.gif") {
     			        	    	PostTreeView.toggle(idx[1]);
+    		        	    	}
     		        	    }
     		        	    
     	        	    	treeArrNum = $('.plusTreeImg').length;
@@ -357,10 +361,12 @@
 	        	메일함 트리뷰 reload 함수
 	        */
 	        function mailbox_treeview_reload() {
-	        	PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-                PostTreeView.update();
-                
-                previewSubTreeCall();
+	        	setTimeout(function() {
+	        		PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+	                PostTreeView.update();
+	                
+	                previewSubTreeCall();
+	        	}, 100);
 	        }
 	        
 	        function Function_Flag(v_data) {

@@ -147,4 +147,37 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		
 		return mPortalTimeLineVOs;
 	}
+
+	@Override
+	public MCommonVO commonInfoWeb(String serverName, String userId) throws Exception {
+		LOGGER.debug("commonInfoWeb started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("serverName", serverName);
+		map.put("userId", userId);
+		
+		MCommonVO info = mOptionDAO.commonInfoWeb(map);
+				
+		if (info != null) {
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
+			
+			// 사용자의 언어가 설정되어 있지 않을 때는 시스템의 Primary Lang을 사용하도록 한다.			
+			if (info.getLang() == null) {				
+				info.setLang(primaryLang);
+			}
+			
+			if (primaryLang.equals(info.getLang())) {
+				info.setPrimary("1");
+			} else {
+				info.setPrimary("2");				
+			}
+		}
+		
+		LOGGER.debug("commonInfoWeb ended");
+		
+		return info;
+	}
+	
+	
+	
 }

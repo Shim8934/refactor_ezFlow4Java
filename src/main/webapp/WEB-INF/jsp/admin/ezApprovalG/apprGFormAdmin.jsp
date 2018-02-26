@@ -527,7 +527,7 @@
 		        ID = treeNode.GetNodeData("DATA1");
 
 		        if (TreeIdx != "") {
-		            if (document.getElementById('forminfo').value == "") {
+		            if (document.getElementById('forminfo').value.trim() == "") {
 		                alert("<spring:message code = 'ezApprovalG.t1160' />");
 						return;
 		        	}

@@ -86,6 +86,7 @@ body{
 .kk_editor .kk_editor_toolbar.chrome .menus .menu .menu_line {display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ height: 12px; position: relative; top: -2px; background: #c0c0c0 /* url(../images/bg_toolbar_document.png) repeat-x top left*/; padding: 0 1px 0 0; margin-right: 2px;}
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_colorpicker,
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_custombox,
@@ -107,6 +108,7 @@ body{
 /*.kk_editor .kk_editor_toolbar .menus .menu .disabled .i_icon { cursor: not-allowed; }*/
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_colorpicker.disabled .i_icon,
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker.disabled .i_icon,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker.disabled .i_icon,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox.disabled .i_icon,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_custombox.disabled .i_icon,
@@ -114,6 +116,7 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button.disabled .i_icon{ opacity: 0.3; }
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_colorpicker .i_icon,
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .i_icon,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker .i_icon,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox .i_icon,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_custombox .i_icon,
@@ -127,6 +130,12 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox .arrow { display: block; width: 10px; height: 10px; vertical-align: middle; background: url(../images/wysiwygeditor.png) no-repeat -185px -123px; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ margin-top: -10px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .arrow_icon { display: block; width: 15px; height: 20px; background: url(../images/wysiwygeditor.png) no-repeat 0 0; vertical-align: middle; }
 
+
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker { width: 30px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .i_icon:hover,
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .arrow_wrap:hover { background-color: #b6b6b6; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .arrow_wrap { display: inline-block; position: absolute; height: 20px; line-height: 25px; top: 2px; cursor: pointer;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .arrow_wrap .arrow { width: 10px; height: 10px; vertical-align: middle; background: url(../images/wysiwygeditor.png) no-repeat -185px -123px; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ margin-top: -10px;}
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker { width: 30px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker .i_icon:hover,
@@ -160,10 +169,8 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_remove_format { background-position: -390px 0px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_colorpicker .i_color { background-position: 0px -30px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_colorpicker .i_background_color { background-position: -30px -30px;}
-.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_numbered_list { background-position: -60px -30px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_textFormatCopy { background-position: -180px -150px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_textFormatPaste { background-position: -150px -150px;}
-.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_bullet_list { background-position: -90px -30px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_outdent { background-position: -120px -30px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_indent { background-position: -150px -30px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox .i_line_height { background-position: -180px -30px; width:22px}
@@ -231,7 +238,18 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_tb_bottom { background-position: -150px -90px; }
 
 
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_numbered_list { background-position: -60px -30px;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_bullet_list { background-position: -90px -30px;}
 
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .i_numbered_list { background-position: -60px -30px;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .i_bullet_list { background-position: -90px -30px;}
+
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker { display: none; top:25px; left:-3px; position: absolute; z-index: 100; width: 180px; margin: 0; padding: 0; background-color: #fff; border: 1px solid #b9b9b9; box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.3); }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm { display: block; margin: 0; background-color: #fff; overflow: hidden; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item { height: 25px; clear: both; line-height: 25px;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item:hover { cursor: pointer; background: #eee; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item .list_title{ float: left; height: 25px; width: 30px; text-align: center; background-color: #d8f5ff;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item .list_name{ float: left; width: 130px; text-align: left; padding-left: 5px;}
 
 
 
@@ -350,6 +368,7 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog .kk_dialog_footer .kk_dialog_buttons{ top: 0; right: 0; z-index: 20; padding: 0px !important; margin: 0px !important; }
 .kk_editor .kk_editor_dialog .kk_dialog .kk_dialog_footer .kk_dialog_buttons li{ list-style: none; display: inline-block; height: 25px; }
 .kk_editor .kk_editor_dialog .kk_dialog .kk_dialog_footer .kk_dialog_buttons .kk_dialog_button { display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ background: #ffffff; border : 1px solid #8b8a8a; width: 60px; height: 23px; line-height:23px; border-radius: 2px; box-shadow: 0 1px #eee; font-size: 12px; font-weight: normal; margin-left: 2px; margin-right: 2px; }
+.kk_editor .kk_editor_dialog .kk_dialog .kk_dialog_footer .kk_dialog_buttons .kk_dialog_button.disabled_button { background-color: #eaeaea; color: #aaaaaa; border: 1px solid #dcd8d8; }
 .kk_editor .kk_editor_dialog .kk_dialog .kk_dialog_footer .kk_dialog_buttons .kk_dialog_button:hover { cursor: pointer;  background: #e9e9e9; }
 
 
@@ -912,8 +931,8 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_image { width: 400px; }
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents { background-color: #ffffff;}
 
-.kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_table_td_label { text-align: center; }
-.kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_table_td_input { text-align: left; }
+.kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_table_td_label { text-align: center; user-select: none;}
+.kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_table_td_input input[type="text"]:disabled { background-color:#eee;}
 
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menus { height: 25px; padding-top: 10px; padding-left: 9px; padding-right: 10px; border-bottom: 1px solid #b9b9b9; background-color: #d4d4d4; }
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menus .kk_image_dialog_tab_menu_item { margin-top: -5px; margin-right: -2px; padding-top: 5px; padding-bottom: 5px; padding-left: 10px; padding-right: 10px; float: left; border-top: 1px solid #dddddd; border-right: 1px solid #dddddd; border-left: 1px solid #dddddd; background-color: #b9b9b9; cursor: pointer; height: 19px; line-height: 19px; color: #666666;}
@@ -1097,6 +1116,11 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_file_open .kk_file_open_input { width: 1px; height: 1px; position: absolute; padding: 0; margin: 0px; overflow: hidden; border: 0; }
 .kk_editor .kk_editor_dialog .kk_dialog_file_open .kk_dialog_contents .kk_file_open_path_wrapper { padding-top:10px; }
 .kk_editor .kk_editor_dialog .kk_dialog_file_open .kk_dialog_contents .kk_file_open_valid_wrapper { padding-top: 15px; padding-bottom: 10px; color: #5f5f5f; }
+
+.kk_editor .kk_editor_dialog .kk_dialog_file_open .kk_dialog_contents .kk_file_open_encoding_wrapper { padding-top:10px; text-align: left;}
+.kk_editor .kk_editor_dialog .kk_dialog_file_open .kk_dialog_contents .kk_file_open_encoding_selection { text-align: left; font-size: 11px; height: 25px;}
+.kk_editor .kk_editor_dialog .kk_dialog_file_open .kk_file_open_encoding_label { margin-right: 6px; display: inline-block; vertical-align: middle; padding-left: 10px; }
+
 
 
 .kk_editor .kk_editor_dialog .kk_dialog_auto_save_load { }

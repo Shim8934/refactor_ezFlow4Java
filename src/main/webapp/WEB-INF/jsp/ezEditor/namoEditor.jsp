@@ -380,6 +380,8 @@
 	    <script type="text/javascript">
 	        var CrossEditor = new NamoSE("Namo");
 	        var useHTMLMode = "${useHTMLMode}";
+	        var defaultFontFamily = "${defaultFontFamily}";
+			var defaultFontSize = "${defaultFontSize}";
 			
 	        if (type == "APPROVAL" || type == "APPROVALG") {
 				CrossEditor.params.Height = height + "px";
@@ -401,7 +403,7 @@
 			CrossEditor.params.FullScreen = true;
 	        CrossEditor.params.PutStyleInBody = true;
 	        CrossEditor.params.Font = "<spring:message code='main.t0620' />".split(";");
-	        CrossEditor.params.ParagraphTagStyle = {"font-size":"13px;", "font-family":"<spring:message code='main.t246' />"};
+	        CrossEditor.params.ParagraphTagStyle = {"font-size":defaultFontSize, "font-family":defaultFontFamily};
 	        
 	        if (useHTMLMode == "NO") {
 	        	CrossEditor.params.CreateTab = "0";

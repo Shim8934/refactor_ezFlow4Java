@@ -385,7 +385,7 @@
                 
                 if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
                 	var str = "<spring:message code = 'ezCommunity.t926' />";
-                	document.getElementById("mycommunity").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='border:1px solid #ddd;height:450px;text-align:center;border-radius:3px;background-color:#fafafa'><img style='margin-top:160px' src='/images/nocomunitydata.png' /><div style='margin-top:10px;color:rgb(55, 54, 130)'>" + str + "</div></div>";
+                	document.getElementById("mycommunity").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='border:1px solid #ddd;height:430px;text-align:center;border-radius:3px;background-color:#fafafa'><img style='margin-top:160px' src='/images/nocomunitydata.png' /><div style='margin-top:10px;color:rgb(55, 54, 130)'>" + str + "</div></div>";
                 }
                 //document.getElementById("tblPageRayer").style.display = "none";
 	        }

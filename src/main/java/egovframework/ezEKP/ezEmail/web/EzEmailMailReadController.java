@@ -2341,7 +2341,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					// sent date
 					date = message.getSentDate();
 					if (date != null) {
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm (z)");
 						dateStr = sdf.format(date);
 					}
 					logger.debug("dateStr=" + dateStr);
@@ -2371,6 +2371,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 						date = sdf.parse(maxReadDate);
+						sdf.applyPattern("yyyy-MM-dd HH:mm (z)");
+						sdf.setTimeZone(TimeZone.getDefault());
 						maxReadDate = sdf.format(date);
 						
 						readDateStr = "<span style=\"color:red\">" + maxReadDate + "</span> " + egovMessageSource.getMessage("ezEmail.lhm37", locale);

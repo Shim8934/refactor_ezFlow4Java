@@ -3506,7 +3506,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId());
 				
 				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-					if(mailchk.equals("Y")) {
+					if(mailchk!=null && mailchk.equals("Y")) {
 						model.addAttribute("chk", "no");
 					}
 					return "main/warning";
