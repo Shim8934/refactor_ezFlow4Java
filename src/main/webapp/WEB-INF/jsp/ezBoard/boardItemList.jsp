@@ -165,9 +165,9 @@
 		    	var clickOutside;
 		    	var leftDocument;
 		    	
-		    	if ($(window.parent.parent.frames['left'].document) == undefined) {
-		    		leftDocument = $(window.parent.parent.parent.frames['left'].document);
-		    	} else {
+		    	try {
+		    		leftDocument = $(window.parent.frames['left'].document);
+		    	} catch (e) {
 		    		leftDocument = $(window.parent.parent.frames['left'].document);
 		    	}
 		    	

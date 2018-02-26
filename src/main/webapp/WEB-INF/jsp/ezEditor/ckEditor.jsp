@@ -248,7 +248,7 @@
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	            
 	        } else {
-	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        }
 			
 			if (useHTMLMode == "NO") {
