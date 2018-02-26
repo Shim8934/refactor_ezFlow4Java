@@ -863,7 +863,7 @@
 			}
 	
 			function btnMail_onclick() {
-			    window.open("/myoffice/ezEmail/newmail.aspx?cmd=docsend&DocID=" + pDocID + "&DocHref=" + pFormHref, '', 'height=700,width=690,resizable=yes,scrollbars=no' + GetOpenPosition(690, 700));
+			    window.open("/ezEmail/mailWrite.do?cmd=docsend&docID=" + pDocID + "&docHref=" + pFormHref, '', 'height=700,width=690,resizable=yes,scrollbars=no' + GetOpenPosition(690, 700));
 			}
 	
 			function btnDocInfo_onclick() {

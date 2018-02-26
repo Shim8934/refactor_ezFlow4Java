@@ -3191,9 +3191,7 @@ function UpdateLineHistory() {
 			result = xml;
 			
 			var DataNodes = GetChildNodes(loadXMLString(result));
-		    if (getNodeText(DataNodes[0]) == "TRUE") {
-		    }
-		    else {
+		    if (getNodeText(DataNodes[0]) != "TRUE") {
 		        var pAlertContent = strLang91;
 		        OpenAlertUI(pAlertContent);
 		    }
@@ -3204,8 +3202,7 @@ function UpdateLineHistory() {
 		}
 	});
 	
-    if (result == "TRUE") {
-    } else {
+    if (result != "<RESULT>TRUE</RESULT>") {
         var pAlertContent = strLang91;
         OpenAlertUI(pAlertContent);
     }

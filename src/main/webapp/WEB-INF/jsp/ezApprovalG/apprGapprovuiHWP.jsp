@@ -9,10 +9,12 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/ApprovUI_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezAprove_HWP.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/attachG.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
@@ -21,10 +23,9 @@
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 	    <script type="text/javascript">
-	    	var pNoneActiveX = "${noneActiveX}";
 	        var OrgAprUserID = "${orgAprUserID}";
 	        var OrgAprUserName = "${orgAprUserName}";
-	        var OrgAprUserName2 = "${orgAprUserName2}";
+	        var OrgAprUserName2 = "";
 	        var OrgAprUserDeptID = "${orgAprUserDeptID}";
 	        var pEndDocHref = "${dirPath}";
 	        var pDocID = "${docID}";
@@ -40,10 +41,10 @@
 	        var arrPrevDoc = new Array();
 	        var arrNextDoc = new Array();
 	        var xmlhttp = createXMLHttpRequest();
-	        var xmldoc = createXmlDom();
-	        var xmlaprline = createXmlDom();
-	        var xmlattach = createXmlDom();
-	        var Resultxml = createXmlDom();
+	        var xmldoc = new ActiveXObject("Microsoft.XMLDOM");
+	        var xmlaprline = new ActiveXObject("Microsoft.XMLDOM");
+	        var xmlattach = new ActiveXObject("Microsoft.XMLDOM");
+	        var Resultxml = new ActiveXObject("Microsoft.XMLDOM");
 	        var hapyuiCount = 0;
 	        var gongramCount = 0;
 	        var pSuSinFlag;
@@ -106,10 +107,10 @@
 	
 	        var pCompanyID = "${userInfo.companyID}";
 	        var KuyjeType = "002";
-	        var signDateFormat = "<%=_optSignDateFormat%>";
-		    var isSplit = "<%=_optisSplit%>";
-	        var SplitKind = "<%=_optSplitKind%>";
-	        var junKyukInfo = "<%=_optjunKyukInfo%>";
+	        var signDateFormat = "${optSignDateFormat}";
+		    var isSplit = "${optisSplit}";
+	        var SplitKind = "${optSplitKind}";
+	        var junKyukInfo = "${optjunKyukInfo}";
 	        var FirstHtml = "";
 	        var beforeHtml;
 	        var beforeHwp = "";
@@ -117,17 +118,18 @@
 	        var cabinetID = "";
 	        var TaskCode = "";
 	        var DocNumCode = "";
-	        var allFlag = "<%=_allFlag%>";
+	        var allFlag = "${allFlag}";
 		    var selectedDocID = "";
 		    var OpinionAction = "";
-		    var CurrYear = "<%=oldyear%>";
+		    var CurrYear = "${oldYear}";
 		    var SummaryFlag = true;
 		    var pGubun;
 		    var isExtDoc;
-		    var pUse_Editor = "<%= Use_Editor%>";
+		    var pUse_Editor = "${useEditor}";
 	        var g_szUserID = arr_userinfo[8];
-	        var g_senderinfo = "<%= userinfo.CompanyName + ", " + userinfo.DeptName + ", " + userinfo.Title %>";
+	        var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
 	        var isHWP = "${isHWP}";
+	        var approvalFlag = "${approvalFlag}";
 	        
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -155,7 +157,7 @@
 		
 		        AllApprove.style.display = "none";
 		        var parameter = "";
-		        var url = "/myoffice/ezApprovalG/ezAPRALLALERT.aspx";
+		        var url = "/ezApprovalG/ezAprAllAlert.do";
 		        var feature = "status:no;dialogWidth:326px;dialogHeight:205px;help:no;scroll:no;dialogLeft:" + window_left + ";dialogTop:" + window_top + "";
 		        var RtnVal = window.showModalDialog(url, parameter, feature);
 		
@@ -223,7 +225,6 @@
 		            OrgAprUserName = NextDocUserName;
 		            OrgAprUserName2 = NextDocUserName2;
 		            OrgAprUserDeptID = NextDocDeptID;
-		            pEndDocHref = "/Upload_ApprovalG/" + pCompanyID + "/doc/" + CurrYear + "/" + (pDocID % 1000) + "/" + pDocID + ".hwp";
 		
 		            getApprovInfo();
 		            pUserID = pOrgAprUserID;
@@ -232,7 +233,7 @@
 		            GetExchInfo();
 		
 		            if (pDocHref != "") {
-		                var URL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pDocHref);
+		                var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref);
 		                var isTrue = HwpCtrl.LoadFile(URL, false);
 		
 		                FieldsAvailable(isTrue);
@@ -310,7 +311,7 @@
 		
 		                if (pDocHref != "") {
 		                    showProgress("<spring:message code='ezApprovalG.t368'/>");
-				        var URL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pDocHref);
+				        var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref);
 		
 		
 				        var isTrue = HwpCtrl.LoadFile(URL, false);
@@ -511,7 +512,7 @@
 			    }
 			
 			    if (!isjunkyul) {
-			        if ("<%=GetApprovalPWD() %>" != "N") {
+			        if ("${approvalPWD}" != "N") {
 				            var chkpass = chk_Passwd(pingUserID);
 				            if (chkpass == "False") {
 				                var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
@@ -864,8 +865,7 @@
 			            HwpCtrl.ChangeMode(2);
 			
 			            setNodeText(btnEdit.childNodes[0], "<spring:message code='ezApprovalG.t42'/>");
-			        }
-			        else {
+			        } else {
 			            var pInformationContent = "<spring:message code='ezApprovalG.t43'/>";
 				        var Ans = OpenInformationUI(pInformationContent);
 			
@@ -963,7 +963,7 @@
 			
 			    function btnMail_onclick() {
 			        SaveFile();
-			        window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=" + pDocHref + "&cmd=docsend&DocID=<%=_DocID%>" + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			        window.open("/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			    }
 	
 			    var tempSecurity = "";
@@ -1020,8 +1020,8 @@
 			        para[0] = g_SepAttachLVXml;
 			        para[1] = cabinetID;
 			
-			        var url = "/myoffice/ezApprovalG/ezCabinet/InsSepAttach.aspx";
-			        var feature = "dialogWidth:728px;dialogHeight:351px;scroll:no;resizable:yes;status:no; help:no ";
+			        var url = "/ezApprovalG/insSepAttach.do";
+				    var feature = "dialogWidth:730px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
 			
 			        if (url != "")
 			            var rtn = window.showModalDialog(url, para, feature);
@@ -1091,22 +1091,28 @@
 			
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
-			        var url = "/myoffice/ezApprovalG/ezLINE/ezApprovalInfo.aspx?initFlag=1&Gubun=" + pGubun;
-			        var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;help:no;scroll:no;;edge:sunken;";
+			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun;
+			        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			        var ret = window.showModalDialog(url, parameter, feature);
 			
 			        if (ret != undefined && ret[0] == "OK") {
 			            try {
 			                HwpCtrl.ChangeMode(2);
-			                var savexmlhttp = createXMLHttpRequest();
-			
 			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
 			
 			                    if (ret[1] != false) {
-			                        savexmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/aprlinesave.aspx", false);
-			                        savexmlhttp.send(ret[1]);
-			
-			                        var dataNodes = GetChildNodes(loadXMLString(savexmlhttp.responseText));
+			                    	$.ajax({
+			                    		type : "POST",
+			                    		dataType : "json",
+			                    		async : false,
+			                    		url : "/ezApprovalG/aprLineSave.do",
+			                    		data : {
+			                    				ret    : ret[1]
+			                    				},
+			                    		success : function(result){
+			                    			
+			                    		}
+			                    	});
 			
 			                        IsSkipDrafter = "FALSE";
 			                        btnSendDraftEnable = "true";
@@ -1119,8 +1125,23 @@
 			                }
 			
 			                if (pGubun != "6" && pGubun != "7" && pGubun != "9" && pGubun != "11" && pGubun != "12" && pGubun != "13") {
-			                    savexmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/AprDeptSave.aspx", false);
-			                    savexmlhttp.send(ret[2]);
+			                	$.ajax({
+		                    		type : "POST",
+		                    		dataType : "text",
+		                    		async : false,
+		                    		url : "/ezApprovalG/aprDeptSave.do",
+		                    		data : {
+		                    				aprDeptInfo : ret[2]
+		                    				},
+		                    		success : function(result){
+		                    			if (result == 'TRUE') {
+		                    				
+		                    			} else {
+		                    				alert(strLang163);
+		                    			}
+		                    		}
+		                    	});
+			                	
 			                    btnReceivLineEnable = false;
 			                    setRecevInfo(ret[3]);
 			                }
@@ -1182,6 +1203,7 @@
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
 	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t157'/></span></li>
+	                        <li id="tbtnTotalSave" style="display: none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	                    </ul>
 	                </div>
 	                <div id="close">
@@ -1196,7 +1218,7 @@
 	        <tr>
 	            <td class="pad1">
 	                <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<%=_HwpToolbar%>", "1");</script>
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "1");</script>
 	
 	                </div>
 	            </td>
