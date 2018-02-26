@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		map.put("parentId", parentId);
 		map.put("folderType",folderType);
-		map.put("companyId",companyId);
+		map.put("comId",companyId);
 		map.put("searchExt", searchExt);
 		map.put("searchFileName", searchFileName);
 		map.put("searchStartDate", searchStartDate);
@@ -70,12 +71,15 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			String searchCreateName, String searchFileType,
 			String searchPageCount, String searchListCount, int pStart , int pEnd) throws Exception {
 		
+		String parentId = "";
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("folderId",folderId);
 		map.put("tenantId",tenantId);
+		parentId = ezWebFolderDAO.getparentId (map);
+		
+		map.put("parentId", parentId);
 		map.put("folderType",folderType);
-		map.put("companyId",companyId);
+		map.put("comId",companyId);
 		map.put("searchExt", searchExt);
 		map.put("searchFileName", searchFileName);
 		map.put("searchStartDate", searchStartDate);
@@ -93,8 +97,9 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		return totalCnt;
 	}
+	
 	@Override
-	public List<Map<String, Object>> getFolderList(String userId,String deptId, String comId ,
+	public List<Map<String, Object>> getFolderList(String admin, String userId,String deptId, String comId ,
 			String folderId, String folderType, int tenantId) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -105,13 +110,49 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("folderId", folderId);
 		map.put("folderType", folderType);
 		map.put("tenantId", tenantId);
+		List<Map<String, Object>> folderList = new ArrayList<Map<String,Object>>();
 		
-		List<Map<String, Object>> folderList = ezWebFolderDAO.getFolderList(map);
+		if ( folderType.equals("C")) {
+			if (admin.equals("ad")) {
+				folderList = ezWebFolderDAO.getFolderListAd(map);
+			} else {
+				folderList = ezWebFolderDAO.getFolderList(map);
+			}
+		}else if ( folderType.equals("D")) {
+			// TODO: 부서폴더 다시해야함 
+			folderList = ezWebFolderDAO.getFolderListDept(map);
+		}else if ( folderType.equals("U")) {
+			folderList = ezWebFolderDAO.getFolderListUser(map);
+		}
+		
 //		System.out.println(folderList.get(0).get("id"));
 		System.out.println(folderList.size());
 		
 		
 		
 		return folderList;
+	}
+
+	@Override
+	public String insertFolder(String folderUppId, String folderType,
+			String tenantId, String companyId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public FolderVO getFolderDetail(String folderUppId, String folderType,
+			int tenantId, String comId) {
+		FolderVO uppFolder  = new FolderVO() ;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("folderUppId", folderUppId);
+		map.put("folderType", folderType);
+		map.put("tenantId", tenantId);
+		map.put("comId", comId);
+		
+		
+		uppFolder = ezWebFolderDAO.getFolderDetail(map);
+		return null;
 	}
 }

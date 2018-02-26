@@ -55,7 +55,6 @@ public class EzWebFolderController_y {
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("userName", userInfo.getName());
         model.addAttribute("primary", userInfo.getPrimary());
-        
 		return "ezWebFolder/webFolderRight";
 	}
 	
@@ -69,10 +68,16 @@ public class EzWebFolderController_y {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String folderType = request.getParameter("folderType") != null ? request.getParameter("folderType") : "";
 		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
-		
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
-		
 		String url = gwServerUrl + "/webfolder/users/" +userInfo.getId() + "/folder-list";
+		String adminCheck = "";
+		
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ) {
+			adminCheck = "ad";
+		}else {
+			adminCheck = "nad";
+		}
+		
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -83,6 +88,7 @@ public class EzWebFolderController_y {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
 				.queryParam("deptId", userInfo.getDeptID())
+				.queryParam("admin", adminCheck)
 				.queryParam("comId", userInfo.getCompanyID())
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("folderType", folderType)
@@ -193,8 +199,9 @@ public class EzWebFolderController_y {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("folderType", folderType)
 				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("comId", userInfo.getCompanyID())
+				.queryParam("folderType", folderType)
 				.queryParam("searchExt", searchExt)
 				.queryParam("searchFileName", searchFileName)
 				.queryParam("searchStartDate", searchStartDate)
@@ -252,6 +259,72 @@ public class EzWebFolderController_y {
 	}
 	
 
+	@RequestMapping( value ="/ezWebFolder/folderControll.do")
+	public String folderControll (@CookieValue("loginCooke") String loginCookie, HttpServletRequest requtest,
+			HttpServletResponse resp , Model model ) throws Exception {
+		return "ezWebFolder/folderControll";
+		
+	}
+	
+	@RequestMapping( value ="/ezWebFolder/insertFolder.do") 
+	public String insertFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse resp, Model model )throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String folderUppId = "";
+		String folderType = "";		
+		if (request.getParameter("folderUp") == null || request.getParameter("folderUp") =="" ) {
+			LOGGER.debug("fail_folderUpperId is not comming");
+			return "fail_ folderUpperId is not comming";
+		}else {
+			folderUppId = request.getParameter("folderUp");
+		}
+		if (request.getParameter("folderType") == null || request.getParameter("folderType") =="" ) {
+			LOGGER.debug("fail_folderType is not comming");
+			return "fail_folderType is not comming";
+		}else {
+			folderType = request.getParameter("folderType");
+		}
+		
+		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String url = gwServerUrl + "/webfolder/folders";
+		
+		RestTemplate rest = new RestTemplate();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		
+		HttpEntity<?> entity = new HttpEntity<>( headers );
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userInfo", userInfo)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("deptId", userInfo.getDeptID())
+				.queryParam("comId", userInfo.getCompanyID())
+				.queryParam("folderType", folderType)
+				.queryParam("folderUppId", folderUppId);
+				
+						
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = null;
+		try {
+			resultBody = (JSONObject)jp.parse(result.getBody());
+		} catch (ParseException e) {
+			System.out.println("에러라구");
+			e.printStackTrace();
+		}
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject test = new JSONObject();
+		
+		if (status.equals("ok")) {
+			return "ok";
+		}else {
+			return "fail";
+		}
+
+	}
 	
 	/*
 	

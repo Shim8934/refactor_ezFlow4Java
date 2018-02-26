@@ -202,7 +202,6 @@
 		<div id="left" style="overflow: auto">
 			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"></div>
 			<h2>
-<<<<<<< HEAD
   				<span style="display:inline-block;width:100%;" onclick="folderList('C');">회사폴더</span>
   			</h2>  
     		<ol>
@@ -230,10 +229,10 @@
 		    <h2>
 				<span style="display:inline-block;width:100%;" onclick="getReceivedShare();">공유폴더</span>
 			</h2>
-			<ul>
+			<ol>
 				<li><span id="organ"     style="width: 100%; display: inline-block;" onclick="getReceivedShare();">공유받은 폴더</span></li>
 				<li><span id="privilege" style="width: 100%; display: inline-block;" onclick="getGivenShare();"   >공유한 폴더</span></li>
-			</ul>
+			</ol>
 		    
 		    <h2>
   				<span style="display:inline-block;width:100%;">츨겨찾기</span>

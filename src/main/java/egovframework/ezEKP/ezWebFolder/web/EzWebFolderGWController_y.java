@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import oracle.net.aso.f;
+
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 
@@ -38,7 +42,7 @@ public class EzWebFolderGWController_y {
 	@RequestMapping ( value="/webfolder/users/{userId}/folder-list" , method=RequestMethod.GET , produces="application/json;charset=utf-8")
 	public JSONObject folderList (@PathVariable String userId ,HttpServletRequest request) {
 		JSONObject jsonObj = new JSONObject();
-		
+		String admin = request.getParameter("admin") != null ? request.getParameter("admin") : "" ;
 		String deptId = request.getParameter("deptId") != null ? request.getParameter("deptId") : "";
 		String comId = request.getParameter("comId") != null ? request.getParameter("comId") : "";
 		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
@@ -47,7 +51,7 @@ public class EzWebFolderGWController_y {
 
 		List<Map<String, Object>> folderList = new ArrayList< Map<String,Object>>();
 		try {
-			folderList = service.getFolderList(userId,deptId,comId, folderId, folderType, tenantId);
+			folderList = service.getFolderList(admin,userId,deptId,comId, folderId, folderType, tenantId);
 //			LOGGER.debug(folderList.get(0).get("id").toString());
 			jsonObj.put ("listTest",folderList.size());
 			jsonObj.put("id", userId);
@@ -76,8 +80,20 @@ public class EzWebFolderGWController_y {
 	@RequestMapping ( value="/webfolder/folders" , method= RequestMethod.POST , produces = "application/json;charset=utf-8")
 	public JSONObject folderInsert (@RequestBody JSONObject insertData, HttpServletRequest request ) {
 		JSONObject jsonObj = new JSONObject();
+		// tenantId, upperId, upperId_path, upper_step, upper_level, 
+		int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+		String folderUppId = request.getParameter("folderUppId") != null ? request.getParameter("folderUppId") : "" ;
+		String folderType = request.getParameter("folderType") != null ? request.getParameter("folderType") : "" ;
+		String userId = request.getParameter("userId");
+		String deptId = request.getParameter("deptId");
+		String comId = request.getParameter("comId");
+		
+		FolderVO folerUppvo= service.getFolderDetail(folderUppId, folderType, tenantId, comId);
 		
 		
+		
+		
+		jsonObj.put("status", "ok");
 		return jsonObj;
 		
 	}
@@ -121,7 +137,6 @@ public class EzWebFolderGWController_y {
 	public JSONObject fileList (@PathVariable String folderId, HttpServletRequest request) {
 		JSONObject jsonObj = new JSONObject();
 		int tenantId = Integer.parseInt(request.getParameter("tenantId"));
-		
 		String folderType = request.getParameter("folderType") != null ? request.getParameter("folderType") : "" ;
 		String searchExt = request.getParameter("searchExt") != null ? request.getParameter("searchExt") : "" ;
 		String searchFileName = request.getParameter("searchFileName") != null ? request.getParameter("searchFileName") : "" ;
@@ -149,10 +164,10 @@ public class EzWebFolderGWController_y {
 		List<FileVO> fileList = new ArrayList<FileVO>();
 		
 		try {
-			fileList = service.getFileList(folderId,folderType, tenantId , request.getParameter("companyId"),
+			fileList = service.getFileList(folderId,folderType, tenantId , request.getParameter("comId"),
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, searchListCount, pStart, pEnd);
-			totalCount = service.getFileToTalCount(folderId,folderType,tenantId , request.getParameter("companyId"),
+			totalCount = service.getFileToTalCount(folderId,folderType,tenantId , request.getParameter("comId"),
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, searchListCount, pStart, pEnd);
 			totalpages = (totalCount/listCount)+1;

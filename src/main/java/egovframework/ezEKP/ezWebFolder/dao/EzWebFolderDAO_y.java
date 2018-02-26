@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzWebFolderDAO_y")
@@ -25,9 +26,23 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public List<Map<String, Object>> getFolderList(Map<String, Object> map) {
 		return   (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList",map);
 	}
+	public List<Map<String, Object>> getFolderListAd(Map<String, Object> map) {
+		return   (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList_ad",map);
+	}
+	public List<Map<String, Object>> getFolderListUser(Map<String, Object> map) {
+		return   (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList_U",map);
+	}
+	public List<Map<String, Object>> getFolderListDept(Map<String, Object> map) {
+		return   (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList_D",map);
+	}
 
 	public String getparentId(Map<String, Object> map) {
 		return (String) select ("EzWebFolderDAO_y.getParentId",map);
+	}
+
+	// 폴더 상세 정보 
+	public FolderVO getFolderDetail(Map<String, Object> map) {
+		return (FolderVO) select("EzWebFolderDAO_y.getFolderDetail",map);
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 
 public interface EzWebFolderService_y {
 	// park yeyeun start
@@ -15,8 +16,6 @@ public interface EzWebFolderService_y {
 	
 	// 폴더 세부 정보 
 	List<FolderVO> getFolderListDetail (String folderId, String folderType, String userId, String tenantId, String companyId ) throws Exception;
-	// 폴더 생성
-	String insertFolder (FolderVO foldervo ,String tenantId, String companyId)throws Exception;
 	// 폴더 수정
 	String updateFolder (String folderId, String folderName, String userId, String companyId) throws Exception;
 	// 폴더 이동
@@ -28,6 +27,8 @@ public interface EzWebFolderService_y {
 	
 	// part yeyeun end
 	*/
+	// 폴더 생성
+	String insertFolder (String folderUppId, String folderType ,String tenantId, String companyId)throws Exception;
 
 	int getFileToTalCount(String folderId,String folderType, int tenantId, String parameter,
 			String searchExt, String searchFileName, String searchStartDate,
@@ -36,8 +37,11 @@ public interface EzWebFolderService_y {
 			String searchListCount, int pStart, int pEnd) throws Exception;
 
 	// 폴더 전체 리스트 
-	List<Map<String, Object>> getFolderList(String userId,String deptId, String comId, String folderId,
-			String folderType, int tenantId) throws Exception; 
+	List<Map<String, Object>> getFolderList( String admin , String userId,String deptId, String comId, String folderId,
+			String folderType, int tenantId) throws Exception;
+	
+	// folder insert위한 폴서 세부 정보 folderDetail
+	FolderVO getFolderDetail(String folderUppId, String folderType, int tenantId ,String comId); 
 	
 	
 }
