@@ -329,6 +329,9 @@
 	<body id="dextbody" style="margin: 0px; padding: 0px;">
 	    <script type="text/javascript">
 	    	var useHTMLMode = "${useHTMLMode}";
+	    	var defaultFontFamily = "${defaultFontFamily}";
+			var defaultFontSize = "${defaultFontSize}";
+			
 	        DEXT5.config.DialogWindow = parent.window;
 	        DEXT5.config.RemoveItem = "about";
 	        if (type == "ADMIN") {
@@ -348,8 +351,8 @@
 	        }
 	        
 	        DEXT5.config.Lang = "<spring:message code='main.t0619' />";
-            DEXT5.config.userFontFamily = "<spring:message code='main.t246' />";
-	        DEXT5.config.userFontSize = parseInt("13px");
+            DEXT5.config.userFontFamily = defaultFontFamily;
+	        DEXT5.config.userFontSize = parseInt(defaultFontSize);
 	        DEXT5.config.HandlerUrl = "http://127.0.0.1:8091/ezEditor/dextUpload.do";
 	        var editorid = new Dext5editor("editor1");
 	    </script>
