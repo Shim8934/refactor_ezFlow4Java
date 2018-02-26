@@ -67,7 +67,7 @@
 					dateFormat: "yy-mm-dd"
 				});
 				
-				search_Set("1");
+				//search_Set("1");
 				preProcessing();
 			}
 			
@@ -351,21 +351,32 @@
 			function refreshView() {
 				search_Set(currentPage);
 			}
+			
+			function optionView(obj){
+				if (obj.getAttribute("mode") == "off") {
+					document.getElementById("layer_Viewpopup").style.left    = document.documentElement.clientWidth - 260 + "px";
+					document.getElementById("layer_Viewpopup").style.top     = "96px";
+					document.getElementById("layer_Viewpopup").style.display = "";
+					obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+					obj.setAttribute("mode", "on");
+				}
+				else {
+					optionHidden();
+				}
+			}
+			
+			function optionHidden() {
+				document.getElementById("layer_Viewpopup").style.display = "none";
+				document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+				document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+			}
 		</script>
 	</head>
 	<body class="mainbody">
 		<h1>
-			<spring:message code='ezWebFolder.t127' />
+			<spring:message code='ezWebFolder.t214' />
 			<span id="mailBoxInfo"></span>
 		</h1>
-		<div id="companySelect" style="margin: 10px 0px;">
-			<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
-			<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
-				<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-			</select>
-		</div>
 		
 		<div id="mainmenu" style="position: relative;">
 			<ul>
@@ -376,8 +387,12 @@
 				<li id=""><a onClick="fileMove()"        style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>
 				<li id=""><a onClick="openSearchPanel()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
 				<li id=""><a onClick="refresh()"         style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
+				<li id="right" style="float:right;">
+					<spring:message code='ezWebFolder.t215'/>
+					<img src ="/images/kr/cm/btn_arrow_down.gif" mode="off" id="webfolderlistoptiondiv" onclick="optionView(this);">
+				</li>
 			</ul>
-			<div style="position: absolute; top: 0px; right: 10px;">
+			<div style="position: absolute; top: 0px; right: 85px;">
 				<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect" onchange="refresh();">
 					<option value="1"><spring:message code='ezWebFolder.t191'/></option>
 					<option value="2"><spring:message code='ezWebFolder.t192'/></option>
@@ -385,6 +400,7 @@
 					<option value="4"><spring:message code='ezWebFolder.t194'/></option>
 					<option value="5"><spring:message code='ezWebFolder.t195'/></option>
 					<option value="6"><spring:message code='ezWebFolder.t196'/></option>
+					<option value="7"><spring:message code='ezWebFolder.t213'/></option>
 				</select>
 			</div>
 		</div>
@@ -447,16 +463,36 @@
 					<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
 					<th width="60px" ><spring:message code='ezWebFolder.t200'/></th>
 				</tr>
-				
 			</table>
 		</div>
 		
-		<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px; display:none" />
+		<div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
+			<div class="popupwrap1">	
+				<div class="popupwrap2">
+					<table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
+						<tr>
+							<th><spring:message code='ezBoard.t10021'/></th>
+							<td>
+								<select id="listcount" style="width: 40px; height: 20px;" onchange="ListCount(this.value);">
+									<option value="10">10</option>
+									<option value="20">20</option>
+									<option value="30">30</option>
+									<option value="40">40</option>
+									<option value="50">50</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="shadow"></div>
+		</div>
+		
+		<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width:1px; height:1px; display:none;"/>
 		<input type="hidden" onclick="fileupload()"/>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
-		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
-		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		<div class="layerpopup" style="z-index:2000; position:absolute; display:none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		
 		<div id="tblPageRayer"></div>

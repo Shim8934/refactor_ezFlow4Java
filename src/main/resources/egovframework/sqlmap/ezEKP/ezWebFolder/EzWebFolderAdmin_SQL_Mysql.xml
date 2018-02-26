@@ -3,8 +3,8 @@
 
 <sqlMap namespace="ezWebFolderAdmin">
 	<typeAlias  alias="WebfolderConfigVO"           type="egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO"/>
-	<typeAlias  alias="UserCapacityVO"              type="egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO"/>
-	<typeAlias  alias="FileLogVO"                   type="egovframework.ezEKP.ezWebFolder.vo.FileLogVO"/>
+	<typeAlias  alias="UserCapacityVO"              type="egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO"   />
+	<typeAlias  alias="FileLogVO"                   type="egovframework.ezEKP.ezWebFolder.vo.FileLogVO"        />
 	
 	<sql id="userCapacityCondition">
 		WHERE
@@ -62,7 +62,7 @@
 		WHERE
 				COMPANY_ID = #companyId#
 			AND
-				TENANT_ID = #tenantId#
+				TENANT_ID  = #tenantId#
 		
 		<isEqual property="searchChk" compareValue="1">
 			<isNotEqual property="fileExt" compareValue="" prepend="AND">
@@ -111,11 +111,11 @@
 		<result property="userId"               column="CN"                     columnIndex="1"  />
 		<result property="userName"             column="DISPLAY_NAME"           columnIndex="2"  />
 		<result property="departmentId"         column="DEPARTMENT_ID"          columnIndex="3"  />
-		<result property="departmentName"       column="DEPARTMENT_NAME"        columnIndex="4"  /> 
-		<result property="companyId"            column="COMPANY_ID"             columnIndex="5"  /> 
+		<result property="departmentName"       column="DEPARTMENT_NAME"        columnIndex="4"  />
+		<result property="companyId"            column="COMPANY_ID"             columnIndex="5"  />
 		<result property="companyName"          column="COMPANY_NAME"           columnIndex="6"  />
 		<result property="totalCapacity"        column="TOTAL_CAPACITY"         columnIndex="7"  />
-		<result property="jobTitle"             column="JOB_TITLE"              columnIndex="8"  /> 
+		<result property="jobTitle"             column="JOB_TITLE"              columnIndex="8"  />
 		<result property="totalUsed"            column="TOTAL_USED"             columnIndex="9"  />
 		<result property="tenantId"             column="TENANT_ID"              columnIndex="10" />
 	</resultMap>
@@ -197,14 +197,14 @@
 	<select id="EzWebFolderAdminDAO.getListUserCapacity" resultMap="userCapacityVO">
 		<![CDATA[
 			SELECT
-				U.CN AS CN,
-				CASE WHEN #primary# = '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END AS DISPLAY_NAME,
-				U.DEPARTMENT AS DEPARTMENT_ID,
-				CASE WHEN #primary# = '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END AS DEPARTMENT_NAME,
-				U.PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
-				CASE WHEN #primary# = '1' THEN U.COMPANY ELSE U.COMPANY2 END AS COMPANY_NAME,
+				U.CN                                                                         AS CN,
+				CASE WHEN #primary# = '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END         AS DISPLAY_NAME,
+				U.DEPARTMENT                                                                 AS DEPARTMENT_ID,
+				CASE WHEN #primary# = '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END         AS DEPARTMENT_NAME,
+				U.PHYSICALDELIVERYOFFICENAME                                                 AS COMPANY_ID,
+				CASE WHEN #primary# = '1' THEN U.COMPANY ELSE U.COMPANY2 END                 AS COMPANY_NAME,
 				IF(W.TOTAL_CAPACITY IS NOT NULL, W.TOTAL_CAPACITY, IFNULL(C.TOTAL_LIMIT, 0)) AS TOTAL_CAPACITY,
-				CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END AS JOB_TITLE,
+				CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END                     AS JOB_TITLE,
 				(
 					SELECT IFNULL(SUM(CAST(F.FILE_SIZE AS INT)), 0)
 						FROM
@@ -217,8 +217,8 @@
 							S.FOLDER_TYPE = 'U'
 						AND
 							S.OWNER_ID = U.CN
-				) AS TOTAL_USED,
-				U.TENANT_ID AS TENANT_ID
+				)                                                                            AS TOTAL_USED,
+				U.TENANT_ID                                                                  AS TENANT_ID
 			FROM
 				TBL_USERMASTER U
 								LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN AND U.TENANT_ID = W.TENANT_ID
@@ -290,18 +290,18 @@
 	<select id="EzWebFolderAdminDAO.getListFileLogs" resultMap="fileLogVO">
 		<![CDATA[
 			SELECT
-				LOG_ID AS LOG_ID,
-				FILE_TYPE AS FILE_TYPE,
-				FILE_NAME AS FILE_NAME,
-				FILE_SIZE AS FILE_SIZE,
-				FILE_EXT AS FILE_EXT,
-				LOG_TYPE AS LOG_TYPE,
-				CREATE_ID AS CREATE_ID,
-				CREATE_NAME1 AS CREATE_NAME1,
-				CREATE_NAME2 AS CREATE_NAME2,
+				LOG_ID                                          AS LOG_ID,
+				FILE_TYPE                                       AS FILE_TYPE,
+				FILE_NAME                                       AS FILE_NAME,
+				FILE_SIZE                                       AS FILE_SIZE,
+				FILE_EXT                                        AS FILE_EXT,
+				LOG_TYPE                                        AS LOG_TYPE,
+				CREATE_ID                                       AS CREATE_ID,
+				CREATE_NAME1                                    AS CREATE_NAME1,
+				CREATE_NAME2                                    AS CREATE_NAME2,
 				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				COMPANY_ID AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID
+				COMPANY_ID                                      AS COMPANY_ID,
+				TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_LOG
 		]]>

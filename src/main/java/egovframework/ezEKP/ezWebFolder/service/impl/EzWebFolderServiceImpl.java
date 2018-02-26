@@ -37,30 +37,30 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	@Override
 	public void insertFile(FileVO fileVO) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("fileId", fileVO.getFileId());
-		map.put("fileName", fileVO.getFileName());
-		map.put("filePath", fileVO.getFilePath());
-		map.put("fileSize", fileVO.getFileSize());
-		map.put("typeId", fileVO.getTypeId());
+		map.put("fileId",      fileVO.getFileId());
+		map.put("fileName",    fileVO.getFileName());
+		map.put("filePath",    fileVO.getFilePath());
+		map.put("fileSize",    fileVO.getFileSize());
+		map.put("typeId",      fileVO.getTypeId());
 		map.put("downloadCnt", fileVO.getDownloadCnt());
-		map.put("fileExt", fileVO.getFileExt());
-		map.put("folderId", fileVO.getFolderId());
-		map.put("useStatus", fileVO.getUseStatus());
-		map.put("createId", fileVO.getCreateId());
+		map.put("fileExt",     fileVO.getFileExt());
+		map.put("folderId",    fileVO.getFolderId());
+		map.put("useStatus",   fileVO.getUseStatus());
+		map.put("createId",    fileVO.getCreateId());
 		map.put("createName1", fileVO.getCreateName1());
 		map.put("createName2", fileVO.getCreateName2());
-		map.put("createDate", fileVO.getCreateDate());
-		map.put("updateId", fileVO.getUpdateId());
-		map.put("updateDate", fileVO.getUpdateDate());
-		map.put("tenantId", fileVO.getTenantId());
+		map.put("createDate",  fileVO.getCreateDate());
+		map.put("updateId",    fileVO.getUpdateId());
+		map.put("updateDate",  fileVO.getUpdateDate());
+		map.put("tenantId",    fileVO.getTenantId());
 		ezWebFolderDAO.insertFile(map);
 	}
 
 	@Override
 	public FileVO getFileByFileId(String fileId, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("fileId", fileId);
-		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("fileId",   fileId);
+		map.put("offset",   commonUtil.getMinuteUTC(offset));
 		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getFileByFileId(map);
 	}
@@ -69,14 +69,14 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	public FileTypeVO getFileTypeByFileExt(String extend, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("extension", extend);
-		map.put("tenantId", tenantId);
+		map.put("tenantId",  tenantId);
 		return ezWebFolderDAO.getFileTypeByFileExt(map);
 	}
 
 	@Override
 	public void deleteFileByFileId(String fileId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("fileId", fileId);
+		map.put("fileId",   fileId);
 		map.put("tenantId", tenantId);
 		ezWebFolderDAO.deleteFileByFileId(map);	
 	}
@@ -84,7 +84,7 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	@Override
 	public void updateFileUseStatus(String fileId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("fileId", fileId);
+		map.put("fileId",   fileId);
 		map.put("tenantId", tenantId);
 		ezWebFolderDAO.updateFileUseStatus(map);
 	}
@@ -92,8 +92,8 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	@Override
 	public void updateFileName(String fileId, String newName, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("fileId", fileId);
-		map.put("name", newName);
+		map.put("fileId",   fileId);
+		map.put("name",     newName);
 		map.put("tenantId", tenantId);
 		ezWebFolderDAO.updateFileName(map);
 	}
@@ -101,7 +101,7 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	@Override
 	public void moveFile(String fileId, String folderId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("fileId", fileId);
+		map.put("fileId",   fileId);
 		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
 		ezWebFolderDAO.moveFile(map);
@@ -118,7 +118,7 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	public FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
-		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("offset",   commonUtil.getMinuteUTC(offset));
 		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getFolderByFolderId(map);
 	}
@@ -127,7 +127,7 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	public FolderSimpleVO getSimpleFolder(String folderId, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
-		map.put("primary", primary);
+		map.put("primary",  primary);
 		map.put("tenantId", tenantId);
 		return ezWebFolderDAO.getSimpleSubFolder(map);
 		
@@ -137,8 +137,8 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	public List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderUpper", folderUpperId);
-		map.put("primary", primary);
-		map.put("tenantId", tenantId);
+		map.put("primary",     primary);
+		map.put("tenantId",    tenantId);
 		return ezWebFolderDAO.getAllSimpleSubFolders(map);
 	}
 
@@ -146,8 +146,8 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	public List<FolderVO> getAllSubFolders(String folderId, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderUpper", folderId);
-		map.put("offset", commonUtil.getMinuteUTC(offset));
-		map.put("tenantId", tenantId);
+		map.put("offset",      commonUtil.getMinuteUTC(offset));
+		map.put("tenantId",    tenantId);
 		return ezWebFolderDAO.getAllSubFolders(map);
 	}
 
@@ -155,15 +155,15 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	public FolderVO getCompanyFolderId(String companyId, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
-		map.put("tenantId", tenantId);
-		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("tenantId",  tenantId);
+		map.put("offset",    commonUtil.getMinuteUTC(offset));
 		return ezWebFolderDAO.getCompanyFolderId(map);
 	}
 
 	@Override
 	public void updateDownCnt(String fileId, int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("fileId", fileId);
+		map.put("fileId",   fileId);
 		map.put("tenantId", tenantId);
 		ezWebFolderDAO.updateDownCnt(map);
 	}
@@ -202,65 +202,65 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	public void updateFolderUseStatus(String folderPath, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath);
-		map.put("tenantId", tenantId);
+		map.put("tenantId",   tenantId);
 		ezWebFolderDAO.updateFolderUseStatus(map);
 	}
 
 	@Override
 	public List<FileVO> getAllFilesInFolder(String folderId, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderId", folderId);
+		map.put("folderId",     folderId);
 		map.put("originalPath", originalPath);
-		map.put("fileType", fileType);
-		map.put("searchChk", searchChk);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
-		map.put("fileExt", fileExt);
-		map.put("fileName", fileName);
-		map.put("userName", userName);
-		map.put("startPoint", startPoint);
-		map.put("pageSize", pageSize);
-		map.put("offset", commonUtil.getMinuteUTC(offset));
-		map.put("primary", primary);
-		map.put("tenantId", tenantId);
+		map.put("fileType",     fileType);
+		map.put("searchChk",    searchChk);
+		map.put("startDate",    startDate);
+		map.put("endDate",      endDate);
+		map.put("fileExt",      fileExt);
+		map.put("fileName",     fileName);
+		map.put("userName",     userName);
+		map.put("startPoint",   startPoint);
+		map.put("pageSize",     pageSize);
+		map.put("offset",       commonUtil.getMinuteUTC(offset));
+		map.put("primary",      primary);
+		map.put("tenantId",     tenantId);
 		return ezWebFolderDAO.getAllFilesInFolder(map);
 	}
 
 	@Override
 	public List<FileVO> getAllFiles(String folderPath, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName,	String userName, String fileType, int startPoint, int pageSize,	String primary, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderPath", folderPath);
+		map.put("folderPath",   folderPath);
 		map.put("originalPath", originalPath);
-		map.put("fileType", fileType);
-		map.put("searchChk", searchChk);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
-		map.put("fileExt", fileExt);
-		map.put("fileName", fileName);
-		map.put("userName", userName);
-		map.put("startPoint", startPoint);
-		map.put("pageSize", pageSize);
-		map.put("offset", commonUtil.getMinuteUTC(offset));
-		map.put("primary", primary);
-		map.put("tenantId", tenantId);
+		map.put("fileType",     fileType);
+		map.put("searchChk",    searchChk);
+		map.put("startDate",    startDate);
+		map.put("endDate",      endDate);
+		map.put("fileExt",      fileExt);
+		map.put("fileName",     fileName);
+		map.put("userName",     userName);
+		map.put("startPoint",   startPoint);
+		map.put("pageSize",     pageSize);
+		map.put("offset",       commonUtil.getMinuteUTC(offset));
+		map.put("primary",      primary);
+		map.put("tenantId",     tenantId);
 		return ezWebFolderDAO.getAllFiles(map);
 	}
 
 	@Override
 	public int getTotalFileCnt(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderId", folderId);
-		map.put("fileType", fileType);
-		map.put("searchChk", searchChk);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
-		map.put("fileExt", fileExt);
-		map.put("fileName", fileName);
-		map.put("userName", userName);
+		map.put("folderId",   folderId);
+		map.put("fileType",   fileType);
+		map.put("searchChk",  searchChk);
+		map.put("startDate",  startDate);
+		map.put("endDate",    endDate);
+		map.put("fileExt",    fileExt);
+		map.put("fileName",   fileName);
+		map.put("userName",   userName);
 		map.put("startPoint", startPoint);
-		map.put("pageSize", pageSize);
-		map.put("primary", primary);
-		map.put("tenantId", tenantId);
+		map.put("pageSize",   pageSize);
+		map.put("primary",    primary);
+		map.put("tenantId",   tenantId);
 		return ezWebFolderDAO.getTotalFileCnt(map);
 	}
 
@@ -268,17 +268,17 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	public int getTotalFileCnt2(String folderPath, String searchChk, String startDate, String endDate, String fileExt, String fileName,	String userName, String fileType, int startPoint, int pageSize, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath);
-		map.put("fileType", fileType);
-		map.put("searchChk", searchChk);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
-		map.put("fileExt", fileExt);
-		map.put("fileName", fileName);
-		map.put("userName", userName);
+		map.put("fileType",   fileType);
+		map.put("searchChk",  searchChk);
+		map.put("startDate",  startDate);
+		map.put("endDate",    endDate);
+		map.put("fileExt",    fileExt);
+		map.put("fileName",   fileName);
+		map.put("userName",   userName);
 		map.put("startPoint", startPoint);
-		map.put("pageSize", pageSize);
-		map.put("primary", primary);
-		map.put("tenantId", tenantId);
+		map.put("pageSize",   pageSize);
+		map.put("primary",    primary);
+		map.put("tenantId",   tenantId);
 		return ezWebFolderDAO.getTotalFileCnt2(map);
 	}
 

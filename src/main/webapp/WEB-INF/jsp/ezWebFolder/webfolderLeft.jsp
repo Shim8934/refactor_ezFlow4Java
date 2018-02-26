@@ -134,7 +134,7 @@
 						console.log(result);						
 				    	folderList();
 					},
-	 				error : function(error) {
+					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134' />" + error);
 					}
 				});	
@@ -149,6 +149,9 @@
 		    function treeTest() {
 		    	window.parent.frames["right"].location.href = "/ezWebFolder/treeTest.do";
 		    }
+		    function getReceivedShare() {
+				window.parent.frames["right"].location.href = "/ezWebFolder/getShareListPage.do";
+			}
 	    </script>
 	    <style>
 		    .jstree-default a { 
@@ -196,9 +199,10 @@
 	    </style>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
-	    <div id="left" style="overflow: auto">
-	        <div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"></div>
+		<div id="left" style="overflow: auto">
+			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"></div>
 			<h2>
+<<<<<<< HEAD
   				<span style="display:inline-block;width:100%;" onclick="folderList('C');">회사폴더</span>
   			</h2>  
     		<ol>
@@ -224,12 +228,12 @@
 		    </ol>  
 		    
 		    <h2>
-  				<span style="display:inline-block;width:100%;">공유폴더</span>
-  			</h2>  
-    		<ol>
-		        <li><span id="organ_3" style="width: 100%; display: inline-block;" onClick="" >공유받은 폴더</span></li>
-		        <li><span id="privileges" style="width: 100%; display: inline-block;" onClick="" >공유한 폴더</span></li>		        
-		    </ol>  
+				<span style="display:inline-block;width:100%;" onclick="getReceivedShare();">공유폴더</span>
+			</h2>
+			<ul>
+				<li><span id="organ"     style="width: 100%; display: inline-block;" onclick="getReceivedShare();">공유받은 폴더</span></li>
+				<li><span id="privilege" style="width: 100%; display: inline-block;" onclick="getGivenShare();"   >공유한 폴더</span></li>
+			</ul>
 		    
 		    <h2>
   				<span style="display:inline-block;width:100%;">츨겨찾기</span>

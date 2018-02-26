@@ -1520,7 +1520,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	private String getMaxFolderUserSeq(int tenantId) throws Exception {
 		int currentMaxolderUserId  = -1;
 		String result              = ezWebFolderService.getFolderUserSequence(tenantId);
-		currentMaxolderUserId      = result.equals("")        ? 1 : Integer.parseInt(result);
+		currentMaxolderUserId      = result.equals("")             ? 1 : Integer.parseInt(result);
 		currentMaxolderUserId	   = (currentMaxolderUserId == -1) ? 1 : (currentMaxolderUserId + 1);
 		return Integer.toString(currentMaxolderUserId);
 	}

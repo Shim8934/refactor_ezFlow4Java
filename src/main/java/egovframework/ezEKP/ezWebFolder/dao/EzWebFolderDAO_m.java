@@ -2,32 +2,19 @@ package egovframework.ezEKP.ezWebFolder.dao;
 
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-
 import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzWebFolderDAO_m")
 public class EzWebFolderDAO_m extends EgovAbstractDAO {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderDAO_m.class);
-	
 	@SuppressWarnings("unchecked")
 	public List<FolderFileVO> getShareGet(Map<String, Object> map) {
-		
-		LOGGER.debug("getShareGet in dao");
-		
 		return (List<FolderFileVO>)list("EzWebFolderDAO_m.getShareGet", map);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<FolderFileVO> getShareGive(Map<String, Object> map) {
-		
-		LOGGER.debug("getShareGive in dao");
-		
 		return (List<FolderFileVO>)list("EzWebFolderDAO_m.getShareGive", map);
 	}
 	
@@ -45,25 +32,16 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<String> userDeptList(Map<String, Object> map) {
-		
-		LOGGER.debug("userDeptList in dao");
-		
 		return (List<String>)list("EzWebFolderDAO_m.userDeptList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<String> chiefDeptPath(Map<String, Object> map) {
-		
-		LOGGER.debug("ciefDeptPath in dao");
-		
 		return (List<String>)list("EzWebFolderDAO_m.chiefDeptPath", map);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<String> chiefDeptList(Map<String, Object> map) {
-		
-		LOGGER.debug("ciefDeptList in dao");
-		
 		return (List<String>)list("EzWebFolderDAO_m.chiefDeptList", map);
 	}
 	
