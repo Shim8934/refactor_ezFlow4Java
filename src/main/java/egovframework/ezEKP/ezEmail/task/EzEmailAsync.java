@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezEmail.task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -47,15 +46,16 @@ public class EzEmailAsync {
     private String jspw;
 	
 	@Async
-	public void cancelMailDelete(String num, int tenantID, String childName) {
+	public void cancelMailDelete(String num, int tenantID) {
+		boolean result = false;
 		logger.debug("cancelMailDelete async methoed started.");
 		logger.debug("num=" + num);
-		int i = -1;
 		Locale locale = Locale.getDefault();
 		ArrayList<String> mailbox = new ArrayList<String>();   
 		mailbox.add(egovMessageSource.getMessage("ezEmail.lhm01", locale));//받은편지함
 		mailbox.add(egovMessageSource.getMessage("ezEmail.t647", locale));//지운편지함
 		mailbox.add(egovMessageSource.getMessage("ezEmail.t648", locale));//개인편지함
+		int i = 0;
 		try {
 			final String messageId = ezEmailService.getMailReceiveMessageId(num);
 			if (messageId == null) {
@@ -70,107 +70,226 @@ public class EzEmailAsync {
 			List<String[]> receiveDetailList = new ArrayList<String[]>();
 			
 			String isReadDelete = ezCommonService.getTenantConfig("IS_READ_DELETE", tenantID);
-			logger.debug("작동 1");
-		
-				for (String address : addresses) {
-					logger.debug("작동2");
-					//jobCode - 1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함
-					//config.IS_READ_DELETE가 YES이면 읽은 메일도 삭제 (jobCode=1)
-					String jobCode = "3";
+			
+			for (String address : addresses) {
+				//jobCode - 1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함
+				//config.IS_READ_DELETE가 YES이면 읽은 메일도 삭제 (jobCode=1)
+				
+				String jobCode = "3";
+				
+				IMAPAccess ia = null;
+				
+				try {
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							address, password, egovMessageSource, locale);
+
+					String mailboxName = mailbox.get(i);
+					Folder folder = null;
+					folder = ia.getFolder(mailboxName);
+					folder.open(Folder.READ_WRITE);
 					
-					IMAPAccess ia = null;
-					
-					try {
-						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-								address, password, egovMessageSource, locale);
-						Folder folder = null;
-	
-						if (childName.equals("")) {
-							logger.debug("빈문자");
-							i++;
-							String mailboxName = mailbox.get(i);
-							folder = ia.getFolder(mailboxName);
-						} else {
-							logger.debug("빈문자가 아닐경우 childName"+childName);
-							folder = ia.getFolder(childName);
-						}
-						
-						folder.open(Folder.READ_WRITE);
-						SearchTerm searchTerm= new SearchTerm() {
-							@Override
-							public boolean match(Message message) {
-								try {
-									String thisMessageId = ((MimeMessage)message).getMessageID(); 
-									
-									if (thisMessageId != null && thisMessageId.contains(messageId)) {
-										return true;
-									}
-								} catch (MessagingException e) {
-									e.printStackTrace();
+					SearchTerm searchTerm= new SearchTerm() {
+						@Override
+						public boolean match(Message message) {
+							try {
+								String thisMessageId = ((MimeMessage)message).getMessageID(); 
+								
+								if (thisMessageId != null && thisMessageId.contains(messageId)) {
+									return true;
 								}
-								return false;
+							} catch (MessagingException e) {
+								e.printStackTrace();
 							}
-						};
+							return false;
+						}
+					};
+				
+					Message[] messages = folder.getMessages();
 					
-						Message[] messages = folder.getMessages();
-						
-						// pre-fetch fields needed for searching
-						FetchProfile fp = new FetchProfile();
-						fp.add(FetchProfile.Item.ENVELOPE);
-						folder.fetch(messages, fp);
-						
-						messages = folder.search(searchTerm);
-						
-						if (messages.length > 0) { // 메일 발견
-							if (messages[0].isSet(Flags.Flag.SEEN)) { //메일 읽음
-								if (isReadDelete.equals("YES")) { //읽어도 지움
-									jobCode = "1";
-									messages[0].setFlag(Flags.Flag.DELETED, true);
-								} else { //읽으면 안지움
-									jobCode = "2";
-								}
-							} else { //메일 안읽음
+					// pre-fetch fields needed for searching
+					FetchProfile fp = new FetchProfile();
+					fp.add(FetchProfile.Item.ENVELOPE);
+					folder.fetch(messages, fp);
+					
+					messages = folder.search(searchTerm);
+					if (messages.length > 0) { //메일 발견
+						result = true;
+						if (messages[0].isSet(Flags.Flag.SEEN)) { //메일 읽음
+							if (isReadDelete.equals("YES")) { //읽어도 지움
 								jobCode = "1";
 								messages[0].setFlag(Flags.Flag.DELETED, true);
-							} 
-						} else {
-							// 메일을 발견하지 못한 경우 
-							Folder[] folderList = folder.list();
-							
-							if (folderList.length > 0) {
-								for (int i1 = 0 ; i1 <= folderList.length; i1 ++) {
-									String childFolderName = folderList[i1].toString();
-									cancelMailDelete(num, tenantID, childFolderName);
-								}
-							} else {
-								cancelMailDelete(num, tenantID, "");
+							} else { //읽으면 안지움
+								jobCode = "2";
 							}
-							
-							cancelMailDelete(num, tenantID, "");
+						} else { //메일 안읽음
+							jobCode = "1";
+							messages[0].setFlag(Flags.Flag.DELETED, true);
 						}
+					}else {
+						Folder[] folderList = folder.list();
+						result = false;
+						if (folderList.length>0){
+							logger.debug("인식성공하고 안비어있음");
 						
-						folder.close(true);
-						ia.close();
-						ia = null;
-					
-					} catch (MessagingException e) {
-						e.printStackTrace();
-						jobCode = "3";
-					} finally {
-						if (ia != null) {
-							ia.close();
+							for (int ii = 0; ii < folderList.length; ii++){
+								String childFolderName = folderList[ii].toString();
+								logger.debug("childFolderName" + childFolderName);
+								cancelMail(num,tenantID,childFolderName);	
+							}
+							if (result == true){
+								break;
+							} else {
+								if(i <= mailbox.size()){
+									i++;
+									String childFolderName = mailbox.get(i).toString();	
+									logger.debug("하위를 다 찾은 후에 다음 상위 폴더 찾을때1"+childFolderName);
+									cancelMail(num,tenantID,childFolderName);	
+								}
+							}
 						}
 					}
+					folder.close(true);
+					ia.close();
+					ia = null;
 					
-					logger.debug("address=" + address + ",jobCode=" + jobCode);
-					receiveDetailList.add(new String[]{address, jobCode});
+				} catch (MessagingException e) {
+					e.printStackTrace();
+					jobCode = "3";
+				} finally {
+					if (ia != null) {
+						ia.close();
+					}
 				}
-				ezEmailService.updateMailReceiveDetailInfo(num, receiveDetailList);
+				
+				logger.debug("address=" + address + ",jobCode=" + jobCode);
+				receiveDetailList.add(new String[]{address, jobCode});
+			}
+			
+			ezEmailService.updateMailReceiveDetailInfo(num, receiveDetailList);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-		  }
-		logger.debug("cancelMailDelete async methoed ended.");
 		}
-	}
-
 		
+		logger.debug("cancelMailDelete async methoed ended.");
+	}
+	
+	public boolean cancelMail(String num, int tenantID, String childFolderName){
+		boolean result= false;
+		logger.debug("cancelMailDelete async methoed222 started.");
+		logger.debug("num=" + num);
+		Locale locale = Locale.getDefault();
+		ArrayList<String> mailbox = new ArrayList<String>();   
+		mailbox.add(egovMessageSource.getMessage("ezEmail.lhm01", locale));//받은편지함
+		mailbox.add(egovMessageSource.getMessage("ezEmail.t647", locale));//지운편지함
+		mailbox.add(egovMessageSource.getMessage("ezEmail.t648", locale));//개인편지함
+		int i = 0;
+		try {
+			final String messageId = ezEmailService.getMailReceiveMessageId(num);
+			if (messageId == null) {
+				logger.error("cannot get messageId from DB");
+			}
+			
+			List<String> addresses = ezEmailService.getMailReceiveAddress(num);
+			
+			String password = jspw;
+			
+			
+			List<String[]> receiveDetailList = new ArrayList<String[]>();
+			
+			String isReadDelete = ezCommonService.getTenantConfig("IS_READ_DELETE", tenantID);
+			
+			for (String address : addresses) {
+				//jobCode - 1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함
+				//config.IS_READ_DELETE가 YES이면 읽은 메일도 삭제 (jobCode=1)
+				
+				String jobCode = "3";
+				
+				IMAPAccess ia = null;
+				
+				try {
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							address, password, egovMessageSource, locale);
+					Folder folder = ia.getFolder(childFolderName);
+					folder.open(Folder.READ_WRITE);
+					
+					SearchTerm searchTerm= new SearchTerm() {
+						@Override
+						public boolean match(Message message) {
+							try {
+								String thisMessageId = ((MimeMessage)message).getMessageID(); 
+								
+								if (thisMessageId != null && thisMessageId.contains(messageId)) {
+									return true;
+								}
+							} catch (MessagingException e) {
+								e.printStackTrace();
+							}
+							return false;
+						}
+					};
+				
+					Message[] messages = folder.getMessages();
+					
+					// pre-fetch fields needed for searching
+					FetchProfile fp = new FetchProfile();
+					fp.add(FetchProfile.Item.ENVELOPE);
+					folder.fetch(messages, fp);
+					
+					messages = folder.search(searchTerm);
+					if (messages.length > 0) { //메일 발견
+						result = true;
+						if (messages[0].isSet(Flags.Flag.SEEN)) { //메일 읽음
+							if (isReadDelete.equals("YES")) { //읽어도 지움
+								jobCode = "1";
+								messages[0].setFlag(Flags.Flag.DELETED, true);
+							} else { //읽으면 안지움
+								jobCode = "2";
+							}
+						} else { //메일 안읽음
+							jobCode = "1";
+							messages[0].setFlag(Flags.Flag.DELETED, true);
+						}
+					}else {
+							Folder[] folderList = folder.list();
+							result = false;
+							if (folderList.length>0){
+								logger.debug("인식성공하고 안비어있음");
+							
+								for (int ii = 0; ii < folderList.length; ii++){
+									childFolderName = folderList[ii].toString();
+									logger.debug("childFolderName" + childFolderName);
+									cancelMail(num,tenantID,childFolderName);	
+								}
+								if (result == true){
+									break;
+								} 
+							}
+						}
+					folder.close(true);
+					ia.close();
+					ia = null;
+					
+				} catch (MessagingException e) {
+					e.printStackTrace();
+					jobCode = "3";
+				} finally {
+					if (ia != null) {
+						ia.close();
+					}
+				}
+				
+				logger.debug("address=" + address + ",jobCode=" + jobCode);
+				receiveDetailList.add(new String[]{address, jobCode});
+			}
+			
+			ezEmailService.updateMailReceiveDetailInfo(num, receiveDetailList);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("cancelMailDelete async methoed222 ended.");
+		return result;
+	}
+}
