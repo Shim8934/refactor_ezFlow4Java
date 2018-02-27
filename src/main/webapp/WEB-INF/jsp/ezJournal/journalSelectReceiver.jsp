@@ -26,6 +26,10 @@
 	   		// 현재 로그인된 사용자 아이디
 	   		var userId = "<c:out value='${userId}'/>";
 	   		console.log(userId);
+	   		// 즐겨찾기 아이디
+	   		var favoriteId = "";
+	   		// 즐겨찾기 저장, 수정 flag
+	   		var type = "new";
 	   		
 	   		function close_Click(){
 	   			window.close();
@@ -127,7 +131,7 @@
 	   			if (receiverList.length > 0) {
 		   		 	DivPopUpShow(360, 185, "/ezJournal/receiverLineName.do");
 	   			} else {
-	   				
+	   				alert("<spring:message code='ezJournal.t136'/>");
 	   			}
 	   		}
 	   		
@@ -141,24 +145,22 @@
 	   				data : {"userId" : userId },
 	   				success : function(result){
 	   					$("#List_TBODY").html(result);
+	   					favoriteId = $(result).filter("tr").attr("favoriteid");
+			   			getFavoriteUser();
 	   				},
 	   				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);
 	   				}
 	   			});
-	   			getFavoriteUser();
 	   		}
 			
 	   		// 즐겨찾기 아이디에 해당하는 수신자리스트 가져오기
 	   		function getFavoriteUser(elem) {
 	   			$("*").removeClass("selectTR");
 	   			$(elem).addClass("selectTR");
-	   			var favoriteId = $(elem).attr("favoriteId");
-	   			if (elem == null || elem == "") {
-	   				var check = $("#List_TBODY tr").first().attr("favoriteid");
-	   				console.log(check);
-	   			//	favoriteId = $("#favoriteList tr").children().eq(1).attr("favoriteid");
-	   				console.log(favoriteId);
+	   			console.log(favoriteId);
+	   			if (elem != null && elem != "") {
+		   			favoriteId = $(elem).attr("favoriteId");
 	   			}
 	   			$.ajax({
 	   				type : "post",
@@ -175,12 +177,62 @@
 	   			});
 	   		}
 	   		
+	   		// 즐겨찾기 적용하기
+	   		function applyFavorite() {
+	   			$.ajax({
+	   				type : "POST",
+	   				dataType : "json",
+	   				url : "/ezJournal/applyFavoriteUser.do",
+	   				data : {"userId" : userId,
+   							"favoriteId" : favoriteId},
+   					success : function(result){
+   						receiverList = result.slice();
+   						drawReceiverList();
+	   				},
+	   				error : function(request, status, error) {
+		    			alert("code : " + request.status + "\nerror : " + error);
+	   				}
+	   			});
+	   		}
+	   		
+	   		// 즐겨찾기 수정
+	   		function modifyFavorite() {
+	   			type = "mod";
+	   			saveFavoriteLine();
+	   		}
+	   		
+	   		// 즐겨찾기 삭제
+	   		function deleteFavorite() {
+	   			var delCheck = confirm("<spring:message code='ezJournal.t139'/>");
+	   			
+	   			if (delCheck) {
+		   			$.ajax({
+		   				type : "POST",
+		   				dataType : "json",
+		   				url : "/ezJournal/deleteFavorite.do",
+		   				data : {"userId" : userId,
+	   							"favoriteId" : favoriteId},
+	   					success : function(result){
+	   						alert("<spring:message code='ezJournal.t138'/>");
+	   						getFavoriteList();
+		   				},
+		   				error : function(request, status, error) {
+			    			alert("code : " + request.status + "\nerror : " + error);
+		   				}
+		   			});
+	   			}
+	   		}
+	   		
 	   		$(document).ready(function(){
 	   			treeContent = ${deptList};
 	   			$("#1tab1").click();
 	            ChangeTab(document.getElementById("1tab1"));
 		   		setDeptList();
 	   			getFavoriteList();
+	   			if ($(opener.selReceiver).length > 0) {
+	   				receiverList = opener.selReceiver;
+	   				drawReceiverList();
+	   			}
 		   		
 	   			$(function () {
 		   			$(document).on({
@@ -191,9 +243,6 @@
 		   				}
 	   				},"#lplistView tr");
 	   			});
-	   			
-	   			
-	   			
    			});
 	   		
 	   		var Tab1_SelectID = "1tab1";
@@ -205,7 +254,7 @@
 		                if (document.getElementById("journalOrgan_content").style.display == "none") {
 		                    document.getElementById("journalOrgan_content").style.display = "";
 		                    document.getElementById("journalFavorite_content").style.display = "none";
-		                    $("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
+		                   // $("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
 		                    _RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
 		                }
 		                break;
@@ -229,6 +278,12 @@
 	                ChangeTab(obj);
 	            }
 	        }
+	   		
+	   		function ok_Click() {
+	   			opener.selReceiver = receiverList;
+	   			opener.showReceiver();
+	   			window.close();
+	   		}
 		</script>
 		<style>
 			tr.hover:hover{background:#eee; color:#fff;}
@@ -242,7 +297,7 @@
         <h1 style="height: 20px;"><spring:message code='ezJournal.t88'/></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick=""><spring:message code='ezJournal.t15'/></span></li>
+	            <li><span onclick="ok_Click()"><spring:message code='ezJournal.t15'/></span></li>
 	            <li><span onclick="close_Click()"><spring:message code='ezJournal.t16'/></span></li>
 	        </ul>
 	    </div>
@@ -308,8 +363,9 @@
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
                                         	<h2 class="h2_dot" style="padding-top: 2px; display: inline-block;"><spring:message code='ezJournal.t95'/></h2>
 		                                    <div style="float:right; margin-top: 1px;">
-		                                        <a class="imgbtn"><span onclick=""><spring:message code='ezJournal.t96'/></span></a>
-		                                        <a class="imgbtn"><span onclick=""><spring:message code='ezJournal.t97'/></span></a>
+		                                        <a class="imgbtn"><span onclick="applyFavorite()"><spring:message code='ezJournal.t135'/></span></a>
+		                                        <a class="imgbtn"><span onclick="modifyFavorite()"><spring:message code='ezJournal.t96'/></span></a>
+		                                        <a class="imgbtn"><span onclick="deleteFavorite()"><spring:message code='ezJournal.t97'/></span></a>
 		                                    </div>
 	                                        <div class="border_gray">
 	                                            <div id="journalFavorite" style="Width: 100%; Height: 173px; OVERFLOW: AUTO; padding-top: 0px;">

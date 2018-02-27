@@ -20,6 +20,7 @@
 		    
 		    function saveReceiverLineName() {
 		        receiverFavoriteName = $("#receiverFavoriteName").val();
+		        
 		        if (receiverFavoriteName == "") {
 	        		alert("<spring:message code='ezJournal.t91'/>");
 		
@@ -39,16 +40,18 @@
 		    }
 		    
 		    function saveReceiverLine() {
-		    	console.log(userId);
+		    	console.log(parent.type);
 		    	$.ajax({
 		    		type : "POST",
 		    		dataType : "json",
 		    		async : false,
 		    		url : "/ezJournal/saveReceiverFavorite.do",
 		    		data : {"favoriteName"	: receiverFavoriteName, 
-		    				"receiverLine"	: JSON.stringify(receiverLine)},
+		    				"receiverLine"	: JSON.stringify(receiverLine),
+		    				"type"			: parent.type,
+		    				"favoriteId"	: parent.favoriteId},
     				success : function(result) {
-    					alert("<spring:message code='ezJournal.t128'/>");
+    					alert("<spring:message code='ezJournal.t137'/>");
     					parent.DivPopUpHidden();
     			    	window.close(); 					
     			    	parent.getFavoriteList();
@@ -56,7 +59,7 @@
     				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nmessage: " + request.responseText + "\nerror : " + error);
 		    		}
-		    	});
+		    	}); 
 		    }
 		    
 		    function cancelNamePop() {

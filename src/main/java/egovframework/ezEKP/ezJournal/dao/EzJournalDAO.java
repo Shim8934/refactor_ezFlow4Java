@@ -228,5 +228,29 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public List<JournalAuthorVO> getFavoriteUserList(Map<String, Object> map) {
 		return (List<JournalAuthorVO>) list("getFavoriteUserList", map);
 	}
+
+	/**
+	 * 즐겨찾기 수신자 리스트 유저 삭제
+	 * @param map
+	 */
+	public void deleteFavoriteUser(Map<String, Object> map) {
+		delete("deleteFavoriteUser", map);
+	}
+
+	/**
+	 * 즐겨찾기 이름 수정
+	 * @param map
+	 */
+	public void updateFavoriteName(Map<String, Object> map) {
+		update("updateFavoriteName", map);
+	}
+
+	/**
+	 * 즐겨찾기 삭제
+	 * @param map
+	 */
+	public void deleteFavorite(Map<String, Object> map) {
+		delete("deleteFavorite", map);
+	}
 	
 }

@@ -27,10 +27,16 @@
 			var companyId = "${userInfo.companyID}"; 
 			//트리조직도 JSON
 	   		var treeContent;
-	    
+	    	// 수신자
+	    	var selReceiver = [];
+	    	// 양식아이디
+	    	var formId;
+	    	// 일지함아이디
+	    	var typeId;
+	    	
 			// 선택된 일지함의 양식 리스트 가져오기
 	    	function getFormList(elem) {
-	    		var typeId = $(elem).val();
+	    		typeId = $(elem).val();
 	    		$.ajax({
 	    			type : "POST",
 	    			dataType : "html",
@@ -42,18 +48,73 @@
 	    			}
 	    		});
 	    	}
+			
+			// 선택된 양식의 폼 호출
+			function getJournalForm(elem) {
+				formId = $(elem).val();
+				$.ajax({
+	    			type : "POST",
+	   				dataType : "json",
+	   				url : "/ezJournal/journalGetForm.do",
+	   				data : {"formId" : formId,
+   							"typeId" : typeId},
+   					success : function(result){
+   						console.log(result);
+   						message.SetEditorContent(result);
+	   				},
+	   				error : function(request, status, error) {
+		    			alert("code : " + request.status + "\nerror : " + error);
+	   				}
+	    		});
+			}
 	    	
 	    	function selectReceiver(){			
 				var url = "/ezJournal/selectReceiver.do";
 				url += "?companyId=" + companyId;
-				window.open(url, "selectReceiver", "width=1100, height=600");
+				GetOpenWindow(url, "selectReceiver", 1100, 600);
 			}
+	    	
+	    	function showReceiver() {
+	    		console.log(selReceiver);
+    			var strReceiver = "";
+    			var total = $(selReceiver).length;
+    			console.log("total : " + total);
+	    		$.each(selReceiver, function(index, item) {
+					if (index == total - 1) {
+						strReceiver += item.userName;												
+					} else {
+						strReceiver += item.userName + ", ";
+					}
+	    		});
+	    		console.log(strReceiver);
+	    		$("#receiverlist").html(strReceiver);
+	    	}
 			
+	    	/*
+	    	function Editor_Complete() {
+		        if (cmd == "mod") {
+	    	        message.SetEditorContent(sigBody.innerHTML);
+	        	}
+
+	        	if (cmd == "add") {
+		            if (msgRtn != "") {
+		                message.SetEditorContent(msgRtn);
+	    	        }
+		        }
+	    	}
+	    	*/
+	    	
 	    	$(document).ready(function() {
 	    		var firstType = $("#optType").find("option:first");
 	    		getFormList(firstType);
+	    		
 	    	});
 	    
+	    	window.onload = function() {
+	    		var firstForm = $("#optForm").find("option:first");
+	    		console.log("firstForm : " + firstForm);
+	    		getJournalForm(firstForm);
+	    	};
 	    </script>
 	</head>
 	<body class="popup" style="height: 97%;" ondragover="bodydragover(event)">
@@ -103,7 +164,7 @@
 	                        			><spring:message code='${type.journaltypeId }'/></option>
 	                        		</c:forEach>
 	                        	</select>
-	                        	<select id="optForm" style="width:182px;" onchange="">
+	                        	<select id="optForm" style="width:182px;" onchange="getJournalForm(this)">
 						                        	
 	                        	</select>
 	                        </td>
@@ -134,7 +195,7 @@
 	        </tr>  
 	        <tr>
 	            <td style="vertical-align: top; height: 100%" id="EdtorSize">
-	                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do?type=BOARDBACKGROUND" style="padding: 0; height: 100%; width: 100%; overflow: auto; margin-top:-1px"></iframe>
+	                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 100%; overflow: auto; margin-top:-1px"></iframe>
 	            </td>
 	        </tr>
 	        <tr>

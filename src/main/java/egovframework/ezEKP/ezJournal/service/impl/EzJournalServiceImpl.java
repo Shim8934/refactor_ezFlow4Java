@@ -413,4 +413,58 @@ public class EzJournalServiceImpl implements EzJournalService{
 		logger.debug("getFavoriteUserList ended");
 		return userList;
 	}
+
+	@Override
+	public void modifyFavorite(JSONObject jsonParam) {
+		logger.debug("modifyFavorite started");
+
+		String favoriteId = jsonParam.get("favoriteId").toString();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", jsonParam.get("userId"));
+		map.put("tenantId", jsonParam.get("tenantId"));
+		map.put("favoriteName", jsonParam.get("favoriteName"));
+		map.put("favoriteId", favoriteId);
+		
+		logger.debug("modifyFavorite map" + map);
+		
+		String tenantId = jsonParam.get("tenantId").toString();
+		
+		logger.debug((String)jsonParam.get("receiverList"));
+		
+		List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
+		if (receivers != null) {
+			ezJournalDAO.deleteFavoriteUser(map);
+			ezJournalDAO.updateFavoriteName(map);
+			for (int i = 0; i < receivers.size(); i++) {
+				try {
+					insertFavoriteUserList(favoriteId, receivers.get(i).get("userId").toString(), tenantId);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		logger.debug("modifyFavorite ended");
+	}
+
+	@Override
+	public void deleteFavorite(String favoriteId, String userId, String tenantId) {
+		logger.debug("deleteFavorite started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("favoriteId", favoriteId);
+		
+		logger.debug("deleteFavorite map" + map);
+		
+		try {
+			ezJournalDAO.deleteFavoriteUser(map);
+			ezJournalDAO.deleteFavorite(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("deleteFavorite ended");
+	}
 }

@@ -626,6 +626,17 @@ public class EzJournalGWController {
 		
 		JSONObject result = new JSONObject();
 		
+		try {
+			ezJournalService.modifyFavorite(jsonParam);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		}
+		
 		LOGGER.debug("ezJournal G/W updateFavorite ended.");
 		return result;
 	}
@@ -639,6 +650,20 @@ public class EzJournalGWController {
 		LOGGER.debug("userId=" + userId + ",favoriteId=" + favoriteId);
 		
 		JSONObject result = new JSONObject();
+		
+		String tenantId = request.getParameter("tenantId");
+		LOGGER.debug("tenantId : " + tenantId);
+		
+		try {
+			ezJournalService.deleteFavorite(favoriteId, userId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		}
 		
 		LOGGER.debug("ezJournal G/W deleteFavorite ended.");
 		return result;

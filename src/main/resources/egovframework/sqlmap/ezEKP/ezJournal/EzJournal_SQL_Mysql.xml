@@ -558,4 +558,41 @@
 			a.tenant_id = #tenantId#
 	</select>
 	
+	<!-- 즐겨찾기 아이디에 해당되는 수신자 리스트 삭제 -->
+	<delete id="deleteFavoriteUser" parameterClass="map">
+		delete from 
+			tbl_journal_recv_favorite_list
+		where
+			favorite_id = #favoriteId#
+		and
+			tenant_id = #tenantId#
+	</delete>
+	
+	<!-- 즐겨찾기 이름 수정 -->
+	<update id="updateFavoriteName" parameterClass="map">
+		update 
+			tbl_journal_recv_favorite
+		set
+			favorite_name = #favoriteName#,
+			favorite_date = now()
+		where
+			favorite_id = #favoriteId#
+		and
+			user_id = #userId#
+		and
+			tenant_id = #tenantId#
+	</update>
+	
+	<!-- 즐겨찾기 삭제 -->
+	<delete id="deleteFavorite" parameterClass="map">
+		delete from 
+			tbl_journal_recv_favorite
+		where
+			favorite_id = #favoriteId#
+		and
+			user_id = #userId#
+		and
+			tenant_id = #tenantId#
+	</delete>
+	
 </sqlMap>

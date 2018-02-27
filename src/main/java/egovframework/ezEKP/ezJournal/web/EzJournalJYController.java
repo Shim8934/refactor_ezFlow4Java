@@ -17,12 +17,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
+
+import com.google.gson.Gson;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.JsonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -206,7 +215,9 @@ public class EzJournalJYController {
 		
 		String receiverList = request.getParameter("receiverLine");
 		String favoriteName = request.getParameter("favoriteName");
-		logger.debug("receiverLine : " + receiverList + ",favoriteName : " + favoriteName);
+		String type = request.getParameter("type");
+		String favoriteId = request.getParameter("favoriteId");
+		logger.debug("receiverLine : " + receiverList + ",favoriteName : " + favoriteName + ",type : " + type + ",favoriteId : " + favoriteId);
 		
 		JSONObject param = new JSONObject();
 		
@@ -214,9 +225,18 @@ public class EzJournalJYController {
 		param.put("tenantId", userInfo.getTenantId());
 		param.put("favoriteName", favoriteName);
 		param.put("receiverList", receiverList);
+		param.put("favoriteId", favoriteId);
 		
-		String restUrl = "/restezjournal/users/" + userId + "/favorites";
-		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", param);
+		String restUrl = "";
+		JSONObject result = new JSONObject();
+		
+		if (type.trim().equals("mod")) {
+			restUrl = "/restezjournal/users/" + userId + "/favorites/" + favoriteId;
+			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "put", param);
+		} else {
+			restUrl = "/restezjournal/users/" + userId + "/favorites";
+			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", param);
+		}
 		
 		String status = result.get("status").toString();
 		
@@ -287,7 +307,104 @@ public class EzJournalJYController {
 			model.addAttribute("userList", userList);
 			logger.debug("userList : " + userList);
 		}
-		logger.debug("getFavoriteUser started");
+		logger.debug("getFavoriteUser ended");
 		return "/ezJournal/journalFavoriteUser";
+	}
+	
+	/**
+	 * 즐겨찾기 수신자 적용
+	 */
+	@RequestMapping(value = "/ezJournal/applyFavoriteUser.do")
+	@ResponseBody
+	public String applyFavoriteUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
+		logger.debug("applyFavoriteUser started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = request.getParameter("userId");
+		if (userId == null || userId.equals("")) {
+			userId = userInfo.getId();
+		}
+		String favoriteId = request.getParameter("favoriteId");
+		logger.debug("favoriteId : " + favoriteId);
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", userInfo.getTenantId());
+		
+		String restUrl = "/restezjournal/users/" + userId + "/favorites/" + favoriteId + "/users";
+		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONArray userList = (JSONArray) result.get("data");
+			logger.debug("userList : " + userList);
+			return JsonUtil.ListToJson(userList);
+		}
+		logger.debug("applyFavoriteUser ended");
+		return JsonUtil.OneStringToJson("json");
+	}
+	
+	/**
+	 * 즐겨찾기 삭제
+	 */
+	@RequestMapping(value = "/ezJournal/deleteFavorite.do")
+	@ResponseBody
+	public String deleteFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
+		logger.debug("deleteFavorite started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = request.getParameter("userId");
+		if (userId == null || userId.equals("")) {
+			userId = userInfo.getId();
+		}
+		String favoriteId = request.getParameter("favoriteId");
+		logger.debug("favoriteId : " + favoriteId);
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", userInfo.getTenantId());
+		
+		String restUrl = "/restezjournal/users/" + userId + "/favorites/" + favoriteId;
+		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "delete", null);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		}
+		logger.debug("deleteFavorite ended");
+		return JsonUtil.OneStringToJson("json");
+	}
+	
+	/**
+	 * 업무일지 양식 폼 호출
+	 */
+	@RequestMapping(value = "/ezJournal/journalGetForm.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public String journalGetForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("journalGetForm started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String formId = request.getParameter("formId");
+		String typeId = request.getParameter("typeId");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", userInfo.getTenantId());
+		param.put("companyId", userInfo.getCompanyID());
+		
+		String restUrl = "/restezjournal/types/" + typeId + "/forms/" + formId;
+		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject jsonResult = (JSONObject) result.get("data");
+			String formContent = jsonResult.get("formContent").toString();
+			logger.debug("formContent : " + formContent);
+			return JsonUtil.OneStringToJson(formContent);
+		}
+
+		logger.debug("journalGetForm ended");
+		return JsonUtil.OneStringToJson("json");
 	}
 }

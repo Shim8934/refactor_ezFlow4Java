@@ -171,5 +171,21 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public List<JournalAuthorVO> getFavoriteUserList(String favoriteId, String tenantId);
+
+	/**
+	 * 수신자 즐겨찾기 수정
+	 * @param jsonParam
+	 * @throws Exception
+	 */
+	public void modifyFavorite(JSONObject jsonParam);
+
+	/**
+	 * 수신자 즐겨찾기 삭제
+	 * @param favoriteId
+	 * @param userId
+	 * @param tenantId
+	 * @throws Exception
+	 */
+	public void deleteFavorite(String favoriteId, String userId, String tenantId);
 	
 }
