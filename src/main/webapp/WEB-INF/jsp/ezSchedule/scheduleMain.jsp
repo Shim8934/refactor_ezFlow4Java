@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="/css/olstyle_nonIE.css" type="text/css" />
         <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />  
+        <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript">
         	var UserOffset = "<c:out value='${pOffset}'/>";
         </script>      
@@ -18,7 +19,8 @@
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarDataPro_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarView_Cross.js"></script>    	
+	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarView_Cross.js"></script>   
+	    <script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<script type="text/javascript">		    
 			var timeZoneStr = "<c:out value='${timeZoneStr}'/>";
 			var receivecount = "<c:out value='${receiveCount}'/>";
@@ -145,11 +147,18 @@
 				if (receivecount != "0") {
 		            schedule_receive_attendant_cross_dialogArguments[0] = this;
 		            schedule_receive_attendant_cross_dialogArguments[1] = windowonload_Complete;
-		            var OpenWin = window.open("/ezSchedule/scheduleReceiveAttendant.do", "schedule_select_attendant", GetOpenWindowfeature(730, 420));
+		           
+		            DivPopUpShow(730,370,"/ezSchedule/scheduleReceiveAttendant.do");
+		        	
+		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
+		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
+		        	$("#iFramePanel").css("left", popupX);
+
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
-		            windowonload_Complete();
+		            windowonload_Complete("empty");
 		        }
+		        
 		    }
 
 		    // aspx.cs에 있던 함수. 2016/08/22 by kgs
@@ -162,21 +171,38 @@
             }
 		    
 		    var schedule_receive_member_dialogArguments = new Array();
-		    function windowonload_Complete() {
-		        if (groupcount != "0") {
+		    function windowonload_Complete(ret) {
+		    	DivPopUpHidden();
+		    	
+		    	if(ret != "empty") { 
+		    		parent.frames["left"].document.body.removeChild(parent.frames["left"].document.getElementById("blockLeft"));
+		    	}
+		        
+		    	if (groupcount != "0") {
 		            schedule_receive_member_dialogArguments[0] = this;
 		            schedule_receive_member_dialogArguments[1] = windowonload_Complete2;
-		            var OpenWin = window.open("/ezSchedule/scheduleReceiveMember.do", "schedule_receive_member", GetOpenWindowfeature(730, 420));
+		            
+		            DivPopUpShow(730,370,"/ezSchedule/scheduleReceiveMember.do");
+		            
+		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
+		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
+		        	$("#iFramePanel").css("left", popupX);
+		        	
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
-		            windowonload_Complete2();
+		            windowonload_Complete2("empty");
 		        }
 		    }
 
-		    function windowonload_Complete2() {
+		    function windowonload_Complete2(ret) {
 		    	schedule_get_lunaruse();
+		    	DivPopUpHidden();
 		    	
-                var xmldom = createXmlDom();
+		    	if(ret != "empty") { 
+		    		parent.frames["left"].document.body.removeChild(parent.frames["left"].document.getElementById("blockLeft"));
+		    	}
+              
+		    	var xmldom = createXmlDom();
 
 		        if (groupxml != "") {
 		            var groupxmldom = loadXMLString(groupxml);
@@ -936,7 +962,8 @@
 		        }
 	
 		        return v_str.toString();
-		    }	    
+		    }
+		   
 	    </script>				
 	</head>
 	<body class="mainbody" style="overflow: auto">
@@ -1004,6 +1031,10 @@
 		            <td style="width:70%" id="showTime"></td>
 		        </tr>
 		    </table>
+		</div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </HTML>
