@@ -6,6 +6,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
 	    <script src="/js/dist/jstree.min.js"></script>
 	    
@@ -29,54 +30,100 @@
 	    
 	    <script type="text/javascript">
 	    var result = ${result};
+	    var letter_displayname;
+	    var letter_displayname2;
 	    var treeCollection = [];
 	    var xmlhttp;
-
+	    var responseResult;
+	    var selectNode;
+	    
 	    window.onload = function() {
 	    	treeSet();
 	    	treeView();
+	    	treeInit();
+	    }
+	    
+	    function treeInit () {
+	    	$("#divTree").on('ready.jstree', function (e, data) {
+	    		selectNode = data;
+	    		data.instance.open_node(["1"]);
+	    		data.instance.select_node(["1"]); //option
+	    	});
+	    }
+	    
+	    //jstree click event
+	    function treeOnclick() { 	
+	    	$('#divTree').on('changed.jstree', function (e, data) {
+	    		selectNode = data; //selectNode => delete, update, insert 에 사용!!
+	    		selectBox(selectNode.node.id);
+	        });
+	    }
+	    
+	    function selectBox(letterBoxNo) {
+	    	var query = "/admin/ezEmail/readLetterBox.do?letterBoxNo=" + letterBoxNo;
 	    	
 	    	xmlhttp = createXMLHttpRequest();
-	        xmlhttp.open("POST", "/admin/ezEmail/readLetterBox.do", true);
-	        xmlhttp.onreadystatechange = detailbox_info;
+	        xmlhttp.open("POST", query, true);
+	        xmlhttp.responseType = 'text'; 
+	        xmlhttp.onreadystatechange = readText;
 	        xmlhttp.send();
 	    }
 	    
-	    function detailbox_info() { 
+	    function readText() { 
 	    	if (xmlhttp == null || xmlhttp.readyState != 4) return;
+	    	responseResult = xmlhttp.response;
+	    	var displayname = 'displayname":"';
+	    	var displayname2 = 'displayname2":"';
+	    	var displayname_start = responseResult.indexOf(displayname) + displayname.length;
+	    	var displayname2_start = responseResult.indexOf(displayname2) + displayname2.length;
+	    	var displayname_end = responseResult.indexOf('","par');
+	    	var displayname2_end = responseResult.indexOf('","com');
 	    	
-            var result = xmlhttp.responseXML; 
-            console.log(result);
-            
+	    	letter_displayname = responseResult.substring(displayname_start, displayname_end);
+	    	letter_displayname2 = responseResult.substring(displayname2_start, displayname2_end);
+	    	
+	    	setDisplay(letter_displayname, letter_displayname2);
+	    }
+	    
+	    
+	    function setDisplay(letter_displayname, letter_displayname2) {
+	    	//change displayname
+	    	document.getElementById("display").value = letter_displayname;
+	    	document.getElementById("display2").value = letter_displayname2;
 	    }
 	    
 	    function treeSet() {
 	    	for(var i = 0; i < result.length; i++) {
-	    		var treeId = "tree_" + result[i].letterbox_no; //각 tree의 아이디는 tree_(고유번호)
-	    		var treeParent = "tree_" + result[i].parent_letterbox_no;
+	    		var treeId = result[i].letterbox_no; //uuid
+	    		var treeParent = result[i].parent_letterbox_no;
 	    		var treeText = result[i].displayname;
 	    		
-	    		if (treeParent == "tree_null") {
-	    			treeParent = '#'; //최상위폴더(루트노드)
+	    		if (treeParent == null) {
+	    			treeParent = '#'; //root node
 	    		}
 	    		
 	    		treeCollection.push({id:treeId, parent:treeParent, text:treeText});
+	    		
 	    	}
 	    }
 	    
 	    function treeView() {
-	    	console.log(treeCollection);
-	    	$('#divTree').jstree({ 'core' : {
+	    	$('#divTree').jstree({
+	    			"plugins" : [ "changed", "wholerow" ],
+	    			 'core' : {
 	    	    'data' : treeCollection
 	    	} });
+	    	
+	    	treeOnclick();
 	    }
 	    
 	    function addLetterBox() {
-	    	alert("편지지함 추가 입니다");
+	    	alert("letterBox add");
+	    	console.log(selectNode);
 	    }
 	    
 	    function deleteLetterBox() {
-	    	alert("편지지함 삭제 입니다.");
+	    	alert("letterBox delete");
 	    }
 	    
 	    </script>
@@ -93,8 +140,8 @@
 		</div>
 		<div id="divInput">
 			<form action=""><br>
-				<b><spring:message code='main.t76'/></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="display" size="30" value="편지지함"><br><br>
-				<b><spring:message code='main.t76'/>(<spring:message code='ezSchedule.t4014'/>)</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="display" size="30" value="내용을 입력해주세요"><br>
+				<b><spring:message code='main.t76'/></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="display" name="display" size="30"><br><br>
+				<b><spring:message code='main.t76'/>(<spring:message code='ezSchedule.t4014'/>)</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="display2" name="display" size="30"><br>
 			
 				<div style="position:absolute; bottom:20px; right:50px;"><input type="submit" value=" 확인 "></div>
 			</form>
