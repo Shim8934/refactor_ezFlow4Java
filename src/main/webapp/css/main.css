@@ -73,7 +73,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 /*------------ topSubMenu 추가 ------------*/
 .topSubMenu {position:relative; clear:both; height:25px;}
 .topSubMenu ul{min-width:80px;position:absolute; margin:0; padding:0; list-style:none; background:white;padding-right:20px;padding-left:20px;margin-left:50px;border:1px solid rgb(0,51,149);border-top:0px;border-radius:0 0 4px 4px;box-shadow:0px 5px 12px rgba(0,0,0,0.3)}
-.topSubMenu li {text-align:center;line-height:22px; padding:3px 0px 0px 0px; font-size:12px; color:rgb(0,51,149); cursor:pointer;height:22px; margin:2px 6px}
+.topSubMenu li {text-align:center;line-height:22px; padding:3px 0px 0px 0px; font-size:12px; color:rgb(0,51,149); cursor:pointer;height:22px; margin:2px 6px;font-family: gulim}
 .topSubMenu ul .left {background:url(../images/kr/cm/subMenubg_left.gif) no-repeat ; width:10px; cursor:none; display:none; padding:0px; margin:0px;}
 .topSubMenu ul .right {background:url(../images/kr/cm/subMenubg_right.gif) no-repeat ; width:10px; cursor:none;display:none; padding:0px; margin:0px;}
 
