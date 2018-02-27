@@ -153,8 +153,7 @@
 		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
 		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
 		        	$("#iFramePanel").css("left", popupX);
-		        	
-// 		            var OpenWin = window.open("/ezSchedule/scheduleReceiveAttendant.do", "schedule_select_attendant", GetOpenWindowfeature(730, 420));
+
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            windowonload_Complete("empty");
@@ -176,7 +175,7 @@
 		    	DivPopUpHidden();
 		    	
 		    	if(ret != "empty") { 
-		    		parent.frames["left"].document.getElementById('blockLeft').remove();
+		    		parent.frames["left"].document.body.removeChild(parent.frames["left"].document.getElementById("blockLeft"));
 		    	}
 		        
 		    	if (groupcount != "0") {
@@ -189,7 +188,6 @@
 		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
 		        	$("#iFramePanel").css("left", popupX);
 		        	
-// 		            var OpenWin = window.open("/ezSchedule/scheduleReceiveMember.do", "schedule_receive_member", GetOpenWindowfeature(730, 420));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            windowonload_Complete2("empty");
@@ -201,7 +199,7 @@
 		    	DivPopUpHidden();
 		    	
 		    	if(ret != "empty") { 
-		    		parent.frames["left"].document.getElementById('blockLeft').remove();
+		    		parent.frames["left"].document.body.removeChild(parent.frames["left"].document.getElementById("blockLeft"));
 		    	}
               
 		    	var xmldom = createXmlDom();
