@@ -10,7 +10,7 @@
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>        
-		<title><spring:message code='ezSchedule.t344'/></title>
+<%-- 		<title><spring:message code='ezSchedule.t344'/></title> --%>
 		<script>
 			var parentwin = null;
 			var ReturnFunction;
@@ -80,14 +80,23 @@
 			
 			    var checks2 = document.all("receivelist").getElementsByTagName("input");
 			    if (checks2.length == 0) {
+			    	ReturnFunction("success");
 			        window.close();
 			    }
 			}
-			window.onbeforeunload = function () {
-			    if (ReturnFunction != null) {
-			        ReturnFunction();
-			    }
+			
+			function closePopup(){
+				if(ReturnFunction != null) {
+					ReturnFunction("cancel");
+					window.close();
+				}
 			}
+			
+// 			window.onbeforeunload = function () {
+// 			    if (ReturnFunction != null) {
+// 			        ReturnFunction();
+// 			    }
+// 			}
 		</script>
 	</head>
 	
@@ -99,9 +108,11 @@
 		      		<li><span onClick="accept_group('2')"><spring:message code='ezSchedule.t339'/></span></li>
 		    	</ul>
 		  	</div>
+		   <div id="popuptitle"><h1><spring:message code='ezSchedule.t344'/></h1></div>
 		  	<div id="close">
 		    	<ul>
-		      		<li><span onClick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
+<%-- 		      		<li><span onClick="window.close()"><spring:message code='ezSchedule.t16'/></span></li> --%>
+		      		<li><span onClick="closePopup()"><spring:message code='ezSchedule.t16'/></span></li>
 		    	</ul>
 		  	</div>
 		  	<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:295px">
