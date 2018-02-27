@@ -31,7 +31,7 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 }
 /*------------ Layout ------------*/
 /*#top {top:0px; left:0px; height:99px; width:100%;clear:both; z-index:10; background:#525761; border-bottom:1px solid #4a4c51;}*/
-#top {top:0px; left:0px; height:99px; width:100%;clear:both; z-index:10; background:#304d7f; border-bottom:1px solid #4a4c51;}
+#top {top:0px; left:0px; height:76px; width:100%;clear:both; z-index:10;}
 #Center {min-height:600px; margin:0px; padding:0px 0px 30px 0px; background:url(../images/kr/main/backimg.jpg) no-repeat center bottom; }
 header{height:42px; background:url(../images/kr/cm/header_bg.gif) repeat-x; clear:both; overflow:hidden;}
 nav {height:33px; background:url(../images/kr/cm/nav_bg.gif) repeat-x; clear:both;}
@@ -71,9 +71,9 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 
 /*------------ topSubMenu �߰� ------------*/
-.topSubMenu {position:relative; clear:both; height:25px; background:#003369;}
-.topSubMenu ul{position:absolute; margin:0; padding:0; list-style:none; height:22px; background:#003369;padding-right:50px;padding-left:50px}
-.topSubMenu li {float:left; line-height:22px; padding:0px 5px 0px 9px; background:url(../images/kr/cm/dot_subMenu.gif) no-repeat left 7px;  font-size:12px; color:#ffffff; cursor:pointer;height:22px; margin:1px 6px}
+.topSubMenu {position:relative; clear:both; height:25px;}
+.topSubMenu ul{min-width:80px;position:absolute; margin:0; padding:0; list-style:none; background:white;padding-right:20px;padding-left:20px;margin-left:50px;border:1px solid rgb(0,51,149);border-top:0px;border-radius:0 0 4px 4px;box-shadow:0px 5px 12px rgba(0,0,0,0.3)}
+.topSubMenu li {text-align:center;line-height:22px; padding:3px 0px 0px 0px; font-size:12px; color:rgb(0,51,149); cursor:pointer;height:22px; margin:2px 6px}
 .topSubMenu ul .left {background:url(../images/kr/cm/subMenubg_left.gif) no-repeat ; width:10px; cursor:none; display:none; padding:0px; margin:0px;}
 .topSubMenu ul .right {background:url(../images/kr/cm/subMenubg_right.gif) no-repeat ; width:10px; cursor:none;display:none; padding:0px; margin:0px;}
 
