@@ -250,7 +250,12 @@ public class MLoginGWController {
     							lang = primaryLang;
     						}
     						
-    						timeZone = "235|+09:00";
+    						timeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
+    					    
+    					    if (timeZone.equals("")) {
+    					    	timeZone = "235|+09:00";
+    					    }
+    					    
     						maintype = "D";
     						listCnt = "10";    				    
     						useSecurity = "N";

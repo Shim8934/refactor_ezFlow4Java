@@ -241,10 +241,15 @@ public class MLoginController {
 						lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 					}
 					
-					logger.debug("userID="+_uid);
-					logger.debug("lang="+lang);
+				    String primaryTimeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
+				    
+				    if (primaryTimeZone.equals("")) {
+				    	primaryTimeZone = "235|+09:00";
+				    }
+				    
+					logger.debug("userID=" + _uid + ",lang=" + lang + ",primaryTimeZone=" + primaryTimeZone);
 					
-					ezCommonService.insertTblUserLocalInfo(_uid, "235|+09:00", lang, tenantId);
+					ezCommonService.insertTblUserLocalInfo(_uid, primaryTimeZone, lang, tenantId);
 				}
 				
 				String timeZone = ezCommonService.selectUserGetTimeZone(_uid, tenantId);
