@@ -148,7 +148,7 @@
 		            schedule_receive_attendant_cross_dialogArguments[0] = this;
 		            schedule_receive_attendant_cross_dialogArguments[1] = windowonload_Complete;
 		           
-		            DivPopUpShow(730,420,"/ezSchedule/scheduleReceiveAttendant.do");
+		            DivPopUpShow(730,370,"/ezSchedule/scheduleReceiveAttendant.do");
 		        	
 		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
 		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
@@ -183,7 +183,7 @@
 		            schedule_receive_member_dialogArguments[0] = this;
 		            schedule_receive_member_dialogArguments[1] = windowonload_Complete2;
 		            
-		            DivPopUpShow(730,420,"/ezSchedule/scheduleReceiveMember.do");
+		            DivPopUpShow(730,370,"/ezSchedule/scheduleReceiveMember.do");
 		            
 		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
 		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;

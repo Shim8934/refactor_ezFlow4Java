@@ -112,7 +112,7 @@
 	                <li><span onClick="accept_schedule('2')"><spring:message code='ezSchedule.t339' /></span></li>
 	            </ul>
 	        </div>
-			<div id="popuptitle"><h1><spring:message code='ezSchedule.t332'/></h1></div>
+			<div id="popuptitle" style="position:absolute;left:260px;top:5px;height:35px;"><h1><spring:message code='ezSchedule.t332'/></h1></div>
 	        <div id="close">
 	            <ul>
 <%-- 	                <li><span onClick="window.close()"><spring:message code='ezSchedule.t16' /></span></li> --%>
