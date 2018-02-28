@@ -1672,7 +1672,8 @@ function setbuttonenable() {
     DocList.LoadFromID("DocList");
     var oArrRows = DocList.GetSelectedRows();
     var tr = oArrRows[0];
-
+    var pFunctionType = GetAttribute(tr, "DATA10");
+    
     if (pListTypeValue == "1") {
         document.getElementById("tbtnApproveALL").style.display = "";
     }
