@@ -342,7 +342,7 @@
 	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName3", document.getElementById("Title3").value);
 	            //createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName4", document.getElementById("Title4").value);
 	            createNodeAndInsertText(xmlpara, objNode, "pLinkType", checkValue);
-	            createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", LinkTypeURL);
+	            createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", $("#ZmakeTypeImg").attr("src"));
 	            createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
 	            createNodeAndInsertText(xmlpara, objNode, "pURL", document.getElementById("txtURL").value);
 	

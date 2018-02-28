@@ -175,7 +175,7 @@
 		    	DivPopUpHidden();
 		    	
 		    	if(ret != "empty") { 
-		    		parent.frames["left"].document.body.removeChild(parent.frames["left"].document.getElementById("blockLeft"));
+		    		$(parent.frames["left"].document.getElementById("blockLeft")).remove();
 		    	}
 		        
 		    	if (groupcount != "0") {
@@ -199,7 +199,7 @@
 		    	DivPopUpHidden();
 		    	
 		    	if(ret != "empty") { 
-		    		parent.frames["left"].document.body.removeChild(parent.frames["left"].document.getElementById("blockLeft"));
+		    		$(parent.frames["left"].document.getElementById("blockLeft")).remove();
 		    	}
               
 		    	var xmldom = createXmlDom();
