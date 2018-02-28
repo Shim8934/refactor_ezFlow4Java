@@ -432,13 +432,13 @@
 		        } else {
 		            if ((pMode == "modify" || pMode == "temp") && $('#Sdatepicker2').val().substring(0, 4) != "9999") {
 		            	//만료일자가 오늘 23:59:59 이전까지 포함할수있게 수정
-		                pEndDateTime = $('#Sdatepicker2').val() + strEndDate.substring(10, 19);
-		            	//pEndDateTime = $('#Sdatepicker2').val() + " 23:59:59";
+		                //pEndDateTime = $('#Sdatepicker2').val() + strEndDate.substring(10, 19);
+		            	pEndDateTime = $('#Sdatepicker2').val() + " 23:59:59";
 		            }
 		            else {
 		            	//만료일자가 오늘 23:59:59 이전까지 포함할수있게 수정
-		                pEndDateTime = $('#Sdatepicker2').val() + strNow.substring(10, 19);
-		            	//pEndDateTime = $('#Sdatepicker2').val() + " 23:59:59";
+		                //pEndDateTime = $('#Sdatepicker2').val() + strNow.substring(10, 19);
+		            	pEndDateTime = $('#Sdatepicker2').val() + " 23:59:59";
 		            }
 		        }
 		        return pEndDateTime;
@@ -523,7 +523,7 @@
 		            return;
 		        }
 		        if (pEndDate != "" && pEndDate <= strNow) {
-		            alert("<spring:message code='ezBoard.jjs01' />");
+		            alert("<spring:message code='ezBoard.t387' />");
 		            return;
 		        }
 		        if (pStartDate != "" && pEndDate != "" && pEndDate < pStartDate) {
