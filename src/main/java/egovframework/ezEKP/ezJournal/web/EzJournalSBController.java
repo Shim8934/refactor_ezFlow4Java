@@ -176,17 +176,14 @@ public class EzJournalSBController {
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/types/"+typeId+"/forms", param, request,"get",null);
 		String status = resultBody.get("status").toString();
-		JSONObject data=null;
-		JSONArray typeList=null;
+		JSONArray formList=null;
 		if (status.equals("ok")) {			
-			//셀렉트박스 부서명
-			data = (JSONObject) resultBody.get("data");
-			typeList = (JSONArray) data.get("fList");
+			formList = (JSONArray) resultBody.get("data");
 		}
 		
 		logger.debug("journalListMainFormList ended");
 		
-		return typeList;
+		return formList;
 	}
 	
 	/**
