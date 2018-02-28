@@ -217,7 +217,7 @@ function callUIASP(pconnString, pqueryString, pkeyNodes) {
     var feature = pconnString
     parameter = window.showModalDialog(url, parameter, feature);
 
-    xmlpara.loadXML(parameter)
+    xmlpara = loadXMLString(parameter)
     return xmlpara;
 }
 function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
@@ -231,7 +231,7 @@ function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
     var feature = pconnString
     parameter = window.showModalDialog(url, xmlsend, feature);
 
-    xmlpara.loadXML(parameter)
+    xmlpara = loadXMLString(parameter)
     return xmlpara;
 }
 function getKeyValue(fieldID, num) {
@@ -342,7 +342,7 @@ function checkValidation(xmlPath) {
 function chkAprLine(objNodes) {
     var xmldom = new ActiveXObject("Microsoft.XMLDOM");
     xmldom.async = false;
-    xmldom.loadXML(TempsaveAprlineinfo);
+    xmldom = loadXMLString(TempsaveAprlineinfo);
 
     var objLines = xmldom.selectNodes("LISTVIEWDATA/ROWS/ROW");
     var objCheck = objNodes.selectNodes("APRLINES/APRLINE");
@@ -443,7 +443,7 @@ function makeKeyValue(pkeyNodes, flag) {
             customData.text = fieldVal;
         } else {
             if (GetDocumentElement(HwpCtrl, "tblinfo") != "") {
-                xmlTbl.loadXML(GetDocumentElement(HwpCtrl, "tblinfo"))
+                xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo"))
 
                 tblid = GetAttribute(pkeyNodes(i),"tableid")
 
@@ -521,7 +521,7 @@ function setData(pobjXml, currTD) {
                     tblRowIdx = 0;
             }
             if (GetDocumentElement(HwpCtrl, "tblinfo") != "") {
-                xmlTbl.loadXML(GetDocumentElement(HwpCtrl, "tblinfo"));
+                xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo"));
                 tblinfoNodes = xmlTbl.documentElement.childNodes
 
                 fieldName = GetAttribute(row(0),"name")
