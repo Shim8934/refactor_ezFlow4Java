@@ -9,10 +9,7 @@
 	<typeAlias alias="authorVO" type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO"/>
 	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO"/>
 	<typeAlias alias="deptInfoVO" type="egovframework.ezEKP.ezJournal.vo.DeptInfoVO"/>	
-<<<<<<< HEAD
 	<typeAlias alias="favoriteVO" type="egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO"/>	
-
-=======
 	<typeAlias alias="journalEnvVO" type="egovframework.ezEKP.ezJournal.vo.JournalEnvVO"/>	
 	<typeAlias alias="journalVO" type="egovframework.ezEKP.ezJournal.vo.JournalVO"/>	
 	
@@ -40,7 +37,6 @@
 		<result property="replyAlert" column="reply_alert"/>
 	</resultMap>
 	
->>>>>>> business-dev
 	<resultMap class="deptViewVO" id="deptViewMap">
 		<result property="id" column="id"/>
 		<result property="parent" column="parent"/>
@@ -426,12 +422,6 @@
 	<delete id="deleteAuthDept" parameterClass="Map">
 		delete from jmocha.tbl_journal_auth where user_id=#userId# and tenant_id=#tenantId#
 	</delete>
-<<<<<<< HEAD
-
-	<!-- 일지 리스트 페이징하기! -->
-	<select id="selectJournalListCount" parameterClass="Map">
-		select count(j.journal_id)
-=======
 	
 	<!-- 수신일지 수 -->
 	<select id="selectRecvJournalCount" parameterClass="Map" resultClass="String">
@@ -445,7 +435,6 @@
 	<!-- 일지 리스트 글수! -->
 	<select id="selectJournalListCount" parameterClass="Map" resultClass="String">
 		select count(j.journal_id) as totalCount
->>>>>>> business-dev
 		from jmocha.tbl_journal j
 		inner join jmocha.tbl_journal_form f on (j.form_id=f.form_id and j.tenant_id = f.tenant_id)
 		inner join jmocha.tbl_journal_form_type ft on (f.type_id=ft.type_id and f.tenant_id=ft.tenant_id)
@@ -570,7 +559,6 @@
 		limit #startCount#,#listCnt#
 	</select>
 	
-<<<<<<< HEAD
 	<!-- 수신자 즐겨찾기 추가 -->
 	<insert id="saveReceiverFavorite" parameterClass="map">
 		insert into tbl_journal_recv_favorite (
@@ -662,7 +650,6 @@
 			tenant_id = #tenantId#
 	</delete>
 	
-=======
 	<!-- 환경설정을 가져오기 -->
 	<select id="selectUserEnv" parameterClass="Map" resultMap="journalEnvMap">
 		select count(user_id),ifnull(list_cnt,20) as list_cnt
@@ -724,5 +711,18 @@
 		</isNotEmpty>
 	</insert>
 	
->>>>>>> business-dev
+	<!-- 최근사용양식 아이디 가져오기 -->
+	<select id="getJournalLastFormId" parameterClass="map" resultClass="String">
+		select 
+			a.form_id
+		from 
+			tbl_journal a join tbl_journal_form b on a.form_id = b.form_id 
+		where 
+			a.journal_writer = #userId#
+		and
+			b.type_id = #typeId#
+		and 
+			a.tenant_id = #tenantId#
+		order by journal_date desc limit 1
+	</select>
 </sqlMap>

@@ -207,6 +207,18 @@ public interface EzJournalService {
 	public JournalEnvVO getUserJournalEnv(String userId, String tenantId) throws Exception;
 	
 	/**
+	 * 마지막 사용양식 아이디 가져오기
+	 * @param typeId
+	 * @param formId
+	 * @param userId
+	 * @param companyId
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public String getJournalLastFormId(String typeId, String formId, String userId, String companyId, String tenantId);
+	
+	/**
 	 * 현재 업무일지 리스트의 전체 게시물 수
 	 * @param map
 	 * @return

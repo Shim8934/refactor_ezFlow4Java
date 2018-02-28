@@ -78,10 +78,14 @@
 	   		// 선택한 사람을 수신자에 추가
 	   		function showInsertAuthDept(elem) {
 	   			console.log("여기서" + $(elem).attr("id"));
-	   			var userId = $(elem).attr("id");
+	   			var receiverId = $(elem).attr("id");
 	   			userName = $(elem).children().eq(1).text();
 	   			console.log(userName);
 	   			var chkFlag = true;
+	   			
+	   			if (userId == receiverId) {
+	   				chkFlag = false;
+	   			}
 	   			for(var i = 0; i < receiverList.length; i++) {
 	   				if (receiverList[i].userId == userId) {
 	   					chkFlag = false;
@@ -89,10 +93,14 @@
 	   			}
 	   			
 	   			if (chkFlag) {
-					receiverList.push({"userName" : userName, "userId" : userId});
+					receiverList.push({"userName" : userName, "userId" : receiverId});
 					console.log(receiverList);
 	   			} else {
-	   				alert("<spring:message code='ezJournal.t127'/>");
+	   				if (userId == receiverId) {
+		   				alert("<spring:message code='ezJournal.t140'/>");
+	   				} else {
+		   				alert("<spring:message code='ezJournal.t127'/>");
+	   				}
 	   			}
 	   			drawReceiverList()
 	   		}

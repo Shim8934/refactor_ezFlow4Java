@@ -389,12 +389,48 @@ public class EzJournalJYController {
 		
 		if (status.equals("ok")) {
 			JSONObject jsonResult = (JSONObject) result.get("data");
-			String formContent = jsonResult.get("formContent").toString();
-			logger.debug("formContent : " + formContent);
-			return JsonUtil.OneStringToJson(formContent);
+			param.clear();
+			param.put("formName", jsonResult.get("formName"));
+			param.put("formContent", jsonResult.get("formContent"));
+			logger.debug("resultparam 확인 : " + param);
+			return JsonUtil.MapToJson(param);
 		}
 
 		logger.debug("journalGetForm ended");
+		return JsonUtil.OneStringToJson("json");
+	}
+	
+	/**
+	 * 업무일지 마지막 사용양식 아이디 가져오기
+	 */
+	@RequestMapping(value = "/ezJournal/journalGetLastForm.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public String journalGetLastForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("journalGetLastForm started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String formId = "last";
+		String typeId = request.getParameter("typeId");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", userInfo.getTenantId());
+		param.put("companyId", userInfo.getCompanyID());
+//		param.put("userId", userInfo.getId());
+		param.put("userId", "sbpark14");
+		
+		String restUrl = "/restezjournal/types/" + typeId + "/forms/" + formId;
+		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			String lastId = result.get("data").toString();
+			logger.debug("lastFormId : " + lastId);
+			return JsonUtil.OneStringToJson(lastId);
+		}
+		
+		logger.debug("journalGetLastForm ended");
 		return JsonUtil.OneStringToJson("json");
 	}
 }

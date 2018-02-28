@@ -519,4 +519,27 @@ public class EzJournalServiceImpl implements EzJournalService{
 		ezJournalDAO.insertUpdateJournalEnv(map);
 		logger.debug("saveJournalEnv ended");
 	}
+		
+	@Override
+	public String getJournalLastFormId(String typeId, String formId, String userId, String companyId, String tenantId) {
+		logger.debug("getJournalLastFormId started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("typeId", typeId);
+		map.put("formId", formId);
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		logger.debug("getJournalFormContent map : " + map);
+		
+		String lastFormId = ezJournalDAO.getJournalLastFormId(map);
+		
+		if (lastFormId == null) {
+			lastFormId = "";
+		}
+		
+		logger.debug("getJournalLastFormId ended");
+		return lastFormId;
+	}
 }
