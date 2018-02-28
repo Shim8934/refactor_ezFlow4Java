@@ -4,7 +4,7 @@ public class JournalEnvVO {
 
 	private String listCnt;
 	private String viewenv;
-	private String recieveAlert;
+	private String recvAlert;
 	private String replyAlert;
 	
 	public String getListCnt() {
@@ -19,11 +19,11 @@ public class JournalEnvVO {
 	public void setViewenv(String viewenv) {
 		this.viewenv = viewenv;
 	}
-	public String getRecieveAlert() {
-		return recieveAlert;
+	public String getRecvAlert() {
+		return recvAlert;
 	}
-	public void setRecieveAlert(String recieveAlert) {
-		this.recieveAlert = recieveAlert;
+	public void setRecvAlert(String recvAlert) {
+		this.recvAlert = recvAlert;
 	}
 	public String getReplyAlert() {
 		return replyAlert;

@@ -1,11 +1,13 @@
 package egovframework.ezEKP.ezJournal.web;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
@@ -22,6 +25,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezMobile.ezApprovalG.web.MApprovalGGWController;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -117,18 +121,19 @@ public class EzJournalGWController {
 			JSONObject data = new JSONObject();
 			
 			// deptId가 없으면 각 양식함에서 사용가능한 리스트조회, deptId 있으면 각 양식함별 부서에서 사용가능한 리스트 조회
-			if (deptId == "" || deptId == null) {
+			if(typeId.equals("basic")){
+				// 취합가능 기본양식 리스트 조회
+				List<JournalFormInfoVO> basicList = ezJournalService.getBasicFormList(companyId, tenantId);
+				data.put("basicList", basicList);
+			}
+			if (deptId.equals("") || deptId == null) {
 				List<JournalFormInfoVO> fList = ezJournalService.getFormList(typeId, companyId, tenantId);
 				data.put("fList", fList);
-
+				
 			} else {
 				List<JournalFormInfoVO> fList = ezJournalService.getDeptUseFormList(typeId, companyId, tenantId, deptId);
 				data.put("fList", fList);
 			}
-			
-			// 취합가능 기본양식 리스트 조회
-			List<JournalFormInfoVO> basicList = ezJournalService.getBasicFormList(companyId, tenantId);
-			data.put("basicList", basicList);
 			
 			result.put("data", data);
 			result.put("status", "ok");
@@ -370,27 +375,61 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 업무일지 리스트 (일일,주간,월간,분기,반기,연간,다른일지가져오기)
 	 */
-	@RequestMapping(value="/restezjournal/types/{typeId}/journals", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject typeJournalList(@PathVariable String typeId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W typeJournalList started.");
-		LOGGER.debug("typeId=" + typeId);
+	@RequestMapping(value="/restezjournal/journals", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject typeJournalList(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezJournal G/W journals started.");
 		
 		JSONObject result = new JSONObject();
 		
-		LOGGER.debug("ezJournal G/W typeJournalList ended.");
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		for (String key : request.getParameterMap().keySet()) {
+			param.put(key, request.getParameter(key));
+		}
+		
+		try {
+			List<JournalVO> journalList = ezJournalService.getJournalList(param);
+			result.put("data", journalList);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		}
+		
+		LOGGER.debug("ezJournal G/W journals ended.");
 		return result;
 	}
 	
 	/**
-	 * 업무일지 G/W [GET] 업무일지 리스트 (수신일지함, 임시보관함)
+	 * 업무일지 G/W [GET] 업무일지 리스트 총 게시물수
 	 */
-	@RequestMapping(value="/restezjournal/journals", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/journals-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject folderJournalList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W folderJournalList started.");
+		LOGGER.debug("ezJournal G/W journals-count started.");
 		
 		JSONObject result = new JSONObject();
 		
-		LOGGER.debug("ezJournal G/W folderJournalList ended.");
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		for (String key : request.getParameterMap().keySet()) {
+			param.put(key, request.getParameter(key));
+		}
+		
+		try {
+			String totalCount = ezJournalService.getTotalListCount(param);
+			
+			result.put("data", totalCount);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		}
+		
+		LOGGER.debug("ezJournal G/W journals-count ended.");
 		return result;
 	}
 	
@@ -731,26 +770,24 @@ public class EzJournalGWController {
 	}
 	
 	/**
-	 * 업무일지 G/W [GET] 일지 수 카운트
-	 */
-	@RequestMapping(value="/restezjournal/journals-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject getJournalsCount(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getJournalsCount started.");
-		
-		JSONObject result = new JSONObject();
-		
-		LOGGER.debug("ezJournal G/W getJournalsCount ended.");
-		return result;
-	}
-	
-	/**
 	 * 업무일지 G/W [POST] 환경설정 정보 저장
 	 */
 	@RequestMapping(value="/restezjournal/users/{userId}/options", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
-	public JSONObject saveOption(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
+	public JSONObject saveOption(@RequestParam Map<String,Object> param,@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W saveOption started.");
-		
+
 		JSONObject result = new JSONObject();
+		
+		param.put("userId", userId);
+		try {
+			ezJournalService.saveJournalEnv(param);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
 		
 		LOGGER.debug("ezJournal G/W saveOption ended.");
 		return result;

@@ -1279,7 +1279,6 @@
 		    <table style="width:100%">
 		        <tr>
 		            <td style="text-align:center;">
-		                <a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
 		                <a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
 		                <a class="imgbtn"><span onClick="BoardSearchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a>
 		            </td>

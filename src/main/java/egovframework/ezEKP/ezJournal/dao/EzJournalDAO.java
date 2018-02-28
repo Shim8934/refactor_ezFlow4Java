@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -210,5 +211,32 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 */
 	public JournalEnvVO selectUserEnv(Map<String, Object> map){
 		return (JournalEnvVO) select("selectUserEnv",map);
+	}
+	
+	/**
+	 * 해당 업무일지 리스트 화면의 총 게시물 수
+	 * @param map
+	 * @return
+	 */
+	public String selectTotalListCount(Map<String, Object> map){
+		return (String) select("selectJournalListCount",map);
+	}
+	
+	/**
+	 * 해당 페이지의 업무일지 리스트 가져오기
+	 * @param map
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<JournalVO> selectJournalList(Map<String, Object> map){
+		return (List<JournalVO>) list("selectJournalList" ,map);
+	}
+	
+	/**
+	 * 환경설정을 저장하거나 업데이트하기
+	 * @param map
+	 */
+	public void insertUpdateJournalEnv(Map<String, Object> map){
+		insert("insertUpdateJournalEnv",map);
 	}
 }

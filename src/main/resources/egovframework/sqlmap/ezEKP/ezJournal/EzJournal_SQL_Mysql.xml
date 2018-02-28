@@ -10,11 +10,29 @@
 	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO"/>
 	<typeAlias alias="deptInfoVO" type="egovframework.ezEKP.ezJournal.vo.DeptInfoVO"/>	
 	<typeAlias alias="journalEnvVO" type="egovframework.ezEKP.ezJournal.vo.JournalEnvVO"/>	
+	<typeAlias alias="journalVO" type="egovframework.ezEKP.ezJournal.vo.JournalVO"/>	
+	
+	<resultMap class="journalVO" id="journalMap">
+		<result property="journalId" column="journal_id"/>
+		<result property="journalTitle" column="journal_title"/>
+		<result property="journalDate" column="journal_date"/>
+		<result property="deptShare" column="dept_share"/>
+		<result property="writerName" column="writer_name"/>
+		<result property="deptName" column="dept_name"/>
+		<result property="formName" column="form_name"/>
+		<result property="typeId" column="type_id"/>
+		<result property="replyCount" column="reply_count"/>
+		<result property="fileCount" column="file_count"/>
+		<result property="viewCount" column="view_count"/>
+		<result property="totalRecv" column="total_recv"/>
+		<result property="checkRecv" column="check_recv"/>
+		<result property="isView" column="is_view"/>
+	</resultMap>
 	
 	<resultMap class="journalEnvVO" id="journalEnvMap">
 		<result property="listCnt" column="list_cnt"/>
 		<result property="viewenv" column="viewenv"/>
-		<result property="recieveAlert" column="recieve_alert"/>
+		<result property="recvAlert" column="recv_alert"/>
 		<result property="replyAlert" column="reply_alert"/>
 	</resultMap>
 	
@@ -393,13 +411,14 @@
 		and isnull(recieve_date)
 	</select>
 	
-	<!-- 일지 리스트 페이징하기! -->
-	<select id="selectJournalListCount" parameterClass="Map">
-		select count(j.journal_id)
+	<!-- 일지 리스트 글수! -->
+	<select id="selectJournalListCount" parameterClass="Map" resultClass="String">
+		select count(j.journal_id) as totalCount
 		from jmocha.tbl_journal j
 		inner join jmocha.tbl_journal_form f on (j.form_id=f.form_id and j.tenant_id = f.tenant_id)
 		inner join jmocha.tbl_journal_form_type ft on (f.type_id=ft.type_id and f.tenant_id=ft.tenant_id)
 		inner join jmocha.tbl_deptmaster d on (j.journal_dept=d.CN and d.TENANT_ID=j.tenant_id)
+		inner join jmocha.tbl_usermaster u on (j.journal_writer=u.CN and u.TENANT_ID=j.tenant_id)
 		left join jmocha.tbl_journal_recv r on (r.journal_id=j.journal_id and j.tenant_id=r.tenant_id)
 		where j.tenant_id=#tenantId#
 		and ft.company_id=#companyId#
@@ -412,20 +431,23 @@
 		<isNotEmpty property="deptId">
 		and d.CN=#deptId#
 		</isNotEmpty>
-		<isNotEmpty property="reciveUser">
-		and r.user_id=#reciveUser#
+		<isNotEmpty property="recvUser">
+		and r.user_id=#recvUser#
 		</isNotEmpty>
 		<isNotEmpty property="status">
 		and j.journal_status=#status#
 		</isNotEmpty>
+		<isNotEmpty property="formId">
+		and f.form_id=#formId#
+		</isNotEmpty>
 		<isNotEmpty property="writerName">
-		and u.DISPLAYNAME like concat('%',#"writerName"#,'%')
+		and u.DISPLAYNAME like concat('%',#writerName#,'%')
 		</isNotEmpty>
 		<isNotEmpty property="journalTitle">
-		and j.journal_title like concat('%',#"journalTitle"#,'%')
+		and j.journal_title like concat('%',#journalTitle#,'%')
 		</isNotEmpty>
 		<isNotEmpty property="formName">
-		and f.form_name like concat('%',#"formName"#,'%')
+		and f.form_name like concat('%',#formName#,'%')
 		</isNotEmpty>
 		<isNotEmpty property="startDate">
 			<isNotEmpty property="endDate">
@@ -443,11 +465,22 @@
 	</select>
 	
 	<!-- 일지 리스트 가져오기 -->
-	<select id="selectJournalList" parameterClass="Map">
-		select j.journal_id as journal_id, j.journal_title as journal_title, j.journal_date as journal_date, j.dept_share as dept_share, 
-				u.DISPLAYNAME as writer_name, d.DISPLAYNAME as dept_name, f.form_name as form_name, ft.type_id as type_id,
-		        count(jr.reply_id) as reply_count, count(jf.file_id) as file_count, count(v.view_date) as view_count,
-		        count(r.user_id) as total_recv, count(r.recieve_date) as check_recv 
+	<select id="selectJournalList" parameterClass="Map" resultMap="journalMap">
+		select 
+			j.journal_id as journal_id, 
+			j.journal_title as journal_title, 
+			substring(j.journal_date,1,19) as journal_date, 
+			j.dept_share as dept_share, 
+			u.DISPLAYNAME as writer_name, 
+			d.DISPLAYNAME as dept_name, 
+			f.form_name as form_name, 
+			ft.type_id as type_id,
+		    count(jr.reply_id) as reply_count, 
+		    count(jf.file_id) as file_count, 
+		    count(v.view_date) as view_count,
+		    count(r.user_id) as total_recv, 
+		    count(r.recieve_date) as check_recv , 
+		    ifnull(v.view_date,'noView') as is_view
 		from jmocha.tbl_journal j
 		inner join jmocha.tbl_journal_form f on (j.form_id=f.form_id and j.tenant_id = f.tenant_id)
 		inner join jmocha.tbl_journal_form_type ft on (f.type_id=ft.type_id and f.tenant_id=ft.tenant_id)
@@ -469,20 +502,23 @@
 		<isNotEmpty property="deptId">
 		and d.CN=#deptId#
 		</isNotEmpty>
-		<isNotEmpty property="reciveUser">
-		and r.user_id=#reciveUser#
+		<isNotEmpty property="recvUser">
+		and r.user_id=#recvUser#
 		</isNotEmpty>
 		<isNotEmpty property="status">
 		and j.journal_status=#status#
 		</isNotEmpty>
+		<isNotEmpty property="formId">
+		and f.form_id=#formId#
+		</isNotEmpty>
 		<isNotEmpty property="writerName">
-		and u.DISPLAYNAME like concat('%',#"writerName"#,'%')
+		and u.DISPLAYNAME like concat('%',#writerName#,'%')
 		</isNotEmpty>
 		<isNotEmpty property="journalTitle">
-		and j.journal_title like concat('%',#"journalTitle"#,'%')
+		and j.journal_title like concat('%',#journalTitle#,'%')
 		</isNotEmpty>
 		<isNotEmpty property="formName">
-		and f.form_name like concat('%',#"formName"#,'%')
+		and f.form_name like concat('%',#formName#,'%')
 		</isNotEmpty>
 		<isNotEmpty property="startDate">
 			<isNotEmpty property="endDate">
@@ -505,12 +541,62 @@
 	<!-- 환경설정을 가져오기 -->
 	<select id="selectUserEnv" parameterClass="Map" resultMap="journalEnvMap">
 		select count(user_id),ifnull(list_cnt,20) as list_cnt
-			,ifnull(viewenv,'normal') as viewenv
-		    ,ifnull(recieve_alert,'yes') as recieve_alert
+			,ifnull(viewenv,'NONE') as viewenv
+		    ,ifnull(recv_alert,'yes') as recv_alert
 		    ,ifnull(reply_alert,'yes') as reply_alert
 		from jmocha.tbl_journal_env
 		where user_id=#userId#
 		and tenant_id=#tenantId#
 	</select>
+	
+	<!-- 환경설정 저장하기 -->
+	<insert id="insertUpdateJournalEnv" parameterClass="map">
+		INSERT INTO jmocha.tbl_journal_env
+		(user_id, 		
+		tenant_id	
+		<isNotEmpty property="listCnt">
+			,list_cnt 		
+		</isNotEmpty>
+		<isNotEmpty property="viewenv">
+			,viewenv 		
+		</isNotEmpty>
+		<isNotEmpty property="replyAlert">
+			,reply_alert 		
+		</isNotEmpty>
+		<isNotEmpty property="recvAlert">
+			,recv_alert		
+		</isNotEmpty>
+		)
+		VALUES 
+		(#userId#, 	
+		#tenantId#
+		<isNotEmpty property="listCnt">
+			,#listCnt# 		
+		</isNotEmpty>
+		<isNotEmpty property="viewenv">
+			,#viewenv# 		
+		</isNotEmpty>
+		<isNotEmpty property="replyAlert">
+			,#replyAlert# 		
+		</isNotEmpty>
+		<isNotEmpty property="recvAlert">
+			,#recvAlert# 		
+		</isNotEmpty>
+		) 
+		ON DUPLICATE KEY UPDATE 
+		user_id=#userId#
+		<isNotEmpty property="listCnt">
+			,list_cnt=#listCnt#		
+		</isNotEmpty>
+		<isNotEmpty property="viewenv">
+			,viewenv=#viewenv#		
+		</isNotEmpty>
+		<isNotEmpty property="replyAlert">
+			,reply_alert=#replyAlert#		
+		</isNotEmpty>
+		<isNotEmpty property="recvAlert">
+			,recv_alert=#recvAlert#		
+		</isNotEmpty>
+	</insert>
 	
 </sqlMap>

@@ -24,6 +24,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.let.utl.fcc.service.JsonUtil;
 
@@ -392,5 +393,29 @@ public class EzJournalServiceImpl implements EzJournalService{
 		logger.debug("getUserJournalEnv ended");
 		
 		return result;
+	}
+
+	@Override
+	public String getTotalListCount(Map<String, Object> map) {
+		logger.debug("getTotalListCount started");
+		String result = ezJournalDAO.selectTotalListCount(map);
+		logger.debug("getTotalListCount ended");
+		return result;
+	}
+
+	@Override
+	public List<JournalVO> getJournalList(Map<String, Object> map) throws Exception {
+		logger.debug("getJournalList started");
+		List<JournalVO> result = ezJournalDAO.selectJournalList(map);
+		logger.debug("getJournalList ended");
+		return result;
+	}
+
+	@Override
+	public void saveJournalEnv(Map<String, Object> map) throws Exception {
+		logger.debug("saveJournalEnv started");
+		ezJournalDAO.insertUpdateJournalEnv(map);
+		logger.debug("saveJournalEnv ended");
+		
 	}
 }

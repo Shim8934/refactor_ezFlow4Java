@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 
 
@@ -174,7 +175,7 @@ public interface EzJournalService {
 	 * @param tenantId
 	 * @return
 	 */
-	public String getRecvJournalCount(String userId, String tenantId);
+	public String getRecvJournalCount(String userId, String tenantId) throws Exception;
 	
 	/**
 	 * 해당사원의 업무일지 환경설정
@@ -182,5 +183,27 @@ public interface EzJournalService {
 	 * @param tenantId
 	 * @return
 	 */
-	public JournalEnvVO getUserJournalEnv(String userId, String tenantId);
+	public JournalEnvVO getUserJournalEnv(String userId, String tenantId) throws Exception;
+	
+	/**
+	 * 현재 업무일지 리스트의 전체 게시물 수
+	 * @param map
+	 * @return
+	 */
+	public String getTotalListCount(Map<String, Object> map) throws Exception;
+	
+	/**
+	 * 현재 페이지의 업무일지 리스트를 가져오기
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public List<JournalVO> getJournalList(Map<String, Object> map) throws Exception;
+	
+	/**
+	 * 업무일지 환경설정을 저장하거나 업데이트
+	 * @param map
+	 * @throws Exception
+	 */
+	public void saveJournalEnv(Map<String, Object> map) throws Exception;
 }
