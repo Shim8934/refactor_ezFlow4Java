@@ -155,6 +155,7 @@
 			var curDocNum = "";
 			var isEditorComplete = false;
 			var isHWP = "";
+			var ext = "mht";
 			
 		    window.onload = function ()
 		    {
@@ -1169,7 +1170,8 @@
 		        var para = new Array();
 		        para[0] = g_SepAttachLVXml;
 		        para[1] = cabinetID;
-		
+				para[3] = ext;
+				
 		        var url = "/ezApprovalG/insSepAttach.do";
 		        inssepattach_cross_dialogArguments[0] = para;
 		        inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;

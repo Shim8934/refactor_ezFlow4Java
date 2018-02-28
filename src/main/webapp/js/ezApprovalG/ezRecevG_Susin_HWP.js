@@ -1,20 +1,18 @@
-function btnSetTaskCode_onclick()
-{
+function btnSetTaskCode_onclick() {
   try {
 	var para = new Array();
 	para[0] = cabinetID;
 	var url = "/myoffice/ezApprovalG/ezCabinet/SelectCabinet.aspx?initFlag=1";
 	var feature = "dialogWidth:850px;dialogHeight:455px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
   
-	if(url != "")
+	if(url != "") {
 		var rtn = window.showModalDialog(url,para,feature);
+	}
 	
-	
-	if (rtn[0] == "TRUE")
-	{
+	if (rtn[0] == "TRUE") {
 		var g_SelCabXml = rtn[1];
 		var xmlCab = createXmlDom();
-		xmlCab.loadXML(g_SelCabXml);
+		xmlCab = loadXMLString(g_SelCabXml);
 		cabinetID = getNodeText(xmlCab.selectSingleNode("CABINETINFO/CABINET/CABINETID"));
 		TaskCode = getNodeText(xmlCab.selectSingleNode("CABINETINFO/CABINET/TASKCODE"));
 	}
@@ -272,23 +270,17 @@ function SendDraftMappingSign(ret)
 	
 	var OpinionText = "";
 	var PositionText = "";
-	if (getOpinionCount())
-	{
-		PositionText = "(" + strLang5;
-	}
 	
-	if( LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16 )
-	{
+	if( LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16 ) {
 		OpinionText = getSignDate() + "\15";
 	}
 	
 	signCnt = 0;
-	if(pDraftFlag == "SUSIN" ||  pDocState == "011")  
-	{ 
+	if(pDraftFlag == "SUSIN" ||  pDocState == "011") { 
 	  	psigncell = pSusinSN + "sign" + sn;
 	  	pseumyungcell = pSusinSN + "jikwe" + sn;
 	  	pseumyungdatecell = pSusinSN + "seumyungdate" + sn;
-	}else{
+	} else {
 	  	psigncell = "sign" + sn;
 	  	pseumyungcell = "jikwe" + sn;
 	  	pseumyungdatecell = "seumyungdate" + sn;
@@ -855,10 +847,8 @@ function setRecevInfo(ret) {
     }
 }
 
-
-function openOpinionUI(pOpinionFlag)
-{
-  try{
+var apropinion_cross_dialogArguments = new Array();
+function openOpinionUI(pOpinionFlag) {
     var parameter = new Array();
     
     parameter[0]	= pDocID;
@@ -866,33 +856,25 @@ function openOpinionUI(pOpinionFlag)
     parameter[2]	= KuyjeType;
     parameter[3]	= pDraftFlag;
   
-    var url = "/myoffice/ezApprovalG/ezAPROPINION/AprOpinion.aspx";
+    var url = "/ezApprovalG/aprOpinion.do";
 	var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no;help:no"
 	var ret     = window.showModalDialog(url,parameter,feature);
-
-	if(ret != "cancel")
-	{
-	    var NodeList;
-	    var objXML = createXmlDom();
-	    
-	    objXML.loadXML(ret);
-	    NodeList = objXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
 	
-	    if(NodeList.length != 0)
-	    {
-			pHasOpinionYN = "Y";
-	    }else{
-			pHasOpinionYN = "N";
-			ret = "cancel";
+	 if (ret != "cancel" && ret!= "Clear") {
+	        var Rtnxml = createXmlDom();
+	        Rtnxml = loadXMLString(ret);
+
+	        var NodeList = SelectNodes(Rtnxml, "LISTVIEWDATA/ROWS/ROW");
+
+	        if (NodeList.length != 0)
+	            pHasOpinionYN = "Y";
+	        else {
+	            pHasOpinionYN = "N";
+	            ret = "cancel";
+	        }
 	    }
-   }
-    return ret;
-
-  }catch(e){
-    alert("openOpinionUI : " + e.description);
-  }
+	 return ret;
 }
-
 
 function openFileAttachUI()
 {
@@ -913,8 +895,7 @@ function openFileAttachUI()
 }
 
 
-function SaveDraftDocInfo()
-{
+function SaveDraftDocInfo() {
 	var rtnVal;
 	
 	SaveFile();
@@ -924,11 +905,8 @@ function SaveDraftDocInfo()
 	return rtnVal;
 }
 
-function SaveDraftDocInfo_susin()
-{
-  try{
-      
-    
+function SaveDraftDocInfo_susin() {
+  try {
     if(pDocNumCode=="")
         return "FLASE";
         
@@ -936,55 +914,56 @@ function SaveDraftDocInfo_susin()
 	var objNode;
 	var field;
 	    
-	var objNodes = xmldoc.documentElement.childNodes;
+    var objNodes = GetChildNodes(xmldoc.documentElement);
 		
 	var xmlpara = createXmlDom();
 	var xmlhttp = createXMLHttpRequest();
 	var xmlRtn = createXmlDom();
 	var objNode;
 	createNodeInsert(xmlpara, objNode, "PARAMETER");
-	createNodeAndInsertText(xmlpara, objNode, "DocID", getNodeText(objNodes(0)));
-	createNodeAndInsertText(xmlpara, objNode, "FormID", getNodeText(objNodes(1)));
-	createNodeAndInsertText(xmlpara, objNode, "OrgDocID", getNodeText(objNodes(2)));
-	createNodeAndInsertText(xmlpara, objNode, "DocType", getNodeText(objNodes(3)));
-	createNodeAndInsertText(xmlpara, objNode, "DocState", "011");
-	createNodeAndInsertText(xmlpara, objNode, "FunctionType", "002");
-	createNodeAndInsertText(xmlpara, objNode, "Href", getNodeText(objNodes(6)));
-	createNodeAndInsertText(xmlpara, objNode, "DocTitle", pDocTitle);
-	createNodeAndInsertText(xmlpara, objNode, "DocNo", pDocNo);
+	createNodeAndInsertText(xmlpara, objNode, "DOCID", getNodeText(objNodes[0]));
+    createNodeAndInsertText(xmlpara, objNode, "FORMID", getNodeText(objNodes[1]));
+    createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", getNodeText(objNodes[2]));
+    createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", getNodeText(objNodes[3]));
+	createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", "011");
+	createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", "002");
+	createNodeAndInsertText(xmlpara, objNode, "HREF", getNodeText(objNodes[6]));
+	createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
+	createNodeAndInsertText(xmlpara, objNode, "DOCNO", pDocNo);
 
-	if (pHasAttachYN == "")
-	    createNodeAndInsertText(xmlpara, objNode, "HasAttachYN", getNodeText(objNodes(9)));
-	else
-	    createNodeAndInsertText(xmlpara, objNode, "HasAttachYN", pHasAttachYN);
+	if (pHasAttachYN == "") {
+	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", getNodeText(objNodes[9]));
+	} else {
+	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
+	}
 
-	if (pHasOpinionYN == "")
-	    createNodeAndInsertText(xmlpara, objNode, "HasOpinionYN", getNodeText(objNodes(10)));
-	else
-	    createNodeAndInsertText(xmlpara, objNode, "HasOpinionYN", pHasOpinionYN);
+	if (pHasOpinionYN == "") {
+	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", getNodeText(objNodes[10]));
+	} else {
+	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
+	}
 
-
-	createNodeAndInsertText(xmlpara, objNode, "StartDate", "DRAFT");
-	createNodeAndInsertText(xmlpara, objNode, "EndDate", "DRAFT");
-	createNodeAndInsertText(xmlpara, objNode, "WriterID", getNodeText(objNodes(13)));
-	createNodeAndInsertText(xmlpara, objNode, "WriterName", getNodeText(objNodes(14)));
-	createNodeAndInsertText(xmlpara, objNode, "WriterJobTitle", getNodeText(objNodes(15)));
-	createNodeAndInsertText(xmlpara, objNode, "WriterDeptID", getNodeText(objNodes(16)));
-	createNodeAndInsertText(xmlpara, objNode, "WriterDeptName", getNodeText(objNodes(17)));
-	createNodeAndInsertText(xmlpara, objNode, "Html", "");
-	createNodeAndInsertText(xmlpara, objNode, "OrgHtml", "");
-	createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
-	createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
-	createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-	createNodeAndInsertText(xmlpara, objNode, "security", tempSecurity);
-	createNodeAndInsertText(xmlpara, objNode, "keepperiod", tempKeep);
-	createNodeAndInsertText(xmlpara, objNode, "publication", tempPublic);
-	createNodeAndInsertText(xmlpara, objNode, "Public", tempPublic);
-	createNodeAndInsertText(xmlpara, objNode, "ItemCode", tempItemCode);
-	createNodeAndInsertText(xmlpara, objNode, "ItemName", tempItemName);
-	createNodeAndInsertText(xmlpara, objNode, "UrgentApproval", tempUrgent);
-	createNodeAndInsertText(xmlpara, objNode, "KeyWord", tempKeyword);
-	createNodeAndInsertText(xmlpara, objNode, "Xdocid", "");
+	createNodeAndInsertText(xmlpara, objNode, "STARTDATE", "DRAFT");
+	createNodeAndInsertText(xmlpara, objNode, "ENDDATE", "DRAFT");
+	createNodeAndInsertText(xmlpara, objNode, "WRITERID", getNodeText(objNodes[13]));
+	createNodeAndInsertText(xmlpara, objNode, "WRITERNAME", getNodeText(objNodes[14]));
+	createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE", getNodeText(objNodes[15]));
+	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTID", getNodeText(objNodes[16]));
+	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME", getNodeText(objNodes[17]));
+	createNodeAndInsertText(xmlpara, objNode, "HTML", "");
+	createNodeAndInsertText(xmlpara, objNode, "ORGHTML", "");
+	createNodeAndInsertText(xmlpara, objNode, "PUSERID", arr_userinfo[1]);
+	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME", arr_userinfo[11]);
+	createNodeAndInsertText(xmlpara, objNode, "PDEPTID", arr_userinfo[4]);
+	createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
+	createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
+	createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", tempPublic);
+	createNodeAndInsertText(xmlpara, objNode, "PUBLIC", tempPublic);
+	createNodeAndInsertText(xmlpara, objNode, "ITEMCODE", tempItemCode);
+	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME", tempItemName);
+	createNodeAndInsertText(xmlpara, objNode, "URGENTAPPROVAL", tempUrgent);
+	createNodeAndInsertText(xmlpara, objNode, "KEYWORD", tempKeyword);
+	createNodeAndInsertText(xmlpara, objNode, "XDOCID", "");
 	createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
 	createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
 	createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
@@ -1003,27 +982,32 @@ function SaveDraftDocInfo_susin()
 
 	createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
 	createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", tempSecurityDate);
-	createNodeAndInsertText(xmlpara, objNode, "WRITERNAME2", getNodeText(objNodes(37)));
-	createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE2", getNodeText(objNodes(38)));
-	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME2", getNodeText(objNodes(39)));
+	createNodeAndInsertText(xmlpara, objNode, "WRITERNAME2", getNodeText(objNodes[37]));
+	createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE2", getNodeText(objNodes[38]));
+	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME2", getNodeText(objNodes[39]));
 	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
 	
-	xmlhttp.open("POST","aspx/dodraft_HWP.aspx",false);
+    xmlhttp.open("POST", "/ezApprovalG/doDraftHWP.do", false);
 	xmlhttp.send(xmlpara);
-	
-	SetBtnStateFalse();
 
-	return getNodeText(loadXMLString(xmlhttp.responseText));  
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+    	 if (xmlhttp.statusText == "OK") {
+    		  SetBtnStateFalse();
+    	      var dataNodes = GetChildNodes(xmlhttp.responseXML);
+    	      return getNodeText(dataNodes[0]);
+    	 } else {
+    		return "FALSE";
+    	 }
+    }
   }catch(e){
     alert("SaveDraftDocInfo_susin : " + e.description);
   }
 }
 
-function btnAddSepAttach_onclick()
-{
-	if (cabinetID == "")
-	{
+var inssepattach_cross_dialogArguments = new Array();
+function btnAddSepAttach_onclick() {
+	if (cabinetID == "") {
 		var pAlertContent = strLang731;
 		OpenAlertUI(pAlertContent);          
 		return;
@@ -1038,16 +1022,17 @@ function btnAddSepAttach_onclick()
 	para[0] = g_SepAttachLVXml;	
 	para[1] = cabinetID;			
 	para[2] = "1";
-	
-	var url = "/myoffice/ezApprovalG/ezCabinet/InsSepAttach.aspx";
+	para[3] = ext;
+	    
+	var url = "/ezApprovalG/insSepAttach.do";
 	var feature = "dialogWidth:730px;dialogHeight:380px;scroll:no;resizable:yes;status:no; help:no ";
   
-	if(url != "")
+	if(url != "") {
 		var rtn = window.showModalDialog(url,para,feature);
-		
-	if (rtn[0] == "TRUE")
-	{
-		g_SepAttachLVXml=rtn[1];
+	}
+
+	if (rtn[0] == "TRUE") {
+		g_SepAttachLVXml = rtn[1];
 		SetDocumentElement(HwpCtrl, "SepAttachLVXml", g_SepAttachLVXml)
 	}
 }
@@ -1061,7 +1046,7 @@ function GetSepAttParamXml(g_SepAttachLVXml)
     if (g_SepAttachLVXml != "") {
         var sepLVXml = createXmlDom();
         sepLVXml = loadXMLString(g_SepAttachLVXml);
-        var rows = SelectNodes(sepLVXml, "LISTVIEWDATA/ROWS/ROW")
+        var rows = SelectNodes(sepLVXml, "LISTVIEWDATA/ROWS/ROW");
         for (i = 0; i < rows.length; i++) {
 
             sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
@@ -1077,41 +1062,31 @@ function GetSepAttParamXml(g_SepAttachLVXml)
     return getXmlString(rtnXml);
 }
 
-function SetSepAttParamXmlNull(g_SepAttachLVXml)
-{
+function SetSepAttParamXmlNull(g_SepAttachLVXml) {
 	var sepAtt, Data, i;
-	if(g_SepAttachLVXml!="")
-	{
+	if(g_SepAttachLVXml != "") {
 		var sepLVXml = createXmlDom();
-		sepLVXml.loadXML(g_SepAttachLVXml);
+		sepLVXml = loadXMLString(g_SepAttachLVXml);
 		
-		var rows = sepLVXml.selectNodes("LISTVIEWDATA/ROWS/ROW")
-		for(i=0; i<rows.length; i++)
-		{
-			
+		var rows = SelectNodes(sepLVXml, "LISTVIEWDATA/ROWS/ROW");
+		for (i=0; i<rows.length; i++) {
 		    setNodeText(rows.item(i).childNodes(0).selectSingleNode("DATA1") , "");
-			
-			
 		    setNodeText(rows.item(i).childNodes(2).selectSingleNode("VALUE") , "");
 		}	
-		g_SepAttachLVXml = sepLVXml.xml;
+        g_SepAttachLVXml = getXmlString(sepLVXml);
 	}	
 	return g_SepAttachLVXml;
 }
 
-function CheckSepAttParamXmlNull(g_SepAttachLVXml)
-{
+function CheckSepAttParamXmlNull(g_SepAttachLVXml) {
 	var sepAtt, Data, i;
 	var rtnVal = true;
-	if(g_SepAttachLVXml!="")
-	{
+	if (g_SepAttachLVXml != "") {
 		var sepLVXml = createXmlDom();
-		sepLVXml.loadXML(g_SepAttachLVXml);
+		sepLVXml = loadXMLString(g_SepAttachLVXml);
 		
-		var rows = sepLVXml.selectNodes("LISTVIEWDATA/ROWS/ROW")
-		for(i=0; i<rows.length; i++)
-		{
-			
+		var rows = SelectNodes(sepLVXml, "LISTVIEWDATA/ROWS/ROW");
+		for (i = 0; i< rows.length; i++) {
 		    if (getNodeText(rows.item(i).childNodes(0).selectSingleNode("DATA1")) == "")
 				rtnVal = false;
 		}	
@@ -1124,31 +1099,35 @@ function openSignUI()
 {
   try{
   
-    var objRoot;
-    var objNode;
     var SignNodeList;
     
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
+    var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getSignRequest.do",
+		data : {
+			userID : pUserID
+		},
+		success: function(xml){
+			result = loadXMLString(xml);
+		}        			
+	});
   
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezAPRSIGN/aspx/GetSignRequest.aspx", false);
-    xmlhttp.send(xmlpara);
+    SignNodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW"); 
   
-    SignNodeList = loadXMLString(xmlhttp.responseText).selectNodes("LISTVIEWDATA/ROWS/ROW"); 
-  
-    if(SignNodeList.length != 0)
-    { 
+    if (SignNodeList.length != 0) { 
 		var parameter	= pUserID;
-		var url = "/myoffice/ezApprovalG/ezAPRSIGN/AprSign1_Cross.aspx";
+		var url = "/ezApprovalG/aprSign.do";
 		var feature	= "status:no;dialogWidth:350px;dialogHeight:310px;help:no;scroll:no;edge:sunken";
 		var ret = window.showModalDialog(url,parameter,feature);
-    }else{
+    } else {
       var ret = "NAME";
     }
 	  return ret;
-  }catch(e){
+  } catch(e) {
     alert("openSignUI : " + e.description);
   }
 }
@@ -1183,13 +1162,13 @@ function rtrim(parm_str) {
   return str_temp;
 }
 
-function OpenInformationUI(pInformationContent)
-{
-	var parameter = pInformationContent;
-	var url = "/myoffice/ezApprovalG/ezAPROPINION.aspx";
-	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-	var RtnVal = window.showModalDialog(url,parameter,feature);
-	return RtnVal;
+function OpenInformationUI(pInformationContent) {
+    var parameter = pInformationContent;
+    var url = "/ezApprovalG/ezAprOpinion.do";
+    var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+    feature = feature + GetShowModalPosition(330, 205);
+    var RtnVal = window.showModalDialog(url, parameter, feature);
+    return RtnVal;
 }
 
 var ezapralert_cross_dialogArguments = new Array();
@@ -1278,17 +1257,13 @@ function openwindow(wfileLocation , wName , wWeigth , wHeigth)
   }
 }
 
-function chk_Passwd()
-{
+function chk_Passwd() {
 	var parameter = pUserID;
-	var url = "/myoffice/ezApprovalG/ezchkPasswd.aspx";
+	var url = "/ezApprovalG/ezchkPasswd.do";
 	var feature		= "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
 	var ret = window.showModalDialog(url,parameter,feature);
 	return ret;
 }
-
-
-
 
 function setFirstDrafter() {
     var ret = getAutoAprLine("");
@@ -1451,32 +1426,3 @@ function chkBtnConfirm(para)
 			
 	}
 }
-
-function getOpinionCount()
-{
-  try {
-	var xmlhttp = createXMLHttpRequest();
-	var xmlpara = createXmlDom();
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "PARAMETER");
-	createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-	createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
-	createNodeAndInsertText(xmlpara, objNode, "chkFlag", "ING");
-	
-	xmlhttp.open("POST", "/myoffice/ezApprovalG/ezAPROPINION/aspx/GetOpinionCount.aspx", false);
-	xmlhttp.send(xmlpara);
-	
-	var tempValue = parseInt(getNodeText(loadXMLString(xmlhttp.responseText)))	
-	if (tempValue > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-  } catch(e) {
-	return false;
-  }
-}
-

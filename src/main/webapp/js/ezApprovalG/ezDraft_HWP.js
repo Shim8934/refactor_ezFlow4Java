@@ -464,10 +464,6 @@ function SendDraftMappingSign(ret)
 	
 	var OpinionText = "";
 	var PositionText = "";
-	if (getOpinionCount())
-	{
-		PositionText = "(" + strLang5;
-	}
 	
 	if( LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) 
 	{
@@ -1568,7 +1564,7 @@ function putSignXML(SignXML)
   var retVal = false;
   try {
 	var NodeList;
-	NodeList = SignXML.selectNodes("SIGNINFOS/SIGNINFO");
+	NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
 	if (NodeList.length > 0) 
 	{
 		for (i=0; i<NodeList.length; i++)
@@ -1614,34 +1610,6 @@ function putSignXML(SignXML)
   return retVal;
 }
 
-//구현해야함
-function getOpinionCount()
-{
-  try {
-	var xmlhttp = createXMLHttpRequest();
-	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "PARAMETER");
-	createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-	createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
-	createNodeAndInsertText(xmlpara, objNode, "chkFlag", "ING");
-	
-	xmlhttp.open("POST", "/myoffice/ezApprovalG/ezAPROPINION/aspx/GetOpinionCount.aspx", false);
-	xmlhttp.send(xmlpara);
-	
-	var tempValue = parseInt(getNodeText(loadXMLString(xmlhttp.responseText)))	
-	if (tempValue > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-  } catch(e) {
-	return false;
-  }
-}
 
 function SaveTMPFile() {
     var result = "";

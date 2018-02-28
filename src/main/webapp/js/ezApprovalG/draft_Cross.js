@@ -3037,8 +3037,6 @@ function getDocInfo() {
         if (SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "Y" || SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "O")
             pHasOpinionYN = "Y";
        
-        var fields = message.GetFieldsList();
-        var field;
         if (isUsed == "reuse") {
         	if (reuseTitleYN == "YES") {
         		doctitle = SelectSingleNodeValueNew(result, "DATA/DOCTITLE");
@@ -3488,36 +3486,40 @@ function SaveOrgFile() {
     return result;
 }
 function SignCheck() {
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getSignInfo.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+	
     var SignXML = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-
-
-    xmlhttp.open("Post", "../ezAPRSIGN/aspx/getSignInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    if (getXmlString(xmlhttp.responseXML) == "")
+    if (result == "" || result == null) {
         return;
+    }
 
     var NodeList;
-    if (SelectNodes(xmlhttp.responseXML, "SIGNINFOS/SIGNINFO")) {
-        NodeList = SelectNodes(xmlhttp.responseXML, "SIGNINFOS/SIGNINFO");
-        if (NodeList.length <= 0)
-            return;
+    NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
+    
+    if (NodeList.length <= 0) {
+        return;
     }
-    SignXML = xmlhttp.responseXML;
+    
+    SignXML = result;
 
     var rtnVal = putSignXML(SignXML);
+    
     if (rtnVal) {
         SaveFile();
-
-        var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("Post", "../ezAPRSIGN/aspx/delSignInfo.aspx", false);
-        xmlhttp.send(SignXML);
     }
 }
 function putSignXML(SignXML) {

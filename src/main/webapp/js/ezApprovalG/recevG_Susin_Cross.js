@@ -888,7 +888,7 @@ function ClearDocCellInfo() {
         	susunSN = pSusinSN;
         }
         
-        if (ext = "mht") {
+        if (ext == "mht") {
 	        var fields = message.GetFieldsList();
 	
 	        for (i = 1; i <= SignCount ; i++) {
@@ -1931,6 +1931,7 @@ function btnAddSepAttach_onclick() {
     para[0] = g_SepAttachLVXml;
     para[1] = cabinetID;
     para[2] = "1";
+    para[3] = ext;
 
     inssepattach_cross_dialogArguments[0] = para;
     inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;

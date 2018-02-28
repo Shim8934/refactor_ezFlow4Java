@@ -3201,11 +3201,6 @@ function UpdateLineHistory() {
 	        OpenAlertUI(pAlertContent);
 		}
 	});
-	
-    if (result != "<RESULT>TRUE</RESULT>") {
-        var pAlertContent = strLang91;
-        OpenAlertUI(pAlertContent);
-    }
 }
 
 function setRecevInfo(ret) {

@@ -349,20 +349,20 @@
 		            var para = new Array();
 		            para[0] = g_TaskCode;
 		            para[1] = GetAttribute(selnode[0], "DATA1");
+		            para[2] = RetValue[3];
 
 		            var url = "/ezApprovalG/selectCabinetInTask.do";
-		            var feature = "dialogWidth:480px;dialogHeight:430px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
+		            var feature = "dialogWidth:700px;dialogHeight:430px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
         			feature = feature + GetShowModalPosition(480, 430);
-		            if (CrossYN()) {
+		            if (CrossYN() && RetValue[3] == 'mht') {
 		            	selectcabinetintask_cross_dialogArguments[0] = para;
 		            	selectcabinetintask_cross_dialogArguments[1] = btnSelectCabinet_onclick_Complete;
 
 		                 DivPopUpShow(475, 375, url);
-		            }
-		            else {
+		            } else {
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);
-		
+
 		            if (rtn[0] == "TRUE") {
 		                var CabXml = createXmlDom();
 		                CabXml = loadXMLString(rtn[1]);
@@ -410,7 +410,6 @@
 		    }
 		    function GetListXml() {
 		        var InfoXml = loadXMLString(GetLVHearderXml());
-		
 		        var Rows = InfoXml.childNodes[0].childNodes[1];
 		
 		        var pLvList = new ListView();
@@ -420,7 +419,7 @@
 		
 		        var selRow, Row, Cell, Value, Data, node, i;
 		        for (i = 0; i < totalRows.length; i++) {
-		            selRow = totalRows[i];
+		            selRow = totalRows[i];        
 		            Row = createNodeAndAppandNode(InfoXml, Rows, Row, "ROW");
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
 		            node = createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[0].innerHTML);
@@ -484,7 +483,7 @@
 		        }
 		        rtnVal[0] = "TRUE";
 		        rtnVal[1] = GetListXml();
-		
+
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
 		        }

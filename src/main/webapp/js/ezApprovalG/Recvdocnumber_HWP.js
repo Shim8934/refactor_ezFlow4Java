@@ -90,18 +90,23 @@ function getRecvDocNumber(pDeptID) {
         name = "receiptnumber"
         if (!HwpCtrl.CheckFieldExist(name)) {
             var DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
-            var xmlhttp = createXMLHttpRequest();
-            var RtnValxml = createXmlDom();
-            var xmlpara = createXmlDom();
-            var objNode;
-            createNodeInsert(xmlpara, objNode, "PARAMETER");
-            createNodeAndInsertText(xmlpara, objNode, "DATA", pDeptID);
-            createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+            var result = "";
+        	
+        	$.ajax({
+        		type : "POST",
+        		dataType : "text",
+        		async : false,
+        		url : "/ezApprovalG/getCabinetSN.do",
+        		data : {
+        			docID : pDocID,
+        			deptID : pDeptID
+        		},
+        		success: function(xml){
+        			result = loadXMLString(xml);
+        		}
+        	});
 
-            xmlhttp.open("Post", "/myoffice/ezApprovalG/docnum/aspx/getCabinetSN.aspx", false);
-            xmlhttp.send(xmlpara);
-
-            var SN = getNodeText(loadXMLString(xmlhttp.responseText));
+            var SN = getNodeText(GetChildNodes(result)[0]);
             pDocNo = DeptSymbol + "-" + SN;
             var tempNumString = SN;
             var i = 0;
@@ -118,20 +123,23 @@ function getRecvDocNumber(pDeptID) {
 
         fractionsymbol = trim(HwpCtrl.GetFieldText(name));
 
-        var xmlhttp = createXMLHttpRequest();
-        var RtnValxml = createXmlDom();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DATA", pDeptID);
-        createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-
-
-        xmlhttp.open("Post", "/myoffice/ezApprovalG/docnum/aspx/getCabinetSN.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var SN = getNodeText(loadXMLString(xmlhttp.responseText));
+        var result = "";
+        
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/getCabinetSN.do",
+    		data : {
+    			docID : pDocID,
+    			deptID : pDeptID
+    		},
+    		success: function(xml){
+    			result = loadXMLString(xml);
+    		}
+    	});
+    	
+        var SN = getNodeText(GetChildNodes(result)[0]);
         if (SN == "") {
             pDocNumCode = "";
             pDocNo = "";
@@ -139,7 +147,7 @@ function getRecvDocNumber(pDeptID) {
             return false;
         }
         else {
-            HwpCtrl.SetFieldText(name, fractionsymbol + SN);
+        	HwpCtrl.SetFieldText(name, fractionsymbol + SN);
             pDocNo = fractionsymbol + SN;
             var tempNumString = SN;
             var i = 0;
@@ -164,8 +172,8 @@ function getRecvDocNumber(pDeptID) {
 }
 function rollbackDocNumber(pDeptID, pDocID) {
     try {
-        var name, docnumber
-        var rtnval
+        var name, docnumber;
+        var rtnval;
 
         name = "receiptnumber"
         if (!HwpCtrl.CheckFieldExist(name))
@@ -178,19 +186,24 @@ function rollbackDocNumber(pDeptID, pDocID) {
         }
         docnumber = docnumber.replace(fractionsymbol, "");
 
-        var xmlpara = createXmlDom();
-
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DATA", pDeptID);
-        createNodeAndInsertText(xmlpara, objNode, "DATA", docnumber);
-        createNodeAndInsertText(xmlpara, objNode, "DATA", pDocID);
-
-        xmlhttp.open("Post", "/myoffice/ezApprovalG/docnum/aspx/rollbackCabinetSN.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        rtnval = getNodeText(loadXMLString(xmlhttp.responseText));
+        var result = "";
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/rollbackCabinetSN.do",
+    		data : {
+    			docID : pDocID,
+    			deptID : pDeptID,
+    			docNumber : docnumber
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}
+    	});
+    	
+        var dataNodes = GetChildNodes(loadXMLString(result));
+        rtnval = getNodeText(dataNodes[0]);
         HwpCtrl.SetFieldText(name, "");
 
         if (rtnval == "FALSE") {
@@ -210,40 +223,47 @@ function rollbackDocNumber(pDeptID, pDocID) {
 }
 function SaveFile() {
     try {
-
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "Html", HwpCtrl.GetCloneData("", "HWP"));
-
-
-        xmlhttp.open("POST", "aspx/SaveFileHWP.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        return xmlhttp.responseText;
+    	var result = "";
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/saveFile.do",
+    		data : {
+    			docID : pDocID,
+    			html  : HwpCtrl.GetCloneData("", "HWP")
+    		},
+    		success: function(text){
+    			result = text;
+    		}        			
+    	});
+        
+        return result;
     } catch (e) {
         alert("SaveFile : " + e.description);
     }
 }
 
 function getDeptSymbol(DeptID, DeptName) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var xmlRtn = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "CN", DeptID);
-    createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute6");
-    createNodeAndInsertText(xmlpara, objNode, "CATE", "group");
-
-    xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetADInfos.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(loadXMLString(xmlhttp.responseText).documentElement);
+var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezOrgan/getADInfos.do",
+		data : {
+			cn : DeptID,
+			prop : "extensionAttribute6",
+			cate  : "group"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    var dataNodes = GetChildNodes(loadXMLString(result).documentElement);
     var RtnVal = getNodeText(dataNodes[0]);
 
     if (RtnVal == "") {
