@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,13 +16,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
+import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 import egovframework.ezMobile.ezApprovalG.web.MApprovalGGWController;
@@ -344,27 +348,61 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 업무일지 리스트 (일일,주간,월간,분기,반기,연간,다른일지가져오기)
 	 */
-	@RequestMapping(value="/restezjournal/types/{typeId}/journals", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject typeJournalList(@PathVariable String typeId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W typeJournalList started.");
-		LOGGER.debug("typeId=" + typeId);
+	@RequestMapping(value="/restezjournal/journals", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject typeJournalList(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezJournal G/W journals started.");
 		
 		JSONObject result = new JSONObject();
 		
-		LOGGER.debug("ezJournal G/W typeJournalList ended.");
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		for (String key : request.getParameterMap().keySet()) {
+			param.put(key, request.getParameter(key));
+		}
+		
+		try {
+			List<JournalVO> journalList = ezJournalService.getJournalList(param);
+			result.put("data", journalList);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		}
+		
+		LOGGER.debug("ezJournal G/W journals ended.");
 		return result;
 	}
 	
 	/**
-	 * 업무일지 G/W [GET] 업무일지 리스트 (수신일지함, 임시보관함)
+	 * 업무일지 G/W [GET] 업무일지 리스트 총 게시물수
 	 */
-	@RequestMapping(value="/restezjournal/journals", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/restezjournal/journals-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject folderJournalList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W folderJournalList started.");
+		LOGGER.debug("ezJournal G/W journals-count started.");
 		
 		JSONObject result = new JSONObject();
 		
-		LOGGER.debug("ezJournal G/W folderJournalList ended.");
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		for (String key : request.getParameterMap().keySet()) {
+			param.put(key, request.getParameter(key));
+		}
+		
+		try {
+			String totalCount = ezJournalService.getTotalListCount(param);
+			
+			result.put("data", totalCount);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		}
+		
+		LOGGER.debug("ezJournal G/W journals-count ended.");
 		return result;
 	}
 	
@@ -767,26 +805,24 @@ public class EzJournalGWController {
 	}
 	
 	/**
-	 * 업무일지 G/W [GET] 일지 수 카운트
-	 */
-	@RequestMapping(value="/restezjournal/journals-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject getJournalsCount(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getJournalsCount started.");
-		
-		JSONObject result = new JSONObject();
-		
-		LOGGER.debug("ezJournal G/W getJournalsCount ended.");
-		return result;
-	}
-	
-	/**
 	 * 업무일지 G/W [POST] 환경설정 정보 저장
 	 */
 	@RequestMapping(value="/restezjournal/users/{userId}/options", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
-	public JSONObject saveOption(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
+	public JSONObject saveOption(@RequestParam Map<String,Object> param,@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W saveOption started.");
-		
+
 		JSONObject result = new JSONObject();
+		
+		param.put("userId", userId);
+		try {
+			ezJournalService.saveJournalEnv(param);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
 		
 		LOGGER.debug("ezJournal G/W saveOption ended.");
 		return result;
@@ -813,6 +849,19 @@ public class EzJournalGWController {
 		LOGGER.debug("ezJournal G/W getOption started.");
 		
 		JSONObject result = new JSONObject();
+		
+		String tenantId = request.getParameter("tenantId");
+		
+		try {
+			JournalEnvVO journalOpt = ezJournalService.getUserJournalEnv(userId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", journalOpt);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
 		
 		LOGGER.debug("ezJournal G/W getOption ended.");
 		return result;
@@ -903,6 +952,31 @@ public class EzJournalGWController {
 		}
 		
 		LOGGER.debug("ezJournal G/W getUserList ended.");
+		return result;
+	}
+	
+	/**
+	 * 업무일지 G/W [GET] 수신일지개수 
+	 */
+	@RequestMapping(value="/restezjournal/users/{userId}/recv-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getRecvJournalCount(@PathVariable String userId,HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezJournal G/W getRecvJournalCount started.");
+		
+		JSONObject result = new JSONObject();
+		
+		String tenantId = request.getParameter("tenantId");
+		
+		try {
+			String recvCount = ezJournalService.getRecvJournalCount(userId,tenantId);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", recvCount);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+		}
+		
+		LOGGER.debug("ezJournal G/W getRecvJournalCount ended.");
 		return result;
 	}
 }

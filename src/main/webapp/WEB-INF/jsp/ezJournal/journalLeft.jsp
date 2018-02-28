@@ -13,24 +13,17 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 	        window.onload = function () {
-	        	
+	        	$(".department:first").click();
 	        }
 	        
 	        function goJournalList(elem) {
-				var url = "";
-				switch(idx) {
-					case 1:
-						url = "/admin/ezJournal/formType.do";
-						break;
-					
-					case 2:
-						url = "/admin/ezJournal/form.do";
-						break;
-						
-					case 3:
-						url = "/admin/ezJournal/author.do";
-						break;
-						
+				var url = "/ezJournal/journalListMain.do";
+				
+				var listType = $(elem).attr("class");
+				url=url+"?listType="+listType;
+				var typeId = $(elem).attr("typeId");
+				if(typeId&&typeId!=undefined){
+					url=url+"&typeId="+typeId;
 				}
 				window.open(url,"right");
 			}
@@ -49,7 +42,7 @@
         <div class="left_pims" title="<spring:message code='ezJournal.t1'/>"></div>
 	        
 	    <div id="left">
-		    <h2><span class='department' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t49'/></span></h2>
+		    <h2><span class='department' onClick="goJournalList(this);" typeId='${typeList[0].journaltypeId }' style="width:100%;display:inline-block;"><spring:message code='ezJournal.t49'/></span></h2>
 		    <ul>
 		    	<c:choose>
 		    		<c:when test="${not empty typeList }">
@@ -59,7 +52,7 @@
 		    		</c:when>
 		    	</c:choose>
 		    </ul>
-		    <h2><span class='mine' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t50'/></span></h2>
+		    <h2><span class='mine' onClick="goJournalList(this);" typeId='${typeList[0].journaltypeId }' style="width:100%;display:inline-block;"><spring:message code='ezJournal.t50'/></span></h2>
 		    <ul>
 		    	<c:choose>
 		    		<c:when test="${not empty typeList }">
@@ -69,7 +62,7 @@
 		    		</c:when>
 		    	</c:choose>
 		    </ul>
-		    <h2><span class='recive' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t51'/></span></h2>
+		    <h2><span class='recv' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t51'/>(${recvCount })</span></h2>
 		    <ul>
 		    </ul>
 		    <h2><span class='temp' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>
@@ -78,11 +71,10 @@
 		    <h2><span class='write' onClick="writejournal();" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t57'/></span></h2>
 		    <ul>
 		    </ul>
-	        <h3><span class='recive'='journalEnv' onClick="" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t53'/></span></h3>
+	        <h3><span class='journalEnv' onClick="" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t53'/></span></h3>
 		</div>		
 	    <script type="text/javascript">
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		    $(".on").attr("class", "off");
 	    </script>
 	    
 	</body>

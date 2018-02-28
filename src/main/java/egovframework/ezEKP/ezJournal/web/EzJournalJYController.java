@@ -54,16 +54,6 @@ public class EzJournalJYController {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
-	@RequestMapping(value="/ezJournal/journalList.do")
-	public String journalList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
-		logger.debug("journalList started");
-		
-		logger.debug("journalList ended");
-		
-		return "/ezJournal/journalList";
-	}
-	
-	
 	/**
 	 * 업무일지 작성 화면 호출
 	 */

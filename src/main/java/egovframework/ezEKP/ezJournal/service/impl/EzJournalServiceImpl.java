@@ -22,7 +22,9 @@ import egovframework.ezEKP.ezJournal.vo.DeptInfoVO;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
+import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 import egovframework.let.utl.fcc.service.JsonUtil;
@@ -466,5 +468,55 @@ public class EzJournalServiceImpl implements EzJournalService{
 		}
 		
 		logger.debug("deleteFavorite ended");
+	}
+	
+	@Override
+	public String getRecvJournalCount(String userId, String tenantId) {
+		logger.debug("getRecvJournalCount started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId",tenantId);
+		String result =ezJournalDAO.selectRecvCount(map);
+		
+		logger.debug("getRecvJournalCount ended");
+		return result;
+	}
+
+	@Override
+	public JournalEnvVO getUserJournalEnv(String userId, String tenantId) {
+		logger.debug("getUserJournalEnv started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId",tenantId);
+		JournalEnvVO result =ezJournalDAO.selectUserEnv(map);
+		
+		logger.debug("getUserJournalEnv ended");
+		
+		return result;
+	}
+
+	@Override
+	public String getTotalListCount(Map<String, Object> map) {
+		logger.debug("getTotalListCount started");
+		String result = ezJournalDAO.selectTotalListCount(map);
+		logger.debug("getTotalListCount ended");
+		return result;
+	}
+
+	@Override
+	public List<JournalVO> getJournalList(Map<String, Object> map) throws Exception {
+		logger.debug("getJournalList started");
+		List<JournalVO> result = ezJournalDAO.selectJournalList(map);
+		logger.debug("getJournalList ended");
+		return result;
+	}
+
+	@Override
+	public void saveJournalEnv(Map<String, Object> map) throws Exception {
+		logger.debug("saveJournalEnv started");
+		ezJournalDAO.insertUpdateJournalEnv(map);
+		logger.debug("saveJournalEnv ended");
 	}
 }
