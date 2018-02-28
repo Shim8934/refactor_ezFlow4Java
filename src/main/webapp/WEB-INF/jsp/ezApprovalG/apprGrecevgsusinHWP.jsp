@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Recvdocnumber_HWP.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/recevG_Susin_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezRecevG_Susin_HWP.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezRecevG_HWP.js"></script>
@@ -110,6 +111,7 @@
 		    var g_szUserID = arr_userinfo[8];
 		    var g_senderinfo = '${userInfo.companyID}' + ", " + "${userInfo.deptName1}" + ", " + "${userInfo.title1}";
 		    var approvalFlag  = '${approvalFlag}';
+		    var ext = "hwp";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -118,8 +120,7 @@
 		                GetAprDocFormID();
 		                setAttachInfo(pDocID, "APR", lstAttachLink);
 		                getDocInfo();
-		            }
-		            else {
+		            } else {
 		                if (pDraftFlag == "REDRAFT") {
 		                    var len;
 		                    var pInformationContent;
@@ -1176,25 +1177,29 @@
 			}
 		
 			function getGongRamDocInfo() {
-			    try {
-			        var objRoot;
-			        var objNode;
-			        var xmlpara = createXmlDom();
-			        var xmlhttp = createXMLHttpRequest();
-			        var objNode;
-			        createNodeInsert(xmlpara, objNode, "PARAMETER");
-			        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-			
-			        xmlhttp.open("Post", "/myoffice/ezApprovalG/ReceivUI/aspx/GongRamDocInfo.aspx", false);
-			        xmlhttp.send(xmlpara);
-			
-			        var pGongRamDocID = getNodeText(loadXMLString(xmlhttp.responseText));
-			        if (pGongRamDocID != "NONE" && pGongRamDocID != "" && pGongRamDocID.length == 20)
-			            JiJungBeBuDisable();
-			
-			    } catch (e) {
-			        alert("getGongRamDocInfo :: " + e.description);
-			    }
+				try {
+		        	var result = "";
+		        	
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		async : false,
+		        		url : "/ezApprovalG/gongRamDocInfo.do",
+		        		data : {
+		        			docID : pDocID
+		        		},
+		        		success: function(xml){
+		        			result = loadXMLString(xml);
+		        		}
+		        	});
+		        	
+		            var pGongRamDocID = getNodeText(GetChildNodes(result)[0]);
+		            if (pGongRamDocID != "NONE" && pGongRamDocID != "" && pGongRamDocID.length == 20)
+		                JiJungBeBuDisable();
+		        }
+		        catch (e) {
+		            alert("getGongRamDocInfo :: " + e.description);
+		        }
 			}
 		
 		

@@ -950,7 +950,7 @@
 			    function btnSave_onclick() {
 			        HwpCtrl.SetSaveMode(1);
 			        HwpCtrl.SetDocumentInfo(pFormID);
-			        HwpCtrl.SaveFile("");
+			        HwpCtrl.SaveFile("", pDocID);
 			        HwpCtrl.ChangeMode(3);
 			    }
 			
