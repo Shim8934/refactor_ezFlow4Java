@@ -230,11 +230,20 @@ public class EzJournalGWController {
 			
 			LOGGER.debug("tenantId : " + tenantId + ", companyId : " + companyId);
 			
-			JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalFormInfo(formId, companyId, tenantId);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", journalFormInfoVO);
+			if (request.getParameter("userId") != null ) {
+				String userId = request.getParameter("userId");
+				String selId = ezJournalService.getJournalLastFormId(typeId, formId, userId, companyId, tenantId);
+				LOGGER.debug("formId : " + selId);
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", selId);
+			} else {
+				JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalFormInfo(formId, companyId, tenantId);
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", journalFormInfoVO);
+			}
 		
 		} catch (Exception e) {
 			result.put("status", "error");

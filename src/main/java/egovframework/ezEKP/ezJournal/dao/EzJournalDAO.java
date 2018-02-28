@@ -252,5 +252,13 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public void deleteFavorite(Map<String, Object> map) {
 		delete("deleteFavorite", map);
 	}
+
+	/**
+	 * 양식내용 가져오기
+	 * @param map
+	 */
+	public String getJournalLastFormId(Map<String, Object> map) {
+		return (String) select("getJournalLastFormId", map);
+	}
 	
 }

@@ -19,7 +19,7 @@
 	    
 			$(document).ready(function() {
 				companyId = $("#SCompID").val();
-			   	var firstType = $("#formType").find("span:first");
+			   	var firstType = $("#formType").find("td:first");
 				getFormList(firstType);
 				
 			});
@@ -37,7 +37,7 @@
 			function getFormList(val) {	
 				typeId = $(val).attr("value");
 				$(".bold").css("font-weight", "normal");
-				$(val).css("font-weight", "bold");
+				$(val).find("span").css("font-weight", "bold");
 				
 			    $.ajax({
 		    		type : "POST",
@@ -208,11 +208,11 @@
 			<tr>
 		    	<td style="width:200px; vertical-align:top">
 		    		<div class="listview">
-						<div style="vertical-align:top; height:500px; width:100%; overflow-x:auto;overflow-y:auto;/* BORDER:#b6b6b6 1px solid; */ BACKGROUND-COLOR:#ffffff" >
+						<div style="vertical-align:top; height:500px; border: none; width:100%; overflow-x:auto;overflow-y:auto;/* BORDER:#b6b6b6 1px solid; */ BACKGROUND-COLOR:#ffffff" >
 							<table id="formType" class="mainlist" style="width: 100%; border-width: 0px 0px 1px 0px;">
 								<c:forEach items="${typeList}" var="type">
 									<tr>
-										<td><span class="bold" value="${type.journaltypeId }" onclick="getFormList(this)"><spring:message code='${type.journaltypeId}'/></span></td>
+										<td value="${type.journaltypeId }" onclick="getFormList(this)"><span class="bold"><spring:message code='${type.journaltypeId}'/></span></td>
 									</tr>
 								</c:forEach>
 							</table>

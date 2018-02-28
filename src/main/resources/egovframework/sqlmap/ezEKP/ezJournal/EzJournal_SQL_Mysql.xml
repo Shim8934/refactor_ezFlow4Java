@@ -595,4 +595,18 @@
 			tenant_id = #tenantId#
 	</delete>
 	
+	<!-- 최근사용양식 아이디 가져오기 -->
+	<select id="getJournalLastFormId" parameterClass="map" resultClass="String">
+		select 
+			a.form_id
+		from 
+			tbl_journal a join tbl_journal_form b on a.form_id = b.form_id 
+		where 
+			a.journal_writer = #userId#
+		and
+			b.type_id = #typeId#
+		and 
+			a.tenant_id = #tenantId#
+		order by journal_date desc limit 1
+	</select>
 </sqlMap>

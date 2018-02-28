@@ -25,14 +25,30 @@
 	    <script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 	    <script type="text/javascript">
 			var companyId = "${userInfo.companyID}"; 
+			// 작성자 이름 // lang에 따라 가져오는값 바꿔야함..
+			var userName = "${userInfo.displayName1}";			
 			//트리조직도 JSON
 	   		var treeContent;
 	    	// 수신자
 	    	var selReceiver = [];
-	    	// 양식아이디
-	    	var formId;
+	    	// 마지막에 사용했던 양식아이디
+	    	var lastFormId;
 	    	// 일지함아이디
-	    	var typeId;
+	    	var typeId = "<c:out value='${typeId}'/>";
+	    	// 작성일
+	    	var curDate = new Date();
+	    	curDate = changeDate(curDate);
+	    	var simpleDate = curDate.split("-");
+	    	simpleDate = simpleDate[0].toString() + simpleDate[1].toString() + simpleDate[2].toString();
+	    	
+	    	// 날짜 표현 변경
+	    	function changeDate(date) {
+	    		function pad(num) {
+	    			num = num + "";
+	    			return num.length < 2 ? "0" + num : num;
+	    		}
+	    		return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
+	    	}
 	    	
 			// 선택된 일지함의 양식 리스트 가져오기
 	    	function getFormList(elem) {
@@ -42,16 +58,26 @@
 	    			dataType : "html",
 	    			async : false,
 	    			url : "/ezJournal/getFormList.do",
-	    			data : {"typeId"	: typeId},
+	    			data : {"typeId" : typeId},
 	    			success : function(result) {
 	    				$("#optForm").html(result);
 	    			}
 	    		});
+	    		console.log("lastFormId 확인 : " + lastFormId);
+	    		if (lastFormId != null && lastFormId != "") {
+	    			lastFormId = parseInt(lastFormId);
+	    			console.log("이전양식가져올때는 여기로 : " + lastFormId);
+	    			getJournalForm(lastFormId);
+	    			$("#optForm option[value=" + lastFormId + "]").attr("selected", "selected");
+	    			lastFormId = "";
+	    		} else {
+	    			var selFormId = $("#optForm").find("option:selected").val();
+		    		getJournalForm(selFormId);
+	    		}
 	    	}
 			
 			// 선택된 양식의 폼 호출
-			function getJournalForm(elem) {
-				formId = $(elem).val();
+			function getJournalForm(formId) {
 				$.ajax({
 	    			type : "POST",
 	   				dataType : "json",
@@ -60,7 +86,12 @@
    							"typeId" : typeId},
    					success : function(result){
    						console.log(result);
-   						message.SetEditorContent(result);
+   						console.log(simpleDate);
+   						console.log(userName);
+   						var title = "[" + result.formName + "] " + simpleDate + " (" + userName + ")";
+   						console.log(title);
+   						$("#txtTitle").val(title);
+   						message.SetEditorContent(result.formContent);
 	   				},
 	   				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);
@@ -68,12 +99,33 @@
 	    		});
 			}
 	    	
+			// 최근에 사용한 양식 호출
+			function getLastForm(typeId) {
+				$.ajax({
+	    			type : "POST",
+	   				dataType : "json",
+	   				url : "/ezJournal/journalGetLastForm.do",
+	   				data : {"typeId" : typeId},
+   					success : function(result){
+						lastFormId = result;
+						var firstType = $("#optType").find("option:first");
+			    		getFormList(firstType);
+	   				},
+	   				error : function(request, status, error) {
+		    			alert("code : " + request.status + "\nmessage : " + request.responseText + "\nerror : " + error);
+	   				}
+	    		});
+				
+			}
+			
+			// 수신자 선택화면 호출
 	    	function selectReceiver(){			
 				var url = "/ezJournal/selectReceiver.do";
 				url += "?companyId=" + companyId;
 				GetOpenWindow(url, "selectReceiver", 1100, 600);
 			}
 	    	
+			// 선택된 수신자 화면에 뿌리기
 	    	function showReceiver() {
 	    		console.log(selReceiver);
     			var strReceiver = "";
@@ -90,31 +142,17 @@
 	    		$("#receiverlist").html(strReceiver);
 	    	}
 			
-	    	/*
-	    	function Editor_Complete() {
-		        if (cmd == "mod") {
-	    	        message.SetEditorContent(sigBody.innerHTML);
-	        	}
-
-	        	if (cmd == "add") {
-		            if (msgRtn != "") {
-		                message.SetEditorContent(msgRtn);
-	    	        }
-		        }
-	    	}
-	    	*/
-	    	
+	    /* 	
 	    	$(document).ready(function() {
 	    		var firstType = $("#optType").find("option:first");
 	    		getFormList(firstType);
-	    		
-	    	});
+	    	}); 
+	    */
 	    
-	    	window.onload = function() {
-	    		var firstForm = $("#optForm").find("option:first");
-	    		console.log("firstForm : " + firstForm);
-	    		getJournalForm(firstForm);
-	    	};
+	    	// 양식내용을 에디터에 넣어주는 작업 
+		    function Editor_Complete() {
+	    		getLastForm(typeId);
+	    	}
 	    </script>
 	</head>
 	<body class="popup" style="height: 97%;" ondragover="bodydragover(event)">
@@ -164,7 +202,7 @@
 	                        			><spring:message code='${type.journaltypeId }'/></option>
 	                        		</c:forEach>
 	                        	</select>
-	                        	<select id="optForm" style="width:182px;" onchange="getJournalForm(this)">
+	                        	<select id="optForm" style="width:182px;" onchange="getJournalForm(this.value)">
 						                        	
 	                        	</select>
 	                        </td>

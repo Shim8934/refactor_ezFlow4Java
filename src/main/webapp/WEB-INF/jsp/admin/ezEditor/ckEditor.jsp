@@ -418,6 +418,28 @@
 	            } catch (e) {
 	            }
 	        }
+	        
+	     	// 업무일지용 문서정보 변경부분
+		    function setFormInfo(info) {
+		    	var totalTD = CKEDITOR.instances.editor1.document.$.getElementsByTagName("TD");
+		    	
+		    	for (var i = 0; i < totalTD.length; i++) {
+		    		if (totalTD[i].id != null) {
+		    			if (totalTD[i].getAttribute("id") == info) {
+		    				$totalTD = $(totalTD[i]);
+		    				$totalTD.removeAttr("id");
+		    				
+		    				if ($totalTD.hasClass("FIELD")) {
+		    					$totalTD.removeClass("FIELD");
+		    				}
+		    				
+		    				if ($totalTD.is("[style]")) {
+		    					$totalTD.removeAttr("style");
+		    				}
+                        }
+                    }
+		    	}
+		    }
 		</script>
 	</head>
 	<body style="margin: 0px; padding: 0px;">

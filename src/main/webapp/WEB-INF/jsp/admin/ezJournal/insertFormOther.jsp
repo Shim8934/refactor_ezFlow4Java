@@ -55,18 +55,36 @@
 		        		$("#setUseDeptList").show();
 		        		drawUseDeptList();
 		        	}
+		        	
 		        }
 			    
 		    });
 		    
 		    // 수정시 양식내용을 에디터에 넣어주는 작업 
-		    $(window).load(function() {
-			    if (formId != null && formId != "") {
-			    	selFormContent = selFormContent.replace(/&#034;/g, "\"");
+		    function Editor_Complete() {
+	            if (formId != "" && formId != null) {
+	            	console.log(selFormContent);
+	            	selFormContent = selFormContent.replace(/&#034;/g, "\"");
 			    	selFormContent = selFormContent.slice(1, -1);
+			    /* 	for (var i = 1; i < 4; i++) {
+			    		var $selTD = $("#TD_" + i);
+			    		var selID = $selTD.attr("id");
+			    		console.log("selTD : " + selID);
+			    		if (selFormContent.indexOf(selID) > -1) {
+			    			$selTD.toggleClass("active");
+			    		}
+			    	} */
+			    	/* if (selFormContent.indexOf("journalDeptId") > -1) {
+			    		$("#TD_1").toggleClass("active");
+			    		
+			    	} else if (selFormContent.indexOf("journalWriterId") > -1) {
+			    		$("#TD_2").toggleClass("active");
+			    	} else if (selFormContent.indexOf("journalWriteDateId") > -1) {
+			    		$("#TD_3").toggleClass("active");
+			    	} */
 		        	message.SetEditorContent(selFormContent);
-			    }
-		    });
+                }
+		    }
 		    
 		    // 사용부서 라디오 선택유무에 따라 부서리스트 보여주는 부분
 		    function checkUseDept() {
@@ -83,16 +101,26 @@
 		    }
 		    
 		    // 양식내용에 정보 넣는 부분(부서명, 작성자, 작성일)
-		    function clickFormInfo(val) {
-		    	var info = $(val).attr("value");
+		    function clickFormInfo(elem) {
+		    	var info = $(elem).attr("value");
 		    	alert(info);
 		    	
-		    	if ($(val).hasClass("active")) {
-			    	if ($("#" + info).length) {
-			    		alert("있음?")
-			    		$("#" + info).removeAttr("id");
+		    	if ($(elem).hasClass("active")) {
+		    		/*
+			    	var content = message.GetEditorContent();
+			    	console.log(content);
+			    	var index = content.indexOf(info);
+			    	console.log(index);
+			    	if (index != -1) {
+			    		var subContent = content.split(info);
+			    		subContent[0] = subContent[0].slice(0, -19);
+			    		subContent[1] = subContent[1].slice(10);
+			    		content = subContent[0].concat(subContent[1]);
+			    		message.SetEditorContent(content);
 			    	}
-			    	$(val).toggleClass("active");
+			    	*/
+			    	message.setFormInfo(info);
+			    	$(elem).toggleClass("active");
 		    	} else {
 					if (useEditor == "HWP") {
 			    		message.SetAttribute(info);
@@ -103,7 +131,7 @@
 			    			message.SetAttribute("INIS", info, "FIELD");
 			    		}
 			    	}
-			    	$(val).toggleClass("active");
+			    	$(elem).toggleClass("active");
 		    	}
 		    	//$(".infoTbl tr").removeClass("active");
 				//$(val).addClass("active");
@@ -167,7 +195,6 @@
 		    function drawUseDeptList() {
 		    	console.log(useDeptList);
 		    	
-		    	var $useFormDept = $("#useFormDept");
 		    	var useListHtml = "";     
 		    	for (var i = 0; i < useDeptList.length; i++) {
 		    		useListHtml += "<tr deptId=" + useDeptList[i].deptId + " onclick='listClick(this)' ondblclick='deleteDept()'>";
@@ -176,15 +203,15 @@
 		    		useListHtml += "</td>";
 		    		useListHtml += "</tr>";
 		    	}
-		    	$useFormDept.html(useListHtml);
+		    	$("#useFormDept").html(useListHtml);
 		    }
 		    
 		    // 선택된 부서리스트에서 부서 선택시 스타일주기
-		    function listClick(val) {
-		    	selDeptId = $(val).attr("deptId");
+		    function listClick(elem) {
+		    	selDeptId = $(elem).attr("deptId");
 		    	
 		    	$(".mainlist tr").removeClass("active");
-				$(val).addClass("active");
+				$(elem).addClass("active");
 		    }
 		    
 		    // 저장버튼
@@ -362,9 +389,9 @@
                         	<table width="100%" cellpadding="0" cellspacing="0" class="infoTbl">
                         		<tbody>
                         			<tr><th><spring:message code='ezJournal.t32'/></th></tr>
-                        			<tr><td value="deptId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t33'/></span></td></tr>
-                        			<tr><td value="writer" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t34'/></span></td></tr>
-                        			<tr><td value="writeDate" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t35'/></span></td></tr>
+                        			<tr><td id="TD_1" value="journalDeptId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t33'/></span></td></tr>
+                        			<tr><td id="TD_2" value="journalWriterId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t34'/></span></td></tr>
+                        			<tr><td id="TD_3" value="journalWriteDate" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t35'/></span></td></tr>
                         		</tbody>
                         	</table>
                         </td>

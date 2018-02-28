@@ -187,5 +187,17 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public void deleteFavorite(String favoriteId, String userId, String tenantId);
+
+	/**
+	 * 마지막 사용양식 아이디 가져오기
+	 * @param typeId
+	 * @param formId
+	 * @param userId
+	 * @param companyId
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public String getJournalLastFormId(String typeId, String formId, String userId, String companyId, String tenantId);
 	
 }
