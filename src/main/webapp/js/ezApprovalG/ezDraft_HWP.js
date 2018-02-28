@@ -1568,7 +1568,7 @@ function putSignXML(SignXML)
   var retVal = false;
   try {
 	var NodeList;
-	NodeList = SignXML.selectNodes("SIGNINFOS/SIGNINFO");
+	NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
 	if (NodeList.length > 0) 
 	{
 		for (i=0; i<NodeList.length; i++)
