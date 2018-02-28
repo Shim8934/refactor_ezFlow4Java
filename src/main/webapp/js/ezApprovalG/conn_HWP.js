@@ -22,7 +22,7 @@ function GetDocumentElement(HwpCtrl, CharName)
 		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
-		    return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName)[0]);
+		    return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
 		} else {
 			return "";
 		}
@@ -53,20 +53,25 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
-			objNode = DocumentKeywordInfo.getElementsByTagName(CharName)[0];
+			var objNode = DocumentKeywordInfo.getElementsByTagName(CharName)[0];
 			setNodeText(objNode , value);
 			DocumentKeywordInfo.documentElement.appendChild(objNode);
-			
-			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.childNodes[0].childNodes[0]));
+console.log("keywordInfo = " + DocumentKeywordInfo.documentElement);
+console.log("if = " + getXmlString(DocumentKeywordInfo.childNodes[0].getElementsByTagName(CharName)[0]));
+console.log(getXmlString(DocumentKeywordInfo).substring(0,9));
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo));
+console.log(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
 			
 			return true;
 		} else {
-			var objNode;
-			objNode = document.createElement(CharName);
+			var objNode = document.createElement(CharName);
 			setNodeText(objNode , value);
 			DocumentKeywordInfo.documentElement.appendChild(objNode);
-			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.childNodes[0].childNodes[0]));
-
+console.log("keywordInfo = " + DocumentKeywordInfo.documentElement);
+console.log("else = " + getXmlString(DocumentKeywordInfo.childNodes[0].getElementsByTagName(CharName)[0]));
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo));
+console.log(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
+			
 			return true;
 		}
 	} else {
