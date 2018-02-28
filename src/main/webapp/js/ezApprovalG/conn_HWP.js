@@ -59,8 +59,8 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 console.log("keywordInfo = " + DocumentKeywordInfo.documentElement);
 console.log("if = " + getXmlString(DocumentKeywordInfo.childNodes[0].getElementsByTagName(CharName)[0]));
 console.log(getXmlString(DocumentKeywordInfo).substring(0,9));
-			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo));
-console.log(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo).replace(/<KEYWORD>/gi, "").replace(/<\/KEYWORD>/gi, ""));
+console.log(getXmlString(DocumentKeywordInfo).replace(/<KEYWORD>/gi, "").replace(/<\/KEYWORD>/gi, ""));
 			
 			return true;
 		} else {
@@ -69,8 +69,8 @@ console.log(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
 			DocumentKeywordInfo.documentElement.appendChild(objNode);
 console.log("keywordInfo = " + DocumentKeywordInfo.documentElement);
 console.log("else = " + getXmlString(DocumentKeywordInfo.childNodes[0].getElementsByTagName(CharName)[0]));
-			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo));
-console.log(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo).replace(/<KEYWORD>/gi, "").replace(/<\/KEYWORD>/gi, ""));
+console.log(getXmlString(DocumentKeywordInfo).replace(/<KEYWORD>/gi, "").replace(/<\/KEYWORD>/gi, ""));
 			
 			return true;
 		}
