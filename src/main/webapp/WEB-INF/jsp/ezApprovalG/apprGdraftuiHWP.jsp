@@ -146,6 +146,7 @@
 	        var approvalFlag = "${approvalFlag}";
 	        var isHWP = "${isHWP}";
 	        var isUsed = "";
+	        var ext = "hwp";
 	        
 	        window.onload = function () {
 	            try {
@@ -981,7 +982,8 @@
 				    var para = new Array();
 				    para[0] = g_SepAttachLVXml;
 				    para[1] = cabinetID;
-				
+					para[3] = ext;
+					
 				    var url = "/ezApprovalG/insSepAttach.do";
 				    var feature = "dialogWidth:730px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
 			        var rtn = window.showModalDialog(url, para, feature);

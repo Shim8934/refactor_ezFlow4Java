@@ -130,6 +130,7 @@
 	        var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
 	        var isHWP = "${isHWP}";
 	        var approvalFlag = "${approvalFlag}";
+	        var ext = "hwp";
 	        
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -1012,7 +1013,8 @@
 			        var para = new Array();
 			        para[0] = g_SepAttachLVXml;
 			        para[1] = cabinetID;
-			
+					para[3] = ext;
+					
 			        var url = "/ezApprovalG/insSepAttach.do";
 				    var feature = "dialogWidth:730px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
 			

@@ -95,10 +95,6 @@ function AprrovMappingSign(ret)
 	
 	var OpinionText = "";
 	var PositionText = "";
-	if (getOpinionCount())
-	{
-		PositionText = "(" + strLang5;
-	}
 	
 	if( LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16)   
 	{
@@ -1279,35 +1275,6 @@ function centerOpenWindow(wfileLocation, wWeight, wHeight)
 	}catch(e){
 		alert("centerOpenWindow :: " + e.description);
 	}
-}
-
-//구현해야되는가? 자바버전은 체크안하고 뺀거같기도 하고
-function getOpinionCount()
-{
-  try {
-	var xmlhttp = createXMLHttpRequest();
-	var xmlpara = createXmlDom();
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "PARAMETER");
-	createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-	createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
-	createNodeAndInsertText(xmlpara, objNode, "chkFlag", "ING");
-	
-	xmlhttp.open("POST", "/myoffice/ezApprovalG/ezAPROPINION/aspx/GetOpinionCount.aspx", false);
-	xmlhttp.send(xmlpara);
-	
-	var tempValue = parseInt(getNodeText(loadXMLString(xmlhttp.responseText)))	
-	if (tempValue > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-  } catch(e) {
-	return false;
-  }
 }
 
 function setRecevInfo(ret) {

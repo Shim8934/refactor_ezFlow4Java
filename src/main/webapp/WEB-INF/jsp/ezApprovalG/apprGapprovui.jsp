@@ -150,6 +150,7 @@
 			var curDocNum = "";
 			var draftDeptID = "${draftDeptID}";
 			var isHWP = "";
+			var ext = "mht";
 			
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -1225,7 +1226,8 @@
 		        var para = new Array();
 		        para[0] = g_SepAttachLVXml;
 		        para[1] = cabinetID;
-		
+		        para[3] = ext;
+		        
 		        inssepattach_cross_dialogArguments[0] = para;
 		        inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
 		

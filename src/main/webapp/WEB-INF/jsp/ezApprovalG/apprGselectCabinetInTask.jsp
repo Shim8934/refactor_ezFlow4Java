@@ -363,11 +363,11 @@
 		        if (totalRows.length > 0) {
 		            rtnVal[0] = "TRUE";
 		            rtnVal[1] = GetSelCabInfoXml();
-		
+		            
 		            if (ReturnFunction != null) {
 		                ReturnFunction(rtnVal);
-		            }
-		            else {
+		            } else {
+		            	window.returnValue = rtnVal;
 		                window.close();
 		            }
 		        }
