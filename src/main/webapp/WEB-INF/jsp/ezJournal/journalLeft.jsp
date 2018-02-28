@@ -28,14 +28,6 @@
 				window.open(url,"right");
 			}
 	        
-	        function writejournal() {
-	        //	var feature = GetOpenWindowfeature(820, 880).replace("resizable=no","resizable=yes"); 
-				var feature = GetOpenPosition(820, 850);
-	        	var typeId = "ezJournal.t05";
-	            var Openwin = window.open("/ezJournal/journalNewItem.do?typeId=" + typeId + "&mode=new", "", "width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
-	        	Openwin.focus();
-	        }
-
 	    </script>
 	</head>
 	<body class="leftbody">
@@ -66,9 +58,6 @@
 		    <ul>
 		    </ul>
 		    <h2><span class='temp' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>
-		    <ul>
-		    </ul>
-		    <h2><span class='write' onClick="writejournal();" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t57'/></span></h2>
 		    <ul>
 		    </ul>
 	        <h3><span class='journalEnv' onClick="" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t53'/></span></h3>

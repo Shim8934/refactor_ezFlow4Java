@@ -358,6 +358,15 @@
 		        $("#Edatepicker").datepicker('setDate', "");
 		     });
 			
+			 function writejournal() {
+	        //	var feature = GetOpenWindowfeature(820, 880).replace("resizable=no","resizable=yes"); 
+				var feature = GetOpenPosition(820, 850);
+	        	var typeId = "ezJournal.t05";
+	            var Openwin = window.open("/ezJournal/journalNewItem.do?typeId=" + typeId + "&mode=new", "", "width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+	        	Openwin.focus();
+	        }
+
+			
 			$(document).ready(function(){
 				setJournalList();
 			});
@@ -398,7 +407,7 @@
 		<div id="mainmenu">
 		  <ul>
 		  	<c:if test="${listType eq 'department' or listType eq 'mine' }">
-	       	 <li><span onClick=""><spring:message code='ezJournal.t57' /></span></li>
+	       	 <li><span onClick="writejournal()"><spring:message code='ezJournal.t57' /></span></li>
 		  	</c:if>
 		  	<c:if test="${listType eq 'department' or listType eq 'recv' }">
 	       	 <li><span onClick=""><spring:message code='ezJournal.t58' /></span></li>
