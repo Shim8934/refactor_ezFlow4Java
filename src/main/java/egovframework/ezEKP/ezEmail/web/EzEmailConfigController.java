@@ -306,28 +306,31 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 			if (mailboxUsage < mailboxQuota) {
 				mailPercent = (int)((mailboxUsage/mailboxQuota) * 100);
-			}
-			else {
+			} else {
 				mailPercent = 100;
 			}
-			
-			if (mailboxUsage >= 1024) {
-				mailboxDetail = (int)(mailboxUsage/1024) + "MB";
-			}
-			else {
-				mailboxDetail = (int)mailboxUsage + "KB";
+						
+			// 분자
+			if (mailboxUsage >= 1024*1024 ) {
+				mailboxDetail = String.format("%.1fG", mailboxUsage/(1024*1024));
+			} else if (mailboxUsage >= 1024) {
+				mailboxDetail = String.format("%.1fM", mailboxUsage/1024);
+			} else {
+				mailboxDetail = String.format("%.1fK", mailboxUsage);
 			}
 	
+			// 분모
 			if (mailboxQuota >= 1024*1024) {
-				mailboxQuotaStr = String.format("%.2fG", mailboxQuota/(1024*1024));
-			}
-			else if (mailboxQuota >= 1024) {
-				mailboxQuotaStr = (int)(mailboxQuota/1024) + "MB";
-			}
-			else {
-				mailboxQuotaStr = (int)mailboxQuota + "KB";
-			}
-		
+				mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
+				
+				if (mailboxQuotaStr.contains(".0")) {
+					mailboxQuotaStr = mailboxQuotaStr.substring(0, mailboxQuotaStr.indexOf(".")) + "G";
+				}
+			} else if (mailboxQuota >= 1024) {
+				mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
+			} else {
+				mailboxQuotaStr = (int)mailboxQuota + "K";
+			}		
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			e.printStackTrace();
@@ -571,17 +574,29 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userInfo.getTenantId(), userInfo.getId());
 		
-		String defalutFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+		
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+			}
+		}
 		
 		if (mailSignatureVO != null) {
 			signState = mailSignatureVO.getUseFlag().trim();
-			signature1 = EgovStringUtil.isEmpty(mailSignatureVO.getContent1()) ? "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent1();
-			signature2 = EgovStringUtil.isEmpty(mailSignatureVO.getContent2()) ? "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent2();
-			signature3 = EgovStringUtil.isEmpty(mailSignatureVO.getContent3()) ? "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent3();
+			signature1 = EgovStringUtil.isEmpty(mailSignatureVO.getContent1()) ? "<div><p " + defaultFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent1();
+			signature2 = EgovStringUtil.isEmpty(mailSignatureVO.getContent2()) ? "<div><p " + defaultFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent2();
+			signature3 = EgovStringUtil.isEmpty(mailSignatureVO.getContent3()) ? "<div><p " + defaultFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent3();
 		} else {
-			signature1 = "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>";
-			signature2 = "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>";
-			signature3 = "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>";
+			signature1 = "<div><p " + defaultFontAndSize + ">&nbsp;</p></div>";
+			signature2 = "<div><p " + defaultFontAndSize + ">&nbsp;</p></div>";
+			signature3 = "<div><p " + defaultFontAndSize + ">&nbsp;</p></div>";
 		}
 
 		serverName = userInfo.getServerName();

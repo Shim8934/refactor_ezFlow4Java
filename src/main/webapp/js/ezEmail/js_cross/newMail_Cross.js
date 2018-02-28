@@ -1,5 +1,4 @@
-﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F\uD800-\uDB7F\uDB80-\uDBFF\uDC00-\uDFFF\uFFFE\uFFFF]/g;
-function MailToMe_Onclick() {
+﻿function MailToMe_Onclick() {
     var checked = document.getElementById('toMe').checked;
     var msgDiv = document.getElementById('MsgToGot');
 
@@ -855,14 +854,14 @@ function Save_onClick_Complete(ReturnValue) {
             createNodeAndInsertText(xmlDoc, rootNode, "MAILCMD", g_cmd);
             createNodeAndInsertText(xmlDoc, rootNode, "ORGMAILCMD", gg_cmd);
             createNodeAndInsertText(xmlDoc, rootNode, "AUTHOR", g_szAuthor);
-            createNodeAndInsertText(xmlDoc, rootNode, "SUBJECT", Subject.replace(regex, " "));
+            createNodeAndInsertText(xmlDoc, rootNode, "SUBJECT", Subject);
             createNodeAndInsertText(xmlDoc, rootNode, "TO", GetAddrFormatForSend(MsgToGot));
             createNodeAndInsertText(xmlDoc, rootNode, "CC", GetAddrFormatForSend(MsgCCGot));
             createNodeAndInsertText(xmlDoc, rootNode, "BCC", GetAddrFormatForSend(MsgBCCGot));
             if (document.getElementById("bodyType") != null && document.getElementById("bodyType").value == "1")
                 createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", document.getElementById("plainTextArea").value);
             else
-                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n").replace(regex, " "));
+                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n"));
             createNodeAndInsertText(xmlDoc, rootNode, "FROM", "\"" + g_myname + "\" <" + g_from + ">");
             createNodeAndInsertText(xmlDoc, rootNode, "SENSITIVITY", m_rgParams4PostOption["postType"]);
             createNodeAndInsertText(xmlDoc, rootNode, "REPLYSENDTIME", m_rgParams4PostOption["replySendTime"]);
@@ -1509,14 +1508,17 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        CompleteEmailAddress(formName, validDIV, iType);
 	        return;
 	    }
-	    userAddr = GetEmailAddressByName(m_addrBook, mailName);
-	    var emailExitsCnt = userAddr["name"].length;
-	    if (userAddr["name"].length == 1 && trim(userAddr["email"][0]) == "" && userAddr["email"][0].lastIndexOf("@") < 2) {
+	    
+	    // 한번 더 거르는 작업이 불필요한 것처럼 보이기 때문에 주석처리함.
+	    //userAddr = GetEmailAddressByName(m_addrBook, mailName);
+	    var emailExitsCnt = m_addrBook["name"].length;
+	    
+	    if (m_addrBook["name"].length == 1 && trim(m_addrBook["email"][0]) == "" && m_addrBook["email"][0].lastIndexOf("@") < 2) {
 	        emailExitsCnt = 0;
 	    }
 	
 	    if (emailExitsCnt == 1) {
-	        newElem = PrepareMailTag(iType, userAddr["type"][0], userAddr["name"][0], userAddr["email"][0], userAddr["href"][0]);
+	        newElem = PrepareMailTag(iType, m_addrBook["type"][0], m_addrBook["name"][0], m_addrBook["email"][0], m_addrBook["href"][0]);
 	        var IsInsert = CheckMailReceiver(newElem);
 	
 	        if (!IsInsert) {
@@ -1524,14 +1526,18 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        }
 	
 	        var szFromName = "";
+	       
 	        for (count1 = 1; count1 < mailArr.length; count1++) {
 	            szFromName += mailArr[count1];
-	            if (count1 != mailArr.length - 1) szFromName += ";";
+	            
+	            if (count1 != mailArr.length - 1) {
+	            	szFromName += ";";
+	            }
 	        }
+	        
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
-	    }
-	    else {
+	    } else {
 	        rgParams = new Array();
 	        rgParams["recipientTDData"] = null;
 	        rgParams["returnedRecipientName"] = "";
@@ -1543,9 +1549,11 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        rgParams["cmd"] = "JustThis"
 	        rgParams["addrBook"] = m_addrBook;
 	        rgParams["g_EmailAddress"] = "";
-	        if (userAddr["name"].length == 0) {
+	        
+	        if (m_addrBook["name"].length == 0) {
 	            rgParams["cmd"] = "showAll";
 	        }
+	        
 	        checkname_cross_dialogArguments = new Array();
 	        checkname_cross_dialogArguments[0] = rgParams;
 	        checkname_cross_dialogArguments[1] = CompleteEmailAddress_Complete;
@@ -1727,6 +1735,8 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
             }
         }
         eSubject.value = strLang117 + getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]);
+        document.title = getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]);
+        
         var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");
         var pstrXML = "";
         if (AttachRows.length > 0) {
@@ -2178,7 +2188,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
     }
 
     if (isBigFile) {
-        var TempText = "<div id='_BigAttachListHtml' style='width:100%;'><table width='100%' border='0' cellspacing='0' cellpadding='0' style='font-size:x-small;font-family:dotum,arial,verdana;margin-bottom:10px;'>" +
+        var TempText = "<div id='_BigAttachListHtml' style='width:100%;'><table width='100%' border='0' cellspacing='0' cellpadding='0' style='font-size:x-small;margin-bottom:10px;'>" +
                         "<tr>" +
                         "<td colspan='2' style='color:#333;font-weight:bold; padding:0px; margin:0px 0px 1px 0px; height:20px;border-bottom:1px solid #dadada;font-size:12px;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_addfile.gif' width='7' height='12' style='margin-right:5px;'>" + strLang245 + "</td>" +
                         "</tr>";
@@ -2306,7 +2316,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         }
     } catch (e) { }
 
-    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div style='font-size:13px;font-family:" + defaultFont + "'>" + tempDiv.innerHTML + "</div>";
+    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div " + defaultFontAndSize + ">" + tempDiv.innerHTML + "</div>";
     
     try {
         // 본문에 <![CDATA[]]> 부분이 있으면 XML 파싱 에러가 발생하여 제거 코드 추가함.
@@ -2314,7 +2324,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         BodyHTMLContent = ReplaceText(BodyHTMLContent, "\\]\\]>", "");
     } catch (e) { }
     
-    bigMakeXmlNode(xmlDoc, rootNode, "HTMLBODY", BodyHTMLContent.replace(regex, " "));
+    bigMakeXmlNode(xmlDoc, rootNode, "HTMLBODY", BodyHTMLContent);
 
     // 사용되지 않는 부분으로 판단되어 제거함.
     /*
@@ -2324,7 +2334,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         tempDiv.innerHTML = ReplaceText(tempDiv.innerHTML, "<P>", ";crlf;");
     } catch (e) { }
 
-    bigMakeXmlNode(xmlDoc, rootNode, "eContentText", tempDiv.innerHTML.replace(regex, " "));
+    bigMakeXmlNode(xmlDoc, rootNode, "eContentText", tempDiv.innerHTML);
     */
 }
 

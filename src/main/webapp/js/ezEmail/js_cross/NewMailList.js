@@ -20,6 +20,7 @@ var GroupSenderImg ="/images/ImgIcon/groupsender.gif";
 var GroupSubjectImg ="/images/ImgIcon/groupsubject.gif";
 var GroupColor = "#666666";
 
+
 function HeaderIni(HeaderObject) {
     MakeHeaderHTML(HeaderObject);
 }
@@ -836,6 +837,9 @@ function MailListRefreshByTimeout() {
 }
 
 function MailListRefresh() {
+	
+	parent.frames["left"].detailView();
+    
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
         goToPageByNum(MailList.getAttribute("curPage"));
     }
@@ -1558,92 +1562,92 @@ function GetContentClassImg(ContentClass, isRead) {
         case "REPORT.IPM.Note.Relayed.DR":
             {
                 Rvalue = "/images/ImgIcon/icon-report-dr.gif";
-                break
+                break;
             }
         case "REPORT.IPM.Note.DR":
             {
                 Rvalue = "/images/ImgIcon/icon-report-dr.gif";
-                break
+                break;
             }
         case "IPM.Note.Microsoft.Voicemail":
             {
                 Rvalue = "/images/ImgIcon/icon-msg-voicemail.gif";
-                break
+                break;
             }
         case "IPM.Note.Microsoft.Voicemail.UM.CA":
             {
                 Rvalue = "/images/ImgIcon/icon-msg-voicemail.gif";
-                break
+                break;
             }
         case "IPM.Note.Microsoft.Missed.Voice":
             {
                 Rvalue = "/images/ImgIcon/icon-msg-missedvoice.gif";
-                break
+                break;
             }
         case "IPM.Schedule.Meeting.Request":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq.png";
-                break
+                break;
             }
         case "IPM.Schedule.Meeting.Canceled":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq-cancel.png";
-                break
+                break;
             }
         case "IPM.Schedule.Meeting.Resp.Pos":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq-accept.png";
-                break
+                break;
             }
         case "IPM.Schedule.Meeting.Resp.Neg":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq-decline.png";
-                break
+                break;
             }
         case "IPM.Schedule.Meeting.Resp.Tent":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq-tentative.png";
-                break
+                break;
             }
         case "REPORT.IPM.Schedule.Meeting.Request.NDR":
             {
                 Rvalue = "/images/ImgIcon/icon-report-ndr.png";
-                break
+                break;
             }
         case "IPM.Contact":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq-tentative.gif";
-                break
+                break;
             }
         case "IPM.Appointment":
             {
                 Rvalue = "/images/ImgIcon/icon-mtgreq-decline.gif";
-                break
+                break;
             }
         case "IPM.Sharing":
             {
                 Rvalue = "/images/ExchWeb/img/icon-appt.gif";
-                break
+                break;
             }
         case "REPORT.IPM.Note.Delayed.DR":
             {
                 Rvalue = "/images/ImgIcon/icon-report-ndr.gif";
-                break
+                break;
             }
         case "REPLY":
             {
                 Rvalue = "/images/ImgIcon/icon-msg-read4.gif";
-                break
+                break;
             }
         case "FORWARD":
             {
                 Rvalue = "/images/ImgIcon/icon-msg-read2.gif";
-                break
+                break;
             }
         case "IPM.Note.StorageQuotaWarning.SendReceive":
             {
                 Rvalue = "/images/ImgIcon/icon-report-ndr.gif";
-                break
+                break;
             }
         default:
             {

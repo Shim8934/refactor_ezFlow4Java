@@ -342,6 +342,9 @@
 	</head>
 	<body id="dextbody" style="margin: 0px; padding: 0px;">
 		<script type="text/javascript">
+			var defaultFontFamily = "${defaultFontFamily}";
+			var defaultFontSize = "${defaultFontSize}";
+		
 	        DEXT5.config.DialogWindow = parent.window;
 	        DEXT5.config.RemoveItem = "about";
             DEXT5.config.StatusBarItem = "design,source";
@@ -349,9 +352,9 @@
 	        
             DEXT5.config.Height = (parseInt("${height}") - 12) + "px";
 	        
-	        DEXT5.config.userFontFamily = "<spring:message code='main.t246' />";
+	        DEXT5.config.userFontFamily = defaultFontFamily;
             DEXT5.config.Lang = "<spring message code = 'main.t0619' />";
-	        DEXT5.config.userFontSize = "13px";
+	        DEXT5.config.userFontSize = defaultFontSize;
 	        
 	        new Dext5editor(formID);
 	    </script>

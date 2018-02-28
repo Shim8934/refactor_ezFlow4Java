@@ -53,7 +53,7 @@ var strLang91 = "삭제할 권한이 없습니다."
 var strLang92 = "자원예약 삭제에 실패하였습니다."
 var strLang93 = "삭제할 자원예약을 선택해 주십시오."
 var strLang94 = "자신이 입력한 자료만 삭제하실 수 있습니다."
-var strLang95 = "되풀이 방법이 잘못되었습니다."
+var strLang95 = "반복회수를 정확히 입력해 주십시오."
 var strLang97 = "매월"
 var strLang98 = "매년"
 var strLang100 = "시작날짜와 끝날짜를 정확하게 입력해주십시오."
@@ -205,3 +205,6 @@ var strLangLHM01 = "default_kr";
 var strLangLHM02 = "인쇄 미리보기";
 var strLangLHM03 = "인쇄";
 var strLangLHM04 = "취소";
+
+//2018.2.21 강민수92 추가
+var strLangKMS1 = "100회 이하만 반복가능합니다.";

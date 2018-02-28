@@ -386,14 +386,14 @@
                   OR AccessID = #v_pCompanyID# 
                   OR AccessID = 'everyone' )
             AND 
-            	BoardID = ( SELECT 
+            	BoardID = IFNULL((SELECT 
             					BoardGroupID 
          					FROM 
          						TBL_Board_BoardInfo 
          					WHERE  
          						TENANT_ID = #v_TENANTID#
          					AND 
-         						BoardID = #v_pBoardID# )
+         						BoardID = #v_pBoardID#), #v_pBoardID#)
 		]]>
 	</select>
 	

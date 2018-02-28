@@ -116,6 +116,7 @@
 		    var SelBoard = false;
 		    var pcheckForm = "${checkForm}";
 		    var pUseBackGround = "${useBackGround}";
+		    var defaultFontAndSize  = "${defaultFontAndSize}";
 		    var FirstFlag = false;
 		    var rsa = new RSAKey();
 		    window.onload = function () {		    	
@@ -1344,7 +1345,7 @@
 		                        document.getElementById("txtTitle").focus();
 		                    }
 		                    
-		                    message.SetEditorContent("<p style='font-size:13px;font-family:Gulim'></p>");
+		                    message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
 		                }
 		            } else {
 		                if (pUrl == "") {
@@ -1554,7 +1555,7 @@
 		                else {
 		                    if (OpenWin == null)
 		                        document.getElementById("txtTitle").focus();
-		                    message.SetEditorContent("<p style='font-size:13px;font-family:Gulim'></p>");
+		                    message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
 		                }
 		
 		                if (pUseBackGround.toUpperCase() == "TRUE") {
@@ -1615,7 +1616,7 @@
 	                else {
 	                    if (OpenWin == null)
 	                        document.getElementById("txtTitle").focus();
-	                    message.SetEditorContent("<p style='font-size:13px;font-family:Gulim'></p>");
+	                    message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
 	                }
 	
 	                if (pUseBackGround.toUpperCase() == "TRUE") {
@@ -1816,7 +1817,8 @@
 		        Td.style.height = imgHeight + "px";
 		        Td.style.backgroundSize = "cover";
 		        
-	        	Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
+	        	//Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
+	        	Td.style.backgroundImage = "URL(" + imgSrc + ")";
 	        	
 		        Table.style.width = "auto";
 		        Table.style.height = "auto";

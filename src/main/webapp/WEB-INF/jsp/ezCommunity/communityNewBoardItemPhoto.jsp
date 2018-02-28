@@ -92,6 +92,7 @@
 // 		    var _hasattach = "<c:out value = '${_hasattach}' />";
 // 		    var NewGuid = "<c:out value = '${NewGuid}' />";
 		    var flag = false;
+		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 		    
 		    window.onresize = function () {
 		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 160 + "PX";

@@ -33,5 +33,9 @@ public class MOptionDAO extends EgovAbstractDAO {
 	public List<MPortalTimeLineVO> getTimeLineList(Map<String, Object> map) throws Exception {
 		return (List<MPortalTimeLineVO>) list("EzOptionDAO.getTimeLineList", map);
 	}
+
+	public MCommonVO commonInfoWeb(Map<String, Object> map) throws Exception {
+		return (MCommonVO) select("EzOptionDAO.commonInfoWeb", map);
+	}
 	
 }

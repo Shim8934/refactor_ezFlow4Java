@@ -9,6 +9,11 @@
 	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
+	    <style>
+	    	.tree div div{
+	    		margin-bottom:5px;
+	    	}
+	    </style>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/Controls/treeview.htc.js"></script>

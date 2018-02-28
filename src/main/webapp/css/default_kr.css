@@ -38,7 +38,11 @@ h2 {margin:2px 0}
 
 .file td input { border: expression((this.type=='text')?'none':((this.type=='checkbox')?'none':''));}
 .file2 td input { border: expression((this.type=='text')?'none':((this.type=='checkbox')?'none':''));}
-select {border:1px solid #b6b6b6;height:18px;margin:0}
+select {-webkit-appearance: none; border:1px solid #b6b6b6;height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white}
+select::-ms-expand {
+    display: none;
+}
+
 textarea {
 	padding: 5px;
 	border: 1px solid #b6b6b6;
@@ -251,8 +255,9 @@ form{display:inline;margin:0}
 #left ul.on, #TopBoards ul.on {display: block;}
 #left ul.off, #TopBoards ul.off {display: none;}
 #left ul li.on, #TopBoards ul li.on{
-	font-weight:bold;
-	color:#333333;
+	/* font-weight:bold; */
+	background-color: rgb(245, 247, 255);	
+	color:black;	
 }
 #left ul li.off, #TopBoards ul li.off{font-weight:normal;}
 #left ol{margin:0}
@@ -333,7 +338,7 @@ form{display:inline;margin:0}
 #mainmenu{
 	clear: both;
 	margin:0; padding:0;
-	margin-bottom:8px !important;
+	margin-bottom:10px !important;
 }
 #mainmenu ul{
 	overflow:hidden;
@@ -1114,7 +1119,7 @@ form{display:inline;margin:0}
 
 .mainlist{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist tr{height:31px}
-.mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:8px 4px; border-top:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf; background-color: #f8f8f8;}
+.mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:6px 4px; border-top:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf; background-color: #fafafa; height:21px}
 .mainlist tr th.title{width:100%; text-align:left;}
 .mainlist tr td{padding:5px 4px 3px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #ebebed; border-spacing:0; word-wrap:break-word;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
@@ -1721,27 +1726,23 @@ form{display:inline;margin:0}
 .receiver_list td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #ebebed; border-spacing:0;}
 
 
-.address_wordmenu {margin:0px 0px 10px 0px; height:20px; padding:0px; list-style:none;}
-.address_wordmenu li {float:left; height:20px; line-height:20px; width:16px; background:url(../images/kr/cm/btn_function_left.gif) no-repeat left; padding:0px 0px 0px 4px; margin:0px 1px 0px 2px; display:inline-block; cursor:pointer;text-align:center}
-.address_wordmenu li span { display:block; height:20px; background:url(../images/kr/cm/btn_function_right.gif) right no-repeat; padding:0px 4px 0px 0px;}
+.address_wordmenu {margin:0px 0px 10px 0px; min-height:25px; padding:5px 0px 10px 0px; list-style:none; border-top:1px dotted #aaa; border-bottom:1px dotted #aaa;}
+.address_wordmenu li {height:22px; line-height:22px; width:18px; padding:0px 0px 0px 4px; display:inline-block; cursor:pointer;text-align:center;border:1px solid #333;border-radius:2px;margin-top:5px;}
+.address_wordmenu li span { display:block; height:22px; padding:0px 4px 0px 0px;color:#333;}
 .address_boxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_boxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
-.address_boxlist .back { border: 1px solid #a5a3a3; height:138px; background:url(../images/kr/cm/address_boxbg02.gif) right bottom; vertical-align:top;}
-.address_boxlist .topinfo { background:url(../images/kr/cm/address_boxbg01.gif) repeat-x;
-height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#393939; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.address_boxlist .back { border: 1px solid #dedede; height:138px; background:url(../images/kr/cm/address_boxbg02.gif) right bottom; vertical-align:top;}
+.address_boxlist .topinfo {height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#333; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .address_boxlist ul { margin:0px 10px 0px 19px; padding:0px; list-style:none;}
 .address_boxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_boxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_boxlist ul .company { color:#393939;}
-.address_boxlist .point_txt { color:#0168c7;}
-
-
+.address_boxlist .point_txt { color:#0168c7; margin-left:3px }
 
 .address_onboxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_onboxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
-.address_onboxlist .back { border: 1px solid #434e63; height:138px; background:url(../images/kr/cm/address_boxbg02.gif) right bottom; vertical-align:top;}
-.address_onboxlist .topinfo { background:url(../images/kr/cm/address_onboxbg01.gif) repeat-x;
-height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.address_onboxlist .back { border: 1px solid rgb(0,72,149); height:140px; background:url(../images/kr/cm/address_boxbg02.gif) right bottom; vertical-align:top;}
+.address_onboxlist .topinfo {background-color:rgb(0,72,149); height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .address_onboxlist ul { margin:0px 10px 0px 19px; padding:0px; list-style:none;}
 .address_onboxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_onboxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
@@ -2031,3 +2032,12 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .opinion_ul li:nth-child(even){background:#fafafa;}
 
 div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:12px;font-family: 'Gulim', 'arial', 'verdana';}
+
+.blockLeft {
+	position : absolute;
+	top : 0px;
+	width:100%;
+	height:100%;
+	z-index : 10;	
+	background: rgba(0,0,0,0.5);
+}

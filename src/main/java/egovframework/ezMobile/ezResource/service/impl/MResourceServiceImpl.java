@@ -234,18 +234,20 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PNOWDATE", nowDate);
 		
 		if(reFlag.equals("1")){
-			int maxNum = mResourceDAO.getResSchMaxNum(map);
+			
+			//모바일 반복일정 삭제 -> 단일삭제에서 전체삭제로 변경2018.02.22
+/*			int maxNum = mResourceDAO.getResSchMaxNum(map);
 			map.put("v_PMAXNUM", maxNum);
-			//MResourceGetScheduleVO resSchRepet = mResourceDAO.getResSchRepet(map);
-			//startDate = startDate.substring(0, 11) + " " + commonUtil.getDateStringInUTC(resSchRepet.getStartDate(), offset, false).substring(11);
-			//endDate = endDate.substring(0, 11) + " " + commonUtil.getDateStringInUTC(resSchRepet.getEndDate(), offset, false).substring(11);			
 			startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 			endDate = commonUtil.getDateStringInUTC(endDate, offset, true);			
 			LOGGER.debug("startDate in repeat :", startDate);
 			LOGGER.debug("endDate in repeat :", endDate);
 			map.put("v_PSTARTDATE", startDate);
 			map.put("v_PENDDATE", endDate);
-			mResourceDAO.delResSch_I(map);
+			mResourceDAO.delResSch_I(map);*/
+			
+			mResourceDAO.delResSch(map);
+			mResourceDAO.delResSchRepet(map);
 		} else {
 			mResourceDAO.delResSch(map);
 		}

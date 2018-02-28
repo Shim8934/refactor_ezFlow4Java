@@ -73,16 +73,39 @@
 				    case 13:
 				        url = "/admin/ezOrgan/addJobList.do";
 				        break;
+			        case 14:
+			        	url = "/admin/ezSystem/systemMainMenu.do";
+			        	break;			            				        
 		            case 20:
 		                url = "/myoffice/ezEmail/Admin/mail_DLMailConfig.aspx";
 		                break;
 		            case 21:
 		                url = "/myoffice/ezEmail/DLmail_list.aspx";
 		                break;
-
 		            case 22:
 		            	url = "/admin/ezEmail/mailQuotaList.do";
 		                break;
+					case 23:
+						url = "/ezStatistics/statisticsMailMain.do";
+						break;
+				    case 24:
+				        url = "/ezStatistics/statisticsMailDept.do";
+					    break;
+			        case 25:
+			            url = "/ezStatistics/statisticsMailUser.do";
+			            break;
+			        case 26:
+			            url = "/ezStatistics/statisticsQuantityDept.do";
+			            break;
+			        case 27:
+			            url = "/ezStatistics/statisticsQuantityUser.do";
+			            break;
+			        case 28:
+			        	url = "/ezStatistics/statisticsMailRecieveLogList.do";
+			        	break;
+			        case 29:
+			        	url = "/ezStatistics/statisticsMailSendLogList.do";
+			        	break;			            		                
 				}
 				window.open(url,"right");
 			}
@@ -90,15 +113,32 @@
 	</head>
 	<body class="leftbody" style="margin:0px 0px 0px 0px">
 		<div id="left">
-  			<div class="left_admin" title="<spring:message code='main.t23' />"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='main.t23' /></div>   
+  			<div class="left_admin" title="<spring:message code='main.t23' />"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;
+  			<c:if test="${dotNetIntegration != 'YES'}">
+  			<spring:message code='main.t23' />
+  			</c:if>
+  			<c:if test="${dotNetIntegration == 'YES'}">
+  			<spring:message code='main.t24' />
+  			</c:if>
+  			</div>   
   			<h2>
-  				<span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
+  				<span onClick="goPage(1)" style="display:inline-block;width:100%;">
+  				<c:if test="${dotNetIntegration != 'YES'}">
+  				<spring:message code='main.t56' />
+  				</c:if>
+  				<c:if test="${dotNetIntegration == 'YES'}">
+  				<spring:message code='main.t24' />
+  				<ul></ul>
+  				</c:if>
+  				</span>
   			</h2>  
+  			<c:if test="${dotNetIntegration != 'YES'}">
     		<ul>
 		        <li><span id="Organ" style="width: 100%; display: inline-block;" onClick="goPage(1)" ><spring:message code='main.t56' /></span></li>
 		        <li><span id="CheckAdmin" style="width: 100%; display: inline-block;" onClick="goPage(12)" ><spring:message code='main.t00062' /></span></li>
 		        <li><span id="Addjob" style="width: 100%; display: inline-block;" onClick="goPage(13)" ><spring:message code='main.t00063' /></span></li>
 		    </ul>   
+		    </c:if>
   			<h2>
   				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
     			<ul></ul>    			
@@ -137,7 +177,22 @@
 			<h2>
 				<span onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
 			    <ul></ul>
-			</h2>			
+			</h2>
+			<c:if test="${dotNetIntegration == 'YES'}">
+            <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(14)" ><spring:message code='main.kms1' /></span>
+            <ul class="on"></ul>
+            </h2>		
+      	    <h2><span id="MAIL" style="display:inline-block;width:100%;" onClick="goPage(23)"><spring:message code='ezStatistics.t2' /></span></h2>
+		    <ul>
+			    <li><span style="display:inline-block;width:100%;" onClick="goPage(23)"><spring:message code='ezStatistics.t1001' /></span></li>
+			    <li><span style="display:inline-block;width:100%;" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(25)"><spring:message code='ezStatistics.t1018' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(26)"><spring:message code='ezStatistics.t1023' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(27)"><spring:message code='ezStatistics.t1025' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(28)"><spring:message code='ezStatistics.kyj1' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(29)"><spring:message code='ezStatistics.kyj2' /></span></li>
+		    </ul>			            				
+            </c:if>						
 		</div>
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");
