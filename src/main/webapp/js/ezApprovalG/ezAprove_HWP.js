@@ -1386,32 +1386,3 @@ function setRecevInfo(ret) {
         }
     }
 }
-
-function SendAckForExch(pType, pMode)
-{
-	var result = "";
-	var pBody = "";
-	var field = pzFormProc.fields("body");
-	if (field) {
-		pBody = field.value;
-	}
-	else {
-		pBody = "";
-	}
-	
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezApprovalG/sendAckforExch.do",
-		data : {
-			docID : pDocID,
-			type  : pType,
-			mode  : pMode,
-			body  : pBody
-		},
-		success: function(xml){
-			result = loadXMLString(xml);
-		}
-	});
-}

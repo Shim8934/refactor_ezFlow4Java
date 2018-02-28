@@ -20640,6 +20640,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String mobileSrvConn_HWP(String userID, String string, String formID, String string2, String textContent, String orgUID,  String langType, String companyID, HttpServletRequest request, LoginVO userInfo) throws Exception {
+		logger.debug("mobileSrvConn_HWP started");
+
+		
+
+		logger.debug("mobileSrvConn_HWP ended");
+		
 		return null;
 	}
 

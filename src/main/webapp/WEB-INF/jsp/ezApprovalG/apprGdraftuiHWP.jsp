@@ -145,6 +145,7 @@
 	        var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
 	        var approvalFlag = "${approvalFlag}";
 	        var isHWP = "${isHWP}";
+	        var isUsed = "";
 	        
 	        window.onload = function () {
 	            try {
