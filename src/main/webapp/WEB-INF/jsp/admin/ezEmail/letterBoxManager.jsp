@@ -41,6 +41,7 @@
 	    	treeSet();
 	    	treeView();
 	    	treeInit();
+	    	
 	    }
 	    
 	    function treeInit () {
@@ -98,7 +99,7 @@
 	    		var treeParent = result[i].parent_letterbox_no;
 	    		var treeText = result[i].displayname;
 	    		
-	    		if (treeParent == null) {
+	    		if (treeParent == '0') {
 	    			treeParent = '#'; //root node
 	    		}
 	    		
@@ -109,21 +110,30 @@
 	    
 	    function treeView() {
 	    	$('#divTree').jstree({
-	    			"plugins" : [ "changed", "wholerow" ],
-	    			 'core' : {
-	    	    'data' : treeCollection
-	    	} });
-	    	
+	    		"plugins" : [ "changed", "wholerow", "contextmenu" ],
+	    		'core' : {
+	    			'data' : treeCollection,
+	    			"check_callback": true
+	    			}
+	    	});
 	    	treeOnclick();
 	    }
 	    
 	    function addLetterBox() {
-	    	alert("letterBox add");
-	    	console.log(selectNode);
+	    	alert("addLetterBox()");
+	    	
+	    	var parent = selectNode.node.id;
+	    	var node = { id: 'temp', text:"편지함"};
+	    	$('#divTree').jstree('create_node', parent, node, 'last');
+	    	
 	    }
+	    
+	    
 	    
 	    function deleteLetterBox() {
 	    	alert("letterBox delete");
+	    	
+	    	$("#divTree").jstree("remove", "#13");
 	    }
 	    
 	    </script>
