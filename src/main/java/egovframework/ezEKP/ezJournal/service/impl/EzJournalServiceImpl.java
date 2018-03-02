@@ -7,12 +7,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -107,7 +104,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 					if (useDept.size() < 1) {
 						useDept.clear();
 						DeptInfoVO deptVO = new DeptInfoVO();
-						deptVO.setDeptName("전체");
+						deptVO.setDeptName(companyId);	// 회사이름 들어가게 수정하기
 						useDept.add(deptVO);
 					}
 					vo.setDepts(useDept);

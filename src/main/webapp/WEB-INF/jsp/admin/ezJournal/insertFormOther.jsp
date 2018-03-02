@@ -68,7 +68,7 @@
 	            	selFormContent = selFormContent.replace(/&#034;/g, "\"");
 			    	selFormContent = selFormContent.slice(1, -1);
 			     	
-			    	var info_len = $("td[name=info]").length;
+			    	var info_len = $("li[name=info]").length;
 			    	console.log(info_len);
 			    	for (var i = 0; i < info_len; i++) {
 			     		
@@ -76,11 +76,11 @@
 			    		var selID = $selTD.attr("value");
 			    	//	console.log("selTD : " + selID);
 			    		
-			    		for (var i = 0; i < totalTD.length; i++) {
+			    		/* for (var i = 0; i < totalTD.length; i++) {
 				    		if (totalTD[i].id == selID) {
 				    			$selTD.toggleClass("active");
 		                    }
-				    	}
+				    	} */
 			    	
 			    	/* 	console.log(message.CKEDITOR.instances.editor1.document.$.getElementById(selID));
 			    		if (message.CKEDITOR.instances.editor1.document.$.getElementById(selID) != null) {
@@ -397,11 +397,29 @@
                     	<li id="property"><span onclick="return idSetField_onclick()"><spring:message code='ezApproval.t641'/></span></li>
                     </ul>
                 </div> --%>
-                <script type="text/javascript">
-                    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-                </script>
-				<table id="TForm" style="height:770px; width:1000px;">
+				<table id="TForm" style="height:770px; width:100%;">
 					<tr>
+						<td id="infoTD" name="infoTD" style="width:100%; vertical-align:top;">
+                        	<table width="100%" cellpadding="0" cellspacing="0" class="infoTbl" id="mainmenu">
+                        		<tbody>
+                        			<tr style="height: 35px;">
+	                        			<th><spring:message code='ezJournal.t32'/></th>
+	                        			<td style="vertical-align: middle;">
+	                        				<ul>
+								            	<li name="info" style="padding-right: 10px;"><span id="info_0" value="journalDeptId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33' /></span></li>
+								            	<li name="info"><span id="info_1" value="journalWriteId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></li>
+								            	<li name="info"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></li>
+								            </ul>
+	                        			</td>
+                        			</tr>
+                        			<%-- <tr><td name="info" id="TD_0" value="journalDeptId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t33'/></span></td></tr>
+                        			<tr><td name="info" id="TD_1" value="journalWriterId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t34'/></span></td></tr>
+                        			<tr><td name="info" id="TD_2" value="journalWriteDate" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t35'/></span></td></tr> --%>
+                        		</tbody>
+                        	</table>
+                        </td>
+                   	</tr>
+                   	<tr>
                         <td style="height:770px; vertical-align:top">
                         	<c:choose>
                         		<c:when test="${useEditor == 'HWP'}">
@@ -412,21 +430,12 @@
                         		</c:otherwise>
                         	</c:choose>
                         </td>
-                        <td id="infoTD" name="infoTD" style="width:100%; vertical-align:top; padding-left:10px;">
-                        	<table width="100%" cellpadding="0" cellspacing="0" class="infoTbl">
-                        		<tbody>
-                        			<tr><th><spring:message code='ezJournal.t32'/></th></tr>
-                        			<tr><td name="info" id="TD_0" value="journalDeptId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t33'/></span></td></tr>
-                        			<tr><td name="info" id="TD_1" value="journalWriterId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t34'/></span></td></tr>
-                        			<tr><td name="info" id="TD_2" value="journalWriteDate" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t35'/></span></td></tr>
-                        		</tbody>
-                        	</table>
-                        </td>
                     </tr>
                 </table>  
 			</div>
 		</div>
         <script type="text/javascript">
+        	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
             Tab1_NewTabIni("tab1");
         </script>
 	</body>

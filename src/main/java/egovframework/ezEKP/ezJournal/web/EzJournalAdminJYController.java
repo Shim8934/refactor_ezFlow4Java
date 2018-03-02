@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.JsonUtil;
@@ -49,20 +50,17 @@ public class EzJournalAdminJYController {
 	public String formMain(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {
 		logger.debug("formMain started");
 		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 
 		String companyId = null;
 		if (request.getParameter("companyId") != null) {
 			companyId = request.getParameter("companyId");
-		} else {
-			companyId = userInfo.getCompanyID();
-		}
+		} 
 		
 		param.put("companyId", companyId);
 		param.put("userId", userInfo.getId());
-		param.put("tenantId", userInfo.getTenantId());
 		
 		String restUrl = "/rest/ezjournal/companies";
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
@@ -80,8 +78,8 @@ public class EzJournalAdminJYController {
 		
 		param.clear();
 		
+		param.put("userId", userInfo.getId());
 		param.put("companyId", companyId);
-		param.put("tenantId", userInfo.getTenantId());
 		param.put("used", "use");
 		
 		restUrl = "/rest/ezjournal/types";
@@ -106,15 +104,14 @@ public class EzJournalAdminJYController {
 	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("getFormList started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String typeId = request.getParameter("typeId");
 		String companyId = request.getParameter("companyId");
-		int tenantId = userInfo.getTenantId();
 	
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("companyId", companyId);
-		param.put("tenantId", tenantId);
+		param.put("userId", userInfo.getId());
 		
 		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms";
 		
@@ -139,7 +136,7 @@ public class EzJournalAdminJYController {
 	public String addForm(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("addForm started");
 		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		logger.debug("addForm ended");
 		return "/admin/ezJournal/insertForm";
@@ -152,7 +149,7 @@ public class EzJournalAdminJYController {
 	public String addFormOther(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("addFormOther started");
 		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String companyId = request.getParameter("companyId");
 		String typeId = request.getParameter("typeId");
@@ -161,7 +158,7 @@ public class EzJournalAdminJYController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("companyId", companyId);
-		param.put("tenantId", userInfo.getTenantId());
+		param.put("userId", userInfo.getId());
 		param.put("used", "use");
 		
 		String restUrl = "/rest/ezjournal/types";
@@ -195,14 +192,12 @@ public class EzJournalAdminJYController {
 				model.addAttribute("formContent", JsonUtil.OneStringToJson(journalFormInfo.getFormContent()));
 				model.addAttribute("useDepts", JsonUtil.ListToJson(journalFormInfo.getDepts()));
 				logger.debug("useDepts 뭐임 : " + JsonUtil.ListToJson(journalFormInfo.getDepts()));
-						
 			}
 		}
 		
 		param.clear();
 		
 		param.put("userId", userInfo.getId());
-		param.put("tenantId", userInfo.getTenantId());
 		param.put("companyId", companyId);
 		
 		result = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request, "get", null);
@@ -242,7 +237,7 @@ public class EzJournalAdminJYController {
 	public String formSave (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("formSave started.");
 		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String companyId = request.getParameter("companyId");
 		String typeId = request.getParameter("typeId");
@@ -252,7 +247,6 @@ public class EzJournalAdminJYController {
 		String useDept = request.getParameter("useDept");
 		String isDeptChanged = request.getParameter("isDeptChanged");
 		String userId = userInfo.getId();
-		int tenantId = userInfo.getTenantId();
 		
 		logger.debug("formName:" + formName + ",formDescript:" + formDescript + ",formContent:" + formContent + ",useDept:" + useDept + ",isDeptChanged:" + isDeptChanged);
 		
@@ -265,8 +259,8 @@ public class EzJournalAdminJYController {
 		param.put("formContent", formContent);
 		param.put("useDept", useDept);
 		param.put("formWriter", userId);
-		param.put("tenantId", tenantId);
 		param.put("isDeptChanged", isDeptChanged);
+		param.put("userId", userInfo.getId());
 		
 		String formId = request.getParameter("formId");
 		String restUrl = "";
@@ -275,23 +269,19 @@ public class EzJournalAdminJYController {
 		logger.debug("formId:" + formId);
 		// formId가 있으면 수정, 없으면 신규등록
 		if (formId != null && formId.trim() != "") {
-			
 			param.put("formId", formId);
 			restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "put", param);
 			status = result.get("status").toString();
 		} else {
-			
 			restUrl = "/rest/ezjournal/types/" + typeId + "/forms";
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", param);
 			status = result.get("status").toString();
 		}
 		
-		
 		if (status.equals("ok")) {
 			
 		}
-		
 		
 		logger.debug("formSave ended.");         
 		
@@ -306,24 +296,22 @@ public class EzJournalAdminJYController {
 	public String deleteForm (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("deleteForm started.");
 		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String formId = request.getParameter("formId");
 		String companyId = request.getParameter("companyId");
 		String typeId = request.getParameter("typeId");
-		int tenantId = userInfo.getTenantId();
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("formId", formId);
 		param.put("companyId", companyId);
-		param.put("tenantId", tenantId);
+		param.put("userId", userInfo.getId());
 		
 		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "delete", null);
 		
 		String status = result.get("status").toString();
-		
 		
 		logger.debug("deleteForm ended.");
 		

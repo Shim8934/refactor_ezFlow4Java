@@ -17,18 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.w3c.dom.Document;
-
-import com.google.gson.Gson;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
-import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.JsonUtil;
@@ -48,12 +42,6 @@ public class EzJournalJYController {
 	@Autowired
 	private EzCommonService ezCommonService;
 	
-	@Resource(name="crypto") 
-	private EgovFileScrty egovFileScrty;
-	
-	@Resource(name="egovMessageSource")
-	private EgovMessageSource egovMessageSource;
-	
 	/**
 	 * 업무일지 작성 화면 호출
 	 */
@@ -61,7 +49,7 @@ public class EzJournalJYController {
 	public String journalNewItem(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("journalNewItem started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String mode = request.getParameter("mode");
@@ -70,8 +58,7 @@ public class EzJournalJYController {
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
-		param.put("companyId", userInfo.getCompanyID());
-		param.put("tenantId", userInfo.getTenantId());
+		param.put("userId", userInfo.getId());
 		param.put("used", "use");
 		
 		String restUrl = "/rest/ezjournal/types";
@@ -111,12 +98,11 @@ public class EzJournalJYController {
 		
 		String companyId = userInfo.getCompanyID();
 		String deptId = userInfo.getDeptID();
-		int tenantId = userInfo.getTenantId();
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("companyId", companyId);
-		param.put("tenantId", tenantId);
 		param.put("deptId", deptId);
+		param.put("userId", userInfo.getId());
 		
 		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms";
 		
@@ -145,7 +131,6 @@ public class EzJournalJYController {
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("tenantId", userInfo.getTenantId());
 		param.put("companyId", userInfo.getCompanyID());
 		
 		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request, "get", null);
@@ -252,7 +237,7 @@ public class EzJournalJYController {
 		}
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("tenantId", userInfo.getTenantId());
+		param.put("userId", userId);
 		
 		String restUrl = "/rest/ezjournal/users/" + userId + "/favorites";
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
@@ -285,7 +270,7 @@ public class EzJournalJYController {
 		logger.debug("favoriteId : " + favoriteId);
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("tenantId", userInfo.getTenantId());
+		param.put("userId", userId);
 		
 		String restUrl = "/rest/ezjournal/users/" + userId + "/favorites/" + favoriteId + "/users";
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
@@ -318,7 +303,7 @@ public class EzJournalJYController {
 		logger.debug("favoriteId : " + favoriteId);
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("tenantId", userInfo.getTenantId());
+		param.put("userId", userId);
 		
 		String restUrl = "/rest/ezjournal/users/" + userId + "/favorites/" + favoriteId + "/users";
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
@@ -351,7 +336,7 @@ public class EzJournalJYController {
 		logger.debug("favoriteId : " + favoriteId);
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("tenantId", userInfo.getTenantId());
+		param.put("userId", userId);
 		
 		String restUrl = "/rest/ezjournal/users/" + userId + "/favorites/" + favoriteId;
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "delete", null);
@@ -379,7 +364,7 @@ public class EzJournalJYController {
 		String typeId = request.getParameter("typeId");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("tenantId", userInfo.getTenantId());
+		param.put("userId", userInfo.getId());
 		param.put("companyId", userInfo.getCompanyID());
 		
 		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
@@ -414,10 +399,9 @@ public class EzJournalJYController {
 		String typeId = request.getParameter("typeId");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("tenantId", userInfo.getTenantId());
 		param.put("companyId", userInfo.getCompanyID());
-//		param.put("userId", userInfo.getId());
-		param.put("userId", "sbpark14");
+		param.put("userId", userInfo.getId());
+		param.put("isGetForm", "isGetForm");
 		
 		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);

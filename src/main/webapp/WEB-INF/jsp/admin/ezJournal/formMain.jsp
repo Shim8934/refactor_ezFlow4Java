@@ -44,7 +44,7 @@
 		    		dataType : "html",
 		    		async : false,
 		    		url : "/admin/ezJournal/getFormList.do",
-		    		data : { "companyId"  : companyId,
+		    		data : {"companyId"  : companyId,
     						"typeId"	  : typeId},
 		    		success: function(result) {
 		    			$("#formList").html(result);
@@ -88,7 +88,7 @@
 		    
 			// 양식추가버튼
 		    function btnInsForm() {
-		    	alert(typeId + " " + companyId + " " + pEditor);
+		    //	console.log(typeId + " " + companyId + " " + pEditor);
 		    	var url = "";
 		    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId);
 		    	
@@ -98,7 +98,7 @@
 			    	url = "/admin/ezJournal/insertForm.do";
 		    	}
 		    	
-		    	GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
+		    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "no");
 		    }
 		    
 			// 양식수정버튼
@@ -113,7 +113,7 @@
 			    	url = "/admin/ezJournal/insertForm.do";
 		    	}
 		    	
-		    	GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
+		    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "no");
 		    }
 		    
 			// 양식삭제버튼
@@ -210,6 +210,9 @@
 		    		<div class="listview">
 						<div style="vertical-align:top; height:500px; border: none; width:100%; overflow-x:auto;overflow-y:auto;/* BORDER:#b6b6b6 1px solid; */ BACKGROUND-COLOR:#ffffff" >
 							<table id="formType" class="mainlist" style="width: 100%; border-width: 0px 0px 1px 0px;">
+								<tr>
+									<th style="text-align: center;"><spring:message code='ezJournal.t12'/></th>
+								</tr>
 								<c:forEach items="${typeList}" var="type">
 									<tr>
 										<td value="${type.journaltypeId }" onclick="getFormList(this)"><span class="bold"><spring:message code='${type.journaltypeId}'/></span></td>
@@ -220,23 +223,23 @@
 					</div>
 				</td>
 		    	<td style="width:800px; padding-left:5px; padding-right:5px;vertical-align:top">
-			    	<div class="listview">
-			        	<div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 500px;overflow-x:auto;overflow-y:auto; padding:0px"  >
+		    		<div class="listview">
+			        	<div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 500px;overflow-x:auto;overflow-y:auto; padding:0px; /* border:1px solid #bdbdbd; */"  >
 			        		<table class="mainlist" style="width: 100%;">
 			        			<thead>
 			        				<tr>
-			        					<th style="width: 5%"><spring:message code='ezJournal.t21'/></th>
+			        					<th style="width: 7%; text-align: center;"><spring:message code='ezJournal.t21'/></th>
 			        					<th style="width: 20%"><spring:message code='ezJournal.t22'/></th>
 			        					<th style="width: 20%"><spring:message code='ezJournal.t23'/></th>
 			        					<th style="width: 35%"><spring:message code='ezJournal.t24'/></th>
-			        					<th style="width: 15%"><spring:message code='ezJournal.t25'/></th>
+			        					<th style="width: 13%"><spring:message code='ezJournal.t25'/></th>
 			        				</tr>
 			        			</thead>
 			        			<tbody id="formList" class="formList" style="margin: 0; padding: 0;" ondblclick="btnModForm()">
 			        			</tbody>
 			        		</table>
 			        	</div>
-			    	</div>
+			        </div>
 				</td>    
 		  	</tr>
 		</table>

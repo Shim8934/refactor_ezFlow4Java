@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
@@ -37,6 +38,9 @@ public class EzJournalGWController {
 
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
 
 	@Resource(name="ezJournalService")
 	private EzJournalService ezJournalService;
@@ -54,11 +58,14 @@ public class EzJournalGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			String companyId = request.getParameter("companyId");
 			String used = request.getParameter("used");
-			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			
+			String companyId = request.getParameter("companyId");
+			if (companyId == null || companyId.equals("")) {
+				companyId = info.getCompanyId();
+			}
 			
 			LOGGER.debug("companyId : " + companyId);
 
@@ -159,7 +166,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, (String) jsonParam.get("userId"));
 			
 			jsonParam.put("tenantId", info.getTenantId());
 			ezJournalService.insertForm(jsonParam);
@@ -191,7 +198,7 @@ public class EzJournalGWController {
 			String companyId = request.getParameter("companyId");
 
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, (String) jsonParam.get("userId"));
 			
 			jsonParam.put("tenantId", info.getTenantId());
 			ezJournalService.updateJournalForm(jsonParam);
@@ -258,7 +265,7 @@ public class EzJournalGWController {
 			
 			LOGGER.debug("companyId : " + companyId);
 			
-			if (request.getParameter("userId") != null ) {
+			if (request.getParameter("isGetForm") != null ) {
 				String userId = request.getParameter("userId");
 				String selId = ezJournalService.getJournalLastFormId(typeId, formId, userId, companyId, info.getTenantId() + "");
 				LOGGER.debug("formId : " + selId);
@@ -968,9 +975,12 @@ public class EzJournalGWController {
 		
 		try {
 			String userId = request.getParameter("userId");
-			String companyId = request.getParameter("companyId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String companyId = request.getParameter("companyId");
+			if (companyId == null || companyId.equals("")) {
+				companyId = info.getCompanyId();
+			}
 			
 			List<JournalCompanyVO> compList = ezJournalService.getCompanyList(userId, info.getTenantId() + "", companyId);
 			
