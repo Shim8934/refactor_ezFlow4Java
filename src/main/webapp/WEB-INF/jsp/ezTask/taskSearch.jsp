@@ -524,14 +524,13 @@
 					<span style="vertical-align:middle"><a class="imgbtn" style="vertical-align:middle"><span onClick="search()"><spring:message code='ezTask.t183' /></span></a></span>
 				</td>
 			</tr>
-			<tr>
+			<tr height="55px">
 				<th style="height:auto"><spring:message code='ezTask.t184' /></th>
 				<td>
-					<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();">
-					<span style="vertical-align:middle"><spring:message code='ezTask.t185' /></span>
-					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" disabled> ~
-					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" disabled>
-					<span style="vertical-align:middle" >&nbsp;&nbsp;&nbsp;(<spring:message code='ezTask.t188' />)</span>
+					<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezTask.t185' /></label>
+					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
+					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+	          		<div style="margin-top:9px">&nbsp;(<spring:message code='ezTask.t188'/></div> 
 				</td>
 			</tr>
 		</table>
