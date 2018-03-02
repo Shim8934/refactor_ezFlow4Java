@@ -2554,12 +2554,12 @@
 								<c:choose>
 									<c:when test="${question.resultFirst == 1}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" <!-- title="투표종료 전 미리보기" --> >
+											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" >
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg" <!-- title="투표 종료 후 미리보기" --> >
+											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg" >
 										</li>
 									</c:otherwise>
 								</c:choose>
@@ -2571,12 +2571,12 @@
 								<c:choose>
 									<c:when test="${question.multiSelect >= 0}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" <!-- title="투표 가능 개수" --> >
+											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" >
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" <!-- title="투표 가능 개수" --> >
+											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" >
 										</li>
 									</c:otherwise>
 								</c:choose>
