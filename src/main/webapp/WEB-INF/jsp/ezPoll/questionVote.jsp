@@ -2554,12 +2554,12 @@
 								<c:choose>
 									<c:when test="${question.resultFirst == 1}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" >
+											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" <!-- title="투표종료 전 미리보기" --> >
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg" >
+											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg" <!-- title="투표 종료 후 미리보기" --> >
 										</li>
 									</c:otherwise>
 								</c:choose>
@@ -2571,12 +2571,12 @@
 								<c:choose>
 									<c:when test="${question.multiSelect >= 0}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" >
+											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" <!-- title="투표 가능 개수" --> >
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" >
+											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" <!-- title="투표 가능 개수" --> >
 										</li>
 									</c:otherwise>
 								</c:choose>
@@ -2598,7 +2598,7 @@
 								<c:choose>
 									<c:when test="${question.secretVote == 1}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg" >
+											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t253'/>" >
 										</li>
 										<li class="img_description">
 											<div><span><spring:message code = 'ezPoll.t111'/></span></div>
@@ -2606,7 +2606,7 @@
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg" >
+											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
 										</li>
 										<li class="img_description">
 											<div><span><spring:message code = 'ezPoll.t240'/></span></div>
@@ -2621,7 +2621,7 @@
 								<c:choose>
 									<c:when test="${question.secretVote == 0}">
 										<li class="voteIconImg_li icon nosecret" onclick="menuDetailSeenUserInfo('${question.qstId}')">
-											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" >
+											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t112'/>" >
 										</li>
 										<li class="img_description">
 											<div><span id="seenPeople">${seenUsers}</span></div>
@@ -2629,7 +2629,7 @@
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" >
+											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t112'/>" >
 										</li>
 										<li class="img_description">
 											<div><span id="seenPeople">${seenUsers}</span></div>
@@ -2644,7 +2644,7 @@
 								<c:choose>
 									<c:when test="${question.secretVote == 0}">
 										<li class="voteIconImg_li icon nosecret" onclick="javascript:displayDetail('${question.qstId}')">
-											<img src="/images/poll/unvoted_user.png" class="voteIconImg" >
+											<img src="/images/poll/unvoted_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t123'/>" >
 										</li>
 										<li class="img_description">
 											<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
@@ -2652,7 +2652,7 @@
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/unvoted_user.png" class="voteIconImg" >
+											<img src="/images/poll/unvoted_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t123'/>" >
 										</li>
 										<li class="img_description">
 											<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
