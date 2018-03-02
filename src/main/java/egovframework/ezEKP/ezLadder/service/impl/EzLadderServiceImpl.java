@@ -34,6 +34,16 @@ public class EzLadderServiceImpl implements EzLadderService {
 		
 		return list;
 	}
+	
+	@Override
+	public List<LadderVO> getPartLadderList(String userId) throws Exception {
+		logger.debug("getPartLadderList started.");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("userId", userId);
+		List<LadderVO> list = ezLadderDAO.getPartLadderList(map);
+		
+		return list;
+	}
 
 	/** boh */
 	
@@ -149,5 +159,4 @@ public class EzLadderServiceImpl implements EzLadderService {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

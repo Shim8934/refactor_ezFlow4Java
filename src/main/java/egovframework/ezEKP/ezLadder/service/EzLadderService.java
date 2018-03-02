@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezLadder.vo.LadderVO;
 public interface EzLadderService {
 
 	public List<LadderVO> getLadderList(String userId) throws Exception;
+	public List<LadderVO> getPartLadderList(String userId) throws Exception;
 	
 	/** boh */
 	public void insertLadder(LadderVO lad, LadderLineVO ladLine) throws Exception; // 사다리 게임 만들기
