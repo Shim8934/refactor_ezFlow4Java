@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezLadder.vo;
 public class LadderLineVO {
 	
 	private int tenant_id;
+	private int ladderId;
 	/** 참여자 아이디 */
 	private String userId;
 	/** 참여자 이름 */
@@ -19,6 +20,8 @@ public class LadderLineVO {
 	private String resultUserName;
 	/** 아이템을 결과로 가지는 참여자 이름(다국어) */
 	private String resultUserName2;
+	/** 생성자 아이디 */
+	private String writerId;
 	
 	
 	public int getTenant_id() {
@@ -26,6 +29,12 @@ public class LadderLineVO {
 	}
 	public void setTenant_id(int tenant_id) {
 		this.tenant_id = tenant_id;
+	}
+	public int getLadderId() {
+		return ladderId;
+	}
+	public void setLadderId(int ladderId) {
+		this.ladderId = ladderId;
 	}
 	public String getUserId() {
 		return userId;
@@ -74,6 +83,21 @@ public class LadderLineVO {
 	}
 	public void setResultUserName2(String resultUserName2) {
 		this.resultUserName2 = resultUserName2;
+	}
+	public String getWriterId() {
+		return writerId;
+	}
+	public void setWriterId(String writerId) {
+		this.writerId = writerId;
+	}
+	
+	@Override
+	public String toString() {
+		return "LadderLineVO [tenant_id=" + tenant_id + ", userId=" + userId
+				+ ", userName=" + userName + ", userName2=" + userName2
+				+ ", item=" + item + ", ladderOrder=" + ladderOrder
+				+ ", resultUserId=" + resultUserId + ", resultUserName="
+				+ resultUserName + ", resultUserName2=" + resultUserName2 + "]";
 	}
 
 }

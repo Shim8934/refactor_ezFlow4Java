@@ -14,7 +14,12 @@
 	<!-- 	<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
 		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>	 -->			
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-				
+			
+		<script type="text/javascript">
+			function newLad() {
+				window.location.href = '/ezLadder/selectLadderType.do';
+			}
+		</script>	
 	
 	</head>
 	<body class="mainbody" style="min-width: 750px;">
@@ -35,7 +40,7 @@
 		</h1>
 		<div id="mainmenu">
 			<ul>
-				<li id="btnInsert"><a  style="margin-top: 3px;"><span><spring:message code="ezLadder.t013"/></span></a></li>
+				<li id="btnInsert" onClick="newLad()"><a  style="margin-top: 3px;"><span><spring:message code="ezLadder.t013"/></span></a></li>
 				<li style="float:right; font-weight:normal; color:black; padding-right: 20px;">
 					<input id="btnRadio1" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle; padding-right: 20px;" onclick="selectCheck()" value="2" checked="checked" >
 					<label for="btnRadio1"><spring:message code='ezLadder.t011' /></label>					

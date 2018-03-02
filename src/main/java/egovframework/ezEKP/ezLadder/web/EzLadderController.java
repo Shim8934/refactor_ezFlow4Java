@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezLadder.web;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
@@ -28,6 +32,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezLadder.service.EzLadderService;
+import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
+import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -114,9 +120,12 @@ public class EzLadderController {
 	 * 사다리 게임 설정 작성
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.GET)
-	public String setLadderView(@CookieValue("loginCookie") String loginCookie, int type) {
+	public String setLadderView(@CookieValue("loginCookie") String loginCookie, String type, Model model) {
 		logger.debug("setLadder.do started.");
 		logger.debug("setLadder.do ended.");
+		
+		model.addAttribute("ladType", type);
+		
 		return "ezLadder/setLadder";
 	}
 	
@@ -125,11 +134,12 @@ public class EzLadderController {
 	 * @throws Exception 
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.POST)
-	public String setLadder(@CookieValue("loginCookie") String loginCookie, String title, String type, String secretFlag, String lineCnt, String [] userId, String [] userName, String [] userName2, String [] item, HttpServletRequest request, Model model) throws Exception {
+	public String setLadder(String ladData,@CookieValue("loginCookie") String loginCookie, String title, String type, String secretFlag, String lineCnt, String [] userId, String [] userName, String [] userName2, String [] item, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("POST setLadder.do started.");
 		
+		logger.debug("#### "+ladData);
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
+		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/ladder/ladders/writers/" + userInfo.getId();
 		
@@ -141,26 +151,31 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("ladData", ladData)
+				.queryParam("writerName", userInfo.getDisplayName())
+				.queryParam("writerName2", userInfo.getDisplayName2())
+				.queryParam("deptName", userInfo.getDeptName())
+				.queryParam("deptName2", userInfo.getDeptName2());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-
-		JSONParser jp = new JSONParser();
-		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
-		
-		JSONArray list = new JSONArray();
-		String status = jsonResult.get("status").toString();
-	
-		if (status.equals("ok")) {
-			list = (JSONArray) jsonResult.get("data");
-			
-			model.addAttribute("list", list);
-		} else {
-			return "error";
-		}
+//
+//		JSONParser jp = new JSONParser();
+//		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
+//		
+//		JSONArray list = new JSONArray();
+//		String status = jsonResult.get("status").toString();
+//	
+//		if (status.equals("ok")) {
+//			list = (JSONArray) jsonResult.get("data");
+//			
+//			model.addAttribute("list", list);
+//		} else {
+//			return "error";
+//		}
 		
 		logger.debug("POST setLadder.do ended.");
-		return ""; // redirect:조회창(ladderId값 파라미터로)
+		return "json"; // redirect:조회창(ladderId값 파라미터로)
 	}
 	
 	/**

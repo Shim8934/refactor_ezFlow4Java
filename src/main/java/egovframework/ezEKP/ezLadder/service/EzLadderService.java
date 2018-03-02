@@ -14,7 +14,7 @@ public interface EzLadderService {
 	public List<LadderVO> getLadderList(String userId) throws Exception;
 	
 	/** boh */
-	public void insertLadder(LadderVO lad, LadderLineVO ladLine) throws Exception; // 사다리 게임 만들기
+	public void insertLadder(LadderVO lad, List<LadderLineVO> ladLineList) throws Exception; // 사다리 게임 만들기
 	
 	public List<LadderBmVO> selectBMGroup(String userId) throws Exception; // 즐겨찾기 그룹 조회
 	public List<LadderBmUserVO> selectBMUser(String userId, int ladderBMId) throws Exception; // 즐겨찾기 그룹 유저 조회
