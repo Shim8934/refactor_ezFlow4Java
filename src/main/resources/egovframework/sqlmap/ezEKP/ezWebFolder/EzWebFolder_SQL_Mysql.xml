@@ -245,7 +245,7 @@
 	<select id="EzWebFolderDAO.getFileSequence" resultClass="String">
 		<![CDATA[
 			SELECT
-				IFNULL(MAX(CONVERT(FILE_ID, UNSIGNED INTEGER)),-1) as maxno
+				IFNULL(MAX(CONVERT(FILE_ID, UNSIGNED INTEGER)), -1) as maxno
 			FROM
 				TBL_WEBFOLDER_FILE
 			WHERE

@@ -923,4 +923,35 @@ public class CommonUtil {
 		}
 		return xmlDoc;
 	}
+
+	//Baonk: Get user's infor from parameters
+	public LoginVO getUserForGw(String userId, String serverName, String lang, String timezone) {
+		try{
+			int tenantId  = loginService.getTenantId(serverName);
+			LoginVO login = new LoginVO();
+			login.setId(userId);
+			login.setDn("NOPASSWORD");
+			login.setTenantId(tenantId);
+			
+			LoginVO user = loginService.selectUser(login);
+			
+			if (!lang.equals("")) {
+				if (user.getPrimary().equals(lang)) {
+					user.setPrimary("1");
+				} else {
+					user.setPrimary("2");
+				}
+			}
+			
+			if (!timezone.equals("")) {
+				user.setOffset(timezone);
+			}
+			
+			return user;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
