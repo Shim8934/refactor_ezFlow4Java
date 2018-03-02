@@ -63,9 +63,8 @@ public class EzJournalAdminSBController {
 		
 		param.put("companyId",companyId);
 		param.put("userId", userInfo.getId());
-		param.put("tenantId", userInfo.getTenantId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/companies", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/companies", param, request,"get",null);
 		String status = resultBody.get("status").toString();
 			
 		if (status.equals("ok")) {			
@@ -75,10 +74,9 @@ public class EzJournalAdminSBController {
 		
 		param.clear();
 		
-		param.put("companyId",companyId );
-		param.put("tenantId", userInfo.getTenantId());
+		param.put("userId",userInfo.getId() );
 		
-		resultBody = commonUtil.getJsonFromRestApi("/restezjournal/types", param, request,"get",null);
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types", param, request,"get",null);
 		status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {		
@@ -101,7 +99,6 @@ public class EzJournalAdminSBController {
 		
 		JSONObject parameter = new JSONObject();
 		parameter.put("companyId", request.getParameter("companyId"));
-		parameter.put("tenantId",userInfo.getTenantId()+"");
 		
 		Map<String, String[]> paramMap = request.getParameterMap();
 		JSONArray journaltypeList = new JSONArray();
@@ -115,7 +112,7 @@ public class EzJournalAdminSBController {
 		}
 		parameter.put("journaltypeList", journaltypeList);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/types", null, request,"put",parameter);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types", null, request,"put",parameter);
 		
 		String status = resultBody.get("status").toString();
 		
@@ -149,7 +146,7 @@ public class EzJournalAdminSBController {
 		param.put("userId", userInfo.getId());
 		param.put("tenantId", userInfo.getTenantId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/companies", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/companies", param, request,"get",null);
 		String status = resultBody.get("status").toString();
 			
 		if (status.equals("ok")) {			
@@ -160,10 +157,9 @@ public class EzJournalAdminSBController {
 		param.clear();
 		
 		param.put("companyId",companyId );
-		param.put("tenantId", userInfo.getTenantId());
 		System.out.println("companyId = "+companyId);
 		System.out.println("tenantId = "+userInfo.getTenantId());
-		resultBody = commonUtil.getJsonFromRestApi("/restezjournal/authors", param, request,"get",null);
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", param, request,"get",null);
 		status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {		
@@ -196,17 +192,15 @@ public class EzJournalAdminSBController {
 		String userId =null;
 		if (request.getParameter("userId")!=null) {
 			userId = request.getParameter("userId");
-			logger.debug("유저 아이디 넘어야놈ㄴ래ㅑ오ㅓ;ㅁㅇㄴ리ㅏㅓㅁㄴ이;ㅏㄹ"+userId);
 			model.addAttribute("selectedUser",userId.trim());
 		}else{
 			userId = userInfo.getId();
 		}
 		
 		param.put("userId",userId);
-		param.put("tenantId", userInfo.getTenantId());
 		param.put("companyId", request.getParameter("companyId"));
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/depts", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request,"get",null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {			
@@ -245,12 +239,11 @@ public class EzJournalAdminSBController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		String key = request.getParameter("key");
-		param.put("tenantId", userInfo.getTenantId());
 		param.put("key",key );
 		param.put("value", request.getParameter("value"));
 		logger.debug(request.getParameter("key"));
 		logger.debug(request.getParameter("value"));
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/users", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users", param, request,"get",null);
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {		
 			JSONArray userList = (JSONArray) resultBody.get("data");
@@ -284,15 +277,9 @@ public class EzJournalAdminSBController {
 	@RequestMapping(value = "/admin/ezJournal/authorDeptList.do")
 	public String authorDeptList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
 		logger.debug("authorDeptList started");
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		String userId = request.getParameter("userId");
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("tenantId", userInfo.getTenantId());
-		
-		logger.debug("tenantId : "+userInfo.getTenantId());
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/users/"+userId+"/author-depts", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/"+userId+"/author-depts", null, request,"get",null);
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {		
 			JSONArray authorDeptList = (JSONArray) resultBody.get("data");
@@ -312,18 +299,13 @@ public class EzJournalAdminSBController {
 	 * @param response
 	 * @throws IOException 
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezJournal/saveAuthor.do")
 	public void saveAuthor(@RequestBody JSONObject jsonString,HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException{
 		logger.debug("saveAuthor started");
 		
 		String result = "";
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		jsonString.put("tenantId",userInfo.getTenantId()+"");
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/authors", null, request,"post",jsonString);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", null, request,"post",jsonString);
 		
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {	
@@ -350,14 +332,11 @@ public class EzJournalAdminSBController {
 		
 		String result = "";
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
-		param.put("tenantId", userInfo.getTenantId());
 		param.put("userId", request.getParameter("userId"));
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/restezjournal/authors", param, request,"delete",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", param, request,"delete",null);
 		
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {	

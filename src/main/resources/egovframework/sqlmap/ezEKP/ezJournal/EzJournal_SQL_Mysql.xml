@@ -277,7 +277,7 @@
 		<isNotEmpty property="companyId">
 			and d.EXTENSIONATTRIBUTE2=#companyId#
 		</isNotEmpty>
-		order by DEPTLEVEL
+		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15,0),6,0) ,d.DISPLAYNAME
 	</select>
 	
 	<!-- 회사 리스트를 가져오는 쿼리 -->
@@ -296,7 +296,7 @@
 		and (((substr(u.EXTENSIONATTRIBUTE1,3,1)=0 and d.extensionattribute2=u.PHYSICALDELIVERYOFFICENAME))
 		or (substr(u.EXTENSIONATTRIBUTE1,3,1)=1))
 		and d.extensionattribute2=d.CN
-		order by DEPTLEVEL
+		order by lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME
 	</select>
 	
 	<!-- 권한자 목록 세럭트 -->

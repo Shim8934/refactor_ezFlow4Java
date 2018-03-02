@@ -86,7 +86,7 @@ public class EzJournalGWController {
 	public Object journalTypeUpdate(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W JOURNAL [PUT /rest/ezjournal/types] started.");
 		JSONObject result = new JSONObject();
-
+		
 		try {
 			String companyId = (String) jsonParam.get("companyId");
 		
