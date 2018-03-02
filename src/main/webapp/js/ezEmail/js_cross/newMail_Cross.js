@@ -1680,9 +1680,11 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
         }
     } else {
 	   	 var fileext = DocHref.toLowerCase().substr(DocHref.length - 4);
-	     var ezUtil = new ActiveXObject("ezUtil.RegScript");
+	     /*var ezUtil = new ActiveXObject("ezUtil.RegScript");
 	     var regData = ezUtil.ReadValueEx(2, "SYSTEM\\CurrentControlSet\\Control\\Nls\\CodePage", "OEMCP");
-	     ezUtil = null;
+	     ezUtil = null;*/
+	   	 
+	   	 var regData = "";
 	
 	     var fullPath = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath="+ escape(DocHref) + "&filename=" + escape(strLang116 + fileext) + "&regData=" + regData;
 	
