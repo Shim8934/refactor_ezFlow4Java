@@ -16,7 +16,7 @@ import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
-@Repository("EzJournalDAO")
+@Repository("ezJournalDAO")
 public class EzJournalDAO extends EgovAbstractDAO{
 
 	/**

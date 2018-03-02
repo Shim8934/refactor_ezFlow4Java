@@ -296,7 +296,7 @@
 		and (((substr(u.EXTENSIONATTRIBUTE1,3,1)=0 and d.extensionattribute2=u.PHYSICALDELIVERYOFFICENAME))
 		or (substr(u.EXTENSIONATTRIBUTE1,3,1)=1))
 		and d.extensionattribute2=d.CN
-		order by lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME
+		order by lpad(ifnull(d.EXTENSIONATTRIBUTE15,0),6,0) ,d.DISPLAYNAME
 	</select>
 	
 	<!-- 권한자 목록 세럭트 -->
@@ -349,7 +349,7 @@
 		from tbl_usermaster
 		where TENANT_ID=#tenantId#
 		and $key$ like concat('%',#value#,'%')
-		order by  lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME
+		order by lpad(ifnull(d.EXTENSIONATTRIBUTE15,0),6,0) ,d.DISPLAYNAME
 	</select>
 	
 	<!-- 양식 상세정보 -->

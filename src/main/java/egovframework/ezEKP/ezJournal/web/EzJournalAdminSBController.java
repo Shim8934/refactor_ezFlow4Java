@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezJournal.web;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -22,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
-import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -72,8 +69,6 @@ public class EzJournalAdminSBController {
 			model.addAttribute("compList", compList);
 		}
 		
-		param.clear();
-		
 		param.put("userId",userInfo.getId() );
 		
 		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types", param, request,"get",null);
@@ -99,6 +94,7 @@ public class EzJournalAdminSBController {
 		
 		JSONObject parameter = new JSONObject();
 		parameter.put("companyId", request.getParameter("companyId"));
+		parameter.put("userId", userInfo.getId());
 		
 		Map<String, String[]> paramMap = request.getParameterMap();
 		JSONArray journaltypeList = new JSONArray();

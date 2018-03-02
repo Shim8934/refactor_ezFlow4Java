@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,12 +32,12 @@ import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 import egovframework.let.utl.fcc.service.JsonUtil;
 
 
-@Service("EzJournalService")
+@Service("ezJournalService")
 public class EzJournalServiceImpl implements EzJournalService{
 
 	private static final Logger logger = LoggerFactory.getLogger(EzJournalServiceImpl.class);
 
-	@Autowired
+	@Resource(name="ezJournalDAO")
 	private EzJournalDAO ezJournalDAO;
 	
 	@Override

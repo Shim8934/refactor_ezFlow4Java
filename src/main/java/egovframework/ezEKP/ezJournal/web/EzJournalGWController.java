@@ -91,7 +91,7 @@ public class EzJournalGWController {
 			String companyId = (String) jsonParam.get("companyId");
 		
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, (String) jsonParam.get("userId"));
 		
 			ArrayList<Map<String, String>> journaltypeList = (ArrayList<Map<String, String>>) jsonParam.get("journaltypeList");
 			
@@ -970,7 +970,7 @@ public class EzJournalGWController {
 			String userId = request.getParameter("userId");
 			String companyId = request.getParameter("companyId");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			List<JournalCompanyVO> compList = ezJournalService.getCompanyList(userId, info.getTenantId() + "", companyId);
 			
