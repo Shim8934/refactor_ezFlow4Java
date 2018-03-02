@@ -79,7 +79,7 @@
 			}
 			
 			function getData(companyId, mode) {
-				 $.ajax({
+				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/getCompanyFolderTree.do",
 					data: {
@@ -234,7 +234,7 @@
 						type: "POST",
 						url: "/admin/ezWebFolder/getSubFolderTree.do",
 						data: {
-							"folderId"	: uniqueId
+							"folderId" : uniqueId
 						},
 						dataType: "JSON",
 						async: true,

@@ -134,3 +134,57 @@ function MakeXMLString(str) {
 	str = ReplaceText(str, "\"", "&quot;");
 	return str;
 }
+
+function menu_SelectRange2() {
+	if (CrossYN()) {
+		var szUrl = "/ezWebFolder/shareUsersSelect.do";
+		var _MSIE = 'MSIE';
+		var useragentstr = navigator.userAgent;
+		
+		if (useragentstr.indexOf(_MSIE) != -1) {
+			var szParam = "dialogHeight:705px;dialogWidth:562px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no" + GetShowModalPosition(562, 705);
+			var rv = window.showModalDialog(szUrl, document.getElementById("RangeXMLStr").value, szParam);
+			
+			if (rv[0] == "OK") {
+				document.getElementById("RangeXMLStr").value = rv[1];
+			} 
+			else if (rv[0] == "NO") {
+				document.getElementById("RangeXMLStr").value = "";
+			}
+		}
+		else {
+			if ((g_windowReference == null) || (g_windowReference.closed == true)) {
+				if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
+					var feature = GetOpenPosition(560, 730);
+					g_windowReference = window.open(szUrl, "SelectRange", "height=730,width=560,resizable=no,center=yes" + feature);
+				}
+				else {
+					var feature = GetOpenPosition(730, 700);
+					g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
+				}
+			}
+			
+			g_windowReference.focus();
+		}
+	}
+	else {
+		menu_SelectRange_IE2();
+	}
+}
+
+function menu_SelectRange_IE2() {
+	var szUrl = "/ezWebFolder/shareUsersSelect.do";
+	
+	if ((g_windowReference == null) || (g_windowReference.closed == true)) {
+		if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
+			var feature = GetOpenPosition(560, 630);
+			g_windowReference = window.open(szUrl, "SelectRange", "height=630,width=560,resizable=no,center=yes" + feature);
+		}
+		else {
+			var feature = GetOpenPosition(560, 700);
+			g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
+		}
+	}
+	
+	g_windowReference.focus();
+}

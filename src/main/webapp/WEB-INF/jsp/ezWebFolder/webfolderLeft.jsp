@@ -152,6 +152,10 @@
 		    function getReceivedShare() {
 				window.parent.frames["right"].location.href = "/ezWebFolder/getShareListPage.do";
 			}
+		    
+		    function getGivenShare() {
+		    	window.parent.frames["right"].location.href = "/ezWebFolder/getGivenShareList.do";
+		    }
 	    </script>
 	    <style>
 		    .jstree-default a { 

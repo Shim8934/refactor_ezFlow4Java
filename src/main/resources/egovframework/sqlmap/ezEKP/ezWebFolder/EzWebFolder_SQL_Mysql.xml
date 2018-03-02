@@ -7,6 +7,7 @@
 	<typeAlias  alias="FolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"/>
 	<typeAlias  alias="FolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
 	<typeAlias  alias="FolderUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.FolderUserVO"/>
+	<typeAlias  alias="SimpleDeptVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO"/>
 	
 	<sql id="getAllFilesInFolderCont">
 		WHERE
@@ -135,7 +136,8 @@
 	<resultMap id="folderSimpleVO" class="FolderSimpleVO">
 		<result property="folderId"             column="FOLDER_ID"               columnIndex="1" />
 		<result property="folderName"           column="FOLDER_NAME"             columnIndex="2" />
-		<result property="folderLevel"          column="FOLDER_LEVEL"            columnIndex="3" />
+		<result property="hasSubFolder"         column="HAS_SUB"                 columnIndex="3" />
+		<result property="folderLevel"          column="FOLDER_LEVEL"            columnIndex="4" />
 	</resultMap>
 	
 	<!-- Folder resultMap -->
@@ -167,6 +169,14 @@
 		<result property="fileExt"              column="FILE_EXT"               columnIndex="3" />
 		<result property="typeIcon"             column="TYPE_ICON"              columnIndex="4" />
 		<result property="tenantId"             column="TENANT_ID"              columnIndex="5" />
+	</resultMap>
+	
+	<!-- SimpleDept resultMap -->
+	<resultMap id="simpleDeptVO" class="SimpleDeptVO">
+		<result property="deptId"               column="DEPT_ID"                columnIndex="1" />
+		<result property="deptName"             column="DEPT_NAME"              columnIndex="2" />
+		<result property="level"                column="LEVEL"                  columnIndex="3" />
+		<result property="hasSub"               column="HAS_SUB"                columnIndex="4" />
 	</resultMap>
 	
 	<insert id="EzWebFolderDAO.insertFile" parameterClass="Map">
@@ -524,17 +534,18 @@
 	<select id="EzWebFolderDAO.getSimpleSubFolder" resultMap="folderSimpleVO">
 		<![CDATA[
 			SELECT
-				FOLDER_ID                                                         AS FOLDER_ID,
-				CASE WHEN #primary# = '1' THEN FOLDER_NAME1 ELSE FOLDER_NAME2 END AS FOLDER_NAME,
-				FOLDER_LEVEL                                                      AS FOLDER_LEVEL
+				a.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				CASE WHEN #primary# = '1' THEN a.FOLDER_NAME1 ELSE a.FOLDER_NAME2 END                                                                                                 AS FOLDER_NAME,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = a.FOLDER_ID AND b.USE_STATUS = "Y" AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
 			FROM
-				TBL_WEBFOLDER_FOLDER
+				TBL_WEBFOLDER_FOLDER a
 			WHERE
-				FOLDER_ID  = #folderId#
+				a.FOLDER_ID  = #folderId#
 			AND
-				USE_STATUS = "Y"
+				a.USE_STATUS = "Y"
 			AND
-				TENANT_ID  = #tenantId#
+				a.TENANT_ID  = #tenantId#
 		]]>
 	</select>
 	
@@ -560,20 +571,21 @@
 	<select id="EzWebFolderDAO.getAllSimpleSubFolders" resultMap="folderSimpleVO">
 		<![CDATA[
 			SELECT
-				FOLDER_ID                                                         AS FOLDER_ID,
-				CASE WHEN #primary# = '1' THEN FOLDER_NAME1 ELSE FOLDER_NAME2 END AS FOLDER_NAME,
-				FOLDER_LEVEL                                                      AS FOLDER_LEVEL
+				a.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				CASE WHEN #primary# = '1' THEN a.FOLDER_NAME1 ELSE a.FOLDER_NAME2 END                                                                                                 AS FOLDER_NAME,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = a.FOLDER_ID AND b.USE_STATUS = "Y" AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
 			FROM
-				TBL_WEBFOLDER_FOLDER
+				TBL_WEBFOLDER_FOLDER a
 			WHERE
-				FOLDER_UPPER = #folderUpper#
+				a.FOLDER_UPPER = #folderUpper#
 			AND
-				USE_STATUS   = "Y"
+				a.USE_STATUS   = "Y"
 			AND
-				TENANT_ID    = #tenantId#
+				a.TENANT_ID    = #tenantId#
 			ORDER BY
-				FOLDER_LEVEL ASC,
-				FOLDER_STEP  ASC
+				a.FOLDER_LEVEL ASC,
+				a.FOLDER_STEP  ASC
 		]]>
 	</select>
 	
@@ -687,4 +699,82 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</update>
+	
+	<select id="EzWebFolderDAO.getAllSimpleDeptsOfCompany" resultMap="simpleDeptVO">
+		select
+			c.CN as DEPT_ID,
+			case when #primary# = '1' then c.DISPLAYNAME else c.DISPLAYNAME2 end as DEPT_NAME,
+			c.level as LEVEL,
+			c.has_sub as HAS_SUB
+		from
+		(
+			select
+				b.*,
+				case when (select count(*) from tbl_deptmaster d where b.CN = d.EXTENSIONATTRIBUTE1 and b.tenant_id = d.tenant_id) = 0 then 0 else 1 end as has_sub,
+				#level# AS level 
+			from 
+				tbl_deptmaster b
+			where
+				b.cn = #companyId#
+			and
+				b.tenant_id = #tenantId#
+			union
+			select 
+				a.*,
+				case when (select count(*) from tbl_deptmaster e where a.CN = e.EXTENSIONATTRIBUTE1 and a.tenant_id = e.tenant_id) = 0 then 0 else 1 end as has_sub,
+				(#level# + 1) AS level
+			from
+				tbl_deptmaster a
+			where
+				a.EXTENSIONATTRIBUTE1 = #companyId#
+			and
+				a.tenant_id = #tenantId#
+		) c
+		order by level, lpad(ifnull(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllSimpleSubDepts" resultMap="simpleDeptVO">
+		select
+			a.CN as DEPT_ID,
+			case when #primary# = '1' then a.DISPLAYNAME else a.DISPLAYNAME2 end as DEPT_NAME,
+			#level# as LEVEL,
+			case when (select count(*) from tbl_deptmaster b where a.CN = b.EXTENSIONATTRIBUTE1 and a.tenant_id = b.tenant_id) = 0 then 0 else 1 end as HAS_SUB,
+			1 AS ordinal 
+		from
+			tbl_deptmaster a
+		where
+			a.EXTENSIONATTRIBUTE1 = #deptId#
+		and
+			a.tenant_id = #tenantId#
+		order by 
+			ordinal, lpad(ifnull(a.EXTENSIONATTRIBUTE15, 0),6,0), a.DISPLAYNAME
+	</select>
+	
+	<select id="EzWebFolderDAO.getSimpleCompany" resultMap="simpleDeptVO">
+		select
+			a.CN as DEPT_ID,
+			case when #primary# = '1' then a.DISPLAYNAME else a.DISPLAYNAME2 end as DEPT_NAME,
+			#level# as LEVEL,
+			case when (select count(*) from tbl_deptmaster b where a.CN = b.EXTENSIONATTRIBUTE1 and a.tenant_id = b.tenant_id) = 0 then 0 else 1 end as HAS_SUB
+		from
+			tbl_deptmaster a
+		where
+			a.CN = #deptId#
+		and
+			a.tenant_id = #tenantId#
+	</select>
+	
+	<select id="EzWebFolderDAO.getDeptPath" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				dept_cd_path
+			FROM 
+				TBL_DEPTMASTER
+			WHERE  
+				cn = #deptId#
+			AND
+				tenant_id = #tenantId#
+		]]> 
+	</select>
+	
 </sqlMap>

@@ -742,5 +742,5 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		logger.debug("select target finishes!");
 		return "admin/ezWebFolder/targetSelect";
 	}
-	
+
 }

@@ -1,0 +1,966 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><spring:message code='ezWebFolder.t165' /></title>
+		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
+		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/ezWebFolder/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/ezWebFolder/TreeView.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript">
+			var pCompanyID       = "${pCompanyID}";
+			var langData         = "${langData}";
+			var primary          = "${primary}";
+			var arrSubFolder     = [];
+			var selectedDept     = "";
+			
+			window.onload = function () {
+				getData("", pCompanyID);
+			}
+			
+			function getData(deptId, companyId) {
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/getDeptTree.do",
+					data: {
+						"deptId"    : deptId,
+						"companyId" : pCompanyID
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var result = data.deptTree;
+						var dept   = data.currentDept;
+						console.log(result);
+						
+						renderData(result, dept);
+					},
+					error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					}
+				});
+			}
+			
+			function renderData(result, currentDept) {
+				if (!result) {
+					alert("<spring:message code='ezWebFolder.t134'/>");
+					return;
+				} 
+				
+				var divTree = document.getElementById("TreeView");
+				var divComp = document.createElement("div");
+				
+				while (divTree.hasChildNodes()) {
+					divTree.removeChild(divTree.lastChild);
+				}
+				
+				displaySubFolder(divTree, divComp, result);
+				
+				if (currentDept) {
+					var spanElmt   = document.getElementsByName(currentDept)[0];
+					selectedDept   = "";
+					getSelected(spanElmt);
+				}
+			}
+			
+			function displaySubFolder(divTree, divElmt, list) {
+				var level = list["level"];
+				
+				if (level > 0) {
+					for (var j = 0; j < level; j++) {
+						var imgTag = document.createElement("img");
+						imgTag.setAttribute("class", "webfolderImg");
+						imgTag.src="/images/OrganTree_cross/dot_continue.gif";
+						divElmt.appendChild(imgTag);
+					}
+				}
+				
+				var imgElmt = document.createElement("img");
+				imgElmt.setAttribute("id" , list["deptId"]);
+				imgElmt.setAttribute("level" , list["level"]);
+				
+				var imgElmt2 = document.createElement("img");
+				imgElmt2.setAttribute("class", "webfolderImg");
+				imgElmt2.src = level > 0 ? "/images/OrganTree_cross/ic-open.gif" : "/images/OrganTree_cross/ic-company.gif";
+				
+				var spanFolderName = document.createElement("span");
+				spanFolderName.textContent = list["deptName"];
+				spanFolderName.setAttribute("class", "spanName");
+				spanFolderName.setAttribute("name", list["deptId"]);
+				spanFolderName.setAttribute("level", list["level"]);
+				spanFolderName.onclick = function() {getSelected(this);};
+				
+				divElmt.appendChild(imgElmt);
+				divElmt.appendChild(imgElmt2);
+				divElmt.appendChild(spanFolderName);
+				divTree.appendChild(divElmt);
+				
+				if (list["hasSub"] == "0") {
+					imgElmt.src = "/images/OrganTree_cross/dot_continue.gif";
+					imgElmt.setAttribute("class", "webfolderImg");
+				}
+				else {
+					imgElmt.onclick = function() {getDetailTree(this);};
+					
+					if (list["subDepts"] == null) {
+						imgElmt.src = "/images/OrganTree_cross/plus.gif";
+						imgElmt.setAttribute("class", "webfolderPlus");
+						return;
+					}
+					
+					imgElmt.src = "/images/OrganTree_cross/minus.gif";
+					imgElmt.setAttribute("class", "webfolderMinus");
+					
+					var len = list["subDepts"].length;
+					arrSubFolder.push(list["deptId"]);
+					
+					var newDivElmt = document.createElement("div");
+					divElmt.appendChild(newDivElmt);
+					
+					for (var i = 0; i < len; i++) {
+						var subDivElmt = document.createElement("div");
+						displaySubFolder(newDivElmt, subDivElmt, list["subDepts"][i]);
+					}
+				}
+			}
+			
+			function getDetailTree(obj) {
+				//Check if already in arrSubFolder
+				var uniqueId = obj.getAttribute("id");
+				var level    = obj.getAttribute("level");
+				
+				if (arrSubFolder.indexOf(uniqueId) != -1) {
+					var childElmt = obj.parentElement.lastElementChild;
+					
+					if (obj.className == "webfolderMinus") {
+						obj.src= "/images/OrganTree_cross/plus.gif";
+						obj.setAttribute("class", "webfolderPlus");
+						childElmt.style.display = "none";
+					}
+					else {
+						obj.src= "/images/OrganTree_cross/minus.gif";
+						obj.setAttribute("class", "webfolderMinus");
+						childElmt.style.display = "";
+					}
+				}
+				else {
+					obj.src = "/images/OrganTree_cross/minus.gif";
+					obj.setAttribute("class", "webfolderMinus");
+					
+					$.ajax({
+						type: "POST",
+						url: "/ezWebFolder/getSubTree.do",
+						data: {
+							"deptId" : uniqueId,
+							"level"  : level
+						},
+						dataType: "JSON",
+						async: true,
+						success: function(data) {
+							var result = data.subTree;
+							console.log(result);
+							
+							displaySubTree(result, obj.parentElement);
+							arrSubFolder.push(uniqueId);
+						},
+						error: function (xhr, status, e){
+							alert("<spring:message code='ezWebFolder.t134'/>");
+						}
+					});	
+				}
+			}
+			
+			function displaySubTree(result, divElmt) {
+				if (result["subDepts"] == null) {
+					alert("<spring:message code='ezWebFolder.t134'/>");
+					return;
+				}
+				
+				var len = result["subDepts"].length;
+				var newDivElmt = document.createElement("div");
+				divElmt.appendChild(newDivElmt);
+				
+				for (var i = 0; i < len; i++) {
+					var subDiv = document.createElement("div");
+					displaySubFolder(newDivElmt, subDiv, result["subDepts"][i]);
+				}
+			}
+			
+			function getSelected(obj) {
+				var previousElmt = document.getElementsByName(selectedDept)[0];
+				
+				if (previousElmt != null) {
+					if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {
+						previousElmt.style.color = "";
+					}
+					else {
+						return;
+					}
+				}
+				
+				selectedDept    = obj.getAttribute("name");
+				obj.style.color = "#e04343";
+				
+				/* $.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/getFolderUsers.do",
+					data: {
+						"folderId" : selectedFolder
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var result = data.folderUsers;
+						processUsersList(result, obj.innerHTML);
+					},
+					error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					}
+				}); */
+			}
+			/* window.onload = function () {
+				var InitData = "";
+				ListviewInit2("DListView", "DeptListView");
+				ListviewInit2("MListView", "MemberListView");
+				
+				if ((window.opener != null) && (!window.opener.closed)) {
+					InitData = window.opener.GetRangeValue();
+				}
+				on_view();
+				ListviewInit();
+				if (InitData != "") {
+					InitRangeData(InitData);
+				}
+			}
+			
+			function ListviewInit2(pID, pListView) {
+				var listview = new ListView();
+				listview.SetID(pID);
+				listview.SetHeightFree(true);
+				listview.SetSelectFlag(false);
+				listview.SetMulSelectable(true);
+				if(pListView == "DeptListView") {
+					listview.SetRowOnDblClick("delete_admin");
+				}
+				else if (pListView == "MemberListView") {
+					listview.SetRowOnDblClick("delete_member");
+				}
+					listview.DataSource(listviewheader);
+					listview.DataBind(pListView);
+					listview.RowDataBind();
+			}
+			
+			function ListviewInit() {
+				var listview = new ListView();
+				listview.SetID("Organ");
+				listview.SetSelectFlag(false);
+				listview.SetMulSelectable(true);
+				listview.SetRowOnDblClick("ListViewNodeDblClick");
+				listview.DataSource(listviewheader2);
+				listview.DataBind("OrganListView");
+			}
+			
+			function cancel_onclick() {
+				window.close();
+			}
+			
+			function close_onclick() {
+				if (g_aChanged == true || g_bChanged == true)
+					if (confirm("<spring:message code='ezWebFolder.t166' />")) {
+						SetRange();
+						return;
+					}
+				window.returnValue = "NO"
+				window.close();
+			}
+			
+			function check_length(chkstr, maxlength, fieldname) {
+				var length = 0;
+				var i;
+				for (i = 0; i < chkstr.length; i++)
+					if (chkstr.charCodeAt(i) > 256) {
+						length = length + 2;
+					} else {
+						length++;
+					}
+				if (length > maxlength) {
+					alert(fieldname + "<spring:message code='ezWebFolder.t167' />" + maxlength + "<spring:message code='ezWebFolder.t168' />");
+					return false
+				}
+				return true;
+			}
+			
+			function add_list() {
+				if (TreeView.selectedNode) {
+					lastindex = deptlist.length;
+					if (TreeView.selectedNode.DATA3 == "user") {
+						add_member();
+					} else {
+						add_dept();
+					}
+				}
+			}
+			
+			function add_dept() {
+				g_aChanged   = true;
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+				var nodeIdx = treeView.GetSelectNode();
+				if (nodeIdx != null) {
+					var _listview = new ListView();
+					_listview.LoadFromID("DListView");
+					var arrRows = _listview.GetDataRows();
+					
+					for (count2 = 0; count2 < arrRows.length; count2++) {
+						if (nodeIdx.GetNodeData("CN") == arrRows[count2].getAttribute("CN")) {
+							alert("<spring:message code='ezWebFolder.t169'/>");
+							return;
+						}
+					}
+					
+					pparsingXML2 = "";
+					pparsingXML  = "";
+					pparsingXML2 = "<LISTVIEWDATA><ROWS>";
+					pparsingXML  = pparsingXML + "<ROW><CELL><CN><![CDATA[" + nodeIdx.GetNodeData("CN") + "]]></CN>";
+					pparsingXML  = pparsingXML + "<DISPLAYNAME1><![CDATA[" + nodeIdx.GetNodeData("DISPLAYNAME1") + "]]></DISPLAYNAME1>";
+					pparsingXML  = pparsingXML + "<DISPLAYNAME2><![CDATA[" + nodeIdx.GetNodeData("DISPLAYNAME2") + "]]></DISPLAYNAME2>";
+					pparsingXML  = pparsingXML + "<VALUE><![CDATA[" + nodeIdx.GetNodeData("VALUE") + "]]></VALUE></CELL></ROW>";
+					pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
+					Resultxml    = loadXMLString(pparsingXML2);
+					
+					var listview = new ListView();
+					listview.LoadFromID("DListView");
+					
+					var MaxID     = 0;
+					var InitTr    = listview.GetDataRows();
+					var MaxCntNum = 0;
+					for (var j = 0  ; j < InitTr.length  ; j++) {
+						var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+						if (MaxID < curnum) {
+							MaxID     = curnum;
+							MaxCntNum = j;
+						}
+					}
+					
+					var objTr = listview.AddRow(InitTr.length);
+					if (MaxCntNum != 0)
+						MaxCntNum = MaxCntNum + 1;
+					SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+					listview.AddDataRow(objTr, Resultxml);
+					document.getElementById("DeptListView").className = "receiver_list";
+					var _tdlength = document.getElementById("DeptListView").getElementsByTagName("TD").length;
+					for (var y = 0; y < _tdlength; y++) {
+						document.getElementById("DeptListView").getElementsByTagName("TD")[y].style.textOverflow = "";
+						document.getElementById("DeptListView").getElementsByTagName("TD")[y].style.overflow = "";
+					}
+				}
+			}
+			
+			function CheckIfExists(pList, pCN) {
+				for (var i = 0; i < pList.length; i++) {
+					if (pCN == pList[i].value.split("\t")[0]) return true;
+				}
+				return false;
+			}
+			
+			function delete_admin() {
+				var selList = new ListView();
+				selList.LoadFromID("DListView");
+				var arrRows = selList.GetSelectedRows();
+				var strName = "";
+				for (var i = 0; i < arrRows.length; i++) {
+					selList.DeleteRow(arrRows[i].id);
+				}
+			}
+			
+			function add_member() {
+				g_bChanged = true;
+				var organListview = new ListView();
+				organListview.LoadFromID("Organ");
+				var length = organListview.GetSelectedRows().length;
+				for (count1 = 0; count1 < length; count1++) {
+					var selRow = organListview.GetSelectedRows()[count1];
+					if (selRow) {
+						var _listview = new ListView();
+						_listview.LoadFromID("MListView");
+						var arrRows = _listview.GetDataRows();
+						for (count2 = 0; count2 < arrRows.length; count2++) {
+							 if (selRow.getAttribute("DATA2") == arrRows[count2].getAttribute("DATA2")) { 
+								alert("<spring:message code='ezWebFolder.t169'/>");
+								return;
+							}
+						}
+						pparsingXML2 = "";
+						pparsingXML  = "";
+	 					pparsingXML2 = "<LISTVIEWDATA><ROWS>";
+	 					pparsingXML  = pparsingXML + "<ROW><CELL><DATA2>" + selRow.getAttribute("DATA2") + "</DATA2>";
+						pparsingXML  = pparsingXML + "<DATA4>" + selRow.getAttribute("DATA4") + "</DATA4>";
+						pparsingXML  = pparsingXML + "<DATA5>" + selRow.getAttribute("DATA5") + "</DATA5>";
+						pparsingXML  = pparsingXML + "<VALUE>" + selRow.cells[0].innerText + "</VALUE></CELL></ROW>";
+						pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
+						Resultxml    = loadXMLString(pparsingXML2);
+						
+						var listview = new ListView();
+						listview.LoadFromID("MListView");
+						
+						var MaxID     = 0;
+						var InitTr    = listview.GetDataRows();
+						var MaxCntNum = 0;
+						for (var j = 0  ; j < InitTr.length ; j++) {
+							var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+							if (MaxID < curnum) {
+								MaxID      = curnum;
+								MaxCntNum = j;
+							}
+						}
+						
+						var objTr = listview.AddRow(InitTr.length);
+						if (MaxCntNum != 0)
+							MaxCntNum = MaxCntNum + 1;
+						SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+						listview.AddDataRow(objTr, Resultxml);
+						
+						document.getElementById("MemberListView").className = "receiver_list";
+						var _tdlength = document.getElementById("MemberListView").getElementsByTagName("TD").length;
+						for (var y = 0; y < _tdlength; y++) {
+							document.getElementById("MemberListView").getElementsByTagName("TD")[y].style.textOverflow = "";
+							document.getElementById("MemberListView").getElementsByTagName("TD")[y].style.overflow = "";
+						}
+					}
+				}
+			}
+			
+			function delete_member() {
+				var selList = new ListView();
+				selList.LoadFromID("MListView");
+				var arrRows = selList.GetSelectedRows();
+				var strName = "";
+				for (var i = 0; i < arrRows.length; i++) {
+					selList.DeleteRow(arrRows[i].id);
+				}
+			}
+			
+			function on_view() {
+				var strQuery = "<DATA><DEPTID>${userInfoDeptCode}</DEPTID><TOPID>Top</TOPID><PROP>displayName</PROP></DATA>";
+				xmlHttp_Depttree = null;
+				xmlHttp_Depttree = createXMLHttpRequest();
+				xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+				xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
+				xmlHttp_Depttree.send(strQuery);
+			}
+			
+			function RequestData(pNodeID, pTreeID) {
+				var TreeIdx = pNodeID;
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(TreeIdx);
+				var deptID = treeNode.GetNodeData("CN");
+				GetDeptSubTreeInfo(deptID, TreeIdx);
+			}
+			
+			function GetDeptSubTreeInfo(deptID, TreeIdx) {
+				var xmlHTTP = createXMLHttpRequest();
+				var xmlRtn  = createXmlDom();
+				var xmlpara = createXmlDom();
+				var objNode;
+				createNodeInsert(xmlpara, objNode, "DATA");
+				createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
+				createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
+				xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
+				xmlHTTP.send(xmlpara);
+				xmlRtn = loadXMLString(xmlHTTP.responseText);
+				if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
+					if (CrossYN()) {
+						xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
+					} else {
+						xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
+					}
+				}
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+				treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+			}
+			
+			function TreeViewNodeClick() {
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+				var nodeIdx = treeView.GetSelectNode();
+				displayUserList(nodeIdx.GetNodeData("CN"));
+			}
+			function displayUserList(DeptID) {
+				$(document).ready(function(){
+				var xmlpara = createXmlDom();
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/ezOrgan/getDeptMemberList.do",
+					data : {deptID : DeptID, cell : "displayName;title;description", prop : "mail;displayName;description;title", type : "user"},
+					success : function(result){
+						document.getElementById("OrganListView").innerHTML = "";
+						var listview = new ListView();
+						listview.SetID("Organ");
+						listview.SetSelectFlag(false);
+						listview.SetMulSelectable(true);
+						listview.SetRowOnDblClick("ListViewNodeDblClick");
+						listview.DataSource(document.getElementById("listviewheader2"));
+						listview.DataBind("OrganListView");
+						listview.DataSource(loadXMLString(result));
+						listview.RowDataBind();
+					},
+					error : function(error){
+						alert("<spring:message code='ezBoard.t22'/>" + error);
+					}
+					});
+				});
+			}
+			
+			function event_displayUserList() {
+				if (xmlHttp_UserList != null && xmlHttp_UserList.readyState == 4) {
+					if (xmlHttp_UserList.statusText == "OK") {
+						document.getElementById("OrganListView").innerHTML = "";
+						var listview = new ListView();
+						listview.SetID("Organ");
+						listview.SetSelectFlag(false);
+						listview.SetMulSelectable(true);
+						var xmlDoc2 = createXmlDom();
+						xmlDoc2     = xmlHttp_UserList.responseXML.getElementsByTagName("LISTVIEWDATA")[0].appendChild(SelectNodes(loadXMLString(listviewheader2.innerHTML.toUpperCase()), "LISTVIEWDATA/HEADERS")[0]);
+						listview.SetRowOnDblClick("ListViewNodeDblClick");
+						listview.DataSource(xmlHttp_UserList.responseXML.getElementsByTagName("LISTVIEWDATA")[0]);
+						listview.DataBind("OrganListView");
+					} else {
+						alert("<spring:message code='ezWebFolder.t170' />" + xmlHttp_UserList.statusText)
+					}
+					xmlHttp_UserList = null;
+				}
+			}
+			
+			function cnsearch_press(e) {
+				var keyCode = e.keyCode ? e.keyCode : e.which;
+				if (keyCode == "13") {
+					cnsearch_click();
+				}
+			}
+			
+			var checkname2_cross_dialogArguments = new Array();
+			function cnsearch_click() {
+				if (cnkeyword.value == "") {
+					alert("<spring:message code='ezWebFolder.t171' />");
+					cnkeyword.focus();
+					return;
+				}
+				var count;
+				var adCount = 0;
+				var xmlDOM = createXmlDom();
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/ezOrgan/getSearchList.do",
+					async : false,
+					data : {search :"displayname::" + cnkeyword.value, cell : 'company;description;title;displayName;mail', prop : 'department', type : 'user'},
+					success : function(result){
+						xmlDOM = loadXMLString(result);
+						adCount = xmlDOM.getElementsByTagName("ROW").length;
+					},
+					error : function(error){
+						alert("<spring:message code='ezBoard.t24'/>" + error);
+						xmlDOM = null;
+					}
+				});
+				if (adCount == 0) {
+					alert("<spring:message code='ezWebFolder.t172' />");
+					return;
+				} else if (adCount == 1) {
+					bSearch = true;
+					var strQuery = "<DATA><DEPTID>" + getNodeText(GetElementsByTagName(xmlDOM, "DATA3")[0]) + "</DEPTID><TOPID>Top</TOPID><PROP>displayName</PROP></DATA>";
+					xmlHttp_Depttree = null;
+					xmlHttp_Depttree = createXMLHttpRequest();
+					xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+					xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
+					xmlHttp_Depttree.send(strQuery);
+				} else {
+					if (!CrossYN()) {
+						var rgParams = new Array();
+						rgParams["addrBook"] = xmlDOM;
+						rgParams["deptid"]   = "";
+						var feature = GetShowModalPosition(600, 320);
+						window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + feature);
+						if (rgParams["deptid"] != "") {
+		 					bSearch = true;
+							xmlHttp_Depttree = null;
+							xmlHttp_Depttree = createXMLHttpRequest();
+							var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>displayName</PROP></DATA>";
+							xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+							xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
+							xmlHttp_Depttree.send(strQuery);
+						}
+					} else {
+						var rgParams = new Array();
+						rgParams["addrBook"] = xmlDOM;
+						rgParams["deptid"]   = "";
+						checkname2_cross_dialogArguments[0] = rgParams;
+						checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
+						var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(609, 352));
+						try { checkName2_Cross.focus(); } catch (e) {
+						}
+					}
+				}
+			}
+			
+			function cnsearch_click_Complete(RetValue) {
+				if (RetValue["deptid"] != "") {
+					bSearch = true;
+					xmlHttp_Depttree = null;
+					xmlHttp_Depttree = createXMLHttpRequest();
+					var strQuery = "<DATA><DEPTID>" + RetValue["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>displayName</PROP></DATA>";
+					xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+					xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
+					xmlHttp_Depttree.send(strQuery);
+				}
+			}
+			
+			function event_getDeptFullTree() {
+				if (xmlHttp_Depttree != null && xmlHttp_Depttree.readyState == 4) {
+					if (xmlHttp_Depttree.statusText == "OK") {
+						if (!bSearch) {
+							try {
+								window.dialogArguments["window"].opener.top.organview = getXmlString(xmlHttp_Depttree.responseXML);
+							} catch (e) { }
+						}
+						var treeXML = loadXMLFile("/xml/organtree_config.xml");
+						document.getElementById('TreeView').innerHTML = "";
+						var treeView = new TreeView();
+						treeView.SetConfig(treeXML);
+						treeView.SetID("FromTreeView");
+						treeView.SetUseAgency(true);
+						treeView.SetRequestData("RequestData");
+						treeView.SetNodeClick("TreeViewNodeClick");
+						treeView.DataSource(xmlHttp_Depttree.responseXML);
+						treeView.DataBind("TreeView");
+					} else {
+						alert("<spring:message code='ezWebFolder.t173' />" + xmlHttp_Depttree.statusText);
+					}
+					xmlHttp_Depttree = null;
+				}
+			}
+			
+			function SetRange() {
+				var selList = new ListView();
+				selList.LoadFromID("DListView");
+				var arrRows = selList.GetDataRows();
+				var selList2 = new ListView();
+				selList2.LoadFromID("MListView");
+				var arrRows2 = selList2.GetDataRows();
+				if (arrRows.length + arrRows2.length > 0) {      
+					//baonk added
+					var listOfTarget = ""; 
+					
+					for (var i = 0; i < arrRows.length; i++) {
+						var deptName = (primary == "1") ? arrRows[i].getAttribute("DISPLAYNAME1") : arrRows[i].getAttribute("DISPLAYNAME2");
+						listOfTarget += deptName + ","
+					}
+					
+					for (var j = 0; j < arrRows2.length; j++) {
+						var userName = (primary == "1") ? arrRows2[j].getAttribute("DATA4") : arrRows2[j].getAttribute("DATA5");
+						listOfTarget += userName + ",";
+					}
+					
+					listOfTarget = listOfTarget.slice(0, -2);
+					window.opener.updateTarget(listOfTarget);
+					
+					window.opener.updateParent("RangeXMLStr", MakeXml_Range(), "value");
+					window.opener.closeWindow();
+				} else {
+					window.opener.updateTarget("");
+					window.opener.updateParent("RangeXMLStr", "", "value");
+					window.opener.closeWindow();
+				}
+			}
+			
+			function HandleStateChange() {
+				if (xmlHttp.readyState != 4) {
+					return;
+				}
+				if (getXmlString(xmlHttp.responseXML) != "") {
+					xmlRtn = xmlHttp.responseXML;
+					if (SelectSingleNodeValueNew(xmlRtn, "RESULT/DATA") != "-1") {
+						window.returnValue = "";
+						window.close();
+						return true;
+					} else {
+						alert("<spring:message code='ezWebFolder.t174' />");
+						return false;
+					}
+				} else {
+					alert("<spring:message code='ezWebFolder.t174' />");
+					return false;
+				}
+			}
+			
+			function ReplaceText(orgStr, findStr, replaceStr) {
+				var re = new RegExp(findStr, "gi");
+				return (orgStr.replace(re, replaceStr));
+			}
+			
+			function MakeXMLString(str) {
+				str = ReplaceText(str, "&", "&amp;");
+				str = ReplaceText(str, "<", "&lt;");
+				str = ReplaceText(str, ">", "&gt;");
+				str = ReplaceText(str, "'", "&#039;");
+				return str;
+			}
+			
+			function MakeUNXMLString(str) {
+				str = ReplaceText(str, "&amp;", "&");
+				str = ReplaceText(str, "&lt;", "<");
+				str = ReplaceText(str, "&gt;", ">");
+				str = ReplaceText(str, "&#039;", "'");
+				return str;
+			}
+			
+			function ListViewNodeDblClick() {
+				add_member();
+			}
+			
+			function MakeXml_Range() {
+				var xmlDoc = createXmlDom();
+				var objNode;
+				var Rootnode = createNodeInsert(xmlDoc, objNode, "RANGE");
+				var DeptNode = createNodeAndAppandNode(xmlDoc, Rootnode, objNode, "DEPT");
+				var selList  = new ListView();
+				selList.LoadFromID("DListView");
+				var arrRows  = selList.GetDataRows();
+				var selList2 = new ListView();
+				selList2.LoadFromID("MListView");
+				var arrRows2 = selList2.GetDataRows();
+				
+				for (var i = 0; i < arrRows.length; i++) {
+					var CurrID  = arrRows[i].getAttribute("CN");
+					var CurrNM  = arrRows[i].getAttribute("DISPLAYNAME1");
+					var CurrNM2 = arrRows[i].getAttribute("DISPLAYNAME2");
+					var DeptNode_sub = createNodeAndAppandNodeText(xmlDoc, DeptNode, objNode, "DATA", CurrID);
+					SetAttribute(DeptNode_sub, "id", CurrID);
+					SetAttribute(DeptNode_sub, "nm", CurrNM);
+					SetAttribute(DeptNode_sub, "nm2", CurrNM2);
+				}
+				var UserNode = createNodeAndAppandNode(xmlDoc, Rootnode, objNode, "MEMBER");
+				
+				for (var j = 0; j < arrRows2.length; j++) {
+					var CurrID = arrRows2[j].getAttribute("DATA2");
+					var CurrNM = arrRows2[j].getAttribute("DATA4");
+					var CurrNM2 = arrRows2[j].getAttribute("DATA5");
+					var UserNode_sub = createNodeAndAppandNodeText(xmlDoc, UserNode, objNode, "DATA", CurrID);
+					SetAttribute(UserNode_sub, "id", CurrID);
+					SetAttribute(UserNode_sub, "nm", CurrNM);
+					SetAttribute(UserNode_sub, "nm2", CurrNM2);
+				}
+				return getXmlString(xmlDoc);
+			}
+			
+			function InitRangeData(InitData) {
+				var xmlDoc   = createXmlDom();
+				xmlDoc       = loadXMLString(InitData);
+				var DeptRows = SelectSingleNodeNew(xmlDoc, "RANGE/DEPT");
+				
+				if (DeptRows != null) {
+					var DeptLen = DeptRows.childNodes.length;
+					
+					for (var i = 0; i < DeptLen; i++) {
+						var CurrID  = MakeUNXMLString(GetAttribute(DeptRows.childNodes[i], "id"));
+						var CurrNM  = MakeUNXMLString(GetAttribute(DeptRows.childNodes[i], "nm"));
+						var CurrNM2 = MakeUNXMLString(GetAttribute(DeptRows.childNodes[i], "nm2"));
+						//lastindex = deptlist.length;
+						var pVaule = "";
+						
+						//userInfo 부분 추가
+						if (langData != "2") {
+							pVaule = CurrNM;
+						} else {
+							pVaule = CurrNM2;
+						}
+						
+						pparsingXML2 = "";
+						pparsingXML  = "";
+						pparsingXML2 = "<LISTVIEWDATA><ROWS>";
+						pparsingXML  = pparsingXML + "<ROW><CELL><CN><![CDATA[" + CurrID + "]]></CN>";
+						pparsingXML  = pparsingXML + "<DISPLAYNAME1><![CDATA[" + CurrNM + "]]></DISPLAYNAME1>";
+						pparsingXML  = pparsingXML + "<DISPLAYNAME2><![CDATA[" + CurrNM2 + "]]></DISPLAYNAME2>";
+						pparsingXML  = pparsingXML + "<VALUE><![CDATA[" + pVaule + "]]></VALUE></CELL></ROW>";
+						pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
+						Resultxml    = loadXMLString(pparsingXML2);
+						var listview = new ListView();
+						listview.LoadFromID("DListView");
+						
+						var MaxID     = 0;
+						var InitTr    = listview.GetDataRows();
+						var MaxCntNum = 0;
+						for (var j = 0  ; j < InitTr.length  ; j++) {
+							var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+							if (MaxID < curnum) {
+								MaxID     = curnum;
+								MaxCntNum = j;
+							}
+						}
+						var objTr = listview.AddRow(InitTr.length);
+						if (MaxCntNum != 0) {
+							MaxCntNum = MaxCntNum + 1;
+						}
+						SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+						listview.AddDataRow(objTr, Resultxml);
+						
+						document.getElementById("DeptListView").className = "receiver_list";
+						var _tdlength = document.getElementById("DeptListView").getElementsByTagName("TD").length;
+						for (var y = 0; y < _tdlength; y++) {
+							document.getElementById("DeptListView").getElementsByTagName("TD")[y].style.textOverflow = "";
+							document.getElementById("DeptListView").getElementsByTagName("TD")[y].style.overflow = "";
+						}
+					}
+				}
+				var UserRows = SelectSingleNodeNew(xmlDoc, "RANGE/MEMBER");
+			 	if (UserRows != null) {
+					var UserLen = UserRows.childNodes.length;
+					for (var i = 0; i < UserLen; i++) {
+						var CurrID  = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "id"));
+						var CurrNM  = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "nm"));
+						var CurrNM2 = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "nm2"));
+						//lastindex = memberlist.length;
+						var pVaule = "";
+						
+						if (langData != "2") {
+							pVaule = CurrNM;
+						} else {
+							pVaule = CurrNM2;
+						} 
+						
+						var _listview = new ListView();
+						_listview.LoadFromID("MListView");
+						pparsingXML2 = "";
+						pparsingXML  = "";
+						pparsingXML2 = "<LISTVIEWDATA><ROWS>";
+						pparsingXML  = pparsingXML + "<ROW><CELL><DATA2><![CDATA[" + CurrID + "]]></DATA2>";
+						pparsingXML  = pparsingXML + "<DATA4><![CDATA[" + CurrNM + "]]></DATA4>";
+						pparsingXML  = pparsingXML + "<DATA5><![CDATA[" + CurrNM2 + "]]></DATA5>";
+						pparsingXML  = pparsingXML + "<VALUE><![CDATA[" + pVaule + "]]></VALUE></CELL></ROW>";
+						pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
+						Resultxml    = loadXMLString(pparsingXML2);
+						var listview = new ListView();
+						listview.LoadFromID("MListView");
+						var MaxID = 0;
+						var InitTr = listview.GetDataRows();
+						var MaxCntNum = 0;
+						for (var j = 0  ; j < InitTr.length  ; j++) {
+							var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+							if (MaxID < curnum) {
+								MaxID     = curnum;
+								MaxCntNum = j;
+							}
+						}
+						
+						var objTr = listview.AddRow(InitTr.length);
+						if (MaxCntNum != 0) {
+							MaxCntNum = MaxCntNum + 1;
+						}
+						
+						SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+						listview.AddDataRow(objTr, Resultxml);
+						
+						document.getElementById("MemberListView").className = "receiver_list";
+						var _tdlength = document.getElementById("MemberListView").getElementsByTagName("TD").length;
+						for (var y = 0; y < _tdlength; y++) {
+							document.getElementById("MemberListView").getElementsByTagName("TD")[y].style.textOverflow = "";
+							document.getElementById("MemberListView").getElementsByTagName("TD")[y].style.overflow = "";
+						}
+					}
+				}
+			} */
+		</script>
+		<style>
+			.mainlist tr th {border-top:0px}
+		</style>
+	</head>
+	<body class="popup"> 
+		<xml id="listviewheader" style="display:none">
+			<LISTVIEWDATA>
+				<HEADERS>
+					<HEADER>
+						<NAME><spring:message code='ezWebFolder.t175' /></NAME>
+						<WIDTH>50</WIDTH>
+					</HEADER>
+				</HEADERS>
+			</LISTVIEWDATA>
+		</xml>
+		<xml id="listviewheader2" style="display:none">
+			<LISTVIEWDATA>
+				<HEADERS>
+				<HEADER>
+					<NAME><spring:message code='ezWebFolder.t175' /></NAME>
+					<WIDTH>50</WIDTH>
+				</HEADER>
+				<HEADER>
+					<NAME><spring:message code='ezWebFolder.t176' /></NAME>
+					<WIDTH>70</WIDTH>
+				</HEADER>
+				<HEADER>
+					<NAME><spring:message code='ezWebFolder.t142' /></NAME>
+					<WIDTH>60</WIDTH>
+				</HEADER>
+				</HEADERS>
+			</LISTVIEWDATA>
+		</xml>
+		<h1><spring:message code='ezWebFolder.t165' /></h1>
+		<table> 
+			<tr> 
+				<td width="195" valign="top">
+					<h2><spring:message code='ezWebFolder.t177' /></h2>
+					<div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:280px;HEIGHT:270px;BACKGROUND-COLOR:#ffffff;" id="TreeView" class="box"></div>
+				</td>
+				<td width="30" align="center" valign="middle"> 
+					<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_dept()" style="cursor:pointer"></div>
+					<div><img src="/images/arr_left.gif" width="16" height="16" vspace="3" onclick="delete_admin()" style="cursor:pointer"></div>
+				</td>
+				<td valign="top">
+					<h2><spring:message code='ezWebFolder.t178' /></h2>
+					<div class="listview" style="margin-bottom:5px">
+						<div id="DeptListView" style="OVERFLOW:auto;WIDTH:220px;HEIGHT:270px;border:0"></div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<h2><spring:message code='ezWebFolder.t179' /></h2>
+					<div class="listview" style="margin-top:5px;margin-bottom:5px">
+						<div id="OrganListView" style="OVERFLOW:auto;WIDTH:280px;HEIGHT:240px;border:0"></div>
+					</div>
+				</td> 
+				<td width="30" align="center" valign="middle"> 
+					<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_member()" style="cursor:pointer"></div>
+					<div><img src="/images/arr_left.gif" width="16" height="16" vspace="3" onclick="delete_member()" style="cursor:pointer"></div>
+				</td> 
+				<td valign="top">
+					<h2><spring:message code='ezWebFolder.t180' /></h2>
+					<div class="listview" style="margin-top:5px;margin-bottom:5px">
+						<div id="MemberListView" style="OVERFLOW:auto;WIDTH:220px;HEIGHT:240px;border:0"></div>
+					</div>
+				</td> 
+			</tr>
+			<tr>
+				<td>
+					<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="WIDTH:130px" />
+					<a class="imgbtn btnSearch" id="cnkeybtn" onclick="cnsearch_click()" ><span><spring:message code='ezWebFolder.t123' /></span></a>
+				</td>
+				<td></td>
+				<td>
+					<div class="btnposition" style="margin-top:0px;padding-top:0px">
+						<a class="imgbtn btnSave" name="Submit" onClick="SetRange()" ><span><spring:message code='ezWebFolder.t116' /></span></a>
+						<a class="imgbtn btnCancel" name="Submit2" onClick="close_onclick()" ><span><spring:message code='ezWebFolder.t112' /></span></a>
+					</div>
+				</td>
+			</tr>
+		</table> 
+	</body>
+</html>

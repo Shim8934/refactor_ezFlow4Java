@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderService")
@@ -284,57 +285,93 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 
 	@Override
 	public void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int mode) throws Exception {
-		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), primary, tenantId);
-		
-		if (listSubSimpleFolders.size() > 0) {
+		if (company.getHasSubFolder() == 1) {
+			List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), primary, tenantId);
 			company.setListSubFolders(listSubSimpleFolders);
-			company.setHasSubFolder(1);
 			
-			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
-				if (mode == 0) {
+			if (mode == 0) {
+				for (FolderSimpleVO subFolder: listSubSimpleFolders) {
 					getAllSubDepts(subFolder, primary, tenantId, mode);
 				}
-				else {
-					List<FolderSimpleVO> subSimpleDepts = getAllSimpleSubFolders(subFolder.getFolderId(), primary, tenantId);
-					if (subSimpleDepts.size() > 0) {
-						subFolder.setHasSubFolder(1);
-					}
-					else {
-						subFolder.setHasSubFolder(0);
-					}
-				}
 			}
-		}
-		else {
-			company.setHasSubFolder(0);
 		}
 	}
 
 	@Override
 	public void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, String[] fdPath, int order) throws Exception {
-		List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), primary, tenantId);
-		
-		if (listSubSimpleFolders.size() > 0) {
+		if (company.getHasSubFolder() == 1) {
+			List<FolderSimpleVO> listSubSimpleFolders = getAllSimpleSubFolders(company.getFolderId(), primary, tenantId);
 			company.setListSubFolders(listSubSimpleFolders);
-			company.setHasSubFolder(1);
 			
 			for (FolderSimpleVO subFolder: listSubSimpleFolders) {
-				List<FolderSimpleVO> subSimpleDepts = getAllSimpleSubFolders(subFolder.getFolderId(), primary, tenantId);
-				if (subSimpleDepts.size() > 0) {
-					subFolder.setHasSubFolder(1);
-					
-					if (order < fdPath.length && subFolder.getFolderId().equals(fdPath[order])) {
-						getAllSubDepts(subFolder, primary, tenantId, fdPath, order + 1);
-					}
+				if (order < fdPath.length && subFolder.getFolderId().equals(fdPath[order])) {
+					getAllSubDepts(subFolder, primary, tenantId, fdPath, order + 1);
 				}
-				else {
-					subFolder.setHasSubFolder(0);
-				}
-				
 			}
 		}
-		else {
-			company.setHasSubFolder(0);
+	}
+
+	private List<SimpleDeptVO> getAllSimpleDeptsOfCompany(String companyId, int level, String primary, int tenantId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId",  companyId);
+		map.put("primary",    primary);
+		map.put("level",      level);
+		map.put("tenantId",   tenantId);
+		
+		return ezWebFolderDAO.getAllSimpleDeptsOfCompany(map);
+	}
+
+	@Override
+	public SimpleDeptVO getAllDepts(String companyId, int level, String primary, int tenantId) throws Exception {
+		List<SimpleDeptVO> deptList = getAllSimpleDeptsOfCompany(companyId, level, primary, tenantId);
+		SimpleDeptVO dept           = deptList.get(0);
+		deptList.remove(0);
+		dept.setSubDepts(deptList);
+		
+		return dept;
+	}
+
+	@Override
+	public SimpleDeptVO getSimpleCompany(String deptId, int level, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("deptId",     deptId);
+		map.put("primary",    primary);
+		map.put("level",      level);
+		map.put("tenantId",   tenantId);
+		
+		return ezWebFolderDAO.getSimpleCompany(map);
+	}
+
+	@Override
+	public void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) throws Exception {
+		if (sDept.getHasSub().equals("1")) {
+			List<SimpleDeptVO> listSubSimpleDepts = getAllSimpleSubDepts(sDept.getDeptId(), level, primary, tenantId);
+			sDept.setSubDepts(listSubSimpleDepts);
+			
+			for (SimpleDeptVO subDept: listSubSimpleDepts) {
+				if (order < path.length && subDept.getDeptId().equals(path[order])) {
+					getAllDepts(subDept, path, primary, tenantId, order + 1, level + 1);
+				}
+			}
 		}
 	}
+
+	private List<SimpleDeptVO> getAllSimpleSubDepts(String deptId, int level, String primary, int tenantId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("deptId",     deptId);
+		map.put("primary",    primary);
+		map.put("level",      level);
+		map.put("tenantId",   tenantId);
+		
+		return ezWebFolderDAO.getAllSimpleSubDepts(map);
+	}
+
+	@Override
+	public String getDeptPath(String deptId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("deptId",     deptId);
+		map.put("tenantId",   tenantId);
+		return ezWebFolderDAO.getDeptPath(map);
+	}
+
 }

@@ -90,8 +90,16 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "ezWebFolder/fileFolderShare";
 	}
 
+	@RequestMapping(value="/ezWebFolder/getGivenShareList.do")
+	public String getGivenShareList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("primary", userInfo.getPrimary());
+		return "ezWebFolder/fileFolderGivenShare";
+	}
+
+	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezWebFolder/uploadFile.do")
+	@RequestMapping(value="/ezWebFolder/uploadFile.do")
 	@ResponseBody
 	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {
 		logger.debug("Upload file is running!");
@@ -103,7 +111,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String url                     = gwServerUrl + "/webfolder/filemanage/file-upload";
 		
 		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-		requestFactory.setBufferRequestBody(false);	
+		requestFactory.setBufferRequestBody(false);
 		
 		RestTemplate restTemplate         = new RestTemplate(requestFactory);
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -376,5 +384,93 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		return "json";
+	}
+	
+	@RequestMapping(value="/ezWebFolder/getDeptTree.do", method = RequestMethod.POST)
+	public String getDepartTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		LoginVO userInfo   = commonUtil.userInfo(loginCookie);
+		String companyId   = request.getParameter("companyId");
+		String deptId      = request.getParameter("deptId") != null ? request.getParameter("deptId") : "";
+		deptId             = deptId.equals("") ? userInfo.getDeptID() : deptId;
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/webfolder/depart-tree";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", userInfo.getTenantId())
+										.queryParam("primary", userInfo.getPrimary())
+										.queryParam("deptId", deptId)
+										.queryParam("companyId", companyId);
+		
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject deptTree   = (JSONObject) resultBody.get("data");
+			
+			if (deptId != null && !deptId.equals("")) {
+				model.addAttribute("currentDept", deptId);
+			}
+			model.addAttribute("deptTree", deptTree);
+		}
+		
+		return "json";
+	}
+	
+	@RequestMapping(value="/ezWebFolder/getSubTree.do", method = RequestMethod.POST)
+	public String getSubDepartTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		LoginVO userInfo   = commonUtil.userInfo(loginCookie);
+		String deptId      = request.getParameter("deptId");
+		String level       = request.getParameter("level");
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/webfolder/sub-tree/" + deptId;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", userInfo.getTenantId())
+										.queryParam("primary", userInfo.getPrimary())
+										.queryParam("level", level);
+		
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject deptTree   = (JSONObject) resultBody.get("data");
+			model.addAttribute("subTree", deptTree);
+		}
+		
+		return "json";
+	}
+
+	@RequestMapping(value="/ezWebFolder/shareUsersSelect.do")
+	public String selectShareUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+		logger.debug("select share users is running!");
+		
+		LoginVO userInfo        = commonUtil.userInfo(loginCookie);
+		String userInfoDeptCode = userInfo.getDeptID();
+		String pCompanyID       = userInfo.getCompanyID();
+		String langData         = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		
+		model.addAttribute("pCompanyID", pCompanyID);
+		model.addAttribute("userInfoDeptCode", userInfoDeptCode);
+		model.addAttribute("langData", langData);
+		model.addAttribute("primary", userInfo.getPrimary());
+		
+		logger.debug("select share users finishes!");
+		return "/ezWebFolder/shareUsersSelect";
 	}
 }

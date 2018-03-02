@@ -38,6 +38,8 @@ import org.springframework.web.multipart.MultipartFile;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
@@ -47,6 +49,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -59,6 +62,9 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
@@ -882,7 +888,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/folders", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	/*@RequestMapping(value="/webfolderadmin/folders", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyFolderList(HttpServletRequest request) {
 		int tenantId      = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
 		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset")                     : "";
@@ -916,7 +922,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		}
 		
 		return result;
-	}
+	}*/
 
 	@RequestMapping(value="/webfolderadmin/folders", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postCompanyFolderInsert(@RequestBody JSONObject jsonObject, HttpServletRequest request) throws ParseException {
@@ -1095,7 +1101,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		logger.debug("RootFolder: " + rootFolder + " || tenantId: " + tenantId + " || Offset: " + offset + " || Primary: " + primary);
 		
 		try {
-			FolderSimpleVO company  = ezWebFolderService.getSimpleFolder(rootFolder, primary, tenantId);
+			FolderSimpleVO company = ezWebFolderService.getSimpleFolder(rootFolder, primary, tenantId);
 			
 			if (fileId.equals("")) {
 				ezWebFolderService.getAllSubDepts(company, primary, tenantId, 2);
@@ -1125,6 +1131,83 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
+	@RequestMapping(value="/webfolder/depart-tree", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getDeptTree(HttpServletRequest request) {
+		int tenantId      = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
+		String companyId  = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
+		String deptId     = request.getParameter("deptId")   != null ? request.getParameter("deptId")                     : "";
+		String primary    = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
+		JSONObject result = new JSONObject();
+		
+		if (companyId.equals("") || primary.equals("") || tenantId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		logger.debug("CompanyId: " + companyId + " || tenantId: " + tenantId + " || Primary: " + primary);
+		
+		try {
+			SimpleDeptVO sCompany = null;
+			
+			if (deptId.equals("")) {
+				sCompany = ezWebFolderService.getAllDepts(companyId, 0, primary, tenantId);
+			}
+			else {
+				String deptPath  = ezWebFolderService.getDeptPath(deptId, tenantId);
+				String[] path    = deptPath.split(",");
+				sCompany         = ezWebFolderService.getSimpleCompany(companyId, 0, primary, tenantId);
+				
+				ezWebFolderService.getAllDepts(sCompany, path, primary, tenantId, 1, 1);
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", sCompany);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		return result;
+	}
+
+	@RequestMapping(value="/webfolder/sub-tree/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getSubTree(@PathVariable(value="deptid") String deptId, HttpServletRequest request) {
+		int tenantId      = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
+		int level         = request.getParameter("level")    != null ? Integer.parseInt(request.getParameter("level"))    : -1;
+		String primary    = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("deptId: " + deptId + " || level: " + level + " || tenantId: " + tenantId);
+		
+		if (deptId.equals("") || primary.equals("") || tenantId == -1 || level == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			SimpleDeptVO sDept = ezWebFolderService.getAllDepts(deptId, level, primary, tenantId);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", sDept);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		return result;
+	}
+	
 	@RequestMapping(value="/webfolderadmin/foldersTree", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyFolderTree(HttpServletRequest request) {
 		int tenantId      = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : -1;
