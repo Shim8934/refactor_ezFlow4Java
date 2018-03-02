@@ -5,34 +5,93 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
-<head>
+	<head>
 		<title><spring:message code="ezLadder.t009" /></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezLadder.i1' />" type="text/css">
 
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<!-- 	<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>	 -->			
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>			
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 			
 		<script type="text/javascript">
 			function newLad() {
 				window.location.href = '/ezLadder/selectLadderType.do';
 			}
-		</script>	
 	
+			function participant(){
+				var mode = $('#part').val();
+				// 일부 참여자 리스트
+				$.ajax({
+					type : "GET",
+					dataType : "json",
+					async : false,
+					url : "/ezLadder/viewLadderModeList.do",
+					data : {
+						mode : mode
+					},
+					success: function(data) {
+						viewList(data);
+					}
+				});
+			}
+			
+			function allPart(){
+				var mode = $('#all').val();
+				// 전체 참여자 리스트 (particpant&all 합쳐야 하는데 방법이 안떠오름...)
+				$.ajax({
+					type : "GET",
+					dataType : "json",
+					async : false,
+					url : "/ezLadder/viewLadderModeList.do",
+					data : {
+						mode : mode
+					},
+					success: function(data) {
+						viewList(data);
+					}
+				});
+			}
+			
+			function viewList(data){
+				var list="";
+					list += "<table class='mainlist' style='width:100%;margin-top:30px;'>" + 
+					    	"<tr><th width='30px'><spring:message code='ezLadder.t002'/></th>" + 					
+							"<th width='20px'><spring:message code='ezLadder.t003'/></th>" +
+							"<th width='60px'><spring:message code='ezLadder.t004'/></th>" +
+							"<th width='40px'><spring:message code='ezLadder.t005'/></th>" + 
+							"<th width='50px'><spring:message code='ezLadder.t006'/></th>" +
+							"<th width='50px'><spring:message code='ezLadder.t007'/></th>" +
+							"<th width='50px'><spring:message code='ezLadder.t008'/></th></tr>";
+				if (data.list.length > 0) {
+					$.each(data.list, function(key, value) {
+						list += "<tr class='white'>" +
+								"<td>" + value.type + "</td>" +
+								"<td>" + value.title + "</td>" +
+								"<td>" + value.writerName + "</td>" +
+								"<td>" + value.writeDate.substring(0,16) + "</td>" +
+								"<td>" + value.status + "</td>" +
+								"<td>" + value.secretFlag + "</td>" +
+								"<td>" + value.deleteFlag + "</td></tr>";
+					});
+				} else {
+					list += "<tr><td colspan='7' align='center' bgcolor='#FFFFFF'> <spring:message code='ezLadder.t010' /></td></tr>";
+				}
+				list+="</table>";
+				$("#divList").html(list);
+			}
+		</script>
 	</head>
 	<body class="mainbody" style="min-width: 750px;">
 		<h1><spring:message code="ezLadder.t001"/>
 			
 			<span style="float: right; font-weight:normal;color:black;">
 				<c:if test="${mode1 != 'wri'}">
-					<input name="searchCheck" id="radio1" type="radio" value="sub" checked style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t106"/></span>
-					<input name="searchCheck" id="radio2" type="radio" value="wri" style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t107"/></span>
+					<input name="searchCheck" id="radio1" type="radio" value="sub" checked style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezLadder.t003"/></span>
+					<input name="searchCheck" id="radio2" type="radio" value="wri" style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezLadder.t004"/></span>
 				</c:if>
 				<c:if test="${mode1 == 'wri'}">
-					<input name="searchCheck" id="radio1" type="radio" value="sub" style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t106"/></span>
-					<input name="searchCheck" id="radio2" type="radio" value="wri" checked style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezPoll.t107"/></span>
+					<input name="searchCheck" id="radio1" type="radio" value="sub" style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezLadder.t003"/></span>
+					<input name="searchCheck" id="radio2" type="radio" value="wri" checked style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezLadder.t004"/></span>
 				</c:if>
 					<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
 					<a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle;" ></a>
@@ -42,20 +101,14 @@
 			<ul>
 				<li id="btnInsert" onClick="newLad()"><a  style="margin-top: 3px;"><span><spring:message code="ezLadder.t013"/></span></a></li>
 				<li style="float:right; font-weight:normal; color:black; padding-right: 20px;">
-					<input id="btnRadio1" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle; padding-right: 20px;" onclick="selectCheck()" value="2" checked="checked" >
-					<label for="btnRadio1"><spring:message code='ezLadder.t011' /></label>					
+					<button id="part" onclick="participant()" value="part"><spring:message code="ezLadder.t012"/></button>
+					<button id="all" onclick="allPart()" value="all"><spring:message code="ezLadder.t011"/></button>
 				</li>
-				<li style="float:right; font-weight:normal; color:black;">
-					<input id="btnRadio2" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="1" >
-					<label for="btnRadio2"><spring:message code='ezLadder.t012' /></label>					
-				</li>
-			
 			</ul>
 		</div>
-
-			 
+		
 		<div class="div_scroll" style="width:100%; height:500px; overflow: auto" id="divList">
-			<table  class="mainlist" style="width:100%;margin-top:5px"> 
+			<table  class="mainlist" style="width:100%;margin-top:30px;"> 
 			    <tr> 
 					<th width="30px"><spring:message code="ezLadder.t002"/></th> 					
 					<th width="20px"><spring:message code="ezLadder.t003"/></th> 
@@ -67,7 +120,7 @@
 			    </tr>
 				 <c:forEach items="${list }" var="vo">
 					<tr class="white">
-						<td>${vo.ladderId }</td>
+						<td>${vo.type }</td>
 						<td>${vo.title }</td>
 						<td>${vo.writerName }</td>
 						<td>${vo.writeDate.substring(0,16) }</td>
@@ -83,9 +136,8 @@
 		       		</tr> 
 		        </c:if> 
 			</table> 
-			<div style="display:none">
-				<input type="text" name="hiddenSeeAll" id="hiddenSeeAll" value="" style="display:none">
-			</div>
+			
 		</div>
+		 
 	</body>
 </html>

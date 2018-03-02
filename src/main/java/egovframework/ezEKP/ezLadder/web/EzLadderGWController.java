@@ -70,6 +70,32 @@ public class EzLadderGWController {
 		return result;
 	}
 	
+	@RequestMapping(value = "/ladder/ladder-list/{mode}/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
+	public JSONObject gwViewLadderParticipant(@PathVariable String mode, @PathVariable String userId, HttpServletRequest request) {
+		logger.debug("web G/W LADDER [GET /ladder/ladder-list/participant/" + userId + "] started.");
+
+		JSONObject result = new JSONObject();
+	
+		try {
+			List<LadderVO> list;
+			if(mode.equals("part")){	// 일부 참여자 선택
+				list = ezLadderService.getPartLadderList(userId);
+			} else {					// 전체 참여자 선택
+				list = ezLadderService.getLadderList(userId);
+			}
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", list);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		logger.debug("web G/W LADDER [GET /ladder/ladder-list/participant/" + userId + "] ended.");
+		
+		return result;
+	}
+	
 	/** boh */
 	
 	/**

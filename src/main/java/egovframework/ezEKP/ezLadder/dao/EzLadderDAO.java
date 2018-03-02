@@ -25,4 +25,9 @@ public class EzLadderDAO extends EgovAbstractDAO {
 		insert("EzLadderDAO.insertLadderLine", vo);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<LadderVO> getPartLadderList(Map<String, Object> map) throws Exception {
+		return (List<LadderVO>) list("EzLadderDAO.getPartLadderList", map);
+	}
+
 }

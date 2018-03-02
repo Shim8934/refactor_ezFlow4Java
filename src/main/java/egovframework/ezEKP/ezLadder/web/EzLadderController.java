@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -102,7 +104,48 @@ public class EzLadderController {
 		return "ezLadder/ladderMain";
 	}
 	
+	/**
+	 * 사다리 게임 참여자 목록 버튼
+	 */
+	@RequestMapping(value = "/ezLadder/viewLadderModeList.do")
+	public String viewLadderParticipant(@RequestParam("mode") String mode, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+		
+		logger.debug("/ezLadder/viewLadderModeList.do started.");
+		logger.debug("participant : " + mode);
 	
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
+		String url = gwServerUrl + "/ladder/ladder-list/" + mode + "/" + userInfo.getId();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+
+		JSONParser jp = new JSONParser();
+		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
+		
+		JSONArray list = new JSONArray();
+		String status = jsonResult.get("status").toString();
+	
+		if (status.equals("ok")) {
+			list = (JSONArray) jsonResult.get("data");
+			model.addAttribute("list", list);
+		} else {
+			return "error";
+		}
+		
+		logger.debug("/ezLadder/viewLadderParticipant.do ended");
+
+		return "json";
+	}
 	/** boh */
 	
 	/**

@@ -89,14 +89,61 @@
 	
 	<select id="EzLadderDAO.getLadderList" resultClass="LadderVO">
 		<![CDATA[
-			SELECT TYPE, TITLE, WRITERNAME, WRITEDATE, STATUS, SECRETFLAG, DELETEFLAG
-			FROM TBL_LADDER
-			WHERE SECRETFLAG = 0 or LADDERID = ANY(
-										SELECT TBL_LADDER.LADDERID 
-                                        FROM TBL_LADDER 
-                                        JOIN TBL_LADDER_LINE ON TBL_LADDER.LADDERID = TBL_LADDER_LINE.LADDERID
-										WHERE TBL_LADDER_LINE.USERID = #userId#) 
-			ORDER BY LADDERID DESC;
+			SELECT 
+				A.TYPE, 
+				A.TITLE, 
+				A.WRITERNAME, 
+				A.WRITEDATE, 
+				A.STATUS, 
+				A.SECRETFLAG, 
+				A.DELETEFLAG
+			FROM 
+				TBL_LADDER A
+			WHERE 
+				A.SECRETFLAG = 0 or A.LADDERID = ANY(
+												SELECT 
+													B.LADDERID 
+                                        		FROM 
+                                        			TBL_LADDER B 
+                                        		JOIN 
+                                        			TBL_LADDER_LINE C
+                                        		ON 
+                                        			B.LADDERID = C.LADDERID
+												WHERE 
+													C.USERID = #userId#) 
+			ORDER BY 
+				A.LADDERID 
+			DESC;
+		]]>
+	</select>
+	
+	<select id="EzLadderDAO.getPartLadderList" resultClass="LadderVO">
+		<![CDATA[
+			SELECT 
+				A.TYPE, 
+				A.TITLE, 
+				A.WRITERNAME, 
+				A.WRITEDATE, 
+				A.STATUS, 
+				A.SECRETFLAG, 
+				A.DELETEFLAG
+			FROM 
+				TBL_LADDER A
+			WHERE 
+				A.LADDERID = ANY(
+								SELECT 
+									B.LADDERID 
+                                FROM 
+                                    TBL_LADDER B 
+                                JOIN 
+                                    TBL_LADDER_LINE C
+                                ON 
+                                    B.LADDERID = C.LADDERID
+								WHERE 
+									C.USERID = #userId#) 
+			ORDER BY 
+				A.LADDERID 
+			DESC;
 		]]>
 	</select>
 	
