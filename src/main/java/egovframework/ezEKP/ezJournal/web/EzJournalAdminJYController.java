@@ -64,7 +64,7 @@ public class EzJournalAdminJYController {
 		param.put("userId", userInfo.getId());
 		param.put("tenantId", userInfo.getTenantId());
 		
-		String restUrl = "/restezjournal/companies";
+		String restUrl = "/rest/ezjournal/companies";
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
@@ -84,7 +84,7 @@ public class EzJournalAdminJYController {
 		param.put("tenantId", userInfo.getTenantId());
 		param.put("used", "use");
 		
-		restUrl = "/restezjournal/types";
+		restUrl = "/rest/ezjournal/types";
 		result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		status = result.get("status").toString();
@@ -116,7 +116,7 @@ public class EzJournalAdminJYController {
 		param.put("companyId", companyId);
 		param.put("tenantId", tenantId);
 		
-		String restUrl = "/restezjournal/types/" + typeId + "/forms";
+		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms";
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
@@ -164,7 +164,7 @@ public class EzJournalAdminJYController {
 		param.put("tenantId", userInfo.getTenantId());
 		param.put("used", "use");
 		
-		String restUrl = "/restezjournal/types";
+		String restUrl = "/rest/ezjournal/types";
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
@@ -181,7 +181,7 @@ public class EzJournalAdminJYController {
 		
 		if (request.getParameter("formId") != null) {
 			String formId = request.getParameter("formId");
-			restUrl = "/restezjournal/types/" + typeId + "/forms/" + formId;
+			restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 			result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 			status = result.get("status").toString();
 			
@@ -205,7 +205,7 @@ public class EzJournalAdminJYController {
 		param.put("tenantId", userInfo.getTenantId());
 		param.put("companyId", companyId);
 		
-		result = commonUtil.getJsonFromRestApi("/restezjournal/depts", param, request, "get", null);
+		result = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request, "get", null);
 		status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -277,12 +277,12 @@ public class EzJournalAdminJYController {
 		if (formId != null && formId.trim() != "") {
 			
 			param.put("formId", formId);
-			restUrl = "/restezjournal/types/" + typeId + "/forms/" + formId;
+			restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "put", param);
 			status = result.get("status").toString();
 		} else {
 			
-			restUrl = "/restezjournal/types/" + typeId + "/forms";
+			restUrl = "/rest/ezjournal/types/" + typeId + "/forms";
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", param);
 			status = result.get("status").toString();
 		}
@@ -318,7 +318,7 @@ public class EzJournalAdminJYController {
 		param.put("companyId", companyId);
 		param.put("tenantId", tenantId);
 		
-		String restUrl = "/restezjournal/types/" + typeId + "/forms/" + formId;
+		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "delete", null);
 		

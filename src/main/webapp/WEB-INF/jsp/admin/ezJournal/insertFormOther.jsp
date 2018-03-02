@@ -62,26 +62,31 @@
 		    
 		    // 수정시 양식내용을 에디터에 넣어주는 작업 
 		    function Editor_Complete() {
+		    	var totalTD = message.CKEDITOR.instances.editor1.document.$.getElementsByTagName("TD");
 	            if (formId != "" && formId != null) {
 	            	console.log(selFormContent);
 	            	selFormContent = selFormContent.replace(/&#034;/g, "\"");
 			    	selFormContent = selFormContent.slice(1, -1);
-			    /* 	for (var i = 1; i < 4; i++) {
+			     	
+			    	var info_len = $("td[name=info]").length;
+			    	console.log(info_len);
+			    	for (var i = 0; i < info_len; i++) {
+			     		
 			    		var $selTD = $("#TD_" + i);
-			    		var selID = $selTD.attr("id");
-			    		console.log("selTD : " + selID);
-			    		if (selFormContent.indexOf(selID) > -1) {
-			    			$selTD.toggleClass("active");
-			    		}
-			    	} */
-			    	/* if (selFormContent.indexOf("journalDeptId") > -1) {
-			    		$("#TD_1").toggleClass("active");
+			    		var selID = $selTD.attr("value");
+			    	//	console.log("selTD : " + selID);
 			    		
-			    	} else if (selFormContent.indexOf("journalWriterId") > -1) {
-			    		$("#TD_2").toggleClass("active");
-			    	} else if (selFormContent.indexOf("journalWriteDateId") > -1) {
-			    		$("#TD_3").toggleClass("active");
-			    	} */
+			    		for (var i = 0; i < totalTD.length; i++) {
+				    		if (totalTD[i].id == selID) {
+				    			$selTD.toggleClass("active");
+		                    }
+				    	}
+			    	
+			    	/* 	console.log(message.CKEDITOR.instances.editor1.document.$.getElementById(selID));
+			    		if (message.CKEDITOR.instances.editor1.document.$.getElementById(selID) != null) {
+			    			$selTD.toggleClass("active");
+			    		} */
+			     	}	
 		        	message.SetEditorContent(selFormContent);
                 }
 		    }
@@ -119,7 +124,7 @@
 			    		message.SetEditorContent(content);
 			    	}
 			    	*/
-			    	message.setFormInfo(info);
+			    	setFormInfo(info);
 			    	$(elem).toggleClass("active");
 		    	} else {
 					if (useEditor == "HWP") {
@@ -136,6 +141,28 @@
 		    	//$(".infoTbl tr").removeClass("active");
 				//$(val).addClass("active");
 		    	
+		    }
+		    
+		 // 업무일지용 문서정보 변경부분
+		    function setFormInfo(info) {
+		    	var totalTD = message.CKEDITOR.instances.editor1.document.$.getElementsByTagName("TD");
+		    	
+		    	for (var i = 0; i < totalTD.length; i++) {
+		    		if (totalTD[i].id != null) {
+		    			if (totalTD[i].getAttribute("id") == info) {
+		    				var $totalTD = $(totalTD[i]);
+		    				$totalTD.removeAttr("id");
+		    				
+		    				if ($totalTD.hasClass("FIELD")) {
+		    					$totalTD.removeClass("FIELD");
+		    				}
+		    				
+		    				if ($totalTD.is("[style]")) {
+		    					$totalTD.removeAttr("style");
+		    				}
+                        }
+                    }
+		    	}
 		    }
 		    
 		    // 부서리스트 그려주는 부분
@@ -389,9 +416,9 @@
                         	<table width="100%" cellpadding="0" cellspacing="0" class="infoTbl">
                         		<tbody>
                         			<tr><th><spring:message code='ezJournal.t32'/></th></tr>
-                        			<tr><td id="TD_1" value="journalDeptId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t33'/></span></td></tr>
-                        			<tr><td id="TD_2" value="journalWriterId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t34'/></span></td></tr>
-                        			<tr><td id="TD_3" value="journalWriteDate" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t35'/></span></td></tr>
+                        			<tr><td name="info" id="TD_0" value="journalDeptId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t33'/></span></td></tr>
+                        			<tr><td name="info" id="TD_1" value="journalWriterId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t34'/></span></td></tr>
+                        			<tr><td name="info" id="TD_2" value="journalWriteDate" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t35'/></span></td></tr>
                         		</tbody>
                         	</table>
                         </td>

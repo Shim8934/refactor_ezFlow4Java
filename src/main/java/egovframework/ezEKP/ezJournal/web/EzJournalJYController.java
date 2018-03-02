@@ -74,7 +74,7 @@ public class EzJournalJYController {
 		param.put("tenantId", userInfo.getTenantId());
 		param.put("used", "use");
 		
-		String restUrl = "/restezjournal/types";
+		String restUrl = "/rest/ezjournal/types";
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
@@ -118,7 +118,7 @@ public class EzJournalJYController {
 		param.put("tenantId", tenantId);
 		param.put("deptId", deptId);
 		
-		String restUrl = "/restezjournal/types/" + typeId + "/forms";
+		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms";
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 	
@@ -148,7 +148,7 @@ public class EzJournalJYController {
 		param.put("tenantId", userInfo.getTenantId());
 		param.put("companyId", userInfo.getCompanyID());
 		
-		JSONObject result = commonUtil.getJsonFromRestApi("/restezjournal/depts", param, request, "get", null);
+		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request, "get", null);
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -221,10 +221,10 @@ public class EzJournalJYController {
 		JSONObject result = new JSONObject();
 		
 		if (type.trim().equals("mod")) {
-			restUrl = "/restezjournal/users/" + userId + "/favorites/" + favoriteId;
+			restUrl = "/rest/ezjournal/users/" + userId + "/favorites/" + favoriteId;
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "put", param);
 		} else {
-			restUrl = "/restezjournal/users/" + userId + "/favorites";
+			restUrl = "/rest/ezjournal/users/" + userId + "/favorites";
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", param);
 		}
 		
@@ -254,7 +254,7 @@ public class EzJournalJYController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", userInfo.getTenantId());
 		
-		String restUrl = "/restezjournal/users/" + userId + "/favorites";
+		String restUrl = "/rest/ezjournal/users/" + userId + "/favorites";
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
@@ -287,7 +287,7 @@ public class EzJournalJYController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", userInfo.getTenantId());
 		
-		String restUrl = "/restezjournal/users/" + userId + "/favorites/" + favoriteId + "/users";
+		String restUrl = "/rest/ezjournal/users/" + userId + "/favorites/" + favoriteId + "/users";
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
@@ -320,7 +320,7 @@ public class EzJournalJYController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", userInfo.getTenantId());
 		
-		String restUrl = "/restezjournal/users/" + userId + "/favorites/" + favoriteId + "/users";
+		String restUrl = "/rest/ezjournal/users/" + userId + "/favorites/" + favoriteId + "/users";
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
@@ -353,7 +353,7 @@ public class EzJournalJYController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", userInfo.getTenantId());
 		
-		String restUrl = "/restezjournal/users/" + userId + "/favorites/" + favoriteId;
+		String restUrl = "/rest/ezjournal/users/" + userId + "/favorites/" + favoriteId;
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "delete", null);
 		
 		String status = result.get("status").toString();
@@ -382,7 +382,7 @@ public class EzJournalJYController {
 		param.put("tenantId", userInfo.getTenantId());
 		param.put("companyId", userInfo.getCompanyID());
 		
-		String restUrl = "/restezjournal/types/" + typeId + "/forms/" + formId;
+		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
@@ -419,7 +419,7 @@ public class EzJournalJYController {
 //		param.put("userId", userInfo.getId());
 		param.put("userId", "sbpark14");
 		
-		String restUrl = "/restezjournal/types/" + typeId + "/forms/" + formId;
+		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
