@@ -2554,12 +2554,12 @@
 								<c:choose>
 									<c:when test="${question.resultFirst == 1}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" >
+											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t255'/>" >
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg" >
+											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t256'/>" >
 										</li>
 									</c:otherwise>
 								</c:choose>
@@ -2571,12 +2571,12 @@
 								<c:choose>
 									<c:when test="${question.multiSelect >= 0}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" >
+											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t257'/>" >
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" >
+											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t257'/>" >
 										</li>
 									</c:otherwise>
 								</c:choose>
