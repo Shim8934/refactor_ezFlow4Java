@@ -2761,7 +2761,7 @@
 			               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left; display:block; heigth:20px; margin:4px 0px 10px 0px;">
 			               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20"></canvas>			               					               					
 			               				</div>	
-			               				<div id="voterNumber<c:out value ="${_option.ansId}" />" style="float:left; display:block; font-size:16px; margin:-4px 10px 0px 10px;">0</div>		               				
+			               				<div id="voterNumber<c:out value ="${_option.ansId}" />" class="voterNumber" >0</div>		               				
 			               				<script type="text/javascript">
 			               					var loopIdx = ${loop.index};
 			               					userNameArr[loopIdx] = [];
@@ -2799,7 +2799,7 @@
 			               		</div>          		
 			               </td>		               
 				          <td style="width:80px; border:1px solid #DDD; border-left:none;">	   	               		
-				               	<div id="_resultPercentage<c:out value ="${_option.ansId}"/>" style="padding-bottom: 3px;padding-left: 20px;"></div>           		
+				               	<div id="_resultPercentage<c:out value ="${_option.ansId}"/>" class="_resultPercentage" ></div>           		
 				          </td>		               
 			            </tr>
 					</c:forEach>
