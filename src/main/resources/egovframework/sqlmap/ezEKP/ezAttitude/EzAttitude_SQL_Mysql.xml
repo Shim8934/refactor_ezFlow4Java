@@ -4,7 +4,4 @@
 <sqlMap namespace="ezAttitude">
 	<typeAlias alias="" type=""/>
 	
-	<select id="" parameterClass="" resultMap="">
-	
-	</select>
 </sqlMap>
