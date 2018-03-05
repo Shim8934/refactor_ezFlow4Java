@@ -460,6 +460,11 @@
 				});
 			}
 			
+			function manageClose() {
+				window.opener.detailView();
+				window.close();
+			}
+			
 			/* 2016-12-28 이효민 : 사용하지 않음 
 			function gettopvalue(currentnode, attrname) {
 				if (currentnode == null) return null;
@@ -504,7 +509,7 @@
 		<h1 style="margin-bottom:0px;"><spring:message code='ezEmail.t481' /></h1>
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+		    <li><span onClick="manageClose()"><spring:message code='ezEmail.t63' /></span></li>
 		  </ul>
 		</div>
 		<div style="margin-bottom:5px;">

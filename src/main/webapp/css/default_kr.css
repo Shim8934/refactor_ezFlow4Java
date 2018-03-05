@@ -17,6 +17,8 @@ p, strong, h3 {
 input {
     box-sizing:border-box;
     -moz-box-sizing:border-box;
+	height:24px;
+	border:1px solid #dedede;
 }
 a{	
 	font-family: 'Gulim', 'arial', 'verdana';
@@ -45,7 +47,7 @@ select::-ms-expand {
 
 textarea {
 	padding: 5px;
-	border: 1px solid #b6b6b6;
+	border: 1px solid #dedede;
 	width:100%;
 }
 table, th, td {
@@ -61,7 +63,7 @@ th{
 	word-wrap: normal;
 	color: #777;
 	background-color:#f8f8f8;
-	border:1px solid #b6b6b6;
+	border:1px solid #d2d2d2;
 	padding:2px 10px;
 }
 
@@ -185,7 +187,7 @@ form{display:inline;margin:0}
 	background:url('/images/kr/left/bg_left.gif') repeat-y right;
 	background-color: #f8f8f8; 
 	background-repeat:repeat-y;
-	border: solid #8c8c8c;
+	border: solid #d2d5d8;
 	border-width: 0px 1px 0px 0px;
 	}
 .leftbody ul{background-color:#ffffff;list-style-type:none;padding:0;margin:0; width:100%;}
@@ -210,8 +212,8 @@ form{display:inline;margin:0}
 #left h2, #TopBoards h2{
 	margin: -1px 0px 0px 0px;
 	padding:0 0 0 19px;
-	border-top:1px solid #cfcfcf;
-	border-bottom: 1px solid #cfcfcf;
+	border-top:1px solid #dedede;
+	border-bottom: 1px solid #dedede;
 	cursor: pointer;
 	background: url('/images/kr/left/01_minus.gif') no-repeat right 13px;
 	height:33px;
@@ -224,10 +226,10 @@ form{display:inline;margin:0}
 #left h2.on, #TopBoards h2.on{
 	font-weight: bold;
 	background: url('/images/kr/left/01_plus.gif') no-repeat right 13px;
-	background-color:#eaeaea;
+	background-color:#edf4fd;
 	color:#333333;
-	border-top:1px solid #ccc;
-	border-bottom:1px solid #ccc;
+	border-top:1px solid #d1ddec;
+	border-bottom:1px solid #d1ddec;
 }
 
 #left h3 {
@@ -490,20 +492,19 @@ form{display:inline;margin:0}
 	display: block;
 	float:left;
 	margin:0 2px 0 0px;
-	background:url(/images/kr/cm/btn_popup_offleft.gif) no-repeat top left;
 	height:28px;
-	padding:0px 0px 0px 8px;
+	padding:0px 0px 0px 0px;
 	vertical-align:top;
 	cursor:pointer;
 	vertical-align:middle
 }
-#menu span, #close span {display:inline-block;background:url(/images/kr/cm/btn_popup_offright.gif) no-repeat top right; height:28px;padding:0px 8px 0px 0px; line-height:28px;font-size:12px;color:#fff;}
-#menu ul li.on, #close ul li.on { background:url(/images/kr/cm/btn_popup_onleft.gif) no-repeat top left;color:#666;}
-#menu li.on span, #close ul li.on span { background:url(/images/kr/cm/btn_popup_onright.gif) no-repeat top right;color:#666;}	
+#menu span, #close span {display:inline-block; background:#004896; border:1px solid #708cac; height:28px;padding:0px 8px 0px 8px; border-radius:3px; box-shadow:0px 1px 0px 0px rgba(0, 0, 0, 0.1); line-height:28px;font-size:12px;color:#fff;}
+#menu ul li.on, #close ul li.on { color:#666;}
+#menu li.on span, #close ul li.on span { color:#004896; background:#fff; border:1px solid #004896;}	
 
 
 #menu ul li.off, #close ul li.off{
- background:url(/images/kr/cm/btn_popup_offleft.gif) no-repeat top left;
+
 }
 
 #menu ul li img {vertical-align:middle;}
@@ -579,19 +580,20 @@ form{display:inline;margin:0}
 .content th, .popuplist th{
     text-align:left;
 	height:23px;
+	font-weight:normal;
     
 }
 .content{border:1px solid #b6b6b6;margin:0;}
 .content td, .file td, .file2 td, .popuplist td {
 	padding:0px 2px 0px 2px;
 	background: #FFF;
-	border:1px solid #b6b6b6;
+	border:1px solid #d2d2d2;
 	height:29px;
 	word-break:break-all;
 	
 }
 
-.content input {vertical-align:middle;}
+.content input {vertical-align:middle; border:1px solid #dedede; height:24px;}
 .content td, .file td, .file2 td{
 	width: 100%;
 }
@@ -602,12 +604,13 @@ form{display:inline;margin:0}
 .content2 th{
     text-align:left;
 	height:23px;
+	font-weight:normal;
 }
 .content2{border:1px solid #b6b6b6;margin:0;}
 .content2 td{
 	padding:0 2px;
 	background: #FFF;
-	border:1px solid #b6b6b6;
+	border:1px solid #d2d2d2;
 	height:23px;
 	vertical-align:middle;
 	word-break:break-all;
@@ -1268,6 +1271,7 @@ form{display:inline;margin:0}
 	padding:0px 0px 0px 15px;
 	line-height:35px;
 	overflow:hidden;
+	background:#147def;
 }
 .popup_noti_title .tl {
 	 position:absolute ; 
@@ -1290,6 +1294,7 @@ form{display:inline;margin:0}
 .popup_noti_content {
 	/* background:url(/images/kr/cm/popup_noti_bgm.gif) repeat-y; */
 	padding:10px 0px 0px 0px;
+	background:#147def;
 	border:0px;
 	font-size:12px;
 	color:#666;
@@ -1297,7 +1302,7 @@ form{display:inline;margin:0}
 	overflow:hidden;
 	text-align:center;
 }
-.popup_noti_content table {table-layout:fixed; border:0px; width:100%; height:70px;}
+.popup_noti_content table {table-layout:fixed; border:0px; width:100%; height:70px; color:#fff; text-shadow:1px 1px 0px #0862c3;}
 .popup_noti_content table .cimg { 
 	/* vertical-align:middle;	
 	background:url(/images/kr/cm/alert.png) no-repeat left top;
@@ -1316,21 +1321,39 @@ form{display:inline;margin:0}
 	word-break:break-all;
 	height:90px;
 	line-height:17px;
-	padding-top:5px;
+	padding-top:31px;
+	background:url(/images/ImgIcon/icon_notification01.png) no-repeat top;
 }
 
 .popup_noti_btnarea .btnposition {
 	margin:0px;
 }
 
+.popup_noti_btnarea .btn, .btnposition input{
+	width:auto;
+	word-break:keep-all;
+	white-space:nowrap;
+	padding: 3px 10px 0px 10px;
+	height: 30px;
+	background-color:white;
+	border:1px solid #bbbbbb;
+	border-radius: 3px;
+	font-family:'gulim','arial';
+	cursor:pointer;
+	color:#000;
+	font-weight:bold;
+}
+
+.popup_noti_btnarea .btn, .btnposition input:hover{ color:#7a7a7a;}
+
 .popup_noti_btnarea {
 	position:relative; 
 /* 	background:url(/images/kr/cm/popup_noti_bgbc.gif) repeat-x bottom; */
-	background-color: #f2f2f2;
+	background-color: #fff;
 	color:#fff;
 	font-size:12px;
 	font-weight:bold;
-	padding:16px 0px 0px 0px;
+	padding:10px 0px 0px 0px;
 	height:46px;
 	margin:0px;
 	border-radius: 4px;
@@ -1726,7 +1749,7 @@ form{display:inline;margin:0}
 
 
 .address_wordmenu {margin:0px 0px 10px 0px; min-height:25px; padding:5px 0px 10px 0px; list-style:none; border-top:1px dotted #aaa; border-bottom:1px dotted #aaa;}
-.address_wordmenu li {height:22px; line-height:22px; width:18px; padding:0px 0px 0px 4px; display:inline-block; cursor:pointer;text-align:center;border:1px solid #333;border-radius:2px;margin-top:5px;}
+.address_wordmenu li {height:22px; line-height:22px; width:18px; padding:0px 0px 0px 3px; display:inline-block; cursor:pointer;text-align:center;border:1px solid #dedede;border-radius:2px;margin-top:5px;}
 .address_wordmenu li span { display:block; height:22px; padding:0px 4px 0px 0px;color:#333;}
 .address_boxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_boxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>TopMenu</title>
@@ -1186,6 +1186,8 @@
 			        menuName = obj.name;
 			        subPath = "";
 			    }
+			    
+			    parent.document.getElementById("topFrame").style.position = "relative";
 			}
 	
 			function img_onMouseOut(obj){
@@ -1207,6 +1209,8 @@
 			    
 			    if (clickmenusub != "")
 			        document.getElementById(clickmenusub).style.display = "";
+			    
+			    parent.document.getElementById("topFrame").style.position = "";
 			}
 	
 			function submenuover(subObj) {
@@ -1406,7 +1410,7 @@
 			var clickmenuName = "";
 			
 			function OpenWindow(evt, url, location, option) {
-				if (option != "") {
+				/* if (option != "") {
 	    			var width = 0, height = 0;
 	    			var leftPosition = "", topPosition = "";
 	    			var opt = option.split(',');
@@ -1444,8 +1448,7 @@
 	 		        	clickmenusub = targetName;
 	 		        	var tName = targetName.replace("menu_", "");
 	 		        	
-	 		            if (menuName != clickmenuName) {
-	 		                /* clickmenuPath = oldPath; */
+	 		            if (menuName != clickmenuName) {	 		                
 	 		                if (clickmenuPath != "") {
 	 		                	if (tName == clickmenuName) {
 									clickmenuPath = clickmenuPath;
@@ -1458,12 +1461,12 @@
 	 		                clickmenuName = targetName.split("menu_")[1];
 	 		            }
 	 		        }
-				}
+				} */
 				window.open(url, location, option);
 			}
 			
 			function OpenWindow2(targetid, url, location, option) {
-				if (option != "") {
+				/* if (option != "") {
 	    			var width = 0, height = 0;
 	    			var leftPosition = "", topPosition = "";
 	    			var opt = option.split(',');
@@ -1490,7 +1493,7 @@
             			clickmenuPath = oldPath;
             			clickmenuName = menuName;
         			}
-    			}
+    			} */
 				window.open(url, location, option);
 			}
 		    
@@ -1507,57 +1510,57 @@
 	        function topMenuToggle(menu) {
 	        	switch (menu) {
 		        	case "NewMail" : 
-		        		img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+		        		//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
 						break;						
 					case "ApprG" : 	
 						// 문서Type 선택 1=결재할문서 2=기안할문서  3=결재진행문서  4=수신문서처리(접수기)
 						var listType;
 						listType = 1;
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu04o(1).gif', document.getElementById("top_menu04(1)"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu04o(1).gif', document.getElementById("top_menu04(1)"));
 						OpenWindow2('top_menu04(1)', "/ezApprovalG/apprGMain.do?listType=" + listType, "main", " ");
 						break;
 					case "Appr" : 		
 						var listType;
 						listType = 1;
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu04o(1).gif', document.getElementById("top_menu04(1)"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu04o(1).gif', document.getElementById("top_menu04(1)"));
 		        		OpenWindow2('top_menu04(1)', "/ezApprovalG/apprMain.do?listType=" + listType, "main", " ");	
 						break;
 					// 표준모듈 (2007.03.23) 수정 : 메모보고 
 					case "Memo" : 					
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
 						break;
 						
 					case "Schedule" :
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu03o(8).gif', document.getElementById("top_menu03(4)"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu03o(8).gif', document.getElementById("top_menu03(4)"));
 		        		OpenWindow2('top_menu03(4)', "/ezSchedule/scheduleIndex.do?funCode=2", "main", " ");
 						break;
 						
 					case "Poll" :
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', document.getElementById("top_menu05"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', document.getElementById("top_menu05"));
 		        		OpenWindow2('top_menu05', "/ezBoard/boardMain.do?func=1", "main", " ");
 						break;
 						
 					case "pollnum" : 
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', document.getElementById("top_menu05"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', document.getElementById("top_menu05"));
 						OpenWindow2('top_menu05', "/ezBoard/boardMain.do?func=1", "main", " ");
 						break;
 					
 					case "Env" :
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
 						break;
 					case "My_Board" :
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
 						break;
 					case "Address" : 
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
 						break;
 				    case "ModInfo":
-				    	img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+				    	//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
 				        break; 
 	        	}

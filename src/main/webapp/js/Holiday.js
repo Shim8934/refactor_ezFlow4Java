@@ -22,22 +22,34 @@ var memorialDays = Array(
 
 function select_memorialDays(val01){
 	if (val01 != "3") {
-		var memorialDays_korea = Array(
-	        new memorialDay("신정", "New Year's Day", 1, 1, 1, true),        
-	        new memorialDay("설날", "Lunar New Year", 1, 1, 2, true),        
-	        new memorialDay("3·1절", "Samiljeol", 3, 1, 1, true),
-	        new memorialDay("석가탄신일", "Buddha's Birthday", 4, 8, 2, true),
-	        new memorialDay("어린이날", "Children's Day", 5, 5, 1, true),
-	        new memorialDay("현충일", "Memorial Day", 6, 6, 1, true),
-	        new memorialDay("광복절", "National Liberation Day", 8, 15, 1, true),        
-	        new memorialDay("추석", "Thanksgiving Day", 8, 15, 2, true),        
-	        new memorialDay("개천절", "Foundation Day", 10, 3, 1, true),
-	        new memorialDay("성탄절", "Christmas", 12, 25, 1, true),
-	        new memorialDay("한글날", "Hangul Proclamation Day", 10, 9, 1, true)
-		);
-		memorialDays = memorialDays_korea;		
+		if (val01 == "5") {
+			var memorialDays_indonesia = Array (
+		        
+			);
+			memorialDays = memorialDays_indonesia;
+		} else {		
+			var memorialDays_korea = Array (
+		        new memorialDay("신정", "New Year's Day", 1, 1, 1, true),
+		        new memorialDay("", "", 0, 0, 0, false),
+		        new memorialDay("", "", 12, 30, 2, true),
+		        new memorialDay("설날", "Lunar New Year", 1, 1, 2, true),
+		        new memorialDay("", "", 1, 2, 2, true),
+		        new memorialDay("3·1절", "Samiljeol", 3, 1, 1, true),	        
+		        new memorialDay("석가탄신일", "Buddha's Birthday", 4, 8, 2, true),
+		        new memorialDay("어린이날", "Children's Day", 5, 5, 1, true),
+		        new memorialDay("현충일", "Memorial Day", 6, 6, 1, true),
+		        new memorialDay("광복절", "National Liberation Day", 8, 15, 1, true),
+		        new memorialDay("", "", 8, 14, 2, true),
+		        new memorialDay("추석", "Thanksgiving Day", 8, 15, 2, true),
+		        new memorialDay("", "", 8, 16, 2, true),
+		        new memorialDay("개천절", "Foundation Day", 10, 3, 1, true),
+		        new memorialDay("성탄절", "Christmas", 12, 25, 1, true),
+		        new memorialDay("한글날", "Hangul Proclamation Day", 10, 9, 1, true)
+			);
+			memorialDays = memorialDays_korea;
+		}
 	} else {
-		var memorialDays_japan = Array(
+		var memorialDays_japan = Array (
 	        new memorialDay("元旦", "元旦", 1, 1, 1, true),        
 	        new memorialDay("元旦", "元旦", 1, 1, 2, true),        
 	        new memorialDay("建国記念の日", "建国記念の日", 2, 11, 1, true),

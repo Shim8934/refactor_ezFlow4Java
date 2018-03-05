@@ -166,7 +166,7 @@
                 	document.getElementById("photoul").appendChild(end_li);
             	} else {
                 	var nodata = "<div class='nodata_portlet '>";
-                	nodata += "<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>";
+                	nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
                 	nodata += "<p>" + strLang1 + "</p></div>";
 
 	                document.getElementById("photoul").innerHTML = nodata;
@@ -423,7 +423,7 @@
         	<div class="birthcont" id="nodata" style="display: none;">
             	<div class="nodata_portlet">
 	                <p>
-    	                <img src="/images/kr/main/nodata_white.gif" width="107" height="70" />
+    	                <img width='92' height='84' src='/images/kr/main/nodata_plan.png' />
         	        </p>
             	    <p>
                 	   <spring:message code='main.t00026'/>
