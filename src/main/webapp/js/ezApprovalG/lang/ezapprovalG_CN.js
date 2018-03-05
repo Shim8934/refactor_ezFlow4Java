@@ -61,6 +61,7 @@ var strLang107 = "분류"
 // DraftUI\draft.js
 var strLang124 = "批准状态"
 var strLang125 = "批准状态"
+var strLang126 = "일반"
 var strLang128 = "기"
 var strLang131 = "오류가 발생하였습니다. "
 var strLang132 = "문서를 다시 선택하여 주십시요!"

@@ -996,18 +996,20 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             	 }
             }
             openwindow(openLocation, "receive", 880, 550);
-        }
-        else {
+        } else {
             var pURL = GetAttribute(pCurSelRow, "DATA3");
             var pDocID = GetAttribute(pCurSelRow, "DATA1");
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-                alert(strLang1103);
-                return;
-            }
-            else {
+            	if (/chrome/i.test(navigator.userAgent)) {
+            		alert(strLang1103);
+            		return;
+            	} else {
+            		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
+            	}
+            } else {
                 openLocation = "/ezApprovalG/recev.do";
-                openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
             }
+            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
             openwindow(openLocation, "receive", 880, 550);
         }
     } else {

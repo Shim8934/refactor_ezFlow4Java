@@ -273,6 +273,9 @@ function getDocInfo() {
 function getReceiveDocInfo() {
     try {
     	var result = "";
+    	var pdocXML;
+    	var xmlpara;
+    	var xmlString;
     	
         $.ajax({
     		type : "POST",

@@ -1186,47 +1186,56 @@ function setButtonReceiveTrue()
 	SetBtnStateFalse();
 }
 
-function setHeSongDocInfo()
-{
-  try{
-	var xmlpara = createXmlDom();
-	var xmlhttp = createXMLHttpRequest();
-	
+function setHeSongDocInfo() {
+	  try {
+	    	var result = "";
+	        var docState = "";
+	        
+	    	if (pAprState == strAprState15) {
+	    		docState = "REACK";
+	    	} else {
+	    		docState = "RECEIVE";
+	    	}
+	    	
+	        $.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : false,
+	    		url : "/ezApprovalG/setHeSongDocInfo.do",
+	    		data : {
+	    			docID : pDocID,
+	    			receiveSN : pSusinSN,
+	    			deptID  : arr_userinfo[4],
+	    			docState : docState,
+	    			userID : pUserID,
+	    			userName : arr_userinfo[11],
+	    			userName2 : arr_userinfo[12]
+	    		},
+	    		success: function(xml){
+	    			result = loadXMLString(xml);
+	    		}, error: function() {
+	    			var pAlertContent = strLang740;
+	                OpenAlertUI(pAlertContent);
+	                return false;
+	    		}			
+	    	});
 
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "ASSIGN");
-	createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-	createNodeAndInsertText(xmlpara, objNode, "ReceiveSN", pSusinSN);
-	createNodeAndInsertText(xmlpara, objNode, "DeptID", arr_userinfo[4]);
-	if (pAprState == "015")
-	    createNodeAndInsertText(xmlpara, objNode, "DocSate", "REBACK");
-	else
-	    createNodeAndInsertText(xmlpara, objNode, "DocSate", "RECEIVE");
+	        var RtnVal = getNodeText(result.documentElement);
 
-	createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-	createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[2]);
-	createNodeAndInsertText(xmlpara, objNode, "pUserName2", arr_userinfo[12]);
-
-	
-	xmlhttp.open("POST", "/myoffice/ezApprovalG/ezAPRRECEIVE/aspx/setHeSongDocInfo.aspx", false);
-	xmlhttp.send(xmlpara);
-
-	if(getNodeText(loadXMLString(xmlhttp.responseText)) != "TRUE")
-	{
-		var pAlertContent = strLang740;
-		OpenAlertUI(pAlertContent);
-		return false;
+	        if (RtnVal == "TRUE") {
+	        	   var pAlertContent = strLang741;
+	               OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+	               return true;
+	        }
+	    }
+	    catch (e) {
+	        alert("setHeSongDocInfo :: " + e.description);
+	        return false;
+	    }
 	}
-	else
-	{
-		var pAlertContent = strLang741;
-		OpenAlertUI(pAlertContent);
-		return true;
-	}
-  }catch(e){
-	alert("setHeSongDocInfo :: " + e.description);
-	return false;
-  }
+
+function OpenAlertUI_Close_Complete() {
+    btnClose_onclick();
 }
 
 function openwindow(wfileLocation , wName , wWeigth , wHeigth)

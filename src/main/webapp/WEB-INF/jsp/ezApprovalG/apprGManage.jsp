@@ -674,6 +674,7 @@
 		    }
 		    function btnReceipt_onclick() {
 		        var DocList = new ListView();
+		        var ua = navigator.userAgent;
 		        DocList.LoadFromID("DocList");
 		        var oArrRows = DocList.GetSelectedRows();
 		        if (oArrRows.length > 0) {
@@ -684,17 +685,14 @@
 		                var openLocation = "";
 		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
 		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
-		                }
-		                else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		                    if (CrossYN()) {
+		                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		                    if (/chrome/i.test(ua)) {
 		                        alert(strLang1103);
 		                        return;
-		                    }
-		                    else {
+		                    } else {
 		                        openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezConvOut_HWP.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                    }
-		                }
-		                else {
+		                } else {
 		                    if (CrossYN()) {
 		                        openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_Cross.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                    }

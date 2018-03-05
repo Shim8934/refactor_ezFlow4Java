@@ -61,6 +61,7 @@ var strLang107 = "分類"
 // DraftUI\draft.js
 var strLang124 = "ステータス "
 var strLang125 = "ステータス"
+var strLang126 = "一般"
 var strLang128 = "官"
 var strLang131 = "エラーが発生しました。"
 var strLang132 = "もう一度文書を選択してください。"

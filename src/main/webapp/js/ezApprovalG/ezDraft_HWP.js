@@ -1,9 +1,8 @@
 var lastKyulName, lastKyuljiwee, LastSignSN;
 var DraftLastFlag = false;
 
-function GetDraftAprLineInfo(ret)
-{
-  try{
+function GetDraftAprLineInfo(ret) {
+  try {
 	DraftLastFlag = false;
 	
 	var xmlKuljea;
@@ -35,20 +34,16 @@ function GetDraftAprLineInfo(ret)
 	if (ret[5] == undefined) {
 	    xmlKuljea = ret[0];
 	    xmlReDraft = ret[2];
-	}
-	else {
+	} else {
 	    xmlKuljea = ret[1];
 	    xmlReDraft = ret[5];
 	}
 	
 	setAprLinesXML(xmlKuljea);
 	
-	if(xmlReDraft == "C")
-	{
+	if(xmlReDraft == "C") {
 		ApplyDocCellInfo();
-	}
-	else if(xmlReDraft == "R")
-	{
+	} else if(xmlReDraft == "R")	{
 		ClearDocCellInfo();
 	}
     

@@ -61,6 +61,7 @@ var strLang107 = "Classified"
 // DraftUI\draft.js
 var strLang124 = "Approval status "
 var strLang125 = "Status"
+var strLang126 = "Public"
 var strLang128 = "기"
 var strLang131 = "Error occurred."
 var strLang132 = "Please select the document again!"

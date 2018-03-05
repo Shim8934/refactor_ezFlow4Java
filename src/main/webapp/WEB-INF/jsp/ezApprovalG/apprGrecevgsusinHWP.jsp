@@ -893,7 +893,7 @@
 			      parameter[3] = pAprState;
 			      parameter[4] = getNodeText(RECEIPTDEPTID);
 			
-			      var url = "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveDistributeUI.aspx";
+			      var url = "/ezApprovalG/ezReceiveDistributeUI.do";
 			      var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;edge:sunken;scroll:no"
 			      var ret = window.showModalDialog(url, parameter, feature);
 			      if (ret == "true") {
@@ -902,15 +902,15 @@
 			          btnClose_onclick();
 			      }
 			  }
-		
+			  
 			  function btnAssign_onclick() {
 			      var parameter = new Array();
 			      parameter[0] = pDocID;
 			      parameter[1] = pSusinSN;
 			      parameter[2] = pAprState;
 			
-			      var url = "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveAssignUI_Cross.aspx";
-			      var feature = "status:no;dialogWidth:460px;dialogHeight:365px;edge:sunken;scroll:no"
+				  var url = "/ezApprovalG/ezReceiveAssignUI.do";
+			      var feature = "status:no;dialogWidth:600px;dialogHeight:365px;edge:sunken;scroll:no"
 			      var ret = window.showModalDialog(url, parameter, feature);
 			      if (ret == "OK") {
 			          var pAlertContent = "<spring:message code='ezApprovalG.t1420'/>";
@@ -942,7 +942,7 @@
 			    else
 			        parameter[4] = "N";
 			
-			    var url = "/myoffice/ezApprovalG/ezAPROPINION/AprOpinion.aspx";
+			    var url = "/ezApprovalG/aprOpinion.do";
 			    var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no;help:no"
 			    var ret = window.showModalDialog(url, parameter, feature);
 			    var hesongok = true;
@@ -956,14 +956,12 @@
 			        if (hesongok) {
 			            hesongok = setHeSongDocInfo();
 			            if (hesongok) {
-			
 			                var ret2 = ExcuteInfo("SUSIN_HOISONG_AFTER", "")
 			                if (!ret2) {
 			                    pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
 			                    OpenAlertUI(pAlertContent);
 			                    return;
 			                }
-			
 			
 			                window.parent.close();
 			

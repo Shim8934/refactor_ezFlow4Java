@@ -1,1414 +1,2100 @@
-function OpenCheckUI() {
-    return "NONE";
+
+var lastKyulName, lastKyuljiwee, LastSignSN;
+var DraftLastFlag = false;
+
+var g_progresswin = null;	
+function showProgress(inforstring) {
+
+	g_progresswin = window.showModelessDialog("/ezCommon/show_progress.do?fileInfo=" + escape(inforstring) , "", "dialogWidth=390px; dialogHeight:185px; center:yes; status:no; help:no; edge:sunken;");
+	while (g_progresswin.document.readyState != "complete") {}
 }
 
-function GetAprDeptXML() {
-	var xmlhttp = createXMLHttpRequest();
-	var xmlpara = createXmlDom();
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "PARAMETER");
-	createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-
-	xmlhttp.open("POST", "/myoffice/ezApprovalG/ezLine/aspx/AprDeptRequest.aspx", false);
-	xmlhttp.send(xmlpara);
-	
-	APRDEPTXML = loadXMLString(xmlhttp.responseText);
-	
-    for (i = 0; i < APRDEPTXML.getElementsByTagName("DATA3").length; i++) {
-        if (getNodeText(APRDEPTXML.getElementsByTagName("DATA3").item(i)) == "Y")
-			isExternal = true;
-	}
-	
-    if (isExternal) {
-        for (i = 0; i < APRDEPTXML.getElementsByTagName("DATA1").length; i++) {
-            if (getNodeText(APRDEPTXML.getElementsByTagName("DATA1").item(i)).indexOf("Address") > -1)
-				isAddress = true;
-		}
-	}
-}
-
-function GetEndDocInfo() {
-	var xmlhttp = createXMLHttpRequest();
-	var xmlpara = createXmlDom();
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "PARAMETERS");
-	createNodeAndInsertText(xmlpara, objNode, "DocID", pOrgDocID);
-	xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/getEndDocInfo.aspx", false);
-	xmlhttp.send(xmlpara);
-
-	pDocInfoXML = loadXMLString(xmlhttp.responseText);
-}
-
-function getLineInfo() {
-	var xmlpara = createXmlDom();	
-	var xmlhttp = createXMLHttpRequest();	
-	  
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "PARAMETERS");
-	createNodeAndInsertText(xmlpara, objNode, "DocID", pOrgDocID);
-	
-	xmlhttp.open("Post", "/myoffice/ezApprovalG/enforce/aspx/getLineInfo.aspx", false);
-	xmlhttp.send(xmlpara);
-	
-	return loadXMLString(xmlhttp.responseText);
-}
-
-
-
-function chkToInfo() {
-	var i;
-	var isFrom_Cert = true;	
-	sendCNT[0] = 0;
-	sendCNT[1] = 0;
-	
-	
-    if (is_Enc == "NONE")
-        isFrom_Cert = false;
-	
-    for (i = 0; i < APRDEPTXML.getElementsByTagName("DATA1").length; i++) {
-        BaseURL[i] = getNodeText(APRDEPTXML.getElementsByTagName("DATA1").item(i));
-        AddInfo[i] = getNodeText(APRDEPTXML.getElementsByTagName("DATA9").item(i));
-        if (isFrom_Cert) {
-			isGPKI[i] = "Y";
-			sendCNT[0] = sendCNT[0] + 1;
-        } else {
-			isGPKI[i] = "N"
-			sendCNT[1] = sendCNT[1] + 1;		
-		}	
-	}
-	return true;
-}
-
-function getPasswdEnd() {
-    var url = "/myoffice/ezApprovalG/enforce/cert.aspx";
-	var feature = "status:no;dialogWidth:420px;dialogHeight:350px;help:no;scroll:no"
-	var param = true;
-	var ret = window.showModalDialog(url,param,feature);
-		
-    if (ret[0]) {
-		encodePass = ret[1];
-		encodePath = ret[2];	
-	}		
-	return ret[0];
-}
-
-function sendExt() {
-	var orgHTML;
-	var sihangDate = "";
-	var field;
-	var xmlpara = createXmlDom();
-	var xmlhttp = createXMLHttpRequest();
-    var xmlRtn;	
-		
-	var chkFlag = chkToInfo();
-    if (!chkFlag) {
-		return false;
-	}
-
-    if (sendCNT[0] > 0) {
-        if (!getPasswdEnd()) {
-			return false;
-		}
-	}
-	
-	if (makeXML(pDocID))		
-		return true;
-	else
-		return false;
-}
-
-function covBody(pbody) {
-    pbody = removeTags(pbody, '<caption><img><i><b><u><sub><sup><p><ul><ol><table><tr><td>');
-
-	var compSTR, subcompSTR, compChar, startIdx, findIdx, nextIdx, endIdx;
-	var i, strgt, startflag;
-	startflag = false;
-    tmpSTR = pbody;
-    
-    startIdx = 1;
-    endIdx = tmpSTR.length;
-    
-    i = 0;
-    startflag = false;
-    strgt = false;
-    compChar = '"';
-    newSTR = "";
-
-    while (i < endIdx) {
-        compSTR = tmpSTR.substr(i, 1);
-        //strgt = false;
-        
-        if(compSTR == "<") strgt = true;
-        if(compSTR == ">") strgt = false;
-            
-        if (!startflag) {
-            if (compSTR == "=" && strgt) {
-                i = i + 1
-                subcompSTR = tmpSTR.substr(i,1);
-                if(compSTR == "<") strgt = true;
-                if(compSTR == ">") strgt = false;
-                                
-                if (subcompSTR != compChar && strgt) {
-                    newSTR = newSTR + compSTR.toLowerCase() + "'" + subcompSTR.toLowerCase();
-                    startflag = true;
-                }
-                else {
-                    if (strgt) {
-						if(subcompSTR == compChar) subcompSTR = "'";
-                        newSTR = newSTR + compSTR.toLowerCase() + subcompSTR.toLowerCase();
-                    }
-                    else
-                        newSTR = newSTR + compSTR + subcompSTR;
-                }
-            }                    
-            else {
-                if (strgt) {
-                    if(compSTR == compChar) compSTR = "'";
-                    newSTR = newSTR + compSTR.toLowerCase();
-                    
-                }
-                else
-                    newSTR = newSTR + compSTR;
-            }    
-            i = i + 1;
-        }
-        else {
-            if (compSTR == " " || compSTR == ">") {
-                if (strgt) {
-					if(compSTR == compChar) compSTR = "'";
-                    newSTR = newSTR + "'" + compSTR.toLowerCase() + " ";
-                }
-                else
-                    newSTR = newSTR + "'" + compSTR + " ";
-                startflag = false
-            }
-            else {
-                if (strgt) {
-					if(compSTR == compChar) compSTR = "'";
-                    newSTR = newSTR + compSTR.toLowerCase();
-                }
-                else
-                    newSTR = newSTR + compSTR;
-            }
-            i = i + 1
-        }
-	}
-	var re = /&nbsp;/g; 
-	var BodyStr = "<content>" + newSTR.replace(re,"&amp;nbsp;") + "</content>";
-	
-	BodyStr = BodyStr.replace(/: '/g,":");
-	BodyStr = BodyStr.replace(/'' /g,"' ");
-	BodyStr = BodyStr.replace(/''>/g,"'>");
-	BodyStr = BodyStr.replace(/'; /g,"; ");
-	BodyStr = BodyStr.replace(/<br>/g,"");
-    
-    BodyStr = BodyStr.replace(/<BR>/g, "");
-    BodyStr = BodyStr.replace(/class=hstyle0/g, "");
-    BodyStr = BodyStr.replace(/''font-size:'/g, "'font-size:");
-    
-    BodyStr = BodyStr.replace(/''margin-bottom:'/g, "'margin-bottom:");
-    BodyStr = BodyStr.replace(/='>/g, "=''>");
-    BodyStr = BodyStr.replace(/=''/g, "='");
-    BodyStr = BodyStr.replace(/:'  '/g, ":");
-    
-    //BodyStr = BodyStr.replace(/width="(.*?)[0-9]*/ig, " $&mm");
-    //BodyStr = BodyStr.replace(/width='(.*?)[0-9]*/ig, " $&mm");
-    //BodyStr = BodyStr.replace(/hight="(.*?)[0-9]*/ig, " $&mm");
-    //BodyStr = BodyStr.replace(/hight='(.*?)[0-9]*/ig, " $&mm");
-    
-    BodyStr = BodyStr.replace(/(\?(\w)*?\w=)((')(\w*?)['])/ig, "$1$5$4");
-
-    BodyStr = BodyStr.replace(/\n|\r|\t/g, "");
-
-	var xmlpara = createXmlDom();
-	xmlpara.async = false;
-    xmlpara.loadXML(BodyStr)
-	var bodyNodes = xmlpara.documentElement;
-	return bodyNodes;
-}
-
-function removeTags(input, allowed) {
-    allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
-    var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
-    return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
-        return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
-    });
-}
-function makeXML(newDocID) {
-	GetEndDocInfo();
-	
-	var tempNode;
-	
-    if (HwpCtrl.CheckFieldExist("opinions")) {
-        if (HwpCtrl.CheckFieldExist("body")) {
-			HwpCtrl.AppendFieldText("body", "<br><br>", false, true);
-			HwpCtrl.AppendFieldText("body", HwpCtrl.GetFieldText("opinions"), false);
-			HwpCtrl.SetFieldText("opinions", "");
-		}
-	}
-	
-	sihangXML = createXmlDom();
-	sihangXML.async = false;
-	sihangXML.load("/myoffice/ezApprovalG/enforce/pubdocsample.xml");
-	
-	var eNodes = sihangXML.documentElement;
-	
-	var Nodes = eNodes.selectNodes("head/organ");
-    if (HwpCtrl.CheckFieldExist("organ")) {
-        setNodeText(Nodes(0) , HwpCtrl.GetFieldText("organ"));
-    } else {
-        setNodeText(Nodes(0) , "");
-	}
-	
-	var Nodes = eNodes.selectNodes("head/receiptinfo/recipient");
-    if (HwpCtrl.CheckFieldExist("recipients")) {
-        if (trim(HwpCtrl.GetFieldText("recipients")) == "") {
-			Nodes(0).setAttribute("refer", "false");
-            if (HwpCtrl.CheckFieldExist("recipient")) {
-                tempNode = eNodes.selectNodes("head/receiptinfo/recipient/rec");
-                setNodeText(tempNode(0) , HwpCtrl.GetFieldText("recipient"));
-			}
-        } else {
-			Nodes(0).setAttribute("refer", "true");	
-            tempNode = eNodes.selectNodes("head/receiptinfo/recipient/rec");
-            setNodeText(tempNode(0) , HwpCtrl.GetFieldText("recipients").replace(strLang177, ""));
-		}
-	}
-	
-	var Nodes = eNodes.selectNodes("head/receiptinfo");
-    if (HwpCtrl.CheckFieldExist("refer")) {
-        if (trim(HwpCtrl.GetFieldText("refer")) != "") {
-            var tempNode2 = sihangXML.createNode(1, "via", "");
-			Nodes(0).appendChild(tempNode2)
-			setNodeText(tempNode2 , HwpCtrl.GetFieldText("refer"));
-		}
-	}
-	
-	var Nodes = eNodes.selectNodes("body/title");
-    if (HwpCtrl.CheckFieldExist("doctitle")) {
-        setNodeText(Nodes(0) , HwpCtrl.GetFieldText("doctitle"));
-    } else {
-        setNodeText(Nodes(0) , "");
-	}
-
-	var Nodes = eNodes.selectNodes("body");	
-    if (attachbodyPath != "") {
-		Nodes(0).setAttribute("separate", "true");	
-    } else {
-		Nodes(0).setAttribute("separate", "false");	
-	}
-	
-	var Nodes = eNodes.selectNodes("body");	
-    if (HwpCtrl.CheckFieldExist("body")) {
-		var strBody = GetHTMLBody(HwpCtrl.GetCloneData("body", "HTML"));
-		var pBody = Encode(strBody);
-		
-        if (pBody == "</ERROR>") {
-            alert("본문에 잘못된 내용이 포함되어 있습니다.\n(이미지, 스타일속성 등을 포함할 수 없습니다.)");
-            return;
-        }
-
-		var re = /vAlign=center/g;
-		pBody = pBody.replace(re,"vAlign=middle");
-		
-		var rtnNodes = covBody(pBody);
-        Nodes(0).appendChild(rtnNodes);
-    } else {
-        setNodeText(Nodes(0) , "");
-	}
-	
-	var Nodes = eNodes.selectNodes("foot/sendername");
-    if (HwpCtrl.CheckFieldExist("chief")) {
-        setNodeText(Nodes(0) , HwpCtrl.GetFieldText("chief"));
-    } else {
-        setNodeText(Nodes(0) , "");
-	}
-
-	var Nodes = eNodes.selectNodes("foot/seal");
-    if (NostampFlag) {
-		Nodes(0).setAttribute("omit", "true");
-    } else {
-        if (HwpCtrl.CheckFieldExist("sealsign")) {
-			sealPath = GetDocumentElement(HwpCtrl, "surl");
-            if (sealPath != "") {
-				Nodes(0).setAttribute("omit", "false");
-				var tempNode2 = sihangXML.createNode(1,"img","")
-				Nodes(0).appendChild(tempNode2)
-				
-				var len = sealPath.lastIndexOf("/");
-				var filelength = sealPath.length - (len + 1);  
-				
-				sealName = sealPath.substr(len + 1,filelength);
-				tempNode2.setAttribute("src",sealName)
-                tempNode2.setAttribute("alt", strLang178);
-				tempNode2.setAttribute("height", GetDocumentElement(HwpCtrl, "sheight").toString() + "mm");
-				tempNode2.setAttribute("width", GetDocumentElement(HwpCtrl, "swidth").toString() + "mm");
-			}
-		}
-	}
-
-	var Nodes = eNodes.selectNodes("foot/approvalinfo");
-	var LineNode = getLineInfo();
-	var SignSN = 1;
-	psignCount = 1;
-	var DekyulFlag = false;
-
-    for (i = 0; i < LineNode.documentElement.childNodes.length; i++) {
-        if (getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("TYPE")) != strLang3) {
-			var tempNode2 = sihangXML.createNode(1,"approval","");
-			Nodes(0).appendChild(tempNode2);
-			tempNode2.setAttribute("order", getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("ORDER")));
-			
-			var tempNode3 = sihangXML.createNode(1,"signposition","");
-			tempNode2.appendChild(tempNode3);
-			if (getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("OPINION")) == "YES")
-			    setNodeText(tempNode3 , getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("SIGNPOSITION")) + "(" + strLang5);
-			else
-			    setNodeText(tempNode3 , getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("SIGNPOSITION")));
-			
-			var tempNode3 = sihangXML.createNode(1,"type","");
-			tempNode2.appendChild(tempNode3);
-			setNodeText(tempNode3 , getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("TYPE")));
-			
-			if (getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("TYPE")) == strLang7 )
-				DekyulFlag = true;
-			
-			if ((getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("TYPE")) == strLang6) && (DekyulFlag)) {
-				var tempNode3 = sihangXML.createNode(1,"name","");
-				tempNode2.appendChild(tempNode3);
-				setNodeText(tempNode3 , getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("NAME")));
-				
-				var tempNode3 = sihangXML.createNode(1,"date","");
-				tempNode2.appendChild(tempNode3);
-				setNodeText(tempNode3 , "");
-            } else {
-                if (HwpCtrl.CheckFieldExist("sign" + SignSN)) {
-							var signPath = GetDocumentElement(HwpCtrl, "sign" + SignSN);
-							
-                    if (signPath != "") {
-								var tempNode3 = sihangXML.createNode(1,"signimage","");
-								tempNode2.appendChild(tempNode3);
-
-								var tempNode4 = sihangXML.createNode(1,"img","");
-								tempNode3.appendChild(tempNode4);
-								
-								var len = signPath.lastIndexOf("/");
-								var filelength = signPath.length - (len + 1);  
-								var signName = signPath.substr(len + 1,filelength);
-
-								tempNode4.setAttribute("src",signName);
-								tempNode4.setAttribute("alt",strLang179);
-								
-                        
-                        var tempSize = GetHTMLBody(HwpCtrl.GetCloneData("sign" + SignSN, "HTML"));
-                        var tmpDiv = document.createElement("div");
-                        tmpDiv.innerHTML = tempSize;
-                        //var tmpH = PixelToMillimeter(GetAttribute(tmpDiv.childNodes[0].childNodes[0].childNodes[0],'height'));
-                        //var tmpW = PixelToMillimeter(GetAttribute(tmpDiv.childNodes[0].childNodes[0].childNodes[0], 'width'));
-                        var tmpH = PixelToMillimeter(GetAttribute(tmpDiv.getElementsByTagName("IMG")[0], 'height'));
-                        var tmpW = PixelToMillimeter(GetAttribute(tmpDiv.getElementsByTagName("IMG")[0], 'width'));
-
-
-                        if (tmpW == null || tmpW == "")
-									tempNode4.setAttribute("width", "21.63mm");
-								else
-                            tempNode4.setAttribute("width", tmpW + "mm");
-								
-                        if (tmpH == null || tmpH == "")
-									tempNode4.setAttribute("height", "10.17mm");
-								else
-                            tempNode4.setAttribute("height", tmpH + "mm");
-								
-								psignName[psignCount] = signName;
-								psignPath[psignCount] = signPath;
-								psignCount = psignCount + 1;
-
-							}
-							var tempNode3 = sihangXML.createNode(1,"name","");
-							tempNode2.appendChild(tempNode3);
-							setNodeText(tempNode3 , getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("NAME")));
-                } else {
-					var tempNode3 = sihangXML.createNode(1,"name","");
-					tempNode2.appendChild(tempNode3);
-					setNodeText(tempNode3 , getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("NAME")));
-				}
-				
-				var tempNode3 = sihangXML.createNode(1,"date","");
-				tempNode2.appendChild(tempNode3);
-				
-				if (getNodeText(LineNode.documentElement.childNodes(i).selectSingleNode("ORDER")) == "final" || DekyulFlag) {
-				    var tempDate = LineNode.documentElement.childNodes(i).selectSingleNode("DATE").text;
-				    setNodeText(tempNode3, tempDate);
-				} else
-				    setNodeText(tempNode3, "");
-			}			
-			SignSN = SignSN + 1;
-		}
-	}
-
-    for (i = 0; i < LineNode.documentElement.childNodes.length; i++) {
-		var SignSN = 1;
-		if (getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/TYPE").item(i)) == strLang3) {
-			var tempNode2 = sihangXML.createNode(1,"assist","");
-			Nodes(0).appendChild(tempNode2);
-			tempNode2.setAttribute("order",getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/ORDER").item(i)))
-
-			var tempNode3 = sihangXML.createNode(1,"signposition","");
-			tempNode2.appendChild(tempNode3);
-			if (getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/OPINION").item(i)) == "YES")
-			    setNodeText(tempNode3 , getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/SIGNPOSITION").item(i)) + "(" + strLang5);
-			else
-			    setNodeText(tempNode3 , getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/SIGNPOSITION").item(i)));
-			
-			var tempNode3 = sihangXML.createNode(1,"type","");
-			tempNode2.appendChild(tempNode3);
-			setNodeText(tempNode3 , getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/TYPE").item(i)));
-			
-
-            if (HwpCtrl.CheckFieldExist("habyuisign" + SignSN)) {
-				var signPath = GetDocumentElement(HwpCtrl, "habyuisign" + SignSN);
-				
-                if (signPath != "") {
-					var tempNode3 = sihangXML.createNode(1,"signimage","");
-					tempNode2.appendChild(tempNode3);
-
-					var tempNode4 = sihangXML.createNode(1,"img","");
-					tempNode3.appendChild(tempNode4);
-					
-					var len = signPath.lastIndexOf("/");
-					var filelength = signPath.length - (len + 1);  
-					var signName = signPath.substr(len + 1,filelength);
-					
-					tempNode4.setAttribute("src",signName);
-					tempNode4.setAttribute("alt", strLang179 );
-
-					//var tempSize = GetImgSize(GetHTMLBody(HwpCtrl.GetCloneData("habyuisign" + SignSN, "HTML")));
-					
-                    var tempSize = GetHTMLBody(HwpCtrl.GetCloneData("habyuisign" + SignSN, "HTML"));
-                    var tmpDiv = document.createElement("div");
-                    tmpDiv.innerHTML = tempSize;
-                    //var tmpH = PixelToMillimeter(GetAttribute(tmpDiv.childNodes[0].childNodes[0].childNodes[0],'height'));
-                    //var tmpW = PixelToMillimeter(GetAttribute(tmpDiv.childNodes[0].childNodes[0].childNodes[0], 'width'));
-                    var tmpH = PixelToMillimeter(GetAttribute(tmpDiv.getElementsByTagName("IMG")[0], 'height'));
-                    var tmpW = PixelToMillimeter(GetAttribute(tmpDiv.getElementsByTagName("IMG")[0], 'width'));
-
-
-                    if (tmpW == null || tmpW == "")
-						tempNode4.setAttribute("width", "21.63mm");
-					else
-                        tempNode4.setAttribute("width", tmpW + "mm");
-					
-                    if (tmpH == null || tmpH == "")
-						tempNode4.setAttribute("height", "10.17mm");
-					else
-                        tempNode4.setAttribute("height", tmpH + "mm");
-					
-					psignName[psignCount] = signName;
-					psignPath[psignCount] = signPath;
-					psignCount = psignCount + 1;
-                } else {
-					var tempNode3 = sihangXML.createNode(1,"name","");
-					tempNode2.appendChild(tempNode3);
-					setNodeText(tempNode3 , getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/NAME").item(i)));	
-				}
-            } else {
-				var tempNode3 = sihangXML.createNode(1,"name","");
-				tempNode2.appendChild(tempNode3);
-				setNodeText(tempNode3 , getNodeText(LineNode.selectNodes("APPROVALINFO/APPROVAL/NAME").item(i)));	
-			}
-			
-			var tempNode3 = sihangXML.createNode(1,"date","");
-			tempNode2.appendChild(tempNode3);
-			setNodeText(tempNode3 , "");
-			
-			SignSN = SignSN + 1;
-		}
-	}
-	
-	var Nodes = eNodes.selectNodes("foot/processinfo/regnumber");
-    if (HwpCtrl.CheckFieldExist("docnumber")) {
-
-        setNodeText(Nodes(0) , HwpCtrl.GetFieldText("docnumber"));
-		
-		var regnumbercode;
-		regnumbercode = getNodeText(pDocInfoXML.documentElement.childNodes(32));
-		Nodes(0).setAttribute("regnumbercode", regnumbercode);
-    } else {
-        setNodeText(Nodes(0) , "");
-		Nodes(0).setAttribute("regnumbercode", "");
-	}
-	
-	var Nodes = eNodes.selectNodes("foot/processinfo/enforcedate");
-    if (HwpCtrl.CheckFieldExist("enforcedate")) {
-        setNodeText(Nodes(0) , HwpCtrl.GetFieldText("enforcedate"));
-    } else {
-        setNodeText(Nodes(0) , "");
-	}
-
-	var Nodes = eNodes.selectNodes("foot/processinfo");
-    if (HwpCtrl.CheckFieldExist("receiptnumber")) {
-		var tempNode2 = sihangXML.createNode(1,"receipt","");
-		Nodes(0).appendChild(tempNode2);
-
-		var tempNode3 = sihangXML.createNode(1,"number","");
-		tempNode2.appendChild(tempNode3);
-		setNodeText(tempNode3 , HwpCtrl.GetFieldText("receiptnumber"));
-
-		var tempNode3 = sihangXML.createNode(1,"date","");
-		tempNode2.appendChild(tempNode3);
-
-        if (HwpCtrl.CheckFieldExist("receiptdate")) {
-            setNodeText(tempNode3 , HwpCtrl.GetFieldText("receiptdate"));
-		}
-	}
-
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
-    if (HwpCtrl.CheckFieldExist("zipcode")) {
-		var tempNode2 = sihangXML.createNode(1,"zipcode","");
-		Nodes(0).appendChild(tempNode2);
-		setNodeText(tempNode2 , HwpCtrl.GetFieldText("zipcode"));
-    } else {
-		var tempNode2 = sihangXML.createNode(1,"zipcode","");
-		Nodes(0).appendChild(tempNode2);
-		setNodeText(tempNode2 , "");
-	}
-	
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
-    if (HwpCtrl.CheckFieldExist("address")) {
-		var tempNode2 = sihangXML.createNode(1,"address","");
-		Nodes(0).appendChild(tempNode2);
-		setNodeText(tempNode2 , HwpCtrl.GetFieldText("address"));
-    } else {
-		var tempNode2 = sihangXML.createNode(1,"address","");
-		Nodes(0).appendChild(tempNode2);
-		setNodeText(tempNode2 , "");
-	}
-
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
-    if (HwpCtrl.CheckFieldExist("homepage")) {
-		var tempNode2 = sihangXML.createNode(1,"homeurl","");
-		Nodes(0).appendChild(tempNode2);
-		setNodeText(tempNode2 , HwpCtrl.GetFieldText("homepage"));
-	}
-	
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
-    if (HwpCtrl.CheckFieldExist("telephone")) {
-		var tempNode2 = sihangXML.createNode(1,"telephone","");
-		Nodes(0).appendChild(tempNode2);
-		setNodeText(tempNode2 , HwpCtrl.GetFieldText("telephone"));
-    } else {
-		var tempNode2 = sihangXML.createNode(1,"telephone","");
-		Nodes(0).appendChild(tempNode2);
-		setNodeText(tempNode2 , "");
-	}
-	
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
-    if (HwpCtrl.CheckFieldExist("fax")) {
-		var tempNode2 = sihangXML.createNode(1,"fax","");
-		Nodes(0).appendChild(tempNode2);
-		setNodeText(tempNode2 , HwpCtrl.GetFieldText("fax"));
-    } else {
-		var tempNode2 = sihangXML.createNode(1,"fax","");
-		Nodes(0).appendChild(tempNode2);
-		setNodeText(tempNode2 , "");
-	}
-	
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
-    if (HwpCtrl.CheckFieldExist("email")) {
-		var tempNode2 = sihangXML.createNode(1,"email","");
-		Nodes(0).appendChild(tempNode2);
-		setNodeText(tempNode2 , HwpCtrl.GetFieldText("email"));
-	}
-	
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
-    if (HwpCtrl.CheckFieldExist("publication")) {
-		var tempNode2 = sihangXML.createNode(1,"publication","");
-		Nodes(0).appendChild(tempNode2);
-		setNodeText(tempNode2 , HwpCtrl.GetFieldText("publication"));
-		tempNode2.setAttribute("code", getNodeText(pDocInfoXML.documentElement.childNodes(27)));		
-    } else {
-		var tempNode2 = sihangXML.createNode(1,"publication","");
-		Nodes(0).appendChild(tempNode2);
-		setNodeText(tempNode2 , "");
-		tempNode2.setAttribute("code", getNodeText(pDocInfoXML.documentElement.childNodes(27)));		
-	}
-
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
-    if (HwpCtrl.CheckFieldExist("symbol")) {
-		symbolPath = GetDocumentElement(HwpCtrl, "symbolurl");
-        if (symbolPath != "") {
-				var tempNode3 = sihangXML.createNode(1,"symbol","");
-				Nodes(0).appendChild(tempNode3);
-				var tempNode2 = sihangXML.createNode(1,"img","")
-            tempNode3.appendChild(tempNode2);
-				
-				var len = symbolPath.lastIndexOf("/");
-				var filelength = symbolPath.length - (len + 1);  
-				symbolName = symbolPath.substr(len + 1,filelength);
-				tempNode2.setAttribute("src",symbolName);
-				tempNode2.setAttribute("alt",strLang180);
-				
-            var tempSize = GetHTMLBody(HwpCtrl.GetCloneData("symbol", "HTML"));
-            var tmpDiv = document.createElement("div");
-            tmpDiv.innerHTML = tempSize;
-            //var tmpH = PixelToMillimeter(GetAttribute(tmpDiv.childNodes[0].childNodes[0].childNodes[0],'height'));
-            //var tmpW = PixelToMillimeter(GetAttribute(tmpDiv.childNodes[0].childNodes[0].childNodes[0],'width'));
-            var tmpH = PixelToMillimeter(GetAttribute(tmpDiv.getElementsByTagName("IMG")[0], 'height'));
-            var tmpW = PixelToMillimeter(GetAttribute(tmpDiv.getElementsByTagName("IMG")[0], 'width'));
-
-            if (tmpW == null || tmpW == "")
-					tempNode2.setAttribute("width", "29.13mm");
-				else
-                tempNode2.setAttribute("width", tmpW + "mm");
-				
-            if (tmpH == null || tmpH == "")
-					tempNode2.setAttribute("height", "5.93mm");
-				else
-                tempNode2.setAttribute("height", tmpH + "mm");
-			}
-	}
-
-	var Nodes = eNodes.selectNodes("foot/sendinfo");
-    if (HwpCtrl.CheckFieldExist("logo")) {
-		logoPath = GetDocumentElement(HwpCtrl, "logourl");
-		
-        if (logoPath != "") {
-					var tempNode3 = sihangXML.createNode(1,"logo","");
-					Nodes(0).appendChild(tempNode3);
-					var tempNode2 = sihangXML.createNode(1,"img","")
-					tempNode3.appendChild(tempNode2)
-					
-					var len = logoPath.lastIndexOf("/");
-					var filelength = logoPath.length - (len + 1);  
-					logoName = logoPath.substr(len + 1,filelength);
-					tempNode2.setAttribute("src",logoName)
-					tempNode2.setAttribute("alt", strLang181)
-					
-            var tempSize = GetHTMLBody(HwpCtrl.GetCloneData("logo", "HTML"));
-            var tmpDiv = document.createElement("div");
-            tmpDiv.innerHTML = tempSize;
-            //var tmpH = PixelToMillimeter(GetAttribute(tmpDiv.childNodes[0].childNodes[0].childNodes[0],'height'));
-            //var tmpW = PixelToMillimeter(GetAttribute(tmpDiv.childNodes[0].childNodes[0].childNodes[0], 'width'));
-            var tmpH = PixelToMillimeter(GetAttribute(tmpDiv.getElementsByTagName("IMG")[0], 'height'));
-            var tmpW = PixelToMillimeter(GetAttribute(tmpDiv.getElementsByTagName("IMG")[0], 'width'));
-
-
-            if (tmpW == null || tmpW == "")
-						tempNode2.setAttribute("width", "19.05mm");
-					else
-                tempNode2.setAttribute("width", tmpW + "mm");
-					
-            if (tmpH == null || tmpH == "")
-						tempNode2.setAttribute("height", "8.68mm");
-					else
-                tempNode2.setAttribute("height", tmpH + "mm");
-
-			}
-	}
-	
-    if (HwpCtrl.CheckFieldExist("headcampaign")) {
-		var Nodes = eNodes.selectNodes("foot");
-		var tempNode2 = sihangXML.createNode(1,"campaign","");
-		Nodes(0).appendChild(tempNode2);
-
-		var tempNode3 = sihangXML.createNode(1,"headcampaign","");
-		tempNode2.appendChild(tempNode3);		
-		setNodeText(tempNode3 , HwpCtrl.GetFieldText("headcampaign"));
-		
-        if (HwpCtrl.CheckFieldExist("footcampaign")) {
-			var tempNode3 = sihangXML.createNode(1,"footcampaign","");
-			tempNode2.appendChild(tempNode3);		
-			setNodeText(tempNode3 , HwpCtrl.GetFieldText("footcampaign"));
-		}		
-    } else {
-        if (HwpCtrl.CheckFieldExist("footcampaign")) {
-			var Nodes = eNodes.selectNodes("foot");
-			var tempNode2 = sihangXML.createNode(1,"campaign","");
-			Nodes(0).appendChild(tempNode2);
-
-			var tempNode3 = sihangXML.createNode(1,"footcampaign","");
-			tempNode2.appendChild(tempNode3);		
-			setNodeText(tempNode3 , HwpCtrl.GetFieldText("footcampaign"));
-		}
-	}
-
-	
-    if (attachName.length > 0) {
-        tempNode = sihangXML.createNode(1, "attach", "");
-        eNodes.appendChild(tempNode);
-		
-		var i;
-        for (i = 0; i < attachName.length; i++) {
-			var subNode;
-			subNode = sihangXML.createNode(1,"title","")
-			tempNode.appendChild(subNode);
-			setNodeText(subNode , attachName[i]);
-		}
-	}
-	
-	var result = true;
-	var sihangXML2 = sihangXML.xml;
-	var strtempxml = sihangXML2;
-	
-	var re = /&amp;nbsp;/g; 
-    var strtempxml = strtempxml.replace(re, "&nbsp;");
-	var re = /strong>/g; 
-    var strtempxml = strtempxml.replace(re, "b>");
-	
-	var objSaveTmp = new ActiveXObject("EzUtil.MiscFunc"); 
-    objSaveTmp.SaveTextToFile("c:\\" + pDocID + "pubdoc.xml", "<?xml version=\"1.0\" encoding=\"euc-kr\"?><?xml-stylesheet type=\"text/xsl\" href=\"siheng.xsl\"?><!DOCTYPE pubdoc SYSTEM \"pubdoc.dtd\">" + strtempxml);
-	objSaveTmp = null;
-    FileUpload(pDocID + "pubdoc.xml", "/Upload_ApprovalG/" + companyID + "/sendXML/" + pDocID + "pubdoc.xml", "c:\\" + pDocID + "pubdoc.xml");
-	
-	arrDelFiles[arrDelFiles.length] = "c:\\" + pDocID + "pubdoc.xml";
-	
-	var xmlhttp = createXMLHttpRequest();
-	var xmlPubDocCheck = createXmlDom();
-	
-	var objRoot = xmlPubDocCheck.createNode(1,"PARAMETER","");
-	xmlPubDocCheck.appendChild(objRoot);
-	
-	var objNode = xmlPubDocCheck.createNode(1, "XMLPATH", "");
-	setNodeText(objNode , "/Upload_ApprovalG/" + companyID + "/sendXML/" + pDocID + "pubdoc.xml");
-	xmlPubDocCheck.documentElement.appendChild(objNode);
-	
-	xmlhttp.open("POST", "/myoffice/ezApprovalG/enforce/aspx/checkPubDocXML.aspx", false);
-	xmlhttp.send(xmlPubDocCheck);
-	
-    if (xmlhttp.responseText != "0") {
-        alert("파서오류(pubdoc) : " + "/Upload_ApprovalG/" + companyID + "/sendXML/" + pDocID + "pubdoc.xml" + ", " + xmlhttp.responseText);
-		return false;
-	}
-	
-    
-    if (sendCNT[0] > 0) {
-
-		var rtnXML = makeExtinfo(sihangXML,newDocID, "GPKI");
-        if (encodePath == "NONE_Enc_SEND") {
-			var rtnFileName = encodeDN(rtnXML);
-			var objSave = new ActiveXObject("EzUtil.MiscFunc"); 
-			ContentXML = objSave.LoadTextFromFile("c:\\" + rtnFileName)
-			objSave = null;
-			ContentXML = ContentXML.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
-			var xmlContent = createXmlDom();
-			xmlContent.loadXML(ContentXML);
-			result = sendExtDoc(xmlContent);
-        } else {
-			var rtnFileName = encodeDN(rtnXML);
-			result = encodeUP(rtnFileName);
-		}
-	}
-	
-    
-    if (sihangXML.xml == "")
-        sihangXML.loadXML(sihangXML2);
-
-    if (sendCNT[1] > 0) {
-        var rtnXML = makeExtinfo(sihangXML, newDocID, "SEND");
-		var rtnFileName = encodeDN(rtnXML);
-		var objSave = new ActiveXObject("EzUtil.MiscFunc"); 
-		ContentXML = objSave.LoadTextFromFile("c:\\" + rtnFileName)
-		ContentXML = ContentXML.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
-		var xmlContent = createXmlDom();
-		xmlContent.loadXML(ContentXML);
-		result = sendExtDoc(xmlContent);
-	}
-		
-    if (result) {
-		return true;
-    } else {
-		var pAlertContent = strLang185;
-		OpenAlertUI(pAlertContent);
-		return false;
-	}
-}
-
-function FileUpload(pFileName, pURL, localPath) {
-	oPoster.Clear();
-	oPoster.UseUTF8 = true;
-	oPoster.AddFormData("DocID", pFileName);
-	oPoster.AddFormData("UploadPath", pURL);
-	oPoster.AddFile("UploadFile", localPath, 0);
-
-	oPoster.Host = document.location.hostname;
-	oPoster.PostURL = "/myoffice/ezApprovalG/ezAPRATTACH/aspx/upload_file.aspx";
-	
-    if (window.location.protocol == "http:")
-        oPoster.Protocol = 0;
-    else
-        oPoster.Protocol = 1;
-	oPoster.Post();
-	var rtnVal = oPoster.Response;
-	
-    if (rtnVal == "SUCCESS") {
-		return true;	
-	}	
-    else {
-		return false;
-	}
-}
-
-function makeExtinfo(psihangXML, newDocID, mode) {
-	var ExtSNodes, Nodes, Nodes2, strTO, i;
-	var isfirst;
-	
-    
-	var ExtXML =  createXmlDom();
-	ExtXML.async = false;
-	ExtXML.load("/myoffice/ezApprovalG/enforce/packXML.xml");
-	
+function hideProgress() {
   try {
-	var objSave = new ActiveXObject("EzUtil.MiscFunc"); 
-	var eNodes = ExtXML.documentElement;
-	var Nodes = psihangXML.documentElement;
+	if (g_progresswin)
+		g_progresswin.close();
+  } catch(e) {}
+}
+function GetDraftAprLineInfo(ret) {
+  try {
+    DraftLastFlag = false;
+    
+	var xmlKuljea;
+	var chamjo;
+	var hapyuiCnt;
+	var SignCnt;
+	var referCnt;
+	var xmlReDraft;
 	
-        
-	var Nodes = eNodes.selectNodes("header/send-orgcode");
-	setNodeText(Nodes(0) , companyID);
+	var objNodes;
+	var FormProc;
+	var fields;
+	var findstring;
+	var count;
+	var i;
+	var name;
 	
-        
-	var Nodes = eNodes.selectNodes("header/send-id");
-	setNodeText(Nodes(0) , companyID);
+	var OrderType = new Array();        
+	var OrderDept = new Array();        
+	var OrderName = new Array();        
+	var OrderStat = new Array();         
+	var OrderJobtitle = new Array();    
+	var OrderReason = new Array();      
 	
-        
-	var Nodes = eNodes.selectNodes("header/send-name");
-	setNodeText(Nodes(0) , objSave.EncodeBase64(companyName));
-	
-	isfirst = true;
-        if (mode == "GPKI") {
-            for (i = 0; i < isGPKI.length; i++) {
-                if (isGPKI[i] == "Y") {
-                    if (isfirst) {
-					strTO = BaseURL[i];
-					isfirst = false;	
-                    } else {
-					strTO = strTO + ";" + BaseURL[i];
-			}		
-		}	
+	var xmldom = createXmlDom();
+
+	if (ret[5] == undefined) {
+	    xmlKuljea = ret[0];
+	    xmlReDraft = ret[2];
 	}
-        } else {
-            for (i = 0; i < isGPKI.length; i++) {
-                if (isGPKI[i] == "N") {
-                    if (isfirst) {
-					strTO = BaseURL[i];
-					isfirst = false;	
-                    } else {
-                        strTO = strTO + ";" + BaseURL[i];
+	else {
+	    xmlKuljea = ret[1];
+	    xmlReDraft = ret[5];
+	}
+
+	setAprLinesXML(xmlKuljea);
+	
+	xmlReDraft = "R";
+	if(xmlReDraft == "C")
+	{
+		ApplyDocCellInfo();
+	}else if(xmlReDraft == "R"){
+		ClearDocCellInfo();
+	}
+
+	xmldom = loadXMLString(xmlKuljea);
+	
+	objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+	count = objNodes.length;
+
+	 
+	for(i=1;i<200;i++)
+	{
+		name = "habyuisign" + i;
+		if (HwpCtrl.CheckFieldExist(name))
+		{
+	  		name = "habyui" + i;
+	  		if (HwpCtrl.CheckFieldExist(name))
+	  			HwpCtrl.SetFieldText(name, "");
+	  		
+	  		name = "habyuisign" + i;
+	  		if (HwpCtrl.CheckFieldExist(name))
+	  			HwpCtrl.SetFieldText(name, "");
+	  		
+	  		name = "habyuipositon" + i;
+	  		if (HwpCtrl.CheckFieldExist(name))
+	  			HwpCtrl.SetFieldText(name, "");
+	  		
+	  		
+	  		name = "habyuidate" + i;
+	  		if (HwpCtrl.CheckFieldExist(name))
+	  			HwpCtrl.SetFieldText(name, "");
+	  	}
+	  	else
+	  	{
+	  	   break;
+	  	}
+	}
+	
+	for(i=1;i < 20;i++) {
+		if (HwpCtrl.CheckFieldExist("gongram" + i)) {
+			HwpCtrl.SetFieldText("gongram" + i, "");
+		}
+	}
+	
+    	
+	for(i=0;i < count;i++) {
+		var Cell = GetChildNodes(objNodes[i]);
+	    var KyljeaOrder = getNodeText(Cell[0]);
+	    var KyljeaName = getNodeText(Cell[1]);
+	    var KyljeaDeptName =  getNodeText(Cell[3]);
+	    var KyljeaType  =  getNodeText(Cell[4]);
+	    var KyljeaStat =  getNodeText(Cell[5]);
+        var KyljeaJobtitle = getNodeText(Cell[2]);
+        var ReasonDoNotApprov = getNodeText(Cell[12]);
+	    
+	    OrderType[KyljeaOrder] = KyljeaType;
+	    OrderName[KyljeaOrder] = KyljeaName;
+	    OrderDept[KyljeaOrder] = KyljeaDeptName;
+	    OrderStat[KyljeaOrder] = KyljeaStat;      
+	    OrderJobtitle[KyljeaOrder] = KyljeaJobtitle;
+	    OrderReason[KyljeaOrder] = ReasonDoNotApprov;
+	}
+     
+    
+    LastSignSN = OrderType.length
+    for(i=1;i<OrderType.length;i++)
+    {
+    	if(OrderType[i] == strLangAprType1 || OrderType[i] == strLangAprType4 || OrderType[i] ==strLangAprType3 )
+    	{
+    		LastSignSN = i;
+        }	
+    }
+
+    if (OrderType[1] == strLangAprType4)
+    {
+		DraftLastFlag = true;
+    }
+     
+	
+    lastKyulName = OrderName[LastSignSN]
+    lastKyuljiwee = OrderJobtitle[LastSignSN]
+	if (HwpCtrl.CheckFieldExist("lastKyuljikwee"))
+		HwpCtrl.SetFieldText("lastKyuljikwee", lastKyuljiwee);
+
+	if (HwpCtrl.CheckFieldExist("lastKyulName"))
+		HwpCtrl.SetFieldText("lastKyulName", lastKyulName);
+    
+	hapyuiCnt = 1;
+	SignCnt = 1;
+	referCnt = 1;
+	gongramCnt = 1;
+
+	var fieldname;
+	var field;
+	var refer;
+	
+	refer = "";
+
+	for(i=0;i < OrderType.length;i ++)
+	{
+		switch (OrderType[i])
+		{
+	  		case strLang126:
+	  	   		break;
+
+	  		case strLangAprType1:
+	  			break;
+	  		
+	  		case strLangAprType2:
+	  			
+	  			if ((OrderName[i] == arr_userinfo[2]) && (i == 1)) IsSkipDrafter = "TRUE";
+	  		  	break;				
+	  	
+	  		case strLang2:
+	  			
+	  			
+	  			
+	  			if(xmlReDraft == "R")
+	  			{
+		  		    fieldname = "habyui" + hapyuiCnt;
+		  		    if (HwpCtrl.CheckFieldExist(fieldname))
+				        HwpCtrl.SetFieldText(fieldname, OrderDept[i]);
+				
+	  				fieldname = "habyuisign" + hapyuiCnt;
+	  				if (HwpCtrl.CheckFieldExist(fieldname))
+				        HwpCtrl.SetFieldText(fieldname, OrderName[i]);
+				
+	  				fieldname = "habyuipositon" + hapyuiCnt;
+	  				if (HwpCtrl.CheckFieldExist(fieldname))
+				        HwpCtrl.SetFieldText(fieldname, OrderJobtitle[i]);
+				}
+	  			else if(xmlReDraft == "C")
+	  			{
+	  				fieldname = "habyui" + hapyuiCnt;
+	  				if (HwpCtrl.CheckFieldExist(fieldname) && OrderStat[i] != strLang173)
+				        HwpCtrl.SetFieldText(fieldname, OrderDept[i]);
+	  				
+	  				fieldname = "habyuisign" + hapyuiCnt;
+	  				if (HwpCtrl.CheckFieldExist(fieldname) && OrderStat[i] != strLang173 )
+				        HwpCtrl.SetFieldText(fieldname, OrderName[i]);
+	  			
+	  				fieldname = "habyuipositon" + hapyuiCnt;
+	  				if (HwpCtrl.CheckFieldExist(fieldname) && OrderStat[i] != strLang173 )
+				        HwpCtrl.SetFieldText(fieldname, OrderJobtitle[i]);
+	  				
+	  				IsSkipDrafter = "TRUE"; 
+	  			}
+	  			else
+	  			{
+	  				fieldname = "habyui" + hapyuiCnt;
+	  				if (HwpCtrl.CheckFieldExist(fieldname))
+				        HwpCtrl.SetFieldText(fieldname, OrderDept[i]);
+	  					  		    
+	  				fieldname = "habyuisign" + hapyuiCnt;
+	  				if (HwpCtrl.CheckFieldExist(fieldname))
+				        HwpCtrl.SetFieldText(fieldname,  OrderName[i]);
+	  				  		    
+	  				fieldname = "habyuipositon" + hapyuiCnt;
+	  			    if (HwpCtrl.CheckFieldExist(fieldname))
+				        HwpCtrl.SetFieldText(fieldname,  OrderJobtitle[i]);
+	  			}
+	  			hapyuiCnt = hapyuiCnt + 1;
+	  			break;
+	  		
+	  		case strLangAprType8:
+	  			
+	  			if(xmlReDraft == "R")
+	  			{
+	  				fieldname = "habyui" + hapyuiCnt;
+	  				if (HwpCtrl.CheckFieldExist(fieldname))
+				        HwpCtrl.SetFieldText(fieldname,  OrderDept[i]);
+				        
+	  				IsSkipDrafter = "FALSE";
+	  			}
+	  			else if(xmlReDraft == "C")
+	  			{
+	  				fieldname = "habyui" + hapyuiCnt;
+	  				if (HwpCtrl.CheckFieldExist(fieldname) && OrderStat[i] != "승인")
+                        
+				        
+	  				IsSkipDrafter = "TRUE"; 
+	  			}
+	  			else
+	  			{
+	  				fieldname = "habyui" + hapyuiCnt;
+	  				if (HwpCtrl.CheckFieldExist(fieldname))
+				        HwpCtrl.SetFieldText(fieldname,  OrderDept[i]);
+	  				
+	  			}
+	  			hapyuiCnt = hapyuiCnt + 1;
+	  			break;
+	  			
+	  		case strLangAprType7:
+	  			if (referCnt == 1)
+	  			{
+	  				refer = "";			
+	  				refer = refer + OrderName[i];
+	  				referCnt = referCnt + 1
+	  			}else{
+	  				refer = refer + ", "  + OrderName[i];
+	  			}
+	  			break;
+	  			
+	  		case strLang12:
+	  			fieldname = "gongram" + gongramCnt
+	  			if (HwpCtrl.CheckFieldExist(fieldname))
+	  			{
+				        HwpCtrl.SetFieldText(fieldname,  OrderName[i] + " " + OrderJobtitle[i] + " " + OrderDept[i]);
+				        gongramCnt = gongramCnt + 1;
+				}       
+	  			break;
+	  	}
+	}
+	  
+	if(refer != "")
+	{
+	  	fieldname = "refer";
+	    if (HwpCtrl.CheckFieldExist(fieldname))
+				        HwpCtrl.SetFieldText(fieldname,  refer);
+	}
+
+	
+	var susinSN = "";
+	if(pDraftFlag == "SUSIN" || pDocState == "011" )
+	  	susinSN = pSusinSN 
+	
+	
+	for(i=1;i < 10;i++)
+	{
+	  	fieldname = susinSN + "jikwe" + i
+	  	if (HwpCtrl.CheckFieldExist(fieldname))
+	  	    HwpCtrl.SetFieldText(fieldname,  "");
+        else
+	  		break;
+	}
+	
+	for(i=1;i < 10;i ++)
+	{
+	  	fieldname =  "hjkwe" + i
+	  	if (HwpCtrl.CheckFieldExist(fieldname))
+	  	    HwpCtrl.SetFieldText(fieldname,  "");
+	  	else
+	  		break;
+	}
+
+	var idx = 1;
+	var hidx = 1;
+	for(i=1;i < OrderJobtitle.length;i ++)
+	{
+	  	if(OrderType[i] == strLangAprType18 || OrderType[i] == strLangAprType19 || OrderType[i] == strLang126 || OrderType[i] == strLangAprType1 || OrderType[i] == strLangAprType4  || OrderType[i] == strLangAprType16)
+	  	{
+	  	   
+	  		var j, chkflag;
+	  		if(OrderType[i] == strLangAprType3)
+	  		{
+	  			chkflag = false;
+	  			for(j=1;j < i;j++)
+	  			{
+	  				if(OrderType[j] == strLangAprType4)
+	  				{
+	  					chkflag = true;
+	  					break;   
+	  				}
+	  			}
+	  			if(!chkflag)
+	  			{
+	  				fieldname = susinSN + "jikwe" + idx;
+	  				if (HwpCtrl.CheckFieldExist(fieldname))
+	  	                HwpCtrl.SetFieldText(fieldname,  OrderJobtitle[i]);
+	  	                	
+	  				fieldname = susinSN + "sign" + idx;
+	  				if (HwpCtrl.CheckFieldExist(fieldname))
+	  	                HwpCtrl.SetFieldText(fieldname,  OrderName[i] + "<br>" + OrderReason[i]);
+	  	                
+	  				idx = idx + 1;
+	  				continue;
+	  			}
+	  		}
+	  		            
+  		    fieldname = susinSN + "jikwe" + idx;
+  		    if (HwpCtrl.CheckFieldExist(fieldname))
+  	            HwpCtrl.SetFieldText(fieldname,  OrderJobtitle[i]);
+  	            
+	  	    
+	  		fieldname = susinSN + "sign" + idx;
+	  		if (HwpCtrl.CheckFieldExist(fieldname))
+	  		{
+	  	        
+	  	        HwpCtrl.SetFieldText(fieldname,  "");
+	  	        idx = idx + 1;
+	  	    }
+	  	}
+
+	  	if(OrderType[i] == strLangAprType8 || OrderType[i] == strLangDocType5 )
+	  	{
+	  		fieldname =  "hjikwe" + hidx;
+	  		if (HwpCtrl.CheckFieldExist(fieldname))
+	  		{
+	  	        HwpCtrl.SetFieldText(fieldname,  OrderJobtitle[i]);
+	  	        hidx = hidx + 1;
+	  		}		
+	  	}	
+	}
+
+  }catch(e){
+    alert(e.description);
+  }	
+  
+}
+
+
+function setSignSlash(pSignKinds, pSusin)
+{
+	var i,j;
+	var fieldName;
+	var field, fieldvalue;
+	var tempFieldName;
+	
+	for (i=1; i<20; i++)
+	{
+		tempFieldName = pSusin + "jikwe" + i;
+		if (HwpCtrl.CheckFieldExist(tempFieldName))
+		{
+			if (trim(HwpCtrl.GetFieldText(tempFieldName)) == "")
+			{
+				fieldName = pSusin + pSignKinds + i;
+				if(HwpCtrl.CheckFieldExist(fieldName))
+				{
+					if (trim(HwpCtrl.GetFieldText(fieldName)) == "")
+					{
+						HwpCtrl.SetFieldSlash(fieldName, true);
+					}
+					else
+					{
+						HwpCtrl.SetFieldSlash(fieldName, false);
+					}
+				}				
+			}
+			else
+			{
+				fieldName = pSusin + pSignKinds + i;
+				if(HwpCtrl.CheckFieldExist(fieldName))
+				{
+					HwpCtrl.SetFieldSlash(fieldName, false);
 				}
 			}
 		}
 	}
-	
-        
-	var Nodes = eNodes.selectNodes("header/receive-id");
-	setNodeText(Nodes(0) , strTO);
+}
 
-        
-	var Nodes = eNodes.selectNodes("header/date");
-	setNodeText(Nodes(0) , "");
 
-        
-	var Nodes = eNodes.selectNodes("header/title");
-	setNodeText(Nodes(0) , objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(7))));
 
-        
-	var Nodes = eNodes.selectNodes("header/doc-id");
-	setNodeText(Nodes(0) , pOrgDocID);
-	
-        
-	var Nodes = eNodes.selectNodes("header/doc-type");
-	if (pAprType == strLang186 )
-		Nodes(0).setAttribute("type", "resend");
-	else
-		Nodes(0).setAttribute("type", "send");
-
-        
-	Nodes(0).setAttribute("dept", objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(17))));
-        
-	Nodes(0).setAttribute("name", objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(14))));
-
-        
-	var Nodes = eNodes.selectNodes("header/send-gw");
-	setNodeText(Nodes(0) , objSave.EncodeBase64("ezFlow2000/G"));
-
-        
-	var Nodes = eNodes.selectNodes("header/dtd-version");
-	setNodeText(Nodes(0) , "2.0");
-
-        
-	var Nodes = eNodes.selectNodes("header/xsl-version");
-	setNodeText(Nodes(0) , "2.0");
-	
-	var Nodes = eNodes.selectNodes("contents");
-	var tempNode = sihangXML.createNode(1,"content","");
-	Nodes(0).appendChild(tempNode);
-	tempNode.setAttribute("content-role", "pubdoc");
-	tempNode.setAttribute("filename", objSave.EncodeBase64("pubdoc.xml"));
-	tempNode.setAttribute("content-transfer-encoding", "base64");
-	tempNode.setAttribute("content-type", "text/xml");
-        tempNode.setAttribute("charset", "euc-kr");
-	
-	var strtempxml = psihangXML.xml;
-	var re = /&amp;nbsp;/g; 
-	var strtempxml = strtempxml.replace(re,"&nbsp;")
-	var re = /strong>/g; 
-	var strtempxml = strtempxml.replace(re,"b>")
-
-	setNodeText(tempNode , objSave.EncodeBase64("<?xml version=\"1.0\" encoding=\"euc-kr\"?><?xml-stylesheet type=\"text/xsl\" href=\"siheng.xsl\"?><!DOCTYPE pubdoc SYSTEM \"pubdoc.dtd\">" + strtempxml));
-	
-        
-        if (sealName != "") {
-		var Nodes = eNodes.selectNodes("contents");
-		var tempNode = sihangXML.createNode(1,"content","");
-		Nodes(0).appendChild(tempNode);
-		tempNode.setAttribute("content-role", "seal");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(sealName));
-		tempNode.setAttribute("content-transfer-encoding", "base64");
-		tempNode.setAttribute("content-type", "");
-		tempNode.setAttribute("charset", "euc-kr");
-		setNodeText(tempNode , sealPath.replace(pDomainName, ""));
-	}	
-	
-        
-        for (i = 0; i < attachName.length; i++) {
-		var Nodes = eNodes.selectNodes("contents");
-		var tempNode = sihangXML.createNode(1,"content","");
-		Nodes(0).appendChild(tempNode);
-		if (attachType[i] == "Y")
-			tempNode.setAttribute("content-role", "attach_body");
-		else
-			tempNode.setAttribute("content-role", "attach");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(attachName[i]));
-		tempNode.setAttribute("content-transfer-encoding", "base64");
-		tempNode.setAttribute("content-type", "");
-		tempNode.setAttribute("charset", "euc-kr");
-		setNodeText(tempNode , attachPath[i]);
-	}
-	
-        if (attachxmlPath != "") {
-		var Nodes = eNodes.selectNodes("contents");
-		var tempNode = sihangXML.createNode(1,"content","");
-		Nodes(0).appendChild(tempNode);
-		tempNode.setAttribute("content-role", "attach_xml");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(attachxmlName));
-		tempNode.setAttribute("content-transfer-encoding", "base64");
-		tempNode.setAttribute("content-type", "html/xml");
-		tempNode.setAttribute("charset", "euc-kr");
-		setNodeText(tempNode , attachxmlPath);
-	}
-
-        if (attachxslPath != "") {
-		var Nodes = eNodes.selectNodes("contents");
-		var tempNode = sihangXML.createNode(1,"content","");
-		Nodes(0).appendChild(tempNode);
-		tempNode.setAttribute("content-role", "attach_xsl");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(attachxslName));
-		tempNode.setAttribute("content-transfer-encoding", "base64");
-		tempNode.setAttribute("content-type", "html/xsl");
-		tempNode.setAttribute("charset", "euc-kr");
-		setNodeText(tempNode , attachxslPath);	
-	}
+function ApplyDocCellInfo()
+{
+  try{
+	var i;
+	var j;
+	var k;
+	var fieldname;
+	var fieldvalue;
 		
-        
-        for (i = 1; i < psignCount; i++) {
-		var Nodes = eNodes.selectNodes("contents");
-		var tempNode = sihangXML.createNode(1,"content","");
-		Nodes(0).appendChild(tempNode);
-		tempNode.setAttribute("content-role", "sign");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(psignName[i]));
-		tempNode.setAttribute("content-transfer-encoding", "base64");
-		tempNode.setAttribute("content-type", "");
-		tempNode.setAttribute("charset", "euc-kr");
-		setNodeText(tempNode , psignPath[i]);
+	for(j = 1 ; j <= hapyuiCount ; j++)
+	{
+		fieldname = "habyuidate" + j;
+		if (HwpCtrl.CheckFieldExist(fieldname))
+		{
+			var fieldvalue = trim(HwpCtrl.GetFieldText(fieldname));
+			if (fieldvalue == "")
+			{
+				fieldname = "habyui" + j;			
+				if (HwpCtrl.CheckFieldExist(fieldname))
+					HwpCtrl.SetFieldText(fieldname, "");
+			}
+		}
 	}
+  }catch(e){
+	alert("ApplyDocCellInfo()" + e.description);
+  }	
+}
+
+
+function ClearDocCellInfo()
+{
+  try{
+	var i;
+	var j;
+	var fieldname;
+	var susunSN = "";
+		    
 	
-        
-        if (symbolName != "") {
-		var Nodes = eNodes.selectNodes("contents");
-		var tempNode = sihangXML.createNode(1,"content","");
-		Nodes(0).appendChild(tempNode);
-		tempNode.setAttribute("content-role", "symbol");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(symbolName));
-		tempNode.setAttribute("content-transfer-encoding", "base64");
-		tempNode.setAttribute("content-type", "");
-		tempNode.setAttribute("charset", "euc-kr");
-		setNodeText(tempNode , symbolPath.replace(pDomainName, ""));
-	}	
-        
-        if (logoName != "") {
-		var Nodes = eNodes.selectNodes("contents");
-		var tempNode = sihangXML.createNode(1,"content","");
-		Nodes(0).appendChild(tempNode);
-		tempNode.setAttribute("content-role", "logo");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(logoName));
-		tempNode.setAttribute("content-transfer-encoding", "base64");
-		tempNode.setAttribute("content-type", "");
-		tempNode.setAttribute("charset", "euc-kr");
-		setNodeText(tempNode , logoPath.replace(pDomainName, ""));
-	}			
-	return ExtXML;
+	if(pDraftFlag == "SUSIN" || pDocState == "011" ) susunSN = pSusinSN;
 	
-  } catch(e) {
-	alert("makeExtinfo : " + e.description);
+	for(i = 1; i <= SignCount ; i++)
+	{
+		fieldname = susunSN + "sign" + i;
+		if (HwpCtrl.CheckFieldExist(fieldname))
+			HwpCtrl.SetFieldText(fieldname, "");
+
+		fieldname = susunSN + "seumyung" + i;
+		if (HwpCtrl.CheckFieldExist(fieldname))
+			HwpCtrl.SetFieldText(fieldname, "");
+
+		fieldname = susunSN + "seumyungdate" + i;
+		if (HwpCtrl.CheckFieldExist(fieldname))
+			HwpCtrl.SetFieldText(fieldname, "");
+					  	
+		fieldname = susunSN + "jikwe" + i;
+		if (HwpCtrl.CheckFieldExist(fieldname))
+			HwpCtrl.SetFieldText(fieldname, "");
+	}
+  
+    for(j = 1 ; j <= hapyuiCount ; j++)
+    {
+		fieldname = susunSN + "habyui" + j;
+		if (HwpCtrl.CheckFieldExist(fieldname))
+			HwpCtrl.SetFieldText(fieldname, "");
+
+		fieldname = susunSN + "habyuipositon" + j;
+		if (HwpCtrl.CheckFieldExist(fieldname))
+			HwpCtrl.SetFieldText(fieldname, "");
+		    
+		fieldname = susunSN + "habyuidate" + j;
+		if (HwpCtrl.CheckFieldExist(fieldname))
+			HwpCtrl.SetFieldText(fieldname, "");
+		
+		fieldname = susunSN + "habyuisign" + j;
+		if (HwpCtrl.CheckFieldExist(fieldname))
+			HwpCtrl.SetFieldText(fieldname, "");
+    }
+    
+    for(i=1;i<20;i++)
+    {
+		fieldname = susunSN + "habyuiopinion" + i;
+		if (HwpCtrl.CheckFieldExist(fieldname))
+			HwpCtrl.SetFieldText(fieldname, "");
+    }
+  }catch(e){
+    alert("ClearDocCellInfo()" + e.description);
   }
 }
 
-var i = 0;
-function sendExtDoc(ExtXML) {
-    try {
-		i = i + 1;
-		var objSaveTmp = new ActiveXObject("EzUtil.MiscFunc"); 
-		objSaveTmp.SaveTextToFile("c:\\" + pDocID + i + "pack.xml", "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">" + ExtXML.xml);
-		objSaveTmp = null;
-		FileUpload(pDocID + i + "pack.xml", "/Upload_ApprovalG/" + companyID + "/sendXML/" + pDocID + i + "pack.xml", "c:\\" + pDocID + i + "pack.xml")
-		
-		
-		arrDelFiles[arrDelFiles.length] = "c:\\" + pDocID + i + "pack.xml";
-		
-		
-		var xmlhttp = createXMLHttpRequest();
-		var xmlPubDocCheck = createXmlDom();
-		
-		var objRoot = xmlPubDocCheck.createNode(1,"PARAMETER","");
-		xmlPubDocCheck.appendChild(objRoot);
-		
-		var objNode = xmlPubDocCheck.createNode(1, "XMLPATH", "");
-		setNodeText(objNode , "/Upload_ApprovalG/" + companyID + "/sendXML/" + pDocID + i + "pack.xml");
-		xmlPubDocCheck.documentElement.appendChild(objNode);
-		
-		xmlhttp.open("POST", "/myoffice/ezApprovalG/enforce/aspx/checkPubDocXML.aspx", false);
-		xmlhttp.send(xmlPubDocCheck);
-		
-        if (xmlhttp.responseText != "0") {
-			alert("" + strLang187 + "" + xmlPubDocCheck.parseError.reason);
-			return false;
-		}
-		
-		
-        xmlhttp.open("POST", "/myoffice/ezApprovalG/enforce/aspx/sendMsg.aspx", false);
-		xmlhttp.send(ExtXML);	
-		return true;
-	}
-    catch (e) {
-		return false;
-	}
+
+function setClearSusinCellInfo()
+{
+  try{
+	var fieldname;
+	fieldname = "recipient";
+	if (HwpCtrl.CheckFieldExist(fieldname))
+		HwpCtrl.SetFieldText(fieldname, "");
+	
+	fieldname = "recipients";
+	if (HwpCtrl.CheckFieldExist(fieldname))
+		HwpCtrl.SetFieldText(fieldname, "");
+  }
+  catch(e){alert("setClearSusinCellInfo()" + e.description);}
 }
 
-function encodeDN(ExtXML) {
+
+function putJunkyulSign(signID)
+{
+	if (HwpCtrl.CheckFieldExist(signID))
+		
+		HwpCtrl.SetFieldText(signID, strLangEtcAprType4);
+}
+
+
+
+function SendDraftMappingSign(ret)
+{
+  try{
+	
+	var psigncell;
+	var pseumyungcell;
+	var pseumyungdatecell;
+	var signInfo = new Array();
+	var signCnt;
+	var sn = 1;
+
+	signCnt = 0;
+	
+	var PositionText = "";
+	PositionText = getOpinionCount();
+	
+	if(LastSignSN == 1) 
+	{
+		
+		if(pDraftFlag == "SUSIN" ||  pDocState == "011")
+		{	
+			fieldname = pSusinSN + "sign" + sn;
+			if (HwpCtrl.CheckFieldExist(fieldname))
+				HwpCtrl.SetFieldText(fieldname, "");		
+			
+			fieldname = pSusinSN + "jikwe" + sn;
+			if (HwpCtrl.CheckFieldExist(fieldname))
+				HwpCtrl.SetFieldText(fieldname, "");		
+		}
+		else
+		{			
+			fieldname = "sign" + sn;
+			if (HwpCtrl.CheckFieldExist(fieldname))
+				HwpCtrl.SetFieldText(fieldname, "");		
+		
+			fieldname = "jikwe" + sn;
+			if (HwpCtrl.CheckFieldExist(fieldname))
+				HwpCtrl.SetFieldText(fieldname, "");		
+		}
+		
+		sn = 1;
+	}
+	else if (DraftLastFlag)		
+	{
+		putJunkyulSign("sign" + sn);
+		for(i=1;i<20;i++)
+	  	{
+	  		if(pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
+	  		else signID = "sign" + i
+
+			if (HwpCtrl.CheckFieldExist(signID))
+				LastSignNo = i;
+	  	}
+		sn = LastSignNo;
+	}
+
+	if(pDraftFlag == "SUSIN" ||  pDocState == "011")
+	{ 
+		psigncell = pSusinSN + "sign" + sn;
+		pseumyungcell = pSusinSN + "jikwe" + sn;
+		pseumyungdatecell = pSusinSN + "seumyungdate" + sn;
+	}else{
+		psigncell = "sign" + sn;
+		pseumyungcell = "jikwe" + sn;
+		pseumyungdatecell = "seumyungdate" + sn;
+	}
+	
+	 
+	var RtnVal = getGyulJeDate();
+	var CurrentDate = RtnVal.split(".");
+	var s = CurrentDate[1] + "." + CurrentDate[2]; 
+	
+	var strimg;
+	var SingFlag = true;
+	
+
+
+	if(ret != "NAME")
+	{
+		if (HwpCtrl.CheckFieldExist(psigncell))
+		{
+			
+			HwpCtrl.SetFieldText(psigncell, "");	
+			HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
+			
+		}
+	
+	  	
+	  	signInfo[signCnt] = psigncell;
+	  	SignName[signCnt] = psigncell;
+	  	SignType[signCnt] = "IMAGE";
+		SignContent[signCnt] = ret;
+	  	signCnt = signCnt + 1
+	  	SingFlag = true;
+	}
+	else
+	{
+	  if (HwpCtrl.CheckFieldExist(psigncell))
+	  {
+	
+            HwpCtrl.SetFieldText(psigncell, arr_userinfo[2]);	  	
+	  		
+	  		signInfo[signCnt] = psigncell;
+	  		SignName[signCnt] = psigncell;
+	  	    SignType[signCnt] = "TEXT";
+		    SignContent[signCnt] = arr_userinfo[2];
+	  		signCnt = signCnt + 1
+	  		SingFlag = false; 
+	  }
+	}
+	
+    
+	if (HwpCtrl.CheckFieldExist(pseumyungcell))
+	{
+		HwpCtrl.SetFieldText(pseumyungcell, arr_userinfo[3] + PositionText);		
+		signInfo[signCnt] = pseumyungcell;
+		SignName[signCnt] = pseumyungcell;
+	  	SignType[signCnt] = "TEXT";
+		SignContent[signCnt] = arr_userinfo[3] + PositionText;
+		signCnt = signCnt + 1
+	}
+
+	
+	if (HwpCtrl.CheckFieldExist(pseumyungdatecell))
+	{
+		HwpCtrl.SetFieldText(pseumyungdatecell, s);		
+		signInfo[signCnt] = pseumyungdatecell;
+		SignName[signCnt] = pseumyungdatecell;
+	  	SignType[signCnt] = "TEXT";
+		SignContent[signCnt] = s;
+		signCnt = signCnt + 1
+	}
+	
+    return signInfo;
+  }catch(e){
+    alert("SendDraftMappingSign(ret)" + e.description);
+  }
+}
+
+
+function UndoSignInfo(signInfo)
+{
+  try{
+	var cnt 
+	if(signInfo)
+	{
+		for(cnt=0;cnt < signInfo.length;cnt++)
+		{
+			if (HwpCtrl.CheckFieldExist(signInfo[cnt]))
+				HwpCtrl.SetFieldText(signInfo[cnt], "");
+		}
+	}
+  }catch(e){
+	alert("UndoSignInfo(signInfo)" + e.description);
+  }
+}
+
+
+function getDraftInfo()
+{
+  try{
+	pFormHref	= FormHref;
+	
+	
+	
+	pDraftFlag = DraftFlag; 
+	pDocType = DocType;
+
+	
+	pSusinSN = SusinSN;    
+	pDocState= DocState;
+	pDocState = ConvertDocState(pDocState);
+	
+	if(pDraftFlag == "SUSIN")
+	{
+		pSusinSN = SusinSN;
+		pDocType = DocType;
+		pDocState= DocState;
+	
+		pDocType = ConvertDocType(pDocType);
+		pDocState = ConvertDocState(pDocState);
+	}
+	else if(pDraftFlag == "HAPYUI")
+	{
+		pDocType = DocType;
+		pDocState= DocState;
+	
+		pDocType = ConvertDocType(pDocType);
+		pDocState = ConvertDocState(pDocState);
+	}
+	pCurSelRow = CurSelRow;
+  }catch(e){
+    alert(e.description);
+  }
+}
+
+
+function ConvertDocType(pDocType)
+{
+	
+	return pDocType;
+}
+
+
+function ConvertDocState(pDocState)
+{
+	
+	return pDocState;
+}
+
+
+function SetBtnStateFalse()
+{
+  try{
+    btnSetAprLine.Enable	= "false";
+	btnSendDraft.Enable		= "false";
+	btnOpinion.Enable		= "false";  
+  }catch(e){
+    alert(e.description);
+  }
+}
+
+
+function SetBtnStateTrue()
+{
+  try{
+  	btnSetAprLine.Enable	= "true";
+  	btnSendDraft.Enable		= "true";
+	btnOpinion.Enable		= "true";
+	btnClose.Enable			= "true";		
+	btnPrint.Enable			= "true";
+  }catch(e){
+    alert(e.description);
+  }
+}
+
+function createNewDoc()
+{
+  try{
+	var NewDocID;
+	var objRoot;
+	var objNode;
+	
+	var xmlpara = createXmlDom();
 	var xmlhttp = createXMLHttpRequest();
-	xmlhttp.open("POST", "/myoffice/ezApprovalG/enforce/aspx/sendMsg2.aspx", false);
-	xmlhttp.send(ExtXML);
+	createNodeInsert(xmlpara, objNode, "PARAMETER");
+	createNodeAndInsertText(xmlpara, objNode, "FormID", pFormID);
+
+	xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/createnewdoc.aspx", false);
+	xmlhttp.send(xmlpara);
 	
-	var emlName = xmlhttp.responseText;
-	
-    try {
-		var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
-		ezUtil.UseUTF8 = true;
-		var result = ezUtil.DownloadToFile(pDomainName + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape("/Upload_ApprovalG/" + companyID + "/ExDocSendMsg/" + emlName), "c:\\" + emlName);
-		ezUtil = null;
-		
-		return emlName;
+	if(xmlhttp.responseText == "False")
+	{
+		var pAlertContent = strLang344 + "<br> " + strLang345;
+		OpenAlertUI(pAlertContent);
+	}else{
+		return xmlhttp.responseText;
 	}
-    catch (e) {
-		return emlName;
+  }catch(e){
+    alert(e.description);
+  }
+}
+
+function getDraftUserInfo() {
+    try {
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezOrgan/getADInfos.do",
+    		data : {
+    			cn : pUserID,
+    			prop : "displayName;mail;description;company;facsimileTelephoneNumber;telephoneNumber;streetaddress;postalcode",
+    			cate  : "user"
+    		},
+    		success: function(xml){
+    			xmluserInfo = loadXMLString(xml);
+    		}        			
+    	});
+    } catch (e) {
+        alert("getDraftUserInfo()" + e.description);
+    }
+}
+
+
+function getDeptSymbol(DeptID, DeptName) {
+var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezOrgan/getADInfos.do",
+		data : {
+			cn : DeptID,
+			prop : "extensionAttribute6",
+			cate  : "group"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+	if (result == "") {
+		return DeptName;
+	} else {
+		return getNodeText(GetChildNodes(loadXMLString(result).documentElement)[0]);
 	}
 }
 
 
-function encodeUP(emlName) {
-	var ouCodes;
-	var rtnVal = true;
+function SetAutoPropertyValue()
+{
+  try{
+	var fieldname;
+	var field;
+	var pSusinNextSN;
+	var objNodes;
+	var CurrentDate;
+	objNodes = xmluserInfo.documentElement.childNodes;
 	
 	
-	showProgress(strLang744);
+    CurrentDate = getGyulJeDate();
+    SignInfo = "";
+    hapyuiCount = 0;
+    SignCount = 0;
+  
+	var FieldLists = HwpCtrl.GetFieldList();
+	var Fields = FieldLists.split(";");
+  
 	
-	var objSave = new ActiveXObject("EzUtil.MiscFunc"); 
-	ContentXML = objSave.LoadTextFromFile("c:\\" + emlName)
-
-	ContentXML = ContentXML.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
-
-    var xmlContent = createXmlDom();
-	xmlContent.loadXML(ContentXML);
-	
-	var ContentsView = xmlContent.selectSingleNode("pack/contents");
-	var ContentText = "";
-    for (i = 0; i < ContentsView.childNodes.length; i++) {
-		ContentText = ContentText + ContentsView.childNodes(i).xml;
+	for (i = 0 ; i < Fields.length ; i ++)
+	{
+		if(pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL")
+		{
+	  		switch (Fields[i])
+	  		{
+	  			case "bedocnumber" :				    
+	  				setDocNumFormat("be");
+	  				break;
+	  			case "docnumber" :				   
+	  				setDocNumFormat("");
+	  				break;
+	  			case "enforcedate" :		 
+	  				break;
+	  			case "recipient" :			 
+	  				break;
+	  			case "refer" :				   
+	  		  		break;
+	  			case "zipcode" :			   
+	  				HwpCtrl.SetFieldText(Fields[i], getNodeText(objNodes.item(7)));
+	  		  		break;
+	  			case "address" :			   
+	  				HwpCtrl.SetFieldText(Fields[i], getNodeText(objNodes.item(6)));
+	  		  		break;												
+	  			case "telephone" :		  	
+	  				HwpCtrl.SetFieldText(Fields[i], getNodeText(objNodes.item(5)));
+	  		  		break;												
+	  			case "fax" :			      	
+	  				HwpCtrl.SetFieldText(Fields[i], getNodeText(objNodes.item(4)));
+	  		  		break;												
+	  			case "department" :		  	
+	  				HwpCtrl.SetFieldText(Fields[i], getNodeText(objNodes.item(2)));
+	  		  		break;												
+	  			case "parantdept" :      
+	  				HwpCtrl.SetFieldText(Fields[i], arrDeptInfo[3]);
+	  		  		break;
+	  			case "seniorposition" :		
+	  		  		break;												
+	  			case "seniorname" :			 
+	  		  		break;												
+	  			case "charge" :				   
+	  				HwpCtrl.SetFieldText(Fields[i], getNodeText(objNodes.item(0)));
+	  		  		break;
+	  			case "position" :			   
+	  				HwpCtrl.SetFieldText(Fields[i], arr_userinfo[3]);
+		  		  	break;
+	  			case "keepperiod" :			 
+	  			  	
+	  		  		break;												
+	  			case "publication" :		 
+	  		  		
+	  		  		break;												
+	  			case "examname" :			  
+		  		  	break;												
+		  		case "examdate" :			  
+	  		  		break;												
+	  			case "headcampaign" :		 
+	  				HwpCtrl.SetFieldText(Fields[i], getNodeText(objNodes.item(3)));
+		  		  	break;							
+	  			case "deptname" :         
+	  				HwpCtrl.SetFieldText(Fields[i], arr_userinfo[5]);
+	  		  		break;
+	  			case "seal" :           
+	  				HwpCtrl.SetFieldText(Fields[i], getNodeText(objNodes.item(3)) + strLang148);
+		  		  	break;
+	  			case "username" :        
+	  				HwpCtrl.SetFieldText(Fields[i], arr_userinfo[2]);
+		  		  	break;
+	  			case "draftername" :      
+	  				HwpCtrl.SetFieldText(Fields[i], arr_userinfo[2]);
+		  		  	break;
+	  			case "draftdate" :       
+	  				HwpCtrl.SetFieldText(Fields[i], CurrentDate);
+		  		  	break;
+	  			case "receiptdate" :
+	  				HwpCtrl.SetFieldText(Fields[i], CurrentDate);
+		  		  	break;
+	  			case "deptshortedname" :
+	  				HwpCtrl.SetFieldText(Fields[i], DeptSymbol);
+		  			break;
+	  			case "receivername" :
+	  				HwpCtrl.SetFieldText(Fields[i], arr_userinfo[2]);
+		  			break;	
+ 			}	  	
+	  	}
+	  	else
+	  	{
+	  	    switch (field.FieldID)
+	  	    {
+	  	     	case pSusinSN + "receiptdate" :	
+	  				HwpCtrl.SetFieldText(Fields[i], CurrentDate);
+	  				break;
+	  	    }	
+	  	}
+	  	
+	  	
+	  	
+	  	if(pDraftFlag == "SUSIN" ||  pDocState == "011")
+	  	{
+	  		var pSignSusin = pSusinSN + "sign";
+	  		if (Fields[i].substr(0, 5) == pSignSusin)
+	  	  		SignCount = SignCount + 1;
+	  	}
+	  	else
+	  	{
+	  		if (Fields[i].substr(0, 4) == "sign")
+	  	  		SignCount = SignCount + 1;
+	  	} 
+      
+		
+	    if (Fields[i].substr(0, 10) == "habyuidate")
+	    {
+	    	hapyuiCount = hapyuiCount + 1;
+	    }
+	    
+	    
+	    if (Fields[i].substr(0, 7) == "gongram")
+	    {
+	    	gongramCount = gongramCount + 1;
+	    }
+	  	
+	    
+	    if(pDraftFlag == "SUSIN" || pSusinSN != "0")
+	    {
+			var pSignInfoSusin = pSusinSN + "jikwe";
+			if(Fields[i].substr(0,6) == pSignInfoSusin)
+			{
+				if(SignInfoFlag)
+				{
+					SignInfo = HwpCtrl.GetFieldText(Fields[i]);
+					SignInfoFlag = false;
+				}
+				else
+				{
+					SignInfo = HwpCtrl.GetFieldText(Fields[i]) + ";" + SignInfo ;
+				}
+			}
+	    }
+	    else
+	    {
+			if(Fields[i].substr(0,5) == "jikwe")
+			{
+				if(SignInfoFlag)
+				{
+					SignInfo = HwpCtrl.GetFieldText(Fields[i]);
+					SignInfoFlag = false;
+				}
+				else
+				{
+					SignInfo = HwpCtrl.GetFieldText(Fields[i]) + ";" + SignInfo ;
+				}
+			}
+	    }
 	}
-	objSave.SaveTextToFile("c:\\content.xml", ContentText);
-	
-	
-	arrDelFiles[arrDelFiles.length] = "c:\\content.xml";
-	
-    if (ObjGPKI.Parse("c:\\content.xml")) {
-		var i = 0;
-		ouCodes = "";
-		
-		var strTO;
-		var isfirst = true;
-		
-        for (i = 0 ; i < isGPKI.length; i++) {
-            if (isGPKI[i] == "Y") {
-				ouCodes = ouCodes + BaseURL[i] + ";";
-				
-                if (isfirst) {
-					strTO = AddInfo[i];
-					isfirst = false;	
-                } else {
-                    strTO = strTO + "," + AddInfo[i];
-				}
-			}
-		}
-		
-		
-		var xmlhttp = createXMLHttpRequest();
-		xmlhttp.open("POST", "/myoffice/ezApprovalG/enforce/aspx/getServerTime.aspx", false);
-		xmlhttp.send();
-		
-        if (is_Enc == "ENC") {
-			
-            if (ObjGPKI.Encode(encodePath, ouCodes, encodePass, xmlhttp.responseText)) {
-				var dday = ObjGPKI.errorMsg
-                if (ObjGPKI.FailCertList != "") {
-					var tempFailList = ObjGPKI.FailCertList;
-					var isfirst = true;
-					var TempRecvList = "";
-                    for (i = 0; i < isGPKI.length; i++) {
-                        if (tempFailList.indexOf(BaseURL[i]) >= 0) {
-							isGPKI[i] = "N"
-                            if (isfirst) {
-								TempRecvList = AddInfo[i];
-								isfirst = false;
-                            } else {
-								TempRecvList = TempRecvList + ", " + AddInfo[i];
-							}													
-							sendCNT[0] = sendCNT[0] - 1;
-							sendCNT[1] = sendCNT[1] + 1;
-						}
-					}
-					var pAlertContent = strLang189 + "" + TempRecvList + "]" + strLang190;
-					OpenAlertUI(pAlertContent);
-				}
-				
-				ObjGPKI.WriteResultFile("C:\\upload.p7m");
-				var GPKIContent = objSave.DownloadToBase64("C:\\upload.p7m");
-				
-				
-				var NewContents = makePKIHeader(GPKIContent);
-				rtnVal = sendExtDoc(NewContents);
-            } else {
-                if (ObjGPKI.FailCertList != "") {
-					var tempFailList = ObjGPKI.FailCertList;
-					var isfirst = true;
-					var TempRecvList = "";
-                    for (i = 0; i < isGPKI.length; i++) {
-                        if (tempFailList.indexOf(BaseURL[i]) >= 0) {
-							isGPKI[i] = "N"
-                            if (isfirst) {
-								TempRecvList = AddInfo[i];
-								isfirst = false;
-                            } else {
-								TempRecvList = TempRecvList + ", " + AddInfo[i];
-							}													
-							sendCNT[0] = sendCNT[0] - 1;
-							sendCNT[1] = sendCNT[1] + 1;
-						}
-					}
-					var pAlertContent = strLang189 + TempRecvList + "]" + strLang190;
-					OpenAlertUI(pAlertContent);
-                } else {
-					var pAlertContent = strLang191 + ObjGPKI.errorMsg;
-					OpenAlertUI(pAlertContent);				
-					rtnVal = false;
-				}
-			}
-        } else if (is_Enc == "SIGN") {
-			
-            if (ObjGPKI.EncodeBySign(encodePath, ouCodes, encodePass, xmlhttp.responseText)) {
-				var dday = ObjGPKI.errorMsg
-                if (ObjGPKI.FailCertList != "") {
-					var tempFailList = ObjGPKI.FailCertList;
-					var isfirst = true;
-					var TempRecvList = "";
-                    for (i = 0; i < isGPKI.length; i++) {
-                        if (tempFailList.indexOf(BaseURL[i]) >= 0) {
-							isGPKI[i] = "N"
-                            if (isfirst) {
-								TempRecvList = AddInfo[i];
-								isfirst = false;
-                            } else {
-								TempRecvList = TempRecvList + ", " + AddInfo[i];
-							}													
-							sendCNT[0] = sendCNT[0] - 1;
-							sendCNT[1] = sendCNT[1] + 1;
-						}
-					}
-					var pAlertContent = strLang189 + TempRecvList + "]" + strLang190;
-					OpenAlertUI(pAlertContent);
-				}
-				
-				ObjGPKI.WriteResultFile("C:\\upload.p7m");
-				var GPKIContent = objSave.DownloadToBase64("C:\\upload.p7m");
-				
-				
-				arrDelFiles[arrDelFiles.length] = "C:\\upload.p7m";
-				
-				
-				var NewContents = makePKIHeader(GPKIContent);
-				rtnVal = sendExtDoc(NewContents);
-            } else {
-                if (ObjGPKI.FailCertList != "") {
-					var tempFailList = ObjGPKI.FailCertList;
-					var isfirst = true;
-					var TempRecvList = "";
-                    for (i = 0; i < isGPKI.length; i++) {
-                        if (tempFailList.indexOf(BaseURL[i]) >= 0) {
-							isGPKI[i] = "N"
-                            if (isfirst) {
-								TempRecvList = AddInfo[i];
-								isfirst = false;
-                            } else {
-								TempRecvList = TempRecvList + ", " + AddInfo[i];
-							}													
-							sendCNT[0] = sendCNT[0] - 1;
-							sendCNT[1] = sendCNT[1] + 1;
-						}
-					}
-					var pAlertContent = strLang189 + TempRecvList + "]" + strLang190;
-					OpenAlertUI(pAlertContent);
-                } else {
-					var pAlertContent = strLang191 + ObjGPKI.errorMsg;
-					OpenAlertUI(pAlertContent);
-					rtnVal = false;
-				}
-			}
-        } else {
-			var pAlertContent = strLang192 + "<br>" + strLang193;
-			OpenAlertUI(pAlertContent);
-			rtnVal = false;
-		}
-    } else {
+	pSuSinFlag = "N";
 
+	
+	
+	if(pDraftFlag != "SUSIN" && pDocState != "011")
+	{
+		var RtnVal = HwpCtrl.CheckFieldExist("recipient");
+		if(RtnVal)
+	    	pSuSinFlag = "Y";
+		else
+	    	pSuSinFlag = "N";
+	}
+
+	
+	if(pSusinSN)
+		pSusinNextSN = parseInt(pSusinSN) + 1;
+	else
+		pSusinNextSN = 1;
+	
+	fieldname = pSusinNextSN + "sign1";
+	if(HwpCtrl.CheckFieldExist(fieldname))	
+		pSuSinFlag = "Y";
+
+	pChamJoFlag = "Y";
+  }catch(e){	
+	alert(e.description);
+  }
+}
+
+function openOpinionUI(pOpinionFlag) {
+  try {
+    var parameter = new Array();
+    parameter[0]	= pDocID;
+    parameter[1]	= pOpinionFlag;
+    parameter[2]	= "002";
+    parameter[3]	= pDraftFlag;
+
+    var url = "/ezApprovalG/aprOpinion.do";
+	var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
+	var ret = window.showModalDialog(url,parameter,feature);
+	 if (ret != "cancel" && ret!= "Clear") {
+	    var NodeList;
+	    var objXML = createXmlDom();
+	    objXML = loadXMLString(ret);
+	    NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+	
+	    if(NodeList.length != 0) {
+	    	pHasOpinionYN = "Y";
+	    } else {
+			pHasOpinionYN = "N";
+			ret = "cancel";
+	    }
+	    makeOpinionList(objXML);	    
+    }
+    return ret;
+  } catch(e){
+    alert(e.description);
+  }
+}
+
+function makeOpinionList(OpinionXML)
+{
+	if (!HwpCtrl.CheckFieldExist("opinions"))
+		return;
+
+	var firstFlag = true;
+	var NodeList = OpinionXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
+	if (NodeList.length > 0)
+	{
+		var strOpinion = " ";
+		for (i=NodeList.length - 1; i>=0; i--)
+		{
+			
+		    if (getNodeText(NodeList.item(i).childNodes(0)) == "일반의견")
+			{
+				if (firstFlag)
+				{
+					strOpinion = "[" +strLang27 +"\n";
+					firstFlag = false;
+				}
+				strOpinion = strOpinion + "" + getNodeText(NodeList.item(i).childNodes(2)) + "      "; 
+				strOpinion = strOpinion + getNodeText(NodeList.item(i).childNodes(1)) + "      "; 
+				strOpinion = strOpinion + getNodeText(NodeList.item(i).childNodes(6)) + "\n"; 
+			}
+				
+		}		
+		HwpCtrl.SetFieldText("opinions", strOpinion);
+	}
+	else
+	{
+		HwpCtrl.SetFieldText("opinions", "");
+	}
+}
+
+function getOpinionCount()
+{
+	
+	return "";
+	
+}
+
+
+function SaveDraftDocInfo()
+{
+	var rtnVal;
+	
+	
+	rtnVal = SaveFile();
+    if (rtnVal != "TRUE")
+	{
+		return rtnVal;
 	}
 	
-	hideProgress();
+	SignSave();
 	
+	switch (pDraftFlag)
+	{
+		case "SUSIN" :				
+			rtnVal = SaveDraftDocInfo_susin();
+			break;
+		
+		case "REDRAFT" :
+			
+			if(pDocState == "011")
+				rtnVal = SaveDraftDocInfo_susin();
+			else
+				rtnVal = SaveDraftDocInfo_ilban();
+			break;	
+       
+       default :
+			rtnVal = SaveDraftDocInfo_ilban();
+			break;
+	}
+
+	if (rtnVal.toUpperCase() != "TRUE")
+	{
+		SaveOrgFile();
+	}	
 	return rtnVal;
 }
 
-function makePKIHeader(psihangXML) {
-	var ExtSNodes, Nodes, Nodes2, strTO, i;
-	var isfirst;
+
+function SaveDraftDocInfo_ilban()
+{
+  try{
+	var field;
+	var objRoot;
+	var objNode;
+	var field;
 	
-	var ExtXML =  createXmlDom();
-	ExtXML.async = false;
-	ExtXML.load("/myoffice/ezApprovalG/enforce/packXML.xml");
-	
-  try {	
-	var objSave = new ActiveXObject("EzUtil.MiscFunc"); 
-	var eNodes = ExtXML.documentElement;
-	var Nodes = psihangXML.documentElement;
+	var xmlpara = createXmlDom();
+	var xmlhttp = createXMLHttpRequest();
 	
 
-	var Nodes = eNodes.selectNodes("header/send-orgcode");
-	setNodeText(Nodes(0) , companyID);
-	
-	var Nodes = eNodes.selectNodes("header/send-id");
-	
-	setNodeText(Nodes(0) , companyID);
+	var objNode;
+	createNodeInsert(xmlpara, objNode, "PARAMETER");
+	createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
+	createNodeAndInsertText(xmlpara, objNode, "FormID", pFormID);
 
-	var Nodes = eNodes.selectNodes("header/send-name");
-	
-	setNodeText(Nodes(0) , objSave.EncodeBase64(companyName));
-	
-	isfirst = true;
-        for (i = 0; i < isGPKI.length; i++) {
-            if (isGPKI[i] == "Y") {
-                if (isfirst) {
-				strTO = BaseURL[i];
-				isfirst = false;	
-			}
-			else
-				strTO = strTO + ";" + BaseURL[i];
-		}		
-	}	
-	
-	var Nodes = eNodes.selectNodes("header/receive-id");
-	setNodeText(Nodes(0) , strTO);
+	if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI") {
+	    createNodeAndInsertText(xmlpara, objNode, "OrgDocID", pOrgDocID);
+	    createNodeAndInsertText(xmlpara, objNode, "DocType", pDocType);
+	    createNodeAndInsertText(xmlpara, objNode, "DocState", pDocState);
+	}
+	else {
+	    createNodeAndInsertText(xmlpara, objNode, "OrgDocID", "");
+	    createNodeAndInsertText(xmlpara, objNode, "DocType", "");
+	    createNodeAndInsertText(xmlpara, objNode, "DocState", "");
+	}
 
-	var Nodes = eNodes.selectNodes("header/date");
-	setNodeText(Nodes(0) , "");
+	createNodeAndInsertText(xmlpara, objNode, "FunctionType", "002");
+	createNodeAndInsertText(xmlpara, objNode, "Href", "/document/doc/" + pDocID + ".hwp");
 
-	var Nodes = eNodes.selectNodes("header/title");
-	setNodeText(Nodes(0) , objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(7))));
 
-	var Nodes = eNodes.selectNodes("header/doc-id");
-	
-	
-	setNodeText(Nodes(0) , pOrgDocID);
 
-	var Nodes = eNodes.selectNodes("header/doc-type");
-	if (pAprType == strLang186)
-		Nodes(0).setAttribute("type", "resend");
+
+	if (HwpCtrl.CheckFieldExist("doctitle"))
+	    createNodeAndInsertText(xmlpara, objNode, "DocTitle", HwpCtrl.GetFieldText("doctitle"));
 	else
-		Nodes(0).setAttribute("type", "send");
-	Nodes(0).setAttribute("dept", objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(17))));
-	Nodes(0).setAttribute("name", objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(14))));
+	    createNodeAndInsertText(xmlpara, objNode, "DocTitle", "");
 
-	var Nodes = eNodes.selectNodes("header/send-gw");
-	
-	setNodeText(Nodes(0) , objSave.EncodeBase64("ezFlow2000/G"));
 
-	var Nodes = eNodes.selectNodes("header/dtd-version");
-	setNodeText(Nodes(0) , "2.0");
 
-	var Nodes = eNodes.selectNodes("header/xsl-version");
-	setNodeText(Nodes(0) , "2.0");
-	
-
-	var Nodes = eNodes.selectNodes("contents");
-	var tempNode = sihangXML.createNode(1,"content","");
-	Nodes(0).appendChild(tempNode);
-	tempNode.setAttribute("content-role", "gpki");
-	tempNode.setAttribute("filename", objSave.EncodeBase64("smime.p7m"));
-	tempNode.setAttribute("content-transfer-encoding", "base64");
-	if(is_Enc == "ENC")
-		tempNode.setAttribute("content-type", "application/gcc-mime;smime-type=signedandenveloped-data;");
+	var field = "";
+	if (HwpCtrl.CheckFieldExist("docnumber"))
+	    field = HwpCtrl.GetFieldText("docnumber");
+	else if (HwpCtrl.CheckFieldExist("be_docnumber"))
+	    field = HwpCtrl.GetFieldText("be_docnumber");
+	else if (HwpCtrl.CheckFieldExist("deptshortedname"))
+	    field = HwpCtrl.GetFieldText("deptshortedname");
 	else
-            tempNode.setAttribute("content-type", "application/gcc-mime;smime-type=signed-data;");
-	tempNode.setAttribute("charset", "euc-kr");
-	setNodeText(tempNode , psihangXML);
+	    field = "";
 
-	return ExtXML;
-	
-  } catch(e) {
-	alert("makePKIHeader : " + e.description);
+	createNodeAndInsertText(xmlpara, objNode, "DocNo", field);
+
+
+	createNodeAndInsertText(xmlpara, objNode, "HasAttachYN", pHasAttachYN);
+	createNodeAndInsertText(xmlpara, objNode, "HasOpinionYN", pHasOpinionYN);
+
+	var startdate;
+	if (pState == "000")
+	    startdate = "DRAFTSAVE";
+	else
+	    startdate = "DRAFT";
+	createNodeAndInsertText(xmlpara, objNode, "StartDate", startdate);
+	createNodeAndInsertText(xmlpara, objNode, "EndDate", "DRAFT");
+	createNodeAndInsertText(xmlpara, objNode, "WriterID", "");
+	createNodeAndInsertText(xmlpara, objNode, "WriterName", "");
+	createNodeAndInsertText(xmlpara, objNode, "WriterJobTitle", "");
+	createNodeAndInsertText(xmlpara, objNode, "WriterDeptID", "");
+	createNodeAndInsertText(xmlpara, objNode, "WriterDeptName", "");
+	createNodeAndInsertText(xmlpara, objNode, "Html", "");
+	createNodeAndInsertText(xmlpara, objNode, "OrgHtml", "");
+	createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
+	createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[2]);
+	createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
+
+	createNodeAndInsertText(xmlpara, objNode, "security", tempSecurity);
+	createNodeAndInsertText(xmlpara, objNode, "keepperiod", tempKeep);
+	createNodeAndInsertText(xmlpara, objNode, "publication", tempPublic);
+
+	createNodeAndInsertText(xmlpara, objNode, "public", "");
+	createNodeAndInsertText(xmlpara, objNode, "ItemCode", tempItemCode);
+	createNodeAndInsertText(xmlpara, objNode, "ItemName", tempItemName);
+	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
+	createNodeAndInsertText(xmlpara, objNode, "UrgentApproval", tempUrgent);
+	createNodeAndInsertText(xmlpara, objNode, "KeyWord", tempKeyword);
+
+	createNodeAndInsertText(xmlpara, objNode, "WRITERNAME2", "");
+	createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE2", "");
+	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME2", "");
+	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[11]);
+	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
+	createNodeAndInsertText(xmlpara, objNode, "CABINETID", cabinetID);
+	createNodeAndInsertText(xmlpara, objNode, "TASKCODE", TaskCode);
+	createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", DocNumCode);
+
+
+
+
+	xmlhttp.open("POST", "/myoffice/ezApprovalG/ezViewHWP/aspx/dodraft_HWP.aspx", false);
+	xmlhttp.send(xmlpara);
+
+	SetBtnStateFalse();
+	return getNodeText(loadXMLString(xmlhttp.responseText));
+  }catch(e){
+    alert(e.description);
   }
 }
 
-function trim(parm_str) {
-	return rtrim(ltrim(parm_str));
+function SaveDraftDocInfo_susin()
+{
+  try{
+	var field;
+	var objRoot;
+	var objNode;
+	var field;
+	    
+	var objNodes = xmldoc.documentElement.childNodes;
+		
+	var xmlpara = createXmlDom();
+	var xmlhttp = createXMLHttpRequest();
+	var xmlRtn = createXmlDom();
+		
+
+	createNodeInsert(xmlpara, objNode, "PARAMETER");
+	createNodeAndInsertText(xmlpara, objNode, "DocID", getNodeText(objNodes(0)));
+	createNodeAndInsertText(xmlpara, objNode, "FormID", getNodeText(objNodes(1)));
+	createNodeAndInsertText(xmlpara, objNode, "OrgDocID", getNodeText(objNodes(2)));
+	createNodeAndInsertText(xmlpara, objNode, "DocType", getNodeText(objNodes(3)));
+
+	createNodeAndInsertText(xmlpara, objNode, "DocState", getNodeText(objNodes(4)));
+	createNodeAndInsertText(xmlpara, objNode, "FunctionType", "002");
+	createNodeAndInsertText(xmlpara, objNode, "Href", getNodeText(objNodes(6)));
+
+	if (HwpCtrl.CheckFieldExist("doctitle"))
+	    createNodeAndInsertText(xmlpara, objNode, "DocTitle", HwpCtrl.GetFieldText("doctitle"));
+	else
+	    createNodeAndInsertText(xmlpara, objNode, "DocTitle", "");
+
+	if (HwpCtrl.CheckFieldExist("docnumber"))
+	    createNodeAndInsertText(xmlpara, objNode, "DocNo", HwpCtrl.GetFieldText("docnumber"));
+	else if (HwpCtrl.CheckFieldExist("be_docnumber"))
+	    createNodeAndInsertText(xmlpara, objNode, "DocNo", HwpCtrl.GetFieldText("be_docnumber"));
+	else if (HwpCtrl.CheckFieldExist("deptshortedname"))
+	    createNodeAndInsertText(xmlpara, objNode, "DocNo", HwpCtrl.GetFieldText("deptshortedname"));
+	else
+	    createNodeAndInsertText(xmlpara, objNode, "DocNo", "");
+
+	createNodeAndInsertText(xmlpara, objNode, "HasAttachYN", pHasAttachYN);
+	createNodeAndInsertText(xmlpara, objNode, "HasOpinionYN", "");
+	createNodeAndInsertText(xmlpara, objNode, "StartDate", "DRAFT");
+	createNodeAndInsertText(xmlpara, objNode, "EndDate", "DRAFT");
+	createNodeAndInsertText(xmlpara, objNode, "WriterID", getNodeText(objNodes(13)));
+	createNodeAndInsertText(xmlpara, objNode, "WriterName", getNodeText(objNodes(14)));
+
+	createNodeAndInsertText(xmlpara, objNode, "WriterJobTitle", getNodeText(objNodes(15)));
+	createNodeAndInsertText(xmlpara, objNode, "WriterDeptID", getNodeText(objNodes(16)));
+	createNodeAndInsertText(xmlpara, objNode, "WriterDeptName", getNodeText(objNodes(17)));
+	createNodeAndInsertText(xmlpara, objNode, "Html", "");
+	createNodeAndInsertText(xmlpara, objNode, "OrgHtml", "");
+
+	createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
+	createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[2]);
+	createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
+
+	createNodeAndInsertText(xmlpara, objNode, "security", tempSecurity);
+	createNodeAndInsertText(xmlpara, objNode, "keepperiod", tempKeep);
+	createNodeAndInsertText(xmlpara, objNode, "publication", tempPublic);
+
+	createNodeAndInsertText(xmlpara, objNode, "Public", tempPublic);
+	createNodeAndInsertText(xmlpara, objNode, "ItemCode", tempItemCode);
+	createNodeAndInsertText(xmlpara, objNode, "ItemName", tempItemName);
+	createNodeAndInsertText(xmlpara, objNode, "ItemName2", tempItemName2);
+	createNodeAndInsertText(xmlpara, objNode, "UrgentApproval", tempUrgent);
+	createNodeAndInsertText(xmlpara, objNode, "KeyWord", tempKeyword);
+
+	createNodeAndInsertText(xmlpara, objNode, "PMemberName", arr_userinfo[11]);
+	createNodeAndInsertText(xmlpara, objNode, "SMemberName", arr_userinfo[12]);
+	createNodeAndInsertText(xmlpara, objNode, "PMemberDeptName", arr_userinfo[15]);
+	createNodeAndInsertText(xmlpara, objNode, "SMemberDeptName", arr_userinfo[16]);
+	createNodeAndInsertText(xmlpara, objNode, "PMemberJobTitle", arr_userinfo[13]);
+	createNodeAndInsertText(xmlpara, objNode, "SMemberJobTitle", arr_userinfo[14]);
+
+	xmlhttp.open("POST", "/myoffice/ezApprovalG/ezViewHWP/aspx/dodraft_HWP.aspx", false);
+	xmlhttp.send(xmlpara);
+	  		
+	SetBtnStateFalse();
+	return getNodeText(loadXMLString(xmlhttp.responseText));
+  }catch(e){
+    alert(e.description);
+  }
 }
+
+
+function openSignUI()
+{
+  try{
+    var objRoot;
+    var objNode;
+    var SignNodeList;
+    
+    var xmlhttp = createXMLHttpRequest();
+    var xmlpara = createXmlDom();
+  
+    createNodeInsert(xmlpara, objNode, "PARAMETER");
+    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
+  
+    xmlhttp.open("Post", "/myoffice/ezApprovalG/ezAPRSIGN/aspx/GetSignRequest.aspx", false);
+    xmlhttp.send(xmlpara);
+  
+    SignNodeList = loadXMLString(xmlhttp.responseText).selectNodes("LISTVIEWDATA/ROWS/ROW"); 
+    if(SignNodeList.length != 0)
+    { 
+		var parameter	= pUserID;
+		var url = "/myoffice/ezApprovalG/ezAPRSIGN/AprSign1_Cross.aspx";
+		var feature	= "status:no;dialogWidth:350px;dialogHeight:320px;help:no;scroll:no;edge:sunken";
+	    var ret = window.showModalDialog(url,parameter,feature);
+    }else{
+		var ret = "NAME";
+    }
+	return ret;
+  }catch(e){
+    alert("openSignUI : " + e.description);
+  }
+}
+
+
+function openAprLineUI() {
+    try {
+        var parameter = new Array();
+        parameter[0] = pDocID;
+
+        parameter[1] = "9999999999";
+        parameter[2] = SignCount;
+        parameter[3] = SignInfo;
+        parameter[4] = hapyuiCount;
+        parameter[5] = pDraftFlag;
+        parameter[6] = pSuSinFlag;
+        parameter[7] = pChamJoFlag;
+        parameter[8] = gongramCount;
+        parameter[9] = false;
+        parameter[10] = pDocType;
+        parameter[11] = "";
+        parameter[12] = "";
+        parameter[13] = DraftFlag;
+        parameter[14] = "";
+        parameter[15] = "";
+        var url = "/myoffice/ezApprovalG/ezAPRLINE/Aprline2.aspx";
+        var feature = "status:no;dialogWidth:990px;dialogHeight:720px;help:no;scroll:no;edge:sunken";
+        var ret = window.showModalDialog(url, parameter, feature);
+        return ret;
+
+    } catch (e) {
+        alert(e.description);
+    }
+} 
+
+function GetAprDocFormID() {
+	 try {
+    	var result = "";
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/getAprDocFormID.do",
+    		data : {
+    			docID : pDocID
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+
+        pFormID = SelectSingleNodeValueNew(loadXMLString(result), "DATA/FORMID");
+	        
+	 } catch (e) {
+       alert("GetAprDocFormID()" + e.description);
+	 }
+}
+
+
+
+function trim(parm_str)
+{
+  return rtrim(ltrim(parm_str));
+}
+
 function ltrim(parm_str) {
-	str_temp = parm_str ;
-	while (str_temp.length != 0) {
-		if (str_temp.substring(0, 1) == " ") {
-			str_temp = str_temp.substring(1, str_temp.length) ;
-		} else {
-			return str_temp ;
-		}
-	}
-return str_temp ;
+  str_temp = parm_str ;
+  while (str_temp.length != 0) {
+    if (str_temp.substring(0, 1) == " ") {
+      str_temp = str_temp.substring(1, str_temp.length) ;
+    } else {
+      return str_temp ;
+    }
+  }
+  return str_temp ;
 }
+
 function rtrim(parm_str) {
-	str_temp = parm_str ;
-	while (str_temp.length != 0) {
-		int_last_blnk_pos = str_temp.lastIndexOf(" ");
-		if ((str_temp.length - 1) == int_last_blnk_pos) {
-			str_temp = str_temp.substring(0, str_temp.length - 1);
-		} else {
-			return str_temp;
+  str_temp = parm_str ;
+  while (str_temp.length != 0) {
+    int_last_blnk_pos = str_temp.lastIndexOf(" ");
+    if ((str_temp.length - 1) == int_last_blnk_pos) {
+      str_temp = str_temp.substring(0, str_temp.length - 1);
+    } else {
+      return str_temp;
+    }
+  }
+  return str_temp;
+}
+
+
+function getGyulJeDate() {
+   try {
+        var xmlhttp = createXMLHttpRequest();
+
+        xmlhttp.open("POST", "/ezApprovalG/getDate.do", false);
+        xmlhttp.send();
+
+        return xmlhttp.responseText;
+
+    } catch (e) {
+        alert("getGyulJeDate()" + e.description);
+    }
+}
+
+
+function setSusinUpdataDocID()
+{
+  try{
+    var xmlhttp = createXMLHttpRequest();
+    var xmlpara = createXmlDom();
+
+    var objNode;
+    createNodeInsert(xmlpara, objNode, "PARAMETER");
+    createNodeAndInsertText(xmlpara, objNode, "pOrgDocID", pOrgDocID);
+    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
+    createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
+
+	xmlhttp.open("POST","/myOffice/ezApprovalG/DraftUI/aspx/setSusinUpdateDocID.aspx",false);
+	xmlhttp.send(xmlpara);
+
+	return xmlhttp.responseText;
+
+  }catch(e){
+    alert(e.description);
+  }
+}
+
+function OpenInformationUI(pInformationContent)
+{
+	var parameter = pInformationContent;
+	var url = "/myoffice/ezApprovalG/ezAPROPINION.aspx";
+	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+	var RtnVal = window.showModalDialog(url,parameter,feature);
+	return RtnVal;
+}
+
+function OpenAlertUI(pAlertContent)
+{
+	var parameter = pAlertContent;
+	var url = "/myoffice/ezApprovalG/ezAPRALERT.aspx";
+	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+	var RtnVal = window.showModalDialog(url,parameter,feature);
+}
+
+
+
+function getDocInfo() {
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getDocInfo.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(xml){
+			result = loadXMLString(xml);
+		}        			
+	});
+	
+    xmldoc = result;
+    var objNodes = xmldoc.documentElement.childNodes;
+	if(objNodes) {
+		pOrgDocID = SelectSingleNodeValueNew(result, "DATA/ORGDOCID");			
+		if (SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "Y" || SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "O") {
+			pHasOpinionYN = "Y";
+		}
+			
+		tempSecurity = SelectSingleNodeValueNew(result, "DATA/SECURITYCODE");
+	    tempKeep = SelectSingleNodeValueNew(result, "DATA/STORAGEPERIOD");
+	    tempUrgent = SelectSingleNodeValueNew(result, "DATA/URGENTAPPROVAL");
+	    tempPublic = SelectSingleNodeValueNew(result, "DATA/ISPUBLIC");
+	    tempKeyword = SelectSingleNodeValueNew(result, "DATA/KEYWORD");
+	    tempItemCode = SelectSingleNodeValueNew(result, "DATA/ITEMCODE");
+	    tempItemName = SelectSingleNodeValueNew(result, "DATA/ITEMNAME");		
+		
+        pSummery = SelectSingleNodeValueNew(result, "DATA/SUMMARY");
+        pSpecialRecordCode = SelectSingleNodeValueNew(result, "DATA/SPECIALRECORDCODE");
+        pPublicityCode = SelectSingleNodeValueNew(result, "DATA/PUBLICITYCODE");
+        pLimitRange = SelectSingleNodeValueNew(result, "DATA/LIMITRANGE");
+        pPageNum = SelectSingleNodeValueNew(result, "DATA/PAGENUM");
+        cabinetID = SelectSingleNodeValueNew(result, "DATA/CABINETID");
+        TaskCode = SelectSingleNodeValueNew(result, "DATA/TASKCODE");
+
+        tempSecurityDate = SelectSingleNodeValueNew(result, "DATA/SECURITYAPPROVAL");
+		drafterDeptid = SelectSingleNodeValueNew(result, "DATA/WRITERDEPTID");
+    }
+}
+
+function getReceiveDocInfo() {
+  try{
+	  var pdocXML;
+	  var result = "";
+  	
+      $.ajax({
+  		type : "POST",
+  		dataType : "text",
+  		async : false,
+  		url : "/ezApprovalG/getReceiveDocInfo.do",
+  		data : {
+  			docID : pDocID
+  		},
+  		success: function(xml){
+  			result = loadXMLString(xml);
+  		}        			
+  	});
+    
+    xmlpara = createXmlDom();
+
+    pdocXML = SelectSingleNodeNew(result, "RECEIVEDATA/DOCINFO");
+    xmlString = getXmlString(pdocXML);
+    xmlpara = loadXMLString(xmlString);
+    document.getElementById("DOCINFO").dataSource = xmlpara;
+	
+    
+    xmlpara = createXmlDom();
+    pdocXML = SelectSingleNodeNew(result, "RECEIVEDATA/ATTACHINFO");
+    xmlString = getXmlString(pdocXML);
+    xmlpara = loadXMLString(xmlString);
+    document.getElementById("ATTACHINFO").dataSource = xmlpara;
+	
+    xmlpara = createXmlDom();
+    pdocXML = SelectSingleNodeNew(result, "RECEIVEDATA/DOCFLAGINFO");
+    xmlString = getXmlString(pdocXML);
+    xmlpara = loadXMLString(xmlString);
+
+    var node = GetElementsByTagName(xmlpara, "DocFlag");
+    pDraftFlag = getNodeText(node[0]);
+    
+    var node = GetElementsByTagName(xmlpara, "Href");
+    pFormHref = getNodeText(node[0]);
+	
+    pOrgDocID = getNodeText(GetElementsByTagName(result, "ORGDOCID")[0]);
+    var doctitle = getNodeText(GetElementsByTagName(result, "DOCTITLE")[0]);
+	   
+	switch (pDraftFlag) {
+		case "SUSIN" :
+			pSusinSN     = getNodeText(GetElementsByTagName(xmlpara, "RecieveSN")[0]);
+            pDocType     = getNodeText(GetElementsByTagName(xmlpara, "DocType")[0]);
+            pDocState    = getNodeText(GetElementsByTagName(xmlpara, "DocState")[0]);
+            pAprState    = getNodeText(GetElementsByTagName(xmlpara, "AprState")[0]);
+            pSusinDocURL = pFormHref;
+			pSusinDocURL = pSusinDocURL.replace("mht", "hwp");
+			break;
+
+		case "HAPYUI" :
+			pSusinSN = ""
+			pDocType     = getNodeText(GetElementsByTagName(xmlpara, "DocType")[0]);
+            pDocState    = getNodeText(GetElementsByTagName(xmlpara, "DocState")[0]);
+            pAprState    = getNodeText(GetElementsByTagName(xmlpara, "AprState")[0]);
+            pSusinDocURL = getNodeText(GetElementsByTagName(result, "HAPYUI")[0]);
+			pSusinDocURL = pSusinDocURL.replace("mht", "hwp");
+			break;
+				
+		case "GAMSABU" :
+			pSusinSN     = getNodeText(GetElementsByTagName(xmlpara, "RecieveSN")[0]);
+            pDocType     = getNodeText(GetElementsByTagName(xmlpara, "DocType")[0]);
+            pDocState    = getNodeText(GetElementsByTagName(xmlpara, "DocState")[0]);
+            pAprState    = getNodeText(GetElementsByTagName(xmlpara, "AprState")[0]);
+            pSusinDocURL = getNodeText(GetElementsByTagName(result, "GAMSA")[0]);
+			pSusinDocURL = pSusinDocURL.replace("mht", "hwp");
+			break;
+				
+		case "WHOKYUL" :
+			pSusinSN      = getNodeText(GetElementsByTagName(xmlpara, "RecieveSN")[0]);
+            pDocType      = getNodeText(GetElementsByTagName(xmlpara, "DocType")[0]);
+            pDocState     = getNodeText(GetElementsByTagName(xmlpara, "DocState")[0]);
+            pAprState     = getNodeText(GetElementsByTagName(xmlpara, "AprState")[0]);
+            pSusinDocURL  = getNodeText(GetElementsByTagName(result, "GAMSA")[0]);
+			pSusinDocURL  = pSusinDocURL.replace("mht", "hwp");
+			break;
+			
+		case "GONGRAM" :
+            pSusinSN     = getNodeText(GetElementsByTagName(xmlpara, "RecieveSN")[0]);
+            pDocType     = getNodeText(GetElementsByTagName(xmlpara, "DocType")[0]);
+            pDocState    = getNodeText(GetElementsByTagName(xmlpara, "DocState")[0]);
+            pAprState    = getNodeText(GetElementsByTagName(xmlpara, "AprState")[0]);
+            pSusinDocURL = pFormHref;
+			pSusinDocURL = pSusinDocURL.replace("mht", "hwp");
+			break;
+			
+		default :
+			pSusinSN = "1"; 
+			break;
+	}
+  }catch(e){
+	alert("getReceiveDocInfo :: " + e.description);
+  }
+}
+
+
+function setButtonReceiveTrue()
+{
+	SetBtnStateFalse();
+	btnAssign.Enable = "false";
+	btnDistribute.Enable = "false";
+	btnReturn.Enable = "false";
+	btnAproveSusin.Enable = "false";
+}
+
+function setHeSongDocInfo(pSelectedRow) {
+    try {
+    	var objRoot;
+        var objNode;
+
+        var xmlpara = createXmlDom();
+        var xmlhttp = createXMLHttpRequest();
+        createNodeInsert(xmlpara, objNode, "ASSIGN");
+
+        createNodeAndInsertText(xmlpara, objNode, "pDocID", GetAttribute(pSelectedRow, "DATA1"));
+        createNodeAndInsertText(xmlpara, objNode, "pAprMemberDeptID", arr_userinfo[4]);
+        createNodeAndInsertText(xmlpara, objNode, "pAprMemberID", pUserID);
+        createNodeAndInsertText(xmlpara, objNode, "pReceiveSN", "1");
+
+        xmlhttp.open("POST", "/ezApprovalG/setHeSongHapyuiDocInfo.do", false);
+        xmlhttp.send(xmlpara);
+    
+        if (xmlhttp != null && xmlhttp.readyState == 4) {
+   	 		if (xmlhttp.statusText == "OK") {
+   	 			var pAlertContent = strLang878;
+   	 			OpenAlertUI(pAlertContent, "", "OPEN");
+   	 			openergetDocInfo();
+   	 		} else {
+   	 			var pAlertContent = strLang740;
+   	 			OpenAlertUI(pAlertContent, "", "OPEN");
+   	 			return;
+   	 		}
+        } 
+    } catch(e){
+    	alert("setHeSongDocInfo :: " + e.description);
+    }
+}
+
+function chk_Passwd()
+{
+	var parameter = pUserID;
+	var url		= "/myoffice/ezApprovalG/ezchkPasswd.aspx";
+	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
+	var ret = window.showModalDialog(url,parameter,feature);
+		
+	
+		
+	return ret;
+}
+
+function getLastOpinon()
+{
+	var xmlpara = createXmlDom();
+
+	var objNode;
+	createNodeInsert(xmlpara, objNode, "PARAMETER");
+	createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
+	
+	xmlhttp.open("Post", "/myoffice/ezApprovalG/ReceivUI/aspx/getLastOpinonCotent.aspx", false);
+	xmlhttp.send(xmlpara);	
+	
+	if (loadXMLString(xmlhttp.responseText).documentElement.childNodes.length > 0 )
+	{
+	    var content = getNodeText(loadXMLString(xmlhttp.responseText).documentElement.childNodes(0));		
+	}	
+
+	if (HwpCtrl.CheckFieldExist("memo"))
+		HwpCtrl.SetFieldText("memo", content);
+}
+
+
+function setFirstDrafter()
+{
+	var pxml 
+	var xmlhttp = createXMLHttpRequest();
+    var xmlpara = createXmlDom();
+
+	pxml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>결재순번</NAME><WIDTH>100</WIDTH></HEADER>"
+	pxml = pxml + "<HEADER><NAME>이름</NAME><WIDTH>100</WIDTH></HEADER>"
+	pxml = pxml + "<HEADER><NAME>부서</NAME><WIDTH>150</WIDTH></HEADER>"
+	pxml = pxml + "<HEADER><NAME>결재방법</NAME><WIDTH>150</WIDTH></HEADER>"
+	pxml = pxml + "<HEADER><NAME>결재상태</NAME><WIDTH>100</WIDTH></HEADER>"
+	pxml = pxml + "<HEADER><NAME>결재일</NAME><WIDTH>120</WIDTH></HEADER>"
+	pxml = pxml + "<HEADER><NAME>수신일</NAME><WIDTH>120</WIDTH></HEADER></HEADERS>"
+	pxml = pxml + "<ROWS><ROW><COLUMN>1</COLUMN>"
+	pxml = pxml + "<COLUMN>" + arr_userinfo[2] + "</COLUMN>"
+	pxml = pxml + "<COLUMN>" + arr_userinfo[3] + "</COLUMN>"
+	pxml = pxml + "<COLUMN>" + arr_userinfo[5] + "</COLUMN>"
+	pxml = pxml + "<COLUMN>" + "확인" + "</COLUMN>"
+	pxml = pxml + "<COLUMN>" + "진행" + "</COLUMN>"
+	pxml = pxml + "<DATA name='ProcessDate'></DATA>"
+	pxml = pxml + "<DATA name='ReceivedDate'></DATA>"
+	pxml = pxml + "<DATA name='DocID'>" + pDocID + "</DATA>"
+	pxml = pxml + "<DATA name='AprMemberID'>" + arr_userinfo[1] + "</DATA>"
+	pxml = pxml + "<DATA name='AprmemberIsDeptYN'>N</DATA>"
+	pxml = pxml + "<DATA name='AprMemberDeptID'>" + arr_userinfo[4] + "</DATA>"
+	pxml = pxml + "<DATA name='ReasonDoNotApprov'>" + "" + "</DATA>"
+	pxml = pxml + "<DATA name='isProposerYN'>N</DATA>"
+	pxml = pxml + "<DATA name='isBriefUserYN'>N</DATA>"
+	pxml = pxml + "</ROW></ROWS></LISTVIEWDATA>"
+	
+	xmlpara.loadXML(pxml);
+	
+	xmlhttp.open("POST", "/myoffice/ezApprovalG/ezLine/aspx/aprlinesave.aspx", false);
+	xmlhttp.send(xmlpara);
+	
+	
+	
+	if(xmlhttp.responseText == "true")
+	{
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		LastSignSN = 1;
+	
+	}
+	else
+	{
+		var pAlertContent = strLang760;
+		OpenAlertUI(pAlertContent);
+	
+	}
+}
+
+
+function setDocNumFormat(pPrefix)
+{
+	var Arr_Header = new Array()
+	var Header, Tail
+	var i
+	var d = new Date();
+		
+	var numHeader = ""
+	if(pDraftFlag == "REDRAFT") return;
+		
+	if(!HwpCtrl.CheckFieldExist(pPrefix + "docnumber"))		
+		return 
+
+
+
+
+	
+	var fieldValue = HwpCtrl.GetFieldText(pPrefix + "docnumber");
+	Arr_Header = fieldValue.split("@")
+	    
+	for(i=1;i<Arr_Header.length;i++)
+	{
+		Header = Arr_Header[i].substr(0,2);
+		Tail   = Arr_Header[i].substr(2);
+				
+		switch(Header)
+		{
+			case "DP":
+				numHeader = numHeader + DeptSymbol + Tail;
+				break;			
+
+			case "dp":
+				numHeader = numHeader + DeptSymbol + Tail 
+				break;
+
+			case "YY":
+				numHeader = numHeader + d.getYear() + Tail 
+				break;
+
+			case "yy":
+				var yyear = d.getYear()
+				numHeader = numHeader + yyear.toString().substr(2) + Tail
+				break;
+
+			case "MM":
+				var mmonth = d.getMonth() + 1
+				if(parseInt(mmonth) < 10) mmonth = "0" + mmonth;
+					numHeader = numHeader + mmonth + Tail
+				break;
+
+			case "mm":
+				numHeader = numHeader + (d.getMonth() + 1) + Tail
+				break;
+
+			case "NN":
+				break;
+
+			case "nn":
+				break;
+
+			case "cs":
+				numHeader = numHeader + strLang107 + Tail;
+				break;
+
+			default:
+				numHeader = numHeader + fieldValue;
+				break;
 		}
 	}
-return str_temp;
+			
+	HwpCtrl.SetFieldText(pPrefix + "docnumber", numHeader);
+	if(numHeader.indexOf(strLang107) > 0) 
+		HwpCtrl.SetDocumentInfo("NULL", "NULL", numHeader);
+}
+
+
+
+function SaveFile()
+{
+
+    var xmlhttp = createXMLHttpRequest();
+    var xmlpara = createXmlDom();
+
+
+    var objNode;
+    createNodeInsert(xmlpara, objNode, "PARAMETER");
+    createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
+    createNodeAndInsertText(xmlpara, objNode, "Html", HwpCtrl.GetCloneData("", "HWP"));
+
+		
+	xmlhttp.open("POST","aspx/SaveFileHWP.aspx",false);
+	xmlhttp.send(xmlpara);
+		
+	return xmlhttp.responseText;
+}
+
+function SaveOrgFile()
+{
+	var xmlhttp = createXMLHttpRequest();
+	var xmlpara = createXmlDom();
+
+	var objNode;
+	createNodeInsert(xmlpara, objNode, "PARAMETER");
+	createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
+	createNodeAndInsertText(xmlpara, objNode, "Html", pOrgHtml);
+
+		
+	xmlhttp.open("POST","aspx/SaveFileHWP.aspx",false);
+	xmlhttp.send(xmlpara);
+		
+	return xmlhttp.responseText;
+}
+
+
+function SignSave()
+{
+	if (SignContent.length > 0)
+	{
+		var xmlhttp = createXMLHttpRequest();
+		var xmlpara = createXmlDom();
+  
+		var objRoot, objNode, subNode;
+		objRoot = createNodeInsert(xmlpara, objRoot, "SIGNINFOS");
+
+		for (i = 0; i < SignContent.length; i++) {
+		    objNode = createNodeAndAppandNode(xmlpara, objRoot, objNode, "SIGNINFO");
+		    createNodeAndAppandNodeText(xmlpara, objNode, subNode, "DOCID", pDocID);
+		    createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNTYPE", SignType[i]);
+		    createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNNAME", SignName[i]);
+		    createNodeAndAppandNodeText(xmlpara, objNode, subNode, "CONTENT", SignContent[i]);
+		}
+		xmlhttp.open("Post", "/myoffice/ezApprovalG/ezAPRSIGN/aspx/setSignInfo.aspx", false);
+		xmlhttp.send(xmlpara);
+	}
+}
+
+
+function setRecevInfo(ret)
+{
+	
+	var i
+	var strMailAdd = ""
+	var precipent = ""
+	var precipents = ""
+	var	mailflag = true;
+	var recipflag = true;
+	var mailList = "";
+	var mailcnt = 0;
+	
+	var xmldom = createXmlDom();
+	xmldom.async = false;
+	xmldom.loadXML(ret)
+
+	
+	if (HwpCtrl.CheckFieldExist("hrecipients"))
+		HwpCtrl.SetFieldText("hrecipients", "");
+	
+	if (HwpCtrl.CheckFieldExist("recipient"))
+	{
+		HwpCtrl.SetFieldText("recipient", "");
+	}
+
+	if (HwpCtrl.CheckFieldExist("recipients"))
+		HwpCtrl.SetFieldText("recipients", "");
+
+	if(xmldom.documentElement.length == 0) return;
+	var rows = xmldom.documentElement.childNodes
+	
+	for(i=rows.length - 1;i>=0;i--)
+	{
+		var row = rows(i)
+		if(getNodeText(rows(i).childNodes(3)) == "Y")
+		{
+			if(mailflag)
+			{
+				strMailAdd = "\"" + getNodeText(rows(i).childNodes(0)) + "\"" + " " + "<" + getNodeText(rows(i).childNodes(6)) + ">";
+				mailflag = false;
+				mailList = getNodeText(rows(i).childNodes(0));
+			}
+			else
+			{
+				strMailAdd = strMailAdd + ", " + "\"" + getNodeText(rows(i).childNodes(0)) + "\"" + " " + "<" + getNodeText(rows(i).childNodes(6)) + ">";
+				mailList = mailList + "," + getNodeText(rows(i).childNodes(0));
+			}
+			mailcnt = mailcnt + 1;
+		}	
+		
+		if(recipflag)
+		{
+				if(getNodeText(rows(i).childNodes(3)) == "Y")
+				{
+					precipent = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0)) 
+					precipents = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
+					recipflag = false;	
+				}
+				else
+				{	
+					if(isExtDoc == "Y")
+					{
+						precipent = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
+						precipents = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))				
+						recipflag = false;	
+					}
+					else
+					{
+						precipent = getNodeText(rows(i).childNodes(0))
+						precipents = getNodeText(rows(i).childNodes(0))				
+						recipflag = false;	
+					}
+				}
+			
+		}
+		else
+		{
+			precipent = strLang68;
+			
+			if(getNodeText(rows(i).childNodes(3)) == "Y")
+				precipents = precipents + "," + getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
+			else
+			{
+				if(isExtDoc == "Y")
+					precipents = precipents + "," + getNodeText(rows(i).childNodes(7)) + " " +  getNodeText(rows(i).childNodes(0)); 
+				else
+					precipents = precipents + "," + getNodeText(rows(i).childNodes(0));
+			}
+		}		
+	}
+	
+	
+	
+		
+	
+	if (HwpCtrl.CheckFieldExist("recipient"))
+	{
+		if(precipent == strLang68)
+		{
+			HwpCtrl.SetFieldText("recipient", precipent);		
+			
+			if (HwpCtrl.CheckFieldExist("recipients"))
+				HwpCtrl.SetFieldText("recipients", precipents);		
+
+			if (HwpCtrl.CheckFieldExist("hrecipients"))
+				HwpCtrl.SetFieldText("hrecipients", strLang70);		
+		}
+		else
+		{
+			HwpCtrl.SetFieldText("recipient", precipent);		
+		
+			if(precipents == "")
+			{			
+				if (HwpCtrl.CheckFieldExist("recipients"))
+					HwpCtrl.SetFieldText("recipients", "");		
+
+				if (HwpCtrl.CheckFieldExist("hrecipients"))
+					HwpCtrl.SetFieldText("hrecipients", "");		
+			}
+		}	
+	}
+	else if (HwpCtrl.CheckFieldExist("recipients"))
+		HwpCtrl.SetFieldText("recipients", precipents);
+}
+
+
+function UpdateLineHistory()
+{
+	var xmlhttp = createXMLHttpRequest();
+	var xmlpara = createXmlDom();
+
+	var objNode;
+	createNodeInsert(xmlpara, objNode, "PARAMETER");
+	createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
+	createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
+	createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
+	createNodeAndInsertText(xmlpara, objNode, "pUserJobTitle", arr_userinfo[13]);
+	createNodeAndInsertText(xmlpara, objNode, "pUserDeptID", arr_userinfo[4]);
+	createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", arr_userinfo[15]);
+	createNodeAndInsertText(xmlpara, objNode, "chkFlag", "MUST");
+	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
+	createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
+	createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
+	
+	xmlhttp.open("POST", "/myoffice/ezApprovalG/ezAPRHISTORY/aspx/UpdateLineHistory.aspx", false);
+	xmlhttp.send(xmlpara);
+	
+	if (getNodeText(loadXMLString(xmlhttp.responseText)) == "TRUE")
+	{
+	}
+	else
+	{
+		var pAlertContent = strLang720;
+    	OpenAlertUI(pAlertContent);
+	}	
 }

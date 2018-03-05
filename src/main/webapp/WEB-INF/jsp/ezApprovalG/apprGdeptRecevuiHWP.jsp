@@ -3,10 +3,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
-<html>
+<html style="height:97%">
 	<head>
 	    <title><spring:message code='ezApprovalG.t1308'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -16,15 +17,14 @@
 		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezDeptRecev_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CheckLines.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 	    <script type="text/javascript">
-	    	var pNoneActiveX = "<%=NoneActiveX%>";
-	        var pDocID = "<%= _DocID%>";
-	        var DraftFlag = "<%=_DraftFlag%>";
+	        var pDocID = "${docID}";
+	        var DraftFlag = "${draftFlag}";
 	        var pFormHref = new String("");
 	        var pFormID = new String();
-	        var pUserID = "<%=userinfo.UserID%>";
+	        var pUserID = "${userInfo.id}";
 			var pHasAttachYN = new String("N");
 			var pHasOpinionYN = new String("N");
 			var CurrentDate
@@ -61,36 +61,37 @@
 			var RootURL = document.location.protocol + "//" + document.location.hostname;
 			var arr_userinfo = new Array();
 			arr_userinfo[0] = "user";
-			arr_userinfo[1] = "<%=userinfo.UserID%>";
-			arr_userinfo[2] = "<%=userinfo.DisplayName%>";
-	        arr_userinfo[3] = "<%=userinfo.Title%>";
-	        arr_userinfo[4] = "<%=userinfo.DeptID%>";
-	        arr_userinfo[5] = "<%=userinfo.DeptName%>";
-	        arr_userinfo[6] = "<%=userinfo.Jikchek%>";
-	        arr_userinfo[8] = "<%=userinfo.Email%>";
+		    arr_userinfo[1]  = "${userInfo.id}";
+		    arr_userinfo[2]  = "${userInfo.displayName}";
+		    arr_userinfo[3]  = "${userInfo.title}";
+		    arr_userinfo[4]  = "${userInfo.deptID}";
+		    arr_userinfo[5]  = "${userInfo.deptName}";
+		    arr_userinfo[6]  = "${userInfo.jikChek}";
+		    arr_userinfo[8]  = "${userInfo.email}";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "<%=_pSusinAdmin%>";
-			arr_userinfo[11] = "<%=userinfo.DisplayName1%>";
-	        arr_userinfo[12] = "<%=userinfo.DisplayName2%>";
-	        arr_userinfo[13] = "<%=userinfo.Title1%>";
-	        arr_userinfo[14] = "<%=userinfo.Title2%>";
-	        arr_userinfo[15] = "<%=userinfo.DeptName1%>";
-	        arr_userinfo[16] = "<%=userinfo.DeptName2%>";
+	        arr_userinfo[10] = "${susinAdmin}";
+		    arr_userinfo[11]  = "${userInfo.displayName1}";
+		    arr_userinfo[12]  = "${userInfo.displayName2}";
+		    arr_userinfo[13]  = "${userInfo.title1}";
+		    arr_userinfo[14]  = "${userInfo.title2}";
+		    arr_userinfo[15]  = "${userInfo.deptName1}";
+		    arr_userinfo[16]  = "${userInfo.deptName2}";
 	
 	        var SignType = new Array();
 	        var SignName = new Array();
 	        var SignContent = new Array();
 	        var KuyjeType = "002";
-	        var signDateFormat = "<%=_optSignDateFormat%>";
-			var isSplit = "<%=_optisSplit%>";
-	        var SplitKind = "<%=_optSplitKind%>";
-	        var _opinionYN = "<%= _opinionYN%>";
-	        var _opinionGamsaYN = "<%= _opinionGamsaYN%>";
-	        var _usepassword = "<%= _usepassword%>";
+	        var signDateFormat = "${optSignDateFormat}";
+			var isSplit = "${optIsSplit}";
+	        var SplitKind = "${optSplitKind}";
+	        var _opinionYN = "${opinionYN}";
+	        var _opinionGamsaYN = "${opinionGamsaYN}";
+	        var _usepassword = "${usePassword}";
 	        var pDocSN = "1";
-	        var pUse_Editor = "<%= Use_Editor%>";
+	        var pUse_Editor = "${useEditor}";
 			var DocNumCode = "";
 			var isHWP = "${isHWP}";
+			var dirPath = "${dirPath}";
 			
 			function process_AfterOpen() {
 			    try {
@@ -179,7 +180,7 @@
 			
 			        var rtnVal = ExcuteInfo("INIT", "")
 			        if (!rtnVal) {
-			            var pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			            var pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 					    OpenAlertUI(pAlertContent);
 					    return;
 					}
@@ -208,17 +209,16 @@
 			        } else {
 			            showProgress("<spring:message code='ezApprovalG.t1475'/>");
 			
-					    var URL = "http:" + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pSusinDocURL);
+					    var URL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + dirPath + escape(pSusinDocURL.substr(pSusinDocURL.lastIndexOf("/") + 1, pSusinDocURL.length));
 					    var isTrue = HwpCtrl.LoadFile(URL, false);
 			
 					    if (isTrue) {
 			
-					        URL = "http:" + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pFormHref);
+					        URL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pFormHref);
 			
 					        isTrue = HwpCtrl2.LoadFile(URL, false);
 					        FieldsAvailable(isTrue);
-					    }
-					    else {
+					    } else {
 					        hideProgress();
 					        var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
 			
@@ -280,10 +280,10 @@
 			        if (HwpCtrl.CheckFieldExist("doctitle"))
 			            pDocTitle = trim(HwpCtrl.GetFieldText("doctitle"));
 			        else
-			            pDocTitle = "<spring:message code='ezApprovalG.t10009'/>";
+			            pDocTitle = "<spring:message code='ezApprovalG.t1394'/>";
 			
 			    if ((LastSignSN == 1 || typeof (LastSignSN) == "undefined") && IsSkipDrafter == "TRUE") {
-			        var pAlertContent = "<spring:message code='ezApprovalG.t10003'/>";
+			        var pAlertContent = "<spring:message code='ezApprovalG.t1489'/>";
 				    OpenAlertUI(pAlertContent);
 				    return;
 				}
@@ -301,7 +301,7 @@
 			    }
 			
 			    if (pDocTitle == "") {
-			        var pAlertContent = "<spring:message code='ezApprovalG.t10004'/>";
+			        var pAlertContent = "<spring:message code='ezApprovalG.t1695'/>";
 				    OpenAlertUI(pAlertContent);
 				    return;
 				}
@@ -348,7 +348,7 @@
 			                  var rtnVal;
 			                  rtnVal = ExcuteInfo("DOCNUM_BEFORE", "")
 			                  if (!rtnVal) {
-			                      var pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			                      var pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 				  			    OpenAlertUI(pAlertContent);
 				  			    return;
 				  			}
@@ -360,7 +360,7 @@
 			                  rtnval = getDocNumber(arr_userinfo[4], "be");
 			
 			              if (!rtnval) {
-			                  var pAlertContent = "<spring:message code='ezApprovalG.t10005'/>";
+			                  var pAlertContent = "[" + "<spring:message code='ezApprovalG.t1384'/>";
 						    OpenAlertUI(pAlertContent);
 						    return;
 						}
@@ -369,7 +369,7 @@
 			                var rtnVal;
 			                rtnVal = ExcuteInfo("DOCNUM_AFTER", "")
 			                if (!rtnVal) {
-			                    var pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 				  			    OpenAlertUI(pAlertContent);
 				  			    return;
 				  			}
@@ -384,7 +384,7 @@
 			              if (RtnVal == "true") {
 			                  RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_BEFORE", "")
 			                  if (!RtnVal) {
-			                      pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			                      pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 				  			    OpenAlertUI(pAlertContent);
 				  			    return;
 				  			}
@@ -395,7 +395,7 @@
 			                      RtnVal = setSusinUpdataDocID();
 			                      RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_AFTER", "")
 			                      if (!RtnVal) {
-			                          pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			                          pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 				  				    OpenAlertUI(pAlertContent);
 				  				    return;
 				  				}
@@ -403,7 +403,7 @@
 			                      if (LastSignSN == 1 || DraftLastFlag) {
 			                          RtnVal = ExcuteInfo("SUSIN_DOCNUM_END", "")
 			                          if (!RtnVal) {
-			                              pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			                              pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 				  					    OpenAlertUI(pAlertContent);
 				  					    return;
 				  					}
@@ -418,12 +418,12 @@
 			                      if (LastSignSN == 1 || DraftLastFlag) {
 			                          RtnVal = ExcuteInfo("END_FAIL", "")
 			                          if (!RtnVal) {
-			                              pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			                              pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 				  					    OpenAlertUI(pAlertContent);
 				  					    return;
 				  					}
 			                      }
-			                      pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			                      pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 				  			    OpenAlertUI(pAlertContent);
 				  			    return;
 				  			}
@@ -433,7 +433,7 @@
 			                  if (LastSignSN == 1 || DraftLastFlag) {
 			                      RtnVal = ExcuteInfo("END_FAIL", "")
 			                      if (!RtnVal) {
-			                          pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			                          pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 				  				    OpenAlertUI(pAlertContent);
 				  				    return;
 				  				}
@@ -441,7 +441,7 @@
 			                  SetBtnStateTrue();
 			                  btnSendDraft.Enable = "true";
 			
-			                  pAlertContent = "<spring:message code='ezApprovalG.t10006'/>";
+			                  pAlertContent = "[" + "<spring:message code='ezApprovalG.t1495'/>";
 				  			OpenAlertUI(pAlertContent);
 				  			return;
 			              }
@@ -449,7 +449,7 @@
 			              var RtnVal = ExcuteInfo("DRAFTSAVE_BEFORE", "")
 			              var pAlertContent;
 			              if (!RtnVal) {
-			                  pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			                  pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 				  		    OpenAlertUI(pAlertContent);
 				  		    return;
 				  		}
@@ -457,7 +457,7 @@
 			              if (RtnVal == "TRUE") {
 			                  RtnVal = ExcuteInfo("DRAFTSAVE_AFTER", "")
 			                  if (!RtnVal) {
-			                      pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			                      pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 				  			    OpenAlertUI(pAlertContent);
 				  			    return;
 				  			}
@@ -465,7 +465,7 @@
 			                  if (LastSignSN == 1 || DraftLastFlag) {
 			                      RtnVal = ExcuteInfo("DOCNUM_END", "")
 			                      if (!RtnVal) {
-			                          pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			                          pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 				  				    OpenAlertUI(pAlertContent);
 				  				    return;
 				  				}
@@ -481,13 +481,13 @@
 			                  if (LastSignSN == 1 || DraftLastFlag) {
 			                      RtnVal = ExcuteInfo("END_FAIL", "")
 			                      if (!RtnVal) {
-			                          pAlertContent = "<spring:message code='ezApprovalG.t10002'/>";
+			                          pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
 				  				    OpenAlertUI(pAlertContent);
 				  				    return;
 				  				}
 			                  }
 			                  SetBtnStateTrue();
-			                  pAlertContent = "<spring:message code='ezApprovalG.t10007'/>";
+			                  pAlertContent = "[" + "<spring:message code='ezApprovalG.t1400'/>";
 				  			OpenAlertUI(pAlertContent);
 				  			return;
 			              }
@@ -525,8 +525,7 @@
 			    parameter[1] = "HeSong";
 			    parameter[2] = "002";
 			    parameter[3] = "";
-			
-			    var url = "/myoffice/ezApprovalG/ezAPROPINION/AprOpinion.aspx";
+			    var url = "/ezApprovalG/aprOpinion.do";
 			    var feature = "status:no;dialogWidth:530px;dialogHeight:520px;help:no;edge:sunken;scroll:no"
 			    var ret = window.showModalDialog(url, parameter, feature);
 			
@@ -543,10 +542,10 @@
 			    var pLeft = (pwidth - 760) / 2;
 			
 			    if (useWebMail == "YES") {
-			        window.open("/myoffice/ezWmail/mail_write.aspx?DocHref=" + pFormHref + "&cmd=docsend&DocID=<%=_DocID%>" + "&TARGET=APPROVALG", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+			        window.open("/myoffice/ezWmail/mail_write.aspx?DocHref=" + pFormHref + "&cmd=docsend&DocID=" + pDocID + "&TARGET=APPROVALG", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 				}
 				else {
-				    window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=" + pFormHref + "&cmd=docsend&DocID=<%=_DocID%>" + "&TARGET=APPROVALG", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+				    window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=" + pFormHref + "&cmd=docsend&DocID=" + pDocID + "&TARGET=APPROVALG", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 				}
 			}
 	
@@ -676,7 +675,8 @@
 			
 			    if (tempItemCode != "")
 			        tempdocnumcode = tempItemCode;
-			    var url = "/myoffice/ezApprovalG/ezLINE/ezApprovalInfo.aspx?initFlag=1&Gubun=" + pGubun;
+			    
+			    var url =  "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun;
 			    var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;help:no;scroll:no;;edge:sunken;";
 			    var ret = window.showModalDialog(url, parameter, feature);
 			
@@ -685,10 +685,19 @@
 			            var savexmlhttp = createXMLHttpRequest();
 			
 			            if (ret[1] != false) {
-			                savexmlhttp.open("Post", "/myoffice/ezApprovalG/ezLine/aspx/aprlinesave.aspx", false);
-			                savexmlhttp.send(ret[1]);
+			            	$.ajax({
+	                    		type : "POST",
+	                    		dataType : "text",
+	                    		async : false,
+	                    		url : "/ezApprovalG/aprLineSave.do",
+	                    		data : {
+	                    				ret    : ret[1]
+	                    				},
+	                    		success : function(result){
+	                    		}
+	                    	});
 			
-			                var dataNodes = GetChildNodes(loadXMLString(savexmlhttp.responseText));
+// 			                var dataNodes = GetChildNodes(loadXMLString(savexmlhttp.responseText));
 			
 			                IsSkipDrafter = "FALSE";
 			                btnSendDraftEnable = "true";
@@ -702,15 +711,14 @@
 			                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 			                }
 			            }
-			        }
-			        catch (e) {
+			        } catch (e) {
 			            alert("저장시 오류 발생");
 			        }
 			    }
 			}
 	    </script>
 	</head>
-	<body class="popup" onload="window_onload()" onbeforeunload="return window_onbeforeunload()">
+	<body class="popup" style="height:100%" onload="window_onload()" onbeforeunload="return window_onbeforeunload()">
 	    <table class="layout">
 	        <tr>
 	            <td height="20">
@@ -720,9 +728,9 @@
 	                        <li id="btnSetAprLine" style="display: none"><span onclick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li>
 	                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 	                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t10000'/></span></li>
-	                        <li id="btnDocInfo" style="display: none;"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t10008'/></span></li>
+	                        <li id="btnDocInfo" style="display: none;"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
-	                        <li id="btnOrgDocInfo"><span onclick="return btnOrgDocInfo_onclick()"><spring:message code='ezApprovalG.t10001'/></span></li>
+	                        <li id="btnOrgDocInfo"><span onclick="return btnOrgDocInfo_onclick()"><spring:message code='ezApprovalG.t367'/></span></li>
 	                        <li id="btnServerSave" style="display: none;"><span style="display: none; cursor: hand" onclick="return btnServerSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 	                    </ul>
@@ -743,13 +751,13 @@
 	                <table width="100%" height="100%">
 	                    <tr>
 	                        <td valign="center" id="form1">
-	                            <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<%=_HwpToolbar%>", "1");</script>
+	                            <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "1");</script>
 	                            <img src="../img/bbs_hr01.gif" width="1" height="10">
 	                        </td>
 	                    </tr>
 	                    <tr id="form2">
 	                        <td valign="center" height="1">
-	                            <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl2", "3", "0", "<%=_HwpToolbar%>", "1");</script>
+	                            <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl2", "3", "0", "${hwpToolbar}", "1");</script>
 	                        </td>
 	                    </tr>
 	                </table>

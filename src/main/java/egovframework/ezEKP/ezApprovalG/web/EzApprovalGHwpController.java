@@ -573,7 +573,56 @@ public class EzApprovalGHwpController {
 		
 		return "ezApprovalG/apprGrecevgsusinHWP";
 	}	
+	
+	
+	@RequestMapping(value = "/ezApprovalG/ezDeptRecevUI_HWP.do")
+	public String ezDeptRecevUI_HWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezDeptRecevUI_HWP started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
+		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
+		String docID = request.getParameter("docID");
+		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String draftFlag = request.getParameter("draftFlag");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        String opinionYN = "N";
+        String opinionGamsaYN = "N";
+        String usePassword = "N";
+		String pSusinAdmin = "";
+		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "form" + commonUtil.separator;
+		
+        if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+        	pSusinAdmin = "YES";
+        } else {
+        	pSusinAdmin = "NO";
+        }
+        
+		model.addAttribute("optSignDateFormat", optSignDateFormat);
+		model.addAttribute("optIsSplit", optIsSplit);
+		model.addAttribute("optSplitKind", optSplitKind);
+		model.addAttribute("docID", docID);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		model.addAttribute("draftFlag", draftFlag);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("pSusinAdmin", pSusinAdmin);
+		model.addAttribute("opinionYN", opinionYN);
+		model.addAttribute("opinionGamsaYN", opinionGamsaYN);
+		model.addAttribute("usePassword", usePassword);
+		model.addAttribute("isHWP", "Y");
+		model.addAttribute("dirPath", dirPath);
+		
+		LOGGER.debug("ezDeptRecevUI_HWP ended");
+		return "ezApprovalG/apprGdeptRecevuiHWP";
+	}
+	
 	public String makeXMLString(String orgString) throws Exception{
 		return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 	}
