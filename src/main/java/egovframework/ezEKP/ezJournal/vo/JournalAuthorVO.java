@@ -11,7 +11,14 @@ public class JournalAuthorVO {
 	private String deptId;
 	private String mail;
 	private String mine;
+	private String userImg;
 	
+	public String getUserImg() {
+		return userImg;
+	}
+	public void setUserImg(String userImg) {
+		this.userImg = userImg;
+	}
 	public String getMine() {
 		return mine;
 	}

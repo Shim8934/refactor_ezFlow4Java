@@ -1,0 +1,115 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><spring:message code='ezSchedule.t6' /></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
+		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />		
+		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
+	    <script type="text/javascript">	
+	    	var selectedUser = "<c:out value="${selectedUser }" />"
+	    	var companyId = "<c:out value="${companyId}" />";
+	    	var deptIds = [];
+	    	var deptNames = [];
+	    	var userDeptId;
+	    	var userDeptName;
+	    
+	    	//사원선택
+	    	function select_person(){
+	    		var url = "/admin/ezJournal/authorDetail.do";
+				url+="?companyId="+companyId;
+				window.open(url, "authorDetail", "width=1100, height=600");
+	    	}
+	    	
+	    	//부서선택
+	    	function selectDept(){
+	    		var url = "/admin/ezJournal/selectAuthorDept.do";
+				url+="?companyId="+companyId+"&userId="+selectedUser;
+				window.open(url, "authorDept", "width=500, height=550");
+	    	}
+	    	 
+	    	//부서 이름 세팅
+	    	function setDeptName(){
+				var deptString;
+				if(deptNames.length<4){
+		    		for (var i = 0; i < deptNames.length; i++) {
+		    			if(i!=0){
+				    		deptString += " ,"+deptNames[i];
+		    			} else {
+		    				deptString=deptNames[i];
+		    			}
+					}
+				} else {
+					deptString = deptNames[0]+" <spring:message code='ezJournal.t124' /> "+ (deptNames.length-1);
+				}
+	    		$("#txtdept").val(deptString);
+	    	}	  
+	    	
+	    	//열람권한 저장
+	    	function insertAuthDept(){
+	   			var jsonString = JSON.stringify({"userId":selectedUser,"depts":deptIds});
+				$.ajax({
+	   				type:"post",
+	   				dataType:"html",
+	   				url:"/admin/ezJournal/saveAuthor.do",
+	   				contentType:"application/json;",
+	   				data:jsonString,
+	   				success: function(result){
+	   					alert(result);
+   						opener.location.reload();
+   						window.close();
+	   				}
+	   			});
+	   		}
+	    	
+	    	$(document).ready(function(){
+	    		<c:if test="${not empty selectedUser }">
+			    	<c:forEach items="${deptList }" var="dept">
+			    		<c:choose>
+				    		<c:when test="${dept.mine eq 'yes' }">
+				    			userDeptName = '${fn:replace(dept.deptName, "'", "\\'") }';
+				    			userDeptId = '${fn:replace(dept.deptId, "'", "\\'") }';
+					    	</c:when>
+					    	<c:otherwise>
+								deptNames.push('${fn:replace(dept.deptName, "'", "\\'") }');
+								deptIds.push('${fn:replace(dept.deptId, "'", "\\'") }');
+							</c:otherwise>
+						</c:choose>
+			    	</c:forEach>
+		    		setDeptName();
+	    		</c:if>
+   			});
+	    	
+		</script>
+	</head>
+	<body class="popup">
+	    <h1><spring:message code='ezPortal.t87' /></h1>
+	    <table class="content">
+	        <tr>
+	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t141' /></th>
+	            <td>
+	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
+	                <a href="#" class="imgbtn"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	            </td>
+	        </tr>
+	        <tr>
+	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t142' /></th>
+	            <td>
+	                <input id="txtdept" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
+	                <a href="#" class="imgbtn"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	            </td>
+	        </tr>
+	    </table>
+	    <div class="btnposition">
+	        <a class="imgbtn"><span onclick="insertAuthDept();" ><spring:message code='ezSchedule.t157' /></span></a>
+	        <a class="imgbtn"><span onclick="window.close();"><spring:message code='ezSchedule.t5' /></span></a>      
+	    </div>
+	</body>
+</html>
+

@@ -60,6 +60,7 @@
 		<result property="jikwi" column="jikwi"/>
 		<result property="mail" column="mail"/>
 		<result property="deptName" column="dept_name"/>
+		<result property="userImg" column="user_img"/>
 	</resultMap>
 	
 	<resultMap class="authorVO" id="deptMap">
@@ -306,7 +307,7 @@
 		u.DISPLAYNAME as user_name,
 		u.title as jikwi,
 		du.DISPLAYNAME as dept_name,
-		group_concat(d.DISPLAYNAME separator '%') as auth_dept
+		group_concat(d.DISPLAYNAME order by 1 separator '%') as auth_dept
 		from jmocha.tbl_usermaster u inner join
 		jmocha.tbl_journal_auth a on (u.CN=a.user_id and u.TENANT_ID=a.tenant_id)
 		inner join jmocha.tbl_deptmaster d on (a.dept_id=d.CN and a.tenant_id=d.TENANT_ID)
@@ -345,11 +346,12 @@
 		CN as user_id,
 		TITLE as jikwi,
 		MAIL as mail,
-		DESCRIPTION as dept_name
+		DESCRIPTION as dept_name,
+		EXTENSIONATTRIBUTE2 as user_img
 		from tbl_usermaster
 		where TENANT_ID=#tenantId#
 		and $key$ like concat('%',#value#,'%')
-		order by lpad(ifnull(d.EXTENSIONATTRIBUTE15,0),6,0) ,d.DISPLAYNAME
+		order by lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME
 	</select>
 	
 	<!-- 양식 상세정보 -->

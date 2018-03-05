@@ -315,17 +315,20 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("userId", jsonParam.get("userId"));
 		map.put("tenantId", jsonParam.get("tenantId"));
 		ezJournalDAO.deleteAuthDept(map);
-		
 		Gson gson = new Gson();
 		
 		List<String> deptList = gson.fromJson(jsonParam.get("depts").toString(), new TypeToken<List<String>>(){}.getType());
-		
 		for (int i = 0; i < deptList.size(); i++) {
-			Map<String, Object> insertMap = new HashMap<String, Object>();
-			insertMap.put("tenantId", ((String) jsonParam.get("tenantId")).trim());
-			insertMap.put("userId", ((String) jsonParam.get("userId")).trim());
-			insertMap.put("deptId", ((String) deptList.get(i)).trim());
-			ezJournalDAO.insertAuthDept(insertMap);
+			try {
+				logger.debug(deptList.get(i));
+				Map<String, Object> insertMap = new HashMap<String, Object>();
+				insertMap.put("tenantId", ((String) jsonParam.get("tenantId")).trim());
+				insertMap.put("userId", ((String) jsonParam.get("userId")).trim());
+				insertMap.put("deptId", ((String) deptList.get(i)).trim());
+				ezJournalDAO.insertAuthDept(insertMap);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		logger.debug("saveAuthDeptList ended");

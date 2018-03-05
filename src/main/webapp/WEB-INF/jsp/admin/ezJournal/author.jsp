@@ -11,7 +11,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">		
 	    	var selectedUser ;
-	    
+	    	var selectedUserName ;
 	    
 			function changeSelectCompany(val) {			    
 				var url = "/admin/ezJournal/author.do";
@@ -19,18 +19,28 @@
 			}
 			
 			function insertAuth(){			
+				var url = "/admin/ezJournal/authorView.do";
+				var companyId = document.getElementById("companyId").value;
+				url+="?companyId="+companyId;
+				window.open(url, "authorView", "width=500, height=180");
+			}
+			
+			function updateAuth(){			
 				var userId = selectedUser;
-				var url = "/admin/ezJournal/authorDetail.do";
+				var url = "/admin/ezJournal/authorView.do";
 				var companyId = document.getElementById("companyId").value;
 				url+="?companyId="+companyId;
 				if (userId) {
-					url+="&userId="+userId;
+					url+="&userId="+userId+"&userName="+selectedUserName;
+					window.open(url, "authorView", "width=500, height=180");
+				} else {
+					alert("<spring:message code='ezPortal.t85' />");
 				}
-				window.open(url, "authorDetail", "width=1100, height=600");
 			}
 			
 			function selectedTR(elem){
 				selectedUser = $(elem).attr("id");
+				selectedUserName = $(elem).attr("userName");
 				$("*").removeClass("selectTR");
 	   			$(elem).addClass("selectTR");
 			}
@@ -78,6 +88,7 @@
 			<div id="mainmenu">
 	  			<ul>
 					<li><span onClick="insertAuth();"><spring:message code='ezJournal.t36' /></span></li>
+					<li><span onClick="updateAuth();"><spring:message code='ezJournal.t362' /></span></li>
 					<li><span onClick="deleteAuthor();"><spring:message code='ezJournal.t37' /></span></li>
 	  			</ul>
 			</div>
@@ -91,7 +102,7 @@
 			    <c:choose>
 				    <c:when test="${fn:length(authList) ne 0}">
 					    <c:forEach items="${authList }" var="auth">
-					    	<tr ondblclick="insertAuth();" id="${auth.userId}" onclick="selectedTR(this);" style="cursor: pointer;">
+					    	<tr ondblclick="updateAuth();" id="${auth.userId}" userName="${auth.userName }" onclick="selectedTR(this);" style="cursor: pointer;">
 					    		<td style="text-align: center;">${auth.userName } </td>
 					    		<td style="text-align: center;">${auth.jikwi } </td>
 					    		<td style="text-align: center;">${auth.deptName } </td>

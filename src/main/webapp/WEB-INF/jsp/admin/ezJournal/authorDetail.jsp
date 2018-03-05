@@ -17,6 +17,9 @@
 	   	<script type="text/javascript">
 	   		//트리조직도 JSON
 	   		var treeContent;
+	   		//선택된 사원
+	   		var selectedUser;
+	   		var selectedUserName;
 	   		//레이어팝업의 부서 정보
 	   		var lpDeptId;
 	   		var lpDeptName;
@@ -81,14 +84,13 @@
 	   				data:{"key":key, "value":value},
 	   				success: function(result){
 	   					$("#orglistView").html(result);
-	   					if(key=="DEPARTMENT"){
-		   					initSelectedUser();
-	   					}
 	   				}
 	   			});
 	   		}
 	   		//선택된 사원의 권한 부서 보여주기
 	   		function setUserAuthorDept(elem){
+	   			selectedUser = $(elem).attr("id");
+	   			selectedUserName = $(elem).attr("name");
 	   			$("*").removeClass("selectTR");
 	   			$(elem).addClass("selectTR");
 	   			$.ajax({
@@ -107,72 +109,87 @@
 	   			var value = $("#keyword").val();
 	   			setUserList(key,value);
 	   		}
-	   		function initSelectedUser(){
-	   			var selectedUser = "<c:out value='${selectedUser}'/>" ;
-	   			if(selectedUser !="" ){
-			   		var elem = document.getElementById(selectedUser);
-			   		setUserAuthorDept(elem,selectedUser);
-	   			}
-	   		}
 	   		
-	   		//레이어 팝업 안에 초기화
-	   		function showInsertAuthDept(elem){
-	   			journal_layer_popup("#insertAuthorDeptPopup");
-	   			userId = $(elem).attr("id");
-	   			updateUserId = userId;
-				$.ajax({
-	   				type:"post",
-	   				dataType:"html",
-	   				url:"/admin/ezJournal/authorDeptList.do",
-	   				data:{"userId":userId},
-	   				success: function(result){
-	   					lpDepts=[];
-	   					$("#lplistView").html(result);
-	   					$("#lplistView tr").each(function(){
-	   						lpDepts.push($(this).attr("targetId"));
-	   					})
-	   				}
-	   			});
+	   		//사원선택
+	   		function setAuthorViewUser(){
+	   			var userId = selectedUser;
+				var url = "/admin/ezJournal/authorView.do";
+				var companyId = opener.companyId;
+				url+="?companyId="+companyId;
+				if (userId) {
+					url+="&userId="+userId+"&userName="+selectedUserName;
+				} else {
+					alert("<spring:message code='ezPortal.t85' />");
+				}
+				window.open(url, "authorView", "width=500, height=180");
+				window.close();
 	   		}
+// 	   		function initSelectedUser(){
+// 	   			var selectedUser = "<c:out value='${selectedUser}'/>" ;
+// 	   			if(selectedUser !="" ){
+// 			   		var elem = document.getElementById(selectedUser);
+// 			   		setUserAuthorDept(elem,selectedUser);
+// 	   			}
+// 	   		}
 	   		
-	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
-	   		function delTargetDept(elem){
-	   			var targetDeptId = $(elem).attr("targetId");
-   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
-   				$(elem).remove();
-	   		}
+// 	   		//레이어 팝업 안에 초기화
+// 	   		function showInsertAuthDept(elem){
+// 	   			journal_layer_popup("#insertAuthorDeptPopup");
+// 	   			userId = $(elem).attr("id");
+// 	   			updateUserId = userId;
+// 				$.ajax({
+// 	   				type:"post",
+// 	   				dataType:"html",
+// 	   				url:"/admin/ezJournal/authorDeptList.do",
+// 	   				data:{"userId":userId},
+// 	   				success: function(result){
+// 	   					lpDepts=[];
+// 	   					$("#lplistView").html(result);
+// 	   					$("#lplistView tr").each(function(){
+// 	   						lpDepts.push($(this).attr("targetId"));
+// 	   					})
+// 	   				}
+// 	   			});
+// 	   		}
 	   		
-	   		//열람궎란정보 저장
-	   		function insertAuthDept(){
-	   			var jsonString = JSON.stringify({"userId":updateUserId,"depts":lpDepts});
-				$.ajax({
-	   				type:"post",
-	   				dataType:"html",
-	   				url:"/admin/ezJournal/saveAuthor.do",
-	   				contentType:"application/json;",
-	   				data:jsonString,
-	   				success: function(result){
-	   					alert(result);
-   						$('.journal-layer').fadeOut();
-   						opener.location.reload();
-   						location.reload(true);
-	   				}
-	   			});
-	   		}
+// 	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
+// 	   		function delTargetDept(elem){
+// 	   			var targetDeptId = $(elem).attr("targetId");
+//    				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
+//    				$(elem).remove();
+// 	   		}
+	   		
+// 	   		//열람궎란정보 저장
+// 	   		function insertAuthDept(){
+// 	   			var jsonString = JSON.stringify({"userId":updateUserId,"depts":lpDepts});
+// 				$.ajax({
+// 	   				type:"post",
+// 	   				dataType:"html",
+// 	   				url:"/admin/ezJournal/saveAuthor.do",
+// 	   				contentType:"application/json;",
+// 	   				data:jsonString,
+// 	   				success: function(result){
+// 	   					alert(result);
+//    						$('.journal-layer').fadeOut();
+//    						opener.location.reload();
+//    						location.reload(true);
+// 	   				}
+// 	   			});
+// 	   		}
 	   		
 	   		$(document).ready(function(){
 	   			treeContent = ${deptList};
 		   		setDeptList();
-		   		setDeptListLayerPopup();
-	   			$(function () {
-		   			$(document).on({
-		   				"dblclick":function(){delTargetDept(this);},
-		   				"click":function(){targetDept = this;
-			   				$("*").removeClass("selectTR");
-				   			$(this).addClass("selectTR");
-		   				}
-	   				},"#lplistView tr");
-	   			});
+// 		   		setDeptListLayerPopup();
+// 	   			$(function () {
+// 		   			$(document).on({
+// 		   				"dblclick":function(){delTargetDept(this);},
+// 		   				"click":function(){targetDept = this;
+// 			   				$("*").removeClass("selectTR");
+// 				   			$(this).addClass("selectTR");
+// 		   				}
+// 	   				},"#lplistView tr");
+// 	   			});
    			});
 		</script>
 		<style>
@@ -187,6 +204,7 @@
         <h1><spring:message code='ezJournal.t42'/></h1>
 	    <div id="close">
 	        <ul>
+	            <li><span onclick="setAuthorViewUser()"><spring:message code='main.t4008'/></span></li>
 	            <li><span onclick="close_Click()"><spring:message code='ezOrgan.t143'/></span></li>
 	        </ul>
 	    </div>
@@ -252,31 +270,6 @@
 				</td>
 			</tr>
         </table>
-        <div class="journal-layer">
-        	<div class="dimBg"></div>
-	        <div id = "insertAuthorDeptPopup" class="pop-layer">
-	        	<h1><spring:message code='ezJournal.t42'/></h1>
-			    <div id="close">
-			        <ul>
-			            <li><span onclick="insertAuthDept();"><spring:message code='ezJournal.t26'/></span></li>
-			            <li class="journal-layerClose"><span><spring:message code='ezOrgan.t143'/></span></li>
-			        </ul>
-			    </div>
-	        	<table>
-		            <tr>
-		                <td class="box">
-		                    <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="lptreeview"></div>
-		                </td>
-		                <td style="width: 30px; text-align: center;">                            
-                        <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
-                        <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept(targetDept)">
-                   		</td>
-		                <td class="listview" style="width: 250px" id="lplistView">
-		                </td>    
-		            </tr>
-		        </table>
-	        </div>
-        </div>
 	</body>
 </html>
 
