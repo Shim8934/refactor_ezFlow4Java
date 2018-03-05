@@ -711,7 +711,7 @@ public class MApprovalGGWController {
 			loginVO.setDeptID(userInfo.getDeptId());
 			
 			if (type.equals("APR")) {
-				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO);
+				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, "");
 				
 				if (rtnVal != null && !rtnVal.equals("ERROR")) {
 					result.put("status", "ok");
@@ -759,7 +759,7 @@ public class MApprovalGGWController {
 					result.put("data", "FAIL");
 				}
 			} else if (type.equals("CHECK")) {
-				rtnVal = ezApprovalGService.doApprove(docId, approvalGDocInfoVO.getAprMemberID(), "003", approvalGDocInfoVO.getAprMemberName(), approvalGDocInfoVO.getAprMemberName2(), realPath + approvalGDocInfoVO.getHref(), approvalGDocInfoVO.getAprMemberDeptID(), userInfo.getUserId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "");
+				rtnVal = ezApprovalGService.doApprove(docId, approvalGDocInfoVO.getAprMemberID(), "003", approvalGDocInfoVO.getAprMemberName(), approvalGDocInfoVO.getAprMemberName2(), realPath + approvalGDocInfoVO.getHref(), approvalGDocInfoVO.getAprMemberDeptID(), userInfo.getUserId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "", "");
 				
 				if (rtnVal != null && !rtnVal.equals("FALSE")) {
 					result.put("status", "ok");

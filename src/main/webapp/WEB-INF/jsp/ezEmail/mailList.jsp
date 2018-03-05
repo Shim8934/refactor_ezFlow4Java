@@ -288,7 +288,6 @@
 		    	});
 		    	
 		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
-		    		console.log("aaaaa")
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    });
