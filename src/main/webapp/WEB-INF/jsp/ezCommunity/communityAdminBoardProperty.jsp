@@ -422,7 +422,7 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<table class="content" >
+		<table class="content" style="margin-top:10px">
 			<tr>
 				<th><spring:message code = 'ezCommunity.t306' /></th>
 				<td>&nbsp;&nbsp;${boardInfo.boardName}</td>
@@ -433,11 +433,11 @@
 					<table style="width:100%;">
 						<tr class="primary">
 							<th>${langPrimary}</th>
-							<td><input name="text" type=text id="txtBoardName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${boardInfo.boardName}" maxlength=23></td>
+							<td><input name="text" type=text id="txtBoardName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${boardInfo.boardName}" maxlength=25></td>
 						</tr>
 						<tr class="secondary">
 							<th>${langSecondary}</th>
-							<td><input name="text2" type="text" id="txtBoardName2" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${boardInfo.boardName2}" maxlength=23></td>
+							<td><input name="text2" type="text" id="txtBoardName2" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${boardInfo.boardName2}" maxlength=25></td>
 						</tr>
 					</table>
 				</td>
@@ -639,7 +639,7 @@
 		
 		<br>
 		
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 			<a class="imgbtn"  onClick="return Save()"><span><spring:message code = 'ezCommunity.t108' /></span></a>
 			<a class="imgbtn"  onClick="window.location.reload(false)"><span><spring:message code = 'ezCommunity.t109' /></span></a>
 			<a class="imgbtn"  onclick="parent.parent.window.close()"><span><spring:message code = 'ezCommunity.t21' /></span></a>

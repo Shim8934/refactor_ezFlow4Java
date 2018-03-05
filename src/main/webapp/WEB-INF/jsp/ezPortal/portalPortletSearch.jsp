@@ -37,7 +37,8 @@
 			    var xmldom = createXmlDom();
 
 			    if (g_PortletCategoryXML != "") {
-			        xmldom = loadXMLString(g_PortletCategoryXML);;
+			        xmldom = loadXMLString(g_PortletCategoryXML);
+			        
 			        for (var i = 0; i < xmldom.getElementsByTagName("CATEGORY").length; i++) {
 			            var lastindex = document.getElementById("PortalGubun").length;
 			        	if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4075') {
@@ -49,8 +50,8 @@
 						} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4078') {
 							var newoption = new Option("<spring:message code='ezPortal.t4078'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));
 						}
+			        	
 			            document.getElementById("PortalGubun").options[lastindex] = newoption;
-			            
 			        }
 			    }
 			    xmldom = null;
@@ -62,6 +63,7 @@
 			function SearchPortlet(pType) {
 			    var xmldom = createXmlDom();
 			    var xmlhttp = createXMLHttpRequest();
+			    
 			    xmlhttp.open("POST", "/ezPortal/portletSearchList.do?pType=" + pType + "&mode=edit" + "&pPageType=" + gubunFlag, false);
 			    xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			    xmlhttp.send();
@@ -81,6 +83,7 @@
 
 	                document.getElementById("div_PortletList").innerHTML = portletHTML;
 	            }
+			    
 	            xmlhttp = null;
 	            xmldom = null;
 	        }

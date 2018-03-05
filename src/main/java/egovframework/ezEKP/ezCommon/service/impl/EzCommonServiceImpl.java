@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCommonService")
@@ -85,57 +86,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             fileExt = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
         }
         fileName = getProperFileName(fileName, fileExt, isUTF8);
-        boolean bAttachment = false;
-        
-        if (pAttachment) {
-            switch (fileExt) {
-                case ".eml":
-                case ".mht":
-                case ".xls":
-                case ".doc":
-                case ".pdf":
-                case ".hwp":
-                case ".ppt":
-                case ".docx":
-                case ".pptx":
-                case ".xlsx":
-                case ".rtf":
-                case ".jpg":
-                case ".gif":
-                case ".bmp":
-                case ".wmv":
-                case ".avi":
-                case ".mp4":
-                case ".mpeg":
-                    bAttachment = true;
-                    break;
-                default:
-                    bAttachment = false;
-                    break;
-            }
-            bAttachment = true;
-        }
         
         FileInputStream is = null;
-        String usebrowser = (request.getHeader("User-Agent")==null||request.getHeader("User-Agent").equals("")) ? "NONE" : request.getHeader("User-Agent").indexOf("MSIE") > -1 ?
-                            "IE" : request.getHeader("User-Agent").indexOf("Trident") > -1 ? "IE" : "NONE";
+        String userAgentHeader = request.getHeader("User-Agent");
+        String usebrowser = ClientUtil.getClientInfo(request, "browser");//(userAgentHeader == null || userAgentHeader.equals("")) ? "NONE" : userAgentHeader.contains("MSIE") ?
+                            //"IE" : userAgentHeader.contains("Trident") ? "IE" : userAgentHeader.contains("Firefox") ? "FIREFOX" : "NONE";
 
-        if (bAttachment) {
-            if (isUTF8.equals("0") && usebrowser.equals("IE")) {
-                response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"),"UTF-8") + "\"");
-            } else if (isUTF8.equals("0") && !usebrowser.equals("IE")) {
-                response.addHeader("Content-Disposition", "attachment;filename=\"" + (fileName) + "\"");
-            } else {
-                response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
-            }
+        if(userAgentHeader == null || userAgentHeader.equals("")) {
+        	usebrowser = "NONE";
+        }
+        
+        String type = pAttachment ? "attachment" : "inline";
+        
+        if (isUTF8.equals("0") && (usebrowser.equals("Firefox") || usebrowser.equals("Safari"))) {
+            response.addHeader("Content-Disposition", type + ";filename=\"" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1") + "\"");
         } else {
-            if (isUTF8.equals("0") && usebrowser.equals("IE")) {
-                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
-            } else if (isUTF8.equals("0") && !usebrowser.equals("IE")) {
-                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
-            } else {
-                response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
-            }
+            response.addHeader("Content-Disposition", type + ";filename=\"" + URLEncoder.encode((fileName), "UTF-8").replace("+", "%20") + "\"");
         }
 
         if (fileExt.equals(".pdf")) {
@@ -791,6 +757,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 //                }
             	
             } else {
+            	realPath = realPath + commonUtil.separator;
+            	
             	File file = new File(realPath + m_BackImageList[i]);
             	in = new FileInputStream(file);
                 int len = 0;
@@ -907,6 +875,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 					return egovMessageSource.getMessage("main.t0601", locale);
 				}
 				
+//				배경이미지 url의 표현방법 수정//태그프리,CK는 정상으로 들어옴
+				if(m_strHTML.contains("url(//")){//NAMO
+					m_strHTML = m_strHTML.replace("url(//", "url(/");
+				}else if(m_strHTML.contains("url('fileroot")){//KUKUDOCS
+					m_strHTML = m_strHTML.replace("url('fileroot", "url(/fileroot");
+					m_strHTML = m_strHTML.replace("')", ")");
+				}
+
 				return m_strHTML;
 			}
 		} else {
@@ -1019,9 +995,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         map.put("tenantID", tenantID);
         
         String propertyValue = ezCommonDAO.getTenantConfig(map);
-        
-        logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID);
-        logger.debug("PROPERTY VALUE : " + propertyValue);
+		
+		logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID);
+		logger.debug("PROPERTY VALUE : " + propertyValue);
         
         if (propertyValue == null) {
             propertyValue = "";

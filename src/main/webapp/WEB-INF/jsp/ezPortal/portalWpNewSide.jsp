@@ -29,7 +29,9 @@
         				<div class="best">
         					<dl>
         						<dt><span class="icon"><img src="/images/<spring:message code='main.t00025' />/main/icon_best1.gif" width="26" height="28"></span><spring:message code='main.t68' /></dt>
-        						<dd class="nodata_portlet"><img src="/images/kr/main/nodata_white.gif" width="107" height="70"><br /> <span><spring:message code='main.t00026' /></span></dd>
+        						<dd class="photo" style='margin-top:10px'><img src="/images/default_pic.gif" width="61" height="64"></dd>
+        						<dd class="txt_name"></dd>
+        						<dd class="txt_part" style='margin-top:17px'><spring:message code='main.t00026' /></dd>        						
         					</dl>
         				</div>
         			</c:otherwise>
@@ -39,8 +41,9 @@
 		
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<script type="text/javascript">
-		   document.onselectstart = function () { return false; };
-		    window.onload = window_onload_Newside;
+		   	document.onselectstart = function () { return false; };
+		   	
+			window.onload = window_onload_Newside;
 		    
 		    function window_onload_Newside() {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {

@@ -82,10 +82,7 @@
 	                if (CrossYN()) {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 	                } else {
-	                    if (pUse_Editor == "")
-	                        openLocation = "/ezApprovalG/contDocView.do";
-	                    else
-	                        openLocation = "/ezApprovalG/contDocView.do";
+                        openLocation = "/ezApprovalG/contDocView.do";
 	                }
 	            }
 	            openLocation = openLocation + "?docID=" + encodeURIComponent(DocID) + "&docHref=" + encodeURIComponent(pURL) + "&formID=" + encodeURIComponent(formID) + "&orgDocID=" + encodeURIComponent(orgDocid) + "&admin=Y";

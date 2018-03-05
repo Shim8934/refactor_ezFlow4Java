@@ -87,7 +87,7 @@
 		        listview.LoadFromID("lvAttachList");
 		        var href = listview.GetSelectedRows()[0].getAttribute("DATA1");
 		        var rep = /'/g;
-		        href = "/myoffice/Common/downloadattach.aspx?filename=" + escapenew(listview.GetSelectedRows()[0].getAttribute("DATA3")) + "&filepath=" + escapenew(listview.GetSelectedRows()[0].getAttribute("DATA4")).replace(rep, "&#39;");
+		        href = "/ezApprovalG/downloadAttach.do?fileName=" + escapenew(listview.GetSelectedRows()[0].getAttribute("DATA3")) + "&filePath=" + escapenew(listview.GetSelectedRows()[0].getAttribute("DATA4")).replace(rep, "&#39;");
 		        document.getElementById("filedown").src = href;
 		    }
 		    function btnrecovery_onclick() {
@@ -311,10 +311,10 @@
 		  </tr>
 		  <tr id="HisLine"> 
 		    <td>
-		    	<div class="listview" style="overflow-x:hidden;">
+		    	<div class="listview" style="overflow-x:hidden;width:718px;">
 		      		<div id=divAprLine style="border:0; width:716px; Height:165px;margin:1px 1px 1px 1px;"></div>
 		      	</div>
-			  	<div class="listview" style="margin-top:5px;overflow-y:auto;overflow-x:hidden">
+			  	<div class="listview" style="margin-top:5px;overflow-y:auto;overflow-x:hidden;width:718px;">
 			  		<div id=divAprLineInfo style="border:0; width:716px; Height:165px;margin:1px 1px 1px 1px;"></div>
 			  	</div>
 			</td>

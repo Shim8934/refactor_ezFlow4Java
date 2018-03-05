@@ -663,6 +663,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				}
                 
                 strXML = getBoardListItemXML(userInfo, pBoardID, pStartRow, pEndRow, pSortBy);
+                strXML = strXML.replace("\\", "&#92;"); // 특수문자 변환 '\' -> $#92; 2018-02-19 천성준
             }
 			
 			if (totalCount > 0) {
@@ -763,6 +764,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		logger.debug("item.getItemLevel() = " + item.getItemLevel());
+		
+		// 2018-02-19 천성준 : 게시글 수정,답변시 인풋박스에 특수문자 '\'가 사라지는 버그 해결로직 ['\' -> '\\']
+		if(pMode.equals("modify") || pMode.equals("reply")){
+			if (item.getTitle().contains("\\") || item.getAbsTract().contains("\\")) {
+				item.setTitle(item.getTitle().replace("\\", "\\\\"));
+				item.setAbsTract(item.getAbsTract().replace("\\", "\\\\"));
+			}
+		}
 		
 		model.addAttribute("item", item);
 		model.addAttribute("startDateTime", startDateTime);
@@ -983,9 +992,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("userCurrentTime=" + dateStr);
 		
 		for (CommunityCPollManagerVO item : list) {
-			logger.debug("getPollStartDate() : " + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10));
-			logger.debug("getPollEndDate() : " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10));
-			
 			if (dateStr.compareTo(item.getPollStartDate().substring(0, 10)) < 0) {
 				pollState = egovMessageSource.getMessage("ezCommunity.t677", userInfo.getLocale());
 				pollManager = egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale());
@@ -1019,10 +1025,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			logger.debug("pollMainGet4 ended.");
 
 			sb.append("<tr>");
-			sb.append("<td align=\"center\">" + item.getPollGroupNo() + "</td>");
-			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
+			/*sb.append("<td align=\"center\">" + item.getPollGroupNo() + "</td>");*/			
 			sb.append("<td style=\"text-overflow:ellipsis;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
 			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" +commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
+			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
 			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", userInfo.getLocale()) + "</td>");
 			sb.append("<td>" + pollState + "</td>");
 			sb.append("<td>");
@@ -1148,7 +1154,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				if (selType.equals("3")) {
 					answerCount = 1;
 					selectedNo = 10;
-					sb.append(egovMessageSource.getMessage("ezCommunity.t654", userInfo.getLocale()) + "<input class='inputText' style='width:90%;margin:3px;height:20px' type = \"text\" size=\"80\" name = \"selJU\">");
+					sb.append(egovMessageSource.getMessage("ezCommunity.t603", userInfo.getLocale()));
 				}
 			}
 		}
@@ -1543,7 +1549,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						
 						break;
 					case 3 :
-						sb.append("<tr style='height:25px'><td colspan=\"5\" style=\"padding-left:10px\"><b>" + commonUtil.cleanValue(answerVO.getAnswerContent()) + ": </b> <input type=\"text\" name=\"answerETC\" style=\"width:550px\">");
+						sb.append("<tr style='height:25px'><td colspan=\"5\" style=\"padding-left:10px\">" + commonUtil.cleanValue(answerVO.getAnswerContent()) + ": <input type=\"text\" name=\"answerETC\" style=\"width:550px\">");
 						sb.append("<input type=hidden name=pollSelect_" + questionVO.getQuestionNo() + ">&nbsp;<a href=\"javascript:etcview('" + egovMessageSource.getMessage("ezCommunity.t207", userInfo.getLocale()) + "', '" + questionVO.getQuestionID() + "' );\" class=\"imgbtn\" ><span>" + egovMessageSource.getMessage("ezCommunity.t689", userInfo.getLocale()) + "</span></a>");
 						sb.append("</td>");
 						sb.append("</tr>");
@@ -1664,39 +1670,46 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String primary = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getTenantId());
 		
-		int iOutputCount = 1;
+		int iOutputCount = 0;
 		
 		for(CommunityCClubUserVO user : userList) {
-			if (userList.indexOf(user) + 1 <= (curPage - 1) * comNoPerPage) {
+		/*	if (userList.indexOf(user) + 1 <= (curPage - 1) * comNoPerPage) {
 				continue;
 			}
 			
 			if (iOutputCount > comNoPerPage) {
 				break;
-			}
+			}*/
+			iOutputCount++;
 			
-			CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), primary, userInfo.getTenantId());
-			
-			sb.append("<tr>");
-			sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
-			sb.append("<td>");
-			
-			if (user.getC_ID().trim().equals(strSysopID)) {
-				sb.append("<img style='margin-right:3px' src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
-			}
-			
-			sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
-			sb.append("<td>" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", userInfo.getPrimary(), userInfo.getTenantId())) + "</td>");
-			sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
-			sb.append("<td>" + user.getC_inDate().substring(0, 10) + "</td>");
-			sb.append("<td>");
-			
-			if (user.getC_lastDate() != null) {
-				sb.append(user.getC_lastDate().substring(0, 10));
-			}
-			
-			sb.append("</td>");
-			sb.append("<td style=\"align:center\">" + user.getC_visited() + egovMessageSource.getMessage("ezCommunity.t728", userInfo.getLocale()) + "</td></tr>");
+			if (iOutputCount > comNoPerPage * curPage) {
+        		break;
+        	}
+
+        	if (iOutputCount > comNoPerPage * curPage - 10) {
+				CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), primary, userInfo.getTenantId());
+				
+				sb.append("<tr>");
+				sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
+				sb.append("<td>");
+				
+				if (user.getC_ID().trim().equals(strSysopID)) {
+					sb.append("<img style='margin-right:3px' src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
+				}
+				
+				sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
+				sb.append("<td>" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", userInfo.getPrimary(), userInfo.getTenantId())) + "</td>");
+				sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
+				sb.append("<td>" + user.getC_inDate().substring(0, 10) + "</td>");
+				sb.append("<td>");
+				
+				if (user.getC_lastDate() != null) {
+					sb.append(user.getC_lastDate().substring(0, 10));
+				}
+				
+				sb.append("</td>");
+				sb.append("<td style=\"align:center\">" + user.getC_visited() + egovMessageSource.getMessage("ezCommunity.t728", userInfo.getLocale()) + "</td></tr>");
+        	}
 		}
 		
 		return sb.toString();
@@ -1884,12 +1897,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             sb.append("<td>" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "</td>");
             sb.append("<td align=\"center\">" + outApplication.getOutDate().substring(0, 10) + "</td>");
             sb.append("<td align=\"center\">");
-            sb.append("<a href=\"javascript:okno('ok','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" class=\"imgbtn\"  ><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a><a href=\"javascript:okno('no','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" class=\"imgbtn\"><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
+            sb.append("<a href=\"javascript:okno('ok','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" class=\"imgbtn\"  ><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>");
+            sb.append("</td>");
+            sb.append("<td align=\"center\">");
+            sb.append("<a href=\"javascript:okno('no','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" class=\"imgbtn\"><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
             sb.append("</td>");
             sb.append("</tr>");
             sb.append("<tr>");
             sb.append("<td width='60' align='center' >" + egovMessageSource.getMessage("ezCommunity.t564", userInfo.getLocale()) + "</td>");
-            sb.append("<td align='left' colspan='4'>");
+            sb.append("<td align='left' colspan='5' style='padding:3px'>");
             sb.append("<textarea id='reason' style='width: 100%;height:60px;box-sizing:border-box;-moz-box-sizing:border-box;' readonly>" + commonUtil.cleanValue(outApplication.getOutReason().trim()) + "</textarea>");
             sb.append("</td>");
             sb.append("</tr>");
@@ -1957,13 +1973,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String myCopNewBoardItem(LoginVO userInfo, int startRow, int endRow) throws Exception {
 		logger.debug("myCopNewBoardItem started.");
 		
-		StringBuilder rtnVal = new StringBuilder();
-System.out.println("startRow.size : " + startRow);
-System.out.println("endRow.size : " + endRow);		
+		StringBuilder rtnVal = new StringBuilder();	
 		List<String> clubNoList = myCommunityGet(userInfo.getId(), startRow, endRow, "LIST", userInfo.getTenantId());
 
 		logger.debug("clubNoList.size : " + clubNoList.size());
-System.out.println("clubNoList.size : " + clubNoList.size());		
+		
 		rtnVal.append("<ITEM><DATA>");
 		
 		for (String clubNo : clubNoList) {
@@ -2882,11 +2896,11 @@ System.out.println("clubNoList.size : " + clubNoList.size());
 		item.setWriterName(URLDecoder.decode(xmlData.getElementsByTagName("WRITERNAME").item(0).getTextContent(), "utf-8").trim());
 		item.setWriterName2(URLDecoder.decode(xmlData.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), "utf-8").trim());
 		item.setWriterDeptID(xmlData.getElementsByTagName("DEPTID").item(0).getTextContent());
-		item.setWriterDeptName(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent());
-		item.setWriterDeptName2(xmlData.getElementsByTagName("DEPTNAME2").item(0).getTextContent());
+		item.setWriterDeptName(URLDecoder.decode(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
+		item.setWriterDeptName2(URLDecoder.decode(xmlData.getElementsByTagName("DEPTNAME2").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
 		item.setWriterCompanyID(xmlData.getElementsByTagName("COMPANYID").item(0).getTextContent());
-		item.setWriterCompanyName(xmlData.getElementsByTagName("COMPANYNAME").item(0).getTextContent());
-		item.setWriterCompanyName2(xmlData.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
+		item.setWriterCompanyName(URLDecoder.decode(xmlData.getElementsByTagName("COMPANYNAME").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
+		item.setWriterCompanyName2(URLDecoder.decode(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
 		item.setWriteDate(dateStr);
 		item.setImportance(Integer.parseInt(xmlData.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
 		item.setTitle(URLDecoder.decode(xmlData.getElementsByTagName("TITLE").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&"), "utf-8").trim());
@@ -2905,7 +2919,7 @@ System.out.println("clubNoList.size : " + clubNoList.size());
 		}
 		
 		item.setEndDate(commonUtil.getDateStringInUTC(xmlData.getElementsByTagName("ENDDATE").item(0).getTextContent(), offset, true));
-		item.setAbsTract(URLDecoder.decode(xmlData.getElementsByTagName("ABSTRACT").item(0).getTextContent(), "utf-8"));
+		item.setAbsTract(URLDecoder.decode(xmlData.getElementsByTagName("ABSTRACT").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&"), "utf-8").trim());
 		item.setAttachments(URLDecoder.decode(xmlData.getElementsByTagName("ATTACHMENTS").item(0).getTextContent(), "utf-8"));
 		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
 		
@@ -3597,7 +3611,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         		break;
         	}
         	
-        	if (i > comNoPerPage * curPage -5) {
+        	if (i > comNoPerPage * curPage -3) {
 	        	sb.append("<ROW>");
 	        	sb.append("<NO>" + item.getNo() + "</NO>");
 	        	sb.append("<ID>" + commonUtil.cleanValue(item.getId().trim()) + "</ID>");
@@ -3661,21 +3675,83 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return bIsMyContent;
 	}
 
+//	@Override
+//	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
+//		logger.debug("getReaderList started.");
+//		logger.debug("pBoardID : " + pBoardID + ", pItemID : " + pItemID + ", tenantID : " + tenantID);
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("v_pBoardID", pBoardID);
+//		map.put("v_pItemID", pItemID);
+//		map.put("tenantID", tenantID);
+//		map.put("offset", offset);
+//		
+//		List<CommunityBoardItemReadVO> list = ezCommunityDAO.getReaderList(map);
+//		
+//		logger.debug("getReaderList started.");
+//		
+//		return list;
+//	}
+	
 	@Override
-	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
-		logger.debug("getReaderList started.");
-		logger.debug("pBoardID : " + pBoardID + ", pItemID : " + pItemID + ", tenantID : " + tenantID);
+	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception {
+		logger.debug("getReaderList started");
+		// 2018-02-06 김보미 
+    	if(pageNum == 0){
+    		pageNum = 1;
+    	}
+    	
+    	int startRowNum = ((pageNum - 1) * perCount);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pBoardID", pBoardID);
-		map.put("v_pItemID", pItemID);
+		
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("userID", userID);
+		map.put("lang", lang);
 		map.put("tenantID", tenantID);
-		map.put("offset", offset);
+		map.put("start", startRowNum);
+		map.put("perCount", perCount);
+		List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
 		
-		List<CommunityBoardItemReadVO> list = ezCommunityDAO.getReaderList(map);
+		StringBuffer resultXML = new StringBuffer();
 		
-		logger.debug("getReaderList started.");
+		resultXML.append("<DOCLIST>");
 		
-		return list;
+		int totalCount = getReaderListCount(boardID, itemID, userID, tenantID);
+		int totalPage = (int) Math.floor(totalCount / perCount);
+		if(totalCount % 10 != 0){
+			totalPage = totalPage + 1;
+		}
+		
+		resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		resultXML.append("<PAGECNT>" + totalPage + "</PAGECNT>");
+		resultXML.append("<PERSONALCNT>" + perCount + "</PERSONALCNT>");
+    	resultXML.append("<LISTVIEWDATA>");
+    	
+		resultXML.append("<ROWS>");
+		for (CommunityBoardItemReadVO vo : readerList) {
+			String userTitle = "";
+			String userDeptName = "";
+			if(vo.getUserTitle() != null){
+				userTitle = vo.getUserTitle();
+			}
+			if( vo.getUserDeptName() != null){
+				userDeptName =  vo.getUserDeptName();
+			}
+			resultXML.append("<ROW>");
+			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><VALUE><![CDATA[" + vo.getUserName() + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + userTitle + "]]></VALUE></CELL>");
+			resultXML.append("<CELL><VALUE><![CDATA[" + commonUtil.getDateStringInUTC(vo.getReadDate(), offset, false) + "]]></VALUE></CELL>");
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		
+		logger.debug("getReaderList ended");
+		return resultXML;
 	}
 
 	@Override
@@ -3739,7 +3815,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			String destAttach = itemAttachment.getFilePath().replace(pOrgBoardID.substring(1, pOrgBoardID.length()-1), pDestBoardID.substring(1, pDestBoardID.length()-1));
 			
 			copyAttachments(orgAttach, destAttach, pDestBoardID, pUploadFilePath);
-			attachments.append(destAttach + ";");
+			attachments.append(destAttach + "|");
 		}
 
 		item.setAttachments(attachments.toString());
@@ -3796,21 +3872,21 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         sb.append("<ITEMID>" + pDestItemID + "</ITEMID>");
         sb.append("<BOARDID>" + pDestBoardID + "</BOARDID>");
         sb.append("<WRITERID>" + item.getWriterID() + "</WRITERID>");
-        sb.append("<WRITERNAME>" + item.getWriterName() + "</WRITERNAME>");
-        sb.append("<WRITERNAME2>" + item.getWriterName2() + "</WRITERNAME2>");
+        sb.append("<WRITERNAME>" + commonUtil.cleanValue(item.getWriterName()) + "</WRITERNAME>");
+        sb.append("<WRITERNAME2>" + commonUtil.cleanValue(item.getWriterName2()) + "</WRITERNAME2>");
         sb.append("<DEPTID>" + item.getWriterDeptID() + "</DEPTID>");
-        sb.append("<DEPTNAME>" + item.getWriterDeptName() + "</DEPTNAME>");
-        sb.append("<DEPTNAME2>" + item.getWriterDeptName2() + "</DEPTNAME2>");
+        sb.append("<DEPTNAME>" + commonUtil.cleanValue(item.getWriterDeptName()) + "</DEPTNAME>");
+        sb.append("<DEPTNAME2>" + commonUtil.cleanValue(item.getWriterDeptName2()) + "</DEPTNAME2>");
         sb.append("<COMPANYID>" + item.getWriterCompanyID() + "</COMPANYID>");
-        sb.append("<COMPANYNAME>" + item.getWriterCompanyName() + "</COMPANYNAME>");
-        sb.append("<COMPANYNAME2>" + item.getWriterCompanyName2() + "</COMPANYNAME2>");
+        sb.append("<COMPANYNAME>" + commonUtil.cleanValue(item.getWriterCompanyName()) + "</COMPANYNAME>");
+        sb.append("<COMPANYNAME2>" + commonUtil.cleanValue(item.getWriterCompanyName2()) + "</COMPANYNAME2>");
         sb.append("<IMPORTANCE>" + item.getImportance() + "</IMPORTANCE>");
-        sb.append("<TITLE>" + URLEncoder.encode(item.getTitle(), "UTF-8") + "</TITLE>");
+        sb.append("<TITLE>" + commonUtil.cleanValue(item.getTitle()) + "</TITLE>");
         sb.append("<CONTENTLOCATION>" + item.getContentLocation() + "</CONTENTLOCATION>"); //복사의 경우만
         sb.append("<STARTDATE>" + item.getStartDate() + "</STARTDATE>");
         sb.append("<ENDDATE>" + item.getEndDate() + "</ENDDATE>");
-        sb.append("<ABSTRACT>" + item.getAbsTract() + "</ABSTRACT>");
-        sb.append("<ATTACHMENTS>" + item.getAttachments() + "</ATTACHMENTS>");
+        sb.append("<ABSTRACT>" + commonUtil.cleanValue(item.getAbsTract()) + "</ABSTRACT>");
+        sb.append("<ATTACHMENTS>" + URLEncoder.encode(item.getAttachments(), "UTF-8") + "</ATTACHMENTS>");
         sb.append("<UPPERITEMIDTREE>" + item.getUpperItemIDTree() + "</UPPERITEMIDTREE>");
         sb.append("<ITEMLEVEL>" + item.getItemLevel() + "</ITEMLEVEL>");
         sb.append("<EXTENSIONATTRIBUTE1>" + item.getExtensionAttribute1() + "</EXTENSIONATTRIBUTE1>");
@@ -5038,7 +5114,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 
 		for (CommunityCClubUserVO user : userList) {
 			sb.append("<tr>");
-            sb.append("<td height=\"23\" align=\"center\" class=\"white\">" + iCount + "</td>");
+            sb.append("<td height=\"23\" align=\"left\" class=\"white\">" + iCount + "</td>");
             sb.append("<td class=\"white\">");
             
             logger.debug("lang = " + userInfoLang + " || userID = " + user.getC_ID() + " || companyID = " + user.getCompanyID() + " || userName = " + user.getUserName() + " || userName2 = " + user.getUserName2());
@@ -5050,8 +5126,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
             }
             
             sb.append("</td>");
-            sb.append("<td class=\"white\" align=\"center\">" + user.getC_inDate().trim().substring(0, 10) + "</td>");
-            sb.append("<td class=\"white\" align=\"center\">");
+            sb.append("<td class=\"white\" align=\"left\">" + user.getC_inDate().trim().substring(0, 10) + "</td>");
+            sb.append("<td class=\"white\" align=\"left\">");
             
             if (userInfoLang.equals("2")) {
             	sb.append("<a href=\"javascript:okno('ok','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName2().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</a>/");
@@ -5236,7 +5312,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_pStart", startRow);
 		map.put("mariaStart", startRow - 1);
 		map.put("v_pEnd", endRow);
-		map.put("mariaEnd", endRow - startRow);
+		map.put("mariaEnd", endRow - startRow + 1);
 		map.put("v_mode", mode);
 		map.put("tenantID", tenantID);
 		
@@ -7247,5 +7323,31 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		String result = ezCommunityDAO.sendPostNoticeMailGet1(map);
 		
 		return result;
+	}
+	// 2018-01-10 강민수92 한줄댓글 개수
+	@Override
+	public String getOneLineReplyCount(String pBoardID, String pItemID, int tenantId) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("boardID", pBoardID);
+		map.put("itemID", pItemID);
+		map.put("tenantID", tenantId);
+		return ezCommunityDAO.getOneLineReplyCount(map);
+	}
+	// 2018-02-06 김보미 - 조회자 수
+	@Override
+	public int getReaderListCount(String boardID, String itemID, String userID, int tenantID) throws Exception {
+		logger.debug("getReaderListCount started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("getReaderListCount ended");
+		return ezCommunityDAO.getReaderListCount(map);
 	}
 }

@@ -30,8 +30,8 @@ var strLang29 = "コピー";
 var strLang30 = "貼り付け";
 var strLang31 = "削除";
 var strLang32 = "全体選択";
-var strLang33 = "Gullim;word-break:break-all";
-var strLang34 = "Gullim";
+var strLang33 = "Meiryo UI;word-break:break-all";
+var strLang34 = "Meiryo UI";
 var strLang35 = "メッセージ";
 var strLang36 = "未読のメッセージ";
 var strLang37 = "差出人別に";
@@ -302,6 +302,10 @@ var strLangKMS02 = "添付フォイルのサイズが ";
 var strLangKMS03 = "メールがありません";
 var strLangKMS04 = "受信者の数が";
 var strLangKMS05 = "人より多いため、個別送信機能を使用することができません。\n個別送信設定を解除してメールを送信してよろしいですか？";
+var strLangKMS06 = "ファイルをアップロード中にエラーが発生しました。";
+var strLangKMS07 = "ユーザによってアップロードがキャンセルされたか、接続が中断されている可能性があります。";
+var strLangKMS08 = "フォルダはアップロードすることができません。";
+	
 
 function GetLocalTime(Offset , pDateTime)
 {

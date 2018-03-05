@@ -19,7 +19,6 @@
 			var compAdmin = "${compAdmin}";
 			var useWebMail = "NO";
 			var pUse_Editor = "${useEditor}";
-		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "${noneActiveX}";
 		    var ret = new Array();
 		    var ReturnFunction;

@@ -117,9 +117,9 @@
 	                            p.className = "title";
 	                            
 	                            if (primary == "1") {
-	                                p.innerHTML=infoVO.boardName;
+	                                p.innerHTML=length_check(infoVO.boardName);
 	                            } else {
-	                            	p.innerHTML=infoVO.boardName2;
+	                            	p.innerHTML=length_check(infoVO.boardName2);
 	                            }
 	                            
 	                            var span = document.createElement("span");
@@ -221,7 +221,7 @@
 	            
 	            var _img = document.createElement("img");
 	            _img.id = "coplogo";
-	            _img.style.width = "894px";
+	            _img.style.width = "auto";
 	            _img.style.height = "100px";
 
 	            if (SelectSingleNodeValueNew(xmldom, "DATA/C_LOGO").indexOf("default_logo_type") > -1) {
@@ -677,7 +677,7 @@
 		    }
 		    
 		    function open_admin(code) {
-		        var wWeight = "840";
+		        var wWeight = "860";
 		        var wHeight = "530";
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
@@ -692,7 +692,7 @@
 		            alert(strLang4);
 		            return;
 		        }
-		        var wWeight = "840";
+		        var wWeight = "860";
 		        var wHeight = "510";
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
@@ -750,13 +750,25 @@
 		    function reload() {
 		        window.location.reload();
 		    }
+		    
+		    // 2018-02-13 천성준
+		    function length_check(txt) {
+		    	var temp = txt;
+		    	// 커뮤니티 팝업 메인화면 게시판 이름이 22자를 넘길시 자르고 뒤에...을 붙인다.
+		    	if(temp.length >= 22) {
+		    		temp = temp.substring(0,22)+"...";
+		    		return temp;
+		    	}else{
+		    		return temp;
+		    	}
+		    }
 		</script>
 	</head>
 	
 	<body class="cmhomebg_<c:out value='${copType }'/>">
 		<div id ="cmhome_<c:out value='${copType }'/>">
 			<div class="cmhome_top" onclick="reload()" style="cursor:pointer;">
-   	  			<div class="homeimg" id="homeimg" style="width:894px;height:100px;"></div>   	  
+   	  			<div class="homeimg" id="homeimg"></div>   	  
       			<h1 id="copname" class="homename"></h1>
 			</div>
 			<div class="cmhome_left">

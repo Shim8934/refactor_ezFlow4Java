@@ -357,10 +357,7 @@
 		    }
 		
 		    function btnBoard_onclick() {
-		        if (pUse_Editor == "TAGFREE")
-		            window.open("/myoffice/ezBoardSTD/NewBoardItem_TFX.aspx?Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + pDocHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
-		        else
-		            window.open("/myoffice/ezBoardSTD/NewBoardItem_CK.aspx?Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + pDocHref, '', 'height=870,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 870));
+	            window.open("/myoffice/ezBoardSTD/NewBoardItem_CK.aspx?Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + pDocHref, '', 'height=870,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 870));
 		    }
 		    var ezaprhistory_cross_dialogArguments = new Array();
 		    function btnhistory_onclick() {		    	
@@ -670,11 +667,7 @@
 		                openLocation = "/ezApprovalG/draftui.do";
 		            }
 		            else {
-		                if (pUse_Editor == "")
-		                    openLocation = "/myoffice/ezApproval/DraftUI/draftui.aspx";
-		                else {
-		                    openLocation = "/myoffice/ezApproval/DraftUI/draftui_IE.aspx";
-		                }
+	                    openLocation = "/ezApprovalG/draftui.do";
 		            }
 
 		            openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
@@ -683,7 +676,7 @@
 		        }
 		        openLocation += "&beforeDocID=" + pDocID;
 		        pListTypeValue = temppListTypeValue;
-		        var result = GetOpenWindow(openLocation, "", 1000, 950, "YES");
+		        var result = GetOpenWindow(openLocation, "", 1150, 950, "YES");
 		        window.close();
 		    }
 		    

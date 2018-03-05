@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 	    <script type="text/javascript" src="/js/ezSchedule/dlg_schedule.js"></script>
-	    
+	    <script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script>
 		<!-- data picker-->		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
@@ -23,9 +23,25 @@
 		<!-- time picker-->		
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>		
 	    <script type="text/javascript">
+   	    	$(document).ready(function() {
+   		    		// 반복이 100회 초과일때 알러트  
+   		    	if ($('input:radio[name=optRangeEnd]').is(':checked')) {
+   			    		$('#list_ReCount').blur(function() {
+   			    		if ($('#list_ReCount').val() > 100 ) {
+   			    			alert(strLangKMS1);
+   			    			$('#list_ReCount').val("");
+   			    		}
+   			    	});
+   			    }		
+   		    });
+	    	
 		    var RetValue;
 		    var ReturnFunction;
-		    
+		    //2018.01.31 김기하 함수 사용을 위해 부모로부터 변수 가져옴
+		    var companyID = window.parent.companyID;
+		    var offSetMin = window.parent.offSetMin;
+		    var sTimeTemp = "";
+		    var eTimeTemp = "";
 		    window.onload = function()
 		    {   
 		        try {
@@ -122,6 +138,8 @@
 		    				}
 		    		}
 		    	}
+		    	allDayTime();
+		    	clearAllDay();
 		    }
 		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();
@@ -146,9 +164,11 @@
 		    function ok_click()
 		    {
 		    	var rtn = new Array();
+
+	    		
 		    	rtn["SDATE"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 		    	rtn["EDATE"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
-		    					
+		    
 		    	var repetition = "";
 		    	
 		    	var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
@@ -215,6 +235,11 @@
 		    	    
 		    		repetition = "0";				
 		    	}
+		    	//2018.01-31 김기하 반복 시 시작일자 검사 
+	    	    if (CheckPreviously(true)) {
+	    	    	alert(strLang275);
+	        		return;
+	        	}
 		    	
 		    	if (alldaycheck.checked == true)
 		    	{
@@ -411,11 +436,14 @@
 		    	    rtn["REPDISPLAY"] = recurString + " " + allDayString + ", " + strLang79 + ":" + scheduleTerm;
 		    	}
 		    	if (ReturnFunction != null) {
-		    	    ReturnFunction(rtn);
+		    	    //2018.01.30 김기하 일정반복 시 시간기준 점 변경  
+		    		window.parent.timeCheck = true;
+		    		ReturnFunction(rtn);
 		    	    parent.DivPopUpHidden();
 	
 		    	}
 		    	else {
+		    	    
 		    	    window.returnValue = rtn;
 		    	    window.close();
 		    	}
@@ -730,6 +758,8 @@
 	
 		    function remove_click()
 		    {
+		    	//2018.01.30 김기하 반복 일정 취소 시 시가 기준 점 기존으로 변경
+		    	window.parent.timeCheck = false;
 		    	var rtn = new Array();
 		    	rtn["SDATE"] = "";
 		    	rtn["EDATE"] = "";
@@ -794,6 +824,9 @@
 		        $('#Etimepicker').timepicker();
 		        $('#Etimepicker').timepicker('setTime', EDate);
 		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+		    
+		        sTimeTemp = $('#Stimepicker').val();
+		        eTimeTemp = $('#Etimepicker').val();
 		    }
 		    		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
@@ -823,8 +856,11 @@
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    }
 		    
+		    
+		    //CheckPreviously 함수 사용을 위해 schedule_write_Corss.js 호출하고  스크립트에 포함된 함수인 check_time 삭제. 
+		    
 		    //2017-11-01 #9736  일정반복설정시, 시작일과 종료일을 반대로 지정해도 경고없이 등록되는 현상 
-		    function check_time() {
+		   /*  function check_time() {
 		        var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
@@ -862,6 +898,39 @@
 		        }
 		        
 		        return true;
+		    } */
+	    	/* 2018.02.23 김기하  */
+		    function allDayTime(){
+	    		if(document.getElementById("alldaycheck").checked == true){
+	    			sTimeTemp = $('#Stimepicker').val();
+		    		eTimeTemp = $('#Etimepicker').val();
+		    		$('#Stimepicker').timepicker("setTime", "00:00");
+		    		$('#Etimepicker').timepicker("setTime", "23:59");
+		    	}else{
+		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
+		    		$('#Etimepicker').timepicker("setTime", eTimeTemp);
+		    	}
+		    }
+		    
+		    function clearAllDay(){
+		    	$('#Stimepicker').change(function(){
+		    		if($("#alldaycheck").prop("checked") == true){
+		    			$("#alldaycheck").prop("checked", false);
+		    		}
+		    		if($('#Stimepicker').val() == "00:00" && $('#Etimepicker').val() == "23:59"){
+		    			$("#alldaycheck").prop("checked", true);
+		    		}
+		    	});
+		    	$('#Etimepicker').change(function(){
+		    		if($("#alldaycheck").prop("checked") == true){
+		    			$("#alldaycheck").prop("checked", false);
+		    		}
+		    		if(($('#Stimepicker').val() == "00:00") && ($('#Etimepicker').val() == "23:59")){
+		    			$("#alldaycheck").prop("checked", true);
+		    		}
+		    	});
+		    	
+		    	
 		    }
 		</script>
 	</head>
@@ -876,7 +945,7 @@
 		      			<div>
 		          			<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
 		        			<label for="btnT1" accesskye="T"></label>
-		        			<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" />
+		        			<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" onChange="allDayTime()"/>
 		        			<spring:message code='ezSchedule.t69' />
 		        		</div>
 		        	</td>

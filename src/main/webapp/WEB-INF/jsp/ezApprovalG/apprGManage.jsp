@@ -96,6 +96,8 @@
 		    var forceCallBackYN = "${forceCallBackYN}";
 		    var SubQuery = "${SubQuery}";
 		    var condition = new Array();
+		    var nowDate = "${nowDateUTC}";
+		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -115,35 +117,15 @@
 		            
 		            if (tmpEndDate < "${nowDate}") {
 		                setBujaeOff();
-		            	checkBujaeInfo_Complete_After();
+		                checkBujaeInfo_Complete(true);
 		                return true;
 
 		            } else if (tmpStartDate > "${nowDate}") {
+		            	checkBujaeInfo_Complete("ING");
 		                return true;
 		            }
 		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
 
-		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
-		            if (Rtnval) {
-		                checkBujaeInfo_Complete(true);
-		            }
-		            else {
-		                checkBujaeInfo_Complete(false);
-		            }
-		        } else if (proxyInfo != null && proxyInfo != "") {
-		        	var tmpStartDate = "${proxyInfo.startDate}".substring(0, 16);
-		            var tmpEndDate = "${proxyInfo.endDate}".substring(0, 16);
-		
-		            tmpStartDate=tmpStartDate.replace("/", ":");
-		            tmpEndDate=tmpEndDate.replace("/", ":");
-		            if (tmpEndDate < "${nowDate}") {
-		                setBujaeOff();
-		                return true;
-		            }
-		            else if (tmpStartDate > "${nowDate}") {
-		                return true;
-		            }
-		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
 		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
 		            if (Rtnval) {
 		                checkBujaeInfo_Complete(true);
@@ -152,22 +134,21 @@
 		                checkBujaeInfo_Complete(false);
 		            }
 		        } else {
-		            checkBujaeInfo_Complete(true);
+		            checkBujaeInfo_Complete("ING");
 		        }
 		    }
 		
 		    function checkBujaeInfo_Complete(Rtnval) {
-		        if (Rtnval)
-		            setBujaeOff();
-		        else {
-		            setbuttonenable();
-		            return;
-		        }
-		     	checkBujaeInfo_Complete_After();
-		    }
-		    
-		    function checkBujaeInfo_Complete_After() {
-		    	if (beforeJob != pListTypeValue) {
+	            if (Rtnval == true) {
+	                setBujaeOff();
+	            }
+	            else if (Rtnval == "ING") { }
+	            else {
+	                setbuttonenable();
+	                return;
+	            }
+
+	            if (beforeJob != pListTypeValue) {
 		            beforeJob = pListTypeValue;
 		            pageNum = 1;
 		        }
@@ -231,7 +212,8 @@
 		            parent.frames["left"].getAprCount();
 		            parent.frames["left"].setPresentValue("");
 		        } catch (e) { }
-		    }
+	        }
+		    
 		        
 		    function setBujaeOff() {
 		    	var result = "";
@@ -717,10 +699,7 @@
 		                        openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_Cross.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                    }
 		                    else {
-		                        if (pUse_Editor == "TAGFREE")
-		                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_TFI.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
-		                        else
-		                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
+	                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                    }
 		                }
 		                openwindow(openLocation, "enforce", 880, 550);
@@ -1313,8 +1292,15 @@
 		        }
 		        else
 		            pDocID = tr[0].getAttribute("DATA1");
-		
-		        var url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
+				
+		        //직인의뢰함에서 타입을 END로 주기위해
+		        var url;
+		        if (pListTypeValue == 7) {
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END";	
+		        } else {
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
+		        }
+		        
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=600px,height=450px";
 		        feature = feature + GetOpenPosition(600, 450);
 		        window.open(url, "", feature);
@@ -1704,8 +1690,8 @@
 		<h1>
 			<span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
-		        <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezApprovalG.t106'/>
-			    <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezApprovalG.t445'/>
+		        <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezApprovalG.t106'/></label>
+			    <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code='ezApprovalG.t445'/></label>
 			    &nbsp;
 			    <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 		        <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search()"></a>

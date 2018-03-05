@@ -17,7 +17,7 @@
 				 	<strong id="personName" style="position:absolute; width:240px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${displayName} ${mailAddress } </strong>
 				 </p>
 				<div class="info">
-    				<p class="pic">${userPhoto }</p>
+    				<p class="pic">${userPhoto}</p>
     				<dl class="info_txt">
         				<dt>${companyNm }<br></dt>
 			 			<dd><strong>${department} ${title}</strong></dd>
@@ -45,14 +45,7 @@
 						</ul>
 					</a>
 					
-					<c:choose>
-						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
-							<a id="AprSign" onClick="javascript:alert('<spring:message code='ezPortal.jjs10' />')">
-						</c:when>
-						<c:otherwise>
-							<a id="AprSign" onClick="btnSumming_click(this)">
-						</c:otherwise>
-					</c:choose>
+					<a id="AprSign" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal02.gif" alt="<spring:message code="main.t00018" />" /></li>
 								<li class="count">
@@ -139,9 +132,6 @@
     			<article class="writebanner">
         			<%-- <p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p> --%>
         			<c:choose>
-						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
-							<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="javascript:alert('<spring:message code='ezPortal.jjs10' />')"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p>
-						</c:when>
 						<c:when test="${host == 'gw.freet.co.kr'}">
 							<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.jpg" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.jpg" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.jpg" width="56" height="85"></span></p>
 						</c:when>
@@ -195,7 +185,6 @@
 		    var strLang1_total = "<spring:message code='main.t00025' />";
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
-		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "YES";
 
 		    function window_onload_total() {
@@ -206,6 +195,7 @@
 			        document.body.style.oUserSelect = 'none';
 			        document.body.style.UserSelect = 'none';
 			    }
+			    
 			    CalendarMiniView("CalendarMini");
 
 			    draw_clock();
@@ -266,6 +256,7 @@
 			}
 			
 			var selDate = "";
+			
 			function getScheduleList(date, mode) {
 			    selDate = date;			    
 
@@ -293,9 +284,10 @@
 			        var mType;
 			        
 			        if (mode == "P") {
-			        	mType = "1";
+			        	//2018.02.05 김기하 #11421
+			        	mType = "16";
 			        } else {
-			        	mType = "23456789";
+			        	mType = "2345789";
 			        }			        
 
 			        for (var i = 0; i < xmldom.getElementsByTagName("ROW").length; i++) {
@@ -318,6 +310,7 @@
 			                count++;
 			        	}
 			        }
+			        
 			        listHTML += "</ul>";
 
 			        if (date == nowDay) {
@@ -327,8 +320,7 @@
 
 			        if (count > 0)
 			            document.getElementById("ScheduleList").innerHTML = listHTML;			        	
-			        else
-			        {
+			        else {
 			            var nodata = "<div class='nodata_schedule '>";
 			            nodata += "<p><img src='/images/" + strLang1_total + "/main/nodata_plan.gif' width='92' height='84' style='margin-top:0px;margin-bottom:5px;'></p>";
 			            nodata += "<p>" + strLang2_total + "</p></div>";
@@ -382,6 +374,7 @@
 			}
 
 			var xmlHttp_getnewmailcount_total = null;
+			
 			function getnewmailcount() {
 				var xmlpara = createXmlDom();
                 var objNode;
@@ -420,6 +413,7 @@
 			}
 
 			var xmlHttp_getnewapprovalcount_total = null;
+			
 			function getnewapprovalcount()  {
 			    xmlHttp_getnewapprovalcount_total = createXMLHttpRequest();//new ActiveXObject("Microsoft.XMLHTTP");
 				xmlHttp_getnewapprovalcount_total.open("Post", "/ezApprovalG/getWebPartCount.do", true);
@@ -427,17 +421,12 @@
 			    xmlHttp_getnewapprovalcount_total.send("<DATA><FLAG>1</FLAG></DATA>");
 			}
 			
-			function event_newapprovalcount()
-			{
-			    if (xmlHttp_getnewapprovalcount_total != null && xmlHttp_getnewapprovalcount_total.readyState == 4)
-				{
-			    	if ((xmlHttp_getnewapprovalcount_total.status < 200) && (xmlHttp_getnewapprovalcount_total.status > 300))
-					{
+			function event_newapprovalcount() {
+			    if (xmlHttp_getnewapprovalcount_total != null && xmlHttp_getnewapprovalcount_total.readyState == 4) {
+			    	if ((xmlHttp_getnewapprovalcount_total.status < 200) && (xmlHttp_getnewapprovalcount_total.status > 300)) {
 			            xmlHttp_getnewapprovalcount_total = null;
 						return;
-					}
-					else 
-					{
+					} else  {
 						try {
 //							document.getElementById("aprnum").innerText = xmlHttp2.responseXML.text;
 		                    if(CrossYN()) {
@@ -446,8 +435,7 @@
 		                        document.getElementById("aprnum").innerText = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.text;		                        
 		                    }
 		                    xmlHttp_getnewapprovalcount_total = null;
-						} catch(e)
-						{
+						} catch(e) {
 						    xmlHttp_getnewapprovalcount_total = null;
 							return;
 						}
@@ -457,30 +445,24 @@
 			
 			// 표준모듈 (2007.03.23) 수정 : 전자메모보고 처리할 메모 갯수 		
 			var xmlHttp_getMemocount_total = null;
-			function getMemocount()
-			{		
+			
+			function getMemocount() {		
 			    xmlHttp_getMemocount_total = createXMLHttpRequest();// new ActiveXObject("Microsoft.XMLHTTP");
 			    xmlHttp_getMemocount_total.open("Post", "/myoffice/ezMemo/WebPartFolder/getWebPartCount.aspx", true);
 			    xmlHttp_getMemocount_total.onreadystatechange = event_getMemocount;
 			    xmlHttp_getMemocount_total.send("<DATA><FLAG>1</FLAG></DATA>");
 			}
 			
-			function event_getMemocount()
-			{
-			    if (xmlHttp_getMemocount_total != null && xmlHttp_getMemocount_total.readyState == 4)
-				{
-			    	if ((xmlHttp_getMemocount_total.status < 200) && (xmlHttp_getMemocount_total.status > 300))
-					{
+			function event_getMemocount() {
+			    if (xmlHttp_getMemocount_total != null && xmlHttp_getMemocount_total.readyState == 4) {
+			    	if ((xmlHttp_getMemocount_total.status < 200) && (xmlHttp_getMemocount_total.status > 300)) {
 			            xmlHttp_getMemocount_total = null;
 						return;
-					}
-					else 
-					{
+					} else {
 						try {
 						    document.getElementById("Memonum").innerText = xmlHttp_getMemocount_total.responseXML.text;
 							xmlHttp_getMemocount_total = null;
-						} catch(e)
-						{
+						} catch(e) {
 						    xmlHttp_getMemocount_total = null;
 							return;
 						}
@@ -488,62 +470,20 @@
 				}
 			}
 					
-			function btnSumming_click(objThis)
-			{
-				switch (objThis.id)
-				{
-					case "NewMail" : 
-						window.open("/ezEmail/mailMain.do?funCode=1", "main");
-						break;						
-										
-					case "AprSign" : 		
-						var listType;
-						listType = 1;
-						if ("${userApprovalG}" == ("YES"))
-							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
-						else
-							window.open("/ezApproval/apprMain.do?listType=" + listType, "main");
-						break;
-					case "aprnum" : 
-						// 문서Type 선택 1=결재할문서 2=기안할문서  3=결재진행문서  4=수신문서처리(접수기)
-						var listType;
-						listType = 1;
-						if ("${userApprovalG}" == ("YES"))
-							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
-						else
-							window.open("/ezApproval/apprMain.do?listType=" + listType, "main");
-						break;
-						
-					// 표준모듈 (2007.03.23) 수정 : 메모보고 
-					case "Memo" : 					
-						window.open("/myoffice/ezMemo/index_memo.aspx?listType=1", "main");
-						break;
-						
-					case "Schedule" : 
-						window.open("/ezSchedule/scheduleIndex.do?funCode=2","main");
-						break;
-						
-					case "Poll" :
-						window.open("/ezBoard/boardMain.do?func=1","main");
-						break;
-						
-					case "pollnum" : 
-						window.open("/ezBoard/boardMain.do?func=1","main");
-						break;
-					
-					case "Env" :
-						window.open("/myoffice/main/index_environment.htm","main");
-						break;
-					case "My_Board" :
-						window.open("/ezBoard/boardMain.do","main");
-						break;
-					case "Address" : 
-						window.open("/myoffice/main/index_myoffice.aspx?funCode=4", "main");
-						break;
-				    case "ModInfo":
-				        window.open("/ezPortal/environmentMain.do?funCode=1", "main");
-				        break;
-					
+			function btnSumming_click(objThis) {
+				var ifr = window.parent.parent.frames['topFrame'];
+				var ifrw = (ifr.contentWindow) ? ifr.contentWindow : ifr
+				
+				if (objThis.id == "AprSign") {
+					if ("${userApprovalG}" == ("YES")) {
+						ifrw.topMenuToggle('ApprG');
+					} else {
+						ifrw.topMenuToggle('Appr');
+					}
+				} else if (objThis.id == "ModInfo") {
+					window.open("/ezPortal/environmentMain.do?funCode=1", "main");
+				} else {
+					ifrw.topMenuToggle(objThis.id);
 				}
 			}
 
@@ -582,17 +522,11 @@
 		                    var top = (heigth - wHeight) / 2;
 		                    if (CrossYN() || pNoneActiveX == "YES") {
 		                        window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                        "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		                        	"height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                    }
 		                    else {
-		                        if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                                     "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                        }
-		                        else {
-		                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                        }
+	                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
+	                                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                    }
 		                }
 		                break;
@@ -619,8 +553,7 @@
 		                    var Schedule_Add_Select_Cross = GetOpenWindow(url, "Schedule_Add_Select_Cross", 552, 435);
 		                    try { Schedule_Add_Select_Cross.focus(); } catch (e) {
 		                    }
-		                }
-		                else {
+		                } else {
 		                    var url = "/ezResource/scheduleAddSelect.do";
 		                    var feature = "status:no;dialogWidth:552px;dialogHeight:430px;help:no;scroll:no;edge:sunken";
 		                    feature = feature + GetShowModalPosition(552, 422);
@@ -649,34 +582,35 @@
 		                break;
 		        }
 		    }
+		    
 		    function btnWrite_onclick_Complete(ret) {
 		        if (ret != "close" && ret != undefined && ret[0][0] != undefined) {
 		            url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ret[0][0] + "&brdName=" + encodeURIComponent(ret[1][0]);
 
 		            var Schedule_Add_ck = window.open(url, "Schedule_Add_Cross", GetOpenWindowfeature(820, 700));
-		            try { Schedule_Add_ck.focus(); } catch (e) {
-		            }
+		            
+		            try { Schedule_Add_ck.focus(); } catch (e) {}
 		        }
 		    }
+		    
 		    var schedule_add_select_cross_dialogArguments = new Array();
+		    
 		    function new_mail_onclick() {
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var conWidth = pwidth * 0.8;
+		        
 		        if (conWidth > 890)
 		            conWidth = 890;
+		        
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
 
 		        if (CrossYN() || pNoneActiveX == "YES") {
 		            window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		        } else {
-		            if (pUse_Editor == "") {
-		                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		            } else {
-		                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		            }
+	                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		        }
 		    }
 
@@ -684,6 +618,7 @@
 		    var formDocType = "";
 		    var getformcont_cross_dialogArguments = new Array();
 		    var url = "";
+		    
 		    function openForm() {
 		        var parameter = new Array();
 		        parameter[0] = "${userInfo.deptID}";
@@ -699,14 +634,14 @@
 		            getformcont_cross_dialogArguments[0] = parameter;
 		            getformcont_cross_dialogArguments[1] = openForm_Complete;
 		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
-		            try { getFormCont_Cross.focus(); } catch (e) {
-		            }
-		        }
-		        else {
+		            
+		            try { getFormCont_Cross.focus(); } catch (e) {}
+		        } else {
 		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
 		            var ret = window.showModalDialog(url, parameter, feature);
 		            formURL = ret[0];
 		            formDocType = ret[1];
+		            
 		            if (formURL != "cancel") {
 		                openDraftUI(formURL, formDocType);
 		            }
@@ -725,6 +660,7 @@
 		    function openDraftUI() {
 		        var pArgument = new Array();
 		        var gb = "";
+		        
 		        if ("${userApprovalG}" == ("YES"))
 		            gb = "G";
 		        
@@ -781,7 +717,6 @@
 		    }
 
 		    function scheduleChangeTab(obj) {
-		        
 		        switch (obj.id) {
 		            case "Psch":
 		                pMode = "P";
@@ -795,11 +730,13 @@
 		              
 		                break;
 		        }
+		        
 		        if(selDate != "")
 		            getScheduleList(selDate, pMode);
 		        else
 		            getScheduleList(nowDay, pMode);
 		    }
+		    
 		    function draw_clock() {
 		        document.getElementById("clock_id").innerHTML = "";
 		        canvas = Raphael("clock_id", 120, 120);
@@ -861,6 +798,7 @@
 			
 		    function MonthMiniDbClick() {
 		    }
+		    
 		    function reload() {
 		        if (CrossYN()) {
 		            if (document.getElementById("Psch").className == "left_on") {

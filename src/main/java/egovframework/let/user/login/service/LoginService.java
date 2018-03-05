@@ -32,7 +32,7 @@ public interface LoginService {
 	 * @exception Exception Exception
 	 */
 	public LoginVO selectUser(LoginVO vo) throws Exception;
-
+	
 	/**
 	 * 아이디를 찾는다.
 	 * @return LoginVO
@@ -60,7 +60,13 @@ public interface LoginService {
 	public void updatePassword(String userID, String pwd) throws Exception;
 	
 	public int getTenantId(String serverName) throws Exception;
+
+	public LoginVO selectReceiver(String userID, int tenantID) throws Exception;
 	
+	public List<LoginVO> selectAllReceivers(String userID, int tenantID) throws Exception;
+	
+	public List<LoginVO> selectAllMemberOfCompany(String companyID, int tenantID) throws Exception;
+
 	public String chkADAndUpdatePassword(String uid, String upwd, int tenantId) throws Exception;
 
 }

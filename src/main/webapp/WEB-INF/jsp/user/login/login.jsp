@@ -12,6 +12,11 @@
 		<link href="/css/login.css" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="<spring:message code='main.e15'/>" type="text/css">
 		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+		<style>
+			.blocker {
+				text-align: center;
+			} 
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
@@ -95,7 +100,7 @@
 			    }
 			    getid(document.loginForm);
 			    
-				if ("${isExpireDate}" == "Y") {					
+				if ("${isExpireDate}" == "Y") {
 					$("#exDiv").modal();
 					$("#exDiv").show(function() {						
 						$("#txtOldPassword").focus();
@@ -212,7 +217,7 @@
 				<c:if test="${isFirstLogin == 'Y'}"><img src="/images/hello.png" width="52" height="52"/></c:if>
 				<c:if test="${isFirstLogin != 'Y'}"><img src="/images/warning.png" width="52" height="52"/></c:if>
 			</div>
-			<div style="float:right;color:rgb(0, 72, 149)">
+			<div style="float:right;color:rgb(0, 72, 149);width:360px">
 				<c:if test="${isFirstLogin == 'Y'}">
 					<div style="font-size:11px">▒ <spring:message code='main.jjh07'/></div>
 				</c:if>
@@ -224,7 +229,7 @@
 			</div>
 			<div style="clear:both"></div>
 			<p style="border-top:1px solid rgb(0, 72, 149);margin-top:13px">
-				<label style="color:rgb(0, 72, 149);">로그인 아이디 : </label>
+				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh09'/> : </label>
 				<span id="chooseId">${userId}</span>
 			</p>
 			<p>

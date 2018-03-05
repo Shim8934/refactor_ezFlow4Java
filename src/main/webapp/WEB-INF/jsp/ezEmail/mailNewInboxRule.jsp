@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>
 		<script type="text/javascript" >
+			var isFolderChanged = false;
 		    var ReturnFunction;
 		    window.onload = function () {
 		        try {
@@ -23,6 +24,14 @@
 		        ConArea.innerHTML += "<span style='margin-left:25px;'>" + inboxRuleCon.innerHTML + "</span>";
 		        ActArea.innerHTML += "<span style='margin-left:20px;'>" + inboxRuleAct.innerHTML + "</span>";
 		        ExptArea.innerHTML += "<span style='margin-left:20px;'>" + inboxRuleExpt.innerHTML + "</span>";
+		    }
+		    window.onunload = function () {
+		    	if (isFolderChanged) {
+            		try {
+            			opener.parent.parent.frames["left"].mailbox_treeview_reload();
+            		} catch (e) {
+            		}
+            	}
 		    }
 		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();
@@ -138,49 +147,63 @@
 		    }
 		    function getFolder() {
 		        mail_selectfolder_cross_dialogArguments[1] = getFolder_Complete;
-		        mail_selectfolder_cross_dialogArguments[2] = getFolder_Complete;
 		        DivPopUpShow(400, 355, "/ezEmail/mailSelectFolder.do");
 		    }
 		    function getFolder_Complete(mailBoxInfo) {
-		        try {
+		    	try {
 		            DivPopUpHidden();
+		            
 		            if (typeof (mailBoxInfo) == "undefined") {
-		                ActRObject.parentNode.children.item(1).innerHTML = "<span onclick='getFoldercell(this);' style='vertical-align:middle;margin-top-10px;'><u>" + strLang219 + "</u></span>";
+		            	_curCellObj.innerHTML = "<span onclick='getFoldercell(this);' style='vertical-align:middle;margin-top-10px;'><u>" + strLang219 + "</u></span>";
 		                return;
 		            }
-		
+					
+		            if (typeof (mailBoxInfo["url"]) == "undefined" || typeof (mailBoxInfo["name"]) == "undefined") {
+		            	_curCellObj.innerHTML = "<span onclick='getFoldercell(this);' style='vertical-align:middle;margin-top-10px;'><u>" + strLang219 + "</u></span>";
+		            	isFolderChanged = mailBoxInfo["isFolderChanged"];
+		                return;
+		            }
+		            
 		            var url = mailBoxInfo["url"];
 		            var name = folderdisnameChange(mailBoxInfo["name"]);
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
 		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
-		        } catch (e) {
-		
+		            isFolderChanged = mailBoxInfo["isFolderChanged"];
+		    	} catch (e) {
+		    		
 		        }
 		    }
 		    function getFoldercell(obj) {
 		        _curCellObj = obj.parentNode;
 		        _RuleKind = _curCellObj.getAttribute("RuleKind");
-		        mail_selectfolder_cross_dialogArguments[1] = getFolder_Complete;
-		        mail_selectfolder_cross_dialogArguments[2] = getFolder_Complete;
-		        mail_selectfolder_cross_dialogArguments[3] = obj.parentNode;
+		        mail_selectfolder_cross_dialogArguments[1] = getFoldercell_Complete;
+		        mail_selectfolder_cross_dialogArguments[2] = obj.parentNode;
 		        DivPopUpShow(400, 355, "/ezEmail/mailSelectFolder.do");
 		    }
 		    function getFoldercell_Complete(mailBoxInfo) {
 		        try {
-		            DivPopUpHidden
+		            DivPopUpHidden();
+		            
 		            if (typeof (mailBoxInfo) == "undefined") {
-		                mail_selectfolder_cross_dialogArguments[3].innerHTML = "<span onclick='getFoldercell(this);' style='vertical-align:middle;margin-top-10px;'><u>" + strLang219 + "</u></span>";
+		            	_curCellObj.innerHTML = "<span onclick='getFoldercell(this);' style='vertical-align:middle;margin-top-10px;'><u>" + strLang219 + "</u></span>";
+		            	return;
+		            }
+		            
+		            if (typeof (mailBoxInfo["url"]) == "undefined" || typeof (mailBoxInfo["name"]) == "undefined") {
+		            	_curCellObj.innerHTML = "<span onclick='getFoldercell(this);' style='vertical-align:middle;margin-top-10px;'><u>" + strLang219 + "</u></span>";
+		            	isFolderChanged = mailBoxInfo["isFolderChanged"];
 		                return;
 		            }
-		
+		            
 		            var url = mailBoxInfo["url"];
 		            var name = folderdisnameChange(mailBoxInfo["name"]);
-		            //mail_selectfolder_cross_dialogArguments[3].parentNode.setAttribute("RuleKind", "MOVE");
+		            //mail_selectfolder_cross_dialogArguments[2].parentNode.setAttribute("RuleKind", "MOVE");
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
 		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
+		            isFolderChanged = mailBoxInfo["isFolderChanged"];
 		        } catch (e) {
 		
 		        }
@@ -726,7 +749,7 @@
         </div>
         <div id="close">
           <ul>
-            <li><span onClick="closed();"><spring:message code='ezEmail.t63' /></span></li>
+            <li><span onClick="window.close();"><spring:message code='ezEmail.t63' /></span></li>
           </ul>
         </div>
 	    <div style="border:1px solid #dbdbda;width:585px;height:475px;overflow-y:auto;margin:5px 5px 5px 5px;">
@@ -813,7 +836,7 @@
 			</tr>
 		</table>
 		<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f2f2f2;">
-			<div id="Conitems" name="Conitems" style="border:1px solid #dbdbda;width:370px;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
+			<div id="Conitems" name="Conitems" style="font-family:<spring:message code='main.t246' />;border:1px solid #dbdbda;width:370px;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
 			</div>
 		</div>
 		<div id="mainmenu" style="margin-left:150px;">

@@ -108,7 +108,7 @@
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onload = function () {
-		    	
+                
 		    	// 웹소켓 지원을 안할 경우 '편지함 내려받기/가져오기' 버튼 숨김
 		        if ('WebSocket' in window) {
 	           	} else if ('MozWebSocket' in window) {
@@ -251,24 +251,62 @@
 	                // 브라우저가 Page Visibility API를 지원할 때의 처리
 	                if ('hidden' in document) {
 	                    console.log('adding visibilitychange event handler');
-	                    
+
 	                    document.addEventListener('visibilitychange', onVisibilityChange);
 	                    recordNextMailListRefreshTime();
 	                }		            
 		        }		
 		    }
 		    
+		    $(document).ready(function() {
+		    	var clickOutside;
+		    	
+		    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
+		    	} else {
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
+		    	}	    	
+		    	
+		    	clickOutside.mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(parent.document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.frames['ifrmPreViewH']).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
+		    		console.log("aaaaa")
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    });
+		    
 		    function getCurrentTime() {
 		        return new Date().getTime();		        
 		    }
 		    
-		    function setMailListRefreshTimer() {                  
+		    function setMailListRefreshTimer() { 
 		        if (pSaveInterval != 0) {
-		            refreshIntervalTimerId = setInterval(function() {
-		                MailListRefresh();
-		                
-		                // 다음 자동 갱신 시간을 기록한다.
-		                recordNextMailListRefreshTime();
+		        	refreshIntervalTimerId = setInterval(function() {
+		            	/* 수아 재은 수정 (메일 검색시 자동 새로고침 X) */
+		            	if (!searchMode) {
+			                MailListRefresh();
+			                
+			                // 다음 자동 갱신 시간을 기록한다.
+			                recordNextMailListRefreshTime();
+		            	}
 		            }, pSaveInterval);
 		        }
 		    }
@@ -281,7 +319,8 @@
 		    
 		    function onVisibilityChange() {
                 var remainingTime = nextMailListRefreshTime - getCurrentTime();
-                                
+              
+                console.log(remainingTime/1000);
 		        // 메일 목록 페이지 상태가 보임으로 변경될 때의 처리
  		        if (!document.hidden) { 		            
  		           console.log('remainingTime=' + remainingTime + ',showing...');
@@ -290,7 +329,10 @@
  		            if (remainingTime <= 0) {
  		                console.log('refresh time already passed. Refresing...')
  		                
- 		                MailListRefresh();
+ 		                // 수정 재은 
+ 		                if (!searchMode) {
+ 		                	MailListRefresh();
+ 		                }
  		                
                         // 다음 자동 갱신 시간을 기록한다.
                         recordNextMailListRefreshTime();
@@ -301,7 +343,11 @@
  		               console.log('refresh time not yet passed. Registering Timer...')
  		               
  		               refreshTimeoutTimerId = setTimeout(function() {
- 		                   MailListRefresh();
+ 		            	   
+ 		            	   // 수정 재은
+ 		            	   if (!searchMode) {
+ 		            		   MailListRefresh();
+ 		            	   }
  		                   
  	                       // 다음 자동 갱신 시간을 기록한다.
  	                       recordNextMailListRefreshTime();
@@ -312,7 +358,7 @@
  		            }
  	            // 메일 목록 페이지 상태가 숨김으로 변경될 때의 처리     
 		        } else {
-	                console.log('remainingTime=' + remainingTime + ',hiding...');
+		        	console.log('remainingTime=' + remainingTime + ',hiding...');
 		            
 		            // 목록 갱신 타이머를 제거한다.
 		            if (refreshIntervalTimerId != 0) {
@@ -460,6 +506,7 @@
 		        // 서버로부터 메세지가 왔을 때 실행되는 함수 
  				webSocket.onmessage = function(message){
 		        	var obj = JSON.parse(message.data);
+		        	
 		        	if (obj.status == "transferStart") {
 		            	userkey = obj.userkey;
 			            ShowMailProgressNew();
@@ -498,9 +545,11 @@
 						});
 						
 		            } else if (obj.status == 'progress') {
+		            	
 		            	if (obj.percent <= 100) {
 			            	ShowPercent(obj.percent);
 		            	}
+		            	
 		            } else if (obj.status == 'end') {
 		            	webSocket.close();
 		            	HiddenMailProgressNew();
@@ -635,7 +684,7 @@
 				}
 				
 				if (result == "ERROR") { // 에러발생
-					alert("<spring:message code='ezEmail.lhm33' />");
+					alert("<spring:message code='ezEmail.lhm35' />");
 					document.importMailboxform.file1.value = "";
 					MailListRefresh();
 				}
@@ -695,7 +744,10 @@
 				document.getElementById("MailProgress").style.display = "none";
 			    document.getElementById("cancleProgressBtn").style.display = "none";
 				parent.document.getElementById("left").contentWindow.hideProgress();
-				parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+				
+				if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
+					parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+				} 
 			}
 
 			function ShowMailProgressNew() {
@@ -708,26 +760,29 @@
 			    document.getElementById("MailProgress").style.display = "";
 			    document.getElementById("cancleProgressBtn").style.display = "block";
 			    parent.document.getElementById("left").contentWindow.showProgress();
-			    parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+			    
+			    if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
+					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+				} 
 			}
 
 			function cancleProgress(){
 	        	HiddenMailProgressNew();
 	        	webSocket.close();
 	        	location.reload();
-			}			
+			}
 			
 		</script>	
 	</head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<h1>${folderName}<span id="mailBoxInfo"></span>
 	      <span style="float:right;font-weight:normal;color:black;">
-	          <input name="searchCheck" id="Radio1" type="radio" value="SUBJECT" checked style="margin:0px;padding:0px;width:13px;height:13px;">&nbsp;<spring:message code="ezEmail.t98" />
+	          <input name="searchCheck" id="Radio1" type="radio" value="SUBJECT" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code="ezEmail.t98" /></label>
 	          <c:if test="${isSentItems == true}">
-	          <input name="searchCheck" id="Radio2" type="radio" value="RECEIVE" style="margin:0px;padding:0px;width:13px;height:13px;">&nbsp;<spring:message code="ezEmail.t66" />
+	          <input name="searchCheck" id="Radio2" type="radio" value="RECEIVE" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code="ezEmail.t66" /></label>
 	          </c:if>
 	          <c:if test="${isSentItems != true}">
-			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;">&nbsp;<spring:message code="ezEmail.t161" />
+			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio3">&nbsp;<spring:message code="ezEmail.t161" /></label>
 			  </c:if>
 			  &nbsp;
 			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
@@ -751,14 +806,19 @@
           <li id="deleteone"><span onClick="deleteWork(true)"><spring:message code="ezEmail.t156" /></span></li>
           <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
           <li onClick="MailListRefresh()"><span class="img_Newbtn"><spring:message code="ezEmail.t515" /></span></li>
-		  <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
+          <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
           <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
 		  <c:if test="${ useMailBoxBackUp eq 'YES' }">
 		 	<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 		  	<li id="mailbox_export"><span onClick="mailbox_export()"><spring:message code="ezEmail.lhm31" /></span></li>
 		  	<li id="mailbox_import"><span><label for="file1" style="cursor: pointer;"><spring:message code="ezEmail.lhm32" /></label></span></li>
 		  </c:if>
-		  <li id="right"><spring:message code="ezEmail.t99000034" />&nbsp;<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /> <!-- 레이어나왔을경우btn_arrow_up.gif --></li>
+		  <li id="right">
+	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
+	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
+					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
+					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" class="maillistoptiondivbtn" onclick="MailOptionView(this);" />
+		  </li> 
           </ul>
         </div>
 		<script type="text/javascript">
@@ -781,14 +841,6 @@
 	                        <option value=40 <c:if test="${mailGeneral.listCount == '40'}">selected</c:if>>40</option>
 	                        <option value=50 <c:if test="${mailGeneral.listCount == '50'}">selected</c:if>>50</option>
 	                    </select>
-	                </td>
-                  </tr>
-                  <tr>
-                    <th style="vertical-align:middle;"><spring:message code="ezEmail.t487" /></th>
-                    <td>
-	                    <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onClick="PreviewRayerChange('NONE')"> 
-	                    <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onClick="PreviewRayerChange('W')">
-	                    <img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onClick="PreviewRayerChange('H')">
 	                </td>
                   </tr>
                   <tr>

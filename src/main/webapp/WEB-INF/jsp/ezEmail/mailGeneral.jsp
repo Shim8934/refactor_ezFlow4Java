@@ -110,6 +110,8 @@
 
 				var xmlHTTP = createXMLHttpRequest();
 				var url = "/ezEmail/mailGeneralSave.do?MODE=ALL" ;
+			    var previewSubTreeSlb = $("#previewSubTreeSlb option:selected").val();
+			    var previewSubTreeStatus = window.parent.parent.frames["left"].previewSubTree;
 				var sendStr = "<DATA><LISTCOUNT>" + listcount.value + "</LISTCOUNT><REFRESHINTERVAL>" + refreshinterval.value + "</REFRESHINTERVAL>"+
 				                "<KEEPDELETELENGTH>" + document.getElementById("AutoSaveTime").value + "</KEEPDELETELENGTH>"+
 				                "<PREVIEWMODE>" + document.getElementById("PreviewMode").value + "</PREVIEWMODE>"+
@@ -120,13 +122,18 @@
 				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>";
 				
                 if (usePreviewSubTree == "YES") {
-                	sendStr +=  "<PREVIEWSUBTREE>" + $("#previewSubTreeSlb option:selected").val() + "</PREVIEWSUBTREE>";
+                	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
                 }
 				
 				xmlHTTP.open("POST", url, false);
 				xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
                 xmlHTTP.send(sendStr + "</DATA>");
-				
+
+                if (previewSubTreeStatus != previewSubTreeSlb) {
+                	var type = previewSubTreeSlb;
+                	window.parent.parent.frames["left"].previewSubTreeCall(type);
+                }
+                
 				if (Gubun == "1") {
 				    if (xmlHTTP.status == 200)
 				        alert("<spring:message code='ezEmail.t42' />");
@@ -183,7 +190,7 @@
 			    for (var i = 0; i < document.getElementById("ExtSenderNM").childNodes.length; i++) {
 			        if (document.getElementById("ExtSenderNM").childNodes.item(i).nodeName == "OPTION") {
 			            var pOptionValue = document.getElementById("ExtSenderNM").childNodes.item(i).value;
-			            Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + pOptionValue + "'><nobr>" + pOptionValue + "</nobr><div>";
+			            Conitems.innerHTML += "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + pOptionValue + "'><nobr>" + pOptionValue + "</nobr><div>";
 			        }
 			    }  
 			    inboxRuleConbtn1.style.display = "";
@@ -247,14 +254,14 @@
 			        }
 			        if (ischeck) {
 			            if (ConCellRow != null) {
-			                ConCellRow.outerHTML = "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
+			                ConCellRow.outerHTML = "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
 			                inboxRuleCon1.value = "";
 			                inboxRuleCon1.focus();
 			                inputBtn.innerText = strLang239;
 			                ConCellRow = null;
 			            }
 			            else {
-			                Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
+			                Conitems.innerHTML += "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
 			                inboxRuleCon1.value = "";
 			                inboxRuleCon1.focus();
 			            }
@@ -419,7 +426,7 @@
 		</table>  
 		<br />
 		<div align="center" style="width:623px;">
-		    <a class="imgbtn" onClick="Change_Click('1')"><span><spring:message code='ezEmail.t48' /></span></a>
+		    <a class="imgbtn" onClick="Change_Click('1')"><span><spring:message code='main.sp09' /></span></a>
 		    <a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
 		</div> 
 		<div  id="inboxRuleConbtn1" style="position:absolute; left:100px; top:65px;border:3px solid gray;width:415px;background-color:#F9F9F9; display:none;">

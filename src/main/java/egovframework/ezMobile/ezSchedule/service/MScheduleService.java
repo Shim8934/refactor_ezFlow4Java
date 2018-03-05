@@ -12,6 +12,8 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 public interface MScheduleService {
 
 	public int insertSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale) throws Exception;
+	
+	public int insertBoardSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale) throws Exception;
 
 	public void deleteSchedule(String scheduleId, int tenantId) throws Exception;
 
@@ -23,8 +25,8 @@ public interface MScheduleService {
 
 	public MScheduleInfoVO scheduleInfo(String scheduleId, String offSetMin, int tenantId) throws Exception;
 	
-	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate, String searchTitle) throws Exception;
+	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate, String searchTitle, String searchColumn, String searchData) throws Exception;
 	
-	public JSONObject scheduleMainList(MCommonVO info, String listCnt) throws Exception;	
+	public JSONObject scheduleMainList(MCommonVO info, String listCnt) throws Exception;
 	
 }

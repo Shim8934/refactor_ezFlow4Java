@@ -14,8 +14,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
-import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -34,7 +34,7 @@ public interface EzBoardService {
 	
 	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID, int tenantID) throws Exception;
 	
-	public List<BoardReadVO> getReaderList(String boardID, String itemID, String userID, String lang, int tenantID) throws Exception;
+	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception;
 	
 	public List<BoardListVO> getAdjacentItems1(String boardID, String parentWriteDate, String upperItemIDTree, int tenantID) throws Exception;
 	
@@ -259,5 +259,15 @@ public interface EzBoardService {
 	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path, String mode) throws Exception;
 
 	public String copyItem(String orgItemIDList, String orgBoardID, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception;
+
+	public BoardPollConfigVO getPollConfig(String pUserID, int tenantId) throws Exception; //baonk added
+
+	public void saveBoardPollConfig(BoardPollConfigVO boardPollConfigVO) throws Exception; //baonk added
+
+	//2017.12.29 강민수92
+	public String getOneLineReplyCount(String boardID, String itemID, int tenantID) throws Exception;
+
+	//2018.02.05 김보미
+	public int getReaderListCount(String boardID, String itemID, String userID, String lang, int tenantID) throws Exception;
 
 }

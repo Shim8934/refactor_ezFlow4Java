@@ -200,7 +200,7 @@ function TreeNode() {
         spnNode.name = "spn_" + strTreeID;
         spnNode.className = TreeClasses["normal"];
 
-        if (SelectSingleNode(pNodeData, "SETTEXTCOLORBYNAME") != null) {
+        if (SelectSingleNode(pNodeData, "SETTEXTCOLORBYNAME") != null && $("#1tab1").attr("class") != "tabon") {
             spnNode.style.color = "#bbbbbb";
         }
 
@@ -645,12 +645,15 @@ function treeicon_toggle(pNodeID, pTreeID, callbackFunc, pNodeIconID) {
 function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
     var treeDiv = document.getElementById(pTreeID);
     var preSelectID = GetAttribute(treeDiv, "SELECTNODEID");
-
+    
+    if (document.getElementById("descript") != null) {
+    	document.getElementById("descript").innerHTML = "";
+    }
+    
     if (preSelectID != "" && preSelectID != "undefined" && preSelectID!= null) {
         var objSpan = document.getElementById("spn_" + preSelectID);
         objSpan.className = TreeClasses["normal"];
     }
-
     if (pNodeID != "" && pNodeID != "undefined") {
         var objSpan = document.getElementById("spn_" + pNodeID);
         objSpan.className = TreeClasses["selected"];

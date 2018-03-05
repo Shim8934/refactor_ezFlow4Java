@@ -66,3 +66,12 @@ var strLang176 = "삭제 권한이 없습니다.";
 var strLang177 = "게시물을 선택해 주세요.";
 var strLang178 = "읽음 표시 하시겠습니까?";
 var strLang179 = "를(을) 선택하세요.";
+
+//2017.12.26 강민수92 추가
+var strLang180 = "댓글을 삭제하시겠습니까?";
+var strLang181 = "댓글이 없습니다.";
+var strLang182 = "내용을 입력하세요.";
+var strLang183 = "암호를 입력하세요.";
+var strLang184 = "자신이 등록한 댓글만 삭제할 수 있습니다.";
+var strLang185 = "암호가 올바르지 않습니다.";
+var strLang186 = "댓글";

@@ -115,5 +115,5 @@
             	CONNECTTIME < SUBDATE(DATE(NOW()), #v_KEEP_LOG_PERIOD#)
 		]]>
 	</delete>
-	
+		
 </sqlMap>

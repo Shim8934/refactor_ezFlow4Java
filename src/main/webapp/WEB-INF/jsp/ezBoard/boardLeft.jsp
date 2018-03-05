@@ -24,10 +24,11 @@
 	        var RedirectBoardID = "${redirectBoardID}";
 	        var Func = "${func}";
 	        var subFunc = "${subFunc}";
+	        var qstId = "${qstId}";
 	        var PhotoType = "${photoType}";
 	        var g_ReadyState = "";
 	        var first = 1;
-	        var items = "${resultCount}";
+	        var items = "${resultCount}";	        
 	
 		    window.onresize = function () {
 		        var menuSize = (parseInt(items) + 2) * 30;
@@ -51,14 +52,18 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        if (Func == "1") {
-		            WebPartToggle(level1El.item(level1El.length - 1));
+		            WebPartToggle(level1El.item(level1El.length - 2));
 		            Open_Func(1);
 		        }
+		        else if (Func == "3") {
+		        	WebPartToggle(level1El.item(level1El.length - 1));
+		        	Poll_Open(1);
+				}
 		        else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
 		            ShowMyBoardItem();
 		        }
 		
-		        if (Func != "1") {
+		        if (Func != "1" && Func != "3") {
 		            if (subFunc == "1") {
 		                MyBoard();
 		            }
@@ -375,7 +380,8 @@
 // 		            clickFlag = false;
 
 // 		        if (!clickFlag) {
-					$(".on").attr("class", "off");
+//					$(".on").attr("class", "off"); 게시물 등록,수정,삭제 등의 작업 완료시, 왼쪽 게시판 리스트가 초기화되는 버그때문에 주석처리
+					$(".fList h2").attr("class", "off");
 					
 		            var rootBoardID = ID;
 		            var num = obj.split("TreeCtrl");
@@ -442,9 +448,6 @@
 		        }
 		    }
 		    function Open_Func(idx) {
-		    	$(".on").attr("class", "off");
-		    	$(".qst h2").attr("class", "on");
-		    	$(".qst").next().attr("class", "on");
 		    	
 		        if (CrossYN()) {
 		            if (idx == 1) {
@@ -461,6 +464,40 @@
 		            SetTreeviewUnSelect("");		            
 		        }		        
 		    }
+
+			function Poll_Open(idx) {
+				$(".on").attr("class", "off");
+				$(".pollDiv h2").attr("class", "on");
+				$(".pollDiv").next().attr("class", "on");
+				
+				if (CrossYN()) {
+		            if (idx == 1) {
+		                window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
+		                qstId = "";
+		            }
+		            else {
+		                window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+		            }
+		        } else {
+		            if (idx == 1) {
+		            	window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
+		            	qstId = "";
+		            }
+		            else {
+		            	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+		            }
+		            SetTreeviewUnSelect("");
+		        }	    
+		    }
+
+		    function toggleQuestionList() {
+		    	if( prevSelMenu != null )
+		    		prevSelMenu.className = "off";
+		    	
+		    	prevSelMenu = $(".qst").next().children().get(0);
+		    	prevSelMenu.className = "on";
+		    }
+
 		    function WebPartToggle(obj) {
 		        for (var i = 0; i < level1El.length; i++) {
 		            if (i != obj.listNum) {
@@ -586,7 +623,7 @@
 	        </c:if>
 	        
 		    <c:if test="${useQuestion == 'YES'}">
-		    	<div class="qst" onclick="Open_Func(1)"> 
+		    	<div class="qst" onclick="Open_Func(1)">
 		        	<h2><span><spring:message code="ezBoard.t365" /></span></h2>		        
 		    	</div>
 		    	<ul>
@@ -596,6 +633,13 @@
 	            	</c:if>
 	        	</ul>
 		    </c:if>
+		    <div class="pollDiv" onclick="Poll_Open(1)" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
+	        	<h2><span><spring:message code="ezBoard.t371" /></span></h2>
+	        </div>	
+	        <ul>
+	            <%-- <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
+	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li> --%>	            
+	        </ul>
 	        <h3>
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>

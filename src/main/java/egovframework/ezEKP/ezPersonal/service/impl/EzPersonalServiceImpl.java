@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import com.ibm.icu.util.ChineseCalendar;
 
-import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -37,6 +35,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -63,28 +62,38 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	
 	@Override
 	public List<PersonalSliderImageVO> getSilderList(String companyID, String mode, String sliderID, int tenantID) throws Exception {
+		logger.debug("getSilderList started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_COMPANYID", companyID);
 		map.put("v_MODE", mode);
 		map.put("v_SLIDERID", sliderID);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getSilderList ended");
 		return ezPersonalDAO.getSilderList(map);
 	}
 
 	@Override
 	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType, int tenantID, String companyID) throws Exception {
+		logger.debug("setApprovalPwd started");
+
 		String result = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userID);
 		map.put("v_PFLAG", flag);
 		map.put("v_PPWD", newPWD);
+		
 		//결재암호 사용안할 시 무조건 로그인 암호로 저장됨
 		if (flag.equals("N")) {
 			map.put("v_PPWDTYPE", "L");
 		} else {
 			map.put("v_PPWDTYPE", pwdType);
 		}
+		
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -103,7 +112,6 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 				} else {
 					ezPersonalDAO.setApprovalPwd_U(map);
 				}
-				
 			} else {
 				ezPersonalDAO.setApprovalPwd_I(map);
 			}
@@ -112,7 +120,8 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		} catch (Exception e) {
 			result = "ERROR " + e.getMessage();
 		}
-		
+
+		logger.debug("setApprovalPwd ended");
 		return result;
 	}
 
@@ -126,6 +135,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		 * userInfo.getID() : 메일 발신자
 		 * */
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userID);
 		map.put("tenantID", tenantID);
 		map.put("currentID", currentID);
@@ -147,18 +157,22 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
         for (int i = 0; i < approvMailVOList.size(); i++) {
 			sb.append(commonUtil.getQueryResult(approvMailVOList.get(i)));
 		}
+        
 		sb.append("</DATA>");
 		
 		logger.debug("sb="+sb.toString());
 		logger.debug("getApprovNotiConfig ended");
-		
 		return sb.toString();
 	}
 
 	@Override
 	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID) throws Exception {
+		logger.debug("setApprovNotiMail started");
+
 		String result = "";
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PUSERID", userID);
 		map.put("v_PALERT", alert);
 		map.put("v_PCOMPLETE", complete);
@@ -181,40 +195,59 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		} catch (Exception e) {
 			result = e.getMessage();
 		}
-		
+
+		logger.debug("setApprovNotiMail ended");
 		return result;
 	}
 
 	@Override
-	public PersonalGetEmpOfMonthVO getEmpOfMonth(String pTerm, int tenantID) throws Exception {
+	public PersonalGetEmpOfMonthVO getEmpOfMonth(String pTerm, LoginVO userInfo) throws Exception {
+		logger.debug("getEmpOfMonth started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PTERM", pTerm);
-		map.put("tenantID", tenantID);
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("tenantID", userInfo.getTenantId());
+
+		logger.debug("getEmpOfMonth ended");
 		return ezPersonalDAO.getEmpOfMonth(map);
 	}
 
 	@Override
 	public int getPollCount(String pComapnyID, int tenantID) throws Exception {
+		logger.debug("getPollCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", pComapnyID);
 		map.put("v_pMode", "U");
 		map.put("tenantID", tenantID);
+
+		logger.debug("getPollCount ended");
 		return ezPersonalDAO.getPollCount(map);
 	}
 
 	@Override
 	public List<PersonalLightPollVO> getPollListUser(String pComapnyID, int pTotal, int pCount, int pStart, int tenantID) throws Exception {
+		logger.debug("getPollListUser started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", pComapnyID);
 		map.put("v_pTotal", pTotal);
 		map.put("v_pCount", pCount);
 		map.put("v_pStart", pStart);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getPollListUser ended");
 		return ezPersonalDAO.getPollListUser(map);
 	}
 	
 	@Override
 	public PersonalLightPollVO getCurrentPoll(String pUserID, String pCompanyID, int tenantID) throws Exception {
+		logger.debug("getCurrentPoll started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -225,20 +258,30 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		map.put("v_pCompanyID", pCompanyID);
 		map.put("tenantID", tenantID);
 		map.put("nowDate", nowDate);
+
+		logger.debug("getCurrentPoll ended");
 		return ezPersonalDAO.getCurrentPoll(map);
 	}
 
 	@Override
 	public List<PersonalLightPollVO> getPollResultOrderResult(int pItemSeq, int tenantID) throws Exception {
+		logger.debug("getPollResultOrderResult started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemSeq", pItemSeq);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getPollResultOrderResult ended");
 		return (List<PersonalLightPollVO>) ezPersonalDAO.getPollResultOrderResult(map);
 	}
 
 	@Override
 	public void insertResult(int pItemSeq, String pUserID, int pResult, int tenantID) throws Exception {
+		logger.debug("insertResult started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemSeq", pItemSeq);
 		map.put("v_pUserID", pUserID);
 		map.put("v_pResult", pResult);
@@ -249,26 +292,40 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		if (temp != null && temp.equals("1")) {
 			ezPersonalDAO.insertResult(map);
 		}
+
+		logger.debug("insertResult ended");
 	}
 
 	@Override
 	public PersonalLightPollVO getPollInfo(int pItemSeq, int tenantID) throws Exception {
+		logger.debug("getPollInfo started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemSeq", pItemSeq);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getPollInfo ended");
 		return ezPersonalDAO.getPollInfo(map);
 	}
 	
 	@Override
 	public List<PersonalLightPollVO> getPollResult(int pItemSeq, int tenantID) throws Exception {
+		logger.debug("getPollResult started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemSeq", pItemSeq);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getPollResult ended");
 		return ezPersonalDAO.getPollResult(map);
 	}
 	
 	@Override
 	public List<PersonalGetPopUpListUserVO> getPopUpListUser(String pComapnyID, int tenantID) throws Exception {
+		logger.debug("getPopUpListUser started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"); 
@@ -276,29 +333,44 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		map.put("v_pCompanyID", pComapnyID);
 		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getPopUpListUser ended");
 		return (List<PersonalGetPopUpListUserVO>) ezPersonalDAO.getPopUpListUser(map);
 	}
 	
 	@Override
 	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu(String accessID, int tenantID) throws Exception {
+		logger.debug("getQuickLinkMenu started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_ACCESSID", accessID);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getQuickLinkMenu ended");
 		return ezPersonalDAO.getQuickLinkMenu(map);
 	}
 	
 	@Override
 	public List<PersonalGetWebPartGroupVO> getWebPartGroup(String pCompanyID, String pMode, int tenantID) throws Exception {
+		logger.debug("getWebPartGroup started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", pCompanyID);
 		map.put("v_pMode", pMode);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getWebPartGroup ended");
 		return ezPersonalDAO.getWebPartGroup(map);
 	}
 	
 	@Override
 	public List<PersonalGetWebPartVO> getUserWebPart(String pUserID, String pCompanyID, String pACL, int tenantID) throws Exception {
+		logger.debug("getUserWebPart started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pUserID", pUserID);
 		map.put("v_pCompanyID", pCompanyID);
 		map.put("v_pACL", pACL.replace(",", "','"));
@@ -307,36 +379,51 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		String temp = ezPersonalDAO.getUserWebPart_S1(map);
 		
 		if (temp != null && temp.equals("1")) {
+			logger.debug("getUserWebPart ended");
 			return ezPersonalDAO.getUserWebPart_S2(map);
 		} else {
+			logger.debug("getUserWebPart ended");
 			return ezPersonalDAO.getUserWebPart_S3(map);
 		}
 	}
 	
 	@Override
 	public List<PersonalNoticeVO> getNoticeListMain(String companyID, int tenantID) throws Exception {
+		logger.debug("getNoticeListMain started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", companyID);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getNoticeListMain ended");
 		return ezPersonalDAO.getNoticeListMain(map);
 	}
 	
 	@Override
 	public List<PersonalNoticeVO> getNoticeListUser(String companyID,int pTotal, int pCount, int pStart, int tenantID) throws Exception {
+		logger.debug("getNoticeListUser started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pTotal", pTotal);
 		map.put("v_pCount", pCount);
 		map.put("v_pStart", pStart);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getNoticeListUser ended");
 		return ezPersonalDAO.getNoticeListUser(map);
 	}
 
 	public String getBirthUserList(String companyID, String curMon, int tenantID) throws Exception {
-		
+		logger.debug("getBirthUserList started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANT_ID", tenantID);
+		
 		List<OrganUserVO> list = ezOrganDAO.getBirthUserList(map); 
 		
 		String solarValue = "";
@@ -354,14 +441,15 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 				if (!solarValue.equals("FALSE")) {
 					solarValue = solarValue.substring(0, 10);
 				}
+				
 				orgranUserInfo.setBirth(solarValue);
 			}
 			
 			tempList.add(orgranUserInfo);
 		}	
 		
-		 //오름차순으로 정렬!
-        Collections.sort(tempList, new Comparator<OrganUserVO>() {
+		//오름차순으로 정렬!
+		Collections.sort(tempList, new Comparator<OrganUserVO>() {
 			@Override
 			public int compare(OrganUserVO o1, OrganUserVO o2) {
 				return o1.getBirth().split("-")[2].compareTo(o2.getBirth().split("-")[2]);
@@ -370,7 +458,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		
 		for (OrganUserVO orgranUserInfo : tempList) {	
 			solarValue = orgranUserInfo.getBirth();
-
+			
 			if (!solarValue.equals("FALSE")) {
 				if (curMon.equals(solarValue.substring(5, 7))) {
 					result.append("<ROW>");
@@ -382,10 +470,11 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 						if(data == null || data.equals(null) || data.equals("null")){
 							data = "";
 						}
+						
 						if (field.getName().toUpperCase().equals("BIRTH")) {
 							result.append("<" + field.getName().toUpperCase() + ">");
 							result.append(solarValue.substring(5, 10));
-
+							
 							result.append("</" + field.getName().toUpperCase() + ">");
 							result.append("<BIRTHDAY>");
 							result.append(solarValue.substring(8, 10));
@@ -403,10 +492,14 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		}
 		
 		result.append("</DATA>");
+
+		logger.debug("getBirthUserList ended");
 		return result.toString();
 	}
 	
 	public String changeSolarCalendar(int pYear, int mon, int day, boolean bDay) {
+		logger.debug("changeSolarCalendar started");
+
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get(Calendar.YEAR);
 		logger.debug("pYear="+pYear + ",mon="+mon+",day="+day+",bDay="+bDay);
@@ -438,36 +531,42 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(days));
 		
 		cal.setTimeInMillis(cc.getTimeInMillis());
-
+		
 		int y = cal.get(Calendar.YEAR); 
-	    int m = cal.get(Calendar.MONTH)+1; 
-	    int d = cal.get(Calendar.DAY_OF_MONTH); 
+		int m = cal.get(Calendar.MONTH)+1; 
+		int d = cal.get(Calendar.DAY_OF_MONTH); 
 		
-		StringBuffer ret = new StringBuffer() ; 
-	      if( y < 1000 ) 
-	         ret.append( "0" ) ; 
-	      else if( y < 100 ) 
-	         ret.append( "00" ) ; 
-	      else if( y < 10 ) 
-	         ret.append( "000" ) ; 
-	      ret.append( y + "-") ; 
-
-	      if( m < 10 ) {
-	    	  ret.append( "0" ) ; 
-	      }
-	      ret.append( m + "-") ; 
-
-	      if( d < 10 ) {
-	    	  ret.append( "0" ) ; 
-	      }
-	      ret.append( d ) ; 
+		StringBuffer ret = new StringBuffer();
 		
-	      logger.debug("sbresult="+ret.toString());
-	      return ret.toString();
+		if( y < 1000 ) 
+			ret.append( "0" ) ; 
+		else if( y < 100 ) 
+			ret.append( "00" ) ; 
+		else if( y < 10 ) 
+			ret.append( "000" ) ; 
+		ret.append( y + "-") ; 
+		
+		if( m < 10 ) {
+			ret.append( "0" ) ; 
+		}
+		
+		ret.append( m + "-") ; 
+		
+		if( d < 10 ) {
+			ret.append( "0" ) ; 
+		}
+		
+		ret.append( d ) ; 
+		
+		logger.debug("sbresult="+ret.toString());
+		logger.debug("changeSolarCalendar ended");
+	    return ret.toString();
 	}
 	
 	//현재 연대에 있는 지정된 연도의 월 수를 반환(윤년, 평년)
 	public int monthsInYear (int year) {
+		logger.debug("monthsInYear started");
+
 		int months;
 		
 		if ((year % 4 == 0) && (year % 100 != 0) || (year % 400 != 0)) {
@@ -475,11 +574,15 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		}  else { 
 			months = 12; 
 		} 
+
+		logger.debug("monthsInYear ended");
 		return months;
 	}
 	
 	//해당 년도 및 월에 있는 일 수
 	public int daysInMonth (int month, int year) {
+		logger.debug("daysInMonth started");
+
 		int days;
 		
 		if (year % 4 == 0 && month == 2) {
@@ -493,21 +596,25 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		} else { 
 			days = 0; 
 		} 
+
+		logger.debug("daysInMonth ended");
 		return days;
 	}
 	
 	public int checkPassword (String pCN, String pPassword, int tenantID) throws Exception {
-    	pPassword = EgovFileScrty.encryptPassword(pPassword, pCN);
-    	
-		int pResult = 0;
+		logger.debug("checkPassword started");
 
+		pPassword = EgovFileScrty.encryptPassword(pPassword, pCN);
+		
+		int pResult = 0;
+		
 		if (ezPersonalDAO.getPassword(pCN, tenantID).equals(pPassword)) {
 			pResult = 1;
 		} else {
 			pResult = 0;
 		}
-		
+
+		logger.debug("checkPassword ended");
 		return pResult;
 	}
-	
 }

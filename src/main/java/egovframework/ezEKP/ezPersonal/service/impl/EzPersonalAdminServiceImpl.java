@@ -56,41 +56,61 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	
 	@Override
 	public int getNoticeCount(String companyID, int tenantID) throws Exception {
+		logger.debug("getNoticeCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pMode", "A");
 		map.put("tenantID", tenantID);
+
+		logger.debug("getNoticeCount ended");
 		return ezPersonalAdminDAO.getNoticeCount(map);
 	}
 	
 	@Override
 	public int getNoticeCountUser(String companyID, int tenantID) throws Exception {
+		logger.debug("getNoticeCountUser started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pMode", "U");
 		map.put("tenantID", tenantID);
+
+		logger.debug("getNoticeCountUser ended");
 		return ezPersonalAdminDAO.getNoticeCount(map);
 	}
 
 	@Override
 	public List<PersonalNoticeVO> getNoticeList(String companyID, int totalCount, int pageSize, int pStart, int tenantID) throws Exception {
+		logger.debug("getNoticeList started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pTotal", totalCount);
 		map.put("v_pCount", pageSize);
 		map.put("v_pStart", pStart);
 		map.put("tenantID", tenantID);
-		
+
+		logger.debug("getNoticeList ended");
 		return ezPersonalAdminDAO.getNoticeList(map);
 	}
 
 	@Override
 	public String deleteNotice(String itemSeq, int tenantID) throws Exception {
+		logger.debug("deleteNotice started");
+
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
+			
 			map.put("v_pItemSeq", itemSeq);
 			map.put("tenantID", tenantID);
+			
 			ezPersonalAdminDAO.deleteNotice(map);
+			
+			logger.debug("deleteNotice ended");
 			return "OK";
 		} catch (Exception e) {
 			return "Error" + e.getMessage();
@@ -99,9 +119,14 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Override
 	public PersonalNoticeVO getNoticeInfo(String itemSeq, int tenantID) throws Exception {
+		logger.debug("getNoticeInfo started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemSeq", itemSeq);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getNoticeInfo ended");
 		return ezPersonalAdminDAO.getNoticeInfo(map);
 	}
 
@@ -110,6 +135,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		logger.debug("insertNotice started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("companyID", companyID);
 		map.put("v_pTitle", title);
 		map.put("v_pTitle2", title2);
@@ -124,19 +150,20 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		try {
 			ezPersonalAdminDAO.insertNotice(map);
+			
 			logger.debug("insertNotice ended");
 			return "OK";
 		} catch (Exception e) {
 			return "Error" + e.getMessage();
 		}
-
-		
-		
 	}
 
 	@Override
 	public String updateNotice(String companyID, String title, String title2, String content, Integer itemSeq, int tenantID) throws Exception {
+		logger.debug("updateNotice started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pTitle", title);
 		map.put("v_pTitle2", title2);
@@ -146,6 +173,8 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		try {
 			ezPersonalAdminDAO.updateNotice(map);
+			
+			logger.debug("updateNotice ended");
 			return "OK";
 		} catch (Exception e) {
 			return "Error" + e.getMessage();
@@ -153,10 +182,15 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public String getQuickLinkList(LoginVO userInfo) throws Exception {
+	public String getQuickLinkList(LoginVO userInfo, String lang) throws Exception {
+		logger.debug("getQuickLinkList started");
+
 		StringBuilder result = new StringBuilder();
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("tenantID", userInfo.getTenantId());
+		
 		List<PersonalQuickLinkVO> list = ezPersonalAdminDAO.getQuickLinkList(map);
 		
 		result.append("<LISTVIEWDATA>");
@@ -164,12 +198,24 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		for(PersonalQuickLinkVO vo : list) {
 			result.append("<ROW>");
-			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName()) + "</VALUE>");
-			result.append("<DATA1>" + commonUtil.cleanValue(vo.getQuickLinkID()) + "</DATA1></CELL>");
 			
-			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE></CELL>");
-			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE></CELL>");
-			//result.append("<CELL><VALUE>" + vo.getQuickLinkName4() + "</VALUE></CELL>");
+			if (lang.equals("1")) {
+				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName()) + "</VALUE>");
+				result.append("<DATA1>" + commonUtil.cleanValue(vo.getQuickLinkID()) + "</DATA1></CELL>");
+				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE></CELL>");
+				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE></CELL>");
+			} else if (lang.equals("2")) {
+				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE>");
+				result.append("<DATA1>" + commonUtil.cleanValue(vo.getQuickLinkID()) + "</DATA1></CELL>");
+				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName()) + "</VALUE></CELL>");
+				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE></CELL>");
+			} else if (lang.equals("3")) {
+				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE>");
+				result.append("<DATA1>" + commonUtil.cleanValue(vo.getQuickLinkID()) + "</DATA1></CELL>");
+				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName()) + "</VALUE></CELL>");
+				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE></CELL>");
+			}
+			
 			result.append("<CELL><VALUE>" + vo.getLinkType() + "</VALUE></CELL>");
 			result.append("<CELL><VALUE><![CDATA[" + vo.getUrl() + "]]></VALUE></CELL>");
 			result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE></CELL>");
@@ -186,52 +232,69 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		result.append("</ROWS>");
 		result.append("</LISTVIEWDATA>");
-		
+
+		logger.debug("getQuickLinkList ended");
 		return result.toString();
 	}
 
 	@Override
 	public String getQuickLink(String quickLinkID, int tenantID) throws Exception {
+		logger.debug("getQuickLink started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_QUICKLINKID", quickLinkID);
 		map.put("tenantID", tenantID);
+		
 		PersonalQuickLinkVO vo = ezPersonalAdminDAO.getQuickLink(map);
 		
 		String result = "<DATA>" + commonUtil.getQueryResult(vo) + "</DATA>";
-		
+
+		logger.debug("getQuickLink ended");
 		return result;
 	}
 
 	@Override
 	public String getQuickLinkACL(String quickLinkID, int tenantID) throws Exception {
+		logger.debug("getQuickLinkACL started");
+
 		StringBuilder result = new StringBuilder();
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_QUICKLINKID", quickLinkID);
 		map.put("tenantID", tenantID);
+		
 		List<PersonalQuickLinkVO> list = ezPersonalAdminDAO.getQuickLinkACL(map);
 		
 		result.append("<NODES>");
+		
 		for (PersonalQuickLinkVO vo : list) {
 			result.append("<NODE>");
 			
 			for (Field field : vo.getClass().getDeclaredFields()) {
-		        field.setAccessible(true);
-									
+				field.setAccessible(true);
+				
 				if (field.getName().toUpperCase().equals("VIEW_FLAG")) {
 					result.append("<PERMISSIONS>" + commonUtil.cleanValue(String.valueOf(field.get(vo))) + "</PERMISSIONS>");
 				} else {
 					result.append("<" + field.getName().toUpperCase() + ">" + commonUtil.cleanValue(String.valueOf(field.get(vo))) + "</" + field.getName().toUpperCase() + ">");
 				}
-		    }
+			}
+			
 			result.append("</NODE>");
 		}
-		result.append("</NODES>");
 		
+		result.append("</NODES>");
+
+		logger.debug("getQuickLinkACL ended");
 		return result.toString();
 	}
 
 	@Override
 	public void saveQuickLink(LoginVO userInfo, Document doc) throws Exception {
+		logger.debug("saveQuickLink started");
+
 		String pQuickLinkID = doc.getElementsByTagName("pQuickLinkID").item(0).getTextContent();
 		String pQuickLinkName = doc.getElementsByTagName("pQuickLinkName").item(0).getTextContent();
 		String pQuickLinkName2 = doc.getElementsByTagName("pQuickLinkName2").item(0).getTextContent();
@@ -265,31 +328,44 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			
 			setQuickLinkACL(quickLinkID, accessID, accessName, accessName2, viewFlag, mode, userInfo.getTenantId());
 		}
+
+		logger.debug("saveQuickLink ended");
 	}
 
 	@Override
 	public int getPollCount(String companyID, int tenantID) throws Exception {
+		logger.debug("getPollCount started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pMode", "A");
 		map.put("tenantID", tenantID);
+
+		logger.debug("getPollCount ended");
 		return ezPersonalAdminDAO.getPollCount(map);
 	}
 
 	@Override
 	public List<PersonalLightPollVO> getPollList(String companyID, int totalCount, int pageSize, int start, int tenantID) throws Exception {
+		logger.debug("getPollList started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", companyID.toUpperCase());
 		map.put("v_pTotal", totalCount);
 		map.put("v_pCount", pageSize);
 		map.put("v_pStart", start);
 		map.put("tenantID", tenantID);
-		
+
+		logger.debug("getPollList ended");
 		return ezPersonalAdminDAO.getPollList(map);
 	}
 
 	@Override
 	public String insertPoll(Document doc, int tenantID) throws Exception {
+		logger.debug("insertPoll started");
+
 		String companyID = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 		String selectCount = doc.getElementsByTagName("NUM").item(0).getTextContent();
 		String pollTitle = doc.getElementsByTagName("TITLE").item(0).getTextContent();
@@ -300,6 +376,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", companyID.toUpperCase());
 		map.put("v_pSelectionCount", selectCount);
 		map.put("v_pPollTitle", pollTitle);
@@ -333,7 +410,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				ezPersonalAdminDAO.insertPoll_I2(map);
 			}
 			
-			//ezPersonalAdminDAO.insertPoll(map);
+			logger.debug("insertPoll ended");
 			return "OK";
 		} catch (Exception e) {
 			return "ERROR : " + e.getMessage();
@@ -342,12 +419,18 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Override
 	public String deletePoll(String itemSeq, int tenantID) throws Exception {
+		logger.debug("deletePoll started");
+
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
+			
 			map.put("v_pItemSeq", itemSeq);
 			map.put("tenantID", tenantID);
+			
 			ezPersonalAdminDAO.deletePoll_D(map);
 			ezPersonalAdminDAO.deletePoll(map);
+			
+			logger.debug("deletePoll ended");
 			return "OK";
 		} catch (Exception e) {
 			return "ERROR : " + e.getMessage();
@@ -356,39 +439,62 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Override
 	public PersonalLightPollVO getPollInfo(String itemSeq, int tenantID) throws Exception {
+		logger.debug("getPollInfo started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemSeq", itemSeq);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getPollInfo ended");
 		return ezPersonalAdminDAO.getPollInfo(map);
 	}
 
 	@Override
 	public List<PersonalLightPollVO> getPollResult(String itemSeq, int tenantID) throws Exception {
+		logger.debug("getPollResult started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemSeq", itemSeq);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getPollResult ended");
 		return ezPersonalAdminDAO.getPollResult(map);
 	}
 
 	@Override
 	public List<PersonalPopupVO> getPopupList(String companyID, int tenantID) throws Exception {
+		logger.debug("getPopupList started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", companyID);
 		map.put("tenantID", tenantID);	
+
+		logger.debug("getPopupList ended");
 		return ezPersonalAdminDAO.getPopupList(map);
 	}
 
 	@Override
 	public PersonalPopupVO getPopupInfo(String itemSeq, int tenantID) throws Exception {
+		logger.debug("getPopupInfo started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemSeq", itemSeq);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getPopupInfo ended");
 		return ezPersonalAdminDAO.getPopupInfo(map);
 	}
 
 	@Override
 	public void insertPopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception {
+		logger.debug("insertPopup started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", vo.getCompanyID());
 		map.put("v_pStartDate", vo.getStartDate());
 		map.put("v_pEndDate", vo.getEndDate());
@@ -399,13 +505,17 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pTitle2", vo.getTitle2());
 		map.put("v_pContent", vo.getContent().replace("\"", "\'"));
 		map.put("tenantID", tenantID);
-		
+
 		ezPersonalAdminDAO.insertPopup(map);
+		logger.debug("insertPopup ended");
 	}
 
 	@Override
 	public void updatePopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception {
+		logger.debug("updatePopup started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemSeq", vo.getItemSeq());
 		map.put("v_pStartDate", vo.getStartDate());
 		map.put("v_pEndDate", vo.getEndDate());
@@ -416,42 +526,57 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pTitle2", vo.getTitle2());
 		map.put("v_pContent", vo.getContent().replace("\"", "\'"));
 		map.put("tenantID", tenantID);
-		
+
 		ezPersonalAdminDAO.updatePopup(map);
+		logger.debug("updatePopup ended");
 	}
 
 	@Override
 	public void deletePopup(String itemSeq, int tenantID) throws Exception {
+		logger.debug("deletePopup started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pItemSeq", itemSeq);
 		map.put("tenantID", tenantID);
+
+		logger.debug("deletePopup ended");
 		ezPersonalAdminDAO.deletePopup(map);
 	}
-	
 
 	@Override
 	public List<PersonalEmpMonthVO> getEmpMonth(String companyID, int tenantID) throws Exception {
+		logger.debug("getEmpMonth started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pCompanyID", companyID);
 		map.put("tenantID", tenantID);
+
+		logger.debug("getEmpMonth ended");
 		return ezPersonalAdminDAO.getEmployeeMonth(map);
 	}
 
 	@Override
-	public void setEmpMonth(String type, String userID, String deptID, String term, int tenantID) throws Exception {
+	public void setEmpMonth(String type, String userID, String deptID, String term, LoginVO userInfo) throws Exception {
+		logger.debug("setEmpMonth started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_pType", type);
 		map.put("v_pUserID", userID);
 		map.put("v_pDeptID", deptID);
 		map.put("v_pTerm", term);
-		map.put("tenantID", tenantID);
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("tenantID", userInfo.getTenantId());
 		
 		if (type != null && type.equals("INS")) {
 			ezPersonalAdminDAO.setEmployeeMonth_I(map);
 		} else {
 			ezPersonalAdminDAO.setEmployeeMonth_D(map);
 		}
-		
+
+		logger.debug("setEmpMonth ended");
 	}
 
 	@Override
@@ -459,6 +584,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		logger.debug("getSlider started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_MODE", "ADMIN");
 		map.put("sliderID", sliderID);
@@ -475,8 +601,8 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			result.append("<HEADER><NAME>" + egovMessageSource.getMessage("ezPersonal.t9", userInfo.getLocale()) + "</NAME><WIDTH>250</WIDTH><COLNAME>SLIDERNAME</COLNAME></HEADER>");
 			result.append("<HEADER><NAME>" + egovMessageSource.getMessage("ezPersonal.t1024", userInfo.getLocale()) + "</NAME><WIDTH>130</WIDTH><COLNAME>REGDATE</COLNAME></HEADER>");
 			result.append("</HEADERS>");
-			
 			result.append("<ROWS>");
+			
 			for (PersonalSliderImageVO vo : list) {
 				result.append("<ROW>");
 				result.append("<CELL>");
@@ -501,9 +627,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				result.append("<CELL>");
 				result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE>");
 				result.append("</CELL>");
-				
 				result.append("</ROW>");
 			}
+			
 			result.append("</ROWS>");
 			result.append("</LISTVIEWDATA>");
 		} else {
@@ -519,13 +645,15 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		logger.debug("result="+result.toString());
 		logger.debug("getSlider ended");
-		
 		return result.toString();
 	}
 
 	@Override
 	public void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo) throws Exception {
+		logger.debug("setSliderImage started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_SLIDERID", sliderID);
 		map.put("v_SLIDERNAME", displayName);
 		map.put("v_SLIDERNAME2", displayName2);
@@ -537,7 +665,6 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String regDate = date.format(new Date());
 		
-		//map.put("v_REGDATE", EgovDateUtil.getTodayTime());
 		map.put("v_REGDATE", regDate);
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_MODE", mode);
@@ -552,14 +679,18 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		} else {
 			ezPersonalAdminDAO.setSliderImage_U(map);
 		}
-		
-		//ezPersonalAdminDAO.setSliderImage(map);
+
+		logger.debug("setSliderImage ended");
 	}
 
 	@Override
 	public String statusChangeSlider1(String sliderID, String isUse, String mode, int tenantID) throws Exception {
+		logger.debug("statusChangeSlider1 started");
+
 		String result = "";
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_SLIDERID", sliderID);
 		map.put("v_VALUE", isUse);
 		map.put("v_MODE", mode);
@@ -567,25 +698,30 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		try {
 			ezPersonalAdminDAO.statusChangeSlider(map);
-			
 			result = "OK";
 		} catch (Exception e) {
 			result = "ERROR";
 		}
-		
+
+		logger.debug("statusChangeSlider1 ended");
 		return result;
 	}
 
 	@Override
 	public String statusChangeSlider2(String aRuleID, String aPriority, String bRuleID, String bPriority, String mode, int tenantID) throws Exception {
+		logger.debug("statusChangeSlider2 started");
+
 		String result = "";
+		
 		Map<String, Object> map1 = new HashMap<String, Object>();
+		
 		map1.put("v_SLIDERID", aRuleID);
 		map1.put("v_VALUE", aPriority);
 		map1.put("v_MODE", mode);
 		map1.put("tenantID", tenantID);
 		
 		Map<String, Object> map2 = new HashMap<String, Object>();
+		
 		map2.put("v_SLIDERID", bRuleID);
 		map2.put("v_VALUE", bPriority);
 		map2.put("v_MODE", mode);
@@ -599,43 +735,61 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		} catch (Exception e) {
 			result = "ERROR";
 		}
-		
+
+		logger.debug("statusChangeSlider2 ended");
 		return result;
 	}
 	
 	@Override
 	public void deleteSlider(String sliderID, int tenantID) throws Exception {
+		logger.debug("deleteSlider started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_SLIDERID", sliderID);
 		map.put("tenantID", tenantID);
+		
 		ezPersonalAdminDAO.delSliderImage_D(map);
 		
 		if (globals.getProperty("Globals.DbType").equals("oracle")) {
 			ezPersonalAdminDAO.delSliderImage();
 		} else if (globals.getProperty("Globals.DbType").equals("mysql")) {
 			List<PersonalSliderImageVO> list = ezPersonalAdminDAO.delSliderImage_S(map);
+			
 			Map<String, Object> map1 = new HashMap<String, Object>();
 			
 			for (int i=0; i<list.size(); i++) {
 				map1.put("sliderID", list.get(i).getSliderID());
 				map1.put("sn", list.get(i).getSn());
 				map1.put("tenantID", tenantID);
+				
 				ezPersonalAdminDAO.delSliderImage_U(map1);
 			}
 		}
+
+		logger.debug("deleteSlider ended");
 	}
 	
 	@Override
 	public void delQuickLink(String quickLinkID, int tenantID) throws Exception {
+		logger.debug("delQuickLink started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_QUICKLINKID", quickLinkID);
 		map.put("tenantID", tenantID);
+		
 		ezPersonalAdminDAO.delQuickLink_D(map);
 		ezPersonalAdminDAO.delQuickLink(map);
+
+		logger.debug("delQuickLink ended");
 	}
 
 	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String linkType, String linkTypeURL, String mode, String url, String size, String userID, int tenantID) throws Exception {
+		logger.debug("setQuickLinkListXML started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PMODE", mode);
 		map.put("v_QUICKLINKID", quickLinkID);
 		map.put("v_QUICKLINKNAME", quickLinkName);
@@ -649,7 +803,6 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
 		
-		//map.put("v_NOWDATE", EgovDateUtil.getToday("-"));
 		map.put("v_NOWDATE", nowDate);
 		map.put("v_REGUSERID", userID);
 		map.put("v_SIZE", size);
@@ -660,10 +813,15 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		} else {
 			ezPersonalAdminDAO.setQuickLinkItem_U(map);
 		}
+
+		logger.debug("setQuickLinkListXML ended");
 	}
 	
 	private void setQuickLinkACL(String quickLinkID, String accessID, String accessName, String accessName2, String viewFlag, String mode, int tenantID) throws Exception {
+		logger.debug("setQuickLinkACL started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_PMODE", mode);
 		map.put("v_QUICKLINKID", quickLinkID);
 		map.put("v_ACCESSID", accessID);
@@ -677,6 +835,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		} else {
 			ezPersonalAdminDAO.setQuickLink_I(map);
 		}
-		
+
+		logger.debug("setQuickLinkACL ended");
 	}
 }

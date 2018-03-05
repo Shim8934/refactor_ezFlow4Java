@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -217,6 +219,8 @@
 		</xml>
 	    <div id="menu">
 	        <ul>
+				<li style="background-image: none;font-size:11pt;font-weight:bold;color:white;padding-top:6px;margin-right:12px;padding-left:0px">
+				<c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t1429'/></c:if></li>	        
 	            <li><span onclick="return btnSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
 	        </ul>
 	    </div>
@@ -251,7 +255,7 @@
 	        </tr>
 	    </table>
 	
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="return bt_OK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 	        <a class="imgbtn"><span onclick="return bt_Cancle_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 	    </div>

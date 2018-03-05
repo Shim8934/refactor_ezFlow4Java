@@ -48,6 +48,7 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.dao.EzEmailDAO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -65,6 +66,7 @@ import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -88,6 +90,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Autowired
 	private EzOrganAdminDAO ezOrganAdminDao;
+	
+	@Autowired
+	private EzEmailDAO ezEmailDAO;
 	
 	@Autowired
 	private EzEmailAsync ezEmailAsync;
@@ -1535,7 +1540,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			folder.open(Folder.READ_ONLY);
 	        UIDFolder uidFolder = (UIDFolder)folder;
 	        
-	        Message[] messages = ezEmailUtil.searchFolder(folder, "", "", null, sdf.parse(dateTime), false, null, true, false);
+	        Message[] messages = ezEmailUtil.searchFolder(folder, "", "", null, sdf.parse(dateTime), false, null, true, false, true);
 	        
 	        // sort the messages
  			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
@@ -1695,20 +1700,18 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return distributionList;
 	}
-
+	
 	@Override
-	public boolean setInitMailSignature(int tenantId, String userId) throws Exception {
-		logger.debug("setInitMailSignature started.");
-		logger.debug("tenantId=" + tenantId + ",userId=" + userId);
+	public MailSignatureVO getInitMailSignature(int tenantId) throws Exception {
+		logger.debug("getInitMailSignature started. tenantId=" + tenantId);
 		
-		boolean returnValue = false;
+		MailSignatureVO mailSignatureVO = null;
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
-		String userAccount = userId + "@" + domain;
 		
-		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
+		String inputParams = "userId=" + URLEncoder.encode(domain, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 		
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setInitMailSignature";			
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailSignature";
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 		
 		if (response != null) {
@@ -1716,14 +1719,23 @@ public class EzEmailServiceImpl implements EzEmailService {
 			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
 			
 			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
-				returnValue = true;
+				JSONObject obj = (JSONObject)responseObj.get("result");
+	        	
+	        	if (obj != null) {
+	        		mailSignatureVO = new MailSignatureVO();
+	        		
+	        		mailSignatureVO.setUseFlag((String)obj.get("useFlag"));
+	        		mailSignatureVO.setContent1((String)obj.get("content1"));
+	        		mailSignatureVO.setContent2((String)obj.get("content2"));
+	        		mailSignatureVO.setContent3((String)obj.get("content3"));
+	        	}
 			}
 		}
 		
-		logger.debug("setInitMailSignature ended. returnValue=" + returnValue);
-		return returnValue;
+		logger.debug("getInitMailSignature ended.");
+		return mailSignatureVO;
 	}
-
+	
 	@Override
 	public boolean setInitInboxRule(int tenantId, String userId) throws Exception {
 		logger.debug("setInitInboxRule started.");
@@ -2065,5 +2077,4 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getSecureMailReaderInfo ended.");
 		return list;
 	}
-	
 }

@@ -986,20 +986,24 @@ var strLangS826 = "循環を送信しませんでした。";
 var strLangpjj27 = "編集するお気に入りを供覧者リストに適用する必要が編集することができます。";
 var strLangHYJ28 = "循環者リストが存在しません。";
 
-var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\\n추가 할 수 없습니다.";
+var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\n추가 할 수 없습니다.";
 
 //2017-11-09 장진혁 추가
-var strLangjjh01 = "첨부파일은 총 ";
-var strLangjjh02 = "MB까지 업로드 가능합니다.";
+var strLangjjh01 = "ファイル添付は ";
+var strLangjjh02 = "MBまで可能です。";
 var strLangjjh03 = "添付ファイルを追加中です。";
+var strLangjjh04 = "要約";
 
 //2017-11-28 박종균 추가
-var strLangPJG01 = "즐겨찾기를 삭제하시겠습니까?";
-var strLangPJG02 = "하위 부서원을 모두 포함하시겠습니까?";
-var strLangPJG03 = "이미 반송된 문서입니다.";
+var strLangPJG01 = "お気に入りから削除してよろしいですか？";
+var strLangPJG02 = "下位部署の部署員をすべて選択しますか？";
+var strLangPJG03 = "すでに差し戻し処理されている文書です。";
 
-var strLangSpjj28 = "기안자나 최종결재자는 '후결'일 수 없습니다.";
-var strLangSpjj29 = "동일인이 '후결'로 2번이상 지정될 수 없습니다."
-var strLangSpjj30 =	"후결을 승인하시겠습니까?"
-var strLangSpjj31 =	"후결을 승인하였습니다.";
-var strLangSpjj32 =	"후결 승인시에 에러가 발생하였습니다."
+var strLangSpjj28 = "起案者および最終決裁者は ‘後決‘を選択することができません。";
+var strLangSpjj29 = "すでに ‘後決’と指定されています。";
+var strLangSpjj30 =	"決を承認しますか？";
+var strLangSpjj31 =	"後決を承認しました。";
+var strLangSpjj32 =	"後決を承認処理中にエラーが発生しました。";
+	
+var strLangSpjj33 = "決裁文書へリンク";
+var strLangSpjj34 = "さんが起案した決裁文書が届きました。<br/>処理を行うには下記のリックをクリックしてください。";

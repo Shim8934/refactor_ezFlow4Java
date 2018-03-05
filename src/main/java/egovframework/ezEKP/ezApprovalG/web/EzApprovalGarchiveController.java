@@ -231,12 +231,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
 		
-	    if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && useIE11Browser.equals("CK")) {
-	    	useIE11Browser = "CK";
-	    }
-	    
 	    String regY = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,4);
 	    String regM = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5,7);
 	    String regD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(8,10);
@@ -563,6 +558,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
 	    model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("serverName", serverName);
@@ -573,6 +574,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("docID", docID);
 		model.addAttribute("dirPath", dirPath);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		logger.debug("regRecordAttach ended");
 		
@@ -1367,9 +1369,10 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("getMailAddress started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		String proplist = "displayName;mail";
+		String proplist = "displayName;mail;department";
 		String email = "";
 		String name = "";
+		String deptID = "";
 		String result = "";
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String id = xmlDom.getElementsByTagName("id").item(0).getTextContent();
@@ -1380,7 +1383,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			
 			email  = doc.getElementsByTagName("MAIL").item(0).getTextContent();
 			name = doc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent().trim();
-			result = name + "," + email ;
+			deptID = doc.getElementsByTagName("DEPARTMENT").item(0).getTextContent().trim();
+			result = name + "," + email + "," + deptID;
 		}
 		
 		logger.debug("getMailAddress ended");
@@ -1390,7 +1394,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 	/** 전자결재 G 자동 알림 메일 */
 	@RequestMapping(value = "/ezApprovalG/mail_intersend.do", produces = "text/xml;charset=utf-8")
-	public void mailInterSend(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse res, Model model) throws Exception{
+	public void mailInterSend(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse res, Model model,Locale locale) throws Exception{
 		logger.debug("mail_intersend started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -1402,7 +1406,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         boolean flag;
 		StringBuilder bodyContent = new StringBuilder();
         
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        bodyContent.append("<DIV id=\"msgBody\" style=\"font-size: 13px; font-family: " + messageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
         bodyContent.append(Content);
         bodyContent.append("</DIV>");
     	InternetAddress from = new InternetAddress();

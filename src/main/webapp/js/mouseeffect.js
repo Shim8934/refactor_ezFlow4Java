@@ -17,7 +17,6 @@ function selToggleList(ulEl, selPTab, selTab, flag)
     {
 		if( flag == "1" )
 			selTab2EI.item(j).onclick = toggleList_Sub;
-		
         selTab2EI.item(j).onmouseover = mouseOver_Sub;
 		selTab2EI.item(j).onmouseout = mouseOut_Sub;
     }
@@ -118,7 +117,9 @@ function initToggleList(ulEl, level1, level2, level3)
 	
 	for( var j = 0 ; j < level3El.length ; j++ )
   {
-		level3El.item(j).onclick = toggleList_Sub;
+		// 2018.01.16 jwseo99
+		level3El.item(j).addEventListener("click", toggleList_Sub, true);
+		//
 		level3El.item(j).onmouseover = mouseOver_Sub;
 		level3El.item(j).onmouseout = mouseOut_Sub;
 	}
@@ -171,13 +172,22 @@ function toggleList() {
 }
 
 var prevSelMenu = null;
-function toggleList_Sub()
+function toggleList_Sub(event)
 {
 	if( prevSelMenu != null )
 		prevSelMenu.className = "off";
 	
 	this.className = "on";
 	prevSelMenu = this;
+	
+	// 2018.01.16 jwseo99	span 태그가 아닌 영역을 클릭하면 li에 on 클래스만 박히는 문제 (span 태그의 글자는 굵어지지만 right 프레임이 갱신 안 됨)
+	var spanElement = prevSelMenu.getElementsByTagName("span")[0];
+	
+	if(spanElement != undefined) {
+		spanElement.onclick();
+	}
+	
+	event.stopPropagation();
 }
 
 function mouseOver_Sub()

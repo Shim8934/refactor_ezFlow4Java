@@ -59,15 +59,16 @@
                     if (XmlNode.getElementsByTagName("ROWS").length > 0) {
                     	if (CrossYN()) {
                     		for (var i = 0; i < XmlNode.getElementsByTagName("ROWS").length; i++) {
-                    		    
-                                var _itemid = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("ID").item(0).textContent;
-                                var _name = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("NAME").item(0).textContent;
-                                var _Use = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("USE").item(0).textContent;
-                                var _priority = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("PRIORITY").item(0).textContent;
+                    			var _item = XmlNode.getElementsByTagName("ROWS").item(i);
+                    			
+                                var _itemid = _item.getElementsByTagName("ID").item(0).textContent;
+                                var _name = _item.getElementsByTagName("NAME").item(0).textContent;
+                                var _Use = _item.getElementsByTagName("USE").item(0).textContent;
+                                var _priority = _item.getElementsByTagName("PRIORITY").item(0).textContent;
                                 var _con = "";
                                 var _conval = "";
         
-                                var conPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("CONDITION").item(0);
+                                var conPath = _item.getElementsByTagName("CONDITION").item(0);
         
                                 for (var j = 0; j < conPath.getElementsByTagName("KIND").length; j++) {
                                     _con += "|!|" + conPath.getElementsByTagName("KIND").item(j).textContent;
@@ -83,7 +84,7 @@
                                 var _actval = "";
                                 
         
-                                var actPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("ACTION").item(0);
+                                var actPath = _item.getElementsByTagName("ACTION").item(0);
                                 var actfcnt = 0;
         
                                 for (var j = 0 ; j < actPath.getElementsByTagName("KIND").length; j++) {
@@ -123,7 +124,7 @@
                                 var _expt = "";
                                 var _exptval = "";
         
-                                var exptPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("EXCEPTION").item(0);
+                                var exptPath = _item.getElementsByTagName("EXCEPTION").item(0);
         
                                 for (var j = 0; j < exptPath.getElementsByTagName("KIND").length; j++) {
                                     _expt += "|!|" + exptPath.getElementsByTagName("KIND").item(j).textContent;
@@ -162,23 +163,25 @@
                             
                                 _html += "</tr></html>";
                                 
-        
-                                if (SelectNodes(XmlNode, "ROWS").length == 0)
-                                    document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang202 + "</td></tr></table>";
-                                else
-                                    document.getElementById("contentlist").innerHTML = _html;
                             }
+                    		
+                    		if (SelectNodes(XmlNode, "ROWS").length == 0)
+                                document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang202 + "</td></tr></table>";
+                            else
+                                document.getElementById("contentlist").innerHTML = _html;
+                    		
                     	} else {
                     		for (var i = 0; i < XmlNode.getElementsByTagName("ROWS").length; i++) {
-                    		    
-                                var _itemid = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("ID").item(0).text;
-                                var _name = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("NAME").item(0).text;
-                                var _Use = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("USE").item(0).text;
-                                var _priority = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("PRIORITY").item(0).text;
+                    			var _item = XmlNode.getElementsByTagName("ROWS").item(i);
+                    			
+                                var _itemid = _item.getElementsByTagName("ID").item(0).text;
+                                var _name = _item.getElementsByTagName("NAME").item(0).text;
+                                var _Use = _item.getElementsByTagName("USE").item(0).text;
+                                var _priority = _item.getElementsByTagName("PRIORITY").item(0).text;
                                 var _con = "";
                                 var _conval = "";
         
-                                var conPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("CONDITION").item(0);
+                                var conPath = _item.getElementsByTagName("CONDITION").item(0);
         
                                 for (var j = 0; j < conPath.getElementsByTagName("KIND").length; j++) {
                                     _con += "|!|" + conPath.getElementsByTagName("KIND").item(j).text;
@@ -194,7 +197,7 @@
                                 var _actval = "";
                                 
         
-                                var actPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("ACTION").item(0);
+                                var actPath = _item.getElementsByTagName("ACTION").item(0);
                                 var actfcnt = 0;
         
                                 for (var j = 0 ; j < actPath.getElementsByTagName("KIND").length; j++) {
@@ -234,7 +237,7 @@
                                 var _expt = "";
                                 var _exptval = "";
         
-                                var exptPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("EXCEPTION").item(0);
+                                var exptPath = _item.getElementsByTagName("EXCEPTION").item(0);
         
                                 for (var j = 0; j < exptPath.getElementsByTagName("KIND").length; j++) {
                                     _expt += "|!|" + exptPath.getElementsByTagName("KIND").item(j).text;
@@ -272,13 +275,12 @@
                                 
                             
                                 _html += "</tr></html>";
-                                
-        
-                                if (SelectNodes(XmlNode, "ROWS").length == 0)
-                                    document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang202 + "</td></tr></table>";
-                                else
-                                    document.getElementById("contentlist").innerHTML = _html;
                             }
+                    		
+                    		if (SelectNodes(XmlNode, "ROWS").length == 0)
+                                document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang202 + "</td></tr></table>";
+                            else
+                                document.getElementById("contentlist").innerHTML = _html;
                     	}
                     	
                         
@@ -773,7 +775,7 @@
 			<table style="width:750px;height:385px;" border="0">
 				<tr>
 					<td>
-						<div style="border:1px solid #dbdbda;width:435px;height:385px;">
+						<div style="border:1px solid #dbdbda;width:435px;height:397px;">
 							<table class="mainlist" style="width:100%;">
 			                    <tr>
 			                        <td style="width:8%;background-color:#F3F3F3;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span><spring:message code='ezEmail.t808' /></span></td>
@@ -793,7 +795,7 @@
 						</div>
 					</td>
 					<td>
-						<div style="border:1px solid #dbdbda;width:315px;height:385px;overflow-y:auto;margin:5px 5px 5px 5px;">
+						<div style="border:1px solid #dbdbda;width:315px;height:397px;overflow-y:auto;margin:5px 5px 5px 5px;">
 							<div id="ContentDescription" style="margin-top:1px;margin:5px 5px 5px 5px;">
 			                </div>
 						</div>

@@ -12,7 +12,6 @@
     <script type="text/javascript">
         var pUse_Editor = "";
         var pNoneActiveX = "";
-        var p_Use_IE11Browser = "";
         window.onload = window_onload;
         document.onselectstart = function () { return false; };
         function window_onload() {
@@ -40,6 +39,9 @@
                     break;
                 case "BoardEnv_div2":
                     document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardFavorite.do";
+                    break;
+                case "BoardEnv_div3":
+                    document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardPollSetting.do";
                     break;
             }
         }
@@ -86,6 +88,7 @@
         <div class="portlet_tabpart01_top" id="tab1">
             <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="1tab1"><spring:message code="ezBoard.t0006" /></span></p>
             <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="1tab2"><spring:message code="ezBoard.t00010" /></span></p>
+            <p id="BoardEnv_sub3" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};"><span divname="BoardEnv_div3" id="1tab3"><spring:message code="ezBoard.t10011" /></span></p>
         </div>
     </div>
     <iframe id="BoardEnv_ifrm" style="width: 100%; height: 100%;" frameborder="0" ></iframe>

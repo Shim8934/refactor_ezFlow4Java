@@ -3,13 +3,19 @@ package egovframework.ezEKP.ezPortal.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -41,6 +47,9 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.ezEKP.ezPoll.service.EzPollService;
+import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
@@ -116,6 +125,8 @@ public class EzPortalController extends EgovFileMngUtil {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+	@Resource(name = "EzPollService")
+	private EzPollService ezPollService;
 	/**
 	 * 포탈 메인 화면 호출 함수
 	 */
@@ -123,9 +134,11 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalMain Start");
 				
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.userInfo(loginCookie);		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		
-        if (commonUtil.getPackageType(userInfo.getTenantId()).equals(CommonUtil.PT_BASIC)) {
+        if (packageType.equals(CommonUtil.PT_BASIC)
+        		|| packageType.equals(CommonUtil.PT_MAIL)) {
             return "redirect:/ezEmail/mailAloneMain.do";
         }
 		
@@ -1022,7 +1035,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		String noneActiveX = "YES";
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = "";
 		String mailAddress = "";
 		String displayName = "";
 		String department = "";
@@ -1033,10 +1045,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		String userPhoto = "";
 		String userOffset = userInfo.getOffset().split("\\|")[1];
 		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
-		
-		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-			useIE11Browser = "CK";
-		}
 		
 		mailAddress = userInfo.getEmail();
 		
@@ -1085,7 +1093,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("companyNm", companyNm);
 		model.addAttribute("lastLogin", lastLogin);
 		model.addAttribute("noneActiveX", noneActiveX);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("mailAddress", mailAddress);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userLang", userInfo.getLang());
@@ -1131,7 +1138,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		Calendar cal = Calendar.getInstance();
 		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
 		
-		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo.getTenantId());
+		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo);
 		
 		if (result != null) {
 			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
@@ -1257,7 +1264,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		Calendar cal = Calendar.getInstance();
 		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
 		
-		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo.getTenantId());
+		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo);
 		
 		if (result != null) {
 			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
@@ -1349,7 +1356,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 설문참여 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
+/*	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
 	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("wpNewPoll Start");
 		
@@ -1449,7 +1456,196 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		logger.debug("wpNewPoll End");
 		return "/ezPortal/portalWpNewPoll";
+	}*/
+	
+	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
+	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("wpNewVote is running!");
+		userInfo = commonUtil.userInfo(loginCookie);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		int qstId = -1;
+		String qstTitle = "";
+		int totalVoteToday = 0;
+		int seeResultBefore = -1;
+		int compareEnd = 0;
+		int compareStart = 0;
+		Date nowTime = new Date();
+		String votePoll = "";
+		int pPollItemSeq = 0;
+		String pPollTitle = "";
+		String pPollResultContent = "";
+		
+		String checkFlag = ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId());
+		
+		if (checkFlag.equalsIgnoreCase("YES")) {
+			//Get list of questions for user
+			Set<PollQuestionVO> setOfQuestions = new HashSet<PollQuestionVO>();
+			ezPollService.getAllQuestionForUser2(userInfo, setOfQuestions, "", "");
+			List<PollQuestionVO> listTotalQuestions = new ArrayList<PollQuestionVO>(setOfQuestions);		
+			
+			if (!listTotalQuestions.isEmpty()) {
+				//Get only processing poll
+				for (Iterator<PollQuestionVO> iterator = listTotalQuestions.iterator(); iterator.hasNext(); ) {
+					PollQuestionVO pollQstVO = iterator.next();
+					Date endDate = formatter.parse(pollQstVO.getEndDate());				
+					compareEnd = endDate.compareTo(nowTime);				
+					
+				    if (compareEnd <= 0) {
+				        iterator.remove();
+				    }
+				    else {
+				    	//baonk added 20180109
+				    	Date startDate = formatter.parse(pollQstVO.getStartDate());
+				    	compareStart = startDate.compareTo(nowTime);
+				    	
+				    	if (compareStart > 0) {
+				    		iterator.remove();
+				    	}
+				    	//end
+				    }
+				}
+				
+				//Get list of modifying question
+				List<PollQuestionVO> listOfModifyingQst = new ArrayList<PollQuestionVO>();
+				
+				for (PollQuestionVO pollQstVO : listTotalQuestions) {
+					if (pollQstVO.getIsMofifying() == 1) {
+						listOfModifyingQst.add(pollQstVO);
+					}
+				}
+				
+				//Remove all modifying questions
+				listTotalQuestions.removeAll(listOfModifyingQst);
+				
+				if (!listTotalQuestions.isEmpty()) {
+					//Sort listQuestions by question id					
+					Collections.sort(listTotalQuestions, (PollQuestionVO qst1, PollQuestionVO qst2) -> {
+				        return Integer.valueOf(qst1.getQstId()).compareTo(qst2.getQstId());
+					});		
+					
+					PollQuestionVO question = listTotalQuestions.get(listTotalQuestions.size() - 1);
+					qstTitle = question.getTitle();
+					qstId = question.getQstId();			
+					seeResultBefore = question.getResultFirst();			
+					
+					//Get list of Options		
+					List<PollAnswerVO> listOptions = ezPollService.getListOptionsOfQst(qstId, userInfo.getTenantId());
+					
+					//Sort list of options by number of votes
+					Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) -> {
+				        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
+					});
+			
+					totalVoteToday = listTotalQuestions.size();
+					
+					model.addAttribute("listOptions", listOptions);
+					model.addAttribute("numberOfOptions", listOptions.size());				
+				}
+			}
+			
+			model.addAttribute("qstTitle", qstTitle);		
+			model.addAttribute("qstId", qstId);	
+			model.addAttribute("tenantId", userInfo.getTenantId());			
+			model.addAttribute("seeResultBefore", seeResultBefore);
+			model.addAttribute("totalVoteToday", totalVoteToday);
+			
+			logger.debug("wpNewVote finishes");
+			return "/ezPortal/portalWpNewVote";
+		}
+		else {			
+			PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
+			
+			if (result != null) {
+				if (result.getResult() > 0) {
+					if (result.getResult() != 0) {
+						votePoll = Integer.toString(result.getResult());
+					}
+				} else {
+					votePoll = "";
+				}	
+				
+				if (result.getItemSeq() > 0) {
+					if (result.getItemSeq() != 0) {
+						pPollItemSeq = result.getItemSeq();
+						int maxAns = Integer.parseInt(result.getPollSelectionCount());
+						pPollTitle = userInfo.getPrimary().equals("1") ? result.getPollTitle() : result.getPollTitle2();
+						
+						List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq, userInfo.getTenantId());
+						
+						int pTotalCnt = 0;
+						
+						for (int i=0; i<list.size(); i++) {
+							pTotalCnt = pTotalCnt + list.get(i).getCount();
+						}
+						
+						List<Integer> pPollResultList = new ArrayList<Integer>();
+						int resultPrintCnt = 0;
+						
+						for (int i=0; i<list.size(); i++) {
+							if (i >= 4) {
+								break;
+							} else {
+								float poolRstCnt = list.get(i).getCount();
+								float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
+								String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
+								String titleString = strAnswer;
+								if (strAnswer.length() > 11) {
+									strAnswer = strAnswer.substring(0, 11) + "…";
+								}
+								pPollResultList.add(list.get(i).getResult());
+								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
+								"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
+								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
+								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
+								"</dl>";
+		                        resultPrintCnt++;
+							}
+						}
+						
+						if (resultPrintCnt < 4) {
+							for (int i=1; i<=maxAns; i++) {
+								boolean isDuplication = false;
+								for (int j=0; j<pPollResultList.size(); j++) {
+									if (i == pPollResultList.get(j)) {
+										isDuplication = true;
+										break;
+									}
+								}
+								
+								if (!isDuplication) {
+									String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
+									String titleString = strAnswer;
+									if (strAnswer.length() > 13) {
+										strAnswer = strAnswer.substring(0, 13) + "...";
+									}
+									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
+		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
+		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
+																	resultPrintCnt++;
+									if (resultPrintCnt == 4) {
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			model.addAttribute("pPollTitle", pPollTitle);
+			model.addAttribute("votePoll", votePoll);
+			model.addAttribute("pPollItemSeq", pPollItemSeq);
+			model.addAttribute("pPollResultContent", pPollResultContent);
+			model.addAttribute("userLang", userInfo.getLang());
+			
+			logger.debug("wpNewPoll End");
+			return "/ezPortal/portalWpNewPoll";
+		}	
+		
 	}
+	
 	
 	/**
 	 * 포탈 - webPart 결재 통계 화면 호출 함수
@@ -1465,6 +1661,14 @@ public class EzPortalController extends EgovFileMngUtil {
 		Calendar cal = Calendar.getInstance();
 		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-01 00:00:00";
 		String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)) + " 23:59:59";
+		
+		if (startDate != null && startDate.split("-")[1].equals("0")) {
+			startDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-01 00:00:00";
+		}
+		
+		if (endDate != null && endDate.split("-")[1].equals("0")) {
+			endDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-" + ezPortalService.daysInMonth(12, cal.get(Calendar.YEAR)-1) + " 23:59:59";
+		}
 		
 		logger.debug("startDate="+startDate+", endDate="+endDate);
 		
@@ -1646,7 +1850,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		String noneActiveX = "";
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = "";
 		String mailAddress = "";
 		String displayName = "";
 		String department = "";
@@ -1658,10 +1861,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		String userPhoto = "";
 		
 		noneActiveX = "YES";
-		
-		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-			useIE11Browser = "CK";
-		}
 		
 		mailAddress = userInfo.getEmail();
 		
@@ -1704,7 +1903,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("lastLogin", lastLogin);
 		model.addAttribute("noneActiveX", noneActiveX);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("mailAddress", mailAddress);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userLang", userInfo.getLang());
@@ -1943,7 +2141,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("useIE11Browser", ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()));
 		
 		logger.debug("theme1wpThemeComm ended");
 		return "/ezPortal/theme1/portalTheme1WpThemeComm";
@@ -2511,7 +2708,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pageID = "";
 		String gubunFlag = "";
 		String newMyPortalPage = "";
-		String newMyPortalPageList = "";
+		//String newMyPortalPageList = "";
 		String searchNewMyPortalPageList = "";
 		int recordCnt = 0;
 		int intPage = 1;
@@ -2560,7 +2757,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			sb.append("</DATA>");
-			newMyPortalPageList = sb.toString();
+			//newMyPortalPageList = sb.toString();
 		}
 		
 		if (req.getParameter("intPage") != null && !req.getParameter("intPage").equals("")) {
@@ -2619,6 +2816,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("resultHTML="+resultHTML);
+		
 		model.addAttribute("searchNewMyPortalPageList", searchNewMyPortalPageList);
 		model.addAttribute("resultHTML", resultHTML);
 		model.addAttribute("intPage", intPage);
@@ -2629,7 +2827,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("environmentMain ended");
 		return "/ezPortal/portalMyPortalPageList";
 	}
-	
 	
 	/**
 	 * 포탈 - 환경설정 초기 화면 호출 함수
@@ -3105,16 +3302,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("help started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String pakageType = "";
-		
-		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
-			pakageType = commonUtil.PT_BASIC;
-		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
-			pakageType = commonUtil.PT_STANDARD;
-		}
-		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+				
 		model.addAttribute("lang", userInfo.getLang());
-		model.addAttribute("pakageType", pakageType);
+		model.addAttribute("packageType", packageType);
 		
 		logger.debug("help ended");
 		return "/ezPortal/help/help";
@@ -3123,20 +3314,13 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 상단 화면 호출 함수
 	 */
-	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezPortal/help/top.do")
 	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("top started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String pakageType = "";
-		
-		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
-			pakageType = commonUtil.PT_BASIC;
-		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
-			pakageType = commonUtil.PT_STANDARD;
-		}
-		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+				
 		String firstScreenMail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
@@ -3145,7 +3329,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("pakageType", pakageType);
+		model.addAttribute("packageType", packageType);
 		model.addAttribute("firstScreen_Mail", firstScreenMail);
 		
 		logger.debug("top ended");
@@ -3307,22 +3491,15 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftEnv 화면 호출 함수
 	 */
-	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezPortal/help/leftEnv.do")
 	public String leftEnv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftEnv started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String pakageType = "";
-		
-		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
-			pakageType = commonUtil.PT_BASIC;
-		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
-			pakageType = commonUtil.PT_STANDARD;
-		}
-		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+				
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("pakageType", pakageType);
+		model.addAttribute("packageType", packageType);
 
 		logger.debug("leftEnv ended");
 		return "/ezPortal/help/leftEnv";

@@ -90,7 +90,6 @@
 		    function select_onchange() {
 			    var treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);	
-			
 			    ID = treeNode.GetNodeData("DATA1");
 			
 			    if (TreeIdx != "") {
@@ -151,7 +150,7 @@
 		            return;
 		        }
 				
-		        var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContIns&companyID=" + encodeURI(companyID) + "&parentID=" + para[6];
+		        var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContIns&companyID=" + encodeURI(companyID) + "&parentID=" + para[6] + "&contID=" + para[1];
 		        formContMain_dialogArguments[0] = para;
 		        formContMain_dialogArguments[1] = btnInsFcont_onclick_complete;
 		        
@@ -315,14 +314,14 @@
 						} else {
 							//일반일때 ck
 							if (approvalFlag =='S') {
-								if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+								if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 									url = "/admin/ezApprovalG/formMainOther.do";
 								} else {
 									url = "/admin/ezApprovalG/formMain.do";
 								}
 							} else {
 // 								if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
-								if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+								if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 
 									url = "/admin/ezApprovalG/formMainOther.do";
 								} else {
@@ -528,7 +527,7 @@
 		        ID = treeNode.GetNodeData("DATA1");
 
 		        if (TreeIdx != "") {
-		            if (document.getElementById('forminfo').value == "") {
+		            if (document.getElementById('forminfo').value.trim() == "") {
 		                alert("<spring:message code = 'ezApprovalG.t1160' />");
 						return;
 		        	}

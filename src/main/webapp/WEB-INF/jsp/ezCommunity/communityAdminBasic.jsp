@@ -64,10 +64,8 @@
 		<form method="post" name="mod" action="/ezCommunity/adminBasicOk.do?" >
 			<input type="hidden" name="code" value="<c:out value = '${code}' />" >
 			<h1><spring:message code ='ezCommunity.t450' /></h1>
-			<br>
-			<br>
 			
-			<table class="content" >
+			<table class="content" style="margin-top:5px">
 				<tr>
 					<th><spring:message code ='ezCommunity.t9' /></th>
 					<td><c:out value = '${club.c_SysopID}' /> (<c:out value = '${name1}' />)</td>
@@ -78,11 +76,11 @@
 						<table style="width:100%">
 							<tr class="primary">
 								<th><c:out value = '${lang_Primary}' /></th>
-								<td><input type="text" name="c_ClubName" value="<c:out value = '${club.c_ClubName}' />" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
+								<td><input type="text" name="c_ClubName" maxlength="50" value="<c:out value = '${club.c_ClubName}' />" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
 							</tr>
 							<tr class="secondary">
 								<th><c:out value = '${lang_Secondary}' /></th>
-								<td><input type="text" name="c_ClubName2" value="<c:out value = '${club.c_ClubName2}' />" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
+								<td><input type="text" name="c_ClubName2" maxlength="50" value="<c:out value = '${club.c_ClubName2}' />" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
 							</tr>
 						</table>
 					</td>
@@ -103,7 +101,7 @@
 				</tr>
 				<tr>
 					<th><spring:message code ='ezCommunity.t65' /></th>
-					<td>
+					<td style="padding:5px">
 						<c:choose>
 							<c:when test="${club.c_ClubConfirmType == '2'}">
 								<input type="radio" name="c_ClubConfirmType" value="2" checked >
@@ -126,14 +124,17 @@
 							</c:otherwise>
 						</c:choose>
 						
-						<spring:message code ='ezCommunity.t14' /><br>
-						<spring:message code ='ezCommunity.t452' /><br>
-						<spring:message code ='ezCommunity.t453' />
+						<spring:message code ='ezCommunity.t14' />
+						
+						<div style="margin-top:5px">
+							<spring:message code ='ezCommunity.t452' /><br>
+							<spring:message code ='ezCommunity.t453' />
+						</div>	
 					</td>
 				</tr>
 				<tr>
 					<th><spring:message code ='ezCommunity.t15' /></th>
-					<td>
+					<td style="padding:5px">
 						<c:choose>
 							<c:when test="${club.c_ClubGubun == '2' }">
 								<input type="radio" name="c_ClubGubun" value="2" checked >
@@ -156,9 +157,12 @@
 							</c:otherwise>
 						</c:choose>
 						
-						<spring:message code ='ezCommunity.t17' /><br>
-						<spring:message code ='ezCommunity.t1017' /><br>
-						<spring:message code ='ezCommunity.t1018' />
+						<spring:message code ='ezCommunity.t17' />
+						
+						<div style="margin-top:5px">
+							<spring:message code ='ezCommunity.t1017' /><br>
+							<spring:message code ='ezCommunity.t1018' />
+						</div>	
 					</td>
 				</tr>
 				<tr style="display:none">
@@ -195,11 +199,11 @@
 					<th colspan="2"><spring:message code ='ezCommunity.t1529' /> <spring:message code ='ezCommunity.t461' /></th>
 				</tr>
 				<tr>
-					<td colspan="2"><textarea name="c_ClubDesc" style="height:120px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none"><c:out value = '${club.c_ClubDesc}' /></textarea></td>
+					<td colspan="2" style="padding:3px"><textarea name="c_ClubDesc" maxlength="2000" style="height:120px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none"><c:out value = '${club.c_ClubDesc}' /></textarea></td>
 				</tr>
 			</table>
 		  
-			<div class="btnposition">
+			<div class="btnposition btnpositionNew">
 				<a class="imgbtn"	name="Submit"	onclick="javascript:check();"><span><spring:message code ='ezCommunity.t20' /></span></a>
 				<a class="imgbtn"	name="Submit2"	onclick="window.location.reload(false)" ><span><spring:message code ='ezCommunity.t109' /></span></a>
 				<a class="imgbtn"	name="Submit3"	onclick="parent.parent.window.close()"><span><spring:message code ='ezCommunity.t21' /></span></a>

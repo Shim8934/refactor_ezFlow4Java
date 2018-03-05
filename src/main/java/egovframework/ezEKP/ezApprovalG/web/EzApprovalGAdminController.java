@@ -237,6 +237,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String secondary= ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		String title = "", topID = "";
 		String parentID = request.getParameter("parentID");
+		String contID = request.getParameter("contID");
 		String parentName = "";
 		
 		if (tCheck.equals("fContIns")) {
@@ -251,12 +252,22 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			topID = "Top";
 		}
 
-		if (parentID != null) {
-			if (!parentID.equalsIgnoreCase("ROOT")) {
-				parentName = ezApprovalGAdminService.getParentContName(parentID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
-			} else {//ezApprovalG.t1539
-				parentName = egovMessageSource.getMessage("ezApprovalG.t1539", userInfo.getLocale());
-			}						
+		if (tCheck.equals("fContIns")) {
+			if (contID != null) {
+				if (!contID.equalsIgnoreCase("ROOT")) {
+					parentName = ezApprovalGAdminService.getParentContName(contID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+				} else {//ezApprovalG.t1539
+					parentName = egovMessageSource.getMessage("ezApprovalG.t1539", userInfo.getLocale());
+				}
+			}
+		} else {
+			if (parentID != null) {
+				if (!parentID.equalsIgnoreCase("ROOT")) {
+					parentName = ezApprovalGAdminService.getParentContName(parentID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+				} else {//ezApprovalG.t1539
+					parentName = egovMessageSource.getMessage("ezApprovalG.t1539", userInfo.getLocale());
+				}
+			}
 		}
 		
 		model.addAttribute("userInfo", userInfo);
@@ -2703,6 +2714,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String useEditApprDoc = ezCommonService.getTenantConfig("useEditApprDoc", userInfo.getTenantId());
 		
 		String type = request.getParameter("type");
+		type = (type == null || type.isEmpty()) ? "admin" : type;
 		
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
 			return "cmm/error/adminDenied";
@@ -2907,6 +2919,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		String type = request.getParameter("type");
+		type = (type == null || type.isEmpty()) ? "admin" : type;
 		
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
 			return "cmm/error/adminDenied";

@@ -27,8 +27,8 @@
 	        var pSelType = "<c:out value = '${pSelType}' />";
 	        var pSelRes1 = "<c:out value = '${pSelRes1}' />";
 	        var pSelRes2 = "<c:out value = '${pSelRes2}' />";
-	        var StartDateTime = "<c:out value = '${pStartDate}' />";
-	        var EndDateTime = "<c:out value = '${pEndDate}' />";
+	        var StartDateTime = "<c:out value = '${startDate}' />";
+	        var EndDateTime = "<c:out value = '${endDate}' />";
 	            
 	        window.onload = function () {
 	            //initdatepicker();
@@ -44,18 +44,22 @@
 				    }
 	                
 	                var selRes1 = document.getElementById('selRes1');
-	                for (var i = 0; i < selRes1.options.length; i++) {
-	                    if (selRes1.options[i].value == pSelRes1) {
-	                        selRes1.selectedIndex = i;
-	                        break;
-	                    }
-	                }
-	                
-	                if (CrossYN()) {
-	                	document.getElementById('selRes2').textContent = pSelRes2;
+
+	                if (pSelType == 3) {
+	                	selRes1.disabled = true;
+	                	document.getElementById('selRes2').disabled = true;
 	                } else {
-	                    document.getElementById('selRes2').innerText = pSelRes2;
+		                for (var i = 0; i < selRes1.options.length; i++) {
+		                    if (selRes1.options[i].value == pSelRes1) {
+		                        selRes1.selectedIndex = i;
+		                        break;
+		                    }
+		                }        
+		                document.getElementById('selRes2').value = pSelRes2;
 	                }
+	                document.getElementById('Sdatepicker').value = StartDateTime;
+	                document.getElementById('Edatepicker').value = EndDateTime;	                
+	                document.getElementById('pollSubject').value = "<c:out value='${pSubject}' />";
 	            }
 	        }
 	        
@@ -143,7 +147,7 @@
 	        }
 	
 	        function selType_onchange() {
-	            if (poll_add.selType.selectedIndex == 2) {
+	            if (poll_add.selType.selectedIndex == 1) {
 	                poll_add.selRes1.selectedIndex = 0;
 	                poll_add.selRes2.value = "";
 	                document.getElementById("selRes1").disabled = true;
@@ -216,11 +220,6 @@
 	            nowdateDay = nowdateDay < 10 ? "0" + nowdateDay : nowdateDay;
 	            var nowdate2 = nowdate.getFullYear() + "-" + nowmonth + "-" + nowdateDay;
 
-	            if ($("#Edatepicker").datepicker({ dateFormat: 'yy' }).val().substring(0, 10) < nowdate2) {
-	                alert("<spring:message code='ezCommunity.t595' />");
-	                return false;
-	            }
-
 	            if (trim(poll_add.pollSubject.value) == "") {
                     alert("<spring:message code='ezQuestion.t492' />");
                     poll_add.pollSubject.value = "";
@@ -239,6 +238,28 @@
                     poll_add.selRes1.focus();
                     return false;
                 }
+  
+                if ($("#selRes2").val() != "" && $("#selRes2").val() < 1) {
+	            	alert("<spring:message code='ezCommunity.t594' />");
+	            	poll_add.selRes2.focus();
+	                return false;
+	            }
+                
+                if ($("#Edatepicker").datepicker({ dateFormat: 'yy' }).val().substring(0, 10) < nowdate2) {
+	                alert("<spring:message code='ezCommunity.t595' />");
+	                return false;
+	            }
+	            
+	            if ($("#Sdatepicker").val() > $("#Edatepicker").val()) {
+	            	alert("<spring:message code='ezCommunity.t595' />");
+	                return false;
+	            }
+	            
+	            if ($("#selRes2").val() >= 100){
+	            	alert("<spring:message code='ezCommunity.csj01' />");
+	            	poll_add.selRes2.focus();
+	            	return false;
+	            }
 
                 return true;
             }
@@ -405,7 +426,7 @@
 	                <td>
 	                    <select id="selType" name="selType" onchange="return selType_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 20px;cursor: pointer;">
 	                        <option value="1"><spring:message code='ezCommunity.t601' />
-	                        <option value="2"><spring:message code='ezCommunity.t602' />
+	                        <%-- <option value="2"><spring:message code='ezCommunity.t602' /> --%>
 	                        <option value="3"><spring:message code='ezCommunity.t603' />
 	                    </select>
 	                    <select id="selRes1" name="selRes1" onchange="return selRes1_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 20px;cursor: pointer;">

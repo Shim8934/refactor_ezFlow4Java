@@ -55,7 +55,7 @@
 	    	</c:if>
 		</table>
 		        </div>
-		<div class="btnposition" >    
+		<div class="btnposition btnpositionNew" >    
 		    <input type="submit" name="Submit2" value="<spring:message code='ezApprovalG.t64'/>" onClick="return btncancel_onclick()">
 		</div>
 	</body>

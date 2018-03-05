@@ -477,6 +477,8 @@ public interface EzApprovalGService {
 	public String getAprLineXmlForExt(String docID, LoginVO userInfo) throws Exception;
 
 	public String checkPubDocXML(String mapPath) throws Exception;
+	
+	public int checkReceivedDoc(String docID, String companyID, int tenantID) throws Exception;
 
 	public String createSendMsgXML(Document xmlDom, String mapPath, LoginVO userInfo) throws Exception;
 
@@ -520,4 +522,5 @@ public interface EzApprovalGService {
 	public String getWhoKyulYN(LoginVO userInfo) throws Exception;
 
 	public String getOrgDraftDeptID(String docID, int tenantId, String companyID) throws Exception;
+
 }

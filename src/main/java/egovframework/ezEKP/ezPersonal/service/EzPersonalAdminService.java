@@ -34,7 +34,7 @@ public interface EzPersonalAdminService {
 	
 	String updateNotice(String companyID, String title, String title2, String content, Integer itemSeq, int tenantID) throws Exception;
 	
-	String getQuickLinkList(LoginVO loginVO) throws Exception;
+	String getQuickLinkList(LoginVO loginVO, String lang) throws Exception;
 	
 	String getQuickLink(String quickLinkID, int tenantID) throws Exception;
 	
@@ -64,7 +64,7 @@ public interface EzPersonalAdminService {
 
 	void deletePopup(String itemSeq, int tenantID) throws Exception;
 
-	void setEmpMonth(String type, String userID, String deptID, String term, int tenantID) throws Exception;
+	void setEmpMonth(String type, String userID, String deptID, String term, LoginVO userInfo) throws Exception;
 
 	void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo) throws Exception;
 

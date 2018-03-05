@@ -8,7 +8,7 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script language="javascript" type="text/javascript">
 	        var XmlBodyATT = createXmlDom();
-	        document.onselectstart = function () { return false; };
+	        document.onselectstart = function () { return true; };
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
@@ -80,12 +80,6 @@
 	                                if (TDRows.item(i).innerHTML == "" || TDRows.item(i).innerHTML == " ") {
 	                                    TDRows.item(i).innerHTML = "&nbsp;";
 	                                }
-	                            }
-	                            if (TDRows.item(i).id == "doctitle") { /* 기안문서 제목 일경우 */
-									var str = TDRows.item(i).innerHTML;
-          							str = str.replace(/&nbsp;/gi, " "); /* &nbsp; => " "으로변환 */
-									str = "<XMP>"+str+"</XMP>"; /* xmp사이의 모든 태그 무효+출력 */
-									TDRows.item(i).innerHTML = str;
 	                            }
 	                        }
 	                    }

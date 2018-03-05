@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAttachVO;
 import egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO;
 import egovframework.ezEKP.ezQuestion.vo.QstListVO;
+import egovframework.ezEKP.ezQuestion.vo.QstPollItemACLVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO;
 import egovframework.ezEKP.ezQuestion.vo.QstResponseVO;
 import egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO;
@@ -23,10 +24,6 @@ public class EzQuestionDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<QstListVO> getQstList(Map<String, Object> map){
 		return (List<QstListVO>) list("EzQuestionDAO.getQstList", map);
-	}
-	
-	public String getUserIDAdmin(int brdID) {
-		return (String) select("EzQuestionDAO.getUserIDAdmin", brdID);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -122,6 +119,11 @@ public class EzQuestionDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(Map<String, Object> map) {
 		return (List<QstDeleteAttachUrlVO>) list("EzQuestionDAO.getDeleteAttachUrl", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QstPollItemACLVO> getQstPollItemAcl(Map<String, Object> map) {
+		return (List<QstPollItemACLVO>) list("EzQuestionDAO.getQstPollItemAcl", map);
 	}
 	
 	public QstResponsePersonVO getResponsePerson(Map<String, Object> map) {
@@ -250,7 +252,9 @@ public class EzQuestionDAO extends EgovAbstractDAO {
 	}
 	
 	public void callInsertPollResponseper(Map<String,Object> map) {
-		insert("EzQuestionDAO.callInsertPollResponseper", map);
+		try {
+			insert("EzQuestionDAO.callInsertPollResponseper", map);
+		} catch(Exception ex) {}
 	}
 	
 	public void insertQuestion(Map<String,Object> map) {

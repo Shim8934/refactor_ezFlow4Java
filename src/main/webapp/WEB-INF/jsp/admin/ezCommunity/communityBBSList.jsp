@@ -201,7 +201,7 @@
 			function goToPage(page) {
 				var href = "/ezCommunity/board/bbsList.do?bName=" + encodeURIComponent("${bName}") + "&code="+ encodeURIComponent("${code}") + "&keyword=" + encodeURIComponent(make_searchstring(pKeyWord)) + "&s_radio=" + encodeURIComponent("${sRadio}") + "&block="+encodeURIComponent("${nowBlock}");
 				if(parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
-					document.location.href = href + "&GotoPage=" + encodeURIComponent(parseInt(page));
+					document.location.href = href + "&goToPage=" + encodeURIComponent(parseInt(page));
 				}
 			}				
 			
@@ -225,11 +225,7 @@
 			    if (CrossYN()) {
 			        window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bName, "", feature);
 			    } else {
-			        if (pUse_Editor == "" || pUse_Editor == "CK") {
-			            window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bName, "", feature);
-			        } else {
-			            window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bName, "", feature);
-			        }
+		            window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bName, "", feature);
 			    }
 			}
 			

@@ -394,6 +394,88 @@
                    	EXTENSIONATTRIBUTE15, DISPLAYNAME
 			]]>
 		</isEqual>
+		
+		<isEqual property="v_CLASS" compareValue="all">
+ 			<![CDATA[
+ 				SELECT
+ 					* 
+                    FROM ( 	SELECT
+                    				CN ,
+ 									MAIL ,
+                          			CASE
+                          				#v_LANGDATA#
+                          			WHEN
+                          				'1'
+                          			THEN
+                          				DISPLAYNAME
+                          			ELSE
+                          				DISPLAYNAME2
+                          			END
+                          				DISPLAYNAME  ,
+                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
+                           			'user' TYPE  
+                          		FROM
+                          			TBL_USERMASTER 
+                          		WHERE
+                          			DEPARTMENT = #v_CN#
+                                 AND
+                                    CN <> 'masteradmin'           
+                                 AND 
+                                    CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                     
+                          		AND
+                          			TENANT_ID = #v_TENANT_ID#	
+                          	UNION ALL 
+                          		SELECT
+                          			A.CN ,
+ 									A.MAIL ,
+                          			CASE
+                          				#v_LANGDATA#
+                          			WHEN
+                          				'1'
+                          			THEN
+                          				DISPLAYNAME
+                          			ELSE
+                          				DISPLAYNAME2
+                          			END
+                          				DISPLAYNAME  ,
+                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
+                          			'user' TYPE  
+                          		FROM
+                          			TBL_ADDJOBMASTER B
+                          		JOIN
+                          			TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                          		WHERE
+                          			B.DEPTID = #v_CN#
+                          		AND
+                          			B.TENANT_ID = #v_TENANT_ID#	
+                          	UNION ALL 
+                          		SELECT
+                          			CN ,
+ 									MAIL ,
+                          			CASE
+                          				#v_LANGDATA#
+                          			WHEN
+                          				'1'
+                          			THEN
+                          				DISPLAYNAME
+                          			ELSE
+                          				DISPLAYNAME2
+                          			END
+                          				DISPLAYNAME  ,
+                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
+                           			'dept' TYPE  
+                          		FROM
+                          			TBL_DEPTMASTER 
+                          		WHERE
+                          			EXTENSIONATTRIBUTE1 = #v_CN#
+                          		AND
+                          			TENANT_ID = #v_TENANT_ID#	 ) AA
+                          		ORDER BY
+                          			TYPE DESC,
+                          			EXTENSIONATTRIBUTE15,
+                          			DISPLAYNAME ASC
+ 			]]>
+ 		</isEqual>
 	</select> 
 		
 	<select id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
@@ -483,7 +565,88 @@
 					EXTENSIONATTRIBUTE15, DISPLAYNAME
                 LIMIT #v_STARTROWForMySQL#, #v_COUNT#
 			]]>
-		</isEqual>			
+		</isEqual>
+		
+		<isEqual property="v_CLASS" compareValue="all">
+ 			<![CDATA[
+ 				SELECT
+ 					* 
+ 				FROM ( 	SELECT
+ 								CN ,
+                                 CASE
+                                 	#v_LANGDATA#
+                                 WHEN
+                                 	'1'
+                                 THEN
+                                 	DISPLAYNAME
+                                 ELSE
+                                 	DISPLAYNAME2
+                                 END
+                                 	DISPLAYNAME  ,
+                                 	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
+                                     'USER' TYPE  
+                            FROM
+                            		TBL_USERMASTER 
+                            WHERE
+ 	                           	DEPARTMENT = #v_CN#
+                            AND
+                                 CN <> 'masteradmin'      
+                            AND 
+                                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                 
+ 	                       AND
+ 	                       		TENANT_ID = #v_TENANT_ID#    	
+ 						UNION ALL 
+                         	SELECT
+                         		A.CN ,
+                                 CASE
+                                 	#v_LANGDATA#
+                                 WHEN
+                                 	'1'
+                                 THEN
+                                 	DISPLAYNAME
+                                 ELSE
+                                 	DISPLAYNAME2
+                                 END
+                                 	DISPLAYNAME  ,
+                                 	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
+                                     'USER' TYPE  
+                              FROM
+                              	TBL_ADDJOBMASTER B
+                              JOIN
+                              	TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                              WHERE
+                              	B.DEPTID = #v_CN#
+                              AND
+                              	B.TENANT_ID = #v_TENANT_ID#	
+                          UNION ALL 
+                            	SELECT
+                            		CN ,
+                                 CASE
+                                 	#v_LANGDATA#
+                                 WHEN
+                                 	'1'
+                                 THEN
+                                 	DISPLAYNAME
+                                 ELSE
+                                 	DISPLAYNAME2
+                                 END
+                                 	DISPLAYNAME  ,
+                                 CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
+                                 'DEPT' TYPE  
+                             FROM
+                             	TBL_DEPTMASTER 
+                             WHERE
+                             	EXTENSIONATTRIBUTE1 = #v_CN#
+                             AND
+                             	TENANT_ID = #v_TENANT_ID#	 
+                     ) AA
+                 ORDER BY
+                     TYPE DESC,
+                     EXTENSIONATTRIBUTE15,
+                     DISPLAYNAME
+                 LIMIT #v_STARTROWForMySQL#, #v_COUNT#
+ 			]]>
+ 		</isEqual>
 	</select>
 		
 	<select id="EzOrganDAO.getMemberListCount" parameterClass="Map" resultClass="String">
@@ -1022,11 +1185,12 @@
 	
 	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
+		
 			SELECT 
 				cn,
 				department as displayName,
-				'' as extensionAttribute15,
-				'user' as type				
+				extensionAttribute15,
+				'user' as type			
 			FROM 
 	    		TBL_USERMASTER A 
             $strSQLForMySQL$
@@ -1041,13 +1205,17 @@
 	      	SELECT 
 	      		A.cn,
 	      		deptid as displayName,
-	      		'' as extensionAttribute15,
+	      		extensionAttribute15,
 	      		'user' as type
 	      	FROM	
 				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
             $strSQLForMySQL$ AND A.TENANT_ID = #v_TENANT_ID#
-            $strSizeForMySQL$
+            <isNotEqual property="class" compareValue="all">
+            ORDER BY  displayname asc, CAST(EXTENSIONATTRIBUTE15 as unsigned) ASC
+            </isNotEqual>
 				
+            $strSizeForMySQL$
+            
 			<isEqual property="class" compareValue="all">
 				UNION ALL
 				
@@ -1350,6 +1518,28 @@
 			TENANT_ID = #tenantID#
 		AND
 			USERID = #userID#
+	</select>	
+
+	<select id="EzOrganDAO.getAllSubDeptId" resultClass="String">
+		SELECT
+			CN
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			EXTENSIONATTRIBUTE1 = #deptId#
+	</select>
+	
+	<select id="EzOrganDAO.getDeptPath" resultClass="String">
+		SELECT
+			DEPT_CD_PATH
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			CN = #deptId#
 	</select>
 	
 	<select id="EzOrganDAO.getExtension4ID" parameterClass="Map" resultClass="OrganDeptVO">
@@ -1371,6 +1561,6 @@
 		AND
 			TENANT_ID = #v_TENANTID#
 		AND
-			EXTENSIONATTRIBUTE2 = #v_COMPANYID#			
+			EXTENSIONATTRIBUTE2 = #v_COMPANYID#		
 	</select>
 </sqlMap>

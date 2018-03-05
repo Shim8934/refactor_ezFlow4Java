@@ -1,12 +1,4 @@
-﻿/*###########################################################################################
-
-
-
-###########################################################################################*/
-
-
-//###########################################################################################
-// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 시작
+﻿// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 시작
 
 //컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
@@ -432,9 +424,11 @@ function ListView() {
         if (!oList)
             return;
 
-        RemoveDataBody();
+        //RemoveDataBody();
 
-        var newTBody = GetTableBodyObj();
+        //페이징때문에 주석.
+//        var newTBody = GetTableBodyObj();
+        var newTBody = GetTableBodyObj2();
 
 
        // if (!new RegExp(/MSIE/).test(navigator.userAgent) && !_SetHeightFree)
@@ -445,6 +439,7 @@ function ListView() {
         oldTbody = null;
         newTBody = null;
         oList = null;
+        
     }
 
     //테이블 min-width 결정
@@ -551,6 +546,11 @@ function ListView() {
                 	objTd.width = "120px";
                 }
                 
+                if (strColName == "DOCNO") {    //강민수92 DocNo 
+                	objTd.style.padding = "0";
+                	objTd.style.textAlign = "left";
+                }
+                
                 if (strColName == "ITEMID") {
                     var _HeaderCheckBox = document.createElement("INPUT");
                     _HeaderCheckBox.type = "checkbox";
@@ -568,12 +568,20 @@ function ListView() {
                     objTd.setAttribute("writerindex", i);
                 }
 
-                if (strColName == "ATTACHMENTS" || strColName == "READCOUNT") {
+                if (strColName == "READCOUNT") {
                     objTd.style.textAlign = "CENTER";
+                }
+                if (strColName == "ATTACHMENTS") {
+                	objTd.style.textAlign = "CENTER";
                 }
 
                 var oText = document.createTextNode(strName);
-                objTd.appendChild(oText);
+                // 2018-01-08 강민수92 첨부파일이면 첨부파일 이미지로 출력
+                if (strColName == "ATTACHMENTS") {
+                	objTd.innerHTML = '<img src="/images/newAttach.gif">';
+                } else {
+                	objTd.appendChild(oText);
+                }
 
                 if (OrderCell != "" && OrderCell == strName) {
                     var _HeaderSpanimg = document.createElement("IMG");
@@ -656,12 +664,11 @@ function ListView() {
                 objTr.oncontextmenu = new Function(_contextHandler + "(this);");
 
             var oCells = GetElementsByTagName(oRows[i], "CELL");
-
             if (_SelectFlag && i == 0) {   //첫번째 row 선택지정 or 특정 row 선택
                 objTr.setAttribute("selected", "true");
                 objTr.style.backgroundColor = m_strColorSelect;
 
-                _firstRowID = _thisID + "_TR_" + i;      
+                _firstRowID = _thisID + "_TR_" + i;    
             }
             else {
                 objTr.setAttribute("selected", "false");
@@ -674,9 +681,9 @@ function ListView() {
             for (var j = 0; j < oDatas.length; j++) {
                 var strData = oDatas[j].tagName;
                 var strValue = "";
-                if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null)
+                if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null) {
                     strValue = oDatas[j].firstChild.nodeValue;
-
+                }
                 objTr.setAttribute(strData, strValue);
             }
             
@@ -691,7 +698,7 @@ function ListView() {
                 var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
                 var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
                 var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
-                              
+                
                 var oText = document.createTextNode(strValue);
                 var objTd = document.createElement("TD");
                 var titleImage = "";
@@ -699,27 +706,26 @@ function ListView() {
                 if (getNodeText(oDatas[3]) == "1") {
                     objTd.style.color = "RED";
                 }
+
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
-                    objTd.style.padding = "0";
                     objTd.style.margin = "0";
                     objTd.style.width = "80%";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
-                    for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++)
-                    {
-                        titleImage = titleImage + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                    for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++) {
+                        titleImage = titleImage + "&nbsp;&nbsp;&nbsp;";
                         
                         if (k == parseInt(getNodeText(oDatas[7])) - 1)
                             titleImage = titleImage + "<img src='/images/i_rep.gif'>&nbsp;";
                     }
-                    if (getNodeText(oDatas[3]) == "1") {
-                        titleImage = titleImage + "<img src='/images/i_urgency.gif'>&nbsp;";
-                    }
-                    if (getNodeText(oDatas[8]) == "1") {
-                        titleImage = titleImage + "<img src='/images/i_notice.gif'>&nbsp;";
-                        objTd.style.fontWeight = "BOLD";
-                    }
+//                    if (getNodeText(oDatas[3]) == "1") {  // 2018-01-10 강민수92  긴급게시물일 경우 빨간 느낌표 이미지 타이틀에 안뜨게 주석
+//                        titleImage = titleImage + "<img src='/images/i_urgency.gif'>&nbsp;";
+//                    }
+//                    if (getNodeText(oDatas[8]) == "1") {  // 2018-01-10 강민수92  공지게시물일 경우 공지 이미지 타이틀에 안뜨게 주석
+//                        titleImage = titleImage + "<img src='/images/i_notice.gif'>&nbsp;";
+//                        objTd.style.fontWeight = "BOLD";
+//                    }
                     if (getNodeText(oDatas[6]) == "Y") {
                         titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
                     }
@@ -753,7 +759,7 @@ function ListView() {
                 }
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ATTACHMENTS") {
-                    objTd.style.textAlign = "center";
+                    objTd.style.textAlign = "center";  
                     if (strValue == "1") {
                         titleImage = titleImage + "<img src='/images/newAttach.gif'>";
                         strValue = "";
@@ -791,15 +797,37 @@ function ListView() {
                 }
                 else {
                     if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERNAME') > -1) {
-                        if (getNodeText(oDatas[10]) != "0")
+                        if (getNodeText(oDatas[10]) != "0") {
                             objTd.innerHTML += MakeXMLString(strValue) + " " + titleOneLineCnt;
-                        else
+                        } else {
                             objTd.innerHTML += MakeXMLString(strValue);
-                    } else {
+                        }
+                    } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1){
                         if (getNodeText(oDatas[10]) != "0"){
                             objTd.innerHTML = titleImage + strValue + " " + titleOneLineCnt;
                         }else{
                         	objTd.innerHTML = titleImage + strValue;
+                        }
+                    } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('DOCNO') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
+                    	if (getNodeText(oDatas[8]) == "1") {
+                    		objTd.style.padding = "0";
+                    		objTd.innerHTML = "<img src='/images/i_notice.gif'>";
+                    	} else {
+                    		objTd.style.padding = "0";
+                    		objTd.innerHTML = titleImage + strValue;
+                    		objTd.style.textAlign = "left"; // 강민수92 docno정렬
+                    	}
+                    } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('TITLE') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
+                    	if (getNodeText(oDatas[10]) != "0"){
+                        	objTd.innerHTML = titleImage + MakeXMLString(strValue) + " " + titleOneLineCnt;
+                        }else{
+                        	objTd.innerHTML = titleImage + MakeXMLString(strValue);
+                        }
+                    } else {
+                        if (getNodeText(oDatas[10]) != "0"){
+                            objTd.innerHTML = titleImage + MakeXMLString(strValue) + " " + titleOneLineCnt;
+                        }else{
+                            objTd.innerHTML = titleImage + MakeXMLString(strValue);
                         }
                     }
                 }
@@ -825,6 +853,141 @@ function ListView() {
 
         return oTbody;
     }
+    
+    //2018-02-07 김보미 
+    //헤더 없는 리스트뷰 바디 생성
+      function GetTableBodyObj2() {
+    	  var oTbody = document.createElement("TBODY");
+          oTbody.style.backgroundColor = m_strColorDefault;
+
+          var oRows = _dataSource.getElementsByTagName("ROW");
+          _rowCount = oRows.length;
+          
+          var oHeaders = _dataSource.getElementsByTagName("HEADER");
+          var colCount = oHeaders.length;
+          
+          for (var i = 0; i < oRows.length; i++) {
+              var objTr = document.createElement("TR");
+              objTr.setAttribute("id", _thisID + "_TR_" + i);
+
+              objTr.onmouseover = new Function("tr_mouseover(this)");
+              objTr.onmouseout = new Function("tr_mouseout(this)");
+
+              if (_rowonclick != null)
+                  objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
+              else
+                  objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");
+
+              if (_rowondblclick != null)
+                  objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
+
+              if (_contextHandler != null)
+                  objTr.oncontextmenu = new Function(_contextHandler + "(this.id);");
+
+              var oCells = GetElementsByTagName(oRows[i], "CELL");
+             
+              if (_SelectFlag && i == 0) {   //첫번째 row 선택지정 or 특정 row 선택
+                  objTr.setAttribute("selected", "true");
+                  objTr.style.backgroundColor = m_strColorSelect;
+                  _firstRowID = _thisID + "_TR_" + i;      
+              }
+              else {
+                  objTr.setAttribute("selected", "false");
+              }
+              //DATA1, DATA2, DATA3... 등의 값 세팅
+              var oDatas = GetDataElements(oCells[0]);
+              for (var j = 0; j < oDatas.length; j++) {
+                  var strData = oDatas[j].tagName;
+                  var strValue = "";
+                  if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null)
+                      strValue = oDatas[j].firstChild.nodeValue;
+
+                  objTr.setAttribute(strData, strValue);
+              }
+
+              oTbody.appendChild(objTr);
+
+              for (var j = 0; j < oCells.length; j++) {
+                  var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
+                  var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
+                  var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
+
+                  var oText = document.createTextNode(strValue);
+                  var objTd = document.createElement("TD");
+
+                  if (strStyle != "") {
+                      if (new RegExp(/MSIE/).test(navigator.userAgent)) {
+                          objTd.style.setAttribute("cssText", strStyle);
+                      }
+                      else {
+                          strStyle = strStyle.replace(/center/, "-moz-center");
+                          objTd.setAttribute("style", strStyle);
+                      }
+                  }               
+                  if (strClass != "") {
+                      objTd.className = strClass;
+                  }
+                  else {
+                      
+                      if(!_SetHeightFree)
+                          //objTd.height = "24";                    
+                          
+                      if (_titleIdx == null) { //하단정보탭일경우                       
+                          if (_Align[j] == 0)
+                              objTd.align = "left";//objTd.className = "kt_li_pop_left";
+                          else
+                              objTd.align = "center";//objTd.className = "kt_li_pop_center";
+                      }
+                      else {  //상단 리스트일경우
+                              objTd.title = strValue;
+                              objTd.style.overflow = "hidden";
+                              objTd.style.textOverflow = "ellipsis";
+                              objTd.style.whiteSpace = "nowrap";                           
+
+                          if (_titleIdx == j) {
+                              if (_UrgentFlag && oDatas[13].textContent == "Y") {   //DATA14값
+                                  objTd.style.color = m_UrgentColor;
+                              }
+                              if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
+                                  objTd.setAttribute("width", "80%");// objTd.setAttribute("width", strWidth + "px");
+                              }
+                              else {
+                                  objTd.width = "80%";// objTd.width = strWidth + "px";
+                              }
+                              objTd.className = "title";
+                          }
+                      
+                          if (_Align[j] == 0)
+                              objTd.align = "left";//objTd.className = "kt_li_left";
+                          else
+                              objTd.align = "center";//objTd.className = "kt_li_center";
+                      }
+                  }
+                  if (_rowCount < 100) {
+                      if (_SecIdx != j) {
+                          if (_UrgentFlag && _titleIdx == j) {       //2010.05.04 제목 긴급일 경우 붉은색 처리로 추가함.
+                              objTd.onmouseover = new Function("td_mouseover(this, " + _titleIdx + ")");
+                              objTd.onmouseout = new Function("td_mouseout(this, " + _titleIdx + ")");
+                          }
+                          else {
+                              objTd.onmouseover = new Function("td_mouseover(this)");
+                              objTd.onmouseout = new Function("td_mouseout(this)");
+                          }
+                      }
+                  }
+                  objTd.appendChild(oText);
+                  objTr.appendChild(objTd);
+                  objTd = null;
+                  oText = null;
+              }
+              objTr = null;
+              oCells = null;
+              oDatas = null;
+          }
+          oRows = null;
+
+          return oTbody;
+      }
 
     function S4() {
         return ((CustomRandom() * 0x10000) | 0).toString(16).substring(1);
@@ -842,7 +1005,6 @@ function ListView() {
 
     //리스트뷰에 Row 추가
     function AddDataRow(objTr, addXml) {
-
         objTr.style.cursor = "pointer";
         objTr.onmouseover = new Function("tr_mouseover(this)");
         objTr.onmouseout = new Function("tr_mouseout(this)");
@@ -858,9 +1020,9 @@ function ListView() {
         for (var j = 0; j < oDatas.length; j++) {
             var strData = oDatas[j].tagName;
             var strValue = "";
-            if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null)
+            if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null) {
                 strValue = oDatas[j].firstChild.nodeValue;
-
+            }
             objTr.setAttribute(strData, strValue);
         }
 
@@ -868,7 +1030,6 @@ function ListView() {
             var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
             var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
             var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
-
 
             var oText = document.createTextNode(strValue);
             var objTd = document.createElement("TD");
@@ -1299,18 +1460,19 @@ function tr_unselectedAll(pTableID) {
     if (!oList)
         return;
 
-    if (document.getElementById("HeaderAllCheckBox").checked) {
-    }
-    else {
-
-        var SelList = new ListView();
-        SelList.LoadFromID("BoardList");
-
-        for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
-            strListInfo = "";
-        }
+    if (document.getElementById("HeaderAllCheckBox")) {    
+    	if (!document.getElementById("HeaderAllCheckBox").checked) {
+	        var SelList = new ListView();
+	        SelList.LoadFromID("BoardList");
+	
+	        for (var i = 0; i < SelList.GetRowCount() ; i++) {
+	            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+	            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+	            strListInfo = "";
+	        }
+	    }
+    } else {
+    	strListInfo = "";
     }
 }
 
@@ -1510,3 +1672,4 @@ function getOriginXML(pTagetID)
     } 
     //alert(xmlHeader + "\r\n" + xmlBody);
 }
+

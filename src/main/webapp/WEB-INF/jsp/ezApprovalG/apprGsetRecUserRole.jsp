@@ -511,11 +511,11 @@
 <table class="content">
 	<tr>
 	<th><spring:message code='ezApprovalG.t1163'/></th>
-		<td><Input Type="radio" name="rdoRecRole" id="rdoRecRole1" value="0" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()" checked><spring:message code='ezApprovalG.t1164'/><br />
-			<Input Type="radio" name="rdoRecRole" id="rdoRecRole2" value="1" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()"><spring:message code='ezApprovalG.t1165'/></td>
+		<td><Input Type="radio" name="rdoRecRole" id="rdoRecRole1" value="0" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()" checked>&nbsp<spring:message code='ezApprovalG.t1164'/><br />
+			<Input Type="radio" name="rdoRecRole" id="rdoRecRole2" value="1" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()">&nbsp<spring:message code='ezApprovalG.t1165'/></td>
 	</tr>
 </table>
-<table id="DataLayout" style="margin-top:10px">
+<table id="DataLayout" style="margin-top:10px; display: none;">
 	<tr id="trRecUserRole">			
 		<td style="vertical-align:top"> <h2><spring:message code='ezApprovalG.t1166'/></h2>
 			<table>
@@ -525,7 +525,7 @@
 						<option value="description"><spring:message code='ezApprovalG.t108'/></option>
 						<option value="title"><spring:message code='ezApprovalG.t230'/></option>
 					</select>
-					<input id="txtKeyword" value="" onKeyPress="txtKeyword_onKeyPress()" style="width:90px"><a class="imgbtn" style="vertical-align:middle"><span onClick="btnSearch_Click()" style="width:40px" ><spring:message code='ezApprovalG.t111'/></span></a></th>
+					<input id="txtKeyword" value="" onKeyPress="txtKeyword_onKeyPress()" style="width:90px">&nbsp<a class="imgbtn" style="vertical-align:middle"><span onClick="btnSearch_Click()" style="width:40px" ><spring:message code='ezApprovalG.t111'/></span></a></th>
 				</tr>
 				<tr style="height:2px">
 				<td></td>
@@ -538,8 +538,12 @@
 			</table>
 		</td>
 
-		<td style="width:25px;text-align:center"><img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" 
-						onClick="return AddUser_onclick()"><a><img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return DelUser_onclick()"></a></td>
+		<td style="width:25px;text-align:center">
+			<a href="#">
+				<img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return AddUser_onclick()">
+				<img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return DelUser_onclick()">
+			</a>
+		</td>
 
 		<td style="width:200px;vertical-align:top"><h2><spring:message code='ezApprovalG.t1167'/></h2>
 		<div class="listview">
@@ -548,7 +552,7 @@
 	</tr>
 </table>
 
-<div class="btnposition">
+<div class="btnposition btnpositionNew">
 <a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 <a class="imgbtn"><span id="btnCancel" onclick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
 </div>

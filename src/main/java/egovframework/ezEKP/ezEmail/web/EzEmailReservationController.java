@@ -113,12 +113,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
 		String draftUrl = "";
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String useIE11Browser = "";
 		String noneActiveX = "YES";
-		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-        	useIE11Browser = "CK";
-        }
 		
 		List<MailReservationVO> list = ezEmailService.getMailReserved(userInfo.getTenantId(), userInfo.getId());
 		
@@ -128,7 +123,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
 		model.addAttribute("draftUrl", draftUrl);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("list", list);
 		
@@ -313,8 +307,20 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		logger.debug("userPrimary=" + userPrimary + ",userLang=" + userLang + ",userTimeset=" + userTimeset);
 		
         String displayNamePrintable = userInfo.getDisplayName();
-		String serverName = loginInfo.getServerName();
-		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
+		
+        // set serverName
+ 		String serverName = loginInfo.getServerName();
+ 		String useMailLinkHostname = ezCommonService.getTenantConfig("useMailLinkHostname", loginInfo.getTenantId());
+ 		
+ 		if (useMailLinkHostname.equals("YES")) {
+ 			String mailLinkHostname = ezCommonService.getTenantConfig("mailLinkHostname", loginInfo.getTenantId());
+ 			
+ 			if (!mailLinkHostname.equals("")) {
+ 				serverName = mailLinkHostname;
+ 			}
+ 		}
+ 		
+        logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
 		String folderDate = EgovDateUtil.getToday("");
 		String stateName = UUID.randomUUID().toString();
@@ -323,7 +329,21 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
 		String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", loginInfo.getTenantId());
-		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",useSecureMail=" + useSecureMail);
+		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+		
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (loginInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", loginInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+			}
+		}
+		
+		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",useSecureMail=" + useSecureMail + ",defaultFontAndSize" + defaultFontAndSize);
 		
 		String senderInfo = userInfo.getCompany() + ", " + userInfo.getDescription() + ", " + userInfo.getTitle();
 		logger.debug("senderInfo=" + senderInfo);
@@ -598,6 +618,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("secureMaxReadCount", secureReadCount);
 		model.addAttribute("secureMaxReadDate", secureReadDate);
 		model.addAttribute("fromAddressHtml", fromAddressHtml);
+		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		
         logger.debug("mailEdit ended.");
         

@@ -42,4 +42,8 @@ var strLang535 = "No data found.";
 var strLang5351 = "People";
 
 /* 2017-11-01 장진혁 */
-var strLang84 = "파일명은 100자를 넘을 수 없습니다.";
+var strLang84 = "파일명은 ";
+var strLangLHM01 = "자를 넘을 수 없습니다.";
+
+//2018-01-12 강민수92
+var strLang85 = "그림파일을 업로드 해야 합니다.";

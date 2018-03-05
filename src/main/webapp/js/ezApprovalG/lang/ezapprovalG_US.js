@@ -986,7 +986,7 @@ var strLangS826 = "회람을 발송하지 못하였습니다.";
 var strLangpjj27 = "편집하려는 즐겨찾기를 공람자 리스트에 적용 해야 편집 할 수 있습니다.";
 var strLangHYJ28 = "회람자 리스트가 존재하지 않습니다.";
 
-var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\\n추가 할 수 없습니다.";
+var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\n추가 할 수 없습니다.";
 
 //2017-11-09 장진혁 추가
 var strLangjjh01 = "첨부파일은 총 ";
@@ -1003,3 +1003,6 @@ var strLangSpjj29 = "동일인이 '후결'로 2번이상 지정될 수 없습니
 var strLangSpjj30 =	"후결을 승인하시겠습니까?"
 var strLangSpjj31 =	"후결을 승인하였습니다.";
 var strLangSpjj32 =	"후결 승인시에 에러가 발생하였습니다."
+	
+var strLangSpjj33 = "결재 문서 바로가기";
+var strLangSpjj34 = "님이 기안한 결재 문서가 도착했습니다. <br> 결재를 하시려면 아래 링크를 클릭하세요.";

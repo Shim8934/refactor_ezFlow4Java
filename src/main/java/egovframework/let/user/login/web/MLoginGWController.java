@@ -91,7 +91,7 @@ public class MLoginGWController {
     		}
     		
     		String rpwd = EgovFileScrty.decryptRsa(pk, request.getParameter("pw"));
-    		String pwd = EgovFileScrty.encryptPassword(rpwd, uid);
+    		String pwd = "";
     		
     		String serverName = request.getHeader("x-user-host");
     		int tenantId = loginService.getTenantId(serverName);
@@ -99,162 +99,218 @@ public class MLoginGWController {
     		LoginVO loginVO = new LoginVO();
     		
     		loginVO.setId(uid);
-    		loginVO.setPassword(pwd);
+    		loginVO.setDn("NOPASSWORD");
     		loginVO.setTenantId(tenantId);
     		
     		LoginVO resultVO = loginService.selectUser(loginVO);
     		
-    		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {        	
-            	//비밀번호 변경 팝업 상태 값 초기화
-            	int diff = 1;
-            	
-            	if (resultVO.getLoginCnt() == 0) {
-            		LOGGER.debug("isFirstLogin");
-                	
-        			result.put("status", "error");
-        			result.put("code", "4");			
-        			result.put("data", "isFirstLogin");
-        			
-        			return result;
-            	} else {
-    	        	String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
-    	        	
-    	        	if (!expirePassPeriod.trim().equals("0")) {
-    	        		int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
-    	        		
-    	        		Calendar cal = Calendar.getInstance();
-    	        		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    	            	
-    	            	String baseStr = commonUtil.getTodayUTCTime("");        	
-    	            	Date baseDT = date.parse(baseStr);
-    	            	            	
-    	            	cal.setTime(baseDT);
-    	            	cal.add(Calendar.DATE, realPeriod);
-    	            	
-    	            	baseDT = cal.getTime();
-    	            	Date lastDT = resultVO.getUpdateDT();
-    	            	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
-    	    			diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
-    	        	}	        	
-            	}        	        	
-    			//0보다 작아지면 패스워드 변경기한 Expired
-    			if (diff <= 0) {
-    				LOGGER.debug("isExpireDate");
-                	
-        			result.put("status", "error");
-        			result.put("code", "5");			
-        			result.put("data", "isExpireDate");
-        			
-        			return result;    	        	
-    			} else {			
-    				String ip = ClientUtil.getClientIP(request);		
-    				loginVO.setIp(ip);
-    				
-    				//IP Address,  마지막 login시간 저장
-    				loginService.updateUser(loginVO);
-    				
-    				//접속 로그정보 저장
-    				resultVO.setIp(ip);
-    				resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
-    				resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
-    				resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
-    				resultVO.setTenantId(tenantId);
-
-    				if(resultVO.getTitle2() == null){
-    					resultVO.setTitle2("");
-    				}
-    				
-    				loginService.insertLog(resultVO);
-
-    				//DB에서 모바일 환경설정 값 가져옴
-    				MOptionVO mOptionVO = mOptionService.optionInfo(uid, tenantId);
-    				
-    				String acceptLanguage = request.getHeader("Accept-Language");    				
-    				String lang = "";
-    				String timeZone = "";
-    				String maintype = "";
-    				String listCnt = "";    				
-    				String useSecurity = "";					
-    				String returnValue = "";
-    				
-    				String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
-    				
-    				//userMobileInfo 테이블에 정보가 없을 때 (첫 로그인)
-    				if (mOptionVO == null || mOptionVO.equals("")) {    			        
-    					
-    			        //UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
-    			        if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
-    				        if (primaryLang.equals("1")) {
-    				        	acceptLanguage = "ko";
-    				        } else if (primaryLang.equals("3")) {
-    				        	acceptLanguage = "ja";
-    				        }
-    			        }
-    			        
-    				    if (acceptLanguage != null) {
-    				        returnValue = acceptLanguage.substring(0, 2);
-    				    //이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
-    				    } else {				        
-    				        returnValue = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
-    				    }
-    					
-    				    lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
-    				    
-    				    //브라우저 언어가 한국어,영어,일본어,중국어가 아닐 때 config의 primary 언어를 가져옴.
-    				    if (lang.equals("")) {						
-    						lang = primaryLang;
-    					}
-    					
-    				    timeZone = "235|+09:00";
-    				    maintype = "D";
-    				    listCnt = "10";    				    
-    				    useSecurity = "N";
-    				    
-    					mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, useSecurity, tenantId);    					
-    				} else {
-    					lang = mOptionVO.getLang();
-    					timeZone = mOptionVO.getTimeZone();
-        				maintype = mOptionVO.getMainType();
-        				listCnt = mOptionVO.getListCnt();        				
-        				useSecurity = mOptionVO.getUseSecurity();
-        				returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
-    				}
- 				
-    				Map<String, Object> map = new HashMap<String, Object>();
-    				map.put("uid", uid);
-    				map.put("ip", ip);
-    				map.put("locale", returnValue);
-    				map.put("lang", lang);
-    				map.put("timeZone", timeZone);
-    				map.put("tenantId", tenantId+"");
-    				map.put("mainType", maintype);
-    				map.put("listCnt", listCnt);    				
-    				map.put("useSecurity", useSecurity);    		
-    				map.put("companyID", resultVO.getCompanyID());
-    				map.put("primaryLang", primaryLang);
-    				map.put("rollInfo", resultVO.getRollInfo());
-    				
-    				if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
-    					map.put("userName", resultVO.getDisplayName1());
-    				} else {
-    					map.put("userName", resultVO.getDisplayName2());
-    				}
-				    				    				
-    				result.put("status", "ok");
-    				result.put("code", "0");
-    				result.put("data", map);
-    				
-    				return result;
-    			}			
-            } else {
-            	LOGGER.debug("user does not exist :" + uid);
+    		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
+    			LOGGER.debug("user does not exist :" + uid);
             	
     			result.put("status", "error");
     			result.put("code", "3");			
     			result.put("data", "user does not exist");
     			
     			return result;
-            }    		
+    		} else {
+    			// 사용자 ID를 사용해 로그인하는 경우
+    			if (uid.equals(resultVO.getId())) {
+    				loginVO.setId(uid);
+					pwd = EgovFileScrty.encryptPassword(rpwd, uid);
+		        	loginVO.setPassword(pwd);
+		            loginVO.setDn("PASSWORD");
+		            
+		            // 암호가 맞는 지 확인한다.
+		            resultVO = loginService.selectUser(loginVO);
+    			// 사원번호를 사용해 로그인하는 경우
+				} else {
+					//Check if his/her tenant allows using employeeID to login				
+					String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+					
+					// 사원번호를 사용한 로그인을 허용하는 경우
+					if (useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
+						// 실제 사용자 ID를 사용해 암호가 맞는 지 확인한다.
+						uid = resultVO.getId();
+						pwd = EgovFileScrty.encryptPassword(rpwd, uid);
+			        	loginVO.setId(uid);
+			        	loginVO.setPassword(pwd);
+			            loginVO.setDn("PASSWORD");
+			            
+			            resultVO = loginService.selectUser(loginVO);
+			         // 사원번호를 사용한 로그인을 허용하지 않는 경우
+					} else {
+						//This kind of login is not allowed in his/her tenant
+						LOGGER.debug("user does not exist :" + uid);
+		            	
+		    			result.put("status", "error");
+		    			result.put("code", "3");			
+		    			result.put("data", "user does not exist");
+		    			
+		    			return result;
+					}
+				}
+    			if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+    				//비밀번호 변경 팝업 상태 값 초기화
+    				int diff = 1;
+    				
+    				if (resultVO.getLoginCnt() == 0) {
+    					LOGGER.debug("isFirstLogin");
+    					
+    					result.put("status", "error");
+    					result.put("code", "4");			
+    					result.put("data", "isFirstLogin");
+    					
+    					return result;
+    				} else {
+    					String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
+    					
+    					if (!expirePassPeriod.trim().equals("0")) {
+    						int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
+    						
+    						Calendar cal = Calendar.getInstance();
+    						SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    						
+    						String baseStr = commonUtil.getTodayUTCTime("");        	
+    						Date baseDT = date.parse(baseStr);
+    						
+    						cal.setTime(baseDT);
+    						cal.add(Calendar.DATE, realPeriod);
+    						
+    						baseDT = cal.getTime();
+    						Date lastDT = resultVO.getUpdateDT();
+    						//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
+    						diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
+    					}	        	
+    				}        	        	
+    				//0보다 작아지면 패스워드 변경기한 Expired
+    				if (diff <= 0) {
+    					LOGGER.debug("isExpireDate");
+    					
+    					result.put("status", "error");
+    					result.put("code", "5");			
+    					result.put("data", "isExpireDate");
+    					
+    					return result;    	        	
+    				} else {			
+    					String ip = ClientUtil.getClientIP(request);		
+    					loginVO.setIp(ip);
+    					
+    					//IP Address,  마지막 login시간 저장
+    					loginService.updateUser(loginVO);
+    					
+    					//접속 로그정보 저장
+    					resultVO.setIp(ip);
+    					resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+    					resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+    					resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+    					resultVO.setTenantId(tenantId);
+    					
+    					if(resultVO.getTitle2() == null){
+    						resultVO.setTitle2("");
+    					}
+    					
+    					loginService.insertLog(resultVO);
+    					
+    					//DB에서 모바일 환경설정 값 가져옴
+    					MOptionVO mOptionVO = mOptionService.optionInfo(uid, tenantId);
+    					
+    					String acceptLanguage = request.getHeader("Accept-Language");    				
+    					String lang = "";
+    					String timeZone = "";
+    					String maintype = "";
+    					String listCnt = "";    				
+    					String useSecurity = "";					
+    					String returnValue = "";
+    					
+    					String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+    					
+    					//userMobileInfo 테이블에 정보가 없을 때 (첫 로그인)
+    					if (mOptionVO == null) {    			        
+    						
+    						//UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
+    						if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
+    							if (primaryLang.equals("1")) {
+    								acceptLanguage = "ko";
+    							} else if (primaryLang.equals("3")) {
+    								acceptLanguage = "ja";
+    							}
+    						}
+    						
+    						if (acceptLanguage != null) {
+    							returnValue = acceptLanguage.substring(0, 2);
+    							//이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
+    						} else {				        
+    							returnValue = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
+    						}
+    						
+    						lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
+    						
+    						//브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
+    						if (lang.equals("")) {						
+    							lang = primaryLang;
+    						}
+    						
+    						timeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
+    					    
+    					    if (timeZone.equals("")) {
+    					    	timeZone = "235|+09:00";
+    					    }
+    					    
+    						maintype = "D";
+    						listCnt = "10";    				    
+    						useSecurity = "N";
+    						
+    						mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, useSecurity, tenantId);    					
+    					} else {
+    						lang = mOptionVO.getLang();
+    						timeZone = mOptionVO.getTimeZone();
+    						maintype = mOptionVO.getMainType();
+    						listCnt = mOptionVO.getListCnt();        				
+    						useSecurity = mOptionVO.getUseSecurity();
+    						returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
+    					}
+    					
+    					/* 2018-01-08 장진혁 - 모바일에서 메일만 사용할 경우 YES or NO */
+    					String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
+    					
+    					Map<String, Object> map = new HashMap<String, Object>();
+    					map.put("uid", uid);
+    					map.put("ip", ip);
+    					map.put("locale", returnValue);
+    					map.put("lang", lang);
+    					map.put("timeZone", timeZone);
+    					map.put("tenantId", tenantId+"");
+    					map.put("mainType", maintype);
+    					map.put("listCnt", listCnt);    				
+    					map.put("useSecurity", useSecurity);    		
+    					map.put("companyID", resultVO.getCompanyID());
+    					map.put("primaryLang", primaryLang);
+    					map.put("rollInfo", resultVO.getRollInfo());    				
+    					
+    					if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
+    						map.put("userName", resultVO.getDisplayName1());
+    					} else {
+    						map.put("userName", resultVO.getDisplayName2());
+    					}
+    					
+    					map.put("useMobileMailOnly", useMobileMailOnly);
+    					
+    					result.put("status", "ok");
+    					result.put("code", "0");
+    					result.put("data", map);
+    					
+    					return result;
+    				}			
+    			} else {
+    				LOGGER.debug("user does not exist :" + uid);
+                	
+        			result.put("status", "error");
+        			result.put("code", "3");			
+        			result.put("data", "user does not exist");
+        			
+        			return result;
+    			}
+    		}
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");			

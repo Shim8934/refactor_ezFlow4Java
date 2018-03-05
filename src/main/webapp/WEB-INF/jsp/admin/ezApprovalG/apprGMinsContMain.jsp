@@ -58,7 +58,7 @@
 		        
 // 		        $("#btnAppdept").closest("a").hide();
 // 	            $("#btnDeldept").closest("a").hide();
-	            document.getElementById("selUseDept").disabled = true;
+//	            document.getElementById("selUseDept").disabled = true;
 		        
 		        if (gState == "U") {
 		            initVal(RetValue);
@@ -112,7 +112,7 @@
 		        
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "html",
+		        	dataType : "text",
 		        	url : "/admin/ezApprovalG/apprGMgetContGroup.do",
 		        	async : false,
 		        	data : {contID : Para[1], comID : P_companyID},

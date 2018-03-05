@@ -7,12 +7,12 @@
 		<title>main_page</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
 		<script type="text/javascript">
 	        var xmlhttp3 = null;
 	        var xmlhttp4 = null;
@@ -32,7 +32,6 @@
 	        var strLang6 = "<spring:message code = 'ezCommunity.t1079' />";
 	        var strLang7 = "<spring:message code = 'ezCommunity.t1102' />";
 	        var strLang8 = "<spring:message code = 'ezCommunity.t2002' />";
-	        var pUse_IE11Browser = "<c:out value = '${useIE11Browser}' />";
 	        
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -64,8 +63,8 @@
 	                document.getElementById("newcomm").style.display = "";
 	            } else if (val == "mycop") {
 	                search = false;
-	                document.getElementById("mycop").className = "on";
-	                document.getElementById("categorycop").className = "icon_tabpartBorder";
+	                //document.getElementById("mycop").className = "on";
+	                //document.getElementById("categorycop").className = "icon_tabpartBorder";
 	                document.getElementById("mycommunity").style.display = "";
 	                document.getElementById("categorycommunity").style.display = "none";
 	                totalPage = temptotalPage;
@@ -74,8 +73,8 @@
 	                makePageSelPage();
 	            } else if(val == "categorycop") {
 	                search = false;
-	                document.getElementById("mycop").className = "";
-	                document.getElementById("categorycop").className = "icon_tabpartBorder on";
+	                //document.getElementById("mycop").className = "";
+	                //document.getElementById("categorycop").className = "icon_tabpartBorder on";
 	                document.getElementById("mycommunity").style.display = "none";
 	                document.getElementById("categorycommunity").style.display = "";
 	                document.getElementById("work").className = "on";
@@ -386,7 +385,7 @@
                 
                 if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
                 	var str = "<spring:message code = 'ezCommunity.t926' />";
-                	document.getElementById("mycommunity").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='border:1px solid #ddd;height:200px;text-align:center;border-radius:3px;background-color:#f8f8f8'><div style='margin-top:92px;color:#777'>" + str + "</div></div>";
+                	document.getElementById("mycommunity").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='border:1px solid #ddd;height:430px;text-align:center;border-radius:3px;background-color:#fafafa'><img style='margin-top:160px' src='/images/nocomunitydata.png' /><div style='margin-top:10px;color:rgb(55, 54, 130)'>" + str + "</div></div>";
                 }
                 //document.getElementById("tblPageRayer").style.display = "none";
 	        }
@@ -516,7 +515,7 @@
 	            if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
 	                CurPage = newPage;
 	                
-	                if (document.getElementById("mycop").className == "on") {
+	                if (document.getElementById("tagsub1").className != "") {
 	                    get_myCommunity();
 	                } else if (search) {
 	                    copsearchpage();
@@ -532,7 +531,7 @@
 	            if (newPage > 0) {
 	                CurPage = newPage;
 	                
-	                if (document.getElementById("mycop").className == "on") {
+	                if (document.getElementById("tagsub1").className != "") {
 	                    get_myCommunity();
 	                } else if (search) {
 	                    copsearchpage();
@@ -548,7 +547,7 @@
 	            if (newPage <= parseInt(totalPage)) {
 	                CurPage = newPage;
 	                
-	                if (document.getElementById("mycop").className == "on") {
+	                if (document.getElementById("tagsub1").className != "") {
 	                    get_myCommunity();
 	                } else if (search) {
 	                    copsearchpage();
@@ -863,6 +862,40 @@
 					success: function(result){
 						if (result["clubVO"] != null) {
 							event_get_todaycop(result);
+						} else {
+							var h1 = document.createElement("H1");
+			                var img = document.createElement("IMG");
+			                img.style.width = "156px";
+			                img.style.height = "28px";
+			                
+			                if ('${userInfo.lang}' == '3') {
+			                	img.src = "/images/jp/community/title_todayCommunity_jp.png";
+			                } else {
+			                	img.src = "/images/kr/community/title_todayCommunity.png";
+			                }
+			                img.alt = "today Community";
+
+			                h1.appendChild(img);
+
+			                var div = document.createElement("DIV");
+			                div.className = "todayCommunity";			                
+
+			                var div2 = document.createElement("DIV");
+			                div2.className = "todayCommunityLayout";			                
+			                div2.innerHTML = "<div><img style='margin-top:20px;' src='/images/nocomunity.png' />&nbsp;<div style='margin-top:10px;color:rgb(55, 54, 130)'>"+strLang88+"</div></div>";
+			                div2.style.backgroundColor = "#fafafa";
+			                div2.style.borderColor = "#ccc";
+			                div2.style.borderRadius = "5px";
+			                div2.style.textAlign = "center";
+			                div2.style.height = "142px";
+			                
+			                div.appendChild(div2);
+
+			                document.getElementById("todaycop").appendChild(h1);
+			                document.getElementById("todaycop").appendChild(div);
+							
+							conts = "<div style='border:1px solid #ccc; background-color:#fafafa; height:172px; text-align:center;'><div><img style='margin-top:35px;' src='/images/nocomunity.png' /><div style='margin-top:10px;color:rgb(55, 54, 130)'>"+strLang88+"</div></div></div>";							
+							$(".newCommunity_listLayout").html(conts);
 						}
 					}
 				});
@@ -1082,7 +1115,7 @@
 	                    window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 	                }
 	            } else {
-	                if (CrossYN() || pUse_IE11Browser == "CK") {
+	                if (CrossYN()) {
 	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 800);
 	                } else {
 	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 800);
@@ -1207,6 +1240,54 @@
 	                try { ret.focus() } catch (e) { }
 	            }
 	        }
+	        
+	        var Tab1_SelectID = "";
+		    function Tab1_MouserOver(obj) {
+		        obj.className = "tabover";
+		    }
+	
+		    function Tab1_MouserOut(obj) {
+		        if(Tab1_SelectID != obj.id)
+		            obj.className = "";
+		    }
+	
+		    function Tab1_MouseClick(obj) {		    	
+		        obj.className = "tabon";
+		        if (obj.id != Tab1_SelectID) {
+		            if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
+		                document.getElementById(Tab1_SelectID).className = "";
+	
+		            obj.className = "tabon";
+		            Tab1_SelectID = obj.id;
+		            ChangeTab(obj);
+		        }
+		    }
+		    
+		    function ChangeTab(obj) {
+		        var pSelectTab = obj.id;
+
+		        switch (pSelectTab) {
+		            case "tagsub1": change_tab('mycop'); break;
+		            case "tagsub2": change_tab('categorycop'); break;
+		        }
+		    }
+	        
+	        function Tab1_NewTabIni(pTabNodeID) {
+		        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
+		            if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
+		                if (document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).nodeName == "SPAN") {
+		                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseover = function () { Tab1_MouserOver(this); };
+		                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };
+		                    document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onclick = function () { Tab1_MouseClick(this); };
+
+		                    if (i == 1) {
+		                        document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).className = "tabon";
+		                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).id;
+		                    }	
+		                }
+		            }
+		        }
+		    }
 		</script>
 	</head>
 	<body>
@@ -1234,12 +1315,21 @@
 			<table style="width:100%" border="0" class="main_communityContent">
 				<tr>
 			    	<td>
-			            <div class="contents_tabpartTitle">
+			            <%-- <div class="contents_tabpartTitle">
 			                <ul class="tabpartTitle">
 			                    <li id="mycop" class="on" onclick ="change_tab('mycop')"><span><span class="icon_tabpart"></span><spring:message code = 'ezCommunity.t2005' /></span></li>
 			                    <li id="categorycop" class="icon_tabpartBorder" onclick ="change_tab('categorycop')"><span><span class="icon_tabpart"></span><spring:message code = 'ezCommunity.t2006' /></span></li>
 			                </ul>
-			            </div>
+			            </div> --%>
+			            <div id="tabnav" class="portlet_tabpart01" style="width:100%;margin-top:5px">
+							<div class="portlet_tabpart01_top" id="tab1">
+							    <p><span id="tagsub1"><spring:message code = 'ezCommunity.t2005' /></span></p>
+							    <p><span id="tagsub2"><spring:message code = 'ezCommunity.t2006' /></span></p>
+						  	</div>	
+						</div>
+				   		<script type="text/javascript">
+				   			Tab1_NewTabIni("tab1");
+						</script>
 			            <div id ="mycommunity" style="height:497px"></div>
 			            <div id ="categorycommunity" style="display:none;">
 			                <div class="tabpartMycommunity02" style="margin-top:18px">

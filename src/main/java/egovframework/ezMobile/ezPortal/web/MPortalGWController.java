@@ -227,6 +227,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
 					mPortalTimeLineVO.setTitle(resGetScheduleVO.getTitle());
 					mPortalTimeLineVO.setStartDate(resGetScheduleVO.getStartDate());
+					mPortalTimeLineVO.setEndDate(resGetScheduleVO.getEndDate());
 					mPortalTimeLineVO.setModule("5");
 					mPortalTimeLineVO.setWriterName((primary.equals("1") ? resGetScheduleVO.getOwnerNm() : resGetScheduleVO.getOwnerNm2()));
 					mPortalTimeLineVO.setResID(resGetScheduleVO.getOwnerId());
@@ -253,12 +254,13 @@ public class MPortalGWController extends EgovFileMngUtil {
 				String tempSDate = nowDate.substring(0, 10) + " 00:00:00";
 				String tempEDate = nowDate.substring(0, 10) + " 23:59:59";
 				
-				List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "");
+				List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "", "", "");
 				
 				for (ScheduleInfoVO scheduleInfoVO : schList) {
 					MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
 					mPortalTimeLineVO.setTitle(scheduleInfoVO.getTitle());
 					mPortalTimeLineVO.setStartDate(scheduleInfoVO.getStartDate());
+					mPortalTimeLineVO.setEndDate(scheduleInfoVO.getEndDate());
 					mPortalTimeLineVO.setModule("3");
 					mPortalTimeLineVO.setWriterName((primary.equals("1") ? scheduleInfoVO.getCreatorName() : scheduleInfoVO.getCreatorName2()));
 					mPortalTimeLineVO.setSchID(scheduleInfoVO.getScheduleId());

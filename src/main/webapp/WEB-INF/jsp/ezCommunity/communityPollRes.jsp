@@ -53,13 +53,13 @@
 			<span id = "idSpan">${idSpanValue }</span>
 
 			<c:if test="${pollState != t679 }">
-				<div style="font-size:12px;text-align:left;margin-top:30px;border-top:1px solid #ccc;padding-top:10px;color:black" class="subtxt"><spring:message code = 'ezCommunity.t683' /></div>
+				<div style="font-weight:normal;font-size:12px;text-align:left;margin-top:30px;border-top:1px solid #ccc;padding-top:10px;color:black" class="subtxt"><spring:message code = 'ezCommunity.t683' /></div>
 			</c:if>
 			<c:if test="${pollState == t679 && isSave == 1}">
-				<div style="font-size:12px;text-align:left;margin-top:30px;border-top:1px solid #ccc;padding-top:10px;color:black" class="subtxt"><spring:message code = 'ezCommunity.t684' /></div>
+				<div style="font-weight:normal;font-size:12px;text-align:left;margin-top:30px;border-top:1px solid #ccc;padding-top:10px;color:black" class="subtxt"><spring:message code = 'ezCommunity.t684' /></div>
 			</c:if>
 			<c:if test="${pollState == t679 && isSave != 1}">
-				<div style="font-size:12px;text-align:left;margin-top:30px;border-top:1px solid #ccc;padding-top:10px;color:black" class="subtxt">&nbsp;</div>
+				<div style="font-weight:normal;font-size:12px;text-align:left;margin-top:30px;border-top:1px solid #ccc;padding-top:10px;color:black" class="subtxt">&nbsp;</div>
 			</c:if>
 			
 			<input type = "hidden" name = "isSave" value = "${isSave }" />

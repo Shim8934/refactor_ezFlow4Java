@@ -25,7 +25,7 @@
 		</style>
 
 		<script type="text/javascript">
-			var CurPage = '<c:out value="${curpage}" />';
+			var CurPage = '<c:out value="${curPage}" />';
 			var totalPage = '<c:out value="${totalPage}" />';
 		    var totalCount = '<c:out value="${keywordCount}" />';
 		    var code = '<c:out value="${code}" />';
@@ -37,13 +37,13 @@
 		        makePageSelPage();
 		        
 		        var html = "";
-		        
+
 		        for(var i = 0; i < SelectNodes(xmlDoc, "DATA/ROW").length; i++) {
-		        	html += "<table class=\"content\" style=\"margin-top:10px;border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;\">";
-		        	html += "<tr style=\"border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;\" >";
-		        	html += "<th style=\"border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
+		        	html += "<table class=\"content\" style=\"margin-top:10px;margin-bottom:20px;border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
+		        	html += "<tr style=\"border-left:1px solid #dddddd;border-right:1px solid #dddddd;\" >";
+		        	html += "<th style=\"height:25px; border-left:1px solid #dddddd;border-right:0px; width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
 		        	/* html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:50px;\" nowrap>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "</th>"; */
-		        	html += "<th style=\"width:100%; text-align:left;border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;\" >";
+		        	html += "<th style=\"width:100%; text-align:left;border-left:1px solid #ddd;border-right:1px solid #dddddd; font-weight:normal\" >";
 		        	
 		        	if(SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NEW") == 'NEW') {
 		        		html += "<img src=\"/images/i_new.gif\" border=\"0\" hspace=\"5\" align=\"absmiddle\">";
@@ -54,20 +54,28 @@
 					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "WRITEDAY");
 					html += " " + "<spring:message code='ezCommunity.t588' /></th>";
 					html += "</tr>";
-					html += "<tr style=\"border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;\">";
-					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;\">";
-					html += "<textarea style=\"height:100px;width:98%; border:0; overflow-y:auto;\" readonly=\"readonly\" id=textarea1 name=textarea1>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "CONTENT").replace(/<br>/gi, "\n").replace(/&dquot;/gi, "\"").replace(/&quot;/gi, "\'") + "</textarea></td>";
+					html += "<tr style=\"border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
+					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
+					html += "<textarea style=\"padding:7px;height:100px;width:98%; border:0; overflow-y:auto;\" readonly=\"readonly\" id=textarea1 name=textarea1>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "CONTENT").replace(/<br>/gi, "\n").replace(/&dquot;/gi, "\"").replace(/&quot;/gi, "\'") + "</textarea></td>";
 					html += "</tr>";
 					html += "</table>";
 		        }
 		        
 		        if (SelectNodes(xmlDoc, "DATA/ROW").length == 0) {
 		        	var strstr = "<spring:message code='ezCommunity.t926' />";
-		        	html += "<table class=\"content\" style=\"margin-top:10px;border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;width:100%;height:130px;text-align:center\">";
-		        	html += "<tr style=\"border-left:1px solid #b6b6b6;border-right:1px solid #b6b6b6;\" ><td style='color:#777;background-color:#fafafa'>" + strstr +"</td></tr></table>";
+		        	html += "<table class=\"content\" style=\"margin-top:10px;border-left:1px solid #dddddd;border-right:1px solid #dddddd;width:100%;height:130px;text-align:center\">";
+		        	html += "<tr style=\"border-left:1px solid #dddddd;border-right:1px solid #dddddd;\" ><td style='color:#777;background-color:#fafafa;border:1px solid #ddd !important'>" + strstr +"</td></tr></table>";
 		        }
 		        
 		        document.getElementById("formDel").innerHTML = document.getElementById("formDel").innerHTML + html; 
+		        
+		        // 2018-02-14 천성준
+		        $(document).keydown(function(e) {
+		        	// input 박스를 제외한 나머지에서 backspace 입력을 막는다.(IE뒤로가기 방지)
+		            if(e.target.nodeName != "INPUT") {
+		                if(e.keyCode === 8) {return false;}
+		            }
+		        });
 		    }
 		    
 		    function keyword_onkeydown(e) {
@@ -391,10 +399,9 @@
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 
-		<table class="content">
-			<tr>          
-				<th><spring:message code='ezCommunity.t28' /></th>
-	  			<td>
+		<table class="content" style="margin-bottom:15px;">
+			<tr>
+	  			<td style="background-color: #f8f8f8;border:1px solid #ddd">
 					<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 20px;margin-left:2px;margin-top:1px">
 						<option selected value="titleContent" ><spring:message code='ezCommunity.t585' /></option>
 						<option value="writer"><spring:message code='ezCommunity.t445' /></option>

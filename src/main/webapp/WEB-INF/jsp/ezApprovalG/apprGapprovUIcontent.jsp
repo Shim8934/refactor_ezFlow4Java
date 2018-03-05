@@ -19,31 +19,37 @@
 	        document.onselectstart = function () {
 	            var ret = false;
 	            var obj = event.srcElement;
+	            var useAllowTextSelection = "${useAllowTextSelection}";
+	            
 	            try {
-	                if (obj.nodeName == "#text")
-	                    obj = obj.parentElement;
-	
-	                if (obj.nodeName == "TD") {
-	                    if (obj.getAttribute("free") != null)
-	                        ret = true;
-	                }
-	                else if (obj.nodeName == "DIV") {
-	                    var pParentNode = obj;
-	                    for (var i = 0; i < 3; i++) {
-	                        pParentNode = pParentNode.parentElement;
-	                        if (pParentNode.nodeName == "TD") {
-	                            if (pParentNode.getAttribute("free") != null) {
-	                                ret = true; break;
-	                            }
-	                        }
-	                        else if (pParentNode.nodeName == "BODY" || pParentNode.nodeName == "HTML")
-	                            break;
-	
-	                    }
-	                }
-	                else if (obj.nodeName == "P") {
-	                    ret = true;
-	                }
+	            	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
+	            		ret = true;
+	            	} else {
+			                if (obj.nodeName == "#text")
+			                    obj = obj.parentElement;
+			
+			                if (obj.nodeName == "TD") {
+			                    if (obj.getAttribute("free") != null)
+			                        ret = true;
+			                }
+			                else if (obj.nodeName == "DIV") {
+			                    var pParentNode = obj;
+			                    for (var i = 0; i < 3; i++) {
+			                        pParentNode = pParentNode.parentElement;
+			                        if (pParentNode.nodeName == "TD") {
+			                            if (pParentNode.getAttribute("free") != null) {
+			                                ret = true; break;
+			                            }
+			                        }
+			                        else if (pParentNode.nodeName == "BODY" || pParentNode.nodeName == "HTML")
+			                            break;
+			
+			                    }
+			                }
+			                else if (obj.nodeName == "P") {
+			                		ret = false;	                		
+			                }
+	            	}
 	            } catch (e) { }
 	            return ret;
 	        };
@@ -182,7 +188,7 @@
 	                        Div_.style.width = "99%";
 	                        Div_.style.overflow = "hidden";
 	                        Div_.setAttribute("contentEditable", true);
-	                        Div_.style.textAlign = "left";
+	                        //Div_.style.textAlign = "left";
 	                        if (navigator.userAgent.indexOf('Firefox') != -1)
 	                            Div_.onkeypress = function (event) { var ret = onKeyDownEvent_Element(event, this); if (!ret) return false; };
 	                        Div_.innerHTML = TDRows.item(i).innerHTML;
@@ -197,7 +203,7 @@
 	                        Div_.style.marginLeft = "2px";
 	                        Div_.style.overflow = "hidden";
 	                        Div_.setAttribute("contentEditable", true);
-	                        Div_.style.textAlign = "left";
+	                        //Div_.style.textAlign = "left";
 	                        Div_.onkeypress = function (event) { var ret = onKeyDownEvent(event, this, 127); if (!ret) return false; };
 	                        Div_.innerHTML = TDRows.item(i).innerHTML;
 	                        TDRows.item(i).innerHTML = "";

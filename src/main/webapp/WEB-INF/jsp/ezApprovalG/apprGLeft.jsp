@@ -130,26 +130,22 @@
 			
 			            if (pListTypeValue == "1") {
 			                setPresentValue("<spring:message code='ezApprovalG.t1747'/>");
-			                document.getElementById('APPROVAL1').parentElement.onclick();
-			                document.getElementById('APPROVAL1').onclick();
+			                document.getElementById('APPROVAL1').click();
 			                //document.getElementById('APPROVAL1').parentElement.setAttribute("class", "on");
 			            }
 			            else if (pListTypeValue == "2") {
 			                setPresentValue("<spring:message code='ezApprovalG.t1748'/>");
-			                document.getElementById('APPROVAL3').parentElement.onclick();
-			                document.getElementById('APPROVAL3').onclick();
+			                document.getElementById('APPROVAL3').click();
 			                //document.getElementById('APPROVAL3').parentElement.setAttribute("class", "on");
 			            }
 			            else if (pListTypeValue == "3") {
 			                setPresentValue("<spring:message code='ezApprovalG.t1706'/>");
-			                document.getElementById('APPROVAL2').parentElement.onclick();
-			                document.getElementById('APPROVAL2').onclick();
+			                document.getElementById('APPROVAL2').click();
 			                //document.getElementById('APPROVAL2').parentElement.setAttribute("class", "on");
 			            }
 			            else if (pListTypeValue == "4") {
 			                setPresentValue("<spring:message code='ezApprovalG.t1749'/>");
-			                document.getElementById('APPROVAL4').parentElement.onclick();
-			                document.getElementById('APPROVAL4').onclick();
+			                document.getElementById('APPROVAL4').click();
 			                //document.getElementById('APPROVAL4').parentElement.setAttribute("class", "on");
 			            }
 			            else if (pListTypeValue == "6") {
@@ -171,8 +167,7 @@
 			            }
 			            if (pListTypeValue == "99") {
 			            	setPresentValue("<spring:message code='ezApprovalG.hyj04'/>");
-			                document.getElementById('APPROVAL99').parentElement.onclick();
-			                document.getElementById('APPROVAL99').onclick();
+			                document.getElementById('APPROVAL99').click();
 			            }
 			            
 		        }
@@ -590,27 +585,27 @@
 		            }
 		            
 		            if (document.getElementById('countWHO') != null) {
-			            if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) > 0)
-		                    document.getElementById('countWHO').innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")</b>";
+			            if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) > 0)
+		                    document.getElementById('countWHO').innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) + ")</b>";
 		                else
-		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
+		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) + ")";
 		            }
 		            
 		            // 임시보관함
 		            if (pListTypeValue != "21") {
-		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
-		                    count21.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")</b>";
+		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) > 0)
+		                    count21.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")</b>";
 		                else
-		                    count21.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
+		                    count21.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
 		            }
 		            try {
-		                // 공람문서
+		                // 공람할문서
 		                if(approvalFlag =="G") {
 			                if (pListTypeValue != "99") {
 			                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) > 0)
-			                        count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
+			                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
 			                    else
-			                        count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
+			                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
 			                }
 		                } else {
 		                	 if (pListTypeValue != "99") {
@@ -618,6 +613,22 @@
 				                        count99.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")</b>";
 				                    else
 				                        count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
+				                }
+		                }
+		                // 공람한문서
+		                if(approvalFlag =="G") {
+			                if (pListTypeValue != "10") {
+			                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
+			                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
+			                    else
+			                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
+			                }
+		                } else {
+		                	 if (pListTypeValue != "10") {
+				                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
+				                    	count10.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")</b>";
+				                    else
+				                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
 				                }
 		                }
 		            } catch (e) { }
@@ -985,10 +996,10 @@
 			</ul>
 			<c:if test="${approvalFlag == 'G'}">
 				<c:if test="${hideCabinet == '0'}">
-			        <h2><span style="width:100%; display:inline-block" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><spring:message code='ezApprovalG.t10010'/><span id="count99"></span></span></h2>
+			        <h2><span style="width:100%; display:inline-block" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><spring:message code='ezApprovalG.t10010'/></span></span></h2>
 			         <ul id="iconul">
-					    <li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/></span></li>
-					    <li><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><img src="/images/ImgIcon/icon_enddisplaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1787'/></span></li>
+					    <li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></li>
+					    <li><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><img src="/images/ImgIcon/icon_enddisplaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1787'/><span id="count10"></span></li>
 					</ul>
 				</c:if>
 			</c:if>

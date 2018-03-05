@@ -1,14 +1,21 @@
 package egovframework.ezEKP.ezEditor.web;
 
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Base64;
+import java.util.Iterator;
 import java.util.Base64.Decoder;
+import java.util.Locale;
 import java.util.UUID;
+import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
@@ -79,6 +86,20 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useHTMLMode = ezCommonService.getTenantConfig("USE_HTMLMODE", userInfo.getTenantId());
+		
+		String defaultFontFamily = egovMessageSource.getMessage("main.t246", userInfo.getLocale());
+		String  defaultFontSize = "13px";
+		
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				defaultFontFamily = editorFontStyle.split("\\|")[0];
+				defaultFontSize = editorFontStyle.split("\\|")[1];
+			}
+		}
+		
 		String returnPath = "";
 		
 		switch (useEditor) {
@@ -93,6 +114,9 @@ public class EzEditorController extends EgovFileMngUtil{
 			case "TAGFREE":
 				returnPath = "ezEditor/tfxEditor";
 				break;
+			case "KUKUDOCS":
+				returnPath = "ezEditor/kukudocsEditor";
+				break;
 			default :
 				returnPath = "ezEditor/ckEditor";
 				break;
@@ -103,6 +127,8 @@ public class EzEditorController extends EgovFileMngUtil{
 		model.addAttribute("type", type);
 		model.addAttribute("height", height);
 		model.addAttribute("isUsed", isUsed);
+		model.addAttribute("defaultFontFamily", defaultFontFamily);
+		model.addAttribute("defaultFontSize", defaultFontSize);
 
 		return returnPath;
 	}
@@ -128,6 +154,19 @@ public class EzEditorController extends EgovFileMngUtil{
 		logger.debug("serverUrl=" + serverUrl);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String defaultFontFamily = egovMessageSource.getMessage("main.t246", userInfo.getLocale());
+		String  defaultFontSize = "13px";
+		
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				defaultFontFamily = editorFontStyle.split("\\|")[0];
+				defaultFontSize = editorFontStyle.split("\\|")[1];
+			}
+		}
+		
 		String returnPath = "";
 		
 		switch (useEditor) {
@@ -142,6 +181,9 @@ public class EzEditorController extends EgovFileMngUtil{
 			case "TAGFREE":
 				returnPath = "admin/ezEditor/tfxEditor";
 				break;
+			case "KUKUDOCS":
+				returnPath = "admin/ezEditor/kukudocsEditor";
+				break;
 			default :
 				returnPath = "admin/ezEditor/ckEditor";
 				break;
@@ -150,6 +192,8 @@ public class EzEditorController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("type", type);
 		model.addAttribute("height", height);
+		model.addAttribute("defaultFontFamily", defaultFontFamily);
+		model.addAttribute("defaultFontSize", defaultFontSize);
 		
 		return returnPath;
 	}
@@ -191,8 +235,41 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		File imageFile = new File(realPath + filePath + commonUtil.separator + fileName);			
 		
-		if (imageFile.exists()) {			
-			BufferedImage bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));			    
+		if (imageFile.exists()) {
+			//Checking CMYK 
+			boolean check = isCMYK(realPath + filePath + commonUtil.separator + fileName);			
+			BufferedImage bi = null;
+			
+			if (check == true) {
+				//Find a suitable ImageReader
+			    Iterator readers = ImageIO.getImageReadersByFormatName("JPEG");
+			    ImageReader reader = null;
+			    
+			    while(readers.hasNext()) {
+			        reader = (ImageReader)readers.next();
+			        if (reader.canReadRaster()) {
+			            break;
+			        }
+			    }
+
+			    //Stream the image file (the original CMYK image)
+			    ImageInputStream input = ImageIO.createImageInputStream(new File(realPath + filePath + commonUtil.separator + fileName)); 
+			    reader.setInput(input); 
+
+			    //Read the image raster
+			    Raster raster = reader.readRaster(0, null); 
+
+			    //Create a new RGB image
+			    bi = new BufferedImage(raster.getWidth(), raster.getHeight(), 
+			    BufferedImage.TYPE_4BYTE_ABGR); 
+
+			    //Fill the new image with the old raster
+			    bi.getRaster().setRect(raster);
+			}
+			else {
+				bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));	
+			}			
+				    
 			width = bi.getWidth();
 			height = bi.getHeight();
 		}
@@ -202,6 +279,26 @@ public class EzEditorController extends EgovFileMngUtil{
 		logger.debug("ckUpload ended");
 		return "ezEditor/ckUpload";
 	}
+	
+    private boolean isCMYK(String filename)
+    {
+        boolean result = false;
+        BufferedImage img = null;
+        
+        try {
+            img = ImageIO.read(new File(filename));
+        }
+        catch (Exception e) {
+        	result = true;
+        }
+        if (img != null)
+        {
+            int colorSpaceType = img.getColorModel().getColorSpace().getType();
+            result = colorSpaceType == ColorSpace.TYPE_CMYK;
+        }
+
+        return result;
+    }
 
 	/**
 	 * ck에디터 심플업로드 실행 Method
@@ -677,4 +774,120 @@ public class EzEditorController extends EgovFileMngUtil{
 		logger.debug("namoUpload ended. result=" + resultObj.toString());
 		return resultObj.toString();
 	}
+	
+	/**
+	 * 쿠쿠닥스 에디터 업로드 실행 Method
+	 */
+	@RequestMapping(value = "/ezEditor/kukudocsUpload.do")
+	@ResponseBody
+	public String kukudocsUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model, Locale locale) throws Exception{
+		logger.debug("kukudocsUpload started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String result = "";
+		String msg = "";
+		
+		try {
+			MultipartFile multiFile = request.getFile("image_type");
+			String fileData = request.getParameter("image_base64_type");
+			String type = request.getParameter("type");
+			
+			// 메일 부재중설정 또는 커뮤니티 포토게시판일 경우 이미지 업로드되지 않도록 한다.
+			if (type.equals("MAILOUTOFOFFICE") || type.equals("COMMUNITYPHOTO")) { 
+				msg = egovMessageSource.getMessage("ezEmail.lhm29", locale);
+				result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
+				logger.debug("Cannot upload image. kukudocsUpload ended. type=" + type);
+				return result;
+			}
+			
+			// fileData가 넘어왔을 경우의 처리
+			if (fileData != null) {
+				String[] fileDatas = fileData.split(",");
+				
+				if (fileDatas[0].startsWith("data:image/")) {
+					String fileType = fileDatas[0].substring(fileDatas[0].indexOf("/") + 1, fileDatas[0].indexOf(";"));
+					fileData = fileDatas[1];
+					FileOutputStream fileOuputStream = null;
+					
+					try {
+						String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+						
+						if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
+							filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+						}
+						
+						String realPath = commonUtil.getRealPath(request);
+						String today = EgovDateUtil.getToday("");
+						String fileName = UUID.randomUUID() + "." + fileType;
+						
+						filePath = filePath + commonUtil.separator + today;
+						File file = new File(realPath + filePath);
+						
+						if (!file.exists()) {
+							file.mkdirs();
+						}
+						
+						Decoder decoder = Base64.getDecoder();
+						byte[] imageByte = decoder.decode(fileData);
+						fileOuputStream = new FileOutputStream(realPath + filePath + commonUtil.separator + fileName); 
+						fileOuputStream.write(imageByte);
+						fileOuputStream.flush();
+						
+						msg = filePath + commonUtil.separator + fileName;
+						result = "{ \"url\" : \"" + msg + "\" }";
+						
+					} finally {
+						try {
+							fileOuputStream.close();
+						} catch (Exception e) {
+						}
+					}
+				} else {
+					msg = egovMessageSource.getMessage("main.t4000", locale);
+					result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
+				}
+				
+			// multiFile이 넘어왔을 경우의 처리
+			} else if (multiFile != null) {
+				String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+				String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+				
+				if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
+					filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+				}
+				
+				String realPath = commonUtil.getRealPath(request);
+				String today = EgovDateUtil.getToday("");
+				String fileName = UUID.randomUUID() + "." + fileType;
+				
+				filePath = filePath + commonUtil.separator + today;
+				File file = new File(realPath + filePath);
+				
+				if (!file.exists()) {
+					file.mkdirs();
+				}
+				
+				writeUploadedFile(multiFile, fileName, realPath + filePath);
+				msg = filePath + commonUtil.separator + fileName;
+				result = "{ \"url\" : \"" + msg + "\" }";
+			
+			//fileData, multiFile 모두 null일 경우
+			} else {
+				// 이미지가 너무 큰 경우 fileData가 null로 들어올 수 있다.(tomcat server.xml의 maxPostSize설정에 따라 이미지 최대 업로드 사이즈 조절 가능하다.)
+				msg = egovMessageSource.getMessage("ezBoard.hyj02", locale);
+				result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
+				logger.debug("fileData and multiFile are null.");
+			}
+		} catch (Exception e) {
+			msg = egovMessageSource.getMessage("ezBoard.hyj02", locale);
+			result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
+			
+			e.printStackTrace();
+		}
+		
+		logger.debug("kukudocsUpload ended.");
+		return result;
+	}
+	
+	
 }

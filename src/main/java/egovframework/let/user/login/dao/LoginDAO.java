@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -34,10 +37,9 @@ public class LoginDAO extends EgovAbstractDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginDAO.class);
                 
-    private LoginVO selectUserForLocal(LoginVO vo) throws Exception {
-        return (LoginVO)select("loginDAO.selectUser", vo);
-    }
-    
+    @Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
+        
 	/**
 	 * 일반 로그인을 처리한다
 	 * @param vo LoginVO
@@ -45,9 +47,19 @@ public class LoginDAO extends EgovAbstractDAO {
 	 * @exception Exception
 	 */
     public LoginVO selectUser(LoginVO vo) throws Exception {
-    	return selectUserForLocal(vo);       
+		String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", vo.getTenantId());
+		
+		if (useEmpNumberLogin.equals("YES")) {
+			logger.debug("calling loginDAO.selectUser");
+			
+			return (LoginVO)select("loginDAO.selectUser", vo);
+		} else { 
+			logger.debug("calling loginDAO.selectUserWithCnOnly");
+			
+			return (LoginVO)select("loginDAO.selectUserWithCnOnly", vo);
+		}
     }
-
+    
     /**
 	 * 아이디를 찾는다.
 	 * @param vo LoginVO
@@ -111,5 +123,17 @@ public class LoginDAO extends EgovAbstractDAO {
         return (TenantServerNameVO)select("loginDAO.selectTenantServerName", map);
     }
  
+	public LoginVO selectReceiver(Map<String, Object> map) throws Exception {
+        return (LoginVO) select("loginDAO.selectReceiver", map);
+    }
 	
+    @SuppressWarnings("unchecked")
+	public List<LoginVO> selectAllReceivers(Map<String, Object> map) throws Exception {
+        return (List<LoginVO>) list("loginDAO.selectAllReceivers", map);
+    }
+    
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> selectAllMemberOfCompany(Map<String, Object> map) throws Exception {
+        return (List<LoginVO>) list("loginDAO.selectAllMemberOfCompany", map);
+    }
 }

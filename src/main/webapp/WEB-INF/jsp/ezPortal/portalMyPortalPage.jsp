@@ -259,9 +259,9 @@
 		                width = parseInt(width) - 10;
 		            }
 		            if(SIZE == "FULL")
-		                window.open(Location, "", "toolbar=1,location=1,directories=0,status=1,menubar=1,scrollbars=0,resizable=1,height=" + screen.height + ",width=" + screen.width + ",top=0,left=0");
+		                window.open(Location, "", "toolbar=1,location=1,directories=0,status=1,menubar=1,scrollbars=0,resizable=1,height=" + screen.height + ",width=" + screen.width + ",top=0,left=0" + ",scrollbars = yes");
 		            else
-		                window.open(Location, "", "toolbar=1,location=1,directories=0,status=1,menubar=1,scrollbars=0,resizable=1,height=" + SIZE.split(':')[1] + ",width=" + SIZE.split(':')[0] + ",top=" + top + ",left = " + left);
+		                window.open(Location, "", "toolbar=1,location=1,directories=0,status=1,menubar=1,scrollbars=0,resizable=1,height=" + SIZE.split(':')[1] + ",width=" + SIZE.split(':')[0] + ",top=" + top + ",left = " + left + ",scrollbars = yes");
 
 		        } catch (e) {
 		            alert("openwindow :: " + e.description);
@@ -591,7 +591,10 @@
 					var Event = e ? e : window.event;
 				    var Element = Event.target ? Event.target : Event.srcElement;
 				    if (Element.getAttribute("id") == "") return;
-				    if (Element.getAttribute("id").indexOf("sub") > -1) return;
+				    if (Element.getAttribute("id").indexOf("sub") > -1) {
+				    	document.getElementById("txtHeight").value = Element.style.height.replace("px", "");
+				    	return;
+				    }
 				    selectedCell = Element.getAttribute("id");
 					if (previousCell != null) previousCell.style.backgroundColor = "white";
 					previousCell = Element.children.item(0).children.item(0).children.item(0).children.item(0);

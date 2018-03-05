@@ -9,10 +9,12 @@ public enum CheckName {
 	IS_READ_DELETE,
 	MailAttachLimit,
 	PrimaryLang,
+	PrimaryTimeZone,
 	USE_FileExtension,
 	ExpirePassPeriod,
 	LicenseKey,
 	Use_FromAddress,
 	MaxAllowedCountOfLoginFail,
 	USE_HTMLMODE,
+	editorFontStyle
 }

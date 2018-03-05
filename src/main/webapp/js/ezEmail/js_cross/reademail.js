@@ -1,6 +1,7 @@
-﻿
+﻿﻿
 
 var m_bPrevNext = false;
+var real_href = "";
 
 function get_mail(flag) {
     var Flag;
@@ -923,14 +924,31 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         pheigth = pheigth - 284;
         pwidth = pwidth - 359;
 
+        var isDotNet = false;
+        var dotNetUrl;
         var xmlhttp = createXMLHttpRequest();
         xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
         xmlhttp.send();
 
-        if (getNodeText(xmlhttp.responseXML.documentElement) != "0") {
-            window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");
+        // 반환값이 http로 시작하면 닷넷 게시판으로 연동하는 경우이다.
+        if (xmlhttp.responseText.substring(0, 4) == "http") {
+            isDotNet = true;
+            dotNetUrl = xmlhttp.responseText;
         }
-        else {
+        
+        if (isDotNet) {
+            xmlhttp.open("POST", dotNetUrl + "/myoffice/ezBoardSTD/interASP/GetItemViewNew.aspx?pBoardID=" + pBoardID + "&pItemID=" + pItemID, false);
+            xmlhttp.withCredentials = true;
+            xmlhttp.send();            
+        } 
+        
+        if (getNodeText(xmlhttp.responseXML.documentElement) != "0") {
+            if (isDotNet) {
+                window.open(dotNetUrl + "/myoffice/ezBoardSTD/BoardItemView_Cross.aspx?ItemID=" + pItemID + "&BoardID=" + pBoardID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");                
+            } else {
+                window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");
+            }
+        } else {
             alert(strLang166);
         }
     }
@@ -1021,5 +1039,21 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
             window.open("", wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
 
     } catch (e) { }
+}
+
+function mail_link(){
+	
+	var chk = $("#approv_a").attr("href");
+	$("#approv_a").removeAttr("href");
+	if(chk != "" && chk != undefined) {
+		var link = chk.split("/");
+		
+		for (var i = 1; i < link.length; i++) {
+			real_href += "/" + link[i];
+		}
+	}
+	
+	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(820, 900));
+
 }
 

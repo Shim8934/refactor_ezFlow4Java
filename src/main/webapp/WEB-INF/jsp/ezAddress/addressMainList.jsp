@@ -8,6 +8,14 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
 	    <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+	    <style>
+	    	.emptyDiv {
+	    		height: 140px;
+	    		border:	1px solid #ddd;
+	    		background-color: #fafafa;
+	    		padding-top: 60px;
+	    	}
+	    </style>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/Address_List.js"></script>
@@ -39,7 +47,6 @@
 	        var CardHeader3 = "<spring:message code='ezAddress.t264' />";
 	        var uLang = "${userInfo.lang}";
 	        var pUse_Editor = "${useEditor}";
-	        var pUse_IE11Browser = "${useIE11Browser}";
 	        var pNoneActiveX = "${noneActiveX}";
 	        var strLang_1 = "";
 	        var AddressType = "<spring:message code='ezAddress.t145' />";
@@ -78,6 +85,13 @@
 	            Get_AddressList();
 	
 	        }
+	        
+	        $(window).on("resize", function(){
+				var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+	        	$("#addpopup").css("left", popupX);
+	        	$("#srarchpopup").css("left", popupX);	        	
+	        });
+	        
 	        function new_address() {
 	        	if (useAnyoneEdit != "YES") {
 	        		if (deptAdmin != "Y" && pFolderType == "D") {
@@ -517,7 +531,8 @@
 	            	}
 	            }
 	            else {
-	            	window.location.href = window.location.href;
+	            	$.modal.close();
+	            	window.location.href = window.location.href;	            	
 	            }	            
 	        }
 	        function address_inout(which) {
@@ -531,6 +546,14 @@
 	            }
 	        }	
 	        function doLayerPopup() {
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        	
+	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	        	
+	        	$("#srarchpopup").css("left", popupX);
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	
 	        	$("#srarchpopup").modal();
 	        }	        
 	        function SearchOptionHidden() {
@@ -546,10 +569,19 @@
 		                alert("<spring:message code='ezAddress.t999900004' />");
 		                return;
 		            }
-	        	}
+	        	}	        	
+	        	
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        	
+	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	        	
+	        	$("#addpopup").css("left", popupX);
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 	        	
 	        	$("#addpopup").modal();
-	        }	
+	        }	        
+	        
 	        function search_start() {
 	        	
 	        	var searchText = document.getElementById("search_text").value.trim();
@@ -700,7 +732,7 @@
 				<li><span onClick="delete_address()"><spring:message code='ezAddress.t175' /></span></li>
 				<li><span onClick="window.location.reload(false)"><spring:message code='ezAddress.t240' /></span></li>
 				<li><span onclick="ShowQuickAddres();"><spring:message code='ezAddress.t2002' /></span></li>
-				<li style="background:none">
+				<li style="background:none;float:right">
 					<select style="margin-top:-3px;" id="ListViewType" onchange="View_Change();">
 						<option value="card" <c:if test="${pListType == 'card'}"> selected</c:if>><spring:message code='ezAddress.t2000' /></option>
 						<option value="list" <c:if test="${pListType == 'list'}"> selected</c:if>><spring:message code='ezAddress.t2001' /></option>
@@ -802,16 +834,16 @@
 		<div style="vertical-align:top;border:0px solid red; white-space:nowrap;" id="list_Layer">
 			<table class="mainlist" id="DetailList_header" style="table-layout: fixed;">
 			    <tr>
-					<th style="cursor:pointer;text-align:center;padding:4px 1px; width:25px;">
+					<th style="cursor:pointer;text-align:center;padding:4px 1px;">
 				    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
 					</th>
 					<th style="text-align:left;width:24px;vertical-align: middle;"><img src="/images/i_individual.gif" border="0"></th>
-					<th id="CompanyName" style="padding-left:7px; CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="1" _OrderName="S_NAME" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t124' /><span id="S_NAME"></span></th>
-					<th id="PhoneNumber" style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
-					<th id="width1" style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY_PHONE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
-					<th id="width2" style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="S_MOBILE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t189' /><span id="S_MOBILE"></span></th>
-					<th style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="S_EMAIL" onClick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t264' /><span id="S_EMAIL"></span></th>
-					<th id="FolderType" style="CURSOR:pointer;width:10%;white-space:nowrap;display:none" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="S_TYPE" onClick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t231' /><span id="S_TYPE"></span></th>
+					<th id="CompanyName" style="padding-left:7px; CURSOR:pointer;width:20%;white-space:nowrap;" _OrderOption="1" _OrderName="S_NAME" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t124' /><span id="S_NAME"></span></th>
+					<th id="PhoneNumber" style="CURSOR:pointer;width:20%;white-space:nowrap;" _OrderOption="0" _OrderName="S_COMPANY" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
+					<th id="width1" style="CURSOR:pointer;width:20%;white-space:nowrap;" _OrderOption="0" _OrderName="S_COMPANY_PHONE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
+					<th id="width2" style="CURSOR:pointer;width:20%;white-space:nowrap;" _OrderOption="0" _OrderName="S_MOBILE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t189' /><span id="S_MOBILE"></span></th>
+					<th style="CURSOR:pointer;width:20%;white-space:nowrap;" _OrderOption="0" _OrderName="S_EMAIL" onClick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t264' /><span id="S_EMAIL"></span></th>
+					<th id="FolderType" style="CURSOR:pointer;width:10%;white-space:nowrap;display:none" _OrderOption="0" _OrderName="S_TYPE" onClick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t231' /><span id="S_TYPE"></span></th>
 				</tr>
 			</table>
 			<div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;">
@@ -824,7 +856,7 @@
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 			<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>		
-		<div id="addpopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px">
+		<div id="addpopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
 			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">

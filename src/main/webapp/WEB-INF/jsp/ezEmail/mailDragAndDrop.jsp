@@ -18,6 +18,8 @@
 		</style>
 		<script type="text/javascript">
 		    var lstAttachLink = document.getElementById("lstAttachLink");
+		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
+		    
 		    function onDragEnter(evt) {
 		        evt.dataTransfer.dropEffect = "copy";
 		        evt.stopPropagation();
@@ -44,8 +46,27 @@
 		        if (evt != undefined) {
 		            evt.stopPropagation();
 		            evt.preventDefault();
-		        }
-		
+				
+					if (evt.dataTransfer.items == undefined || evt.dataTransfer.items == null) {
+						if (evt.dataTransfer.files.length == 0) {
+							alert(strLangKMS08);
+							return;
+						}
+					} else {
+						var length = evt.dataTransfer.items.length;
+						
+					    for (var i = 0; i < length; i++) {
+					    	var entry = evt.dataTransfer.items[i].webkitGetAsEntry();
+					    	
+					    	if (entry.isFile) {
+					    	} else if (entry.isDirectory) {
+					    		alert(strLangKMS08);
+					      		return;
+					    	}
+					  	}
+					}
+		        }				
+		        
 		        if (isfileup) {
 		            alert(strLang86);
 		            return;
@@ -57,7 +78,7 @@
 		        else {
 		            filelist = evt.dataTransfer.files;
 		        }
-		
+				
 		        var tempfilesize = 0;
 		        var tempbigfilesize = 0;
 		
@@ -309,12 +330,12 @@
 		    }
 		    function uploadFailed(evt) {
 		        isfileup = false;
-		        alert("There was an error attempting to upload the file.");
+		        alert(strLangKMS06);
 		    }
 		
 		    function uploadCanceled(evt) {
 		        isfileup = false;
-		        alert("The upload has been canceled by the user or the browser dropped the connection.");
+		        alert(strLangKMS07);
 		    }
 		
 		    function defaultenter(evt) {
@@ -396,8 +417,8 @@
 		        for (var i = 0; i < filelist.length; i++) {
 					var fnl = filelist[i].name.length;
 		        	
-		        	if (fnl > 104) {
-		        		alert("<spring:message code='main.jjh08' />");
+		        	if (fnl > attachFileNameMaxLength) {
+		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
 		        		isfileup = false;
 		        		return;
 		        	} else {

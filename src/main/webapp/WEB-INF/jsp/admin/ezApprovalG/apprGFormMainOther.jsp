@@ -850,11 +850,6 @@
                         <select id="selFormKind" name="selFormKind" style="width: 100%;">${docType}</select>
                     </td>
                 </tr>
-                <tr class="approvalG">
-                    <td colspan="8" style="width:10%; text-align:center">
-                        <input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
-                    </td>
-                </tr>
                 <tr>
 					<td colspan="8" style="width:10%; text-align:center; <c:if test="${approvalFlag == 'S' }">display:none;</c:if>">
 						<input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />

@@ -191,7 +191,7 @@
 	                        Div_.style.width = "99%";
 	                        Div_.style.overflow = "hidden";
         					Div_.setAttribute("contentEditable", true);
-	                        Div_.style.textAlign = "left";
+	                        //Div_.style.textAlign = "left";
 	                        if (navigator.userAgent.indexOf('Firefox') != -1)
 	                            Div_.onkeypress = function (event) { var ret = onKeyDownEvent_Element(event, this); if (!ret) return false; };
 	                        Div_.innerHTML = TDRows.item(i).innerHTML;
@@ -206,7 +206,7 @@
 	                        Div_.style.marginLeft = "2px";
 	                        Div_.style.overflow = "hidden";
 	                        Div_.setAttribute("contentEditable", true);
-	                        Div_.style.textAlign = "left";
+	                        //Div_.style.textAlign = "left";
 	                        Div_.onkeypress = function (event) { var ret = onKeyDownEvent(event, this, 127); if (!ret) return false; };
  							Div_.innerHTML = TDRows.item(i).innerHTML;
 	                        TDRows.item(i).innerHTML = "";
@@ -240,25 +240,6 @@
 	                        _DocContentHtml = ConXmlDiv.innerHTML;
 	                    }
 	                    document.getElementById('div_Content').innerHTML = _DocContentHtml; //.replace(/(<p)/igm, '<div').replace(/<\/p>/igm, '</div>');	                    
-	                    
-	                    var Document_Ptag = document.getElementById('div_Content').getElementsByTagName("P");
-	                    if (Document_Ptag.length > 0) {
-	                        for (var i = 0 ; i < Document_Ptag.length; i++) {
-	                            if (Document_Ptag[i].style.marginBottom == "")
-	                                Document_Ptag[i].style.marginBottom = "0px";
-	                            if (Document_Ptag[i].style.marginTop == "")
-	                                Document_Ptag[i].style.marginTop = "0px";
-	                            if ("${userInfo.lang}" == "3") {
-	                            	Document_Ptag[i].style.fontFamily = "メイリオ";
-	                            } else {
-	                            	Document_Ptag[i].style.fontFamily = "Gulim";
-	                            }
-	                            
-	                            if(Document_Ptag[i].innerHTML == "&nbsp;") {
-	                            	Document_Ptag[i].innerHTML = "<br/>";
-	                            }
-	                        }
-	                    }
 	                    
 	                    _htmlcontent = document.getElementById('div_Content').innerHTML;
 	                    var TDRows = document.getElementById('div_Content').getElementsByTagName("TD");
@@ -616,7 +597,7 @@
 	                    //}
 	                    if (DocTitleObj.getAttribute("free") != null) {
 	                        titleObj.innerHTML = GetDocTitle();
-	                        titleObj.style.textAlign = "left";
+	                        //titleObj.style.textAlign = "left";
 	                    }
 	                }
 	                return HTML.outerHTML;
@@ -695,6 +676,8 @@
 	                if (isConDoc) {
 	                    parent.Conn_Initial();
 	                }
+	                
+	                parent.isEditorComplete = true;
 	            } catch (e) {
 	            }
 	        }

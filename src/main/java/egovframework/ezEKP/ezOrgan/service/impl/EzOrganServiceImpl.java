@@ -503,7 +503,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	private String getMemberInfo(String pXMLString, String pCellList, String pPropList, String pMemberID, String pCategory) {		
         logger.debug("getMemberInfo started");
         logger.debug("pCellList=" + pCellList + ",pPropList=" + pPropList + ",pMemberID=" + pMemberID 
-                + ",pCategory=" + pCategory + ",pXMLString=" + pXMLString);
+                + ",pCategory=" + pCategory);
 
 	    Document doc = commonUtil.convertStringToDocument(pXMLString);
         StringBuilder nodeInfo = new StringBuilder("<ROW>");
@@ -742,140 +742,143 @@ public class EzOrganServiceImpl implements EzOrganService {
         String ListInfo="";
         String[] SearchParemeta=null;
         String type = "";
-                
-        if (!pSearchList.equals("")){
-               pSearchList = pSearchList.replace(";;", "##");
-               pSearchList = pSearchList.replace("::", "@@");
-               SearchList  = pSearchList.split("##");
-               
-               SearchParemeta = new String[SearchList.length];
-               
-               logger.debug("searchList.length=" + SearchList.length);
-               
-               for(i = 0; i < SearchList.length; i++){
-                   SearchInfo = SearchList[i].split("@@");
-                   
-                   if(i == 0){
-                       // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
-                       SearchParemeta[i] = SearchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'").toLowerCase();
-                       if (checkSearchField(SearchInfo[0])){
-                           if (SearchInfo[0].toUpperCase().equals("DISPLAYNAME") && SearchParemeta[0].toString().equals(":")){
-                               strSQL = strSQL + " WHERE (" + SearchInfo[0].toLowerCase() + " = UPPER('" + SearchParemeta[i] + "') OR " + SearchInfo[0].toLowerCase() + "2 = UPPER('" + SearchParemeta[i] + "'))";
-                               SearchParemeta[0] = SearchParemeta[0].substring(0, SearchParemeta[0].length() - 1);
-                           }
-                           else{
-                               strSQL = strSQL + " WHERE (" + SearchInfo[0].toLowerCase() + " LIKE  '%" + SearchParemeta[i] + "%' OR " + SearchInfo[0].toLowerCase() + "2 LIKE '%" + SearchParemeta[i] + "%')";
-                       }
-                   }
-                   else{
-                       if (SearchInfo[0].indexOf("EXACT_") == 0)
-                           strSQL = strSQL + " WHERE " + SearchInfo[0].substring(6).toLowerCase() + "=UPPER('" + SearchParemeta[i] + "') ";
-                       else if (SearchInfo[0].indexOf("LEFT_") == 0)
-                           strSQL = strSQL + " WHERE " + SearchInfo[0].substring(5).toLowerCase() + " LIKE '" + SearchParemeta[i] + "%' ";
-                       else if (SearchInfo[0].indexOf("RIGHT_") == 0)
-                           strSQL = strSQL + " WHERE " + SearchInfo[0].substring(5).toLowerCase() + " LIKE '%" + SearchParemeta[i] + "%'";
-                       else
-                           strSQL = strSQL + " WHERE " + SearchInfo[0].toLowerCase() + " LIKE '%" + SearchParemeta[i] + "%'";
-                   }
-               }
-                   else{
-                       // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
-                       SearchParemeta[i] = SearchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'").toLowerCase();
-                       if (checkSearchField(SearchInfo[0]))
-                       {
-                           strSQL = strSQL + " AND (" + SearchInfo[0].toLowerCase() + " LIKE  '%" + SearchParemeta[i] + "%' OR " + SearchInfo[0].toLowerCase() + "2 LIKE '%" + SearchParemeta[i] + "%')";
-                       }
-                       else
-                       {
-                           if (SearchInfo[0].indexOf("EXACT_") == 0)
-                               strSQL = strSQL + " AND " + SearchInfo[0].substring(6).toLowerCase() + "=UPPER('" + SearchParemeta[i] + "') ";
-                           else if (SearchInfo[0].indexOf("LEFT_") == 0)
-                               strSQL = strSQL + " AND " + SearchInfo[0].substring(5).toLowerCase() + " LIKE '" + SearchParemeta[i] + "%' ";
-                           else if (SearchInfo[0].indexOf("RIGHT_") == 0)
-                               strSQL = strSQL + " AND " + SearchInfo[0].substring(5).toLowerCase() + " LIKE '%" + SearchParemeta[i] + "%'";
-                           else
-                               strSQL = strSQL + " AND " + SearchInfo[0].toLowerCase() + " LIKE '%" + SearchParemeta[i] + "%'";
-                       }
-                   }
-               }
-            }
-        
-        if (pClass.equals("user") || pClass.equals("all")){
-             strSQL = strSQL.replace("cn", "a.cn");
-             strSQL = strSQL.replace("title", "a.title");
-                          
-             type = "U";
+        StringBuilder memberlist2 = null;
+        try {
+	        if (!pSearchList.equals("")){
+	               pSearchList = pSearchList.replace(";;", "##");
+	               pSearchList = pSearchList.replace("::", "@@");
+	               SearchList  = pSearchList.split("##");
+	               
+	               SearchParemeta = new String[SearchList.length];
+	               
+	               logger.debug("searchList.length=" + SearchList.length);
+	               
+	               for(i = 0; i < SearchList.length; i++){
+	                   SearchInfo = SearchList[i].split("@@");
+	                   
+	                   if(i == 0){
+	                       // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
+	                       SearchParemeta[i] = SearchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'").toLowerCase();
+	                       if (checkSearchField(SearchInfo[0])){
+	                           if (SearchInfo[0].toUpperCase().equals("DISPLAYNAME") && SearchParemeta[0].toString().equals(":")){
+	                               strSQL = strSQL + " WHERE (" + SearchInfo[0].toLowerCase() + " = UPPER('" + SearchParemeta[i] + "') OR " + SearchInfo[0].toLowerCase() + "2 = UPPER('" + SearchParemeta[i] + "'))";
+	                               SearchParemeta[0] = SearchParemeta[0].substring(0, SearchParemeta[0].length() - 1);
+	                           }
+	                           else{
+	                               strSQL = strSQL + " WHERE (" + SearchInfo[0].toLowerCase() + " LIKE  '%" + SearchParemeta[i] + "%' OR " + SearchInfo[0].toLowerCase() + "2 LIKE '%" + SearchParemeta[i] + "%')";
+	                       }
+	                   }
+	                   else{
+	                       if (SearchInfo[0].indexOf("EXACT_") == 0)
+	                           strSQL = strSQL + " WHERE " + SearchInfo[0].substring(6).toLowerCase() + "=UPPER('" + SearchParemeta[i] + "') ";
+	                       else if (SearchInfo[0].indexOf("LEFT_") == 0)
+	                           strSQL = strSQL + " WHERE " + SearchInfo[0].substring(5).toLowerCase() + " LIKE '" + SearchParemeta[i] + "%' ";
+	                       else if (SearchInfo[0].indexOf("RIGHT_") == 0)
+	                           strSQL = strSQL + " WHERE " + SearchInfo[0].substring(5).toLowerCase() + " LIKE '%" + SearchParemeta[i] + "%'";
+	                       else
+	                           strSQL = strSQL + " WHERE " + SearchInfo[0].toLowerCase() + " LIKE '%" + SearchParemeta[i] + "%'";
+	                   }
+	               }
+	                   else{
+	                       // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
+	                       SearchParemeta[i] = SearchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'").toLowerCase();
+	                       if (checkSearchField(SearchInfo[0]))
+	                       {
+	                           strSQL = strSQL + " AND (" + SearchInfo[0].toLowerCase() + " LIKE  '%" + SearchParemeta[i] + "%' OR " + SearchInfo[0].toLowerCase() + "2 LIKE '%" + SearchParemeta[i] + "%')";
+	                       }
+	                       else
+	                       {
+	                           if (SearchInfo[0].indexOf("EXACT_") == 0)
+	                               strSQL = strSQL + " AND " + SearchInfo[0].substring(6).toLowerCase() + "=UPPER('" + SearchParemeta[i] + "') ";
+	                           else if (SearchInfo[0].indexOf("LEFT_") == 0)
+	                               strSQL = strSQL + " AND " + SearchInfo[0].substring(5).toLowerCase() + " LIKE '" + SearchParemeta[i] + "%' ";
+	                           else if (SearchInfo[0].indexOf("RIGHT_") == 0)
+	                               strSQL = strSQL + " AND " + SearchInfo[0].substring(5).toLowerCase() + " LIKE '%" + SearchParemeta[i] + "%'";
+	                           else
+	                               strSQL = strSQL + " AND " + SearchInfo[0].toLowerCase() + " LIKE '%" + SearchParemeta[i] + "%'";
+	                       }
+	                   }
+	               }
+	            }
+	        
+	        if (pClass.equals("user") || pClass.equals("all")){
+	             strSQL = strSQL.replace("cn", "a.cn");
+	             strSQL = strSQL.replace("title", "a.title");
+	                          
+	             type = "U";
+	        }
+	        else{
+	            type = "G";
+	        }
+	
+	        if(page.equals(null) || page.equals("")){
+	            page = "1";
+	        }
+	        
+	         int startRow = (Integer.parseInt(page) - 1) * 50 + 1;
+	         int endRow = Integer.parseInt(page) * 50 + 1;
+	         
+	         Map<String , Object> map = new HashMap<String , Object>();
+	                  
+	         map.put("strSQL" , strSQL);
+	         map.put("type", type);
+	         map.put("class", pClass);
+	         map.put("startRow", startRow);
+	         map.put("endRow", endRow);
+	         map.put("v_TENANT_ID", tenantID);
+	         map.put("startRowForMySQL", startRow - 1);
+	         map.put("count", 50);              
+	         
+	         logger.debug("strSQL=" + strSQL);
+	         
+	         List<OrganDeptVO> list = ezOrganDAO.organSearchListPage(map);
+	         
+	         if(pClass.equals("user")){
+	        	 int totalcount = ezOrganDAO.getSearchListCount(map);
+	             memberlist2 = new StringBuilder("<LISTVIEWDATA>");
+	             memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
+	         }else{
+	             memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
+	         }
+	       
+	
+	        for(int j=0; j < list.size(); j++){
+	            Map<String, Object> map1 = new HashMap<String, Object>();           
+	            OrganDeptVO organVO = list.get(j);
+	            Object result = null;           
+	            
+	            if(!organVO.getCn().equals("") && organVO.getCn() != null){
+	                StringBuilder sb = new StringBuilder();
+	                sb.append("<DATA>");
+	                
+	                if(organVO.getType().equals("user")){
+	                    map1.put("v_CN", organVO.getCn());
+	                    map1.put("v_DEPTCD", organVO.getDisplayName());
+	                    map1.put("v_LANGDATA", pLangCode);
+	                    map1.put("v_TENANT_ID", tenantID);
+	                    
+	                    result = ezOrganDAO.getTBLUserMaster(map1);                 
+	                }else{
+	                    map1.put("v_CN", organVO.getCn());
+	                    map1.put("v_LANGDATA", pLangCode);
+	                    map1.put("v_TENANT_ID", tenantID);
+	                    
+	                    result = ezOrganDAO.getTBLDeptMaster(map1);                 
+	                }
+	                
+	                sb.append(commonUtil.getQueryResult(result));
+	                sb.append("</DATA>");
+	                
+	                ListInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", organVO.getType());
+	                memberlist2.append(ListInfo);
+	            }           
+	        }
+	        memberlist2.append("</ROWS></LISTVIEWDATA>");
+        } catch (Exception e) {
+        	memberlist2 = new StringBuilder("<LISTVIEWDATA>");
+            memberlist2.append("<TOTALCOUNT>" + "0" + "</TOTALCOUNT><ROWS>");
+            memberlist2.append("</ROWS></LISTVIEWDATA>");
         }
-        else{
-            type = "G";
-        }
-
-        if(page.equals(null) || page.equals("")){
-            page = "1";
-        }
-        
-         int startRow = (Integer.parseInt(page) - 1) * 50 + 1;
-         int endRow = Integer.parseInt(page) * 50 + 1;
-         
-         Map<String , Object> map = new HashMap<String , Object>();
-                  
-         map.put("strSQL" , strSQL);
-         map.put("type", type);
-         map.put("class", pClass);
-         map.put("startRow", startRow);
-         map.put("endRow", endRow);
-         map.put("v_TENANT_ID", tenantID);
-         map.put("startRowForMySQL", startRow - 1);
-         map.put("count", 50);              
-         
-         logger.debug("strSQL=" + strSQL);
-         
-         List<OrganDeptVO> list = ezOrganDAO.organSearchListPage(map);
-         
-         StringBuilder memberlist2 = null;
-         
-         if(pClass.equals("user")){
-        	 int totalcount = ezOrganDAO.getSearchListCount(map);
-             memberlist2 = new StringBuilder("<LISTVIEWDATA>");
-             memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
-         }else{
-             memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
-         }
-       
-
-        for(int j=0; j < list.size(); j++){
-            Map<String, Object> map1 = new HashMap<String, Object>();           
-            OrganDeptVO organVO = list.get(j);
-            Object result = null;           
-            
-            if(!organVO.getCn().equals("") && organVO.getCn() != null){
-                StringBuilder sb = new StringBuilder();
-                sb.append("<DATA>");
-                
-                if(organVO.getType().equals("user")){
-                    map1.put("v_CN", organVO.getCn());
-                    map1.put("v_DEPTCD", organVO.getDisplayName());
-                    map1.put("v_LANGDATA", pLangCode);
-                    map1.put("v_TENANT_ID", tenantID);
-                    
-                    result = ezOrganDAO.getTBLUserMaster(map1);                 
-                }else{
-                    map1.put("v_CN", organVO.getCn());
-                    map1.put("v_LANGDATA", pLangCode);
-                    map1.put("v_TENANT_ID", tenantID);
-                    
-                    result = ezOrganDAO.getTBLDeptMaster(map1);                 
-                }
-                
-                sb.append(commonUtil.getQueryResult(result));
-                sb.append("</DATA>");
-                
-                ListInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", organVO.getType());
-                memberlist2.append(ListInfo);
-            }           
-        }
-        memberlist2.append("</ROWS></LISTVIEWDATA>");
-        
         logger.debug("getSearchListPagination ended");
         
         return memberlist2.toString();
@@ -1481,6 +1484,23 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("getProxyInfo ended");
 		
 		return proxyInfo;
+	}
+	
+	@Override
+	public List<String> getAllSubDeptId(String deptID, int tenantID)
+			throws Exception {	
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptId", deptID);
+		map.put("tenantID", tenantID);
+		return ezOrganDAO.getAllSubDeptId(map);
+	}
+	
+	@Override
+	public String getDeptPath(String deptID, int tenantID) throws Exception {		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptId", deptID);
+		map.put("tenantID", tenantID);
+		return ezOrganDAO.getDeptPath(map);
 	}
 
 	@Override

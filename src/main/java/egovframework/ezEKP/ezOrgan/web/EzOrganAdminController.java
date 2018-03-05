@@ -5,6 +5,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,6 +24,10 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -45,10 +52,13 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -77,6 +87,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private EzSystemAdminService ezSystemAdminService;
 		
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
@@ -104,7 +117,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
-    
+
+	
+
+
 	/**
 	 * 조직도관리 메인화면 호출 함수
 	 */
@@ -117,7 +133,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 왼쪽화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/organLeft.do")
-	public String organLeft() throws Exception{        
+	public String organLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
+		
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		
 		return "admin/ezOrgan/organLeft";
 	}
 	
@@ -155,6 +176,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useBizmekaTalk", useBizmekaTalk);
+		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		
 		return "admin/ezOrgan/organRight";
 	}
@@ -713,7 +737,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String checkID = config.getProperty("config.USE_CHECKUPSTR");
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
-		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());		
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
+		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+		
+		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
+			useZipCodeSearch = "YES";
+		}
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
@@ -724,6 +753,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 				
 		logger.debug("userInfo ended");
 		
@@ -1207,6 +1237,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         	return "EMAIL_ERROR";
         }
 	    	    
+        // JMocha Mail Server가 계정이 소문자로 저장될 필요가 있어 
+        // 사용자 아이디를 무조건 소문자로 변환한다.
+        // 소문자로 저장되기만 하면 메일 수신 시에는 발신자가 대소문자를 혼합해서 보내도
+        // 수신에 문제는 없다.
+        if (vo.getCn() != null) {
+        	vo.setCn(vo.getCn().toLowerCase());
+        }
+        
 	    int tenantID = userInfo.getTenantId();
 
 	    vo.setTenantId(tenantID);
@@ -1304,36 +1342,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo, oriPass);
 							
-							// UseInitMailSign이 YES일 경우 메일 서명 등록
-							String useInitMailSign = ezCommonService.getTenantConfig("UseInitMailSign", tenantID);
-							if (useInitMailSign.equals("YES")) {
-								ezEmailService.setInitMailSignature(tenantID, cn);
-							}
 							
-							// UseInitInboxRule이 YES일 경우 메일 자동분류 등록
-							String useInitInboxRule = ezCommonService.getTenantConfig("UseInitInboxRule", tenantID);
-							if (useInitInboxRule.equals("YES")) {
-								//자동분류에 등록된 메일함이 존재하지 않으면 메일함을 생성한다.
-								List<String> mailboxList = ezEmailService.getInitInboxRuleMailbox(tenantID);
-								String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
-								
-								IMAPAccess ia = null;
-						        try {
-									ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-											mailAddr, password, egovMessageSource, locale);
-									
-									for (int i = 0; i < mailboxList.size(); i++) {
-										ia.createFolder(mailboxList.get(i));
-									}
-								} finally {
-									if (ia != null) {
-										ia.close();
-										ia = null;
-									}
-								}
-								
-								ezEmailService.setInitInboxRule(tenantID, cn);
-							}
 							
 							result = "OK";
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
@@ -1355,6 +1364,73 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+        if (result.equals("OK")) {
+	        // UseInitMailSign이 YES일 경우 메일 서명 등록
+			String useInitMailSign = ezCommonService.getTenantConfig("UseInitMailSign", tenantID);
+			if (useInitMailSign.equals("YES")) {
+				MailSignatureVO mailSignatureVO = ezEmailService.getInitMailSignature(tenantID);
+				
+				if (mailSignatureVO != null) {
+					vo = ezOrganAdminService.getUserInfo(vo.getCn(), "1", tenantID);
+					
+					String content1 = mailSignatureVO.getContent1() == null ? "" : mailSignatureVO.getContent1();
+					String content2 = mailSignatureVO.getContent2() == null ? "" : mailSignatureVO.getContent2();
+					String content3 = mailSignatureVO.getContent3() == null ? "" : mailSignatureVO.getContent3();
+					
+					content1 = content1.replace("${company}", vo.getCompany1()).replace("${engCompany}", vo.getCompany2()).replace("${name}", vo.getDisplayName1()).replace("${engName}", vo.getDisplayName2())
+							.replace("${department}", vo.getDescription1()).replace("${engDepartment}", vo.getDescription2()).replace("${email}", vo.getMail())
+							.replace("${title}", vo.getTitle1() == null ? "" : vo.getTitle1()).replace("${engTitle}", vo.getTitle2() == null ? "" : vo.getTitle2())
+							.replace("${position}", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101()).replace("${engPosition}", vo.getExtensionAttribute102() == null ? "" : vo.getExtensionAttribute102())
+							.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
+							.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
+							.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
+				
+					content2 = content2.replace("${company}", vo.getCompany1()).replace("${engCompany}", vo.getCompany2()).replace("${name}", vo.getDisplayName1()).replace("${engName}", vo.getDisplayName2())
+							.replace("${department}", vo.getDescription1()).replace("${engDepartment}", vo.getDescription2()).replace("${email}", vo.getMail())
+							.replace("${title}", vo.getTitle1() == null ? "" : vo.getTitle1()).replace("${engTitle}", vo.getTitle2() == null ? "" : vo.getTitle2())
+							.replace("${position}", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101()).replace("${engPosition}", vo.getExtensionAttribute102() == null ? "" : vo.getExtensionAttribute102())
+							.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
+							.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
+							.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
+				
+					content3 = content3.replace("${company}", vo.getCompany1()).replace("${engCompany}", vo.getCompany2()).replace("${name}", vo.getDisplayName1()).replace("${engName}", vo.getDisplayName2())
+							.replace("${department}", vo.getDescription1()).replace("${engDepartment}", vo.getDescription2()).replace("${email}", vo.getMail())
+							.replace("${title}", vo.getTitle1() == null ? "" : vo.getTitle1()).replace("${engTitle}", vo.getTitle2() == null ? "" : vo.getTitle2())
+							.replace("${position}", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101()).replace("${engPosition}", vo.getExtensionAttribute102() == null ? "" : vo.getExtensionAttribute102())
+							.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
+							.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
+							.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
+					
+					ezEmailService.setMailSignature(tenantID, vo.getCn(), mailSignatureVO.getUseFlag(), content1, content2, content3);
+				}
+			}
+			
+			// UseInitInboxRule이 YES일 경우 메일 자동분류 등록
+			String useInitInboxRule = ezCommonService.getTenantConfig("UseInitInboxRule", tenantID);
+			if (useInitInboxRule.equals("YES")) {
+				//자동분류에 등록된 메일함이 존재하지 않으면 메일함을 생성한다.
+				List<String> mailboxList = ezEmailService.getInitInboxRuleMailbox(tenantID);
+				String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+				
+				IMAPAccess ia = null;
+		        try {
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							vo.getMail(), password, egovMessageSource, locale);
+					
+					for (int i = 0; i < mailboxList.size(); i++) {
+						ia.createFolder(mailboxList.get(i));
+					}
+				} finally {
+					if (ia != null) {
+						ia.close();
+						ia = null;
+					}
+				}
+				
+				ezEmailService.setInitInboxRule(tenantID, vo.getCn());
+			}
+        }
+        
 		logger.debug("saveUserInfo ended. result=" + result);
 		
 		return result;
@@ -1626,7 +1702,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", tenantID);
-		String use_ie11Browser = ezCommonService.getTenantConfig("IE11EDITOR", tenantID);
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
@@ -1640,7 +1715,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("use_editor", use_editor);
-		model.addAttribute("use_ie11Browser", use_ie11Browser);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
 		
@@ -1939,7 +2013,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
-		String use_ie11Browser = ezCommonService.getTenantConfig("IE11EDITOR", user.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
 		
@@ -1956,7 +2029,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		        	
 		model.addAttribute("use_editor", use_editor);
-		model.addAttribute("use_ie11Browser", use_ie11Browser);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);	
@@ -2138,6 +2210,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
    		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
    		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+   		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
    		
    		logger.debug("retireUserManage ended");
    		
@@ -2426,12 +2501,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
             return "cmm/error/adminDenied";
         }
-        
         int tenantID = userInfo.getTenantId();        
         logger.debug("tenantID=" + tenantID);
         
+//        String strCurrentUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+//        String caller = request.getHeader("referer").replace(strCurrentUrl, "");
+//        logger.debug("caller=" + caller);
+       
         String userId = (request.getParameter("id") == null ? "" : request.getParameter("id"));  
-
         String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
         String userEmail = userId + "@" + domainName;
                         
@@ -2452,6 +2529,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("userId", userId);
         model.addAttribute("userQuota", userQuota);
         model.addAttribute("userWarn", userWarn);
+//        model.addAttribute("caller", caller);
         
         logger.debug("configUserQuota ended.");
         

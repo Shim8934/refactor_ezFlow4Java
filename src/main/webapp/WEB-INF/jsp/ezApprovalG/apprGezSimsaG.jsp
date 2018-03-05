@@ -1603,8 +1603,7 @@
 		</script>
 	</head>
 	<body class="popup"  style="overflow:hidden;height:100%;">
-		<object id=oPoster classid="clsid:19E224CA-6992-425C-8006-8FA6FD2BD9E5" style="DISPLAY: none; HEIGHT: 86px; WIDTH: 243px" VIEWASTEXT></object>
-		<OBJECT classid=clsid:80009476-666B-4869-8C04-AB03492561CD id=ObjGPKI style="DISPLAY: none; HEIGHT: 86px; WIDTH: 243px"></OBJECT>
+	    <object classid="clsid:80009476-666B-4869-8C04-AB03492561CD" id="ObjGPKI" style="DISPLAY: none; HEIGHT: 86px; WIDTH: 243px"></object>
 		<table class="layout">
 			<tr> 
 				<td style="height:20px;"> 
