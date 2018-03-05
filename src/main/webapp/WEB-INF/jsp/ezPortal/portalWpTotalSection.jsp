@@ -233,6 +233,7 @@
 		        getnewmailcount();
 		        getnewapprovalcount();		        
 		        getScheduleList(nowDay, pMode);
+		        getNewCircularCount();
 			}
 
 			function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date) {
@@ -372,7 +373,23 @@
 			        });
 			    } catch (e) {}
 			}
-
+			
+			//회람판 신규 갯수 가져오기 2018-03-05 강민수92
+	        function getNewCircularCount() {
+	        	$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezCircular/getListCount.do",
+					data : {
+						listType : 'newCircular'
+					},
+					success: function(result){
+						console.log("회람판 신규 갯수 : " + result.count);
+					}
+				});
+	        }
+			
 			var xmlHttp_getnewmailcount_total = null;
 			
 			function getnewmailcount() {
