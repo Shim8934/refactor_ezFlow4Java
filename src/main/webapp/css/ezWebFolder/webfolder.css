@@ -47,4 +47,14 @@
 .btnCancel{background:#d0d0d0; border:1px solid #888; width:58px; height:20px; line-height:16px; padding:0px;}
 .btnCancel span{background:#d0d0d0; padding:0px; line-height:20px;}
 
+.userInfo:hover {cursor:pointer;}
+.userInfo:hover {background-color:#f7fae0;}
+.userInfo2 {cursor:pointer; background-color:#e9f1f4;}
 
+.selectedDept {cursor:pointer;}
+.selectedDept:hover {background-color:#f7fae0;}
+.selectedDept2 {cursor:pointer; background-color:#e9f1f4;}
+
+.selectedUser {cursor:pointer;}
+.selectedUser:hover {background-color:#f7fae0;}
+.selectedUser2 {cursor:pointer; background-color:#e9f1f4;}

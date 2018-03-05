@@ -142,7 +142,7 @@
 				
 				if (compFolderId == selectedFolder) {
 					document.getElementById("fldName").value = obj.innerHTML;
-					document.getElementById("RangeXMLStr").value = "";
+					document.getElementById("rangeStr").value = "";
 					updateTarget("");
 					document.getElementById("usersSelect").style.display  = "none";
 					document.getElementById("displayUsers").style.display = "none";
@@ -170,40 +170,42 @@
 				});
 			}
 			
-			function processUsersList(result, folerName) {
-				document.getElementById("fldName").value = folerName;
+			function processUsersList(result, folderName) {
+				document.getElementById("fldName").value = folderName;
 				
 				if(result == null || result.length == 0) {
-					document.getElementById("RangeXMLStr").value = "";
+					document.getElementById("rangeStr").value = "";
 					updateTarget("");
 				}
 				else {
-					var target   = "";
-					var xmlStr   = "<RANGE>";
-					var xmlUsers = "<MEMBER>";
-					var xmlDepts = "<DEPT>";
+					var target    = "";
+					var jsonObj   = {};
+					var deptArray = [];
+					var userArray = [];
 					
 					for (var i = 0; i < result.length; i++) {
 						target = primary == "1" ? (target + result[i]["displayName1"] + ",") : (target + result[i]["displayName2"] + ",");
 						
 						if (result[i]["userType"] == "user") {
-							xmlUsers += "<DATA id=\"" + MakeXMLString(result[i]["userId"]) + "\" nm=\"" + MakeXMLString(result[i]["displayName1"]) + 
-							"\" nm2=\"" + MakeXMLString(result[i]["displayName2"]) + "\">" + MakeXMLString(result[i]["userId"]) + "</DATA>";
+							var userJson         = {};
+							userJson["userId"]   = result[i]["userId"];
+							userJson["userName"] = primary == '1' ? result[i]["displayName1"] : result[i]["displayName2"];
+							userArray.push(userJson);
 						}
 						else {
-							xmlDepts += "<DATA id=\"" + MakeXMLString(result[i]["userId"]) + "\" nm=\"" + MakeXMLString(result[i]["displayName1"]) + 
-							"\" nm2=\"" + MakeXMLString(result[i]["displayName2"]) + "\">" + MakeXMLString(result[i]["userId"]) + "</DATA>";
+							var deptJson         = {};
+							deptJson["deptId"]   = result[i]["userId"];
+							deptJson["deptName"] = primary == '1' ? result[i]["displayName1"] : result[i]["displayName2"];
+							deptArray.push(deptJson);
 						}
 						
 					}
 					
-					xmlDepts += "</DEPT>";
-					xmlUsers += "</MEMBER>";
-					xmlStr   += xmlDepts;
-					xmlStr   += xmlUsers;
-					xmlStr   += "</RANGE>";
+					jsonObj["user"] = userArray;
+					jsonObj["dept"] = deptArray;
+					
 					updateTarget(target.slice(0, -1));
-					document.getElementById("RangeXMLStr").value = xmlStr;
+					document.getElementById("rangeStr").value = JSON.stringify(jsonObj);
 				}
 				
 			}
@@ -286,7 +288,7 @@
 				document.getElementById("listBttn1").style.display    = "none";
 				document.getElementById("listBttn2").style.display    = "";
 				document.getElementById("fldName").value              = "";
-				document.getElementById("RangeXMLStr").value          = "";
+				document.getElementById("rangeStr").value          = "";
 				updateTarget("");
 			}
 			
@@ -298,7 +300,7 @@
 			
 			function saveNewFolder() {
 				var folderName  = document.getElementById("fldName").value;
-				var folderUsers = getJsonData(document.getElementById("RangeXMLStr").value);
+				var folderUsers = getJsonData(document.getElementById("rangeStr").value);
 				var target      = document.getElementById("newTargetDiv").innerHTML;
 				
 				if (!folderName.replace(/\s/g,'')) {
@@ -357,7 +359,7 @@
 				}
 				
 				var folderName  = document.getElementById("fldName").value;
-				var folderUsers = getJsonData(document.getElementById("RangeXMLStr").value);
+				var folderUsers = getJsonData(document.getElementById("rangeStr").value);
 				var target      = document.getElementById("newTargetDiv").innerHTML;
 				
 				if (!folderName.replace(/\s/g,'')) {
@@ -505,7 +507,7 @@
 			<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		
-		<input type="text" name="RangeXMLStr" id="RangeXMLStr" style="display:none">
+		<input type="text" name="rangeStr" id="rangeStr" style="display:none">
 		<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
 	</body>
 </html>

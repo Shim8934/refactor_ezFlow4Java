@@ -7,6 +7,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 
 public interface EzWebFolderService {
 	String getFileSequence(int tenantId) throws Exception;
@@ -39,4 +40,5 @@ public interface EzWebFolderService {
 	SimpleDeptVO getSimpleCompany(String deptId, int level, String primary, int tenantId) throws Exception;
 	void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) throws Exception;
 	String getDeptPath(String deptId, int tenantId) throws Exception;
+	List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int tenantId) throws Exception;
 }

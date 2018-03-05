@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
@@ -16,6 +18,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderService")
@@ -372,6 +375,16 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("deptId",     deptId);
 		map.put("tenantId",   tenantId);
 		return ezWebFolderDAO.getDeptPath(map);
+	}
+
+	@Override
+	public List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("deptId",     deptId);
+		map.put("primary",    primary);
+		map.put("tenantId",   tenantId);
+		
+		return ezWebFolderDAO.getDeptMemberList(map);
 	}
 
 }

@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzWebFolderDAO")
@@ -136,5 +137,10 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 
 	public String getDeptPath(Map<String, Object> map) {
 		return (String)select("EzWebFolderDAO.getDeptPath", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<SimpleUserVO> getDeptMemberList(Map<String, Object> map) {
+		return (List<SimpleUserVO>)list("EzWebFolderDAO.getDeptMemberList", map);
 	}
 }

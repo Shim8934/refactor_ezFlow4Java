@@ -8,13 +8,13 @@ function menu_SelectRange() {
 		
 		if (useragentstr.indexOf(_MSIE) != -1) {
 			var szParam = "dialogHeight:705px;dialogWidth:562px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no" + GetShowModalPosition(562, 705);
-			var rv = window.showModalDialog(szUrl, document.getElementById("RangeXMLStr").value, szParam);
+			var rv = window.showModalDialog(szUrl, document.getElementById("rangeStr").value, szParam);
 			
 			if (rv[0] == "OK") {
-				document.getElementById("RangeXMLStr").value = rv[1];
+				document.getElementById("rangeStr").value = rv[1];
 			} 
 			else if (rv[0] == "NO") {
-				document.getElementById("RangeXMLStr").value = "";
+				document.getElementById("rangeStr").value = "";
 			}
 		}
 		else {
@@ -55,7 +55,7 @@ function menu_SelectRange_IE() {
 }
 
 function GetRangeValue() {
-	return document.getElementById("RangeXMLStr").value;
+	return document.getElementById("rangeStr").value;
 }
 
 function updateParent(_element, _value, _Type) {
@@ -74,7 +74,12 @@ function updateParent(_element, _value, _Type) {
 }
 
 function updateTarget(listOfTarget) {
-	var newTargetDiv       = document.getElementById("newTargetDiv");
+	var newTargetDiv = document.getElementById("newTargetDiv");
+	
+	if (newTargetDiv == null) {
+		return;
+	}
+	
 	newTargetDiv.innerHTML = listOfTarget;
 	newTargetDiv.setAttribute("title", listOfTarget);
 	newTargetDiv.style.display = "";
@@ -87,29 +92,28 @@ function closeWindow() {
 	}
 }
 
-function getJsonData(InitData) {
-	var xmlDoc   = createXmlDom();
-	xmlDoc       = loadXMLString(InitData);
-	var DeptRows = SelectSingleNodeNew(xmlDoc, "RANGE/DEPT");
+function getJsonData(initData) {
+	var jsonData = JSON.parse(initData);
 	var jsonObj  = {};
+	var deptData = jsonData["dept"];
+	var userData = jsonData["user"];
 	
-	if (DeptRows != null) {
-		var DeptLen   = DeptRows.childNodes.length;
+	if (deptData != null) {
+		var deptLen   = deptData.length;
 		var deptArray = [];
 		
-		for (var i = 0; i < DeptLen; i++) {
-			deptArray.push(MakeUNXMLString(GetAttribute(DeptRows.childNodes[i], "id")));
+		for (var i = 0; i < deptLen; i++) {
+			deptArray.push(deptData[i]["deptId"]);
 		}
 		jsonObj["dept"] = deptArray;
 	}
-	var UserRows = SelectSingleNodeNew(xmlDoc, "RANGE/MEMBER");
 	
-	if (UserRows != null) {
-		var UserLen   = UserRows.childNodes.length;
+	if (userData != null) {
+		var userLen   = userData.length;
 		var userArray = [];
 		
-		for (var i = 0; i < UserLen; i++) {
-			userArray.push(MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "id")));
+		for (var i = 0; i < userLen; i++) {
+			userArray.push(userData[i]["userId"]);
 		}
 		
 		jsonObj["user"] = userArray;
@@ -143,13 +147,13 @@ function menu_SelectRange2() {
 		
 		if (useragentstr.indexOf(_MSIE) != -1) {
 			var szParam = "dialogHeight:705px;dialogWidth:562px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no" + GetShowModalPosition(562, 705);
-			var rv = window.showModalDialog(szUrl, document.getElementById("RangeXMLStr").value, szParam);
+			var rv = window.showModalDialog(szUrl, document.getElementById("rangeStr").value, szParam);
 			
 			if (rv[0] == "OK") {
-				document.getElementById("RangeXMLStr").value = rv[1];
+				document.getElementById("rangeStr").value = rv[1];
 			} 
 			else if (rv[0] == "NO") {
-				document.getElementById("RangeXMLStr").value = "";
+				document.getElementById("rangeStr").value = "";
 			}
 		}
 		else {

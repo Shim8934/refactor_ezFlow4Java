@@ -75,31 +75,29 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 	@RequestMapping(value="/ezWebFolder/webfolderLeft.do")
 	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie,ModelMap modelMap, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
 		return "ezWebFolder/webfolderLeft";
 	}
 
 	@RequestMapping(value="/ezWebFolder/test.do")
-	public String webfolderTest(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
-		model.addAttribute("primary", userInfo.getPrimary());
+	public String webfolderTest(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		LoginSimpleVO userInfo  = commonUtil.userInfoSimple(loginCookie);
+		model.addAttribute("primary", userInfo.getLang());
 		return "ezWebFolder/webfolderTest";
 	}
 
 	@RequestMapping(value="/ezWebFolder/getShareListPage.do")
-	public String getShareListPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
-		model.addAttribute("primary", userInfo.getPrimary());
+	public String getShareListPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		LoginSimpleVO userInfo  = commonUtil.userInfoSimple(loginCookie);
+		model.addAttribute("primary", userInfo.getLang());
 		return "ezWebFolder/fileFolderShare";
 	}
 
 	@RequestMapping(value="/ezWebFolder/getGivenShareList.do")
-	public String getGivenShareList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
-		model.addAttribute("primary", userInfo.getPrimary());
+	public String getGivenShareList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		LoginSimpleVO userInfo  = commonUtil.userInfoSimple(loginCookie);
+		model.addAttribute("primary", userInfo.getLang());
 		return "ezWebFolder/fileFolderGivenShare";
 	}
-
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezWebFolder/uploadFile.do")
@@ -419,9 +417,9 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		if (status.equals("ok")) {
 			JSONObject deptTree   = (JSONObject) resultBody.get("data");
-			
-			if (deptId != null && !deptId.equals("")) {
-				model.addAttribute("currentDept", deptId);
+			String     userDept   = (String) resultBody.get("userDept");
+			if (userDept != null && !userDept.equals("")) {
+				model.addAttribute("currentDept", userDept);
 			}
 			model.addAttribute("deptTree", deptTree);
 		}
@@ -475,4 +473,37 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("select share users finishes!");
 		return "/ezWebFolder/shareUsersSelect";
 	}
+	
+	@RequestMapping(value="/ezWebFolder/getDeptMembers.do", method = RequestMethod.POST)
+	public String getDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		String deptId      = request.getParameter("deptId");
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/webfolder/dept-member/" + deptId;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("primary", user.getLang());
+		
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONArray memberList = (JSONArray) resultBody.get("data");
+			model.addAttribute("listMembers", memberList);
+		}
+		
+		return "json";
+	}
+	
 }
