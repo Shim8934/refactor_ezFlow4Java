@@ -258,6 +258,41 @@
 		        }		
 		    }
 		    
+		    $(document).ready(function() {
+		    	var clickOutside;
+		    	
+		    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
+		    	} else {
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
+		    	}	    	
+		    	
+		    	clickOutside.mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(parent.document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.frames['ifrmPreViewH']).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
+		    		console.log("aaaaa")
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    });
+		    
 		    function getCurrentTime() {
 		        return new Date().getTime();		        
 		    }
@@ -778,7 +813,12 @@
 		  	<li id="mailbox_export"><span onClick="mailbox_export()"><spring:message code="ezEmail.lhm31" /></span></li>
 		  	<li id="mailbox_import"><span><label for="file1" style="cursor: pointer;"><spring:message code="ezEmail.lhm32" /></label></span></li>
 		  </c:if>
-		  <li id="right"><spring:message code="ezEmail.t99000034" />&nbsp;<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /> <!-- 레이어나왔을경우btn_arrow_up.gif --></li>
+		  <li id="right">
+	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
+	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
+					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
+					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" class="maillistoptiondivbtn" onclick="MailOptionView(this);" />
+		  </li> 
           </ul>
         </div>
 		<script type="text/javascript">
@@ -801,14 +841,6 @@
 	                        <option value=40 <c:if test="${mailGeneral.listCount == '40'}">selected</c:if>>40</option>
 	                        <option value=50 <c:if test="${mailGeneral.listCount == '50'}">selected</c:if>>50</option>
 	                    </select>
-	                </td>
-                  </tr>
-                  <tr>
-                    <th style="vertical-align:middle;"><spring:message code="ezEmail.t487" /></th>
-                    <td>
-	                    <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onClick="PreviewRayerChange('NONE')"> 
-	                    <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onClick="PreviewRayerChange('W')">
-	                    <img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onClick="PreviewRayerChange('H')">
 	                </td>
                   </tr>
                   <tr>
