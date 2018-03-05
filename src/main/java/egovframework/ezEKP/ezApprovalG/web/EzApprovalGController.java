@@ -7495,4 +7495,25 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return "json";
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/ezConvOut.do")
+	public String ezConvOut(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("ezConvOut started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String docHref = request.getParameter("docHref");
+		
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("approvalPWD", approvalPWD);
+		
+		logger.debug("ezConvOut ended.");
+		
+		return "/ezApprovalG/apprGezConvOut";
+	}
 }
