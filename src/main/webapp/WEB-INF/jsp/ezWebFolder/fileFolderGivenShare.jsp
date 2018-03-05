@@ -503,6 +503,7 @@
 		
 		<div id="tblPageRayer"></div>
 		<input type="text" name="rangeStr" id="rangeStr" style="display:none">
+		<input type="text" name="mode"     id="mode"     style="display:none">
 		<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	</body>

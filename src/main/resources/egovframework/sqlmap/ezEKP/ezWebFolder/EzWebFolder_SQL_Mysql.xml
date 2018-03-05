@@ -720,27 +720,27 @@
 		(
 			SELECT
 				b.*,
-				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER d WHERE b.CN = d.EXTENSIONATTRIBUTE1 AND b.tenant_id = d.tenant_id) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER d WHERE b.CN = d.EXTENSIONATTRIBUTE1 AND b.TENANT_ID = d.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
 				#level#                                                                                                                                  AS LEVEL 
 			FROM 
 				TBL_DEPTMASTER b
 			WHERE
-				b.cn = #companyId#
+				b.CN = #companyId#
 			AND
-				b.tenant_id = #tenantId#
+				b.TENANT_ID = #tenantId#
 				
 			UNION
 			
 			SELECT 
 				a.*,
-				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER e WHERE a.CN = e.EXTENSIONATTRIBUTE1 AND a.tenant_id = e.tenant_id) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER e WHERE a.CN = e.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = e.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
 				(#level# + 1)                                                                                                                            AS LEVEL
 			FROM
 				TBL_DEPTMASTER a
 			WHERE
 				a.EXTENSIONATTRIBUTE1 = #companyId#
 			AND
-				a.tenant_id           = #tenantId#
+				a.TENANT_ID           = #tenantId#
 		) c
 		ORDER BY
 			LEVEL, lpad(ifnull(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
@@ -751,13 +751,13 @@
 			a.CN                                                                                                                                     AS DEPT_ID,
 			CASE WHEN #primary# = '1' THEN a.DISPLAYNAME ELSE a.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
 			#level#                                                                                                                                  AS LEVEL,
-			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE a.CN = b.EXTENSIONATTRIBUTE1 AND a.tenant_id = b.tenant_id) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE a.CN = b.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
 		FROM
 			TBL_DEPTMASTER a
 		WHERE
 			a.EXTENSIONATTRIBUTE1 = #deptId#
 		AND
-			a.tenant_id = #tenantId#
+			a.TENANT_ID = #tenantId#
 		ORDER BY
 			lpad(ifnull(a.EXTENSIONATTRIBUTE15, 0),6,0), a.DISPLAYNAME
 	</select>
@@ -767,13 +767,13 @@
 			a.CN                                                                                                                                     AS DEPT_ID,
 			CASE WHEN #primary# = '1' THEN a.DISPLAYNAME ELSE a.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
 			#level#                                                                                                                                  AS LEVEL,
-			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE a.CN = b.EXTENSIONATTRIBUTE1 AND a.tenant_id = b.tenant_id) = 0 THEN 0 ELSE 1 END AS HAS_SUB
+			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE a.CN = b.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
 		FROM
 			TBL_DEPTMASTER a
 		WHERE
 			a.CN = #deptId#
 		AND
-			a.tenant_id = #tenantId#
+			a.TENANT_ID = #tenantId#
 	</select>
 	
 	<select id="EzWebFolderDAO.getDeptPath" parameterClass="Map" resultClass="String">
@@ -783,9 +783,9 @@
 			FROM 
 				TBL_DEPTMASTER
 			WHERE
-				cn = #deptId#
+				CN = #deptId#
 			AND
-				tenant_id = #tenantId#
+				TENANT_ID = #tenantId#
 		]]> 
 	</select>
 	
