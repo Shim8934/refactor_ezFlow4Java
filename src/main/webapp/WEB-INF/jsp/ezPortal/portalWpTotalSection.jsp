@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -78,10 +79,10 @@
 						</ul>
 					</a>
 					<a id="Poll" onClick="btnSumming_click(this)">
-						<ul class="last">
+						<ul>
 							<li class="count">
 								<div>
-									<span>${pollNum }</span>
+									<span><c:if test="${fn:length(pollNum) > 2}">99+</c:if><c:if test="${fn:length(pollNum) <= 2}">${pollNum}</c:if></span>
 								</div>
 							</li>
                     		<c:choose>
@@ -98,10 +99,17 @@
 						<ul class="last">
 							<li class="count">
 								<div>
-									<span>0</span>
+									<span id="circularCnt">0</span>
 								</div>
 							</li>
-                    		<li class="title">회람판</li>                    		
+                    		<c:choose>
+                    			<c:when test="${userInfo.lang != '3'}">
+                    				<li class="title"><spring:message code="ezCircular.t1" /></li>
+                    			</c:when>
+                    			<c:otherwise>
+                    				<li class="title1"><spring:message code="ezCircular.t1" /></li>
+                    			</c:otherwise>
+                    		</c:choose>                  		
 						</ul>
 					</a>			
 				</div>
@@ -269,7 +277,7 @@
 			    $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
-		    		async : false,
+		    		async : true,
 		    		url : "/ezSchedule/scheduleNewWebPartList.do",
 		    		data : {
 		    			selectDate  : date		    			
@@ -321,6 +329,10 @@
 
 			        if (date == nowDay) {
 			        	var cnt = xmldom.getElementsByTagName("ROW").length;
+	
+			        	if (cnt > 99) {
+			        		cnt = "99+";	
+			        	}			        	
 			        	document.getElementById("schedulenum").innerHTML = cnt;
 			        }
 
@@ -384,13 +396,18 @@
 	        	$.ajax({
 					type : "POST",
 					dataType : "json",
-					async : false,
+					async : true,
 					url : "/ezCircular/getListCount.do",
 					data : {
 						listType : 'newCircular'
 					},
 					success: function(result){
-						console.log("회람판 신규 갯수 : " + result.count);
+						var cirCnt = result.count;
+						
+						if (cirCnt > 99) {
+							cirCnt = "99+";		
+						}						
+						$("#circularCnt").html(cirCnt);
 					}
 				});
 	        }
@@ -413,6 +430,10 @@
 			    if (xmlHttp_getnewmailcount_total != null && xmlHttp_getnewmailcount_total.readyState == 4) {
 			        if (xmlHttp_getnewmailcount_total.status > 199 && xmlHttp_getnewmailcount_total.status < 300) {
 			        	var unreadcount = getNodeText(SelectNodes(xmlHttp_getnewmailcount_total.responseXML, "DATA")[0]);
+			        	
+			        	if (unreadcount.length > 2) {
+			        		unreadcount = "99+";
+			        	}			        	
 			        	
 		                if(CrossYN()) {
 		                    document.getElementById("mailnum").textContent = unreadcount;
@@ -450,11 +471,20 @@
 						return;
 					} else  {
 						try {
-//							document.getElementById("aprnum").innerText = xmlHttp2.responseXML.text;
 		                    if(CrossYN()) {
-		                        document.getElementById("aprnum").textContent = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.textContent;
-		                    } else {		                    	
-		                        document.getElementById("aprnum").innerText = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.text;		                        
+		                    	var aprnumCnt = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.textContent;
+		                    	
+		                    	if (aprnumCnt.length > 2) {		                    		
+		                    		aprnumCnt = "99+";
+		                    	}
+		                        document.getElementById("aprnum").textContent = aprnumCnt;
+		                    } else {
+		                    	var aprnumCnt = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.text;
+		                    	
+		                    	if (aprnumCnt.length > 2) {
+		                    		aprnumCnt = "99+";
+		                    	}
+		                        document.getElementById("aprnum").innerText = aprnumCnt;		                        
 		                    }
 		                    xmlHttp_getnewapprovalcount_total = null;
 						} catch(e) {
