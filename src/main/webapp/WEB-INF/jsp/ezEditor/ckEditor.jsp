@@ -10,8 +10,8 @@
 		<script  type="text/javascript">
 			var type = "${type}";
 			var height = "${height}";
-			
 		    CKEDITOR.on( 'instanceReady', function( ev ) {
+				console.log("type : "+type);
 			    ExecuteCommand("maximize");
 			    
 			    parent.Editor_Complete();

@@ -300,6 +300,33 @@ public class EzEmailAdminLetterController {
 		return null;
 	}
 	
+	/**
+	 * 편지지 관리페이지 (수아)
+	 */
+	@RequestMapping("/admin/ezEmail/letterAdminPage.do")
+	public String letterAdminPage(@CookieValue("loginCookie") String loginCookie) throws Exception{
+		// 관리자 권한체크      
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		return "/admin/ezEmail/letterManager";
+	}
+	
+	/**
+	 * 편지지 추가,수정 팝업  (수아)
+	 */
+	@RequestMapping("/admin/ezEmail/letterEditPopUp.do")
+	public String letterAdminAddSetPopUp(@CookieValue("loginCookie") String loginCookie) throws Exception{
+		// 관리자 권한체크      
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		return "/admin/ezEmail/letterEditPopUp";
+	}
 	
 	/**
 	 * 편지지 작성 (수아)
@@ -339,7 +366,7 @@ public class EzEmailAdminLetterController {
 	 * @param displayname, displayname2, letterNo
 	 * @return : "OK" or "ERROR"
 	 */
-	@RequestMapping("/admin/ezEmail/updateDisplaynameLetter")
+	@RequestMapping("/admin/ezEmail/updateDisplayNameLetter")
 	@ResponseBody
 	public String updateDisplayNameLetter(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterVO letter) throws Exception{
 		logger.debug("updateDisplayNameLetter started.");

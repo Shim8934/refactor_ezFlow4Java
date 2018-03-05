@@ -6,7 +6,8 @@
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">	
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/FormCont.js"></script>
@@ -20,7 +21,6 @@
 	        	Tab1_NewTabIni("tab1");
 
 	        	companyID = document.getElementById("ListCompany").value;
-	        	
 	        };
 	        
 	        function selectCompanyID() {
@@ -81,7 +81,7 @@
 		            	document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterBoxManager.do";
 		            	break;
 		            case "tagsub2":
-		            	document.getElementById("Letter_ifrm").src = "";
+		            	document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterAdminPage.do";
 		            	break;
 		            	
 		        }
@@ -135,7 +135,7 @@
 	        
 	    </script>
 	</head>
-	<body class="mainbody" style="height: 95%; overflow:hidden;">
+	<body class="mainbody" style="height: 95%;">
 	    <h1><spring:message code='main.t374'/><span></span></h1>
 		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
 			    <select id="ListCompany" onChange="selectCompanyID()">
@@ -152,6 +152,6 @@
 			    <p><span id="tagsub2"><spring:message code='ezEmail.t824'/></span></p>
 	        </div>
 	    </div>
-	    <iframe id="Letter_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>
+	    <iframe id="Letter_ifrm" style="width: 1200px; height:650px;" frameborder="0"></iframe> 
 	</body>
 </html>
