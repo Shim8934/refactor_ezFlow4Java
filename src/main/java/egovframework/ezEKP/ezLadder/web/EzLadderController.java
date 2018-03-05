@@ -151,7 +151,7 @@ public class EzLadderController {
 	}
 	
 	/**
-	 * 사다리 게임 참여자 목록 버튼
+	 * 사다리 검색
 	 */
 	@RequestMapping(value = "/ezLadder/searchLadder.do")
 	public String searchLadder(@RequestParam(value="allData") List<String> allData, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
@@ -187,7 +187,6 @@ public class EzLadderController {
 		} else {
 			return "error";
 		}
-		System.out.println(list);
 		
 		logger.debug("/ezLadder/searchLadder.do ended");
 

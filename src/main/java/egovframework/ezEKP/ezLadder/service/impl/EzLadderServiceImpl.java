@@ -66,9 +66,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 		
 		
 		List<LadderVO> list = null;
-		if(mode.equals("part")) {
+		if(mode.equals("part")) {		// 참여버튼 검색
 			list = ezLadderDAO.searchPartLadderList(map);
-		} else {
+		} else {						// 전체버튼 검색
 			list = ezLadderDAO.searchAllLadderList(map);
 		}
 		logger.debug("searchLadderList ended.");
