@@ -82,4 +82,7 @@ public interface EzAttitudeService {
 	
 	//근태유형관리 유형수정
 	//public void updateAttitudeType(AttitudeTypeVO attitudeTypeInfo) throws Exception;
+	
+	//사용자별 근태설정 리스트
+	
 }
