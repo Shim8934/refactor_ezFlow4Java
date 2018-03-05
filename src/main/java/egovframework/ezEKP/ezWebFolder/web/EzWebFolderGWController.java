@@ -174,7 +174,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			totalPages                            = (totalUsers + pageSize - 1)/pageSize;
 			
 			for(UserCapacityVO capacity: listUserCapacity) {
-				if (capacity.getTotalUsed().equals("0")) {
+				if (capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity().equals("0")) {
 					capacity.setUsedRate(0);
 				}
 				else {

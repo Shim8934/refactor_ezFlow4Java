@@ -285,8 +285,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("companyId", companyId);
 		
 		RestTemplate rest = new RestTemplate();
-		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-	
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		logger.debug("Status: " + status);
 		logger.debug("saveConfig finishes!");
 	}
 
@@ -379,8 +383,13 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("companyId", companyId)
 										.queryParam("userList", String.join(",", userList));
 		
-		RestTemplate rest = new RestTemplate();
-		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		logger.debug("Status: " + status);
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/restoreCapacities.do", method = RequestMethod.POST)
@@ -399,8 +408,13 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("companyId", companyId)
 										.queryParam("userList", String.join(",", userList));
 		
-		RestTemplate rest = new RestTemplate();
-		rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		logger.debug("Status: " + status);
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)
