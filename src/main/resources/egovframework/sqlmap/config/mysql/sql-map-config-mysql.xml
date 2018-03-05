@@ -76,4 +76,7 @@
     <!-- 조직도,직원조회 -->
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezOrgan/EzOrganMobile_SQL_Mysql.xml"/>
     
+    <!-- 근태관리 모듈관련 SQL쿼리 XML -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitude_SQL_Mysql.xml"/>
+        
 </sqlMapConfig>
