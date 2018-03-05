@@ -27,8 +27,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 
 @Component
 public class EzEmailAsync {
-	private static final Logger logger = LoggerFactory
-			.getLogger(EzEmailAsync.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzEmailAsync.class);
 
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -111,6 +110,7 @@ public class EzEmailAsync {
 									 if (jobCode != 3) {
 										 	break; 
 									 }
+									 
 							}
 							
 							ia.close();
@@ -130,8 +130,8 @@ public class EzEmailAsync {
 					logger.debug("address=" + address + ",jobCode=" + jobCode);
 					receiveDetailList.add(new String[] { address,String.valueOf(jobCode)});
 				}
-
 				ezEmailService.updateMailReceiveDetailInfo(num, receiveDetailList);
+
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -181,8 +181,7 @@ public class EzEmailAsync {
 				folder.close(true);
 			} else {
 				folder.close(true);
-				List<Folder> subfolderList = ia
-						.getSubFolders(folderPath, false);
+				List<Folder> subfolderList = ia.getSubFolders(folderPath, false);
 
 				for (Folder subFolder : subfolderList) {
 					int subJobCode = recursiveCancelMailSearch(ia, subFolder, searchTerm, isReadDelete);
