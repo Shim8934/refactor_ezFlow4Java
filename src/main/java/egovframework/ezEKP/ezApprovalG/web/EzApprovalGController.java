@@ -7508,6 +7508,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "json";
 	}
 	
+	/**
+	 * 직인의뢰접수화면 호출 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/ezConvOut.do")
 	public String ezConvOut(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("ezConvOut started.");

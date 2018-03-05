@@ -337,18 +337,35 @@
 		    }
 		
 		    function GetSealInfo() {
-		        var xmlhttp = createXMLHttpRequest();
+		        /* var xmlhttp = createXMLHttpRequest();
 		        var xmlpara = createXmlDom();
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "PARAMETER");
 		        createNodeAndInsertText(xmlpara, objNode, "Flag", "LIST");
 		        xmlhttp.open("POST", "/myoffice/ezApprovalG/ezSealInfo/aspx/GetSealList.aspx", false);
 		        xmlhttp.send(xmlpara);
-		        return loadXMLString(xmlhttp.responseText);
+		        return loadXMLString(xmlhttp.responseText); */
+		        
+				var result = "";
+		    	
+	    		$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApprovalG/getSealList.do",
+		    		data : {
+		    			flag : "LIST"
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		}        			
+		    	});
+	    		
+		        return result;
 		    }
 		
 		    function GetDeptSealInfo() {
-		        var xmlhttp = createXMLHttpRequest();
+		        /* var xmlhttp = createXMLHttpRequest();
 		        var xmlpara = createXmlDom();
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -356,7 +373,28 @@
 		        createNodeAndInsertText(xmlpara, objNode, "DeptID", arr_userinfo[4]);
 		        xmlhttp.open("POST", "/myoffice/ezApprovalG/ezSealInfo/aspx/GetDeptSealList.aspx", false);
 		        xmlhttp.send(xmlpara);
-		        return loadXMLString(xmlhttp.responseText);
+		        return loadXMLString(xmlhttp.responseText); */
+		        
+				var result = "";
+		    	
+	    		$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApprovalG/getDeptSealList.do",
+		    		data : {
+		    			flag : "LIST",
+		    			deptID  : arr_userinfo[4]
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		},
+		    		error : function(jqXHR, textStatus, errorThrown) {
+		        		alert("<spring:message code = 'ezApprovalG.t228' />" + jqXHR.statusText);
+		        	}
+		    	});
+	    		
+		        return result;
 		    }
 		
 		    function btnStamp_onclick() {
@@ -399,7 +437,8 @@
 		            if (field) {
 		                var signWidth = getPixel(SealWidth) + "px";
 		                var signHeight = getPixel(SealHeight) + "px";
-		                strimg = "<img src='" + pDomainName + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(SealHref) + "' border=0 embedding='1' ";
+		                /* strimg = "<img src='" + pDomainName + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(SealHref) + "' border=0 embedding='1' "; */
+		                strimg = "<img src='" + encodeURI(SealHref) + "' border=0 embedding='1' ";
 		                strimg = strimg + " width=" + signWidth;
 		                strimg = strimg + " height=" + signHeight + ">";
 		                var field2 = message.GetListItem(fields, "chief");
