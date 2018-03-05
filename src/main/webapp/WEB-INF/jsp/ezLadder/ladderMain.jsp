@@ -13,9 +13,16 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>			
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
-		
+		var mode;
+		if(mode==null) {
+			mode = "all";
+		}
+		var searchSelect;
+		var searchInput;
 		function participant(){
-			var mode = $('#part').val();
+			/* var mode = document.getElementsByClassName('a').val(); */
+			/* mode = document.getElementsByClassName("a")[0].getAttribute('name'); */
+			 mode = $('#part').val();
 			// 일부 참여자 리스트
 			$.ajax({
 				type : "GET",
@@ -32,7 +39,7 @@
 		}
 		
 		function allPart(){
-			var mode = $('#all').val();
+			mode = $('#all').val();
 			// 전체 참여자 리스트 (particpant&all 합쳐야 하는데 방법이 안떠오름...)
 			$.ajax({
 				type : "GET",
@@ -47,7 +54,29 @@
 				}
 			});
 		}
-		
+		function searchLadder() {
+			searchSelect = document.getElementById("searchOption").value;
+			searchInput = document.getElementById("searchInput").value;
+			alert(searchSelect);
+			alert(searchInput);
+			alert(mode);
+			var allData = [searchSelect, searchInput, mode];
+			
+			jQuery.ajaxSettings.traditional = true;
+			
+			$.ajax({
+				type : "GET",
+				dataType : "json",
+				async : false,
+				url : "/ezLadder/searchLadder.do",
+				data : {
+					"allData":allData
+				},
+				success: function(data) {
+					viewList(data);
+				}
+			});
+		}
 		function viewList(data){
 			var list="";
 				list += "<table class='mainlist' style='width:100%;margin-top:30px;'>" + 
@@ -82,16 +111,15 @@
 		<h1><spring:message code="ezLadder.t001"/>
 			
 			<span style="float: right; font-weight:normal;color:black;">
-				<c:if test="${mode1 != 'wri'}">
-					<input name="searchCheck" id="radio1" type="radio" value="sub" checked style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezLadder.t003"/></span>
-					<input name="searchCheck" id="radio2" type="radio" value="wri" style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezLadder.t004"/></span>
-				</c:if>
-				<c:if test="${mode1 == 'wri'}">
-					<input name="searchCheck" id="radio1" type="radio" value="sub" style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezLadder.t003"/></span>
-					<input name="searchCheck" id="radio2" type="radio" value="wri" checked style="margin:0px;padding:0px;width:13px;height:13px; "> <span><spring:message code="ezLadder.t004"/></span>
-				</c:if>
-					<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
-					<a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle;" ></a>
+				<select id="searchOption">
+				  <option value="title">사다리 제목</option>
+				  <option value="kind">사다리 종류</option>
+				  <option value="writer">작성자</option>
+				  <option value="participant">참여자</option>
+				</select>
+
+				<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
+				<a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle;" onclick="searchLadder()" ></a>
 			</span>
 		</h1>
 		<div id="mainmenu">

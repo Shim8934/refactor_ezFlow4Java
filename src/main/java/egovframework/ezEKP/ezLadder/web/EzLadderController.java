@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezLadder.web;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -102,10 +103,10 @@ public class EzLadderController {
 	 * 사다리 게임 참여자 목록 버튼
 	 */
 	@RequestMapping(value = "/ezLadder/viewLadderModeList.do")
-	public String viewLadderParticipant(@RequestParam("mode") String mode, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String viewLadderParticipant(String mode, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		
 		logger.debug("/ezLadder/viewLadderModeList.do started.");
-		logger.debug("participant : " + mode);
+		logger.debug("mode : " + mode);
 	
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
@@ -137,6 +138,50 @@ public class EzLadderController {
 		}
 		
 		logger.debug("/ezLadder/viewLadderParticipant.do ended");
+
+		return "json";
+	}
+	
+	/**
+	 * 사다리 게임 참여자 목록 버튼
+	 */
+	@RequestMapping(value = "/ezLadder/searchLadder.do")
+	public String searchLadder(@RequestParam(value="allData") List<String> allData, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+		
+		logger.debug("/ezLadder/searchLadder.do started.");
+		logger.debug("searchSelect : " + allData.get(0) + ", searchInput " + allData.get(1) +  ", mode : " + allData.get(2));
+	
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
+		String url = gwServerUrl + "/ladder/search/" + allData + "/" + userInfo.getId();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+
+		JSONParser jp = new JSONParser();
+		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
+		
+		JSONArray list = new JSONArray();
+		String status = jsonResult.get("status").toString();
+	
+		if (status.equals("ok")) {
+			list = (JSONArray) jsonResult.get("data");
+			model.addAttribute("list", list);
+		} else {
+			return "error";
+		}
+		System.out.println(list);
+		
+		logger.debug("/ezLadder/searchLadder.do ended");
 
 		return "json";
 	}

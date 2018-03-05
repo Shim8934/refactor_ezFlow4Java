@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezLadder.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -92,6 +93,29 @@ public class EzLadderGWController {
 		return result;
 	}
 	
+	@RequestMapping(value = "/ladder/search/{allData}/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
+	public JSONObject gwSearchLadder(@PathVariable List<String> allData,  @PathVariable String userId, HttpServletRequest request) {
+		logger.debug("web G/W LADDER [GET /ladder/search/" + allData.get(0) + "/" + allData.get(1) + "/" + allData.get(2) + "/" + userId + "] started.");
+
+		JSONObject result = new JSONObject();
+		String mode= "part";
+		try {
+			List<LadderVO> list;
+							// 전체 참여자 선택
+				list = ezLadderService.searchLadderList(userId, allData);
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", list);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		logger.debug("web G/W LADDER [GET /ladder/search/" + allData.get(0) + "/" + allData.get(1) + "/" + allData.get(2) + "/" + userId + "] ended.");
+		
+		return result;
+	}
 	/** boh */
 	
 	/**

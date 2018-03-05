@@ -32,6 +32,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("userId", userId);
 		List<LadderVO> list = ezLadderDAO.getLadderList(map);
 		
+		logger.debug("getLadderList ended.");
 		return list;
 	}
 	
@@ -42,6 +43,34 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("userId", userId);
 		List<LadderVO> list = ezLadderDAO.getPartLadderList(map);
 		
+		logger.debug("getPartLadderList ended.");
+		return list;
+	}
+	
+	@Override
+	public List<LadderVO> searchLadderList(String userId, List<String> allData) throws Exception {
+		logger.debug("searchLadderList started.");
+	
+		Map<String,Object> map = new HashMap<String, Object>();	
+		String searchSelect = allData.get(0).substring(1);
+		String searchInput = allData.get(1);
+		String mode = allData.get(2).substring(0,allData.get(2).length()-1);
+		
+		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
+		
+		map.put("userId", userId);
+		map.put("searchSelect", searchSelect);
+		map.put("searchInput", searchInput);
+		map.put("mode", mode);
+		
+		
+		List<LadderVO> list = null;
+		if(mode.equals("part")) {
+			list = ezLadderDAO.searchPartLadderList(map);
+		} else {
+			list = ezLadderDAO.searchAllLadderList(map);
+		}
+		logger.debug("searchLadderList ended.");
 		return list;
 	}
 
