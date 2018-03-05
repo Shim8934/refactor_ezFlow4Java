@@ -2530,7 +2530,7 @@
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="ballotSystemBody">
-				<div id="mainmenu3" style="overflow: hidden; margin:29px 0px 12px 0px">
+				<div id="mainmenu3" style="overflow: hidden; margin:29px 0px 5px 0px">
 					  <div style="float: left; display: block;" class="voteInfo">
 					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
 							<div id="textTest" style="display:inline-block;" class="voteTextTest">
@@ -2554,12 +2554,12 @@
 								<c:choose>
 									<c:when test="${question.resultFirst == 1}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" >
+											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t255'/>" >
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg" >
+											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t256'/>" >
 										</li>
 									</c:otherwise>
 								</c:choose>
@@ -2571,12 +2571,12 @@
 								<c:choose>
 									<c:when test="${question.multiSelect >= 0}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" >
+											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t257'/>" >
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" >
+											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t257'/>" >
 										</li>
 									</c:otherwise>
 								</c:choose>
@@ -2598,7 +2598,7 @@
 								<c:choose>
 									<c:when test="${question.secretVote == 1}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg" >
+											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t253'/>" >
 										</li>
 										<li class="img_description">
 											<div><span><spring:message code = 'ezPoll.t111'/></span></div>
@@ -2606,7 +2606,7 @@
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg" >
+											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
 										</li>
 										<li class="img_description">
 											<div><span><spring:message code = 'ezPoll.t240'/></span></div>
@@ -2621,7 +2621,7 @@
 								<c:choose>
 									<c:when test="${question.secretVote == 0}">
 										<li class="voteIconImg_li icon nosecret" onclick="menuDetailSeenUserInfo('${question.qstId}')">
-											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" >
+											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t112'/>" >
 										</li>
 										<li class="img_description">
 											<div><span id="seenPeople">${seenUsers}</span></div>
@@ -2629,7 +2629,7 @@
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" >
+											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t112'/>" >
 										</li>
 										<li class="img_description">
 											<div><span id="seenPeople">${seenUsers}</span></div>
@@ -2644,7 +2644,7 @@
 								<c:choose>
 									<c:when test="${question.secretVote == 0}">
 										<li class="voteIconImg_li icon nosecret" onclick="javascript:displayDetail('${question.qstId}')">
-											<img src="/images/poll/unvoted_user.png" class="voteIconImg" >
+											<img src="/images/poll/unvoted_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t123'/>" >
 										</li>
 										<li class="img_description">
 											<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
@@ -2652,7 +2652,7 @@
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/unvoted_user.png" class="voteIconImg" >
+											<img src="/images/poll/unvoted_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t123'/>" >
 										</li>
 										<li class="img_description">
 											<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
@@ -2761,7 +2761,7 @@
 			               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left; display:block; heigth:20px; margin:4px 0px 10px 0px;">
 			               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20"></canvas>			               					               					
 			               				</div>	
-			               				<div id="voterNumber<c:out value ="${_option.ansId}" />" style="float:left; display:block; font-size:16px; margin:-4px 10px 0px 10px;">0</div>		               				
+			               				<div id="voterNumber<c:out value ="${_option.ansId}" />" class="voterNumber" >0</div>		               				
 			               				<script type="text/javascript">
 			               					var loopIdx = ${loop.index};
 			               					userNameArr[loopIdx] = [];
@@ -2799,7 +2799,7 @@
 			               		</div>          		
 			               </td>		               
 				          <td style="width:80px; border:1px solid #DDD; border-left:none;">	   	               		
-				               	<div id="_resultPercentage<c:out value ="${_option.ansId}"/>" style="padding-bottom: 3px;padding-left: 20px;"></div>           		
+				               	<div id="_resultPercentage<c:out value ="${_option.ansId}"/>" class="_resultPercentage" ></div>           		
 				          </td>		               
 			            </tr>
 					</c:forEach>
