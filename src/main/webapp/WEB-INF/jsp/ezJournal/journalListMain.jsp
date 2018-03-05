@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -20,9 +19,11 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 		<!-- time picker-->
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		
 	    <style>
 	    	#layer_Viewpopup { 
@@ -79,6 +80,8 @@
 			var clickPreviweType = "text";
 			var PreviewH_Move = false;
 			var PreviewW_Move = false;
+			var isPreviewChange = false;
+			var g_bPrevShow=false;
 			
 			//업무일지 리스트 뿌리기
 			function setJournalList(){
@@ -148,22 +151,30 @@
 				searchEndDate = document.getElementById("Edatepicker").value;
 				setJournalList();
 				BoardSearchOptionHidden();
+				SearchOptionHidden();
 			}
 			
 			//상세검색 레이어팝업
 			function doLayerPopup(obj) {
-		        if (obj.getAttribute("mode") == "off") {
-		            document.getElementById("layer_popup").style.left = "10px";
-		            if (pAdminType == "y")
-		                document.getElementById("layer_popup").style.top = "56px";
-		            else
-		                document.getElementById("layer_popup").style.top = "100px";
-		            document.getElementById("layer_popup").style.display = "";           
-		            obj.setAttribute("mode", "on");
-		        }
-		        else {
-		            BoardSearchOptionHidden();
-		        }
+				$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        	
+	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	        	
+	        	$("#srarchpopup").css("left", popupX);
+	        	
+				$("#srarchpopup").modal();
+// 		        if (obj.getAttribute("mode") == "off") {
+// 		            document.getElementById("layer_popup").style.left = "10px";
+// 		            if (pAdminType == "y")
+// 		                document.getElementById("layer_popup").style.top = "56px";
+// 		            else
+// 		                document.getElementById("layer_popup").style.top = "100px";
+// 		            document.getElementById("layer_popup").style.display = "";           
+// 		            obj.setAttribute("mode", "on");
+// 		        }
+// 		        else {
+// 		            BoardSearchOptionHidden();
+// 		        }
 		    }
 			function btn_PostDate_Clear() {
 		        $("#Sdatepicker").val("");
@@ -177,6 +188,7 @@
 		        document.getElementById("searchTitle").value = "";
 		        document.getElementById("layer_popup").style.display = "none";
 		        document.getElementById("SearchOption").setAttribute("mode", "off");
+		        SearchOptionHidden();
 		    }
 			
 			//부서에 의한 페이지 세팅
@@ -221,18 +233,47 @@
 	   				}
 	   			});
 			}
+	        	
+	        function SearchOptionHidden() {
+	        	$.modal.close();
+	        }	        
+	        function ShowQuickAddres() {
+	        	if (useAnyoneEdit != "YES") {
+		        	if (deptAdmin != "Y" && pFolderType == "D") {
+		                alert("<spring:message code='ezAddress.t999900003' />");
+		                return;
+		            }
+		            else if (compAdmin != "Y" && pFolderType == "C") {
+		                alert("<spring:message code='ezAddress.t999900004' />");
+		                return;
+		            }
+	        	}	        	
+	        	
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        	
+	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	        	
+	        	$("#addpopup").css("left", popupX);
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	
+	        	$("#addpopup").modal();
+	        }	
+			
+			function savePreviewRayer(viewHow){
+				$.ajax({
+	   				type:"post",
+	   				data:{viewenv:viewHow},
+	   				url:"/ezJournal/saveJournalEnv.do",
+	   				success: function(result){
+	   					journalPreviewRayerChange(viewHow);
+	   				}
+	   			});
+			}
 			
 			//분할보기 설정
 			function journalPreviewRayerChange(pGubun) {
 			    pGubun = pGubun.trim();
-			    
-			    $.ajax({
-	   				type:"post",
-	   				data:{viewenv:pGubun},
-	   				url:"/ezJournal/saveJournalEnv.do",
-	   				success: function(result){
-	   				}
-	   			});
 
 			    if (pGubun == "OFF")
 			        pGubun = "NONE";
@@ -423,7 +464,6 @@
 	       	 <li><span onClick=""><spring:message code='ezJournal.t60' /></span></li>
 		  	</c:if>
 	        <c:if test="${listType eq 'department'}">
-		        <li><spring:message code='ezJournal.t61' /></li> 
 		        <li style="background:none">
 		            <select id="dept" onchange="goToPageByDeptId();">
 		            	<c:forEach items="${deptList}" var="dept">
@@ -433,25 +473,17 @@
 		        </li>
 	        </c:if>
 	        <c:if test="${listType eq 'department' or listType eq 'mine'}">
-		        <li><spring:message code='ezJournal.t62' /></li> 
 		        <li style="background:none">
 		            <select id="formId" onchange="goToPageByFormName();">
 		            </select>
 		        </li>
 	        </c:if>
-<%-- 	        <c:if test="${listType eq 'recv'}"> --%>
-<%-- 		        <li><spring:message code='ezJournal.t12' /></li>  --%>
-<!-- 		        <li style="background:none"> -->
-<!-- 		            <select id="typeSelectbox" onchange=""> -->
-<!-- 		            </select> -->
-<!-- 		        </li> -->
-<%-- 	        </c:if> --%>
 				<li style="">
 				</li>
 		        <li id="right">
-					<img src="/images/kr/cm/btn_noframe.gif"     width="22" height="20" class="btnimg" id="PreViewNone"   status="off" onclick="journalPreviewRayerChange('NONE')">
-					<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" status="off" onclick="journalPreviewRayerChange('W')">
-					<img src="/images/kr/cm/btn_leftframe.gif"   width="22" height="20" class="btnimg" id="PreViewleft"   status="off" onclick="journalPreviewRayerChange('H')">
+					<img src="/images/kr/cm/btn_noframe.gif"     width="22" height="20" class="btnimg" id="PreViewNone"   status="off" onclick="savePreviewRayer('NONE')">
+					<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" status="off" onclick="savePreviewRayer('W')">
+					<img src="/images/kr/cm/btn_leftframe.gif"   width="22" height="20" class="btnimg" id="PreViewleft"   status="off" onclick="savePreviewRayer('H')">
 		        	<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
 		        </li>         
 		  </ul>
@@ -536,12 +568,9 @@
 		    </span>
 		    <div id="ListInfo" style="display:none"></div>
 
-
-	<div id="layer_popup"
-		style="width: 400px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
-		<div class="popupwrap1">
-			<div class="popupwrap2">
-				<table class="content">
+	<div class="jquery-modal blocker current" id="layer_popup" style="display:none;">
+		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
+			<table class="content">
 					<c:if test="${listType ne 'mine' }">
 					<tr>
 						<th style="text-align: center"><spring:message code='ezJournal.t34' /></th>
@@ -574,10 +603,50 @@
 						</td>
 					</tr>
 				</table>
-			</div>
+			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
 		</div>
-		<div class="shadow"></div>
 	</div>
+
+<!-- 	<div id="layer_popup" style="width: 400px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;"> -->
+<!-- 		<div class="popupwrap1"> -->
+<!-- 			<div class="popupwrap2"> -->
+<!-- 				<table class="content"> -->
+<%-- 					<c:if test="${listType ne 'mine' }"> --%>
+<!-- 					<tr> -->
+<%-- 						<th style="text-align: center"><spring:message code='ezJournal.t34' /></th> --%>
+<!-- 						<td><input type="text" id="searchWriter" style="width: 98%" value=""></td> -->
+<!-- 					</tr> -->
+<%-- 					</c:if> --%>
+<!-- 					<tr> -->
+<%-- 						<th style="text-align: center"><spring:message code='ezBoard.t208' /></th> --%>
+<!-- 						<td><input type="text" id="searchTitle" style="width: 98%" value=""></td> -->
+<!-- 					</tr> -->
+<!-- 					<tr> -->
+<%-- 						<th style="text-align: center"><spring:message code='ezJournal.t22' /></th> --%>
+<!-- 						<td><input type="text" id="searchFormName" style="width: 98%" value=""></td> -->
+<!-- 					</tr> -->
+<!-- 					<tr> -->
+<%-- 						<th style="text-align: center"><spring:message code='ezBoard.t210' /></th> --%>
+<!-- 						<td><input type="text" id="Sdatepicker" -->
+<!-- 							style="width: 80px; text-align: center" readonly="readonly"> -->
+<!-- 							~ <input type="text" id="Edatepicker" -->
+<!-- 							style="width: 80px; text-align: center" readonly="readonly"> -->
+<!-- 						</td> -->
+<!-- 					</tr> -->
+<!-- 				</table> -->
+<!-- 				<br /> -->
+<!-- 				<table style="width: 100%"> -->
+<!-- 					<tr> -->
+<!-- 						<td style="text-align: center;"> -->
+<%-- 							<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezBoard.t188' /></span></a>  --%>
+<%-- 							<a class="imgbtn"><span onClick="BoardSearchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a> --%>
+<!-- 						</td> -->
+<!-- 					</tr> -->
+<!-- 				</table> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 		<div class="shadow"></div> -->
+<!-- 	</div> -->
 	<c:if test="${listType eq 'department' or listType eq 'mine' }">
 		<script type="text/javascript">
 			setFormName();

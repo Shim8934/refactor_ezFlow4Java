@@ -12,6 +12,20 @@
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	   	<script type="text/javascript">
+	   		function ChangeListView_onClick(flag){
+	   			if(flag=='TXT'){
+	   				$("#txtlist_Layer").css("display","");
+	   				$("#DeptUserImgList").css("display","none");
+	   				$("#txtlist").attr("src","/images/kr/cm/btn_onlist.gif");
+	   				$("#imglist").attr("src","/images/kr/cm/btn_imglist.gif");
+	   			}else{
+	   				$("#DeptUserImgList").css("display","");
+	   				$("#txtlist_Layer").css("display","none");
+	   				$("#txtlist").attr("src","/images/kr/cm/btn_list.gif");
+	   				$("#imglist").attr("src","/images/kr/cm/btn_onimglist.gif");
+	   			}
+	   		}
+	   		
 		</script>
 		<style>
 		</style>
@@ -21,6 +35,10 @@
 				<tr>
 			    	<th style="white-space:normal">
 			    		<span id="selectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">${keyword }-[<span style="color:#017BEC;">${userCount }명</span>]</span>
+			    		<span style="float:right;">
+                           <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_onlist.gif" class="icon_btn" id="txtlist"></span>
+                           <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
+                       </span>
 			        </th>
 			    </tr>
 			</tbody>
@@ -34,7 +52,7 @@
 					<th style="font-weight: bold;"><spring:message code='main.t78'/></th>
 		        </tr>
 		        <c:forEach items="${userList}" var="user">
-			        <tr id="${user.userId }" onclick="setUserAuthorDept(this);" ondblclick="showInsertAuthDept(this);" style="cursor: pointer;" class="hover">
+			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
 				        <td style="width: 130px;"><c:out value="${user.deptName }" /></td>
 						<td style="width: 90px;" ><c:out value="${user.userName }" /></td>
 						<td style="width: 90px;" ><c:out value="${user.jikwi }" /></td>
@@ -43,6 +61,31 @@
 		        </c:forEach>
 		    </table>
 		</div>
-		<div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+		<div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 550px;" id="DeptUserImgList">
+			<c:forEach items="${userList}" var="user">
+				<table class="organwrap" cellspacing="0" cellpadding="0"
+					style="margin-top: 5px; margin-left: auto; margin-right: auto;">
+			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
+						<td class="pictd"><div class="pic">
+						<c:if test="${not empty user.userImg }">
+						<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${user.userImg }" width="90px" height="90px">
+						</c:if>
+						</div></td>
+						<td style="width: 300px;"><table class="organinfo">
+								<tr>
+									<td class="name" style="text-align: left;">${user.userName }</td>
+								</tr>
+								<tr>
+									<td style="text-align: left;">${user.deptName }</td>
+								</tr>
+								<tr>
+									<td style="text-align: left;"><img class="icon"
+										src="/images/OrganTree/icon_mail.gif">${user.mail }</td>
+								</tr>
+							</table></td>
+					</tr>
+				</table>
+			</c:forEach>
+		</div>
 </html>
 

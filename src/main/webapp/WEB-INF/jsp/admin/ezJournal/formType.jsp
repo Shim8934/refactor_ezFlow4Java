@@ -30,7 +30,12 @@
 		    		url : "/admin/ezJournal/updatreFormType.do",
 		    		data :formData,
 		    		success: function(result) {
-		    			alert("<spring:message code='ezSchedule.t4012' />");
+		    			if(result.status=='ok'){
+			    			alert("<spring:message code='ezSchedule.t4012' />");
+			    			window.location.reload(true);
+		    			} else {
+		    				alert("<spring:message code='ezBoard.t80' />");
+		    			}
 		    		}
 		        });
 		    }
@@ -92,7 +97,7 @@
 			    </c:forEach>
 			    
 			</table>
-			<div class="btnposition" style="width: 260px">
+			<div class="btnposition" style="width: 400px">
 			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezJournal.t15' /></span></a>
 			    <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code='ezJournal.t16' /></span></a>
 			</div>

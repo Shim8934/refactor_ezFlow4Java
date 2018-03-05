@@ -80,6 +80,7 @@ public class EzJournalSBController {
 		}
 		
 		param.put("companyId",userInfo.getCompanyID());
+		param.put("userId",userInfo.getId());
 		param.put("used", "use");
 		
 		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types", param, request,"get",null);
@@ -164,6 +165,7 @@ public class EzJournalSBController {
 		
 		param.put("deptId",deptId);
 		param.put("companyId",companyId);
+		param.put("userId", userInfo.getId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types/"+typeId+"/forms", param, request,"get",null);
 		String status = resultBody.get("status").toString();
@@ -201,6 +203,7 @@ public class EzJournalSBController {
 		int currentPage = (int) param.remove("currentPage");
 		
 		param.put("companyId", userInfo.getCompanyID());
+		param.put("userId", userInfo.getId());
 		
 		switch (listType) {
 		case "department":
@@ -279,7 +282,6 @@ public class EzJournalSBController {
 		logger.debug("saveJournalEnv started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		logger.debug("리스트 갯수******************"+param.get("listCnt"));
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/"+userInfo.getId()+"/options", param, request,"post",null);
 		
