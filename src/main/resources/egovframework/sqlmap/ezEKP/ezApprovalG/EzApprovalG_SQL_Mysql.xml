@@ -10364,7 +10364,7 @@
 					a.EXTENSIONATTRIBUTE1 like '%a=1%'
 				AND 
 					a.TENANT_ID = #v_TENANTID#
-			) as Z;		         	
+			) as Z
 		</select>
 	
 <!-- 	<procedure id="EzApprovalG.doProcessCount" parameterClass="Map" resultClass="int"> -->

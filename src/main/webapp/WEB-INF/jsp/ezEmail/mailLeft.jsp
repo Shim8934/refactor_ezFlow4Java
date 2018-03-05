@@ -229,6 +229,7 @@
 	        }
 	        
 	        function selectnode() {
+	        	detailView();
 	        	var nodeIdx = PostTreeView.selectedIndex();
 	            var href = PostTreeView.getvalue(nodeIdx, "href");
 	            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
@@ -523,6 +524,7 @@
 	        }
 	        
 	        function mail_Config() {
+	        	detailView();
 	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
 	        }
 	        function Address_Menu_Click() {

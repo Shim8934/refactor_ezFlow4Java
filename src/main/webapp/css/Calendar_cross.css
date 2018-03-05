@@ -140,7 +140,7 @@
 .calendar_mini th{font-weight:normal;width:14.2%; height:27px; line-height:27px; background-color:rgb(0, 72, 148); margin:0; padding:2px 0 0 0; border-top:0 none; border-right:0 none; border-bottom:0 none; border-left:0 none; font-size:11px; color:#ffffff; font-family: Meiryo UI, Arial, Gulim;}
 .calendar_mini th.sun{color:#ffffff;} /* 흰색으로 수정 원본-> .calendar_mini th.sun{color:#ee1c25;} */
 .calendar_mini th.sat{color:#ffffff;} /* 흰색으로 수정 원본-> .calendar_mini th.sat{color:rgb(0, 72, 149);} */
-.calendar_mini td{width:14.2%; height:30px; text-align:center; cursor:pointer; font-family: Meiryo UI, Arial, Gulim;}
+.calendar_mini td{width:14.2%; height:30px; text-align:center; cursor:pointer; font-family: Meiryo UI, Dotum, Gulim;}
 .calendar_mini td div{height:30px; line-height:30px; cursor:pointer;}
 .calendar_mini td.sun{color:#ee1c25;}
 .calendar_mini td.sat{color:rgb(0, 72, 149);}
