@@ -1275,7 +1275,7 @@
 	<body id="parentBody" class="popup" style="overflow:hidden;">
 	    <table id="normalScreen" class="layout">
 	        <tr>
-	            <td style="height:20px;">
+	            <td style="">
 	                <div id="menu">
 	                    <ul>
 	                        <li><span onclick="Send_onClick()"><spring:message code='ezEmail.t674' /></span></li>
@@ -1286,20 +1286,24 @@
 	                            <spring:message code='ezEmail.t824' /></span></li> -->
 	                        <li><span onclick="NameCertify_onClick()">
 	                            <spring:message code='ezEmail.t331' /></span></li>
-	                        <li style="margin-left:5px;"><span onclick="Option_onClick()" id="Span1">
+	                        <li><span onclick="Option_onClick()" id="Span1">
 	                            <spring:message code='ezEmail.t353' /></span></li>
-	                        <li class="sel" style="background:none; border:0; padding:4px 0px 0px 0px; cursor:default; color:#fff;">
-	                            <img src="/images/pbar.gif" ><spring:message code='ezEmail.t359' />&nbsp;</li>
+	                    </ul>
+	                    <ul style="float:right;margin-right:50px">
+	                    	<li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">
+	                        	<input type="checkbox" id="chkSecureMail" />
+	                        	<label for="chkSecureMail" style="color:white"><spring:message code='ezEmail.lhm63' /></label>	                        	
+	                        </li>
+	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;">
+	                            <img src="/images/pbar.gif">
+	                        </li>
 	                        <li id="menuTable" class="sel" style="background:none;border:0; padding:4px 0 0 0; margin:0; vertical-align:top;">
 	                            <select name="importantSelect" id="importantSelect" onchange="important_change()" style="vertical-align:top;">
-	                                <option value="0"><spring:message code='ezEmail.t360' /></option>
-	                                <option value="1" selected="selected"><spring:message code='ezEmail.t361' /></option>
-	                                <option value="2"><spring:message code='ezEmail.t362' /></option>
+	                                <option value="0"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t360' /></option>
+	                                <option value="1" selected="selected"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t361' /></option>
+	                                <option value="2"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t362' /></option>
 	                            </select>
 	                        </li>
-	                        <li class="bar"  style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default; display: none;">
-	                            <img src="/images/pbar.gif"></li>
-	                        
 	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
 	                            <img src="/images/pbar.gif"></li> 
 	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
@@ -1330,13 +1334,6 @@
 		                            </select>
 		                        </li>
 	                        </c:if>
-	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;">
-	                            <img src="/images/pbar.gif">
-	                        </li>
-	                        <li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">
-	                        	<input type="checkbox" id="chkSecureMail" />
-	                        	<label for="chkSecureMail" style="color:white"><spring:message code='ezEmail.lhm63' /></label>
-	                        </li>
 	                    </ul>
 	                </div>
 	                <div id="close">
@@ -1447,7 +1444,7 @@
 	                            <div id="MsgBCCGot" style="overflow-y: auto; height: 17px" class="viewtxt"></div>
 	                        </td>
 	                    </tr>
-	                    <tr>
+	                    <tr style="height:33px">
 	                        <th style="text-align: center;border-bottom:0px;">
 	                            <spring:message code='ezEmail.t98' />
 	                        </th>
@@ -1476,7 +1473,7 @@
 	                <table style="width:100%;height:100%;">
 	                    <tr>
 	                        <td style="height:100%;">
-	                            <iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+	                            <iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;margin-bottom:1px"></iframe>
 	                        	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; display:none;"></textarea>
 	                        </td>
 	                    </tr>
