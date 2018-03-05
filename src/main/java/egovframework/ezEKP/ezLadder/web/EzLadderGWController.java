@@ -7,7 +7,9 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezLadder.service.EzLadderService;
+import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -122,18 +125,64 @@ public class EzLadderGWController {
 	 * 사다리 게임 추가
 	 * */
 	@RequestMapping(value = "/ladder/ladders/writers/{writerId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwInsertLadder(@PathVariable String writerId) {
+	public JSONObject gwInsertLadder(@PathVariable String writerId, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [POST /ladder/ladders/writers/" + writerId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			String ladData = request.getParameter("ladData");
+			String writerName = request.getParameter("writerName");
+			String writerName2 = request.getParameter("writerName2");
+			String deptName = request.getParameter("deptName");
+			String deptName2 = request.getParameter("deptName2");
+			
+			JSONParser jp = new JSONParser();
+			JSONObject ladObj = (JSONObject) jp.parse(ladData);
+			JSONArray ladArr = (JSONArray) ladObj.get("lineList");
+			
+			List<LadderLineVO> ladLineList = new ArrayList<LadderLineVO>();
+			
+			for(int i = 0; i < ladArr.size(); i++) {
+				LadderLineVO vo = new LadderLineVO();
+				JSONObject ladline = (JSONObject) ladArr.get(i);
+				
+				vo.setUserId((String) ladline.get("userId")); 
+				vo.setUserName((String) ladline.get("userName"));
+				vo.setUserName2((String) ladline.get("userName2"));
+				vo.setItem((String) ladline.get("item"));
+				vo.setLadderOrder(i);
+				vo.setWriterId(writerId);
+				
+				ladLineList.add(vo);
+			}
+			
+			JSONObject ladInfo = (JSONObject) ladObj.get("ladInfo");
+			LadderVO lad = new LadderVO();
+			
+			lad.setTitle((String) ladInfo.get("title"));
+			lad.setWriterId(writerId);
+			lad.setWriterName(writerName);
+			lad.setWriterName2(writerName2);
+			lad.setDeptName(deptName);
+			lad.setDeptName2(deptName2);
+			
+			for(LadderLineVO vo : ladLineList) {
+				logger.debug("###"+vo.toString());
+			}
+			logger.debug("###"+lad.getTitle());
+			
+			ezLadderService.insertLadder(lad, ladLineList);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", null);
+			logger.debug("###t 성공");
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.debug("###t 실패");
+			e.printStackTrace();
 		}
 		
 		logger.debug("web G/W LADDER [POST /ladder/ladders/writers/" + writerId + "] ended.");

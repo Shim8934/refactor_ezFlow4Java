@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.support.DaoSupport;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezLadder.dao.EzLadderDAO;
@@ -77,10 +78,15 @@ public class EzLadderServiceImpl implements EzLadderService {
 	/** boh */
 	
 	@Override
-	public void insertLadder(LadderVO lad, LadderLineVO ladLine)
+	public void insertLadder(LadderVO lad, List<LadderLineVO> ladLineList)
 			throws Exception {
 		// TODO Auto-generated method stub
 		
+		ezLadderDAO.insertLadderSet(lad);
+		
+		for(LadderLineVO ladLine : ladLineList) {
+			ezLadderDAO.insertLadderLine(ladLine);
+		}
 	}
 
 	@Override

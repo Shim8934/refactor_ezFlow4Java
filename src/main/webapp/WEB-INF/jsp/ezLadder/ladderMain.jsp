@@ -12,7 +12,9 @@
 
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>			
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+			
 		<script type="text/javascript">
+
 		var mode;
 		if(mode==null) {
 			mode = "all";
@@ -97,15 +99,74 @@
 							"<td>" + value.status + "</td>" +
 							"<td>" + value.secretFlag + "</td>" +
 							"<td>" + value.deleteFlag + "</td></tr>";
-				});
-			} else {
-				list += "<tr><td colspan='7' align='center' bgcolor='#FFFFFF'> <spring:message code='ezLadder.t010' /></td></tr>";
+
+			function newLad() {
+				window.location.href = '/ezLadder/selectLadderType.do';
 			}
-			list+="</table>";
-			$("#divList").html(list);
-		}
+	
+			function participant(){
+				var mode = $('#part').val();
+				// 일부 참여자 리스트
+				$.ajax({
+					type : "GET",
+					dataType : "json",
+					async : false,
+					url : "/ezLadder/viewLadderModeList.do",
+					data : {
+						mode : mode
+					},
+					success: function(data) {
+						viewList(data);
+					}
+
+				});
+			}
+			
+			function allPart(){
+				var mode = $('#all').val();
+				// 전체 참여자 리스트 (particpant&all 합쳐야 하는데 방법이 안떠오름...)
+				$.ajax({
+					type : "GET",
+					dataType : "json",
+					async : false,
+					url : "/ezLadder/viewLadderModeList.do",
+					data : {
+						mode : mode
+					},
+					success: function(data) {
+						viewList(data);
+					}
+				});
+			}
+			
+			function viewList(data){
+				var list="";
+					list += "<table class='mainlist' style='width:100%;margin-top:30px;'>" + 
+					    	"<tr><th width='30px'><spring:message code='ezLadder.t002'/></th>" + 					
+							"<th width='20px'><spring:message code='ezLadder.t003'/></th>" +
+							"<th width='60px'><spring:message code='ezLadder.t004'/></th>" +
+							"<th width='40px'><spring:message code='ezLadder.t005'/></th>" + 
+							"<th width='50px'><spring:message code='ezLadder.t006'/></th>" +
+							"<th width='50px'><spring:message code='ezLadder.t007'/></th>" +
+							"<th width='50px'><spring:message code='ezLadder.t008'/></th></tr>";
+				if (data.list.length > 0) {
+					$.each(data.list, function(key, value) {
+						list += "<tr class='white'>" +
+								"<td>" + value.type + "</td>" +
+								"<td>" + value.title + "</td>" +
+								"<td>" + value.writerName + "</td>" +
+								"<td>" + value.writeDate.substring(0,16) + "</td>" +
+								"<td>" + value.status + "</td>" +
+								"<td>" + value.secretFlag + "</td>" +
+								"<td>" + value.deleteFlag + "</td></tr>";
+					});
+				} else {
+					list += "<tr><td colspan='7' align='center' bgcolor='#FFFFFF'> <spring:message code='ezLadder.t010' /></td></tr>";
+				}
+				list+="</table>";
+				$("#divList").html(list);
+			}
 		</script>
-		
 	</head>
 	<body class="mainbody" style="min-width: 750px;">
 		<h1><spring:message code="ezLadder.t001"/>
@@ -124,7 +185,7 @@
 		</h1>
 		<div id="mainmenu">
 			<ul>
-				<li id="btnInsert"><a  style="margin-top: 3px;"><span><spring:message code="ezLadder.t013"/></span></a></li>
+				<li id="btnInsert" onClick="newLad()"><a  style="margin-top: 3px;"><span><spring:message code="ezLadder.t013"/></span></a></li>
 				<li style="float:right; font-weight:normal; color:black; padding-right: 20px;">
 					<button id="part" onclick="participant()" value="part"><spring:message code="ezLadder.t012"/></button>
 					<button id="all" onclick="allPart()" value="all"><spring:message code="ezLadder.t011"/></button>
