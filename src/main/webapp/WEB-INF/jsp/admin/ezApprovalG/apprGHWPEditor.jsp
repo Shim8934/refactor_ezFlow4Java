@@ -22,11 +22,17 @@
 		    var FormText;
 		    var g_toggleFlag = false;
 	
-		    $(document).ready(function() {
+		    /* $(document).ready(function() {
 		        HwpCtrl.SetImgReg();
 		        HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 		        HwpCtrl.SetSaveMode(1);
-		    });
+		    }); */
+		    
+		    window.onload = function () {
+		    	HwpCtrl.SetImgReg();
+		        HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+		        HwpCtrl.SetSaveMode(1);
+		    }
 	
 		    function HWP_LoadFile(formURL) {
 		        HwpCtrl.LoadFile(formURL, false);
