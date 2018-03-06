@@ -27,6 +27,11 @@
 	    	position:relative;
 	    }
 	    
+	    .myScrollableBlock {
+		  display: block;
+		  overflow: auto;
+		}
+	    
 	    </style>
 	    
 	    <script type="text/javascript">
@@ -66,7 +71,8 @@
 	    function treeInit () {
 	    	$("#divTree").on('ready.jstree', function (e, data) {
 	    		selectNode = data;
-	    		$("#divTree").jstree('open_all');
+	    		//$("#divTree").jstree('open_all');
+	    		//data.instance.open_node(["1"]);
 	    		data.instance.select_node(["1"]);
 	    	});
 	    }
@@ -75,6 +81,15 @@
 	    	var parent;
 	    	
 	    	$('#divTree').on('changed.jstree', function (e, data) {
+	    		
+	    		if (addCheck == -1) {
+	    			//추가하면 다른 node 못누르게됨
+	    			$("#divTree").jstree('select_node', "#temp");
+	    			setDisplay("편지지함", "letterbox_temp");
+	    			return;
+	    		}
+	    		
+	    		
 	    		selectNode = data;
 	    		parent = selectNode.node.parent;
 	    		
@@ -263,14 +278,15 @@
 	    	if (document.getElementById("letterbox_no").disabled) {
 	    		//true이면 create로
 	    		formUrl = "/admin/ezEmail/createLetterBox.do";
-	    		var checkVal = boxNameCheck();
-	    		
-	    		if (checkVal == true) {
-	    			alert("편지지함명 이 중복되었습니다.");
-					document.getElementById("display").focus();
-					return;
-	    		}
 	    	}
+	    	
+	    	var checkVal = boxNameCheck();
+    		
+    		if (checkVal == true) {
+    			alert("편지지함명 이 중복되었습니다.");
+				document.getElementById("display").focus();
+				return;
+    		}
 	    	 
 			$.ajax({
 				type : "POST",
@@ -301,7 +317,7 @@
 		        <li><span onclick="deleteLetterBox()">&nbsp;&nbsp;- 편지지함 <spring:message code='ezQuestion.t177'/>&nbsp;&nbsp;</span></li>
 		    </ul>
 		</div>
-		<div id="divTree">
+		<div id="divTree" class="myScrollableBlock">
 		</div>
 		<div id="divInput">
 			<form id="myForm" action="/admin/ezEmail/updateLetterBox.do" method="post"><br>
