@@ -69,7 +69,6 @@ public class EzJournalJYController {
 		if (status.equals("ok")) {
 			JSONArray typeList = (JSONArray) result.get("data");
 			model.addAttribute("typeList", typeList);
-			System.out.println(typeList);
 		}
 		
 		model.addAttribute("typeId", typeId);

@@ -62,7 +62,7 @@
 		    
 		    // 수정시 양식내용을 에디터에 넣어주는 작업 
 		    function Editor_Complete() {
-		    	var totalTD = message.CKEDITOR.instances.editor1.document.$.getElementsByTagName("TD");
+		   
 	            if (formId != "" && formId != null) {
 	            	console.log(selFormContent);
 	            	selFormContent = selFormContent.replace(/&#034;/g, "\"");
