@@ -69,7 +69,7 @@ public interface EzAttitudeService {
 	//public void updateAttitudeConfig(AttitudeConfigVO attitudeConfigInfo) throws Exception;
 	
 	//근태유형관리 리스트 출력
-	//public List<map<String, String>> getAttitudeTypeList(int tenantID, String companyID) throws Exception;
+	//public List<Map<String, String>> getAttitudeTypeList(int tenantID, String companyID) throws Exception;
 	
 	//근태유형관리 설정 저장(사용여부)
 	//public void updateAttitudeTypeConfig(AttitudeTypeVO attitudeTypeInfo) throws Exception;
@@ -84,5 +84,15 @@ public interface EzAttitudeService {
 	//public void updateAttitudeType(AttitudeTypeVO attitudeTypeInfo) throws Exception;
 	
 	//사용자별 근태설정 리스트
+	//public list<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantID, String companyID) throws Exception;
+	
+	//사용자별 근태설정 정보조회
+	//public AttitudeUserConfigVO getAttitudeUserConfigInfo(int tenantID, String userID) throws Exception;
+	
+	//사용자별 근태설정 시간변경 
+	public void updateAttitudeUserConfig(int tenantID, String userID, String workStartTime, String workEndTime) throws Exception;
+	
+	//사용자별 근태설정 시간설정
+	public void insertAttitudeUserConfig(int tenantID, String companyID, String userID, String workStartTime, String workEndTime) throws Exception;
 	
 }
