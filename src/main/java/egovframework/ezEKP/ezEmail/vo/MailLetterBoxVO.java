@@ -7,6 +7,7 @@ public class MailLetterBoxVO {
 	private String displayname;
 	private String displayname2;
 	private String companyID;
+	private int tenantID;
 	
 	public int getLetterBoxNo() {
 		return letterBoxNo;
@@ -38,13 +39,19 @@ public class MailLetterBoxVO {
 	public void setCompanyID(String companyID) {
 		this.companyID = companyID;
 	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}
 	
 	@Override
 	public String toString() {
 		return "MailLetterBoxVO [letterBoxNo=" + letterBoxNo
 				+ ", parentLetterBoxNo=" + parentLetterBoxNo + ", displayname="
 				+ displayname + ", displayname2=" + displayname2
-				+ ", companyID=" + companyID + "]";
+				+ ", companyID=" + companyID + ", tenantID=" + tenantID + "]";
 	}
 
 }
