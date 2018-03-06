@@ -207,6 +207,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void insertAttitudeTypeIcon(String typeId, String fileName,
+			String realPath, int tenantId) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId,
@@ -236,4 +243,5 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }
