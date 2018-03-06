@@ -139,7 +139,7 @@
 							      		  AND 
 							      		 	$v_SPSUBQUERY$
 				      					</isGreaterThan> ) AS B 
-				      				WHERE (DOCTYPE != '017' AND FUNCTIONTYPE != '004')
+<!-- 				      				WHERE (DOCTYPE != '017' AND FUNCTIONTYPE != '004') -->
 					      				
 				      		<isNotEmpty property="v_ORDEROPTION"> 
 				      		<isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="9" >
