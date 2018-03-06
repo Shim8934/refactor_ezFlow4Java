@@ -78,7 +78,10 @@
                 	else
 	                    document.getElementById("curMontxt").innerText = txtmonth;
             	}
-
+				
+	            if (month < 10 && String(month).length == 1)
+		            month = "0" + month;
+	            
             	if (CrossYN())
 	                document.getElementById("curMon").textContent = month;
             	else

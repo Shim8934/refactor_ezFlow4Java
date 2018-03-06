@@ -16156,19 +16156,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getAprType_AprState(String docID, String userID, String companyID, int tenantID) throws Exception {
+	public String getAprType_AprState(String docID, String userID, String strType, String companyID, int tenantID) throws Exception {
 		String sbVal = "NO/NO";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_PDOCID", docID);
 		map.put("v_PUSERID", userID);
+		if (strType.equals("017")) {
+			strType = "007";
+		}
+		map.put("strType", strType);
 		map.put("v_TENANTID", tenantID);
 		/**
 		 * 해당 문서에 해당 유저가 아직 완료하지 않은 (aprState != 003 && aprState != 010) 문서 추출
 		 * -> 아직 결재를 마치지 못한 문서 추출
 		 * */
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getAprLineInfoAprState(map);
+     	List<ApprGAprLineVO> apprGAprLineVOChamJoList = ezApprovalGDAO.getAprLineInfoAprStateChamJo(map);
 		
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
@@ -16182,6 +16187,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (infoXml.getElementsByTagName("APRTYPE").getLength() > 0) {
 			sbVal = infoXml.getElementsByTagName("APRTYPE").item(0).getTextContent() + "/" + infoXml.getElementsByTagName("APRSTATE").item(0).getTextContent();
+		} else if (apprGAprLineVOChamJoList.size() > 0) {
+			if (apprGAprLineVOChamJoList.get(0).getAprState().equals("000")) {
+				sbVal = "007/000";
+			}
 		} else {
 			sbVal = "NO/NO";
 		}
