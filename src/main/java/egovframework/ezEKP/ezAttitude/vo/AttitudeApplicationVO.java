@@ -1,0 +1,169 @@
+package egovframework.ezEKP.ezAttitude.vo;
+
+public class AttitudeApplicationVO {
+	/** 근태 아이디 */
+	private String attitudeId;
+	/** 계열사 아이디 */
+	private String companuId;
+	/** 고객사 아이디 */
+	private int tenantId;
+	/** 신청자 아이디 */
+	private String writerId;
+	/** 신청자 이름 */
+	private String WriterName;
+	/** 신청자 이름(영문) */
+	private String WriterName2;
+	/** 신청자 직위 */
+	private String writerTitle;
+	/** 신청자 직위(영문) */
+	private String writerTitle2;
+	/** 신청자 부서 아이디 */
+	private String writerDeptId;
+	/** 신청자 부서명 */
+	private String writerDeptName;
+	/** 신청자 부서명(영문) */
+	private String writerDeptName2;
+	/** 변경 일자 */
+	private String changeDate;
+	/** 변경 시각 */
+	private String changeTime;
+	/** 삭제 여부 */
+	private String delFlag;
+	/** 승인자 아이디 */
+	private String applUserId;
+	/** 승인자 이름 */
+	private String applUserName;
+	/** 승인자 이름(영문) */
+	private String applUserName2;
+	/** 승인일자 */
+	private String applDate;
+	/** 승인상태 */
+	private String applStatus;
+	/** 사유 */
+	private String content;
+	
+	public String getAttitudeId() {
+		return attitudeId;
+	}
+	public void setAttitudeId(String attitudeId) {
+		this.attitudeId = attitudeId;
+	}
+	public String getCompanuId() {
+		return companuId;
+	}
+	public void setCompanuId(String companuId) {
+		this.companuId = companuId;
+	}
+	public int getTenantId() {
+		return tenantId;
+	}
+	public void setTenantId(int tenantId) {
+		this.tenantId = tenantId;
+	}
+	public String getWriterId() {
+		return writerId;
+	}
+	public void setWriterId(String writerId) {
+		this.writerId = writerId;
+	}
+	public String getWriterName() {
+		return WriterName;
+	}
+	public void setWriterName(String writerName) {
+		WriterName = writerName;
+	}
+	public String getWriterName2() {
+		return WriterName2;
+	}
+	public void setWriterName2(String writerName2) {
+		WriterName2 = writerName2;
+	}
+	public String getWriterTitle() {
+		return writerTitle;
+	}
+	public void setWriterTitle(String writerTitle) {
+		this.writerTitle = writerTitle;
+	}
+	public String getWriterTitle2() {
+		return writerTitle2;
+	}
+	public void setWriterTitle2(String writerTitle2) {
+		this.writerTitle2 = writerTitle2;
+	}
+	public String getWriterDeptId() {
+		return writerDeptId;
+	}
+	public void setWriterDeptId(String writerDeptId) {
+		this.writerDeptId = writerDeptId;
+	}
+	public String getWriterDeptName() {
+		return writerDeptName;
+	}
+	public void setWriterDeptName(String writerDeptName) {
+		this.writerDeptName = writerDeptName;
+	}
+	public String getWriterDeptName2() {
+		return writerDeptName2;
+	}
+	public void setWriterDeptName2(String writerDeptName2) {
+		this.writerDeptName2 = writerDeptName2;
+	}
+	public String getChangeDate() {
+		return changeDate;
+	}
+	public void setChangeDate(String changeDate) {
+		this.changeDate = changeDate;
+	}
+	public String getChangeTime() {
+		return changeTime;
+	}
+	public void setChangeTime(String changeTime) {
+		this.changeTime = changeTime;
+	}
+	public String getDelFlag() {
+		return delFlag;
+	}
+	public void setDelFlag(String delFlag) {
+		this.delFlag = delFlag;
+	}
+	public String getApplUserId() {
+		return applUserId;
+	}
+	public void setApplUserId(String applUserId) {
+		this.applUserId = applUserId;
+	}
+	public String getApplUserName() {
+		return applUserName;
+	}
+	public void setApplUserName(String applUserName) {
+		this.applUserName = applUserName;
+	}
+	public String getApplUserName2() {
+		return applUserName2;
+	}
+	public void setApplUserName2(String applUserName2) {
+		this.applUserName2 = applUserName2;
+	}
+	public String getApplDate() {
+		return applDate;
+	}
+	public void setApplDate(String applDate) {
+		this.applDate = applDate;
+	}
+	public String getApplStatus() {
+		return applStatus;
+	}
+	public void setApplStatus(String applStatus) {
+		this.applStatus = applStatus;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
+	
+	
+
+}

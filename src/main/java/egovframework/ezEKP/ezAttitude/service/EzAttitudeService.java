@@ -3,7 +3,10 @@ package egovframework.ezEKP.ezAttitude.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 
 public interface EzAttitudeService {
 	public Object getAttitudeInfo(String userId, String date, String typeId, int tenantId) throws Exception;
@@ -32,7 +35,7 @@ public interface EzAttitudeService {
 	
 	public String getAttitudeApplStatus(String attitudeId, int tenantId) throws Exception;
 	
-	public void updateAttitudeApplication(String attitudeId, String changeDate, String changeTime, String content, String companyId, int tenantId) throws Exception;
+	public void updateAttitudeApplication(String attitudeId, String changeTime, String content, String companyId, int tenantId) throws Exception;
 	
 	public void updateAttitudeApplicationApproval(String attitudeId, String apprUserId, String apprUserName, String apprUserName2, String apprStatus, 
 			int tenantId) throws Exception;
@@ -44,55 +47,32 @@ public interface EzAttitudeService {
 	
 	//조즥도
 	
-	//근태신청 등록
-	//public void insertModifyAttitude(ModifyAttitudeVO modifyAttitudeInfo) throws Exception;
+	public AttitudeApplicationVO getAttitudeApplicationInfo(int tenantId, String companyId, String attitudeId) throws Exception;
 	
-	//근태수정현황 리스트 출력 - 검색(승인자명, 기간), 정렬(전체, 진행, 승인, 반려)
-	//public list<ModifyAttitudeVO> getUserModifyAttitudeList(String userID, int tenantID, String apprUserName, String startDate, String endDate, String statusType) throws Exception;
+	public void deleteAttitudeApplication(String attitudeId, int tenantId) throws Exception;
 	
-	//근태수정신청 상세보기 조회
-	//public ModifyAttitudeVO getModifyAttitudeInfo(int tenantID, String companyID, String attitudeID)
+	public List<AttitudeApplicationVO> getUserAttitudeApplicationList(String userId, int tenantId, String writeName, String applUserName, String startDate, String endDate, String statusType) throws Exception;
+
+	public List<AttitudeApplicationVO> getAttitudeApplicationList(int tenantId, String writeName, String applUserName, String deptName, String startDate, String endDate, String statusType) throws Exception;
 	
-	//근태수정신청 삭제
-	//public void deleteModifyAttitude(String attitudeID, int tenantID) throws Exception;
+	public AttitudeConfigVO getAttitudeConfig(int tenantId, String companyId) throws Exception;
 	
-	//근태수정신청 수정 - vo로 가져가도 괜찮으려나
-	//public void updateModifyAttitude(ModifyAttitudeVO modifyAttitudeInfo) throws Exception;
+	public void updateAttitudeConfig(AttitudeConfigVO attitudeConfigInfo) throws Exception;
 	
-	//근태신청관리현황 리스트 출력
-	//public list<ModifyAttitudeVO> getModifyAttitudeList(int tenantID, String writeName, String apprUserName,String deptName, String startDate, String endDate, String statusType) throws Exception;
+	public void updateAttitudeTypeConfig(String typeId, String isUse, int tenantId, String companyId) throws Exception;
 	
-	//근태규율 정보 출력
-	//public AttitudeConfigVO getAttitudeConfig(int tenantID, String companyID) throws Exception;
+	public void insertAttitudeType(String typeName, String typeName2, String imgPath, String formId, String parentId, int tenantId, String companyId) throws Exception;
 	
-	//근태규율 정보 저장
-	//public void updateAttitudeConfig(AttitudeConfigVO attitudeConfigInfo) throws Exception;
+	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId, String typeId) throws Exception;
 	
-	//근태유형관리 리스트 출력
-	//public List<Map<String, String>> getAttitudeTypeList(int tenantID, String companyID) throws Exception;
+	public void updateAttitudeType(String typeName, String typeName2, String imgPath, int tenantId, String companyId) throws Exception;
 	
-	//근태유형관리 설정 저장(사용여부)
-	//public void updateAttitudeTypeConfig(AttitudeTypeVO attitudeTypeInfo) throws Exception;
+	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId, String userName, String deptName) throws Exception;
 	
-	//근태유형관리 유형추가
-	//public void insertAttitudeType(AttitudeTypeVO attitudeTypeInfo) throws Exception;
+	public AttitudeUserConfigVO getAttitudeUserConfigInfo(int tenantId, String companyId, String userId) throws Exception;
 	
-	//근태유형관리 유형정보조회
-	//public AttitudeTypeVO getAttitudeTypeInfo(int tenantID, String companyID, String typeID) throws Exception;
+	public void updateAttitudeUserConfig(int tenantId, String userId, String workStartTime, String workEndTime) throws Exception;
 	
-	//근태유형관리 유형수정
-	//public void updateAttitudeType(AttitudeTypeVO attitudeTypeInfo) throws Exception;
-	
-	//사용자별 근태설정 리스트
-	//public list<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantID, String companyID) throws Exception;
-	
-	//사용자별 근태설정 정보조회
-	//public AttitudeUserConfigVO getAttitudeUserConfigInfo(int tenantID, String userID) throws Exception;
-	
-	//사용자별 근태설정 시간변경 
-	public void updateAttitudeUserConfig(int tenantID, String userID, String workStartTime, String workEndTime) throws Exception;
-	
-	//사용자별 근태설정 시간설정
-	public void insertAttitudeUserConfig(int tenantID, String companyID, String userID, String workStartTime, String workEndTime) throws Exception;
+	public void insertAttitudeUserConfig(int tenantId, String companyId, String userId, String workStartTime, String workEndTime) throws Exception;
 	
 }
