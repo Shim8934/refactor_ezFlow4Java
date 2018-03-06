@@ -658,7 +658,11 @@ public class EzEditorController extends EgovFileMngUtil{
 					String filePath = "";
 					if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
 						filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
-					} else {
+					} else if (type.equals("MAILLETTER")) {
+						// userInfo tenantId -> 회사의 tenantId로 변경하기 (수아)
+						// path경로 추가해야함 "letterBoxNo/LetterUUID/Image"
+						filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
+					}else {
 						filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 					}
 					

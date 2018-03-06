@@ -55,29 +55,6 @@
 			width: 100%;
 			box-sizing: border-box;
 		}
-		
-		
-		/* .leLetterInfo ul {
-			padding: 0;
-			list-style: none;
-			margin:10px 0;
-		}
-		.leLetterInfo ul li {
-			margin-bottom: 5px;
-			float: left;
-    		width: 100%;
-		}
-		.leLetterInfo ul li * {
-			float:left;
-		}
-		.leLetterInfo ul li span{ 
-			width: 15%;
-			display: inline-block;
-			margin-left: 2px;
-		}
-		.leLetterInfo ul li input{ 
-			width: 84%;
-		} */
 		.leLetterEditer {
 			width: 100%;
 			height: 500px;
@@ -140,11 +117,11 @@
 				 	</ul> -->
 				 </div>
 				 <div class="leLetterEditer">
-				 	<iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+				 	<iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILLETTER" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 				 	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; display:none;"></textarea>
 				 </div>
 				 <div class="leLetterBtns">
-				 	<button id="leSave">저장</button>
+				 	<button id="leSave" data-letterId="${letterId }" data-boxNo="${letterBoxNo }">저장</button>
 				 	<button id="leClose">취소</button>
 				 </div>
 			</div>
@@ -153,23 +130,26 @@
 		<script>
 			// 저장
 			$("#leSave").on("click",function(){
+				//편지지명, 편지지명(영문), 편지지 내용, 편지지함, 편지지 고유 id
+				var displayname = $("#displayname").val();
+				var displayname2 = $("#displayname2").val();
+				var letterContent = document.getElementById("tbContentElement").cotentWindow.GetEditorContent();
+				var letterBoxNo = $(this).attr("data-boxNo");
+				var letterId = $(this).attr("data-letterId");
+				
 				// 편지지명 없을때 return
-				if ($("#displayname").val().trim() == "" || $("#displayname2").val().trim() == "") {
+				if (displayname.trim() == "" || displayname2.trim() == "") {
 					alert("편지지명을 입력해주세요.");
 					return;
 				}
-				
-				// 편지지 본문
-				var gEContent = document.getElementById("tbContentElement").contentWindow.GetEditorContent();
 				// 편지지 작성 X
-				if (gEContent.replace(/&nbsp;/gi,"").replace(/<br \/>/gi,"").trim() != "") {
+				if (letterContent.replace(/&nbsp;/gi,"").replace(/<br \/>/gi,"").trim() != "") {
 					alert("편지지를 작성해주세요.");
 					return;
 				}
 				
-				
-				
-				
+				alert(letterBoxNo + "   " + letterId);
+		
 			});
 			
 			// 취소

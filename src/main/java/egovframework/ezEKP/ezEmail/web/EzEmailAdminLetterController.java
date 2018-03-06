@@ -1,7 +1,9 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,12 +12,16 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
 import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
@@ -24,6 +30,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 
 /** 
@@ -305,12 +312,15 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping("/admin/ezEmail/letterAdminPage.do")
 	public String letterAdminPage(@CookieValue("loginCookie") String loginCookie) throws Exception{
+		logger.debug("letterAdminPage started.");
+		
 		// 관리자 권한체크      
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		if (auth == null) {
 			return "cmm/error/adminDenied";
 		}
 		
+		logger.debug("letterAdminPage ended.");
 		return "/admin/ezEmail/letterManager";
 	}
 	
@@ -318,14 +328,64 @@ public class EzEmailAdminLetterController {
 	 * 편지지 추가,수정 팝업  (수아)
 	 */
 	@RequestMapping("/admin/ezEmail/letterEditPopUp.do")
-	public String letterAdminAddSetPopUp(@CookieValue("loginCookie") String loginCookie) throws Exception{
+	public String letterAdminAddSetPopUp(@CookieValue("loginCookie") String loginCookie, @RequestParam("letterBoxNo") String letterBoxNo, @RequestParam("type") String type , Model model) throws Exception{
+		logger.debug("letterAdminAddSetPopUp started.");
+		logger.debug("letterBoxNo=" + letterBoxNo + ", type=" + type);
+		
 		// 관리자 권한체크      
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		if (auth == null) {
 			return "cmm/error/adminDenied";
 		}
 		
+		// 편지지 고유 id
+		UUID letterId = null;
+		
+		if (type.equals("add")) {
+			letterId = UUID.randomUUID();
+		} else { // 편지지 수정일 경우
+			
+		}
+		logger.debug("letter_id=" + letterId);
+
+		model.addAttribute("letterBoxNo", letterBoxNo);
+		model.addAttribute("letterId", letterId);
+		
+		logger.debug("letterAdminAddSetPopUp ended.");
 		return "/admin/ezEmail/letterEditPopUp";
+	}
+	
+	/**
+	 * 편지지 추가, 수정 이미지 업로드 (수아)
+	 */
+	@RequestMapping(value = "/admin/ezEmail/letterImageUpload.do", produces = "application/json; charset=utf-8")
+	@ResponseBody
+	public void letterImageUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
+		logger.debug("letterImageUpload started");
+		
+		logger.debug("+++++++++image+++++++");
+		
+		/*LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		MultipartFile multiFile = request.getFile("upload");
+		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+		
+		String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
+		String today = EgovDateUtil.getToday("");
+		String fileName = UUID.randomUUID() + "." + fileType;
+		
+		filePath = filePath + commonUtil.separator + today;
+		File file = new File(realPath + filePath);
+		
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		writeUploadedFile(multiFile, fileName, realPath + filePath);
+		//return "<script>window.parent.CKEDITOR.tools.callFunction(2, '" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "', '')</script>";
+		logger.debug("ckSimpleUpload ended");
+		return "{\"uploaded\": 1,\"fileName\": \""+fileName+"\", \"url\": \"" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "\"}";*/
 	}
 	
 	/**

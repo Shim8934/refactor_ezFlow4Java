@@ -245,6 +245,9 @@
 	            CKEDITOR.config.removePlugins = '_Insert_Image';
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	            
+	        } else if (type == "MAILLETTER") { // 편지지 
+	        	//CKEDITOR.config.imageUploadUrl = "/admin/ezEmail/letterImageUpload.do";
+	            //CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        } else {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
 	        }

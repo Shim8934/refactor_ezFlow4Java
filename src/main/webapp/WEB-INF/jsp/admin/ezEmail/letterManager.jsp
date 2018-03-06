@@ -142,13 +142,13 @@
 				<div class="lmLetter">
 					<div class="lmtitle lmLetterTitle">
 						편지지 목록
-					</div>
-					<div class="lmLetterList">
+					</div> 
+					<div class="lmLetterList boxNo" data-boxNo="1"> <!-- boxNo -->
 						<ul class="lmLetterListUl">
 							<li class="lmNoData">데이터가 없습니다.</li>
 							<li>
 								<span>결혼축하 편지지</span>
-								<button class="lmLetterModifyBtn" onClick="letterEditPopUp()">수정</button>
+								<button class="lmLetterModifyBtn" onClick="letterEditPopUp(this)">수정</button>
 								<button class="lmLetterDeleteBtn">삭제</button>
 							</li>
 							<li>
@@ -161,8 +161,8 @@
 				</div>
 				<!-- 버튼 -->
 				<div class="lmBtns">
-					<div>
-						<button onClick="letterEditPopUp()">편지지 추가</button>
+					<div class="boxNo" data-boxNo="1"> <!-- boxNo -->
+						<button onClick="letterEditPopUp(this, 'add')">편지지 추가</button>
 						<button>편지지 이동</button>
 						<img src="/images/i_bar.gif" alt="line">
 						<button class="lmBtnPrev"><img src="/images/ImgIcon/prev.gif" alt="prev"></button>
@@ -202,7 +202,7 @@
 				});
 				
 				//편지지 삭제
-				$(".lmLetterListUl lmLetterDeleteBtn").on("click",function(){
+				$(".lmLetterListUl .lmLetterDeleteBtn").on("click",function(){
 					var deleteChk = confirm("정말로 삭제하시겠습니까?");
 					
 					//ajax
@@ -230,10 +230,21 @@
 					$(this).parent("li").not(".lmLetterSelect").css("background","none");
 				});
 				
+				
 			}); // document on ready
 			
-			function letterEditPopUp() {
-				window.open("/admin/ezEmail/letterEditPopUp.do","_blank","width=890, height=660");
+			// 편지지 추가, 수정 클릭 시  || btn -> this, type -> 추가=add
+			function letterEditPopUp(btn, type) {
+				
+				// 편지지함 no
+				letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo");
+				// 추가 or 수정 구분
+				popUpType = type == "add" ? type : "modify";
+				
+				//url
+				url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&type=" + popUpType;  
+					
+				window.open(url,"_blank","width=890, height=660");
 			}
 			
 					
