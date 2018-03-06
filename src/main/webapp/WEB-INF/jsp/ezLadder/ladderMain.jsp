@@ -49,7 +49,7 @@
 			}
 	
 			function participant(){
-				var mode = $('#part').val();
+				mode = $('#part').val();
 				// 일부 참여자 리스트
 				$.ajax({
 					type : "GET",
@@ -67,7 +67,7 @@
 			}
 			
 			function allPart(){
-				var mode = $('#all').val();
+				mode = $('#all').val();
 				// 전체 참여자 리스트 (particpant&all 합쳐야 하는데 방법이 안떠오름...)
 				$.ajax({
 					type : "GET",
