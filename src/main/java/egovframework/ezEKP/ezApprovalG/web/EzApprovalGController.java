@@ -6306,6 +6306,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String rtnVal = "OK/0/0/0"; // OK or ERR/ totalCount / trueCount / falseCount
 		int totCnt = 0, trueCnt = 0, falseCnt = 0;
 		
+		System.out.println("xmlPara:"+xmlPara);
+		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		logger.debug("<<<xmlDom : " + commonUtil.convertDocumentToString(xmlDom));
 		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
@@ -6321,9 +6323,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			for (int k = xmlDom.getElementsByTagName("DOCID").getLength() - 1; k > -1; k--) {
 				orgUID = xmlDom.getElementsByTagName("ORGAPRUSERID").item(k).getTextContent(); // 원결재자
+				mode = xmlDom.getElementsByTagName("MODE").item(k).getTextContent();
 				
 				String docState = xmlDom.getElementsByTagName("DOCSTATE").item(k).getTextContent().trim();
 				String approveRet = ezApprovalGService.getApproveDocInfo(userInfo, xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(),mode,docState);
+				System.out.println("approveRet:"+approveRet);
 				Document aprXML = commonUtil.convertStringToDocument(approveRet);
 				
 				if (xmlDom.getElementsByTagName("TYPE").getLength() > 0) {
