@@ -82,6 +82,7 @@
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ORGAPRUSERID", document.frm.chk[i].value.split("|")[1]);
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FORMID", document.frm.chk[i].value.split("|")[2]);
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", document.frm.chk[i].value.split("|")[3]);
+		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCSTATE", document.frm.chk[i].value.split("|")[4]);
 		        			createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);
 		                }
 		            }
@@ -106,6 +107,7 @@
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ORGAPRUSERID", document.frm.chk.value.split("|")[1]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FORMID", document.frm.chk.value.split("|")[2]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", document.frm.chk.value.split("|")[3]);
+		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCSTATE", document.frm.chk.value.split("|")[4]);
 		        		createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);
 		            }
 		        }
@@ -258,7 +260,7 @@
 		            <td >                
 		                <div id="close">
 		                    <ul>
-		                        <li id="btnApprove"><span onClick="return btnApprove_onclick('003')" ><spring:message code='ezApprovalG.t1'/></span></li>
+		                        <li id="btnApprove"><span onClick="return btnApprove_onclick('003')" ><spring:message code='ezApprovalG.t1'/>/<spring:message code='ezApprovalG.t1760'/></span></li>
 		                        <li id="btnClose" ><span onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
 		                    </ul>
 		                </div>

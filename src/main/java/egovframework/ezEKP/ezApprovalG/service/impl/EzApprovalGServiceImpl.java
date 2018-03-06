@@ -16156,19 +16156,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getAprType_AprState(String docID, String userID, String companyID, int tenantID) throws Exception {
+	public String getAprType_AprState(String docID, String userID, String strType, String companyID, int tenantID) throws Exception {
 		String sbVal = "NO/NO";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_PDOCID", docID);
 		map.put("v_PUSERID", userID);
+		if (strType.equals("017")) {
+			strType = "007";
+		}
+		map.put("strType", strType);
 		map.put("v_TENANTID", tenantID);
 		/**
 		 * 해당 문서에 해당 유저가 아직 완료하지 않은 (aprState != 003 && aprState != 010) 문서 추출
 		 * -> 아직 결재를 마치지 못한 문서 추출
 		 * */
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getAprLineInfoAprState(map);
+     	List<ApprGAprLineVO> apprGAprLineVOChamJoList = ezApprovalGDAO.getAprLineInfoAprStateChamJo(map);
 		
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
@@ -16182,6 +16187,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (infoXml.getElementsByTagName("APRTYPE").getLength() > 0) {
 			sbVal = infoXml.getElementsByTagName("APRTYPE").item(0).getTextContent() + "/" + infoXml.getElementsByTagName("APRSTATE").item(0).getTextContent();
+		} else if (apprGAprLineVOChamJoList.size() > 0) {
+			if (apprGAprLineVOChamJoList.get(0).getAprState().equals("000")) {
+				sbVal = "007/000";
+			}
 		} else {
 			sbVal = "NO/NO";
 		}
@@ -23657,7 +23666,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public boolean updateSusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, int tenantID) throws Exception {
+	public boolean updateRelaySusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, int tenantID) throws Exception {
 		boolean result = false;
 		try {
 			String strRecDate = strPrecDate;
@@ -24161,6 +24170,71 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		logger.debug("getLineModeFlag ended.");
 		return result;
+	}
+	
+	@Override
+	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception {
+		String recStates = "";
+		long time = System.currentTimeMillis();
+		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    	
+		if (recDate.trim().equals("")) {
+			recDate = dayTime.format(new Date(time));
+		} else {
+			recDate = dayTime.parse(recDate).toString();
+		}
+
+		switch(mode.trim()) {
+			case "send":
+				recStates = "S";
+				break;
+
+			case "resend":
+				recStates = "S";
+				break;
+
+			case "fail":
+				recStates = "E";
+				break;
+		
+			case "arrive":
+				recStates = "V";
+				break;
+
+			case "receive":
+				recStates = "R";
+				break;
+
+			case "accept":
+				recStates = "I";
+				break;
+
+			case "return":
+				recStates = "T";
+				break;
+
+			case "req-resend":
+				recStates = "T";
+				break;
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("receiptPointID", deptID);
+		map.put("processDate", recDate);
+		map.put("processYN", recStates);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		if (deptID.equals("Address")) {
+			map.put("address", "Y");
+		} else {
+			map.put("address", "N");
+		}
+		
+		ezApprovalGDAO.updateSusinState(map);
+		
+		return "TRUE";
 	}
 
 	private String createDocNO(String cabinetSN, String docNumZeroCnt) {
