@@ -42,7 +42,6 @@ public interface EzAttitudeService {
 	
 	public void deptExcelDownload(String downMode, String pidList, int tenantId) throws Exception;
 	
-	//25번 리스트보기 출력
 	public List<Map<String, String>> getDeptAttitudeList(String pidList, int tenantId) throws Exception;
 	
 	//조즥도
