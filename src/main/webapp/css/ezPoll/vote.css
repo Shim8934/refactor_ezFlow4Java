@@ -92,7 +92,7 @@
 #commentArea table tbody tr [id *= toolCmt]{margin-left: 11px}
 
 .voterNumber{float:left; display:block; font-size:16px; margin:-2px 10px 0px 10px;}
-._resultPercentage{padding-bottom: 3px; padding-left: 20px;}
+._resultPercentage{padding-bottom: 3px; padding-left: 20px; font-weight:bold;}
 
 /* vote popup css */
 
