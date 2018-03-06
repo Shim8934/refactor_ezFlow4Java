@@ -66,7 +66,9 @@ public class EzJournalAdminJYController {
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+//		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = commonUtil.getTenantConfigRest("EDITOR", userInfo.getId(), request);
+		
 		
 		if (status.equals("ok")) {
 			JSONArray companyList = (JSONArray) result.get("data");

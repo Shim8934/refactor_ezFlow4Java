@@ -137,7 +137,7 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
 
-			List<JournalFormInfoVO> formList = ezJournalService.getFormList(typeId, deptId, companyId, info.getTenantId() + "");
+			List<JournalFormInfoVO> formList = ezJournalService.getFormList(typeId, deptId, companyId, info.getCompanyName(), info.getTenantId() + "");
 			
 			result.put("data", formList);
 			result.put("status", "ok");

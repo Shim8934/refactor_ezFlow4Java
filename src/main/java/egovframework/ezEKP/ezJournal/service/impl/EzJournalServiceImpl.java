@@ -78,14 +78,13 @@ public class EzJournalServiceImpl implements EzJournalService{
 	
 
 	@Override
-	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String tenantId) throws Exception {
+	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String companyName, String tenantId) throws Exception {
 		logger.debug("getFormList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-	//	map.put("listType", listType);
 		map.put("typeId", typeId);
 		map.put("deptId", deptId);
-		logger.debug("deptId확인:" + deptId);
+		logger.debug("companyName확인:" + companyName);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
@@ -104,7 +103,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 					if (useDept.size() < 1) {
 						useDept.clear();
 						DeptInfoVO deptVO = new DeptInfoVO();
-						deptVO.setDeptName(companyId);	// 회사이름 들어가게 수정하기
+						deptVO.setDeptName(companyName);	
 						useDept.add(deptVO);
 					}
 					vo.setDepts(useDept);
