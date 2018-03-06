@@ -1,7 +1,6 @@
 package egovframework.ezMobile.ezApprovalG.web;
 
 import java.security.PrivateKey;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -54,9 +52,6 @@ public class MApprovalGGWController {
 	
 	@Autowired
 	private CommonUtil commonUtil;
-
-	@Autowired
-	private Properties config;
 	
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
@@ -711,7 +706,9 @@ public class MApprovalGGWController {
 			loginVO.setDeptID(userInfo.getDeptId());
 			
 			if (type.equals("APR")) {
-				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, "");
+				String mode = ezApprovalGService.getLineModeFlag(docId, userInfo.getCompanyId(), userInfo.getTenantId());
+				
+				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, mode);
 				
 				if (rtnVal != null && !rtnVal.equals("ERROR")) {
 					result.put("status", "ok");
@@ -759,7 +756,7 @@ public class MApprovalGGWController {
 					result.put("data", "FAIL");
 				}
 			} else if (type.equals("CHECK")) {
-				rtnVal = ezApprovalGService.doApprove(docId, approvalGDocInfoVO.getAprMemberID(), "003", approvalGDocInfoVO.getAprMemberName(), approvalGDocInfoVO.getAprMemberName2(), realPath + approvalGDocInfoVO.getHref(), approvalGDocInfoVO.getAprMemberDeptID(), userInfo.getUserId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "", "");
+				rtnVal = ezApprovalGService.doApprove(docId, approvalGDocInfoVO.getAprMemberID(), "003", approvalGDocInfoVO.getAprMemberName(), approvalGDocInfoVO.getAprMemberName2(), realPath + approvalGDocInfoVO.getHref(), approvalGDocInfoVO.getAprMemberDeptID(), userInfo.getUserId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "", "017");
 				
 				if (rtnVal != null && !rtnVal.equals("FALSE")) {
 					result.put("status", "ok");
@@ -776,6 +773,7 @@ public class MApprovalGGWController {
 				result.put("code", "1");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", "1");
 		}
