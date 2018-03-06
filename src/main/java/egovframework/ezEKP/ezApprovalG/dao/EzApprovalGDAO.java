@@ -453,6 +453,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getAprLineInfoAprStateChamJo(Map<String, Object> map) throws Exception{
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getAprLineInfoAprStateChamJo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<ApprGAprLineVO> getInnerLineInfo(Map<String, Object> map) throws Exception{
 		return (List<ApprGAprLineVO>) list("EzApprovalG.getInnerLineInfo", map);
 	}
@@ -2956,5 +2961,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 
 	public String getChamJoDocID(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getChamJoDocID", map);
+	}
+
+	public void updateSusinState(Map<String, Object> map) {
+		update("EzApprovalG.updateSusinState", map);
 	}
 }

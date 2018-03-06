@@ -16,10 +16,14 @@ p, strong, h3 {
 
 input {
     box-sizing:border-box;
-    -moz-box-sizing:border-box;
-	height:24px;
+    -moz-box-sizing:border-box;	
 	border:1px solid #dedede;
 }
+
+input[type=text] {
+	height:24px;
+}
+
 a{	
 	font-family: 'Gulim', 'arial', 'verdana';
 	color: #393939;
@@ -40,10 +44,12 @@ h2 {margin:2px 0}
 
 .file td input { border: expression((this.type=='text')?'none':((this.type=='checkbox')?'none':''));}
 .file2 td input { border: expression((this.type=='text')?'none':((this.type=='checkbox')?'none':''));}
-select {-webkit-appearance: none; border:1px solid #b6b6b6;height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white}
+select {-webkit-appearance: none; border:1px solid #dedede;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white}
 select::-ms-expand {
     display: none;
 }
+
+#menu select, #menu input {border:0px}
 
 textarea {
 	padding: 5px;
@@ -78,7 +84,7 @@ form{display:inline;margin:0}
 .imgbtn{ 
 	white-space:nowrap;
 	display:inline-block;
-	background:url('/images/kr/cm/btn_middle_left.gif') top left;
+	/* background:url('/images/kr/cm/btn_middle_left.gif') top left; */
 	background-repeat:no-repeat;
 	cursor: pointer;
 	height:20px;
@@ -86,10 +92,13 @@ form{display:inline;margin:0}
 	vertical-align:top;
 	cursor:pointer;
 	margin-bottom:2px;
+	border:1px solid #ccc;
+	border-radius:2px;
+	background-color: white;	
 }
 .imgbtn span{
 	display:inline-block;
-	background:url('/images/kr/cm/btn_middle_right.gif') top right;
+	/* background:url('/images/kr/cm/btn_middle_right.gif') top right; */
 	background-repeat:no-repeat;
 	height:20px;
 	padding-right:12px;	
@@ -185,21 +194,21 @@ form{display:inline;margin:0}
 	margin: 0px;
 	padding:0px;
 	background:url('/images/kr/left/bg_left.gif') repeat-y right;
-	background-color: #f8f8f8; 
+	background-color: #fcfcfc; 
 	background-repeat:repeat-y;
 	border: solid #d2d5d8;
 	border-width: 0px 1px 0px 0px;
 	}
 .leftbody ul{background-color:#ffffff;list-style-type:none;padding:0;margin:0; width:100%;}
 .leftbody ul li{
-	border-bottom: 1px solid #dedede;
+	border-bottom: 1px solid #eee;
 	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;
 	padding:8px 5px 7px 40px;
 	cursor:pointer;
 }
 .leftbody #iconul {background-color:#ffffff;list-style-type:none;padding:0;margin:0;}
 .leftbody #iconul li{
-	border-bottom: 1px solid #dedede;
+	border-bottom: 1px solid #eee;
 	background:#fff;
 	padding:7px 5px 6px 20px;
 	cursor:pointer;
@@ -221,7 +230,7 @@ form{display:inline;margin:0}
 	word-break:keep-all;
 	white-space:nowrap;
 	z-index:10;
-	background-color:#f8f8f8;
+	background-color:#fcfcfc;
 }
 #left h2.on, #TopBoards h2.on{
 	font-weight: bold;
@@ -257,7 +266,7 @@ form{display:inline;margin:0}
 #left ul.off, #TopBoards ul.off {display: none;}
 #left ul li.on, #TopBoards ul li.on{
 	/* font-weight:bold; */
-	background-color: rgb(245, 247, 255);	
+	/* background-color: rgb(245, 247, 255); */
 	color:black;	
 }
 #left ul li.off, #TopBoards ul li.off{font-weight:normal;}
@@ -310,18 +319,17 @@ form{display:inline;margin:0}
 	padding-left:5px;
 	margin:16px 0px 24px;
 	left:7px;
-	color:#666;
+	color:#333;
 	height:20px;
 	line-height:20px;
 }
 
 .mainbody #presentcell {
 	font-size:15px;
-	font-weight:bold;
-	padding-left:5px;
+	font-weight:bold;	
 	margin:16px 0px 24px;
 	left:7px;
-	color:#666;
+	color:#333;
 	height:20px;
 	line-height:20px;
 }
@@ -373,11 +381,11 @@ form{display:inline;margin:0}
 	float:left;
 	/* background:url('/images/kr/cm/btn_default_offright.gif') no-repeat top right;
 	height:28px; */
-	padding:4px;
+	padding:5px 4px;	
 	font:12px gulim;
 	letter-spacing:-1;
 	padding-top:7px;
-	border:1px solid #ccc;
+	border:1px solid #ddd;
 	color:#666;
 	border-radius: 3px;
 }
@@ -498,7 +506,7 @@ form{display:inline;margin:0}
 	cursor:pointer;
 	vertical-align:middle
 }
-#menu span, #close span {display:inline-block; background:#004896; border:1px solid #708cac; height:28px;padding:0px 8px 0px 8px; border-radius:3px; box-shadow:0px 1px 0px 0px rgba(0, 0, 0, 0.1); line-height:28px;font-size:12px;color:#fff;}
+#menu span, #close span {display:inline-block; background:#003886; border:1px solid #003880; height:25px;padding:0px 8px 0px 8px; border-radius:3px; box-shadow:0px 1px 0px 0px rgba(0, 0, 0, 0.1); line-height:25px;font-size:12px;color:#fff;}
 #menu ul li.on, #close ul li.on { color:#666;}
 #menu li.on span, #close ul li.on span { color:#004896; background:#fff; border:1px solid #004896;}	
 
@@ -1121,9 +1129,9 @@ form{display:inline;margin:0}
 
 .mainlist{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist tr{height:31px}
-.mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:6px 4px; border-top:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf; background-color: #fafafa; height:21px}
+.mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#999; font-size:12px; padding:6px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background-color: #fcfcfc; height:21px}
 .mainlist tr th.title{width:100%; text-align:left;}
-.mainlist tr td{padding:5px 4px 3px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #ebebed; border-spacing:0; word-wrap:break-word;}
+.mainlist tr td{padding:5px 4px 3px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #efefef; border-spacing:0; word-wrap:break-word;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
 
@@ -1771,7 +1779,7 @@ form{display:inline;margin:0}
 .address_onboxlist ul .company { color:#393939;}
 .address_onboxlist .point_txt { color:#0168c7;}
 .sublist{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
-.sublist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:3px 4px 4px; border-bottom:1px solid #b6b6b6; background:url(../images/kr/progress/th_bg3.gif) #fff repeat-x bottom;}
+.sublist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:3px 4px 4px; border-bottom:1px solid #b6b6b6;}
 .sublist tr th.title{width:100%; text-align:left;}
 .sublist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #ebebed; border-spacing:0;}
 .sublist tr td img{vertical-align:middle;}
@@ -1957,7 +1965,7 @@ form{display:inline;margin:0}
 
 
 .content_property .tabTitle:hover{background:rgb(48, 77, 127); color:#fff;}
-.content_property .tabList table td:hover{background:rgb(233, 241, 255);}
+.content_property .tabList table td:hover{background:#edf4fd;}
 
 .content_propertyInfo{margin:10px 0px 0px 0px;}
 .content_propertyInfo table{border-collapse:collapse; border-spacing:0;}
