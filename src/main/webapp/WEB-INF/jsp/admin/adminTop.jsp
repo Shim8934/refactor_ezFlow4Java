@@ -79,7 +79,11 @@
 				    case "menu20":
 				        parent.frames["bottom"].location.href = "/myoffice/ezStatistics/ezLog/index_Log.aspx";
 				        break;
-					//20120725 모바일 기기 관리자 메뉴 추가	end				
+					//20120725 모바일 기기 관리자 메뉴 추가	end
+				    case "menu30":
+				    	parent.frames["bottom"].location.href = "/admin/ezAttitude/attitudeMain.do";
+				    	break;
+				    //근태관리 관리자 메뉴 추가
 				}
 			}
 			
@@ -148,6 +152,7 @@
 		      			<c:if test="${use_ezDMS == 'YES'}">
 		      				<li><span id="menu15" onClick="menu_change(920, event);"><spring:message code="main.t52" /></span></li>
 		      			</c:if>
+		      			<li><span id="menu30" onClick="menu_change(920, event)">근태관리</span></li>
                     </c:if>
                     <li class='btn_logout' style='float:right;'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'><spring:message code='ezPortal.t990043' /></span></li>
 		    	</ul>
