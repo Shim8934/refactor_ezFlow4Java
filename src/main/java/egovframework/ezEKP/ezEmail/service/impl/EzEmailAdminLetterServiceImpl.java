@@ -157,7 +157,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		
 		logger.debug("updateLetterBox started.");
 		logger.debug("letterbox_no=" + letterbox_no + ",parent_letterbox_no=" + parent_letterbox_no 
-				+ ",displayname=" + displayname + ",displayname2=" + displayname2 + ",company_id" + company_id);
+				+ ",displayname=" + displayname + ",displayname2=" + displayname2 + ",company_id=" + company_id);
 		
 		String letterBoxNoStr = "letterbox_no=" + URLEncoder.encode(letterbox_no, "UTF-8");
 		String parentLetterBoxNoStr = "parent_letterbox_no=" + URLEncoder.encode(parent_letterbox_no, "UTF-8");

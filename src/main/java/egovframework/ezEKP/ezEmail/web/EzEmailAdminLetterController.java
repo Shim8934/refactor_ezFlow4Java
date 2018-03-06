@@ -115,6 +115,29 @@ public class EzEmailAdminLetterController {
 	}
 	
 	/**
+	 * 편지지함 목록 가져오기
+	 * @param String loginCookie
+	 * @return : JSONArray
+	 */
+	@RequestMapping(value="/admin/ezEmail/getLetterBox.do")
+	@ResponseBody
+	public JSONArray getLetterBox(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getLetterBox started.");
+		
+		JSONArray returnJsonArr = new JSONArray();
+		
+		try {
+			returnJsonArr = EzEmailAdminLetterService.selectAllLetterBox();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		logger.debug("getLetterBox ended.");
+		
+		return returnJsonArr;
+		
+	}
+	
+	/**
 	 * 편지지함 추가
 	 * @param String loginCookie, Model model
 	 * @return : "OK" or "ERROR"
@@ -224,9 +247,9 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/deleteLetterBox.do")
 	@ResponseBody
-	public String deleteLetterBox(@CookieValue("loginCookie") String loginCookie, int letterbox_No) throws Exception {
+	public String deleteLetterBox(@CookieValue("loginCookie") String loginCookie, int letterbox_no) throws Exception {
 		logger.debug("deleteLetterBox started.");
-		logger.debug("letterbox_No=" + letterbox_No);
+		logger.debug("letterbox_No=" + letterbox_no);
 		
 		// 관리자 권한체크      
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
@@ -234,11 +257,11 @@ public class EzEmailAdminLetterController {
 			return "cmm/error/adminDenied";
 		}
 		
-		String letterbox_no = Integer.toString(letterbox_No);
+		String letterbox_num = Integer.toString(letterbox_no);
 		String returnStr = "OK";
 		
 		try {
-			EzEmailAdminLetterService.deleteLetterBox(letterbox_no);
+			EzEmailAdminLetterService.deleteLetterBox(letterbox_num);
 		} catch (Exception e) {
 			returnStr = "ERROR";
 		}
