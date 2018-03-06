@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -57,7 +58,7 @@
 			#layer_Viewpopup .popupwrap3 h1 {
 				font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
 			}
-			#MailListRayer tr:hover{
+			#MailListRayer tr:not(.selectTR):hover{
 				background-color: rgb(244,245,245);
 			}
 			.selectTR{
@@ -77,11 +78,34 @@
 			var searchFormName = "";
 			var searchStartDate = "";
 			var searchEndDate = "";
-			var clickPreviweType = "text";
+			var orderNum; 
+			var orderHow;
 			var PreviewH_Move = false;
 			var PreviewW_Move = false;
 			var isPreviewChange = false;
 			var g_bPrevShow=false;
+			var selobj=null;
+			var onclickFlag = false;
+			var previewType = "TEXT";
+		    var clickPreviweType = "TEXT";
+		    var CurrentHeight = 0;
+		    var CurrenWidth = 0;
+		    var pMailListHeightW = 0;
+		    var pMailPreHeightW = 0;
+		    var pMailListDiv = 0;
+		    var pMailPreVDiv = 0;
+		    var pMailListWidthH = 0;
+		    var pMailPreWidthH = 0;
+		    var pMailListDiv_H = 0;
+		    var pMailPreVDiv_H = 0;
+		    var normal=null;
+			
+			window.onresize = function ()
+		    {
+		        MailOptionHidden();
+		        journalPreviewRayerChange(pPreviewShow_HOW)
+// 		        Window_resize();
+		    };
 			
 			//업무일지 리스트 뿌리기
 			function setJournalList(){
@@ -98,6 +122,8 @@
 				jsonParam["formName"]=searchFormName;
 				jsonParam["startDate"]=searchStartDate;
 				jsonParam["endDate"]=searchEndDate;
+				jsonParam["orderNum"]=orderNum;
+				jsonParam["orderHow"]=orderHow;
 				
 				$.ajax({
 	   				type:"post",
@@ -108,6 +134,7 @@
 	   				success: function(result){
 	   					$("#MailListRayer").html(result);
 	   					journalPreviewRayerChange("${journalEnv.viewenv}");
+	   					setInitOrder();
 	   				}
 	   			});
 			}
@@ -205,12 +232,28 @@
 			
 			//tr선택시
 			function selectedTR(elem){
+				var parent = $(elem).parent();
 				$("#BoardList tr").removeClass("selectTR");
 				$("#BoardList tr").find("input[type='checkbox']").removeProp("checked");
-	   			$(elem).addClass("selectTR");
-	   			$(elem).find("input[type='checkbox']").prop("checked","true");
+	   			$(parent).addClass("selectTR");
+	   			$(parent).find("input[type='checkbox']").prop("checked","true");
 	   			if (pPreviewShow_HOW=='W' || pPreviewShow_HOW=='H') {
 					
+				}
+			}
+			
+			//서렉트박스 전체선택 혹은 해제
+			function selectedAllTR(elem){
+				if($(elem).is(":checked")){
+					 $('input:checkbox[name="journalCheckbox"]').each(function() {
+						 $(this).prop("checked","true");
+						 $(this).parent().parent().addClass("selectTR");
+					 });
+				} else {
+					 $('input:checkbox[name="journalCheckbox"]').each(function() {
+						 $(this).removeProp("checked","true");
+						 $(this).parent().parent().removeClass("selectTR");
+					 });
 				}
 			}
 			
@@ -271,144 +314,218 @@
 	   			});
 			}
 			
+
 			//분할보기 설정
 			function journalPreviewRayerChange(pGubun) {
-			    pGubun = pGubun.trim();
+				pGubun = pGubun.trim();
 
-			    if (pGubun == "OFF")
-			        pGubun = "NONE";
-			    try {
-			        if (document.getElementById("previewmail_bar_h") != null)
-			            document.getElementById("previewmail_bar_h").style.cursor = "w-resize";
+				if (pGubun == "OFF")
+					pGubun = "NONE";
+				try {
+					if (document.getElementById("previewmail_bar_h") != null)
+						document.getElementById("previewmail_bar_h").style.cursor = "w-resize";
 
-			        isPreviewChange = true;
-			        if (pGubun == "NONE") {
-			            pPreviewShow_HOW = "OFF";
-			            document.getElementById("PreviewRayerW").style.display = "none";
-			            document.getElementById("PreviewRayerH").style.display = "none";
-			            CurrentHeight = document.documentElement.clientHeight - 110;
-			            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
-			            document.getElementById("MailListRayer").style.width = "100%";
-		                document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-			            g_bPrevShow = false;
-			        }
-			        else if (pGubun == "W") {
-		                pMailListDiv = 50; pMailPreVDiv = 50;
+					isPreviewChange = true;
+					if (pGubun == "NONE") {
+						pPreviewShow_HOW = "OFF";
+						document.getElementById("PreviewRayerW").style.display = "none";
+						document.getElementById("PreviewRayerH").style.display = "none";
+						CurrentHeight = document.documentElement.clientHeight - 110;
+						document.getElementById("MailListRayer").style.height = CurrentHeight
+								+ "px";
+						document.getElementById("MailListRayer").style.width = "100%";
+						document.getElementById("divList").style.height = (CurrentHeight - 50)
+								+ "px";
+						g_bPrevShow = false;
+					} else if (pGubun == "W") {
+						pMailListDiv = 50;
+						pMailPreVDiv = 50;
 
-			            document.getElementById("MailListRayer").style.display = "inline-block";
-			            document.getElementById("PreviewRayerW").style.display = "block";
-			            document.getElementById("PreviewRayerH").style.display = "none";
+						document.getElementById("MailListRayer").style.display = "inline-block";
+						document.getElementById("PreviewRayerW").style.display = "block";
+						document.getElementById("PreviewRayerH").style.display = "none";
 
-			            CurrenWidth = document.documentElement.clientWidth - 10;
-			            CurrentHeight = document.documentElement.clientHeight - 110;
-			            document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
-			            document.getElementById("ResizeBarW").style.width = (CurrenWidth - 10) + "px";
-			            pMailListHeightW = parseInt(CurrentHeight * (pMailListDiv / 100));
-			            pMailPreHeightW = parseInt(CurrentHeight * (pMailPreVDiv / 100));
+						CurrenWidth = document.documentElement.clientWidth - 10;
+						CurrentHeight = document.documentElement.clientHeight - 152;
+						document.getElementById("ResizeBarH").style.height = CurrentHeight
+								+ "px";
+						document.getElementById("ResizeBarW").style.width = (CurrenWidth - 10)
+								+ "px";
+						pMailListHeightW = parseInt(CurrentHeight
+								* (pMailListDiv / 100));
+						pMailPreHeightW = parseInt(CurrentHeight
+								* (pMailPreVDiv / 100));
 
-			            document.getElementById("MailListRayer").style.width = "100%";
-			            document.getElementById("PreviewRayerW").style.width = "100%";
-			            document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-		                document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
-			            document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
+						document.getElementById("MailListRayer").style.width = "100%";
+						document.getElementById("PreviewRayerW").style.width = "100%";
+						document.getElementById("MailListRayer").style.height = pMailListHeightW
+								+ "px";
+						document.getElementById("divList").style.height = (pMailListHeightW - 50)
+								+ "px";
+						document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45)
+								+ "px";
 
-		                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
-			            pPreviewShow_HOW = "W";
-			            pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
-			            pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
+						document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95)
+								+ "px";
+						pPreviewShow_HOW = "W";
+						pMailListDiv = Math
+								.round((pMailListHeightW / CurrentHeight) * 100);
+						pMailPreVDiv = Math
+								.round((pMailPreHeightW / CurrentHeight) * 100);
 
-		                document.getElementById("Preview_HeaderW").style.display = "";
-		                document.getElementById("Preview_HeaderH").style.display = "none";
-			            g_bPrevShow = true;
-		                ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
-			        }
-			        else if (pGubun == "H") {
-		                pMailListDiv_H = 50; pMailPreVDiv_H = 50;
+						document.getElementById("Preview_HeaderW").style.display = "";
+						document.getElementById("Preview_HeaderH").style.display = "none";
+						g_bPrevShow = true;
+						ifrmPreViewW.document
+								.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+					} else if (pGubun == "H") {
+						pMailListDiv_H = 50;
+						pMailPreVDiv_H = 50;
 
 						if (parent.document.getElementById("tab1")) {
 							CurrenWidth = document.documentElement.clientWidth + 7;
 						} else {
 							CurrenWidth = document.documentElement.clientWidth - 20;
 						}
-			            CurrentHeight = document.documentElement.clientHeight - 110;
-			            pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
-			            pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
+						CurrentHeight = document.documentElement.clientHeight - 151;
+						pMailListWidthH = parseInt(CurrenWidth
+								* (pMailListDiv_H / 100));
+						pMailPreWidthH = parseInt(CurrenWidth
+								* (pMailPreVDiv_H / 100)) - 3;
 
-			            document.getElementById("MailListRayer").style.display = "inline-block";
-			            document.getElementById("PreviewRayerW").style.display = "none";
-			            document.getElementById("PreviewRayerH").style.display = "inline-block";
+						document.getElementById("MailListRayer").style.display = "inline-block";
+						document.getElementById("PreviewRayerW").style.display = "none";
+						document.getElementById("PreviewRayerH").style.display = "inline-block";
 
-			            if (CurrenWidth < (pMailListWidthH + pMailPreWidthH)) {
-			                if (pMailListWidthH > parseInt(CurrenWidth * 0.40)) {
-			                    pMailListWidthH = pMailListWidthH - ((pMailListWidthH + pMailPreWidthH) - CurrenWidth);
-			                }
-			                else {
-			                    pMailPreWidthH = pMailPreWidthH - ((pMailListWidthH + pMailPreWidthH) - CurrenWidth);
-			                }
-			            }
+						if (CurrenWidth < (pMailListWidthH + pMailPreWidthH)) {
+							if (pMailListWidthH > parseInt(CurrenWidth * 0.40)) {
+								pMailListWidthH = pMailListWidthH
+										- ((pMailListWidthH + pMailPreWidthH) - CurrenWidth);
+							} else {
+								pMailPreWidthH = pMailPreWidthH
+										- ((pMailListWidthH + pMailPreWidthH) - CurrenWidth);
+							}
+						}
 
-			            document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
-			            document.getElementById("ResizeBarW").style.width = CurrenWidth + "px";
-			            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
-			            document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
-			            document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-		                document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
+						document.getElementById("ResizeBarH").style.height = CurrentHeight
+								+ "px";
+						document.getElementById("ResizeBarW").style.width = CurrenWidth
+								+ "px";
+						document.getElementById("MailListRayer").style.height = CurrentHeight
+								+ "px";
+						document.getElementById("PreviewRayerH").style.height = CurrentHeight
+								+ "px";
+						document.getElementById("MailListRayer").style.width = pMailListWidthH
+								+ "px";
+						document.getElementById("divList").style.height = (CurrentHeight - 50)
+								+ "px";
 
-			            document.getElementById("divList").style.overflow = "auto";
-			            document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
-			            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
-			            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
-			            pPreviewShow_HOW = "H";
-			            pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
-			            pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
+						document.getElementById("divList").style.overflow = "auto";
+						document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70)
+								+ "px";
+						document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10)
+								+ "px";
+						document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68)
+								+ "px";
+						pPreviewShow_HOW = "H";
+						pMailListDiv_H = Math
+								.round((pMailListWidthH / CurrenWidth) * 100);
+						pMailPreVDiv_H = Math
+								.round((pMailPreWidthH / CurrenWidth) * 100);
 
-		                document.getElementById("Preview_HeaderW").style.display = "none";
-		                document.getElementById("Preview_HeaderH").style.display = "";
+						document.getElementById("Preview_HeaderW").style.display = "none";
+						document.getElementById("Preview_HeaderH").style.display = "";
 
-			            g_bPrevShow = true;
-		                ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
-			        }
-			        MailOptionHidden();
-			        PreviewMode_ChangeBtn();
-			        isPreviewChange = false;
-			    } catch (e) { }
+						g_bPrevShow = true;
+						ifrmPreViewH.document
+								.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+					}
+					MailOptionHidden();
+					PreviewMode_ChangeBtn();
+					isPreviewChange = false;
+				} catch (e) {
+				}
+			}
+
+			$(function() {
+				$("#Sdatepicker").datepicker({
+					changeMonth : true,
+					changeYear : true,
+					autoSize : true,
+					showOn : "both",
+					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly : true
+				});
+				$("#Edatepicker").datepicker({
+					changeMonth : true,
+					changeYear : true,
+					autoSize : true,
+					showOn : "both",
+					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly : true
+				});
+
+				$("#Sdatepicker")
+						.datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Sdatepicker").datepicker('setDate', "");
+
+				$("#Edatepicker")
+						.datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Edatepicker").datepicker('setDate', "");
+			});
+			
+			//정렬에 의한 리스트 셋팅
+			function setListOrder(elem){
+				orderNum = $(elem).attr("order");
+				orderHow = $(elem).attr("sort");
+				if(orderHow==null){
+					orderHow='asc';
+				} else if(orderHow == 'asc'){
+					orderHow='desc';
+				} else if(orderHow == 'desc'){
+					orderHow='asc';
+				}
+				setJournalList();
+			}
+			function setInitOrder(){
+				$("#BoardList_TH th").each(function (){
+					if(orderNum==$(this).attr("order")){
+						if(orderHow == 'asc'){
+							$(this).attr("sort","asc");
+							$(this).append(' <img src="/images/etc/view-sortdown.gif" align="absmiddle">');
+						} else if(orderHow == 'desc'){
+							$(this).attr("sort","desc");
+							$(this).append(' <img src="/images/etc/view-sortup.gif" align="absmiddle">');
+						}
+					}
+				})
+			}
+
+			function writejournal() {
+				//	var feature = GetOpenWindowfeature(820, 880).replace("resizable=no","resizable=yes"); 
+				var feature = GetOpenPosition(820, 850);
+				var typeId = "ezJournal.t05";
+				var Openwin = window
+						.open(
+								"/ezJournal/journalNewItem.do?typeId=" + typeId
+										+ "&mode=new",
+								"",
+								"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
+										+ feature);
+				Openwin.focus();
 			}
 			
-			$(function () {
-		        $("#Sdatepicker").datepicker({
-		            changeMonth: true,
-		            changeYear: true,
-		            autoSize: true,
-		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true
-		        });
-		        $("#Edatepicker").datepicker({
-		            changeMonth: true,
-		            changeYear: true,
-		            autoSize: true,
-		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true
-		        });
-		
-		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $("#Sdatepicker").datepicker('setDate', "");
-		
-		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $("#Edatepicker").datepicker('setDate', "");
-		     });
-			
-			 function writejournal() {
-	        //	var feature = GetOpenWindowfeature(820, 880).replace("resizable=no","resizable=yes"); 
-				var feature = GetOpenPosition(820, 850);
-	        	var typeId = "ezJournal.t05";
-	            var Openwin = window.open("/ezJournal/journalNewItem.do?typeId=" + typeId + "&mode=new", "", "width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
-	        	Openwin.focus();
-	        }
+			function checkedCheckbox(elem){
+				if($(elem).is(":checked")){
+					$(elem).prop("checked","true");
+					$(elem).parent().parent().addClass("selectTR");
+				} else {
+					$(elem).removeProp("checked");
+					$(elem).parent().parent().removeClass("selectTR");
+				}
+			}
 
-			
-			$(document).ready(function(){
+			$(document).ready(function() {
 				setJournalList();
 			});
 		</script>
@@ -606,47 +723,6 @@
 			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
 		</div>
 	</div>
-
-<!-- 	<div id="layer_popup" style="width: 400px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;"> -->
-<!-- 		<div class="popupwrap1"> -->
-<!-- 			<div class="popupwrap2"> -->
-<!-- 				<table class="content"> -->
-<%-- 					<c:if test="${listType ne 'mine' }"> --%>
-<!-- 					<tr> -->
-<%-- 						<th style="text-align: center"><spring:message code='ezJournal.t34' /></th> --%>
-<!-- 						<td><input type="text" id="searchWriter" style="width: 98%" value=""></td> -->
-<!-- 					</tr> -->
-<%-- 					</c:if> --%>
-<!-- 					<tr> -->
-<%-- 						<th style="text-align: center"><spring:message code='ezBoard.t208' /></th> --%>
-<!-- 						<td><input type="text" id="searchTitle" style="width: 98%" value=""></td> -->
-<!-- 					</tr> -->
-<!-- 					<tr> -->
-<%-- 						<th style="text-align: center"><spring:message code='ezJournal.t22' /></th> --%>
-<!-- 						<td><input type="text" id="searchFormName" style="width: 98%" value=""></td> -->
-<!-- 					</tr> -->
-<!-- 					<tr> -->
-<%-- 						<th style="text-align: center"><spring:message code='ezBoard.t210' /></th> --%>
-<!-- 						<td><input type="text" id="Sdatepicker" -->
-<!-- 							style="width: 80px; text-align: center" readonly="readonly"> -->
-<!-- 							~ <input type="text" id="Edatepicker" -->
-<!-- 							style="width: 80px; text-align: center" readonly="readonly"> -->
-<!-- 						</td> -->
-<!-- 					</tr> -->
-<!-- 				</table> -->
-<!-- 				<br /> -->
-<!-- 				<table style="width: 100%"> -->
-<!-- 					<tr> -->
-<!-- 						<td style="text-align: center;"> -->
-<%-- 							<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezBoard.t188' /></span></a>  --%>
-<%-- 							<a class="imgbtn"><span onClick="BoardSearchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a> --%>
-<!-- 						</td> -->
-<!-- 					</tr> -->
-<!-- 				</table> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 		<div class="shadow"></div> -->
-<!-- 	</div> -->
 	<c:if test="${listType eq 'department' or listType eq 'mine' }">
 		<script type="text/javascript">
 			setFormName();
