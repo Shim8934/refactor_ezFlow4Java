@@ -7531,4 +7531,26 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return "/ezApprovalG/apprGezConvOut";
 	}
+	
+	/**
+	 * 직인의뢰 접수 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/updateSusinState.do")
+	@ResponseBody
+	public String updateSusinState(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("updateSusinState started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String recDate = request.getParameter("recDate");
+		String mode = request.getParameter("mode");
+		String deptID = request.getParameter("deptID");
+		
+		String result = ezApprovalGService.updateSusinState(docID, recDate, mode, deptID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("updateSusinState ended.");
+		
+		return result;
+	}
 }

@@ -497,7 +497,7 @@ public interface EzApprovalGService {
 
 	public boolean sendAck(String realPath, String strXDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception;
 
-	public boolean updateSusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, int tenantID) throws Exception;
+	public boolean updateRelaySusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, int tenantID) throws Exception;
 
 	public boolean insFailMessage(String strXDocID, String strSendID, String strSendName, String message, String strCompanyID, int tenantID) throws Exception;
 
@@ -524,5 +524,7 @@ public interface EzApprovalGService {
 	public String getOrgDraftDeptID(String docID, int tenantId, String companyID) throws Exception;
 
 	public String getLineModeFlag(String docID, String companyID, int tenantId) throws Exception;
+
+	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception;
 
 }

@@ -24097,4 +24097,30 @@
 			DOCID = #v_DOCID#
 		LIMIT 1
 	</select>
+	
+	<update id="EzApprovalG.updateSusinState" parameterClass="Map">
+	  	<![CDATA[
+	  		UPDATE
+	  			TBL_ENDRECEIPTPOINTINFO
+			SET
+				processdate = #processDate#,
+				processyn = #processYN#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid = #docID#
+	  	]]>
+	  	
+	  	<isEqual property="address" compareValue="N">
+	  		AND
+				receiptpointid = #receiptPointID#
+		</isEqual>
+		
+		<isNotEqual property="address" compareValue="N">
+	  		AND
+				receiptpointid LIKE '$receiptPointID$%'
+		</isNotEqual>
+	</update>
 </sqlMap>
