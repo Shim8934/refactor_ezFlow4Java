@@ -21248,7 +21248,7 @@
 		AND                
 			AprMemberID = #v_APRMEMBERID# 
 		AND 
-			(AprState = #v_AprState2# OR AprState = #v_AprState3#) 
+			(AprState = #v_AprState2# OR AprState = #v_AprState3# OR AprState = '000' ) 
 		AND 
 			TENANT_ID= #v_TENANTID#
 		AND
