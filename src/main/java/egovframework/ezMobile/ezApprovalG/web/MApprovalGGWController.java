@@ -209,11 +209,13 @@ public class MApprovalGGWController {
 			String userId = request.getParameter("userId");
 			String type = request.getParameter("type");
 			String aprMemberSN = request.getParameter("aprMemberSN");
+			String mode = request.getParameter("mode");
 			String serverName = request.getHeader("x-user-host");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			LOGGER.debug("type : " + type);
+			LOGGER.debug("mode : " + mode);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
@@ -226,9 +228,9 @@ public class MApprovalGGWController {
 	    		scheme = "https://";
 	    	}
 			//본문
-			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale, type, scheme);
+			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale, type, scheme, mode);
 			//결재문서정보
-			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN);
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
 			//회수 가능여부
 			String callBackYN = ezApprovalGService.getCallBackYN(docId, userId, userInfo.getCompanyId(), userInfo.getTenantId());
 			
@@ -263,11 +265,17 @@ public class MApprovalGGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String type = request.getParameter("type");
+			String mode = request.getParameter("mode");
 			String serverName = request.getHeader("x-user-host");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			LOGGER.debug("type : " + type);
+			LOGGER.debug("mode : " + mode);
+			
+			if (mode != null && mode.equals("END")) {
+				type = "END";
+			}
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -302,10 +310,16 @@ public class MApprovalGGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			String type = request.getParameter("type");
+			String mode = request.getParameter("mode");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			LOGGER.debug("type : " + type);
+			LOGGER.debug("mode : " + mode);
+			
+			if (mode != null && mode.equals("END")) {
+				type = "END";
+			}
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -336,12 +350,18 @@ public class MApprovalGGWController {
 		
 		try {
 			String type = request.getParameter("type");
+			String mode = request.getParameter("mode");
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			LOGGER.debug("type : " + type);
+			LOGGER.debug("mode : " + mode);
+			
+			if (mode != null && mode.equals("END")) {
+				type = "END";
+			}
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -373,9 +393,15 @@ public class MApprovalGGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			String type = request.getParameter("type");
+			String mode = request.getParameter("mode");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("mode : " + mode);
+			
+			if (mode != null && mode.equals("END")) {
+				type = "END";
+			}
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -681,8 +707,13 @@ public class MApprovalGGWController {
 			String userId = request.getParameter("userId");
 			String locale = request.getParameter("locale");
 			String aprMemberSN = request.getParameter("aprMemberSN");
+			String mode = request.getParameter("mode");
 			String serverName = request.getHeader("x-user-host");
 			String realPath = commonUtil.getRealPath(request);
+			
+			if (mode == null || mode.equals("")) {
+				mode = "APR";
+			}
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
@@ -693,7 +724,7 @@ public class MApprovalGGWController {
 			String rtnVal = "";
 			
 			//docId로만 정보 가져오기
-			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, "DO", optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN);
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, "DO", optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
 			
 			LoginVO loginVO = new LoginVO();
 			
@@ -706,9 +737,9 @@ public class MApprovalGGWController {
 			loginVO.setDeptID(userInfo.getDeptId());
 			
 			if (type.equals("APR")) {
-				String mode = ezApprovalGService.getLineModeFlag(docId, userInfo.getCompanyId(), userInfo.getTenantId());
+				String lineMode = ezApprovalGService.getLineModeFlag(docId, userInfo.getCompanyId(), userInfo.getTenantId());
 				
-				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, mode);
+				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, lineMode);
 				
 				if (rtnVal != null && !rtnVal.equals("ERROR")) {
 					result.put("status", "ok");
