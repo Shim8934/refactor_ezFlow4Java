@@ -24,9 +24,9 @@
 	    <script type="text/javascript" src="/js/jstree/jstree.js"></script>
 	    <script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 	    <script type="text/javascript">
-			var companyId = "${userInfo.companyID}"; 
+			var companyId = "${info.companyID}"; 
 			// 작성자 이름 // lang에 따라 가져오는값 바꿔야함..
-			var userName = "${userInfo.displayName1}";			
+			var userName = "${info.displayName1}";			
 			//트리조직도 JSON
 	   		var treeContent;
 	    	// 수신자
