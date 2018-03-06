@@ -167,7 +167,7 @@
 	    	var uploadFilePath = "/ezEditor/tfxUpload.do?type=" + type;
 	    	var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=" + type;
 	    	
-	    	if (type == "MAILOUTOFOFFICE") {
+	    	if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
 	   			uploadPasteContentsPath = "/ezEditor/tfxNoop.do";
 	   		}
 	    	
@@ -186,12 +186,10 @@
 	        
 	        xfe.render('xfe');
 	        
-	        if (type == "MAILOUTOFOFFICE") {
-	        	xfe.showToolbarItem(0, 10, false);
-	        }
-	        
-	        if (type == "COMMUNITYPHOTO") {
-	        	xfe.showToolbarItem(0, 10, false);
+	        if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
+	        	xfe.showToolbarItem(0, 11, false);
+	        	xfe.showToolbarItem(0, 12, false);
+	        	xfe.showToolbarItem(0, 13, false);
 	        }
 	        
 	        if (useHTMLMode == "NO") {
