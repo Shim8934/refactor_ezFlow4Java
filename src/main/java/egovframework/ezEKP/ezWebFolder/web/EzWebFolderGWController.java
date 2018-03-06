@@ -1632,31 +1632,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1) {
-				result.put("data", userInfo.getCompanyID());
-			}
-			else {
-				//Get list of companies
-				List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-				int check = 0;
-				
-				for (int i = 0; i < list.size(); i++) {
-					OrganDeptVO vo = list.get(i);
-					
-					if (vo.getCn().equals(userInfo.getCompanyID())) {
-						check = 1;
-						break;
-					}
-				}
-				
-				if (check == 1) {
-					result.put("data", userInfo.getCompanyID());
-				}
-				else {
-					result.put("data", list.get(0).getCn());
-				}
-			}
-			
+			result.put("data", userInfo.getCompanyID());
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 

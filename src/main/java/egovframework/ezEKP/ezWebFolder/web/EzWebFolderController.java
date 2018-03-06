@@ -43,7 +43,6 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
@@ -74,7 +73,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value="/ezWebFolder/webfolderLeft.do")
-	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie,ModelMap modelMap, HttpServletRequest request, Model model, LoginVO userInfo, HttpServletResponse response) throws Exception{
+	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie,ModelMap modelMap, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		return "ezWebFolder/webfolderLeft";
 	}
 
@@ -402,7 +401,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezWebFolder/getDeptTree.do", method = RequestMethod.POST)
 	public String getDepartTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
-		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String companyId   = request.getParameter("companyId");
 		String deptId      = request.getParameter("deptId") != null ? request.getParameter("deptId") : "";
@@ -441,7 +439,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezWebFolder/getSubTree.do", method = RequestMethod.POST)
 	public String getSubDepartTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
-		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String deptId      = request.getParameter("deptId");
 		String level       = request.getParameter("level");
@@ -473,14 +470,33 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value="/ezWebFolder/shareUsersSelect.do")
-	public String selectShareUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+	public String selectShareUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("select share users is running!");
 		
-		LoginVO userInfo  = commonUtil.userInfo(loginCookie);
-		String pCompanyID = userInfo.getCompanyID();
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
+		String url           = gwServerUrl + "/webfolderadmin/company-id/" + user.getId();
 		
-		model.addAttribute("pCompanyID", pCompanyID);
-		model.addAttribute("primary", userInfo.getPrimary());
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("offset", user.getOffset())
+										.queryParam("lang", user.getLang());
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			String companyId = (String) resultBody.get("data");
+			model.addAttribute("pCompanyID", companyId);
+			model.addAttribute("primary", user.getLang());
+		}
 		
 		logger.debug("select share users finishes!");
 		return "/ezWebFolder/shareUsersSelect";
@@ -488,9 +504,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezWebFolder/getDeptMembers.do", method = RequestMethod.POST)
 	public String getDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
-		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		
 		String deptId      = request.getParameter("deptId");
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
 		String url         = gwServerUrl + "/webfolder/dept-member/" + deptId;
