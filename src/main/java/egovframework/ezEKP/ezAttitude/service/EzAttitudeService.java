@@ -62,6 +62,8 @@ public interface EzAttitudeService {
 	
 	public void insertAttitudeType(String typeName, String typeName2, String imgPath, String formId, String parentId, int tenantId, String companyId) throws Exception;
 	
+	public void insertAttitudeTypeIcon(String typeId, String fileName, String realPath, int tenantId) throws Exception;
+	
 	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId, String typeId) throws Exception;
 	
 	public void updateAttitudeType(String typeName, String typeName2, String imgPath, int tenantId, String companyId) throws Exception;
