@@ -51,13 +51,16 @@ public interface EzAttitudeService {
 	
 	//근태수정신청 상세보기 조회
 	//public modifyAttitudeVO getModifyAttitudeInfo(int tenantID, String companyID, String attitudeID)
+	
 	//근태수정신청 삭제
 	//public void deleteModifyAttitude(String attitudeID, int tenantID) throws Exception;
 	
 	//근태수정신청 수정 - vo로 가져가도 괜찮으려나
 	//public void updateModifyAttitude(modifyAttitudeVO modifyAttitudeInfo) throws Exception;
+	
 	//근태신청관리현황 리스트 출력
 	//public list<modifyAttitudeVO> getModifyAttitudeList(int tenantID, String writeName, String apprUserName,String deptName, String startDate, String endDate, String statusType) throws Exception;
+	
 	//근태규율 정보 출력
 	//public AttitudeConfigVO getAttitudeConfig(int tenantID, String companyID) throws Exception;
 	
