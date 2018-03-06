@@ -1,8 +1,8 @@
 ﻿/* 달력디자인 추가 css */
 
 /* 월보기 */
-.calendar_month_navi{table-layout:fixed; border:1px solid #9b9b9b; border-bottom:0px solid #014b88;}
-.calendar_month_navi th{height:29px; line-height:29px; padding:0; margin:0; color:#777; background-color: white}
+.calendar_month_navi{table-layout:fixed; border-bottom:0px solid #014b88;}
+.calendar_month_navi th{height:29px; line-height:25px; padding:0; margin:0; color:#777; background-color: white; font-size: 15px;}
 .calendar_month_navi th .btn_prev{display: inline-block; vertical-align: top; margin: 3px 12px 0px; height:17px;cursor:pointer;}
 .calendar_month_navi th .btn_next{display: inline-block; vertical-align: top; margin: 3px 0px 0px 12px; height:17px;cursor:pointer;}
 .calendar_month{table-layout:fixed; vertical-align:top;}
@@ -11,7 +11,7 @@
 .calendar_month th.sat{color:rgb(0, 72, 149);}
 .calendar_month td{width:14.2%; border:1px solid #b5b5b5;}
 .calendar_month td.gray{background:#F6F6F6;}
-.calendar_month td.today{background:rgb(233, 240, 255);}
+.calendar_month td.today{background:#edf4fd;}
 .calendar_month .td_day{table-layout:fixed; width:100%; cursor:pointer;}
 .calendar_month .td_day td {height:22px; line-height:22px; border:0 none; padding:0px 0px 0px 7px; margin:0; color:#333333;}
 .calendar_month .click{background:#b6b6b6;} /* 날자클릭시 백그라운드 처리 */
