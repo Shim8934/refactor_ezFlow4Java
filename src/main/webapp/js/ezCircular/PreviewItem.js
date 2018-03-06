@@ -13,6 +13,16 @@
         MailOptionHidden();
     }
 }
+//레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
+function MailOptionHiddenOutside(e) {
+	var container = $('#layer_Viewpopup');
+	var maillistoptionmode = $('#maillistoptiondiv').attr('mode');
+	if (maillistoptionmode == "on") {
+		if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'maillistoptiondiv') {
+			MailOptionHidden();
+		}
+	}
+}
 function MailOptionHidden() {
     document.getElementById("layer_Viewpopup").style.display = "none";
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");

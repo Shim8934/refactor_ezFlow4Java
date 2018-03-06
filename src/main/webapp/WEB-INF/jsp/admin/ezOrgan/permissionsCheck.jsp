@@ -456,7 +456,7 @@
 	            }
 	        }
 		    
-		    var m_strColorSelect = "rgb(233, 241, 255)";
+		    var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -958,14 +958,12 @@
 			                <DATA1>a</DATA1>
 			            </CELL>
 			        </ROW>
-			        <c:if test="${approvalFlag != 'S'}">
 			        <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t294'/></VALUE>
 			                <DATA1>i</DATA1>
 			            </CELL>
 			        </ROW>
-			        </c:if>
 			        <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t297'/></VALUE>

@@ -79,7 +79,7 @@
 		                getBoardList_NewBoardSTD();
 		            } else {
 		                var nodata = "<div class='nodata_portlet '>";
-		                nodata += "<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>";
+		                nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
 		                nodata += "<p>" + strLang1_NewBoardSTD + "</p></div>";
 
 		                document.getElementById("BoardList").innerHTML = nodata;
@@ -124,7 +124,7 @@
 		            try {
 		                if (xml == "") {
 		                    var nodata = "<div class='nodata_portlet '>";
-		                    nodata += "<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>";
+		                    nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
 		                    nodata += "<p>" + strLang1_NewBoardSTD + "</p></div>";
 		                    document.getElementById("BoardList").innerHTML = nodata;
 		                    return;
@@ -214,13 +214,13 @@
 		                        } 
 		                    } else {
 		                        var nodata = "<div class='nodata_portlet '>";
-		                        nodata += "<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>";
+		                        nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
 		                        nodata += "<p>" + strLang1_NewBoardSTD + "</p></div>";
 		                        document.getElementById("BoardList").innerHTML = nodata;
 		                    }
 		                } else {
 		                    var nodata = "<div class='nodata_portlet '>";
-		                    nodata += "<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>";
+		                    nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
 		                    nodata += "<p>" + strLang1_NewBoardSTD + "</p></div>";
 		                    document.getElementById("BoardList").innerHTML = nodata;
 		                }

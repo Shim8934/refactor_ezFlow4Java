@@ -1,6 +1,7 @@
 package egovframework.ezMobile.ezApprovalG.web;
 
 import java.security.PrivateKey;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -73,7 +75,7 @@ public class MApprovalGGWController {
 	
 	@Resource(name = "MOptionService")
 	private MOptionService mOptionService;
-
+	
 	/**
 	 * 모바일 G/W 전자결재 [GET] 결재문서 메인 리스트
 	 */
@@ -248,7 +250,7 @@ public class MApprovalGGWController {
 			result.put("status", "error");
 			result.put("code", "1");
 		}
-
+		
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "] ended.");
 		
 		return result;
@@ -709,7 +711,7 @@ public class MApprovalGGWController {
 			loginVO.setDeptID(userInfo.getDeptId());
 			
 			if (type.equals("APR")) {
-				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO);
+				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, "");
 				
 				if (rtnVal != null && !rtnVal.equals("ERROR")) {
 					result.put("status", "ok");
@@ -757,7 +759,7 @@ public class MApprovalGGWController {
 					result.put("data", "FAIL");
 				}
 			} else if (type.equals("CHECK")) {
-				rtnVal = ezApprovalGService.doApprove(docId, approvalGDocInfoVO.getAprMemberID(), "003", approvalGDocInfoVO.getAprMemberName(), approvalGDocInfoVO.getAprMemberName2(), realPath + approvalGDocInfoVO.getHref(), approvalGDocInfoVO.getAprMemberDeptID(), userInfo.getUserId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "");
+				rtnVal = ezApprovalGService.doApprove(docId, approvalGDocInfoVO.getAprMemberID(), "003", approvalGDocInfoVO.getAprMemberName(), approvalGDocInfoVO.getAprMemberName2(), realPath + approvalGDocInfoVO.getHref(), approvalGDocInfoVO.getAprMemberDeptID(), userInfo.getUserId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "", "");
 				
 				if (rtnVal != null && !rtnVal.equals("FALSE")) {
 					result.put("status", "ok");
@@ -811,4 +813,53 @@ public class MApprovalGGWController {
 		
 		return result;
 	}
+	
+	//pAprMemberSN  가져오기 메일에서 전자결재
+	@RequestMapping(value = "/mobile/ezapproval/AprMemberSN/{docId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getAprMemberSN(@PathVariable String docId, HttpServletRequest request, Locale locale) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String DocID = request.getParameter("DocID");
+			String type = request.getParameter("type");
+			String serverName = request.getHeader("x-user-host");
+			
+			LOGGER.debug("serverName : " + serverName);
+			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("type : " + type);
+			LOGGER.debug("DocID : " + DocID);
+			
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
+			
+			String realPath = commonUtil.getRealPath(request);
+			String domain = request.getServerName() + ":" + request.getServerPort();
+	        String scheme = "http://";
+			
+	    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+	    		scheme = "https://";
+	    	}
+			//결재문서정보
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprMemberSn(docId, type,userInfo.getCompanyId(), userInfo.getTenantId());
+			
+			JSONObject totalData = new JSONObject();
+			
+			totalData.put("docInfo", approvalGDocInfoVO);
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", totalData);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "] ended.");
+		
+		return result;
+	}
+
 }

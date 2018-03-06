@@ -147,6 +147,19 @@
 					}
 	    		}
 			}
+	    	
+	    	$(document).ready(function() {
+	    		// 반복이 100회 초과일때 알러트  
+	    		if ($('input:radio[name=optRangeEnd]').is(':checked')) {
+		    		$('#list_ReCount').blur(function() {
+		    			if ($('#list_ReCount').val() > 100 ) {
+		    				alert(strLangKMS1);
+		    				$('#list_ReCount').val("");
+		    			}
+		    		});
+		    	}		
+	    	});
+	    	
 		</script>
 	</head>
 	<body class="popup">
@@ -349,7 +362,7 @@
       			</td>
   			</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn" onclick='event_btnOk_onclick()'><span><spring:message code="ezResource.t15"/></span></a>
     		<a class="imgbtn" onclick='event_btnCancel_onclick()'><span><spring:message code="ezResource.t16"/></span></a>
     		<a class="imgbtn" onclick='event_btnRemoveRecurrence_onclick()'><span><spring:message code="ezResource.t318"/></span></a>

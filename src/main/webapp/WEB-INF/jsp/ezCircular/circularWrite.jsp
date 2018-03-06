@@ -51,6 +51,7 @@
 	    	} 
 
 		    window.onload = function () {
+		    	//2018-02-13 주홍선 IE10에서 창이 정상적으로 열리지 않던 것 수정
 		    	if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
 		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
 		    	}
@@ -331,8 +332,8 @@
 	</head>
 	
 	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
-	
-	<body id="mainbodytag" class="popup" style="height: 100%; overflow: hidden;">
+	<!-- 2018-02-19 김보미 - height를 100%에서 98%로 수정 -->
+	<body id="mainbodytag" class="popup" style="height: 98%; overflow: hidden;">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -439,6 +440,7 @@
       			</td>
   			</tr>
   			<tr>
+  			<!-- 2018-02-13 주홍선 mode와 circularID 항상 보내도록 수정 -->
   				<td>
    					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do?mode=${mode}&circularID=${circularID}"></iframe>
   				</td>

@@ -199,10 +199,8 @@
       						</c:forEach>
   						</c:when>
   						<c:otherwise>
-	  						<br />
-    						<br />
     						<div class="nodata_portlet">
-	    						<p><img src="/images/kr/main/nodata_white.gif" width="107" height="70"></p>
+	    						<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>
     							<p><spring:message code='main.t261' /></p>
     						</div>
   						</c:otherwise>

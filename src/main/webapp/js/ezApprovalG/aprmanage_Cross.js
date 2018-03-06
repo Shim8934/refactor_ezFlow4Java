@@ -581,7 +581,25 @@ function getAprLine(tr) {
     } else {
     	pMode = "APR";
     }
-
+    if (GetAttribute(tr, "DATA12") == "017") {
+    	   $.ajax({
+    			type : "POST",
+    			dataType : "text",
+    			async : false,
+    			url : "/ezApprovalG/getLineMode.do",
+    			data : {
+    					docID : pDocID
+    					},
+    			success: function(xml){
+    				if (xml == "APR") {
+    					pMode = "CHAMJOAPR";
+    				} else {
+    					pMode = "CHAMJOEND";
+    				}
+    			}        			
+    		});
+    }
+    
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -747,6 +765,7 @@ function openApprovUI(allFlag) {
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
     var tr = DocList.GetSelectedRows();
+    var mode = "APR";
     var openLocation;
     if (tr.length > 0) {
         var pArgument = new Array();
@@ -755,6 +774,21 @@ function openApprovUI(allFlag) {
         pArgument[2] = GetAttribute(tr[0], "DATA5");		
         pArgument[3] = GetAttribute(tr[0], "DATA7");	
 
+        if (GetAttribute(tr[0], "DATA12") == "017") {
+        	   $.ajax({
+        			type : "POST",
+        			dataType : "text",
+        			async : false,
+        			url : "/ezApprovalG/getLineMode.do",
+        			data : {
+        					docID : pArgument[0]
+        					},
+        			success: function(xml){
+        				mode = xml;
+        			}        			
+        	  });
+        }
+        
         var formURL = GetAttribute(tr[0], "DATA3");
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "doc") {
             openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?docID=" + encodeURI(pArgument[0]);
@@ -778,7 +812,7 @@ function openApprovUI(allFlag) {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode);
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
@@ -1230,6 +1264,21 @@ function getAprDocAproveInfo(tr) {
         	pFlag = "APR";
         }
 
+        if (GetAttribute(tr, "DATA12") == "017") {
+       	   $.ajax({
+       			type : "POST",
+       			dataType : "text",
+       			async : false,
+       			url : "/ezApprovalG/getLineMode.do",
+       			data : {
+       					docID : pDocID
+       					},
+       			success: function(xml){
+       				pFlag = xml;
+       			}        			
+       	  });
+       }
+        
         $.ajax({
     		type : "POST",
     		dataType : "text",
@@ -1256,6 +1305,21 @@ function getAprDocAproveInfo(tr) {
     		pFlag = "APR";
     	}
 
+        if (GetAttribute(tr, "DATA12") == "017") {
+      	   $.ajax({
+      			type : "POST",
+      			dataType : "text",
+      			async : false,
+      			url : "/ezApprovalG/getLineMode.do",
+      			data : {
+      					docID : pDocID
+      					},
+      			success: function(xml){
+      				pFlag = xml;
+      			}        			
+      	  });
+      }
+        
         $.ajax({
     		type : "POST",
     		dataType : "text",
@@ -1282,6 +1346,21 @@ function getAprDocAproveInfo(tr) {
     		pFlag = "APR";
     	}
 
+        if (GetAttribute(tr, "DATA12") == "017") {
+     	   $.ajax({
+     			type : "POST",
+     			dataType : "text",
+     			async : false,
+     			url : "/ezApprovalG/getLineMode.do",
+     			data : {
+     					docID : pDocID
+     					},
+     			success: function(xml){
+     				pFlag = xml;
+     			}        			
+     	  });
+     }
+        
         $.ajax({
     		type : "POST",
     		dataType : "text",
@@ -1304,6 +1383,21 @@ function getAprDocAproveInfo(tr) {
     		pFlag = "APR";
     	}
     	
+    	 if (GetAttribute(tr, "DATA12") == "017") {
+        	   $.ajax({
+        			type : "POST",
+        			dataType : "text",
+        			async : false,
+        			url : "/ezApprovalG/getLineMode.do",
+        			data : {
+        					docID : pDocID
+        					},
+        			success: function(xml){
+        				pFlag = xml;
+        			}        			
+        	  });
+        }
+    	 
     	$.ajax({
     		type : "POST",
     		dataType : "text",
@@ -1494,16 +1588,19 @@ function makePageSelPage() {
 
     var period;
     if (document.getElementById("sel_year").value.toLowerCase() == "all") {
-        var nowyear = new Date().getFullYear();
+        /*var nowyear = new Date().getFullYear();
         var nowmonth = new Date().getMonth() + 1;
-        var nowday = new Date().getDate();
+        var nowday = new Date().getDate();*/
         
-        if (nowmonth < 10)
+    	var nowyear = nowDate.substring(0,4);
+        var nowmonth = nowDate.substring(5,7);
+        var nowday = nowDate.substring(8,10);
+        
+/*        if (nowmonth < 10)
             nowmonth = "0" + nowmonth;
 
         if (nowday < 10)
-            nowday = "0" + nowday;
-
+            nowday = "0" + nowday;*/
         
         	if (SearchCond[5] != null && SearchCond[5] != "" ) {
         		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + SearchCond[5].substring(5, 7) + strLang1029 + " " + SearchCond[5].substring(8, 10) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + SearchCond[6].substring(5, 7) + strLang1029 + " " + SearchCond[6].substring(8, 10) + strLang1030;
@@ -1669,7 +1766,8 @@ function setbuttonenable() {
     DocList.LoadFromID("DocList");
     var oArrRows = DocList.GetSelectedRows();
     var tr = oArrRows[0];
-
+    var pFunctionType = GetAttribute(tr, "DATA10");
+    
     if (pListTypeValue == "1") {
         document.getElementById("tbtnApproveALL").style.display = "";
     }
@@ -1901,6 +1999,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                
                 if(approvalFlag == "G") {
                 	document.getElementById("tbtnRegList").style.display = "";
                 } else {
@@ -1975,6 +2074,11 @@ function setbuttonenable() {
 	        document.getElementById("tbtnReturn").style.display = "none";
 	        document.getElementById("tbtnViewDoc").style.display = "none";
 	        document.getElementById("tbtnReceipt").style.display = "";
+	        
+	        if (pFunctionType == "015") {
+	            // 회송된 문서일 경우 접수버튼 display none 처리
+	            document.getElementById("tbtnReceipt").style.display = "none";	   	        	
+	        }     
 	    }
 	    if (pListTypeValue == "3") {
             document.getElementById("tbtnDraft").style.display = "";   

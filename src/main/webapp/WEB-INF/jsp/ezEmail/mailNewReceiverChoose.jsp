@@ -13,7 +13,7 @@
 	    		padding-left:15px;	    		
 	    	}
 	    </style>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<link rel="stylesheet" href="/js/ezEmail/Controls/ezSearchDatePicker.htc" type="text/css">
 		<script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
@@ -24,6 +24,7 @@
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 	    <script type="text/javascript">
 	        var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
 	        var m_dlImg = { "normal": "/imagefs/tab_dl1.gif", "select": "/images/tab_dl.gif" };
@@ -237,6 +238,12 @@
 	            else {
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
 	            }
+	            
+	            // 수정 수아 재은 (수신자 설정 시 drag, drop으로 순서 조정)
+	            $("#listType1 tr").each(function(){
+	            	$(this).find("table tbody").sortable();
+	            });
+
 	        }
 		    function recevieListview(pID, pListView) {
 		        var listview = new ListView();
@@ -1308,7 +1315,7 @@
 		        });
 	        }
 	        
-		    var m_strColorSelect = "rgb(233, 241, 255)";
+		    var m_strColorSelect = "#edf4fd";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;

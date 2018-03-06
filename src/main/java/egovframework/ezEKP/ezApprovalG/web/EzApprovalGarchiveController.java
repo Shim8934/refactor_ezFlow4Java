@@ -558,6 +558,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
 	    model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("serverName", serverName);
@@ -568,6 +574,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("docID", docID);
 		model.addAttribute("dirPath", dirPath);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		logger.debug("regRecordAttach ended");
 		
@@ -1387,7 +1394,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 	/** 전자결재 G 자동 알림 메일 */
 	@RequestMapping(value = "/ezApprovalG/mail_intersend.do", produces = "text/xml;charset=utf-8")
-	public void mailInterSend(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse res, Model model) throws Exception{
+	public void mailInterSend(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse res, Model model,Locale locale) throws Exception{
 		logger.debug("mail_intersend started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -1399,7 +1406,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         boolean flag;
 		StringBuilder bodyContent = new StringBuilder();
         
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        bodyContent.append("<DIV id=\"msgBody\" style=\"font-size: 13px; font-family: " + messageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
         bodyContent.append(Content);
         bodyContent.append("</DIV>");
     	InternetAddress from = new InternetAddress();
@@ -2593,5 +2600,21 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("result = " + result);
 		logger.debug("getContDocCount ended");
 	return "<RESULT>" + xmlDom.getElementsByTagName("TOTALCNT").item(0).getTextContent() + "</RESULT>";
+	}
+	
+	/** 전자결재 참조 원기안문서 진행상태*/
+	@RequestMapping(value = "/ezApprovalG/getLineMode.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getLineMode(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("getLineMode started");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+
+		String result = ezApprovalGService.getLineModeFlag(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("result = " + result);
+		logger.debug("getLineMode ended");
+	return result;
 	}
 }

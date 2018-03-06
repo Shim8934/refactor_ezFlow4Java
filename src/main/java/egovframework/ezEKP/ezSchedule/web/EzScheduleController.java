@@ -826,6 +826,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String endDate = request.getParameter("edate");
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());		
 		String pidList = "'" + loginVO.getId() + "'," + "'" + loginVO.getDeptID() + "'," + "'" + loginVO.getCompanyID() + "'";
+		//////////////////2018-03-02김은석
+		String chkStartDate = "";
+		String chkEndDate = "";
 		
 		if (filter != null && !filter.equals("")) {			
 			String utcStartTime = "";
@@ -834,8 +837,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 			if (keyword == null) keyword = "";
 			if (startDate == null) startDate = "";
 			if (endDate == null) endDate = "";			
+			//////////////////2018-03-02김은석
+			chkStartDate = startDate;
+			chkEndDate = endDate;
 			
-			if (startDate == null || startDate.equals("") || endDate == null || endDate.equals("")) {
+			if ((startDate == null || startDate.equals("") || endDate == null || endDate.equals(""))) {
 				String utcTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date now = sdf.parse(utcTime);
@@ -853,7 +859,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			startDate = startDate + " 00:00:00";
 			endDate = endDate + " 23:59:59";
-			
 			utcStartTime = commonUtil.getDateStringInUTC(startDate, loginVO.getOffset(), true);
 			utcEndTime = commonUtil.getDateStringInUTC(endDate, loginVO.getOffset(), true);
 			
@@ -905,7 +910,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			startDate = startDate.substring(0,10);
 			endDate = endDate.substring(0,10);
+			//////////////////2018-03-02김은석
+			if (chkStartDate.equals("") && !chkStartDate.equals(startDate)) {
+				startDate = chkStartDate;
+				endDate = chkEndDate;
+			}
 		}
+		
 		
 		model.addAttribute("offSetMin", offSetMin);
 		model.addAttribute("filter", filter);
@@ -2090,7 +2101,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 
         loginVO = commonUtil.userInfo(loginCookie);
 		
+        String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", loginVO.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+        
 		model.addAttribute("userInfo", loginVO);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		return "ezSchedule/scheduleDragAndDrop";
 	}	

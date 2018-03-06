@@ -588,7 +588,7 @@
 		            }
 		        }
 		    }
-		    var m_strColorSelect = "rgb(233, 241, 255)";
+		    var m_strColorSelect = "#edf4fd";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
@@ -799,7 +799,8 @@
                     			<option value="title"><spring:message code="ezResource.t10"/></option>
                     			<option value="telephonenumber"><spring:message code="ezResource.t11"/></option>
                     			<option value="mobile"><spring:message code="ezResource.t136"/></option>
-                    			<option value="HomePhone"><spring:message code="ezResource.t137"/></option>
+                    			<!-- 2018.02.20 김기하 #11640 -->
+                    			<%-- <option value="HomePhone"><spring:message code="ezResource.t137"/></option> --%>
                     			<option value="facsimileTelephoneNumber"><spring:message code="ezResource.t138"/></option>
                     			<option value="mail"><spring:message code="ezResource.t139"/></option>
                     			<option value="streetAddress"><spring:message code="ezResource.t140"/></option>

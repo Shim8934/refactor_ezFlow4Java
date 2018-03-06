@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -10,9 +11,8 @@
 		<section class="body_bg2">
 			<article  class="personal">
 				<p>
-					<span class="btn_green">
-						<span id="ModInfo" onClick="btnSumming_click(this)"><spring:message code="main.t00015" />
-						</span>
+					<span class="info_set">
+						<span id="ModInfo" onClick="btnSumming_click(this)"></span>
 					</span>
 				 	<strong id="personName" style="position:absolute; width:240px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${displayName} ${mailAddress } </strong>
 				 </p>
@@ -20,15 +20,14 @@
     				<p class="pic">${userPhoto}</p>
     				<dl class="info_txt">
         				<dt>${companyNm }<br></dt>
-			 			<dd><strong>${department} ${title}</strong></dd>
-						<dd><spring:message code="main.t00016" />  ${lastLogin }</dd>
+			 			<dd>${department} ${title}</dd>
+						<dd class="gray"><spring:message code="main.t00016" />  ${lastLogin }</dd>
     				</dl>
     				<div class="bottom"></div>
     			</div>
     			<div class="personal_content">
 					<a id="NewMail" onClick="btnSumming_click(this)">
 						<ul>
-							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal01.gif" alt="<spring:message code="main.t00017" />" /></li>
 							<li class="count">
 								<div>
 									<span id="mailnum">0</span>
@@ -46,26 +45,24 @@
 					</a>
 					
 					<a id="AprSign" onClick="btnSumming_click(this)">
-						<ul>
-							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal02.gif" alt="<spring:message code="main.t00018" />" /></li>
-								<li class="count">
-									<div>
-										<span id="aprnum">0</span>
-									</div>
-								</li>
-                    			<c:choose>
-                    			<c:when test="${userInfo.lang != '3'}">
-                    				<li class="title"><spring:message code="main.t00018" /></li>
-                    			</c:when>
-                    			<c:otherwise>
-                    				<li class="title1"><spring:message code="main.t00018" /></li>
-                    			</c:otherwise>
+						<ul>							
+							<li class="count">
+								<div>
+									<span id="aprnum">0</span>
+								</div>
+							</li>
+                   			<c:choose>
+	                   			<c:when test="${userInfo.lang != '3'}">
+	                   				<li class="title"><spring:message code="main.t00018" /></li>
+	                   			</c:when>
+	                   			<c:otherwise>
+	                   				<li class="title1"><spring:message code="main.t00018" /></li>
+	                   			</c:otherwise>
                     		</c:choose>
 						</ul>
 					</a>
 					<a id="Schedule" onClick="btnSumming_click(this)">
 						<ul>
-							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal03.gif" alt="<spring:message code="main.t00019" />" /></li>
 							<li class="count">
 								<div>
 									<span id="schedulenum">0</span>
@@ -82,11 +79,10 @@
 						</ul>
 					</a>
 					<a id="Poll" onClick="btnSumming_click(this)">
-						<ul class="last">
-							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal04.gif" alt="<spring:message code="main.t00020" />" /></li>
+						<ul>
 							<li class="count">
 								<div>
-									<span>${pollNum }</span>
+									<span><c:if test="${fn:length(pollNum) > 2}">99+</c:if><c:if test="${fn:length(pollNum) <= 2}">${pollNum}</c:if></span>
 								</div>
 							</li>
                     		<c:choose>
@@ -97,6 +93,23 @@
                     				<li class="title1"><spring:message code="main.t00020" /></li>
                     			</c:otherwise>
                     		</c:choose>
+						</ul>						
+					</a>
+					<a>
+						<ul class="last">
+							<li class="count">
+								<div>
+									<span id="circularCnt">0</span>
+								</div>
+							</li>
+                    		<c:choose>
+                    			<c:when test="${userInfo.lang != '3'}">
+                    				<li class="title"><spring:message code="ezCircular.t1" /></li>
+                    			</c:when>
+                    			<c:otherwise>
+                    				<li class="title1"><spring:message code="ezCircular.t1" /></li>
+                    			</c:otherwise>
+                    		</c:choose>                  		
 						</ul>
 					</a>			
 				</div>
@@ -133,18 +146,18 @@
         			<%-- <p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p> --%>
         			<c:choose>
 						<c:when test="${host == 'gw.freet.co.kr'}">
-							<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.jpg" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.jpg" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.jpg" width="56" height="85"></span></p>
+							<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="62" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="62" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="62" height="85"></span></p>
 						</c:when>
 						<c:otherwise>
-							 <p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p>
+							<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="62" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="62" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="62" height="85"></span></p>
 						</c:otherwise>
 					</c:choose>
 					<c:choose>
 					<c:when test="${host == 'gw.freet.co.kr'}">
-						<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.jpg" width="58" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.jpg" width="56" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.jpg" width="56" height="85"></span></p>
+						<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
 					</c:when>
 					<c:otherwise>
-						<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="58" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="56" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="56" height="85"></span></p>
+						<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
 					</c:otherwise>
 					</c:choose>
         			
@@ -233,6 +246,7 @@
 		        getnewmailcount();
 		        getnewapprovalcount();		        
 		        getScheduleList(nowDay, pMode);
+		        getNewCircularCount();
 			}
 
 			function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date) {
@@ -263,7 +277,7 @@
 			    $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
-		    		async : false,
+		    		async : true,
 		    		url : "/ezSchedule/scheduleNewWebPartList.do",
 		    		data : {
 		    			selectDate  : date		    			
@@ -315,6 +329,10 @@
 
 			        if (date == nowDay) {
 			        	var cnt = xmldom.getElementsByTagName("ROW").length;
+	
+			        	if (cnt > 99) {
+			        		cnt = "99+";	
+			        	}			        	
 			        	document.getElementById("schedulenum").innerHTML = cnt;
 			        }
 
@@ -322,7 +340,7 @@
 			            document.getElementById("ScheduleList").innerHTML = listHTML;			        	
 			        else {
 			            var nodata = "<div class='nodata_schedule '>";
-			            nodata += "<p><img src='/images/" + strLang1_total + "/main/nodata_plan.gif' width='92' height='84' style='margin-top:0px;margin-bottom:5px;'></p>";
+			            nodata += "<p><img src='/images/" + strLang1_total + "/main/nodata_plan.png' width='92' height='84' style='margin-top:0px;margin-bottom:5px;'></p>";
 			            nodata += "<p>" + strLang2_total + "</p></div>";
 
 			            var scrollbox = {};
@@ -372,7 +390,28 @@
 			        });
 			    } catch (e) {}
 			}
-
+			
+			//회람판 신규 갯수 가져오기 2018-03-05 강민수92
+	        function getNewCircularCount() {
+	        	$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezCircular/getListCount.do",
+					data : {
+						listType : 'newCircular'
+					},
+					success: function(result){
+						var cirCnt = result.count;
+						
+						if (cirCnt > 99) {
+							cirCnt = "99+";		
+						}						
+						$("#circularCnt").html(cirCnt);
+					}
+				});
+	        }
+			
 			var xmlHttp_getnewmailcount_total = null;
 			
 			function getnewmailcount() {
@@ -391,6 +430,10 @@
 			    if (xmlHttp_getnewmailcount_total != null && xmlHttp_getnewmailcount_total.readyState == 4) {
 			        if (xmlHttp_getnewmailcount_total.status > 199 && xmlHttp_getnewmailcount_total.status < 300) {
 			        	var unreadcount = getNodeText(SelectNodes(xmlHttp_getnewmailcount_total.responseXML, "DATA")[0]);
+			        	
+			        	if (unreadcount.length > 2) {
+			        		unreadcount = "99+";
+			        	}			        	
 			        	
 		                if(CrossYN()) {
 		                    document.getElementById("mailnum").textContent = unreadcount;
@@ -428,11 +471,20 @@
 						return;
 					} else  {
 						try {
-//							document.getElementById("aprnum").innerText = xmlHttp2.responseXML.text;
 		                    if(CrossYN()) {
-		                        document.getElementById("aprnum").textContent = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.textContent;
-		                    } else {		                    	
-		                        document.getElementById("aprnum").innerText = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.text;		                        
+		                    	var aprnumCnt = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.textContent;
+		                    	
+		                    	if (aprnumCnt.length > 2) {		                    		
+		                    		aprnumCnt = "99+";
+		                    	}
+		                        document.getElementById("aprnum").textContent = aprnumCnt;
+		                    } else {
+		                    	var aprnumCnt = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.text;
+		                    	
+		                    	if (aprnumCnt.length > 2) {
+		                    		aprnumCnt = "99+";
+		                    	}
+		                        document.getElementById("aprnum").innerText = aprnumCnt;		                        
 		                    }
 		                    xmlHttp_getnewapprovalcount_total = null;
 						} catch(e) {
@@ -471,58 +523,19 @@
 			}
 					
 			function btnSumming_click(objThis) {
-				switch (objThis.id) {
-					case "NewMail" : 
-						window.open("/ezEmail/mailMain.do?funCode=1", "main");
-						break;						
-										
-					case "AprSign" : 		
-						var listType;
-						listType = 1;
-						if ("${userApprovalG}" == ("YES"))
-							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
-						else
-							window.open("/ezApproval/apprMain.do?listType=" + listType, "main");
-						break;
-					case "aprnum" : 
-						// 문서Type 선택 1=결재할문서 2=기안할문서  3=결재진행문서  4=수신문서처리(접수기)
-						var listType;
-						listType = 1;
-						if ("${userApprovalG}" == ("YES"))
-							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
-						else
-							window.open("/ezApproval/apprMain.do?listType=" + listType, "main");
-						break;
-						
-					// 표준모듈 (2007.03.23) 수정 : 메모보고 
-					case "Memo" : 					
-						window.open("/myoffice/ezMemo/index_memo.aspx?listType=1", "main");
-						break;
-						
-					case "Schedule" : 
-						window.open("/ezSchedule/scheduleIndex.do?funCode=2","main");
-						break;
-						
-					case "Poll" :
-						window.open("/ezBoard/boardMain.do?func=1","main");
-						break;
-						
-					case "pollnum" : 
-						window.open("/ezBoard/boardMain.do?func=1","main");
-						break;
-					
-					case "Env" :
-						window.open("/myoffice/main/index_environment.htm","main");
-						break;
-					case "My_Board" :
-						window.open("/ezBoard/boardMain.do","main");
-						break;
-					case "Address" : 
-						window.open("/myoffice/main/index_myoffice.aspx?funCode=4", "main");
-						break;
-				    case "ModInfo":
-				        window.open("/ezPortal/environmentMain.do?funCode=1", "main");
-				        break;
+				var ifr = window.parent.parent.frames['topFrame'];
+				var ifrw = (ifr.contentWindow) ? ifr.contentWindow : ifr
+				
+				if (objThis.id == "AprSign") {
+					if ("${userApprovalG}" == ("YES")) {
+						ifrw.topMenuToggle('ApprG');
+					} else {
+						ifrw.topMenuToggle('Appr');
+					}
+				} else if (objThis.id == "ModInfo") {
+					window.open("/ezPortal/environmentMain.do?funCode=1", "main");
+				} else {
+					ifrw.topMenuToggle(objThis.id);
 				}
 			}
 

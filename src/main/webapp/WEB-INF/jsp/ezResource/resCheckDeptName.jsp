@@ -98,7 +98,7 @@
         				<WIDTH>100</WIDTH>
       				</HEADER>
       				<HEADER>
-        				<NAME><spring:message code="ezResource.t135"/></NAME>
+        				<NAME><spring:message code="ezResource.t132"/></NAME>
         				<WIDTH>100</WIDTH>
       				</HEADER>
       				<HEADER>

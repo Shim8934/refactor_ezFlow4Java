@@ -247,7 +247,20 @@ function Schedule_Repetition_onclick()
 		g_data["startTime"] = startDateRepeat;
 		g_data["endTime"] = endDateRepeat;
 	} else {
-	    if (repetitionFlag) {
+		/* 2018.02.22 김기하  #11624 */
+		var ssDate = $("#Sdatepicker").datepicker().val();
+    	var eeDate = $("#Edatepicker").datepicker().val();
+    	var ssTime = $("#Stimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+    	var eeTime = $("#Etimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+    	
+    	if(ssDate == "" || eeDate == "" || ssTime == "" || eeTime == ""){
+    		$("#Sdatepicker").datepicker("setDate", SdateNow);
+    		$("#Edatepicker").datepicker("setDate", EdateNow);
+    		$("#Stimepicker").timepicker("setTime", SdateNow);
+    		$("#Etimepicker").timepicker("setTime", EdateNow);
+    	}
+		
+		if (repetitionFlag) {
 	    	if(reStartDate == null)
 	            g_data["startTime"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 	        else
@@ -320,9 +333,18 @@ function Schedule_Repetition_onclick_Complete(retVal) {
         var eDate = retVal["endTime"];
         var SeteTime = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
         
+        var ssDate = new Date();
+        var eeDate = new Date();
+        ssDate.setHours(sDate.getHours(),sDate.getMinutes(),0,0);
+        eeDate.setHours(eDate.getHours(),eDate.getMinutes(),0,0);
+        /*2018.02.20 김기하 #11633 */
+        
         $("#Sdatepicker").datepicker('setDate', SetsTime);
         $("#Edatepicker").datepicker('setDate', SeteTime);
-
+   
+        $("#Stimepicker").timepicker('setTime', ssDate);
+        $("#Etimepicker").timepicker('setTime', eeDate);
+        
         document.getElementById("tr_STime").style.display = "none";
         
         document.getElementById("tr_Recur").style.display = "";

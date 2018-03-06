@@ -33,7 +33,7 @@
 			var enddate = "";
 			var pageCnt = "";
 			var strListInfo = "";
-
+		    var usepostDate = false;
 		    document.onselectstart = function () { return false; };
 		    
 		    window.onload = function () {
@@ -44,10 +44,11 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        $("#Sdatepicker").datepicker('disable');
+		        $("#Edatepicker").datepicker('disable');
 
 		        var height = parseInt(document.documentElement.clientHeight - 240);
 		        document.getElementById("divList").style.height = height + "px";
-		        
 		        getSearchList_after(loadXMLString("${listHeader}"));
 		    }
 			
@@ -80,6 +81,7 @@
 		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Edatepicker").datepicker('setDate', EDate);
 		    });
+
 		    
 		    var monthMsg = "<spring:message code='ezCircular.t129' />";
 		    var monthStr = monthMsg.split(";");		    
@@ -121,7 +123,6 @@
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 		    
-		    var usepostDate = false;
 		    function DateSearch_Click() {
 		        if(usepostDate){
 		            usepostDate = false;
@@ -199,7 +200,7 @@
 		        } else {
 		        	url = "/ezCircular/getFolderCircularList.do"
 		        }
-		        
+		        console.log("sDate :: "+sdate + "edate :: "+edate);
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
@@ -469,7 +470,7 @@
 		        }
 		    }
 		    
-		    // 2018-02-24 주홍선 수정 및 재사용에 대한 액션 뒤 창이 닫히지 않는 것 수정
+		    // 2018-02-14 주홍선 수정 및 재사용에 대한 액션 뒤 창이 닫히지 않는 것 수정
 		    function getLeftCount() {
 		    	if (typeof (window.parent.frames.left) != "undefined") {
 		    		parent.frames["left"].getNewCircularCount();
@@ -480,7 +481,7 @@
 		    	var strListArr = new Array();
 	        	strListArr = strListInfo.split(";");
 
-	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
+	        	if ((pageCnt - strListArr.length + 1) % 20 == 0 && CurPage != 1) {						
 					CurPage = CurPage - 1;
 				}
 
@@ -514,7 +515,7 @@
 		    	<tr> 
 		      		<th><spring:message code='ezCircular.t137' /></th>
 		      		<td>
-						<input type="checkbox" value="1" id="usepostdate" style="display:none;"><a class="imgbtn"><span onclick="DateSearch_Click();"><spring:message code='ezCircular.t138' /></span></a>
+						<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code='ezCircular.t138'/></label>
 		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" disabled/> ~
 		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" disabled/>
 			  		</td>

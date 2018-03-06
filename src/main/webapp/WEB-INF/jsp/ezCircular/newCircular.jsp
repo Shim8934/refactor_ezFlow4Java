@@ -104,6 +104,41 @@
 
 	            getBoardList();
 	        }; 
+	        
+		    $(document).ready(function() {
+		    	var clickOutside;
+		    	
+		    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
+		    	} else {
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
+		    	}	    	
+		    	
+		    	clickOutside.mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.parent.frames['left'].document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(parent.document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.frames['ifrmPreViewH']).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    });
+		    
 	        var Save_unloadSave = false;
 	        function Window_onunload() {
 	            if (window_onunload_Event && !Save_unloadSave) {
@@ -484,10 +519,13 @@
 		    function refresh_onclick() {
 		    	var strListArr = new Array();
 	        	strListArr = strListInfo.split(";");
-
-	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {
+	        	//2018-02-19 김보미
+	        	if ((pageCnt - strListArr.length + 1) % perCnt == 0 && CurPage != 1) {						
 					CurPage = CurPage - 1;
 				}
+// 	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {
+// 					CurPage = CurPage - 1;
+// 				}
 
 		    	getBoardList();
 		    }
@@ -636,7 +674,7 @@
 	    <span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
 	        <span id="previewmail_bar_h" class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
 	            <p class="hbar_dotted">
-	                <img src="/images/prevview_hbar_dotted.gif">
+	                <img src="/images/prevview_hbar_dotted.gif" draggable="false">
 	            </p>
 	        </span>
 	        <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
@@ -663,7 +701,7 @@
 	
 	    <span id="PreviewRayerW" style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
 	        <span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
-	            <img src="/images/prevview_bar_dotted.gif">
+	            <img src="/images/prevview_bar_dotted.gif" draggable="false">
 	        </span>
 	        <span id="PreContent_RayerW" style="display: block;">
 	            <span style="width: 100%; height: 100px; display: block;">

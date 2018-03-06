@@ -380,7 +380,8 @@
 // 		            clickFlag = false;
 
 // 		        if (!clickFlag) {
-					$(".on").attr("class", "off");
+//					$(".on").attr("class", "off"); 게시물 등록,수정,삭제 등의 작업 완료시, 왼쪽 게시판 리스트가 초기화되는 버그때문에 주석처리
+					$(".fList h2").attr("class", "off");
 					
 		            var rootBoardID = ID;
 		            var num = obj.split("TreeCtrl");

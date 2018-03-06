@@ -1,6 +1,6 @@
 ﻿function MailOptionView(obj) {
     if (obj.getAttribute("mode") == "off") {
-        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
         if(pAdminType == "y")
             document.getElementById("layer_Viewpopup").style.top = "50px";
         else
@@ -18,7 +18,16 @@ function MailOptionHidden() {
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
     document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
 }
-
+//레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
+function MailOptionHiddenOutside(e) {
+	var container = $('#layer_Viewpopup');
+	var maillistoptionmode = $('#maillistoptiondiv').attr('mode');
+	if (maillistoptionmode == "on") {
+		if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'maillistoptiondiv') {
+			MailOptionHidden();
+		}
+	}
+}
 function PreviewRayerChange(pGubun) {
     pGubun = pGubun.trim();
     if (selobj != null && pGubun != "NONE" && selobj.childNodes.length != 0)
@@ -53,10 +62,11 @@ function PreviewRayerChange(pGubun) {
             CurrentHeight = document.documentElement.clientHeight - 110;
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = "100%";
-            if (navigator.userAgent.indexOf('Firefox') != -1)
+            if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-            else
+            } else {
                 document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
+            }
             g_bPrevShow = false;
         }
         else if (pGubun == "W") {
@@ -78,16 +88,18 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("MailListRayer").style.width = "100%";
             document.getElementById("PreviewRayerW").style.width = "100%";
             document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-            if (navigator.userAgent.indexOf('Firefox') != -1)
+            if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
-            else
+            } else {
                 document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
+            }
             document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
-            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
+            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
-            else
+            } else {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
+            }
             pPreviewShow_HOW = "W";
             pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
             pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
@@ -154,8 +166,10 @@ function PreviewRayerChange(pGubun) {
         }
         MailOptionHidden();
         PreviewMode_ChangeBtn();
-        if (pAdminType != "y" && firstFlag)
+        if ( firstFlag) {
             Set_BoardConfig();
+        
+        }
         isPreviewChange = false;
     } catch (e) { }
 }
@@ -864,7 +878,7 @@ function ListCount(pCount) {
 }
 
 function Set_BoardConfig() {
-    $.ajax({
+     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : true,
@@ -880,15 +894,26 @@ function Set_BoardConfig() {
 
 //레프트 메뉴카운트 업뎃용
 function leftCountRf() {
-	var pDiv, pId, pValue;
+	var pDiv, pId, pValue, pNodeID, pTreeID;
     var h2 = window.parent.frames["left"].document.getElementsByTagName("h2");
-
+    var span = window.parent.frames["left"].document.getElementsByTagName("span");
+    
+    // 2018-02-23 천성준 
+    /* 게시판  게시물 등록, 삭제, 복사, 이동시 왼쪽 게시판 폴더 볼드 해제되는 버그 수정 */
+    for (var j = 0; j < span.length; j++) {
+    	if (span[j].className == "node_selected") {
+    		pNodeID = span[j].id.replace("spn_","");
+    		pTreeID = pNodeID.split("_")[0];
+    	}
+    }
+    
     for (var i = 0; i < h2.length; i++) {
         if (h2[i].className == "on") {
             pId = h2[i].getElementsByTagName("div")[0].id;
             pId = pId.replace("TreeCtr", "TreeCtrl");
             pValue = h2[i].getElementsByTagName("div")[0].getAttribute("value");
             window.parent.frames["left"].TopBoard_onclick(pId, pValue);
+            window.parent.frames["left"].node_select(pNodeID, "", pTreeID, "");
             break;
         }
     }

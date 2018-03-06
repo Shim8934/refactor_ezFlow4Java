@@ -188,6 +188,7 @@
 		    	var _params = getParameters();
 		    	var szUrl = "/ezPoll/pollList.do?brdID=" + brdID + _params; 
 		    	window.location.href = szUrl;
+		    	goToPageByNum(1); //필터 라디오버튼을 누를 경우 1페이지로 선택하게 함.
 		    }
 		    
 		    function getParameters() {
@@ -475,9 +476,14 @@
 					<label for="btnRadio2"><spring:message code='ezPoll.t146' /></label>					
 				</li>
 				<li style="float:right; font-weight:normal; color:black;">
+					<input id="btnRadio4" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="4" ${pollType == '4'? 'checked' : ''}>
+					<label for="btnRadio4"><spring:message code='ezPoll.t251' /></label>		
+				</li>
+				<li style="float:right; font-weight:normal; color:black;">
 					<input id="btnRadio3" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="1" ${pollType == '1'? 'checked' : ''}>
 					<label for="btnRadio3"><spring:message code='ezPoll.t237' /></label>		
 				</li>
+				
 			</ul>
 		</div>
 		<script type="text/javascript">
@@ -485,7 +491,7 @@
 		</script>	
 			 
 		<div class="div_scroll" style="width:100%; height:500px; overflow: auto" id="divList">
-			<table id="QstList" class="mainlist" style="width:100%;margin-top:5px"> 
+			<table id="QstList" class="mainlist" style="width:100%;"> 
 			    <tr> 
 					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
 						<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">

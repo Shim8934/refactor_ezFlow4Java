@@ -1,6 +1,6 @@
 ﻿var PressCtrlKey = false;
 var PressShiftKey = false;
-var m_strColorSelect =  "rgb(233, 241, 255)";
+var m_strColorSelect =  "#edf4fd";
 var m_strColorDefault =  "#FFFFFF";
 var m_strColorOver = "#F7FAE0";
 var m_UrgentColor = "#E9101A";
@@ -330,6 +330,7 @@ function ListView() {
 
             var oTHeader = GetTableHeaderObj();
             var oTBody = GetTableBodyObj();
+            
             if (_SelectFlag && _firstRowID != "") {
                 oTable.setAttribute("lastSelectedRowID", _firstRowID);
             }
@@ -694,7 +695,7 @@ function ListView() {
                 objTd = null;
                 oText = null;
             }
-
+            
             objTr = null;
             oCells = null;
             oDatas = null;
@@ -913,7 +914,7 @@ function ListView() {
                 objTr.setAttribute("selected", "true");
                 objTr.style.backgroundColor = m_strColorSelect;
 
-                _firstRowID = _thisID + "_TR_" + i;      
+                _firstRowID = _thisID + "_TR_" + i;
             }
             else {
                 objTr.setAttribute("selected", "false");
@@ -1017,7 +1018,7 @@ function ListView() {
                 objTd = null;
                 oText = null;
             }
-
+            
             objTr = null;
             oCells = null;
             oDatas = null;
@@ -1089,10 +1090,13 @@ function ListView() {
                 objTd.onmouseover = new Function("td_mouseover(this)");
                 objTd.onmouseout = new Function("td_mouseout(this)");
             }
-
+             
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
-
+            
+            // 수정 수아 재은
+            objTr.draggable = "true";
+            
             objTd = null;
             oText = null;
         }
@@ -1100,8 +1104,9 @@ function ListView() {
         objTr = null;
         oCells = null;
         oDatas = null;
+      
     }
-
+    
     function GetDataElements(pObjElm) {
         var elements = new Array();
 
@@ -1225,7 +1230,7 @@ function ListView() {
             objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
         else
             objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
-
+        
         return objTr;
     }
 
@@ -1266,7 +1271,7 @@ function ListView() {
             objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
         else
             objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
-
+        
         return objTr;
     }
     
@@ -1299,7 +1304,7 @@ function ListView() {
         if (document.getElementById(_thisID).childNodes[1].innerHTML == "") {
             return "";
         }
-        
+
         return oList.childNodes[1].childNodes[pIdx].getAttribute("id");
     }
 

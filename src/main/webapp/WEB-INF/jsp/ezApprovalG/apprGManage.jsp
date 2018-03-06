@@ -96,6 +96,8 @@
 		    var forceCallBackYN = "${forceCallBackYN}";
 		    var SubQuery = "${SubQuery}";
 		    var condition = new Array();
+		    var nowDate = "${nowDateUTC}";
+		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -674,44 +676,48 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var oArrRows = DocList.GetSelectedRows();
+		        
 		        if (oArrRows.length > 0) {
 		            var pCurSelRow = oArrRows[0];
+		            
 		            if (pListTypeValue == "7") {
 		                var pDocID = pCurSelRow.getAttribute("DATA1");
 		                var pURL = pCurSelRow.getAttribute("DATA3");
 		                var openLocation = "";
+		                
 		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
-		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
-		                }
-		                else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
+		                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
 		                    if (CrossYN()) {
 		                        alert(strLang1103);
 		                        return;
+		                    } else {
+// 		                        openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezConvOut_HWP.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
+		                        openLocation = "/ezApprovalG/ezConvOutHWP.do?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
 		                    }
-		                    else {
-		                        openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezConvOut_HWP.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
-		                    }
+		                } else {
+		                    /* if (CrossYN()) {
+		                        openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_Cross.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
+		                    } else {
+	                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
+		                    } */
+		                    
+		                	openLocation = "/ezApprovalG/ezConvOut.do?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
 		                }
-		                else {
-		                    if (CrossYN()) {
-		                        openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_Cross.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
-		                    }
-		                    else {
-	                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
-		                    }
-		                }
+		                
 		                openwindow(openLocation, "enforce", 880, 550);
-		            }
-		            else {
+		            } else {
 		                if (pSusinManagerFlag == "admin" || pCurSelRow.getAttribute("DATA8") == pUserID) {
 		                    var pDraftFlag;
-		                    if (pCurSelRow.getAttribute("DATA9") == strDocState11)
+		                    
+		                    if (pCurSelRow.getAttribute("DATA9") == strDocState11) {
 		                        pDraftFlag = "SUSIN";
-		                    else if (pCurSelRow.getAttribute("DATA9") == strDocState12 || pCurSelRow.getAttribute("DATA9") == strDocState2)
+		                    } else if (pCurSelRow.getAttribute("DATA9") == strDocState12 || pCurSelRow.getAttribute("DATA9") == strDocState2) {
 		                        pDraftFlag = "HAPYUI";
+		                    }
+		                    
 		                    OpenReceiveDraftUI(pCurSelRow, pDraftFlag);
-		                }
-		                else {
+		                } else {
 		                    var pAlertContent = "<spring:message code='ezApprovalG.t1730'/>";
 		                    //OpenAlertUI(pAlertContent);
 		                    alert(pAlertContent);
@@ -719,6 +725,7 @@
 		            }
 		        }
 		    }
+		    
 		    function btnDistribute_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -1290,8 +1297,15 @@
 		        }
 		        else
 		            pDocID = tr[0].getAttribute("DATA1");
-		
-		        var url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
+				
+		        //직인의뢰함에서 타입을 END로 주기위해
+		        var url;
+		        if (pListTypeValue == 7) {
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END";	
+		        } else {
+		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
+		        }
+		        
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=600px,height=450px";
 		        feature = feature + GetOpenPosition(600, 450);
 		        window.open(url, "", feature);
