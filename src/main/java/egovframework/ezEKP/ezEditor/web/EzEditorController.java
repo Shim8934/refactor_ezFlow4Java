@@ -495,9 +495,10 @@ public class EzEditorController extends EgovFileMngUtil{
 		try {
 			String type = request.getParameter("type");
 			logger.debug("type=" + type);
-			
-			if (type.equals("MAILOUTOFOFFICE")) { //메일 부재중설정 시 이미지 업로드되지 않도록.
-				logger.debug("type is MAILOUTOFOFFICE. no upload.");
+		
+			// 메일 부재중설정 또는 커뮤니티 포토게시판일 경우 이미지 업로드되지 않도록 한다.
+			if (type.equals("MAILOUTOFOFFICE") || type.equals("COMMUNITYPHOTO")) {
+				logger.debug("Cannot upload image. type=" + type);
 				result = "fail_image"; //TODO: 적절한 result가 필요함..
 			} else {
 				LoginVO userInfo = commonUtil.userInfo(loginCookie);
