@@ -626,6 +626,7 @@ public class EzEditorController extends EgovFileMngUtil{
 			String type = request.getParameter("type");
 			
 			// 메일 부재중설정 또는 커뮤니티 포토게시판일 경우 이미지 업로드되지 않도록 한다.
+			//TODO: ezEmail.lhm29 메시지 변경
 			if (type.equals("MAILOUTOFOFFICE") || type.equals("COMMUNITYPHOTO")) { 
 				msg = egovMessageSource.getMessage("ezEmail.lhm29", locale);
 				result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
@@ -643,10 +644,12 @@ public class EzEditorController extends EgovFileMngUtil{
 					FileOutputStream fileOuputStream = null;
 					
 					try {
-						String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+						String filePath = "";
 						
 						if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
 							filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+						} else {
+							filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 						}
 						
 						String realPath = commonUtil.getRealPath(request);
