@@ -11,17 +11,43 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
-			
+			function moveToPage(idx)
+			{
+				var url = "";
+				switch(idx)
+				{
+					case 1:
+						url = "";
+						break;
+					case 2:
+						url = "";
+						break;
+					case 3:
+						url = "";
+						break;
+					case 4:
+						url = "";
+						break;
+					case 5:
+						url = "";
+						break;
+				}
+				window.open(url, "attitude_main");
+			}
 		</script>
 	</head>
 	<body class="leftbody">
 		<div id="left">
 			<div class="left_admin" title="attitude"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='ezAttitude.t1'/></div>
-			<h2><span style="display:inline-block; width:100%;" onClick="goPage(1)"><spring:message code = 'ezAttitude.t10' /></span><ul></ul></h2>
-			<h2><span style="display:inline-block; width:100%;" onClick="goPage(2)"><spring:message code = 'ezAttitude.t11' /></span><ul></ul></h2>
-			<h2><span style="display:inline-block; width:100%;" onClick="goPage(3)"><spring:message code = 'ezAttitude.t12' /></span><ul></ul></h2>
-			<h2><span style="display:inline-block; width:100%;" onClick="goPage(4)"><spring:message code = 'ezAttitude.t13' /></span><ul></ul></h2>
-			<h2><span style="display:inline-block; width:100%;" onClick="goPage(4)"><spring:message code = 'ezAttitude.t14' /></span><ul></ul></h2>
+			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(1)"><spring:message code = 'ezAttitude.t10' /></span><ul></ul></h2>
+			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(2)"><spring:message code = 'ezAttitude.t11' /></span><ul></ul></h2>
+			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(3)"><spring:message code = 'ezAttitude.t12' /></span><ul></ul></h2>
+			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(4)"><spring:message code = 'ezAttitude.t13' /></span><ul></ul></h2>
+			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(4)"><spring:message code = 'ezAttitude.t14' /></span><ul></ul></h2>
 		</div>
+		
+		<script type="text/javascript">
+			initToggleList(document.getElementById("left"), "h2", "ul", "li");
+		</script>
 	</body>
 </html>
