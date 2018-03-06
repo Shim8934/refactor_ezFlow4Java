@@ -164,13 +164,10 @@
 	    	}
 	    	
 	    	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
-	    	var uploadFilePath = "/ezEditor/tfxUpload.do";
-	    	var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do";
+	    	var uploadFilePath = "/ezEditor/tfxUpload.do?type=" + type;
+	    	var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=" + type;
 	    	
-	    	if (type == "MAILSIGNATURE") {
-	   			uploadFilePath = "/ezEditor/tfxUploadMail.do";
-	   			uploadPasteContentsPath = "/ezEditor/tfxSimpleUploadMail.do";
-	   		} else if (type == "MAILOUTOFOFFICE") {
+	    	if (type == "MAILOUTOFOFFICE") {
 	   			uploadPasteContentsPath = "/ezEditor/tfxNoop.do";
 	   		}
 	    	
