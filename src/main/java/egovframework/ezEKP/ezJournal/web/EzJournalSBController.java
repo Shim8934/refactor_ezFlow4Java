@@ -32,7 +32,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @Controller
 public class EzJournalSBController {
 
-	private static final Logger logger = LoggerFactory.getLogger(EzJournalAdminController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzJournalSBController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -131,6 +131,7 @@ public class EzJournalSBController {
 		if (status.equals("ok")) {			
 			//업무일지 환경설정
 			JSONObject journalEnv =  (JSONObject) resultBody.get("data");
+			logger.debug("journalEnv : " + journalEnv);
 			model.addAttribute("journalEnv", journalEnv);
 		}
 		logger.debug("journalListMain ended");
@@ -199,7 +200,7 @@ public class EzJournalSBController {
 			e.printStackTrace();
 		}
 		String listType =(String) param.remove("listType");
-		int listCnt = Integer.parseInt((String) param.get("listCnt"));
+		int listCnt = Integer.parseInt(param.get("listCnt").toString());
 		int currentPage = (int) param.remove("currentPage");
 		
 		param.put("companyId", userInfo.getCompanyID());

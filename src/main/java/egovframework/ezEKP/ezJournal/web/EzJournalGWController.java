@@ -332,7 +332,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
 			
 			List<JournalAuthorVO> deptList = ezJournalService.getAuthDeptList(info.getTenantId() + "", userId);
 	
@@ -359,9 +359,9 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, (String) jsonParam.get("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
 			
-			jsonParam.put("tenantId", info.getTenantId()+"");
+			jsonParam.put("tenantId", info.getTenantId());
 			ezJournalService.saveAuthDeptList(jsonParam);
 			
 			result.put("status", "ok");
@@ -683,7 +683,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
 			
 			List<ReceiverFavoriteVO> favoriteList = ezJournalService.getFavoriteList(userId, info.getTenantId() + "");
 			
@@ -713,7 +713,7 @@ public class EzJournalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
 			
 			jsonParam.put("tenantId", info.getTenantId());
 			ezJournalService.saveFavorite(jsonParam);
@@ -743,7 +743,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
 			
 			jsonParam.put("tenantId", info.getTenantId());
 			ezJournalService.modifyFavorite(jsonParam);
@@ -774,7 +774,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
 			
 			ezJournalService.deleteFavorite(favoriteId, userId, info.getTenantId() + "");
 			
@@ -804,7 +804,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
 			
 			List<JournalAuthorVO> userList = ezJournalService.getFavoriteUserList(favoriteId, info.getTenantId() + "");
 			
@@ -1070,7 +1070,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
 			
 			String recvCount = ezJournalService.getRecvJournalCount(userId, info.getTenantId() + "");
 		

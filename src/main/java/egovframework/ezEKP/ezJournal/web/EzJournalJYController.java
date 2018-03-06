@@ -51,7 +51,7 @@ public class EzJournalJYController {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = commonUtil.getTenantConfigRest("EDITOR", userInfo.getId(), request);
 		String mode = request.getParameter("mode");
 		String typeId = request.getParameter("typeId");
 		String hasAttach = "";
@@ -74,7 +74,6 @@ public class EzJournalJYController {
 		
 		model.addAttribute("typeId", typeId);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mode", mode);
 		
 		logger.debug("journalNewItem ended");
