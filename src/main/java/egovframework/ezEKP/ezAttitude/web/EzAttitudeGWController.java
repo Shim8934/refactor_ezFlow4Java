@@ -38,9 +38,12 @@ public class EzAttitudeGWController {
 	@Resource(name = "EzAttitudeService")
 	private EzAttitudeService ezAttitudeService;
 	
-	@RequestMapping(value = "/ezattitude/users/{userId}/attitude-list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject userAttitudeMainList(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /ezattitude/users/" + userId + "/attitude-list] started.");
+	/**
+	 * G/W 근태관리 [GET] 개인, 부서, 부서+개인 근태현황조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attitudeMainList(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -49,13 +52,16 @@ public class EzAttitudeGWController {
 		} catch (Exception e) {
 			
 		}
-		LOGGER.debug("G/W EzAttitude [GET /ezattitude/users/" + userId + "/attitude-list] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] ended.");
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezattitude/attitude-list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject AttitudeList (HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /ezattitude/attitude-list] started.");
+	/**
+	 * G/W 근태관리 [POST] 근태등록
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitudes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject registeAttitude(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/attitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -64,7 +70,475 @@ public class EzAttitudeGWController {
 		} catch (Exception e) {
 			
 		}
-		LOGGER.debug("G/W EzAttitude [GET /ezattitude/attitude-list] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/attitudes] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 유형별 근태현황 조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}/attitudes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attitudeListType(@PathVariable String attitudetypeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/" + attitudetypeId + "/attitudes] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/" + attitudetypeId + "/attitudes] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 근태 상세조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getAttitudeInfo(@PathVariable String attitudeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [POST] 근태수정
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject updateAttitudeInfo(@PathVariable String attitudeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [DELETE] 근태삭제
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteAttitudeInfo(@PathVariable String attitudeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/attitudes/" + attitudeId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 수정신청 조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/modify-applications", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject modifyApplicationList(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modify-applications] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modify-applications] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [POST] 수정신청 등록
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}/modify-applications", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject modifyApplicationList(@PathVariable String attitudeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [PUT] 수정신청 수정
+	 */
+	@RequestMapping(value = "/rest/ezattitude/modify-applications/{modapplId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject updatemodifyApplication(@PathVariable String modapplId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/modify-applications/" + modapplId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/modify-applications/" + modapplId + "] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 수정신청 상세보기
+	 */
+	@RequestMapping(value = "/rest/ezattitude/modify-applications/{modapplId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject modifyApplicationInfo(@PathVariable String modapplId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modify-applications/" + modapplId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modify-applications/" + modapplId + "] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [PUT] 수정신청 일괄처리
+	 */
+	@RequestMapping(value = "/rest/ezattitude/modify-applications", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject updateModifyApplicationBatch(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/modify-applications] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/modify-applications] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [DELETE] 수정신청 일괄처리
+	 */
+	@RequestMapping(value = "/rest/ezattitude/modify-applications", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteModifyApplicationBatch(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/modify-applications] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/modify-applications] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 조직도 회사, 부서조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/organtree/depts", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject organtreeDepts(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 부서의 사원들 조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/organtree/depts/{deptId}/users", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject organtreeUsersOfDept(@PathVariable String deptId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts/" + deptId + "/users] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts/" + deptId + "/users] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 개인 월별 근태 통계
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject userAttitudeCount(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-count] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-count] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 부서 월별 근태 통계
+	 */
+	@RequestMapping(value = "/rest/ezattitude/depts/{deptId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject deptAttitudeCount(@PathVariable String deptId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/depts/" + deptId + "/attitude-count] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /ezattitude/depts/" + deptId + "/attitude-count] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 근태설정정보 조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitude-conf", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attitudeConfInfo(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitude-conf] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitude-conf] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [POST] 근태설정정보 수정
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitude-conf", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject updateAttitudeConf(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitude-conf] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitude-conf] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 근태유형 조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudetypes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attitudeTypeList(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [PUT] 근태유형 사용여부 일괄저장
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudetypes", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject attitudeTypeBatchStore(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/attitudetypes] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/attitudetypes] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [POST] 근태유형 추가
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudetypes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject insertAttitudeType(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudetypes] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudetypes] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [PUT] 근태유형 수정
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject updateAttitudeType(@PathVariable String attitudetypeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/attitudetypes/" + attitudetypeId+ "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/attitudetypes/" + attitudetypeId+ "] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 회사리스트
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject updateAttitudeType(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 사용자별 근태설정 조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/user-attitude-confs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject userAttitudeConfList(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users-attitude-confs] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users-attitude-confs] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [POST] 사용자별 근태설정 등록
+	 */
+	@RequestMapping(value = "/rest/ezattitude/user-attitude-confs", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject insertUserAttitudeConf(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users-attitude-confs] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users-attitude-confs] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [PUT] 사용자별 근태설정 수정
+	 */
+	@RequestMapping(value = "/rest/ezattitude/user-attitude-confs/{user-attitude-confId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject updateUserAttitudeConf(@PathVariable String userAttitudeConfId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users-attitude-confs/" + userAttitudeConfId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users-attitude-confs/" + userAttitudeConfId + "] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [POST] 관리자 권한 추가
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/add-authority", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject addAuthority(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/add-authority] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users" + userId + "/add-authority] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 엑셀다운로드
+	 */
+	@RequestMapping(value = "/rest/ezattitude/exceldown", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject exceldown(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/exceldown] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+		} catch (Exception e) {
+			
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/exceldown] ended.");
 		return result;
 	}
 }
