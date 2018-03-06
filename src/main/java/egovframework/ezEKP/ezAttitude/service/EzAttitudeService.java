@@ -51,9 +51,9 @@ public interface EzAttitudeService {
 	
 	public void deleteAttitudeApplication(String attitudeId, int tenantId) throws Exception;
 	
-	public List<AttitudeApplicationVO> getUserAttitudeApplicationList(String userId, int tenantId, String writeName, String applUserName, String startDate, String endDate, String statusType) throws Exception;
+	public List<AttitudeApplicationVO> getUserAttitudeApplicationList(String userId, int tenantId, String writeName, String apprUserName, String startDate, String endDate, String statusType) throws Exception;
 
-	public List<AttitudeApplicationVO> getAttitudeApplicationList(int tenantId, String writeName, String applUserName, String deptName, String startDate, String endDate, String statusType) throws Exception;
+	public List<AttitudeApplicationVO> getAttitudeApplicationList(int tenantId, String writeName, String apprUserName, String deptName, String startDate, String endDate, String statusType) throws Exception;
 	
 	public AttitudeConfigVO getAttitudeConfig(int tenantId, String companyId) throws Exception;
 	

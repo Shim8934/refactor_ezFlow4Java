@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzAttitudeService")
@@ -101,14 +104,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void updateAttitudeApplication(String attitudeId, String changeDate,
-			String changeTime, String content, String companyId, int tenantId)
-			throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void updateAttitudeApplicationApproval(String attitudeId,
 			String apprUserId, String apprUserName, String apprUserName2,
 			String apprStatus, int tenantId) throws Exception {
@@ -143,5 +138,102 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			throws Exception {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void updateAttitudeApplication(String attitudeId, String changeTime,
+			String content, String companyId, int tenantId) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public AttitudeApplicationVO getAttitudeApplicationInfo(int tenantId,
+			String companyId, String attitudeId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteAttitudeApplication(String attitudeId, int tenantId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<AttitudeApplicationVO> getUserAttitudeApplicationList(
+			String userId, int tenantId, String writeName, String apprUserName,
+			String startDate, String endDate, String statusType)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<AttitudeApplicationVO> getAttitudeApplicationList(int tenantId,
+			String writeName, String apprUserName, String deptName,
+			String startDate, String endDate, String statusType)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AttitudeConfigVO getAttitudeConfig(int tenantId, String companyId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateAttitudeConfig(AttitudeConfigVO attitudeConfigInfo)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateAttitudeTypeConfig(String typeId, String isUse,
+			int tenantId, String companyId) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void insertAttitudeType(String typeName, String typeName2,
+			String imgPath, String formId, String parentId, int tenantId,
+			String companyId) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId,
+			String typeId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateAttitudeType(String typeName, String typeName2,
+			String imgPath, int tenantId, String companyId) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId,
+			String companyId, String userName, String deptName)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AttitudeUserConfigVO getAttitudeUserConfigInfo(int tenantId,
+			String companyId, String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

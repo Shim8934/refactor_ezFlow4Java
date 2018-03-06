@@ -30,15 +30,15 @@ public class AttitudeApplicationVO {
 	/** 삭제 여부 */
 	private String delFlag;
 	/** 승인자 아이디 */
-	private String applUserId;
+	private String apprUserId;
 	/** 승인자 이름 */
-	private String applUserName;
+	private String apprUserName;
 	/** 승인자 이름(영문) */
-	private String applUserName2;
+	private String apprUserName2;
 	/** 승인일자 */
-	private String applDate;
+	private String apprDate;
 	/** 승인상태 */
-	private String applStatus;
+	private String apprStatus;
 	/** 사유 */
 	private String content;
 	
@@ -126,35 +126,35 @@ public class AttitudeApplicationVO {
 	public void setDelFlag(String delFlag) {
 		this.delFlag = delFlag;
 	}
-	public String getApplUserId() {
-		return applUserId;
+	public String getApprUserId() {
+		return apprUserId;
 	}
-	public void setApplUserId(String applUserId) {
-		this.applUserId = applUserId;
+	public void setApprUserId(String apprUserId) {
+		this.apprUserId = apprUserId;
 	}
-	public String getApplUserName() {
-		return applUserName;
+	public String getApprUserName() {
+		return apprUserName;
 	}
-	public void setApplUserName(String applUserName) {
-		this.applUserName = applUserName;
+	public void setApprUserName(String apprUserName) {
+		this.apprUserName = apprUserName;
 	}
-	public String getApplUserName2() {
-		return applUserName2;
+	public String getApprUserName2() {
+		return apprUserName2;
 	}
-	public void setApplUserName2(String applUserName2) {
-		this.applUserName2 = applUserName2;
+	public void setApprUserName2(String apprUserName2) {
+		this.apprUserName2 = apprUserName2;
 	}
-	public String getApplDate() {
-		return applDate;
+	public String getApprDate() {
+		return apprDate;
 	}
-	public void setApplDate(String applDate) {
-		this.applDate = applDate;
+	public void setApprDate(String apprDate) {
+		this.apprDate = apprDate;
 	}
-	public String getApplStatus() {
-		return applStatus;
+	public String getApprStatus() {
+		return apprStatus;
 	}
-	public void setApplStatus(String applStatus) {
-		this.applStatus = applStatus;
+	public void setApprStatus(String apprStatus) {
+		this.apprStatus = apprStatus;
 	}
 	public String getContent() {
 		return content;
@@ -162,8 +162,6 @@ public class AttitudeApplicationVO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	
 	
 
 }
