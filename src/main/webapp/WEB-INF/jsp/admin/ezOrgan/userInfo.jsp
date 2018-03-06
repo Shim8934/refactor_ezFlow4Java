@@ -437,7 +437,8 @@
 							alert("<spring:message code='ezOrgan.t269' />");
 					    }, 100);
 					}
-				});		        
+				});
+				mailAddDistribution();
 		    }
 		    function trim(str) {
 		        while (str && str.indexOf(" ") == 0)
@@ -519,6 +520,28 @@
 						alert("<spring:message code='ezOrgan.t270' />");
 					}
 				});
+		    }
+		    function mailAddDistribution(){
+		    	$.ajax({
+		    		type : "POST",
+		    	    dataType : "text",
+		    	    url : "/admin/ezOrgan/mailSaveDistributionList.do" ,
+		    	    data : {cn: document.getElementById("UserID").value, jobTitle: JobTitle.value, 
+		    	     jobTitle2: JobTitle2.value, jobPosition: JobPosition.value, jobPosition2:JobPosition2.value
+		    	     },
+		    	    async : false,
+		    	    success : function(result){
+		    	    	if (result == "OK"){
+		    	    		
+		    	    	} else if(result == "GROUP_NAME") {
+		    	    		alert("<spring:message code='ezEmail.lhm11' />");
+		    	    	} else if (result == "GROUP_ID") {
+			            	alert("<spring:message code='ezEmail.lhm12' />");
+		    	    	} else {
+			            	alert("<spring:message code='ezEmail.t23' />");
+		    	    	}
+		    	    }
+		    	})
 		    }
 	    </script>
 	</head>

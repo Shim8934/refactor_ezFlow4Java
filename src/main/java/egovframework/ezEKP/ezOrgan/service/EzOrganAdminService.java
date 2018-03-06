@@ -83,4 +83,8 @@ public interface EzOrganAdminService {
 	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword) throws Exception;
 	
 	public int getUserCount(int tenantID,String keycode,String keyword) throws Exception;
+	
+	public String mailAddDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
+	
+	public String mailUpdateDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
 }

@@ -5,10 +5,10 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,10 +24,8 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +34,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -52,13 +48,13 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
-import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -2686,6 +2682,70 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("setUseDisablePop3Imap ended.");
 		
 		return returnValue;
+	}
+	
+	/**
+	 * 조직도 사원 추가, 수정시 직위,직책으로 공용배포그룹 생성 및 수정
+	 */
+	@RequestMapping(value="/admin/ezOrgan/mailSaveDistributionList.do")
+	@ResponseBody
+	public String mailSaveDistributionList(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model,  HttpServletRequest request) throws Exception{
+		//관리자 권한체크
+		LoginVO auth = commonUtil.aprCheckAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String cn = request.getParameter("cn");
+		String jobTile = request.getParameter("jobTitle") == null ? "" : request.getParameter("jobTitle");
+		String jobTile2 = request.getParameter("jobTitle2") == null ? "" : request.getParameter("jobTitle2");
+		String jobPostion = request.getParameter("jobPosition") == null ? "" : request.getParameter("jobPosition");
+		String jobPostion2 = request.getParameter("jobPosition2") == null ? "" : request.getParameter("jobPosition2");
+		
+		logger.debug("mailSaveDistributionList started.");
+		logger.debug("cn=" + cn + ", jobTile=" + jobTile + ", jobTile2=" + jobTile2 + ", jobPosition=" + jobPostion + ",jobPostion2=" + jobPostion2);
+		
+		int tenantID = auth.getTenantId();
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		String companyId = userInfo.getCompanyID();
+		String result = "ERROR";
+		
+		try {
+			
+			List<MailDistributionVO> distributionList = new ArrayList<MailDistributionVO>();
+			
+			if (jobTile2 != null) {
+				 distributionList = ezEmailService.getDistributionSearchList(companyId, tenantID, jobTile);
+				 
+				 if (distributionList != null && distributionList.size() == 3) {//직책 이름으로 공용 배포그룹 존재시
+					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, jobTile2, companyId, tenantID, cn);
+				 } else {
+					 result = ezOrganAdminService.mailAddDistributionList(domain, jobTile, jobTile2, companyId, tenantID, cn);
+				 }
+				 
+			}
+			
+			if (jobPostion2 != null) {
+				 distributionList = ezEmailService.getDistributionSearchList(companyId, tenantID, jobPostion);
+				 
+				 if (distributionList != null && distributionList.size() == 3) {//직위 이름으로 공용 배포그룹 존재시
+					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, cn);
+				 } else {
+					 result = ezOrganAdminService.mailAddDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, cn);
+				 }
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("mailSaveDistributionList ended.");
+		
+		return result;
 	}
 	
 	private boolean createThumbnail(File sourceFile, File targetFile) {

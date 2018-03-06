@@ -1,16 +1,23 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
+import javax.xml.bind.ParseConversionEvent;
 
+import org.bouncycastle.util.encoders.UrlBase64Encoder;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +71,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     
     @Autowired
     private ADConnection conn;
+    
+    @Autowired
+    private Properties config;
     
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
@@ -1130,4 +1140,181 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     	
 		return userCount;
     }	
+    
+	@Override
+	public String mailAddDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception {
+		logger.debug("mailAddDistributionList started.");
+		logger.debug("domain=" + domain + "job=" + job + "job2=" + job2 + "companyId=" + companyId + "tenantID=" + tenantID);
+		
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+		String result = "ERROR";
+		String bizmekaResult = "ERROR";
+		int reasonCode = -100;
+		
+		if (useBizmekaSpambox.equals("YES")) {
+			String bizmekaAdminId = ezCommonService.getTenantConfig
+					("bizmekaAdminId", tenantID);
+			String bizmekaAdminPw = ezCommonService.getTenantConfig
+					("bizmekaAdminPw", tenantID);
+			String bizmekaCompanyId = ezCommonService.getTenantConfig
+					("BizmekaCompanyId", tenantID);
+			
+			List<String> memberList =  new ArrayList<String>();
+			
+			memberList.add(cn);
+			
+			bizmekaResult = ezEmailUtil.bizmekaAddDistributionList(
+					bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId,
+					job2, job, memberList);
+
+			logger.debug("bizmekaResult=" + bizmekaResult);
+
+			if (!bizmekaResult.equals("OK")) {
+				throw new Exception("bizmekaAddDistributionList failed");
+			}
+		}
+		
+		 String inputParams = "companyId="
+				 + URLEncoder.encode(companyId, "UTF-8") + "&name="
+				 + URLEncoder.encode(job, "UTF-8") + "&id="
+				 + URLEncoder.encode(job2, "UTF-8") + "&domain="
+				 + URLEncoder.encode(domain, "UTF-8") + "&memberId="
+				 + URLEncoder.encode(cn, "UTF-8");
+		 
+			 logger.debug("inputParams=" + inputParams);
+			 
+			 String requestURL = config.getProperty("config.JGWServerURL")
+					 +"jMochaAccess/setDistributionList";
+			 String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			 
+			 logger.debug("response=" + response);
+			 
+			 if (response != null) {
+				 JSONParser jsonParser = new JSONParser();
+				 JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+				 String resultCode = (String) responseObj.get("resultCode");
+				 if (resultCode.equals("OK")) {	
+						reasonCode = ((Long) responseObj.get("reasonCode"))
+								.intValue();
+					}
+			 }
+			 
+			if (reasonCode == 0) {
+					result = "OK";
+			} else if (reasonCode == -1) {
+					result = "GROUP_NAME";
+			} else if (reasonCode == -2) {
+					result = "GROUP_ID";
+			}
+			 
+		logger.debug("result= " + result);
+		logger.debug("mailAddDistributionList ended.");
+		
+		return result;
+	}
+
+	@Override
+	public String mailUpdateDistributionList(String domain, String job, String job2, String companyId, int tenantID,
+			String cn) throws Exception {
+		logger.debug("mailUpdateDistributionList started.");
+		logger.debug("domain=" + domain + "job=" + job + "job2=" + job2 + "companyId=" + companyId + "tenantID=" + tenantID);
+		
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+		String bizmekaResult = "ERROR";
+		String result = "ERROR";
+		List<String> memberList = new ArrayList<String>();
+		int reasonCode = -100;
+		
+		if (useBizmekaSpambox.equals("YES")) {
+			String bizmekaAdminId = ezCommonService.getTenantConfig(
+					"bizmekaAdminId", tenantID);
+			String bizmekaAdminPw = ezCommonService.getTenantConfig(
+					"bizmekaAdminPw", tenantID);
+			String bizmekaCompanyId = ezCommonService.getTenantConfig(
+					"BizmekaCompanyId", tenantID);
+			
+			String inputParams = "cn="
+					+ URLEncoder.encode(job2, "UTF-8") + "&domain"
+					+ URLEncoder.encode(domain, "UTF-8");
+			
+			String requestURL = config.getProperty("config.JGwServerURL")
+					+ "/jMochaAccess/getTargetAddress";
+			String response = ezEmailUtil.getWebServiceResult(requestURL,
+					inputParams);
+			String[] arrAddress = null;
+
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject resopnseObj = (JSONObject) jsonParser.parse(response);
+				String targetAddress = (String) resopnseObj.get("targetAddress");
+				
+				if (targetAddress.length() > -1 && targetAddress.contains(";")) {
+					arrAddress = targetAddress.split(";");
+					
+					for (int i = 0 ; i < arrAddress.length ; i++) {
+						int idx = arrAddress[i].indexOf("@");
+						memberList.add(arrAddress[i].substring(0, idx));
+					}
+					memberList.add(cn);
+				}
+			}
+			
+			bizmekaResult = ezEmailUtil.bizmekaEditDistributionList(
+					bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId,
+					job2, job, memberList);
+
+			logger.debug("bizmekaResult=" + bizmekaResult);
+
+			if (!bizmekaResult.equals("OK")) {
+				throw new Exception(
+						"bizmekaEditDistributionList failed");
+			}
+		}
+
+		String inputParams = "companyId="
+				+ URLEncoder.encode(companyId, "UTF-8") + "&cn="
+				+ URLEncoder.encode(cn, "UTF-8") + "&name="
+				+ URLEncoder.encode(job, "UTF-8") + "&id="
+				+ URLEncoder.encode(job2, "UTF-8") + "&domain="
+				+ URLEncoder.encode(domain, "UTF-8");
+
+		for (int i = 0; i < memberList.size(); i++) {
+			inputParams += "&memberId="
+					+ URLEncoder.encode(memberList.get(i), "UTF-8");
+		}
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL")
+				+ "/jMochaAccess/updateDistributionList";
+		String response = ezEmailUtil.getWebServiceResult(requestURL,
+				inputParams);
+
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser
+					.parse(response);
+
+			String resultCode = (String) responseObj.get("resultCode");
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long) responseObj.get("reasonCode"))
+						.intValue();
+			}
+		}
+		
+		if (reasonCode == 0) {
+			result = "OK";
+		} else if (reasonCode == -1) {
+			result = "GROUP_NAME";
+		} else if (reasonCode == -2) {
+			result = "GROUP_ID";
+		}
+		
+		logger.debug("result=" + result);
+		logger.debug("mailUpdateDistributionList ended.");
+		
+		return result;
+	}
 }
