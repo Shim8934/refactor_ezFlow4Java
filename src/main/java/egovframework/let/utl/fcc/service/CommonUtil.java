@@ -999,4 +999,43 @@ public class CommonUtil {
 		logger.debug("getJsonFromRestApi ended");
 		return resultBody;
 	}
+	
+	/**
+	 * 테넌트에 따른 설정정보 얻어오는 메서드
+	 */
+	public String getTenantConfigRest(String property, String userId, HttpServletRequest request) throws Exception {
+
+	//	String gwServerUrl = config.getProperty("config.journalGWServerURL");
+		String gwServerUrl = "http://localhost:8080";
+		String url = gwServerUrl + "/rest/ezcommon/configs";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+		        .queryParam("property", property)
+		        .queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+				
+		String status = resultBody.get("status").toString();
+		
+		String propertyValue = "";
+		if (status.equals("ok")) {
+			propertyValue = (String) resultBody.get("data");
+		}
+        
+        return propertyValue;
+    }
+
+	
 }

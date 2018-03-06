@@ -50,10 +50,11 @@ public interface EzJournalService {
 	 * @param deptId
 	 * @param companyId
 	 * @param tenantId
+	 * @param companyName 
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String tenantId) throws Exception;
+	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String companyName, String tenantId) throws Exception;
 
 	/**
 	 * 양식 등록

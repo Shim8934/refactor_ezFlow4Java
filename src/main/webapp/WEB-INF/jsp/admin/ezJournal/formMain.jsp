@@ -15,19 +15,20 @@
 		    var typeId = "";
 		    var formId = "";
 		    var selFormId = "";
+		    var formStatus = "";
 		    var pEditor = "<c:out value = '${useEditor}'/>";
 	    
 			$(document).ready(function() {
 				companyId = $("#SCompID").val();
 			   	var firstType = $("#formType").find("td:first");
 				getFormList(firstType);
-				
 			});
 	
 			// 양식리스트 중 하나가 선택되었을 때 스타일 지정 및 선택된 양식 아이디 저장
 			function listClick(val) {
 		    	selFormId = $(val).attr("formid");
-		    	
+		    	formStatus = $(val).attr("formstatus");
+		    	console.log("formStatus : " + formStatus);
 				$(".formList tr").removeClass("active");
 				$(val).addClass("active");
 		    	
@@ -103,40 +104,51 @@
 		    
 			// 양식수정버튼
 		    function btnModForm() {
-		    	var url = "";
-		    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
-		    			+ "&formId=" + encodeURIComponent(selFormId);
-		    	
-		    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
-		    		url = "/admin/ezJournal/insertFormOther.do"	
-		    	} else {
-			    	url = "/admin/ezJournal/insertForm.do";
-		    	}
-		    	
-		    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "no");
-		    }
+				
+				if (formStatus == "basic") {
+					alert("<spring:message code='ezJournal.t143'/>");
+				} else {
+			    	var url = "";
+			    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
+			    			+ "&formId=" + encodeURIComponent(selFormId);
+			    	
+			    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
+			    		url = "/admin/ezJournal/insertFormOther.do"	
+			    	} else {
+				    	url = "/admin/ezJournal/insertForm.do";
+			    	}
+			    	
+			    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "no");
+				}
+				
+			}
 		    
 			// 양식삭제버튼
 		    function btnDelForm() {
 		    	
-		    	if (selFormId != null) {
-		    		if (confirm("<spring:message code = 'ezApprovalG.t999933' />") == true) {
-		    			
-		    			$.ajax({
-		    				type : "POST",
-		    				url : "/admin/ezJournal/deleteForm.do",
-		    				asnyc : false,
-		    				data : {"formId"	 : selFormId,
-		    						"companyId"  : companyId,
-		    						"typeId" 	 : typeId},
-		    				success : function (result) {
-		    					alert("<spring:message code='ezJournal.t129'/>");
-		    					parent.frames["right"].location.reload();
-		    				},
-		    				error : function(request, status, error) {
-		    					alert("code : " + request.status + "\nerror : " + error);
-		    				}
-		    			});
+		    	if (formStatus == "basic") {
+					alert("<spring:message code='ezJournal.t144'/>");
+		    	} else {
+		    		
+		    		if (selFormId != null) {
+			    		if (confirm("<spring:message code = 'ezApprovalG.t999933' />") == true) {
+			    			
+			    			$.ajax({
+			    				type : "POST",
+			    				url : "/admin/ezJournal/deleteForm.do",
+			    				asnyc : false,
+			    				data : {"formId"	 : selFormId,
+			    						"companyId"  : companyId,
+			    						"typeId" 	 : typeId},
+			    				success : function (result) {
+			    					alert("<spring:message code='ezJournal.t129'/>");
+			    					parent.frames["right"].location.reload();
+			    				},
+			    				error : function(request, status, error) {
+			    					alert("code : " + request.status + "\nerror : " + error);
+			    				}
+			    			});
+		    			}
 		    		}
 		    	}
 		    	

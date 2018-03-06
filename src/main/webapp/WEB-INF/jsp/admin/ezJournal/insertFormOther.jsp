@@ -68,25 +68,6 @@
 	            	selFormContent = selFormContent.replace(/&#034;/g, "\"");
 			    	selFormContent = selFormContent.slice(1, -1);
 			     	
-			    	var info_len = $("li[name=info]").length;
-			    	console.log(info_len);
-			    	for (var i = 0; i < info_len; i++) {
-			     		
-			    		var $selTD = $("#TD_" + i);
-			    		var selID = $selTD.attr("value");
-			    	//	console.log("selTD : " + selID);
-			    		
-			    		/* for (var i = 0; i < totalTD.length; i++) {
-				    		if (totalTD[i].id == selID) {
-				    			$selTD.toggleClass("active");
-		                    }
-				    	} */
-			    	
-			    	/* 	console.log(message.CKEDITOR.instances.editor1.document.$.getElementById(selID));
-			    		if (message.CKEDITOR.instances.editor1.document.$.getElementById(selID) != null) {
-			    			$selTD.toggleClass("active");
-			    		} */
-			     	}	
 		        	message.SetEditorContent(selFormContent);
                 }
 		    }
@@ -110,40 +91,29 @@
 		    	var info = $(elem).attr("value");
 		    	alert(info);
 		    	
-		    	if ($(elem).hasClass("active")) {
-		    		/*
-			    	var content = message.GetEditorContent();
-			    	console.log(content);
-			    	var index = content.indexOf(info);
-			    	console.log(index);
-			    	if (index != -1) {
-			    		var subContent = content.split(info);
-			    		subContent[0] = subContent[0].slice(0, -19);
-			    		subContent[1] = subContent[1].slice(10);
-			    		content = subContent[0].concat(subContent[1]);
-			    		message.SetEditorContent(content);
-			    	}
-			    	*/
-			    	setFormInfo(info);
-			    	$(elem).toggleClass("active");
+				if (useEditor == "HWP") {
+		    		message.SetAttribute(info);
 		    	} else {
-					if (useEditor == "HWP") {
-			    		message.SetAttribute(info);
-			    	} else {
-			    		if (isFree) {
-			    			message.SetAttribute("LOCK", "", "");
-			    		} else {
+		    		if (isFree) {
+		    			message.SetAttribute("LOCK", "", "");
+		    		} else {
+		    			if (message.GetEditorContent().indexOf("@" + info) < 0) {
 			    			message.SetAttribute("INIS", info, "FIELD");
-			    		}
-			    	}
-			    	$(elem).toggleClass("active");
+		    			} else {
+			    			if (confirm("사용중인 예약어입니다. 또 추가하시겠습니까?") == true) {
+				    			message.SetAttribute("INIS", info, "FIELD");
+	                		}
+		    			}
+		    		}
 		    	}
-		    	//$(".infoTbl tr").removeClass("active");
-				//$(val).addClass("active");
-		    	
-		    }
+	    	}
 		    
-		 // 업무일지용 문서정보 변경부분
+		    function btnCancel() {
+		        message.SetAttribute("DEL", "", "");
+		    }
+		    	
+		    /*
+		 // 업무일지용 문서정보 변경부분 (더 사용안함....)
 		    function setFormInfo(info) {
 		    	var totalTD = message.CKEDITOR.instances.editor1.document.$.getElementsByTagName("TD");
 		    	
@@ -163,7 +133,7 @@
                         }
                     }
 		    	}
-		    }
+		    }*/
 		    
 		    // 부서리스트 그려주는 부분
 		    function setDeptList() {
@@ -249,6 +219,9 @@
 		    	
 		    	if (formName == "") {
 		    		alert("<spring:message code='ezJournal.t130'/>");
+		    		return false;
+		    	} else if (formContent == "") {
+		    		alert("<spring:message code='ezJournal.t145'/>");
 		    		return false;
 		    	}
 		    	
@@ -402,19 +375,22 @@
 						<td id="infoTD" name="infoTD" style="width:100%; vertical-align:top;">
                         	<table width="100%" cellpadding="0" cellspacing="0" class="infoTbl" id="mainmenu">
                         		<tbody>
-                        			<tr style="height: 35px;">
+                        			<tr>
 	                        			<th><spring:message code='ezJournal.t32'/></th>
 	                        			<td style="vertical-align: middle;">
-	                        				<ul>
+	                        				<%-- <ul>
 								            	<li name="info" style="padding-right: 10px;"><span id="info_0" value="journalDeptId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33' /></span></li>
 								            	<li name="info"><span id="info_1" value="journalWriteId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></li>
 								            	<li name="info"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></li>
-								            </ul>
+								            </ul> --%>
+							            	<a class="imgbtn" style="margin-left: 5px; margin-right: 10px;"><span id="info_0" value="journalDeptId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33' /></span></a>
+							            	<a class="imgbtn" style="margin-right: 10px;"><span id="info_1" value="journalWriteId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></a>
+							            	<a class="imgbtn" style="margin-right: 10px;"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></a>
+	                        			</td>
+	                        			<td style="width: 8%; text-align: center;" >
+							            	<a class="imgbtn" style="margin-right: 4px;"><span onclick="btnCancel()"><spring:message code='ezJournal.t16' /></span></a>
 	                        			</td>
                         			</tr>
-                        			<%-- <tr><td name="info" id="TD_0" value="journalDeptId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t33'/></span></td></tr>
-                        			<tr><td name="info" id="TD_1" value="journalWriterId" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t34'/></span></td></tr>
-                        			<tr><td name="info" id="TD_2" value="journalWriteDate" onclick="clickFormInfo(this)"><span><spring:message code='ezJournal.t35'/></span></td></tr> --%>
                         		</tbody>
                         	</table>
                         </td>
@@ -426,7 +402,7 @@
 	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
                         		</c:when>
                         		<c:otherwise>
-	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectEditor.do?type=ADMIN&height=770&formID=${formId}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
+	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectEditor.do?type=JOURNAL&height=770&formID=${formId}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
                         		</c:otherwise>
                         	</c:choose>
                         </td>
@@ -435,7 +411,7 @@
 			</div>
 		</div>
         <script type="text/javascript">
-        	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+        //	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
             Tab1_NewTabIni("tab1");
         </script>
 	</body>
