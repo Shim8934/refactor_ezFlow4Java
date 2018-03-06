@@ -542,12 +542,14 @@ public class EzOrganServiceImpl implements EzOrganService {
             
             logger.debug("cellList["+i+"]=" + celllist[i]);
             
-            if (cellvalue == null || cellvalue.equals("")) {
+              if (cellvalue == null || cellvalue.equals("")) { 
                 if (celllist[i] != null && !celllist[i].equals("")) {
-                    if (doc.getElementsByTagName(celllist[i].toUpperCase()) != null) {
-                        cellvalue = doc.getElementsByTagName(celllist[i].toUpperCase()).item(0).getTextContent();
+                    if (doc.getElementsByTagName(celllist[i].toUpperCase()).item(0) != null) {
+                    	if (!doc.getElementsByTagName(celllist[i].toUpperCase()).item(0).getTextContent().equals("")) {
+                    		cellvalue = doc.getElementsByTagName(celllist[i].toUpperCase()).item(0).getTextContent();
+                    	}
                     } else {
-                        cellvalue = "";
+                         cellvalue = "";
                     }
                 } else {
                     cellvalue = "";
@@ -559,7 +561,7 @@ public class EzOrganServiceImpl implements EzOrganService {
             if (i == 0) {
                 String strNode = "";
                 
-                if (doc.getElementsByTagName("CN") != null) {
+                if (doc.getElementsByTagName("CN").item(0) != null) {
                     strNode = doc.getElementsByTagName("CN").item(0).getTextContent();
                 }
                 
