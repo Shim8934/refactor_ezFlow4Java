@@ -427,30 +427,30 @@ public class EzApprovalGRelayScheduler {
                               // 발송 실패에 따른 메시지 Update
                               case "fail":
                                   String Message = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(0).getTextContent()));
-                                  boolean UpdateSendDoc_Fail = ezApprovalGService.updateSusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, list.get(0).getTenantId());
+                                  boolean UpdateSendDoc_Fail = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, list.get(0).getTenantId());
                                   boolean InsMessage = ezApprovalGService.insFailMessage(strXDocID, strSendID, strSendName, Message, strCompanyID, list.get(0).getTenantId());
                                   logger.debug("#발송실패오류=" + Message, "");
                                   logger.debug("#발송문서정보갱신=" + UpdateSendDoc_Fail, "");
                                   break;
                               // 도달 - 수신기관의 중계모듈이 전송용 통합파일을 임시수신함(receivetemp)에 저장한 후 생성
                               case "arrive":
-                            	  boolean UpdateSendDoc_Arrive = ezApprovalGService.updateSusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, list.get(0).getTenantId());
+                            	  boolean UpdateSendDoc_Arrive = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, list.get(0).getTenantId());
                                   break;
                               // 수신 - 수신기관의 전자문서시스템이 중계모듈의 임시수신함(receivetemp)에 수신된 문서를 가져가는 작업 완료 후 생성
                               case "receive":
-                            	  boolean UpdateSendDoc_Receive = ezApprovalGService.updateSusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, list.get(0).getTenantId());
+                            	  boolean UpdateSendDoc_Receive = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, list.get(0).getTenantId());
                                   break;
                               // 접수 - 수신기관에서 문서를 정상적으로 최초 확인
                               case "accept":
                                   String strAcceptName = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent())) + "(" + Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()).toString() + ")";
-                                  boolean UpdateSendDoc_Accept = ezApprovalGService.updateSusinState(strXDocID, strRecDate, strDocType, strSendID, strAcceptName, strCompanyID, list.get(0).getTenantId());
+                                  boolean UpdateSendDoc_Accept = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, strAcceptName, strCompanyID, list.get(0).getTenantId());
                                   logger.debug("#발송문서정보갱신=" + UpdateSendDoc_Accept);
 
                                   break;
                               // 발송 문서에 대한 수신 기관 접수 부서 및 접수자 Update
                               case "return":                           
                               case "req-resend":
-                            	  boolean UpdateSendDoc_ReqResend = ezApprovalGService.updateSusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, list.get(0).getTenantId());
+                            	  boolean UpdateSendDoc_ReqResend = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, list.get(0).getTenantId());
                             	  logger.debug("#발송문서정보갱신=" + UpdateSendDoc_ReqResend);
                                   break;
                           }

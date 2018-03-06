@@ -260,7 +260,7 @@
 		            <td >                
 		                <div id="close">
 		                    <ul>
-		                        <li id="btnApprove"><span onClick="return btnApprove_onclick('003')" ><spring:message code='ezApprovalG.t1'/></span></li>
+		                        <li id="btnApprove"><span onClick="return btnApprove_onclick('003')" ><spring:message code='ezApprovalG.t1'/>/<spring:message code='ezApprovalG.t1760'/></span></li>
 		                        <li id="btnClose" ><span onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
 		                    </ul>
 		                </div>

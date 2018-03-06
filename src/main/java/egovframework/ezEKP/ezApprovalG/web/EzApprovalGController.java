@@ -6321,9 +6321,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			for (int k = xmlDom.getElementsByTagName("DOCID").getLength() - 1; k > -1; k--) {
 				orgUID = xmlDom.getElementsByTagName("ORGAPRUSERID").item(k).getTextContent(); // 원결재자
+				mode = xmlDom.getElementsByTagName("MODE").item(k).getTextContent();
 				
 				String docState = xmlDom.getElementsByTagName("DOCSTATE").item(k).getTextContent().trim();
 				String approveRet = ezApprovalGService.getApproveDocInfo(userInfo, xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(),mode,docState);
+				
 				Document aprXML = commonUtil.convertStringToDocument(approveRet);
 				
 				if (xmlDom.getElementsByTagName("TYPE").getLength() > 0) {
@@ -7548,5 +7550,27 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("ezConvOut ended.");
 		
 		return "/ezApprovalG/apprGezConvOut";
+	}
+	
+	/**
+	 * 직인의뢰 접수 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/updateSusinState.do")
+	@ResponseBody
+	public String updateSusinState(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("updateSusinState started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String recDate = request.getParameter("recDate");
+		String mode = request.getParameter("mode");
+		String deptID = request.getParameter("deptID");
+		
+		String result = ezApprovalGService.updateSusinState(docID, recDate, mode, deptID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("updateSusinState ended.");
+		
+		return result;
 	}
 }

@@ -2962,4 +2962,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getChamJoDocID(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getChamJoDocID", map);
 	}
+
+	public void updateSusinState(Map<String, Object> map) {
+		update("EzApprovalG.updateSusinState", map);
+	}
 }

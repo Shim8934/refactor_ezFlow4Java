@@ -23666,7 +23666,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public boolean updateSusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, int tenantID) throws Exception {
+	public boolean updateRelaySusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, int tenantID) throws Exception {
 		boolean result = false;
 		try {
 			String strRecDate = strPrecDate;
@@ -24170,6 +24170,71 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		logger.debug("getLineModeFlag ended.");
 		return result;
+	}
+	
+	@Override
+	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception {
+		String recStates = "";
+		long time = System.currentTimeMillis();
+		SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    	
+		if (recDate.trim().equals("")) {
+			recDate = dayTime.format(new Date(time));
+		} else {
+			recDate = dayTime.parse(recDate).toString();
+		}
+
+		switch(mode.trim()) {
+			case "send":
+				recStates = "S";
+				break;
+
+			case "resend":
+				recStates = "S";
+				break;
+
+			case "fail":
+				recStates = "E";
+				break;
+		
+			case "arrive":
+				recStates = "V";
+				break;
+
+			case "receive":
+				recStates = "R";
+				break;
+
+			case "accept":
+				recStates = "I";
+				break;
+
+			case "return":
+				recStates = "T";
+				break;
+
+			case "req-resend":
+				recStates = "T";
+				break;
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("receiptPointID", deptID);
+		map.put("processDate", recDate);
+		map.put("processYN", recStates);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		if (deptID.equals("Address")) {
+			map.put("address", "Y");
+		} else {
+			map.put("address", "N");
+		}
+		
+		ezApprovalGDAO.updateSusinState(map);
+		
+		return "TRUE";
 	}
 
 	private String createDocNO(String cabinetSN, String docNumZeroCnt) {
