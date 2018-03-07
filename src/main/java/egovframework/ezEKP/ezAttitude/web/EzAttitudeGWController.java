@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
+import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -37,6 +40,9 @@ public class EzAttitudeGWController {
 	
 	@Resource(name = "EzAttitudeService")
 	private EzAttitudeService ezAttitudeService;
+	
+	@Resource(name="MOptionService")
+	private MOptionService mOptionService;
 	
 	/**
 	 * G/W 근태관리 [GET] 개인, 부서, 부서+개인 근태현황조회
@@ -409,32 +415,39 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 근태규율설정정보 조회
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitude-conf", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject attitudeConfInfo(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitude-conf] started.");
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudereg", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attitudeConfInfo(@PathVariable String companyId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudereg] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			
+			int tenantId = info.getTenantId();
+			
+			//근태규율설정정보
+			AttitudeConfigVO attitudeConfigInfo = ezAttitudeService.getAttitudeConfig(tenantId, companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
+			result.put("data", attitudeConfigInfo);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitude-conf] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudereg] ended.");
 		return result;
 	}
 	
 	/**
 	 * G/W 근태관리 [POST] 근태규율설정정보 수정
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitude-conf", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject updateAttitudeConf(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitude-conf] started.");
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudereg", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject updateAttitudeConf(@PathVariable String companyId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudereg] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -448,7 +461,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitude-conf] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudereg] ended.");
 		return result;
 	}
 	

@@ -13,7 +13,7 @@
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">
-	        $(document).ready(function(){
+	        $(document).ready(function() {
 		        if (document.getElementById("ListCompany").length == 0) {
 		            alert("");
 		        } else {
@@ -21,6 +21,54 @@
 		            company_change();
 		        }
 	        });
+	        
+	        function company_change() {
+	            $.ajax({
+	            	type : "GET",
+	            	url : "/admin/ezAttitude/attitudeConfigInfo.do",
+	            	dataType : "json",
+	            	data : {companyId : encodeURI(document.getElementById("ListCompany").value)},
+	            	success : function(result) {
+	            		attitudeConfigSet(result);
+	            	},
+	            	error : function(e) {
+	            		alert(e);
+	            	}
+	            });
+	        }
+	        
+	        function attitudeConfigSet(result) {
+        		//근무시간
+        		var startTime = result.workStartTime.split(':');
+        		var endTime = result.workEndTime.split(':');
+        		$('#start_hr').val(startTime[0]);
+        		$('#start_min').val(startTime[1]);
+        		$('#end_hr').val(endTime[0]);
+        		$('#end_min').val(endTime[1]);
+        		//휴무요일
+        		var closedDays = result.closedDay.split(',');
+        		for (var i = 0; i < closedDays.length; i++) {
+        			$('#dayChkBox input[type=checkbox]').eq(i).val(closedDays[i]);
+        			if(closedDays[i] == 1){
+        				$('#dayChkBox input[type=checkbox]').eq(i).attr('checked','checked');
+        			}
+        		}
+        		//근태수정신청
+        		var attitudeModAppl = result.attitudeModAppl;
+        		if (attitudeModAppl == 0) {
+        			$('input[name=attitude_mod_appl]').eq(1).attr('checked','checked');
+        		} else {
+        			$('input[name=attitude_mod_appl]').eq(0).attr('checked','checked');
+        		}
+        		//휴무일근태등록
+        		var closedDateAttitude = result.closedDateAttitude;
+        		if (closedDateAttitude == 0) {
+        			$('input[name=close_date_attitude]').eq(1).attr('checked','checked');
+        		} else {
+        			$('input[name=close_date_attitude]').eq(0).attr('checked','checked');
+        		}
+        		
+	        }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -45,21 +93,21 @@
 					<spring:message code='ezAttitude.t17' />
 	            </th>
 	            <td style="width: 500px; text-align:left; padding-left: 5px;">
-	            	<input type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' /><input type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' /> ~ <input type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' /><input type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' />
+	            	<input id="start_hr" type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' /><input id="start_min" type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' /> ~ <input id="end_hr" type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' /><input id="end_min" type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' />
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
 	        	<th style="width: 70px; text-align:center">
 					<spring:message code='ezAttitude.t20' />
 	            </th> 
-	            <td style="width: 500px; text-align:left">
-	            	<input type="checkbox" name="day_chk" value=""/><spring:message code='ezAttitude.t21' />
-	            	<input type="checkbox" name="day_chk" value=""/><spring:message code='ezAttitude.t22' />
-	            	<input type="checkbox" name="day_chk" value=""/><spring:message code='ezAttitude.t23' />
-	            	<input type="checkbox" name="day_chk" value=""/><spring:message code='ezAttitude.t24' />
-	            	<input type="checkbox" name="day_chk" value=""/><spring:message code='ezAttitude.t25' />
-	            	<input type="checkbox" name="day_chk" value=""/><spring:message code='ezAttitude.t26' />
-	            	<input type="checkbox" name="day_chk" value=""/><spring:message code='ezAttitude.t27' />
+	            <td id="dayChkBox" style="width: 500px; text-align:left">
+	            	<input type="checkbox"/><spring:message code='ezAttitude.t21' />
+	            	<input type="checkbox"/><spring:message code='ezAttitude.t22' />
+	            	<input type="checkbox"/><spring:message code='ezAttitude.t23' />
+	            	<input type="checkbox"/><spring:message code='ezAttitude.t24' />
+	            	<input type="checkbox"/><spring:message code='ezAttitude.t25' />
+	            	<input type="checkbox"/><spring:message code='ezAttitude.t26' />
+	            	<input type="checkbox"/><spring:message code='ezAttitude.t27' />
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
