@@ -24,7 +24,7 @@
 	    	function select_person(){
 	    		var url = "/admin/ezJournal/authorDetail.do";
 				url+="?companyId="+companyId;
-				window.open(url, "authorDetail", "width=1100, height=600");
+				window.open(url, "authorDetail", "width=950, height=600");
 	    	}
 	    	
 	    	//부서선택
