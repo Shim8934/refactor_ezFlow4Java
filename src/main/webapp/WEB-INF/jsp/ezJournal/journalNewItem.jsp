@@ -101,6 +101,7 @@
 	    	
 			// 최근에 사용한 양식 호출
 			function getLastForm(typeId) {
+				
 				$.ajax({
 	    			type : "POST",
 	   				dataType : "json",
@@ -108,7 +109,7 @@
 	   				data : {"typeId" : typeId},
    					success : function(result){
 						lastFormId = result;
-						var firstType = $("#optType").find("option:first");
+						var firstType = $("#optType").find("option:selected");
 			    		getFormList(firstType);
 	   				},
 	   				error : function(request, status, error) {
