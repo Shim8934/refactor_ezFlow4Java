@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -337,7 +338,7 @@ public class EzEmailAdminLetterController {
 	 * 편지지 관리페이지 (수아)
 	 */
 	@RequestMapping("/admin/ezEmail/letterAdminPage.do")
-	public String letterAdminPage(@CookieValue("loginCookie") String loginCookie) throws Exception{
+	public String letterAdminPage(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		logger.debug("letterAdminPage started.");
 		
 		// 관리자 권한체크      
@@ -345,6 +346,8 @@ public class EzEmailAdminLetterController {
 		if (auth == null) {
 			return "cmm/error/adminDenied";
 		}
+
+		model.addAttribute("pageType", "letter");
 		
 		logger.debug("letterAdminPage ended.");
 		return "/admin/ezEmail/letterManager";
@@ -379,6 +382,17 @@ public class EzEmailAdminLetterController {
 		
 		logger.debug("letterAdminAddSetPopUp ended.");
 		return "/admin/ezEmail/letterEditPopUp";
+	}
+	
+	/**
+	 * 편지지함 이동(변경) 팝업 (수아)
+	 */
+	@RequestMapping("/admin/ezEmail/letterBoxMovePopUp.do")
+	public String letterAdminBoxMovePopUp(@CookieValue("loginCookie") String loginCookie, @RequestParam("letterNo") String letterNo, Model model) throws Exception{
+		
+		model.addAttribute("letterNo", letterNo);
+		
+		return "/admin/ezEmail/letterBoxMovePopUp";
 	}
 	
 	/**
@@ -577,7 +591,7 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping("/admin/ezEmail/readLetterList")
 	@ResponseBody
-	public JSONArray readLetterList(String letterBoxNo) throws Exception{
+	public JSONArray readLetterList(@RequestParam("letterBoxNo") String letterBoxNo, HttpServletResponse response) throws Exception{
 		logger.debug("readLetterList started.");
 		logger.debug("letterBoxNo=" + letterBoxNo);
 		
@@ -585,8 +599,9 @@ public class EzEmailAdminLetterController {
 		
 		try {
 			returnJsonArr = EzEmailAdminLetterService.selectAllLeter(letterBoxNo);
+			logger.debug("jsonArr=" + returnJsonArr);
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 		
 		logger.debug("readLetterList ended.");
