@@ -107,11 +107,11 @@
                     //"dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
                     AddNotice_dialogArguments[0] = document.all("ListCompany").value;
                     AddNotice_dialogArguments[1] = add_notice_Complete;
-                    var OpenWin = window.open("/admin/ezPersonal/addNoticeCK.do", "AddNoticeCK", GetOpenWindowfeature(800, 510));
+                    var OpenWin = window.open("/admin/ezPersonal/addNoticeCK.do", "AddNoticeCK", GetOpenWindowfeature(800, 520));
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
                 	rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
-                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
