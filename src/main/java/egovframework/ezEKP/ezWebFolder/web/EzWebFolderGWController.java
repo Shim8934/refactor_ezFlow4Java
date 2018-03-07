@@ -79,7 +79,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderGWController.class);
 
-	@RequestMapping(value="/webfolderadmin/basicstorage/id/{companyid}/comp", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/id/{companyid}/comp", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getBasicStorage(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
@@ -110,7 +110,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/basicstorage/{newvalue}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/{newvalue}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putChangeBasicStorage(@PathVariable(value="newvalue") String newValue, HttpServletRequest request) {
 		String serverName  = request.getHeader("host-name")      != null ? request.getHeader("host-name")      : "";
 		String uploadLimit = request.getParameter("uploadLimit") != null ? request.getParameter("uploadLimit") : "";
@@ -144,7 +144,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/basicstorage/id/{companyid}/person", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/id/{companyid}/person", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getPersonalStorage(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
 		int currPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) :  1;
@@ -199,7 +199,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/basicstorage/{newvalue}/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/{newvalue}/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putChangePersonalStorage(@PathVariable(value="newvalue") String newValue, @RequestParam("userList") List<String> userList, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
@@ -234,7 +234,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/storagereset/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/storagereset/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putResetPersonalStorage(@RequestParam("userList") List<String> userList, HttpServletRequest request) {
 		String serverName  = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String companyId   = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
@@ -275,7 +275,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/filehistorylist", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/filehistorylist", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFileHistory(HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
 		String offset     = request.getParameter("offset")      != null ? request.getParameter("offset")                        : "";
@@ -354,7 +354,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolder/filemanage/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/filemanage/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, HttpServletRequest request) throws Exception {
 		JSONParser jp          = new JSONParser();
 		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);
@@ -481,7 +481,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value = "/webfolder/filemanage/file-download", method=RequestMethod.GET, produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	@RequestMapping(value = "/rest/ezwebfolder/filemanage/file-download", method=RequestMethod.GET, produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE})
 	public void getFileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";
 		String listFileId   = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
@@ -607,7 +607,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return;
 	}
 
-	@RequestMapping(value = "/webfolder/file-delete", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezwebfolder/file-delete", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject delFileDelete(HttpServletRequest request) {
 		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";
 		String listFileId   = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
@@ -651,7 +651,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolder/file-rename/fileid/{fileid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/file-rename/fileid/{fileid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putFileRename(@PathVariable(value="fileid") String fileId, HttpServletRequest request) {
 		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")  : "";
 		String userId       = request.getParameter("userId")   != null ? request.getParameter("userId")  : "";
@@ -691,7 +691,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolder/filemove/fileid/{fileid}/modes/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/filemove/fileid/{fileid}/modes/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putFileMove(@PathVariable(value="fileid") String fileId, @PathVariable(value="mode") String mode, HttpServletRequest request) {
 		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";
 		String userId       = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
@@ -747,7 +747,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/webfolderadmin-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/webfolderadmin-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getWebfolderAdminList(HttpServletRequest request) {
 		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")                     : "";
 		String primary      = request.getParameter("primary")  != null ? request.getParameter("primary")                    : "";
@@ -958,7 +958,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}*/
 
-	@RequestMapping(value="/webfolderadmin/folders", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/folders", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postCompanyFolderInsert(@RequestBody JSONObject jsonObject, HttpServletRequest request) throws ParseException {
 		JSONParser parser      = new JSONParser();
 		jsonObject             = (JSONObject) parser.parse(jsonObject.toJSONString());
@@ -1042,7 +1042,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/folders/{folderid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/folders/{folderid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putCompanyFolderUpdate(@RequestBody JSONObject jsonObject, @PathVariable(value="folderid") String folderId, HttpServletRequest request) throws ParseException {
 		JSONParser parser      = new JSONParser();
 		jsonObject             = (JSONObject) parser.parse(jsonObject.toJSONString());
@@ -1120,7 +1120,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolder/foldersTree", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/foldersTree", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFolderTree(HttpServletRequest request) {
 		String offset     = request.getParameter("offset")     != null ? request.getParameter("offset")                     : "";
 		String rootFolder = request.getParameter("rootFolder") != null ? request.getParameter("rootFolder")                 : "";
@@ -1170,7 +1170,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolder/depart-tree", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/depart-tree", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getDeptTree(HttpServletRequest request) {
 		String companyId  = request.getParameter("companyId")!= null ? request.getParameter("companyId") : "";
 		String deptId     = request.getParameter("deptId")   != null ? request.getParameter("deptId")    : "";
@@ -1220,7 +1220,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolder/sub-tree/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/sub-tree/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSubTree(@PathVariable(value="deptid") String deptId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")                     : "";
 		int level         = request.getParameter("level")    != null ? Integer.parseInt(request.getParameter("level"))    : -1;
@@ -1253,7 +1253,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
-	@RequestMapping(value="/webfolder/dept-member/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/dept-member/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getAllDeptMembers(@PathVariable(value="deptid") String deptId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")  : "";
 		String primary    = request.getParameter("primary")  != null ? request.getParameter("primary") : "";
@@ -1286,7 +1286,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
-	@RequestMapping(value="/webfolderadmin/foldersTree", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/foldersTree", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyFolderTree(HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String offset     = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
@@ -1334,7 +1334,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/subfolder-tree/{folderid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/subfolder-tree/{folderid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSubFoldersTree(@PathVariable(value="folderid") String folderId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")  : "";
 		String primary    = request.getParameter("primary")  != null ? request.getParameter("primary") : "";
@@ -1368,7 +1368,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/folder-users/{folderid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/folder-users/{folderid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFolderUsers(@PathVariable(value="folderid") String folderId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
 		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset") : "";
@@ -1406,7 +1406,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/folders/{folderid}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/folders/{folderid}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject delCompanyFolder(@PathVariable(value="folderid") String folderId, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
 		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset") : "";
@@ -1438,7 +1438,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/folders/{folderid}/modes/{mode}/folder-move", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/folders/{folderid}/modes/{mode}/folder-move", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putCompanyFolderMove(@PathVariable(value="folderid") String folderId, @PathVariable(value="mode") String mode, HttpServletRequest request) throws Exception {
 		String serverName   = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String offset       = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
@@ -1498,7 +1498,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value="/webfolderadmin/folders/{folderid}/file-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/folders/{folderid}/file-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFileList(@PathVariable(value="folderid") String folderId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
 		String offset     = request.getParameter("offset")      != null ? request.getParameter("offset")                        : "";
@@ -1613,7 +1613,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
-	@RequestMapping(value="/webfolderadmin/company-id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/company-id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyId(@PathVariable(value="userid") String userId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
 		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset") : "";
@@ -1646,7 +1646,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
-	@RequestMapping(value="/webfolderadmin/company-list/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/company-list/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyList(@PathVariable(value="userid") String userId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
 		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset") : "";
@@ -1693,7 +1693,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
-
 	private String getFolderPath(String[] path, String offset, int tenantId) throws Exception {
 		String result = "/";
 		
@@ -1705,7 +1704,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
-
 	private void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, String fileSize, String fileExt, String fileType, int tenantId) throws Exception {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
@@ -1729,12 +1727,10 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		ezWebFolderAdminService.insertFileLog(fileLog);
 	}
 	
-
 	private String getWebFolderDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
 	}
 	
-
 	private String getMaxFileID(int tenantId) throws Exception {
 		int currentMaxFileId = -1;
 		String result        = ezWebFolderService.getFileSequence(tenantId);
@@ -1743,7 +1739,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return Integer.toString(currentMaxFileId);
 	}
 	
-
 	private String getMaxLogID(int tenantId) throws Exception {
 		int currentMaxLogId = -1;
 		String result       = ezWebFolderService.getFileLogSequence(tenantId);
@@ -1752,7 +1747,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return Integer.toString(currentMaxLogId);
 	}
 	
-
 	private String getMaxFolderID(int tenantId) throws Exception {
 		int currentMaxFolderId = -1;
 		String result          = ezWebFolderService.getFolderSequence(tenantId);
@@ -1761,7 +1755,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return Integer.toString(currentMaxFolderId);
 	}
 	
-
 	private int getMaxFolderStep(String folderId, int tenantId) throws Exception {
 		int currentMaxStep = -1;
 		String result      = ezWebFolderService.getMaxFolderStep(folderId, tenantId);
@@ -1770,7 +1763,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return currentMaxStep;
 	}
 	
-
 	private String getMaxFolderUserSeq(int tenantId) throws Exception {
 		int currentMaxolderUserId  = -1;
 		String result              = ezWebFolderService.getFolderUserSequence(tenantId);
@@ -1779,7 +1771,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		return Integer.toString(currentMaxolderUserId);
 	}
 	
-
 	private void moveFolder(FolderVO folder, List<FolderVO> listSubFolder, String destFolderId, String userId, String offset, int tenantId) throws Exception {
 		FolderVO parentFolder      = ezWebFolderService.getFolderByFolderId(destFolderId, offset, tenantId);
 		String oldPath             = folder.getFolderPath();
@@ -1827,7 +1818,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		}
 	}
 	
-
 	private void copyFolder(FolderVO folder, List<FolderVO> listSubFolder, String destFolderId, String userId, String primary, String offset, int tenantId) throws Exception {
 		FolderVO parentFolder      = ezWebFolderService.getFolderByFolderId(destFolderId, offset, tenantId);
 		String folderId            = folder.getFolderId();
@@ -1888,7 +1878,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		}
 	}
 	
-
 	private void copyFile(String folderId, String userId, String newId, String timeUTC, String primary, String offset, int tenantId) throws Exception {
 		List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder(folderId, "", "0", "", "", "", "", "", "1", 0, 0, primary, offset, tenantId);
 		

@@ -79,21 +79,21 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 	@RequestMapping(value="/ezWebFolder/test.do")
 	public String webfolderTest(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
-		LoginSimpleVO userInfo  = commonUtil.userInfoSimple(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
 		return "ezWebFolder/webfolderTest";
 	}
 
 	@RequestMapping(value="/ezWebFolder/getShareListPage.do")
 	public String getShareListPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
-		LoginSimpleVO userInfo  = commonUtil.userInfoSimple(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
 		return "ezWebFolder/fileFolderShare";
 	}
 
 	@RequestMapping(value="/ezWebFolder/getGivenShareList.do")
 	public String getGivenShareList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
-		LoginSimpleVO userInfo  = commonUtil.userInfoSimple(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
 		return "ezWebFolder/fileFolderGivenShare";
 	}
@@ -108,7 +108,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
 		String folderId                = request.getParameter("folderId");
 		String gwServerUrl             = config.getProperty("config.webfolderGwServerURL");
-		String url                     = gwServerUrl + "/webfolder/filemanage/file-upload";
+		String url                     = gwServerUrl + "/rest/ezwebfolder/filemanage/file-upload";
 		
 		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
 		requestFactory.setBufferRequestBody(false);
@@ -173,7 +173,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String listFileId  = request.getParameter("fileList");
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url         = gwServerUrl + "/webfolder/filemanage/file-download";
+		String url         = gwServerUrl + "/rest/ezwebfolder/filemanage/file-download";
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("offset", user.getOffset())
@@ -232,7 +232,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String listFileId   = request.getParameter("fileList");
 		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
-		String url          = gwServerUrl + "/webfolder/file-delete";
+		String url          = gwServerUrl + "/rest/ezwebfolder/file-delete";
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
@@ -281,7 +281,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String fileId       = request.getParameter("fileId");
 		String newName      = request.getParameter("newName");
 		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
-		String url          = gwServerUrl + "/webfolder/file-rename/fileid/" + fileId;
+		String url          = gwServerUrl + "/rest/ezwebfolder/file-rename/fileid/" + fileId;
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
@@ -334,7 +334,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String mode         = request.getParameter("mode");
 		
 		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
-		String url          = gwServerUrl + "/webfolder/filemove/fileid/" + fileId + "/modes/" + mode;
+		String url          = gwServerUrl + "/rest/ezwebfolder/filemove/fileid/" + fileId + "/modes/" + mode;
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
@@ -366,7 +366,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String fileId      = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
 		
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url         = gwServerUrl + "/webfolder/foldersTree";
+		String url         = gwServerUrl + "/rest/ezwebfolder/foldersTree";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -405,7 +405,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String companyId   = request.getParameter("companyId");
 		String deptId      = request.getParameter("deptId") != null ? request.getParameter("deptId") : "";
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url         = gwServerUrl + "/webfolder/depart-tree";
+		String url         = gwServerUrl + "/rest/ezwebfolder/depart-tree";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -443,7 +443,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String deptId      = request.getParameter("deptId");
 		String level       = request.getParameter("level");
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url         = gwServerUrl + "/webfolder/sub-tree/" + deptId;
+		String url         = gwServerUrl + "/rest/ezwebfolder/sub-tree/" + deptId;
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -475,7 +475,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
-		String url           = gwServerUrl + "/webfolderadmin/company-id/" + user.getId();
+		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-id/" + user.getId();
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -507,7 +507,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String deptId      = request.getParameter("deptId");
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url         = gwServerUrl + "/webfolder/dept-member/" + deptId;
+		String url         = gwServerUrl + "/rest/ezwebfolder/dept-member/" + deptId;
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
