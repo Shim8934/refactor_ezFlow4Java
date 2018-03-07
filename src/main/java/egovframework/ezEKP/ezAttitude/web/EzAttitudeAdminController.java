@@ -66,11 +66,5 @@ public class EzAttitudeAdminController {
 		return "/admin/ezAttitude/attitudeRight";
 	}
 
-	/**
-	 * 관리자 근태규율관리 화면 호출 함수
-	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeConfig.do")
-	public String attitudeConfig() {
-		return "admin/ezAttitude/attitudeConfig";
-	}
+
 }
