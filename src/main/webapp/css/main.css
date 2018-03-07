@@ -196,7 +196,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 /*------------ time ------------*/
 .time {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; float:left ;width:104px; margin:29px 0px 0px 0px;}
-.time .title { font-size:12px; color:#000; font-weight:bold; text-align:center; height:25px; margin:0px 0px 0px 10px; padding:0px; line-height:25px;}
+.time .title { font-size:12px; color:#000; font-weight:bold; text-align:center; height:25px; margin:0px 0px 0px 10px; padding:0px; line-height:25px; background:#f0f5fc; border:1px solid #d1e1f2;}
 .time .timeflash { text-align:center;}
 
 
@@ -232,11 +232,11 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 .portlet_side .event { float:left; width:155px;}
 .portlet_side .best { float:right; width:155px; height:179px; background:url(../images/kr/main/bestperson_bg.gif) no-repeat; vertical-align:top;}
 .portlet_side .best dl {margin:0px; padding:0px;font-family:Gulim, Dotum, Arial, Helvetica, sans-serif ;font-size:12px;}
-.portlet_side .best dl dt {margin:10px 10px 5px; padding:0px; text-align:center; height:28px; color:#000; font-size:12px; font-weight:bold; line-height:28px; color:#333;}
-.portlet_side .best dl dt img { vertical-align:middle;}
+.portlet_side .best dl dt {margin:10px 10px 5px; padding:0px; text-align:center; height:28px; color:#fff; font-size:12px; font-weight:bold; line-height:28px;}
+.portlet_side .best dl dt img { vertical-align:middle; display:none;}
 .portlet_side .best dl dd {padding:0px; text-align:center;font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .portlet_side .best dl .photo { margin:0px 10px 5px; text-align:center;}
-.portlet_side .best dl .photo img { border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px;}
+.portlet_side .best dl .photo img { border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; border:1px solid #fff;}
 .portlet_side .best dl .txt_name { font-weight:bold;margin:15px 10px 0px; color:#333; }
 .portlet_side .best dl .txt_part {margin:5px 10px 5px; color:#555;}
 
