@@ -12,12 +12,12 @@
 					<span class="tl" ></span>
 					<span class="tr"></span>
 					<span class="title_txt">
-						<img src="/images/kr/main/btn_prev1.gif" width="21" height="17" class="btn_img" onclick="moveBirth('PREV')">
+						<img src="/images/kr/main/btn_calendar_prev.gif" class="btn_img" onclick="moveBirth('PREV')">
 							<span id="kordisplay">
 								<span id="curMon"></span><spring:message code='main.t1002' />
 							</span>
 							<span id="curMontxt"></span>
-							<img src="/images/kr/main/btn_next1.gif" width="21" height="17" class="btn_img" onclick="moveBirth('NEXT')">
+							<img src="/images/kr/main/btn_calendar_next.gif" class="btn_img" onclick="moveBirth('NEXT')">
 								<span class="t11"><spring:message code='main.t1003' /></span> 
 					</span>
         		</div>
@@ -28,7 +28,7 @@
         		<div class="birthcont" id="nodata_NewBirth" style="display:none;">
             		<div class="nodata_portlet">
                 		<p>
-                    		<img src="/images/kr/main/nodata_white.gif" width="107" height="70" />
+                    		<img width="92" height="84" src="/images/kr/main/nodata_plan.png" />
                 		</p>
                 		<p>
                     		<spring:message code='main.t00026' />
@@ -61,6 +61,9 @@
 	            	document.body.style.oUserSelect = 'none';
 	            	document.body.style.UserSelect = 'none';
 	        	}
+		        
+		        if (month < 10 && String(month).length == 1)
+		            month = "0" + month;
 		        
 		        if (CrossYN())
 		            document.getElementById("curMon").textContent = month;

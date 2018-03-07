@@ -35,21 +35,22 @@ function sendAlertMail(mode, sn, ui) {
     if (ui == "DRAFT")
         SendMailApproveMember(MemberList, sn, pDocTitle, arr_userinfo[2], Gyuljedate);
     else {       
-
-        var _pAprMemberSN = sn;
-        var objNodes = SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW");
-        for (i = 0; i < objNodes.length; i++) {
-            if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4])) == CurrentAprUserID && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11])) == CurrentAprType &&
-                trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) == "003") {
-                _pAprMemberSN = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[0])); break;
-            }
-        }
-        var pwriterID   = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]);
-        var Drafter     = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]);
-        var pstartdate  = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]);
-        var DocTitle    = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]);
-
-        SendMailApproveMember(MemberList, _pAprMemberSN, DocTitle, Drafter, pstartdate);
+    	if (CurrentAprType != "007") {
+	        var _pAprMemberSN = sn;
+	        var objNodes = SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW");
+	        for (i = 0; i < objNodes.length; i++) {
+	            if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4])) == CurrentAprUserID && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11])) == CurrentAprType &&
+	                trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) == "003") {
+	                _pAprMemberSN = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[0])); break;
+	            }
+	        }
+	        var pwriterID   = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]);
+	        var Drafter     = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]);
+	        var pstartdate  = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]);
+	        var DocTitle    = getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]);
+	
+	        SendMailApproveMember(MemberList, _pAprMemberSN, DocTitle, Drafter, pstartdate);
+    	}
     }
 }
 
@@ -312,65 +313,64 @@ function continusendMail(nextMethod, aprlinelist, sn) {
             Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[Tempsn])[0])[11]))
             continusendMail(Method, aprlinelist, Tempsn);
         }
-    }
-        
-    else if (nextMethod == "007") {
-
-        
-        var isstop = false;
-        var isLastman = "N";
-
-        for (i = sn; i > -1; i--) {
-
-            sn = i;
-
-            if (objNodes.length != "0") {
-
-                nextID = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]));
-                Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11]));
-
-                if (Method == nextMethod)
-                    isstop = false;
-                else
-                    isstop = true;
-
-
-                if (isstop == true) {
-                    break;
-                }
-                else {  
-
-                    sendNextMail(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[5]), nextID, Method);
-
-                    if (i == 0) {  
-                        isLastman = "Y";
-                    }
-
-
-                }
-            }
-            else { break; return; }
-
-        }
-
-        if (sn >= 0 && isLastman == "N")
-            continusendMail(Method, aprlinelist, sn);
-        return; 
-    }
-    else {
-        if (sn == objNodes.length || sn < 0)  
-            return;
+    } else {
+        if (sn == objNodes.length || sn < 0) {
+        	return;
+        } 
 
         if (CurrentAprType == "009") {
             for (var i = sn + 1; i < objNodes.length; i++) {
-                if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "003" && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "010")
-                    return;
+                if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "003" && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "010") {
+                	return;
+                }
             }
         }
+        
+        if (nextMethod == "007") {
+            var isstop = false;
+            var isLastman = "N";
 
-        nextID = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[4]));
-        Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[11]));
-        sendNextMail(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[5]), nextID, Method);
+            for (i = sn; i > -1; i--) {
+                sn = i;
+
+                if (objNodes.length != "0") {
+                    nextID = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]));
+                    Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11]));
+
+                    if (Method == nextMethod) {
+                    	isstop = false;
+                    } else {
+                    	isstop = true;
+                    }
+
+                    if (isstop == true) {
+                        break;
+                    } else {  
+                        sendNextMail(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[5]), nextID, Method);
+                        if (i == 0) {  
+                            isLastman = "Y";
+                        }
+                    }
+                }
+                else { break; return; }
+            }
+
+            if (sn >= 0 && isLastman == "N")
+                continusendMail(Method, aprlinelist, sn);
+            return; 
+        } else {
+        	 nextID = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[4]));
+             Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[11]));
+             sendNextMail(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[5]), nextID, Method);
+             
+             if (sn < objNodes.length) {
+            	 if(sn-1 >= 0) {
+	            	if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn-1])[0])[11])) == "007") {
+	            		continusendMail(trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn - 1])[0])[11])), aprlinelist, sn-1);
+	            	}
+            	 }
+             }
+        }
     }
 }
 

@@ -2784,7 +2784,7 @@
 			               					}			               					
 			               				</script>      					               			
 			               		</div>
-			               		<div id="voterNumber_<c:out value ="${_option.ansId}" />" style="float:left;display:none;width:100%">0</div>
+			               		<div id="voterNumber_<c:out value ="${_option.ansId}" />" class="voterNumber_" >0</div>
 			               		<div id="voteInfo<c:out value ="${_option.ansId}" />" style="clear:both; display:none; height:20px;">              
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>

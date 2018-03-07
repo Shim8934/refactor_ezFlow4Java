@@ -14,6 +14,7 @@
 	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO" remapResults="true">
 		<isEqual property="type" compareValue="DO">
 			<![CDATA[
+			SELECT * FROM (
 				SELECT 
 					DOCID,
 					DOCTITLE,
@@ -25,7 +26,8 @@
 					APRTYPE,
 					FUNCTIONTYPE,
 					APRMEMBERSN,
-					URGENTAPPROVAL
+					URGENTAPPROVAL,
+					'APR' as MODE
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -46,6 +48,43 @@
 					OR 
 				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
 			</isNotEmpty>
+			<![CDATA[
+				UNION ALL
+				
+				SELECT 
+					DOCID,
+					DOCTITLE,
+					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE,
+					WRITERNAME$lang$ WRITERNAME,
+					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					HASATTACHYN,
+					HASOPINIONYN,
+					APRTYPE,
+					FUNCTIONTYPE,
+					APRMEMBERSN,
+					URGENTAPPROVAL,
+					'END' as MODE
+				FROM 
+					VENDCHAMJODOCINFO 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				STARTDATE < #lastDate#
+	   			AND
+	   				APRMEMBERID IN ($id$) 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+				) as LIST
 				ORDER BY 
 					STARTDATE DESC
 				LIMIT
@@ -620,20 +659,38 @@
 	
 	<select id="MApprovalG.getAprDocHref" parameterClass="Map" resultClass="String">
 		<isEqual property="type" compareValue="DO">
-			<![CDATA[
-				SELECT 
-					HREF
-				FROM
-					VAPRDOINGDOCLIST 
-	   			WHERE
-	   				TENANT_ID = #tenantID#
-	   			AND
-	   				COMPANYID = #companyID#
-	   			AND
-	   				DOCID = #docID#
-	   			LIMIT
-	   				1
-			]]>
+			<isEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT 
+						HREF
+					FROM
+						VAPRDOINGDOCLIST 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND
+		   				DOCID = #docID#
+		   			LIMIT
+		   				1
+				]]>
+			</isEqual>
+			<isNotEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT 
+						HREF
+					FROM
+						VENDCHAMJODOCINFO 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND
+		   				DOCID = #docID#
+		   			LIMIT
+		   				1
+				]]>
+			</isNotEqual>
 		</isEqual>
 		<isEqual property="type" compareValue="ING">
 			<![CDATA[
@@ -888,45 +945,88 @@
 	
 	<select id="MApprovalG.getAprDocInfo" parameterClass="Map" resultClass="MApprGDocInfoVO">
 		<isEqual property="type" compareValue="DO">
-			<![CDATA[
-				SELECT
-					DOCID,
-					ORGDOCID,
-					FORMID,
-					HREF,
-					HASATTACHYN,
-					APRMEMBERID,
-					APRMEMBERNAME,
-					APRMEMBERNAME2,
-					APRMEMBERDEPTID,
-					DOCSTATE,
-					DOCTITLE,
-					CASE 
-	   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
-	   					ELSE WRITERNAME$lang$
-	   				END WRITERNAME,
-	   				CASE 
-	   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
-	   					ELSE WRITERDEPTNAME$lang$
-	   				END WRITERDEPTNAME,
-	   				CASE 
-	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
-	   					ELSE WRITERJOBTITLE$lang$
-	   				END WRITERJOBTITLE
-				FROM
-					VAPRDOINGDOCLIST
-				WHERE
-					TENANT_ID = #tenantID#
-				AND
-					COMPANYID = #companyID#
-				AND
-					DOCID = #docID#
-			]]>
-			<isNotEmpty property="aprMemberSN" prepend="AND">
-				APRMEMBERSN = #aprMemberSN#
-			</isNotEmpty>
-				LIMIT
-					1
+			<isEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT
+						DOCID,
+						ORGDOCID,
+						FORMID,
+						HREF,
+						HASATTACHYN,
+						APRMEMBERID,
+						APRMEMBERNAME,
+						APRMEMBERNAME2,
+						APRMEMBERDEPTID,
+						DOCSTATE,
+						DOCTITLE,
+						CASE 
+		   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+		   					ELSE WRITERNAME$lang$
+		   				END WRITERNAME,
+		   				CASE 
+		   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+		   					ELSE WRITERDEPTNAME$lang$
+		   				END WRITERDEPTNAME,
+		   				CASE 
+		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+		   					ELSE WRITERJOBTITLE$lang$
+		   				END WRITERJOBTITLE
+					FROM
+						VAPRDOINGDOCLIST
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
+						COMPANYID = #companyID#
+					AND
+						DOCID = #docID#
+				]]>
+				<isNotEmpty property="aprMemberSN" prepend="AND">
+					APRMEMBERSN = #aprMemberSN#
+				</isNotEmpty>
+					LIMIT
+						1
+			</isEqual>
+			<isNotEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT
+						DOCID,
+						ORGDOCID,
+						FORMID,
+						HREF,
+						HASATTACHYN,
+						APRMEMBERID,
+						APRMEMBERNAME,
+						APRMEMBERNAME2,
+						APRMEMBERDEPTID,
+						DOCSTATE,
+						DOCTITLE,
+						CASE 
+		   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+		   					ELSE WRITERNAME$lang$
+		   				END WRITERNAME,
+		   				CASE 
+		   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+		   					ELSE WRITERDEPTNAME$lang$
+		   				END WRITERDEPTNAME,
+		   				CASE 
+		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+		   					ELSE WRITERJOBTITLE$lang$
+		   				END WRITERJOBTITLE
+					FROM
+						VENDCHAMJODOCINFO
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
+						COMPANYID = #companyID#
+					AND
+						DOCID = #docID#
+				]]>
+				<isNotEmpty property="aprMemberSN" prepend="AND">
+					APRMEMBERSN = #aprMemberSN#
+				</isNotEmpty>
+					LIMIT
+						1
+			</isNotEqual>
 		</isEqual>
 		<isEqual property="type" compareValue="ING">
 			<![CDATA[
