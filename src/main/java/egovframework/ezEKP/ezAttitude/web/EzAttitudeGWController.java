@@ -407,7 +407,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 근태설정정보 조회
+	 * G/W 근태관리 [GET] 근태규율설정정보 조회
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitude-conf", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeConfInfo(HttpServletRequest request) {
@@ -430,7 +430,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [POST] 근태설정정보 수정
+	 * G/W 근태관리 [POST] 근태규율설정정보 수정
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitude-conf", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject updateAttitudeConf(HttpServletRequest request) {
