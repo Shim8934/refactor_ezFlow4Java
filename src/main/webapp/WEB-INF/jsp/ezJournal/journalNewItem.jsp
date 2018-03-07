@@ -36,19 +36,7 @@
 	    	// 일지함아이디
 	    	var typeId = "<c:out value='${typeId}'/>";
 	    	// 작성일
-	    	var curDate = new Date();
-	    	curDate = changeDate(curDate);
-	    	var simpleDate = curDate.split("-");
-	    	simpleDate = simpleDate[0].toString() + simpleDate[1].toString() + simpleDate[2].toString();
-	    	
-	    	// 날짜 표현 변경
-	    	function changeDate(date) {
-	    		function pad(num) {
-	    			num = num + "";
-	    			return num.length < 2 ? "0" + num : num;
-	    		}
-	    		return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
-	    	}
+	    	var nowDate = "${nowDate}";
 	    	
 			// 선택된 일지함의 양식 리스트 가져오기
 	    	function getFormList(elem) {
@@ -86,9 +74,8 @@
    							"typeId" : typeId},
    					success : function(result){
    						console.log(result);
-   						console.log(simpleDate);
    						console.log(userName);
-   						var title = "[" + result.formName + "] " + simpleDate + " (" + userName + ")";
+   						var title = "[" + result.formName + "] " + nowDate + " (" + userName + ")";
    						console.log(title);
    						$("#txtTitle").val(title);
    						message.SetEditorContent(result.formContent);
@@ -101,6 +88,7 @@
 	    	
 			// 최근에 사용한 양식 호출
 			function getLastForm(typeId) {
+				
 				$.ajax({
 	    			type : "POST",
 	   				dataType : "json",
@@ -108,7 +96,7 @@
 	   				data : {"typeId" : typeId},
    					success : function(result){
 						lastFormId = result;
-						var firstType = $("#optType").find("option:first");
+						var firstType = $("#optType").find("option:selected");
 			    		getFormList(firstType);
 	   				},
 	   				error : function(request, status, error) {
@@ -122,7 +110,7 @@
 	    	function selectReceiver(){			
 				var url = "/ezJournal/selectReceiver.do";
 				url += "?companyId=" + companyId;
-				GetOpenWindow(url, "selectReceiver", 1100, 600);
+				GetOpenWindow(url, "selectReceiver", 980, 600);
 			}
 	    	
 			// 선택된 수신자 화면에 뿌리기
@@ -238,7 +226,7 @@
 	        </tr>
 	        <tr>
   				<td>
-   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do?mode=${mode}&circularID=${circularID}"></iframe>
+   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezJournal/dragAndDrop.do?mode=${mode}&journalId=${journalId}"></iframe>
   				</td>
   			</tr>
 	    </table>

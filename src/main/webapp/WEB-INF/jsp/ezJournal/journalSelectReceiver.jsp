@@ -23,6 +23,8 @@
 	   		var userName = "";
 	   		// 선택된 수신자 아이디
 	   		var selUserId = "";
+	   		// 선택된 수신자 이름
+	   		var selUserName = "";
 	   		// 현재 로그인된 사용자 아이디
 	   		var userId = "<c:out value='${userId}'/>";
 	   		console.log(userId);
@@ -69,17 +71,23 @@
 	   		
 	   		// 리스트에서 클릭이벤트 적용
 	   		function setUserAuthorDept(elem) {
-	   			$("*").removeClass("selectTR");
+	   			if ($(elem).parent().attr("id") === "List_TBODY2") {
+	   				$("#List_TBODY2 tr").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "receiverList"){
+		   			$("#receiverList tr").removeClass("selectTR");
+	   			} else {
+		   			$("*").removeClass("selectTR");
+	   			}
 	   			$(elem).addClass("selectTR");
-	   			selUserId = $(elem).attr("userId");
+	   			selUserId = $(elem).attr("id");
+	   			selUserName = $(elem).attr("name");
 	   			console.log("selUserId : " + selUserId)
 	   		}
 	   		
 	   		// 선택한 사람을 수신자에 추가
-	   		function showInsertAuthDept(elem) {
-	   			console.log("여기서" + $(elem).attr("id"));
-	   			var receiverId = $(elem).attr("id");
-	   			userName = $(elem).children().eq(1).text();
+	   		function setAuthorViewUser() {
+	   			var receiverId = selUserId;
+	   			userName = selUserName;
 	   			console.log(userName);
 	   			var chkFlag = true;
 	   			
@@ -87,7 +95,7 @@
 	   				chkFlag = false;
 	   			}
 	   			for(var i = 0; i < receiverList.length; i++) {
-	   				if (receiverList[i].userId == userId) {
+	   				if (receiverList[i].userId == receiverId) {
 	   					chkFlag = false;
 	   				}
 	   			}
@@ -124,9 +132,10 @@
 		    	var strHTML = "";     
 		    	for (var i = 0; i < receiverList.length; i++) {
 		    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-		    		strHTML += "<tr userId=" + receiverList[i].userId + " onclick='setUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
+		    		strHTML += "<tr id=" + receiverList[i].userId + " class='hover' onclick='setUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
 		    		strHTML += "<td>";
-		    		strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+		    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+		    		strHTML += receiverList[i].userName;
 		    		strHTML += "</td>";
 		    		strHTML += "</tr>";
 		    		strHTML += "</table>";
@@ -154,7 +163,7 @@
 	   				success : function(result){
 	   					$("#List_TBODY").html(result);
 	   					favoriteId = $(result).filter("tr").attr("favoriteid");
-			   			getFavoriteUser();
+			   			getFavoriteUser($("#List_TBODY tr:first"));
 	   				},
 	   				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);
@@ -166,10 +175,10 @@
 	   		function getFavoriteUser(elem) {
 	   			$("*").removeClass("selectTR");
 	   			$(elem).addClass("selectTR");
-	   			console.log(favoriteId);
 	   			if (elem != null && elem != "") {
 		   			favoriteId = $(elem).attr("favoriteId");
 	   			}
+	   			console.log("userId : " + userId + ", favoriteId : " + favoriteId);
 	   			$.ajax({
 	   				type : "post",
 	   				dataType : "html",
@@ -231,6 +240,19 @@
 	   			}
 	   		}
 	   		
+	   		function applyReceiver() {
+	   			/*
+	   			if (Tab1_SelectID == "1tab1") {
+	   				setAuthorViewUser();
+	   			} else {
+	   				if ($(elem).parent().attr("id") === "List_TBODY2") {
+	   					
+	   				}
+	   			}
+	   			*/
+  				setAuthorViewUser();
+	   		}
+	   		
 	   		$(document).ready(function(){
 	   			treeContent = ${deptList};
 	   			$("#1tab1").click();
@@ -262,14 +284,18 @@
 		                if (document.getElementById("journalOrgan_content").style.display == "none") {
 		                    document.getElementById("journalOrgan_content").style.display = "";
 		                    document.getElementById("journalFavorite_content").style.display = "none";
-		                   // $("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
-		                    _RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
+		                   	$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
+		                   // _RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
+		                    $("#dblarrow").css("display", "none");
 		                }
 		                break;
 		            case "journalFavorite":
 		                if (document.getElementById("journalFavorite_content").style.display == "none") {
 		                    document.getElementById("journalOrgan_content").style.display = "none";
 		                    document.getElementById("journalFavorite_content").style.display = "";
+		                    $("#dblarrow").css("display", "");
+		                    getFavoriteList();
+		                    $("#journalFavorite").scrollTop(0);
 		                }
 		                break;
 		    	}
@@ -416,8 +442,9 @@
 	                            </table>
 	                        </td>
 	                        <td style="width: 30px; text-align: center;">                            
-	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="showInsertAuthDept(${selUserId})"><br>
-	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver()">
+	                            <img src="/images/arr_rr.gif" id="dblarrow" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; display: none;" onclick="applyFavorite()"><br>
+	                            <img src="/images/arr_r.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver()"><br>
+	                            <img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver()">
 	                        </td>
 	                        <td style="vertical-align: top;">
 	                            <h2 class="receiver_tltype01" style="margin-top:4px;">

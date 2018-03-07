@@ -52,6 +52,7 @@
 		    				"favoriteId"	: parent.favoriteId},
     				success : function(result) {
     					alert("<spring:message code='ezJournal.t137'/>");
+    					parent.type = "new";
     					parent.DivPopUpHidden();
     			    	window.close(); 					
     			    	parent.getFavoriteList();
@@ -65,7 +66,7 @@
 		    function cancelNamePop() {
 		    	parent.DivPopUpHidden();
 		    	window.close();
-		    	parent.location.reload();
+		    //	parent.location.reload();
 		    }
 		
 		    window.onload = function () {		
