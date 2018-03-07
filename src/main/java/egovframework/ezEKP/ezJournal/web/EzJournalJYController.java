@@ -1,14 +1,17 @@
 package egovframework.ezEKP.ezJournal.web;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -19,17 +22,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.JsonUtil;
-import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
-public class EzJournalJYController {
+public class EzJournalJYController extends EgovFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzJournalJYController.class);
 	
@@ -49,11 +53,16 @@ public class EzJournalJYController {
 	public String journalNewItem(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("journalNewItem started");
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		// 여기만 우선 userInfo 사용! userName 받아오는 문제때문..
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String useEditor = commonUtil.getTenantConfigRest("EDITOR", userInfo.getId(), request);
+		String offset = userInfo.getOffset();
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		nowDate = nowDate.substring(0, 10);
+		nowDate = nowDate.replace("-", "");
 		String mode = request.getParameter("mode");
 		String typeId = request.getParameter("typeId");
+		String useEditor = commonUtil.getTenantConfigRest("EDITOR", userInfo.getId(), request);
 		String hasAttach = "";
 		
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -71,9 +80,11 @@ public class EzJournalJYController {
 			model.addAttribute("typeList", typeList);
 		}
 		
+		model.addAttribute("nowDate", nowDate);
 		model.addAttribute("typeId", typeId);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("mode", mode);
+		model.addAttribute("info", userInfo);
 		
 		logger.debug("journalNewItem ended");
 		
@@ -88,18 +99,13 @@ public class EzJournalJYController {
 	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("getFormList started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String typeId = request.getParameter("typeId");
 		if (typeId == null || typeId.equals("")) {
 			typeId = "basic";
 		}
 		
-		String companyId = userInfo.getCompanyID();
-		String deptId = userInfo.getDeptID();
-		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("companyId", companyId);
-		param.put("deptId", deptId);
 		param.put("userId", userInfo.getId());
 		
 		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms";
@@ -125,11 +131,10 @@ public class EzJournalJYController {
 	public String selectReceiver(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("selectReceiver started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("companyId", userInfo.getCompanyID());
 		
 		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request, "get", null);
 		String status = result.get("status").toString();
@@ -166,7 +171,7 @@ public class EzJournalJYController {
 	public String receiverLineName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("receiverLineName started");
 	
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = userInfo.getId();
 		
 		model.addAttribute("userInfo", userInfo);
@@ -183,7 +188,7 @@ public class EzJournalJYController {
 	public String saveReceiverFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("saveReceiverFavorite started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = userInfo.getId();
 		
 		String receiverList = request.getParameter("receiverLine");
@@ -195,7 +200,6 @@ public class EzJournalJYController {
 		JSONObject param = new JSONObject();
 		
 		param.put("userId", userId);
-		param.put("tenantId", userInfo.getTenantId());
 		param.put("favoriteName", favoriteName);
 		param.put("receiverList", receiverList);
 		param.put("favoriteId", favoriteId);
@@ -228,7 +232,7 @@ public class EzJournalJYController {
 	public String getFavoriteList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("getFavoriteList started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = request.getParameter("userId");
 		if (userId == null || userId.equals("")) {
 			userId = userInfo.getId();
@@ -259,7 +263,7 @@ public class EzJournalJYController {
 	public String getFavoriteUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("getFavoriteUser started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = request.getParameter("userId");
 		if (userId == null || userId.equals("")) {
 			userId = userInfo.getId();
@@ -292,7 +296,7 @@ public class EzJournalJYController {
 	public String applyFavoriteUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("applyFavoriteUser started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = request.getParameter("userId");
 		if (userId == null || userId.equals("")) {
 			userId = userInfo.getId();
@@ -325,7 +329,7 @@ public class EzJournalJYController {
 	public String deleteFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("deleteFavorite started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = request.getParameter("userId");
 		if (userId == null || userId.equals("")) {
 			userId = userInfo.getId();
@@ -356,14 +360,13 @@ public class EzJournalJYController {
 	public String journalGetForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("journalGetForm started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String formId = request.getParameter("formId");
 		String typeId = request.getParameter("typeId");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("companyId", userInfo.getCompanyID());
 		
 		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
@@ -391,13 +394,12 @@ public class EzJournalJYController {
 	public String journalGetLastForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("journalGetLastForm started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String formId = "last";
 		String typeId = request.getParameter("typeId");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("companyId", userInfo.getCompanyID());
 		param.put("userId", userInfo.getId());
 		param.put("isGetForm", "isGetForm");
 		
@@ -415,4 +417,204 @@ public class EzJournalJYController {
 		logger.debug("journalGetLastForm ended");
 		return JsonUtil.OneStringToJson("json");
 	}
+	
+	/**
+	 * 일지작성 > 첨부파일 리스트 호출 
+	 */
+	@RequestMapping(value = "/ezJournal/dragAndDrop.do")
+	public String journalDragAndDrop(@CookieValue("loginCookie") String loginCookie, Model model,  HttpServletRequest request) throws Exception {
+		
+		logger.debug("journalDragAndDrop started");
+
+        LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+        String attachFileNameMaxLength = commonUtil.getTenantConfigRest("attachFileNameMaxLength", userInfo.getId(), request);
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
+		String mode = "";
+		String journalId = "";
+		
+		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
+			mode = request.getParameter("mode");
+		}
+		
+		if (request.getParameter("journalId") != null && !request.getParameter("journalId").equals("")) {
+			mode = request.getParameter("journalId");
+		}
+        
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("mode", mode);
+		model.addAttribute("journalId", journalId);
+		
+		logger.debug("journalDragAndDrop ended");
+		return "ezJournal/journalDragAndDrop";
+	}	
+	
+	/**
+	 * 일지작성 > 첨부파일 업로드
+	 */
+	@RequestMapping(value = "/ezJournal/uploadJournalAttach.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String uploadJournalAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		
+		logger.debug("uploadJournalAttach started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
+		int cnt = multiFile.size();
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String[] pFileName = new String[cnt];
+        Long[] fileSize = new Long[cnt];        
+        String[] resultUpload = new String[cnt];
+        String[] sGUID = new String[cnt];
+        String[] pUploadSN = new String[cnt];
+        
+        String useExtension = commonUtil.getTenantConfigRest("USE_FileExtension", userInfo.getId(), request);
+        
+        //2018-02-13 주홍선 mode와 circularID 가져오도록 주석 제거
+        String mode = "";
+		String journalId = "";
+
+		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
+			mode = request.getParameter("mode");
+		}
+		
+		if (request.getParameter("journalId") != null && !request.getParameter("journalId").equals("")) {
+			journalId = request.getParameter("journalId");		
+		}
+
+		logger.debug("mode : " + mode + " | journalId : " + journalId);
+
+        for (int i = 0; i < cnt; i++) {
+            resultUpload[i] = "false";
+            sGUID[i] = UUID.randomUUID().toString();
+            pUploadSN[i] = "{" + sGUID[i] + "}";
+        }
+
+        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	
+            for (int i = 0; i < cnt; i++) {
+                String _pFileName = multiFile.get(i).getOriginalFilename();
+                if (_pFileName.indexOf(commonUtil.separator) > 0) {
+                    _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
+                }
+                pFileName[i] = _pFileName;
+            }
+        }
+
+        for (int i = 0; i < cnt; i++) {
+            pFileName[i] = pFileName[i].replace("%2b", "+");
+            pFileName[i] = pFileName[i].replace("%3b", ";");
+        }
+        
+        String pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", userInfo.getTenantId());
+
+        pDirPath = realPath + pDirPath;
+        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+        	pDirPath = pDirPath + commonUtil.separator;
+        }
+        File file = new File(pDirPath + "uploadFile");
+        File tempFile = new File(pDirPath + "tempUploadFile");
+
+        if (!file.exists()) {
+        	file.mkdir();
+        }
+        
+        if (!tempFile.exists()) {
+        	tempFile.mkdir();
+        }
+
+        StringBuffer strXML = new StringBuffer();
+        strXML.append("<ROOT><NODES>");
+        
+        for (int i = 0; i < cnt; i++) {        	
+        	fileSize[i] = multiFile.get(i).getSize();
+            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+            String newFileName = pUploadSN[i];
+            
+            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
+				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
+				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
+				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
+				strXML.append("<DATA4><![CDATA[]]></DATA4>");
+				strXML.append("<DATA5><![CDATA[denied]]></DATA5>");
+            } else {
+//            	if (mode.equals("temp")) {
+            	writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");            		
+//            	} else {
+//            		writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
+//            	}
+            	
+				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
+				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
+				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
+				strXML.append("<DATA4><![CDATA[]]></DATA4>");
+				strXML.append("<DATA5><![CDATA[OK]]></DATA5>");
+            }
+        }
+        strXML.append("</NODES></ROOT>");
+        
+        logger.debug("uploadJournalAttach ended");
+        
+        return strXML.toString();
+    }
+	
+	/**
+	 * 일지작성 > 닫기 클릭시 임시첨부파일 삭제
+	 */
+	@RequestMapping(value = "/ezJournal/tempUploadFileDelete.do")
+	public String tempUploadFileDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		
+		logger.debug("tempUploadFileDelete started");
+		
+		//2018-02-13 주홍선 loginSimpleVO 쿠키에서 가져오도록 변경
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+
+		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
+		String fileList = request.getParameter("fileList");
+		//2018-02-13 주홍선 주석제거
+		String mode = "";
+		String circularID = "";
+		String filePath = "";
+		
+		logger.debug("fileList : " + fileList);
+		
+		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
+			mode = request.getParameter("mode");
+		}
+		
+		if (request.getParameter("circularID") != null && !request.getParameter("circularID").equals("")) {
+			circularID = request.getParameter("circularID");
+		}
+
+		if (mode.equals("temp")) {
+			filePath = "uploadFile" + commonUtil.separator + circularID + "_uploadFile";
+		} else {
+			filePath = "tempUploadFile";
+		}
+		
+		logger.debug("filePath : " + filePath);
+
+		if (fileList.length() != 0) {
+			String[] data = fileList.split(","); 
+			
+			for (int i=0; i<data.length; i++) {
+				String sGUID = data[i].split(";")[0];
+				String fileName = data[i].split(";")[1];
+				
+				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+				
+				file.delete();
+			}			
+		}
+
+        logger.debug("tempUploadFileDelete ended");
+        
+        return "json";
+    }
 }

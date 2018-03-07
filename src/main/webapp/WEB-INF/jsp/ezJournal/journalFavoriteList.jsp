@@ -5,7 +5,7 @@
 	<c:choose>
 		<c:when test="${fn:length(favoriteList) > 0}">
 			<c:forEach items="${favoriteList}" var="favorite" varStatus="status">
-				<tr favoriteid="${favorite.favoriteId}" onclick="getFavoriteUser(this)">
+				<tr favoriteid="${favorite.favoriteId}" class="hover" onclick="getFavoriteUser(this)">
 					<td>${status.count }</td>
 					<td>${favorite.favoriteName }</td>
 					<td>${fn:substring(favorite.favoriteDate, 0, 10) }</td>

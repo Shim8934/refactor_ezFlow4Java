@@ -606,7 +606,8 @@
 			a.CN as user_id,
 			a.TITLE as jikwi,
 			a.MAIL as mail,
-			a.DESCRIPTION as dept_name
+			a.DESCRIPTION as dept_name,
+			a.EXTENSIONATTRIBUTE2 as user_img
 		from 
 			tbl_usermaster a join tbl_journal_recv_favorite_list b on a.CN = b.user_id
 		where 

@@ -130,14 +130,10 @@ public class EzJournalGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			
-			String companyId = request.getParameter("companyId");
-			String deptId = request.getParameter("deptId");
-			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
 
-			List<JournalFormInfoVO> formList = ezJournalService.getFormList(typeId, deptId, companyId, info.getCompanyName(), info.getTenantId() + "");
+			List<JournalFormInfoVO> formList = ezJournalService.getFormList(typeId, info.getDeptId(), info.getCompanyId(), info.getCompanyName(), info.getTenantId() + "");
 			
 			result.put("data", formList);
 			result.put("status", "ok");
@@ -258,20 +254,22 @@ public class EzJournalGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			String companyId = request.getParameter("companyId");
 			
+			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String companyId = info.getCompanyId();
 			
 			LOGGER.debug("companyId : " + companyId);
 			
+			// 마지막 사용양식 id 가져오기
 			if (request.getParameter("isGetForm") != null ) {
-				String userId = request.getParameter("userId");
 				String selId = ezJournalService.getJournalLastFormId(typeId, formId, userId, companyId, info.getTenantId() + "");
 				LOGGER.debug("formId : " + selId);
 				result.put("status", "ok");
 				result.put("code", 0);
 				result.put("data", selId);
+			// 선택된 양식 가져오기	
 			} else {
 				JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalFormInfo(formId, companyId, info.getTenantId() + "");
 				
@@ -713,7 +711,7 @@ public class EzJournalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			jsonParam.put("tenantId", info.getTenantId());
 			ezJournalService.saveFavorite(jsonParam);
@@ -743,7 +741,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			jsonParam.put("tenantId", info.getTenantId());
 			ezJournalService.modifyFavorite(jsonParam);
@@ -774,7 +772,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			ezJournalService.deleteFavorite(favoriteId, userId, info.getTenantId() + "");
 			
@@ -804,7 +802,8 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			LOGGER.debug("servername: " + serverName);
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			List<JournalAuthorVO> userList = ezJournalService.getFavoriteUserList(favoriteId, info.getTenantId() + "");
 			
@@ -1008,13 +1007,12 @@ public class EzJournalGWController {
 		
 		try {
 			String userId = request.getParameter("userId");
-			String companyId = request.getParameter("companyId");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId);
+			LOGGER.debug("userId : " + userId);
 			
-			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, companyId, info.getTenantId() + "");
+			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, info.getCompanyId(), info.getTenantId() + "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);
