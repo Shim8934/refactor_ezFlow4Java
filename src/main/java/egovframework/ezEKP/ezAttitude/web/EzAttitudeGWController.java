@@ -49,8 +49,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] ended.");
 		return result;
@@ -67,8 +72,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/attitudes] ended.");
 		return result;
@@ -85,8 +95,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/" + attitudetypeId + "/attitudes] ended.");
 		return result;
@@ -103,8 +118,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
 		return result;
@@ -121,8 +141,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
 		return result;
@@ -139,8 +164,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
 		return result;
@@ -157,8 +187,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modify-applications] ended.");
 		return result;
@@ -175,8 +210,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] ended.");
 		return result;
@@ -193,8 +233,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/modify-applications/" + modapplId + "] ended.");
 		return result;
@@ -211,8 +256,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modify-applications/" + modapplId + "] ended.");
 		return result;
@@ -229,8 +279,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/modify-applications] ended.");
 		return result;
@@ -247,8 +302,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/modify-applications] ended.");
 		return result;
@@ -265,8 +325,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts] ended.");
 		return result;
@@ -283,8 +348,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts/" + deptId + "/users] ended.");
 		return result;
@@ -301,8 +371,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-count] ended.");
 		return result;
@@ -319,8 +394,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /ezattitude/depts/" + deptId + "/attitude-count] ended.");
 		return result;
@@ -337,8 +417,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitude-conf] ended.");
 		return result;
@@ -355,8 +440,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitude-conf] ended.");
 		return result;
@@ -373,8 +463,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes] ended.");
 		return result;
@@ -391,8 +486,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/attitudetypes] ended.");
 		return result;
@@ -409,8 +509,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudetypes] ended.");
 		return result;
@@ -427,8 +532,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/attitudetypes/" + attitudetypeId+ "] ended.");
 		return result;
@@ -445,8 +555,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies] ended.");
 		return result;
@@ -463,8 +578,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users-attitude-confs] ended.");
 		return result;
@@ -481,8 +601,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users-attitude-confs] ended.");
 		return result;
@@ -499,8 +624,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users-attitude-confs/" + userAttitudeConfId + "] ended.");
 		return result;
@@ -517,8 +647,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users" + userId + "/add-authority] ended.");
 		return result;
@@ -535,8 +670,13 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/exceldown] ended.");
 		return result;
