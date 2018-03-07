@@ -1122,49 +1122,29 @@
 				location.href = "/ezPortal/topMenu.do?mode=new";
 			}
 	
-			/* 현재 이미지 관리 및 롤오버시 이미지 변환 함수 */
-			var curImg = new Image;
-			var oldPath = "";
+			/* 2018-03-07 장진혁 서브메뉴 수정 현재 이미지 관리 및 롤오버시 이미지 변환 함수 */			
 			var subPath = "";
 			var menuName = "";
-			var tempclickmenuPath = "";
-			var temppNewPath;
-			var tempobj;
+			var tempobj;			
 			
-			function img_onMouseOver(pNewPath, obj) {
-			    temppNewPath = pNewPath;
-			    tempobj = obj;
-
-			    if (curImg == obj) {
-			        return;
-			    } else {
-			        oldPath = obj.src;
-			        obj.src = pNewPath;
-			        if (clickmenusub != "")
-			            document.getElementById(clickmenusub).style.display = "none";
-			        if (clickmenuName != "" && document.getElementsByName(clickmenuName)[0].src.indexOf(pNewPath) == -1) {
-			            tempclickmenuPath = document.getElementsByName(clickmenuName)[0].src;
-			            document.getElementsByName(clickmenuName)[0].src = clickmenuPath;
-			        }
-			    }
-			    
-			    if (document.getElementById("menu_" + obj.name) != null) {
-			        subPath = "menu_" + obj.name;
-			        menuName = obj.name;
-			        document.getElementById("menu_" + obj.name).style.left = 0;			        
-			        document.getElementById("menu_" + obj.name).style.display = "";
-			        var LeftMargin = parseInt(document.getElementsByName(menuName)[0].offsetLeft) - 50;
+			function img_onMouseOver(obj) {			    
+			    if (document.getElementById("menu_" + obj.id) != null) {
+			        subPath = "menu_" + obj.id;
+			        menuName = obj.id;
+			        document.getElementById("menu_" + obj.id).style.left = 0;			        
+			        document.getElementById("menu_" + obj.id).style.display = "";
+			        var LeftMargin = parseInt(document.getElementById(menuName).offsetLeft) - 60;
 			        
-			        /* $("#menu_" + obj.name).css("padding-left", LeftMargin + "px");
-			        $("#menu_" + obj.name).css("width", "100%"); */
-
-			        if (window.document.documentElement.clientWidth < document.getElementsByName(menuName)[0].offsetLeft + document.getElementById("menu_" + obj.name).clientWidth) {
-			            LeftMargin = LeftMargin - (document.getElementsByName(menuName)[0].offsetLeft + document.getElementById("menu_" + obj.name).clientWidth - window.document.documentElement.clientWidth);
-			            LeftMargin = LeftMargin - 30;
-			        }			        
-			        document.getElementById("menu_" + obj.name).style.left = LeftMargin + "px";
+			        if (window.document.documentElement.clientWidth < document.getElementById(menuName).offsetLeft + document.getElementById("menu_" + obj.id).clientWidth) {
+			            LeftMargin = LeftMargin - (document.getElementById(menuName).offsetLeft + document.getElementById("menu_" + obj.id).clientWidth - window.document.documentElement.clientWidth);
+			            LeftMargin = LeftMargin - 20;
+			        }
+					var cw = document.getElementById(obj.id).clientWidth;
+					
+			        document.getElementById("menu_" + obj.id).style.left = LeftMargin + "px";
+			        document.getElementById("menu_" + obj.id).style.width = cw + "px";
 			    } else {
-			        menuName = obj.name;
+			        menuName = obj.id;
 			        subPath = "";
 			    }
 			    
@@ -1174,29 +1154,16 @@
 			function img_onMouseOut(obj){
 				tempobj = obj;
 				
-			    if (curImg == obj) {
-			        return;
-			    } else if (clickmenuPath == oldPath) {
-			    	
-			    } else {
-			        obj.src = oldPath;
-			        if (tempclickmenuPath != "" && obj != document.getElementsByName(clickmenuName)[0])
-			            document.getElementsByName(clickmenuName)[0].src = tempclickmenuPath;
-			    }
-			    
-			    if (subPath != "" && document.getElementById(subPath).style.display == "" && subPath != clickmenusub) {
-			        document.getElementById(subPath).style.display = "none";
-			    }
-			    
-			    if (clickmenusub != "")
-			        document.getElementById(clickmenusub).style.display = "";
+				if (document.getElementById("menu_"+obj.id)) {
+					document.getElementById("menu_"+obj.id).style.display = "none";
+				}
 			    
 			    parent.document.getElementById("topFrame").style.position = "";
 			}
 	
-			function submenuover(subObj) {
-			    if (tempobj.name == subObj.id.replace("menu_", "")) {
-					img_onMouseOver(temppNewPath, tempobj);
+			function submenuover(subObj) {				
+			    if (tempobj.id == subObj.id.replace("menu_", "")) {
+					img_onMouseOver(tempobj);
 			    }
 			}
 	
