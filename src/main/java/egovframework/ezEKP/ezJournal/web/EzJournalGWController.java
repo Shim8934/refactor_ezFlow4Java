@@ -506,12 +506,29 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 업무일지 조회
 	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject viewJournal(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject viewJournal(@PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W viewJournal started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
+		LOGGER.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			JournalVO journal = ezJournalService.getJournal(journalId, userId, info.getTenantId()+"");
+			
+			result.put("data", journal);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("data", "");
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		}
 		
 		LOGGER.debug("ezJournal G/W viewJournal ended.");
 		return result;
@@ -1070,7 +1087,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			String recvCount = ezJournalService.getRecvJournalCount(userId, info.getTenantId() + "");
 		

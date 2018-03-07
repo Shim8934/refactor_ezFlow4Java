@@ -77,10 +77,10 @@
 		<c:choose>
 		<c:when test="${fn:length(journalList) ne 0}">
 			<c:forEach items="${journalList}" var="journal" varStatus="status">
-			<tr class="${journal.isView }" onclick="" style="cursor: pointer;">
+			<tr class="${journal.isView }" id="${journal.journalId }" onclick="" style="cursor: pointer;">
 				<td class="cbTD"
 					style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><input onchange="checkedCheckbox(this);"
-					type="checkbox" name="journalCheckbox" id="${journal.journalId }" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>
+					type="checkbox" name="journalCheckbox" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>
 				<c:if test="${listType eq 'recv' }">
 				<c:choose>
 				<c:when test="${journal.isView == 'noView'}">
@@ -145,7 +145,7 @@
 				</td>
 				</c:if>
 				<c:if test="${listType eq 'department' or listType eq 'mine' }">
-				<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+				<td	onclick="selectedTR(this);" class="viewCount" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 				${journal.viewCount}
 				</td>
 				</c:if>

@@ -306,4 +306,21 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public void insertUpdateJournalEnv(Map<String, Object> map){
 		insert("insertUpdateJournalEnv",map);
 	}
+	
+	/**
+	 * 해당 일지 상세 내용 가져오기
+	 * @param map
+	 * @return
+	 */
+	public JournalVO selectJournal(Map<String, Object> map){
+		return (JournalVO) select("getJournal",map);
+	}
+	
+	/**
+	 * 일지 열람 정보 인서트
+	 * @param map
+	 */
+	public void insertViewInfo(Map<String, Object> map){
+		insert("insertViewDate",map);
+	}
 }

@@ -28,6 +28,16 @@
 				window.open(url,"right");
 			}
 	        
+	        function setRecvCount(){
+        		$.ajax({
+	   				type:"post",
+	   				url:"/ezJournal/leftRecvCount.do",
+	   				success: function(data){
+	   					$("#recvCount").text(data);
+	   				}
+	   			});
+	        }
+	        
 	    </script>
 	</head>
 	<body class="leftbody">
@@ -54,7 +64,7 @@
 		    		</c:when>
 		    	</c:choose>
 		    </ul>
-		    <h2><span class='recv' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t51'/>(${recvCount })</span></h2>
+		    <h2><span class='recv' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t51'/>(<span id="recvCount">${recvCount }</span>)</span></h2>
 		    <ul>
 		    </ul>
 		    <h2><span class='temp' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>

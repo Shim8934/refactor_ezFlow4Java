@@ -1,9 +1,12 @@
 package egovframework.ezEKP.ezJournal.vo;
 
+import java.util.List;
+
 public class JournalVO {
 
 	private String journalId;
 	private String journalTitle;
+	private String journalContent;
 	private String journalDate;
 	private String deptShare;
 	private String writerName;
@@ -16,7 +19,27 @@ public class JournalVO {
 	private int totalRecv;
 	private int checkRecv;
 	private String isView;
+	private String mine;
+	private List<JournalFileVO> fileList;
 	
+	public String getMine() {
+		return mine;
+	}
+	public void setMine(String mine) {
+		this.mine = mine;
+	}
+	public List<JournalFileVO> getFileList() {
+		return fileList;
+	}
+	public void setFileList(List<JournalFileVO> fileList) {
+		this.fileList = fileList;
+	}
+	public String getJournalContent() {
+		return journalContent;
+	}
+	public void setJournalContent(String journalContent) {
+		this.journalContent = journalContent;
+	}
 	public String getIsView() {
 		return isView;
 	}

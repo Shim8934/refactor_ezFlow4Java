@@ -99,6 +99,7 @@
 		    var pMailListDiv_H = 0;
 		    var pMailPreVDiv_H = 0;
 		    var normal=null;
+		    var onPreview=false;
 			
 			window.onresize = function ()
 		    {
@@ -232,13 +233,32 @@
 			
 			//tr선택시
 			function selectedTR(elem){
-				var parent = $(elem).parent();
+				onPreview=true;
+				var parentElem = $(elem).parent();
 				$("#BoardList tr").removeClass("selectTR");
 				$("#BoardList tr").find("input[type='checkbox']").removeProp("checked");
-	   			$(parent).addClass("selectTR");
-	   			$(parent).find("input[type='checkbox']").prop("checked","true");
+	   			$(parentElem).addClass("selectTR");
+	   			var vc = $(parentElem).find(".viewCount");
+	   			if($(parentElem).hasClass("noView")){
+		   			$(vc).text(parseInt($(vc).text())+1);
+		   			$(parentElem).removeClass("noView");
+	   			}
+	   			$(parentElem).find("input[type='checkbox']").prop("checked","true");
+	   			var journalId=$(parentElem).attr("id");
 	   			if (pPreviewShow_HOW=='W' || pPreviewShow_HOW=='H') {
-					
+					$.ajax({
+		   				type:"post",
+		   				dataType:"json",
+		   				data:{journalId:journalId},
+		   				url:"/ezJournal/journalPreview.do",
+		   				success: function(data){
+							$("#Preview_ContentW").html(data.journalContent);
+							$("#Preview_ContentH").html(data.journalContent);
+							parent.left.setRecvCount();
+// 		   					ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
+// 		   					ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
+		   				}
+		   			});
 				}
 			}
 			
@@ -365,8 +385,8 @@
 						document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45)
 								+ "px";
 
-						document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95)
-								+ "px";
+// 						document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95)
+// 								+ "px";
 						pPreviewShow_HOW = "W";
 						pMailListDiv = Math
 								.round((pMailListHeightW / CurrentHeight) * 100);
@@ -376,8 +396,11 @@
 						document.getElementById("Preview_HeaderW").style.display = "";
 						document.getElementById("Preview_HeaderH").style.display = "none";
 						g_bPrevShow = true;
-						ifrmPreViewW.document
-								.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+						if(onPreview==false){
+							$("#Preview_ContentW").html("<spring:message code='ezBoard.t10022' />");
+// 							ifrmPreViewW.document
+// 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+						}
 					} else if (pGubun == "H") {
 						pMailListDiv_H = 50;
 						pMailPreVDiv_H = 50;
@@ -425,8 +448,8 @@
 								+ "px";
 						document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10)
 								+ "px";
-						document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68)
-								+ "px";
+// 						document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68)
+// 								+ "px";
 						pPreviewShow_HOW = "H";
 						pMailListDiv_H = Math
 								.round((pMailListWidthH / CurrenWidth) * 100);
@@ -437,8 +460,11 @@
 						document.getElementById("Preview_HeaderH").style.display = "";
 
 						g_bPrevShow = true;
-						ifrmPreViewH.document
-								.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+						if(onPreview==false){
+							$("#Preview_ContentH").html("<spring:message code='ezBoard.t10022' />");
+// 							ifrmPreViewH.documentr
+// 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+						}
 					}
 					MailOptionHidden();
 					PreviewMode_ChangeBtn();
@@ -525,7 +551,7 @@
 			});
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:auto;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
+	<body class="mainbody" style="overflow:auto;" onmousemove="journalPreviewResize(event);" onmouseup="journalPreviewEnd(event);">
 			<c:choose>
 				<c:when test="${listType eq 'department' }">
 					<h1><spring:message code='ezJournal.t49'/>
@@ -658,7 +684,8 @@
 		                    </div>
 		                </span>
 		                
-		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+		                <div id="Preview_ContentH" style="text-align: center;"></div>
+<!-- 		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe> -->
 		            </span>
 		        </span>
 		    </span>
@@ -674,7 +701,7 @@
 		                    </div>
 		                </span>
 		                
-		                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+		                <div id="Preview_ContentW" style="text-align: center;"></div>
 		            </span>
 		        </span>
 		    </span>
@@ -723,5 +750,108 @@
 			setFormName();
 		</script>
 	</c:if>
+	
+	<script type="text/javascript">
+	function journalPreviewEnd(e) {
+	    if (PreviewW_Move || PreviewH_Move) {
+	        document.getElementById("ResizeBarH").style.display = "none";
+	        document.getElementById("ResizeBarW").style.display = "none";
+	        document.getElementById("mailPanel").style.display = "none";
+	        
+	        if (PreviewH_Move) {
+	            var newPos_H = parseInt(document.getElementById("ResizeBarH").style.left) - 10;
+	            
+	            if (pMailListWidthH > newPos_H) {
+	                pMailPreWidthH = pMailPreWidthH + (pMailListWidthH - newPos_H);
+	                pMailListWidthH = newPos_H;
+	            } else {
+	                pMailPreWidthH = CurrenWidth - newPos_H;
+	                pMailListWidthH = newPos_H;
+	            }
+	            
+// 	            document.getElementById("ifrmPreViewH").style.display = "";
+	            document.getElementById("Preview_ContentH").style.display = "";
+	            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+	            document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
+	            document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
+	            document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
+	            document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
+	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
+// 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
+	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 80) + "px";
+	            pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
+	            pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
+
+	        } else if (PreviewW_Move) {
+	            var newPos_W = parseInt(document.getElementById("ResizeBarW").style.top) - 90;
+	            if (pMailListHeightW > newPos_W) {
+	                pMailPreHeightW = pMailPreHeightW + (pMailListHeightW - newPos_W);
+	                pMailListHeightW = newPos_W;
+	            } else {
+	                pMailPreHeightW = CurrentHeight - newPos_W;
+	                pMailListHeightW = newPos_W;
+	            }
+// 	            document.getElementById("ifrmPreViewW").style.display = "";
+	            document.getElementById("Preview_ContentW").style.display = "";
+	            document.getElementById("MailListRayer").style.width = "100%";
+	            document.getElementById("PreviewRayerW").style.width = "100%";
+	            document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
+	            document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
+	            document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
+
+//                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
+                document.getElementById("Preview_ContentW").style.height = (pMailPreHeightW - 95) + "px";
+	            pMailListDiv = (pMailListHeightW / CurrentHeight) * 100;
+	            pMailPreVDiv = (pMailPreHeightW / CurrentHeight) * 100;
+	        }
+	        PreviewH_Move = false;
+	        PreviewW_Move = false;
+	    }
+	}
+
+	function journalPreviewResize(e) {
+	    if (PreviewH_Move) {
+	        curevent = (typeof event == 'undefined' ? e : event);
+	        var minSize = parseInt(200);
+	        var maxSize = parseInt(document.documentElement.clientWidth - 200);
+	        if (curevent.clientX < minSize || curevent.clientX > maxSize) {
+	        	journalPreviewEnd(e);
+	        } else {
+	            var newPos_H = curevent.clientX;
+
+	            if (newPos_H < parseInt(CurrenWidth * 0.40)) {
+	                newPos_H = parseInt(CurrenWidth * 0.40);
+	                SmallSizeList = true;
+	            }
+	            else if (newPos_H > parseInt(CurrenWidth * 0.65)) {
+	                newPos_H = parseInt(CurrenWidth * 0.65);
+	            }
+
+	            if (newPos_H > parseInt(CurrenWidth * 0.40))
+	                SmallSizeList = false;
+
+	            document.getElementById("ResizeBarH").style.left = newPos_H + "px";
+	        }
+	    } else if (PreviewW_Move) {
+	        curevent = (typeof event == 'undefined' ? e : event);
+	        var minSize = parseInt(100);
+	        var maxSize = parseInt(document.documentElement.clientHeight - 100);
+
+	        if (curevent.clientY < minSize || curevent.clientY > maxSize) {
+	        	journalPreviewEnd(e);
+	        } else {
+	            var newPos_W = curevent.clientY;
+	            
+	            if (newPos_W < (parseInt(CurrentHeight * 0.25) + 90)) {
+	                newPos_W = parseInt(CurrentHeight * 0.25) + 90;
+	            } else if (newPos_W > (parseInt(CurrentHeight * 0.65) + 90)) {
+	                newPos_W = (parseInt(CurrentHeight * 0.65) + 90);
+	            }
+	            
+	            document.getElementById("ResizeBarW").style.top = newPos_W + "px";
+	        }
+	    }
+	}
+	</script>
 	</body>
 </html>

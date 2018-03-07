@@ -543,4 +543,25 @@ public class EzJournalServiceImpl implements EzJournalService{
 		logger.debug("getJournalLastFormId ended");
 		return lastFormId;
 	}
+
+	@Override
+	public JournalVO getJournal(String journalId,String userId,  String tenantId) throws Exception {
+		logger.debug("getJournal started");
+		
+		logger.debug("journalId : "+journalId);
+		logger.debug("tenantId : "+tenantId);
+		logger.debug("userId : "+userId);
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("journalId", journalId);
+		param.put("tenantId", tenantId);
+		param.put("userId", userId);
+		
+		ezJournalDAO.insertViewInfo(param);
+		logger.debug("열람정보는 들어가나요?");
+		JournalVO result = ezJournalDAO.selectJournal(param);
+		
+		logger.debug("getJournal ended");
+		
+		return result;
+	}
 }

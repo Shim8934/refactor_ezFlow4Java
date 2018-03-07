@@ -240,4 +240,14 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public void saveJournalEnv(Map<String, Object> map) throws Exception;
+	
+	/**
+	 * 해당 아이디의 업무일지 상세내용 가져오기
+	 * @param journalId
+	 * @param tenantId
+	 * @param string 
+	 * @return
+	 * @throws Exception
+	 */
+	public JournalVO getJournal(String journalId, String userId, String tenantId) throws Exception;
 }

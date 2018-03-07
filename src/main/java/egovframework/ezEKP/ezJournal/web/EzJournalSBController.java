@@ -199,7 +199,7 @@ public class EzJournalSBController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		String listType =(String) param.remove("listType");
+		String listType =(String) param.get("listType");
 		int listCnt = Integer.parseInt(param.get("listCnt").toString());
 		int currentPage = (int) param.remove("currentPage");
 		
@@ -279,7 +279,7 @@ public class EzJournalSBController {
 	 */
 	@RequestMapping(value="/ezJournal/saveJournalEnv.do")
 	@ResponseBody
-	public JSONObject saveJournalEnv(@RequestParam Map<String,Object> param,HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+	public JSONObject saveJournalEnv(@RequestParam Map<String,Object> param,HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("saveJournalEnv started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -289,5 +289,94 @@ public class EzJournalSBController {
 		logger.debug("saveJournalEnv ended");
 		
 		return resultBody;
+	}
+	
+	/**
+	 * 업무일지 상세내용 가져오기
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezJournal/journalDetail.do")
+	@ResponseBody
+	public String getJournalDetail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("getJournalDetail started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String journalId = request.getParameter("journalId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId, param, request,"get",null);
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject journal = null;
+		if (status.equals("ok")) {			
+			journal = (JSONObject) resultBody.get("data");
+			model.addAttribute("journal",journal);
+		}
+		
+		logger.debug("getJournalDetail ended");
+		
+		return "/ezJournal/journalDetail";
+	}
+		
+		/**
+		 * 업무일지 미리보기 내용 가져오기
+		 * @param request
+		 * @param model
+		 * @param loginCookie
+		 * @return
+		 */
+		@RequestMapping(value="/ezJournal/journalPreview.do")
+		@ResponseBody
+		public JSONObject getJournalPreview(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
+			logger.debug("getJournalPreview started");
+			
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("userId", userInfo.getId());
+			
+			String journalId = request.getParameter("journalId");
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId, param, request,"get",null);
+			
+			String status = resultBody.get("status").toString();
+			
+			JSONObject journal = null;
+			if (status.equals("ok")) {			
+				journal = (JSONObject) resultBody.get("data");
+			}
+			
+			logger.debug("getJournalPreview ended");
+			
+			return journal;
+	}
+		
+	@RequestMapping(value="/ezJournal/leftRecvCount.do")
+	@ResponseBody
+	public String leftRecvCount(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("leftRecvCount started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/"+userInfo.getId()+"/recv-count", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		
+		String recvCount="";
+		if (status.equals("ok")) {			
+			recvCount= (String) resultBody.get("data");
+			logger.debug("recvCount = ********"+recvCount);
+		}
+		logger.debug("leftRecvCount ended");
+		
+		return recvCount;
 	}
 }
