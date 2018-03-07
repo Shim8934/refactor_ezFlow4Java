@@ -338,17 +338,16 @@
 		<form method="post">
 	        <h1><spring:message code = 'ezPersonal.t157' /><span id="mailBoxInfo"></span></h1>
 	        <div id="mainmenu">
-	            <ul>
-	            	<li style="background: none">
-		                <SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
-			        	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>
-		            	</c:forEach>
-			        	</SELECT>
-		        	</li>
+				<span><b><spring:message code='ezEmail.t59' /></b></span>&nbsp;
+				<SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
+		        	<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+				</SELECT>
+				<ul style="margin-top:15px">	            	
 	                <li><span onclick="add_notice()"><spring:message code = 'ezPersonal.t158' /></span></li>
 	            </ul>
-	        </div>
+		  	</div>
 	        
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

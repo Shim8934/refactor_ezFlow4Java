@@ -1037,5 +1037,4 @@ public class CommonUtil {
         return propertyValue;
     }
 
-	
 }
