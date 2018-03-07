@@ -85,7 +85,6 @@
 		    var protocol = window.location.protocol;
 		    var host = defineHost(protocol) + window.location.host + '/websocket/${userId}';
 		    var useEncryptZipForEmail = "${useEncryptZipForEmail}";
-			var useMailBoxBackUp = "${useMailBoxBackUp}";
 			var uploading = "uploading";
 		    var enc = "encrypt";
 		    var dec = "decrypt";
@@ -108,15 +107,6 @@
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onload = function () {
-                
-		    	// 웹소켓 지원을 안할 경우 '편지함 내려받기/가져오기' 버튼 숨김
-		        if ('WebSocket' in window) {
-	           	} else if ('MozWebSocket' in window) {
-	           	} else {
-	           		document.getElementById("mailbox_export").style.display = "none";
-					document.getElementById("mailbox_import").style.display = "none";
-	           	}
-		        
 		        CurrentHeight = document.body.clientHeight;
 		        CurrenWidth = document.body.clientWidth;
 		        
@@ -807,18 +797,13 @@
           <li onClick="MailListRefresh()"><span class="img_Newbtn"><spring:message code="ezEmail.t515" /></span></li>
           <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
           <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
-		  <c:if test="${ useMailBoxBackUp eq 'YES' }">
-		 	<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
-		  	<li id="mailbox_export"><span onClick="mailbox_export()"><spring:message code="ezEmail.lhm31" /></span></li>
-		  	<li id="mailbox_import"><span><label for="file1" style="cursor: pointer;"><spring:message code="ezEmail.lhm32" /></label></span></li>
-		  </c:if>
 		  <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" class="maillistoptiondivbtn" onclick="MailOptionView(this);" />
 		  </li> 
-          </ul>
+        </ul>
         </div>
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

@@ -2107,7 +2107,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				continue;
 			}
 			
-			/*String menuitemUID = result.get(i).getuID();*/
+			String menuitemUID = result.get(i).getuID();
 			String menuitemDisplayName = result.get(i).getDisplayName();
 			/*String menuitemImageUID = result.get(i).getImageUId();*/
 			String menuitemLinkURL = result.get(i).getLinkURL();
@@ -2119,7 +2119,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			sb.append("<li ");
 			
 			if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
-				sb.append(" onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+				sb.append("id='" + menuitemUID + "' onmouseover='img_onMouseOver(this);' onmouseout='img_onMouseOut(this);' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 				sb.append(", \"" + "main" + "\"");
 				sb.append(", \"" + menuitemWindowOption + "\")'");
 			}
