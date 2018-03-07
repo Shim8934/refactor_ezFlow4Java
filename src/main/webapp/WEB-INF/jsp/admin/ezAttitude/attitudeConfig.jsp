@@ -27,8 +27,8 @@
 	    <h1>근태 규율 관리</h1>
 		<div id="mainmenu">
 			<ul>
-	        	<li style="background: none">
-				<span><b>회사선택</b></span>
+	        	<li style="background: none;">
+				<span style="border: none;"><b>회사선택</b></span>
 				</li>
 				<li>
 				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
@@ -38,6 +38,39 @@
 	      		<li><span onclick="save_config()">저장</span></li>
 	      	</ul>
 	  	</div>
-	        <iframe id = "MailEnv_ifrm" style ="width:100%;height:100%;" frameborder="0" ></iframe>
+		<table class="content" style="width:1000px">
+			<tr style="height:30px;">
+	        	<th style="width: 70px; text-align:center">
+					근무시간
+	            </th>
+	            <td style="width: 500px; text-align:center">
+	            	<input width="10px;"/>시<input width="10px;"/>분~<input width="10px;"/>시<input width="10px;"/>분
+	            </td>
+	        </tr>
+	        <tr style="height:30px;">
+	        	<th style="width: 70px; text-align:center">
+					휴무요일
+	            </th>
+	            <td style="width: 500px; text-align:center">
+	            	
+	            </td>
+	        </tr>
+	        <tr style="height:30px;">
+	        	<th style="width: 70px; text-align:center">
+					근태수정신청
+	            </th>
+	            <td style="width: 500px; text-align:center">
+	            	
+	            </td>
+	        </tr>
+	        <tr style="height:30px;">
+	        	<th style="width: 70px; text-align:center">
+					휴무일근태등록
+	            </th>
+	            <td style="width: 500px; text-align:center">
+	            	
+	            </td>
+	        </tr>
+		</table>
 	</body>
 </html>
