@@ -414,7 +414,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 			JSONParser parser = new JSONParser();
 			JSONObject object = (JSONObject)parser.parse(strJson);
 			
-			test = (JSONArray) object.get("resultLetterList");
+			test = (JSONArray) object.get("result");
 			
 			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1 || test.size() <= 0) {
 				throw new Exception("JGwServer ERROR");
@@ -447,7 +447,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 			JSONParser parser = new JSONParser();
 			JSONObject object = (JSONObject)parser.parse(strJson);
 			
-			test = (JSONObject) object.get("resultLetter");
+			test = (JSONObject) object.get("result");
 			
 			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1 || test.size() <= 0) {
 				throw new Exception("JGwServer ERROR");
