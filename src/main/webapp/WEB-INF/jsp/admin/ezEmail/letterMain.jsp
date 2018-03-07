@@ -28,11 +28,7 @@
 	        	if (companyID != document.getElementById("ListCompany").value ) {
 	        		companyID = document.getElementById("ListCompany").value;
 	        		
-	        		xmlhttp = createXMLHttpRequest();
-	    	        xmlhttp.open("POST", "/admin/ezEmail/letterBoxManager.do?companyId=" + companyID, true);
-	    	        xmlhttp.responseType = 'text';
-	    	        xmlhttp.send();
-	        		
+	        		document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterBoxManager.do?companyId=" + companyID;
 	        	}
 	        }
 	        
@@ -145,7 +141,7 @@
 	<body class="mainbody" style="height: 95%;">
 	    <h1><spring:message code='main.t374'/><span></span></h1>
 		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			    <select id="ListCompany" onclick="selectCompanyID()">
+			    <select id="ListCompany" onchange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 		        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>

@@ -112,7 +112,7 @@ public class EzEmailAdminLetterController {
 				
 		logger.debug("letterBoxManagerView ended.");
 		
-		return "/admin/ezEmail/letterBoxManager";
+		return "admin/ezEmail/letterBoxManager";
 		
 	}
 	
