@@ -70,7 +70,7 @@ public class EzAttitudeController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeConfig.do")
 	public String attitudeConfig(){
-		return "admin/ezAttitude/attitudeConfig";
+		return "/admin/ezAttitude/attitudeConfig";
 	}
 	
 }

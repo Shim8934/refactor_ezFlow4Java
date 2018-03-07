@@ -17,7 +17,7 @@
 				switch(idx)
 				{
 					case 1:
-						url = "";
+						url = "/admin/ezAttitude/attitudeConfig.do";
 						break;
 					case 2:
 						url = "";
