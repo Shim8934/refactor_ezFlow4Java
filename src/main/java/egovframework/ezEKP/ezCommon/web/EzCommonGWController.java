@@ -39,7 +39,7 @@ public class EzCommonGWController {
 			String property = request.getParameter("property");
 			
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			String propertyValue = ezCommonService.getTenantConfig(property, info.getTenantId());
 	
