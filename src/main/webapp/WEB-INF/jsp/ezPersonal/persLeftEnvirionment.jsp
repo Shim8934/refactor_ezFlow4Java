@@ -170,7 +170,7 @@
 	</head>
 	<body  class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 		<div id="left">
-			<div class="left_env"></div>
+			<div class="left_env"><span><spring:message code='ezBoard.t0005' /></span></div>
 			<c:if test="${packageType == 'standard'}">
 				<c:if test="${firstScreen_Mail != 'YES'}">
 					<c:choose>
