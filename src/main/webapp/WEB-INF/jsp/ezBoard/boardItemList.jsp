@@ -168,7 +168,11 @@
 		    	try {
 		    		leftDocument = $(window.parent.frames['left'].document);
 		    	} catch (e) {
-		    		leftDocument = $(window.parent.parent.frames['left'].document);
+		    		try {
+		    			leftDocument = $(window.parent.parent.frames['left'].document);
+		    		} catch (e) {
+		    			leftDocument = $(window.parent.parent.frames['board_menu'].document);
+		    		}
 		    	}
 		    	
 		    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
