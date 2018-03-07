@@ -14,26 +14,7 @@
 			<c:otherwise>
 				<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 			</c:otherwise>
-		</c:choose>
-		
-		<c:choose>
-			<c:when test="${lang == '2'}">
-				<style type="text/css">
-					#input_search { background:#f2f2f2 url(/../images/us/cm/input_search_bg.gif) no-repeat 0 0 }
-				</style>
-			</c:when>
-			<c:when test="${lang == '3'}">
-				<style type="text/css">
-					#input_search { background:#f2f2f2 url(/../images/jp/cm/input_search_bg.gif) no-repeat 0 0 }
-				</style>
-			</c:when>
-			<c:when test="${lang == '4'}">
-				<style type="text/css">
-					#input_search { background:#f2f2f2 url(/../images/cn/cm/input_search_bg.gif) no-repeat 0 0 }
-				</style>
-			</c:when>
-		</c:choose>
-	
+		</c:choose>	
         <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>			
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
