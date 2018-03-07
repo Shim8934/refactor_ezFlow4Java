@@ -20,7 +20,7 @@
 						url = "/admin/ezAttitude/attitudeConfig.do";
 						break;
 					case 2:
-						url = "";
+						url = "/admin/ezAttitude/attitudeUserConf.do";
 						break;
 					case 3:
 						url = "";
