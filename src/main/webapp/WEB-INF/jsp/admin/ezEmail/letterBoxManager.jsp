@@ -42,7 +42,9 @@
 	    var xmlhttp;
 	    var responseResult;
 	    var selectNode;
-	    var addCheck = 0; // 0이면 추가 가능, -1이면 불가능
+	    var addCheck = 0;
+	    var company;
+	    var returnCompany = '${companyId}';
 	    
 	    window.onload = window_onload;
 	    
@@ -53,7 +55,7 @@
 		function resultRead() {
 			$.ajax({
 				type : "POST",
-				url : "/admin/ezEmail/getLetterBox.do",
+				url : "/admin/ezEmail/getLetterBox.do?companyId=" + returnCompany,
 				datatype : 'json',
 				error : function(data) {
 					alert("error");
@@ -62,23 +64,31 @@
 				complete : function(data) {
 			        result = data.responseJSON;
 			        treeSet();
+			        setCompany();
 			    	treeView();
 			    	treeInit();
 			    }
 			});
 	    }
 	    
-	    function treeInit () {
+	    function treeInit() {
 	    	$("#divTree").on('ready.jstree', function (e, data) {
 	    		selectNode = data;
-	    		//$("#divTree").jstree('open_all');
-	    		//data.instance.open_node(["1"]);
-	    		data.instance.select_node(["1"]);
+	    		data.instance.select_node([treeCollection[0].id]);
 	    	});
+	    }
+	    
+	    function setCompany() {
+	    	company = treeCollection[0].company_id;
+	    	
+	    	if (company == null) {
+	    		company = "";
+	    	}
 	    }
 	    
 	    function treeOnclick() {
 	    	var parent;
+	    	var nodeId;
 	    	
 	    	$('#divTree').on('changed.jstree', function (e, data) {
 	    		
@@ -89,8 +99,8 @@
 	    			return;
 	    		}
 	    		
-	    		
 	    		selectNode = data;
+	    		nodeId = selectNode.node.id;
 	    		parent = selectNode.node.parent;
 	    		
 	    		if (parent == '#') {
@@ -98,8 +108,8 @@
 	    		}
 	    		
 	    		document.getElementById("parent_letterbox_no").value = parent;
-	    		document.getElementById("letterbox_no").value = selectNode.node.id;
-	    		//여기다가 비슷하게 회사 추가하기
+	    		document.getElementById("letterbox_no").value = nodeId;
+	    		document.getElementById("company_id").value = company;
 	    		
 	    		if (!(selectNode.node.id.indexOf('temp'))) {
 	    			// 편지지함이 임시 추가라면
@@ -163,18 +173,19 @@
 	    }
 	    
 	    function treeSet() {
-	    	var parentArray = [];
 	    	for(var i = 0; i < result.length; i++) {
-	    		var treeId = result[i].letterbox_no; //uuid
+	    		var treeId = result[i].letterbox_no;
 	    		var treeParent = result[i].parent_letterbox_no;
 	    		var treeText = result[i].displayname;
+	    		var companyId = result[i].company_id;
 	    		
 	    		if (treeParent == '0') {
-	    			treeParent = '#'; //root node
+	    			treeParent = '#'; 
 	    		}
 	    		
-	    		treeCollection.push({id:treeId, parent:treeParent, text:treeText});
+	    		treeCollection.push({id:treeId, parent:treeParent, text:treeText, company_id:companyId});
 	    	}
+	    	
 	    	
 	    }
 	    
@@ -194,7 +205,6 @@
 	    	treeOnclick();
 	    }
 	    
-	    // 임시 addLetterBox, 확인버튼을 눌러야 DB에 저장된다.
 	    function addLetterBox() {
 	    	
 	    	if (addCheck == -1) {
@@ -202,17 +212,16 @@
 	    		return;
 	    	}
 	    	
-	    	
-	    	// 여기 수정하기
 	    	var parent = selectNode.node.id;
 	    	var node = { id: 'temp', text:"편지지함"};
 	    	$('#divTree').jstree('create_node', parent, node, 'last');
 	    	
 	    	$("#divTree").jstree("open_node", $('#'+parent));
 	    	$("#divTree").jstree("select_node", $('#temp'));
-	    	document.getElementById("parent_letterbox_no").value = parent;
 	    	
-	    	//createLetterBox.do에는 letterbox_no을 넘기면 안된다
+	    	document.getElementById("parent_letterbox_no").value = parent;
+	    	document.getElementById("company_id").value = company;
+	    	
 	    	$("#letterbox_no").attr("disabled","disabled");
 	    	
 	    	addCheck = -1;
@@ -241,20 +250,17 @@
 	    
 	    function deleteLetterBox() {
 	    	var id = selectNode.node.id;
-	    	var realCheck = false; //삭제할껀지 안할껀지
+	    	var realCheck = false;
 	    	
-	    	if (id == '1') {
-	    		//최상위 루트는 삭제 불가
+	    	if (id == treeCollection[0].id) {
 	    		alert("기본편지지함은 삭제가 불가능합니다.");
 	    		return;
 	    	}
 	    	
 	    	if (selectNode.node.children.length != 0) {
-	    		//하위편지지함이 있을 경우
 	    		alert("하위 편지지함이 존재합니다. 하위편지지함을 삭제해주세요");
 	    		return;
 	    	} else {
-	    		//자식이 없으면 그냥 물어보기
 	    		var con = confirm("편지지함을 삭제하시겠습니까?");
 	    		if (con == true) {
 	    			realCheck = true;
@@ -271,12 +277,10 @@
 	    	
 	    }
 	    
-	    //method action
 	    function submitClick() {
 	    	var formData = $("#myForm").serialize();
 	    	var formUrl = "/admin/ezEmail/updateLetterBox.do";
 	    	if (document.getElementById("letterbox_no").disabled) {
-	    		//true이면 create로
 	    		formUrl = "/admin/ezEmail/createLetterBox.do";
 	    	}
 	    	
@@ -324,8 +328,8 @@
 				<b><spring:message code='main.t76'/></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="display" name="displayname" size="30"><br><br>
 				<b><spring:message code='main.t76'/>(<spring:message code='ezSchedule.t4014'/>)</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="display2" name="displayname2" size="30"><br>
 				<input type="hidden" id="letterbox_no" name="letterBoxNo">
-				<input type="hidden" id="company_id" name="companyID" value="S907001">
 				<input type="hidden" id="parent_letterbox_no" name="parentLetterBoxNo">
+				<input type="hidden" id="company_id" name="companyID">
 				<div style="position:absolute; bottom:20px; right:50px;"><input type="button" id="submitBtn" onclick="submitClick()" value=" 확인 "></div>
 			</form>
 		</div>

@@ -7,8 +7,9 @@ public interface EzEmailAdminLetterService {
 	
 	/**
 	 * 전체 편지지함 목록 조회(기본)
+	 * @param company_id, tenant_id
 	 */
-	public JSONArray selectAllLetterBox() throws Exception;
+	public JSONArray selectAllLetterBox(String company_id, String tenant_id) throws Exception;
 	
 	/**
 	 * 선택한 편지지함 조회
@@ -18,9 +19,9 @@ public interface EzEmailAdminLetterService {
 	
 	/**
 	 * 편지지함 추가
-	 * @param parent_letterbox_no, displayname, displayname2, company_id
+	 * @param parent_letterbox_no, displayname, displayname2, company_id, tenant_id
 	 */
-	public void insertLetterBox(String parent_letterbox_no, String displayname, String displayname2, String company_id) throws Exception;
+	public void insertLetterBox(String parent_letterbox_no, String displayname, String displayname2, String company_id, String tenant_id) throws Exception;
 	
 	/**
 	 * 편지지함 삭제 
@@ -30,9 +31,9 @@ public interface EzEmailAdminLetterService {
 	
 	/**
 	 * 편지지함 수정
-	 * @param String letterbox_no, String parent_letterbox_no, String displayname, String displayname2, String company_id
+	 * @param letterbox_no, parent_letterbox_no, displayname, displayname2, company_id, tenant_id
 	 */
-	public void updateLetterBox(String letterbox_no, String parent_letterbox_no, String displayname, String displayname2, String company_id) throws Exception;
+	public void updateLetterBox(String letterbox_no, String parent_letterbox_no, String displayname, String displayname2, String company_id, String tenant_id) throws Exception;
 	
 	/**
 	 * 편지지 순서 조회 (재은)

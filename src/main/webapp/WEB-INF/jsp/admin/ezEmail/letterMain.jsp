@@ -17,15 +17,22 @@
 	    	var companyID = "";
 	    	
 	        window.onload = function () {
+	        	companyID = document.getElementById("ListCompany").value;
 	        	Tab_init_select(document.getElementById("tagsub1"));
 	        	Tab1_NewTabIni("tab1");
 
-	        	companyID = document.getElementById("ListCompany").value;
+	        	
 	        };
 	        
 	        function selectCompanyID() {
-	        	if (selectID != document.getElementById("ListCompany").value ) {
+	        	if (companyID != document.getElementById("ListCompany").value ) {
 	        		companyID = document.getElementById("ListCompany").value;
+	        		
+	        		xmlhttp = createXMLHttpRequest();
+	    	        xmlhttp.open("POST", "/admin/ezEmail/letterBoxManager.do?companyId=" + companyID, true);
+	    	        xmlhttp.responseType = 'text';
+	    	        xmlhttp.send();
+	        		
 	        	}
 	        }
 	        
@@ -78,7 +85,7 @@
 	        	 
 	        	 switch (pSelectTab) {
 		            case "tagsub1": 
-		            	document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterBoxManager.do";
+		            	document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterBoxManager.do?companyId=" + companyID;
 		            	break;
 		            case "tagsub2":
 		            	document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterAdminPage.do";
@@ -138,14 +145,12 @@
 	<body class="mainbody" style="height: 95%;">
 	    <h1><spring:message code='main.t374'/><span></span></h1>
 		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			    <select id="ListCompany" onChange="selectCompanyID()">
+			    <select id="ListCompany" onclick="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 		        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 			    </select>
-		    </span>
-	        	
-		    </select><br>
+		    </span><br>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	        	<p><span id="tagsub1">편지지함<!-- spring message로 넣기 --></span></p>
