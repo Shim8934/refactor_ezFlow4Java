@@ -880,10 +880,10 @@
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="folder_ReadChange('R');HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/msg-rd.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.jyh01" /></span></td>
 		    </tr>
 		    <tr id="mailbox_export" <c:if test="${useMailBoxBackUp ne 'YES'}">style="display:none"</c:if>>
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_export();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_fw.gif" alt="" align="absmiddle" border="0" hspace="5"><spring:message code="ezEmail.lhm31" /></span></td>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_export();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_mailreply.gif" alt="" align="absmiddle" border="0" hspace="5"><spring:message code="ezEmail.lhm31" /></span></td>
 		    </tr>
 		    <tr id="mailbox_import" <c:if test="${useMailBoxBackUp ne 'YES'}">style="display:none"</c:if>>
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_import();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_mailreply.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.lhm32" /></span></td>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_import();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_fw.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.lhm32" /></span></td>
 		    </tr>
 		    </table>
 		</div>
