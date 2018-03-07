@@ -46,10 +46,10 @@
 		<div style="vertical-align: top; height: 440px; overflow: auto; width: 100%;" id="txtlist_Layer">
 			<table style="width:100%; border: 1px solid #B6B6B6;" class="mainlist">
 				<tr>
-				    <th style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t68'/></th>
-					<th style="width: 70px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></th>
-					<th style="width: 70px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></th>
-					<th style="width: 180px; font-weight: bold;"><spring:message code='main.t78'/></th>
+				    <th style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t68'/></th>
+					<th style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></th>
+					<th style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></th>
+					<th style="width: 40%; font-weight: bold;"><spring:message code='main.t78'/></th>
 		        </tr>
 		        <c:forEach items="${userList}" var="user">
 			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
@@ -71,7 +71,7 @@
 						<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${user.userImg }" width="90px" height="90px">
 						</c:if>
 						</div></td>
-						<td style="width: 300px;"><table class="organinfo">
+						<td style="width: 75%;"><table class="organinfo">
 								<tr>
 									<td class="name" style="text-align: left;">${user.userName }</td>
 								</tr>
