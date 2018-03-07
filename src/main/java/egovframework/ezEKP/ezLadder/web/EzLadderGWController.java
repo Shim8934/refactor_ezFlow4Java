@@ -101,7 +101,6 @@ public class EzLadderGWController {
 		logger.debug("web G/W LADDER [GET /ladder/search/" + allData.get(0) + "/" + allData.get(1) + "/" + allData.get(2) + "/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
-		String mode= "part";
 		try {
 			List<LadderVO> list;
 							// 전체 참여자 선택
@@ -449,22 +448,27 @@ public class EzLadderGWController {
 	/**
 	 * 사디리 삭제 
 	 */
-	@RequestMapping(value = "ladder/ladders/{ladderId}/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8") 
-	public JSONObject gwDeleteLadderList(@PathVariable String ladderId , @PathVariable String userId) {
-		logger.debug("web G/W LADDER [DELETE /ladder/ladders/" + ladderId+ "users/" + userId + "] started.");
-		
+	@RequestMapping(value = "ladder/ladders/delete/{allData}/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
+	public JSONObject gwDeleteLadderList(@PathVariable List<String> allData,  @PathVariable String userId,  HttpServletRequest request) {
+
+		logger.debug("web G/W LADDER [GET /ladder/search/" + allData.get(0) + "/" + allData.get(1) + "/" + allData.get(2) + "/" + allData.get(3) + "/" + userId + "] started.");
+
 		JSONObject result = new JSONObject();
 		
 		try {
+			List<LadderVO> list;
+							// 전체 참여자 선택
+			list = ezLadderService.deleteLadderList(userId, allData);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", null);
+			result.put("data", list);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [DELETE /ladder/ladders/" + ladderId + "users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [GET /ladder/search/" + allData.get(0) + "/" + allData.get(1) + "/" + allData.get(2) + "/" + allData.get(3) + "/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -495,7 +499,7 @@ public class EzLadderGWController {
 	/**
 	 * 사다리게임 시작
 	 */
-	@RequestMapping(value = "ladder/ladders/{ladderId}/users/{writerId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
+	@RequestMapping(value = "ladder/ladders/{allData}/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
 	public JSONObject gwSetLadderStart(@PathVariable String ladderId , @PathVariable String writerId) {
 		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId+ "users/" + writerId + "] started.");
 		

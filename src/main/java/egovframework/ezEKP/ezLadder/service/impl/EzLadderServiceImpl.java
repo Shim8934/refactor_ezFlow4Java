@@ -54,7 +54,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 		Map<String,Object> map = new HashMap<String, Object>();	
 		String searchSelect = allData.get(0).substring(1);
-		String searchInput = allData.get(1);
+		String searchInput = allData.get(1).trim();
 		String mode = allData.get(2).substring(0,allData.get(2).length()-1);
 		
 		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
@@ -176,9 +176,42 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public void deleteLadder(String userId, int ladderId) throws Exception {
-		// TODO Auto-generated method stub
+	public List<LadderVO> deleteLadderList(String userId, List<String> allData) throws Exception {
+		logger.debug("deleteLadder started.");
 		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		String ladderId = allData.get(0).substring(1);
+		String searchSelect = allData.get(1);
+		String searchInput = allData.get(2).trim();
+		String mode = allData.get(3).substring(0,allData.get(3).length()-1);
+		
+		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
+		
+		map.put("userId", userId);
+		map.put("searchSelect", searchSelect);
+		map.put("searchInput", searchInput);
+		map.put("mode", mode);
+		map.put("ladderId", ladderId);
+		
+		// mode가 참여인지, 일부인지에 따라
+		ezLadderDAO.deleteLadderList(map);
+		
+		List<LadderVO> list = null;
+		if(mode.equals("part")) {		// 참여버튼 검색
+			if(searchSelect.equals("none")) {
+				list = ezLadderDAO.getPartLadderList(map);		// 검색이 아닐 때
+			} else {
+				list = ezLadderDAO.searchPartLadderList(map);	// 검색시
+			}
+		} else {						// 전체버튼 검색
+			if(searchSelect.equals("none")) {
+				list = ezLadderDAO.getLadderList(map);			// 검색이 아닐 때
+			} else {
+				list = ezLadderDAO.searchAllLadderList(map);	// 검색시
+			}
+		}
+		logger.debug("deleteLadder ended.");
+		return list;
 	}
 
 	@Override

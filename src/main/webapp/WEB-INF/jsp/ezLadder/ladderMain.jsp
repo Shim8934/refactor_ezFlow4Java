@@ -19,14 +19,18 @@
 			if(mode==null) {
 				mode = "all";
 			}
-			var searchSelect;
-			var searchInput;
-			
+			var searchSelect = "none";
+			var searchInput = "input";
+			var allData = [];
+			var id;
+			$(function(){
+				id = "${id}";
+			});
 			function searchLadder() {
 				searchSelect = document.getElementById("searchOption").value;
 				searchInput = document.getElementById("searchInput").value;
 				
-				var allData = [searchSelect, searchInput, mode];
+				allData = [searchSelect, searchInput, mode];
 				
 				jQuery.ajaxSettings.traditional = true;
 				
@@ -94,21 +98,48 @@
 							"<th width='50px'><spring:message code='ezLadder.t007'/></th>" +
 							"<th width='50px'><spring:message code='ezLadder.t008'/></th></tr>";
 				if (data.list.length > 0) {
+					
 					$.each(data.list, function(key, value) {
+						
 						list += "<tr class='white'>" +
 								"<td>" + value.type + "</td>" +
 								"<td>" + value.title + "</td>" +
 								"<td>" + value.writerName + "</td>" +
 								"<td>" + value.writeDate.substring(0,16) + "</td>" +
 								"<td>" + value.status + "</td>" +
-								"<td>" + value.secretFlag + "</td>" +
-								"<td>" + value.deleteFlag + "</td></tr>";
+								"<td>" + value.secretFlag + "</td>"; 
+								if(id == value.writerId) {
+									list += "<td><a href='#' onclick='deleteLadder(" + value.ladderId + ")'>" + value.deleteFlag + "</a></td></tr>";
+								} else {
+									list += "<td>" + value.deleteFlag + "</td></tr>";
+								}
 					});
 				} else {
 					list += "<tr><td colspan='7' align='center' bgcolor='#FFFFFF'> <spring:message code='ezLadder.t010' /></td></tr>";
 				}
 				list+="</table>";
 				$("#divList").html(list);
+			}
+			
+			function deleteLadder(ladderId) {
+
+				allData = [ladderId, searchSelect, searchInput, mode];
+				
+				jQuery.ajaxSettings.traditional = true;
+				if(confirm('삭제 하시겠습니까?')) {
+					$.ajax({
+						type : "GET",
+						dataType : "json",
+						async : false,
+						url : "/ezLadder/deleteLadder.do",
+						data : {
+							"allData":allData
+						},
+						success: function(data) {
+							viewList(data);
+						}
+					});
+				}
 			}
 		</script>
 	</head>
@@ -156,7 +187,14 @@
 						<td>${vo.writeDate.substring(0,16) }</td>
 						<td>${vo.status }</td>
 						<td>${vo.secretFlag }</td>
-						<td>${vo.deleteFlag }</td>
+					<c:choose>
+						<c:when test="${id eq vo.writerId}">
+							<td><a href="#" onclick="deleteLadder(${vo.ladderId})">${vo.deleteFlag }</a></td>
+						</c:when>
+						<c:otherwise>
+							<td>${vo.deleteFlag }</td>
+						</c:otherwise>
+					</c:choose>
 					</tr>
 				</c:forEach>
 		        

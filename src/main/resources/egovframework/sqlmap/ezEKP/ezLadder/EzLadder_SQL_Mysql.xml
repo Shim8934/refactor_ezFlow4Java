@@ -89,14 +89,23 @@
 	
 	<select id="EzLadderDAO.getLadderList" resultClass="LadderVO">
 		<![CDATA[
-			SELECT 
-				A.TYPE, 
-				A.TITLE, 
-				A.WRITERNAME, 
-				A.WRITEDATE, 
-				A.STATUS, 
-				A.SECRETFLAG, 
-				A.DELETEFLAG
+			SELECT
+				E.LADDERID, 
+				E.TYPE, 
+				E.TITLE,
+				E.WRITERID, 
+				E.WRITERNAME, 
+				E.WRITEDATE, 
+				E.STATUS, 
+				E.SECRETFLAG, 
+				E.DELETEFLAG
+			FROM
+				TBL_LADDER E
+			WHERE 
+				E.DELETEFLAG = 0 AND E.LADDERID in
+			(
+			SELECT
+				A.LADDERID
 			FROM 
 				TBL_LADDER A
 			WHERE 
@@ -113,17 +122,20 @@
 													C.USERID = #userId#)
 			OR
 				A.WRITERID = #userId# 
-			ORDER BY 
-				A.LADDERID 
-			DESC;
+            )
+            ORDER BY 
+				E.LADDERID 
+			DESC
 		]]>
 	</select>
 	
 	<select id="EzLadderDAO.getPartLadderList" resultClass="LadderVO">
 		<![CDATA[
-			SELECT 
+			SELECT
+				A.LADDERID, 
 				A.TYPE, 
-				A.TITLE, 
+				A.TITLE,
+				A.WRITERID, 
 				A.WRITERNAME, 
 				A.WRITEDATE, 
 				A.STATUS, 
@@ -131,7 +143,9 @@
 				A.DELETEFLAG
 			FROM 
 				TBL_LADDER A
-			WHERE 
+			WHERE
+				A.DELETEFLAG = 0
+			AND 
 				A.LADDERID = ANY(
 								SELECT 
 									B.LADDERID 
@@ -145,16 +159,18 @@
 									C.USERID = #userId#) 
 			ORDER BY 
 				A.LADDERID 
-			DESC;
+			DESC
 		]]>
 	</select>
 	
 	<select id="EzLadderDAO.searchPartLadderList" resultClass="LadderVO">
 		<isEqual property="searchSelect" compareValue="participant">
 		<![CDATA[
-			SELECT 
+			SELECT
+				A.LADDERID, 
 				A.TYPE, 
-				A.TITLE, 
+				A.TITLE,
+				A.WRITERID, 
 				A.WRITERNAME, 
 				A.WRITEDATE, 
 				A.STATUS, 
@@ -166,7 +182,9 @@
 				TBL_LADDER_LINE D
 			ON
 				A.LADDERID = D.LADDERID
-			WHERE 
+			WHERE
+				A.DELETEFLAG = 0
+			AND 
 				A.LADDERID = ANY(
 								SELECT 
 									B.LADDERID 
@@ -184,14 +202,16 @@
 			LIKE CONCAT('%', #searchInput#, '%')
 			ORDER BY 
 				A.LADDERID 
-			DESC;
+			DESC
 		]]>
 		</isEqual>
 		<isNotEqual property="searchSelect" compareValue="participant">
 			<![CDATA[
-				SELECT 
+				SELECT
+					A.LADDERID, 
 					A.TYPE, 
-					A.TITLE, 
+					A.TITLE,
+					A.WRITERID, 
 					A.WRITERNAME, 
 					A.WRITEDATE, 
 					A.STATUS, 
@@ -199,7 +219,9 @@
 					A.DELETEFLAG
 				FROM 
 					TBL_LADDER A
-				WHERE 
+				WHERE
+					A.DELETEFLAG = 0
+				AND 
 					A.LADDERID = ANY(
 									SELECT 
 										B.LADDERID 
@@ -234,9 +256,9 @@
 				]]>	  
 				</isEqual>
 				<![CDATA[
-				ORDER BY 
-					A.LADDERID 
-				DESC;
+					ORDER BY 
+						A.LADDERID 
+					DESC
 				]]>
         </isNotEqual> 
 	</select>
@@ -244,9 +266,11 @@
 	<select id="EzLadderDAO.searchAllLadderList" resultClass="LadderVO">
 		<isEqual property="searchSelect" compareValue="participant">
 		<![CDATA[
-			SELECT 
+			SELECT
+				D.LADDERID, 
 				D.TYPE, 
-				D.TITLE, 
+				D.TITLE,
+				D.WRITERID, 
 				D.WRITERNAME, 
 				D.WRITEDATE, 
 				D.STATUS, 
@@ -259,6 +283,8 @@
 			ON
 				D.LADDERID = E.LADDERID
 			WHERE
+				D.DELETEFLAG = 0
+			AND
 				D.LADDERID IN 
 							(
 							SELECT 
@@ -285,14 +311,16 @@
 			LIKE CONCAT('%', #searchInput#, '%')
 			ORDER BY
 				D.LADDERID
-			DESC;
+			DESC
 		]]>
 		</isEqual>
 		<isNotEqual property="searchSelect" compareValue="participant">
 			<![CDATA[
-				SELECT 
+				SELECT
+					D.LADDERID, 
 					D.TYPE, 
-					D.TITLE, 
+					D.TITLE,
+					D.WRITERID, 
 					D.WRITERNAME, 
 					D.WRITEDATE, 
 					D.STATUS, 
@@ -301,6 +329,8 @@
 				FROM
 					TBL_LADDER D
 				WHERE
+					D.DELETEFLAG = 0
+				AND
 					D.LADDERID IN 
 								(
 								SELECT 
@@ -345,9 +375,9 @@
 				]]>	  
 				</isEqual>
 				<![CDATA[
-				ORDER BY 
-					D.LADDERID 
-				DESC;
+					ORDER BY 
+						D.LADDERID 
+					DESC
 				]]>
         </isNotEqual> 
 	</select>
@@ -372,5 +402,37 @@
 			WHERE 
 				WRITERID = #writerId#
 		</selectKey>
-	</insert> 
+	</insert>
+	
+	<update id="EzLadderDAO.deleteLadderList" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_LADDER
+			SET
+				DELETEFLAG = 1
+			WHERE
+				WRITERID = #userId#
+			AND
+				LADDERID = #ladderId#
+		]]>
+	</update>
+	
+	<select id="EzLadderDAO.ladderContent" resultClass="LadderVO" parameterClass="map">
+		<![CDATA[
+			SELECT
+				LADDERID, 
+				TYPE, 
+				TITLE,
+				WRITERID, 
+				WRITERNAME, 
+				WRITEDATE, 
+				STATUS, 
+				SECRETFLAG, 
+				DELETEFLAG
+			FROM
+				TBL_LADDER 
+			WHERE
+				LADDERID = #ladderId#
+		]]>
+	</select> 
 </sqlMap>

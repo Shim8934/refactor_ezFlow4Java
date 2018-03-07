@@ -139,5 +139,5 @@ public class LadderVO {
 	public void setDeleteDate(String deleteDate) {
 		this.deleteDate = deleteDate;
 	}
-	
+
 }

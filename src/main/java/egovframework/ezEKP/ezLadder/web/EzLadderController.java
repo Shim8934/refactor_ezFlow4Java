@@ -96,7 +96,7 @@ public class EzLadderController {
 	
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
-			
+			model.addAttribute("id", userInfo.getId());
 			model.addAttribute("list", list);
 		} else {
 			return "error";
@@ -584,12 +584,13 @@ public class EzLadderController {
 	 *
 	 */
 	@RequestMapping(value = "/ezLadder/deleteLadder.do")
-	public String deleteLadderList(@CookieValue("loginCookie") String loginCookie, String ladderId, HttpServletRequest request, Model model) throws Exception {
+	public String deleteLadderList(@RequestParam(value="allData") List<String> allData, @CookieValue("loginCookie") String loginCookie, String ladderId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("ezLadder/deleteLadder.do started.");
+		logger.debug("ladderId : " + allData.get(0), ", searchSelect : " + allData.get(1) + ", searchInput " + allData.get(2) +  ", mode : " + allData.get(3));
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladders/" + ladderId + "users/" + userInfo.getId();
+		String url = gwServerUrl + "/ladder/ladders/delete/" + allData + "/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -601,7 +602,7 @@ public class EzLadderController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
@@ -611,7 +612,6 @@ public class EzLadderController {
 	
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
-			
 			model.addAttribute("list", list);
 		} else {
 			return "error";
