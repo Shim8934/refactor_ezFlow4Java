@@ -2761,7 +2761,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			String useKukudocs = ezCommonService.getTenantConfig("USE_KUKUDOCS", info.getTenantId());
+			String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
 			String pAttachListHtmlSub = null;
 			
 			List<String> bodyInfoList = null;
@@ -3168,7 +3168,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("isSentItems", isSentItems);
 			mail.put("pnFlag", pnFlag);
 			mail.put("pIsCCFg", pIsCCFg);
-			mail.put("useKukudocs", useKukudocs);
+			mail.put("useMobileViewer", useMobileViewer);
 			
 			if (bodyInfoList != null) { 
 				String htmlBody = bodyInfoList.get(0);
@@ -3232,7 +3232,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
-			String useKukudocs = ezCommonService.getTenantConfig("USE_KUKUDOCS", info.getTenantId());
+			String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
 			
 			LOGGER.debug("userEmail=" + userEmail);
 			
@@ -3311,7 +3311,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							data.put("bytes", bytes);
 							data.put("filename",filename);
 							data.put("filetype",part.getContentType());
-							data.put("useKukudocs", useKukudocs);
+							data.put("useMobileViewer", useMobileViewer);
 							
 							result.put("status", "ok");
 							result.put("code", 0);			
