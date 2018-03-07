@@ -2698,14 +2698,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String cn = request.getParameter("cn");
+		String memberId = request.getParameter("cn");
 		String jobTile = request.getParameter("jobTitle") == null ? "" : request.getParameter("jobTitle");
 		String jobTile2 = request.getParameter("jobTitle2") == null ? "" : request.getParameter("jobTitle2");
 		String jobPostion = request.getParameter("jobPosition") == null ? "" : request.getParameter("jobPosition");
 		String jobPostion2 = request.getParameter("jobPosition2") == null ? "" : request.getParameter("jobPosition2");
 		
 		logger.debug("mailSaveDistributionList started.");
-		logger.debug("cn=" + cn + ", jobTile=" + jobTile + ", jobTile2=" + jobTile2 + ", jobPosition=" + jobPostion + ",jobPostion2=" + jobPostion2);
+		logger.debug("memberId=" + memberId + ", jobTile=" + jobTile + ", jobTile2=" + jobTile2 + ", jobPosition=" + jobPostion + ",jobPostion2=" + jobPostion2);
 		
 		int tenantID = auth.getTenantId();
 		
@@ -2716,26 +2716,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		try {
 			
-			List<MailDistributionVO> distributionList = new ArrayList<MailDistributionVO>();
+			int  isUserName = -1;
 			
 			if (jobTile2 != null) {
-				 distributionList = ezEmailService.getDistributionSearchList(companyId, tenantID, jobTile);
-				 
-				 if (distributionList != null && distributionList.size() == 3) {//직책 이름으로 공용 배포그룹 존재시
-					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, jobTile2, companyId, tenantID, cn);
+				isUserName = ezOrganAdminService.getDistributionUserName(companyId, tenantID, jobTile);
+
+				 if ( isUserName > -1 ) {//직위 이름으로 공용 배포그룹 존재시
+					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, jobTile2, companyId, tenantID, memberId);
 				 } else {
-					 result = ezOrganAdminService.mailAddDistributionList(domain, jobTile, jobTile2, companyId, tenantID, cn);
+					 result = ezOrganAdminService.mailAddDistributionList(domain, jobTile, jobTile2, companyId, tenantID, memberId);
 				 }
 				 
 			}
 			
 			if (jobPostion2 != null) {
-				 distributionList = ezEmailService.getDistributionSearchList(companyId, tenantID, jobPostion);
+				isUserName = ezOrganAdminService.getDistributionUserName(companyId, tenantID, jobPostion);
 				 
-				 if (distributionList != null && distributionList.size() == 3) {//직위 이름으로 공용 배포그룹 존재시
-					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, cn);
+				 if ( isUserName > -1 ) {//직책 이름으로 공용 배포그룹 존재시
+					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, memberId);
 				 } else {
-					 result = ezOrganAdminService.mailAddDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, cn);
+					 result = ezOrganAdminService.mailAddDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, memberId);
 				 }
 			}
 			
@@ -2743,8 +2743,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		logger.debug("mailSaveDistributionList ended.");
 		
+		logger.debug("result=" + result);
+		logger.debug("mailSaveDistributionList ended.");
 		return result;
 	}
 	

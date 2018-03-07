@@ -16,6 +16,7 @@ import javax.naming.directory.DirContext;
 import javax.xml.bind.ParseConversionEvent;
 
 import org.bouncycastle.util.encoders.UrlBase64Encoder;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -1144,7 +1146,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Override
 	public String mailAddDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception {
 		logger.debug("mailAddDistributionList started.");
-		logger.debug("domain=" + domain + "job=" + job + "job2=" + job2 + "companyId=" + companyId + "tenantID=" + tenantID);
+		logger.debug("domain=" + domain + ",job=" + job + ",job2=" + job2 + ",companyId=" + companyId + ",tenantID=" + tenantID + ",cn=" + cn);
 		
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
 		String result = "ERROR";
@@ -1181,31 +1183,31 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				 + URLEncoder.encode(domain, "UTF-8") + "&memberId="
 				 + URLEncoder.encode(cn, "UTF-8");
 		 
-			 logger.debug("inputParams=" + inputParams);
+		logger.debug("inputParams=" + inputParams);
 			 
-			 String requestURL = config.getProperty("config.JGWServerURL")
-					 +"jMochaAccess/setDistributionList";
-			 String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		String requestURL = config.getProperty("config.JGwServerURL")
+					 + "/jMochaAccess/setDistributionList";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 			 
-			 logger.debug("response=" + response);
+		logger.debug("response=" + response);
 			 
-			 if (response != null) {
-				 JSONParser jsonParser = new JSONParser();
-				 JSONObject responseObj = (JSONObject) jsonParser.parse(response);
-				 String resultCode = (String) responseObj.get("resultCode");
-				 if (resultCode.equals("OK")) {	
-						reasonCode = ((Long) responseObj.get("reasonCode"))
-								.intValue();
-					}
-			 }
+		if (response != null) {
+			 JSONParser jsonParser = new JSONParser();
+			 JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+			 String resultCode = (String) responseObj.get("resultCode");
+			 if (resultCode.equals("OK")) {	
+					reasonCode = ((Long) responseObj.get("reasonCode"))
+							.intValue();
+				}
+		 }
 			 
-			if (reasonCode == 0) {
-					result = "OK";
-			} else if (reasonCode == -1) {
-					result = "GROUP_NAME";
-			} else if (reasonCode == -2) {
-					result = "GROUP_ID";
-			}
+		if (reasonCode == 0) {
+			result = "OK";
+		} else if (reasonCode == -1) {
+				result = "GROUP_NAME";
+		} else if (reasonCode == -2) {
+				result = "GROUP_ID";
+		}
 			 
 		logger.debug("result= " + result);
 		logger.debug("mailAddDistributionList ended.");
@@ -1215,15 +1217,50 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 	@Override
 	public String mailUpdateDistributionList(String domain, String job, String job2, String companyId, int tenantID,
-			String cn) throws Exception {
+			String memberId) throws Exception {
 		logger.debug("mailUpdateDistributionList started.");
-		logger.debug("domain=" + domain + "job=" + job + "job2=" + job2 + "companyId=" + companyId + "tenantID=" + tenantID);
+		logger.debug("domain=" + domain + ",job=" + job + ",job2=" + job2 + ",companyId=" + companyId + ",tenantID=" + tenantID + ",memberId=" + memberId);
 		
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
 		String bizmekaResult = "ERROR";
 		String result = "ERROR";
 		List<String> memberList = new ArrayList<String>();
 		int reasonCode = -100;
+		String inputParams = "";
+		String requestURL = "" ;
+		String response = "" ;
+		String[] arrAddress = null;
+		
+		inputParams = "userName="
+			+ URLEncoder.encode(job2, "UTF-8") + "&domainName="
+			+ URLEncoder.encode(domain, "UTF-8");
+		
+		logger.debug("inputParams=" + inputParams);
+
+		 requestURL = config.getProperty("config.JGwServerURL")
+			+ "/jMochaAccess/getTargetAddress";
+		 response = ezEmailUtil.getWebServiceResult(requestURL,
+				inputParams);
+		
+		 logger.debug("response=" + response);
+		 
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject resopnseObj = (JSONObject) jsonParser.parse(response);
+			String targetAddress = (String) resopnseObj.get("targetAddress");
+			
+			if (!targetAddress.equals("")) {
+				arrAddress = targetAddress.split(";");
+				
+				for (int i = 0 ; i < arrAddress.length ; i++) {
+					int idx = arrAddress[i].indexOf("@");
+					memberList.add(arrAddress[i].substring(0, idx));
+				}
+			} 
+			memberList.add(memberId);
+		} 
+		
+		logger.debug("meberId=" + memberList.toString());
 		
 		if (useBizmekaSpambox.equals("YES")) {
 			String bizmekaAdminId = ezCommonService.getTenantConfig(
@@ -1233,31 +1270,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			String bizmekaCompanyId = ezCommonService.getTenantConfig(
 					"BizmekaCompanyId", tenantID);
 			
-			String inputParams = "cn="
-					+ URLEncoder.encode(job2, "UTF-8") + "&domain"
-					+ URLEncoder.encode(domain, "UTF-8");
-			
-			String requestURL = config.getProperty("config.JGwServerURL")
-					+ "/jMochaAccess/getTargetAddress";
-			String response = ezEmailUtil.getWebServiceResult(requestURL,
-					inputParams);
-			String[] arrAddress = null;
-
-			if (response != null) {
-				JSONParser jsonParser = new JSONParser();
-				JSONObject resopnseObj = (JSONObject) jsonParser.parse(response);
-				String targetAddress = (String) resopnseObj.get("targetAddress");
-				
-				if (targetAddress.length() > -1 && targetAddress.contains(";")) {
-					arrAddress = targetAddress.split(";");
-					
-					for (int i = 0 ; i < arrAddress.length ; i++) {
-						int idx = arrAddress[i].indexOf("@");
-						memberList.add(arrAddress[i].substring(0, idx));
-					}
-					memberList.add(cn);
-				}
-			}
 			
 			bizmekaResult = ezEmailUtil.bizmekaEditDistributionList(
 					bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId,
@@ -1271,24 +1283,24 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
 		}
 
-		String inputParams = "companyId="
+		 inputParams = "companyId="
 				+ URLEncoder.encode(companyId, "UTF-8") + "&cn="
-				+ URLEncoder.encode(cn, "UTF-8") + "&name="
+				+ URLEncoder.encode(job2, "UTF-8") + "&name="
 				+ URLEncoder.encode(job, "UTF-8") + "&id="
 				+ URLEncoder.encode(job2, "UTF-8") + "&domain="
 				+ URLEncoder.encode(domain, "UTF-8");
-
+		 
 		for (int i = 0; i < memberList.size(); i++) {
 			inputParams += "&memberId="
 					+ URLEncoder.encode(memberList.get(i), "UTF-8");
 		}
-
+		
 		logger.debug("inputParams=" + inputParams);
 
-		String requestURL = config.getProperty("config.JGwServerURL")
-				+ "/jMochaAccess/updateDistributionList";
-		String response = ezEmailUtil.getWebServiceResult(requestURL,
-				inputParams);
+		requestURL = config.getProperty("config.JGwServerURL")
+			+ "/jMochaAccess/updateDistributionList";
+		response = ezEmailUtil.getWebServiceResult(requestURL,
+			inputParams);
 
 		logger.debug("response=" + response);
 
@@ -1316,5 +1328,54 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("mailUpdateDistributionList ended.");
 		
 		return result;
+	}
+
+	@Override
+	public int getDistributionUserName (String companyId, int tenantId,  String groupName) throws Exception {
+		logger.debug("getDistributionUserName started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",groupName=" + groupName);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		inputParams += "&domainName=" + URLEncoder.encode(domain, "UTF-8");
+		inputParams += "&groupName=" + URLEncoder.encode(groupName, "UTF-8");
+		
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionUserName";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100;
+		String userName = "";
+		int isUserName = -1;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					userName = (String) responseObj.get("userName");
+					
+					if (!userName.equals("")) {
+						isUserName = 1;
+					}
+				}
+			}
+		}
+
+		logger.debug("resultCode=" + resultCode + ",reasonCode=" + reasonCode + ",userName=" + userName);
+		logger.debug("isUserName=" + isUserName);
+		logger.debug("getDistributionUserName ended.");
+
+		return isUserName;
 	}
 }

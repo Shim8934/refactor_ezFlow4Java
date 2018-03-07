@@ -87,4 +87,6 @@ public interface EzOrganAdminService {
 	public String mailAddDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
 	
 	public String mailUpdateDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
+	
+	public int getDistributionUserName (String companyId, int tenantId, String groupName) throws Exception;
 }
