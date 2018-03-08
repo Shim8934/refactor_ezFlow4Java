@@ -601,12 +601,12 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
 			String userId = request.getParameter("userId");
-			String userName = request.getParameter("userName");
-			String deptName = request.getParameter("deptName");
+			String searchUserName = request.getParameter("searchUserName");
+			String searchDeptName = request.getParameter("searchDeptName");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(info.getTenantId(), companyId, "", "");
+			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(info.getTenantId(), companyId, searchUserName, searchDeptName);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

@@ -13,6 +13,12 @@
     <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
     <script type="text/javascript">
     	var pCompanyId = ""; //현재 선택된 회사의 아이디
+    	var searchUserName = ""; // 검색조건 (사원명)
+    	var searchDeptName = ""; // 검색조건 (부서명)
+    	
+    	window.onload = function(){
+    		company_change();
+    	}
     	
     	function company_change(){
     		pCompanyId = $("select[name=ListCompany]").val();
@@ -25,7 +31,7 @@
     			dataType : "json",
     			async : false,
     			url : "/admin/ezAttitude/attitudeUserConfList.do",
-    			data : {companyId : pCompanyId},
+    			data : {companyId : pCompanyId, userName : searchUserName, deptName : searchDeptName},
     			success : function(result){
     				getUserConfList_after(result);
     			}
@@ -34,6 +40,8 @@
     	
     	function getUserConfList_after(result){
     		var resultHtml = "";
+    		searchUserName = "";
+    		searchDeptName = "";
     		$(".mainlist tbody").html("");
     		
     		for(var resultLeng = 0; resultLeng < result.length; resultLeng ++){
@@ -54,18 +62,27 @@
     		makePageSelPageAtti();
     	}
     	
-    	function searchUserConf(){
+    	function searchUserConf(searchFlag){
     		if($("#layer_popup").css("display") == "none"){
     			$("#layer_popup").css("display", "");
     		} else {
     			$("#layer_popup").css("display", "none");
+    		}
+    		
+    		if (searchFlag) {
+    			searchUserName = $("#txtUserName").val();
+    			searchDeptName = $("#txtDeptName").val();
+    			$("#txtUserName").val("");
+    			$("#txtDeptName").val("");
+    			
+    			getUserConfList();
     		}
     	}
     	
     	function userConfAddModify(){
     		if (CrossYN()) {
     			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
-    			OpenWin = GetOpenWindow("url", "", , );
+    			OpenWin = GetOpenWindow("url", "", "", "");
     			try { OpenWin.focus();} catch (e) { }
     		} else {
     			showModalDialog("url", null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
@@ -93,7 +110,7 @@
 	  	<div id="mainmenu">
 	  		<ul class="on">
 	  			<li class="off"><span onclick="userConfAddModify()">추가/변경</span></li>
-	  			<li class="off"><span onclick="searchUserConf()">검색</span></li>
+	  			<li class="off"><span onclick="searchUserConf(false)">검색</span></li>
 	  		</ul>
 	  	</div>
 	  	<div id="layer_popup" style="width: 500px; position: absolute; left: 10px; top: 130px; background-color: rgb(255, 255, 255); display:none;">
@@ -116,8 +133,8 @@
 	  					<tbody>
 	  						<tr>
 	  							<td style="text-align:center">
-	  								<a class="imgbtn"><span onclick="">검색</span></a>
-	  								<a class="imgbtn"><span onclick="">취소</span></a>
+	  								<a class="imgbtn"><span onclick="searchUserConf(true)">검색</span></a>
+	  								<a class="imgbtn"><span onclick="searchUserConf(false)">취소</span></a>
 	  							</td>
 	  						</tr>
 	  					</tbody>

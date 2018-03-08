@@ -105,8 +105,8 @@ public class EzAttitudeAdminBHSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String companyId = request.getParameter("companyId");
-		String userName = request.getParameter("userName");
-		String deptName = request.getParameter("deptName");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
 		String userId = userInfo.getId();
 		
 		LOGGER.debug(companyId);
@@ -121,8 +121,8 @@ public class EzAttitudeAdminBHSController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
-				.queryParam("userName", userName)
-				.queryParam("deptName", deptName)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
 				.queryParam("userId", userId);
 		
 		RestTemplate rest = new RestTemplate();

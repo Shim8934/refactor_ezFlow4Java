@@ -56,11 +56,11 @@
 		<isNotEmpty prepend="AND" property="companyId">
 			A.COMPANYID = #companyId#
 		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="deptName">
-			B.DESCRIPTION = #deptName#
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			B.DESCRIPTION = #searchDeptName#
 		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="userName">
-			B.DISPLAYNAME = #userName#
+		<isNotEmpty prepend="AND" property="searchUserName">
+			B.DISPLAYNAME = #searchUserName#
 		</isNotEmpty>
 	</select>
 </sqlMap>
