@@ -2049,13 +2049,31 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				sb.append(getUtilImageHTML(menuitemDisplayName, pCallingMenuID, menuitemImageUID, lastLogout, pUID, userInfo) + "\n");
 			} else {
 				if (menuitemLinkURL != null && !menuitemLinkURL.equals("")) {
-					if (i == result.size() - 1) {
-						sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");
+					/* 2018-03-06 장진혁 유틸메뉴 이미지화 작업 */
+					String defaultIcon = "";
+					
+					if (menuitemLinkURL.equals("/admin/main.do")) {
+						defaultIcon = "/images/kr/main/admin.png";
+					} else if (menuitemLinkURL.equals("/ezPersonal/personSearch.do")) {
+						defaultIcon = "/images/kr/main/person.png";
+					} else if (menuitemLinkURL.equals("/ezPortal/environmentMain.do")) {
+						defaultIcon = "/images/kr/main/env.png";
+					} else if (menuitemLinkURL.equals("/ezPortal/help/help.do")) {
+						defaultIcon = "/images/kr/main/help.png";
+					} else if (menuitemLinkURL.equals("/user/login/actionLogout.do")) {
+						defaultIcon = "/images/kr/main/logout.png";
 					} else {
-						sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+						defaultIcon = "/images/kr/main/common.png";
+					}
+					
+					if (i == result.size() - 1) {
+						/*sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");*/						
+						sb.append("<li><img src='" + defaultIcon + "' style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"' title='" + menuitemDisplayName +"' /></li>\n");
+					} else {
+						sb.append("<li><img src='" + defaultIcon + "' style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 						sb.append(", \"" + menuitemLinkLocation + "\"");
                         //sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
-						sb.append(", \"" + menuitemWindowOption + "\")'>" + menuitemDisplayName + "</span></li>\n");
+						sb.append(", \"" + menuitemWindowOption + "\")' title='" + menuitemDisplayName + "' /></li>\n");
 					}
                       
 				} else {
@@ -2091,13 +2109,25 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			
 			String menuitemUID = result.get(i).getuID();
 			String menuitemDisplayName = result.get(i).getDisplayName();
-			String menuitemImageUID = result.get(i).getImageUId();
+			/*String menuitemImageUID = result.get(i).getImageUId();*/
 			String menuitemLinkURL = result.get(i).getLinkURL();
-			String menuitemLinkLocation = result.get(i).getLinkLocation();
+			/*String menuitemLinkLocation = result.get(i).getLinkLocation();*/
 			String menuitemWindowOption = result.get(i).getWindowOption();
-			String menuitemNormalImagePath = result.get(i).getNormalImagePath();
+			/*String menuitemNormalImagePath = result.get(i).getNormalImagePath();*/
 			
-			if (menuitemImageUID != null && !menuitemImageUID.trim().equals("") && menuitemNormalImagePath != null && !menuitemNormalImagePath.trim().equals("")) {
+			/* 2018-03-06 장진혁 탑메뉴 이미지 제거 후 text로 변경 */
+			sb.append("<li ");
+			
+			if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
+				sb.append("id='" + menuitemUID + "' onmouseover='img_onMouseOver(this);' onmouseout='img_onMouseOut(this);' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+				sb.append(", \"" + "main" + "\"");
+				sb.append(", \"" + menuitemWindowOption + "\")'");
+			}
+			
+			sb.append(">" + menuitemDisplayName + "</li>");
+			
+			/* 2018-03-06 장진혁 탑메뉴 이미지 제거 */
+			/* if (menuitemImageUID != null && !menuitemImageUID.trim().equals("") && menuitemNormalImagePath != null && !menuitemNormalImagePath.trim().equals("")) {
 				sb.append("<li>" + getImageHTML(pCallingMenuID, menuitemImageUID, false, menuitemUID, userInfo) + "</li>");
 			} else {
 				sb.append("<li ");
@@ -2109,7 +2139,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				}
 				
 				sb.append(">" + menuitemDisplayName + "</li>");
-			}
+			}*/
 		}
 		
 		sb.append("</ul></nav>");

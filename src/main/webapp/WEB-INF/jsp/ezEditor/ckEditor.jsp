@@ -239,10 +239,6 @@
 	            CKEDITOR.config.removePlugins = '_Insert_Image';
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	            
-	        } else if (type == "MAILSIGNATURE") {
-	        	CKEDITOR.config.imageUploadUrl = "/ezEditor/ckSimpleUploadMail.do";
-	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
-	            
 	        } else if (type == "COMMUNITYPHOTO") {
 	            CKEDITOR.config.removePlugins = '_Insert_Image';
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
@@ -255,8 +251,8 @@
 				CKEDITOR.config.removePlugins = "sourcearea";
 			}
 			
+			CKEDITOR.config.imageUploadUrl = "/ezEditor/ckSimpleUpload.do?type=" + type;
 			CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
-			
 		    CKEDITOR.config.font_defaultLabel = defaultFontFamily;
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";
 		    CKEDITOR.config.language = "<spring:message code='main.t0619' />";

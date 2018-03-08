@@ -279,7 +279,7 @@ form{display:inline;margin:0}
 	border:none;
 }
 
-.left_myoffice{background: url(/images/left/left_myoffice.jpg) repeat ;height: 40px;}
+/*.left_myoffice{background: url(/images/left/left_myoffice.jpg) repeat ;height: 40px;}
 .left_mail{background:url(/images/kr/left/left_mail.gif) repeat ;height: 51px;}
 .left_pims{background:url(/images/kr/left/left_pims.gif) repeat ;height: 51px;}
 .left_board{background:url(/images/kr/left/left_board.gif) repeat ;height: 51px;}
@@ -299,7 +299,38 @@ form{display:inline;margin:0}
 .left_search{background:url(/images/left/left_search.jpg) repeat #184c8b;height: 40px;}
 .left_diary{background:url(/images/left/left_diary.jpg) left top repeat ;width:170px; height: 40px;}
 .left_tasktime{background:url(/images/left/left_tasktime.jpg) left top repeat ;width:170px; height: 40px;}
-.left_circular{background:url(/images/kr/left/left_circular.gif) repeat ;height: 51px;}
+.left_circular{background:url(/images/kr/left/left_circular.gif) repeat ;height: 51px;}*/
+
+.left_myoffice{background: url(/images/left/left_myoffice.jpg) repeat ;height: 40px;}
+.left_mail{height:52px; background:#004896;}
+.left_mail span{background:url(/images/kr/left/left_mail.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
+.left_pims{height:51px; background:#004896;}
+.left_pims span{background:url(/images/kr/left/left_schedule.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
+.left_board{height:52px; background:#004896;}
+.left_board span{background:url(/images/kr/left/left_board.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
+.left_appr{height:52px; background:#004896;}
+.left_appr span{background:url(/images/kr/left/left_approval.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
+.left_resource{height:52px; background:#004896;}
+.left_resource span{background:url(/images/kr/left/left_resource.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
+.left_kms{background:url(/images/kr/left/left_kms.gif) repeat ;height: 51px;}
+.left_dms{background:url(/images/kr/left/left_dms.gif) repeat ;height: 51px;}
+.left_cop{height:52px; background:#004896;}
+.left_cop span{background:url(/images/kr/left/left_community.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
+.left_copadmin{background:url(/images/comm/admin_left.jpg) repeat #184c8b;height: 40px;}
+.left_webdisk{background:url(/images/left/left_webdisk.jpg) repeat #184c8b;height: 40px;}
+.left_ezprocess{background:url(/images/left/left_ezprocess.jpg) repeat #184c8b;height: 40px;}
+.left_env{height:52px; background:#004896;}
+.left_env span{background:url(/images/kr/left/left_env.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
+
+.left_sitemap{background:url(/images/kr/left/left_sitemap.gif) repeat ;height: 51px;}
+.left_notice{background:url(/images/left/left_notice.jpg) repeat #184c8b;height: 40px;}
+.left_memo{background:url(/images/left/left_memo.jpg) repeat #184c8b;height: 40px;}
+.left_poll{background:url(/images/left/left_poll.jpg) repeat #184c8b;height: 40px;}
+.left_search{background:url(/images/left/left_search.jpg) repeat #184c8b;height: 40px;}
+.left_diary{background:url(/images/left/left_diary.jpg) left top repeat ;width:170px; height: 40px;}
+.left_tasktime{background:url(/images/left/left_tasktime.jpg) left top repeat ;width:170px; height: 40px;}
+.left_circular{height:52px; background:#004896;}
+.left_circular span{background:url(/images/kr/left/left_circular.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
 
 .tasktime { background: url(/images/main/time_bg.gif) no-repeat left top; 
 	width:232px; height:58px; margin:0; border-top:2px solid #efefef}
@@ -771,7 +802,7 @@ form{display:inline;margin:0}
 .listview2{ behavior:url(/myoffice/ezKMS/controls/listview/listview.htc);}
 .listview3{ behavior:url(/myoffice/ezKMS/controls/listview/listview_search.htc);}
 .left_admin{
-    font-size:16px;
+    font-size:17px;
 	font-weight:bold;
 	font-family:'gulim','arial';
 	color:rgb(93,93,93);
@@ -1130,7 +1161,7 @@ form{display:inline;margin:0}
 
 .mainlist{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist tr{height:31px}
-.mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#999; font-size:12px; padding:6px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background-color: #fcfcfc; height:21px}
+.mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:6px 4px; border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8; background-color: #f9f9f9; height:24px}
 .mainlist tr th.title{width:100%; text-align:left;}
 .mainlist tr td{padding:5px 4px 3px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #efefef; border-spacing:0; word-wrap:break-word;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
