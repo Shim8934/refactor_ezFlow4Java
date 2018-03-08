@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAttitudeDAO")
@@ -21,4 +22,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public List<AttitudeUserConfigVO> getAttitudeUserConfig(Map<String, Object> map) throws Exception{
 		return (List<AttitudeUserConfigVO>) list("ezAttitudeAdminDAO.getAttitudeUserConfig", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public AttitudeConfigVO getAttitudeConfig(Map<String, Object> map) throws Exception{
+		return (AttitudeConfigVO) select("ezAttitude.getAttitudeConfig", map);
+	}
+
 }

@@ -184,8 +184,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public AttitudeConfigVO getAttitudeConfig(int tenantId, String companyId)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.debug("getAttitudeConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		LOGGER.debug("getAttitudeConfig ended");
+		return ezAttitudeDAO.getAttitudeConfig(map);
 	}
 
 	@Override
