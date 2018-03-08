@@ -188,7 +188,7 @@
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
 	        
 	        $(function () {
-	        	if (pIniGubun == "1") {
+	        	if (pIniGubun == "1" || pIniGubun == "11") {
 	        		$("#SaveAprLineTemplet").css("display", "");
 	        	}
 	        	

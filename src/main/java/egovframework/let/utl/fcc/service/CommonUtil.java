@@ -427,7 +427,8 @@ public class CommonUtil {
 	
 	public Document convertStringToDocument(String xmlStr) {
 		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
-														
+		replaceData = replaceData.replace("&shy;", "");
+		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
         DocumentBuilder builder;
         Document doc = null;
@@ -435,7 +436,9 @@ public class CommonUtil {
         try {  
             builder = factory.newDocumentBuilder();  
             doc = builder.parse(new InputSource(new StringReader(replaceData)));
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
         
         return doc;
 	}
