@@ -299,14 +299,19 @@ public class EzJournalSBController {
 	 * @return
 	 */
 	@RequestMapping(value="/ezJournal/journalDetail.do")
-	@ResponseBody
 	public String getJournalDetail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getJournalDetail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		String viewDate ="";
+		try {
+			viewDate = commonUtil.getTodayUTCTime("");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("viewDate", viewDate);
 		
 		String journalId = request.getParameter("journalId");
 		
