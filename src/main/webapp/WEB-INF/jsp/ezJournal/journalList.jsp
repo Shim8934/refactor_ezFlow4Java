@@ -77,7 +77,7 @@
 		<c:choose>
 		<c:when test="${fn:length(journalList) ne 0}">
 			<c:forEach items="${journalList}" var="journal" varStatus="status">
-			<tr class="${journal.isView }" id="${journal.journalId }" onclick="" style="cursor: pointer;">
+			<tr class="${journal.isView }" id="${journal.journalId }" onclick="goJournalDetail(this);" style="cursor: pointer;">
 				<td class="cbTD"
 					style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><input onchange="checkedCheckbox(this);"
 					type="checkbox" name="journalCheckbox" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>
