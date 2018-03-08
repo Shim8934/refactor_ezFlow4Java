@@ -11,7 +11,13 @@ function resultRead() {
 		complete : function(data) {
 	        result = data.responseJSON;
 	        
+	        
 	        if (pageType == 'letterBox') {
+	        	
+	        	if (result.length == 0) {
+	        		noResult = true;
+	        	}
+	        	
 	    	   setCompany();
 	        }
 	        treeSet();
@@ -23,15 +29,19 @@ function resultRead() {
 
 // 페이지 처음 들어갔을 때 클릭되는 부분
 function treeInit() {
-	$("#divTree").on('ready.jstree', function (e, data) {
-		selectNode = data;
-		data.instance.select_node([treeCollection[0].id]);
-	});
+	
+	if (!noResult) {
+		$("#divTree").on('ready.jstree', function (e, data) {
+			selectNode = data;
+			data.instance.select_node([treeCollection[0].id]);
+		});
+	}
 }
 
 // 회사 아이디 저장
 function setCompany() {
-	company = result[0].company_id;
+	
+	company = returnCompany;
 	
 	if (company == null) {
 		company = "";
@@ -164,17 +174,28 @@ function treeView() {
 
 // 편지지함 추가
 function addLetterBox() {
+	var parent;
+	var parentId;
 	
 	if (addCheck == -1) {
 		alert("추가 더이상 안돼"); // 이거 strLang으로 바꾸기
 		return;
 	}
 	
-	var parent = selectNode.node.id;
+	if (noResult) {
+		//편지지함이 한개도 없을 경우, 부모를 루트로 만들어야함
+		parent = '#';
+		parentId = '';
+		
+	} else {
+		parent = selectNode.node.id;
+		parentId = parent;
+	}
+
 	var node = { id: 'temp', text:"편지지함"};
 	$('#divTree').jstree('create_node', parent, node, 'last');
 	
-	$("#divTree").jstree("open_node", $('#'+parent));
+	$("#divTree").jstree("open_node", $('#'+parentId));
 	$("#divTree").jstree("select_node", $('#temp'));
 	
 	document.getElementById("parent_letterbox_no").value = parent;
@@ -239,6 +260,10 @@ function deleteLetterBox() {
 // '확인' 버튼 클릭 시, update로 할것인지 insert로 할것인지
 function submitClick() {
 	var formData = $("#myForm").serialize();
+	
+	console.log(formData);
+	
+	return;
 	var formUrl = "/admin/ezEmail/updateLetterBox.do";
 	if (document.getElementById("letterbox_no").disabled) {
 		formUrl = "/admin/ezEmail/createLetterBox.do";
