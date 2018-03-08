@@ -881,6 +881,26 @@
 			        }
 			    }
 			}
+			
+			var boardmoveselect_cross_dialogArguments = new Array();
+			
+			function MoveSelect(){
+// 			    var parameter = new Array();
+// 			    parameter[0] = OrgBoardID;
+// 			    parameter[1] = OrgBoardGroupID;
+
+// 		        boardmoveselect_cross_dialogArguments[0] = parameter;
+		        boardmoveselect_cross_dialogArguments[0] = MoveSelect_Complete;
+		        var BoardMoveSelect_Cross = window.open("/admin/ezPortal/portalBoardSelect.do", "portalBoardSelect", GetOpenWindowfeature(340, 656));
+		        try { 
+		        	BoardMoveSelect_Cross.focus(); 
+		        }catch (e) {}	   
+			}
+			
+			function MoveSelect_Complete(ret) {
+				document.getElementById("newParamValue").value = ret[0];
+		        document.getElementById("newBoardName").value = ret[2];
+			}
     </script>
 	
 	<script language="javascript" type="text/javascript" FOR="objFormEditor" EVENT="DocumentComplete">
@@ -1113,29 +1133,65 @@
 				${paramHtml}
 			</table>
 			<table id="toggle_tbl2_2" class="content" style="display:none">
-  				<tr>
-    				<th width="85" ><spring:message code='ezPortal.t117'/></th>
-    				<td><input type="text" id="newParamName" style="width:99%;margin-left:2px"></td>
-  				</tr>
-  				<tr>
-    				<th ><spring:message code='ezPortal.t118'/></th>
-    				<td>
-    					<table width="100%" >
-        					<tr>
-          						<td style="width:125px; ">
-          	 						<select id="SelectParamType" onChange="Param_Change()" width="100%">
-            	  						<c:forEach items="${paramType}" var="item">
-              								<option value="${item.paramType}"><spring:message code='ezPortal.${item.shortName}'/></option>
-              							</c:forEach>
-            						</select> 
-								</td>
-          						<td>
-          							<input type="text" id="newParamValue" style="width:100%">
-          						</td>
-        					</tr>
-      					</table>
-      				</td>
-  				</tr>
+  				<c:if test="${uID != 'c08c6efa-7494-4185-b1dc-09ecc908f683'}">
+	  				<tr>
+	    				<th width="85" ><spring:message code='ezPortal.t117'/></th>
+	    				<td><input type="text" id="newParamName" style="width:99%;margin-left:2px"></td>
+	  				</tr>
+	  				<tr>
+	    				<th ><spring:message code='ezPortal.t118'/></th>
+	    				<td>
+	    					<table width="100%" >
+	        					<tr>
+	          						<td style="width:125px; ">
+	          	 						<select id="SelectParamType" onChange="Param_Change()" width="100%">
+	            	  						<c:forEach items="${paramType}" var="item">
+	              								<option value="${item.paramType}"><spring:message code='ezPortal.${item.shortName}'/></option>
+	              							</c:forEach>
+	            						</select> 
+									</td>
+	          						<td>
+	          							<input type="text" id="newParamValue" style="width:100%">
+	          						</td>
+	        					</tr>
+	      					</table>
+	      				</td>
+	  				</tr>
+  				</c:if>
+  				<c:if test="${uID == 'c08c6efa-7494-4185-b1dc-09ecc908f683'}">
+  					<tr>
+	    				<th width="85" ><spring:message code='ezBoard.jjh05'/></th>
+	    					<td>
+	    						<select id="newParamName" style="width:100%">
+									<option value="companyBoardID"><spring:message code='ezBoard.kms01'/></option>
+									<option value="deptBoardID"><spring:message code='ezBoard.kms02'/></option>
+									<option value="newsBoardID"><spring:message code='ezBoard.kms03'/></option>
+								</select>
+							</td> 
+<!-- 	    				<td><input type="text" id="newParamName" style="width:99%;margin-left:2px"></td> -->
+	  				</tr>
+	  				<tr>
+	    				<th ><spring:message code='ezCommunity.t1465'/></th>
+	    				<td>
+	    					<table width="100%" >
+	        					<tr>
+	          						<td style="width:125px; display:none">
+	          	 						<select id="SelectParamType" onChange="Param_Change()" width="100%">
+	            	  						<c:forEach items="${paramType}" var="item">
+	              								<option value="${item.paramType}"><spring:message code='ezPortal.${item.shortName}'/></option>
+	              							</c:forEach>
+	            						</select> 
+									</td>
+	          						<td>
+	          							<input type="text" id="newBoardName" readonly style="width:75%">
+	          							<input type="text" id="newParamValue" style="width:75%; display:none">
+	          							<a class="imgbtn"><span onClick="MoveSelect()"><spring:message code='ezCommunity.t352'/></span></a>
+	          						</td>
+	        					</tr>
+	      					</table>
+	      				</td>
+	  				</tr>
+  				</c:if>
 			</table>
 			<div class="btnposition" id="toggle_tbl2_3"  style="display:none">
 				<a class="imgbtn"><span onClick="AddParameter()"><spring:message code='ezPortal.t62'/></span></a>
