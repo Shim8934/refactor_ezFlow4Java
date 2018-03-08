@@ -768,7 +768,7 @@
 		<isEmpty property="isUser">
 			insert into jmocha.tbl_journal_view (user_id,tenant_id,journal_id, view_date)
 			select 
-			#userId#,#tenantId#,#journalId#,now()
+			#userId#,#tenantId#,#journalId#,#viewDate#
 	        from dual
 			where not exists(
 	        select 
@@ -780,7 +780,7 @@
 		</isEmpty>
 		<isNotEmpty property="isUser">
 			update jmocha.tbl_journal_recv
-			set recieve_date=now()
+			set recieve_date=#viewDate#
 			where journal_id=#journalId#
 			and tenant_id=#tenantId#
 			and user_id=#userId#
