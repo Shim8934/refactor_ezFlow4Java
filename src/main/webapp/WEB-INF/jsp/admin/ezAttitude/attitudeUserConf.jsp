@@ -12,7 +12,19 @@
     <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <script type="text/javascript">
     	function company_change(){
+    		pCompanyId = $("select[name=ListCompany]").val();
     		
+    		$.ajax({
+    			data : "POST, GET",
+    			dataType : "json",
+    			async : false,
+    			url : "/admin/ezAttitude/attitudeUserConfList.do",
+    			data : {companyId : pComapnyId, key2 : 'value2'},
+    			success : function(result){
+    				alert(result);
+    			}
+    			
+    		});
     	}
     </script>
 	</head>
@@ -26,7 +38,9 @@
 				</li>
 				<li>
 				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
-					<option>회사</option>
+					<c:forEach var = "companyItem" items="${list }">
+						<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
+					</c:forEach>
 	      		</select>
 	      		</li>
 	      	</ul>

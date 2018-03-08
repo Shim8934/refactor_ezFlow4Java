@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -233,8 +235,16 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId,
 			String companyId, String userName, String deptName)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("userName", userName);
+		map.put("deptName", deptName);
+		
+		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfig(map);
+		
+		return resultList;
 	}
 
 	@Override
@@ -242,6 +252,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String companyId, String userId) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId) throws Exception{
+		LOGGER.debug("getCompanyList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("lang", lang);
+		map.put("tenantId", tenantId);
+		
+		List<AttitudeDeptVO> companyList = ezAttitudeDAO.getCompanyList(map);
+		
+		LOGGER.debug("getCompanyList ended");
+		return companyList;
 	}
 
 }

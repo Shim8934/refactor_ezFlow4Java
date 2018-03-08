@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezAttitudeAdmin">
+	<typeAlias alias="AttitudeDeptVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO"/>
+	
+	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
+		<![CDATA[
+			SELECT
+				A.CN,
+				A.DISPLAYNAME,
+				A.DISPLAYNAME2
+			FROM
+				(
+					SELECT
+					  CN,
+					  CASE #lang#
+					      WHEN '1' THEN DISPLAYNAME
+					      ELSE DISPLAYNAME2
+					      END DISPLAYNAME,
+					  CASE #lang#
+					  	  WHEN '1' THEN DISPLAYNAME2
+					  	  ELSE DISPLAYNAME
+					  	  END DISPLAYNAME2
+					FROM
+						TBL_DEPTMASTER
+					WHERE
+						TENANT_ID = #tenantId#
+					AND
+						(DEPTLEVEL = 1
+					OR
+						CN = 'Top') ) A
+				
+		]]>
+	</select>
+</sqlMap>

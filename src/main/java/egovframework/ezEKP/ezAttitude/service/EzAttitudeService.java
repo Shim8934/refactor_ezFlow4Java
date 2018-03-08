@@ -5,6 +5,7 @@ import java.util.Map;
 
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 
@@ -76,4 +77,5 @@ public interface EzAttitudeService {
 	
 	public void insertAttitudeUserConfig(int tenantId, String companyId, String userId, String workStartTime, String workEndTime) throws Exception;
 	
+	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId) throws Exception;
 }

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -16,6 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
+import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -37,6 +42,9 @@ public class EzAttitudeGWController {
 	
 	@Resource(name = "EzAttitudeService")
 	private EzAttitudeService ezAttitudeService;
+	
+	@Resource(name = "MOptionService")
+	private MOptionService mOptionService;
 	
 	/**
 	 * G/W 근태관리 [GET] 개인, 부서, 부서+개인 근태현황조회
@@ -554,10 +562,15 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			List<AttitudeDeptVO> list = ezAttitudeService.getCompanyList(info.getPrimary(), info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
+			result.put("data", list);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -577,10 +590,17 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			String companyId = request.getParameter("companyId");
+			String userId = request.getParameter("userId");
+			
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(info.getTenantId(), companyId, "", "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
+			result.put("data", list);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
