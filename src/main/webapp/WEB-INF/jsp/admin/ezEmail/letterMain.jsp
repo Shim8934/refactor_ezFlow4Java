@@ -84,7 +84,7 @@
 		            	document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterBoxManager.do?companyId=" + companyID;
 		            	break;
 		            case "tagsub2":
-		            	document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterAdminPage.do";
+		            	document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterAdminPage.do?companyId=" + companyID;
 		            	break;
 		            	
 		        }

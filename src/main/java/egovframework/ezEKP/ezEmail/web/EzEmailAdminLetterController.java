@@ -110,6 +110,7 @@ public class EzEmailAdminLetterController {
 		}
 		
 		model.addAttribute("companyId", companyId);
+		model.addAttribute("pageType", "letterBox");
 				
 		logger.debug("letterBoxManagerView ended.");
 		
@@ -338,7 +339,7 @@ public class EzEmailAdminLetterController {
 	 * 편지지 관리페이지 (수아)
 	 */
 	@RequestMapping("/admin/ezEmail/letterAdminPage.do")
-	public String letterAdminPage(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+	public String letterAdminPage(@CookieValue("loginCookie") String loginCookie, String companyId, Model model) throws Exception{
 		logger.debug("letterAdminPage started.");
 		
 		// 관리자 권한체크      
@@ -348,9 +349,10 @@ public class EzEmailAdminLetterController {
 		}
 
 		model.addAttribute("pageType", "letter");
+		model.addAttribute("companyId", companyId);
 		
 		logger.debug("letterAdminPage ended.");
-		return "/admin/ezEmail/letterManager";
+		return "admin/ezEmail/letterManager";
 	}
 	
 	/**
@@ -381,7 +383,7 @@ public class EzEmailAdminLetterController {
 		model.addAttribute("letterId", letterId);
 		
 		logger.debug("letterAdminAddSetPopUp ended.");
-		return "/admin/ezEmail/letterEditPopUp";
+		return "admin/ezEmail/letterEditPopUp";
 	}
 	
 	/**
@@ -392,7 +394,7 @@ public class EzEmailAdminLetterController {
 		
 		model.addAttribute("letterNo", letterNo);
 		
-		return "/admin/ezEmail/letterBoxMovePopUp";
+		return "admin/ezEmail/letterBoxMovePopUp";
 	}
 	
 	/**
@@ -601,7 +603,7 @@ public class EzEmailAdminLetterController {
 			returnJsonArr = EzEmailAdminLetterService.selectAllLeter(letterBoxNo);
 			logger.debug("jsonArr=" + returnJsonArr);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 		logger.debug("readLetterList ended.");

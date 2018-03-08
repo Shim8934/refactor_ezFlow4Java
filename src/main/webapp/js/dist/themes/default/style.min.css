@@ -504,11 +504,13 @@
 .jstree-default .jstree-open>.jstree-ocl {
 	/* background-position: -132px -4px */
 	 background-image: url("/images/OrganTree_cross/minus.gif");
+	 background-position: center center;
 }
 
 .jstree-default .jstree-closed>.jstree-ocl {
 	/* background-position: -100px -4px */
 	background-image: url("/images/OrganTree_cross/plus.gif"); 
+	background-position: center center;
 }
 
 .jstree-default .jstree-leaf>.jstree-ocl {
@@ -527,11 +529,13 @@
 .jstree-default>.jstree-no-dots .jstree-open>.jstree-ocl {
 	/* background-position: -36px -4px */
 	background-image: url("/images/OrganTree_cross/minus.gif");
+	background-position: center center;
 }
 
 .jstree-default>.jstree-no-dots .jstree-closed>.jstree-ocl {
 	/* background-position: -4px -4px */
 	background-image: url("/images/OrganTree_cross/plus.gif");
+	background-position: center center;
 }
 
 .jstree-default .jstree-disabled {

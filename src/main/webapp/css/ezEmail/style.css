@@ -1,0 +1,172 @@
+/* 재은 style (letterBoxManager.jsp) */
+/* #divTree {
+	
+} */
+
+#divInput {
+	float: left;
+	width: 350px;
+	height: 350px;
+	margin-left: 20px;
+	position: relative;
+}
+
+.myScrollableBlock {
+	height: 350px;
+	width: 250px;
+	background-color: #f5f6f6;
+	float: left;
+	display: block;
+	overflow: auto;
+}
+
+/* 수아 style (letterManager.jsp) */
+body {
+	margin: 0;
+}
+
+#lmTop {
+	width: 1200px;
+	margin-top: 5px;
+}
+
+#lmTop>div {
+	float: left;
+	height: 600px;
+}
+
+#lmTop button {
+	background: white;
+	border: 1px solid #c6c6c6;
+	border-radius: 3px;
+	font-size: 12px;
+	color: #393939;
+	cursor: pointer;
+	outline: none;
+	height: 20px;
+	line-height: 1;
+}
+
+#lmTop button:hover {
+	color: #0B790E;
+}
+
+.lmtitle {
+	height: 30px;
+	background: #f8f8f8;
+	border-bottom: 1px solid #cbcbcb;
+	font-weight: bold;
+	color: #777;
+	font-size: 12px;
+	line-height: 30px;
+	box-sizing: border-box;
+	padding: 0 4px;
+}
+
+.lmleft {
+	width: 360px;
+	width: 30%;
+	margin-right: 20px;
+}
+
+.lmLetterBox {
+	height: 32%;
+	border: #b6b6b6 1px solid;
+}
+
+.lmLetterBoxList {
+	overflow: auto;
+	font-size: 12px;
+	color: #5b5a5a;
+	box-sizing: border-box;
+	padding: 4px;
+	height: 160px;
+}
+
+.lmLetterBoxTitle>div {
+	width: 70px;
+	border-right: 1px solid #cbcbcb;
+	display: inline-block;
+}
+
+.lmLetterBoxTitle>input {
+	width: 170px;
+	color: #393939;
+	border: 1px solid #cbcbcb;
+}
+
+/* .jstree-clicked {
+	color: #0B790E !important;
+} */
+
+.lmLetter {
+	height: 60%;
+	border: #b6b6b6 1px solid;
+}
+
+.lmBtns {
+	height: 5%;
+}
+
+.lmleft>div:nth-child(2) {
+	margin: 10px 0;
+}
+
+.lmright {
+	width: 60%;
+	border: #b6b6b6 1px solid;
+}
+
+.lmLetterListUl {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	font-size: 12px;
+	color: #5b5a5a;
+	text-align: left;
+}
+
+.lmNoData {
+	text-align: center;
+}
+
+.lmLetterListUl li {
+	height: 30px;
+	line-height: 30px;
+	box-sizing: border-box;
+	border-bottom: 1px solid #ebebed;
+	padding: 0 4px;
+}
+
+.lmLetterListUl li span {
+	width: 250px;
+	margin-right: 10px;
+	display: inline-block;
+	cursor: pointer;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	float: left;
+}
+
+.lmLetterListUl li button {
+	margin: 0 2px;
+}
+
+.lmBtns button {
+	height: 25px !important;
+}
+
+.lmBtns div {
+	float: right;
+}
+
+.lmBtns div button, img {
+	float: left;
+	margin: 0 3px;
+}
+
+.lmPreview {
+	height: 100%;
+	overflow: auto;
+}
