@@ -266,6 +266,9 @@
 			<![CDATA[
 				SELECT 
 					COUNT(*)
+				FROM ( 
+				SELECT 
+					*
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -286,6 +289,32 @@
 					OR 
 				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
 			</isNotEmpty>
+			<![CDATA[
+				UNION ALL
+				
+				SELECT 
+					*
+				FROM 
+					VENDCHAMJODOCINFO 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				STARTDATE < #lastDate#
+	   			AND
+	   				APRMEMBERID IN ($id$) 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+			)
 		</isEqual>
 		<isEqual property="type" compareValue="DRAFT">
 			<![CDATA[
