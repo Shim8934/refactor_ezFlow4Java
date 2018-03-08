@@ -50,8 +50,6 @@
 			.calendar_layer .btn ul{list-style:none; margin:0 25px; padding:0px 3px; overflow:hidden; text-align:center;clear:both;list-style-type:none}
 			.calendar_layer .btn ul li{float:left; height:27px; line-height:27px; background:url(images/calendar/btn_calendar_l.gif) no-repeat left top; padding:0px 3px 0px 8px;}
 			.calendar_layer .btn ul li span{display:inline-block; background:url(images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
-			
-			.calResTitleSpan {font-size:14px;color:#2f2f2f;text-align:center;font-family: Malgun Gothic;}
 		</style>
 		<script type="text/javascript">
 			var pBrdid = "${brdID}";

@@ -884,8 +884,8 @@
 			                div2.className = "todayCommunityLayout";			                
 			                div2.innerHTML = "<div><img style='margin-top:20px;' src='/images/kr/main/nodata_plan.png' />&nbsp;<div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div>";
 			                div2.style.backgroundColor = "#fafafa";
-			                div2.style.borderColor = "#ccc";
-			                div2.style.borderRadius = "5px";
+			                div2.style.borderColor = "#ddd";
+			                div2.style.borderRadius = "3px";
 			                div2.style.textAlign = "center";
 			                div2.style.height = "142px";
 			                
@@ -894,7 +894,7 @@
 			                /* document.getElementById("todaycop").appendChild(h1); */
 			                document.getElementById("todaycop").appendChild(div);
 							
-							conts = "<div style='height:172px; text-align:center;'><div><img style='margin-top:35px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
+							conts = "<div style='height:170px; text-align:center;background-color:#fafafa;border:1px solid #ddd;margin-top:5px;border-radius:3px'><div><img style='margin-top:35px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
 							$(".newCommunity_listLayout").html(conts);
 						}
 					}

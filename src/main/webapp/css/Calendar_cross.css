@@ -2,7 +2,7 @@
 
 /* 월보기 */
 .calendar_month_navi{table-layout:fixed; border:1px solid #9b9b9b; border-bottom:0px solid #014b88;}
-.calendar_month_navi th{height:35px; line-height:25px; border:1px solid #d1ddec; font-family:Malgun Gothic; padding:0; margin:0; color:#2f2f2f;background-color: #edf4fd; font-size: 16px;}
+.calendar_month_navi th{height:33px; line-height:24px; border:1px solid #d1ddec; font-family:Malgun Gothic; padding:0px 0px 2px 0px; margin:0; color:#2f2f2f;background-color: #edf4fd; font-size: 15px;}
 .calendar_month_navi th .btn_prev{display: inline-block; vertical-align: top; margin: 2px 12px 0px; height:17px;cursor:pointer;}
 .calendar_month_navi th .btn_next{display: inline-block; vertical-align: top; margin: 2px 0px 0px 12px; height:17px;cursor:pointer;}
 .calendar_month{table-layout:fixed; vertical-align:top;}
@@ -10,7 +10,7 @@
 .calendar_month th.sun{color:#ee1c25;}
 .calendar_month th.sat{color:rgb(0, 72, 149);}
 .calendar_month td{width:14.2%; border:1px solid #dedede;}
-.calendar_month td.gray{background:#F6F6F6;}
+.calendar_month td.gray{background:#f8f8f8;}
 .calendar_month td.today{background:#edf4fd; border:1px solid #d1ddec;}
 .calendar_month .td_day{table-layout:fixed; width:100%; cursor:pointer;}
 .calendar_month .td_day td {height:22px; line-height:22px; border:0 none; padding:0px 0px 0px 7px; margin:0; color:#333333;}
@@ -128,20 +128,20 @@
 /* //일보기 */
 
 /* 미니달력 */
-.calendar_mini_title{table-layout:fixed; text-align:center; border:1px solid #dedede; border-bottom:0 none;}
+.calendar_mini_title{table-layout:fixed; text-align:center; border-bottom:0 none;}
 .calendar_mini_title td{vertical-align:middle;}
 .calendar_mini_title .btn_pprev{width:45px; height:30px; padding:0px 0px;cursor:pointer;}
-.calendar_mini_title .btn_prev{width:45px; height:30px; padding:0px 0px;cursor:pointer;}
+.calendar_mini_title .btn_prev{width:45px; height:30px; padding:0px 0px;cursor:pointer;text-align:left;}
 .calendar_mini_title .calendar_mini_day{width:100%; height:30px;}
-.calendar_mini_title .btn_next{width:45px; height:30px; padding:0px 0px;cursor:pointer;}
+.calendar_mini_title .btn_next{width:45px; height:30px; padding:0px 0px;cursor:pointer;text-align:right;}
 .calendar_mini_title .btn_nnext{width:45px; height:30px; padding:0px 0px;cursor:pointer;}
 .calendar_mini_title span{display:inline-block;}
-.calendar_mini{table-layout:fixed; border:1px solid #dedede; border-top:0 none;}
-.calendar_mini th{font-weight:normal;width:14.2%; height:27px; line-height:27px; background-color:rgb(0, 72, 148); margin:0; padding:2px 0 0 0; border-top:0 none; border-right:0 none; border-bottom:0 none; border-left:0 none; font-size:11px; color:#ffffff; font-family: Meiryo UI, Arial, Gulim;}
-.calendar_mini th.sun{color:#ffffff;} /* 흰색으로 수정 원본-> .calendar_mini th.sun{color:#ee1c25;} */
-.calendar_mini th.sat{color:#ffffff;} /* 흰색으로 수정 원본-> .calendar_mini th.sat{color:rgb(0, 72, 149);} */
-.calendar_mini td{width:14.2%; height:30px; text-align:center; cursor:pointer; font-family: Meiryo UI, Dotum, Gulim;}
-.calendar_mini td div{height:30px; line-height:30px; cursor:pointer;}
+.calendar_mini{table-layout:fixed; border-top:0 none;}
+.calendar_mini th{font-weight:normal;width:14.2%; height:26px; line-height:26px; background-color:white; margin:0; padding:2px 0 0 0; border-top:0 none; border-right:0 none; border-bottom:0 none; border-left:0 none; font-size:12px; color:#333; font-family: Meiryo UI, Arial, Gulim;}
+.calendar_mini th.sun{color:#ee1c25;} /* 흰색으로 수정 원본-> .calendar_mini th.sun{color:#ee1c25;} */
+.calendar_mini th.sat{color:rgb(0, 72, 149);} /* 흰색으로 수정 원본-> .calendar_mini th.sat{color:rgb(0, 72, 149);} */
+.calendar_mini td{width:14.2%; height:26px; text-align:center; cursor:pointer; font-family: Meiryo UI, Dotum, Gulim;}
+.calendar_mini td div{height:26px; line-height:26px; cursor:pointer;}
 .calendar_mini td.sun{color:#ee1c25;}
 .calendar_mini td.sat{color:rgb(0, 72, 149);}
 .calendar_mini td.gray{color:#aaa;}
@@ -175,5 +175,6 @@
 
 
 /* //달력디자인 추가 css */
+.calendar_month p {height:15px;color:#333;padding-left:3px !important}
 
 

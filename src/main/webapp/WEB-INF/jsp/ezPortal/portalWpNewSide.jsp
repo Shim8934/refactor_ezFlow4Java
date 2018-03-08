@@ -28,7 +28,7 @@
         			<c:otherwise>
         				<div class="best">
         					<dl>
-        						<dt><span class="icon"><img src="/images/<spring:message code='main.t00025' />/main/icon_best1.gif" width="26" height="28"></span><spring:message code='main.t68' /></dt>
+        						<dt><span class="icon"><img src="/images/<spring:message code='main.t00025' />/main/icon_best1.png" width="26" height="28"></span><spring:message code='main.t68' /></dt>
         						<dd class="photo" style='margin-top:10px'><img src="/images/default_pic.gif" width="61" height="64"></dd>
         						<dd class="txt_name"></dd>
         						<dd class="txt_part" style='margin-top:17px'><spring:message code='main.t00026' /></dd>        						
