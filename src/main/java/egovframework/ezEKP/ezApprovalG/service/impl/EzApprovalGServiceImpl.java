@@ -11417,6 +11417,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_AprState3", staASBoRyu);
 				// 현재 결재자의 APRSTATE가 '진행' 혹은 '보류' 상태인 경우 -> APRSTATE를 '반송'으로 변경
 				ezApprovalGDAO.updateBanSongAprLineInfo(map);   
+				ezApprovalGDAO.updateBanSongChamJoAprLineInfo(map);   
 				ezApprovalGDAO.updateBanSongAprDocInfo(map);
 				// APRMEMBERSN='1'인 경우. 즉, 기안자인 경우 -> APRSTATE를 '진행'으로 변경
 				ezApprovalGDAO.updateBanSongAprLineInfo2(map); 
@@ -11548,6 +11549,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_AprState3", staASBoRyu);
 				
 				ezApprovalGDAO.updateBanSongAprLineInfo(map);
+				ezApprovalGDAO.updateBanSongChamJoAprLineInfo(map);   
 				ezApprovalGDAO.updateBanSongAprDocInfo(map);
 				ezApprovalGDAO.updateBanSongAprLineInfo2(map);
 	            
@@ -11579,6 +11581,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_AprState3", staASBoRyu);
 				
 				ezApprovalGDAO.updateBanSongAprLineInfo(map);
+				ezApprovalGDAO.updateBanSongChamJoAprLineInfo(map);   
 				ezApprovalGDAO.updateBanSongAprDocInfo(map);
 				ezApprovalGDAO.updateBanSongAprLineInfo2(map);
 	            
