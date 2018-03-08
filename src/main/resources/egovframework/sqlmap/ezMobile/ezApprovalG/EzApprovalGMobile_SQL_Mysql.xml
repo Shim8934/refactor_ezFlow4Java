@@ -301,7 +301,7 @@
 	   			AND
 	   				COMPANYID = #companyID#
 	   			AND
-	   				STARTDATE < #lastDate#
+	   				STARTDATE < #nowDate#
 	   			AND
 	   				APRMEMBERID IN ($id$) 
 	   			AND 
@@ -314,7 +314,7 @@
 					OR 
 				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
 			</isNotEmpty>
-			)
+			) as LIST
 		</isEqual>
 		<isEqual property="type" compareValue="DRAFT">
 			<![CDATA[
