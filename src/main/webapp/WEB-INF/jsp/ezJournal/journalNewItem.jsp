@@ -37,6 +37,10 @@
 	    	var typeId = "<c:out value='${typeId}'/>";
 	    	// 작성일
 	    	var nowDate = "${nowDate}";
+	    	// 부서아이디
+	    	var deptId = "${info.deptID}";
+	    	// 첨부파일 최대용량
+	    	var AttachLimit = 5;
 	    	
 			// 선택된 일지함의 양식 리스트 가져오기
 	    	function getFormList(elem) {
@@ -46,7 +50,8 @@
 	    			dataType : "html",
 	    			async : false,
 	    			url : "/ezJournal/getFormList.do",
-	    			data : {"typeId" : typeId},
+	    			data : {"typeId" : typeId,
+	    					"deptId" : deptId},
 	    			success : function(result) {
 	    				$("#optForm").html(result);
 	    			}

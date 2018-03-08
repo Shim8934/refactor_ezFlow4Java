@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.JsonUtil;
 
 
@@ -36,6 +38,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 
 	@Resource(name="ezJournalDAO")
 	private EzJournalDAO ezJournalDAO;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	@Override
 	public List<JournaltypeVO> getJournaltypeList(String companyId,String tenantId,String used) throws Exception {
@@ -84,7 +89,6 @@ public class EzJournalServiceImpl implements EzJournalService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("typeId", typeId);
 		map.put("deptId", deptId);
-		logger.debug("companyName확인:" + companyName);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
@@ -130,6 +134,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("formDescript", jsonParam.get("formDescript"));
 		map.put("formContent", jsonParam.get("formContent"));
 		map.put("formWriter", jsonParam.get("formWriter"));
+		map.put("writeDate", commonUtil.getTodayUTCTime(""));
 		map.put("companyId", jsonParam.get("companyId"));
 		map.put("tenantId", jsonParam.get("tenantId"));
 		
@@ -353,6 +358,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("userId", jsonParam.get("userId"));
 		map.put("tenantId", jsonParam.get("tenantId"));
 		map.put("favoriteName", jsonParam.get("favoriteName"));
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		logger.debug("saveFavorite map" + map);
 		

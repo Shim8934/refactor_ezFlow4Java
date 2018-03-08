@@ -41,9 +41,10 @@
 	    </script>
 	</head>
 	<body class="leftbody">
-        <div class="left_pims" title="<spring:message code='ezJournal.t1'/>"></div>
-	        
 	    <div id="left">
+	        <div class="left_circular" title="<spring:message code='ezJournal.t1'/>">
+	        	<span><spring:message code='ezJournal.t1'/></span>
+	        </div>
 		    <h2><span class='department' onClick="goJournalList(this);" typeId='${typeList[0].journaltypeId }' style="width:100%;display:inline-block;"><spring:message code='ezJournal.t49'/></span></h2>
 		    <ul>
 		    	<c:choose>

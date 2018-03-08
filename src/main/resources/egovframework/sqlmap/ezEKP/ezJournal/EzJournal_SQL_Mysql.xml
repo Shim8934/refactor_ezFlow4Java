@@ -255,7 +255,7 @@
 			tenant_id,		form_name,		form_content,		type_id,		form_date,		form_writer,		form_info,			company_id
 		)
 		values (
-			#tenantId#,		#formName#,		#formContent#,		#typeId#,		now(),			#formWriter#,		#formDescript#,		#companyId#
+			#tenantId#,		#formName#,		#formContent#,		#typeId#,		#writeDate#,	#formWriter#,		#formDescript#,		#companyId#
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
 			select last_insert_id()
@@ -595,7 +595,7 @@
 			tenant_id,		user_id,		favorite_name,		favorite_date
 		)
 		values (
-			#tenantId#,		#userId#,		#favoriteName#,		now()
+			#tenantId#,		#userId#,		#favoriteName#,		#nowDate#
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
 			select last_insert_id()
@@ -659,8 +659,7 @@
 		update 
 			tbl_journal_recv_favorite
 		set
-			favorite_name = #favoriteName#,
-			favorite_date = now()
+			favorite_name = #favoriteName#
 		where
 			favorite_id = #favoriteId#
 		and

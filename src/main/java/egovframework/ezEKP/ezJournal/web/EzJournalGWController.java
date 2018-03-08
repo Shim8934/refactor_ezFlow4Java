@@ -1,13 +1,25 @@
 package egovframework.ezEKP.ezJournal.web;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +47,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @RestController
 public class EzJournalGWController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzJournalGWController.class);
-
+	
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -60,7 +72,7 @@ public class EzJournalGWController {
 		try {
 			String used = request.getParameter("used");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			String companyId = request.getParameter("companyId");
 			if (companyId == null || companyId.equals("")) {
@@ -98,7 +110,7 @@ public class EzJournalGWController {
 			String companyId = (String) jsonParam.get("companyId");
 		
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, (String) jsonParam.get("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
 		
 			ArrayList<Map<String, String>> journaltypeList = (ArrayList<Map<String, String>>) jsonParam.get("journaltypeList");
 			
@@ -131,9 +143,14 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
-
-			List<JournalFormInfoVO> formList = ezJournalService.getFormList(typeId, info.getDeptId(), info.getCompanyId(), info.getCompanyName(), info.getTenantId() + "");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			String deptId = request.getParameter("deptId");
+			if (deptId == null || deptId.equals("")) {
+				deptId = "";
+			}
+			
+			List<JournalFormInfoVO> formList = ezJournalService.getFormList(typeId, deptId, info.getCompanyId(), info.getCompanyName(), info.getTenantId() + "");
 			
 			result.put("data", formList);
 			result.put("status", "ok");
@@ -162,7 +179,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, (String) jsonParam.get("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
 			
 			jsonParam.put("tenantId", info.getTenantId());
 			ezJournalService.insertForm(jsonParam);
@@ -191,10 +208,10 @@ public class EzJournalGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			String companyId = request.getParameter("companyId");
+		//	String companyId = request.getParameter("companyId");
 
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, (String) jsonParam.get("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
 			
 			jsonParam.put("tenantId", info.getTenantId());
 			ezJournalService.updateJournalForm(jsonParam);
@@ -226,7 +243,7 @@ public class EzJournalGWController {
 			String companyId = request.getParameter("companyId");
 
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			ezJournalService.deleteJournalForm(formId, companyId, info.getTenantId() + "");
 			
@@ -257,7 +274,7 @@ public class EzJournalGWController {
 			
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			
 			LOGGER.debug("companyId : " + companyId);
@@ -301,7 +318,7 @@ public class EzJournalGWController {
 			String companyId = request.getParameter("companyId");
 			
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			List<JournalAuthorVO> authList = ezJournalService.getAuthorList(companyId, info.getTenantId() + "");
 		
@@ -330,7 +347,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			List<JournalAuthorVO> deptList = ezJournalService.getAuthDeptList(info.getTenantId() + "", userId);
 	
@@ -357,7 +374,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			jsonParam.put("tenantId", info.getTenantId());
 			ezJournalService.saveAuthDeptList(jsonParam);
@@ -386,7 +403,7 @@ public class EzJournalGWController {
 		LOGGER.debug(request.getParameter("userId"));
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			ezJournalService.deleteAuthor(request.getParameter("userId"), info.getTenantId() + "");
 			
@@ -414,7 +431,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			Map<String, Object> param = new HashMap<String, Object>();
 			
@@ -449,7 +466,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			Map<String, Object> param = new HashMap<String, Object>();
 			
@@ -514,7 +531,7 @@ public class EzJournalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			JournalVO journal = ezJournalService.getJournal(journalId, userId, info.getTenantId()+"");
 			
@@ -591,16 +608,205 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [POST] 첨부파일 업로드
 	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
-	public JSONObject uploadFile(@PathVariable String typeId, @PathVariable String journalId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezjournal/attachfiles", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	public JSONObject uploadFile(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W uploadFile started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			
+			JSONArray fileArray = new JSONArray();
+			
+			String typeId = "";
+			String userId = "";
+			int cnt = 0;
+			int maxSize = 0;
+			
+			if (jsonParam.get("fileArray") != null) {
+				fileArray = (JSONArray) jsonParam.get("fileArray");
+			}
+			
+			if (jsonParam.get("cnt") != null) {
+				cnt =  ((Long) jsonParam.get("cnt")).intValue();
+			}
+			
+			if (jsonParam.get("maxSize") != null) {
+				maxSize =  ((Long) jsonParam.get("maxSize")).intValue();
+			}
+			
+			if (jsonParam.get("typeId") != null) {
+				typeId =  (String) jsonParam.get("typeId");
+			}
+			
+			if (jsonParam.get("userID") != null) {
+				userId = (String) jsonParam.get("userId");
+			}
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			String[] pFileName = new String[cnt];
+			String realPath = commonUtil.getRealPath(request);
+			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
+			String[] sGUID = new String[cnt];
+			String[] pUploadSN = new String[cnt];
+			Long[] fileSize = new Long[cnt];
+			String[] resultUpload = new String[cnt];
+			String[] fileLocation = new String[cnt];
+			
+			for (int i = 0; i < cnt; i++) {
+	            resultUpload[i] = "false";
+	            sGUID[i] = UUID.randomUUID().toString();
+	            pUploadSN[i] = "{" + sGUID[i] + "}";
+	        }
+		
+			if (useExtension == null) {
+				useExtension = "";
+			}
+			
+			if (((JSONObject)fileArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)fileArray.get(0)).get("originalFilename"))) {
+	            for (int i = 0; i < cnt; i++) {
+	                String _pFileName = (String) ((JSONObject)fileArray.get(i)).get("originalFilename");
+	                
+	                if (_pFileName.indexOf(commonUtil.separator) > 0) {
+	                    _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
+	                }
+	                pFileName[i] = _pFileName;
+	            }
+	        }
+			
+			String pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
+	        pDirPath = realPath + pDirPath;
+	        
+	        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+	        	pDirPath = pDirPath + commonUtil.separator;
+	        }
+	        
+	        File file1 = new File(pDirPath);
+	        File file2 = new File(pDirPath + typeId + commonUtil.separator + "uploadFile");
+//	        File tempFile = new File(pDirPath + "tempUploadFile");
+
+	        if (!file1.exists()) {
+	        	file1.mkdirs();
+	        	file2.mkdirs();
+	        }
+	        
+//	        if (!tempFile.exists()) {
+//	        	tempFile.mkdir();
+//	        }
+			
+	        for (int i = 0; i < cnt; i++) {
+	        	fileSize[i] = (Long) ((JSONObject)fileArray.get(i)).get("fileSize");
+
+	            if (fileSize[i] > maxSize) {
+	                resultUpload[i] = "overflow";
+	            } else {
+                    if (useExtension.toLowerCase().indexOf(pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
+                        resultUpload[i] = "denied";
+                    } else {
+                        String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator;
+                        File fTemp = new File(pAttachPath, pUploadSN[i] + "_" + pFileName[i]);
+                        
+                        if (!file1.exists()) {
+                        	fTemp.mkdirs();
+                        }
+                        
+                        journalWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
+                        
+                        fileLocation[i] = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator + pUploadSN[i] + "_" + pFileName[i];
+                        resultUpload[i] = "true";
+                    }
+	            }
+	        }
+			
+	        StringBuffer strXML = new StringBuffer();
+
+	        strXML.append("<ROOT><NODES>");
+	        
+	        for (int i = 0; i < cnt; i++) {
+	            strXML.append("<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + "_" + pFileName[i] + "]]></PUPLOADSN>");
+	            strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
+	            strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
+	            strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
+	            strXML.append("<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>");
+	            strXML.append("</NODE>");
+	        }
+	        
+	        strXML.append("</NODES></ROOT>");
+	        
+	        result.put("data", strXML);
+			result.put("status", "ok");
+			result.put("code", 0);
+			
+		} catch (Exception e) {
+			result.put("data", "");
+			result.put("status", "error");
+			result.put("code", 0);
+		}
 		
 		LOGGER.debug("ezJournal G/W uploadFile ended.");
 		return result;
 	}
+	
+	/**
+     * 첨부파일을 서버에 저장한다.
+     *
+     * @param file
+     * @param newName
+     * @param stordFilePath
+     * @throws Exception
+     */
+    public void journalWriteUploadedFile(String bytearray, String newName, String stordFilePath) throws Exception {
+    	LOGGER.debug("journalWriteUploadedFile started.");
+    	
+		InputStream stream = null;
+		OutputStream bos = null;
+		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
+		
+		try {
+		    File cFile = new File(stordFilePathReal);
+	
+		    if (!cFile.isDirectory()) {
+				boolean _flag = cFile.mkdirs();
+				if (!_flag) {
+				    throw new IOException("Directory creation Failed ");
+				}
+		    }
+	
+		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
+		    LOGGER.debug("###" + stordFilePathReal + File.separator + newName + "###");
+		    Decoder decoder = Base64.getDecoder();
+
+		    bos.write(decoder.decode(bytearray));
+
+		} catch (FileNotFoundException fnfe) {
+			LOGGER.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			LOGGER.debug("ioe: {}", ioe);
+		} catch (Exception e) {
+			LOGGER.debug("e: {}", e);
+		} finally {
+		    if (bos != null) {
+				try {
+				    bos.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		    if (stream != null) {
+				try {
+				    stream.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		}
+		LOGGER.debug("journalWriteUploadedFile ended.");
+    }
 	
 	/**
 	 * 업무일지 G/W [GET] 첨부파일 리스트
@@ -698,7 +904,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			List<ReceiverFavoriteVO> favoriteList = ezJournalService.getFavoriteList(userId, info.getTenantId() + "");
 			
@@ -728,7 +934,7 @@ public class EzJournalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			jsonParam.put("tenantId", info.getTenantId());
 			ezJournalService.saveFavorite(jsonParam);
@@ -758,7 +964,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			jsonParam.put("tenantId", info.getTenantId());
 			ezJournalService.modifyFavorite(jsonParam);
@@ -789,7 +995,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			ezJournalService.deleteFavorite(favoriteId, userId, info.getTenantId() + "");
 			
@@ -820,7 +1026,7 @@ public class EzJournalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			LOGGER.debug("servername: " + serverName);
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			List<JournalAuthorVO> userList = ezJournalService.getFavoriteUserList(favoriteId, info.getTenantId() + "");
 			
@@ -919,7 +1125,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			param.put("userId", userId);
 			param.put("tenantId", info.getTenantId());
@@ -962,7 +1168,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			JournalEnvVO journalOpt = ezJournalService.getUserJournalEnv(userId, info.getTenantId() + "");
 			
@@ -992,7 +1198,7 @@ public class EzJournalGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = request.getParameter("companyId");
 			if (companyId == null || companyId.equals("")) {
 				companyId = info.getCompanyId();
@@ -1025,7 +1231,7 @@ public class EzJournalGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			LOGGER.debug("userId : " + userId);
 			
@@ -1057,7 +1263,7 @@ public class EzJournalGWController {
 			String key = request.getParameter("key");
 			String value = request.getParameter("value");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			List<JournalAuthorVO> userList = ezJournalService.getDeptUserList(info.getTenantId() + "", key, value);
 			
@@ -1085,7 +1291,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			String recvCount = ezJournalService.getRecvJournalCount(userId, info.getTenantId() + "");
 		
