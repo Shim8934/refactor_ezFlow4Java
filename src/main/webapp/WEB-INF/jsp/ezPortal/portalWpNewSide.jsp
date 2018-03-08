@@ -14,7 +14,7 @@
         			<c:when test="${result != null && result != ''}">
         				<div class="best">
         					<dl>
-        						<dt><span class="icon"><img src="/images/<spring:message code='main.t00025' />/main/icon_best1.gif" width="26" height="28"></span><spring:message code='main.t68' /></dt>
+        						<dt><span class="icon"><img src="/images/<spring:message code='main.t00025' />/main/icon_best1.png" width="32" height="32"></span><spring:message code='main.t68' /></dt>
         						<dd class="photo"><img src="${filePath}" width="75" height="77"></dd>
         						<dd class="txt_name">
             						<span style="cursor:pointer" onclick="OpenUserInfo('${result.cn}')">

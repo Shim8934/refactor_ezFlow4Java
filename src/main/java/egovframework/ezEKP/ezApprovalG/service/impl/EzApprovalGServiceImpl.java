@@ -8915,10 +8915,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			href = makeListField(signXML.getElementsByTagName("HREF").item(0).getTextContent());
 		}
 		
-		if (mode.toUpperCase().equals("CHAMJOEND")) {
-			orgDocID = ezApprovalGDAO.getChamJoDocID(map);
-			docID = orgDocID;
-		}
 		rtnVal.append("<DOCFLAGINFO>");
 		// 문서상태에 따른 XML데이터 설정
 		if (!docState.trim().equals("")) {
@@ -8975,7 +8971,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		rtnVal.append("</DOCFLAGINFO>");
 		rtnVal.append("<DOCINFO>");
-		rtnVal.append(getDocInfo(docID, mode, "ALL", userInfo, companyID, tenantID, "", ""));
+		
+		String docInfo = getDocInfo(docID, mode, "ALL", userInfo, companyID, tenantID, "", "");
+		
+		//결재랑 참조랑 같이 지정하면서 참조가 마지막으로 올때 aprInfo에 없으면 endaprInfo를 검색하도록 
+		if (docState.equals("017") && docInfo.equals("<DATA></DATA>")) {
+			docInfo = getDocInfo(docID, "END", "ALL", userInfo, companyID, tenantID, "", "");
+		}
+		
+		rtnVal.append(docInfo);
 		rtnVal.append("</DOCINFO>");
 		rtnVal.append("<ATTACHINFO>");
 		rtnVal.append(getAttachInfo(docID, mode, "", "", companyID, lang, tenantID, offset));

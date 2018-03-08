@@ -304,17 +304,24 @@ form{display:inline;margin:0}
 .left_myoffice{background: url(/images/left/left_myoffice.jpg) repeat ;height: 40px;}
 .left_mail{height:52px; background:#004896;}
 .left_mail span{background:url(/images/kr/left/left_mail.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:20px;}
-.left_pims{background:url(/images/kr/left/left_pims.gif) repeat ;height: 51px;}
-.left_board{background:url(/images/kr/left/left_board.gif) repeat ;height: 51px;}
-.left_appr{background:url(/images/kr/left/left_appr.gif) repeat ;height: 51px;}
-.left_resource{background:url(/images/kr/left/left_resource.gif) repeat ; height: 51px;}
+.left_pims{height:51px; background:#004896;}
+.left_pims span{background:url(/images/kr/left/left_schedule.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:20px;}
+.left_board{height:52px; background:#004896;}
+.left_board span{background:url(/images/kr/left/left_board.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:20px;}
+.left_appr{height:52px; background:#004896;}
+.left_appr span{background:url(/images/kr/left/left_approval.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:20px;}
+.left_resource{height:52px; background:#004896;}
+.left_resource span{background:url(/images/kr/left/left_resource.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:20px;}
 .left_kms{background:url(/images/kr/left/left_kms.gif) repeat ;height: 51px;}
 .left_dms{background:url(/images/kr/left/left_dms.gif) repeat ;height: 51px;}
-.left_cop{background:url(/images/kr/left/left_community.gif) repeat ;height: 51px;}
+.left_cop{height:52px; background:#004896;}
+.left_cop span{background:url(/images/kr/left/left_community.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:20px;}
 .left_copadmin{background:url(/images/comm/admin_left.jpg) repeat #184c8b;height: 40px;}
 .left_webdisk{background:url(/images/left/left_webdisk.jpg) repeat #184c8b;height: 40px;}
 .left_ezprocess{background:url(/images/left/left_ezprocess.jpg) repeat #184c8b;height: 40px;}
-.left_env{background:url(/images/kr/left/left_env.gif) repeat ;height: 51px;}
+.left_env{height:52px; background:#004896;}
+.left_env span{background:url(/images/kr/left/left_env.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:20px;}
+
 .left_sitemap{background:url(/images/kr/left/left_sitemap.gif) repeat ;height: 51px;}
 .left_notice{background:url(/images/left/left_notice.jpg) repeat #184c8b;height: 40px;}
 .left_memo{background:url(/images/left/left_memo.jpg) repeat #184c8b;height: 40px;}
@@ -322,7 +329,8 @@ form{display:inline;margin:0}
 .left_search{background:url(/images/left/left_search.jpg) repeat #184c8b;height: 40px;}
 .left_diary{background:url(/images/left/left_diary.jpg) left top repeat ;width:170px; height: 40px;}
 .left_tasktime{background:url(/images/left/left_tasktime.jpg) left top repeat ;width:170px; height: 40px;}
-.left_circular{background:url(/images/kr/left/left_circular.gif) repeat ;height: 51px;}
+.left_circular{height:52px; background:#004896;}
+.left_circular span{background:url(/images/kr/left/left_circular.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:20px;}
 
 .tasktime { background: url(/images/main/time_bg.gif) no-repeat left top; 
 	width:232px; height:58px; margin:0; border-top:2px solid #efefef}
@@ -794,7 +802,7 @@ form{display:inline;margin:0}
 .listview2{ behavior:url(/myoffice/ezKMS/controls/listview/listview.htc);}
 .listview3{ behavior:url(/myoffice/ezKMS/controls/listview/listview_search.htc);}
 .left_admin{
-    font-size:16px;
+    font-size:17px;
 	font-weight:bold;
 	font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	color:rgb(93,93,93);
@@ -1000,7 +1008,7 @@ form{display:inline;margin:0}
 .pl10{padding-left:10px;}
 
 
-.tstyle1 {border:1px  solid #b6b6b6; width:100%; font-size:12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;} 
+.tstyle1 {border:1px  solid #b6b6b6; width:100%; font-size:12px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;} 
 .tstyle1 th {
 	padding:5px;
 	border-left: 0px;
@@ -1515,7 +1523,7 @@ form{display:inline;margin:0}
 .organwrap_list  .organinfo .name { height:18px; padding-top:5px!important;}
 
 /* organliststyle2 */
-.popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .popup_mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; line-height:19px; padding:4px 4px 0px; border-top:1px solid #cfcfcf; border-bottom:1px solid #cfcfcf; background-color: #f8f8f8;}
 .popup_mainlist tr th.title{width:100%; text-align:left;}
 

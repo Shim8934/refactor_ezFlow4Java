@@ -304,7 +304,7 @@ form{display:inline;margin:0}
 .left_myoffice{background: url(/images/left/left_myoffice.jpg) repeat ;height: 40px;}
 .left_mail{height:52px; background:#004896;}
 .left_mail span{background:url(/images/kr/left/left_mail.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
-.left_pims{height:52px; background:#004896;}
+.left_pims{height:51px; background:#004896;}
 .left_pims span{background:url(/images/kr/left/left_schedule.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
 .left_board{height:52px; background:#004896;}
 .left_board span{background:url(/images/kr/left/left_board.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
@@ -802,7 +802,7 @@ form{display:inline;margin:0}
 .listview2{ behavior:url(/myoffice/ezKMS/controls/listview/listview.htc);}
 .listview3{ behavior:url(/myoffice/ezKMS/controls/listview/listview_search.htc);}
 .left_admin{
-    font-size:16px;
+    font-size:17px;
 	font-weight:bold;
 	font-family:'gulim','arial';
 	color:rgb(93,93,93);
