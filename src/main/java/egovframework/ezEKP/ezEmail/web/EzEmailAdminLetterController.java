@@ -66,7 +66,7 @@ public class EzEmailAdminLetterController {
 	 * @param String loginCookie, Model model
 	 * @return String
 	 */
-	@RequestMapping(value="/admin/ezEmail/letterlMain.do")
+	@RequestMapping(value="/admin/ezEmail/letterMain.do")
 	public String letterMainView(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("letterMainView started.");
 		
@@ -160,6 +160,7 @@ public class EzEmailAdminLetterController {
 		if (auth == null) {
 			return "cmm/error/adminDenied";
 		}
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Integer tenant = userInfo.getTenantId();
 		String tenant_id = Integer.toString(tenant);

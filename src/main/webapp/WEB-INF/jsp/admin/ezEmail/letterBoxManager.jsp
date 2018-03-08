@@ -47,7 +47,7 @@
 		    var company;
 		    var returnCompany = '${companyId}';
 		    var pageType = "${pageType}";
-		    var noResult = false; //result가 한개도 없을 경우 true
+		    
 		    
 		    window.onload = window_onload;
 		    

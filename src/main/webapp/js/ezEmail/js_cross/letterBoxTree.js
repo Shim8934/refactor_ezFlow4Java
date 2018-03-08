@@ -1,3 +1,5 @@
+var noResult = false;
+
 // 편지지함 트리 가져오기
 function resultRead() {
 	$.ajax({
@@ -11,13 +13,11 @@ function resultRead() {
 		complete : function(data) {
 	        result = data.responseJSON;
 	        
+	        if (result.length == 0) {
+        		noResult = true;
+        	}
 	        
-	        if (pageType == 'letterBox') {
-	        	
-	        	if (result.length == 0) {
-	        		noResult = true;
-	        	}
-	        	
+	        if (pageType == 'letterBox') {	
 	    	   setCompany();
 	        }
 	        treeSet();
@@ -42,6 +42,7 @@ function treeInit() {
 function setCompany() {
 	
 	company = returnCompany;
+	document.getElementById("company_id").value = company;
 	
 	if (company == null) {
 		company = "";
@@ -71,7 +72,6 @@ function treeOnclick() {
     		
     		document.getElementById("parent_letterbox_no").value = parent;
     		document.getElementById("letterbox_no").value = selectNode.node.id; 
-    		//여기다가 비슷하게 회사 추가하기
     		
     		if (!(selectNode.node.id.indexOf('temp'))) {
     			// 편지지함이 임시 추가라면
@@ -176,6 +176,7 @@ function treeView() {
 function addLetterBox() {
 	var parent;
 	var parentId;
+	var putParent;
 	
 	if (addCheck == -1) {
 		alert("추가 더이상 안돼"); // 이거 strLang으로 바꾸기
@@ -186,10 +187,12 @@ function addLetterBox() {
 		//편지지함이 한개도 없을 경우, 부모를 루트로 만들어야함
 		parent = '#';
 		parentId = '';
+		putParent = '0';
 		
 	} else {
 		parent = selectNode.node.id;
 		parentId = parent;
+		putParent = parent;
 	}
 
 	var node = { id: 'temp', text:"편지지함"};
@@ -198,8 +201,7 @@ function addLetterBox() {
 	$("#divTree").jstree("open_node", $('#'+parentId));
 	$("#divTree").jstree("select_node", $('#temp'));
 	
-	document.getElementById("parent_letterbox_no").value = parent;
-	document.getElementById("company_id").value = company;
+	document.getElementById("parent_letterbox_no").value = putParent;
 	
 	$("#letterbox_no").attr("disabled","disabled");
 	
@@ -261,9 +263,6 @@ function deleteLetterBox() {
 function submitClick() {
 	var formData = $("#myForm").serialize();
 	
-	console.log(formData);
-	
-	return;
 	var formUrl = "/admin/ezEmail/updateLetterBox.do";
 	if (document.getElementById("letterbox_no").disabled) {
 		formUrl = "/admin/ezEmail/createLetterBox.do";

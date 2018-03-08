@@ -85,10 +85,9 @@
 		            case 22:
 		            	url = "/admin/ezEmail/mailQuotaList.do";
 		                break;
-		                
-				case 23:
-					url = "/ezStatistics/statisticsMailMain.do";
-					break;
+					case 23:
+						url = "/ezStatistics/statisticsMailMain.do";
+						break;
 				    case 24:
 				        url = "/ezStatistics/statisticsMailDept.do";
 					    break;
@@ -107,9 +106,9 @@
 			        case 29:
 			        	url = "/ezStatistics/statisticsMailSendLogList.do";
 			        	break;
-				 case 30:
-				 	url = "/admin/ezEmail/letterMain.do";
-				 	break;
+				    case 30:
+					 	url = "/admin/ezEmail/letterMain.do";
+					 	break;
 				}
 				window.open(url,"right");
 			}
