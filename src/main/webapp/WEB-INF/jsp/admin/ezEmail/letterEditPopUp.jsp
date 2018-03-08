@@ -6,83 +6,10 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Insert title here</title>
-		<!-- <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css"> -->	
+	    <link rel="stylesheet" href="/css/ezEmail/style.css" />		
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	</head>
-	<body>
-	<style>
-		body {
-			background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top;
-		}
-		#leTop {
-		}
-		.leTitle {
-		    padding: 3px;
-		    color: white;
-		}
-		.leLetter {
-			margin-top: 15px;
-		}
-		.leLetterInfo {
-		    height: 50px;
-		}
-		.leLetterInfo table {
-			width: 100%;
-			border-collapse: collapse;
-		    empty-cells: show;
-		    padding: 0;
-		    margin: 0;
-		    font-size: 12px;
-		    font-family: 'Gulim', 'arial', 'verdana';
-		}
-		.leLetterInfo th {
-			white-space: nowrap;
-		    word-break: keep-all;
-		    word-wrap: normal;
-		    color: #777;
-		    background-color: #f8f8f8;
-		    border: 1px solid #b6b6b6;
-		    padding: 2px 10px;
-		}
-		.leLetterInfo td {
-		    padding: 0px 2px 0px 2px;
-		    background: #FFF;
-		    border: 1px solid #b6b6b6;
-		    height: 29px;
-		    word-break: break-all;
-		}
-		.leLetterInfo table input {
-			width: 100%;
-			box-sizing: border-box;
-		}
-		.leLetterEditer {
-			width: 100%;
-			height: 500px;
-			//border: 1px solid black;
-			//clear: both;
-    		margin: 15px 0;
-		}
-		.leLetterEditer > iframe {
-		    border: none;
-	    }
-		.leLetterBtns {
-			text-align: center;
-		}
-		.leLetterBtns button {
-		    background: linear-gradient(#3a5382,#28416d);
-		    color: white;
-		    border: 1px solid #223151;
-		    padding: 3px 10px;
-		    border-radius: 4px;
-		    cursor: pointer;
-	    }
-		.leLetterBtns button:hover {
-			background: linear-gradient(white,#f3f2f2);
-		    color: #393939;
-		    border: 1px solid #a5a3a3;
-		}
-		
-	</style>
+	<body style="background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top">
 		<div id="leTop">
 			
 			<div class="leTitle">
@@ -105,17 +32,7 @@
 				 			<td><input type="text" id="displayname2" name="displayname2" placeholder="편지지명(영문)을 입력해주세요"></td>
 				 		</tr>
 				 	</table>
-				 	<!-- <ul>
-				 		<li>
-				 			<span>편지지명</span>
-				 			<input type="text" name="" placeholder="편지지명을 입력해주세요">
-				 		</li>
-				 		<li>
-				 			<span>편지지명(영문)</span>
-				 			<input type="text" name="" placeholder="편지지명을 입력해주세요">
-				 		</li>
-				 	</ul> -->
-				 </div>
+				 </div> <!-- leLetterInfo End -->
 				 <div class="leLetterEditer">
 				 	<iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILLETTER" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 				 	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; display:none;"></textarea>
@@ -124,7 +41,7 @@
 				 	<button id="leSave" data-letterId="${letterId }" data-boxNo="${letterBoxNo }">저장</button>
 				 	<button id="leClose">취소</button>
 				 </div>
-			</div>
+			</div> <!-- leLetter End -->
 		
 		</div>
 		<script>
