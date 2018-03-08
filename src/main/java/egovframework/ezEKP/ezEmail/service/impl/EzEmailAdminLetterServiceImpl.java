@@ -51,7 +51,7 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 			json = (JSONArray) object.get("result");
 			
 			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1 || json.size() <= 0) {
-				throw new Exception("JGwServer ERROR");
+				//throw new Exception("JGwServer ERROR");
 			}
 		}
 		

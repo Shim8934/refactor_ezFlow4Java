@@ -47,6 +47,7 @@
 		    var company;
 		    var returnCompany = '${companyId}';
 		    var pageType = "${pageType}";
+		    var noResult = false; //result가 한개도 없을 경우 true
 		    
 		    window.onload = window_onload;
 		    
@@ -54,7 +55,7 @@
 		    	resultRead();
 		    }
 		    
-		 // 이름, 이름(영문)뿌려주는애
+		    // 이름, 이름(영문)뿌려주는애
 		    function setDisplay(letter_displayname, letter_displayname2) {
 		    	document.getElementById("display").value = letter_displayname;
 		    	document.getElementById("display2").value = letter_displayname2;
