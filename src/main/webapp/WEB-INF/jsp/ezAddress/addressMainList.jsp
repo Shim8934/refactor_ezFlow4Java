@@ -11,9 +11,10 @@
 	    <style>
 	    	.emptyDiv {
 	    		height: 140px;
-	    		border:	1px solid #ddd;
-	    		background-color: #fafafa;
 	    		padding-top: 60px;
+	    		color : #d0d0d0;
+	    		font-size : 12px;
+	    		font-weight: bold;
 	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
