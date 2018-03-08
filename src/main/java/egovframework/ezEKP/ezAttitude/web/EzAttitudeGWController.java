@@ -601,6 +601,8 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
 			String userId = request.getParameter("userId");
+			String userName = request.getParameter("userName");
+			String deptName = request.getParameter("deptName");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			

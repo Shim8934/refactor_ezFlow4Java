@@ -3,6 +3,7 @@
 
 <sqlMap namespace="ezAttitudeAdmin">
 	<typeAlias alias="AttitudeDeptVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO"/>
+	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
 		<![CDATA[
@@ -32,5 +33,34 @@
 						CN = 'Top') ) A
 				
 		]]>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultClass="AttitudeUserConfigVO">
+		SELECT
+			A.USERID,
+			A.WORKSTARTTIME,
+			A.WORKENDTIME,
+			B.TITLE AS USERTITLE,
+			B.DISPLAYNAME AS USERNAME,
+			B.DESCRIPTION AS DEPTNAME
+		FROM
+			tbl_attitude_user_conf A 
+		INNER JOIN 
+			tbl_usermaster B 
+		ON 
+			A.USERID = B.CN
+		AND
+			A.TENANT_ID = B.TENANT_ID
+		WHERE
+			A.TENANT_ID = #tenantId#
+		<isNotEmpty prepend="AND" property="companyId">
+			A.COMPANYID = #companyId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="deptName">
+			B.DESCRIPTION = #deptName#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userName">
+			B.DISPLAYNAME = #userName#
+		</isNotEmpty>
 	</select>
 </sqlMap>

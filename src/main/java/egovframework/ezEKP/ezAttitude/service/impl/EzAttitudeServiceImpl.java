@@ -242,6 +242,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId,
 			String companyId, String userName, String deptName)
 			throws Exception {
+		LOGGER.debug("getAttitudeUserConfigList started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantId", tenantId);
@@ -249,8 +250,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("userName", userName);
 		map.put("deptName", deptName);
 		
-		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfig(map);
-		
+		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfigList(map);
+		LOGGER.debug("getAttitudeUserConfigList ended");
 		return resultList;
 	}
 
