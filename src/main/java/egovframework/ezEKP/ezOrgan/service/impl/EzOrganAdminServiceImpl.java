@@ -1257,7 +1257,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 					memberList.add(arrAddress[i].substring(0, idx));
 				}
 			} 
-			memberList.add(memberId);
+			memberList.add(memberId); //기존 공용배포그룹에 추가하는 유저
 		} 
 		
 		logger.debug("meberId=" + memberList.toString());
@@ -1331,15 +1331,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public int getDistributionUserName (String companyId, int tenantId,  String groupName) throws Exception {
+	public String getDistributionUserName (int tenantId,  String groupName) throws Exception {
 		logger.debug("getDistributionUserName started.");
-		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",groupName=" + groupName);
+		logger.debug("tenantId=" + tenantId + ",groupName=" + groupName);
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
-		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
-		inputParams += "&domainName=" + URLEncoder.encode(domain, "UTF-8");
-		inputParams += "&groupName=" + URLEncoder.encode(groupName, "UTF-8");
+		String inputParams = "&domainName=" + URLEncoder.encode(domain, "UTF-8") 
+				+"&groupName=" + URLEncoder.encode(groupName, "UTF-8");
 		
 		logger.debug("inputParams=" + inputParams);
 
@@ -1351,7 +1350,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String resultCode = "Error";
 		int reasonCode = -100;
 		String userName = "";
-		int isUserName = -1;
 		
 		if (response != null) {
 			JSONParser jsonParser = new JSONParser();
@@ -1364,18 +1362,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				
 				if (reasonCode == 0) {
 					userName = (String) responseObj.get("userName");
-					
-					if (!userName.equals("")) {
-						isUserName = 1;
-					}
 				}
 			}
 		}
 
 		logger.debug("resultCode=" + resultCode + ",reasonCode=" + reasonCode + ",userName=" + userName);
-		logger.debug("isUserName=" + isUserName);
 		logger.debug("getDistributionUserName ended.");
 
-		return isUserName;
+		return userName;
 	}
 }

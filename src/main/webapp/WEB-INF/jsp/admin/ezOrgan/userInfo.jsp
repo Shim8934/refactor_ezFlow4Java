@@ -526,8 +526,9 @@
 		    		type : "POST",
 		    	    dataType : "text",
 		    	    url : "/admin/ezOrgan/mailSaveDistributionList.do" ,
-		    	    data : {cn: document.getElementById("UserID").value, jobTitle: JobTitle.value, 
-		    	     jobTitle2: JobTitle2.value, jobPosition: JobPosition.value, jobPosition2:JobPosition2.value
+		    	    data : {cn: document.getElementById("UserID").value, 
+		    	    			jobTitle: JobTitle.value, 
+		   						jobPosition: JobPosition.value
 		    	     },
 		    	    async : false,
 		    	    success : function(result){

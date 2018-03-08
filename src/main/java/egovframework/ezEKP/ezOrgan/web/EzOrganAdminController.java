@@ -2700,12 +2700,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String memberId = request.getParameter("cn");
 		String jobTile = request.getParameter("jobTitle") == null ? "" : request.getParameter("jobTitle");
-		String jobTile2 = request.getParameter("jobTitle2") == null ? "" : request.getParameter("jobTitle2");
 		String jobPostion = request.getParameter("jobPosition") == null ? "" : request.getParameter("jobPosition");
-		String jobPostion2 = request.getParameter("jobPosition2") == null ? "" : request.getParameter("jobPosition2");
 		
 		logger.debug("mailSaveDistributionList started.");
-		logger.debug("memberId=" + memberId + ", jobTile=" + jobTile + ", jobTile2=" + jobTile2 + ", jobPosition=" + jobPostion + ",jobPostion2=" + jobPostion2);
+		logger.debug("memberId=" + memberId + ", jobTile=" + jobTile +  ", jobPosition=" + jobPostion);
 		
 		int tenantID = auth.getTenantId();
 		
@@ -2716,24 +2714,28 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		try {
 			
-			int  isUserName = -1;
+			String userName = "";
 			
-			if (jobTile2 != null) {
-				isUserName = ezOrganAdminService.getDistributionUserName(companyId, tenantID, jobTile);
-
-				 if ( isUserName > -1 ) {//직위 이름으로 공용 배포그룹 존재시
-					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, jobTile2, companyId, tenantID, memberId);
+			if (!jobTile.equals("")) {
+				userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile);
+				String jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
+				logger.debug("jobTitle UUID=" + jobTile2);
+				
+				 if (!userName.equals("")) {//직위 이름으로 공용 배포그룹 존재시
+					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, userName, companyId, tenantID, memberId);
 				 } else {
 					 result = ezOrganAdminService.mailAddDistributionList(domain, jobTile, jobTile2, companyId, tenantID, memberId);
 				 }
 				 
 			}
 			
-			if (jobPostion2 != null) {
-				isUserName = ezOrganAdminService.getDistributionUserName(companyId, tenantID, jobPostion);
+			if (!jobPostion.equals("")) {
+				userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion);
+				String jobPostion2 = String.valueOf(UUID.randomUUID()).substring(0,8);
+				logger.debug("jobPostion2 UUID=" + jobPostion2);
 				 
-				 if ( isUserName > -1 ) {//직책 이름으로 공용 배포그룹 존재시
-					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, memberId);
+				 if (!userName.equals("")) {//직책 이름으로 공용 배포그룹 존재시
+					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, userName, companyId, tenantID, memberId);
 				 } else {
 					 result = ezOrganAdminService.mailAddDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, memberId);
 				 }
@@ -2742,7 +2744,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		
 		logger.debug("result=" + result);
 		logger.debug("mailSaveDistributionList ended.");
