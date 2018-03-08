@@ -446,6 +446,16 @@ public class EzPollController extends EgovFileMngUtil {
 					}
 				}
 			}
+			//대기 상황일 경우도 필터하도록 처리 pollType => 1:전체, 2:진행, 3완료, 4:대기
+			else if(pollType.equals("4")) {
+				while (iterator.hasNext()){
+					PollQuestionVO question = iterator.next();
+					
+					if(question.getStatus() != 2){
+						iterator.remove();	
+					}	
+				}
+			}
 			else {
 				while (iterator.hasNext()) {
 					PollQuestionVO question = iterator.next();

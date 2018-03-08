@@ -50,6 +50,7 @@
 			var currentGroupSticker 	= -1;
 			var flagEvent 				= -1;
 			var currentEditingCmt 		= -1;
+			var selectedList 			= ${listSelectedOptions};
 			var colors 					= ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",		
 											"#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",     
 			           						"#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"];
@@ -174,7 +175,9 @@
 							}
 						}
 					}					
-				}				
+				}
+				
+				emoticonPanelClose();
 			}
 			
 			function updateGraph() {				
@@ -185,6 +188,12 @@
 					var percentTdId = "_resultPercentage" + _optId; 
 					var optionID = "optionContent" + _optId;		
 					var emailElmt = document.getElementById("mailSend" + _optId);
+					
+					var selectedFlag = 0;
+					for(var j = 0; j < selectedList.length; j++){
+						selectedFlag = selectedList.indexOf(_optId) != -1 ? true : false;
+					}
+					
  					document.getElementById(optionID).style.color = colors[i % 30];
 					
 					if (totalVotes > 0 && (seeResultBeforVote == 1 || _status == 0)) {				
@@ -261,7 +270,7 @@
 							
 							//Check if the poll is allowed see result before vote														
 							if (_status != 0) {							
-								if (seeResultBeforVote != 0) {
+								/* if (seeResultBeforVote != 0) {
 									var showVotes = document.getElementById("voterNumber_" + _optId);																	
 					   				showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";	
 				   					showVotes.style.color = colors[i % 30];
@@ -269,7 +278,13 @@
 									
 									document.getElementById(graphId).style.display = "none";
 									//document.getElementById(voteInfo).style.display = "block";
-								}
+								} */
+									var showVotes = document.getElementById("voterNumber_" + _optId);																	
+					   				showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";	
+				   					showVotes.style.color = colors[i % 30];
+									showVotes.style.display = "block";
+									
+									document.getElementById(graphId).style.display = "none";
 							}
 							else {
 								var showVotes = document.getElementById("voterNumber_" + _optId);
@@ -298,7 +313,16 @@
 						
 						//Check if the poll is allowed see result before vote
 						if (_status != 0) {							
-							if (seeResultBeforVote != 0) {
+							/* if (seeResultBeforVote != 0) {
+								var showVotes = document.getElementById("voterNumber_" + _optId);																	
+				   				showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";	
+			   					showVotes.style.color = colors[i % 30];
+								showVotes.style.display = "block";
+								
+								document.getElementById(graphId).style.display = "none";
+								//document.getElementById(voteInfo).style.display = "block";
+							} */
+							if (!selectedFlag) {
 								var showVotes = document.getElementById("voterNumber_" + _optId);																	
 				   				showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";	
 			   					showVotes.style.color = colors[i % 30];
@@ -328,7 +352,7 @@
 		        	
 			            if (ret != -1 && ret != s_Users) {
 					    	s_Users = ret;
-					    	document.getElementById("seenPeople").innerHTML = "(" + ret + ")";	
+					    	document.getElementById("seenPeople").innerHTML = ret;	
 					    	//document.getElementById("seenPeople").style.color="red";
 					    	
 				    		if (window_open1 != null && !window_open1.closed) {	
@@ -353,7 +377,7 @@
 			        	
 			            if (ret == "ADD") {							
 			            	numberOfUnvotedUsers = numberOfUnvotedUsers - 1;			            	
-			            	document.getElementById("_unVotedNumber").innerHTML = "(" + numberOfUnvotedUsers + ")";
+			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
 			            	
 			            	//if (user != curentUser || sessionId != _sessionid) {
 			            	votedUsers = votedUsers + 1;
@@ -362,7 +386,7 @@
 					    }
 			            else {
 			            	numberOfUnvotedUsers = numberOfUnvotedUsers + 1;			            	
-			            	document.getElementById("_unVotedNumber").innerHTML = "(" + numberOfUnvotedUsers + ")";
+			            	document.getElementById("_unVotedNumber").innerHTML = numberOfUnvotedUsers;
 			            	
 			            	//if (user != curentUser || sessionId != _sessionid) {
 		            		votedUsers = votedUsers - 1;
@@ -754,6 +778,8 @@
  	    		var optId = votesArr[voteId][0]; 	    		
  	    		
 	 	    	if (obj.src.indexOf("/images/poll/unchecked_vote.png") !== -1) { 	    		   		
+	 	    		modifySelectedList(optId, 'add');
+	 	    		
 	 	    		if (votePrivilege == 0) {
 	 	    			alert("<spring:message code = 'ezPoll.t172'/>");
 	 					return;
@@ -793,6 +819,8 @@
 					});   		
 		    	}
 	 	    	else {
+	 	    		modifySelectedList(optId, 'remove');
+	 	    		
 	 	    		obj.onclick = null;
 	 	    		
 	 	    		$.ajax({
@@ -2472,6 +2500,29 @@
 		        var pLeft = (pwidth - 890) / 2;
 		        window.open("/ezPoll/mailWrite.do?type=group&state=voted&qstId=" + pQstID + "&optId=" + pOptID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);		       
 		    }
+		    
+		    //이모티콘 패널이 아닌 영역을 선택하면 패널이 닫힘
+		    function emoticonPanelClose(){
+		    	var emoticonPanel = document.getElementById('emoticonPanel');
+		        $(document).click(function(e){
+		            var target = e.target;
+		            var onOff = emoticonPanel.getAttribute('style').indexOf('display: block')!=-1?true:false;
+		            
+		            if(onOff && target.id != "_addEmoticon"){
+                        addSticker();
+		            }
+		        });
+		    }
+		    
+		    //투표 버튼 누를 때 선택한 리스트의 정보를 바꾸어 줌.
+		    function modifySelectedList(optId, mode){
+		    	var optIdIdxInArr = selectedList.indexOf(optId);
+		    	if(mode == 'add'){
+		    		selectedList.push(optId);
+		    	}else{
+		    		selectedList.splice(optIdIdxInArr,1);
+		    	}
+		    }
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -2498,7 +2549,123 @@
 					  <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2)}">
 						  <div id="_editVote" onclick="voteEdit()"><span><spring:message code = 'ezEmail.t149'/></span></div>
 					  </c:if>
-	                  <div class="voteBtn">
+					  <div class='voteIconDiv'>
+						  	<ul class='voteIcon_ul'>
+								<c:choose>
+									<c:when test="${question.resultFirst == 1}">
+										<li class="voteIconImg_li icon">
+											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" >
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li icon">
+											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg" >
+										</li>
+									</c:otherwise>
+								</c:choose>
+								<!-- <li class='icon_title'>
+									<span>미리보기</span>
+								</li> -->
+							</ul>
+							<ul class='voteIcon_ul'>
+								<c:choose>
+									<c:when test="${question.multiSelect >= 0}">
+										<li class="voteIconImg_li icon">
+											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" >
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li icon">
+											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" >
+										</li>
+									</c:otherwise>
+								</c:choose>
+								<c:if test="${question.multiSelect > 0}">
+										<li class="img_description">
+											<div><span>${question.multiSelect}</span></div>
+										</li>
+								</c:if>
+								<c:if test="${question.multiSelect == 0}">
+										<li class="img_description">
+											<div><span><spring:message code = 'ezEmail.lhm67'/></span></div>
+										</li>
+								</c:if>
+								<!-- <li class='icon_title'>
+									<span>다중투표</span>
+								</li> -->
+							</ul>
+							<ul class='voteIcon_ul'>
+								<c:choose>
+									<c:when test="${question.secretVote == 1}">
+										<li class="voteIconImg_li icon">
+											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg" >
+										</li>
+										<li class="img_description">
+											<div><span><spring:message code = 'ezPoll.t111'/></span></div>
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li icon">
+											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg" >
+										</li>
+										<li class="img_description">
+											<div><span><spring:message code = 'ezPoll.t240'/></span></div>
+										</li>
+									</c:otherwise>
+								</c:choose>
+								<%-- <li class='icon_title'>
+									<span><spring:message code = 'ezPoll.t109'/></span>
+								</li> --%>
+							</ul>
+							<ul class='voteIcon_ul'>
+								<c:choose>
+									<c:when test="${question.secretVote == 0}">
+										<li class="voteIconImg_li icon nosecret" onclick="menuDetailSeenUserInfo('${question.qstId}')">
+											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" >
+										</li>
+										<li class="img_description">
+											<div><span id="seenPeople">${seenUsers}</span></div>
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li icon">
+											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" >
+										</li>
+										<li class="img_description">
+											<div><span id="seenPeople">${seenUsers}</span></div>
+										</li>
+									</c:otherwise>
+								</c:choose>
+								<%-- <li class='icon_title'>
+									<span><spring:message code = 'ezPoll.t112'/></span>
+								</li> --%>
+							</ul>
+							<ul class='voteIcon_ul'>
+								<c:choose>
+									<c:when test="${question.secretVote == 0}">
+										<li class="voteIconImg_li icon nosecret" onclick="javascript:displayDetail('${question.qstId}')">
+											<img src="/images/poll/unvoted_user.png" class="voteIconImg" >
+										</li>
+										<li class="img_description">
+											<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li icon">
+											<img src="/images/poll/unvoted_user.png" class="voteIconImg" >
+										</li>
+										<li class="img_description">
+											<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
+										</li>
+									</c:otherwise>
+								</c:choose>
+								<%-- <li class='icon_title'>
+									<span><spring:message code = 'ezPoll.t123'/></span>
+								</li> --%>
+							</ul>
+					  </div>
+					  
+	                 <%--  <div class="voteBtn">
 	                  				<c:choose>
 	                  					<c:when test="${question.secretVote == 0}">
 	                  						<div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
@@ -2507,7 +2674,7 @@
 	                  						<div><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
 	                  					</c:when>
 	                                </c:choose>
-	                                <%-- <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div> --%>
+	                                <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div>
 	                                <!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
 	                            </div>
 	                  <div class="voteBtn">
@@ -2520,7 +2687,7 @@
           					</c:when>
                         </c:choose>
 					  	
-					  </div>
+					  </div> --%>
 				</div>
 				<div id="titleAndContent">				
 					<div id="title" class="questionTitle" style="width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
@@ -2594,7 +2761,7 @@
 			               				<div id="graphBar<c:out value ="${_option.ansId}" />" style="float:left; display:block; heigth:20px; margin:4px 0px 10px 0px;">
 			               					<canvas class="graph01" id="myCanvas<c:out value ="${_option.ansId}" />"  height="20"></canvas>			               					               					
 			               				</div>	
-			               				<div id="voterNumber<c:out value ="${_option.ansId}" />" style="float:left; display:block; font-size:16px; margin:-4px 10px 0px 10px;">0</div>		               				
+			               				<div id="voterNumber<c:out value ="${_option.ansId}" />" class="voterNumber" >0</div>		               				
 			               				<script type="text/javascript">
 			               					var loopIdx = ${loop.index};
 			               					userNameArr[loopIdx] = [];
@@ -2632,7 +2799,7 @@
 			               		</div>          		
 			               </td>		               
 				          <td style="width:80px; border:1px solid #DDD; border-left:none;">	   	               		
-				               	<div id="_resultPercentage<c:out value ="${_option.ansId}"/>" style="padding-bottom: 3px;padding-left: 20px;"></div>           		
+				               	<div id="_resultPercentage<c:out value ="${_option.ansId}"/>" class="_resultPercentage" ></div>           		
 				          </td>		               
 			            </tr>
 					</c:forEach>

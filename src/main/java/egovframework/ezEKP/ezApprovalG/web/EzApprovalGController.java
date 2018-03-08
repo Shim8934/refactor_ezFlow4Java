@@ -377,6 +377,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("proxyInfo", proxyInfo);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
 		model.addAttribute("relayG_type", relayG_type);
+		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		
 		logger.debug("aprManage ended.");
 		
@@ -1866,6 +1867,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String poptExt = ezApprovalGService.getOptionInfo("A39", "001", userInfo, "CODE");
 		// 첨부파일의 maxSize 설정(단위 MB)
 		String maxSize = ezApprovalGService.getOptionInfo("A39", "002", userInfo, "CODE");
+		
+		// 첨부파일명 최대길이
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
 		String isBody = "";
 
 		if (!formList.replace(formID, "").equals(formList)) {
@@ -1884,6 +1893,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		//2017-11-09 장진혁 전자결재 총 첨부용량 제한 기능 추가
 		model.addAttribute("apprTotalAttachLimit", apprTotalAttachLimit);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		logger.debug("aprAttach ended");
 		
@@ -3496,7 +3506,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId());
 				
 				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-					if(mailchk.equals("Y")) {
+					if(mailchk!=null && mailchk.equals("Y")) {
 						model.addAttribute("chk", "no");
 					}
 					return "main/warning";

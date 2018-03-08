@@ -86,6 +86,20 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useHTMLMode = ezCommonService.getTenantConfig("USE_HTMLMODE", userInfo.getTenantId());
+		
+		String defaultFontFamily = egovMessageSource.getMessage("main.t246", userInfo.getLocale());
+		String  defaultFontSize = "13px";
+		
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				defaultFontFamily = editorFontStyle.split("\\|")[0];
+				defaultFontSize = editorFontStyle.split("\\|")[1];
+			}
+		}
+		
 		String returnPath = "";
 		
 		switch (useEditor) {
@@ -113,6 +127,8 @@ public class EzEditorController extends EgovFileMngUtil{
 		model.addAttribute("type", type);
 		model.addAttribute("height", height);
 		model.addAttribute("isUsed", isUsed);
+		model.addAttribute("defaultFontFamily", defaultFontFamily);
+		model.addAttribute("defaultFontSize", defaultFontSize);
 
 		return returnPath;
 	}
@@ -138,6 +154,19 @@ public class EzEditorController extends EgovFileMngUtil{
 		logger.debug("serverUrl=" + serverUrl);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String defaultFontFamily = egovMessageSource.getMessage("main.t246", userInfo.getLocale());
+		String  defaultFontSize = "13px";
+		
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				defaultFontFamily = editorFontStyle.split("\\|")[0];
+				defaultFontSize = editorFontStyle.split("\\|")[1];
+			}
+		}
+		
 		String returnPath = "";
 		
 		switch (useEditor) {
@@ -163,6 +192,8 @@ public class EzEditorController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("type", type);
 		model.addAttribute("height", height);
+		model.addAttribute("defaultFontFamily", defaultFontFamily);
+		model.addAttribute("defaultFontSize", defaultFontSize);
 		
 		return returnPath;
 	}

@@ -107,6 +107,43 @@
 	            getBoardList();
 	        };
 	        
+		    $(document).ready(function() {
+		    	var clickOutside;
+		    	
+		    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
+		    	} else {
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
+		    	}	    	
+		    	
+		    	clickOutside.mouseup(function (e) {
+		    		console.log("1")
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.parent.frames['left'].document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(parent.document).mouseup(function (e) {
+		    		console.log("2")
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(document).mouseup(function (e) {
+		    		console.log("3")
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.frames['ifrmPreViewH']).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    });
+	        
 	        var Save_unloadSave = false;
 	        function Window_onunload() {
 	            if (window_onunload_Event && !Save_unloadSave) {
@@ -468,10 +505,14 @@
 		    function refresh_onclick() {
 		    	var strListArr = new Array();
 	        	strListArr = strListInfo.split(";");
-
-	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
+	        	
+	        	//2018-02-19 김보미
+	        	if ((pageCnt - strListArr.length + 1) % perCnt == 0 && CurPage != 1) {						
 					CurPage = CurPage - 1;
 				}
+// 	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
+// 					CurPage = CurPage - 1;
+// 				}
 
 		    	getBoardList();
 		    }

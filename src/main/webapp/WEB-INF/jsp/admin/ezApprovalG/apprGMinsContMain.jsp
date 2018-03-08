@@ -58,7 +58,7 @@
 		        
 // 		        $("#btnAppdept").closest("a").hide();
 // 	            $("#btnDeldept").closest("a").hide();
-	            document.getElementById("selUseDept").disabled = true;
+//	            document.getElementById("selUseDept").disabled = true;
 		        
 		        if (gState == "U") {
 		            initVal(RetValue);

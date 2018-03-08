@@ -22,7 +22,7 @@
 			var filter = "<c:out value='${filter}' />";
 			var keyword = "<c:out value='${keyword}' />";
 			var offSetMin = "<c:out value='${offSetMin}' />";
-
+			var usedate = false;
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -33,9 +33,19 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        if (startdate != "") {
-		            document.getElementById("usedate").checked = true;
+		        	document.getElementById("usedate").checked = true;
 		            //document.getElementById('keyword').value = keyword;
-		        }	        
+			        $("#Sdatepicker").datepicker('enable');
+			        $("#Edatepicker").datepicker('enable');
+			        usedate = true;
+				//////////////////
+		        } else {
+		        	document.getElementById("usedate").checked = false;
+			        $("#Sdatepicker").datepicker('disable');
+			        $("#Edatepicker").datepicker('disable');
+			        usedate = false;
+		        }
+				//////////////////
 		    }
 			
 		    $(function () {
@@ -116,11 +126,11 @@
 		        var edate = "";
 		        var keyword = "";
 		        var filter = "ScheduleID=ScheduleID";		        
-		
+		        var useDate = document.getElementById("usedate").checked;
 		        if (document.getElementById("usedate").checked) {
 		            sdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		            edate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-		        }
+		        } 
 
 		        if (sdate > edate) {
 		        	alert("<spring:message code='ezResource.dateChk' />");
@@ -133,6 +143,7 @@
 		        }
 		        
 		        window.location.href = "/ezSchedule/scheduleSearch.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + encodeURIComponent(filter) + "&keyword=" + encodeURIComponent(keyword);
+		        
 		    }
 		
 		    function ReplaceText(orgStr, findStr, replaceStr) {
@@ -187,6 +198,19 @@
 		            search();
 		        }
 		    }
+			//////////////////
+			function DateSearch_Click() {
+		        if(usedate){
+		        	usedate = false;
+		            $("#Sdatepicker").datepicker('disable');
+		            $("#Edatepicker").datepicker('disable');
+		        } else {
+		        	usedate = true;
+		            $("#Sdatepicker").datepicker('enable');
+		            $("#Edatepicker").datepicker('enable');
+		        }
+		    }
+			//////////////////
 		</script>
 	</head>
 	<body class="mainbody"> 
@@ -207,7 +231,7 @@
 		    	<tr height="55px"> 
 		      		<th><spring:message code='ezSchedule.t349'/></th>
 		      		<td>
-		      			<input type="checkbox" value="1" id="usedate" /><spring:message code='ezSchedule.t350'/>
+		      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" /><label for="usedate"><spring:message code='ezSchedule.t350'/></label>
 		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
 		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 		          		<div style="margin-top:9px">&nbsp;(<spring:message code='ezSchedule.t351'/></div> 

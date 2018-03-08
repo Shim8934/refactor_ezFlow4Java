@@ -134,7 +134,7 @@ function MakeAddressList() {
         if (document.getElementById("ListViewType").value == "list") {
             var _TR = document.createElement("TR");
             _TR.style.verticalAlign = "middle";
-            _TR.style.height = "25px";
+            _TR.style.height = "31px";
             _TR.style.width = "100%";
             _TR.setAttribute("id", "Maillist_" + Cnt);
             _TR.style.cursor = "pointer";
@@ -448,7 +448,7 @@ function MakeNoDateList() {
         document.getElementById("MailList").style.width = "100%";
         var _TR = document.createElement("TR");
         _TR.style.verticalAlign = "middle";
-        _TR.style.height = "25px";
+        _TR.style.height = "31px";
 
         var _TD = document.createElement("TD");
         _TD.style.textAlign = "center";
@@ -459,8 +459,8 @@ function MakeNoDateList() {
     else {
         var DivLayer = document.createElement("DIV");
         DivLayer.style.textAlign = "center";
-        DivLayer.style.paddingTop = "40px";
-        DivLayer.innerHTML = strLang100;
+        DivLayer.className = "emptyDiv";
+        DivLayer.innerHTML = "<img src='/images/alert.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";
         document.getElementById("MailListCard").appendChild(DivLayer);
     }
 }
@@ -597,22 +597,22 @@ function makePageSelPage() {
 function Window_onresize() {
     if (searchFlag) {
         if (document.getElementById("ListViewType").value == "list") {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 200) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 250) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 253) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 283) + "px";
         }
         else {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 168) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 218) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 218) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 248) + "px";
         }
     }
     else {
         if (document.getElementById("ListViewType").value == "list") {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 160) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 210) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 213) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 243) + "px";
         }
         else {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 128) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 178) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 178) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 208) + "px";
         }
     }
 }

@@ -7,13 +7,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
@@ -22,6 +25,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.mail.Flags;
+import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -584,6 +588,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						try {
 							inputStream = multiFile.get(i).getInputStream();
 							message = sa.readMimeMessage(inputStream);
+							message.setFlag(Flags.Flag.SEEN, true);
 							logger.debug("subject=" + message.getSubject());
 						} finally {
 							try {
@@ -666,6 +671,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				InputStream inputStream = request.getInputStream();
 				MimeMessage message = sa.readMimeMessage(inputStream);
 				inputStream.close();
+				
+				message.setFlag(Flags.Flag.SEEN, true);
 				
 				folder.appendMessages(new Message[]{message});
 				folder.close(true);
@@ -853,6 +860,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						}
 	
 						message = sa.readMimeMessage(zis);
+						message.setFlag(Flags.Flag.SEEN, true);
 						messageList.add(message);
 						emlCount ++;
 					} catch (Exception e) {
@@ -1018,16 +1026,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
 				} else {
-					String subject = ezEmailUtil.getSubject(message);
-					
-					if(subject.trim().equals("")){
-						subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
-					}
-					
-					String fileName = subject + ".eml";
+					String fileName = ezEmailUtil.saveFilenameForm(loginInfo, locale, message) + ".eml";
 					fileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), fileName);
 					logger.debug("fileName=" + fileName);
-					
 					response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 					
 					OutputStream outputStream = null;
@@ -1141,13 +1142,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 							logger.error("Message not found. uid=" + uid);
 							
 						} else {
-							String subject = ezEmailUtil.getSubject(message);
-							
-							if(subject.trim().equals("")){
-								subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
-							}
-							
-							String fileName = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f]", "");
+							String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message);
 							String fileNameLowerCase = fileName.toLowerCase();
 							
 							// rename fileName if the fileName already exists
@@ -1312,13 +1307,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				long lastTime = System.currentTimeMillis();
 				
 				for (Message message : messages) {
-					String subject = ezEmailUtil.getSubject(message);
-					
-					if(subject.trim().equals("")){
-						subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
-					}
-					
-					String fileName = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f]", "");
+					String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message);
 					String fileNameLowerCase = fileName.toLowerCase();
 					
 					// rename fileName if the fileName already exists

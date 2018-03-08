@@ -80,7 +80,7 @@
 		    var strParentWriteDate = "<c:out value = '${item.parentWriteDate}' />";
 		    var strImportance = "<c:out value = '${item.importance}' />";
 		    var strStartDate = "<c:out value = '${startDateTime}' />";
-		    var strEndDate = "<c:out value = '${item.endDate}' />";
+		    var strEndDate = "<c:out value = '${endDate}' />";
 		    var strAttachments = "<c:out value = '${item.attachments}' />";
 		    var strContentLocation = "<c:out value = '${item.contentLocation}' />";
 		    var strUpperItemIDTree = "<c:out value = '${item.upperItemIDTree}' />";
@@ -104,6 +104,7 @@
 			var flag = false;
 			var saveFlag = false;
 			var clickFlag = false;
+			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			
 			<c:if test="${isCrossBrowser != true}">
 			    var objMHT = new ActiveXObject("MhtFormat.Convert");
@@ -145,15 +146,21 @@
 		            document.getElementById("txtTitle").value  = ConvMakeXMLString("<c:out value = '${item.title}' />");
 		            document.getElementById("txtAbstract").value = ConvMakeXMLString("<c:out value = '${item.absTract}' />");
 		            
-					if (strEndDate.substring(0,4) != "9999") {		        
-		         		document.getElementById("Edatepicker").value = ConvMakeXMLString("<c:out value = '${item.endDate}' />").substring(0,10);   	
+		            if (strEndDate.substring(0,4) != "9999") {		
+		            	document.getElementById("Edatepicker").value = ConvMakeXMLString("<c:out value = '${item.endDate}' />").substring(0,10);   	
 		            }
+		            
+					if(pReservedItem == "true") {
+						document.getElementById("Sdatepicker").value = ConvMakeXMLString("<c:out value = '${item.startDate}' />").substring(0,10);
+						document.getElementById("Stimepicker").value = ConvMakeXMLString("<c:out value = '${item.startDate}' />").substring(11,16);
+					}
 		        }
 							
 		        if (pMode == "reply") {
 		            document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value = '${item.title}' />");
 		        }
-		        
+
+		        InitializeSettings();
 		        ChkPermanent();
 		        rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 		    }
@@ -192,7 +199,13 @@
 		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
 
 		        var NowDate2 = new Date();
-		        NowDate2.setMonth(NowDate2.getMonth() + 1);
+		        
+		        if (ExpireDays != -1) { //영구만료가 아닌 경우에는 지정된 만료일을 더한 날짜가 기본으로 새로 게시될때 만료일이 나와야함
+		        	NowDate2.setDate(NowDate2.getDate() + parseInt(ExpireDays));
+		        } else {
+		        	NowDate2.setMonth(NowDate2.getMonth() + 1);
+		        }
+		        
 		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Edatepicker").datepicker('setDate', NowDate2);
 		        
@@ -768,8 +781,8 @@
             function InitializeSettings() {
             	
                 document.getElementById('tdBoardName').innerHTML = "${boardInfo.boardName}";
-	
-                if (ExpireDays == "-1") {
+                
+                if (ExpireDays == "-1" && strEndDate.substring(0,4) == "9999" || ExpireDays == "-1" && pMode == "new") {
                     document.getElementById('ChkPermanence').checked = true;
                     document.getElementById('Makedate').style.display = "none";
                 } else {

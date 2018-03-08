@@ -663,6 +663,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				}
                 
                 strXML = getBoardListItemXML(userInfo, pBoardID, pStartRow, pEndRow, pSortBy);
+                strXML = strXML.replace("\\", "&#92;"); // 특수문자 변환 '\' -> $#92; 2018-02-19 천성준
             }
 			
 			if (totalCount > 0) {
@@ -763,6 +764,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		logger.debug("item.getItemLevel() = " + item.getItemLevel());
+		
+		// 2018-02-19 천성준 : 게시글 수정,답변시 인풋박스에 특수문자 '\'가 사라지는 버그 해결로직 ['\' -> '\\']
+		if(pMode.equals("modify") || pMode.equals("reply")){
+			if (item.getTitle().contains("\\") || item.getAbsTract().contains("\\")) {
+				item.setTitle(item.getTitle().replace("\\", "\\\\"));
+				item.setAbsTract(item.getAbsTract().replace("\\", "\\\\"));
+			}
+		}
 		
 		model.addAttribute("item", item);
 		model.addAttribute("startDateTime", startDateTime);
@@ -2910,7 +2919,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		item.setEndDate(commonUtil.getDateStringInUTC(xmlData.getElementsByTagName("ENDDATE").item(0).getTextContent(), offset, true));
-		item.setAbsTract(URLDecoder.decode(xmlData.getElementsByTagName("ABSTRACT").item(0).getTextContent(), "utf-8"));
+		item.setAbsTract(URLDecoder.decode(xmlData.getElementsByTagName("ABSTRACT").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&"), "utf-8").trim());
 		item.setAttachments(URLDecoder.decode(xmlData.getElementsByTagName("ATTACHMENTS").item(0).getTextContent(), "utf-8"));
 		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
 		
@@ -3872,11 +3881,11 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         sb.append("<COMPANYNAME>" + commonUtil.cleanValue(item.getWriterCompanyName()) + "</COMPANYNAME>");
         sb.append("<COMPANYNAME2>" + commonUtil.cleanValue(item.getWriterCompanyName2()) + "</COMPANYNAME2>");
         sb.append("<IMPORTANCE>" + item.getImportance() + "</IMPORTANCE>");
-        sb.append("<TITLE>" + URLEncoder.encode(item.getTitle(), "UTF-8") + "</TITLE>");
+        sb.append("<TITLE>" + commonUtil.cleanValue(item.getTitle()) + "</TITLE>");
         sb.append("<CONTENTLOCATION>" + item.getContentLocation() + "</CONTENTLOCATION>"); //복사의 경우만
         sb.append("<STARTDATE>" + item.getStartDate() + "</STARTDATE>");
         sb.append("<ENDDATE>" + item.getEndDate() + "</ENDDATE>");
-        sb.append("<ABSTRACT>" + item.getAbsTract() + "</ABSTRACT>");
+        sb.append("<ABSTRACT>" + commonUtil.cleanValue(item.getAbsTract()) + "</ABSTRACT>");
         sb.append("<ATTACHMENTS>" + URLEncoder.encode(item.getAttachments(), "UTF-8") + "</ATTACHMENTS>");
         sb.append("<UPPERITEMIDTREE>" + item.getUpperItemIDTree() + "</UPPERITEMIDTREE>");
         sb.append("<ITEMLEVEL>" + item.getItemLevel() + "</ITEMLEVEL>");

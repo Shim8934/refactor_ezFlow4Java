@@ -102,6 +102,11 @@
     },
 
     close: function() {
+      if (parent.frames["left"]) {
+    	  if (parent.frames["left"].document.getElementById("blockLeft")) {	
+    		  $(parent.frames["left"].document.getElementById("blockLeft")).remove();
+    	  }
+      }
       modals.pop();
       this.unblock();
       this.hide();
@@ -127,6 +132,7 @@
         this.$blocker.children().appendTo(this.$body);
         this.$blocker.remove();
         this.$blocker = null;
+        
         selectCurrent();
         if (!$.modal.isActive())
           this.$body.css('overflow','');
