@@ -48,6 +48,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -2981,4 +2982,63 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("processAutoMDN ended.");
 	}
 	
+	/**
+	 *  편지함 모두 읽기
+	 */
+	@RequestMapping(value="/ezEmail/folderSetReadChange.do",method=RequestMethod.POST,
+			produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String folderSetReadChange(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, Locale locale, Model model) throws Exception{
+		logger.debug("folderSetReadChange started.");
+		
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String password = userIdAndPassword.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userInfo.getId() + "@" + domainName;
+		
+		String folderId = request.getParameter("url");
+		String isRead = request.getParameter("isRead");
+		
+		
+		logger.debug("url: " + folderId);
+		logger.debug("userAccount=" + userAccount);
+			
+		
+		String returnData = "<DATA>OK</DATA>";
+		
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userAccount, password, egovMessageSource, locale);
+			
+			IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderId);
+			sourceFolder.open(Folder.READ_WRITE);
+			
+			Message[] msgs = sourceFolder.getMessages();
+			
+			if (isRead.equals("TRUE")) {
+				sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
+			} 
+			else {
+				sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), false);
+			}
+			
+			sourceFolder.close(true);
+		} catch (Exception e) {
+			returnData = "<DATA>ERROR</DATA>";
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("returnData=" + returnData);
+		logger.debug("folderSetReadChange started.");
+		
+		return returnData;
+	}
 }

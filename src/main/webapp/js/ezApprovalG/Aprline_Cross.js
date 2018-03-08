@@ -11,7 +11,8 @@
     				docID    : pDocID, 
     				userID 	 : pUserID,
     				formID   : pFormID,
-    				isUsed   : ""
+    				isUsed   : "",
+    				mode     : ""
     				},
     		success: function(xml){
     			result = loadXMLString(xml);
