@@ -8915,10 +8915,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			href = makeListField(signXML.getElementsByTagName("HREF").item(0).getTextContent());
 		}
 		
-		if (mode.toUpperCase().equals("CHAMJOEND")) {
-			orgDocID = ezApprovalGDAO.getChamJoDocID(map);
-			docID = orgDocID;
-		}
 		rtnVal.append("<DOCFLAGINFO>");
 		// 문서상태에 따른 XML데이터 설정
 		if (!docState.trim().equals("")) {
