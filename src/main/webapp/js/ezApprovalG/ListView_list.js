@@ -463,7 +463,7 @@ function ListView() {
                 var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
                 if(strColName == "DocTitle")
                     _titleIdx = i;
-               
+                
                 if (strColName == "ProcessDate") {
                 	if (CrossYN() && navigator.userAgent.search('rv:11.0') == -1) {
                 		strWidth = parseInt(strWidth) + parseInt("20");		
@@ -547,7 +547,13 @@ function ListView() {
 
                 var oText = document.createTextNode(strName);
                 //objTd.appendChild(oText);
-                objTd.innerHTML = strName;
+                
+                // 2018-01-08 강민수92 첨부파일이면 첨부파일 이미지로 출력
+                if (strColName == "HASATTACHYN") {
+                	objTd.innerHTML = '<img src="/images/newAttach.gif">';
+                } else {
+                	objTd.innerHTML = strName;
+                }
                 objTr.appendChild(objTd);
 
                 objTd = null;
