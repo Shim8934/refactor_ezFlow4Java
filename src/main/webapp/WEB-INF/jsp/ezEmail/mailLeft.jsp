@@ -668,6 +668,9 @@
 			        case 13:
 			        	url = "/admin/ezSystem/systemMainMenu.do";
 			        	break;			            
+			        case 14:
+			        	url = "/admin/ezEmail/mailQuotaList.do";
+			        	break;			            
 				}
 				
 				window.open(url, "right");
@@ -838,6 +841,10 @@
   			</h2>  
   			<h2>
   				<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
+    			<ul></ul>
+  			</h2>  			
+  			<h2>
+  				<span onClick="goPage(14)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.lsd01' /></span>
     			<ul></ul>
   			</h2>  			
 			<h2>

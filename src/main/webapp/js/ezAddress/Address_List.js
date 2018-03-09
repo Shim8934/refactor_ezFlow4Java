@@ -460,7 +460,7 @@ function MakeNoDateList() {
         var DivLayer = document.createElement("DIV");
         DivLayer.style.textAlign = "center";
         DivLayer.className = "emptyDiv";
-        DivLayer.innerHTML = "<img src='/images/alert.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";
+        DivLayer.innerHTML = "<img src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";
         document.getElementById("MailListCard").appendChild(DivLayer);
     }
 }

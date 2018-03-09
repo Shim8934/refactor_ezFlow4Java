@@ -557,11 +557,7 @@
 	<body class="leftbody" id="body">
 	    <div id="left">
 	        <div class="left_cop" title="<spring:message code='main.t1006' />"><span><spring:message code='main.t1006' /></span></div>
-	        <!-- mylist -->
-	        <h2 class="community_lt">
-	        	<span><img src="/images/kr/left/icon_dialog.gif"></span>
-	        	<spring:message code='ezCommunity.t2000' />
-	        </h2>
+	        <!-- mylist -->	        
 	        <div style="overflow: auto; overflow-x: hidden; height: 470px; background-color: white; border-bottom:1px solid #ddd" id="MyCopList">
 	            <!-- list -->
 	            <ul class="list_thumbnail" id="list_thumbnail">

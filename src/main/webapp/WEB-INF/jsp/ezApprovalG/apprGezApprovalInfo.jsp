@@ -360,7 +360,7 @@
 	            approvalType = RetValue[12];
 	            chkReDraft = RetValue[13];
 	            if (pReDraftAprLineFlag) pOrgApruserid = RetValue[13];
-	
+
 	            onlyviewsusin = RetValue[27];
 	            onlydocinfiview = RetValue[28];
 	            pItemCode = RetValue[29];

@@ -99,9 +99,41 @@
 				APRMEMBERSN as APRMEMBERSN,
 				'' as BOARDID,
 				'' as BOARDITEMID,
-				URGENTAPPROVAL as BOARDGUBUN
+				URGENTAPPROVAL as BOARDGUBUN,
+				'APR' as MODE
 			FROM 
 				VAPRDOINGDOCLIST
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND 
+				APRMEMBERID IN ($userIDS$)
+			AND 
+				APRTYPE <> '015' 
+			AND
+   				APRMEMBERSN <> 1
+   			AND
+				STARTDATE < #sessionDate#)
+			
+			UNION
+			
+   			(SELECT 
+				DOCTITLE as title,
+				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
+				1 as module,
+		]]>	
+				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
+				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
+		<![CDATA[
+				DOCID as APPRID,
+				APRMEMBERSN as APRMEMBERSN,
+				'' as BOARDID,
+				'' as BOARDITEMID,
+				URGENTAPPROVAL as BOARDGUBUN,
+				'END' as MODE
+			FROM 
+				VENDCHAMJODOCINFO
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
@@ -129,7 +161,8 @@
 				A.IMPORTANCE as APRMEMBERSN,
 				A.BOARDID,
 				A.ITEMID as BOARDITEMID,
-				P.GUBUN as BOARDGUBUN
+				P.GUBUN as BOARDGUBUN,
+				'' as MODE
 			  FROM 
 				TBL_BOARD_ITEM A 
 			  INNER JOIN 
