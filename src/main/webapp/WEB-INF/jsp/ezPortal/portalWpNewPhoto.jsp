@@ -21,7 +21,7 @@
 		 				</c:when>
 		 				<c:otherwise>
 		 					<div class='nodata_portlet '>
-            				<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>
+            				<p><img src='/images/kr/main/nodata_plan.png' width='92' height='84'></p>
             				<p><spring:message code='main.t00026' /></p>
             			</div>
 		 				</c:otherwise>
@@ -145,7 +145,7 @@
 	        		var nodata = "";
 	        		
 	            	nodata += "<div class='nodata_portlet '>";
-	            	nodata += "<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>";
+	            	nodata += "<p><img src='/images/kr/main/nodata_plan.png' width='92' height='84'></p>";
 	            	nodata += "<p>" + strLang1_NewPhoto + "</p></div>";
 
 	            	$('#photoul').html(nodata);

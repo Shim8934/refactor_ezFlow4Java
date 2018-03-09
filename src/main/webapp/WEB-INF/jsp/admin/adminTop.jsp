@@ -104,7 +104,7 @@
 	</head>
 	<body class="admin_top" onload="javascript:window_onload()">
 		<form method="post">
-			<h1 title="logo"></h1>
+			<h1 title="logo"><spring:message code="ezBoard.t84" /></h1>
 			<div id="adminmenu">
 		    	<ul>		    		
                     <c:if test="${firstScreen_Mail == 'YES'}">

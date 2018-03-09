@@ -188,10 +188,6 @@
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
 	        
 	        $(function () {
-	        	if (pIniGubun == "1") {
-	        		$("#SaveAprLineTemplet").css("display", "");
-	        	}
-	        	
 	        	if (document.getElementById("AprSecurity").checked){
 	        		$("#idDatepicker").attr('disabled',false);
 	        	} else {
@@ -364,7 +360,7 @@
 	            approvalType = RetValue[12];
 	            chkReDraft = RetValue[13];
 	            if (pReDraftAprLineFlag) pOrgApruserid = RetValue[13];
-	
+
 	            onlyviewsusin = RetValue[27];
 	            onlydocinfiview = RetValue[28];
 	            pItemCode = RetValue[29];
@@ -1672,7 +1668,7 @@
 	                                    <a style="margin-top: 8px;" class="imgbtn">
 	                                 </c:if>
 	                                 <c:if test = "${approvalFlag=='S'}">
-	                                 <td style="padding-top: 5px; text-align: right; vertical-align: top; display: none;" id="SaveAprLineTemplet">
+	                                 <td style="padding-top: 5px; text-align: right; vertical-align: top;" id="SaveAprLineTemplet">
 	                                 <a class="imgbtn">
 	                                 </c:if>
 	                                 <span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span></a>

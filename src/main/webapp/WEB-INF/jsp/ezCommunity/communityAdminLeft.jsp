@@ -308,7 +308,6 @@
 				
 				$("#treeUL").html(treeXML);
 				
-				initToggleList(document.getElementById("left"), "h2", "ul", "li");
 			}
 		</script>
 		
