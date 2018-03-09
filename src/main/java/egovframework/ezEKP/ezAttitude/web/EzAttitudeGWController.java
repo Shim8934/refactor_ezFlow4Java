@@ -491,7 +491,6 @@ public class EzAttitudeGWController {
 			jsonParam.put("workStartTime", startDate.substring(startIdx + 1));
 			jsonParam.put("workEndTime", endDate.substring(endIdx + 1));
 			
-			//수정
 			ezAttitudeService.updateAttitudeConfig(jsonParam);
 			
 			result.put("status", "ok");
@@ -502,7 +501,9 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
+		
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudereg] ended.");
+		
 		return result;
 	}
 	

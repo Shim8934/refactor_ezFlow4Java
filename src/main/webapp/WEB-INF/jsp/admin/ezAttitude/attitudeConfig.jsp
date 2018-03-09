@@ -15,7 +15,7 @@
 	    <script type="text/javascript">
 	        $(document).ready(function() {
 		        if (document.getElementById("ListCompany").length == 0) {
-		            alert("");
+		            alert("<spring:message code = 'ezAttitude.t32' />");
 		        } else {
 		            document.getElementById("ListCompany").selectedIndex = 0;
 		            company_change();
@@ -27,12 +27,12 @@
 	            	type : "GET",
 	            	url : "/admin/ezAttitude/attitudeConfigInfo.do",
 	            	dataType : "json",
-	            	data : {companyId : encodeURI(document.getElementById("ListCompany").value)},
+	            	data : {companyId : encodeURI($("#ListCompany").val())},
 	            	success : function(result) {
 	            		attitudeConfigSet(result);
 	            	},
 	            	error : function() {
-	            		$('table.content input').val("");
+	            		
 	            	}
 	            });
 	        }
@@ -50,22 +50,24 @@
         		for (var i = 0; i < closedDays.length; i++) {
         			$('#dayChkBox input[type=checkbox]').eq(i).val(closedDays[i]);
         			if(closedDays[i] == 1){
-        				$('#dayChkBox input[type=checkbox]').eq(i).attr('checked','checked');
+        				$('#dayChkBox input[type=checkbox]').eq(i).prop('checked', true);
+        			} else {
+        				$('#dayChkBox input[type=checkbox]').eq(i).prop('checked', false);
         			}
         		}
         		//근태수정신청
         		var attitudeModAppl = result.attitudeModAppl;
         		if (attitudeModAppl == 0) {
-        			$('input[name=attitude_mod_appl]').eq(1).attr('checked','checked');
+        			$('input[name=attitude_mod_appl]').eq(1).prop('checked', true);
         		} else {
-        			$('input[name=attitude_mod_appl]').eq(0).attr('checked','checked');
+        			$('input[name=attitude_mod_appl]').eq(0).prop('checked', true);
         		}
         		//휴무일근태등록
         		var closedDateAttitude = result.closedDateAttitude;
         		if (closedDateAttitude == 0) {
-        			$('input[name=close_date_attitude]').eq(1).attr('checked','checked');
+        			$('input[name=close_date_attitude]').eq(1).prop('checked', true);
         		} else {
-        			$('input[name=close_date_attitude]').eq(0).attr('checked','checked');
+        			$('input[name=close_date_attitude]').eq(0).prop('checked', true);
         		}
 	        }
 	        
@@ -78,8 +80,7 @@
 	            $.ajax({
 	            	type : "POST",
 	            	url : "/admin/ezAttitude/updateAttitudeConfInfo.do",
-	            	dataType : "json",
-	            	data : {companyId : encodeURI(document.getElementById("ListCompany").value),
+	            	data : {companyId : encodeURI($("#ListCompany").val()),
 	            			workStartTime : $("#start_hr").val() + ":" + $("#start_min").val(),
 	            			workEndTime : $("#end_hr").val() + ":" + $("#end_min").val(),
 	            			closedDay : closedDays.slice(0, -1),
@@ -102,7 +103,7 @@
 		    		$(this).attr('value','0');
 		    	}
 		    })
-
+		    
 	    </script>
 	</head>
 	<body class="mainbody">
