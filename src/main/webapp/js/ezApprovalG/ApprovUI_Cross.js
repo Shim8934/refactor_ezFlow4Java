@@ -1159,9 +1159,27 @@ function getApprovInfo() {
         pOrgAprUserName = OrgAprUserName;
         pOrgAprUserName2 = OrgAprUserName2;
         pOrgAprUserDeptID = OrgAprUserDeptID;
-
+        var pMode = "APR";
     	var result = "";
     	
+    	if (docState == "017") {
+	 	   $.ajax({
+	 			type : "POST",
+	 			dataType : "text",
+	 			async : false,
+	 			url : "/ezApprovalG/getLineMode.do",
+	 			data : {
+	 					docID : pDocID
+	 					},
+	 			success: function(xml){
+	 				if (xml == "END") {
+	 					pMode = "CHAMJOEND";
+	 				} else {
+	 					pMode = "CHAMJOAPR";
+	 				}
+	 			}        			
+	 		});
+    	}
     	$.ajax({
     		type : "POST",
     		dataType : "text",
@@ -1170,7 +1188,9 @@ function getApprovInfo() {
     		data : {
     			docID : pDocID,
     			userID : pUserID,
-    			deptID : OrgAprUserDeptID
+    			deptID : OrgAprUserDeptID,
+    			mode : pMode,
+    			chamState : docState
     		},
     		success: function(xml){
     			result = xml;
@@ -1313,7 +1333,22 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
 }
 function getCurApproverAprLine(type) {
 	var result = "";
-    
+    var pMode = "";
+	if (docState == "017") {
+		  $.ajax({
+	 			type : "POST",
+	 			dataType : "text",
+	 			async : false,
+	 			url : "/ezApprovalG/getLineMode.do",
+	 			data : {
+	 					docID : pDocID
+	 					},
+	 			success: function(xml){
+	 					pMode = xml;
+	 			}        			
+		  });
+	}
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -1324,7 +1359,8 @@ function getCurApproverAprLine(type) {
 				userID 	 : "",
 				formID   : "",
 				deptID   : arr_userinfo[4],
-				isUsed   : type
+				isUsed   : type,
+				mode     : pMode
 				},
 		success: function(xml){
 			result = xml;
@@ -1346,7 +1382,7 @@ function getCurApproverAprLine(type) {
         var dataNodes = GetLastChildNodes(objNodes[i], params);
 
         var pCurrentAprState = getNodeText(dataNodes[12]);
-        if ((getNodeText(dataNodes[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5))) {
+        if ((getNodeText(dataNodes[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5) || (pCurrentAprState == strAprState0))) {
             pAprLineType = getNodeText(dataNodes[11]);
 
             if (approvalFlag == "S") {
@@ -1365,8 +1401,15 @@ function getCurApproverAprLine(type) {
             	
             	pAprMemberSN = AprLineSNCount(pAprLineType, objNodes, pTmpAprLineType);
             }
-            
-            break;
+            if (docState == "017") {
+            	if (pAprLineType == "007") {
+            		break;
+            	} 
+            } else {
+            	if (pCurrentAprState != strAprState0) {
+            		break;
+            	}
+            }
         }
     }
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType2)
@@ -3459,20 +3502,19 @@ function getNextDocInfo() {
         NextDocUserName2 = "";
         NextDocDeptID = "";
         if (result != "") {
-            var objNodes = GetChildNodes(loadXMLString(result).documentElement);
+            var objNodes = loadXMLString(result);
 
-            if (objNodes.length > 0) {
-                NextDocID = getNodeText(objNodes[0]);
-                NextDocUserID = getNodeText(objNodes[1]);
-                NextDocUserName = getNodeText(objNodes[2]);
-                NextDocDeptID = getNodeText(objNodes[3]);
-                NextDocType = getNodeText(objNodes[4]);
-                NextDocState = getNodeText(objNodes[5]);
-                NextDocWriterID = getNodeText(objNodes[6]);
-                NextDocAprType = getNodeText(objNodes[7]);
-                NextDocHref = getNodeText(objNodes[8]);
-                NextDocExtended = getNodeText(objNodes[9]);
-            }
+            NextDocID =  getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "DOCID"));
+            NextDocUserID = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "USERID"));
+            NextDocUserName = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "USERNAME"));
+            NextDocDeptID = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "USERDEPTID"));
+            NextDocType = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "DOCTYPE"));
+            NextDocState = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "DOCSTATE"));
+            docState = NextDocState;
+            NextDocWriterID = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "WRITERID"));
+            NextDocAprType = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "APRTYPE"));
+            NextDocHref = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "HREF"));
+            NextDocExtended = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "EXTENDEDNAME"));
         }
     } catch (e) { }
 }

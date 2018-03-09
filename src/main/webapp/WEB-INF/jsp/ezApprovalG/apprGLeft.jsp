@@ -951,7 +951,7 @@
 	<body ondragstart="return false" onselectstart="return false" class="leftbody" style="overflow-y:auto; ">
 		<span  id="presentcell" style="display:none"></span>
 		<div id="left" style="overflow-x:hidden">
-			<div class="left_appr" title="<spring:message code='ezApprovalG.t102'/>"></div>
+			<div class="left_appr" title="<spring:message code='ezApprovalG.t102'/>"><span><spring:message code='main.t25'/></span></div>
 			<c:if test="${isSubTitle}">
 		        <select name="country_id" id="country_id" tabindex="1">
 		            ${subTitleString}

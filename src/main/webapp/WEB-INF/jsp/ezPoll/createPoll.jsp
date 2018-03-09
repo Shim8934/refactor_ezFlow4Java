@@ -490,7 +490,8 @@
 		function addOption() {		
 			var currentOptionNumber = $('#columnsbnk li').length + 1;	
 			
-			if ($('#qst_title').val().replace(/ /g,'') == '') {
+			/* 항목 추가시 타이틀 체크기능 주석처리 */
+			/* if ($('#qst_title').val().replace(/ /g,'') == '') {
 				alert('<spring:message code="ezPoll.t147"/>');
 	            document.getElementById("qst_title").value = "";	           
 	            document.getElementById("qst_title").focus();
@@ -498,7 +499,9 @@
 			else {
 				$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
 				$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
-			}					
+			} */					
+			$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
+			$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
 		}
 		
 		function menuQst_List() {

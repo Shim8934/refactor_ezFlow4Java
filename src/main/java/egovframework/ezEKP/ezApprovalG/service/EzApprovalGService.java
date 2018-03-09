@@ -36,7 +36,7 @@ public interface EzApprovalGService {
 
 	public String getProxyUser(String id, String lang, int tenantID, String offset) throws Exception;
 
-	public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID, String isUsed, String beforeDocID) throws Exception;
+	public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID, String isUsed, String beforeDocID, String mode) throws Exception;
 	
 	public String getListHeader(String listCode, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -72,7 +72,7 @@ public interface EzApprovalGService {
 	
 	public String getAprType(String approvalFlag, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag, String isUsed, String beforeDocID) throws Exception;
+	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag, String isUsed, String beforeDocID, String mode) throws Exception;
 	
 	public String getTempList(String userID, String formID, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -199,7 +199,7 @@ public interface EzApprovalGService {
 	
 	public String getApprovalPWD1(String dUserID, int tenantID, String companyID) throws Exception;
 	
-	public String getApproveDocInfo(LoginVO userInfo, String docID, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getApproveDocInfo(LoginVO userInfo, String docID, String companyID, String lang, int tenantID, String offset, String mode, String chamState) throws Exception;
 	
 	public String getLastOpinionContent(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -249,7 +249,7 @@ public interface EzApprovalGService {
 	
 	public String doSusinHesong(String docID, String receiveSN, String deptID, String docState, String userID, String userName, String userName2, String dirPath, String companyID, String lang, int tenantID, String offSet) throws Exception;
 	
-	public String getAprType_AprState(String docID, String userID, String companyID, int tenantID) throws Exception;
+	public String getAprType_AprState(String docID, String userID, String strDocState, String companyID, int tenantID) throws Exception;
 	
 	public String doCallBack(String docID, String userID, String companyID, int tenantID) throws Exception;
 	
@@ -293,7 +293,7 @@ public interface EzApprovalGService {
 	
 	public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 	
-	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo) throws Exception;
+	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception;
 	
 	public String reqDelayCabEndY(String cabClassList, String flag, String companyID, int tenantID) throws Exception;
 	
@@ -321,7 +321,7 @@ public interface EzApprovalGService {
 	
 	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID, int tenantID) throws Exception; 
 	
-	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID, int tenantID) throws Exception;
+	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID, int tenantID, String docState) throws Exception;
 
 	public String sendOfferCheck(String docID, String userID, String string, String companyID, String lang, int tenantID) throws Exception;
 
@@ -466,7 +466,7 @@ public interface EzApprovalGService {
 
 	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
 
-	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum) throws Exception;
+	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState) throws Exception;
 
 	public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
 
@@ -497,7 +497,7 @@ public interface EzApprovalGService {
 
 	public boolean sendAck(String realPath, String strXDocID, String strReceiveID, String strSendID, String strTitle, String strDocType, String strDocTypeDept, String strDocTypeName, String strErrMsg, String strCompanyID, int tenantID) throws Exception;
 
-	public boolean updateSusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, int tenantID) throws Exception;
+	public boolean updateRelaySusinState(String strDocID, String strPrecDate, String strMode, String strDeptID, String strAcceptName, String strCompanyID, int tenantID) throws Exception;
 
 	public boolean insFailMessage(String strXDocID, String strSendID, String strSendName, String message, String strCompanyID, int tenantID) throws Exception;
 
@@ -522,5 +522,9 @@ public interface EzApprovalGService {
 	public String getWhoKyulYN(LoginVO userInfo) throws Exception;
 
 	public String getOrgDraftDeptID(String docID, int tenantId, String companyID) throws Exception;
+
+	public String getLineModeFlag(String docID, String companyID, int tenantId) throws Exception;
+
+	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception;
 
 }

@@ -44,6 +44,20 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     
 	var result = "";
 	
+	if (INGFlag != "TMP") {
+    	   $.ajax({
+    			type : "POST",
+    			dataType : "text",
+    			async : false,
+    			url : "/ezApprovalG/getLineMode.do",
+    			data : {
+    					docID : pDocID
+    					},
+    			success: function(xml){
+    				INGFlag = xml;
+    			}        			
+    	  });
+	}
 	$.ajax({
 		type : "POST",
 		dataType : "text",

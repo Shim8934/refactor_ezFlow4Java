@@ -427,17 +427,17 @@
 	                                	<li><span onclick="check_name()"><spring:message code='ezSchedule.t53'/></span></li>
 									</c:if>
 	                                <li><span onclick="Print_onClick()"><spring:message code='ezSchedule.t217'/></span></li>
-	                                <li class="bar" style="background: none; border: 0; padding-left: 0; padding-right: 0; cursor: default; color: #fff; padding-top: 4px;">
-	                                    <img src="/images/pbar.gif"><spring:message code='ezSchedule.t310'/></li>
+	                            </ul>
+	                            <ul style="float:right;margin-right:50px">        
 	                                <li id="menuTable" class="sel" style="background: none; border: none; padding-top: 4px; padding-right: 4px;">	
 	                                    <select id="importantSelect" name="importantSelect">
-	                                        <option value='1'><spring:message code='ezSchedule.t325'/></option>
-	                                        <option value='2' selected><spring:message code='ezSchedule.t326'/></option>
-	                                        <option value='3'><spring:message code='ezSchedule.t327'/></option>
+	                                        <option value='1'><spring:message code='ezSchedule.t310'/> <spring:message code='ezSchedule.t325'/></option>
+	                                        <option value='2' selected><spring:message code='ezSchedule.t310'/> <spring:message code='ezSchedule.t326'/></option>
+	                                        <option value='3'><spring:message code='ezSchedule.t310'/> <spring:message code='ezSchedule.t327'/></option>
 	                                    </select>	
 	                                </li>
 	                                <li class="bar" style="margin: 1 0 0 0; background: none; border: 0; padding-left: 0; padding-right: 0; cursor: default; color: #fff; padding-top: 4px;">
-	                                    <img src="/images/pbar.gif"><spring:message code='ezSchedule.t309'/></li>
+	                                    <img src="/images/pbar.gif"></li>
 	                                <li id="menuTable" class="sel" style="background: none; border: none; padding-top: 4px;">	
 	                                    <select id="publicSelect" name="publicSelect">
 	                                        <option value='Y'><spring:message code='ezSchedule.t359'/></option>

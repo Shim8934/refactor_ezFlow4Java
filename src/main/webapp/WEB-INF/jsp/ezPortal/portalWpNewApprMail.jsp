@@ -252,7 +252,7 @@
 		                    listHTML += "</ul>";
 		                } else {
 		                    listHTML = "<div class='nodata_portlet '>";
-		                    listHTML += "<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_white.gif' width='107' height='70'></p>";
+		                    listHTML += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
 		                    listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
 		                }
 		                
@@ -461,7 +461,7 @@
 
 	                openLocation = openLocation + escape(pArgument[0]);
 	                openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]);
-	                openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0";
+	                openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0" + "&docState=" + escape(pDocState);
 	            }
 	            openwindow(openLocation, "", 880, 550);       
 		    }
@@ -596,7 +596,7 @@
 		                listHTML += "</ul>";
 		            } else {
 		                listHTML = "<div class='nodata_portlet '>";
-		                listHTML += "<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_white.gif' width='107' height='70'></p>";
+		                listHTML += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
 		                listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
 		            }
 	

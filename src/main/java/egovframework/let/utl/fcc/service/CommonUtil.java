@@ -50,12 +50,21 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -417,7 +426,8 @@ public class CommonUtil {
 	
 	public Document convertStringToDocument(String xmlStr) {
 		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
-														
+		replaceData = replaceData.replace("&shy;", "");
+		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
         DocumentBuilder builder;
         Document doc = null;
@@ -425,7 +435,9 @@ public class CommonUtil {
         try {  
             builder = factory.newDocumentBuilder();  
             doc = builder.parse(new InputSource(new StringReader(replaceData)));
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
         
         return doc;
 	}
@@ -959,4 +971,42 @@ public class CommonUtil {
 			return null;
 		}
 	}
+	
+	/**
+	 * 테넌트에 따른 설정정보 얻어오는 메서드
+	 */
+	public String getTenantConfigRest(String property, String userId, HttpServletRequest request) throws Exception {
+
+	//	String gwServerUrl = config.getProperty("config.journalGWServerURL");
+		String gwServerUrl = "http://localhost:8080";
+		String url = gwServerUrl + "/rest/ezcommon/configs";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+		        .queryParam("property", property)
+		        .queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+				
+		String status = resultBody.get("status").toString();
+		
+		String propertyValue = "";
+		if (status.equals("ok")) {
+			propertyValue = (String) resultBody.get("data");
+		}
+        
+        return propertyValue;
+    }
+
 }
