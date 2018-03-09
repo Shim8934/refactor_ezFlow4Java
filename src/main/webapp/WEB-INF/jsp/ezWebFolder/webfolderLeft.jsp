@@ -6,6 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	   	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	   	<link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <!--    	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
@@ -205,8 +206,8 @@
 	    </style>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
-		<div id="left" style="overflow: auto">
-			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"></div>
+		<div id="left" style="overflow: none">
+			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"><span>웹폴더</span></div>
 			<h2>
   				<span style="display:inline-block;width:100%;" onclick="folderList('C');">회사폴더</span>
   			</h2>  
