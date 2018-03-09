@@ -30,7 +30,7 @@
 				<b><spring:message code='main.t76'/>(<spring:message code='ezSchedule.t4014'/>)</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="display2" name="displayname2" size="30"><br>
 				<input type="hidden" id="letterbox_no" name="letterBoxNo">
 				<input type="hidden" id="parent_letterbox_no" name="parentLetterBoxNo">
-				<input type="hidden" id="company_id" name="companyID">
+				<input type="hidden" id="company_id" name="companyID" value="${companyId}">
 				<div style="position:absolute; bottom:20px; right:50px;"><input type="button" id="submitBtn" onclick="submitClick()" value=" 확인 "></div>
 			</form>
 		</div>
@@ -44,10 +44,8 @@
 		    var responseResult;
 		    var selectNode;
 		    var addCheck = 0;
-		    var company;
-		    var returnCompany = '${companyId}';
 		    var pageType = "${pageType}";
-		    
+		    var returnCompany = '${companyId}';
 		    
 		    window.onload = window_onload;
 		    

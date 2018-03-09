@@ -79,8 +79,9 @@ function addLetterList(jsonArr) {
 		for (i = 0; i < listCount; i++) {
 			letterListHtml += "<li data-letterNo='" + jsonArr[i].letterNo + "'>";
 			letterListHtml += "<span>" + jsonArr[i].displayname + "</span>";
-			letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp()'>수정</button>";
-			letterListHtml += "<button class='lmLetterDeleteBtn'>삭제</button>";
+			// 여기서 오른쪽에 '편지지함/편지지' 보여주기
+			/*letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp()'>수정</button>";
+			letterListHtml += "<button class='lmLetterDeleteBtn'>삭제</button>";*/
 			letterListHtml += "</li>";
 		}
 	} else {

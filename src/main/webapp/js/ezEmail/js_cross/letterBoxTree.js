@@ -17,9 +17,6 @@ function resultRead() {
         		noResult = true;
         	}
 	        
-	        if (pageType == 'letterBox') {	
-	    	   setCompany();
-	        }
 	        treeSet();
 	    	treeView();
 	    	treeInit();
@@ -35,17 +32,6 @@ function treeInit() {
 			selectNode = data;
 			data.instance.select_node([treeCollection[0].id]);
 		});
-	}
-}
-
-// 회사 아이디 저장
-function setCompany() {
-	
-	company = returnCompany;
-	document.getElementById("company_id").value = company;
-	
-	if (company == null) {
-		company = "";
 	}
 }
 
@@ -79,6 +65,7 @@ function treeOnclick() {
     		} else { 
     			selectBox(selectNode.node.id);
     		}
+    		
 		} else { // 편지지
 			// letterBoxNo
 			var letterBoxNo = data.node.id === "undefined" ? "1" : data.node.id;

@@ -1261,6 +1261,11 @@
 	        }
 	    }
 	    
+	    // 재은 수정(편지지)
+	    function Letter_onClick() {
+	    	DivPopUpShow(583, 485, "/ezEmail/mailLetter.do");
+	    }
+	    
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -1280,6 +1285,8 @@
 	                    <ul>
 	                        <li><span onclick="Send_onClick()"><spring:message code='ezEmail.t674' /></span></li>
 	                        <li><span onclick="Save_onClick('tempsave')"><spring:message code='ezEmail.t48' /></span></li>
+	                        <!-- 재은 수정(편지지) -->
+	                        <li><span onclick="Letter_onClick()"><spring:message code='ezEmail.t824' /></span></li>
 	                        <li  style="display:none"><span onclick="Print_onClick()">
 	                            <spring:message code='ezEmail.t546' /></span></li>
 	                        <!-- <li><span onclick="LoadFormat_onClick()">
