@@ -923,7 +923,8 @@ function openViewDocInfo(type) {
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
         	//hwp 사용안함
             if (CrossYN()) {
-                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
+//                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
+            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
             }
             else {
                 openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP.aspx";

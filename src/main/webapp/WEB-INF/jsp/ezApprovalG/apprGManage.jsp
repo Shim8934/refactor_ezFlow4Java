@@ -439,7 +439,8 @@
 		                para[0] = pDocID;
 		                para[1] = pURL;
 		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp")
-		                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
+// 		                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
+		                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		                else {
 	                        openLocation = "/ezApprovalG/contDocView.do";
 		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
@@ -574,7 +575,8 @@
 		            para[1] = pURL;
 		            var openLocation;
 		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
+// 		                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
+		            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		            }
 		            else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
