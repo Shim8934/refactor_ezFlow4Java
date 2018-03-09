@@ -2966,4 +2966,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateSusinState(Map<String, Object> map) {
 		update("EzApprovalG.updateSusinState", map);
 	}
+
+	public void updateBanSongChamJoAprLineInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateBanSongChamJoAprLineInfo", map);
+	}
 }
