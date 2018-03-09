@@ -12621,9 +12621,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		org.jsoup.nodes.Document doc = Jsoup.parse(content);
 		
 		if (isHesong) {
-			doc.getElementById(susinSN + "habyuipositon" + aprSN).html(userInfo.getTitle());
+			if (doc.getElementById(susinSN + "habyuipositon" + aprSN) != null) {
+				doc.getElementById(susinSN + "habyuipositon" + aprSN).html(userInfo.getTitle());
+			}
 		} else {
-			doc.getElementById(susinSN + "habyuipositon" + aprSN).html(signTitle);
+			if (doc.getElementById(susinSN + "habyuipositon" + aprSN) != null) {
+				doc.getElementById(susinSN + "habyuipositon" + aprSN).html(signTitle);
+			}
 		}
 		
 		if (signType.equals("IMAGE")) {
@@ -12671,8 +12675,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}   
 		}
 		
-		doc.getElementById(susinSN + "habyuisign" + aprSN).html(signCont);
-		doc.getElementById(susinSN + "habyuidate" + aprSN).html(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", "."));
+		if (doc.getElementById(susinSN + "habyuisign" + aprSN) != null) {
+			doc.getElementById(susinSN + "habyuisign" + aprSN).html(signCont);
+		}
+		if (doc.getElementById(susinSN + "habyuidate" + aprSN) != null) {
+			doc.getElementById(susinSN + "habyuidate" + aprSN).html(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", "."));
+		}
 		
 		String tempHtml = doc.outerHtml();
 		OutputStream outputStream = null;
@@ -21869,7 +21877,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (companyID.equals(pOrgCompanyID)) {
 				map.put("v_APRSTATE", staASBanSong);
 				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-				map.put("staASBanSong", pReceiveSN);
+				map.put("pReceiveSN", pReceiveSN);
 				
 				ezApprovalGDAO.updateHesongReceiptInfo(map);
 				
