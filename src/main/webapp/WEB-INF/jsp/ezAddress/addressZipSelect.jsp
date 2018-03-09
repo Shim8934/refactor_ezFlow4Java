@@ -265,19 +265,23 @@
 
 	            ReturnValue[0] = getNodeText(SelectElement.childNodes[0]);
 	            ReturnValue[1] = getNodeText(SelectElement.childNodes[1].childNodes[1]);
-	            if (ReturnFunction != undefined)
+	            if (ReturnFunction != undefined) {
 	                ReturnFunction(ReturnValue);
-	            else
+	            }
+	            else {
 	                window.returnValue = ReturnValue;
-	            window.close();
+		            window.close();
+	            }
 	        }
 
 	        function window_close() {
 	        	var ReturnValue = new Array();
 	        	ReturnValue[0] = "cancel";
-	            if (ReturnFunction != undefined)
+	            if (ReturnFunction != undefined) {
 	                ReturnFunction(ReturnValue);
-	            window.close();
+	            } else {
+	            	window.close();
+	            }
 	        }
 
 	        function SearchAddress_KeyPress(evt) {
