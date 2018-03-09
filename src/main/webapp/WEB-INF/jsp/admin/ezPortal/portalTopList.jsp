@@ -31,12 +31,12 @@
 				
 				if( g_SelectedObj == null )
 				{
-				    pObj.style.backgroundColor = "rgb(233, 241, 255)";
+				    pObj.style.backgroundColor = "#edf4fd";
 					g_SelectedObj = pObj;
 				}
 				else
 				{
-				    pObj.style.backgroundColor = "rgb(233, 241, 255)";
+				    pObj.style.backgroundColor = "#edf4fd";
 					
 					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 					g_SelectedObj = pObj;

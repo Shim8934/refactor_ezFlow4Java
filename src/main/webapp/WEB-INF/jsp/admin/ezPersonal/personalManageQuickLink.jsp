@@ -103,7 +103,7 @@
 	            if (CrossYN()) {
 	                addquicklink_dialogArguments[0] = listviewSelected[0].getAttribute("data1");
 	                addquicklink_dialogArguments[1] = btn_Select_Complete;
-	                var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 625));
+	                var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 680));
 	                try { AddQuickLink.focus(); } catch (e) {
 	                }
 	            } else {

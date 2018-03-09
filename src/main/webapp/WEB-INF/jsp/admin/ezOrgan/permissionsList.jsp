@@ -446,46 +446,44 @@
 	    <form id="Form1" method="post">
 		    <h1><spring:message code='ezOrgan.t00005' /><span id="mailBoxInfo"></span></h1>
 		    <div id="mainmenu">
-		    <span><b><spring:message code='ezOrgan.t00006' /></b></span>
-		    <div style="margin-top:5px;margin-bottom:10px">		           
+			    <span><b><spring:message code='ezOrgan.t00006' /></b></span>&nbsp;    		           
 	            <select id="ListCompany" onchange="company_change()">
 	            	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 	            </select>
-            </div>
-	        <ul>
-	            <li><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
-	            <li><span onClick="Permissions_Del('MOD')"><spring:message code='ezOrgan.t00008' /></span></li>
-	            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
-	            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
-	        </ul>
-	    </div>
-	    <script type="text/javascript">
-	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
-	    </script>
-	    <div class="portlet_tabpart01" style="padding-bottom:3px">
-	        <div class="portlet_tabpart01_top" id="tab1">
-                <p id="Permission_sub1"><span divname="c" id="1tab1"><spring:message code='ezOrgan.t291' /></span></p>
-                <p id="Permission_sub2"><span divname="k" id="1tab2"><spring:message code='ezOrgan.t293' /></span></p>
-                <p id="Permission_sub3"><span divname="g" id="1tab3"><spring:message code='ezOrgan.t295' /></span></p>
-                <p id="Permission_sub4" <c:if test="${approvalFlag == 'G'}">style="display:none;"</c:if>><span divname="a" id="1tab4"><spring:message code='ezOrgan.t292' /></span></p>
-                <p id="Permission_sub5"><span divname="i" id="1tab5"><spring:message code='ezOrgan.t294' /></span></p>
-                <p id="Permission_sub6"><span divname="n" id="1tab6"><spring:message code='ezOrgan.t297' /></span></p>
-                <p id="Permission_sub7"><span divname="l" id="1tab7"><spring:message code='ezOrgan.t296' /></span></p>
-                <p id="Permission_sub8" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="w" id="1tab8"><spring:message code='ezOrgan.t301' /></span></p>
-                <p id="Permission_sub9" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="m" id="1tab9"><spring:message code='ezOrgan.t300' /></span></p>
-                <c:if test="${approvalForDoc == 'Y'}">
-                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
-                </c:if>
-	        </div>
-	    </div>
-	
-	    <div class="listview" style="Width:100%; border-top:0px">
-	        <div id="AdminListView" style="border: 0px solid #B6B6B6; Width: 100%; Height:445PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
-	    </div>
-	    <div id="tblPageRayer" style="text-align:center"></div>
-	</form>         
+		        <ul style="margin-top:15px">
+		            <li><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
+		            <li><span onClick="Permissions_Del('MOD')"><spring:message code='ezOrgan.t00008' /></span></li>
+		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
+		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
+		        </ul>
+		    </div>
+		    <script type="text/javascript">
+		        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
+		    </script>
+		    <div class="portlet_tabpart01" style="padding-bottom:3px">
+		        <div class="portlet_tabpart01_top" id="tab1">
+	                <p id="Permission_sub1"><span divname="c" id="1tab1"><spring:message code='ezOrgan.t291' /></span></p>
+	                <p id="Permission_sub2"><span divname="k" id="1tab2"><spring:message code='ezOrgan.t293' /></span></p>
+	                <p id="Permission_sub3"><span divname="g" id="1tab3"><spring:message code='ezOrgan.t295' /></span></p>
+	                <p id="Permission_sub4" <c:if test="${approvalFlag == 'G'}">style="display:none;"</c:if>><span divname="a" id="1tab4"><spring:message code='ezOrgan.t292' /></span></p>
+	                <p id="Permission_sub5"><span divname="i" id="1tab5"><spring:message code='ezOrgan.t294' /></span></p>
+	                <p id="Permission_sub6"><span divname="n" id="1tab6"><spring:message code='ezOrgan.t297' /></span></p>
+	                <p id="Permission_sub7"><span divname="l" id="1tab7"><spring:message code='ezOrgan.t296' /></span></p>
+	                <p id="Permission_sub8" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="w" id="1tab8"><spring:message code='ezOrgan.t301' /></span></p>
+	                <p id="Permission_sub9" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="m" id="1tab9"><spring:message code='ezOrgan.t300' /></span></p>
+	                <c:if test="${approvalForDoc == 'Y'}">
+	                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
+	                </c:if>
+		        </div>
+		    </div>
+		
+		    <div class="listview" style="Width:100%; border-top:0px">
+		        <div id="AdminListView" style="border: 0px solid #B6B6B6; Width: 100%; Height:445PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		    </div>
+		    <div id="tblPageRayer" style="text-align:center"></div>
+		</form>         
 	</body>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");

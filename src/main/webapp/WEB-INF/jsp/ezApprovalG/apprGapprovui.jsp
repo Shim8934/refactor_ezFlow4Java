@@ -152,6 +152,7 @@
 			var isHWP = "";
 			var ext = "mht";
 			
+			var docState = "${docState}";
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -657,7 +658,7 @@
 		        	if (approvalFlag == "S") {
 		        		// '현재진행 중인 결재가 개인순차합의가 아닌 경우' 추가
 		        		// 마지막 결재자가 합의인 경우 totalMemSN 값으로 해당 조건절 사용.
-			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8) || pAprLineType == strAprType4 || totalMemSN > 0) {
+			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7) || pAprLineType == strAprType4 || totalMemSN > 0) {
 			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 			                    var rtnval;
 			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);

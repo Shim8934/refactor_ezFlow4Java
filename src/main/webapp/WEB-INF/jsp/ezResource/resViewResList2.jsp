@@ -50,12 +50,6 @@
 			.calendar_layer .btn ul{list-style:none; margin:0 25px; padding:0px 3px; overflow:hidden; text-align:center;clear:both;list-style-type:none}
 			.calendar_layer .btn ul li{float:left; height:27px; line-height:27px; background:url(images/calendar/btn_calendar_l.gif) no-repeat left top; padding:0px 3px 0px 8px;}
 			.calendar_layer .btn ul li span{display:inline-block; background:url(images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
-			.table_layout th {
-				color:#777;
-			}
-			#divViewHeader {
-				color:#777
-			}
 		</style>
 		<script type="text/javascript">
 			var pBrdid = "${brdID}";
@@ -353,10 +347,10 @@
                 	<div id="mainlistlayout" style="width:100%;height:780px;overflow-y: auto;overflow-x:hidden;" >
                 		<table style="width:100%;margin-top:10px;">
                     		<tr id="weeklyline">
-                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f8f8f8;">
-                					<div style="border:1px solid #ddd;border-bottom:0px;padding-top:9px;padding-bottom:7px;height:19px">
+                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #edf4fd;">
+                					<div style="border:1px solid #d1ddec;height:35px;line-height: 33px">
 					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
-					                	&nbsp;<span id="divViewHeader" style="color: #777; text-align:center;vertical-align: middle;"></span>&nbsp;
+					                	&nbsp;<span id="divViewHeader" class="calResTitleSpan"></span>&nbsp;
 					                	<img src="/images/calendar/btn_calendar_mini_next.gif" style="cursor:pointer;vertical-align:middle;" id=Img3 onClick="pagenavi('NEXT');">
 				                	</div>
 				            	</td>

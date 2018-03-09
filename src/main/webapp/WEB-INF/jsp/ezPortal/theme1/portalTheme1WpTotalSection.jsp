@@ -16,7 +16,8 @@
 	            getnewapprovalcount();
 	            getnewmailcount();
 	            GetScheduleCount();
-
+				getNewCircularCount();
+	            
 	            try { top.onresize() } catch (e) { }
 	        }
 		    
@@ -30,6 +31,22 @@
 			    xmlHttp_getnewapprovalcount_total.onreadystatechange = event_newapprovalcount;
 			    xmlHttp_getnewapprovalcount_total.send("<DATA><FLAG>1</FLAG></DATA>");
 			}
+			
+			//회람판 신규 갯수 가져오기 2018-03-05 강민수92
+	        function getNewCircularCount() {
+	        	$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezCircular/getListCount.do",
+					data : {
+						listType : 'newCircular'
+					},
+					success: function(result){
+						console.log("회람판 신규 갯수 : " + result.count);
+					}
+				});
+	        }
 			
 			function event_newapprovalcount() {
 			    if (xmlHttp_getnewapprovalcount_total != null && xmlHttp_getnewapprovalcount_total.readyState == 4) {

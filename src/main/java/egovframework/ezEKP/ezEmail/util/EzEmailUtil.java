@@ -678,8 +678,6 @@ public class EzEmailUtil {
                 
                 filename = MimeUtility.decodeText(originalFilename);
             } else if (filename != null) {
-			    // filename이 US-ASCII 로만 되어 있지 않은 경우는 위에서 part.getFileName 메소드에 의해 디코딩된 경우이므로
-			    // 디코딩 처리를 하지 않는다.
 				if (isPureAscii(filename)) {
 				    // Content-Disposition 헤더에 있는 filename 속성의 값이 Non-Ascii 문자를 포함할 경우에는 직접 디코딩을 처리한다.
                     if (NonAsciiFilename !=  null) {
@@ -689,7 +687,20 @@ public class EzEmailUtil {
                     } else {				    
                         filename = MimeUtility.decodeText(filename);
                     }
-				} 
+			    // filename이 US-ASCII 로만 되어 있지 않은 경우는 위에서 part.getFileName 메소드에 의해 디코딩된
+                // 경우로 보고 원칙적으로 해당 값을 이용한다.
+				} else {
+					// filename이 NonAsciiFilename과 동일한 경우는 part.getFileName 메소드에 의해 디코딩이
+					// 제대로 이루어지지 않은 경우로 판단하여 직접 디코딩을 처리한다.
+					// 예) Content-Type: text/plain; name="첨부파일 테스트1.txt"
+					//		  Content-Transfer-Encoding: 7bit
+					//		  Content-Disposition: attachment; filename="첨부파일 테스트1.txt" - EUC-KR로 인코딩됨					
+					if (NonAsciiFilename !=  null && filename.equals(NonAsciiFilename)) {
+                        byte[] rawBytes = NonAsciiFilename.getBytes("iso-8859-1");
+                        
+                        filename = decodeNonAsciiBytes(rawBytes);						
+					}
+				}
 			} else {
 				filename = "";
 			}

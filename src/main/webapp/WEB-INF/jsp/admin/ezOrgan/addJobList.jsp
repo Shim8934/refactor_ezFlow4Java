@@ -482,15 +482,13 @@
 	    <form id="Form1" method="post">
 		    <h1><spring:message code='ezOrgan.t00013' /></h1>
 		    <div id="mainmenu">
-		    	<span><b><spring:message code='ezOrgan.t00006' /></b></span>
-	            <div style="margin-top:5px;margin-bottom:10px">		           
-		            <select id="ListCompany" onchange="company_change()">
-		            	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-		            	</c:forEach>
-		            </select>
-	            </div>
-		        <ul>		            
+		    	<span><b><spring:message code='ezOrgan.t00006' /></b></span>&nbsp;
+	            <select id="ListCompany" onchange="company_change()">
+	            	<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+	            </select>
+		        <ul style="margin-top:15px">		            
 		            <li><span onClick="AddJob_Add()"><spring:message code='ezOrgan.t00014' /></span></li>
 		            <li><span onClick="AddJob_Del('DEL', '')"><spring:message code='ezOrgan.t00015' /></span></li>
 		            <li><span onClick="AddJob_Del('ALL', '')"><spring:message code='ezOrgan.t00016' /></span></li>            
@@ -501,19 +499,19 @@
 		        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
 		    </script>
 		    <div class="portlet_tabpart01" style="padding-bottom:3px">
-		        <div class="portlet_tabpart01_top" id="tab1" style="width:500px;">
+		        <div class="portlet_tabpart01_top" id="tab1" style="width:800px;">
 	                <p id="AddJob_sub1"><span divname="AddJob1" id="1tab1"><spring:message code='ezOrgan.t00017' /></span></p>               
 		        </div>
 		    </div>
-		    <table style="width:100%">
+		    <table style="width:800px">
 		        <tr>
-		            <td style="width:500px">
-		                <div class="listview" style="Width:500px; border-top:0px;">
-		                    <div id="AddJobListView" style="border: 0px solid #B6B6B6; Width: 500px; Height:600PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		            <td style="width:800px">
+		                <div class="listview" style="Width:800px; border-top:0px;">
+		                    <div id="AddJobListView" style="border: 0px solid #B6B6B6; Width: 800px; Height:600PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		                </div>
 		            </td>
 		            <td style="padding-left:3px; vertical-align:top">            
-		                 <div style="height:100%; width:550px;" id="AddJobList" >
+		                 <div style="height:100%; width:800px;" id="AddJobList" >
 		                </div>      
 		            </td>
 		        </tr>

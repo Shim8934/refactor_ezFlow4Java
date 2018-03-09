@@ -734,7 +734,8 @@
 		        		data : {
 		        				docID    : pDocID, 
 		        				userID 	 : pUserID,
-		        				formID   : pFormID
+		        				formID   : pFormID,
+		        				mode     : ""
 		        				},
 		        		success: function(xml){
 		        			result = loadXMLString(xml);

@@ -1508,14 +1508,17 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        CompleteEmailAddress(formName, validDIV, iType);
 	        return;
 	    }
-	    userAddr = GetEmailAddressByName(m_addrBook, mailName);
-	    var emailExitsCnt = userAddr["name"].length;
-	    if (userAddr["name"].length == 1 && trim(userAddr["email"][0]) == "" && userAddr["email"][0].lastIndexOf("@") < 2) {
+	    
+	    // 한번 더 거르는 작업이 불필요한 것처럼 보이기 때문에 주석처리함.
+	    //userAddr = GetEmailAddressByName(m_addrBook, mailName);
+	    var emailExitsCnt = m_addrBook["name"].length;
+	    
+	    if (m_addrBook["name"].length == 1 && trim(m_addrBook["email"][0]) == "" && m_addrBook["email"][0].lastIndexOf("@") < 2) {
 	        emailExitsCnt = 0;
 	    }
 	
 	    if (emailExitsCnt == 1) {
-	        newElem = PrepareMailTag(iType, userAddr["type"][0], userAddr["name"][0], userAddr["email"][0], userAddr["href"][0]);
+	        newElem = PrepareMailTag(iType, m_addrBook["type"][0], m_addrBook["name"][0], m_addrBook["email"][0], m_addrBook["href"][0]);
 	        var IsInsert = CheckMailReceiver(newElem);
 	
 	        if (!IsInsert) {
@@ -1523,14 +1526,18 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        }
 	
 	        var szFromName = "";
+	       
 	        for (count1 = 1; count1 < mailArr.length; count1++) {
 	            szFromName += mailArr[count1];
-	            if (count1 != mailArr.length - 1) szFromName += ";";
+	            
+	            if (count1 != mailArr.length - 1) {
+	            	szFromName += ";";
+	            }
 	        }
+	        
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
-	    }
-	    else {
+	    } else {
 	        rgParams = new Array();
 	        rgParams["recipientTDData"] = null;
 	        rgParams["returnedRecipientName"] = "";
@@ -1542,9 +1549,11 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        rgParams["cmd"] = "JustThis"
 	        rgParams["addrBook"] = m_addrBook;
 	        rgParams["g_EmailAddress"] = "";
-	        if (userAddr["name"].length == 0) {
+	        
+	        if (m_addrBook["name"].length == 0) {
 	            rgParams["cmd"] = "showAll";
 	        }
+	        
 	        checkname_cross_dialogArguments = new Array();
 	        checkname_cross_dialogArguments[0] = rgParams;
 	        checkname_cross_dialogArguments[1] = CompleteEmailAddress_Complete;

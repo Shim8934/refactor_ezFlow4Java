@@ -213,7 +213,7 @@
                         openLocation = "/ezApprovalG/approvui.do?docID=";
 	                    openLocation = openLocation + escape(pArgument[0]);
 	                    openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]);
-	                    openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0";
+	                    openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0" + "&docState=" + escape(pDocState);
 	                }
 	                openwindow(openLocation, "", 880, 550);
 	            }

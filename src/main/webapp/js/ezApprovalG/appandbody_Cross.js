@@ -101,6 +101,19 @@ function addAttach(DocID, pFlag) {
 		pFlag = "END";
 	}
 	
+   	  $.ajax({
+   			type : "POST",
+   			dataType : "text",
+   			async : false,
+   			url : "/ezApprovalG/getLineMode.do",
+   			data : {
+   					docID : DocID
+   					},
+   			success: function(xml){
+   				pFlag = xml;
+   			}        			
+   	  });
+    
 	$.ajax({
 		type : "POST",
 		dataType : "text",

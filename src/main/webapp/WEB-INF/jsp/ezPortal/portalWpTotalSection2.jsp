@@ -76,7 +76,7 @@
             	try {
 	                if (xml == "") {
     	                var nodata = "<div class='nodata_portlet '>";
-        	            nodata += "<p><img src='/images/" + strLang1 + "/main/nodata_gray.gif' width='107' height='70'></p>";
+        	            nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
                     	nodata += "<p>" + strLang2 + "</p></div>";
 
 	                    document.getElementById("BoardList").innerHTML = nodata;
@@ -116,7 +116,7 @@
                     	getContent(pfirstItemID);
                 	} else {
                     	var nodata = "<div class='nodata_portlet '>";
-                    	nodata += "<p><img src='/images/" + strLang1 + "/main/nodata_gray.gif' width='107' height='70'></p>";
+                    	nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
                     	nodata += "<p>" + strLang2 + "</p></div>";
 
                     	document.getElementById("BoardList").innerHTML = nodata;
@@ -284,7 +284,7 @@
         			<div class="best">
         				<dl>
         					<dt><span class="icon"><img src="/images/<spring:message code='main.t00025' />/main/icon_best1.gif" width="26" height="28"></span><spring:message code='main.t68' /></dt>
-        					<dd class="nodata_portlet"><img src="/images/kr/main/nodata_white.gif" width="107" height="70"><br /> <span><spring:message code='main.t00026' /></span></dd>
+        					<dd class="nodata_portlet"><img src="/images/kr/main/nodata_plan.png" width="92" height="70"><br /> <span><spring:message code='main.t00026' /></span></dd>
         				</dl>
         			</div>
         		</c:otherwise>
