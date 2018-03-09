@@ -255,17 +255,18 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId,
-			String companyId, String userName, String deptName)
+			String companyId, String searchUserName, String searchDeptName)
 			throws Exception {
+		LOGGER.debug("getAttitudeUserConfigList started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("userName", userName);
-		map.put("deptName", deptName);
+		map.put("searchUserName", searchUserName);
+		map.put("searchDeptName", searchDeptName);
 		
-		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfig(map);
-		
+		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfigList(map);
+		LOGGER.debug("getAttitudeUserConfigList ended");
 		return resultList;
 	}
 

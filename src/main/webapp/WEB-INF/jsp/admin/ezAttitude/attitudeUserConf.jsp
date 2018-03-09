@@ -10,21 +10,83 @@
     <script type="text/javascript" src="/js/mouseeffect.js"></script>
     <script type="text/javascript" src="/js/Common.js"></script>
     <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
     <script type="text/javascript">
+    	var pCompanyId = ""; //현재 선택된 회사의 아이디
+    	var searchUserName = ""; // 검색조건 (사원명)
+    	var searchDeptName = ""; // 검색조건 (부서명)
+    	
+    	window.onload = function(){
+    		company_change();
+    	}
+    	
     	function company_change(){
     		pCompanyId = $("select[name=ListCompany]").val();
-    		
+    		getUserConfList();
+    	}
+    	
+    	function getUserConfList(){
     		$.ajax({
-    			data : "POST, GET",
+    			data : "GET",
     			dataType : "json",
     			async : false,
     			url : "/admin/ezAttitude/attitudeUserConfList.do",
-    			data : {companyId : pComapnyId, key2 : 'value2'},
+    			data : {companyId : pCompanyId, userName : searchUserName, deptName : searchDeptName},
     			success : function(result){
-    				alert(result);
+    				getUserConfList_after(result);
     			}
-    			
     		});
+    	}
+    	
+    	function getUserConfList_after(result){
+    		var resultHtml = "";
+    		searchUserName = "";
+    		searchDeptName = "";
+    		$(".mainlist tbody").html("");
+    		
+    		for(var resultLeng = 0; resultLeng < result.length; resultLeng ++){
+    			resultHtml += "<tr><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>"
+    			   			+ "<td>" + (resultLeng + 1) + "</td>"
+    			   			+ "<td>" + result[resultLeng].userName+ "</td>"
+    			   			+ "<td>" + result[resultLeng].userTitle+ "</td>"
+    			   			+ "<td>" + result[resultLeng].deptName+ "</td>"
+    			   			+ "<td>" + result[resultLeng].workStartTime + " ~ " + result[resultLeng].workEndTime + "</td></tr>";
+    		}
+    		
+    		if(resultHtml == ""){
+    			resultHtml = "<tr><td colspan='6' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";
+    		}
+    		
+    		$(".mainlist tbody").append(resultHtml);
+    		
+    		makePageSelPageAtti();
+    	}
+    	
+    	function searchUserConf(searchFlag){
+    		if($("#layer_popup").css("display") == "none"){
+    			$("#layer_popup").css("display", "");
+    		} else {
+    			$("#layer_popup").css("display", "none");
+    		}
+    		
+    		if (searchFlag) {
+    			searchUserName = $("#txtUserName").val();
+    			searchDeptName = $("#txtDeptName").val();
+    			$("#txtUserName").val("");
+    			$("#txtDeptName").val("");
+    			
+    			getUserConfList();
+    		}
+    	}
+    	
+    	function userConfAddModify(){
+    		if (CrossYN()) {
+    			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
+    			OpenWin = GetOpenWindow("url", "", "", "");
+    			try { OpenWin.focus();} catch (e) { }
+    		} else {
+    			showModalDialog("url", null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
+    		}
     	}
     </script>
 	</head>
@@ -47,9 +109,40 @@
 	  	</div>
 	  	<div id="mainmenu">
 	  		<ul class="on">
-	  			<li class="off"><span onclick="">추가/변경</span></li>
-	  			<li class="off"><span onclick="">검색</span></li>
+	  			<li class="off"><span onclick="userConfAddModify()">추가/변경</span></li>
+	  			<li class="off"><span onclick="searchUserConf(false)">검색</span></li>
 	  		</ul>
+	  	</div>
+	  	<div id="layer_popup" style="width: 500px; position: absolute; left: 10px; top: 130px; background-color: rgb(255, 255, 255); display:none;">
+	  		<div class="popupwrap1">
+	  			<div class="popupwrap2">
+	  				<table class="content">
+	  					<tbody>
+	  						<tr>
+	  							<th style="text-align:center">부서명</th>
+	  							<td><input type="text" id="txtDeptName" style="width:98%" value=""/></td>
+	  						</tr>
+	  						<tr>
+	  							<th style="text-align:center">사원명</th>
+	  							<td><input type="text" id="txtUserName" style="width:98%" value=""/></td>
+	  						</tr>
+	  					</tbody>
+	  				</table>
+	  				<br>
+	  				<table style="width:100%">
+	  					<tbody>
+	  						<tr>
+	  							<td style="text-align:center">
+	  								<a class="imgbtn"><span onclick="searchUserConf(true)">검색</span></a>
+	  								<a class="imgbtn"><span onclick="searchUserConf(false)">취소</span></a>
+	  							</td>
+	  						</tr>
+	  					</tbody>
+	  				</table>
+	  			</div>
+	  		</div>
+	  		<div class="shadow">
+	  		</div>
 	  	</div>
 		<table class="mainlist" style="width:100%;">
 			<thead>
@@ -63,11 +156,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td colspan="6" style="text-align:center">등록된 정보가 없습니다.</td>
-				</tr>
 			</tbody>
 		</table>
+		<div id="tblPageRayer">
+		</div>
 	</body>
 </body>
 </html>

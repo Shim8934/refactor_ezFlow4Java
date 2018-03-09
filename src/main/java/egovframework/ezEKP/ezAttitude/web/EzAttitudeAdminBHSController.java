@@ -105,7 +105,11 @@ public class EzAttitudeAdminBHSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String companyId = request.getParameter("companyId");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
 		String userId = userInfo.getId();
+		
+		LOGGER.debug(companyId);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/user-attitude-confs";
@@ -117,6 +121,8 @@ public class EzAttitudeAdminBHSController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
 				.queryParam("userId", userId);
 		
 		RestTemplate rest = new RestTemplate();

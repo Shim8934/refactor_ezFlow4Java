@@ -4,6 +4,7 @@
 <sqlMap namespace="ezAttitudeAdmin">
 	<typeAlias alias="AttitudeDeptVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO"/>
 	<typeAlias alias="AttitudeConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO"/>
+	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
 		<![CDATA[
@@ -67,4 +68,34 @@
 		AND
 			TENANT_ID = #tenantId#
 	</update>
+
+	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultClass="AttitudeUserConfigVO">
+		SELECT
+			A.USERID,
+			A.WORKSTARTTIME,
+			A.WORKENDTIME,
+			B.TITLE AS USERTITLE,
+			B.DISPLAYNAME AS USERNAME,
+			B.DESCRIPTION AS DEPTNAME
+		FROM
+			tbl_attitude_user_conf A 
+		INNER JOIN 
+			tbl_usermaster B 
+		ON 
+			A.USERID = B.CN
+		AND
+			A.TENANT_ID = B.TENANT_ID
+		WHERE
+			A.TENANT_ID = #tenantId#
+		<isNotEmpty prepend="AND" property="companyId">
+			A.COMPANYID = #companyId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			B.DESCRIPTION = #searchDeptName#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			B.DISPLAYNAME = #searchUserName#
+		</isNotEmpty>
+	</select>
+	
 </sqlMap>
