@@ -91,6 +91,7 @@
 		        $("#Sdatepicker").datepicker('setDate', SDate);
 
 		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+
 		        $("#Edatepicker").datepicker('setDate', EDate);
 		    });
 			

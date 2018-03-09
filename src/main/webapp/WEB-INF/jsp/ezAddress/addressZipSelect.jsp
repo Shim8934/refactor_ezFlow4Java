@@ -265,31 +265,35 @@
 
 	            ReturnValue[0] = getNodeText(SelectElement.childNodes[0]);
 	            ReturnValue[1] = getNodeText(SelectElement.childNodes[1].childNodes[1]);
-	            if (ReturnFunction != undefined)
+	            if (ReturnFunction != undefined) {
 	                ReturnFunction(ReturnValue);
-	            else
+	            }
+	            else {
 	                window.returnValue = ReturnValue;
-	            window.close();
+		            window.close();
+	            }
 	        }
 
 	        function window_close() {
 	        	var ReturnValue = new Array();
 	        	ReturnValue[0] = "cancel";
-	            if (ReturnFunction != undefined)
+	            if (ReturnFunction != undefined) {
 	                ReturnFunction(ReturnValue);
-	            window.close();
+	            } else {
+	            	window.close();
+	            }
 	        }
 
 	        function SearchAddress_KeyPress(evt) {
 	            if (window.event) {
 	                if (window.event.keyCode == 13) {
-	                	resetCurPageAndSearchAddress();
+	                	SearchAddress();
 	                    event.returnValue = false;
 	                }
 	            }
 	            else {
 	                if (evt.keyCode == "13") {
-	                	resetCurPageAndSearchAddress();
+	                	SearchAddress();
 	                }
 	            }
 	        }
@@ -337,7 +341,7 @@
 	                <td style="border:0px">
 	                    <div class="searchWrap" style="padding-left:4px">
 			            	<div class="searchDesignBtn" onclick="SearchAddress()">
-			                	<input type="image" <spring:message code='ezPersonal.t5004' /> id="btnImgSrch" alt="<spring:message code='ezPersonal.t83' />"><img <spring:message code='ezPersonal.t5004' /> id="searchingBtnImg" style="display:none;" alt="<spring:message code='ezPersonal.t83' />">
+			                	<input type="image" <spring:message code='ezPersonal.t5004' /> id="btnImgSrch" alt="<spring:message code='ezPersonal.t83' />" style="height:100%;margin:-1px;" />
 			            	</div>
 	                    	<div class="searchDesign">
 			                	<input type="text" name="keyword" id="keyword" size="50" value="" onkeypress="SearchAddress_KeyPress(event)">
