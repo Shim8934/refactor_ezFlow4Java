@@ -255,7 +255,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId,
-			String companyId, String searchUserName, String searchDeptName, String pageNum)
+			String companyId, String searchUserName, String searchDeptName, String pageNum, String listSize)
 			throws Exception {
 		LOGGER.debug("getAttitudeUserConfigList started");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -266,6 +266,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("limit", limit);
+		map.put("listSize", listSize);
 		
 		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfigList(map);
 		LOGGER.debug("getAttitudeUserConfigList ended");

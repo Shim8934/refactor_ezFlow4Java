@@ -108,6 +108,7 @@ public class EzAttitudeAdminBHSController {
 		String searchUserName = request.getParameter("userName");
 		String searchDeptName = request.getParameter("deptName");
 		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
 		String userId = userInfo.getId();
 		
 		LOGGER.debug(companyId);
@@ -125,7 +126,8 @@ public class EzAttitudeAdminBHSController {
 				.queryParam("searchUserName", searchUserName)
 				.queryParam("searchDeptName", searchDeptName)
 				.queryParam("userId", userId)
-				.queryParam("pageNum", pageNum);
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize);
 		
 		RestTemplate rest = new RestTemplate();
 		

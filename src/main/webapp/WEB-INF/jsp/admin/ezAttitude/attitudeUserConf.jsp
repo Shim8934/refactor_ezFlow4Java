@@ -34,7 +34,7 @@
     			dataType : "json",
     			async : false,
     			url : "/admin/ezAttitude/attitudeUserConfList.do",
-    			data : {companyId : pCompanyId, userName : searchUserName, deptName : searchDeptName, pageNum : pageNum},
+    			data : {companyId : pCompanyId, userName : searchUserName, deptName : searchDeptName, pageNum : pageNum, listSize : listSize},
     			success : function(result){
     				totalCount = result.totalCount;
     				totalPage = parseInt(totalCount / blockSize);
@@ -49,7 +49,7 @@
     		$(".mainlist tbody").html("");
     		for (var resultLeng = 0; resultLeng < result.length; resultLeng ++) {
     			resultHtml += "<tr userid='" + result[resultLeng].userId + "'><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>"
-    			   			+ "<td>" + (resultLeng + 1) + "</td>"
+    			   			+ "<td>" + (((pageNum - 1) * listSize) + (resultLeng + 1)) + "</td>"
     			   			+ "<td>" + result[resultLeng].userName+ "</td>"
     			   			+ "<td>" + result[resultLeng].userTitle+ "</td>"
     			   			+ "<td>" + result[resultLeng].deptName+ "</td>"
@@ -94,9 +94,16 @@
     	
     	//페이지 이동 함수
     	function goToPageByNum(pCurPage){
-    		pageNum = pCurPage;
+    		if (pCurPage == 0 || totalPage < pCurPage) {
+    			return;
+    		} else {
+	    		pageNum = pCurPage;    			
+    		}
+    		
     		getUserConfList();
     	}
+    	
+    	
     </script>
 	</head>
 <body>
@@ -156,7 +163,7 @@
 		<table class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
-					<th style="width:20px;"><input type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
+					<th style="width:20px;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
 					<th style="width:29px;">NO</th>
 					<th style="width:300px">이름</th>
 					<th style="width:200px">직위</th>

@@ -96,7 +96,7 @@
 		<isNotEmpty prepend="AND" property="searchUserName">
 			B.DISPLAYNAME = #searchUserName#
 		</isNotEmpty>
-		LIMIT #limit#, 10;
+		LIMIT #limit#, #listSize#;
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigCount" parameterClass="Map" resultClass="String">
