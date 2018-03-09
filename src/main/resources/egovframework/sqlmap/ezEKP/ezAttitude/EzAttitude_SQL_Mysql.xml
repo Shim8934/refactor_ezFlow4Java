@@ -2,23 +2,8 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezAttitude">
-	<typeAlias alias="AttitudeConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO"/>
 	
-	<select id="ezAttitude.getAttitudeConfig" parameterClass="Map" resultClass="AttitudeConfigVO">
-		SELECT
-			COMPANYID,
-			TENANT_ID,
-			WORKSTARTTIME,
-			WORKENDTIME,
-			CLOSEDDAY,
-			ATTITUDEMODAPPL,
-			CLOSEDDATEATTITUDE
-		FROM
-			TBL_ATTITUDE_CONF
-		WHERE
-			COMPANYID = #companyId#
-		AND
-			TENANT_ID = #tenantId#
-	</select>
+	
+
 	
 </sqlMap>

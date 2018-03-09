@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,10 +197,24 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void updateAttitudeConfig(AttitudeConfigVO attitudeConfigInfo)
+	public void updateAttitudeConfig(JSONObject jsonParam)
 			throws Exception {
-		// TODO Auto-generated method stub
+		LOGGER.debug("updateAttitudeConfig started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantId", jsonParam.get("tenantId").toString());
+		map.put("companyId", jsonParam.get("companyId").toString());
+		map.put("workStartTime", jsonParam.get("workStartTime").toString());
+		map.put("workEndTime", jsonParam.get("workEndTime").toString());
+		map.put("closedDay", jsonParam.get("closedDay").toString());
+		map.put("attitudeModAppl", jsonParam.get("attitudeModAppl").toString());
+		map.put("closedDateAttitude", jsonParam.get("closedDateAttitude").toString());
+		map.put("confSetDate", jsonParam.get("confSetDate").toString());
+		
+		ezAttitudeDAO.updateAttitudeConfig(map);
+		
+		LOGGER.debug("updateAttitudeConfig ended");
 	}
 
 	@Override

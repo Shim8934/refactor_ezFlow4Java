@@ -3,6 +3,7 @@
 
 <sqlMap namespace="ezAttitudeAdmin">
 	<typeAlias alias="AttitudeDeptVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO"/>
+	<typeAlias alias="AttitudeConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO"/>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
 		<![CDATA[
@@ -33,4 +34,37 @@
 				
 		]]>
 	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeConfig" parameterClass="Map" resultClass="AttitudeConfigVO">
+		SELECT
+			COMPANYID,
+			TENANT_ID,
+			WORKSTARTTIME,
+			WORKENDTIME,
+			CLOSEDDAY,
+			ATTITUDEMODAPPL,
+			CLOSEDDATEATTITUDE,
+			date_format(CONFSETDATE, '%Y-%m-%d') as CONFSETDATE
+		FROM
+			TBL_ATTITUDE_CONF
+		WHERE
+			COMPANYID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<update id="ezAttitudeAdminDAO.updateAttitudeConfig" parameterClass="Map">
+		UPDATE TBL_ATTITUDE_CONF
+		SET
+			WORKSTARTTIME = #workStartTime#,
+			WORKENDTIME = #workEndTime#,
+			CLOSEDDAY = #closedDay#,
+			ATTITUDEMODAPPL = #attitudeModAppl#,
+			CLOSEDDATEATTITUDE = #closedDateAttitude#,
+			CONFSETDATE = str_to_date(#confSetDate#, '%Y-%m-%d') 
+		WHERE
+			COMPANYID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
 </sqlMap>

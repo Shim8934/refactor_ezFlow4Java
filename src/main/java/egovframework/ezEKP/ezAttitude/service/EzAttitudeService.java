@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezAttitude.service;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
@@ -57,7 +59,7 @@ public interface EzAttitudeService {
 	
 	public AttitudeConfigVO getAttitudeConfig(int tenantId, String companyId) throws Exception;
 	
-	public void updateAttitudeConfig(AttitudeConfigVO attitudeConfigInfo) throws Exception;
+	public void updateAttitudeConfig(JSONObject jsonParam) throws Exception;
 	
 	public void updateAttitudeTypeConfig(String typeId, String isUse, int tenantId, String companyId) throws Exception;
 	

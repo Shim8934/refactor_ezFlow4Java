@@ -9,6 +9,7 @@ public class AttitudeConfigVO {
 	private String closedDay;
 	private String attitudeModAppl;
 	private String closedDateAttitude;
+	private String confSetDate;
 	
 	public String getCompanyId() {
 		return companyId;
@@ -51,6 +52,12 @@ public class AttitudeConfigVO {
 	}
 	public void setClosedDateAttitude(String closedDateAttitude) {
 		this.closedDateAttitude = closedDateAttitude;
+	}
+	public String getConfSetDate() {
+		return confSetDate;
+	}
+	public void setConfSetDate(String confSetDate) {
+		this.confSetDate = confSetDate;
 	}
 	
 }

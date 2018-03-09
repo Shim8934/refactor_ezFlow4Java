@@ -31,8 +31,8 @@
 	            	success : function(result) {
 	            		attitudeConfigSet(result);
 	            	},
-	            	error : function(e) {
-	            		alert(e);
+	            	error : function() {
+	            		$('table.content input').val("");
 	            	}
 	            });
 	        }
@@ -67,8 +67,42 @@
         		} else {
         			$('input[name=close_date_attitude]').eq(0).attr('checked','checked');
         		}
-        		
 	        }
+	        
+	        function save_config() {
+	        	var closedDaysLength = $('#dayChkBox').find('input[type=checkbox]').length;
+	        	var closedDays = "";
+	        	for (var i = 0; i < closedDaysLength; i++) {
+	        		closedDays += $('#dayChkBox input[type=checkbox]').eq(i).val() + ",";
+	        	}
+	            $.ajax({
+	            	type : "POST",
+	            	url : "/admin/ezAttitude/updateAttitudeConfInfo.do",
+	            	dataType : "json",
+	            	data : {companyId : encodeURI(document.getElementById("ListCompany").value),
+	            			workStartTime : $("#start_hr").val() + ":" + $("#start_min").val(),
+	            			workEndTime : $("#end_hr").val() + ":" + $("#end_min").val(),
+	            			closedDay : closedDays.slice(0, -1),
+	            			attitudeModAppl : $('input[name=attitude_mod_appl]:checked').val(),
+	            			closedDateAttitude : $('input[name=close_date_attitude]:checked').val()},
+	            	success : function() {
+	            		company_change();
+	            	},
+	            	error : function() {
+	            		
+	            	}
+	            });
+	        }
+	        
+	     	//체크박스 변경시 값 변경
+		    $(document).on('click', 'input[type=checkbox]' ,function() {
+		    	if ($(this).is(":checked")) {
+			    	$(this).attr('value','1');
+		    	} else {
+		    		$(this).attr('value','0');
+		    	}
+		    })
+
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -80,8 +114,9 @@
 				</li>
 				<li>
 				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
-					<option>회사1</option>
-					<option>회사2</option>
+					<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+					</c:forEach>
 	      		</select>
 	      		</li>
 	      		<li><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></li>

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -426,12 +428,20 @@ public class EzAttitudeGWController {
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
-			
-			int tenantId = info.getTenantId();
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			//근태규율설정정보
-			AttitudeConfigVO attitudeConfigInfo = ezAttitudeService.getAttitudeConfig(tenantId, companyId);
+			AttitudeConfigVO attitudeConfigInfo = ezAttitudeService.getAttitudeConfig(info.getTenantId(), companyId);
+			
+			//시간 셋팅
+			String startDate = commonUtil.getDateStringInUTC(attitudeConfigInfo.getConfSetDate() + " " + attitudeConfigInfo.getWorkStartTime(), info.getOffSet(), false);
+			String endDate = commonUtil.getDateStringInUTC(attitudeConfigInfo.getConfSetDate() + " " + attitudeConfigInfo.getWorkEndTime(), info.getOffSet(), false);
+			
+			int startIdx = startDate.indexOf(" ");
+			int endIdx = endDate.indexOf(" ");
+			
+			attitudeConfigInfo.setWorkStartTime(startDate.substring(startIdx + 1));
+			attitudeConfigInfo.setWorkEndTime(endDate.substring(endIdx + 1));
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -446,15 +456,43 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [POST] 근태규율설정정보 수정
+	 * G/W 근태관리 [PUT] 근태규율설정정보 수정
 	 */
-	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudereg", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject updateAttitudeConf(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudereg] started.");
-		
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudereg", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject updateAttitudeConf(@PathVariable String companyId, @RequestBody JSONObject jsonParam, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudereg] started.");
+		//TODO
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			//테넌트아이디
+			jsonParam.put("tenantId", info.getTenantId());
+			
+			//오늘일자로 설정일자
+			String confSetDate =  commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			jsonParam.put("confSetDate", confSetDate);
+			
+			//시간 셋팅
+			if (jsonParam.get("workStartTime").toString().length() == 4) {
+				jsonParam.put("workStartTime", "0" + jsonParam.get("workStartTime").toString());
+			}
+			if (jsonParam.get("workEndTime").toString().length() == 4) {
+				jsonParam.put("workEndTime", "0" + jsonParam.get("workEndTime").toString());
+			}
+			String startDate = commonUtil.getDateStringInUTC(confSetDate + " " + jsonParam.get("workStartTime").toString(), info.getOffSet(), true);
+			String endDate = commonUtil.getDateStringInUTC(confSetDate + " " + jsonParam.get("workEndTime").toString(), info.getOffSet(), true);
+			
+			int startIdx = startDate.indexOf(" ");
+			int endIdx = endDate.indexOf(" ");
+			
+			jsonParam.put("workStartTime", startDate.substring(startIdx + 1));
+			jsonParam.put("workEndTime", endDate.substring(endIdx + 1));
+			
+			//수정
+			ezAttitudeService.updateAttitudeConfig(jsonParam);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -464,7 +502,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudereg] ended.");
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudereg] ended.");
 		return result;
 	}
 	
