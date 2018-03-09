@@ -13,5 +13,4 @@
 	            <frame name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
 		    </frameset>
     </frameset>
->>>>>>> Stashed changes
 </html>

@@ -500,7 +500,7 @@
 			'home': function (e) {
 				// home
 				e.preventDefault();
-				var o = this._firstChild(this.get_container_ul()[0]);
+				var o = this._firstChild(this.get_container_ol()[0]);
 				if(o) { $(o).children('.jstree-anchor').filter(':visible').focus(); }
 			},
 			'end': function (e) {
@@ -586,16 +586,16 @@
 			 */
 			this.trigger("init");
 
-			this._data.core.original_container_html = this.element.find(" > ul > li").clone(true);
+			this._data.core.original_container_html = this.element.find(" > ol > li").clone(true);
 			this._data.core.original_container_html
 				.find("li").addBack()
 				.contents().filter(function() {
 					return this.nodeType === 3 && (!this.nodeValue || /^\s+$/.test(this.nodeValue));
 				})
 				.remove();
-			this.element.html("<"+"ul class='jstree-container-ul jstree-children' role='group'><"+"li id='j"+this._id+"_loading' class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='tree-item'><i class='jstree-icon jstree-ocl'></i><"+"a class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</a></li></ul>");
+			this.element.html("<"+"ol class='jstree-container-ol jstree-children' role='group'><"+"li id='j"+this._id+"_loading' class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='tree-item'><i class='jstree-icon jstree-ocl'></i><"+"a class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</a></li></ol>");
 			this.element.attr('aria-activedescendant','j' + this._id + '_loading');
-			this._data.core.li_height = this.get_container_ul().children("li").first().outerHeight() || 24;
+			this._data.core.li_height = this.get_container_ol().children("li").first().outerHeight() || 24;
 			this._data.core.node = this._create_prototype_node();
 			/**
 			 * triggered after the loading text is shown and before loading starts
@@ -775,8 +775,8 @@
 						if(data.status) {
 							if(data.node.id === $.jstree.root && !this._data.core.loaded) {
 								this._data.core.loaded = true;
-								if(this._firstChild(this.get_container_ul()[0])) {
-									this.element.attr('aria-activedescendant',this._firstChild(this.get_container_ul()[0]).id);
+								if(this._firstChild(this.get_container_ol()[0])) {
+									this.element.attr('aria-activedescendant',this._firstChild(this.get_container_ol()[0]).id);
 								}
 								/**
 								 * triggered after the root node is loaded for the first time
@@ -787,7 +787,7 @@
 							}
 							if(!this._data.core.ready) {
 								setTimeout($.proxy(function() {
-									if(this.element && !this.get_container_ul().find('.jstree-loading').length) {
+									if(this.element && !this.get_container_ol().find('.jstree-loading').length) {
 										this._data.core.ready = true;
 										if(this._data.core.selected.length) {
 											if(this.settings.core.expand_selected_onload) {
@@ -951,10 +951,10 @@
 		/**
 		 * returns the jQuery extended main UL node inside the instance container. Used internally.
 		 * @private
-		 * @name get_container_ul()
+		 * @name get_container_ol()
 		 * @return {jQuery}
 		 */
-		get_container_ul : function () {
+		get_container_ol : function () {
 			return this.element.children(".jstree-children").first();
 		},
 		/**
@@ -1082,7 +1082,7 @@
 			var tmp;
 			obj = this.get_node(obj, true);
 			if(obj[0] === this.element[0]) {
-				tmp = this._firstChild(this.get_container_ul()[0]);
+				tmp = this._firstChild(this.get_container_ol()[0]);
 				while (tmp && tmp.offsetHeight === 0) {
 					tmp = this._nextSibling(tmp);
 				}
@@ -1127,7 +1127,7 @@
 			var tmp;
 			obj = this.get_node(obj, true);
 			if(obj[0] === this.element[0]) {
-				tmp = this.get_container_ul()[0].lastChild;
+				tmp = this.get_container_ol()[0].lastChild;
 				while (tmp && tmp.offsetHeight === 0) {
 					tmp = this._previousSibling(tmp);
 				}
@@ -1179,7 +1179,7 @@
 		get_children_dom : function (obj) {
 			obj = this.get_node(obj, true);
 			if(obj[0] === this.element[0]) {
-				return this.get_container_ul().children(".jstree-node");
+				return this.get_container_ol().children(".jstree-node");
 			}
 			if(!obj || !obj.length) {
 				return false;
@@ -1526,7 +1526,7 @@
 			dom = this.get_node(dom);
 			dom.children = [];
 			dom.children_d = [];
-			var dat = data.is('ul') ? data.children() : data,
+			var dat = data.is('ol') ? data.children() : data,
 				par = dom.id,
 				chd = [],
 				dpc = [],
@@ -1562,7 +1562,7 @@
 				this.redraw();
 			}
 			else {
-				this.get_container_ul().children('.jstree-initial-node').remove();
+				this.get_container_ol().children('.jstree-initial-node').remove();
 				this.redraw(true);
 			}
 			if(this._data.core.selected.length !== s) {
@@ -1923,7 +1923,7 @@
 						this.redraw();
 					}
 					else {
-						// this.get_container_ul().children('.jstree-initial-node').remove();
+						// this.get_container_ol().children('.jstree-initial-node').remove();
 						this.redraw(true);
 					}
 					if(rslt.add.length) {
@@ -2037,7 +2037,7 @@
 				});
 			}
 			tmp = d.children("a").first().length ? d.children("a").first().clone() : d.clone();
-			tmp.children("ins, i, ul").remove();
+			tmp.children("ins, i, ol").remove();
 			tmp = tmp.html();
 			tmp = $('<div />').html(tmp);
 			data.text = this.settings.core.force_text ? tmp.text() : tmp.html();
@@ -2063,7 +2063,7 @@
 			if(data.icon === undefined || data.icon === null || data.icon === "") {
 				data.icon = true;
 			}
-			tmp = d.children("ul").children("li");
+			tmp = d.children("ol").children("li");
 			do {
 				tid = 'j' + this._id + '_' + (++this._cnt);
 			} while(m[tid]);
@@ -2312,7 +2312,7 @@
 		 */
 		_redraw : function () {
 			var nodes = this._model.force_full_redraw ? this._model.data[$.jstree.root].children.concat([]) : this._model.changed.concat([]),
-				f = document.createElement('UL'), tmp, i, j, fe = this._data.core.focused;
+				f = document.createElement('OL'), tmp, i, j, fe = this._data.core.focused;
 			for(i = 0, j = nodes.length; i < j; i++) {
 				tmp = this.redraw_node(nodes[i], true, this._model.force_full_redraw);
 				if(tmp && this._model.force_full_redraw) {
@@ -2320,10 +2320,10 @@
 				}
 			}
 			if(this._model.force_full_redraw) {
-				f.className = this.get_container_ul()[0].className;
+				f.className = this.get_container_ol()[0].className;
 				f.setAttribute('role','group');
 				this.element.empty().append(f);
-				//this.get_container_ul()[0].appendChild(f);
+				//this.get_container_ol()[0].appendChild(f);
 			}
 			if(fe !== null) {
 				tmp = this.get_node(fe, true);
@@ -2379,7 +2379,7 @@
 			node.children('.jstree-children').remove();
 			node = node[0];
 			if(obj.children.length && obj.state.loaded) {
-				k = d.createElement('UL');
+				k = d.createElement('OL');
 				k.setAttribute('role', 'group');
 				k.className = 'jstree-children';
 				for(i = 0, j = obj.children.length; i < j; i++) {
@@ -2555,7 +2555,7 @@
 
 
 			if(deep && obj.children.length && (obj.state.opened || force_render) && obj.state.loaded) {
-				k = d.createElement('UL');
+				k = d.createElement('OL');
 				k.setAttribute('role', 'group');
 				k.className = 'jstree-children';
 				for(i = 0, j = obj.children.length; i < j; i++) {
@@ -2578,7 +2578,7 @@
 					}
 				}
 				if(!tmp) {
-					tmp = d.createElement('UL');
+					tmp = d.createElement('OL');
 					tmp.setAttribute('role', 'group');
 					tmp.className = 'jstree-children';
 					par.appendChild(tmp);
@@ -2823,7 +2823,7 @@
 			if(!obj) { obj = $.jstree.root; }
 			obj = this.get_node(obj);
 			if(!obj) { return false; }
-			var dom = obj.id === $.jstree.root ? this.get_container_ul() : this.get_node(obj, true), i, j, _this;
+			var dom = obj.id === $.jstree.root ? this.get_container_ol() : this.get_node(obj, true), i, j, _this;
 			if(!dom.length) {
 				for(i = 0, j = obj.children_d.length; i < j; i++) {
 					if(this.is_closed(this._model.data[obj.children_d[i]])) {
@@ -2863,7 +2863,7 @@
 			if(!obj) { obj = $.jstree.root; }
 			obj = this.get_node(obj);
 			if(!obj) { return false; }
-			var dom = obj.id === $.jstree.root ? this.get_container_ul() : this.get_node(obj, true),
+			var dom = obj.id === $.jstree.root ? this.get_container_ol() : this.get_node(obj, true),
 				_this = this, i, j;
 			if(dom.length) {
 				dom = this.is_open(obj) ? dom.find('.jstree-open').addBack() : dom.find('.jstree-open');
@@ -3579,16 +3579,16 @@
 			this._data.core.last_clicked = null;
 			this._data.core.focused = null;
 
-			var c = this.get_container_ul()[0].className;
+			var c = this.get_container_ol()[0].className;
 			if(!skip_loading) {
-				this.element.html("<"+"ul class='"+c+"' role='group'><"+"li class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='treeitem' id='j"+this._id+"_loading'><i class='jstree-icon jstree-ocl'></i><"+"a class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</a></li></ul>");
+				this.element.html("<"+"ol class='"+c+"' role='group'><"+"li class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='treeitem' id='j"+this._id+"_loading'><i class='jstree-icon jstree-ocl'></i><"+"a class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</a></li></ol>");
 				this.element.attr('aria-activedescendant','j'+this._id+'_loading');
 			}
 			this.load_node($.jstree.root, function (o, s) {
 				if(s) {
-					this.get_container_ul()[0].className = c;
-					if(this._firstChild(this.get_container_ul()[0])) {
-						this.element.attr('aria-activedescendant',this._firstChild(this.get_container_ul()[0]).id);
+					this.get_container_ol()[0].className = c;
+					if(this._firstChild(this.get_container_ol()[0])) {
+						this.element.attr('aria-activedescendant',this._firstChild(this.get_container_ol()[0]).id);
 					}
 					this.set_state($.extend(true, {}, this._data.core.state), function () {
 						/**
@@ -4644,7 +4644,7 @@
 		 */
 		show_stripes : function () {
 			this._data.core.themes.stripes = true;
-			this.get_container_ul().addClass("jstree-striped");
+			this.get_container_ol().addClass("jstree-striped");
 			/**
 			 * triggered when stripes are shown
 			 * @event
@@ -4658,7 +4658,7 @@
 		 */
 		hide_stripes : function () {
 			this._data.core.themes.stripes = false;
-			this.get_container_ul().removeClass("jstree-striped");
+			this.get_container_ol().removeClass("jstree-striped");
 			/**
 			 * triggered when stripes are hidden
 			 * @event
@@ -4677,7 +4677,7 @@
 		 */
 		show_dots : function () {
 			this._data.core.themes.dots = true;
-			this.get_container_ul().removeClass("jstree-no-dots");
+			this.get_container_ol().removeClass("jstree-no-dots");
 			/**
 			 * triggered when dots are shown
 			 * @event
@@ -4691,7 +4691,7 @@
 		 */
 		hide_dots : function () {
 			this._data.core.themes.dots = false;
-			this.get_container_ul().addClass("jstree-no-dots");
+			this.get_container_ol().addClass("jstree-no-dots");
 			/**
 			 * triggered when dots are hidden
 			 * @event
@@ -4710,7 +4710,7 @@
 		 */
 		show_icons : function () {
 			this._data.core.themes.icons = true;
-			this.get_container_ul().removeClass("jstree-no-icons");
+			this.get_container_ol().removeClass("jstree-no-icons");
 			/**
 			 * triggered when icons are shown
 			 * @event
@@ -4724,7 +4724,7 @@
 		 */
 		hide_icons : function () {
 			this._data.core.themes.icons = false;
-			this.get_container_ul().addClass("jstree-no-icons");
+			this.get_container_ol().addClass("jstree-no-icons");
 			/**
 			 * triggered when icons are hidden
 			 * @event
@@ -4743,7 +4743,7 @@
 		 */
 		show_ellipsis : function () {
 			this._data.core.themes.ellipsis = true;
-			this.get_container_ul().addClass("jstree-ellipsis");
+			this.get_container_ol().addClass("jstree-ellipsis");
 			/**
 			 * triggered when ellisis is shown
 			 * @event
@@ -4757,7 +4757,7 @@
 		 */
 		hide_ellipsis : function () {
 			this._data.core.themes.ellipsis = false;
-			this.get_container_ul().removeClass("jstree-ellipsis");
+			this.get_container_ol().removeClass("jstree-ellipsis");
 			/**
 			 * triggered when ellisis is hidden
 			 * @event
@@ -5463,13 +5463,13 @@
 		 * @name show_checkboxes()
 		 * @plugin checkbox
 		 */
-		this.show_checkboxes = function () { this._data.core.themes.checkboxes = true; this.get_container_ul().removeClass("jstree-no-checkboxes"); };
+		this.show_checkboxes = function () { this._data.core.themes.checkboxes = true; this.get_container_ol().removeClass("jstree-no-checkboxes"); };
 		/**
 		 * hide the node checkbox icons
 		 * @name hide_checkboxes()
 		 * @plugin checkbox
 		 */
-		this.hide_checkboxes = function () { this._data.core.themes.checkboxes = false; this.get_container_ul().addClass("jstree-no-checkboxes"); };
+		this.hide_checkboxes = function () { this._data.core.themes.checkboxes = false; this.get_container_ol().addClass("jstree-no-checkboxes"); };
 		/**
 		 * toggle the node icons
 		 * @name toggle_checkboxes()
@@ -6115,7 +6115,7 @@
 			var last_ts = 0, cto = null, ex, ey;
 			this.element
 				.on("init.jstree loading.jstree ready.jstree", $.proxy(function () {
-						this.get_container_ul().addClass('jstree-contextmenu');
+						this.get_container_ol().addClass('jstree-contextmenu');
 					}, this))
 				.on("contextmenu.jstree", ".jstree-anchor", $.proxy(function (e, data) {
 						if (e.target.tagName.toLowerCase() === 'input') {
@@ -6315,7 +6315,7 @@
 					sep = false,
 					tmp;
 
-				if(is_callback) { str += "<"+"ul>"; }
+				if(is_callback) { str += "<"+"ol>"; }
 				$.each(o, function (i, val) {
 					if(!val) { return true; }
 					vakata_context.items.push(val);
@@ -6345,7 +6345,7 @@
 					}
 				});
 				str  = str.replace(/<li class\='vakata-context-separator'\><\/li\>$/,"");
-				if(is_callback) { str += "</ul>"; }
+				if(is_callback) { str += "</ol>"; }
 				/**
 				 * triggered on the document when the contextmenu is parsed (HTML is built)
 				 * @event
@@ -6360,8 +6360,8 @@
 			},
 			_show_submenu : function (o) {
 				o = $(o);
-				if(!o.length || !o.children("ul").length) { return; }
-				var e = o.children("ul"),
+				if(!o.length || !o.children("ol").length) { return; }
+				var e = o.children("ol"),
 					xl = o.offset().left,
 					x = xl + o.outerWidth(),
 					y = o.offset().top,
@@ -6464,7 +6464,7 @@
 			},
 			hide : function () {
 				if(vakata_context.is_visible) {
-					vakata_context.element.hide().find("ul").hide().end().find(':focus').blur().end().detach();
+					vakata_context.element.hide().find("ol").hide().end().find(':focus').blur().end().detach();
 					vakata_context.is_visible = false;
 					/**
 					 * triggered on the document when the contextmenu is hidden
@@ -6483,7 +6483,7 @@
 			right_to_left = $("body").css("direction") === "rtl";
 			var to = false;
 
-			vakata_context.element = $("<ul class='vakata-context'></ul>");
+			vakata_context.element = $("<ol class='vakata-context'></ol>");
 			vakata_context.element
 				.on("mouseenter", "li", function (e) {
 					e.stopImmediatePropagation();
@@ -6498,7 +6498,7 @@
 					vakata_context.element.find(".vakata-context-hover").removeClass("vakata-context-hover").end();
 
 					$(this)
-						.siblings().find("ul").hide().end().end()
+						.siblings().find("ol").hide().end().end()
 						.parentsUntil(".vakata-context", "li").addBack().addClass("vakata-context-hover");
 					$.vakata.context._show_submenu(this);
 				})
@@ -6535,15 +6535,15 @@
 								break;
 							case 37:
 								if(vakata_context.is_visible) {
-									vakata_context.element.find(".vakata-context-hover").last().closest("li").first().find("ul").hide().find(".vakata-context-hover").removeClass("vakata-context-hover").end().end().children('a').focus();
+									vakata_context.element.find(".vakata-context-hover").last().closest("li").first().find("ol").hide().find(".vakata-context-hover").removeClass("vakata-context-hover").end().end().children('a').focus();
 									e.stopImmediatePropagation();
 									e.preventDefault();
 								}
 								break;
 							case 38:
 								if(vakata_context.is_visible) {
-									o = vakata_context.element.find("ul:visible").addBack().last().children(".vakata-context-hover").removeClass("vakata-context-hover").prevAll("li:not(.vakata-context-separator)").first();
-									if(!o.length) { o = vakata_context.element.find("ul:visible").addBack().last().children("li:not(.vakata-context-separator)").last(); }
+									o = vakata_context.element.find("ol:visible").addBack().last().children(".vakata-context-hover").removeClass("vakata-context-hover").prevAll("li:not(.vakata-context-separator)").first();
+									if(!o.length) { o = vakata_context.element.find("ol:visible").addBack().last().children("li:not(.vakata-context-separator)").last(); }
 									o.addClass("vakata-context-hover").children('a').focus();
 									e.stopImmediatePropagation();
 									e.preventDefault();
@@ -6551,15 +6551,15 @@
 								break;
 							case 39:
 								if(vakata_context.is_visible) {
-									vakata_context.element.find(".vakata-context-hover").last().children("ul").show().children("li:not(.vakata-context-separator)").removeClass("vakata-context-hover").first().addClass("vakata-context-hover").children('a').focus();
+									vakata_context.element.find(".vakata-context-hover").last().children("ol").show().children("li:not(.vakata-context-separator)").removeClass("vakata-context-hover").first().addClass("vakata-context-hover").children('a').focus();
 									e.stopImmediatePropagation();
 									e.preventDefault();
 								}
 								break;
 							case 40:
 								if(vakata_context.is_visible) {
-									o = vakata_context.element.find("ul:visible").addBack().last().children(".vakata-context-hover").removeClass("vakata-context-hover").nextAll("li:not(.vakata-context-separator)").first();
-									if(!o.length) { o = vakata_context.element.find("ul:visible").addBack().last().children("li:not(.vakata-context-separator)").first(); }
+									o = vakata_context.element.find("ol:visible").addBack().last().children(".vakata-context-hover").removeClass("vakata-context-hover").nextAll("li:not(.vakata-context-separator)").first();
+									if(!o.length) { o = vakata_context.element.find("ol:visible").addBack().last().children("li:not(.vakata-context-separator)").first(); }
 									o.addClass("vakata-context-hover").children('a').focus();
 									e.stopImmediatePropagation();
 									e.preventDefault();
@@ -6589,12 +6589,12 @@
 					}
 				})
 				.on("context_show.vakata.jstree", function (e, data) {
-					vakata_context.element.find("li:has(ul)").children("a").addClass("vakata-context-parent");
+					vakata_context.element.find("li:has(ol)").children("a").addClass("vakata-context-parent");
 					if(right_to_left) {
 						vakata_context.element.addClass("vakata-context-rtl").css("direction", "rtl");
 					}
 					// also apply a RTL class?
-					vakata_context.element.find("ul").hide().end();
+					vakata_context.element.find("ol").hide().end();
 				});
 		});
 	}($));
@@ -6804,7 +6804,7 @@
 
 					// if are hovering the container itself add a new root node
 					//console.log(data.event);
-					if( (data.event.target === ins.element[0] || data.event.target === ins.get_container_ul()[0]) && ins.get_container_ul().children().length === 0) {
+					if( (data.event.target === ins.element[0] || data.event.target === ins.get_container_ol()[0]) && ins.get_container_ol().children().length === 0) {
 						ok = true;
 						for(t1 = 0, t2 = data.data.nodes.length; t1 < t2; t1++) {
 							ok = ok && ins.check( (data.data.origin && (data.data.origin.settings.dnd.always_copy || (data.data.origin.settings.dnd.copy && (data.event.metaKey || data.event.ctrlKey)) ) ? "copy_node" : "move_node"), (data.data.origin && data.data.origin !== ins ? data.data.origin.get_node(data.data.nodes[t1]) : data.data.nodes[t1]), $.jstree.root, 'last', { 'dnd' : true, 'ref' : ins.get_node($.jstree.root), 'pos' : 'i', 'origin' : data.data.origin, 'is_multi' : (data.data.origin && data.data.origin !== ins), 'is_foreign' : (!data.data.origin) });
@@ -8477,7 +8477,7 @@
 					}, this))
 				.on("init.jstree loading.jstree ready.jstree", $.proxy(function () {
 						//div.style.height = this._data.core.li_height + 'px';
-						this.get_container_ul().addClass('jstree-wholerow-ul');
+						this.get_container_ol().addClass('jstree-wholerow-ol');
 					}, this))
 				.on("deselect_all.jstree", $.proxy(function (e, data) {
 						this.element.find('.jstree-wholerow-clicked').removeClass('jstree-wholerow-clicked');

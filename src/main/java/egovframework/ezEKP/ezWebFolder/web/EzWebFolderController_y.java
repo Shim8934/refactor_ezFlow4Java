@@ -18,15 +18,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.gson.Gson;
 
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -45,7 +44,7 @@ public class EzWebFolderController_y {
 	public String main (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String folderType = request.getParameter("folderType")!=null? request.getParameter("folderType") : "";
+		String folderType = request.getParameter("folderType")!=null? request.getParameter("folderType"): "";
         //Add more function here
 		LOGGER.debug(request.getParameter("folderId"));
 		LOGGER.debug("folderType"+ folderType+"은 이거임");
@@ -65,34 +64,35 @@ public class EzWebFolderController_y {
 			HttpServletResponse resp, Model model ){
 		
 		// tenantID, companyId, userId, folderType, folderId
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderType = request.getParameter("folderType") != null ? request.getParameter("folderType") : "";
 		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
-		String url = gwServerUrl + "/webfolder/users/" +userInfo.getId() + "/folder-list";
+		String url = gwServerUrl + "/rest/ezwebfolder/users/" +userInfo.getId() + "/folder-list";
 		String adminCheck = "";
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ) {
-			adminCheck = "ad";
-		}else {
-			adminCheck = "nad";
-		}
+		// admin인지 판단하는 if문 userInfoSimple에서는 찾을수 없음 LoginVO에서 찾을수 있음
+//		if ( userInfo..indexOf("c=1") != -1 ) {
+//			adminCheck = "ad";
+//		}else {
+//			adminCheck = "nad";
+//		}
 		
 		
 		RestTemplate rest = new RestTemplate();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+
 		
 		HttpEntity<?> entity = new HttpEntity<>( headers );
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("deptId", userInfo.getDeptID())
-				.queryParam("admin", adminCheck)
-				.queryParam("comId", userInfo.getCompanyID())
-				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("folderType", folderType)
 				.queryParam("folderId", folderId);
+//				.queryParam("admin", adminCheck)
 		
 						
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -108,12 +108,16 @@ public class EzWebFolderController_y {
 		
 		String status = resultBody.get("status").toString();
 		
-		JSONObject test = new JSONObject();
+		JSONObject data = new JSONObject();
 		
 		if (status.equals("ok")) {
-			test.put("userInfo", userInfo);
-			test.put("folderList",resultBody.get("folderList"));
-			model.addAttribute("folderList",test);
+			model.addAttribute("status","ok");
+			model.addAttribute("code",0);
+			model.addAttribute("data",resultBody.get("data"));
+		} else {
+			model.addAttribute("status","error");
+			model.addAttribute("code",1);
+			model.addAttribute("data","");
 		}
 
 		return "json";
@@ -126,7 +130,9 @@ public class EzWebFolderController_y {
 	public String getFileList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		JSONObject jsonObject = new JSONObject();
 		String folderId = request.getParameter("folderId")!=null? request.getParameter("folderId") : "";
 		String folderType = request.getParameter("folderType")!=null? request.getParameter("folderType") : "";
 		System.out.println("folderType"+folderType);
@@ -146,18 +152,7 @@ public class EzWebFolderController_y {
 			totalPages = 1;
 		}
 		
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
-		String url = gwServerUrl + "/webfolder/folders/" + folderId + "/file-list";
 		
-		RestTemplate rest = new RestTemplate();
-		
-		// x-user-host : rest api에는 호스트명이 있어야 한다.
-		// 컨트롤러에 구현할때만 그런건가 
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-//		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>( headers );
 		String searchExt = "" ;
 		String searchFileName = "" ;
 		String searchStartDate = "" ;
@@ -197,52 +192,64 @@ public class EzWebFolderController_y {
 			searchListCount = request.getParameter("searchListCount");
 		}
 		
+		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String url = gwServerUrl + "/rest/ezwebfolder/folders/" + folderId + "/file-list";
+		
+		RestTemplate rest = new RestTemplate();
+		
+		// host-name : rest api에는 호스트명이 있어야 한다.
+		// 컨트롤러에 구현할때만 그런건가 
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>( headers );
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId())
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("comId", userInfo.getCompanyID())
-				.queryParam("folderType", folderType)
-				.queryParam("searchExt", searchExt)
-				.queryParam("searchFileName", searchFileName)
-				.queryParam("searchStartDate", searchStartDate)
-				.queryParam("searchEndDate", searchEndDate)
-				.queryParam("searchCreateName",searchCreateName)
-				.queryParam("searchFileType", searchFileType)
-				.queryParam("searchPageCount", searchPageCount)
-				.queryParam("totalCount", totalCount)
-				.queryParam("currPage", currPage)
-				.queryParam("listCount", listCount)
-				.queryParam("totalPages", totalPages)
-				.queryParam("pStart", pStart)
-				.queryParam("pEnd", pEnd);
+				.queryParam("userId", userInfo.getId())				
+				.queryParam("folderType", folderType)               
+				.queryParam("searchExt", searchExt)                 
+				.queryParam("searchFileName", searchFileName)       
+				.queryParam("searchStartDate", searchStartDate)     
+				.queryParam("searchEndDate", searchEndDate)         
+				.queryParam("searchCreateName",searchCreateName)    
+				.queryParam("searchFileType", searchFileType)       
+				.queryParam("searchPageCount", searchPageCount)     
+				.queryParam("totalCount", totalCount)               
+				.queryParam("currPage", currPage)                   
+				.queryParam("listCount", listCount)                 
+				.queryParam("totalPages", totalPages)               
+				.queryParam("pStart", pStart)                       
+				.queryParam("pEnd", pEnd);                          
 	
-		
+//		jsonObject.put("folderType", folderType);
+//		jsonObject.put("searchExt", searchExt);
+//		jsonObject.put("searchFileName", searchFileName);
+//		jsonObject.put("searchStartDate", searchStartDate);
+//		jsonObject.put("searchCreateName", searchCreateName);
+//		jsonObject.put("searchFileType", searchFileType);
+//		jsonObject.put("searchPageCount", searchPageCount);
+//		jsonObject.put("totalCount", totalCount);
+//		jsonObject.put("currPage", currPage);
+//		jsonObject.put("listCount", listCount);
+//		jsonObject.put("totalPages", totalPages);
+//		jsonObject.put("pStart", pStart);
+//		jsonObject.put("pEnd", pEnd);
 		// 갔다 돌아옴
- 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+ 		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+ 		
+ 		
+		JSONObject resultBody = result.getBody();
 		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject)jp.parse(result.getBody());
-		String status = null;
-		if( resultBody.get("status") == null ) {
-			System.out.println("값이 없습니다.");
-			LOGGER.debug("status == null");
-		}else {
-			status = resultBody.get("status").toString();
-		}
-		totalCount = Integer.parseInt(resultBody.get("totalCount").toString());
-		totalPages = Integer.parseInt(resultBody.get("totalpages").toString());
-		listCount = Integer.parseInt(resultBody.get("listCount").toString());
-		
-		JSONObject test = new JSONObject();
+		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			test.put("userInfo", userInfo);
-			test.put("fileList",resultBody.get("fileList"));
-			test.put("totalCount", totalCount );
-			test.put("totalPages", totalPages );
-			test.put("listCount", listCount );
-			test.put("currPage", currPage );
-			model.addAttribute("fileList",test);
+			model.addAttribute("status","ok");
+			model.addAttribute("code",0);
+			model.addAttribute("data",resultBody.get("data"));
+		}else {
+			model.addAttribute("status","error");
+			model.addAttribute("code",1);
+			model.addAttribute("data","");
 		}
 		
 		return "json";
@@ -259,72 +266,97 @@ public class EzWebFolderController_y {
 	}
 	
 
-	@RequestMapping( value ="/ezWebFolder/folderControll.do")
-	public String folderControll (@CookieValue("loginCooke") String loginCookie, HttpServletRequest requtest,
+	@RequestMapping( value ="/ezWebFolder/folderManage.do")
+	public String folderControll (@CookieValue("loginCookie") String loginCookie, HttpServletRequest requtest,
 			HttpServletResponse resp , Model model ) throws Exception {
-		return "ezWebFolder/folderControll";
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		return "ezWebFolder/folderManage";
+		
+	}
+	@RequestMapping( value ="/ezWebFolder/inputNameDlg.do")
+	public String inputNameDlg (@CookieValue("loginCookie") String loginCookie, HttpServletRequest requtest,
+			HttpServletResponse resp , Model model ) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		return "ezWebFolder/newFolderInput";
 		
 	}
 	
 	@RequestMapping( value ="/ezWebFolder/insertFolder.do") 
 	public String insertFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderUppId = "";
-		String folderType = "";		
-		if (request.getParameter("folderUp") == null || request.getParameter("folderUp") =="" ) {
-			LOGGER.debug("fail_folderUpperId is not comming");
-			return "fail_ folderUpperId is not comming";
-		}else {
-			folderUppId = request.getParameter("folderUp");
-		}
-		if (request.getParameter("folderType") == null || request.getParameter("folderType") =="" ) {
-			LOGGER.debug("fail_folderType is not comming");
-			return "fail_folderType is not comming";
-		}else {
-			folderType = request.getParameter("folderType");
-		}
+//		String folderType = "";		
+		String newFolderName1 = "";
+		String newFolderName2 = "";
 		
+		if (request.getParameter("folderId").equals(null) || request.getParameter("folderId").equals("") ) {
+			LOGGER.debug("fail_folderUpperId is not comming");
+		}else {
+			folderUppId = request.getParameter("folderId");
+		}
+		if (request.getParameter("newFolderName1").equals(null) || request.getParameter("newFolderName1").equals("")) {
+			LOGGER.debug("fail_newFolderName is not comming");
+		}else {
+			newFolderName1 = request.getParameter("newFolderName1");
+		}
+		if (request.getParameter("newFolderName2").equals(null) || request.getParameter("newFolderName2").equals("")) {
+			LOGGER.debug("fail_newFolderName is not comming");
+			newFolderName2 = request.getParameter("newFolderName2");
+		}else {
+			newFolderName2 = request.getParameter("newFolderName2");
+		}
+//		if (request.getParameter("folderType") == null || request.getParameter("folderType") =="" ) {
+//			LOGGER.debug("fail_folderType is not comming");
+//		}else {
+//			folderType = request.getParameter("folderType");
+//		}
+		
+		
+		
+		String serverName = request.getServerName();
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
-		String url = gwServerUrl + "/webfolder/folders";
+		String url = gwServerUrl + "/rest/ezwebfolder/folders";
 		
 		RestTemplate rest = new RestTemplate();
-		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", serverName);
 		
-		HttpEntity<?> entity = new HttpEntity<>( headers );
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userInfo", userInfo)
-				.queryParam("userId", userInfo.getId())
-				.queryParam("deptId", userInfo.getDeptID())
-				.queryParam("comId", userInfo.getCompanyID())
-				.queryParam("folderType", folderType)
-				.queryParam("folderUppId", folderUppId);
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(userInfo);
+		JSONObject jsonObject = gson.fromJson(jsonString, JSONObject.class);
+		HttpEntity<Object> entity = new HttpEntity<Object>( jsonObject,headers );
+		
+		jsonObject.put("userId", userInfo.getId());
+		jsonObject.put("folderUppId", folderUppId);
+		jsonObject.put("newFolderName1", newFolderName1);
+		jsonObject.put("newFolderName2", newFolderName2);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 				
-						
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		ResponseEntity<JSONObject> 	result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
+
 		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = null;
-		try {
-			resultBody = (JSONObject)jp.parse(result.getBody());
-		} catch (ParseException e) {
-			System.out.println("에러라구");
-			e.printStackTrace();
-		}
+		JSONObject resultBody = result.getBody();
+		LOGGER.debug("result: " + resultBody.get("status"));
 		
 		String status = resultBody.get("status").toString();
-		
-		JSONObject test = new JSONObject();
-		
+		System.out.println(status+": status");
 		if (status.equals("ok")) {
-			return "ok";
+			System.out.println("ok");
+			model.addAttribute("status","ok");
+			model.addAttribute("code",0);
 		}else {
-			return "fail";
+			System.out.println(status+" 여기는 controller");
+			model.addAttribute("status","error");
+			model.addAttribute("code",1);
 		}
-
+		return "json";
 	}
+	
+	
 	
 	/*
 	

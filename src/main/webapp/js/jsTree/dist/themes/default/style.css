@@ -382,7 +382,7 @@
 .jstree-default .jstree-node {
   min-height: 24px;
   line-height: 24px;
-  margin-left: 24px;
+  margin-left: 10px;
   min-width: 24px;
 }
 .jstree-default .jstree-anchor {
@@ -407,20 +407,20 @@
 }
 .jstree-default .jstree-node,
 .jstree-default .jstree-icon {
-  background-image: url("/images/OrganTree_cross/plus.gif");
+  background-image: url("32px.png");
 }
-/* .jstree-default .jstree-node { */
-/*   background-position: -292px -4px; */
-/*   background-repeat: repeat-y; */
-/* } */
+.jstree-default .jstree-node {
+  background-position: -292px -4px;
+  background-repeat: repeat-y;
+}
 .jstree-default .jstree-last {
   background: transparent;
 }
 .jstree-default .jstree-open > .jstree-ocl {
-  background-position: -132px -4px;
+   background-image: url("/images/OrganTree_cross/minus.gif");
 }
 .jstree-default .jstree-closed > .jstree-ocl {
-  background-position: -100px -4px;
+  background-image: url("/images/OrganTree_cross/plus.gif");
 }
 .jstree-default .jstree-leaf > .jstree-ocl {
   background-position: -68px -4px;
@@ -433,10 +433,10 @@
   background: transparent;
 }
 .jstree-default > .jstree-no-dots .jstree-open > .jstree-ocl {
-  background-position: -36px -4px;
+   background-image: url("/images/OrganTree_cross/minus.gif");
 }
 .jstree-default > .jstree-no-dots .jstree-closed > .jstree-ocl {
-  background-position: -4px -4px;
+  background-image: url("/images/OrganTree_cross/plus.gif");
 }
 .jstree-default .jstree-disabled {
   background: transparent;
@@ -487,11 +487,11 @@
 .jstree-default.jstree-rtl .jstree-last {
   background: transparent;
 }
-.jstree-default.jstree-rtl .jstree-open > .jstree-ocl {
-  background-position: -132px -36px;
+.jstree-default-large.jstree-rtl .jstree-open > .jstree-ocl {
+  background-image: url("/images/OrganTree_cross/plus.gif");
 }
-.jstree-default.jstree-rtl .jstree-closed > .jstree-ocl {
-  background-position: -100px -36px;
+.jstree-default-large.jstree-rtl .jstree-closed > .jstree-ocl {
+   background-image: url("/images/OrganTree_cross/minus.gif");
 }
 .jstree-default.jstree-rtl .jstree-leaf > .jstree-ocl {
   background-position: -68px -36px;
@@ -501,10 +501,10 @@
   background: transparent;
 }
 .jstree-default.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {
-  background-position: -36px -36px;
+  background-image: url("/images/OrganTree_cross/plus.gif");
 }
 .jstree-default.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {
-  background-position: -4px -36px;
+  background-image: url("/images/OrganTree_cross/minus.gif");
 }
 .jstree-default .jstree-themeicon-custom {
   background-color: transparent;
@@ -566,7 +566,7 @@
 .jstree-default-small .jstree-node {
   min-height: 18px;
   line-height: 18px;
-  margin-left: 18px;
+  margin-left: 10px;
   min-width: 18px;
 }
 .jstree-default-small .jstree-anchor {
@@ -591,7 +591,8 @@
 }
 .jstree-default-small .jstree-node,
 .jstree-default-small .jstree-icon {
-  background-image: url("/images/OrganTree_cross/plus.gif");
+	background-image: url("/images/OrganTree_cross/plus.gif");
+/*   background-image: url("32px.png"); */
 }
 .jstree-default-small .jstree-node {
   background-position: -295px -7px;
@@ -601,10 +602,10 @@
   background: transparent;
 }
 .jstree-default-small .jstree-open > .jstree-ocl {
-  background-position: -135px -7px;
+	background-image: url("/images/OrganTree_cross/minus.gif");
 }
 .jstree-default-small .jstree-closed > .jstree-ocl {
-  background-position: -103px -7px;
+    background-image: url("/images/OrganTree_cross/plus.gif");
 }
 .jstree-default-small .jstree-leaf > .jstree-ocl {
   background-position: -71px -7px;
@@ -617,10 +618,10 @@
   background: transparent;
 }
 .jstree-default-small > .jstree-no-dots .jstree-open > .jstree-ocl {
-  background-position: -39px -7px;
+	background-image: url("/images/OrganTree_cross/minus.gif");
 }
 .jstree-default-small > .jstree-no-dots .jstree-closed > .jstree-ocl {
-  background-position: -7px -7px;
+	background-image: url("/images/OrganTree_cross/plus.gif");
 }
 .jstree-default-small .jstree-disabled {
   background: transparent;
@@ -672,10 +673,10 @@
   background: transparent;
 }
 .jstree-default-small.jstree-rtl .jstree-open > .jstree-ocl {
-  background-position: -135px -39px;
+  background-image: url("/images/OrganTree_cross/plus.gif");
 }
 .jstree-default-small.jstree-rtl .jstree-closed > .jstree-ocl {
-  background-position: -103px -39px;
+   background-image: url("/images/OrganTree_cross/minus.gif");
 }
 .jstree-default-small.jstree-rtl .jstree-leaf > .jstree-ocl {
   background-position: -71px -39px;
@@ -785,10 +786,10 @@
   background: transparent;
 }
 .jstree-default-large .jstree-open > .jstree-ocl {
-  background-position: -128px 0px;
+  background-image: url("/images/OrganTree_cross/plus.gif");
 }
 .jstree-default-large .jstree-closed > .jstree-ocl {
-  background-position: -96px 0px;
+   background-image: url("/images/OrganTree_cross/minus.gif");
 }
 .jstree-default-large .jstree-leaf > .jstree-ocl {
   background-position: -64px 0px;
@@ -856,10 +857,10 @@
   background: transparent;
 }
 .jstree-default-large.jstree-rtl .jstree-open > .jstree-ocl {
-  background-position: -128px -32px;
+  background-image: url("/images/OrganTree_cross/plus.gif");
 }
 .jstree-default-large.jstree-rtl .jstree-closed > .jstree-ocl {
-  background-position: -96px -32px;
+   background-image: url("/images/OrganTree_cross/minus.gif");
 }
 .jstree-default-large.jstree-rtl .jstree-leaf > .jstree-ocl {
   background-position: -64px -32px;
@@ -869,10 +870,10 @@
   background: transparent;
 }
 .jstree-default-large.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {
-  background-position: -32px -32px;
+  background-image: url("/images/OrganTree_cross/plus.gif");
 }
 .jstree-default-large.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {
-  background-position: 0px -32px;
+   background-image: url("/images/OrganTree_cross/minus.gif");
 }
 .jstree-default-large .jstree-themeicon-custom {
   background-color: transparent;
@@ -931,6 +932,9 @@
 .jstree-default-large.jstree-rtl .jstree-last {
   background: transparent;
 }
+.jstree-default .foldertreeIcon {
+	background-image: "/images/OrganTree_cross/fldr.gif";
+}
 @media (max-width: 768px) {
   #jstree-dnd.jstree-dnd-responsive {
     line-height: 40px;
@@ -962,10 +966,10 @@
 }
 @media (max-width: 768px) {
   .jstree-default-responsive {
-    /*
+    
 	.jstree-open > .jstree-ocl,
 	.jstree-closed > .jstree-ocl { border-radius:20px; background-color:white; }
-	*/
+	
   }
   .jstree-default-responsive .jstree-icon {
     background-image: url("40px.png");
@@ -977,7 +981,7 @@
   .jstree-default-responsive .jstree-node {
     min-height: 40px;
     line-height: 40px;
-    margin-left: 40px;
+    margin-left: 10px;
     min-width: 40px;
     white-space: nowrap;
   }
@@ -1012,10 +1016,10 @@
     background: transparent;
   }
   .jstree-default-responsive .jstree-open > .jstree-ocl {
-    background-position: 0 0px !important;
+    background-position: 5 5px !important;
   }
   .jstree-default-responsive .jstree-closed > .jstree-ocl {
-    background-position: 0 -40px !important;
+    background-position: 5 5px !important;
   }
   .jstree-default-responsive.jstree-rtl .jstree-closed > .jstree-ocl {
     background-position: -40px 0px !important;

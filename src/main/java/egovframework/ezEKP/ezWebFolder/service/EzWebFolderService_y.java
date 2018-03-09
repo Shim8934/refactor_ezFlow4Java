@@ -5,9 +5,9 @@ import java.util.Map;
 
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzWebFolderService_y {
-	// park yeyeun start
 	// 파일 list
 	List<FileVO> getFileList(String folderId,String folderType, int tenantId, String companyId, String searchExt,
 			String searchFileName, String searchStartDate, String searchEndDate,String searchCreateName,
@@ -27,8 +27,6 @@ public interface EzWebFolderService_y {
 	
 	// part yeyeun end
 	*/
-	// 폴더 생성
-	String insertFolder (String folderUppId, String folderType ,String tenantId, String companyId)throws Exception;
 
 	int getFileToTalCount(String folderId,String folderType, int tenantId, String parameter,
 			String searchExt, String searchFileName, String searchStartDate,
@@ -41,7 +39,15 @@ public interface EzWebFolderService_y {
 			String folderType, int tenantId) throws Exception;
 	
 	// folder insert위한 폴서 세부 정보 folderDetail
-	FolderVO getFolderDetail(String folderUppId, String folderType, int tenantId ,String comId); 
+	FolderVO getFolderDetail(String folderUppId, String userId, int tenantId ,String comId)throws Exception;
+	
+	// 폴더 생성
+	String insertFolder (int tenantId, String comId, String userId, String newFolderName1,String newFolderName2, FolderVO uppFolder);
+	
+	// folderUser 테이블에 데이터 생성
+	LoginVO getUserInfo (int tenantId , String comId, String userId ) throws Exception;
+	
+	
 	
 	
 }

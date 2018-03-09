@@ -7,8 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
+@SuppressWarnings("unchecked")
 @Repository("EzWebFolderDAO_y")
 public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	// fileList 가져오는 메소드
@@ -35,6 +37,9 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public List<Map<String, Object>> getFolderListDept(Map<String, Object> map) {
 		return   (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList_D",map);
 	}
+	public List<Map<String, Object>> getFolderListAll(Map<String, Object> map) {
+		return   (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList_all",map);
+	}
 
 	public String getparentId(Map<String, Object> map) {
 		return (String) select ("EzWebFolderDAO_y.getParentId",map);
@@ -45,4 +50,16 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (FolderVO) select("EzWebFolderDAO_y.getFolderDetail",map);
 	}
 
+	public String insertFolder(Map<String, Object> map) {
+		return  (String) insert("EzWebFolderDAO_y.insertFolder",map);
+	}
+
+	public LoginVO getUserInfo(Map<String, Object> map) {
+		return  (LoginVO) select("EzWebFolderDAO_y.getUserInfo", map);
+	}
+	public int getFolderStep(Map<String, Object> map) {
+		return  (int) select("EzWebFolderDAO_y.getFolderStep", map);
+	}
+	
+	
 }

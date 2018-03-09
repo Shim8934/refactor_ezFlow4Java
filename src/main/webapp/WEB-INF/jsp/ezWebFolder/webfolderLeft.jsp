@@ -8,29 +8,33 @@
 	   	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<!--    	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <link rel="stylesheet" href="/js/jsTree/src/themes/default/style.css" />
+	    <link rel="stylesheet" href="/js/jsTree/dist/themes/default/style.css" />
 	    <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+		<script type="text/javascript" src="/js/jsTree/dist/jstree.js"></script>
+<!-- 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script> -->
+		
 		<script type="text/javascript" >	        
+		
 		    var companyFolderId = "";
 		    var deptFolderId    = "";
 		    var persFolderId    = "";
-		    var userId = "<c:out value='${userId}'/>";
-			var userName = "<c:out value='${userName}'/>";
+// 		    var userId = "<c:out value='${userId}'/>";
+// 			var userName = "<c:out value='${userName}'/>";
 			var folderId = "1";
 			var folderType = null;
+	    	var $element ;
 			
-		    window.onload = function () {
-		    	
-		    	folderList('C');
-		    	
+		    
+		    $(function() { 
+				folderList('C');
 		    	folderType = 'C';
-		    };
+		    	
+		    });
 		    function folderList(obj) {
-		    	var $element = null;
+		    	folderId = "";
 				if ( obj == 'C') {
 					$element = '#tree';
 				}else if (obj == 'D') {
@@ -38,7 +42,8 @@
 				}else if (obj == 'U') {
 					$element = '#treePer';
 				}
-// 				folderId =data.selected[0];
+				$($element).jstree('refresh');
+// 				$($element).jstree('destroy');
 				folderType = obj;
 				$.ajax ({
 					type :"POST",
@@ -52,14 +57,11 @@
 						},
 					dataType: "JSON",
 					success : function (data) {
-// 						var div = document.createElement('div');
-// 						div.innerHTML = document.getElementById('tree').innerHTML;
-// 						document.getElementsByTagName('left_webfolder').appendChild(this);
-						
-						
 						$($element).jstree({
+							
+							'plugins': ["core","types","json_data","themes","ui"],
 							'core' : {
-								'data' : data.folderList.folderList,
+								'data' : data.data,
 								"multiple" : false,
 								'themes' : {
 									"theme"      : "default",
@@ -75,26 +77,27 @@
 								}
 							},
 							"grid": {
-								"width"       : "25",
+								"width"       : "20",
 								"margin-left" : "10"
-							},
-							'plugins': ["types","json_data","core","themes","ui"]
+							}
 						})
-						folderId = data.folderList.folderList[0].id;
-// 						parent = data.folderList.folderList[0].parent;
+						folderId = data.data[0].id;
 						getFileList(folderId);
+				   		console.log("The selected nodes are:" + folderId);	
+				   		$($element).jstree("selected", folderId)
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134' />" + error);
 					}
 				});
-				$($element).on("changed.jstree", function (e, data) {
-				   folderId =data.selected[0]; 
-				   console.log("The selected nodes are:" + folderId);
-// 				   alert(folderId);
-				   getFileList(folderId);
-				});
+				$($element).on('changed.jstree', function (e, data) {
+					   folderId = data.selected[0]; 
+					   console.log("The selected nodes are:" + folderId);
+					   getFileList(folderId);
+					});
 		    }
+		    
+				
 		    
 		    function goPage(idx) {
 		    	switch (idx) {
@@ -105,45 +108,44 @@
 		    	}
 		    }
 		    
-		    // 완정 수정해야함
-		    function getCompanyList(folderType) {
-		    	var folderID = null;
-		    	switch(folderType) {
-		    		case "1":
-		    			folderID = companyFolderId;
-		    			break;
-		    		case "2":
-		    			folderID = deptFolderId;
-		    			break;
-		    		case "3":
-		    			folderID = persFolderId;
-		    			break;
-		    	}
+// 		    // 완정 수정해야함
+// 		    function getCompanyList(folderType) {
+// 		    	var folderID = null;
+// 		    	switch(folderType) {
+// 		    		case "1":
+// 		    			folderID = companyFolderId;
+// 		    			break;
+// 		    		case "2":
+// 		    			folderID = deptFolderId;
+// 		    			break;
+// 		    		case "3":
+// 		    			folderID = persFolderId;
+// 		    			break;
+// 		    	}
 		    	
-		    	$.ajax({
-					type: "POST",
-					url: "/ezWebFolder/folderList.do",
-					data: {
-						"folderType" : folderType,
-						"folderId"   : folderID
-					},
-					dataType: "JSON",
-					async: true,
-					success : function(data) {				
-						var result = data.folderList;												
-						console.log(result);						
-				    	folderList();
-					},
-					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134' />" + error);
-					}
-				});	
-		    }
+// 		    	$.ajax({
+// 					type: "POST",
+// 					url: "/ezWebFolder/folderList.do",
+// 					data: {
+// 						"folderType" : folderType,
+// 						"folderId"   : folderID
+// 					},
+// 					dataType: "JSON",
+// 					async: true,
+// 					success : function(data) {				
+// 						var result = data.folderList;												
+// 						console.log(result);						
+// 				    	folderList();
+// 					},
+// 					error : function(error) {
+// 						alert("<spring:message code='ezWebFolder.t134' />" + error);
+// 					}
+// 				});	
+// 		    }
 		    function getFileList(folderId) {
 		    	// + 버튼 누르면 오른쪽 화면 뜨고 오른쪽 화면에서 ajax로 띄움
+	    		
 		    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do?folderId="+folderId+"&folderType="+folderType;
-
-		    	
 		   		
 		   	}
 		    function treeTest() {
@@ -173,30 +175,30 @@
 			.jstree-leaf a{
 			    height: auto !important;
 			}
-			.leftbody ul li {
+			.leftbody ul li ,.leftbody ul div{
 			    cursor: pointer;
  			    border-bottom: 0px ; 
 /* 			    background: url(/images/kr/left/left_dot02.gif) 25px 9px no-repeat rgb(255, 255, 255); */
 			    padding: 4px 7px 4px 5px;
 			    margin-left : 5px;
 			}
-			#left ol{margin:0}
-			#left ol li, #left ol.on, #left ol.off{
+			#left ul{margin:0}
+			#left ul li, #left ul.on, #left ul.off, #left ul div, #left ul ol li.on{
 				cursor: pointer;
  			    border-bottom: 0px ; 
 				list-style:none;
 				padding: 4px 7px 4px 5px;
-			    margin-left : 5px;
+/* 			    margin-left : 5px; */
 			    background-color:#f8f8f8;
 			}
-			#left ol.on, #TopBoards ol.on {display: block;}
-			#left ol.off, #TopBoards ol.off {display: none;}
-			#left ol li.on, #TopBoards ol li.on{
+			#left ul.on, #TopBoards ul.on {display: block;}
+			#left ul.off, #TopBoards ul.off {display: none;}
+			#left ul li.on, #TopBoards ul li.on, .leftbody ul div.on, , #left ul ol li.on{
 				font-weight:bold;
 				color:#333333;
 				
 			}
-			#left ol li ul{
+			#left ul li ol, .leftbody ul div, #left ul ol li{
 				background-color:#f8f8f8;
 				margin:0;
 			}
@@ -208,51 +210,49 @@
 			<h2>
   				<span style="display:inline-block;width:100%;" onclick="folderList('C');">회사폴더</span>
   			</h2>  
-    		<ol>
-	  			<li id ="company"><div id ="tree" style="width:100%;min-height:200px; font-size: 20px;"></div></li>
-		    </ol>  	
+    		<ul>
+    			<div id ="tree" style="width:100%;min-height:200px; font-size: 20px;"></div>
+<!-- 	  			<li id ="company"></li> -->
+		    </ul>  	
 		    <h2>
   				<span style="display:inline-block;width:100%;" onclick="folderList('D');">부서폴더</span>
   			</h2>  
-    		<ol>
-	  			<li id ="dept"><div id ="treeDept" style="width:100%; min-height:200px; font-size: 20px;"></div></li>
-<!-- 		        <li><span id="organ_1" style="width: 100%; display: inline-block;" onClick="goPage(3)" >오픈솔루션팀</span></li> -->
-<!-- 		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >ezEKP</span></li>		         -->
-		    </ol>  
+    		<ul>
+    			<div id ="treeDept" style="width:100%; min-height:200px; font-size: 20px;"></div>
+<!-- 	  			<li id ="dept"></li> -->
+		    </ul>  
 		    	
 		   	<h2>
   				<span style="display:inline-block;width:100%;" onclick="folderList('U');">개인폴더</span>
   			</h2>  
-    		<ol>
-	  			<li id="person"><div id ="treePer" style="width:100%;min-height:200px; font-size: 20px;"></div></li>
-<!-- 		        <li><span id="organ_2" style="width: 100%; display: inline-block;" onClick="treeTest()" >영화</span></li> -->
-<!-- 		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="fileList()" >문서</span></li>		         -->
-<!-- 		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="getFileList()" >파일</span></li>		         -->
-		    </ol>  
+    		<ul>
+    			<div id ="treePer" style="width:100%;min-height:200px; font-size: 20px;"></div>
+<!-- 	  			<li id="person"></li> -->
+		    </ul>  
 		    
 		    <h2>
 				<span style="display:inline-block;width:100%;" onclick="getReceivedShare();">공유폴더</span>
 			</h2>
-			<ol>
+			<ul>
 				<li><span id="organ"     style="width: 100%; display: inline-block;" onclick="getReceivedShare();">공유받은 폴더</span></li>
 				<li><span id="privilege" style="width: 100%; display: inline-block;" onclick="getGivenShare();"   >공유한 폴더</span></li>
-			</ol>
+			</ul>
 		    
 		    <h2>
   				<span style="display:inline-block;width:100%;">츨겨찾기</span>
   			</h2>  
-    		<ol>
-<!-- 		        <li><span id="organ_4" style="width: 100%; display: inline-block;" onClick="" >테스트 5</span></li> -->
-<!-- 		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >테스트 6</span></li>		         -->
-		    </ol>  	   
-		    
+    		<ul>
+		    </ul>  	   
+		    <h2>
+  				<span style="display:inline-block;width:100%;">폴더관리</span>
+  			</h2>  
+		    <ul>
+		    </ul> 
 		    <h2>
   				<span style="display:inline-block;width:100%;">휴지통</span>
   			</h2>  
-    		<ol>
-<!-- 		        <li><span id="organ" style="width: 100%; display: inline-block;" onClick="" >테스트  7</span></li> -->
-<!-- 		        <li><span id="privilege" style="width: 100%; display: inline-block;" onClick="" >테스트  8</span></li>		         -->
-		    </ol>       
+    		<ul>
+		    </ul>       
 
 			<h3>
 		        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
@@ -264,7 +264,7 @@
 		    </c:if>
 	    </div>
 	    <script type="text/javascript">
-	        initToggleList(document.getElementById("left"), "h2", "ol", "li");	        
+	        initToggleList(document.getElementById("left"), "h2", "ul", "li");	        
 	    </script>
 	</body>
 </html>
