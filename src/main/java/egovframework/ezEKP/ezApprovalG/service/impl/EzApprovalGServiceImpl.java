@@ -13386,7 +13386,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		doc.getElementById(susinSN + "habyuisign" + aprSN).html(signCont);
-		doc.getElementById(susinSN + "habyuidate" + aprSN).html(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", "."));
+		if (doc.getElementById(susinSN + "habyuidate" + aprSN) != null) {
+			doc.getElementById(susinSN + "habyuidate" + aprSN).html(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", "."));
+		}
 		
 		String tempHtml = doc.outerHtml();
 		OutputStream outputStream = null;

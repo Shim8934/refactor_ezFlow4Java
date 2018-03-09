@@ -32,7 +32,7 @@
 	        window.onload = window_onload;
 	        function window_onload() {
 	            //compid = window.dialogArguments;
-	           
+
 	            if (startdate == "" && enddate == "") {
 	                var nowDate = new Date();
 	                document.getElementById("Sdatepicker").value = DateFormat(nowDate);

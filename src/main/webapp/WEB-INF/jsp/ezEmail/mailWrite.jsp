@@ -1017,7 +1017,12 @@
 	                    filesize = strLang116;
 	                }
 	                else if (filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
-	                    filename = filename + ".mht";
+	                    var extension = filename.substring(filename.length - 4);
+	                    
+	                    if (extension.toLowerCase() != ".mht") {
+	                    	filename = filename + ".mht";
+	                    }
+	                    
 	                    filesize = strLang116;
 	                }
 
