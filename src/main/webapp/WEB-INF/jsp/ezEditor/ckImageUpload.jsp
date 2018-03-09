@@ -10,6 +10,8 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
+			var type = "${type}";
+			
 		    window.onload = function () {
 		    };
 		    function filesearch() {
@@ -55,7 +57,7 @@
 		        }		        
 		        
 		        var frm = document.getElementById('form');
-		        frm.action = "/ezEditor/ckUpload.do";
+		        frm.action = "/ezEditor/ckUpload.do?type=" + type;
 		        frm.submit();
 		        isuload = true;
 		        document.form.file1.value = "";
@@ -177,7 +179,7 @@
 	        <a href="#" class="imgbtn"><span onclick="return window_close();"><spring:message code='main.t135'/></span></a>
 	    </div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-	     <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezCommon/ckUpload.do" target="ifrm" style="width:1px;height:1px">
+	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="width:1px;height:1px">
 	        <input type="file" name="file1" id="file1" onchange="btn_AttachAddText_onclick()" style="width: 1px; height: 1px;" />
 	    </form>
 	</body>

@@ -1,4 +1,4 @@
-TD,input, text, div,select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: dotum,arial,verdana}
+TD,input, text, div,select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: gulim, arial,verdana;}
 input,SELECT{HEIGHT: 20px}
 .td{empty-cells:show}
 TEXTAREA{padding:5px}
@@ -31,10 +31,10 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 .pstitle{background-color: ECECEC;padding-left:10px;padding-right:10px;padding-top:5px;padding-bottom:5px;white-space: nowrap;word-break:keep-all;word-wrap:normal}
 .btnposition{padding-right:10px;text-align:right}
 
-.pmenu{FONT-SIZE: 9pt;FONT-FAMILY: dotum,arial,verdana;padding-left:8px;padding-right:6px; white-space: nowrap; text-align: center;vertical-align: middle;background-image:url(../images/pbar.gif);background-position:left;background-repeat:no-repeat;}
+.pmenu{FONT-SIZE: 9pt;FONT-FAMILY: gulim,arial,verdana;padding-left:8px;padding-right:6px; white-space: nowrap; text-align: center;vertical-align: middle;background-image:url(../images/pbar.gif);background-position:left;background-repeat:no-repeat;}
 
 
-/* ¾Æ·¡ºÎÅÍ´Â ¾ø¾Ö¹ö¸± css - Á¶¸¸°£ »ç¶óÁú°ÍÀÓ*/
+/* ï¿½Æ·ï¿½ï¿½ï¿½ï¿½Í´ï¿½ ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ css - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 .rpad{PADDING-RIGHT: 20px;TEXT-ALIGN: right}
 .atitle_stat{PADDING-RIGHT: 0px;COLOR: #ffffff;HEIGHT: 25px;BACKGROUND-COLOR: #a5b8dd}
 .atitle_stat2{PADDING-RIGHT: 5px;PADDING-LEFT: 0px;COLOR: #ffffff;HEIGHT: 25px;BACKGROUND-COLOR: #ffffff}
@@ -51,7 +51,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 {
     FONT-SIZE: 9pt;
     COLOR: darkblue;
-    FONT-FAMILY: Arial;
+    FONT-FAMILY: gulim, arial,verdana;
     TEXT-DECORATION: underline;
     cursGroupor: help
 }
@@ -73,40 +73,46 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
     COLOR: black;
     PADDING-TOP: 5px;
     BORDER-BOTTOM: black 1px solid;
-    FONT-FAMILY: Arial
+    FONT-FAMILY: gulim, arial,verdana;
 }
 
 
 /* admin top */
-.admin_top{margin:0;background:#585d68;}
+.admin_top{margin:0;background:rgb(0, 72, 149);}
 .admin_top h1{
-	background:url(/images/admin/top_admin.gif) no-repeat;
+	font-size:18px;
+	color: white;
 	width:177px;
-	height:36px; margin:0px; padding:0px;}
+	height:46px;
+	line-height:46px; 
+	margin:0px;
+	font-family: 'Malgun Gothic';
+	padding:0px 10px;}
 #adminmenu{
 	clear: both;
 	margin: 0; 
 	padding:0;
-	height:31px;
-	border-bottom:1px solid #000;
-	border-top:1px solid #313037;
-	background:#40474e;}
+	height:31px;	
+	background:white;}
 #adminmenu ul{
-	height:30px;
+	height:41px;
+	line-height:41px;
 	margin:0px;
 	padding:0 0 0 10px;
-	border-top:1px solid #5f656b; background:#40474e;
+	background:white;
+	border-top:1px solid rgb(0, 72, 149);
+	border-bottom:1px solid #ccc;
 	}
 #adminmenu li, #adminmenu li.off{
 	float:left;
 	display:inline-block;
 	margin-right:2px;
-	background:url('/images/admin/top_bar.gif') no-repeat top right;
-	height:30px;
+	/* background:url('/images/admin/top_bar.gif') no-repeat top right; */
+	height:41px;
 	padding:0px 10px;
 	vertical-align:middle;
 	cursor:pointer;
-	color:#fff;
+	color:#333;
 	font-weight:bold;
 }
 #adminmenu li span, #adminmenu li span.off{
@@ -115,5 +121,5 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 	line-height:29px;
 	font-size:13px;
 }
-#adminmenu li.on span{background:url('/images/admin/top_select.gif') repeat-x bottom ;height:30px;}
+#adminmenu li.on span{height:30px;line-height: 30px; color: rgb(0, 72, 149)}
 .adminsub{background-color:#f5f5f5;height:25px}
