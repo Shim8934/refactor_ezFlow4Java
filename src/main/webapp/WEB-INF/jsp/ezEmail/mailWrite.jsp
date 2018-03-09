@@ -1016,7 +1016,7 @@
 	                    filename = filename + ".hwp";
 	                    filesize = strLang116;
 	                }
-	                else if ((filesize == "0" || filesize == "") && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
+	                else if (filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
 	                    filename = filename + ".mht";
 	                    filesize = strLang116;
 	                }
