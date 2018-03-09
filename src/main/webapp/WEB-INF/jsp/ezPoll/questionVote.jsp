@@ -100,7 +100,7 @@
 						var id = "myCanvas" + _optId;																	   					
 	   					var canv = document.getElementById(id);	   					
 	   					var max_width = document.getElementById(graphId).offsetWidth;
-	   					var maxWidth_for_canvas = max_width - 40;	   					   					
+	   					var maxWidth_for_canvas = max_width - 75;	   					   					
 						var best_width = Math.round(maxWidth_for_canvas * percent);	
 						
 						//Resize and fill canvas
@@ -217,7 +217,7 @@
 		   					}
 		   					
 		   					var max_width = document.getElementById(graphId).offsetWidth;		   					
-		   					var maxWidth_for_canvas = max_width - 40;	   					   					
+		   					var maxWidth_for_canvas = max_width - 75;	   					   					
 							var best_width = Math.round(maxWidth_for_canvas * percent);	
 							
 							//Fill canvas with color
@@ -2944,7 +2944,7 @@
 					</div>
 					</div>
 				</div>
-				<input id="fileInput" type="file" onchange="uploadFileCmt();" style="width: 0px; height: 0px" />
+				<input id="fileInput" type="file" onchange="uploadFileCmt();" class="voteFileInput" />
 			</div>	
 		</form>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe> 

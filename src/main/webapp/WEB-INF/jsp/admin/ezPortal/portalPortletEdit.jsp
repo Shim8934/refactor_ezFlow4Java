@@ -1183,7 +1183,7 @@
 	            						</select> 
 									</td>
 	          						<td>
-	          							<input type="text" id="newBoardName" readonly style="width:75%">
+	          							<input type="text" id="newBoardName" onClick="MoveSelect()" readonly style="width:75%">
 	          							<input type="text" id="newParamValue" style="width:75%; display:none">
 	          							<a class="imgbtn"><span onClick="MoveSelect()"><spring:message code='ezCommunity.t352'/></span></a>
 	          						</td>
