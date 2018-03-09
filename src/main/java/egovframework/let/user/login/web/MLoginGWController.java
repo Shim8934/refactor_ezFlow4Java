@@ -225,7 +225,7 @@ public class MLoginGWController {
     					String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
     					
     					//userMobileInfo 테이블에 정보가 없을 때 (첫 로그인)
-    					if (mOptionVO == null || mOptionVO.equals("")) {    			        
+    					if (mOptionVO == null) {    			        
     						
     						//UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
     						if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
@@ -245,12 +245,17 @@ public class MLoginGWController {
     						
     						lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
     						
-    						//브라우저 언어가 한국어,영어,일본어,중국어가 아닐 때 config의 primary 언어를 가져옴.
+    						//브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
     						if (lang.equals("")) {						
     							lang = primaryLang;
     						}
     						
-    						timeZone = "235|+09:00";
+    						timeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
+    					    
+    					    if (timeZone.equals("")) {
+    					    	timeZone = "235|+09:00";
+    					    }
+    					    
     						maintype = "D";
     						listCnt = "10";    				    
     						useSecurity = "N";
