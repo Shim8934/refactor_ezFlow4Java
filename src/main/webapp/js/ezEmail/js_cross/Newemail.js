@@ -277,6 +277,31 @@ function all_reply_mail_onclick() {
     }
 }
 
+function reSend_onClick() {
+	
+	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+        alert(strLang45);
+    }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang46);
+        return;
+    } else {
+        var pSelectItem;
+        
+        if (listContentArry.length > 0) {
+            pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
+        } else {
+            pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        }
+        
+        var pURI = "/ezEmail/mailWrite.do?cmd=RESEND&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
+        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
+        newwin.focus();
+    }
+
+}
+
 function transmission_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang47);

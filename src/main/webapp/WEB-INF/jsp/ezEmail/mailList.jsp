@@ -88,6 +88,8 @@
 			var uploading = "uploading";
 		    var enc = "encrypt";
 		    var dec = "decrypt";
+		    var compareFolderName = "<spring:message code="ezEmail.t645" />";
+		    var useReSend = "${useReSend}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -107,6 +109,11 @@
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onload = function () {
+		    	
+		    	if (useReSend == "YES" && g_szRootFolderName == compareFolderName) {
+		    		$('#liReSend').css('display', 'block');
+		    	}
+		    	
 		        CurrentHeight = document.body.clientHeight;
 		        CurrenWidth = document.body.clientWidth;
 		        
@@ -280,6 +287,7 @@
 		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
+		    	
 		    });
 		    
 		    function getCurrentTime() {
@@ -760,7 +768,6 @@
 	        	webSocket.close();
 	        	location.reload();
 			}
-			
 		</script>	
 	</head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
@@ -783,6 +790,7 @@
           <li><span onClick="new_mail_onclick()"><spring:message code="ezEmail.t510" /></span></li>
           <li id="reply"><span onClick="reply_mail_onclick()"><spring:message code="ezEmail.t511" /></span></li>
           <li><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
+          <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
           <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
           <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
           <li><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
