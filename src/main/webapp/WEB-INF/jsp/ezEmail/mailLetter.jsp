@@ -21,20 +21,22 @@
 		<script type="text/javascript">
 	    var pageType = "${pageType}";
 	    var returnCompany = '${companyId}';
+	    var isDivPopUp = false;
+	    
+	 // 편지지 목록 ===========================================================================================
+		var result = [];
+	    var treeCollection = [];
+	    var xmlhttp;
+	    var responseResult;
+	    var selectNode;
 	    
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록
+				isDivPopUp = true;
 				
 			});
 			
-			// 편지지 목록 ===========================================================================================
-			var result = [];
-		    var treeCollection = [];
-		    var xmlhttp;
-		    var responseResult;
-		    var selectNode;
-		    	
-		    function letterPreview() {
+			function letterPreview() {
 		    	alert("미리보기");
 		    }
 		    
@@ -43,22 +45,13 @@
 		    }
 		    
 		    function cancel() {
+	             if (!isDivPopUp){
+	                window.close();
+	            } else {
+	            	parent.DivPopUpHidden();
+	            }
 		    }
 		    
-		    //검색어 초기화
-		    function inputReset() {
-		    	$("#lmSearchInput").val("");
-		    }
-		    
-		    //편지지 검색
-		    function letterSearch() {
-		    	if($("#lmSearchInput").val().trim() == "") {
-		    		alert("검색어를 입력해주세요.");
-		    		return;
-		    	}
-		    }
-			
-					
 		</script>
 		<style>
 			.imgbtn {

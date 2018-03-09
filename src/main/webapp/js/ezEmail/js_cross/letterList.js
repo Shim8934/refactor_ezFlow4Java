@@ -1,16 +1,16 @@
-//검색 버튼 클릭
-$("#lmSearch").on("click",function(){
+//편지지 검색
+function letterSearch() {
 	if($("#lmSearchInput").val().trim() == "") {
 		alert("검색어를 입력해주세요.");
 		return;
 	}
-	//ajax
-	
-});
+}
+			
+
 //검색어 초기화
-$("#lmSearchReset").on("click",function(){
+function inputReset() {
 	$("#lmSearchInput").val("");
-});
+}
 
 //편지지 삭제
 $(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
