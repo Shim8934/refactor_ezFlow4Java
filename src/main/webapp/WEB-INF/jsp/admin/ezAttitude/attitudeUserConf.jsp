@@ -164,11 +164,11 @@
 			<thead>
 				<tr>
 					<th style="width:20px;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
-					<th style="width:29px;">NO</th>
-					<th style="width:300px">이름</th>
-					<th style="width:200px">직위</th>
-					<th style="width:400px">부서</th>
-					<th style="width:600px">근무시간</th>
+					<th style="width:29px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">NO</th>
+					<th style="width:300px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">이름</th>
+					<th style="width:200px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">직위</th>
+					<th style="width:400px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">부서</th>
+					<th style="width:600px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">근무시간</th>
 				</tr>
 			</thead>
 			<tbody>
