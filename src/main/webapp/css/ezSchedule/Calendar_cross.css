@@ -2,16 +2,16 @@
 
 /* 월보기 */
 .calendar_month_navi{table-layout:fixed; border-bottom:0px solid #014b88;}
-.calendar_month_navi th{height:29px; line-height:25px; padding:0; margin:0; color:#777; background-color: white; font-size: 15px;}
-.calendar_month_navi th .btn_prev{display: inline-block; vertical-align: top; margin: 3px 12px 0px; height:17px;cursor:pointer;}
-.calendar_month_navi th .btn_next{display: inline-block; vertical-align: top; margin: 3px 0px 0px 12px; height:17px;cursor:pointer;}
+.calendar_month_navi th{height:33px; line-height:24px; border:1px solid #d1ddec; font-family:Malgun Gothic; padding:0px 0px 2px 0px; margin:0; color:#2f2f2f;background-color: #edf4fd; font-size: 15px;}
+.calendar_month_navi th .btn_prev{display: inline-block; vertical-align: top; margin: 2px 12px 0px; height:17px;cursor:pointer;}
+.calendar_month_navi th .btn_next{display: inline-block; vertical-align: top; margin: 2px 0px 0px 12px; height:17px;cursor:pointer;}
 .calendar_month{table-layout:fixed; vertical-align:top;}
-.calendar_month th{color:#777;height:26px; background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b5b5b5; border-left:1px solid #b5b5b5; padding:0; margin:0;}
+.calendar_month th{color:#2f2f2f;height:26px; background:#fff; border-top:0 none; border-right:1px solid #dedede; border-bottom:1px solid #dedede; border-left:1px solid #dedede; padding:0; margin:0;}
 .calendar_month th.sun{color:#ee1c25;}
 .calendar_month th.sat{color:rgb(0, 72, 149);}
-.calendar_month td{width:14.2%; border:1px solid #b5b5b5;}
-.calendar_month td.gray{background:#F6F6F6;}
-.calendar_month td.today{background:#edf4fd;}
+.calendar_month td{width:14.2%; border:1px solid #dedede;}
+.calendar_month td.gray{background:#f8f8f8;}
+.calendar_month td.today{background:#edf4fd; border:1px solid #d1ddec;}
 .calendar_month .td_day{table-layout:fixed; width:100%; cursor:pointer;}
 .calendar_month .td_day td {height:22px; line-height:22px; border:0 none; padding:0px 0px 0px 7px; margin:0; color:#333333;}
 .calendar_month .click{background:#b6b6b6;} /* 날자클릭시 백그라운드 처리 */
@@ -20,7 +20,7 @@
 .calendar_month .sat td{color:rgb(0, 72, 149);}
 .calendar_month .span_list{display:block; height:69px; overflow:auto;}
 .calendar_month .td_list{table-layout:fixed; display:block; width:100%; overflow:hidden;}
-.calendar_month .td_list td{height:20px; line-height:20px; border:0 none; padding:0px 0px 0px 7px; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;}
+.calendar_month .td_list td{height:21px; line-height:21px; border:0 none; padding:0px 0px 0px 7px; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;}
 
 /* 개인,부서,회사 색상 */
 .calendar_month .td_list td.individual{color:#666666;}
@@ -168,7 +168,7 @@
 .calendar_mini td.sun{color:#ee1c25;}
 .calendar_mini td.sat{color:rgb(0, 72, 149);}
 .calendar_mini td.gray{color:#aaa;}
-.calendar_mini td.today{background:rgb(233, 240, 255);}
+.calendar_mini td.today{background:rgb(233, 240, 255); border-radius:20px;}
 /* //미니달력 */
 
 
