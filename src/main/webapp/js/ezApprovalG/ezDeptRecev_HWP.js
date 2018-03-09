@@ -4,8 +4,7 @@ var DraftLastFlag = false;
 
 var g_progresswin = null;	
 function showProgress(inforstring) {
-
-	g_progresswin = window.showModelessDialog("/ezCommon/show_progress.do?fileInfo=" + escape(inforstring) , "", "dialogWidth=390px; dialogHeight:185px; center:yes; status:no; help:no; edge:sunken;");
+	g_progresswin = window.showModelessDialog("/ezApprovalG/showProgress.do?fileInfo=" + encodeURI(inforstring) , "", "dialogWidth=390px; dialogHeight:185px; center:yes; status:no; help:no; edge:sunken;");
 	while (g_progresswin.document.readyState != "complete") {}
 }
 
@@ -1511,14 +1510,12 @@ function OpenInformationUI(pInformationContent)
 	return RtnVal;
 }
 
-function OpenAlertUI(pAlertContent)
-{
-	var parameter = pAlertContent;
-	var url = "/myoffice/ezApprovalG/ezAPRALERT.aspx";
-	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-	var RtnVal = window.showModalDialog(url,parameter,feature);
+function OpenAlertUI(pAlertContent) {
+	var parameter	= pAlertContent;
+	var url = "/ezApprovalG/ezAprAlert.do";
+	var feature		= "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+	var RtnVal		= window.showModalDialog(url,parameter,feature);
 }
-
 
 
 function getDocInfo() {
@@ -1677,7 +1674,7 @@ function setButtonReceiveTrue()
 	btnAproveSusin.Enable = "false";
 }
 
-function setHeSongDocInfo(pSelectedRow) {
+function setHeSongDocInfo() {
     try {
     	var objRoot;
         var objNode;
@@ -1686,7 +1683,7 @@ function setHeSongDocInfo(pSelectedRow) {
         var xmlhttp = createXMLHttpRequest();
         createNodeInsert(xmlpara, objNode, "ASSIGN");
 
-        createNodeAndInsertText(xmlpara, objNode, "pDocID", GetAttribute(pSelectedRow, "DATA1"));
+        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
         createNodeAndInsertText(xmlpara, objNode, "pAprMemberDeptID", arr_userinfo[4]);
         createNodeAndInsertText(xmlpara, objNode, "pAprMemberID", pUserID);
         createNodeAndInsertText(xmlpara, objNode, "pReceiveSN", "1");
@@ -1698,7 +1695,6 @@ function setHeSongDocInfo(pSelectedRow) {
    	 		if (xmlhttp.statusText == "OK") {
    	 			var pAlertContent = strLang878;
    	 			OpenAlertUI(pAlertContent, "", "OPEN");
-   	 			openergetDocInfo();
    	 		} else {
    	 			var pAlertContent = strLang740;
    	 			OpenAlertUI(pAlertContent, "", "OPEN");

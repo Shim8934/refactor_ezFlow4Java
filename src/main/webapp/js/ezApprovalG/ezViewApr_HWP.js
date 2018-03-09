@@ -20,14 +20,12 @@ function OpenInformationUI(pInformationContent) {
 	return RtnVal;
 }
 
-function OpenAlertUI(pAlertContent)
-{
-	var parameter = pAlertContent;
-	var url = "/myoffice/ezApprovalG/ezAPRALERT.aspx";
-	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-	var RtnVal = window.showModalDialog(url,parameter,feature);
+function OpenAlertUI(pAlertContent) {
+	var parameter	= pAlertContent;
+	var url = "/ezApprovalG/ezAprAlert.do";
+	var feature		= "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+	var RtnVal		= window.showModalDialog(url,parameter,feature);
 }
-
 
 function setMenuBar(id,flag)
 {

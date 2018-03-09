@@ -677,7 +677,7 @@
 			        tempdocnumcode = tempItemCode;
 			    
 			    var url =  "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun;
-			    var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;help:no;scroll:no;;edge:sunken;";
+		        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			    var ret = window.showModalDialog(url, parameter, feature);
 			
 			    if (ret != undefined && ret[0] == "OK") {
@@ -727,7 +727,7 @@
 	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo('14')"><spring:message code='ezApprovalG.t1742'/></span></li>
 	                        <li id="btnSetAprLine" style="display: none"><span onclick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li>
 	                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
-	                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t10000'/></span></li>
+	                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 	                        <li id="btnDocInfo" style="display: none;"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnOrgDocInfo"><span onclick="return btnOrgDocInfo_onclick()"><spring:message code='ezApprovalG.t367'/></span></li>
