@@ -158,6 +158,7 @@
 	        m_rgParams4PostOption["bodyType"] = g_bodyType;
 	        m_rgParams4PostOption["EachMail"] = iseachMail;
 	        m_rgParams4PostOption["SecurityMail"] = pSecurity;
+	        
 	        if (xmpTo.innerHTML != "") {
 	        	var moduleType = "<c:out value='${moduleType}'/>";
 	        	
@@ -165,22 +166,30 @@
 	        		var pollSendType = "<c:out value='${pollSendType}'/>";       		
 		            var addrArr = getEmailAddressList2(xmpTo.innerHTML, pollSendType);
 		            addReceiverFromList(0, addrArr);
-	        	}
-	        	else {
+	        	} else {
 		            var splitAddr = getEmailAddressList(xmpTo.innerHTML);
 		            addReceiverFromList(0, splitAddr);
 	        	}
 	        }
+	        
 	        if (xmpCc.innerHTML != "") {
 	            splitAddr = getEmailAddressList(xmpCc.innerHTML);
 	            addReceiverFromList(1, splitAddr);
 	        }
+	        
 	        if (xmpBcc.innerHTML != "") {
 	            splitAddr = getEmailAddressList(xmpBcc.innerHTML);
 	            addReceiverFromList(2, splitAddr);
+	            $('#BccViewer').find('img').attr('src', GroupminImg);
+			    $('#BccViewer').attr("status","on");
+			    document.getElementById("MsgBCC_TRu").style.display = "";
+			    document.getElementById("MsgBCC_TR").style.display = "";
 	        }
-	        Subject_ReApply();        
+	        
+	        Subject_ReApply();  
+            window.onresize();
 	        g_bDirty = false;
+	        
 	        if (g_charsetCheck == "0") {
 	            if (confirm("<spring:message code='ezEmail.t665' />")) {
 	                location.href = location.href + "&attach=1";

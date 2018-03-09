@@ -136,6 +136,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
+		String useReSend = ezCommonService.getTenantConfig("useReSend", loginInfo.getTenantId());
 		logger.debug("userEmail=" + userEmail);
 		
 		// retrieve the passed in parameters
@@ -474,6 +475,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("pIsCCFg", pIsCCFg);
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("dotNetUrl", dotNetUrl);
+		model.addAttribute("useReSend", useReSend);
 		
 		logger.debug("readMail ended.");
 		
