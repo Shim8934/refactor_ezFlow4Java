@@ -237,7 +237,7 @@
 	</head>
 	<body class="leftbody">
 	    <div id="left">
-	        <div class="left_circular" title="<spring:message code="ezCircular.t1" />"></div>
+	        <div class="left_circular" title="<spring:message code="ezCircular.t1" />"><span><spring:message code="ezCircular.t1" /></span></div>
 	        <h2><span style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t1" /></span></h2>				
 	        <ul id="iconul">
 	        	<li><span style="width:100%;display:inline-block;" id="newCircular" onClick="newCircular()"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t2" /><span id="newCircularCount"></span></span></li>

@@ -3027,6 +3027,23 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 	}
 	
+	/**
+	 * 포틀릿 관리 > 공지게시판_포틀릿 > 게시판 선택 UI 호출
+	 */
+	@RequestMapping(value = "/admin/ezPortal/portalBoardSelect.do")
+	public String portalBoardSelect(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("portalBoardSelect started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String serverName = userInfo.getServerName();
+		
+		model.addAttribute("serverName", serverName);
+
+		logger.debug("portalBoardSelect ended");
+		return "admin/ezPortal/portalBoardSelect";
+	}
+	
     protected void writeUploadedFile(InputStream stream, String newName, String stordFilePath) throws Exception {
 		logger.debug("writeUploadedFile started");
 

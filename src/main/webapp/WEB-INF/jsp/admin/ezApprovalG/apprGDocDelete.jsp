@@ -77,7 +77,8 @@
 		            orgDocid = GetAttribute(oArrRows[0], "DATA5");
 		
 		        if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		            openLocation = "/myoffice/ezApproval/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
+// 		            openLocation = "/myoffice/ezApproval/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
+		        	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		        } else {
 		            if (CrossYN()) {
 		                openLocation = "/ezApprovalG/contDocView.do";

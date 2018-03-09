@@ -99,29 +99,51 @@ var level2El;
 var level3El;
 function initToggleList(ulEl, level1, level2, level3)
 {
+	var elementItem;
+	var elementCount;
     currentListNum = true;
     
     level1El = ulEl.getElementsByTagName(level1);
     level2El = ulEl.getElementsByTagName(level2);
     level3El = ulEl.getElementsByTagName(level3);
     
-    for( var i = 0 ; i < level1El.length ; i++ )
-    {
-			level1El.item(i).listNum = i;
-			level1El.item(i).onclick = toggleList;
+    elementCount = level1El.length;
+    
+    for (var i = 0; i < elementCount; i++) {
+    	elementItem = level1El.item(i);
+    	
+    	elementItem.listNum = i;
+    	elementItem.onclick = toggleList;
+    	
+    	elementItem = level2El.item(i);
 			
-			level2El.item(i).listNum = i;
-			level2El.item(i).className = "off";
-			level2El.item(i).subtag = level3;
-		}
+    	elementItem.listNum = i;
+    	elementItem.className = "off";
+    	elementItem.subtag = level3;
+	}
 	
-	for( var j = 0 ; j < level3El.length ; j++ )
-  {
+    elementCount = level3El.length;
+    
+	for(var j = 0; j < elementCount; j++) {
+		elementItem = level3El.item(j);
 		// 2018.01.16 jwseo99
-		level3El.item(j).addEventListener("click", toggleList_Sub, true);
+		elementItem.addEventListener("click", toggleList_Sub);
+		// 2018.01.16 jwseo99	span 태그가 아닌 영역을 클릭하면 li에 on 클래스만 박히는 문제 (span 태그의 글자는 굵어지지만 right 프레임이 갱신 안 됨)
+		
+		var firstChild = elementItem.firstChild;
+		// 만약 li의 첫 번재 자식이 span 태그라면 
+		if(firstChild != undefined && firstChild.tagName === "SPAN") {
+			// 해당 span 태그에 onclick 속성이 있다면
+			if (firstChild.hasAttribute("onclick") && !elementItem.hasAttribute("onclick")) {
+				// span의 onclick을 li로 옮긴다 (기존 span의 onclick 삭제)
+				// addEventListener를 안 쓰는 이유: 어떤 클릭 이벤트가 발생되는지 디버깅이 힘듦
+				elementItem.setAttribute("onclick", firstChild.getAttribute("onclick"));
+				firstChild.removeAttribute("onclick");
+			}
+		}
 		//
-		level3El.item(j).onmouseover = mouseOver_Sub;
-		level3El.item(j).onmouseout = mouseOut_Sub;
+		elementItem.onmouseover = mouseOver_Sub;
+		elementItem.onmouseout = mouseOut_Sub;
 	}
 	
 	level2El.item(0).className = "on";
@@ -179,15 +201,6 @@ function toggleList_Sub(event)
 	
 	this.className = "on";
 	prevSelMenu = this;
-	
-	// 2018.01.16 jwseo99	span 태그가 아닌 영역을 클릭하면 li에 on 클래스만 박히는 문제 (span 태그의 글자는 굵어지지만 right 프레임이 갱신 안 됨)
-	var spanElement = prevSelMenu.getElementsByTagName("span")[0];
-	
-	if(spanElement != undefined) {
-		spanElement.onclick();
-	}
-	
-	event.stopPropagation();
 }
 
 function mouseOver_Sub()

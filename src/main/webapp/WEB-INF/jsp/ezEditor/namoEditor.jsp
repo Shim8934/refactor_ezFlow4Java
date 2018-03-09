@@ -389,16 +389,11 @@
 				CrossEditor.params.Height = document.documentElement.clientHeight + "px";
 			}
 	        
-	        if (type == "MAILOUTOFOFFICE") {
-	        	//메일 부제중설정 시 이미지 업로드 아이콘 제거
+	        if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
+	        	//메일 부제중설정, 포토게시판일 경우 시 이미지 업로드 아이콘 제거
 	        	CrossEditor.params.DeleteCommand = ["image"];
 	        }
-	        
-	        if (type == "COMMUNITYPHOTO") {
-	        	//포토게시판 시 이미지 업로드 아이콘 제거
-	        	CrossEditor.params.DeleteCommand = ["image"];
-	        }
-	                
+	       	
 	        CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
 			CrossEditor.params.FullScreen = true;
 	        CrossEditor.params.PutStyleInBody = true;

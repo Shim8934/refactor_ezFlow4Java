@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -100,9 +101,12 @@
 					
 					<c:forEach var="item" items="${list }">
 						<tr> 
-							<td style="text-align:center">${item.term}</td> 
 							<td style="text-align:center">
-								<span style="cursor:pointer; color:blue" onclick="OpenUserInfo('${item.cn}')">${item.displayName }</span>
+								<c:if test="${fn:length(item.term) > 6}">${item.term}</c:if>
+								<c:if test="${fn:length(item.term) <= 6}">${fn:substring(item.term,0,5)}0${fn:substring(item.term,5,6)}</c:if>
+							</td> 
+							<td style="text-align:center">
+								<span style="cursor:pointer;" onclick="OpenUserInfo('${item.cn}')">${item.displayName }</span>
 					        </td> 
 					        <td style="text-align:center">${item.title}</td> 
 							<td style="text-align:center">${item.description}</td> 
