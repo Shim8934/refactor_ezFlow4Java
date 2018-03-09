@@ -114,7 +114,7 @@
 					<c:when test="${gubun == 2}">
 						<tr>
 							<th colspan="2" style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2;
-									 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8f8; padding-bottom:3px">
+									 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
 								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
 							</th>
 					</c:when>
@@ -139,7 +139,7 @@
 				</tr>
 				<c:if test="${gubun == 2}">
 					<tr>
-						<th colspan="2" style="width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #f8f8f8; border-right:1px solid #e2e2e2; text-align:right;
+						<th colspan="2" style="width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #f8f8fa; border-right:1px solid #e2e2e2; text-align:right;
 								border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle">
 							<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
 							<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>

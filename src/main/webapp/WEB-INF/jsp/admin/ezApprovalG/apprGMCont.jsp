@@ -284,7 +284,7 @@
 	        </tr>
 	        <tr>
 	            <td style="vertical-align: top;">
-	                <div class="listview" style="BORDER-RIGHT: #b6b6b6 1px solid; BORDER-TOP: #b6b6b6 1px solid; OVERFLOW-Y: auto; OVERFLOW-X: auto; BORDER-LEFT: #b6b6b6 1px solid; BORDER-BOTTOM: #b6b6b6 1px solid; WIDTH: 300px; HEIGHT: 400px; BACKGROUND-COLOR: #ffffff">
+	                <div class="listview" style="BORDER-RIGHT: #ddd 1px solid; BORDER-TOP: #ddd 1px solid; OVERFLOW-Y: auto; OVERFLOW-X: auto; BORDER-LEFT: #ddd 1px solid; BORDER-BOTTOM: #ddd 1px solid; WIDTH: 300px; HEIGHT: 400px; BACKGROUND-COLOR: #ffffff">
 	                    <div id="TreeView" style="padding:5px"></div>
 	                </div>
 	            </td>

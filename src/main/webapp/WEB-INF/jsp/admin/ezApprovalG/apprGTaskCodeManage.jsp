@@ -747,7 +747,7 @@
 			<tr>
 				<td>
 					<h2></h2>
-					<div style="border:#b6b6b6 1px solid; overflow-y:auto; overflow-x:auto; width:220px;height:400px; background-color:#ffffff"  id="TreeView"></div>
+					<div style="border:#ddd 1px solid; overflow-y:auto; overflow-x:auto; width:220px;height:400px; background-color:#ffffff"  id="TreeView"></div>
 				</td>
 				<td style="padding-left:5px">
 					<h2 id="descript"></h2>
