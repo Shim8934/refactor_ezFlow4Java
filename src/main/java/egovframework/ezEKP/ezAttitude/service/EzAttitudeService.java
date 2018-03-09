@@ -71,7 +71,7 @@ public interface EzAttitudeService {
 	
 	public void updateAttitudeType(String typeName, String typeName2, String imgPath, int tenantId, String companyId) throws Exception;
 	
-	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId, String searchUserName, String searchDeptName) throws Exception;
+	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId, String searchUserName, String searchDeptName, String pageNum) throws Exception;
 	
 	public AttitudeUserConfigVO getAttitudeUserConfigInfo(int tenantId, String companyId, String userId) throws Exception;
 	
@@ -80,4 +80,6 @@ public interface EzAttitudeService {
 	public void insertAttitudeUserConfig(int tenantId, String companyId, String userId, String workStartTime, String workEndTime) throws Exception;
 	
 	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId) throws Exception;
+	
+	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName) throws Exception;
 }

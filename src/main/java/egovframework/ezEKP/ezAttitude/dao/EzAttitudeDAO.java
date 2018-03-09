@@ -31,5 +31,9 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void updateAttitudeConfig(Map<String, Object> map) {
 		update("ezAttitudeAdminDAO.updateAttitudeConfig", map);
 	}
+	
+	public String getAttitudeUserConfigCount(Map<String, Object> map) throws Exception{
+		return (String) select("ezAttitudeAdminDAO.getAttitudeUserConfigCount", map);
+	}
 
 }

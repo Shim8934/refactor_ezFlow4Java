@@ -255,15 +255,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId,
-			String companyId, String searchUserName, String searchDeptName)
+			String companyId, String searchUserName, String searchDeptName, String pageNum)
 			throws Exception {
 		LOGGER.debug("getAttitudeUserConfigList started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		int limit = (Integer.valueOf(pageNum) - 1) * 10;
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
+		map.put("limit", limit);
 		
 		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfigList(map);
 		LOGGER.debug("getAttitudeUserConfigList ended");
@@ -292,4 +294,22 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		return companyList;
 	}
 
+	@Override
+	public String getAttitudeUserConfigCount(int tenantId,
+			String companyId, String searchUserName, String searchDeptName)
+			throws Exception {
+		LOGGER.debug("getAttitudeUserConfigListCount started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("searchUserName", searchUserName);
+		map.put("searchDeptName", searchDeptName);
+		
+		String totalCount = ezAttitudeDAO.getAttitudeUserConfigCount(map);
+		
+		LOGGER.debug("getAttitudeUserConfigListCount ended");
+		return totalCount;
+	}
 }
