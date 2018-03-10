@@ -662,14 +662,14 @@
 		  <tr>
 		    <td valign="top"><table>
 		        <tr>
-		          <td valign="top" ><h2 style="margin-top:10px" ><spring:message code='ezApprovalG.t232'/></h2><div class="listview" style="margin-top:5px;overflow-x:auto;overflow-y:auto;height:280px;width:280px;border:1px solid #b6b6b6;">
+		          <td valign="top" ><h2 style="margin-top:10px" ><spring:message code='ezApprovalG.t232'/></h2><div class="listview" style="margin-top:5px;overflow-x:auto;overflow-y:auto;height:280px;width:280px;border:1px solid #ddd;">
 		            <div id ="TreeView"></div></div></td>
 		        </tr>
 		        <tr style="height:2px;">
 		            <td></td>
 		        </tr>
 		        <tr>
-		          <td style="border:1px solid #b6b6b6;"><div class="listview" style="overflow:auto;border:0;Width:280px; Height:236px;">
+		          <td style="border:1px solid #ddd;"><div class="listview" style="overflow:auto;border:0;Width:280px; Height:236px;">
 		          <%--<DIV id="UserList" style="BEHAVIOR: url(#behavelist1#ListView); border:0;Width:280px; Height:215px" onrowdblclick="list2_onSel_DBclick()" onselchanged="list2_onSel_Click()"></DIV>--%>
 		          <DIV id="UserList" style="border:0;Width:370px; Height:215px;margin:1px 1px 1px 1px;"></DIV>
 		          </div></td>
@@ -730,7 +730,7 @@
 		      </table></td>
 		    <td valign="top" style="" ><table style="margin-left:5px; margin-top:5px;">
 		        <tr>
-		          <td height="20" style="background-color:#f3f3f3; padding:4px 0 3px 0;"><a  class="imgbtn"><span id="btn_AddToAprLine" onClick="return btn_AddToAprLine_onclick()"  ><spring:message code='ezApprovalG.t336'/></span></a>
+		          <td height="20" style="background-color:#f8f8f8; padding:4px 0 3px 0;"><a  class="imgbtn"><span id="btn_AddToAprLine" onClick="return btn_AddToAprLine_onclick()"  ><spring:message code='ezApprovalG.t336'/></span></a>
 		          <select id="stl_AprLineTemplet"  LANGUAGE="javascript" style="width:73%;height:20px;" onChange="return stl_AprLineTemplet_onchange()"></select></td>
 		        </tr>
 		        <tr>

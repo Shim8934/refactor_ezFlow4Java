@@ -712,7 +712,7 @@ function config_repeat()
 	schedule_repetition_cross_dialogArguments[0] = args;
 	schedule_repetition_cross_dialogArguments[1] = config_repeat_Complete;
 
-	DivPopUpShow(450, 542, "/ezSchedule/scheduleRepetition.do");
+	DivPopUpShow(450, 582, "/ezSchedule/scheduleRepetition.do");
 }
 
 function config_repeat_Complete(rtn) {

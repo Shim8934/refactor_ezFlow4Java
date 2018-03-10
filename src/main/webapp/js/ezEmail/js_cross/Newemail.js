@@ -277,6 +277,31 @@ function all_reply_mail_onclick() {
     }
 }
 
+function reSend_onClick() {
+	
+	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+        alert(strLang45);
+    }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang46);
+        return;
+    } else {
+        var pSelectItem;
+        
+        if (listContentArry.length > 0) {
+            pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
+        } else {
+            pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        }
+        
+        var pURI = "/ezEmail/mailWrite.do?cmd=RESEND&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
+        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
+        newwin.focus();
+    }
+
+}
+
 function transmission_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang47);
@@ -1625,4 +1650,15 @@ function MailOptionHidden() {
     document.getElementById("layer_popup").style.display = "none";
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
     document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+}
+//레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
+function MailOptionHiddenOutside(e) {
+	var container = $('#layer_popup');
+	var btncontainer = $('#maillistoptiondiv');
+	var maillistoptionmode = $('#maillistoptiondiv').attr('mode');
+	if (maillistoptionmode == "on") {
+		if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'maillistoptiondiv') {
+			MailOptionHidden();
+		}
+	}
 }

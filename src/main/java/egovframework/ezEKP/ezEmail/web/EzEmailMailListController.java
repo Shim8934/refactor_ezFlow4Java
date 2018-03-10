@@ -116,6 +116,7 @@ public class EzEmailMailListController {
 		boolean isSentItems = false;
 		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
 		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", userInfo.getTenantId());
+		String useReSend = ezCommonService.getTenantConfig("useReSend", userInfo.getTenantId());
 		
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
@@ -166,6 +167,7 @@ public class EzEmailMailListController {
 		model.addAttribute("importanceColor", importanceColor);
 		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
 		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
+		model.addAttribute("useReSend", useReSend);
 		
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor

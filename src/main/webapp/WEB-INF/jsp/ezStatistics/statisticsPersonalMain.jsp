@@ -303,7 +303,7 @@
 </head>
 <h1><spring:message code='ezStatistics.t1047'/></h1>
 <body class="mainbody">
-    <table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2; margin-bottom: 5px">
+    <table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2; margin-bottom: 5px">
         <tr>
             <td style="width: 99%">
             <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t195'/> :

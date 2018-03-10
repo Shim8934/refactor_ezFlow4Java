@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/ezEmail/Newemail.js"></script>
 	    <script language="javascript" type="text/javascript">
 	        var g_paramURL = "${url}";
 	        var editor = "${Use_Editor}";
@@ -19,6 +20,24 @@
 		    function window_onload()
 		    {
 		    }
+		    
+	        //보기설정 레이어팝업 바깥 클릭시 close되게 하기위한 코드 2018.03.05 강민수92
+	        $(document).ready(function() {
+	        	var maillistoption = parent.document.getElementById('maillistoptiondiv');
+	        	
+	        	$(document).mouseup(function(e) {
+	        		var container = $('#layer_popup');
+	        		var maillistoptionmode = $(maillistoption).attr('mode');
+	        		if (maillistoptionmode == "on") {
+	        			if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'maillistoptiondiv') {
+	        			    parent.document.getElementById("layer_popup").style.display = "none";
+	        			    parent.document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
+	        			    parent.document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif"); 
+	        			}
+	        		}
+	        	})
+	        });
+		    
 		    function AttachDetail_view(obj) {
 		        if (obj.className == "icon_graydown") {
 		            obj.className = "icon_grayup"
