@@ -175,7 +175,7 @@
 		    </tr>
 		    <tr>
 		        <td class="pad1">
-		        <iframe  id="message" name="message" frameborder="0" style="width:100%;height:100%;BORDER:#b6b6b6 1px solid; background:#fff;" ></iframe>
+		        <iframe  id="message" name="message" frameborder="0" style="width:100%;height:100%;BORDER:#ddd 1px solid; background:#fff;" ></iframe>
 		        </td>
 		    </tr>
 		</table>

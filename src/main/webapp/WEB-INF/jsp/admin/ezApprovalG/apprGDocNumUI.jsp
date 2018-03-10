@@ -204,7 +204,7 @@
 	    <table>
 	        <tr>
 	            <td>
-	                <div id="TreeView" style="height: 215px; width: 200px; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff; vertical-align: top"></div>
+	                <div id="TreeView" style="height: 215px; width: 200px; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff; vertical-align: top"></div>
 	            </td>
 	            <td style="padding-left: 5px">
 	                <div class="listview">

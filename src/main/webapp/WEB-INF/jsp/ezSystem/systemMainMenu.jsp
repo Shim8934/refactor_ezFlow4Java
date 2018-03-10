@@ -15,6 +15,8 @@
 			var confirmChange = "";
 			window.onload = window_onload;
 			var editorFontStyle = "";
+			var useAllUserOldMailDelete = "${useAllUserOldMailDelete}";
+			var useAllUserOldMailDeletePeriod = "${useAllUserOldMailDeletePeriod}";
 			
 			function window_onload() {
 				
@@ -42,7 +44,8 @@
 						{ name : "LicenseKey", value : document.getElementById("LicenseKey").value.trim() },
 						{ name : "Use_FromAddress", value : document.getElementById("Use_FromAddress").value.trim() },
 						{ name : "USE_HTMLMODE", value : document.getElementById("Use_HTMLMode").value.trim() },
-						{ name : "editorFontStyle", value : editorFontStyle } 
+						{ name : "editorFontStyle", value : editorFontStyle },
+						{ name : "useAllUserOldMailDeletePeriod", value : document.getElementById("useAllUserOldMailDeletePeriod").value.trim() } 
 					  ];
 				
 				if (!paramArray[0].value.match(/^\d+$/)) {
@@ -206,8 +209,9 @@
 	            <tr><th><spring:message code="ezSystem.x0016"/></th><td><input id="LicenseKey" size="60" maxlength="60" type="text" value="${configMap.LicenseKey}"> (<spring:message code="ezSystem.x0017"/>: ${licensedUserCount}, <spring:message code="ezSystem.x0018"/>: ${userCount})</td></tr>
 	            <tr><th><spring:message code="ezSystem.x0020"/></th><td><select id="Use_FromAddress"><option <c:if test="${configMap.Use_FromAddress == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.Use_FromAddress == null or configMap.Use_FromAddress == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
 	            <tr><th><spring:message code="ezSystem.lhj1"/></th><td><select id="Use_HTMLMode"><option <c:if test="${configMap.USE_HTMLMODE == null or configMap.USE_HTMLMODE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.USE_HTMLMODE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
-	            
-	            <c:if test="${configMap.PrimaryLang == '1' and configMap.editorFontStyle != null}">
+
+
+				<c:if test="${configMap.PrimaryLang == '1' and configMap.editorFontStyle != null}">
 	            	<tr>
 		            	<th><spring:message code="ezSystem.lhm1"/></th>
 		            	<td>
@@ -235,6 +239,16 @@
 		            	editorFontSize.addEventListener("change", function () {editorFontStyle = document.getElementById("editorFontFamily").value + "|" + document.getElementById("editorFontSize").value;});
 		            </script>
 		    	</c:if>
+		    	
+				<c:if test="${useAllUserOldMailDelete eq 'YES'}">
+			    	<tr>
+						<th><spring:message code="ezSystem.kyj3" /></th>
+						<td>
+							<input id="useAllUserOldMailDeletePeriod" maxlength="3" type="text" value="${useAllUserOldMailDeletePeriod}"> (<spring:message code="ezSystem.kyj4"/>, <spring:message code="ezSystem.kyj5"/>)
+						</td>
+					</tr>
+				</c:if>
+		    	
 	        </tbody>
 	    </table> 
 	    <div class="btnposition">

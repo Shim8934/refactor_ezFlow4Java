@@ -490,7 +490,8 @@
 		function addOption() {		
 			var currentOptionNumber = $('#columnsbnk li').length + 1;	
 			
-			if ($('#qst_title').val().replace(/ /g,'') == '') {
+			/* 항목 추가시 타이틀 체크기능 주석처리 */
+			/* if ($('#qst_title').val().replace(/ /g,'') == '') {
 				alert('<spring:message code="ezPoll.t147"/>');
 	            document.getElementById("qst_title").value = "";	           
 	            document.getElementById("qst_title").focus();
@@ -498,7 +499,9 @@
 			else {
 				$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
 				$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
-			}					
+			} */					
+			$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
+			$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
 		}
 		
 		function menuQst_List() {
@@ -845,7 +848,7 @@
 							</div>
 							<div style="clear: both"></div>
 						</div>
-						<div id="lstAttachLink" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 92px;border: 1px solid #b6b6b6;overflow: auto; margin:8px 0px 0px 0px;">
+						<div id="lstAttachLink" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 92px;border: 1px solid #ddd;overflow: auto; margin:8px 0px 0px 0px;">
 							<div id="addFile" class="pollAddFile">
 								<img src="/images/poll/pollAddFile_Addicon.png" style="height:23px;width:20px;vertical-align:middle; margin:-4px 5px 0px 0px; padding:0px; cursor: pointer;" onclick="uploadbtn()">
 								<spring:message code="ezPoll.t151"/>

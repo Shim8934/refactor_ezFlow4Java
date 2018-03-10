@@ -491,7 +491,7 @@
 		</script>	
 			 
 		<div class="div_scroll" style="width:100%; height:500px; overflow: auto" id="divList">
-			<table id="QstList" class="mainlist" style="width:100%;margin-top:5px"> 
+			<table id="QstList" class="mainlist" style="width:100%;"> 
 			    <tr> 
 					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
 						<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">
