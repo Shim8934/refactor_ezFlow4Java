@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -28,8 +29,16 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (AttitudeConfigVO) select("ezAttitudeAdminDAO.getAttitudeConfig", map);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void updateAttitudeConfig(Map<String, Object> map) {
 		update("ezAttitudeAdminDAO.updateAttitudeConfig", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<AttitudeTypeVO> getAttitudeTypeList(Map<String, Object> map) {
+		return (List<AttitudeTypeVO>) select("ezAttitudeAdminDAO.getAttitudeTypeList", map);
+	}
+	
+	
 
 }
