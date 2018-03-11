@@ -1365,7 +1365,7 @@ function onmouse_over_Week(td) {
 //일보기 마우스임팩트
 function onmouse_out_Week(td) {
     if (p_Type != "MAIN") {
-        //td.style.backgroundColor = "#F8F8F8";
+        //td.style.backgroundColor = "#f8f8fa";
         td.style.backgroundColor = "transparent";
     }
 }
