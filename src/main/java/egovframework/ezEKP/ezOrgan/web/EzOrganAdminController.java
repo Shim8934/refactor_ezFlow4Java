@@ -1364,70 +1364,27 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 		}
 		
-        if (result.equals("OK")) {
+    	if (result.equals("OK")) {
 	        // UseInitMailSign이 YES일 경우 메일 서명 등록
 			String useInitMailSign = ezCommonService.getTenantConfig("UseInitMailSign", tenantID);
 			if (useInitMailSign.equals("YES")) {
-				MailSignatureVO mailSignatureVO = ezEmailService.getInitMailSignature(tenantID);
-				
-				if (mailSignatureVO != null) {
-					vo = ezOrganAdminService.getUserInfo(vo.getCn(), "1", tenantID);
-					
-					String content1 = mailSignatureVO.getContent1() == null ? "" : mailSignatureVO.getContent1();
-					String content2 = mailSignatureVO.getContent2() == null ? "" : mailSignatureVO.getContent2();
-					String content3 = mailSignatureVO.getContent3() == null ? "" : mailSignatureVO.getContent3();
-					
-					content1 = content1.replace("${company}", vo.getCompany1()).replace("${engCompany}", vo.getCompany2()).replace("${name}", vo.getDisplayName1()).replace("${engName}", vo.getDisplayName2())
-							.replace("${department}", vo.getDescription1()).replace("${engDepartment}", vo.getDescription2()).replace("${email}", vo.getMail())
-							.replace("${title}", vo.getTitle1() == null ? "" : vo.getTitle1()).replace("${engTitle}", vo.getTitle2() == null ? "" : vo.getTitle2())
-							.replace("${position}", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101()).replace("${engPosition}", vo.getExtensionAttribute102() == null ? "" : vo.getExtensionAttribute102())
-							.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
-							.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
-							.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
-				
-					content2 = content2.replace("${company}", vo.getCompany1()).replace("${engCompany}", vo.getCompany2()).replace("${name}", vo.getDisplayName1()).replace("${engName}", vo.getDisplayName2())
-							.replace("${department}", vo.getDescription1()).replace("${engDepartment}", vo.getDescription2()).replace("${email}", vo.getMail())
-							.replace("${title}", vo.getTitle1() == null ? "" : vo.getTitle1()).replace("${engTitle}", vo.getTitle2() == null ? "" : vo.getTitle2())
-							.replace("${position}", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101()).replace("${engPosition}", vo.getExtensionAttribute102() == null ? "" : vo.getExtensionAttribute102())
-							.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
-							.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
-							.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
-				
-					content3 = content3.replace("${company}", vo.getCompany1()).replace("${engCompany}", vo.getCompany2()).replace("${name}", vo.getDisplayName1()).replace("${engName}", vo.getDisplayName2())
-							.replace("${department}", vo.getDescription1()).replace("${engDepartment}", vo.getDescription2()).replace("${email}", vo.getMail())
-							.replace("${title}", vo.getTitle1() == null ? "" : vo.getTitle1()).replace("${engTitle}", vo.getTitle2() == null ? "" : vo.getTitle2())
-							.replace("${position}", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101()).replace("${engPosition}", vo.getExtensionAttribute102() == null ? "" : vo.getExtensionAttribute102())
-							.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
-							.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
-							.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
-					
-					ezEmailService.setMailSignature(tenantID, vo.getCn(), mailSignatureVO.getUseFlag(), content1, content2, content3);
+				try {
+					setInitMailSign(vo);
+				} catch (Exception e) {
+					logger.error("setInitMailSign fail.");
+					e.printStackTrace();
 				}
 			}
 			
 			// UseInitInboxRule이 YES일 경우 메일 자동분류 등록
 			String useInitInboxRule = ezCommonService.getTenantConfig("UseInitInboxRule", tenantID);
 			if (useInitInboxRule.equals("YES")) {
-				//자동분류에 등록된 메일함이 존재하지 않으면 메일함을 생성한다.
-				List<String> mailboxList = ezEmailService.getInitInboxRuleMailbox(tenantID);
-				String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
-				
-				IMAPAccess ia = null;
-		        try {
-					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							vo.getMail(), password, egovMessageSource, locale);
-					
-					for (int i = 0; i < mailboxList.size(); i++) {
-						ia.createFolder(mailboxList.get(i));
-					}
-				} finally {
-					if (ia != null) {
-						ia.close();
-						ia = null;
-					}
+				try {
+					setInitInboxRule(loginCookie, vo, locale);
+				} catch (Exception e) {
+					logger.error("setInitInboxRule fail.");
+					e.printStackTrace();
 				}
-				
-				ezEmailService.setInitInboxRule(tenantID, vo.getCn());
 			}
         }
         
@@ -2718,5 +2675,69 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		return result;
+	}
+	
+	private void setInitMailSign(OrganUserVO vo) throws Exception {
+		MailSignatureVO mailSignatureVO = ezEmailService.getInitMailSignature(vo.getTenantId());
+		
+		if (mailSignatureVO != null) {
+			vo = ezOrganAdminService.getUserInfo(vo.getCn(), "1", vo.getTenantId());
+			
+			String content1 = mailSignatureVO.getContent1() == null ? "" : mailSignatureVO.getContent1();
+			String content2 = mailSignatureVO.getContent2() == null ? "" : mailSignatureVO.getContent2();
+			String content3 = mailSignatureVO.getContent3() == null ? "" : mailSignatureVO.getContent3();
+			
+			content1 = content1.replace("${company}", vo.getCompany1()).replace("${engCompany}", vo.getCompany2()).replace("${name}", vo.getDisplayName1()).replace("${engName}", vo.getDisplayName2())
+					.replace("${department}", vo.getDescription1()).replace("${engDepartment}", vo.getDescription2()).replace("${email}", vo.getMail())
+					.replace("${title}", vo.getTitle1() == null ? "" : vo.getTitle1()).replace("${engTitle}", vo.getTitle2() == null ? "" : vo.getTitle2())
+					.replace("${position}", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101()).replace("${engPosition}", vo.getExtensionAttribute102() == null ? "" : vo.getExtensionAttribute102())
+					.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
+					.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
+					.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
+		
+			content2 = content2.replace("${company}", vo.getCompany1()).replace("${engCompany}", vo.getCompany2()).replace("${name}", vo.getDisplayName1()).replace("${engName}", vo.getDisplayName2())
+					.replace("${department}", vo.getDescription1()).replace("${engDepartment}", vo.getDescription2()).replace("${email}", vo.getMail())
+					.replace("${title}", vo.getTitle1() == null ? "" : vo.getTitle1()).replace("${engTitle}", vo.getTitle2() == null ? "" : vo.getTitle2())
+					.replace("${position}", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101()).replace("${engPosition}", vo.getExtensionAttribute102() == null ? "" : vo.getExtensionAttribute102())
+					.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
+					.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
+					.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
+		
+			content3 = content3.replace("${company}", vo.getCompany1()).replace("${engCompany}", vo.getCompany2()).replace("${name}", vo.getDisplayName1()).replace("${engName}", vo.getDisplayName2())
+					.replace("${department}", vo.getDescription1()).replace("${engDepartment}", vo.getDescription2()).replace("${email}", vo.getMail())
+					.replace("${title}", vo.getTitle1() == null ? "" : vo.getTitle1()).replace("${engTitle}", vo.getTitle2() == null ? "" : vo.getTitle2())
+					.replace("${position}", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101()).replace("${engPosition}", vo.getExtensionAttribute102() == null ? "" : vo.getExtensionAttribute102())
+					.replace("${officePhone}", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber()).replace("${homePhone}", vo.getHomePhone() == null ? "" : vo.getHomePhone())
+					.replace("${fax}", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber()).replace("${mobile}", vo.getMobile() == null ? "" : vo.getMobile())
+					.replace("${zipCode}", vo.getPostalCode() == null ? "" : vo.getPostalCode()).replace("${address}", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
+			
+			ezEmailService.setMailSignature(vo.getTenantId(), vo.getCn(), mailSignatureVO.getUseFlag(), content1, content2, content3);
+			logger.debug("InitMailSign set.");
+		}
+	}
+	
+	private void setInitInboxRule(String loginCookie, OrganUserVO vo, Locale locale) throws Exception {
+		//자동분류에 등록된 메일함이 존재하지 않으면 메일함을 생성한다.
+		List<String> mailboxList = ezEmailService.getInitInboxRuleMailbox(vo.getTenantId());
+		String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+		
+		IMAPAccess ia = null;
+		
+        try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					vo.getMail(), password, egovMessageSource, locale);
+			
+			for (int i = 0; i < mailboxList.size(); i++) {
+				ia.createFolder(mailboxList.get(i));
+			}
+		} finally {
+			if (ia != null) {
+				ia.close();
+				ia = null;
+			}
+		}
+		
+		ezEmailService.setInitInboxRule(vo.getTenantId(), vo.getCn());
+		logger.debug("InitInboxRule set.");
 	}
 }
