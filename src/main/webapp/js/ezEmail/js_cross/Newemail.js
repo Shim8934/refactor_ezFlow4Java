@@ -1379,6 +1379,14 @@ function HiddenContextMenu() {
 function ContextMenuHidden() {
     if (document.getElementById("ContextMenuDiv").style.display == "")
         HiddenContextMenu();
+    
+    if (document.getElementById("mailPanel").style.display == "")
+    	HiddenContextMenu();
+    
+    if (parent.frames["left"].document.getElementById("folderMenuDiv").style.display == "") {
+    	parent.frames["left"].document.getElementById("folderPanel").style.display = "none";
+    	parent.frames["left"].document.getElementById("folderMenuDiv").style.display = "none";
+    }
 }
 function PopUpPreMail() {
     
