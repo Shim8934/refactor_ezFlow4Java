@@ -19,9 +19,21 @@
     	var totalCount = "" // 게시물 총 갯수
     	var totalPage = ""; // 게시판의 총 페이지갯수
     	
-    	window.onload = function(){
+    	$(function(){
     		company_change();
-    	}
+    		
+    		$(".mainlist").on('mouseover mouseleave', 'tr', function(e){
+    			if (e.type == "mouseover") {
+    				$(this).css("background-color", "rgb(244,245,245)");
+    			} else {
+    				$(this).css("background-color", "rgb(255,255,255)");
+    			}
+    		})
+    		
+    		$(".mainlist").on('click', 'tr', function(){
+    			$(this).find("input[type='checkbox']").attr("checked", true);
+    		})
+    	})
     	
     	function company_change(){
     		pCompanyId = $("select[name=ListCompany]").val();
@@ -34,7 +46,11 @@
     			dataType : "json",
     			async : false,
     			url : "/admin/ezAttitude/attitudeUserConfList.do",
-    			data : {companyId : pCompanyId, userName : searchUserName, deptName : searchDeptName, pageNum : pageNum, listSize : listSize},
+    			data : {companyId : pCompanyId, 
+    					userName : searchUserName, 
+    					deptName : searchDeptName, 
+    					pageNum : pageNum, 
+    					listSize : listSize},
     			success : function(result){
     				totalCount = result.totalCount;
     				totalPage = parseInt(totalCount / blockSize);
@@ -45,11 +61,10 @@
     	
     	function getUserConfList_after(result){
     		var resultHtml = "";
-    		
     		$(".mainlist tbody").html("");
+    		
     		for (var resultLeng = 0; resultLeng < result.length; resultLeng ++) {
     			resultHtml += "<tr userid='" + result[resultLeng].userId + "'><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>"
-    			   			+ "<td>" + (((pageNum - 1) * listSize) + (resultLeng + 1)) + "</td>"
     			   			+ "<td>" + result[resultLeng].userName+ "</td>"
     			   			+ "<td>" + result[resultLeng].userTitle+ "</td>"
     			   			+ "<td>" + result[resultLeng].deptName+ "</td>"
@@ -57,11 +72,11 @@
     		}
     		
     		if (resultHtml == "") {
-    			resultHtml = "<tr><td colspan='6' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";
+    			resultHtml = "<tr><td colspan='5' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
     		}
     		
     		$(".mainlist tbody").append(resultHtml);
-    		
+    		setTdStyle($(".mainlist td"));
     		makePageSelPageAtti();
     	}
     	
@@ -102,7 +117,6 @@
     		
     		getUserConfList();
     	}
-    	
     	
     </script>
 	</head>
@@ -163,12 +177,11 @@
 		<table class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
-					<th style="width:20px;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
-					<th style="width:29px;">NO</th>
-					<th style="width:300px">이름</th>
-					<th style="width:200px">직위</th>
-					<th style="width:400px">부서</th>
-					<th style="width:600px">근무시간</th>
+					<th style="width:29px;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
+					<th style="width:300px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">이름</th>
+					<th style="width:200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">직위</th>
+					<th style="width:400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">부서</th>
+					<th style="width:620px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">근무시간</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -177,5 +190,11 @@
 		<div id="tblPageRayer">
 		</div>
 	</body>
+	<script>
+		$("#HeaderAllCheckBox").on('click', function(){
+			alert($(".mainlist th").length);
+			alert($(".mainlist td").length);
+		});
+	</script>
 </body>
 </html>

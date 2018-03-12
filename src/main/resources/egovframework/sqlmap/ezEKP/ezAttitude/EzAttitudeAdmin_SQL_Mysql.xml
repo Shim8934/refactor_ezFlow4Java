@@ -92,6 +92,7 @@
 				A.TENANT_ID = B.TENANT_ID
 			WHERE
 				A.TENANT_ID = #tenantId#
+		]]>
 			<isNotEmpty prepend="AND" property="companyId">
 				A.COMPANYID = #companyId#
 			</isNotEmpty>
@@ -101,32 +102,36 @@
 			<isNotEmpty prepend="AND" property="searchUserName">
 				B.DISPLAYNAME = #searchUserName#
 			</isNotEmpty>
+		<![CDATA[
 			LIMIT #limit#, #listSize#;
 	</select>
 	
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigCount" parameterClass="Map" resultClass="String">
-		SELECT
-			COUNT(*)
-		FROM
-			tbl_attitude_user_conf A 
-		INNER JOIN 
-			tbl_usermaster B 
-		ON 
-			A.USERID = B.CN
-		AND
-			A.TENANT_ID = B.TENANT_ID
-		WHERE
-			A.TENANT_ID = #tenantId#
-		<isNotEmpty prepend="AND" property="companyId">
-			A.COMPANYID = #companyId#
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchDeptName">
-			B.DESCRIPTION = #searchDeptName#
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchUserName">
-			B.DISPLAYNAME = #searchUserName#
-		</isNotEmpty>
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				tbl_attitude_user_conf A 
+			INNER JOIN 
+				tbl_usermaster B 
+			ON 
+				A.USERID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE
+				A.TENANT_ID = #tenantId#
+		]]>
+			<isNotEmpty prepend="AND" property="companyId">
+				A.COMPANYID = #companyId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="searchDeptName">
+				B.DESCRIPTION = #searchDeptName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="searchUserName">
+				B.DISPLAYNAME = #searchUserName#
+			</isNotEmpty>
+		
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeTypeList" parameterClass="Map" resultClass="AttitudeTypeVO">

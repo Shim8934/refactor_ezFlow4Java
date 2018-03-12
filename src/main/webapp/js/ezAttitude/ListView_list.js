@@ -56,3 +56,10 @@ function makePageSelPageAtti(){
 	
 	$("#tblPageRayer").html(pagingHtml);
 }
+
+//td 스타일 적용 함수
+function setTdStyle(tdList){
+	tdList.each(function(index){
+		tdList.css({"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"});
+	})
+}
