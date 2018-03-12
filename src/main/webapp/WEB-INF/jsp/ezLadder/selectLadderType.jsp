@@ -25,10 +25,10 @@
 		</div>
 		<div>
 			<ul>
-				<li onClick='selectLadType(1)'><spring:message code='ezLadder.t101' /></li>
-				<li onClick='selectLadType(2)'><spring:message code='ezLadder.t102' /></li>
-				<li onClick='selectLadType(3)'><spring:message code='ezLadder.t103' /></li>
-				<li onClick='selectLadType(4)'><spring:message code='ezLadder.t104' /></li>
+				<li onClick='selectLadType(0)'><spring:message code='ezLadder.t101' /></li>
+				<li onClick='selectLadType(1)'><spring:message code='ezLadder.t102' /></li>
+				<li onClick='selectLadType(2)'><spring:message code='ezLadder.t103' /></li>
+				<li onClick='selectLadType(3)'><spring:message code='ezLadder.t104' /></li>
 			</ul>
 		</div>
 	</body>

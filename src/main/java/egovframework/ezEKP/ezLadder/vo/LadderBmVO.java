@@ -43,4 +43,10 @@ public class LadderBmVO {
 	public void setRegdate(String regdate) {
 		this.regdate = regdate;
 	}
+	@Override
+	public String toString() {
+		return "LadderBmVO [tenant_id=" + tenant_id + ", ladderBmId="
+				+ ladderBmId + ", bmName=" + bmName + ", userId=" + userId
+				+ ", regdate=" + regdate + "]";
+	}
 }

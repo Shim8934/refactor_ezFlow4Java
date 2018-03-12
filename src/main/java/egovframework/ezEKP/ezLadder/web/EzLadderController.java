@@ -243,16 +243,42 @@ public class EzLadderController {
 		return "ezLadder/setLadder";
 	}
 	
+	/** 
+	 * 참여자 추가 (조직도 호출)
+	 * */
+	@RequestMapping(value = "/ezLadder/setLadderAttendant.do")
+	public String setLadderAttendant(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+		logger.debug("GET setLadderAttendant.do started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userID", userInfo.getId());
+		model.addAttribute("deptID", userInfo.getDeptID());
+		
+		logger.debug("GET setLadderAttendant.do ended.");
+		
+		return "ezLadder/ladderSetAttendant";
+	}
+	
+	/**
+	 * 참여자 검색 시 이름 체크 팝업창
+	 * */
+	@RequestMapping(value = "/ezLadder/checkName.do")
+	public String ladderCheckName() {
+		return "ezLadder/ladderCheckName";
+	}
+	
 	/**
 	 * 사다리 게임 추가
 	 * @throws Exception 
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.POST)
-	public String setLadder(String ladData,@CookieValue("loginCookie") String loginCookie, String title, String type, String secretFlag, String lineCnt, String [] userId, String [] userName, String [] userName2, String [] item, HttpServletRequest request, Model model) throws Exception {
+	public String setLadder(@CookieValue("loginCookie") String loginCookie, String allLadData, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("POST setLadder.do started.");
 		
-		logger.debug("#### "+ladData);
+		logger.debug("#### "+allLadData);
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("#### "+userInfo.getTenantId());
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/ladder/ladders/writers/" + userInfo.getId();
@@ -266,11 +292,12 @@ public class EzLadderController {
 		RestTemplate rest = new RestTemplate();
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("ladData", ladData)
+				.queryParam("allLadData", allLadData)
 				.queryParam("writerName", userInfo.getDisplayName())
 				.queryParam("writerName2", userInfo.getDisplayName2())
 				.queryParam("deptName", userInfo.getDeptName())
-				.queryParam("deptName2", userInfo.getDeptName2());
+				.queryParam("deptName2", userInfo.getDeptName2())
+				.queryParam("tenant_id", userInfo.getTenantId());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 //
@@ -291,6 +318,7 @@ public class EzLadderController {
 		logger.debug("POST setLadder.do ended.");
 		return "json"; // redirect:조회창(ladderId값 파라미터로)
 	}
+	
 	
 	/**
 	 * 즐겨찾기 조회
@@ -319,7 +347,8 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenant_id", userInfo.getTenantId());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -331,28 +360,35 @@ public class EzLadderController {
 	
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
-			
-			model.addAttribute("list", list);
+			model.addAttribute("bmList", list);
 		} else {
 			return "error";
 		}
+		
+		logger.debug("getLadderBM.do ended.");
 		
 		logger.debug("getLadderBM.do ended.");
 		return "json";
 	}
 	
 	/**
-	 * 즐겨찾기 추가, 수정, 삭제
+	 * 즐겨찾기 추가
 	 * @throws Exception 
 	 * */
-	@RequestMapping(value = "/ezLadder/setLadderBM.do")
-	public String setLadderBM(@CookieValue("loginCookie") String loginCookie, String mark, String ladderBMId, String bmName, String [] bmUserId, String [] bmUserName, String [] bmUserName2, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("getLadderBM.do started.");
+	@RequestMapping(value = "/ezLadder/setLadderBM.do", method = RequestMethod.POST)
+	public String setLadderBM(@CookieValue("loginCookie") String loginCookie, String flag, String ladderBMId, String bmName, String bmUsers, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("setLadderBM.do started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/BMs/" + ladderBMId + "/users/" + userInfo.getId();
+		String url = "";
+		
+		if(flag.equals("add")) {
+			url = gwServerUrl + "/ladder/BMs/users/" + userInfo.getId();
+		} else {
+			url = gwServerUrl + "/ladder/BMs/" + ladderBMId + "/users/" + userInfo.getId();
+		}
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -362,28 +398,28 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenant_id", userInfo.getTenantId())
+				.queryParam("bmName", bmName)
+				.queryParam("bmUsers", bmUsers);
 		
 		ResponseEntity<String> result = null;
 		
-		if(mark.equals("add")) {
+		if(flag.equals("add")) {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-		} else if(mark.equals("modify")) {
+		} else if(flag.equals("modify")) {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-		} else if(mark.equals("delete")) {
+		} else if(flag.equals("delete")){
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
 		}
-
+		
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		
-		JSONArray list = new JSONArray();
 		String status = jsonResult.get("status").toString();
 	
 		if (status.equals("ok")) {
-			list = (JSONArray) jsonResult.get("data");
-			
-			model.addAttribute("list", list);
+			model.addAttribute("status", status);
 		} else {
 			return "error";
 		}

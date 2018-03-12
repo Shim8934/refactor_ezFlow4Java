@@ -7,9 +7,11 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.bouncycastle.asn1.ocsp.Request;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezLadder.service.EzLadderService;
+import egovframework.ezEKP.ezLadder.vo.LadderBmUserVO;
+import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.let.user.login.service.LoginService;
@@ -193,57 +197,59 @@ public class EzLadderGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			String ladData = request.getParameter("ladData");
+			String allLadData = request.getParameter("allLadData");
 			String writerName = request.getParameter("writerName");
 			String writerName2 = request.getParameter("writerName2");
 			String deptName = request.getParameter("deptName");
 			String deptName2 = request.getParameter("deptName2");
+			int tenant_id = Integer.parseInt(request.getParameter("tenant_id"));
 			
 			JSONParser jp = new JSONParser();
-			JSONObject ladObj = (JSONObject) jp.parse(ladData);
-			JSONArray ladArr = (JSONArray) ladObj.get("lineList");
+			JSONObject ladObj = (JSONObject) jp.parse(allLadData);
 			
+			JSONObject lad = (JSONObject) ladObj.get("lad");
+			LadderVO ladVO = new LadderVO();
+			
+			ladVO.setTenant_id(tenant_id); 
+			ladVO.setTitle((String) lad.get("title"));
+			ladVO.setType(Integer.parseInt((String) lad.get("type")));
+			ladVO.setSecretFlag(Integer.parseInt((String) lad.get("secretflag")));
+			ladVO.setWriterId(writerId);
+			ladVO.setWriterName(writerName);
+			ladVO.setWriterName2(writerName2);
+			ladVO.setDeptName(deptName);
+			ladVO.setDeptName2(deptName2);
+			ladVO.setLineCnt(Integer.parseInt((String) lad.get("linecnt")));
+			ladVO.setWriteDate((String) lad.get("writedate"));
+			
+			JSONArray ladLineArr = (JSONArray) ladObj.get("ladline");
 			List<LadderLineVO> ladLineList = new ArrayList<LadderLineVO>();
+			LadderLineVO ladlineVO = new LadderLineVO();
+			JSONObject ladline = new JSONObject();
 			
-			for(int i = 0; i < ladArr.size(); i++) {
-				LadderLineVO vo = new LadderLineVO();
-				JSONObject ladline = (JSONObject) ladArr.get(i);
+			int len = ladLineArr.size();
+			for(int i = 0; i < len; i++) {
+				ladline = (JSONObject) ladLineArr.get(i);
 				
-				vo.setUserId((String) ladline.get("userId")); 
-				vo.setUserName((String) ladline.get("userName"));
-				vo.setUserName2((String) ladline.get("userName2"));
-				vo.setItem((String) ladline.get("item"));
-				vo.setLadderOrder(i);
-				vo.setWriterId(writerId);
+				ladlineVO.setTenant_id(tenant_id);
+				ladlineVO.setUserId((String) ladline.get("userid")); 
+				ladlineVO.setUserName((String) ladline.get("username"));
+				ladlineVO.setUserName2((String) ladline.get("username2"));
+				ladlineVO.setItem((String) ladline.get("item"));
+				ladlineVO.setLadderOrder(Integer.parseInt((String) ladline.get("ladderorder")));
+				ladlineVO.setWriterId(writerId);
 				
-				ladLineList.add(vo);
+				ladLineList.add(ladlineVO);
 			}
 			
-			JSONObject ladInfo = (JSONObject) ladObj.get("ladInfo");
-			LadderVO lad = new LadderVO();
-			
-			lad.setTitle((String) ladInfo.get("title"));
-			lad.setWriterId(writerId);
-			lad.setWriterName(writerName);
-			lad.setWriterName2(writerName2);
-			lad.setDeptName(deptName);
-			lad.setDeptName2(deptName2);
-			
-			for(LadderLineVO vo : ladLineList) {
-				logger.debug("###"+vo.toString());
-			}
-			logger.debug("###"+lad.getTitle());
-			
-			ezLadderService.insertLadder(lad, ladLineList);
+			ezLadderService.insertLadder(ladVO, ladLineList);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", null);
-			logger.debug("###t 성공");
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			logger.debug("###t 실패");
 			e.printStackTrace();
 		}
 		
@@ -256,15 +262,20 @@ public class EzLadderGWController {
 	 * 즐겨찾기 그룹 조회
 	 * */
 	@RequestMapping(value = "/ladder/BMs/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject gwSelectBMGroup(@PathVariable String userId) {
+	public JSONObject gwSelectBMGroup(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [GET /ladder/BMs/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			
+			int tenant_id = Integer.parseInt(request.getParameter("tenant_id"));
+
+			List<LadderBmVO> bmGroups = ezLadderService.selectBMGroup(userId, tenant_id);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", null);
+			result.put("data", bmGroups);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -279,15 +290,20 @@ public class EzLadderGWController {
 	 * 즐겨찾기 그룹 유저 조회
 	 * */
 	@RequestMapping(value = "/ladder/BMs/{ladderBMId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject gwSelectBMUser(@PathVariable String userId, @PathVariable String ladderBMId) {
+	public JSONObject gwSelectBMUser(@PathVariable String userId, @PathVariable int ladderBMId, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [GET /ladder/BMs/" + ladderBMId + "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			
+			int tenant_id = Integer.parseInt(request.getParameter("tenant_id"));
+			
+			List<LadderBmUserVO> bmUsers = ezLadderService.selectBMUser(tenant_id, ladderBMId);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", null);
+			result.put("data", bmUsers);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -301,22 +317,32 @@ public class EzLadderGWController {
 	/**
 	 * 즐겨찾기 그룹 추가
 	 * */
-	@RequestMapping(value = "/ladder/BMs/{ladderBMId}/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwInsertBMGroup(@PathVariable String userId, @PathVariable String ladderBMId) {
-		logger.debug("web G/W LADDER [POST /ladder/BMs/" + ladderBMId + "/users/" + userId + "] started.");
+	@RequestMapping(value = "/ladder/BMs/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject gwInsertBMGroup(@PathVariable String userId, HttpServletRequest request) {
+		logger.debug("web G/W LADDER [POST /ladder/BMs/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			int tenant_id = Integer.parseInt(request.getParameter("tenant_id"));
+			String bmName = request.getParameter("bmName");
+			String bmUsers = request.getParameter("bmUsers");
+			
+			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, 0, bmName, userId);
+			List<LadderBmUserVO> bmUsersVO = makeBmUsersVO(tenant_id, 0, userId, bmUsers, "");
+			
+			ezLadderService.insertBM(bmGroupVO, bmUsersVO);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", null);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			e.printStackTrace();
 		}
 		
-		logger.debug("web G/W LADDER [POST /ladder/BMs/" + ladderBMId + "/users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [POST /ladder/BMs/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -325,12 +351,21 @@ public class EzLadderGWController {
 	 * 즐겨찾기 그룹 수정
 	 * */
 	@RequestMapping(value = "/ladder/BMs/{ladderBMId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject gwUpdateBMGroup(@PathVariable String userId, @PathVariable String ladderBMId) {
+	public JSONObject gwUpdateBMGroup(@PathVariable String userId, @PathVariable int ladderBMId, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [PUT /ladder/BMs/" + ladderBMId + "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			int tenant_id = Integer.parseInt(request.getParameter("tenant_id"));
+			String bmName = request.getParameter("bmName");
+			String bmUsers = request.getParameter("bmUsers");
+			
+			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, ladderBMId, bmName, userId);
+			List<LadderBmUserVO> bmUsersVO = makeBmUsersVO(tenant_id, ladderBMId, userId, bmUsers, "");
+			
+			ezLadderService.updateBM(bmGroupVO, bmUsersVO);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", null);
@@ -348,12 +383,21 @@ public class EzLadderGWController {
 	 * 즐겨찾기 그룹 삭제
 	 * */
 	@RequestMapping(value = "/ladder/BMs/{ladderBMId}/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject gwDeleteBMGroup(@PathVariable String userId, @PathVariable String ladderBMId) {
+	public JSONObject gwDeleteBMGroup(@PathVariable String userId, @PathVariable int ladderBMId, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [DELETE /ladder/BMs/" + ladderBMId + "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			int tenant_id = Integer.parseInt(request.getParameter("tenant_id"));
+			String bmName = request.getParameter("bmName");
+			String bmUsers = request.getParameter("bmUsers");
+			
+			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, ladderBMId, bmName, userId);
+			List<LadderBmUserVO> bmUsersVO = makeBmUsersVO(tenant_id, ladderBMId, userId, bmUsers, "");
+			
+			ezLadderService.deleteBM(bmGroupVO, bmUsersVO);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", null);
@@ -365,6 +409,46 @@ public class EzLadderGWController {
 		logger.debug("web G/W LADDER [DELETE /ladder/BMs/" + ladderBMId + "/users/" + userId + "] ended.");
 		
 		return result;
+	}
+
+	/** ladderBmVO set */
+	public LadderBmVO makeBmGroupVO(int tenant_id, int ladderBmId, String bmName, String userId) {
+		LadderBmVO bmGroupVO = new LadderBmVO();
+		bmGroupVO.setTenant_id(tenant_id);
+		bmGroupVO.setLadderBmId(ladderBmId);
+		bmGroupVO.setBmName(bmName);
+		bmGroupVO.setUserId(userId);
+		
+		return bmGroupVO;
+	}
+	
+	/** ladderBmUserVO set */
+	public List<LadderBmUserVO> makeBmUsersVO(int tenant_id, int ladderBmId, String writerId, String bmUsers, String lang) throws Exception {
+		List<LadderBmUserVO> bmUsersVO = new ArrayList<LadderBmUserVO>();
+		
+		if(!bmUsers.equals("")) {
+			JSONParser jp = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jp.parse(bmUsers);
+			JSONArray bmUserId = (JSONArray) jsonObj.get("userid");
+			JSONArray bmUserName = (JSONArray) jsonObj.get("username");
+			JSONArray bmUserName2 = (JSONArray) jsonObj.get("username2");
+			
+			int len = bmUserId.size();
+			for(int i = 0; i < len; i++) {
+				LadderBmUserVO bmUserVO = new LadderBmUserVO();
+				
+				bmUserVO.setTenant_id(tenant_id);
+				bmUserVO.setLadderBmId(ladderBmId);
+				bmUserVO.setWriterId(writerId);
+				bmUserVO.setUserId((String) bmUserId.get(i));
+				bmUserVO.setUserName((String) bmUserName.get(i));
+				bmUserVO.setUserName2((String) bmUserName2.get(i));
+				bmUserVO.setLang(lang);
+				
+				bmUsersVO.add(bmUserVO);
+			}
+		}
+		return bmUsersVO;
 	}
 	
 	/**

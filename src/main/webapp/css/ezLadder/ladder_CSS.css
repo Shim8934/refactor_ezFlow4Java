@@ -1,0 +1,44 @@
+/* @CHARSET "UTF-8";
+ */
+#ladderLineBox ul li {
+    background: moccasin;
+    display: inline-block;
+    width: 126px;
+    margin-left: 2%;
+}
+table, td, th {    
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 15px;
+}
+
+.Seldiv {
+	width: 50px;
+    float: left;
+    margin: auto 2%;
+    height: 50px;
+    background: darkgray;
+    cursor: pointer;
+}
+
+.active {
+	background: olive;
+}
+
+.remove {
+	float: right;
+    background: chocolate;
+    padding: 0 5px;
+}
+
+#ladderLineBox {
+	overflow: 
+}

@@ -18,11 +18,11 @@ public interface EzLadderService {
 	/** boh */
 	public void insertLadder(LadderVO lad, List<LadderLineVO> ladLineList) throws Exception; // 사다리 게임 만들기
 	
-	public List<LadderBmVO> selectBMGroup(String userId) throws Exception; // 즐겨찾기 그룹 조회
-	public List<LadderBmUserVO> selectBMUser(String userId, int ladderBMId) throws Exception; // 즐겨찾기 그룹 유저 조회
-	public void insertBMGroup(LadderBmVO bmGroup, LadderBmUserVO bmUser) throws Exception; // 즐겨찾기 그룹 추가
-	public void updateBMGroup(LadderBmVO bmGroup, LadderBmUserVO bmUser) throws Exception; // 즐겨찾기 그룹 수정
-	public void deleteBMGroup(String userId, int ladderBMId) throws Exception; // 즐겨찾기 그룹 삭제
+	public List<LadderBmVO> selectBMGroup(String userId, int tenant_id) throws Exception; // 즐겨찾기 그룹 조회
+	public List<LadderBmUserVO> selectBMUser(int tenant_id, int ladderBMId) throws Exception; // 즐겨찾기 그룹 유저 조회
+	public void insertBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUser) throws Exception; // 즐겨찾기 그룹 추가
+	public void updateBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUser) throws Exception; // 즐겨찾기 그룹 수정
+	public void deleteBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUser) throws Exception; // 즐겨찾기 그룹 삭제
 	
 	public List<LadderCommentVO> selectComment(int ladderId) throws Exception; // 댓글 조회
 	public void insertComment(LadderCommentVO ladCmt) throws Exception; // 댓글 추가

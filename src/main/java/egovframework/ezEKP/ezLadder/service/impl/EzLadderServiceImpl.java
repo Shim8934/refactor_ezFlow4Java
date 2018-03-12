@@ -78,48 +78,66 @@ public class EzLadderServiceImpl implements EzLadderService {
 	/** boh */
 	
 	@Override
-	public void insertLadder(LadderVO lad, List<LadderLineVO> ladLineList)
-			throws Exception {
-		// TODO Auto-generated method stub
-		
-		ezLadderDAO.insertLadderSet(lad);
+	public void insertLadder(LadderVO lad, List<LadderLineVO> ladLineList) throws Exception {
+		/*ezLadderDAO.insertLadderSet(lad);
 		
 		for(LadderLineVO ladLine : ladLineList) {
 			ezLadderDAO.insertLadderLine(ladLine);
+		}*/
+	}
+
+	@Override
+	public List<LadderBmVO> selectBMGroup(String userId, int tenant_id) throws Exception {
+		LadderBmVO bmGroup = new LadderBmVO();
+		
+		bmGroup.setUserId(userId);
+		bmGroup.setTenant_id(tenant_id);
+		
+		return ezLadderDAO.selectBMGroup(bmGroup);
+	}
+
+	@Override
+	public List<LadderBmUserVO> selectBMUser(int tenant_id, int ladderBMId) throws Exception {
+		LadderBmVO bmGroup = new LadderBmVO();
+		
+		bmGroup.setLadderBmId(ladderBMId);
+		bmGroup.setTenant_id(tenant_id);
+		
+		return ezLadderDAO.selectBMUser(bmGroup);
+	}
+
+	@Override
+	public void insertBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUsers) throws Exception {
+		
+		ezLadderDAO.insertBMGroup(bmGroup);
+		
+		for(LadderBmUserVO bmuser : bmUsers) {
+			ezLadderDAO.insertBMUser(bmuser);
 		}
 	}
 
 	@Override
-	public List<LadderBmVO> selectBMGroup(String userId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<LadderBmUserVO> selectBMUser(String userId, int ladderBMId)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void insertBMGroup(LadderBmVO bmGroup, LadderBmUserVO bmUser)
-			throws Exception {
-		// TODO Auto-generated method stub
+	public void updateBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUser) throws Exception {
+		ezLadderDAO.updateBMGroup(bmGroup);
 		
+		ezLadderDAO.deleteBMUserAll(bmGroup);
+		
+		int len = bmUser.size();
+		for(int i = 0; i < len; i++) {
+			ezLadderDAO.insertBMUser(bmUser.get(i));
+		}
 	}
 
 	@Override
-	public void updateBMGroup(LadderBmVO bmGroup, LadderBmUserVO bmUser)
-			throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void deleteBMGroup(String userId, int ladderBMId) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void deleteBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUser) throws Exception {
+		int len = bmUser.size();
+		if(len == 0) { // 즐겨찾기 그룹 삭제
+			ezLadderDAO.deleteBMGroup(bmGroup);
+		} else {
+			for(int i = 0; i < len; i++) { // 특정 즐겨찾기의 멤버 삭제
+				ezLadderDAO.deleteBMUser(bmUser.get(i));
+			}
+		}
 	}
 
 	@Override
