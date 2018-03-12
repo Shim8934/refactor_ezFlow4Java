@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezLadder.web;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -327,8 +329,9 @@ public class EzLadderGWController {
 			int tenant_id = Integer.parseInt(request.getParameter("tenant_id"));
 			String bmName = request.getParameter("bmName");
 			String bmUsers = request.getParameter("bmUsers");
+			String dateStr = printDate();
 			
-			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, 0, bmName, userId);
+			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, 0, bmName, userId, dateStr);
 			List<LadderBmUserVO> bmUsersVO = makeBmUsersVO(tenant_id, 0, userId, bmUsers, "");
 			
 			ezLadderService.insertBM(bmGroupVO, bmUsersVO);
@@ -360,8 +363,9 @@ public class EzLadderGWController {
 			int tenant_id = Integer.parseInt(request.getParameter("tenant_id"));
 			String bmName = request.getParameter("bmName");
 			String bmUsers = request.getParameter("bmUsers");
+			String dateStr = printDate();
 			
-			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, ladderBMId, bmName, userId);
+			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, ladderBMId, bmName, userId, dateStr);
 			List<LadderBmUserVO> bmUsersVO = makeBmUsersVO(tenant_id, ladderBMId, userId, bmUsers, "");
 			
 			ezLadderService.updateBM(bmGroupVO, bmUsersVO);
@@ -393,7 +397,7 @@ public class EzLadderGWController {
 			String bmName = request.getParameter("bmName");
 			String bmUsers = request.getParameter("bmUsers");
 			
-			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, ladderBMId, bmName, userId);
+			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, ladderBMId, bmName, userId, "");
 			List<LadderBmUserVO> bmUsersVO = makeBmUsersVO(tenant_id, ladderBMId, userId, bmUsers, "");
 			
 			ezLadderService.deleteBM(bmGroupVO, bmUsersVO);
@@ -412,12 +416,13 @@ public class EzLadderGWController {
 	}
 
 	/** ladderBmVO set */
-	public LadderBmVO makeBmGroupVO(int tenant_id, int ladderBmId, String bmName, String userId) {
+	public LadderBmVO makeBmGroupVO(int tenant_id, int ladderBmId, String bmName, String userId, String dateStr) {
 		LadderBmVO bmGroupVO = new LadderBmVO();
 		bmGroupVO.setTenant_id(tenant_id);
 		bmGroupVO.setLadderBmId(ladderBmId);
 		bmGroupVO.setBmName(bmName);
 		bmGroupVO.setUserId(userId);
+		bmGroupVO.setRegdate(dateStr);
 		
 		return bmGroupVO;
 	}
@@ -449,6 +454,15 @@ public class EzLadderGWController {
 			}
 		}
 		return bmUsersVO;
+	}
+	
+	/** 날짜 출력 */
+	public String printDate() {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date date = new Date();
+		String dateStr = formatter.format(date);
+		
+		return dateStr;
 	}
 	
 	/**

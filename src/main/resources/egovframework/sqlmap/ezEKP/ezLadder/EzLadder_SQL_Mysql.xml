@@ -467,9 +467,9 @@
 	
 	<insert id="EzLadderDAO.insertLadderBMGroup" parameterClass="LadderBmVO">
 		INSERT 
-			TBL_LADDER_BM (TENANT_ID, BMNAME, USERID<!-- , REGDATE -->)
+			TBL_LADDER_BM (TENANT_ID, BMNAME, USERID, REGDATE)
 		VALUES 
-			(#tenant_id#, #bmName#, #userId#<!-- , #regdate# -->)
+			(#tenant_id#, #bmName#, #userId#, #regdate#)
 	</insert>
 	
 	<insert id="EzLadderDAO.insertLadderBMUser" parameterClass="LadderBmUserVO">

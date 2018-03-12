@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezLadder.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,6 +110,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 
 	@Override
 	public void insertBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUsers) throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date date = new Date();
+		String regdate = formatter.format(date);
+		
+		logger.debug("### regdate "+regdate);
 		
 		ezLadderDAO.insertBMGroup(bmGroup);
 		

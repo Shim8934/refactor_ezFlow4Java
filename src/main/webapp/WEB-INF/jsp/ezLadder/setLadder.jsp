@@ -57,9 +57,9 @@
 				});
 				$("#amount").val($("#slider-range-min").slider("value"));
 				$("#bmtest").on("click", function() { /* 즐겨찾기 테스트 버튼 */
-					var flag = "delete";
+					var flag = "add";
 					var ladderbmid = flag === "add" ? "0" : "68";
-					var bmname = "수뎡ㅇㅇㅇㅇㅇㅇㅇㅇ";
+					var bmname = "야뱡뱌얍야뱌얍얍야";
 					var bmuserid = ["id1", "id2", "id3", "id-add"];
 					var bmusername = ["name1", "name2", "name3", "name-add"];
 					var bmusername2 = ["name1", "name2", "name3", "name-add"];
