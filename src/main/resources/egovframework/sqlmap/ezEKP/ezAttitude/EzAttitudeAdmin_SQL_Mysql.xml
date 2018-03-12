@@ -75,7 +75,6 @@
 	</update>
 
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultClass="AttitudeUserConfigVO">
-		<![CDATA[
 			SELECT
 				A.USERID,
 				A.WORKSTARTTIME,
@@ -103,29 +102,8 @@
 				B.DISPLAYNAME = #searchUserName#
 			</isNotEmpty>
 			LIMIT #limit#, #listSize#;
-		]]>
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.getAttitudeTypeList" parameterClass="Map" resultClass="AttitudeTypeVO">
-		<![CDATA[
-			SELECT
-				TYPEID,
-				COMPANYID,
-				TENANT_ID,
-				TYPENAME,
-				TYPENAME2,
-				ISUSE,
-				IMGPATH,
-				PARENTID,
-				FORMID
-			FROM
-				TBL_ATTITUDE_TYPE
-			WHERE
-				COMPANYID = #companyId#
-			AND
-				TENANT_ID = #tenantId#
-		]]>
-	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigCount" parameterClass="Map" resultClass="String">
 		SELECT
@@ -149,5 +127,26 @@
 		<isNotEmpty prepend="AND" property="searchUserName">
 			B.DISPLAYNAME = #searchUserName#
 		</isNotEmpty>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeTypeList" parameterClass="Map" resultClass="AttitudeTypeVO">
+		<![CDATA[
+			SELECT
+				TYPEID,
+				COMPANYID,
+				TENANT_ID AS TENANTID,
+				TYPENAME,
+				TYPENAME2,
+				ISUSE,
+				IFNULL(IMGPATH,'') AS IMGPATH,
+				IFNULL(PARENTID,'') AS PARENTID,
+				FORMID
+			FROM
+				TBL_ATTITUDE_TYPE
+			WHERE
+				COMPANYID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
 	</select>
 </sqlMap>

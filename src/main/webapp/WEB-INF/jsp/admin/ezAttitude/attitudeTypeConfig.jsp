@@ -38,16 +38,24 @@
 	        }
 	        
 	        function listSet(result) {
-                var html;
-                for (var i = 0; i < result.size(); i++) {
+                var html = "";
+                for (var i = 0; i < result.length; i++) {
                     html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick();'>";
-                    html += "<td style='width:38%;color:gray;'>" + result[i].typeName + "</td>";
-                    html += "<td style='width:32%;color:gray;'><select><option>사용</option><option>사용안함</option></select></td>";
-                    html += "<td style='width:30%;color:gray;'>이미지이</td>";
+                    html += "<td style='width:50%;color:gray;'>" + result[i].typeName + "</td>";
+                    html += "<td style='width:30%;color:gray;'><select name='useSelectBox'><option value='1'>사용</option><option value='0'>사용안함</option></select></td>";
+                    html += "<td style='width:20%;color:gray;'>" + result[i].imgPath + "</td>";
                     html += "</tr>";
-//                     html += "</html>";
                 }
                 $("#contentlist table.mainlist").html(html);
+                useSelect(result);
+	        }
+	        
+	        function useSelect(result){
+	        	for (var i = 0; i < result.length; i++) {
+		        	if($('select[name=useSelectBox]').eq(i).val() == result[i].isuse) {
+		        		$(this).prop('selected', true);
+		        	}
+	        	}
 	        }
 		    
 	    </script>
