@@ -75,6 +75,7 @@
 	</update>
 
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultClass="AttitudeUserConfigVO">
+		<![CDATA[
 			SELECT
 				A.USERID,
 				A.WORKSTARTTIME,
@@ -104,6 +105,7 @@
 			</isNotEmpty>
 		<![CDATA[
 			LIMIT #limit#, #listSize#;
+		]]>
 	</select>
 	
 	

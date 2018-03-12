@@ -30,9 +30,10 @@
 	            	data : {companyId : encodeURI($("#ListCompany").val())},
 	            	success : function(result) {
 	            		listSet(result);
+	            		useSelect(result);
 	            	},
 	            	error : function() {
-	            		alert("에러!!");
+	            		
 	            	}
 	            });
 	        }
@@ -47,21 +48,18 @@
                     html += "</tr>";
                 }
                 $("#contentlist table.mainlist").html(html);
-                useSelect(result);
 	        }
 	        
 	        function useSelect(result){
 	        	for (var i = 0; i < result.length; i++) {
-		        	if($('select[name=useSelectBox]').eq(i).val() == result[i].isuse) {
-		        		$(this).prop('selected', true);
-		        	}
+	        		$('table.mainlist select[name=useSelectBox]').eq(i).val(result[i].isuse);
 	        	}
 	        }
 		    
 	    </script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code='ezAttitude.t10' /></h1>
+	    <h1><spring:message code='ezAttitude.t12' /></h1>
 		<div id="mainmenu">
 			<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
 			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
@@ -70,10 +68,10 @@
 				</c:forEach>
 	      	</select>
 	      	<ul>
-	      		<li><span onclick="type_save()">유형추가/수정</span></li>
+	      		<li><span onclick="type_save()"><spring:message code='ezAttitude.t33' /></span></li>
 	      		<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 	      		<li><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></li>
-	      		<li><span onclick="cancle_config()">취소</span></li>
+	      		<li><span onclick="cancle_config()"><spring:message code='ezAttitude.t34' /></span></li>
 	      	</ul>
 	  	</div>
 	  	<table style="width: 950px; height: 385px;" >
@@ -82,9 +80,9 @@
                     <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 396px;">
                         <table class="mainlist" style="width: 100%;">
                             <tr>
-                                <th style="width: 50%;"><span>휴가유형명</span></th>
-                                <th style="width: 30%;"><span>사용여부</span></th>
-                                <th style="width: 20%;"><span>아이콘</span></th>
+                                <th style="width: 50%;"><span><spring:message code='ezAttitude.t35' /></span></th>
+                                <th style="width: 30%;"><span><spring:message code='ezAttitude.t36' /></span></th>
+                                <th style="width: 20%;"><span><spring:message code='ezAttitude.t37' /></span></th>
                             </tr>
                         </table>
                         <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">
