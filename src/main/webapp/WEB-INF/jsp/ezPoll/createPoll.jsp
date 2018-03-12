@@ -95,7 +95,7 @@
         	var sConfigTime = null;
         	var eConfigTime = null;
 			
-			if (mode == "modify") {
+			if (mode == "modify" || mode == "reuse") {
 				//Modify the vote
 				//var questionTitle = "<c:out value='${question.title}'/>";
 				//document.getElementById("qst_title").value = questionTitle;
