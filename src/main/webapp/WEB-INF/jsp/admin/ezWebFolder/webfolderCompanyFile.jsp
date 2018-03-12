@@ -236,7 +236,7 @@
 			
 			function change() {
 				refresh();
-				window.parent.frames["left"].getData(document.getElementById("companyList").value, 1);
+				window.parent.frames["left"].getCompanyData(document.getElementById("companyList").value, 1);
 			}
 			
 			function fileDownload() {

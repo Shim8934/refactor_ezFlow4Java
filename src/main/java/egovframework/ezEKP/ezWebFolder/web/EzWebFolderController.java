@@ -362,8 +362,9 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/getFolderTree.do", method = RequestMethod.POST)
 	public String getFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String rootFolder  = request.getParameter("rootFolder");
-		String fileId      = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
+		String rootFolder  = request.getParameter("rootFolder") != null ? request.getParameter("rootFolder") : "";
+		String fileId      = request.getParameter("fileId")     != null ? request.getParameter("fileId")     : "";
+		String folderId    = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
 		
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/foldersTree";
@@ -377,6 +378,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("lang", user.getLang())
 										.queryParam("rootFolder", rootFolder)
 										.queryParam("fileId", fileId)
+										.queryParam("folderId", folderId)
 										.queryParam("offset", user.getOffset());
 		
 		RestTemplate rest             = new RestTemplate();
@@ -387,13 +389,21 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String status                 = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			JSONObject folderTree = (JSONObject) resultBody.get("data");
-			String     currFolder = (String)resultBody.get("currentFolder");
+			String currFolder = (String)resultBody.get("currentFolder");
+			
+			if (!fileId.equals("") || !rootFolder.equals("")) {
+				JSONObject folderTree = (JSONObject) resultBody.get("data");
+				model.addAttribute("folderTree", folderTree);
+			}
+			else {
+				JSONArray folderTree = (JSONArray) resultBody.get("data");
+				model.addAttribute("folderTree", folderTree);
+			}
 			
 			if (!currFolder.equals("")) {
 				model.addAttribute("currentFolder", currFolder);
 			}
-			model.addAttribute("folderTree", folderTree);
+			
 		}
 		
 		return "json";

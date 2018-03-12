@@ -23,17 +23,19 @@
 		};
 		
 		function getData() {
+			var mode = rootFld ? "1" : "0";
+			
 			$.ajax({
 				type: "POST",
 				url: "/ezWebFolder/getFolderTree.do",
 				data: {
-					"rootFolder" : rootFld
+					"folderId" : folderId
 				},
 				dataType: "JSON",
 				async: true,
 				success : function(data) {
 					var result = data.folderTree;
-					renderData(result);
+					renderData(result, mode);
 				},
  				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -41,21 +43,30 @@
 			});	
 		}
 		
-		function renderData(result) {
+		function renderData(result, mode) {
 			if (!result) {
 				alert("<spring:message code='ezWebFolder.t134'/>");
 				return;
 			} 
 			
 			var divTree   = document.getElementById("folderTree");
-			var divComp   = document.createElement("div");
-			compFolderId  = result["folderId"];
 			
 			while (divTree.hasChildNodes()) {
 				divTree.removeChild(divTree.lastChild);
 			}
 			
-			displaySubFolder(divTree, divComp, result);
+			if (mode == "1") {
+				var divComp   = document.createElement("div");
+				compFolderId  = result["folderId"];
+
+				displaySubFolder(divTree, divComp, result);
+			}
+			else {
+				for (var i = 0; i < result.length; i++) {
+					var divDept  = document.createElement("div");
+					displaySubFolder(divTree, divDept, result[i]);
+				}
+			}
 		}
 		
 		function displaySubFolder(divTree, divElmt, list) {
@@ -282,9 +293,9 @@
 		</ul>
 	</div>
 	
-	<div style="margin: 10px; border: 1px solid #666666; min-height: 380px;" id="folderTree">
+	<div style="margin: 10px; border: 1px solid #666666; min-height: 380px; max-height: 380px; overflow: auto;" id="folderTree">
 	
-	</div>	
+	</div>
 	
 	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
 		<a id="btnSave"  class="webfolderBttn" onClick="folderMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>

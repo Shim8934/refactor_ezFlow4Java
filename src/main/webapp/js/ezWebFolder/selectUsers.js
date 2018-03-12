@@ -80,7 +80,7 @@ function updateTarget(listOfTarget) {
 		return;
 	}
 	
-	newTargetDiv.innerHTML = listOfTarget;
+	newTargetDiv.textContent = listOfTarget;
 	newTargetDiv.setAttribute("title", listOfTarget);
 	newTargetDiv.style.display = "";
 }

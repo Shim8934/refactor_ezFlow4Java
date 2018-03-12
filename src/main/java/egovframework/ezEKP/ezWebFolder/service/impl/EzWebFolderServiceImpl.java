@@ -387,4 +387,14 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		return ezWebFolderDAO.getDeptMemberList(map);
 	}
 
+	@Override
+	public List<FolderSimpleVO> getAllSimpleDeptFolder(String companyId, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId",  companyId);
+		map.put("primary",    primary);
+		map.put("tenantId",   tenantId);
+		
+		return ezWebFolderDAO.getAllSimpleDeptFolder(map);
+	}
+
 }

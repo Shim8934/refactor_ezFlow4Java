@@ -15,7 +15,6 @@
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
 			var primary           = "<c:out value='${primary}'/>";
-			var compFolderId      = null;
 			
 			window.onload = function () {
 				document.onselectstart = function(){
@@ -28,7 +27,7 @@
 			function getData() {
 				 $.ajax({
 					type: "POST",
-					url: "/admin/ezWebFolder/getCompanyFolderTree.do",
+					url: "/admin/ezWebFolder/getDepartFolderTree.do",
 					data: {
 						"companyId" : document.getElementById("companyList").value,
 						"folderId"  : selectedFolder
@@ -36,7 +35,7 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var result = data.companyTree;
+						var result = data.deptTree;
 						renderData(result);
 					},
 					error : function(error) {
@@ -49,17 +48,17 @@
 				if (!result) {
 					alert("<spring:message code='ezWebFolder.t134'/>");
 					return;
-				} 
+				}
 				
 				var divTree  = document.getElementById("folderTree");
-				var divComp  = document.createElement("div");
-				compFolderId = result["folderId"];
-				
 				while (divTree.hasChildNodes()) {
 					divTree.removeChild(divTree.lastChild);
 				}
 				
-				displaySubFolder(divTree, divComp, result);
+				for (var i = 0; i < result.length; i++) {
+					var divDept  = document.createElement("div");
+					displaySubFolder(divTree, divDept, result[i]);
+				}
 				
 				if (selectedFolder) {
 					cancelAdd();
@@ -144,29 +143,20 @@
 				selectedFolder  = obj.getAttribute("name");
 				obj.style.color = "#e04343";
 				
-				if (compFolderId == selectedFolder) {
-					document.getElementById("fldName").value = obj.innerHTML;
-					document.getElementById("rangeStr").value = "";
-					updateTarget("");
-					document.getElementById("usersSelect").style.display  = "none";
-					document.getElementById("displayUsers").style.display = "none";
-					return;
-				}
-				
-				document.getElementById("usersSelect").style.display  = (level != 1) ? "none" : "";
-				document.getElementById("displayUsers").style.display = (level == 0) ? "none" : "";
+				document.getElementById("fldName").readOnly = false;
 				
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/getFolderUsers.do",
 					data: {
-						"folderId" : selectedFolder
+						"folderId" : selectedFolder,
+						"mode"     : "dept"
 					},
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
 						var result = data.folderUsers;
-						processUsersList(result, obj.textContent);
+						processUsersList(result, obj.textContent, level);
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -174,44 +164,25 @@
 				});
 			}
 			
-			function processUsersList(result, folderName) {
+			function processUsersList(result, folderName, level) {
 				document.getElementById("fldName").value = folderName;
 				
+				if (level == 0) {
+					document.getElementById("fldName").readOnly = true;
+				}
+				
 				if(result == null || result.length == 0) {
-					document.getElementById("rangeStr").value = "";
 					updateTarget("");
 				}
 				else {
-					var target    = "";
-					var jsonObj   = {};
-					var deptArray = [];
-					var userArray = [];
+					var target = "";
 					
 					for (var i = 0; i < result.length; i++) {
 						target = primary == "1" ? (target + result[i]["displayName1"] + ",") : (target + result[i]["displayName2"] + ",");
-						
-						if (result[i]["userType"] == "user") {
-							var userJson         = {};
-							userJson["userId"]   = result[i]["userId"];
-							userJson["userName"] = primary == '1' ? result[i]["displayName1"] : result[i]["displayName2"];
-							userArray.push(userJson);
-						}
-						else {
-							var deptJson         = {};
-							deptJson["deptId"]   = result[i]["userId"];
-							deptJson["deptName"] = primary == '1' ? result[i]["displayName1"] : result[i]["displayName2"];
-							deptArray.push(deptJson);
-						}
-						
 					}
 					
-					jsonObj["user"] = userArray;
-					jsonObj["dept"] = deptArray;
-					
 					updateTarget(target.slice(0, -1));
-					document.getElementById("rangeStr").value = JSON.stringify(jsonObj);
 				}
-				
 			}
 			
 			function getDetailTree(obj) {
@@ -272,28 +243,16 @@
 				}
 			}
 			
-			function getUsersPage() {
-				if (!selectedFolder) {
-					alert("<spring:message code='ezWebFolder.t181'/>");
-					return;
-				}
-				
-				menu_SelectRange();
-			}
-			
 			function newFolder() {
 				if (!selectedFolder) {
 					alert("<spring:message code='ezWebFolder.t181'/>");
 					return;
 				}
 				
-				document.getElementById("usersSelect").style.display  = (compFolderId == selectedFolder) ? "" : "none";
-				document.getElementById("displayUsers").style.display = (compFolderId == selectedFolder) ? "" : "none";
+				document.getElementById("fldName").readOnly           = false;
 				document.getElementById("listBttn1").style.display    = "none";
 				document.getElementById("listBttn2").style.display    = "";
 				document.getElementById("fldName").value              = "";
-				document.getElementById("rangeStr").value          = "";
-				updateTarget("");
 			}
 			
 			function cancelAdd() {
@@ -304,8 +263,6 @@
 			
 			function saveNewFolder() {
 				var folderName  = document.getElementById("fldName").value;
-				var folderUsers = getJsonData(document.getElementById("rangeStr").value);
-				var target      = document.getElementById("newTargetDiv").innerHTML;
 				
 				if (!folderName.replace(/\s/g,'')) {
 					alert("<spring:message code='ezWebFolder.t201'/>");
@@ -314,17 +271,11 @@
 					return;
 				}
 				
-				if (compFolderId == selectedFolder && !target.replace(/\s/g,'')) {
-					alert("<spring:message code='ezWebFolder.t202'/>");
-					return;
-				}
-				
 				$.ajax({
 					type: "POST",
-					url: "/admin/ezWebFolder/addCompanyFolder.do",
+					url: "/admin/ezWebFolder/addDeptFolder.do",
 					data: {
 						"folderId"    : selectedFolder,
-						"folderUsers" : JSON.stringify(folderUsers),
 						"folderName"  : folderName
 					},
 					dataType: "JSON",
@@ -356,14 +307,14 @@
 					return;
 				}
 				
-				if (compFolderId == selectedFolder) {
-					alert("<spring:message code='ezWebFolder.t203'/>");
+				var spanName = document.getElementsByName(selectedFolder)[0];
+				var level    = spanName.getAttribute("level");
+				
+				if (level == null || level == '0') {
 					return;
 				}
 				
 				var folderName  = document.getElementById("fldName").value;
-				var folderUsers = getJsonData(document.getElementById("rangeStr").value);
-				var target      = document.getElementById("newTargetDiv").innerHTML;
 				
 				if (!folderName.replace(/\s/g,'')) {
 					alert("<spring:message code='ezWebFolder.t201'/>");
@@ -372,17 +323,11 @@
 					return;
 				}
 				
-				if (!target.replace(/\s/g,'')) {
-					alert("<spring:message code='ezWebFolder.t202'/>");
-					return;
-				}
-				
 				$.ajax({
 					type: "POST",
-					url: "/admin/ezWebFolder/changeCompanyFolder.do",
+					url: "/admin/ezWebFolder/changeDepartFolder.do",
 					data: {
 						"folderId"    : selectedFolder,
-						"folderUsers" : JSON.stringify(folderUsers),
 						"folderName"  : folderName
 					},
 					dataType: "JSON",
@@ -402,12 +347,15 @@
 					return;
 				}
 				
-				if (compFolderId == selectedFolder) {
-					alert("<spring:message code='ezWebFolder.t203'/>");
+				var spanName = document.getElementsByName(selectedFolder)[0];
+				var level    = spanName.getAttribute("level");
+				
+				if (level == null || level == '0') {
+					alert("<spring:message code='ezWebFolder.t223'/>");
 					return;
 				}
 				
-				DivPopUpShow(450, 480, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId);
+				DivPopUpShow(450, 480, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder);
 			}
 			
 			function deleteFolder() {
@@ -416,8 +364,11 @@
 					return;
 				}
 				
-				if (compFolderId == selectedFolder) {
-					alert("<spring:message code='ezWebFolder.t203'/>");
+				var spanName = document.getElementsByName(selectedFolder)[0];
+				var level    = spanName.getAttribute("level");
+				
+				if (level == null || level == '0') {
+					alert("<spring:message code='ezWebFolder.t221'/>");
 					return;
 				}
 				
@@ -445,6 +396,18 @@
 					}
 				});
 			}
+			
+			function updateTarget(value) {
+				var newTargetDiv = document.getElementById("newTargetDiv");
+				
+				if (newTargetDiv == null) {
+					return;
+				}
+				
+				newTargetDiv.textContent = value;
+				newTargetDiv.setAttribute("title", value);
+				newTargetDiv.style.display = "";
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -462,7 +425,7 @@
 			<table style="border-collapse: collapse; width: 100%;">
 				<tr>
 					<td style="width: 350px; min-width: 350px;">
-						<div id="folderTree" style="width: 350px; height: 450px; border: 1px solid #666666;"></div>
+						<div id="folderTree" style="width: 350px; height: 450px; border: 1px solid #666666; overflow: auto;"></div>
 					</td>
 					<td>
 						<div style="width: 500px; height: 450px; border: 1px solid #cccccc; margin-left: 10px;">
@@ -477,16 +440,9 @@
 								</tr>
 								<tr>
 									<td>
-										<div style="margin: 10px 20px; min-height: 36px;">
+										<div style="margin: 10px 20px; min-height: 240px; max-height: 240px;">
 											<span id="displayUsers"><spring:message code='ezWebFolder.t204'/></span>
 											<span id="newTargetDiv"></span>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<div style="margin: 20px 20px 100px 20px; min-height: 80px;" >
-											<a class="webfolderBttn2"><span onclick="getUsersPage();" id="usersSelect"><spring:message code='ezWebFolder.t205'/></span></a>
 										</div>
 									</td>
 								</tr>
@@ -515,8 +471,5 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		
-		<input type="text" name="rangeStr" id="rangeStr" style="display:none">
-		<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
 	</body>
 </html>

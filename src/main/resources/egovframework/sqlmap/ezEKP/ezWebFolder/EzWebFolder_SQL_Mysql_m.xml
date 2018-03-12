@@ -281,9 +281,10 @@
 			TD.DEPT_CD_PATH
 			FROM
 			TBL_DEPTMASTER TD
-			WHERE 1=1
-			AND TD.EXTENSIONATTRIBUTE9 = #userId#
-			AND TD.TENANT_ID = #tenantId#
+			WHERE
+				TD.EXTENSIONATTRIBUTE9 = #userId#
+			AND 
+				TD.TENANT_ID = #tenantId#
 	</select>
 	
 	<select id="EzWebFolderDAO_m.chiefDeptList" parameterClass="Map" resultClass="String">

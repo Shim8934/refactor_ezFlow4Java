@@ -838,4 +838,28 @@
 			DISPLAYNAME ASC
 	</select>
 	
+	<select id="EzWebFolderDAO.getAllSimpleDeptFolder" resultMap="folderSimpleVO">
+		<![CDATA[
+			SELECT
+				a.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				CASE WHEN #primary# = '1' THEN a.FOLDER_NAME1 ELSE a.FOLDER_NAME2 END                                                                                                 AS FOLDER_NAME,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = a.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+			FROM
+				TBL_WEBFOLDER_FOLDER a
+			WHERE
+				a.FOLDER_TYPE  = 'D'
+			AND
+				a.FOLDER_UPPER = 'root'
+			AND
+				a.USE_STATUS   = 'Y'
+			AND
+				a.COMPANY_ID   = #companyId#
+			AND
+				a.TENANT_ID    = #tenantId#
+			ORDER BY
+				a.FOLDER_LEVEL ASC,
+				a.FOLDER_STEP  ASC
+		]]>
+	</select>
 </sqlMap>
