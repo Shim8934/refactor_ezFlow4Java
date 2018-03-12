@@ -54,9 +54,9 @@ public interface EzEmailAdminLetterService {
 	
 	/**
 	 * 편지지 추가 (수아)
-	 * @param displayname, displayname2, letterBoxNo (편지지 이름, 편지지 이름 영문, 편지지함 번호)
+	 * @param displayname, displayname2, letterBoxNo (편지지 이름, 편지지 이름 영문, 편지지함 번호, 편지지아이디)
 	 * */
-	public void addLetter(String displayname, String displayname2, String letterBoxNo) throws Exception;
+	public void addLetter(String displayname, String displayname2, String letterBoxNo, String letterId) throws Exception;
 	
 	/**
 	 * 편지지 수정 - 편지지 이름 (수아)

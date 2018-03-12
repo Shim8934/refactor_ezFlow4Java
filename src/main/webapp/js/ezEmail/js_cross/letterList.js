@@ -32,8 +32,8 @@ function letterSearch() {
 			
 
 //검색어 초기화
-function inputReset() {
-	$("#lmSearchInput").val("");
+function inputReset(){
+	$(".searchInput").val("");
 }
 
 //편지지 삭제
@@ -60,9 +60,13 @@ $(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
 
 // 편지지 선택
 $(document).on("click", ".lmLetterListUl li span", function(){
+	var letterNo = $(this).parent("li").attr("data-letterno");
+	
 	$(this).parent("li").css("background","#e9f1ff");
 	$(this).parents("ul").find(".lmLetterSelect").css("background","none").removeClass("lmLetterSelect");
 	$(this).parent("li").addClass("lmLetterSelect");
+	
+	letterPreView(letterNo); // 편지지 미리보기
 });
 
 // 편지지 마우스 올릴때 
@@ -74,6 +78,21 @@ $(document).on("mouseover", ".lmLetterListUl li:not('.lmLetterSelect') span", fu
 $(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect') span",function(){
 	$(this).parent("li").not(".lmLetterSelect").css("background","none");
 });
+
+// 편지지 미리보기
+function letterPreView(letterNo) {
+	$.ajax({
+		type:"POST",
+		data:{letterNo:letterNo},
+		url:"/admin/ezEmail/readLetter",
+		dataType:"json",
+		success:function(data){
+			$(".lmPreViewTxt").css("display","none");
+			$(".lmPreViewIframe").attr("src",data.filePath);
+			$(".lmPreViewIframe").css("display","block");
+		}
+	});
+}
 
 // 편지지 리스트
 function getLetterList(letterBoxNo) {

@@ -54,11 +54,29 @@
 		        	return;
 		        }		        
 		        
+		        // 편지지 추가, 수정 기능에서 넘길 데이터가 달라서 비교 (수아)
+		        if (typeof parent.letterPopUp != 'undefined' && parent.letterPopUp == true) { // letterPopUp -> letterEditPopUp에서 선언
+		        	var letterInfo = parent.document.getElementById("leSave"); // letterPopUp.jsp
+		        	var letterId = letterInfo.getAttribute("data-letterid"); // letterId(UUID)
+		        	var letterBoxNo = letterInfo.getAttribute("data-boxno"); // letterBoxNo
+		        	
+		        	// class='letterPopUpData'
+		        	$("#form").append("<input type='hidden' value='letterPopUp' class='letterPopUpData' name='letterPopUp'>");
+		        	$("#form").append("<input type='hidden' value='" + letterId + "' class='letterPopUpData' name='letterId'>");
+		        	$("#form").append("<input type='hidden' value='" + letterBoxNo + "' class='letterPopUpData' name='letterBoxNo'>");
+		        }
+		        
 		        var frm = document.getElementById('form');
 		        frm.action = "/ezEditor/ckUpload.do";
 		        frm.submit();
 		        isuload = true;
 		        document.form.file1.value = "";
+		        
+		        // 편지지 추가, 수정할 때 추가된 input들 삭제
+		        if ($("#form").find(".letterPopUpData")){
+		        	$(".letterPopUpData").remove();
+		        }
+		        
 		    }
 		
 		    var fileinfo = "";
