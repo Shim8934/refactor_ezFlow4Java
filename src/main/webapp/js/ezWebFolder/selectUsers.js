@@ -93,7 +93,12 @@ function closeWindow() {
 }
 
 function getJsonData(initData) {
-	var jsonData = JSON.parse(initData);
+	var jsonData = null;
+	try {
+		jsonData = JSON.parse(initData);
+	}
+	catch (e) { return {};}
+	
 	var jsonObj  = {};
 	var deptData = jsonData["dept"];
 	var userData = jsonData["user"];

@@ -29,7 +29,8 @@
 				type: "POST",
 				url: "/ezWebFolder/getFolderTree.do",
 				data: {
-					"folderId" : folderId
+					"folderId"   : folderId,
+					"rootFolder" : rootFld
 				},
 				dataType: "JSON",
 				async: true,
