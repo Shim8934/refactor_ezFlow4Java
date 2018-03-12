@@ -79,7 +79,7 @@
 		  </tr>
 		</table>
 		
-		<div style="width:100%;height:200px;overflow-y:scroll;margin:0;padding:0;border-left:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6;">
+		<div style="width:100%;height:200px;overflow-y:scroll;margin:0;padding:0;border-left:1px solid #ddd;border-bottom:1px solid #ddd;">
 			<table style="width:100%;text-align:center">
 				<c:forEach var="vo" items="${secureReaderList}">
 					<tr>

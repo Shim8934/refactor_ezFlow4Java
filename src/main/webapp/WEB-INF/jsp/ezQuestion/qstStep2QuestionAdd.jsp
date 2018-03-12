@@ -826,7 +826,7 @@
                     		radioBtn.setAttribute("type", "radio");
                     		radioBtn.setAttribute("name", "radio" + j);
                     		radioBtn.setAttribute("disabled", "true")
-                    		oTd.setAttribute("style", "border: 1px solid #b6b6b6;text-align:center;");
+                    		oTd.setAttribute("style", "border: 1px solid #ddd;text-align:center;");
                     		oTd.appendChild(radioBtn);
                     		oTr.appendChild(oTd);
                     		oTd = null;
@@ -893,7 +893,7 @@
             		oRadioBtn.setAttribute("type", "radio")
             		oRadioBtn.setAttribute("disabled", "true")
             		oTd.appendChild(oRadioBtn);
-            		oTd.setAttribute("style", "border: 1px solid #b6b6b6;text-align:center;");
+            		oTd.setAttribute("style", "border: 1px solid #ddd;text-align:center;");
             		oTr.appendChild(oTd);
         		}
         		table.appendChild(oTr);
@@ -919,7 +919,7 @@
                 		oRadioBtn.setAttribute("type", "radio");
                 		oRadioBtn.setAttribute("disabled", "true");
                 		oTd.appendChild(oRadioBtn);
-                		oTd.setAttribute("style", "border: 1px solid #b6b6b6;text-align:center;");
+                		oTd.setAttribute("style", "border: 1px solid #ddd;text-align:center;");
                 		oTr.appendChild(oTd);
             		}
         		}

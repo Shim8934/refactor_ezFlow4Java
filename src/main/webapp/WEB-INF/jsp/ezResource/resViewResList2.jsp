@@ -30,7 +30,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<style type="text/css">
-			.warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
+			.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
 			.warnintxt01 { position:relative ;padding-bottom:10px;margin-top:15px}
 			.warningimg { position:absolute; top:0px; left:0px;}
@@ -50,8 +50,6 @@
 			.calendar_layer .btn ul{list-style:none; margin:0 25px; padding:0px 3px; overflow:hidden; text-align:center;clear:both;list-style-type:none}
 			.calendar_layer .btn ul li{float:left; height:27px; line-height:27px; background:url(images/calendar/btn_calendar_l.gif) no-repeat left top; padding:0px 3px 0px 8px;}
 			.calendar_layer .btn ul li span{display:inline-block; background:url(images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
-			
-			.calResTitleSpan {font-size:14px;color:#2f2f2f;text-align:center;font-family: Malgun Gothic;}
 		</style>
 		<script type="text/javascript">
 			var pBrdid = "${brdID}";
@@ -277,11 +275,11 @@
 						if (result.primary == "1") {						
 							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
 							$("#ownerDept").html(result.resBrd.ownDeptNm);
-							$("#brdNm").html(result.resBrd.brdNm);
+							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm);
 						} else {
 							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
 							$("#ownerDept").html(result.resBrd.ownDeptNm2);
-							$("#brdNm").html(result.resBrd.brdNm2);
+							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm2);
 						}
 						
 						$("#ownerCall").html(result.resBrd.ownerCall);
@@ -383,7 +381,7 @@
         	<div class="warningbox01" style="margin-top:100px;">
           		<div class="warningbox02">
   	        		<div class="warnintxt01" >
-	        			<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style='margin:18px'></span>
+	        			<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style="margin: 18px 18px 18px 58px;"></span>
 	        			<dl class="warningdl">
 	        				<dt><img src="/images/notify/warning01.gif" width="183" height="27"></dt>
 	        				<dd>
@@ -398,7 +396,7 @@
         <div id="ResourceInfo" style="display: none">
         	<table id="resourceDataTable" style="width:440px; border-collapse:collapse; border-spacing:0px; margin-top:10px; border-color:#ccc; margin-bottom:10px">
 				<tr>
-					<th colspan="2" style="background-color: rgb(0, 72, 149);border-color:rgb(0, 72, 149);color:white;font-weight: bold;height:30px" id="brdNm"></th>
+					<th colspan="2" class="layerHeader" id="brdNm"></th>
 				</tr>
 				<tr>
 					<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>

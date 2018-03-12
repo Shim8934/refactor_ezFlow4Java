@@ -196,7 +196,7 @@
 	                    resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
 	                                     "<td style='width:25px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
 	                                     "<td style='width:113px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #b6b6b6; margin:0; padding:0;' maxlength='50' name='imgContent'>" + fileContent + "</textarea></td>" +
+	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'>" + fileContent + "</textarea></td>" +
 	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'>";
 	
 	                    if (flag == "Y")
@@ -208,7 +208,7 @@
 	                    resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
 	                                     "<td style='width:20px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
 	                                     "<td style='width:100px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #b6b6b6; margin:0; padding:0;' maxlength='50' name='imgContent'>" + fileContent + "</textarea></td>" +
+	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'>" + fileContent + "</textarea></td>" +
 	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'>";
 	
 	                    if (flag == "Y")
@@ -241,7 +241,7 @@
 	                resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
 	                                     "<td style='width:20px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
 	                                     "<td style='width:100px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #b6b6b6; margin:0; padding:0;' maxlength='50' name='imgContent'>" + fileContent + "</textarea></td>" +
+	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'>" + fileContent + "</textarea></td>" +
 	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'>";
 	                if (flag == "Y")
 	                    resultHTML += "<input type='radio' name='mainFG' checked='checked'/></td></tr></table>";
@@ -284,14 +284,14 @@
 	                    resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
 	                                     "<td style='width:25px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
 	                                     "<td style='width:113px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #b6b6b6; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
+	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
 	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><input type='radio' name=mainFG /></td></tr></table>";
 	                }
 	                else {
 	                    resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
 	                                     "<td style='width:20px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
 	                                     "<td style='width:100px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #b6b6b6; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
+	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
 	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><input type='radio' name=mainFG /></td></tr></table>";
 	                }
 	                var imagecontent = document.getElementById("addimagecontent");
@@ -319,7 +319,7 @@
 	                var resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
 	                                 "<td style='width:20px; background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
 	                                 "<td style='width:100px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                                 "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #b6b6b6; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
+	                                 "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
 	                                 "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><input type='radio' name=mainFG /></td></tr></table>";
 	
 	                var imagecontent = document.getElementById("addimagecontent");
@@ -965,7 +965,7 @@
 	        </tr>
 	        <tr>
 	          <th style="text-align:center"><spring:message code='ezBoard.t208'/></th>
-	          <td colspan="3" style="width:100%; vertical-align:middle; padding:0px 5px 0px 3px; margin:0;"><INPUT type="text" id="txtTitle" style="WIDTH:100%;word-wrap:break-word;word-break:break-all; border:1px solid #b6b6b6; margin:0px; padding:2px 0px 2px 0px;" value="<c:out value='${boardListVO.title}'/>" maxlength="100" /></td>
+	          <td colspan="3" style="width:100%; vertical-align:middle; padding:0px 5px 0px 3px; margin:0;"><INPUT type="text" id="txtTitle" style="WIDTH:100%;word-wrap:break-word;word-break:break-all; border:1px solid #ddd; margin:0px; padding:2px 0px 2px 0px;" value="<c:out value='${boardListVO.title}'/>" maxlength="100" /></td>
 	        </tr>
 	        <tr style="display:none;">
 	          <th><spring:message code='ezBoard.t1001'/></th>
@@ -977,14 +977,14 @@
 	        </tr>
 	        <tr>
 	            <th><spring:message code='ezBoard.t1008'/></th>
-	            <td colspan="3" style="height:100px; margin:0; padding:3px 5px 3px 3px;"><textarea style="width:100%; height:100px; margin:0; padding:0; border:1px solid #b6b6b6;" id="photocontent" wrap="hard">${boardListVO.mainContent}</textarea></td>
+	            <td colspan="3" style="height:100px; margin:0; padding:3px 5px 3px 3px;"><textarea style="width:100%; height:100px; margin:0; padding:0; border:1px solid #ddd;" id="photocontent" wrap="hard">${boardListVO.mainContent}</textarea></td>
 	        </tr>
 	      </table>
 	      </td>
 	  </tr>
 	  <tr>
 	    <td>
-	        <table style="width:100%; border:1px solid #b6b6b6; border-top:0 none; table-layout:fixed;" border="0" cellspacing="0" cellpadding="0">
+	        <table style="width:100%; border:1px solid #ddd; border-top:0 none; table-layout:fixed;" border="0" cellspacing="0" cellpadding="0">
 	        <tr>
 	            <th width="60" style="text-align:left;padding-left:3px;border:0;"><input id="checkmenu" type="checkbox" onclick="imagecheckAll(this)" name="checkmenu"/></th>
 	            <th style="text-align:center ;padding-left:2px;border:0;"><spring:message code='ezBoard.t1012'/></th>

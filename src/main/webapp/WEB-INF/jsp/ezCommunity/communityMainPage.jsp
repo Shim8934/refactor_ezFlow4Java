@@ -338,7 +338,7 @@
 
                     var tr = document.createElement("TR");
                     if (j % 2 == 0) {
-                    	tr.style.backgroundColor = "#f8f8f8"; 
+                    	tr.style.backgroundColor = "rgb(250, 250, 250)"; 
                     }
                     var td = document.createElement("TD");
                     var td2 = document.createElement("TD");
@@ -881,20 +881,18 @@
 			                div.className = "todayCommunity";			                
 
 			                var div2 = document.createElement("DIV");
-			                div2.className = "todayCommunityLayout";			                
-			                div2.innerHTML = "<div><img style='margin-top:20px;' src='/images/kr/main/nodata_plan.png' />&nbsp;<div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div>";
-			                div2.style.backgroundColor = "#fafafa";
-			                div2.style.borderColor = "#ccc";
-			                div2.style.borderRadius = "5px";
-			                div2.style.textAlign = "center";
-			                div2.style.height = "142px";
+			                div2.className = "todayCommunityLayout";
 			                
+			                var strHtml = "<p class='btn_CommunityMore' type='2' code='C_48'><img src='/images/kr/community/btn_todayCommunity.png' /></p>";
+			                strHtml += "<p class='todayCommunity_img'><img src='/images/ezCommunity/logo/default_logo_empty.png' /></p>";
+			                strHtml += "<dl class='todayCommunity_list'><div style='text-align:center'><img style='margin-top:13px;' src='/images/kr/main/nodata_plan.png' />&nbsp;<div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></dl>";
+			                
+			                div2.innerHTML = strHtml;
 			                div.appendChild(div2);
-
-			                /* document.getElementById("todaycop").appendChild(h1); */
+			                
 			                document.getElementById("todaycop").appendChild(div);
 							
-							conts = "<div style='height:172px; text-align:center;'><div><img style='margin-top:35px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
+							conts = "<div style='height:170px; text-align:center;margin-top:5px;'><div><img style='margin-top:28px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
 							$(".newCommunity_listLayout").html(conts);
 						}
 					}
@@ -1330,7 +1328,7 @@
 				   		<script type="text/javascript">
 				   			Tab1_NewTabIni("tab1");
 						</script>
-			            <div id ="mycommunity" style="height:497px"></div>
+			            <div id ="mycommunity" style="height:477px"></div>
 			            <div id ="categorycommunity" style="display:none;">
 			                <div class="tabpartMycommunity02" style="margin-top:18px">
 			                    <div class="left_tabpart">

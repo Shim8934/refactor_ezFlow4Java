@@ -479,10 +479,10 @@
 		        </div>
 		    </div>
 		
-		    <div class="listview" style="Width:100%; border-top:0px">
-		        <div id="AdminListView" style="border: 0px solid #B6B6B6; Width: 100%; Height:445PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		    <div class="listview" style="Width:100%; border-top:0px; margin-top:7px">
+		        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:445PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		    </div>
-		    <div id="tblPageRayer" style="text-align:center"></div>
+		    <div id="tblPageRayer" style="text-align:center;margin-top:10px"></div>
 		</form>         
 	</body>
 	<script type="text/javascript">
