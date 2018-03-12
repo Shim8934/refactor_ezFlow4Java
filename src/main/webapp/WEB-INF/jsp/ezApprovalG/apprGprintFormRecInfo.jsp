@@ -11,7 +11,7 @@
 		<STYLE>P { MARGIN-BOTTOM: 2px; MARGIN-TOP: 2px }</STYLE>
 	</HEAD>
 	<BODY topMargin="10" free kaoni bgcolor="#ffffff">
-		<TABLE border="0" borderColorDark="white" borderColorLight="#b6b6b6" cellPadding="0" cellSpacing="0"
+		<TABLE border="0" borderColorDark="white" borderColorLight="#ddd" cellPadding="0" cellSpacing="0"
 			width="635" class="FIELD" id="table1" style="MARGIN:10px">
 			<TR>
 				<TD align="center">
@@ -23,7 +23,7 @@
 				<td><b><spring:message code='ezApprovalG.t825'/></b></td>
 			</tr>
 		</table>
-		<TABLE border="1" borderColorDark="#ffffff" borderColorLight="#b6b6b6" cellPadding="0"
+		<TABLE border="1" borderColorDark="#ffffff" borderColorLight="#ddd" cellPadding="0"
 			cellSpacing="0" width="640" style=" PADDING-LEFT:5px; FONT-SIZE:9pt; PADDING-TOP:4px">
 			<tr>
 				<td height="23" width="85" bgcolor="#f7f7f7"><spring:message code='ezApprovalG.t106'/></td>
@@ -56,7 +56,7 @@
 		</TABLE>
 		<BR>
 		<p><FONT SIZE="3"><b><spring:message code='ezApprovalG.t832'/></b></FONT></p>
-		<TABLE border="1" borderColorDark="#ffffff" borderColorLight="#b6b6b6" cellPadding="0"
+		<TABLE border="1" borderColorDark="#ffffff" borderColorLight="#ddd" cellPadding="0"
 			cellSpacing="0" width="640" style=" PADDING-LEFT:5px; FONT-SIZE:9pt; PADDING-TOP:4px">
 			<tr>
 				<td height="23" bgcolor="#f7f7f7" width="110">
@@ -138,7 +138,7 @@
 		</TABLE>
 		<BR>
 		<p><FONT SIZE="3"><b><spring:message code='ezApprovalG.t840'/></b></FONT></p>
-		<TABLE border="1" borderColorDark="#ffffff" borderColorLight="#b6b6b6" cellPadding="0"
+		<TABLE border="1" borderColorDark="#ffffff" borderColorLight="#ddd" cellPadding="0"
 			cellSpacing="0" width="640" style=" PADDING-LEFT:5px; FONT-SIZE:9pt; PADDING-TOP:4px">
 			<tr bgcolor="#ffffff">
 				<td bgcolor="#f7f7f7" height="23" width="110">

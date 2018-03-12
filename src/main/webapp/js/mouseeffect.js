@@ -130,6 +130,8 @@ function initToggleList(ulEl, level1, level2, level3)
 		elementItem.addEventListener("click", toggleList_Sub);
 		// 2018.01.16 jwseo99	span 태그가 아닌 영역을 클릭하면 li에 on 클래스만 박히는 문제 (span 태그의 글자는 굵어지지만 right 프레임이 갱신 안 됨)
 		
+		// IE에서 왼쪽 메뉴 중 팝업 메뉴를 오픈하는 메뉴를 클릭할 때 두 번 오픈되는 문제 수정
+		/*
 		var firstChild = elementItem.firstChild;
 		// 만약 li의 첫 번재 자식이 span 태그라면 
 		if(firstChild != undefined && firstChild.tagName === "SPAN") {
@@ -141,6 +143,8 @@ function initToggleList(ulEl, level1, level2, level3)
 				firstChild.removeAttribute("onclick");
 			}
 		}
+		*/
+		
 		//
 		elementItem.onmouseover = mouseOver_Sub;
 		elementItem.onmouseout = mouseOut_Sub;

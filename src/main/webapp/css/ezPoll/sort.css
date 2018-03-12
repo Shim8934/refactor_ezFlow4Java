@@ -124,7 +124,7 @@
 
 .mainlist1{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist1 tr{height:31px}
-.mainlist1 tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(/images/sub/th_bg1.gif) #fff repeat-x bottom;}
+.mainlist1 tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background:url(/images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist1 tr th.title{width:100%; text-align:left;}
 
 .mainlist1 tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; border-bottom:1px solid #ebebed; border-spacing:0;}
@@ -135,7 +135,7 @@
 
 .mainlist1_free{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 /* fomace */
-.mainlist1_free tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(/images/sub/th_bg1.gif) #fff repeat-x bottom;}
+.mainlist1_free tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background:url(/images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist1_free tr th.title{width:100%; text-align:left;}
 
 .mainlist1_free tr td{ border:0px; font-weight:normal; font-size:12px;padding:4px 4px; line-height:150%; border-bottom:1px solid #ebebed; border-spacing:0;}
@@ -143,17 +143,17 @@
 .mainlist1_free tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
 .mainlist1_depth{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px;}
-.mainlist1_depth tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg2.gif) #eee repeat-x bottom;}
+.mainlist1_depth tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background:url(../images/sub/th_bg2.gif) #eee repeat-x bottom;}
 .mainlist1_depth tr th.title{width:100%; text-align:left;}
-.mainlist1_depth tr th.left {border-left:1px solid #b6b6b6;}
-.mainlist1_depth tr th.right {border-right:1px solid #b6b6b6;}
+.mainlist1_depth tr th.left {border-left:1px solid #ddd;}
+.mainlist1_depth tr th.right {border-right:1px solid #ddd;}
 
 .mainlist1_depth tr td{  font-weight:normal; font-size:12px; padding:4px 4px; line-height:150%; border-bottom:1px solid #ebebed; background:transparent;}
 .mainlist1_depth tr td.title{width:100%; text-align:left;}
 .mainlist1_depth tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
 #mainmenu11 ul, #mainmenu11 ul.on{ list-style-type: none; padding-bottom: 5px;}
-.myBorder{ border-bottom: 1px solid #b6b6b6;}
+.myBorder{ border-bottom: 1px solid #ddd;}
 .floatedTable{ float:left;}
 
 #mainmenu1{	clear: both; margin:0; padding:0;}

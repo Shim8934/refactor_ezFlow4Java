@@ -401,7 +401,7 @@
 
 		<table class="content" style="margin-bottom:15px;">
 			<tr>
-	  			<td style="background-color: #f8f8f8;border:1px solid #ddd">
+	  			<td style="background-color: #f8f8fa;border:1px solid #ddd">
 					<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 20px;margin-left:2px;margin-top:1px">
 						<option selected value="titleContent" ><spring:message code='ezCommunity.t585' /></option>
 						<option value="writer"><spring:message code='ezCommunity.t445' /></option>
