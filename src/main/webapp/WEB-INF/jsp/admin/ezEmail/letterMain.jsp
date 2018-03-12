@@ -28,7 +28,12 @@
 	        	if (companyID != document.getElementById("ListCompany").value ) {
 	        		companyID = document.getElementById("ListCompany").value;
 	        		
-	        		document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterBoxManager.do?companyId=" + companyID;
+	        		if (Tab1_SelectID == 'tagsub1') {
+	        			document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterBoxManager.do?companyId=" + companyID;
+	        		} else {
+	        			document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterAdminPage.do?companyId=" + companyID;
+	        		}
+	        		
 	        	}
 	        }
 	        

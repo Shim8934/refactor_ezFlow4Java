@@ -184,13 +184,10 @@ function addLetterBox() {
 
 	var node = { id: 'temp', text:"편지지함"};
 	$('#divTree').jstree('create_node', parent, node, 'last');
-	
 	$("#divTree").jstree("open_node", $('#'+parentId));
 	$("#divTree").jstree("select_node", $('#temp'));
-	
-	document.getElementById("parent_letterbox_no").value = putParent;
-	
 	$("#letterbox_no").attr("disabled","disabled");
+	document.getElementById("parent_letterbox_no").value = putParent;
 	
 	addCheck = -1;
 	

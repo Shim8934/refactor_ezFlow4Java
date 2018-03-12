@@ -18,6 +18,12 @@ public interface EzEmailAdminLetterService {
 	public JSONObject selectOneLetterBox(String letterbox_no) throws Exception;
 	
 	/**
+	 * 편지지함명 조회
+	 * @param letterbox_no
+	 */
+	public JSONObject selectLetterBoxName(String letterbox_no) throws Exception;
+	
+	/**
 	 * 편지지함 추가
 	 * @param parent_letterbox_no, displayname, displayname2, company_id, tenant_id
 	 */
@@ -42,9 +48,9 @@ public interface EzEmailAdminLetterService {
 	
 	/**
 	 * 편지지 검색 (재은)
-	 * @param searchStr
+	 * @param searchStr, company_id, tenant_id
 	 */
-	public JSONArray searchLetter(String search) throws Exception;
+	public JSONArray searchLetter(String search, String company_id, String tenant_id) throws Exception;
 	
 	/**
 	 * 편지지 추가 (수아)

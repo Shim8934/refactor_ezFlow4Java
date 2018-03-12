@@ -1,9 +1,33 @@
+var searchMode = false; //검색중이면 오른쪽에 편지지함명
+
 //편지지 검색
 function letterSearch() {
-	if($("#lmSearchInput").val().trim() == "") {
+	
+	// 편지지(사용자) 중에서도 검색일때만 
+	if (pageType == 'letter_user') {
+		searchMode = true;
+	}
+	
+	var search = $("#lmSearchInput").val();
+	if(search.trim() == "") {
 		alert("검색어를 입력해주세요.");
 		return;
 	}
+	
+	$.ajax({
+		type : "POST",
+		url : "/ezEmail/searchLetter.do?search=" + search,
+		datatype : 'json',
+		error : function(data) {
+			alert("error");
+			console.log(data);
+		},
+		complete : function(data) {
+			addLetterList(data.responseJSON);
+			
+	    }
+	});
+	
 }
 			
 
@@ -51,7 +75,6 @@ $(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect') span",fu
 	$(this).parent("li").not(".lmLetterSelect").css("background","none");
 });
 
-
 // 편지지 리스트
 function getLetterList(letterBoxNo) {
 	$.ajax({
@@ -72,14 +95,34 @@ function getLetterList(letterBoxNo) {
 			    
 // 편지지 목록 추가 
 function addLetterList(jsonArr) {
+	
 	var letterListHtml = "";
 	var listCount = jsonArr.length;
 
 	if (listCount != 0) {
 		for (i = 0; i < listCount; i++) {
-			letterListHtml += "<li data-letterNo='" + jsonArr[i].letterNo + "'>";
-			letterListHtml += "<span>" + jsonArr[i].displayname + "</span>";
-			// 여기서 오른쪽에 '편지지함/편지지' 보여주기
+			letterListHtml += "<li data-letterNo='" + jsonArr[i].letter_no + "'>"; //수아 부분에서는 letterNo으로 해야됨
+			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname + "</span>";
+			
+			if (searchMode) {
+				var boxName;
+				
+				$.ajax({
+					type:"POST",
+					url:"/ezEmail/selectLetterBoxName.do?letterbox_no=" + jsonArr[i].letterbox_no,
+					dataType:"json",
+					async: false,
+					success:function(data) {
+						boxName = data.displayname;
+					},
+					error:function(data){
+						alert("error");
+						console.log(data);
+					}
+				});
+				
+				letterListHtml += "<span style='float:right'>" + boxName + "</span>";
+			}
 			/*letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp()'>수정</button>";
 			letterListHtml += "<button class='lmLetterDeleteBtn'>삭제</button>";*/
 			letterListHtml += "</li>";
@@ -88,6 +131,7 @@ function addLetterList(jsonArr) {
     	letterListHtml = "<li class='lmNoData'>데이터가 없습니다.</li>";
 	}
 	
+	searchMode = false;
 	$(".lmLetterListUl").html(letterListHtml);
 }
 

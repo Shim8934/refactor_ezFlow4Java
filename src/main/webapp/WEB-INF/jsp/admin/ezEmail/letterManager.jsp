@@ -23,8 +23,8 @@
 					<div class="lmtitle lmLetterBoxTitle">
 						<div>편지지 검색</div>
 						<input type="text" name="" id="lmSearchInput">
-						<button id="lmSearch">검색</button>
-						<button id="lmSearchReset">초기화</button>
+						<button id="lmSearch" onclick="letterSearch()">검색</button>
+						<button id="lmSearchReset" onclick="inputReset()">초기화</button>
 					</div>	
 					<div id="divTree" class="lmLetterBoxList"></div>
 				</div>

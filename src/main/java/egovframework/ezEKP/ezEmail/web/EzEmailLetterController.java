@@ -1,8 +1,7 @@
 package egovframework.ezEKP.ezEmail.web;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -58,7 +57,7 @@ public class EzEmailLetterController {
 		String companyId = userInfo.getCompanyID();
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("pageType", "letter");
+		model.addAttribute("pageType", "letter_user");
 		model.addAttribute("companyId", companyId);
 		
 		logger.debug("mailLetterView ended.");
@@ -67,5 +66,68 @@ public class EzEmailLetterController {
 		
 	}
 	
+	/**
+	 * 편지지 검색
+	 * @param String loginCookie, Model model
+	 * @return String
+	 */
+	@RequestMapping(value="/ezEmail/searchLetter.do")
+	@ResponseBody
+	public JSONArray searchLetter(@CookieValue("loginCookie") String loginCookie, String search) throws Exception {
+		logger.debug("searchLetter started.");
+		logger.debug("search=" + search);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String company_id = userInfo.getCompanyID();
+		String tenant_id = Integer.toString(userInfo.getTenantId());
+		
+		if (search == null || search.equals("")) {
+			search = "";
+		}
+		
+		JSONArray returnJsonArr = new JSONArray();
+		
+		
+		try {
+			returnJsonArr = EzEmailAdminLetterService.searchLetter(search, company_id, tenant_id);
+		} catch (Exception e) {
+			//e.printStackTrace();
+			logger.debug("no data");
+		}
+		
+		logger.debug("searchLetter ended.");
+		
+		return returnJsonArr;
+		
+	}
+	
+	/**
+	 * 편지지함명 검색
+	 * @param String loginCookie, Model model
+	 * @return String
+	 */
+	@RequestMapping(value="/ezEmail/selectLetterBoxName.do")
+	@ResponseBody
+	public JSONObject selectLetterBoxName(@CookieValue("loginCookie") String loginCookie, String letterbox_no) throws Exception {
+		
+		logger.debug("selectLetterBoxName started.");
+		logger.debug("letterbox_no=" + letterbox_no);
+		
+		JSONObject json = null;
+		
+		try {
+			json = EzEmailAdminLetterService.selectLetterBoxName(letterbox_no);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("readLetterBox ended.");
+		if (json != null) {
+			return json;
+		}
+		
+		return null;
+		
+	}
 
 }

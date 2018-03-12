@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 
 
+
+
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 
@@ -88,6 +90,38 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		}
 		
         logger.debug("selectOneLetterBox ended.");
+        
+		return json;
+	}
+	
+	/**
+	 * 편지지함명 조회
+	 * @param letterbox_no
+	 */
+	@Override
+	public JSONObject selectLetterBoxName(String letterbox_no) throws Exception {
+		logger.debug("selectLetterBoxName started. letterbox_no=" + letterbox_no);
+		
+		String letterBoxNoStr = "letterbox_no=" + URLEncoder.encode(letterbox_no, "UTF-8");
+		String inputParams = letterBoxNoStr;
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/getLetterBoxName", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONObject json = new JSONObject();
+		
+		if (!strJson.equals("")){
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+			
+			json = (JSONObject) object.get("result");
+			
+			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1 || json.size() <= 0) {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+        logger.debug("selectLetterBoxName ended.");
         
 		return json;
 	}
@@ -222,14 +256,18 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 
 	/**
 	 * 편지지 검색 (재은)
-	 * @param searchStr
+	 * @param searchStr, company_id, tenant_id
 	 */
 	@Override
-	public JSONArray searchLetter(String search) throws Exception {
-		logger.debug("searchLetter started. search=" + search);
+	public JSONArray searchLetter(String search, String company_id, String tenant_id) throws Exception {
+		logger.debug("searchLetter started.");
+		logger.debug("search=" + search +", company_id=" + company_id + ",tenant_id=" + tenant_id);
 		
 		String searchStr = "displayname=" + URLEncoder.encode(search, "UTF-8");
-		String inputParams = searchStr;
+		String companyIdStr = "company_id=" + URLEncoder.encode(company_id, "UTF-8");
+		String tenantStr = "tenant_id=" + URLEncoder.encode(tenant_id, "UTF-8");
+		
+		String inputParams = searchStr + "&" + companyIdStr + "&" + tenantStr;
 		logger.debug("inputParams="+inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/getLetterSearch", inputParams);

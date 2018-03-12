@@ -310,33 +310,6 @@ public class EzEmailAdminLetterController {
 	}
 	
 	/**
-	 * 편지지 검색 (재은)
-	 * @param String loginCookie, String searchStr
-	 * @return : int letterBoxNo
-	 */
-	@RequestMapping(value="/admin/ezEmail/readLetterSearch.do")
-	@ResponseBody
-	public JSONArray readLetterSearch(@CookieValue("loginCookie") String loginCookie, String search) throws Exception {
-		logger.debug("readLetterSearch started.");
-		logger.debug("search="+search);
-		
-		JSONArray json = null;
-		
-		try {
-			json = EzEmailAdminLetterService.searchLetter(search);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		logger.debug("readLetterSearch ended.");
-		if (json != null) {
-			return json;
-		}
-		
-		return null;
-	}
-	
-	/**
 	 * 편지지 관리페이지 (수아)
 	 */
 	@RequestMapping("/admin/ezEmail/letterAdminPage.do")

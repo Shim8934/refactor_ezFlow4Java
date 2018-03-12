@@ -29,6 +29,7 @@
 	    var xmlhttp;
 	    var responseResult;
 	    var selectNode;
+	    var pageType = '${pageType}';
 	    
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록
@@ -51,6 +52,8 @@
 	            	parent.DivPopUpHidden();
 	            }
 		    }
+		    
+		  
 		    
 		</script>
 		<style>
@@ -104,20 +107,28 @@
 				text-align: center;
 			}
 			
+			span {
+				clear: none;
+			}
+			/* 
+			.lmLetterListUl li {
+			    cursor: pointer;
+			}
+			
+			.lmLetterListUl li:hover{
+			    background: rgb(248, 248, 248);
+			}
+			
+			.lmLetterListUl li:click{
+			    background: rgb(233, 241, 255);
+			}
+			 */
+			
 		</style>
 	
 	</head>
 	<body style="overflow:hidden;" class="popup">
-		<h1>
-		편지지
-			<!-- <div id="mainmenu">
-		        <ul id="tb_Parent" class="on">
-			          <li><span onclick="letterPreview()">미리보기</span></li>
-			          <li><span onclick="letterSelect()">선택</span></li>
-			          <li><span onclick="cancel()">닫기</span></li>
-		          </ul>
-	        </div> -->
-		</h1>
+		<h1>편지지</h1>
 		
 		<table border="1" id="letterTable">
 			<tr style="height:8%;">
@@ -133,11 +144,11 @@
 				<td style="width:50%; vertical-align:top;">
 					<div id="divTree" style="height: 100%; width: 100%; overflow: auto;"></div>
 				</td>
-				<td style="width:50%; vertical-align:top;">
+				<td style="width:50%; vertical-align:top; ">
 					<div class="lmtitle lmLetterTitle">
 						편지지 목록
 					</div> 
-					<div class="lmLetterList boxNo" data-boxNo="" style="height:100%; width:100%; overflow: auto;">
+					<div class="lmLetterList boxNo" data-boxNo="" style="height:100%; overflow: auto;">
 						<ul class="lmLetterListUl"></ul>
 					</div>
 				</td>
