@@ -53,9 +53,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 		logger.debug("searchLadderList started.");
 	
 		Map<String,Object> map = new HashMap<String, Object>();	
-		String searchSelect = allData.get(0).substring(1);
+		String searchSelect = allData.get(0);
 		String searchInput = allData.get(1).trim();
-		String mode = allData.get(2).substring(0,allData.get(2).length()-1);
+		String mode = allData.get(2);
 		
 		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
 		
@@ -180,10 +180,10 @@ public class EzLadderServiceImpl implements EzLadderService {
 		logger.debug("deleteLadder started.");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
-		String ladderId = allData.get(0).substring(1);
+		String ladderId = allData.get(0);
 		String searchSelect = allData.get(1);
 		String searchInput = allData.get(2).trim();
-		String mode = allData.get(3).substring(0,allData.get(3).length()-1);
+		String mode = allData.get(3);
 		
 		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
 		

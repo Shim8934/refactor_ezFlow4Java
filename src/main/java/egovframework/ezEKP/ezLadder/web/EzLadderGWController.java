@@ -57,9 +57,26 @@ public class EzLadderGWController {
 		try {
 			List<LadderVO> list = ezLadderService.getLadderList(userId);
 		
+			int page = 1;
+			int block = 10;
+			int totalLadder = list.size();
+			int totalPage = (int) Math.ceil(list.size()/(double) 10);
+			int startPoint = (page - 1)*10;
+			int endPoint = 0;
+			if(page == totalPage) {
+				endPoint = totalLadder;
+			} else {
+				endPoint = page*block;
+			}
+			if(list.size()>0) {
+				list = list.subList(startPoint, endPoint);
+			}
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", list);
+			result.put("currPage", page);
+			result.put("totalPage", totalPage);
+			result.put("totalLadder", totalLadder);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -70,22 +87,40 @@ public class EzLadderGWController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/ladder/ladder-list/{mode}/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
-	public JSONObject gwViewLadderParticipant(@PathVariable String mode, @PathVariable String userId, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [GET /ladder/ladder-list/participant/" + userId + "] started.");
+	@RequestMapping(value = "/ladder/ladder-list/{mode}/{currPage}/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
+	public JSONObject gwViewLadderParticipant(@PathVariable String mode, @PathVariable String currPage, @PathVariable String userId, HttpServletRequest request) {
+		logger.debug("web G/W LADDER [GET /ladder/ladder-list/" + mode + "/" + currPage +"/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 	
 		try {
+			int page = Integer.parseInt(currPage);
 			List<LadderVO> list;
 			if(mode.equals("part")){	// 일부 참여자 선택
 				list = ezLadderService.getPartLadderList(userId);
 			} else {					// 전체 참여자 선택
 				list = ezLadderService.getLadderList(userId);
 			}
+			
+			int block = 10;
+			int totalLadder = list.size();
+			int totalPage = (int) Math.ceil(list.size()/(double) 10);
+			int startPoint = (page - 1)*10;
+			int endPoint = 0;
+			if(page == totalPage) {
+				endPoint = totalLadder;
+			} else {
+				endPoint = page*block;
+			}
+			if(list.size()>0) {
+				list = list.subList(startPoint, endPoint);
+			}
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", list);
+			result.put("currPage", page);
+			result.put("totalPage", totalPage);
+			result.put("totalLadder", totalLadder);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -96,25 +131,53 @@ public class EzLadderGWController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/ladder/search/{allData}/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
-	public JSONObject gwSearchLadder(@PathVariable List<String> allData,  @PathVariable String userId, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [GET /ladder/search/" + allData.get(0) + "/" + allData.get(1) + "/" + allData.get(2) + "/" + userId + "] started.");
+	@RequestMapping(value = "/ladder/search/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
+	public JSONObject gwSearchLadder(@PathVariable String userId, HttpServletRequest request) {
+		logger.debug("web G/W LADDER [GET /ladder/search/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		try {
 			List<LadderVO> list;
 							// 전체 참여자 선택
-				list = ezLadderService.searchLadderList(userId, allData);
+			String searchSelect = request.getParameter("searchSelect");
+			String searchInput = request.getParameter("searchInput");
+			String mode = request.getParameter("mode");
+			int page = Integer.parseInt(request.getParameter("currPage"));
 			
+			logger.debug("searchSelect : " + searchSelect + ", searchInput : " + searchInput + ", mode : " + mode + ", currPage : " + page);
+			
+			List<String> allData = new ArrayList<String>();
+			allData.add(searchSelect);
+			allData.add(searchInput);
+			allData.add(mode);
+			
+			list = ezLadderService.searchLadderList(userId, allData);
+			
+			int block = 10;
+			int totalLadder = list.size();
+			int totalPage = (int) Math.ceil(list.size()/(double) 10);
+			int startPoint = (page - 1)*10;
+			int endPoint = 0;
+			if(page == totalPage) {
+				endPoint = totalLadder;
+			} else {
+				endPoint = page*block;
+			}
+			if(list.size()>0) {
+				list = list.subList(startPoint, endPoint);
+			}
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", list);
+			result.put("currPage", page);
+			result.put("totalPage", totalPage);
+			result.put("totalLadder", totalLadder);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [GET /ladder/search/" + allData.get(0) + "/" + allData.get(1) + "/" + allData.get(2) + "/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [GET /ladder/search/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -448,27 +511,58 @@ public class EzLadderGWController {
 	/**
 	 * 사디리 삭제 
 	 */
-	@RequestMapping(value = "ladder/ladders/delete/{allData}/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
-	public JSONObject gwDeleteLadderList(@PathVariable List<String> allData,  @PathVariable String userId,  HttpServletRequest request) {
+	@RequestMapping(value = "ladder/ladders/delete/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
+	public JSONObject gwDeleteLadderList(@PathVariable String userId,  HttpServletRequest request) {
 
-		logger.debug("web G/W LADDER [GET /ladder/search/" + allData.get(0) + "/" + allData.get(1) + "/" + allData.get(2) + "/" + allData.get(3) + "/" + userId + "] started.");
+		logger.debug("web G/W LADDER [GET /ladder/delete/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		
 		try {
 			List<LadderVO> list;
-							// 전체 참여자 선택
+			
+			String ladderId = request.getParameter("ladderId");
+			String searchSelect = request.getParameter("searchSelect");
+			String searchInput = request.getParameter("searchInput");
+			String mode = request.getParameter("mode");
+			int page = Integer.parseInt(request.getParameter("currPage"));
+			
+			logger.debug("ladderId : " + ladderId + ", searchSelect : " + searchSelect + ", searchInput : " + searchInput + ", mode : " + mode);
+			
+			List<String> allData = new ArrayList<String>();
+			allData.add(ladderId);
+			allData.add(searchSelect);
+			allData.add(searchInput);
+			allData.add(mode);
+			
 			list = ezLadderService.deleteLadderList(userId, allData);
 			
+
+			int block = 10;
+			int totalLadder = list.size();
+			int totalPage = (int) Math.ceil(list.size()/(double) 10);
+			int startPoint = (page - 1)*10;
+			int endPoint = 0;
+			if(page == totalPage) {
+				endPoint = totalLadder;
+			} else {
+				endPoint = page*block;
+			}
+			if(list.size()>0) {
+				list = list.subList(startPoint, endPoint);
+			}
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", list);
+			result.put("currPage", page);
+			result.put("totalPage", totalPage);
+			result.put("totalLadder", totalLadder);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [GET /ladder/search/" + allData.get(0) + "/" + allData.get(1) + "/" + allData.get(2) + "/" + allData.get(3) + "/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [GET /ladder/delete/" + userId + "] ended.");
 		
 		return result;
 	}

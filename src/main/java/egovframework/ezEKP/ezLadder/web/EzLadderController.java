@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezLadder.web;
 
 
 import java.util.List;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -93,11 +92,17 @@ public class EzLadderController {
 		
 		JSONArray list = new JSONArray();
 		String status = jsonResult.get("status").toString();
+		String page = jsonResult.get("currPage").toString();
+		String totalLadder = jsonResult.get("totalLadder").toString();
+		String totalPage = jsonResult.get("totalPage").toString();
 	
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
 			model.addAttribute("id", userInfo.getId());
 			model.addAttribute("list", list);
+			model.addAttribute("currPage", page);
+			model.addAttribute("totalPage", totalPage);
+			model.addAttribute("totalLadder", totalLadder);
 		} else {
 			return "error";
 		}
@@ -111,14 +116,15 @@ public class EzLadderController {
 	 * 사다리 게임 참여자 목록 버튼
 	 */
 	@RequestMapping(value = "/ezLadder/viewLadderModeList.do")
-	public String viewLadderParticipant(String mode, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String viewLadderParticipant(String mode, String currPage, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		
 		logger.debug("/ezLadder/viewLadderModeList.do started.");
 		logger.debug("mode : " + mode);
+		logger.debug("currPage : " + currPage);
 	
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladder-list/" + mode + "/" + userInfo.getId();
+		String url = gwServerUrl + "/ladder/ladder-list/" + mode + "/" + currPage + "/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -137,10 +143,16 @@ public class EzLadderController {
 		
 		JSONArray list = new JSONArray();
 		String status = jsonResult.get("status").toString();
+		String totalLadder = jsonResult.get("totalLadder").toString();
+		String totalPage = jsonResult.get("totalPage").toString();
 	
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
+			
 			model.addAttribute("list", list);
+			model.addAttribute("currPage", currPage);
+			model.addAttribute("totalPage", totalPage);
+			model.addAttribute("totalLadder", totalLadder);
 		} else {
 			return "error";
 		}
@@ -161,7 +173,7 @@ public class EzLadderController {
 	
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/search/" + allData + "/" + userInfo.getId();
+		String url = gwServerUrl + "/ladder/search/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -171,7 +183,11 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+							.queryParam("searchSelect", allData.get(0))
+							.queryParam("searchInput", allData.get(1))
+							.queryParam("mode", allData.get(2))
+							.queryParam("currPage", allData.get(3));
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -180,13 +196,22 @@ public class EzLadderController {
 		
 		JSONArray list = new JSONArray();
 		String status = jsonResult.get("status").toString();
-	
+		String page = jsonResult.get("currPage").toString();
+		String totalLadder = jsonResult.get("totalLadder").toString();
+		String totalPage = jsonResult.get("totalPage").toString();
+		
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
+			
 			model.addAttribute("list", list);
+			model.addAttribute("currPage", page);
+			model.addAttribute("totalPage", totalPage);
+			model.addAttribute("totalLadder", totalLadder);
 		} else {
 			return "error";
 		}
+		
+		
 		
 		logger.debug("/ezLadder/searchLadder.do ended");
 
@@ -586,11 +611,11 @@ public class EzLadderController {
 	@RequestMapping(value = "/ezLadder/deleteLadder.do")
 	public String deleteLadderList(@RequestParam(value="allData") List<String> allData, @CookieValue("loginCookie") String loginCookie, String ladderId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("ezLadder/deleteLadder.do started.");
-		logger.debug("ladderId : " + allData.get(0), ", searchSelect : " + allData.get(1) + ", searchInput " + allData.get(2) +  ", mode : " + allData.get(3));
+		logger.debug("ladderId : " + allData.get(0), ", searchSelect : " + allData.get(1) + ", searchInput " + allData.get(2) +  ", mode : " + allData.get(3) + ", currPage : " + allData.get(4));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladders/delete/" + allData + "/" + userInfo.getId();
+		String url = gwServerUrl + "/ladder/ladders/delete/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -600,7 +625,12 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("ladderId", allData.get(0))
+										.queryParam("searchSelect", allData.get(1))
+										.queryParam("searchInput", allData.get(2))
+										.queryParam("mode", allData.get(3))
+										.queryParam("currPage", allData.get(4));
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 
@@ -609,10 +639,17 @@ public class EzLadderController {
 		
 		JSONArray list = new JSONArray();
 		String status = jsonResult.get("status").toString();
-	
+		String page = jsonResult.get("currPage").toString();
+		String totalLadder = jsonResult.get("totalLadder").toString();
+		String totalPage = jsonResult.get("totalPage").toString();
+		
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
+			
 			model.addAttribute("list", list);
+			model.addAttribute("currPage", page);
+			model.addAttribute("totalPage", totalPage);
+			model.addAttribute("totalLadder", totalLadder);
 		} else {
 			return "error";
 		}
