@@ -451,7 +451,7 @@
 	            } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
 	                openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
 	                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
-	                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
+	                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0" + "&docState=" + escape(pDocState);
 	            } else {                
                     openLocation = "/ezApprovalG/approvui.do?docID=";
 	                openLocation = openLocation + escape(pArgument[0]);

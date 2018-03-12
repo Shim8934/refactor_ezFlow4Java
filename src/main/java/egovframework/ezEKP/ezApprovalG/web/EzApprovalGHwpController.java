@@ -135,7 +135,8 @@ public class EzApprovalGHwpController {
         String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-        
+		String docState = request.getParameter("docState");
+
         if (userInfo.getRollInfo().indexOf("a=1") > -1) {
         	susinAdmin = "YES";
         } else {
@@ -183,6 +184,7 @@ public class EzApprovalGHwpController {
         model.addAttribute("dirPath", dirPath);
         model.addAttribute("hwpToolbar", hwpToolbar);
         model.addAttribute("susinAdmin", susinAdmin);
+        model.addAttribute("docState", docState);
         model.addAttribute("isHWP", "Y");
         
 		LOGGER.debug("approvuiHWP ended");
