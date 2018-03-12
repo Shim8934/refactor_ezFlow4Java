@@ -3,7 +3,7 @@ var searchMode = false; //검색중이면 오른쪽에 편지지함명
 //편지지 검색
 function letterSearch() {
 	
-	// 편지지(사용자) 중에서도 검색일때만 
+	// 편지지(사용자) 중에서 검색 모드일때만
 	if (pageType == 'letter_user') {
 		searchMode = true;
 	}
