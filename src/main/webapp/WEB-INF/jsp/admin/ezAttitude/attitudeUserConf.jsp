@@ -15,6 +15,9 @@
     	var pCompanyId = ""; //현재 선택된 회사의 아이디
     	var searchUserName = ""; // 검색조건 (사원명)
     	var searchDeptName = ""; // 검색조건 (부서명)
+    	var pageNum = 1; // 페이지 ==> 초기값 설정
+    	var totalCount = "" // 게시물 총 갯수
+    	var totalPage = ""; // 게시판의 총 페이지갯수
     	
     	window.onload = function(){
     		company_change();
@@ -31,29 +34,29 @@
     			dataType : "json",
     			async : false,
     			url : "/admin/ezAttitude/attitudeUserConfList.do",
-    			data : {companyId : pCompanyId, userName : searchUserName, deptName : searchDeptName},
+    			data : {companyId : pCompanyId, userName : searchUserName, deptName : searchDeptName, pageNum : pageNum, listSize : listSize},
     			success : function(result){
-    				getUserConfList_after(result);
+    				totalCount = result.totalCount;
+    				totalPage = parseInt(totalCount / blockSize);
+    				getUserConfList_after(result.list);
     			}
     		});
     	}
     	
     	function getUserConfList_after(result){
     		var resultHtml = "";
-    		searchUserName = "";
-    		searchDeptName = "";
-    		$(".mainlist tbody").html("");
     		
-    		for(var resultLeng = 0; resultLeng < result.length; resultLeng ++){
-    			resultHtml += "<tr><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>"
-    			   			+ "<td>" + (resultLeng + 1) + "</td>"
+    		$(".mainlist tbody").html("");
+    		for (var resultLeng = 0; resultLeng < result.length; resultLeng ++) {
+    			resultHtml += "<tr userid='" + result[resultLeng].userId + "'><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>"
+    			   			+ "<td>" + (((pageNum - 1) * listSize) + (resultLeng + 1)) + "</td>"
     			   			+ "<td>" + result[resultLeng].userName+ "</td>"
     			   			+ "<td>" + result[resultLeng].userTitle+ "</td>"
     			   			+ "<td>" + result[resultLeng].deptName+ "</td>"
     			   			+ "<td>" + result[resultLeng].workStartTime + " ~ " + result[resultLeng].workEndTime + "</td></tr>";
     		}
     		
-    		if(resultHtml == ""){
+    		if (resultHtml == "") {
     			resultHtml = "<tr><td colspan='6' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";
     		}
     		
@@ -63,7 +66,7 @@
     	}
     	
     	function searchUserConf(searchFlag){
-    		if($("#layer_popup").css("display") == "none"){
+    		if ($("#layer_popup").css("display") == "none") {
     			$("#layer_popup").css("display", "");
     		} else {
     			$("#layer_popup").css("display", "none");
@@ -82,17 +85,30 @@
     	function userConfAddModify(){
     		if (CrossYN()) {
     			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
-    			OpenWin = GetOpenWindow("url", "", "", "");
+    			OpenWin = GetOpenWindow("url", "", "1140", "550");
     			try { OpenWin.focus();} catch (e) { }
     		} else {
     			showModalDialog("url", null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
     		}
     	}
+    	
+    	//페이지 이동 함수
+    	function goToPageByNum(pCurPage){
+    		if (pCurPage == 0 || totalPage < pCurPage) {
+    			return;
+    		} else {
+	    		pageNum = pCurPage;    			
+    		}
+    		
+    		getUserConfList();
+    	}
+    	
+    	
     </script>
 	</head>
 <body>
 	<body class="mainbody">
-	    <h1>사용자별 근태관리</h1>
+	    <h1>사용자별 근태관리<span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
 	        	<li style="background: none;">
@@ -147,7 +163,7 @@
 		<table class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
-					<th style="width:20px;"><input type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
+					<th style="width:20px;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
 					<th style="width:29px;">NO</th>
 					<th style="width:300px">이름</th>
 					<th style="width:200px">직위</th>

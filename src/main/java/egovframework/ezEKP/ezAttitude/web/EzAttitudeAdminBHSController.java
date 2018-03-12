@@ -99,7 +99,7 @@ public class EzAttitudeAdminBHSController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConfList.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public JSONArray getAttitudeUserConfList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	public JSONObject getAttitudeUserConfList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
 		LOGGER.debug("/admin/ezAttitude/attitudeUserConfList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -107,6 +107,8 @@ public class EzAttitudeAdminBHSController {
 		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("userName");
 		String searchDeptName = request.getParameter("deptName");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
 		String userId = userInfo.getId();
 		
 		LOGGER.debug(companyId);
@@ -123,7 +125,9 @@ public class EzAttitudeAdminBHSController {
 				.queryParam("companyId", companyId)
 				.queryParam("searchUserName", searchUserName)
 				.queryParam("searchDeptName", searchDeptName)
-				.queryParam("userId", userId);
+				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -135,12 +139,13 @@ public class EzAttitudeAdminBHSController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 		
-		JSONArray list = new JSONArray();
+		
+		JSONObject jObject = new JSONObject();
 		if(status.equals("ok")){
-			list = (JSONArray) resultBody.get("data");
+			jObject = (JSONObject) resultBody.get("data");
 		}
 		
 		LOGGER.debug("/admin/ezAttitude/attitudeUserConfList ended");
-		return list;
+		return jObject;
 	}
 }

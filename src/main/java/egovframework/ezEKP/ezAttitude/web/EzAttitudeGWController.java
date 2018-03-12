@@ -648,14 +648,21 @@ public class EzAttitudeGWController {
 			String userId = request.getParameter("userId");
 			String searchUserName = request.getParameter("searchUserName");
 			String searchDeptName = request.getParameter("searchDeptName");
+			String pageNum = request.getParameter("pageNum");
+			String listSize = request.getParameter("listSize");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(info.getTenantId(), companyId, searchUserName, searchDeptName);
+			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(info.getTenantId(), companyId, searchUserName, searchDeptName, pageNum, listSize);
+			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(info.getTenantId(), companyId, searchUserName, searchDeptName);
+			
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("totalCount", totalCount);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", list);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
