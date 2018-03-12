@@ -585,9 +585,12 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping("/admin/ezEmail/deleteLetter")
 	@ResponseBody
-	public String deleteLetter(@CookieValue("loginCookie") String loginCookie, String letterNo) throws Exception{
+	public String deleteLetter(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, String letterNo, String letterBoxNo, String letterId) throws Exception{
 		logger.debug("deleteLetter started.");
 		logger.debug("letterNo=" + letterNo);
+		logger.debug("letterBoxNo=" + letterBoxNo + "letterId=" + letterId);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		// 관리자 권한체크      
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
@@ -597,8 +600,31 @@ public class EzEmailAdminLetterController {
 		
 		String returnStr = "OK";
 		
+		// /files/upload_mail/letterBoxUpload/
+		String realPath = commonUtil.getRealPath(request);
+		String filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
+		filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId; 	
+		
 		try {
 			EzEmailAdminLetterService.deleteLetter(letterNo);
+			
+			File file = new File(realPath + filePath);
+			logger.debug("path=" + realPath + filePath);
+			
+			if (file.exists()) {
+				File[] fileList = file.listFiles();
+				
+				for (File f : fileList) {
+					if (!f.delete()){ // 삭제가 안되면 이미지 폴더 밑에 이미지들 삭제
+						File[] imgList = f.listFiles();
+						for (File imgF : imgList) {
+							imgF.delete();
+						}
+						f.delete();
+					}
+				}
+				file.delete();
+			}
 		} catch (Exception e) {
 			returnStr = "ERROR";
 			//e.printStackTrace();

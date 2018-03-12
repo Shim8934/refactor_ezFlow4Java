@@ -34,7 +34,7 @@
 						편지지 목록
 					</div> 
 					<div class="lmLetterList boxNo" data-boxNo=""> <!-- boxNo -->
-						<ul class="lmLetterListUl"></ul>
+						<ul class="lmLetterListUl lmLetterListWrap"></ul>
 					</div>
 				</div>
 				<!-- 버튼 -->
@@ -75,13 +75,14 @@
 			
 			// 편지지 추가, 수정 btn 클릭 시  ---- btn -> this, type -> 추가=add
 			function letterEditPopUp(btn, type) {
-				letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
-				popUpType = type == "add" ? type : "modify"; // 클릭된 버튼 구분(추가 or 수정)
+				var letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
+				var popUpType = type == "add" ? type : "modify"; // 클릭된 버튼 구분(추가 or 수정)
 				
 				url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&popUpType=" + popUpType;  
 					
 				window.open(url,"_blank","width=890, height=660");
 			}
+			
 					
 		</script>
 	</body>

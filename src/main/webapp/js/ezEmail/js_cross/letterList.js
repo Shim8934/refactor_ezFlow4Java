@@ -29,7 +29,6 @@ function letterSearch() {
 	});
 	
 }
-			
 
 //검색어 초기화
 function inputReset(){
@@ -41,16 +40,16 @@ $(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
 	var deleteChk = confirm("정말로 삭제하시겠습니까?");
 	
 	if(deleteChk) {
-		var letterBox = $(this).parents(".boxNo").attr("data-boxNo");
+		var letterId = $(this).parent("li").attr("data-letterId");
+		var letterBoxNo = $(this).parents(".boxNo").attr("data-boxNo");
 		var letterNo = $(this).parent("li").attr("data-letterNo");
-		console.log(letterBox + " ==== " + letterNo);
 		
 		$.ajax({
 			type:"POST",
-			data:{letterNo:letterNo},
+			data:{letterNo:letterNo,letterBoxNo:letterBoxNo,letterId:letterId},
 			url:"/admin/ezEmail/deleteLetter",
 			success:function(){
-				getLetterList(letterBox);
+				getLetterList(letterBoxNo);
 				alert("삭제하였습니다.");
 			}
 		});
@@ -58,7 +57,7 @@ $(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
 	
 });
 
-// 편지지 선택
+// 편지지 선택 (개별 조회)
 $(document).on("click", ".lmLetterListUl li span", function(){
 	var letterNo = $(this).parent("li").attr("data-letterno");
 	
@@ -120,7 +119,7 @@ function addLetterList(jsonArr) {
 
 	if (listCount != 0) {
 		for (i = 0; i < listCount; i++) {
-			letterListHtml += "<li data-letterNo='" + jsonArr[i].letter_no + "'>"; //수아 부분에서는 letterNo으로 해야됨
+			letterListHtml += "<li data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + "'>"; 
 			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname + "</span>";
 			
 			if (pageType == 'letter_user') {

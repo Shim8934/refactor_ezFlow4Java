@@ -248,8 +248,13 @@
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	            
 	        } else if (type == "MAILLETTER") { // 편지지 
-	        	//CKEDITOR.config.imageUploadUrl = "/admin/ezEmail/letterImageUpload.do";
-	            //CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
+	        	var letterPopUp = parent.letterPopUp;
+	        	var letterBoxNo = parent.letterBoxNo; // letterEditPopUp.jsp
+	        	var letterId = parent.letterId // letterEditPopUp.jsp
+	        	var uploadUrl = "/ezEditor/ckSimpleUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
+	        	
+	        	CKEDITOR.config.imageUploadUrl = uploadUrl;
+	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        } else {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        }
