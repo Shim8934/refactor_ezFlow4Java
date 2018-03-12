@@ -16,10 +16,6 @@ function resultRead() {
 	        if (result.length == 0) {
         		noResult = true;
         	}
-	        
-	        if (pageType == 'letterBox') {
-	    	   setCompany();
-	        }
 	        treeSet();
 	        treeView();
 	    	treeInit();

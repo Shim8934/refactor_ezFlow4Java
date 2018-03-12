@@ -123,27 +123,31 @@ function addLetterList(jsonArr) {
 			letterListHtml += "<li data-letterNo='" + jsonArr[i].letter_no + "'>"; //수아 부분에서는 letterNo으로 해야됨
 			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname + "</span>";
 			
-			if (searchMode) {
-				var boxName;
-				
-				$.ajax({
-					type:"POST",
-					url:"/ezEmail/selectLetterBoxName.do?letterbox_no=" + jsonArr[i].letterbox_no,
-					dataType:"json",
-					async: false,
-					success:function(data) {
-						boxName = data.displayname;
-					},
-					error:function(data){
-						alert("error");
-						console.log(data);
-					}
-				});
-				
-				letterListHtml += "<span style='float:right'>" + boxName + "</span>";
+			if (pageType == 'letter_user') {
+				if (searchMode) {
+					var boxName;
+					
+					$.ajax({
+						type:"POST",
+						url:"/ezEmail/selectLetterBoxName.do?letterbox_no=" + jsonArr[i].letterbox_no,
+						dataType:"json",
+						async: false,
+						success:function(data) {
+							boxName = data.displayname;
+						},
+						error:function(data){
+							alert("error");
+							console.log(data);
+						}
+					});
+					
+					letterListHtml += "<span style='float:right'>" + boxName + "</span>";
+				}
+			} else {
+				letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp()'>수정</button>";
+				letterListHtml += "<button class='lmLetterDeleteBtn'>삭제</button>";
 			}
-			/*letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp()'>수정</button>";
-			letterListHtml += "<button class='lmLetterDeleteBtn'>삭제</button>";*/
+			
 			letterListHtml += "</li>";
 		}
 	} else {

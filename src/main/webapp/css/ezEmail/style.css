@@ -139,14 +139,13 @@ body {
 }
 
 .lmLetterListUl li span {
-	/* width: 250px; */
 	margin-right: 10px;
 	display: inline-block;
 	cursor: pointer;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	/* float: left; */
+	float: left;
 }
 
 .lmLetterListUl li button {

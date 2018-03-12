@@ -110,6 +110,8 @@
 			span {
 				clear: none;
 			}
+			
+
 			/* 
 			.lmLetterListUl li {
 			    cursor: pointer;
