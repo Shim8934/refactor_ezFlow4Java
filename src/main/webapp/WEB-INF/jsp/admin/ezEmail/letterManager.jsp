@@ -22,9 +22,9 @@
 				<div class="lmLetterBox">
 					<div class="lmtitle lmLetterBoxTitle">
 						<div>편지지 검색</div>
-						<input type="text" name="" id="lmSearchInput">
+						<input type="text" name="" id="lmSearchInput" class="searchInput">
 						<button id="lmSearch">검색</button>
-						<button id="lmSearchReset">초기화</button>
+						<button id="lmSearchReset" onClick="inputReset()">초기화</button>
 					</div>	
 					<div id="divTree" class="lmLetterBoxList"></div>
 				</div>
@@ -51,51 +51,37 @@
 			</div>
 			
 			<div class="lmright">
-				<div class="lmPreview"></div>
+				<div class="lmPreview">
+					<div class="lmPreViewTxt"style='text-align:center; position:relative; top:50%; tansform:translateY(-50%);'>미리보기</div>
+					<iframe src="" class="lmPreViewIframe" name="lmPreViewIframe" style="display:none; border:none; width:100%; height:100%;"></iframe>
+				</div>
 			</div>			
 		</div>
 		
 		<script type="text/javascript">
-			var pageType = "${pageType}";
-			var returnCompany = '${companyId}';
-			var previewHtml = "<div style='text-align:center; position:relative; top:50%; tansform:translateY(-50%);'>미리보기</div>";
-			
-			$(document).ready(function(){
-				
-				resultRead(); // 편지지함 목록
-				
-				$(".lmPreview").html(previewHtml); //미리보기 text
-
-				
-				
-				
-			}); // document on ready
-			
-			// 편지지 추가, 수정 클릭 시  || btn -> this, type -> 추가=add
-			function letterEditPopUp(btn, type) {
-				
-				// 편지지함 no
-				letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo");
-				// 추가 or 수정 구분
-				popUpType = type == "add" ? type : "modify";
-				
-				//url
-				url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&type=" + popUpType;  
-					
-				window.open(url,"_blank","width=890, height=660");
-			}
-			
-			
-			// 편지지 목록 ===========================================================================================
+			// resultRead() 사용 *
 			var result = [];
 		    var treeCollection = [];
 		    var xmlhttp;
 		    var responseResult;
 		    var selectNode;
-		    
-		    // ==========================================================================
-		    	
+		    var noResult = false; 
+			var pageType = "${pageType}"; //letter
+			var returnCompany = '${companyId}'; //companyId
 			
+			$(document).ready(function(){
+				resultRead(); // 편지지함 목록  (/js/ezEmail/js_cross/letterBoxTree.js)
+			}); // document on ready
+			
+			// 편지지 추가, 수정 btn 클릭 시  ---- btn -> this, type -> 추가=add
+			function letterEditPopUp(btn, type) {
+				letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
+				popUpType = type == "add" ? type : "modify"; // 클릭된 버튼 구분(추가 or 수정)
+				
+				url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&popUpType=" + popUpType;  
+					
+				window.open(url,"_blank","width=890, height=660");
+			}
 					
 		</script>
 	</body>

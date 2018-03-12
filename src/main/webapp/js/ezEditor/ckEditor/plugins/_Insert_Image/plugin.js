@@ -45,6 +45,13 @@ function Insert_ImageCmd_Complete(rtn) {
 			            parent.parent.DivPopUpShow(470, 400, "/ezEditor/ckImageUploadMail.do");
 			            parent.document.getElementById("iFramePanel").style.left = "165px";
 			        }
+			    } else if (parent.document.location.href.toLowerCase().indexOf("/ezemail/lettereditpopup.do") > -1) { // 편지지 추가,수정 팝업(수아)
+			    	if (parent.document.getElementById("mailPanel") != null) {
+			    		parent.DivPopUpShow(470, 400, "/ezEditor/ckImageUpload.do");
+			    	} else {
+			            parent.parent.DivPopUpShow(470, 400, "/ezEditor/ckImageUpload.do");
+			            //parent.document.getElementById("iFramePanel").style.left = "165px";
+			        }
 			    } else {
 			    	if (parent.document.getElementById("mailPanel") != null) {
 			    		parent.DivPopUpShow(470, 400, "/ezEditor/ckImageUpload.do");

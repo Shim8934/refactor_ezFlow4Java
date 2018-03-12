@@ -11,17 +11,14 @@ function resultRead() {
 		complete : function(data) {
 	        result = data.responseJSON;
 	        
-	        
+	        if (result.length == 0) {
+        		noResult = true;
+        	}
 	        if (pageType == 'letterBox') {
-	        	
-	        	if (result.length == 0) {
-	        		noResult = true;
-	        	}
-	        	
 	    	   setCompany();
 	        }
 	        treeSet();
-	    	treeView();
+	        treeView();
 	    	treeInit();
 	    }
 	});
@@ -29,7 +26,6 @@ function resultRead() {
 
 // 페이지 처음 들어갔을 때 클릭되는 부분
 function treeInit() {
-	
 	if (!noResult) {
 		$("#divTree").on('ready.jstree', function (e, data) {
 			selectNode = data;

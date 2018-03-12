@@ -7,7 +7,8 @@ public class MailLetterVO {
 	private String displayname2;
 	private int letterOrder;
 	private int letterBoxNo;
-	private String letterID;
+	private String letterId;
+	private String letterContent;
 	
 	public int getLetterNo() {
 		return letterNo;
@@ -39,11 +40,17 @@ public class MailLetterVO {
 	public void setLetterBoxNo(int letterBoxNo) {
 		this.letterBoxNo = letterBoxNo;
 	}
-	public String getLetterID() {
-		return letterID;
+	public String getLetterId() {
+		return letterId;
 	}
-	public void setLetterID(String letterID) {
-		this.letterID = letterID;
+	public void setLetterId(String letterId) {
+		this.letterId = letterId;
+	}
+	public String getLetterContent() {
+		return letterContent;
+	}
+	public void setLetterContent(String letterContent) {
+		this.letterContent = letterContent;
 	}
 	
 	@Override
@@ -51,7 +58,8 @@ public class MailLetterVO {
 		return "MailLetterVO [letterNo=" + letterNo + ", displayname="
 				+ displayname + ", displayname2=" + displayname2
 				+ ", letterOrder=" + letterOrder + ", letterBoxNo="
-				+ letterBoxNo + ", letterID=" + letterID + "]";
+				+ letterBoxNo + ", letterId=" + letterId + ", "
+						+ "letterContent=" + letterContent + "]";
 	}
 	
 }

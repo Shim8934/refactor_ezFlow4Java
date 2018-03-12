@@ -257,17 +257,19 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 	
 	/**
 	 * 편지지 추가 (수아)
-	 * @param displayname, displayname2, letterBoxNo (편지지 이름, 편지지 이름 영문, 편지지함 번호)
+	 * @param displayname, displayname2, letterBoxNo (편지지 이름, 편지지 이름 영문, 편지지함 번호, 편지지 아이디)
 	 * */
 	@Override
 	public void addLetter(String displayname, String displayname2,
-			String letterBoxNo) throws Exception {
-		logger.debug("addLetter started. displayname=" + displayname + ",displayname2=" + displayname2 + ",letterBoxNo=" + letterBoxNo);
+			String letterBoxNo, String letterId) throws Exception {
+		logger.debug("addLetter started. displayname=" + displayname + ",displayname2=" + displayname2 + ",letterBoxNo=" + letterBoxNo + ",letterId="
+				+ letterId);
 		
 		String displaynameStr = "displayname=" + URLEncoder.encode(displayname, "UTF-8");
 		String displayname2Str = "displayname2=" + URLEncoder.encode(displayname2, "UTF-8");
 		String letterBoxNoStr = "letterBoxNo=" + URLEncoder.encode(letterBoxNo, "UTF-8");
-		String inputParams = displaynameStr + "&" + displayname2Str + "&" + letterBoxNoStr;
+		String letterIdStr = "letterId=" + URLEncoder.encode(letterId, "UTF-8");
+		String inputParams = displaynameStr + "&" + displayname2Str + "&" + letterBoxNoStr + "&" + letterIdStr;
 		logger.debug("inputParams="+inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/setLetter", inputParams);
@@ -449,22 +451,22 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/selectDetailLetter", inputParams);
 		logger.debug("strJson="+strJson);
 		
-		JSONObject test = new JSONObject();
+		JSONObject resultJsonObj = new JSONObject();
 		
 		if (!strJson.equals("")){
 			JSONParser parser = new JSONParser();
 			JSONObject object = (JSONObject)parser.parse(strJson);
 			
-			test = (JSONObject) object.get("result");
+			resultJsonObj = (JSONObject) object.get("result");
 			
-			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1 || test.size() <= 0) {
+			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1 || resultJsonObj.size() <= 0) {
 				throw new Exception("JGwServer ERROR");
 			}
 		}
 		
         logger.debug("selectDetailLetter ended.");
         
-		return test;
+		return resultJsonObj;
 	}
 	
 }
