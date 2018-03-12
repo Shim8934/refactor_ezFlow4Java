@@ -5,6 +5,7 @@
 	<typeAlias alias="AttitudeDeptVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO"/>
 	<typeAlias alias="AttitudeConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO"/>
 	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
+	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
 		<![CDATA[
@@ -37,66 +38,93 @@
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeConfig" parameterClass="Map" resultClass="AttitudeConfigVO">
-		SELECT
-			COMPANYID,
-			TENANT_ID,
-			WORKSTARTTIME,
-			WORKENDTIME,
-			CLOSEDDAY,
-			ATTITUDEMODAPPL,
-			CLOSEDDATEATTITUDE,
-			date_format(CONFSETDATE, '%Y-%m-%d') as CONFSETDATE
-		FROM
-			TBL_ATTITUDE_CONF
-		WHERE
-			COMPANYID = #companyId#
-		AND
-			TENANT_ID = #tenantId#
+		<![CDATA[
+			SELECT
+				COMPANYID,
+				TENANT_ID,
+				WORKSTARTTIME,
+				WORKENDTIME,
+				CLOSEDDAY,
+				ATTITUDEMODAPPL,
+				CLOSEDDATEATTITUDE,
+				date_format(CONFSETDATE, '%Y-%m-%d') as CONFSETDATE
+			FROM
+				TBL_ATTITUDE_CONF
+			WHERE
+				COMPANYID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
 	</select>
 	
 	<update id="ezAttitudeAdminDAO.updateAttitudeConfig" parameterClass="Map">
-		UPDATE TBL_ATTITUDE_CONF
-		SET
-			WORKSTARTTIME = #workStartTime#,
-			WORKENDTIME = #workEndTime#,
-			CLOSEDDAY = #closedDay#,
-			ATTITUDEMODAPPL = #attitudeModAppl#,
-			CLOSEDDATEATTITUDE = #closedDateAttitude#,
-			CONFSETDATE = str_to_date(#confSetDate#, '%Y-%m-%d') 
-		WHERE
-			COMPANYID = #companyId#
-		AND
-			TENANT_ID = #tenantId#
+		<![CDATA[
+			UPDATE TBL_ATTITUDE_CONF
+			SET
+				WORKSTARTTIME = #workStartTime#,
+				WORKENDTIME = #workEndTime#,
+				CLOSEDDAY = #closedDay#,
+				ATTITUDEMODAPPL = #attitudeModAppl#,
+				CLOSEDDATEATTITUDE = #closedDateAttitude#,
+				CONFSETDATE = str_to_date(#confSetDate#, '%Y-%m-%d') 
+			WHERE
+				COMPANYID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
 	</update>
 
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultClass="AttitudeUserConfigVO">
-		SELECT
-			A.USERID,
-			A.WORKSTARTTIME,
-			A.WORKENDTIME,
-			B.TITLE AS USERTITLE,
-			B.DISPLAYNAME AS USERNAME,
-			B.DESCRIPTION AS DEPTNAME
-		FROM
-			tbl_attitude_user_conf A 
-		INNER JOIN 
-			tbl_usermaster B 
-		ON 
-			A.USERID = B.CN
-		AND
-			A.TENANT_ID = B.TENANT_ID
-		WHERE
-			A.TENANT_ID = #tenantId#
-		<isNotEmpty prepend="AND" property="companyId">
-			A.COMPANYID = #companyId#
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchDeptName">
-			B.DESCRIPTION = #searchDeptName#
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchUserName">
-			B.DISPLAYNAME = #searchUserName#
-		</isNotEmpty>
-		LIMIT #limit#, #listSize#;
+		<![CDATA[
+			SELECT
+				A.USERID,
+				A.WORKSTARTTIME,
+				A.WORKENDTIME,
+				B.TITLE AS USERTITLE,
+				B.DISPLAYNAME AS USERNAME,
+				B.DESCRIPTION AS DEPTNAME
+			FROM
+				tbl_attitude_user_conf A 
+			INNER JOIN 
+				tbl_usermaster B 
+			ON 
+				A.USERID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE
+				A.TENANT_ID = #tenantId#
+			<isNotEmpty prepend="AND" property="companyId">
+				A.COMPANYID = #companyId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="searchDeptName">
+				B.DESCRIPTION = #searchDeptName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="searchUserName">
+				B.DISPLAYNAME = #searchUserName#
+			</isNotEmpty>
+			LIMIT #limit#, #listSize#;
+		]]>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeTypeList" parameterClass="Map" resultClass="AttitudeTypeVO">
+		<![CDATA[
+			SELECT
+				TYPEID,
+				COMPANYID,
+				TENANT_ID,
+				TYPENAME,
+				TYPENAME2,
+				ISUSE,
+				IMGPATH,
+				PARENTID,
+				FORMID
+			FROM
+				TBL_ATTITUDE_TYPE
+			WHERE
+				COMPANYID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigCount" parameterClass="Map" resultClass="String">

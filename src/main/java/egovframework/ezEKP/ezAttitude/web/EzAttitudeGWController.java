@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -461,7 +462,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudereg", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateAttitudeConf(@PathVariable String companyId, @RequestBody JSONObject jsonParam, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudereg] started.");
-		//TODO
+		
 		JSONObject result = new JSONObject();
 		
 		try{
@@ -491,7 +492,6 @@ public class EzAttitudeGWController {
 			jsonParam.put("workStartTime", startDate.substring(startIdx + 1));
 			jsonParam.put("workEndTime", endDate.substring(endIdx + 1));
 			
-			//수정
 			ezAttitudeService.updateAttitudeConfig(jsonParam);
 			
 			result.put("status", "ok");
@@ -502,39 +502,46 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
+		
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudereg] ended.");
+		
 		return result;
 	}
 	
 	/**
 	 * G/W 근태관리 [GET] 근태유형 조회
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudetypes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject attitudeTypeList(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes] started.");
-		
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attitudeTypeList(@PathVariable String companyId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes] started.");
+		//TODO=====================================================================================================================================================
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			//근태유형 리스트
+			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
+			result.put("data", attitudeTypeList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
 		return result;
 	}
 	
 	/**
 	 * G/W 근태관리 [PUT] 근태유형 사용여부 일괄저장
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudetypes", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeTypeBatchStore(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/attitudetypes] started.");
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -548,16 +555,16 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/attitudetypes] ended.");
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes] ended.");
 		return result;
 	}
 	
 	/**
 	 * G/W 근태관리 [POST] 근태유형 추가
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudetypes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertAttitudeType(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudetypes] started.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -571,16 +578,16 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudetypes] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes] ended.");
 		return result;
 	}
 	
 	/**
 	 * G/W 근태관리 [PUT] 근태유형 수정
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateAttitudeType(@PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/attitudetypes/" + attitudetypeId+ "] started.");
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes/" + attitudetypeId+ "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -594,7 +601,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/attitudetypes/" + attitudetypeId+ "] ended.");
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes/" + attitudetypeId+ "] ended.");
 		return result;
 	}
 	

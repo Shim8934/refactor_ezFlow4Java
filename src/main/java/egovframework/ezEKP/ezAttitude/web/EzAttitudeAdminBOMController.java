@@ -82,21 +82,20 @@ public class EzAttitudeAdminBOMController {
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
 		JSONParser jp = new JSONParser();
+		
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
 		
 		JSONArray list = new JSONArray();
 		if(status.equals("ok")){
 			list = (JSONArray) resultBody.get("data");
 			
-			LOGGER.debug("list : " + list);
-			
 			model.addAttribute("list", list);
 		}
 		
 		LOGGER.debug("attitudeConfig ended.");
+		
 		return "admin/ezAttitude/attitudeConfig";
 	}
 	/**
@@ -136,13 +135,16 @@ public class EzAttitudeAdminBOMController {
 		
 		if (status.equals("ok")) {
 			dataObject = (JSONObject) resultBody.get("data");
-//			model.addAttribute("attitudeConfigInfo", dataObject);
 		}
 		
 		LOGGER.debug("attitudeConfigInfo ended.");
+		
 		return dataObject;
 	}
-	
+	/**
+	 * 관리자 근태규율관리 회사별 설정 수정 함수
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/admin/ezAttitude/updateAttitudeConfInfo.do")
 	@ResponseBody
 	public void updateAttitudeConfInfo(AttitudeConfigVO attitudeConfigVO, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -174,6 +176,98 @@ public class EzAttitudeAdminBOMController {
 		String status = resultBody.get("status").toString();
 		
 		LOGGER.debug("updateAttitudeConfInfo ended.");
+	}
+	
+	/**
+	 * 관리자 유형관리  화면 호출 함수
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfig.do")
+	public String attitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("attitudeTypeConfig started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray list = new JSONArray();
+		if(status.equals("ok")){
+			list = (JSONArray) resultBody.get("data");
+			
+			LOGGER.debug("list : " + list);
+			
+			model.addAttribute("list", list);
+		}
+		
+		LOGGER.debug("attitudeTypeConfig ended.");
+		
+		return "admin/ezAttitude/attitudeTypeConfig";
+	}
+	
+	/**
+	 * 관리자 유형관리 설정 정보 호출 함수
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfigInfo.do")
+	public JSONArray attitudeTypeConfigInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("attitudeTypeConfigInfo started.");
+		//TODO===============================================================================================================================================
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + request.getParameter("companyId") + "/attitudetypes";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+				
+		String status = resultBody.get("status").toString();
+		
+		JSONArray dataList = new JSONArray();
+		if (status.equals("ok")) {		
+			dataList = (JSONArray) resultBody.get("data");
+		}
+		
+		LOGGER.debug("attitudeTypeConfigInfo ended.");
+		
+		return dataList;
 	}
 	
 }
