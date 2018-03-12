@@ -91,20 +91,15 @@ function selectBox(letterBoxNo) {
 function deleteBox(letterBoxNo) {
 	var query = "/admin/ezEmail/deleteLetterBox.do?letterbox_no=" + letterBoxNo;
 	
-	xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", query, true);
-    xmlhttp.responseType = 'json'; 
-    xmlhttp.onreadystatechange = deleteText;
-    xmlhttp.send();
-}
-// 편지지함 삭제 상태
-function deleteText() {
-	if (xmlhttp == null || xmlhttp.readyState != 4) return;
-	responseResult = xmlhttp.response;
-	
-	if (responseResult == "ERROR") {
-		return;
-	}
+	$.ajax({
+		type : "POST",
+		url : query,
+		datatype : 'json',
+		error : function(data) {
+			alert("error");
+			console.log(data);
+		}
+	});
 }
 
 // 이름, 이름(영문) 가져오는 친구
