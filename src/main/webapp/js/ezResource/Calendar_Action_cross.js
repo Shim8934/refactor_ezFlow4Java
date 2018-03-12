@@ -280,7 +280,7 @@ function tableListControl_Week()
         var weekStartDatename = datanameweek(weekStartDate.getFullYear(), weekStartDate.getMonth() + 1, weekStartDate.getDate(), "HEARDER");
         var weekEndDatename = datanameweek(weekEndDate.getFullYear(), weekEndDate.getMonth() + 1, weekEndDate.getDate(), "HEARDER");
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
-        document.getElementById("divViewHeader").setAttribute("style", "color:#777;");
+        //document.getElementById("divViewHeader").setAttribute("style", "color:#777;");
         setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " - " + weekEndDatename);
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
@@ -668,17 +668,20 @@ function tableListControl_Week()
                 }
                 else if (s_weekDateSet < weekdatename[0] && e_weekDateSet <= weekdatename[6]) {
                     var endCnt = getNodeText(xmldom.getElementsByTagName("deDaytype")[j]);
-                    for (var i = endCnt; 0 < i; i--) {
+                    for (var i = endCnt; 0 <= i; i--) {
                         makeTable(xmldom, j, i);
                     }
                 }
                 else if (weekdatename[0] <= s_weekDateSet && weekdatename[6] < e_weekDateSet) {
                     var startCnt = getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]);
                     for (var i = startCnt; i < 8; i++) {
-                        if (i == 7)
-                            makeTable(xmldom, j, 0);
-                        else
-                            makeTable(xmldom, j, i);
+                        if (i == 7) {
+                        	//makeTable(xmldom, j, 0); // 천성준 2018-03-09 자원관리 > 금토일 자원예약시 폴더 주보기에서 자원예약이 잘못표시되는 버그수정
+                        	break;
+                        }
+                        else{
+                        	makeTable(xmldom, j, i);
+                        }
                     }
                 }
                 else {
@@ -1363,7 +1366,7 @@ function onmouse_over_Week(td) {
 //일보기 마우스임팩트
 function onmouse_out_Week(td) {
     if (p_Type != "MAIN") {
-        //td.style.backgroundColor = "#F8F8F8";
+        //td.style.backgroundColor = "#f8f8fa";
         td.style.backgroundColor = "transparent";
     }
 }

@@ -1078,19 +1078,13 @@
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
 				</li>
 		        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63'/></span></li>
-		        <li style="background:none">
-		            <select id="viewtype" onchange="getBoardList('1')">
-		                <option value="1"><spring:message code='ezBoard.t4001'/></option>
-		                <option value="2"><spring:message code='ezBoard.t4002'/></option>
-		            </select>
-		        </li>
 		  </ul>
 		</div>
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 	</c:if>
-	    <div id="layer_Viewpopup" style="width: 150px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
+	    <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
 	        <div class="popupwrap1">
 	            <div class="popupwrap2">
 	                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
@@ -1109,6 +1103,16 @@
 	                                <option value="40">40</option>
 	                                <option value="50">50</option>
 	                            </select>    
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <th><spring:message code="ezEmail.t99000035" /></th>
+	                        <td>
+	                            <select id="viewtype" onchange="getBoardList('1')">
+					                <option value="1"><spring:message code='ezBoard.t4001' /></option>
+					                <option value="2"><spring:message code='ezBoard.t4002' /></option>
+<%-- 					                <option value="3"><spring:message code='ezBoard.t4003' /></option> --%>
+	            				</select>
 	                        </td>
 	                    </tr>
 	                </table>

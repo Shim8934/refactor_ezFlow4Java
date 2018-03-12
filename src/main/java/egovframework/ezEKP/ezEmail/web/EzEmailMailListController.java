@@ -52,6 +52,7 @@ import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 
 /** 
  * @Description [Controller] 메일 리스트
@@ -115,6 +116,7 @@ public class EzEmailMailListController {
 		boolean isSentItems = false;
 		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
 		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", userInfo.getTenantId());
+		String useReSend = ezCommonService.getTenantConfig("useReSend", userInfo.getTenantId());
 		
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
@@ -165,6 +167,7 @@ public class EzEmailMailListController {
 		model.addAttribute("importanceColor", importanceColor);
 		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
 		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
+		model.addAttribute("useReSend", useReSend);
 		
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
@@ -1036,43 +1039,24 @@ public class EzEmailMailListController {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userAccount, password, egovMessageSource, locale, 40*1000, 20*1000);
 			
-			// get quota info
-			int mailPercent = 0;
-			String mailboxDetail = "";
-			String mailboxQuotaStr = "";
-			
 			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 			
 			double mailboxUsage = storageUsageAndLimit[0]; // in KBs
 			double mailboxQuota = storageUsageAndLimit[1]; // in KBs
 			
-			logger.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+			// 재은 수정
+			String[] mailUse = ezEmailUtil.getMailUsage(mailboxUsage, mailboxQuota);
+			String mailPercent = "";
+			String mailboxDetail = "";
+			String mailboxQuotaStr = "";
 			
-			if (mailboxUsage < mailboxQuota) {
-				mailPercent = (int)((mailboxUsage/mailboxQuota) * 100);
+			if (mailUse != null) {
+				mailPercent = mailUse[0];
+				mailboxDetail = mailUse[1];
+				mailboxQuotaStr = mailUse[2];
 			}
-			else {
-				mailPercent = 100;
-			}
-			
-			if (mailboxUsage >= 1024) {
-				mailboxDetail = (int)(mailboxUsage/1024) + "MB";
-			}
-			else {
-				mailboxDetail = (int)mailboxUsage + "KB";
-			}
-	
-			if (mailboxQuota >= 1024*1024) {
-				mailboxQuotaStr = String.format("%.2fG", mailboxQuota/(1024*1024));
-			}
-			else if (mailboxQuota >= 1024) {
-				mailboxQuotaStr = (int)(mailboxQuota/1024) + "MB";
-			}
-			else {
-				mailboxQuotaStr = (int)mailboxQuota + "KB";
-			}
-			// get quota info - end
-			
+					
+			logger.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);		
 			
 			Folder folder = ia.getFolder(folderPath);		
 			folder.open(Folder.READ_ONLY);
