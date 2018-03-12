@@ -862,7 +862,7 @@
 				<!-- 내용 -->
 			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
 			    	<tr>
-						<th style="border-color: rgb(0, 72, 149); color: white; background-color: rgb(0, 72, 149); text-align: center; height:30px" colspan="2"><spring:message code='ezAddress.t2003' /></th>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAddress.t2003' /></th>
 					</tr>
 					<tr>
 			  			<th style="width:90px;height:30px"><spring:message code='ezAddress.t124' /></th>
@@ -897,7 +897,7 @@
 			<div class="popupwrap3">
 				<table class="content" style="margin-top:10px;">  
 					<tr>
-						<th style="border-color: rgb(0, 72, 149); color: white; background-color: rgb(0, 72, 149); text-align: center; height:30px" colspan="2"><spring:message code='ezAddress.t312' /></th>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAddress.t312' /></th>
 					</tr>
 					<tr>
 						<th style="text-align:center;height:30px"><spring:message code='ezAddress.t314' /></th>

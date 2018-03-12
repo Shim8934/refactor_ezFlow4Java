@@ -1070,7 +1070,7 @@
 	                <div id="ReceptTemp" style="display: none">
 	                    <table style="padding-left: 5px">
 	                        <tr>
-	                            <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+	                            <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                <h2 class="h2_dot"><spring:message code='ezApprovalG.G0003'/></h2>
 	                                <div class="border_gray">
 	                                    <div id="RecSaveList" style="border: 0px; Width: 386px; Height: 236px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
@@ -1130,10 +1130,10 @@
 	                </h2>
 	                <div class="listview" style="margin-top: 7px; margin-left: 1px">
 	                <c:if test="${approvalFlag == 'S'}">
-	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #B6B6B6; width: 710px; height: 550px; background-color: #ffffff;"></div>
+	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 710px; height: 550px; background-color: #ffffff;"></div>
 	                </c:if>
 	                <c:if test="${approvalFlag == 'G'}">
-	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #B6B6B6; width: 750px; height: 550px; background-color: #ffffff;"></div>
+	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 750px; height: 550px; background-color: #ffffff;"></div>
 	                </c:if>
 	                </div>
 	                <div style="text-align: right;">

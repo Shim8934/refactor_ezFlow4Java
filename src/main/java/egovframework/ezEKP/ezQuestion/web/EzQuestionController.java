@@ -4028,28 +4028,28 @@ public class EzQuestionController extends EgovFileMngUtil {
 				iCount++;
 				if (iCount == 1) {
 					strTagData += "<tr>";
-					strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\"></th>";
+					strTagData += "<th style=\"background-color:#f8f8f8; border:1px solid #ddd; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\"></th>";
 					
 					for(QstAnswerVO qstAnswerVO : qstAnswerAnswerList){
-						strTagData += "<th title=\"" + commonUtil.cleanValue(qstAnswerVO.getAnswerContent()) + "\" style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">";
+						strTagData += "<th title=\"" + commonUtil.cleanValue(qstAnswerVO.getAnswerContent()) + "\" style=\"background-color:#f8f8f8; border:1px solid #ddd; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">";
 						strTagData += commonUtil.cleanValue(qstAnswerVO.getAnswerContent());
 						strTagData += "</th>";
 					}
 					
 					strTagData += "</tr><tr>";
-					strTagData += "<th title=\"" + commonUtil.cleanValue(qstAnswer.getAnswerContent()) + "\" style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+commonUtil.cleanValue(qstAnswer.getAnswerContent())+"</th>";
+					strTagData += "<th title=\"" + commonUtil.cleanValue(qstAnswer.getAnswerContent()) + "\" style=\"background-color:#f8f8f8; border:1px solid #ddd; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+commonUtil.cleanValue(qstAnswer.getAnswerContent())+"</th>";
 					
 					for (QstAnswerVO qstAnswerVO : qstAnswerAnswerList) {
-						strTagData += "<td style=\"border:1px solid #b6b6b6; text-align:center;\"><input type=\"radio\" name=\"radio" + qstNo + "_" + qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
+						strTagData += "<td style=\"border:1px solid #ddd; text-align:center;\"><input type=\"radio\" name=\"radio" + qstNo + "_" + qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
 					}
 					
 					strTagData += "</tr>";
 				} else {
 					strTagData += "<tr>";
-					strTagData += "<th title=\"" + commonUtil.cleanValue(qstAnswer.getAnswerContent()) + "\" style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+commonUtil.cleanValue(qstAnswer.getAnswerContent())+"</th>";
+					strTagData += "<th title=\"" + commonUtil.cleanValue(qstAnswer.getAnswerContent()) + "\" style=\"background-color:#f8f8f8; border:1px solid #ddd; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+commonUtil.cleanValue(qstAnswer.getAnswerContent())+"</th>";
 					
 					for (QstAnswerVO qstAnswerVO : qstAnswerAnswerList) {
-						strTagData += "<td style=\"border:1px solid #b6b6b6; text-align:center;\"><input type=\"radio\" name=\"radio" + qstNo + "_" + qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
+						strTagData += "<td style=\"border:1px solid #ddd; text-align:center;\"><input type=\"radio\" name=\"radio" + qstNo + "_" + qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
 					}
 					
 					strTagData += "</tr>";
@@ -4582,9 +4582,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 				
 				for (int i = 0; i <= xmlDom.getElementsByTagName("ANSWER_ANSWERCONTENT").getLength(); i++){
 					if (i == 0){
-						strData += "<td style=\"border:1px solid #b6b6b6;\"></td>";
+						strData += "<td style=\"border:1px solid #ddd;\"></td>";
 					}else{
-						strData += "<td colspan='3' style='border:1px solid #b6b6b6;'>" + commonUtil.cleanValue(xmlDom.getElementsByTagName("ANSWER_ANSWERCONTENT").item(i - 1).getTextContent()) + "</td>";
+						strData += "<td colspan='3' style='border:1px solid #ddd;'>" + commonUtil.cleanValue(xmlDom.getElementsByTagName("ANSWER_ANSWERCONTENT").item(i - 1).getTextContent()) + "</td>";
 					}
 				}
 				
@@ -4592,7 +4592,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}
 			
 			strData += "<tr style=\"text-align:center;\">";
-			strData += "<td style=\"border:1px solid #b6b6b6;\">" + commonUtil.cleanValue(qstAnswerVO.getAnswerContent());
+			strData += "<td style=\"border:1px solid #ddd;\">" + commonUtil.cleanValue(qstAnswerVO.getAnswerContent());
 			strData += getAttachList(userInfo, Integer.toString(questionNo), Integer.toString(qstAnswerVO.getAnswerNo()), brdID, itemNo) + "</td>";
 			
 			for (int i = 0; i < xmlDom.getElementsByTagName("ANSWER_ANSWERCONTENT").getLength(); i++){
@@ -4602,12 +4602,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 					percent = (rCnt * 100) / responseCnt;
 				}
 				
-				strData += "<td width=\"80' valign=\"top\" align=\"right\" nowrap style=\"border:1px solid #b6b6b6; border-right:0px;\">";
+				strData += "<td width=\"80' valign=\"top\" align=\"right\" nowrap style=\"border:1px solid #ddd; border-right:0px;\">";
 				strData += "" + rCnt + "";
 				strData += "" + egovMessageSource.getMessage("ezQuestion.t399", locale) + "";
 				strData += "</th>";
-				strData += "<td width=\"70\" valign=\"top\" align=\"right\" nowrap style=\"border:1px solid #b6b6b6; border-right:0px; border-left:0px;\">[" + percent + "%]</td>";
-				strData += "<td width=\"150\" valign=\"top\" style=\"border:1px solid #b6b6b6; padding-right:10px; border-left:0px;\">";
+				strData += "<td width=\"70\" valign=\"top\" align=\"right\" nowrap style=\"border:1px solid #ddd; border-right:0px; border-left:0px;\">[" + percent + "%]</td>";
+				strData += "<td width=\"150\" valign=\"top\" style=\"border:1px solid #ddd; padding-right:10px; border-left:0px;\">";
 				
 				if (percent > 0){
 					strData += "<img src=\"/images/img_graph.gif\" width=\"" + percent + "%\" height=\"16\" align=\"absmiddle\">";

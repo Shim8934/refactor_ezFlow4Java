@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -1488,11 +1490,17 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
 			mode = req.getParameter("mode");
 		}
-		
-		if (mode.equals("1")) {
-			ret = ezPortalAdminService.savePortletParameters(xmlStr, userInfo.getTenantId());
-		} else {
-			ret = ezPortalAdminService.saveMenuItemParameters(xmlStr, userInfo.getTenantId());
+		try {
+			if (mode.equals("1")) {
+				ret = ezPortalAdminService.savePortletParameters(xmlStr, userInfo.getTenantId());
+			} else {
+				ret = ezPortalAdminService.saveMenuItemParameters(xmlStr, userInfo.getTenantId());
+			}
+		} catch (SQLIntegrityConstraintViolationException | DuplicateKeyException e) {
+			ret = e.getMessage();
+			if (ret.contains("SQLIntegrityConstraintViolationException") && ret.contains("Duplicate entry")){
+				ret = "Duplicate entry";
+			}
 		}
 		
 		logger.debug("addParameter ended");

@@ -1197,7 +1197,7 @@
 	        <table id="TreeViewTD">
 	            <tr>
 	                <td>
-	                    <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
+	                    <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
 	                        <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
 	                            <table style="margin-top: 3px; width: 100%;">
 	                                <tr>
@@ -1253,14 +1253,14 @@
 	                                    </tr>
 	                                </table>
 	                                <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
-	                                    <table style="width:100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
+	                                    <table style="width:100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                        <tr>
 	                                            <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
 	                                            <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
 	                                            <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t29' /></td>
 	                                        </tr>
 	                                    </table>
-	                                    <table style="width:100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
+	                                    <table style="width:100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                        <tr>
 	                                            <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t26' /></td>
 	                                            <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
