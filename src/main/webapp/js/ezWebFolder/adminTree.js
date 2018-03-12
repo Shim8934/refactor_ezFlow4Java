@@ -69,7 +69,7 @@ function displaySubFolder(divTree, divElmt, list) {
 	imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
 	
 	var spanFolderName = document.createElement("span");
-	spanFolderName.innerHTML = list["folderName"];
+	spanFolderName.textContent = list["folderName"];
 	spanFolderName.setAttribute("class", "spanName");
 	spanFolderName.setAttribute("name", list["folderId"]);
 	spanFolderName.setAttribute("level", list["folderLevel"]);
@@ -197,11 +197,43 @@ function getDepartmentData(companyId, mode, rootDiv) {
 		dataType: "JSON",
 		async: true,
 		success : function(data) {
-			//var result = data.companyTree;
-			//renderData(result, mode, rootDiv);
+			var result = data.deptTree;
+			renderData2(result, mode, rootDiv);
 		},
 		error : function(error) {
 			alert(strMessage);
 		}
 	});
+}
+
+function renderData2(result, mode, rootDiv) {
+	if (!result || result.length == 0) {
+		alert(strMessage);
+		return;
+	}
+	
+	var divTree    = document.getElementById(rootDiv);
+	selectedFolder = result[0]["folderId"];
+		
+	while (divTree.hasChildNodes()) {
+		divTree.removeChild(divTree.lastChild);
+	}
+	
+	for (var i = 0; i < result.length; i++) {
+		var divDept  = document.createElement("div");
+		displaySubFolder(divTree, divDept, result[i]);
+	}
+	
+	var spanFirstDept = document.getElementById(selectedFolder).nextSibling.nextSibling;
+	
+	if (mode == "") {
+		spanFirstDept.style.color = "#e04343";
+		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder, "right");
+	}
+	else {
+		selectedFolder = "";
+		getSelected(spanFirstDept);
+	}
+	
+	divTree.style.display = "";
 }

@@ -37,8 +37,7 @@
 			var userNameStr  = "";
 			var folderId     = "<c:out value='${folderId}'/>";
 			var checkedArr   = [];
-			var folderType   = "company";
-			var rootFolder   = "<c:out value='${rootFolder}'/>";
+			var folderType   = "dept";
 			
 			window.onresize = function () {
 				var divList          = document.getElementById("dragDropArea");
@@ -236,7 +235,7 @@
 			
 			function change() {
 				refresh();
-				window.parent.frames["left"].getCompanyData(document.getElementById("companyList").value, 1, "folderTree");
+				window.parent.frames["left"].getDepartmentData(document.getElementById("companyList").value, 1, "folderTree2");
 			}
 			
 			function fileDownload() {
@@ -305,7 +304,7 @@
 				
 				var fileId = checkedArr[0];
 				
-				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId + "&rootFolder=" + rootFolder);
+				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId);
 			}
 			
 			function getChecked(obj) {

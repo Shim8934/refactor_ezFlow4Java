@@ -70,9 +70,20 @@
 				while (divTree.hasChildNodes()) {
 					divTree.removeChild(divTree.lastChild);
 				}
+				
+				var divTree2           = document.getElementById("folderTree2");
+				divTree2.style.display = "none";
+				
+				while (divTree2.hasChildNodes()) {
+					divTree2.removeChild(divTree2.lastChild);
+				}
 			}
 			
-			function companyFile() {
+			function companyFile(obj) {
+				if (obj.parentElement.className == 'on') {
+					return;
+				}
+				
 				clearToggle();
 				getCompanyData(companyId, "", "folderTree");
 			}
@@ -83,7 +94,17 @@
 			}
 			
 			function departmentFolder() {
+				clearToggle();
 				window.open("/admin/ezWebFolder/webfolderAdminDeptFolder.do", "right");
+			}
+			
+			function departmentFile(obj) {
+				if (obj.parentElement.className == 'on') {
+					return;
+				}
+				
+				clearToggle();
+				getDepartmentData(companyId, "", "folderTree2");
 			}
 		</script>
 	</head>
@@ -107,10 +128,10 @@
 			<ul></ul>
 			
 			<h2>
-				<span style="display:inline-block;width:100%;" onClick="companyFile();"><spring:message code='ezWebFolder.t127'/></span>
+				<span style="display:inline-block;width:100%;" onClick="companyFile(this);"><spring:message code='ezWebFolder.t127'/></span>
 			</h2>
 			<ul></ul>
-			<div id="folderTree" style="min-height: 200px; display: none;"></div>
+			<div id="folderTree" style="min-height: 200px; display: none; overflow-x: auto;"></div>
 			
 			<h2>
 				<span style="display:inline-block;width:100%;" onClick="departmentFolder();"><spring:message code='ezWebFolder.t219'/></span>
@@ -118,10 +139,10 @@
 			<ul></ul>
 			
 			<h2>
-				<span style="display:inline-block;width:100%;" onClick="departmentFile();"><spring:message code='ezWebFolder.t220'/></span>
+				<span style="display:inline-block;width:100%;" onClick="departmentFile(this);"><spring:message code='ezWebFolder.t220'/></span>
 			</h2>
 			<ul></ul>
-			<div id="folderTree2" style="min-height: 200px; display: none;"></div>
+			<div id="folderTree2" style="min-height: 200px; display: none; overflow-x: auto;"></div>
 			
 			<h2>
 				<span style="display:inline-block;width:100%;" onClick="fileTransactionHistory();"><spring:message code='ezWebFolder.t128'/></span>
