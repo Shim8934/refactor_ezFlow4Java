@@ -127,6 +127,7 @@
 		        document.getElementById('prog_bar').style.width = "0%";
 		        document.getElementById('prog_num').innerHTML = "0";
 		        document.getElementById('progdiv').style.display = "none";
+		        console.log(xhr.responseText);
 		        setAttachFileInfo(xhr.responseText);	        
 		        
 		        isfileup = false;
@@ -140,31 +141,24 @@
 		        alert("The upload has been canceled by the user or the browser dropped the connection.");
 		    }
 	
-		    function setAttachFileInfo(strXML) {
-		        if (strXML == "ERROR") {
-		            alert(strLang28);
-		            return;
-		        }
-		        var xml = loadXMLString(strXML);
-
+		    function setAttachFileInfo(str) {
+		        var filelist = JSON.parse(str);
+		        
 		        try {
-		            var strAttach = "";
-		            strPreViewAttach = "";
 		            var listtable;
+		            var extCheck = false; 
 
-		            listtable = dadiframe.document.getElementById("filelist");
-		            dadiframe.document.getElementById("lstAttachLink").appendChild(listtable);
+		            listtable = document.getElementById("filelist");
+		            document.getElementById("lstAttachLink").appendChild(listtable);
 
-		            var extCheck = false;
-		            for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
-		                var newFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[i]);
-		                var pFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[i]);
-		                var fileSize = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA3")[i]);
-		                var attid = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA4")[i]);
+		            for (i = 0; i < filelist.length; i++) {
+		                var newFileName = filelist[i].pUploadSN;
+		                var pFileName = filelist[i].pFileName;
+		                var fileSize = filelist[i].fileSize;
 
-		                if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA5")[i]) == "OK") {
+		                if (filelist[i].resultUpload == "true") {
 		                    objTr = document.createElement("TR");
-		                    objTr.setAttribute("DATA2", newFileName + ";" + fileSize);
+		                    objTr.setAttribute("DATA2", newFileName + ";" + pFileName);
 
 		                    var objTd = document.createElement("TD");
 		                    objTd.style.textAlign = "center";
@@ -199,13 +193,14 @@
 		                    setNodeText(objTd3, fileSize);
 		                    objTr.appendChild(objTd3);
 
-		                    dadiframe.document.getElementById("filelist").appendChild(objTr);
+		                    document.getElementById("filelist").appendChild(objTr);
 		                }
-		                else
-		                    extCheck = true;          
+		                else {
+		                    extCheck = true;
+		                }
 		            }
 		            if (extCheck)
-		                alert(strLang267);
+		                alert("<spring:message code='main.sp12'/>");
 		        }
 		        catch (e) { alert("returnvalue :: " + e.description); }
 		    }
@@ -220,7 +215,6 @@
 	
 		    function btnfiledel() {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
-		        var pBoardID = window.parent.pBoardID;
 		        var strRet = "";
 	
 		        var isFileDelete = false;
@@ -279,7 +273,7 @@
 		        	}		            
 		        }
 		        fd.append("typeId", window.parent.typeId);
-		        fd.append("maxsize", window.parent.AttachLimit * 1024 * 1024);
+		        fd.append("maxSize", window.parent.AttachLimit * 1024 * 1024);
 //		        fd.append("mode", "ATT");
 	
 		        isfileup = true;

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAttachVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
@@ -49,12 +50,13 @@ public interface EzJournalService {
 	 * @param typeId
 	 * @param deptId
 	 * @param companyId
-	 * @param tenantId
 	 * @param companyName 
+	 * @param tenantId
+	 * @param offset
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String companyName, String tenantId) throws Exception;
+	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String companyName, String tenantId, String offset) throws Exception;
 
 	/**
 	 * 양식 등록
@@ -163,9 +165,10 @@ public interface EzJournalService {
 	 * 수신자 즐겨찾기 리스트 가져오기
 	 * @param userId
 	 * @param tenantId
+	 * @param offset
 	 * @throws Exception
 	 */
-	public List<ReceiverFavoriteVO> getFavoriteList(String userId, String tenantId);
+	public List<ReceiverFavoriteVO> getFavoriteList(String userId, String tenantId, String offset) throws Exception;
 
 	/**
 	 * 수신자 즐겨찾기 유저리스트 가져오기
@@ -173,14 +176,14 @@ public interface EzJournalService {
 	 * @param tenantId
 	 * @throws Exception
 	 */
-	public List<JournalAuthorVO> getFavoriteUserList(String favoriteId, String tenantId);
+	public List<JournalAuthorVO> getFavoriteUserList(String favoriteId, String tenantId) throws Exception;
 
 	/**
 	 * 수신자 즐겨찾기 수정
 	 * @param jsonParam
 	 * @throws Exception
 	 */
-	public void modifyFavorite(JSONObject jsonParam);
+	public void modifyFavorite(JSONObject jsonParam) throws Exception;
 
 	/**
 	 * 수신자 즐겨찾기 삭제
@@ -189,7 +192,7 @@ public interface EzJournalService {
 	 * @param tenantId
 	 * @throws Exception
 	 */
-	public void deleteFavorite(String favoriteId, String userId, String tenantId);
+	public void deleteFavorite(String favoriteId, String userId, String tenantId) throws Exception;
 
 	/**
 	 * 해당사원의 수신일지 개수
@@ -217,7 +220,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String getJournalLastFormId(String typeId, String formId, String userId, String companyId, String tenantId);
+	public String getJournalLastFormId(String typeId, String formId, String userId, String companyId, String tenantId) throws Exception;
 	
 	/**
 	 * 현재 업무일지 리스트의 전체 게시물 수
@@ -244,10 +247,19 @@ public interface EzJournalService {
 	/**
 	 * 해당 아이디의 업무일지 상세내용 가져오기
 	 * @param journalId
+	 * @param userId 
 	 * @param tenantId
-	 * @param string 
 	 * @return
 	 * @throws Exception
 	 */
 	public JournalVO getJournal(String journalId, String userId, String tenantId) throws Exception;
+
+	/**
+	 * 첨부파일 리스트 가져오기
+	 * @param journalId
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<JournalAttachVO> getAttachList(String journalId, int tenantId) throws Exception;
 }

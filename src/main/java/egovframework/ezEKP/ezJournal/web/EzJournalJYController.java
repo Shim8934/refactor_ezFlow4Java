@@ -388,6 +388,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			param.clear();
 			param.put("formName", jsonResult.get("formName"));
 			param.put("formContent", jsonResult.get("formContent"));
+			param.put("formStatus", jsonResult.get("formStatus"));
 			logger.debug("resultparam 확인 : " + param);
 			return JsonUtil.MapToJson(param);
 		}
@@ -452,7 +453,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		}
 		
 		if (request.getParameter("journalId") != null && !request.getParameter("journalId").equals("")) {
-			mode = request.getParameter("journalId");
+			journalId = request.getParameter("journalId");
 		}
         
 		model.addAttribute("userInfo", userInfo);
@@ -535,7 +536,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
         jsonObject.put("fileArray", jsonArray);
 		jsonObject.put("cnt", cnt);
 		jsonObject.put("maxSize", maxSize);
-		jsonObject.put("userID",userInfo.getId());
+		jsonObject.put("userId",userInfo.getId());
 		jsonObject.put("typeId", typeId);
         
 		HttpEntity<JSONObject> entity = new HttpEntity(jsonObject, headers);
@@ -554,8 +555,9 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		
 		if (status.equals("ok")) {
 			data = resultBody.get("data");
-			
+			logger.debug("xml데이터 확인 : " + data);
 			model.addAttribute("data", data.toString());
+			return data.toString();
 		}
 
 		logger.debug("status:"+status);
@@ -575,11 +577,11 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		//2018-02-13 주홍선 loginSimpleVO 쿠키에서 가져오도록 변경
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 
-		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
+		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_journal.ROOT", loginSimpleVO.getTenantId());
 		String fileList = request.getParameter("fileList");
 		//2018-02-13 주홍선 주석제거
 		String mode = "";
-		String circularID = "";
+		String journalID = "";
 		String filePath = "";
 		
 		logger.debug("fileList : " + fileList);
@@ -588,12 +590,12 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			mode = request.getParameter("mode");
 		}
 		
-		if (request.getParameter("circularID") != null && !request.getParameter("circularID").equals("")) {
-			circularID = request.getParameter("circularID");
+		if (request.getParameter("journalID") != null && !request.getParameter("journalID").equals("")) {
+			journalID = request.getParameter("journalID");
 		}
 
 		if (mode.equals("temp")) {
-			filePath = "uploadFile" + commonUtil.separator + circularID + "_uploadFile";
+			filePath = "uploadFile" + commonUtil.separator + journalID + "_uploadFile";
 		} else {
 			filePath = "tempUploadFile";
 		}
@@ -606,8 +608,9 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			for (int i=0; i<data.length; i++) {
 				String sGUID = data[i].split(";")[0];
 				String fileName = data[i].split(";")[1];
+				logger.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 				
-				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "_" + fileName);
 				
 				file.delete();
 			}			
@@ -617,4 +620,6 @@ public class EzJournalJYController extends EgovFileMngUtil {
         
         return "json";
     }
+	
+	
 }

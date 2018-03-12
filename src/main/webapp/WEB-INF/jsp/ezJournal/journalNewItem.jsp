@@ -80,6 +80,12 @@
    					success : function(result){
    						console.log(result);
    						console.log(userName);
+   						
+   						if (result.formStatus == null) {
+   							$("#btnGetOther").css("display", "none");
+   						} else {
+   							$("#btnGetOther").css("display", "");
+   						}
    						var title = "[" + result.formName + "] " + nowDate + " (" + userName + ")";
    						console.log(title);
    						$("#txtTitle").val(title);
@@ -146,6 +152,133 @@
 		    function Editor_Complete() {
 	    		getLastForm(typeId);
 	    	}
+	    
+		 	// 버튼 중복클릭 방지
+		    var doubleSubmitFlag = false;
+		    function doubleSubmitCheck() {
+		    	if (doubleSubmitFlag) {
+		    		return doubleSubmitFlag;
+		    	} else {
+		    		doubleSubmitFlag = true;
+		    		return false;
+		    	}
+		    }
+	    
+	    	// 저장
+		    function btn_Save(mode) {
+	        	if (doubleSubmitCheck()){
+	        		return;
+	        	}
+	    		//일지작성 눌렀을 시
+	        	var content = message.GetEditorContent();
+				var option = 0;
+	
+				if ($("#txtTitle").val() == "") {
+					alert("<spring:message code='ezCircular.t52'/>");
+					doubleSubmitFlag = false;
+					
+					return;
+				}
+	
+				if ($("#receiverlist").text() == "") {
+	    			alert("<spring:message code='ezCircular.t53'/>")
+	    			doubleSubmitFlag = false;
+	    			
+	    			return;
+	    		}
+	
+				if ($.trim($("#txtTitle").val()) == "") {
+		        	alert("<spring:message code='ezCircular.t190' />");
+		        	doubleSubmitFlag = false;
+	
+		        	return;
+		        }
+	
+				// 부서공유여부
+				if ($(':checkbox[name=chkList]:checked').length == 2) {
+					option = 3;
+				}
+		
+				//파일 첨부된 목록 가져오기
+				var listtable = dadiframe.document.getElementById("filelist");
+				var filelist = GetChildNodes(listtable);
+				var fileList = "";
+	
+				for (var i = 0; i < filelist.length - 1; i++) {	    
+					if (i == 0) {
+						fileList = GetAttribute(filelist[i + 1], "data2");
+					} else {
+						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+	        		}
+				}
+				
+				var receiverList = document.getElementById("receiverlist").innerHTML;
+				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
+				var receiverID = document.getElementById("receiverID").innerHTML;
+	
+				if (receiverList.indexOf(userMyName) == -1) {
+					receiverList += ", " + userMyName;
+					receiverList2 += ", " + userMyName2;
+					receiverID += ", " + userMyID;
+				}
+	
+	    		$.ajax ({
+	 			   	url : '/ezCircular/saveCircular.do',
+	 			   	type : 'POST',
+	                dataType : 'text',
+	                data : {	title : document.getElementById("title").value,
+	                			importance : document.getElementById("importance").value,
+	                			option : option,
+	                			receiverList : receiverList,
+	                			receiverList2 : receiverList2,
+	                			receiverID : receiverID,
+	                			content : content,
+	                			fileList : fileList,
+	                			oldCircularID : oldCircularID,
+	                			mode : mode
+	                },  
+	                cache: false,
+	                success: function(data) {	   
+	                  alert("<spring:message code='ezCircular.t70'/>");
+	                  
+	                  window.opener.getLeftCount();
+	                  window.opener.refresh_onclick();
+	             	  window.close();
+	                }
+	 			});
+	    	}
+	    
+	    	// 닫기 버튼 클릭시
+		    function btn_Close() {
+				//파일 첨부된 목록 가져오기
+				var listtable = dadiframe.document.getElementById("filelist");
+				var filelist = GetChildNodes(listtable);
+				var fileList = "";
+	
+				for (var i = 0; i < filelist.length - 1; i++) {	    
+					if (i == 0) {
+						fileList = GetAttribute(filelist[i + 1], "data2");
+					} else {
+						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+	        		}
+				}
+				console.log("fileList : " + fileList);
+				$.ajax({
+					async : false,
+					url : '/ezJournal/tempUploadFileDelete.do',
+	                type : 'POST',
+	                dataType : 'json',
+	                data : {
+	                	fileList : fileList
+	                },
+	                success: function() {
+						window.close();
+	                },
+	                error: function() {
+	                	alert("<spring:message code='ezCircular.t102'/>");	
+	                }
+				});
+			}
 	    </script>
 	</head>
 	<body class="popup" style="height: 97%;" ondragover="bodydragover(event)">
@@ -170,8 +303,8 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li><span onclick=""><spring:message code='ezJournal.t75' /></span></li>
-	                        <li><span onclick="window.close();"><spring:message code='ezJournal.t27' /></span></li>
+	                        <li id="btnGetOther"><span onclick=""><spring:message code='ezJournal.t75' /></span></li>
+	                        <li><span onclick="btn_Close();"><spring:message code='ezJournal.t27' /></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">

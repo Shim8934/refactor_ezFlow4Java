@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAttachVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
@@ -40,6 +42,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -150,7 +153,7 @@ public class EzJournalGWController {
 				deptId = "";
 			}
 			
-			List<JournalFormInfoVO> formList = ezJournalService.getFormList(typeId, deptId, info.getCompanyId(), info.getCompanyName(), info.getTenantId() + "");
+			List<JournalFormInfoVO> formList = ezJournalService.getFormList(typeId, deptId, info.getCompanyId(), info.getCompanyName(), info.getTenantId() + "", info.getOffSet());
 			
 			result.put("data", formList);
 			result.put("status", "ok");
@@ -614,15 +617,12 @@ public class EzJournalGWController {
 		
 		JSONObject result = new JSONObject();
 		
+		JSONParser jp = new JSONParser();
+		jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+	
 		try {
-			String serverName = request.getHeader("x-user-host");
-			
-			JSONParser jp = new JSONParser();
-			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
-			
 			JSONArray fileArray = new JSONArray();
-			
-			String typeId = "";
+//			String typeId = "";
 			String userId = "";
 			int cnt = 0;
 			int maxSize = 0;
@@ -639,24 +639,28 @@ public class EzJournalGWController {
 				maxSize =  ((Long) jsonParam.get("maxSize")).intValue();
 			}
 			
-			if (jsonParam.get("typeId") != null) {
-				typeId =  (String) jsonParam.get("typeId");
-			}
+//			if (jsonParam.get("typeId") != null) {
+//				typeId =  (String) jsonParam.get("typeId");
+//			}
 			
-			if (jsonParam.get("userID") != null) {
+			if (jsonParam.get("userId") != null) {
 				userId = (String) jsonParam.get("userId");
 			}
 			
+			LOGGER.debug("####cnt:" + cnt + ", maxSize:" + maxSize + "userId:" + userId);
+			
+			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			String[] pFileName = new String[cnt];
 			String realPath = commonUtil.getRealPath(request);
-			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
+			String[] pFileName = new String[cnt];
+			Long[] fileSize = new Long[cnt];
+			String[] fileLocation = new String[cnt];
+			String[] resultUpload = new String[cnt];
 			String[] sGUID = new String[cnt];
 			String[] pUploadSN = new String[cnt];
-			Long[] fileSize = new Long[cnt];
-			String[] resultUpload = new String[cnt];
-			String[] fileLocation = new String[cnt];
+
+			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
 			
 			for (int i = 0; i < cnt; i++) {
 	            resultUpload[i] = "false";
@@ -669,12 +673,16 @@ public class EzJournalGWController {
 			}
 			
 			if (((JSONObject)fileArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)fileArray.get(0)).get("originalFilename"))) {
-	            for (int i = 0; i < cnt; i++) {
-	                String _pFileName = (String) ((JSONObject)fileArray.get(i)).get("originalFilename");
+				String _pFileName = "";
+				
+				for (int i = 0; i < cnt; i++) {
+	                _pFileName = (String) ((JSONObject)fileArray.get(i)).get("originalFilename");
 	                
+	                // 폴더패스를 제외한 파일명을 구한다.
 	                if (_pFileName.indexOf(commonUtil.separator) > 0) {
 	                    _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
 	                }
+	                
 	                pFileName[i] = _pFileName;
 	            }
 	        }
@@ -686,43 +694,40 @@ public class EzJournalGWController {
 	        	pDirPath = pDirPath + commonUtil.separator;
 	        }
 	        
-	        File file1 = new File(pDirPath);
-	        File file2 = new File(pDirPath + typeId + commonUtil.separator + "uploadFile");
-//	        File tempFile = new File(pDirPath + "tempUploadFile");
+	        File file = new File(pDirPath + "uploadFile");
+//	        File file2 = new File(pDirPath + typeId + commonUtil.separator + "uploadFile");
+	        File tempFile = new File(pDirPath + "tempUploadFile");
 
-	        if (!file1.exists()) {
-	        	file1.mkdirs();
-	        	file2.mkdirs();
+	        if (!file.exists()) {
+	        	file.mkdirs();
 	        }
 	        
-//	        if (!tempFile.exists()) {
-//	        	tempFile.mkdir();
-//	        }
+	        if (!tempFile.exists()) {
+	        	tempFile.mkdir();
+	        }
 			
 	        for (int i = 0; i < cnt; i++) {
 	        	fileSize[i] = (Long) ((JSONObject)fileArray.get(i)).get("fileSize");
-
-	            if (fileSize[i] > maxSize) {
+        		
+	        	// maxsize를 넘어가는 파일은 저장하지 않는다.
+	            if (fileSize[i] > maxSize && maxSize != 0) {
 	                resultUpload[i] = "overflow";
 	            } else {
+	            	// 허용하는 확장자가 아닌경우 저장하지 않는다.
                     if (useExtension.toLowerCase().indexOf(pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
                         resultUpload[i] = "denied";
                     } else {
-                        String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator;
-                        File fTemp = new File(pAttachPath, pUploadSN[i] + "_" + pFileName[i]);
-                        
-                        if (!file1.exists()) {
-                        	fTemp.mkdirs();
-                        }
-                        
+                        String pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator;
+//                        
+                        // 업로드된 파일 데이터를 파일로 저장한다.
                         journalWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
                         
-                        fileLocation[i] = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator + pUploadSN[i] + "_" + pFileName[i];
+                        fileLocation[i] = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId()) + commonUtil.separator + "tempUploadFile" + commonUtil.separator + pUploadSN[i] + "_" + pFileName[i];
                         resultUpload[i] = "true";
                     }
 	            }
 	        }
-			
+			/*
 	        StringBuffer strXML = new StringBuffer();
 
 	        strXML.append("<ROOT><NODES>");
@@ -739,6 +744,21 @@ public class EzJournalGWController {
 	        strXML.append("</NODES></ROOT>");
 	        
 	        result.put("data", strXML);
+	        */
+	        
+	        ArrayList<JSONObject> filelist = new ArrayList<JSONObject>();
+	        
+	        for (int i = 0; i < cnt; i++) {
+	        	JSONObject fileInfo = new JSONObject();
+	        	fileInfo.put("pUploadSN", pUploadSN[i]);
+	        	fileInfo.put("pFileName", pFileName[i]);
+	        	fileInfo.put("fileSize", fileSize[i]);
+	        	fileInfo.put("fileLocation", fileLocation[i]);
+	        	fileInfo.put("resultUpload", resultUpload[i]);
+	        	filelist.add(i, fileInfo);
+	        }
+
+	        result.put("data", filelist);
 			result.put("status", "ok");
 			result.put("code", 0);
 			
@@ -765,7 +785,7 @@ public class EzJournalGWController {
     	
 		InputStream stream = null;
 		OutputStream bos = null;
-		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
+		String stordFilePathReal = (stordFilePath == null ? "" : stordFilePath);
 		
 		try {
 		    File cFile = new File(stordFilePathReal);
@@ -818,7 +838,44 @@ public class EzJournalGWController {
 		
 		JSONObject result = new JSONObject();
 		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+			
+			List<JournalAttachVO> list = ezJournalService.getAttachList(journalId, info.getTenantId());
+			
+			//파일사이즈 단위 수정
+			String fileSize = "";
+			for (int i=0; i<list.size(); i++) {
+				fileSize = list.get(i).getFileSize();
+				double fs = Double.parseDouble(fileSize);
+				
+				if (fs / 1024 / 1024 > 1) {
+					fileSize = Math.floor(fs / 1024 / 1024 * 10) / 10 + "MB";
+				} else if ((fs / 1024) > 1) {
+					fileSize = (int)(fs/1024) + "KB"; 
+				} else {
+					fileSize = Integer.parseInt(fileSize) + "B";
+				}
+				
+				list.get(i).setFileSize(fileSize);
+				//filePath 및 fileName 인코딩
+				list.get(i).setEncodeFilePath(URLEncoder.encode(list.get(i).getFilePath(), "UTF-8"));
+				list.get(i).setEncodeFileName(URLEncoder.encode(list.get(i).getFileName(), "UTF-8"));
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", list);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
 		LOGGER.debug("ezJournal G/W attachList ended.");
+	
 		return result;
 	}
 	
@@ -906,7 +963,7 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			List<ReceiverFavoriteVO> favoriteList = ezJournalService.getFavoriteList(userId, info.getTenantId() + "");
+			List<ReceiverFavoriteVO> favoriteList = ezJournalService.getFavoriteList(userId, info.getTenantId() + "", info.getOffSet());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

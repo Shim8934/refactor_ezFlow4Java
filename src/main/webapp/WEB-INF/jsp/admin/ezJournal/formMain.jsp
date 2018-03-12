@@ -9,6 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">		    
 		    var companyId = "";
@@ -215,7 +216,9 @@
             	<li id="btnDeleteForm"><span onclick="return btnDelForm()"><spring:message code='ezJournal.t19' /></span></li>
             </ul>
 		</div>
-		
+		<script type="text/javascript">
+		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		</script>
 		<table style="margin-top:5px;width:1005px;height:500px">
 			<tr>
 		    	<td style="width:200px; vertical-align:top">
