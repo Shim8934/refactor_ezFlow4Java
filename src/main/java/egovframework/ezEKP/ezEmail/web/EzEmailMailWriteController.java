@@ -272,6 +272,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
 		String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", loginInfo.getTenantId());
 		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+		String useReSend = ezCommonService.getTenantConfig("useReSend", loginInfo.getTenantId());
 		
 		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
 		if (loginInfo.getLang().equals("1")) {
@@ -543,7 +544,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	                    mailSignSel = "0";
 		        	}
 		        	// in case of resending
-		        	else if (folderPath.equals(sentFolderName) && _cmd.equals("RESEND") && !msgto.equals("")) {
+	        		else if (folderPath.equals(sentFolderName) && _cmd.equals("RESEND")) {
 		        		//임시보관함에 메시지 임시저장
 		        		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 		        				userAccount, password);
@@ -587,10 +588,43 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		reSendFlag = "Y";
 		        		
 		        		Address[] addresses = orgMessage.getAllRecipients();
+		        		
 		        		for (Address address : addresses) {
 		        			if (((InternetAddress)address).getAddress().equalsIgnoreCase(msgto)) {
 								to = ezEmailUtil.getStringListOfAddresses(new Address[]{address}, true);
 								break;
+								
+		        			} else {
+		        				// 재작성시 메세지에서 수신인을 뽑아내어 넣어준다. 
+		        				if (useReSend.equals("YES") && msgto.equals("")) {
+		        					addresses = orgMessage.getRecipients(Message.RecipientType.TO);
+									String[] rawHeaders = orgMessage.getHeader("From");
+									String rawHeader = rawHeaders != null ? rawHeaders[0] : "";		
+									boolean isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
+									
+									if (isPureAscii) {
+										rawHeaders = orgMessage.getHeader("To");
+										rawHeader = rawHeaders != null ? rawHeaders[0] : "";
+										isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
+									}
+									
+									to = ezEmailUtil.getStringListOfAddresses(addresses, isPureAscii);
+			
+									// retrieve the CC addresses from the reply message.
+									addresses = orgMessage.getRecipients(Message.RecipientType.CC);
+									
+									if (addresses != null) {
+										rawHeaders = orgMessage.getHeader("Cc");
+										rawHeader = rawHeaders != null ? rawHeaders[0] : "";																					
+										cc = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
+									}
+									
+									// retrieve the BCC addresses from the reply message.
+									addresses = orgMessage.getRecipients(Message.RecipientType.BCC);
+									bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
+		        					
+									break;
+		        				}
 		        			}
 		        		}
 		        		

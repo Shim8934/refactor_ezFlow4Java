@@ -3168,7 +3168,7 @@
 	                <table id="TreeViewTD">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
 	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
@@ -3221,14 +3221,14 @@
 	                                            </tr>
 	                                        </table>
 	                                        <div style="vertical-align: top; height: 410px; overflow: auto; width: 446px;" id="txtlist_Layer">
-	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
+	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
 	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
 	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
 	                                                </tr>
 	                                            </table>
-	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
+	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t26' /></td>
 	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
@@ -3251,7 +3251,7 @@
 	                            <table style="width: 100%;">
 	                                <tr>
 	                                    <td id="AddrSearch">
-	                                        <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
+	                                        <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
 	                                            <div class="portlet_tabpart03_top" id="Div1" style="border: 1px solid #d3d2d2;">
 	                                                <table style="margin-top: 3px; width: 100%;">
 	                                                    <tr>
@@ -3288,19 +3288,19 @@
 	                    </tr>
 	                    <tr>
 	                        <td>
-	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; height: 468px; width: 220px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin-top: 3px;padding-top:5px"></div>
+	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; height: 468px; width: 220px; border: 1px solid #ddd; background-color: #FFFFFF; margin-top: 3px;padding-top:5px"></div>
 	                        </td>
 	                        <td style="width: 5px;"></td>
 	                        <td style="vertical-align: top;">
-	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #bdbdbd; border-bottom: 0px; height: 20px; padding-top: 5px; padding-left: 5px;">
+	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 20px; padding-top: 5px; padding-left: 5px;">
 	                                <img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer" />
 	                                <span id="addressFolderName" style="font-weight: bold;"></span>
 	                                -[<span id="addressFolderCnt" style="color: #017BEC; font-weight: bold;"></span>]
 	                            </div>
 	                            <div style="width: 441px; height: 417px; overflow: auto; background-color: #ffffff; border-bottom:0px" id="AddressListView" class="border_gray">
 	                            </div>
-	                            <div id="tblPageRayer" style="left: 445px; vertical-align: middle; border: 1px solid #bdbdbd; border-top: 0px; height: 30px;"></div>
-	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 445px; border: 1px solid #bdbdbd; border-top: 0px; height: 27px;">
+	                            <div id="tblPageRayer" style="left: 445px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; height: 30px;"></div>
+	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 445px; border: 1px solid #ddd; border-top: 0px; height: 27px;">
 	                                <spring:message code='ezEmail.t588' /><span style="color: #017BEC; font-weight: bold;" id="totalcount"></span>
 	                                <spring:message code='ezEmail.t589' /><span id="td_Previous" onclick="pagemove(-1)"><img src="/images/kr/cm/btn_prev.gif"
 	                                    width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer"></span><spring:message code='ezEmail.t590' /><span
@@ -3319,7 +3319,7 @@
 	                <table id="ListViewDLTD" style="display: none">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
 	                                <div class="portlet_tabpart03_top" id="Div2" style="border: 1px solid #d3d2d2;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>

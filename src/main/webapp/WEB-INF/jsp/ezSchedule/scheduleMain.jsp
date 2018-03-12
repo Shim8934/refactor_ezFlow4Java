@@ -1013,7 +1013,7 @@
 		</table>                
 		<br/>
 		<div id="showDiv" style="display:none;position:absolute;background-color:white;">
-			<table style="width:200px;height:60px;margin:1px;border:1px solid #b6b6b6" class="popuplist" >
+			<table style="width:200px;height:60px;margin:1px;border:1px solid #ddd" class="popuplist" >
 				<tr>    
 		            <th style="height:20px; width:30%" align=center><img src="/images/bt_edit.gif" onclick="showUpdate('EDIT')" style="cursor: pointer;" />&nbsp;
 		            	<img src="/images/bt_del.gif" onclick="showUpdate('DEL')" style="cursor: pointer;"/>

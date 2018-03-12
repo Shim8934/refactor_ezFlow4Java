@@ -158,6 +158,7 @@
 	        m_rgParams4PostOption["bodyType"] = g_bodyType;
 	        m_rgParams4PostOption["EachMail"] = iseachMail;
 	        m_rgParams4PostOption["SecurityMail"] = pSecurity;
+	        
 	        if (xmpTo.innerHTML != "") {
 	        	var moduleType = "<c:out value='${moduleType}'/>";
 	        	
@@ -165,22 +166,30 @@
 	        		var pollSendType = "<c:out value='${pollSendType}'/>";       		
 		            var addrArr = getEmailAddressList2(xmpTo.innerHTML, pollSendType);
 		            addReceiverFromList(0, addrArr);
-	        	}
-	        	else {
+	        	} else {
 		            var splitAddr = getEmailAddressList(xmpTo.innerHTML);
 		            addReceiverFromList(0, splitAddr);
 	        	}
 	        }
+	        
 	        if (xmpCc.innerHTML != "") {
 	            splitAddr = getEmailAddressList(xmpCc.innerHTML);
 	            addReceiverFromList(1, splitAddr);
 	        }
+	        
 	        if (xmpBcc.innerHTML != "") {
 	            splitAddr = getEmailAddressList(xmpBcc.innerHTML);
 	            addReceiverFromList(2, splitAddr);
+	            $('#BccViewer').find('img').attr('src', GroupminImg);
+			    $('#BccViewer').attr("status","on");
+			    document.getElementById("MsgBCC_TRu").style.display = "";
+			    document.getElementById("MsgBCC_TR").style.display = "";
 	        }
-	        Subject_ReApply();        
+	        
+	        Subject_ReApply();  
+            window.onresize();
 	        g_bDirty = false;
+	        
 	        if (g_charsetCheck == "0") {
 	            if (confirm("<spring:message code='ezEmail.t665' />")) {
 	                location.href = location.href + "&attach=1";
@@ -1008,7 +1017,12 @@
 	                    filesize = strLang116;
 	                }
 	                else if (filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
-	                    filename = filename + ".mht";
+	                    var extension = filename.substring(filename.length - 4);
+	                    
+	                    if (extension.toLowerCase() != ".mht") {
+	                    	filename = filename + ".mht";
+	                    }
+	                    
 	                    filesize = strLang116;
 	                }
 
@@ -1292,7 +1306,7 @@
 	                    <ul style="float:right;margin-right:50px">
 	                    	<li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">
 	                        	<input type="checkbox" id="chkSecureMail" />
-	                        	<label for="chkSecureMail" style="color:white"><spring:message code='ezEmail.lhm63' /></label>	                        	
+	                        	<label for="chkSecureMail" style="color:#333"><spring:message code='ezEmail.lhm63' /></label>	                        	
 	                        </li>
 	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;">
 	                            <img src="/images/pbar.gif">
@@ -1480,7 +1494,7 @@
                 		<!-- 2017-01-24 이효민 : 쓰이는 곳 없어서 우선 주석처리
                 		<tr id="HolderDocSend" style="display:none">
                             <td style="height:150px;">
-                                <div id="docContentBorder" style="border: #B6B6B6 1px solid; background-color: white;margin-top: 5px;overflow:auto;text-align:center;">
+                                <div id="docContentBorder" style="border: #ddd 1px solid; background-color: white;margin-top: 5px;overflow:auto;text-align:center;">
                                     <div id="docContent" style="height: 100%; margin:auto;width:620px;border:none;text-align:center;" ></div>
                                 </div>
                             </td>
