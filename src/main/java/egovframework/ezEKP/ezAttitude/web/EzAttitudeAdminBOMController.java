@@ -233,6 +233,7 @@ public class EzAttitudeAdminBOMController {
 	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfigInfo.do")
+	@ResponseBody
 	public JSONArray attitudeTypeConfigInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("attitudeTypeConfigInfo started.");
 		//TODO===============================================================================================================================================

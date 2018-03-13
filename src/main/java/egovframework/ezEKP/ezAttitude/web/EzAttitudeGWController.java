@@ -514,14 +514,13 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeTypeList(@PathVariable String companyId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes] started.");
-		//TODO=====================================================================================================================================================
+
 		JSONObject result = new JSONObject();
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			//근태유형 리스트
 			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, info.getTenantId());
 			
 			result.put("status", "ok");

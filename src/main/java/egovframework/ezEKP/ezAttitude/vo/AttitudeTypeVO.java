@@ -14,7 +14,7 @@ public class AttitudeTypeVO {
 	/** 사용여부*/
 	private String isuse;
 	/** 이미지경로 */
-	private String imagePath;
+	private String imgPath;
 	/** parentId*/
 	private String parentId;
 	/** 작성양식아이디*/
@@ -56,11 +56,11 @@ public class AttitudeTypeVO {
 	public void setIsuse(String isuse) {
 		this.isuse = isuse;
 	}
-	public String getImagePath() {
-		return imagePath;
+	public String getImgPath() {
+		return imgPath;
 	}
-	public void setImagePath(String imagePath) {
-		this.imagePath = imagePath;
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
 	}
 	public String getParentId() {
 		return parentId;

@@ -70,6 +70,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		
 		LOGGER.debug("getAttitudeTypeList ended");
+		
 		return ezAttitudeDAO.getAttitudeTypeList(map);
 	}
 
