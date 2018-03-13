@@ -172,7 +172,7 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code="ezResource.t119" /></h1>
-		<div id="TreeView" valign="top" style="height:300px;width:100%;overflow-x:auto;overflow-y:auto;BORDER:#b6b6b6 1px solid; BACKGROUND-COLOR:#ffffff; vertical-align:top"></div>
+		<div id="TreeView" valign="top" style="height:300px;width:100%;overflow-x:auto;overflow-y:auto;BORDER:#ddd 1px solid; BACKGROUND-COLOR:#ffffff; vertical-align:top"></div>
 		<div class="btnposition">
       		<a class="imgbtn"><span onclick="bt_Ok_onclick()" ><spring:message code="ezResource.t15" /></span></a>
       		<a class="imgbtn"><span onclick="bt_Close_onclick()" ><spring:message code="ezResource.t16" /></span></a>

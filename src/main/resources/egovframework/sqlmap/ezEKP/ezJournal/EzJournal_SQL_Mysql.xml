@@ -13,6 +13,7 @@
 	<typeAlias alias="journalEnvVO" type="egovframework.ezEKP.ezJournal.vo.JournalEnvVO"/>	
 	<typeAlias alias="journalVO" type="egovframework.ezEKP.ezJournal.vo.JournalVO"/>	
 	<typeAlias alias="fileVO" type="egovframework.ezEKP.ezJournal.vo.JournalFileVO"/>	
+	<typeAlias alias="JournalAttachVO" type="egovframework.ezEKP.ezJournal.vo.JournalAttachVO"/>	
 	
 	<resultMap class="journalVO" id="journalMap" groupBy="journalId">
 		<result property="journalId" column="journal_id"/>
@@ -116,6 +117,7 @@
 		<result property="formName"		column="form_name"			columnIndex="2"/>
 		<result property="formInfo"		column="form_info"			columnIndex="3"/>
 		<result property="formContent"	column="form_content"		columnIndex="4"/>
+		<result property="formStatus"	column="form_status"		columnIndex="5"/>
 	</resultMap> 
 	
 	<resultMap class="deptInfoVO" id="deptInfoVO">
@@ -176,7 +178,7 @@
 						a.form_id,
 						a.form_name,
 						a.form_info,
-						a.form_date,
+						DATE_ADD(DATE_FORMAT(a.form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
 						a.form_writer,
 						a.form_status
 					from 
@@ -197,7 +199,7 @@
 						form_id,
 						form_name,
 						form_info,
-						form_date,
+						DATE_ADD(DATE_FORMAT(form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
 						form_writer,
 						form_status
 					from 
@@ -218,7 +220,7 @@
 					a.form_id,
 					a.form_name,
 					a.form_info,
-					a.form_date,
+					DATE_ADD(DATE_FORMAT(a.form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
 					a.form_writer,
 					a.form_status
 				from 
@@ -256,7 +258,7 @@
 			tenant_id,		form_name,		form_content,		type_id,		form_date,		form_writer,		form_info,			company_id
 		)
 		values (
-			#tenantId#,		#formName#,		#formContent#,		#typeId#,		now(),			#formWriter#,		#formDescript#,		#companyId#
+			#tenantId#,		#formName#,		#formContent#,		#typeId#,		#writeDate#,	#formWriter#,		#formDescript#,		#companyId#
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
 			select last_insert_id()
@@ -383,7 +385,8 @@
 			form_id,
 			form_name,
 			form_info,
-			form_content
+			form_content,
+			form_status
 		from
 			tbl_journal_form
 		where
@@ -600,7 +603,7 @@
 			tenant_id,		user_id,		favorite_name,		favorite_date
 		)
 		values (
-			#tenantId#,		#userId#,		#favoriteName#,		now()
+			#tenantId#,		#userId#,		#favoriteName#,		#nowDate#
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
 			select last_insert_id()
@@ -622,7 +625,7 @@
 		select 
 			favorite_id,
 			favorite_name,
-			favorite_date
+			DATE_ADD(DATE_FORMAT(favorite_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as favorite_date
 		from 
 			tbl_journal_recv_favorite
 		where
@@ -664,8 +667,7 @@
 		update 
 			tbl_journal_recv_favorite
 		set
-			favorite_name = #favoriteName#,
-			favorite_date = now()
+			favorite_name = #favoriteName#
 		where
 			favorite_id = #favoriteId#
 		and
@@ -815,4 +817,16 @@
 		and j.journal_id=#journalId#
         group by 1,2,3,4,5,6,7,11,12,13,14
 	</select>
+	
+	<!-- 첨부파일 리스트 가져오기 -->
+	<select id="getAttachList" parameterClass="Map" resultClass="JournalAttachVO">
+	    select  
+	        * 
+	    from 
+	        tbl_journal_file
+	    where 
+	        tenant_id = #tenantId#
+	    AND
+	        journal_id = #journalId#
+  </select>
 </sqlMap>

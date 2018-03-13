@@ -412,6 +412,8 @@
 		</div>
         <script type="text/javascript">
         //	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+        	selToggleList(document.getElementById("menu"), "ul", "li", "0");
+            selToggleList(document.getElementById("close"), "ul", "li", "0");
             Tab1_NewTabIni("tab1");
         </script>
 	</body>

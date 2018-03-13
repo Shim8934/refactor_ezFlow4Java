@@ -344,7 +344,7 @@
 	            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 				</SELECT>
-				<ul style="margin-top:15px">	            	
+				<ul style="margin-top:15px">
 	                <li><span onclick="add_notice()"><spring:message code = 'ezPersonal.t158' /></span></li>
 	            </ul>
 		  	</div>

@@ -22,8 +22,8 @@
 			    word-break: keep-all;
 			    word-wrap: normal;
 			    color: #666;
-			    background-color:#f3f3f3;
-			    border:1px solid #b6b6b6;
+			    background-color:#f8f8f8;
+			    border:1px solid #ddd;
 			    padding:2px 10px;
 		        text-align:center;
 		        width:50px;
@@ -32,11 +32,11 @@
 		   .printcontent th, .popuplist th{
 			height:23px;
 		    }
-		    .printcontent{border:1px solid #b6b6b6;margin:0;}
+		    .printcontent{border:1px solid #ddd;margin:0;}
 		    .printcontent td, .file td, .file2 td, .popuplist td {
 			    padding:0px 2px 0px 2px;
 			    background: #FFF;
-			    border:1px solid #b6b6b6;
+			    border:1px solid #ddd;
 			    height:29px;
 			    word-break:break-all;			
 		    }		
@@ -139,7 +139,7 @@
 				    </td>
 				</tr>            
 	      	</table>
-			<div id="printDocument" style="border:1px solid #b6b6b6; margin-top:10px;padding-right:15px; PADDING-LEFT: 10px; PADDING-BOTTOM: 5px; PADDING-TOP: 10px; line-height:1.3;width:95.8%;font-size:12px;">${printDocument}</div>			
+			<div id="printDocument" style="border:1px solid #ddd; margin-top:10px;padding-right:15px; PADDING-LEFT: 10px; PADDING-BOTTOM: 5px; PADDING-TOP: 10px; line-height:1.3;width:95.8%;font-size:12px;">${printDocument}</div>			
 		</div>
 	</body>
 </html>

@@ -127,7 +127,8 @@
 		        document.getElementById('prog_bar').style.width = "0%";
 		        document.getElementById('prog_num').innerHTML = "0";
 		        document.getElementById('progdiv').style.display = "none";
-		        window.parent.setAttachFileInfo(xhr.responseText);	        
+		        console.log(xhr.responseText);
+		        setAttachFileInfo(xhr.responseText);	        
 		        
 		        isfileup = false;
 		    }
@@ -140,6 +141,70 @@
 		        alert("The upload has been canceled by the user or the browser dropped the connection.");
 		    }
 	
+		    function setAttachFileInfo(str) {
+		        var filelist = JSON.parse(str);
+		        
+		        try {
+		            var listtable;
+		            var extCheck = false; 
+
+		            listtable = document.getElementById("filelist");
+		            document.getElementById("lstAttachLink").appendChild(listtable);
+
+		            for (i = 0; i < filelist.length; i++) {
+		                var newFileName = filelist[i].pUploadSN;
+		                var pFileName = filelist[i].pFileName;
+		                var fileSize = filelist[i].fileSize;
+
+		                if (filelist[i].resultUpload == "true") {
+		                    objTr = document.createElement("TR");
+		                    objTr.setAttribute("DATA2", newFileName + ";" + pFileName);
+
+		                    var objTd = document.createElement("TD");
+		                    objTd.style.textAlign = "center";
+
+		                    var input = document.createElement("input");
+		                    input.type = "checkbox";
+		                    input.name = "fileSelect";
+
+		                    objTd.appendChild(input);
+		                    objTr.appendChild(objTd);
+
+		                    var objTd2 = document.createElement("TD");
+
+		                    objTd2.setAttribute("NAME", "fileName");
+		                    objTd2.innerHTML = pFileName;
+		                    objTd2.style.wordWrap = "break-word";
+		                    objTr.appendChild(objTd2);
+
+		                    var fileSize = parseInt(fileSize);
+
+		                    if (fileSize / 1024 / 1024 > 1) {
+		                        fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
+		                    }
+		                    else if (fileSize / 1024 > 1) {
+		                        fileSize = parseInt(fileSize / 1024) + "KB";
+		                    }
+		                    else {
+		                        fileSize = fileSize + "B";
+		                    }
+
+		                    var objTd3 = document.createElement("TD");
+		                    setNodeText(objTd3, fileSize);
+		                    objTr.appendChild(objTd3);
+
+		                    document.getElementById("filelist").appendChild(objTr);
+		                }
+		                else {
+		                    extCheck = true;
+		                }
+		            }
+		            if (extCheck)
+		                alert("<spring:message code='main.sp12'/>");
+		        }
+		        catch (e) { alert("returnvalue :: " + e.description); }
+		    }
+		    
 		    function btnfileup() {
 		        document.getElementById("file").click();
 		    }
@@ -150,7 +215,6 @@
 	
 		    function btnfiledel() {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
-		        var pBoardID = window.parent.pBoardID;
 		        var strRet = "";
 	
 		        var isFileDelete = false;
@@ -208,8 +272,8 @@
 		        		fd.append("fileToUpload", file[i]);
 		        	}		            
 		        }
-//		        fd.append("boardid", window.parent.pBoardID);
-		        fd.append("maxsize", window.parent.AttachLimit * 1024 * 1024);
+		        fd.append("typeId", window.parent.typeId);
+		        fd.append("maxSize", window.parent.AttachLimit * 1024 * 1024);
 //		        fd.append("mode", "ATT");
 	
 		        isfileup = true;

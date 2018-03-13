@@ -127,8 +127,8 @@
 						}
 						
 						var percent = votesArr[i][1]/totalVotes;												
-						inforDiv.innerHTML = "&nbsp(<strong>" + votesArr[i][1] + "</strong><spring:message code = 'ezPoll.t166'/>/"
-											 + "<span style=\"color:red; font-weight: bold\">" +  (percent * 100).toFixed(1) + "</span>" + "%)";
+						inforDiv.innerHTML = "&nbsp<span style='color:#333'>" + votesArr[i][1] + "</span><spring:message code = 'ezPoll.t166'/>/"
+											 + "<span style=\"color:rgb(245, 117, 120);\">" +  (percent * 100).toFixed(1) + "</span>" + "%";
 						
 						if (votesArr[i][1] != 0) {																					
 							graph.style.display = "inline-block";		
@@ -141,8 +141,8 @@
 					}
 					else {
 						graph.style.display = "none";
-						inforDiv.innerHTML = "&nbsp(<strong>" + votesArr[i][1] + "</strong><spring:message code = 'ezPoll.t166'/>/"
-											 + "<span style=\"color:red; font-weight: bold\">0.0</span>" + "%)";
+						inforDiv.innerHTML = "&nbsp<span style='color:#333'>" + votesArr[i][1] + "</span><spring:message code = 'ezPoll.t166'/>/"
+											 + "<span style=\"color:rgb(245, 117, 120); \">0.0</span>" + "%";
 					}
 				}
 			}
@@ -162,14 +162,14 @@
       							<div class="poll_list1"> 								    
 		               				<div style="display: inline-block; width: 100%; font-family: Gulim,Dotum,Arial,Helvetica,sans-serif; font-size: 12px; ">
 		               					<div style="float:left; display: block;">${loop.index + 1}. </div>
-		               					<div style="float:left; display: block; width: 120px; overflow-x: hidden; white-space: nowrap; text-overflow: ellipsis;" title="<c:out value ="${_option.content}" />"><c:out value ="${_option.content}" /></div>
+		               					<div style="float:left; display: block; width: 130px; overflow-x: hidden; white-space: nowrap; text-overflow: ellipsis;" title="<c:out value ="${_option.content}" />"><c:out value ="${_option.content}" /></div>
 		               					
 		               					<c:choose>
 		               						<c:when test="${seeResultBefore == 1}">
-		               							<div id="info<c:out value ="${_option.ansId}" />" style="float:left; display: block;">&nbsp(<strong>${_option.votesNumber}</strong><spring:message code = 'ezPoll.t166'/>/</div>
+		               							<div id="info<c:out value ="${_option.ansId}" />" style="float:right; display: block;">&nbsp${_option.votesNumber}<spring:message code = 'ezPoll.t166'/>/</div>
 		               						</c:when>
 		               						<c:otherwise>
-		               							<div id="info<c:out value ="${_option.ansId}" />" style="float:left; display: none;">&nbsp(<strong>${_option.votesNumber}</strong><spring:message code = 'ezPoll.t166'/>/</div>		               							
+		               							<div id="info<c:out value ="${_option.ansId}" />" style="float:right; display: none;">&nbsp${_option.votesNumber}<spring:message code = 'ezPoll.t166'/>/</div>		               							
 		               						</c:otherwise>
 		               					</c:choose>
 		               					

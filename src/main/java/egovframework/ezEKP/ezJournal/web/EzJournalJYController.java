@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezJournal.web;
 
 import java.io.File;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -14,14 +15,21 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -57,9 +65,9 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String offset = userInfo.getOffset();
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
-		nowDate = nowDate.substring(0, 10);
-		nowDate = nowDate.replace("-", "");
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMdd"), offset, false);
+//		nowDate = nowDate.substring(0, 10);
+//		nowDate = nowDate.replace("-", "");
 		String mode = request.getParameter("mode");
 		String typeId = request.getParameter("typeId");
 		String useEditor = commonUtil.getTenantConfigRest("EDITOR", userInfo.getId(), request);
@@ -104,9 +112,11 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		if (typeId == null || typeId.equals("")) {
 			typeId = "basic";
 		}
+		String deptId = request.getParameter("deptId");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("deptId", deptId);
 		
 		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms";
 		
@@ -378,6 +388,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			param.clear();
 			param.put("formName", jsonResult.get("formName"));
 			param.put("formContent", jsonResult.get("formContent"));
+			param.put("formStatus", jsonResult.get("formStatus"));
 			logger.debug("resultparam 확인 : " + param);
 			return JsonUtil.MapToJson(param);
 		}
@@ -442,7 +453,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		}
 		
 		if (request.getParameter("journalId") != null && !request.getParameter("journalId").equals("")) {
-			mode = request.getParameter("journalId");
+			journalId = request.getParameter("journalId");
 		}
         
 		model.addAttribute("userInfo", userInfo);
@@ -459,25 +470,31 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezJournal/uploadJournalAttach.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String uploadJournalAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
+	public String uploadJournalAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		
 		logger.debug("uploadJournalAttach started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
-		int cnt = multiFile.size();
+		String gwServerUrl = config.getProperty("config.journalGWServerURL");
+		String url = gwServerUrl + "/rest/ezjournal/attachfiles";
 		
-		String realPath = request.getServletContext().getRealPath("");
-		String[] pFileName = new String[cnt];
+		URI uri = URI.create(url);
+		
+		String typeId = request.getParameter("typeId");
+		List<MultipartFile> files = request.getFiles("fileToUpload"); 
+		int cnt = files.size();
+		int maxSize = 0;
+		
+//		String realPath = request.getServletContext().getRealPath("");
         Long[] fileSize = new Long[cnt];        
         String[] resultUpload = new String[cnt];
         String[] sGUID = new String[cnt];
         String[] pUploadSN = new String[cnt];
+        maxSize = Integer.parseInt(request.getParameter("maxSize"));
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
         
-        String useExtension = commonUtil.getTenantConfigRest("USE_FileExtension", userInfo.getId(), request);
-        
-        //2018-02-13 주홍선 mode와 circularID 가져오도록 주석 제거
         String mode = "";
 		String journalId = "";
 
@@ -496,72 +513,57 @@ public class EzJournalJYController extends EgovFileMngUtil {
             sGUID[i] = UUID.randomUUID().toString();
             pUploadSN[i] = "{" + sGUID[i] + "}";
         }
-
-        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	
+        
+        HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+        
+        if (StringUtils.isNotEmpty(files.get(0).getOriginalFilename()) && StringUtils.isNotBlank(files.get(0).getOriginalFilename())) {        	
             for (int i = 0; i < cnt; i++) {
-                String _pFileName = multiFile.get(i).getOriginalFilename();
-                if (_pFileName.indexOf(commonUtil.separator) > 0) {
-                    _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
-                }
-                pFileName[i] = _pFileName;
-            }
-        }
-
-        for (int i = 0; i < cnt; i++) {
-            pFileName[i] = pFileName[i].replace("%2b", "+");
-            pFileName[i] = pFileName[i].replace("%3b", ";");
-        }
-        
-        String pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", userInfo.getTenantId());
-
-        pDirPath = realPath + pDirPath;
-        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
-        	pDirPath = pDirPath + commonUtil.separator;
-        }
-        File file = new File(pDirPath + "uploadFile");
-        File tempFile = new File(pDirPath + "tempUploadFile");
-
-        if (!file.exists()) {
-        	file.mkdir();
-        }
-        
-        if (!tempFile.exists()) {
-        	tempFile.mkdir();
-        }
-
-        StringBuffer strXML = new StringBuffer();
-        strXML.append("<ROOT><NODES>");
-        
-        for (int i = 0; i < cnt; i++) {        	
-        	fileSize[i] = multiFile.get(i).getSize();
-            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
-            String newFileName = pUploadSN[i];
-            
-            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
-				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
-				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
-				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
-				strXML.append("<DATA4><![CDATA[]]></DATA4>");
-				strXML.append("<DATA5><![CDATA[denied]]></DATA5>");
-            } else {
-//            	if (mode.equals("temp")) {
-            	writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");            		
-//            	} else {
-//            		writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
-//            	}
+            	JSONObject fileJson = new JSONObject();
             	
-				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
-				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
-				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
-				strXML.append("<DATA4><![CDATA[]]></DATA4>");
-				strXML.append("<DATA5><![CDATA[OK]]></DATA5>");
+            	byte[] bytes = files.get(i).getBytes();
+            	fileSize[i] = files.get(i).getSize();
+                String originalFilename = files.get(i).getOriginalFilename();
+                fileJson.put("bytes", bytes);
+                fileJson.put("fileSize", fileSize[i]);
+                fileJson.put("originalFilename", originalFilename);
+                fileJson.put("typeId", typeId);
+                
+                jsonArray.add(fileJson);
             }
         }
-        strXML.append("</NODES></ROOT>");
+        jsonObject.put("fileArray", jsonArray);
+		jsonObject.put("cnt", cnt);
+		jsonObject.put("maxSize", maxSize);
+		jsonObject.put("userId",userInfo.getId());
+		jsonObject.put("typeId", typeId);
         
+		HttpEntity<JSONObject> entity = new HttpEntity(jsonObject, headers);
+		
+        RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(uri, HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+	
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		Object data = "";
+		
+		if (status.equals("ok")) {
+			data = resultBody.get("data");
+			logger.debug("xml데이터 확인 : " + data);
+			model.addAttribute("data", data.toString());
+			return data.toString();
+		}
+
+		logger.debug("status:"+status);
         logger.debug("uploadJournalAttach ended");
         
-        return strXML.toString();
+        return "json";
     }
 	
 	/**
@@ -575,11 +577,11 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		//2018-02-13 주홍선 loginSimpleVO 쿠키에서 가져오도록 변경
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 
-		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
+		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_journal.ROOT", loginSimpleVO.getTenantId());
 		String fileList = request.getParameter("fileList");
 		//2018-02-13 주홍선 주석제거
 		String mode = "";
-		String circularID = "";
+		String journalID = "";
 		String filePath = "";
 		
 		logger.debug("fileList : " + fileList);
@@ -588,12 +590,12 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			mode = request.getParameter("mode");
 		}
 		
-		if (request.getParameter("circularID") != null && !request.getParameter("circularID").equals("")) {
-			circularID = request.getParameter("circularID");
+		if (request.getParameter("journalID") != null && !request.getParameter("journalID").equals("")) {
+			journalID = request.getParameter("journalID");
 		}
 
 		if (mode.equals("temp")) {
-			filePath = "uploadFile" + commonUtil.separator + circularID + "_uploadFile";
+			filePath = "uploadFile" + commonUtil.separator + journalID + "_uploadFile";
 		} else {
 			filePath = "tempUploadFile";
 		}
@@ -606,8 +608,9 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			for (int i=0; i<data.length; i++) {
 				String sGUID = data[i].split(";")[0];
 				String fileName = data[i].split(";")[1];
+				logger.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 				
-				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "_" + fileName);
 				
 				file.delete();
 			}			
@@ -617,4 +620,6 @@ public class EzJournalJYController extends EgovFileMngUtil {
         
         return "json";
     }
+	
+	
 }

@@ -172,7 +172,7 @@
 			</div>
     		<br />
     		<div id="TreeView" valign="top" style="behavior:url(/js/ezResource/organtreeview.htc);height:380px;width:174px;overflow-x:auto;overflow-y:auto;
-    			BORDER:#b6b6b6 0px solid; BACKGROUND-COLOR:#F8F8F8;margin-top:5px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
+    			BORDER:#ddd 0px solid; BACKGROUND-COLOR:#f8f8fa;margin-top:5px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
 				onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" onclick="brdlistsInit()">
 			</div>
     		

@@ -1368,7 +1368,7 @@
 		  <c:choose>
 			  <c:when test="${guBun != '3'}">
 			    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
-			        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:495px; overflow:auto; border:1px solid #b6b6b6"></iframe>
+			        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:495px; overflow:auto; border:1px solid #ddd"></iframe>
 			    </td>
 			  </c:when>
 			  <c:otherwise>

@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">		
 	    	var selectedUser ;
@@ -73,25 +74,26 @@
 		<h1><spring:message code='ezJournal.t2' /></h1>
 		<form class="journalForm">
 			<div id="mainmenu">
-				<span><b><spring:message code = 'ezApprovalG.t1512' /></b></span>
-	            <select name="companyId" id="companyId" onchange="changeSelectCompany(this.value)">
-	            	<c:forEach items="${compList}" var="company">
-		            	<option value="${company.companyId }"
-	            		<c:if test="${company.selected eq 'selected' }">
-	            			selected
-	            		</c:if>
-		            	>${company.companyName }</option>
-	            	</c:forEach>
-	            </select>
-			</div>
-			<br/>
-			<div id="mainmenu">
+				<span><b><spring:message code = 'ezApprovalG.t1512' /></b>
+		            <select name="companyId" id="companyId" onchange="changeSelectCompany(this.value)">
+		            	<c:forEach items="${compList}" var="company">
+			            	<option value="${company.companyId }"
+		            		<c:if test="${company.selected eq 'selected' }">
+		            			selected
+		            		</c:if>
+			            	>${company.companyName }</option>
+		            	</c:forEach>
+		            </select><br/><br/>
+	            </span>
 	  			<ul>
 					<li><span onClick="insertAuth();"><spring:message code='ezJournal.t36' /></span></li>
 					<li><span onClick="updateAuth();"><spring:message code='ezJournal.t362' /></span></li>
 					<li><span onClick="deleteAuthor();"><spring:message code='ezJournal.t37' /></span></li>
 	  			</ul>
 			</div>
+			<script type="text/javascript">
+		   		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+			</script>
 			<table class="mainlist" style="width:80%;">
 			    <tr>
 			        <th style="text-align: center; width:20%;"><spring:message code='ezJournal.t38' /></th>
