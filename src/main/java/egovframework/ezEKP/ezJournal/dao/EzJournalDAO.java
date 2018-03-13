@@ -333,4 +333,28 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public List<JournalAttachVO> getAttachList(Map<String, Object> map) {
 		return (List<JournalAttachVO>) list("getAttachList", map);
 	}
+
+	/**
+	 * 일지저장
+	 * @param map
+	 */
+	public int insertJournal(Map<String, Object> map) {
+		return (int) insert("insertJournal", map);
+	}
+
+	/**
+	 * 첨부파일 정보 저장
+	 * @param map
+	 */
+	public void insertJournalAttach(Map<String, Object> map) {
+		insert("insertJournalAttach", map);
+	}
+
+	/**
+	 * 수신자 정보 저장
+	 * @param map
+	 */
+	public void insertReceiver(Map<String, Object> map) {
+		insert("insertReceiver", map);
+	}
 }

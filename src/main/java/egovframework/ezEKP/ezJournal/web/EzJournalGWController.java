@@ -503,6 +503,21 @@ public class EzJournalGWController {
 		
 		JSONObject result = new JSONObject();
 		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
+			String realPath = commonUtil.getRealPath(request);
+			
+			ezJournalService.insertJournal(jsonParam, info, realPath);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+		
 		LOGGER.debug("ezJournal G/W insertJournal ended.");
 		return result;
 	}
@@ -720,9 +735,9 @@ public class EzJournalGWController {
                         String pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator;
 //                        
                         // 업로드된 파일 데이터를 파일로 저장한다.
-                        journalWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
+                        journalWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), pUploadSN[i] + ";" + pFileName[i], pAttachPath);
                         
-                        fileLocation[i] = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId()) + commonUtil.separator + "tempUploadFile" + commonUtil.separator + pUploadSN[i] + "_" + pFileName[i];
+                        fileLocation[i] = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId()) + commonUtil.separator + "tempUploadFile" + commonUtil.separator + pUploadSN[i] + ";" + pFileName[i];
                         resultUpload[i] = "true";
                     }
 	            }

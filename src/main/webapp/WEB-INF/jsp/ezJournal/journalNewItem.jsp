@@ -41,6 +41,9 @@
 	    	var deptId = "${info.deptID}";
 	    	// 첨부파일 최대용량
 	    	var AttachLimit = 5;
+	    	var mode = "${mode}";
+	    	var oldJournalId = "${journalId}";
+	    	var selFormId = "";
 	    	
 			// 선택된 일지함의 양식 리스트 가져오기
 	    	function getFormList(elem) {
@@ -88,7 +91,8 @@
    						}
    						var title = "[" + result.formName + "] " + nowDate + " (" + userName + ")";
    						console.log(title);
-   						$("#txtTitle").val(title);
+   						selFormId = formId;
+   						$("#title").val(title);
    						message.SetEditorContent(result.formContent);
 	   				},
 	   				error : function(request, status, error) {
@@ -126,19 +130,23 @@
 	    	
 			// 선택된 수신자 화면에 뿌리기
 	    	function showReceiver() {
-	    		console.log(selReceiver);
+	    		console.log("selReceiver : " + selReceiver);
     			var strReceiver = "";
+    			var strReceiverID = "";
     			var total = $(selReceiver).length;
     			console.log("total : " + total);
 	    		$.each(selReceiver, function(index, item) {
 					if (index == total - 1) {
-						strReceiver += item.userName;												
+						strReceiver += item.userName;	
+						strReceiverID += item.userId;
 					} else {
 						strReceiver += item.userName + ", ";
+						strReceiverID += item.userId + ", ";
 					}
 	    		});
-	    		console.log(strReceiver);
+	    		console.log(strReceiverID);
 	    		$("#receiverlist").html(strReceiver);
+	    		$("#receiverID").html(strReceiverID);
 	    	}
 			
 	    /* 	
@@ -171,23 +179,15 @@
 	        	}
 	    		//일지작성 눌렀을 시
 	        	var content = message.GetEditorContent();
-				var option = 0;
 	
-				if ($("#txtTitle").val() == "") {
+				if ($("#title").val() == "") {
 					alert("<spring:message code='ezCircular.t52'/>");
 					doubleSubmitFlag = false;
 					
 					return;
 				}
 	
-				if ($("#receiverlist").text() == "") {
-	    			alert("<spring:message code='ezCircular.t53'/>")
-	    			doubleSubmitFlag = false;
-	    			
-	    			return;
-	    		}
-	
-				if ($.trim($("#txtTitle").val()) == "") {
+				if ($.trim($("#title").val()) == "") {
 		        	alert("<spring:message code='ezCircular.t190' />");
 		        	doubleSubmitFlag = false;
 	
@@ -195,10 +195,8 @@
 		        }
 	
 				// 부서공유여부
-				if ($(':checkbox[name=chkList]:checked').length == 2) {
-					option = 3;
-				}
-		
+				var isPublic = $("input[type=radio][name=isPublic]:checked").val();
+				
 				//파일 첨부된 목록 가져오기
 				var listtable = dadiframe.document.getElementById("filelist");
 				var filelist = GetChildNodes(listtable);
@@ -212,36 +210,29 @@
 	        		}
 				}
 				
-				var receiverList = document.getElementById("receiverlist").innerHTML;
-				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
-				var receiverID = document.getElementById("receiverID").innerHTML;
-	
-				if (receiverList.indexOf(userMyName) == -1) {
-					receiverList += ", " + userMyName;
-					receiverList2 += ", " + userMyName2;
-					receiverID += ", " + userMyID;
-				}
+				// 수신자 있는 경우 수신자 가져오기
+				var receiverList = $("#receiverlist").html();
+				var receiverID = $("#receiverID").html();
 	
 	    		$.ajax ({
-	 			   	url : '/ezCircular/saveCircular.do',
+	 			   	url : '/ezJournal/saveJournal.do',
 	 			   	type : 'POST',
 	                dataType : 'text',
-	                data : {	title : document.getElementById("title").value,
-	                			importance : document.getElementById("importance").value,
-	                			option : option,
+	                data : {	title : $("#title").val(),
+	                			typeId : typeId,
+	                			formId : selFormId,
+	                			isPublic : isPublic,
 	                			receiverList : receiverList,
-	                			receiverList2 : receiverList2,
 	                			receiverID : receiverID,
 	                			content : content,
 	                			fileList : fileList,
-	                			oldCircularID : oldCircularID,
+	                			oldJournalId : oldJournalId,
 	                			mode : mode
 	                },  
 	                cache: false,
 	                success: function(data) {	   
 	                  alert("<spring:message code='ezCircular.t70'/>");
 	                  
-	                  window.opener.getLeftCount();
 	                  window.opener.refresh_onclick();
 	             	  window.close();
 	                }
@@ -334,8 +325,8 @@
 	                        </td>
 	                        <th><spring:message code='ezJournal.t77' /></th>
 	                        <td style="width: 300px;">
-	                        	<input type="radio" id="selPublic" name="isPublic" value="Y" checked onclick=""/><label for="selPublic"><spring:message code='ezJournal.t78'/></label>
-	                        	<input type="radio" id="selPrivate" name="isPublic" value="N" onclick=""/><label for="selPrivate"><spring:message code='ezJournal.t79'/></label>
+	                        	<input type="radio" id="selPublic" name="isPublic" value="Y" checked/><label for="selPublic"><spring:message code='ezJournal.t78'/></label>
+	                        	<input type="radio" id="selPrivate" name="isPublic" value="N"/><label for="selPrivate"><spring:message code='ezJournal.t79'/></label>
 	                        </td>
 	                    </tr>
 	                    <tr>
@@ -343,6 +334,7 @@
 	                        <td colspan="3">
 	                            <input id="receiverInput" name="receiverInput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)" >
 	                       		<div id="receiverlist" style="overflow-y: auto; height: 28px; display: inline;"></div>
+	                        	<div id="receiverID" style="overflow-y: auto; height: 17px; display:none;"></div>
 	                        	<div style="position: absolute; right: 15px; top: 88px;">
 	                        		<a class="imgbtn"><span style="text-align: right;" id="clickbtn" onclick="selectReceiver()"><spring:message code='ezJournal.t81'/></span></a>
 	                        	</div>
@@ -351,7 +343,7 @@
 	                    <tr>
 	                        <th><spring:message code='ezJournal.t56' /></th>
 	                        <td colspan="3">
-	                            <input type="text" id="txtTitle" style="WIDTH: 100%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeydown="Title_onkeyDown(event)" >
+	                            <input type="text" id="title" style="WIDTH: 100%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeydown="Title_onkeyDown(event)" >
 	                        </td>
 	                    </tr>
 	                </table>
