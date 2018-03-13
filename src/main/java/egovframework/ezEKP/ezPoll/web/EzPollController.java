@@ -537,6 +537,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int resultFirst = Integer.parseInt(req.getParameter("hidResultFirst"));
 		String qstModifyInfo = req.getParameter("hidModifyInfo");
 		int setDate = Integer.parseInt(req.getParameter("hidSetDate"));
+		int isSorting = Integer.parseInt(req.getParameter("hidIsSorting"));
 		
 		//Get list of options for this question
 		List<String> listOptions = new ArrayList<String>();
@@ -580,6 +581,8 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO.setResultFirst(resultFirst);
 		pollQuestionVO.setMultiSelect(numberOfMultiSelect);
 		pollQuestionVO.setSetDate(setDate);
+		pollQuestionVO.setIsSorting(isSorting);
+		
 		
 		if (!qstModifyInfo.equals("")) {
 			pollQuestionVO.setQstId(Integer.parseInt(qstModifyInfo));
@@ -811,9 +814,11 @@ public class EzPollController extends EgovFileMngUtil {
 		List<PollAnswerVO> listOptions = ezPollService.getListOptionsOfQst(qstId, tenantId);	
 		
 		//Sort list of options/answers by number of votes
-		Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) -> {
-	        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
-		});
+		if(pollQuestionVO.getIsSorting()==1){
+			Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) -> {
+		        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
+			});
+		}
 		
 		//Get list of comments for this question
 		List<PollCommentVO> listComments = ezPollService.getListCmtOfQst(qstId, tenantId);
