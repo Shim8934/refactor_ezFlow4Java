@@ -29,10 +29,17 @@ public class EzLadderServiceImpl implements EzLadderService {
 	private EzLadderDAO ezLadderDAO;
 	
 	@Override
-	public List<LadderVO> getLadderList(String userId) throws Exception {
+	public List<LadderVO> getLadderList(String userId, String tenantId) throws Exception {
 		logger.debug("getLadderList started.");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		System.out.println("================");
+		System.out.println("================");
+		System.out.println("================");
+		System.out.println("================");
+		System.out.println("================");
+		System.out.println(tenantId);
 		List<LadderVO> list = ezLadderDAO.getLadderList(map);
 		
 		logger.debug("getLadderList ended.");
@@ -196,8 +203,10 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 	@Override
 	public LadderVO getLadderGame(String userId, int ladderId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("ladderId", ladderId);
+		LadderVO vo = ezLadderDAO.ladderContent(map);
+		return vo;
 	}
 
 	@Override

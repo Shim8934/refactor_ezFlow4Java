@@ -3,6 +3,12 @@ function newLad() {
 	window.location.href = '/ezLadder/selectLadderType.do';
 }
 
+// 게임 조회로 이동
+function getLadderGame(ladderId) {
+	allData = [ ladderId, searchSelect, searchInput, mode, currPage ];
+	window.location.href = '/ezLadder/getLadderGame.do?allData=' + allData;
+}
+
 // 참여자 버튼
 function participant() {
 	if (modeCheck !== 'part') {
@@ -83,7 +89,7 @@ function allPart() {
 // 삭제
 function deleteLadder(ladderId) {
 
-	allData = [ ladderId, searchSelect, searchInput, mode, currPage ];
+	allData = [ ladderId, searchSelect, searchInput, mode, currPage, back ];
 
 	jQuery.ajaxSettings.traditional = true;
 	if (confirm('삭제 하시겠습니까?')) {
@@ -158,17 +164,15 @@ function viewList(data) {
 		$.each(data.list, function(key, value) {
 
 			list += "<tr class='white'>" + "<td>" + value.type + "</td>"
-					+ "<td>" + value.title + "</td>" + "<td>"
-					+ value.writerName + "</td>" + "<td>"
-					+ value.writeDate.substring(0, 16) + "</td>" + "<td>"
-					+ value.status + "</td>" + "<td>" + value.secretFlag
-					+ "</td>";
+					+ "<td><a href='#' onclick='getLadderGame(" + value.ladderId + ")'>" + value.title + "</a></td>" 
+					+ "<td>" + value.writerName + "</td>"
+					+ "<td>" + value.writeDate.substring(0, 16) + "</td>"
+					+ "<td>" + value.status + "</td>" 
+					+ "<td>" + value.secretFlag	+ "</td>";
 			if (id == value.writerId) {
-				list += "<td><a href='#' onclick='deleteLadder("
-						+ value.ladderId + ")'>" + value.deleteFlag
-						+ "</a></td></tr>";
+				list += "<td><a href='#' onclick='deleteLadder(" + value.ladderId + ")'><img src = '/images/ezLadder/trash.png' width = '30' height = '30'/></a></td></tr>";
 			} else {
-				list += "<td>" + value.deleteFlag + "</td></tr>";
+				list += "<td><img src ='/images/ezLadder/trash.png' width='30' height ='30'/></td></tr>";
 			}
 		});
 	} else {
@@ -184,7 +188,6 @@ function viewList(data) {
 
 // 페이징 처리
 function makePageSelPage() {
-
 	var strtext = "";
 	var PagingHTML = "<div class='pagenavi'>";
 	var pageNum = currPage;

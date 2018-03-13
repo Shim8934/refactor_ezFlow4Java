@@ -11,7 +11,7 @@ import egovframework.ezEKP.ezLadder.vo.LadderVO;
 
 public interface EzLadderService {
 
-	public List<LadderVO> getLadderList(String userId) throws Exception;
+	public List<LadderVO> getLadderList(String userId, String tenantId) throws Exception;
 	public List<LadderVO> getPartLadderList(String userId) throws Exception;
 	public List<LadderVO> searchLadderList(String userId, List<String> allData) throws Exception;
 	

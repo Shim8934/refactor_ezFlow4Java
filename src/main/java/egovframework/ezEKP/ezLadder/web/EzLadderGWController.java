@@ -59,9 +59,9 @@ public class EzLadderGWController {
 		logger.debug("web G/W LADDER [GET /ladder/ladder-list/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
-		
+		String tenantId = request.getParameter("tenantId");
 		try {
-			List<LadderVO> list = ezLadderService.getLadderList(userId);
+			List<LadderVO> list = ezLadderService.getLadderList(userId, tenantId);
 		
 			int page = 1;
 			int block = 10;
@@ -105,7 +105,7 @@ public class EzLadderGWController {
 			if(mode.equals("part")){	// 일부 참여자 선택
 				list = ezLadderService.getPartLadderList(userId);
 			} else {					// 전체 참여자 선택
-				list = ezLadderService.getLadderList(userId);
+				list = ezLadderService.getLadderList(userId , userId);
 			}
 			
 			int block = 10;
@@ -586,16 +586,23 @@ public class EzLadderGWController {
 	/**
 	 * 사디리 게임 조회 
 	 */
-	@RequestMapping(value = "ladder/ladders/{ladderId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
+	@RequestMapping(value = "ladder/ladderGame/{ladderId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
 	public JSONObject gwGetLadderGame(@PathVariable String ladderId , @PathVariable String userId) {
-		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId+ "users/" + userId + "] started.");
+		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
 		
+		int ladId = Integer.parseInt(ladderId);
 		JSONObject result = new JSONObject();
-		
 		try {
+			LadderVO vo = ezLadderService.getLadderGame(userId, ladId);
+			System.out.println(vo);
+			System.out.println(vo.getLadderId());
+			System.out.println(vo.getType());
+			System.out.println(vo.getStatus());
+			System.out.println(vo.getSecretFlag());
+			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", null);
+			result.put("data", vo);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -639,6 +646,9 @@ public class EzLadderGWController {
 			int block = 10;
 			int totalLadder = list.size();
 			int totalPage = (int) Math.ceil(list.size()/(double) 10);
+			if(page>totalPage) {	// 마지막 페이지 사다리 삭제시
+				page = totalPage;
+			}
 			int startPoint = (page - 1)*10;
 			int endPoint = 0;
 			if(page == totalPage) {

@@ -27,12 +27,13 @@
 			var searchOption = "off";
 			var allData = [];
 			var id = "${id}";
-	
+			var back = "none";
 			// onLoad시 페이징 블록 생성
 			$(function() {
 				makePageSelPage();
 			});
-		</script>
+
+			</script>
 	</head>
 	<body class="mainbody" style="min-width: 750px;">
 		<h1><spring:message code="ezLadder.t001"/>
@@ -71,19 +72,19 @@
 					<th width="50px"><spring:message code="ezLadder.t008"/></th>		
 			    </tr>
 				 <c:forEach items="${list }" var="vo">
-					<tr class="white">
+					<tr class="black">
 						<td>${vo.type }</td>
-						<td>${vo.title }</td>
+						<td><a href="#" onClick="getLadderGame(${vo.ladderId})">${vo.title }</a></td>
 						<td>${vo.writerName }</td>
 						<td>${vo.writeDate.substring(0,16) }</td>
 						<td>${vo.status }</td>
 						<td>${vo.secretFlag }</td>
 					<c:choose>
 						<c:when test="${id eq vo.writerId}">
-							<td><a href="#" onclick="deleteLadder(${vo.ladderId})">${vo.deleteFlag }</a></td>
+							<td><a href="#" onclick="deleteLadder(${vo.ladderId})"><img src ='/images/ezLadder/trash.png' width='30' height ='30'/></a></td>
 						</c:when>
 						<c:otherwise>
-							<td>${vo.deleteFlag }</td>
+							<td><img src ='/images/ezLadder/trash.png' width='30' height ='30'/></td>
 						</c:otherwise>
 					</c:choose>
 					</tr>
