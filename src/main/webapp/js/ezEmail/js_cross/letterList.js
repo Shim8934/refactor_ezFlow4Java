@@ -154,7 +154,7 @@ function addLetterList(jsonArr) {
 					letterListHtml += "<span style='float:right'>" + boxName + "</span>";
 				}
 			} else {
-				letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp()'>수정</button>";
+				letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp(this)'>수정</button>";
 				letterListHtml += "<button class='lmLetterDeleteBtn'>삭제</button>";
 			}
 			

@@ -76,9 +76,10 @@
 			// 편지지 추가, 수정 btn 클릭 시  ---- btn -> this, type -> 추가=add
 			function letterEditPopUp(btn, type) {
 				var letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
+				var letterNo = $(btn).parents("li").attr("data-letterno");
 				var popUpType = type == "add" ? type : "modify"; // 클릭된 버튼 구분(추가 or 수정)
 				
-				url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&popUpType=" + popUpType;  
+				url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&popUpType=" + popUpType + "&letterNo=" + letterNo;  
 					
 				window.open(url,"_blank","width=890, height=660");
 			}

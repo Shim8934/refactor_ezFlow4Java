@@ -336,7 +336,7 @@ public class EzEmailAdminLetterController {
 	 * 편지지 추가,수정 팝업  (수아)
 	 */
 	@RequestMapping("/admin/ezEmail/letterEditPopUp.do")
-	public String letterAdminAddSetPopUp(@CookieValue("loginCookie") String loginCookie, @RequestParam("letterBoxNo") String letterBoxNo, @RequestParam("popUpType") String popUpType , Model model) throws Exception{
+	public String letterAdminAddSetPopUp(@CookieValue("loginCookie") String loginCookie, String letterBoxNo, String popUpType , String letterNo, Model model) throws Exception{
 		logger.debug("letterAdminAddSetPopUp started.");
 		logger.debug("letterBoxNo=" + letterBoxNo + ", popUpType=" + popUpType);
 		
@@ -348,16 +348,20 @@ public class EzEmailAdminLetterController {
 		
 		// 편지지 고유 id
 		UUID letterId = null;
+		JSONObject letter = new JSONObject();
 		
 		if (popUpType.equals("add")) { // 편지지 작성
 			letterId = UUID.randomUUID();
 		} else { // 편지지 수정
-			
+			letter = EzEmailAdminLetterService.selectDetailLetter(letterNo);
+			model.addAttribute("letter", letter);
 		}
 		logger.debug("letterId=" + letterId);
 
 		model.addAttribute("letterBoxNo", letterBoxNo);
 		model.addAttribute("letterId", letterId);
+		model.addAttribute("letterNo", letterNo);
+		model.addAttribute("popUpType", popUpType);
 		
 		logger.debug("letterAdminAddSetPopUp ended.");
 		return "admin/ezEmail/letterEditPopUp";

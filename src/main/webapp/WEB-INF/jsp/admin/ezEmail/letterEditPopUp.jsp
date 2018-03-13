@@ -45,7 +45,7 @@
 			</div>
 			<!-- btns -->
 			<div class="leLetterBtns">
-				<button id="leSave" onClick="letterSave(this)" data-letterId="${letterId }" data-boxNo="${letterBoxNo }">저장</button>
+				<button id="leSave" onClick="letterSave(this)" data-letterId="${letterId }" data-letterNo="${letterNo }" data-boxNo="${letterBoxNo }">저장</button>
 				<button id="leClose" onClick="letterPopUpClose()">취소</button>
 			</div>
 		</div> <!-- leLetter End -->
@@ -55,6 +55,8 @@
 			var letterPopUp = true; // 에디터에서 이미지 업로드 할때 편지지 팝업인지 구분 (ckImageUpload.jsp -> fileupload())
 			var letterId = $("#leSave").attr("data-letterId");
 			var letterBoxNo = $("#leSave").attr("data-boxNo");
+			var letter = "${letter}";
+			var popUpType = "${popUpType}"; // add : 작성, modify : 수정
 			
 			// 저장 버튼 클릭시                  btn -> this
 			function letterSave(btn) {
