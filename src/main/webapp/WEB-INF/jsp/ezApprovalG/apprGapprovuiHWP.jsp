@@ -131,6 +131,7 @@
 	        var isHWP = "${isHWP}";
 	        var approvalFlag = "${approvalFlag}";
 	        var ext = "hwp";
+	        var docState = "${docState}";
 	        
 		    function getNextDocList() {
 		        NextDocID = "";
