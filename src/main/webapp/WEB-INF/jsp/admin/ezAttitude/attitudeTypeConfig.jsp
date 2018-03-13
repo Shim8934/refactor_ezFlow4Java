@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title>attitudeConfig</title>
+	    <title>attitudeTypeConfig</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -33,7 +33,7 @@
 	            		useSelect(result);
 	            	},
 	            	error : function() {
-	            		
+	            		 //휴가유형이 없습니다 는 멘트를 출력시키자.****************************************
 	            	}
 	            });
 	        }
@@ -50,11 +50,60 @@
                 $("#contentlist table.mainlist").html(html);
 	        }
 	        
-	        function useSelect(result){
+	        function useSelect(result) {
 	        	for (var i = 0; i < result.length; i++) {
 	        		$('table.mainlist select[name=useSelectBox]').eq(i).val(result[i].isuse);
 	        	}
 	        }
+	        
+	        function save_config() {
+	        	var length = $('table.mainlist select[name=useSelectBox]').length;
+	        	var list = [];
+	        	for (var i = 0; i < length; i++) {
+	        		var typeId = $('table.mainlist select[name=useSelectBox]').eq(i).closest('tr').attr('id');
+	        		var isuse = $('table.mainlist select[name=useSelectBox]').eq(i).val();
+	        		var obj = '';
+	        		obj += typeId + ',' + isuse + ";";
+	        		if (i == (length-1)) {
+	        			obj.slice(0, -1);
+	        		}
+	        		list.push(obj);
+	        	}
+	        	
+	        	var typestr = list.join('');
+	        	
+	            $.ajax({
+	            	type : "POST",
+	            	url : "/admin/ezAttitude/saveAttitudeTypeConfig.do",
+	            	data : {
+	            		"typelist" : typestr,
+	            		"companyId" : encodeURI($("#ListCompany").val())
+	            	},
+	            	success : function() {
+	            		alert('성공');
+	            	},
+	            	error : function() {
+	            		alert('실패');
+	            	}
+	            });        	
+	        }
+	        
+// 	        var saveType_dialogArguments = new Array();
+// 	        function add_notice() {
+// 	            if (CrossYN()) {
+// 	            	saveType_dialogArguments[0] = document.all("ListCompany").value;
+// 	            	saveType_dialogArguments[1] = save_type_Complete;
+//                     var OpenWin = window.open("/admin/ezAttitude/saveType.do", "SaveAttitudeType", GetOpenWindowfeature(800, 520));
+//                     try { OpenWin.focus(); } catch (e) { }
+// 	            } else {
+//                 	rtnValue = window.showModalDialog("/admin/ezAttitude/saveType.do", document.all("ListCompany").value,
+//                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+	                
+// 	                if (typeof (rtnValue) != "undefined") {
+// 	                    company_change();
+// 	                }
+// 	            }
+// 	        }
 		    
 	    </script>
 	</head>
@@ -68,10 +117,10 @@
 				</c:forEach>
 	      	</select>
 	      	<ul>
-	      		<li><span onclick="type_save()"><spring:message code='ezAttitude.t33' /></span></li>
+	      		<li><span onclick="save_type()"><spring:message code='ezAttitude.t33' /></span></li>
 	      		<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 	      		<li><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></li>
-	      		<li><span onclick="cancle_config()"><spring:message code='ezAttitude.t34' /></span></li>
+	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
 	      	</ul>
 	  	</div>
 	  	<table style="width: 950px; height: 385px;" >
@@ -101,6 +150,6 @@
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-
+<!--****************************************************페이징******************************************************************** -->
 	</body>
 </html>

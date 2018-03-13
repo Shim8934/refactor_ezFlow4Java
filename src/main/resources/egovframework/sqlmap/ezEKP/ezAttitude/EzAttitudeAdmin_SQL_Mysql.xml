@@ -156,4 +156,18 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</select>
+	
+	<update id="ezAttitudeAdminDAO.updateAttitudeTypeConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_ATTITUDE_TYPE
+			SET
+				ISUSE = #isuse#
+			WHERE
+				COMPANYID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				TYPEID = #typeId#
+		]]>
+	</update>
 </sqlMap>

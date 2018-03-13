@@ -539,12 +539,16 @@ public class EzAttitudeGWController {
 	 * G/W 근태관리 [PUT] 근태유형 사용여부 일괄저장
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject attitudeTypeBatchStore(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes] started.");
+	public JSONObject attitudeTypeBatchStore(@PathVariable String companyId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			ezAttitudeService.updateAttitudeTypeConfig(request.getParameter("typeConfigList"), companyId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -554,7 +558,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes] ended.");
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
 		return result;
 	}
 	

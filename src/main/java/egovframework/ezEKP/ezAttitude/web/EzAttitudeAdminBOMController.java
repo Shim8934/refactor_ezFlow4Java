@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -22,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -30,6 +34,7 @@ import com.google.gson.Gson;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -236,7 +241,7 @@ public class EzAttitudeAdminBOMController {
 	@ResponseBody
 	public JSONArray attitudeTypeConfigInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("attitudeTypeConfigInfo started.");
-		//TODO===============================================================================================================================================
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -269,6 +274,39 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("attitudeTypeConfigInfo ended.");
 		
 		return dataList;
+	}
+	
+	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeTypeConfig.do")
+	@ResponseBody
+	public void saveAttitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("saveAttitudeTypeConfig started.");
+		//TODO===============================================================================================================================================
+		String typeConfigList = request.getParameter("typelist");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + request.getParameter("companyId") + "/attitudetypes";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("typeConfigList", typeConfigList);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		LOGGER.debug("saveAttitudeTypeConfig ended.");
 	}
 	
 }
