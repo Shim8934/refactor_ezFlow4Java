@@ -681,9 +681,15 @@ public class EzEmailAdminLetterController {
 		try {
 			returnJson = EzEmailAdminLetterService.selectDetailLetter(letterNo);
 
-			filePath = filePath + commonUtil.separator + returnJson.get("letterBoxNo") + "/" + returnJson.get("letterId");
-			returnJson.put("filePath",filePath + "/" + fileName);
+			String letter = filePath + commonUtil.separator + returnJson.get("letterBoxNo") + "/" 
+						+ returnJson.get("letterId") + "/" + fileName;
 			
+			if (!new File(realPath + letter).exists()) {
+				letter = "ERROR";
+			}
+			logger.debug("letter=" + letter);
+			
+			returnJson.put("filePath", letter);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

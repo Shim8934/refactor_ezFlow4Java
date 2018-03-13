@@ -86,9 +86,20 @@ function letterPreView(letterNo) {
 		url:"/admin/ezEmail/readLetter",
 		dataType:"json",
 		success:function(data){
-			$(".lmPreViewTxt").css("display","none");
-			$(".lmPreViewIframe").attr("src",data.filePath);
-			$(".lmPreViewIframe").css("display","block");
+			var filePath = data.filePath; 
+			var txtDisplay = "none";
+			var iframeDisplay = "block";
+			
+			if (filePath == "ERROR") {
+				txtDisplay = "block";
+				iframeDisplay = "none";
+				$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
+			} else {
+				$(".lmPreViewIframe").attr("src",data.filePath);
+			}
+			
+			$(".lmPreViewTxt").css("display",txtDisplay);
+			$(".lmPreViewIframe").css("display",iframeDisplay);
 		}
 	});
 }
