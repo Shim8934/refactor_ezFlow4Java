@@ -267,10 +267,22 @@ public interface EzJournalService {
 	/**
 	 * 일지 저장하기
 	 * @param jsonParam
-	 * @param info
+	 * @param deptId
+	 * @param tenantId
 	 * @param realPath
 	 * @return
 	 * @throws Exception
 	 */
-	public void insertJournal(JSONObject jsonParam, MCommonVO info, String realPath) throws Exception;
+	public void insertJournal(JSONObject jsonParam, String deptId, int tenantId, String realPath) throws Exception;
+
+	/**
+	 * 일지 수정하기
+	 * @param journalId
+	 * @param jsonParam
+	 * @param tenantId
+	 * @param realPath
+	 * @return
+	 * @throws Exception
+	 */
+	public void updateJournal(String journalId, JSONObject jsonParam, int tenantId, String realPath) throws Exception;
 }

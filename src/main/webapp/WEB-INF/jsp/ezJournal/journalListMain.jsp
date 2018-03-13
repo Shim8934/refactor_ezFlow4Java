@@ -554,7 +554,7 @@
 			function writejournal() {
 				//	var feature = GetOpenWindowfeature(820, 880).replace("resizable=no","resizable=yes"); 
 				var feature = GetOpenPosition(820, 850);
-				var Openwin = window.open("/ezJournal/journalNewItem.do?typeId=" + typeId + "&mode=new", "",
+				var Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + typeId + "&mode=new", "",
 								"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 									+ feature);
 				Openwin.focus();

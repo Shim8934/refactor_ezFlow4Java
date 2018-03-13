@@ -508,12 +508,14 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
 			String realPath = commonUtil.getRealPath(request);
 			
-			ezJournalService.insertJournal(jsonParam, info, realPath);
+			ezJournalService.insertJournal(jsonParam, info.getDeptId(), info.getTenantId(), realPath);
 			
+			result.put("data", "");
 			result.put("status", "ok");
 			result.put("code", 0);
 		
 		} catch (Exception e) {
+			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
 		}
@@ -578,6 +580,30 @@ public class EzJournalGWController {
 		
 		JSONObject result = new JSONObject();
 		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
+			String realPath = commonUtil.getRealPath(request);
+			
+			String mode = jsonParam.get("mode").toString();
+			LOGGER.debug("mode : " + mode);
+			
+			if (mode.equals("tempMod")) {
+		//		ezJournalService.modifyTempJournal(journalId, jsonParam, info.getTenantId(), realPath);
+			} else {
+				ezJournalService.updateJournal(journalId, jsonParam, info.getTenantId(), realPath);
+			}
+			
+			result.put("data", "");
+			result.put("status", "ok");
+			result.put("code", 0);
+		
+		} catch (Exception e) {
+			result.put("data", "");
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+		
 		LOGGER.debug("ezJournal G/W updateJournal ended.");
 		return result;
 	}
@@ -638,7 +664,6 @@ public class EzJournalGWController {
 	
 		try {
 			JSONArray fileArray = new JSONArray();
-//			String typeId = "";
 			String userId = "";
 			int cnt = 0;
 			int maxSize = 0;
@@ -654,10 +679,6 @@ public class EzJournalGWController {
 			if (jsonParam.get("maxSize") != null) {
 				maxSize =  ((Long) jsonParam.get("maxSize")).intValue();
 			}
-			
-//			if (jsonParam.get("typeId") != null) {
-//				typeId =  (String) jsonParam.get("typeId");
-//			}
 			
 			if (jsonParam.get("userId") != null) {
 				userId = (String) jsonParam.get("userId");
@@ -711,7 +732,6 @@ public class EzJournalGWController {
 	        }
 	        
 	        File file = new File(pDirPath + "uploadFile");
-//	        File file2 = new File(pDirPath + typeId + commonUtil.separator + "uploadFile");
 	        File tempFile = new File(pDirPath + "tempUploadFile");
 
 	        if (!file.exists()) {
@@ -904,6 +924,47 @@ public class EzJournalGWController {
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+		
+			String mode = "";
+			if (request.getParameter("mode") != null || request.getParameter("mode").equals("")) {
+				mode = request.getParameter("mode");
+			}
+			String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
+			String filePath = request.getParameter("filePath");
+			String fileList = request.getParameter("fileList");
+			
+			LOGGER.debug("pDirPath : " + pDirPath + " | fileList : " + fileList);
+			
+			// journalId가 temp이면 임시파일 삭제의 의미 (있으면 journalId에 해당하는 일지의 첨부파일 삭제해야함)
+			if (journalId.equals("temp")) {
+				if (fileList.length() != 0) {
+					String[] data = fileList.split(","); 
+					
+					for (int i=0; i<data.length; i++) {
+						String sGUID = data[i].split(";")[0];
+						String fileName = data[i].split(";")[1];
+						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
+						
+						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+						
+						file.delete();
+					}			
+				}
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
 		
 		LOGGER.debug("ezJournal G/W deleteFile ended.");
 		return result;

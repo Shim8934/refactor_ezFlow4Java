@@ -594,46 +594,38 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void insertJournal(JSONObject jsonParam, MCommonVO info, String realPath) throws Exception {
+	public void insertJournal(JSONObject jsonParam, String deptId, int tenantId, String realPath) throws Exception {
 		logger.debug("insertJournal started");
 		
-		//첨부파일 카운트
-		String hasattach = "N";
-		
-		logger.debug("fileList정보 : " + jsonParam.get("fileList"));
-		String fileList = jsonParam.get("fileList").toString();
-		
-//		if(jsonParam.get("fileList").etLength() > 0) {				
-//			hasattach = "Y";
-//		}
-//		//수신자정보 카운트
-//		String hasattendant = "N";
-//		
-//		if(attendantId.getLength() > 0) {				
-//			hasattendant = "Y";
-//		}			
+		String mode = jsonParam.get("mode").toString();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("writerId", info.getUserId());
-		map.put("tenantId", info.getTenantId());
+		map.put("writerId", jsonParam.get("userId"));
+		map.put("tenantId", tenantId);
 		map.put("title", jsonParam.get("title"));
 		map.put("content", jsonParam.get("content"));
 		map.put("writeDate", commonUtil.getTodayUTCTime(""));
-		map.put("deptId", info.getDeptId());
+		map.put("deptId", deptId);
 		map.put("formId", jsonParam.get("formId"));
 		map.put("deptShare", jsonParam.get("deptShare"));
+		if (mode != null && mode.equals("temp")) {
+			map.put("journalStatus", mode);
+		}
 		
 		logger.debug("insertJournal map" + map);
 		
 		String journalId = ezJournalDAO.insertJournal(map) + "";
 		
+		String fileList = jsonParam.get("fileList").toString();
+		logger.debug("fileList정보 : " + fileList.toString());
+	
 		// 첨부파일 저장
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		String pDirPath = "";
 		
 		if (fileList != null && !fileList.equals("")) {
 			
-			pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
+			pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", tenantId);
 			pDirPath = realPath + pDirPath;
 			
 			logger.debug("pDirPath : " + pDirPath + ",reapPath : " + realPath);
@@ -652,7 +644,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 			String[] attach = fileList.split(",");
 			
 			attachMap.put("journalId", journalId);
-			attachMap.put("tenantId", info.getTenantId());
+			attachMap.put("tenantId", tenantId);
 			
 			for (int i = 0; i < attach.length; i++) {
 				String[] files = attach[i].split(";");
@@ -693,14 +685,13 @@ public class EzJournalServiceImpl implements EzJournalService{
 //			String[] receiverName = receiverList.split(",");
 			
 			receiverMap.put("journalId", journalId);
-			receiverMap.put("tenantId", info.getTenantId());
+			receiverMap.put("tenantId", tenantId);
 
 			for (int i = 0; i < receiverID.length; i++) {
 				receiverMap.put("receiverId", receiverID[i]);
 				
 				ezJournalDAO.insertReceiver(receiverMap);
 			}
-			
 		}
 		
 		logger.debug("insertJournal ended");
@@ -729,5 +720,113 @@ public class EzJournalServiceImpl implements EzJournalService{
 		
 		logger.debug("fileMove ended.");
 	}
+
+	@Override
+	public void updateJournal(String journalId, JSONObject jsonParam, int tenantId, String realPath) throws Exception {
+
+		String mode = jsonParam.get("mode").toString();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", jsonParam.get("title"));
+		map.put("content", jsonParam.get("content"));
+		map.put("deptShare", jsonParam.get("deptShare"));
+		map.put("journalId", journalId);
+		map.put("tenantId", tenantId);
+//		if (mode != null && mode.equals("temp")) {
+//			map.put("journalStatus", mode);
+//		}
+		
+		logger.debug("updateJournal map" + map);
+		
+		ezJournalDAO.updateJournal(map);
+
+		String fileList = jsonParam.get("fileList").toString();
+		logger.debug("fileList정보 : " + fileList.toString());
 	
+		// 첨부파일 삭제 후 저장
+		ezJournalDAO.deleteJournalAttach(map);
+		
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		
+		if (fileList != null && !fileList.equals("")) {
+			
+			
+			logger.debug("updateJournal fileList : " + fileList);
+			
+			String[] attach = fileList.split(",");
+			
+			attachMap.put("journalId", journalId);
+			attachMap.put("tenantId", tenantId);
+			
+			for (int i = 0; i < attach.length; i++) {
+				String[] files = attach[i].split(";");
+				String filePath = files[0];
+				String fileName = files[1];
+				String fileSize = files[2];
+				
+				logger.debug("filePath : " + filePath + " | fileName : " + fileName + " | fileSize : " + fileSize);
+				
+				String uploadFilePath = commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				
+				attachMap.put("fileName", fileName);
+				attachMap.put("fileSize", fileSize);
+				attachMap.put("filePath", uploadFilePath);
+				
+				logger.debug("uploadFilePath : " + uploadFilePath);
+				
+				ezJournalDAO.insertJournalAttach(attachMap);
+				
+				// mode 가 수정일때?? Temp폴더에서 첨부파일 이동
+				if (mode.equals("modify")) {
+					String pDirPath = "";
+					pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", tenantId);
+					pDirPath = realPath + pDirPath;
+							
+					if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+						pDirPath = pDirPath + commonUtil.separator;
+					}
+							
+					File file = new File(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
+							
+					if (!file.exists()) {
+						file.mkdir();
+					}
+					
+					String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+					String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+					
+					fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+					
+				}
+			}
+		}
+		
+		// 수신자 삭제 후 저장
+		ezJournalDAO.deleteReceiver(map);
+		
+		String receiverIDs = jsonParam.get("receiverIDs").toString();
+		logger.debug("receiverIDs : " + receiverIDs);
+
+		insertJournalReceiver(receiverIDs, journalId, tenantId);
+	}
+	
+	public void insertJournalReceiver(String receiverIDs, String journalId, int tenantId) {
+		logger.debug("insertJournalReceiver started");
+		if (receiverIDs != null && !receiverIDs.equals("")) {
+			
+			Map<String, Object> receiverMap = new HashMap<String, Object>();
+			
+			String[] receiverID = receiverIDs.split(",");
+			
+			receiverMap.put("journalId", journalId);
+			receiverMap.put("tenantId", tenantId);
+			
+			for (int i = 0; i < receiverID.length; i++) {
+				receiverMap.put("receiverId", receiverID[i]);
+				
+				ezJournalDAO.insertReceiver(receiverMap);
+			}
+		}
+		logger.debug("insertJournalReceiver ended");
+	}
 }

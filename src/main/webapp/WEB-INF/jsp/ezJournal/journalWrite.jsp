@@ -25,6 +25,7 @@
 	    <script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 	    <script type="text/javascript">
 			var companyId = "${info.companyID}"; 
+			var userId = "${userId}";
 			// 작성자 이름 // lang에 따라 가져오는값 바꿔야함..
 			var userName = "${info.displayName1}";			
 			//트리조직도 JSON
@@ -50,15 +51,25 @@
 	    		typeId = $(elem).val();
 	    		$.ajax({
 	    			type : "POST",
-	    			dataType : "html",
+	    			dataType : "json",
 	    			async : false,
 	    			url : "/ezJournal/getFormList.do",
 	    			data : {"typeId" : typeId,
 	    					"deptId" : deptId},
 	    			success : function(result) {
-	    				$("#optForm").html(result);
+	    				console.log(result.length);
+	    				var str = "";
+	    				if (result.length > 0) {
+		    				$(result).each(function() {
+		    					str += "<option value=" + this.formId + ">" + this.formName + "</option>";
+		    				});
+	    				} else {
+	    					str += "<option><spring:message code='ezJournal.t134'/></option>";
+	    				}
+	    				$("#optForm").html(str);
 	    			}
 	    		});
+	    		
 	    		console.log("lastFormId 확인 : " + lastFormId);
 	    		if (lastFormId != null && lastFormId != "") {
 	    			lastFormId = parseInt(lastFormId);
@@ -93,6 +104,13 @@
    						console.log(title);
    						selFormId = formId;
    						$("#title").val(title);
+   						
+   						// 예약어 부분에 내용 추가
+   						var content = result.formContent;
+   						content.replace(/@journalDeptId/g, deptId);
+   						content.replace(/@journalWriterId/g, userId);
+   						content.replace(/@journalWriteDate/g, nowDate);
+   						
    						message.SetEditorContent(result.formContent);
 	   				},
 	   				error : function(request, status, error) {
@@ -233,8 +251,9 @@
 	                success: function(data) {	   
 	                  alert("<spring:message code='ezCircular.t70'/>");
 	                  
-	                  window.opener.refresh_onclick();
-	             	  window.close();
+	               // window.opener.refresh_onclick();
+	             	  window.opener.reload();
+          			  window.close();
 	                }
 	 			});
 	    	}
@@ -287,7 +306,7 @@
 	                    		</c:when>
 	                    		<c:otherwise>
 			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t73' /></span></li>
-			                        <li><span onclick="btn_TempSave()"><spring:message code='ezJournal.t74' /></span></li>
+			                        <li><span onclick="btn_Save('temp')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
 	                    </ul>
