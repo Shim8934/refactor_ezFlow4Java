@@ -8183,6 +8183,12 @@ CREATE TABLE `tbl_vote_question` (
   `RESULT_FIRST` tinyint(4) NOT NULL DEFAULT '1',
   `IS_MODIFYING` tinyint(4) NOT NULL DEFAULT '0',
   `SET_DATE` tinyint(4) NOT NULL DEFAULT '0',
+  `IS_SORTING` tinyint(4) NOT NULL DEFAULT '0',
+  `VOTEOPTION1` tinyint(4) DEFAULT '0',
+  `VOTEOPTION2` tinyint(4) DEFAULT '0',
+  `VOTEOPTION3` tinyint(4) DEFAULT '0',
+  `VOTEOPTION4` tinyint(4) DEFAULT '0',
+  
   PRIMARY KEY (`ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;

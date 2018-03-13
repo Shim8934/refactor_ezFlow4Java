@@ -305,6 +305,8 @@ var strLangKMS05 = "人より多いため、個別送信機能を使用するこ
 var strLangKMS06 = "ファイルをアップロード中にエラーが発生しました。";
 var strLangKMS07 = "ユーザによってアップロードがキャンセルされたか、接続が中断されている可能性があります。";
 var strLangKMS08 = "フォルダはアップロードすることができません。";
+var strLangKYJ01 = "選択したメールがありません。";
+var strLangKYJ02 = "재작성할 메일을 하나만 선택해주세요.";
 	
 
 function GetLocalTime(Offset , pDateTime)
