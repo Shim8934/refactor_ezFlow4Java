@@ -2012,7 +2012,7 @@ function btnAddAddress() {
         }
         
         var Para = window.showModalDialog("/ezAddress/addressZipCodePopUp.do", "", "dialogWidth:655px;dialogHeight:420px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(330, 205));
-        var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
+        var windowName = "/ezApprovalG/aprDeptAddressName.do";
         var parameter = "status:no;dialogWidth:335px;dialogHeight:195px;scroll:no;edge:sunken;help:no;";
         parameter = parameter + GetShowModalPosition(330, 205);
         var dialogValue = "";
@@ -2038,7 +2038,7 @@ function btnAddAddress() {
         } else {
             strAddress = AddressUserName + "(" + dialogValue + ")";
         }
-
+        
         if (CheckLen(strAddress, 100) == false) {
             var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
             var parameter = "status:no;dialogWidth:335px;dialogHeight:185px;scroll:no;edge:sunken;help:no;";
