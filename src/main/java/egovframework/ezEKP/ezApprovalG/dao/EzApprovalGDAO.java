@@ -2963,7 +2963,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (String) select("EzApprovalG.getChamJoDocID", map);
 	}
 
-	public void updateSusinState(Map<String, Object> map) {
+	public void updateSusinState(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateSusinState", map);
+	}
+
+	public void updateBanSongChamJoAprLineInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateBanSongChamJoAprLineInfo", map);
 	}
 }

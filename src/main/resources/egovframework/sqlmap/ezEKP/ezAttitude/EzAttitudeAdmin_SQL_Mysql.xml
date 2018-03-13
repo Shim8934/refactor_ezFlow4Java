@@ -7,6 +7,15 @@
 	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
 	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
 	
+	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
+		<result property="userId" 					column="USERID" 				columnIndex="1"/>
+		<result property="workStartTime"			column="WORKSTARTTIME"			columnIndex="2"/>
+		<result property="workEndTime" 				column="WORKENDTIME" 			columnIndex="3"/>
+		<result property="userTitle"				column="TITLE"					columnIndex="4"/>
+		<result property="userName" 				column="DISPLAYNAME" 			columnIndex="5"/>
+		<result property="deptName" 				column="DESCRIPTION" 			columnIndex="6"/>
+	</resultMap>
+	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
 		<![CDATA[
 			SELECT
@@ -80,9 +89,9 @@
 				A.USERID,
 				A.WORKSTARTTIME,
 				A.WORKENDTIME,
-				B.TITLE AS USERTITLE,
-				B.DISPLAYNAME AS USERNAME,
-				B.DESCRIPTION AS DEPTNAME
+				B.TITLE,
+				B.DISPLAYNAME,
+				B.DESCRIPTION
 			FROM
 				tbl_attitude_user_conf A 
 			INNER JOIN 
@@ -98,13 +107,16 @@
 				A.COMPANYID = #companyId#
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="searchDeptName">
-				B.DESCRIPTION = #searchDeptName#
+				B.DESCRIPTION like CONCAT('%', #searchDeptName#, '%')
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="searchUserName">
-				B.DISPLAYNAME = #searchUserName#
+				B.DISPLAYNAME like CONCAT('%', #searchUserName#, '%')
+			</isNotEmpty>
+			<isNotEmpty prepend="" property="order">
+				ORDER BY $order$
 			</isNotEmpty>
 		<![CDATA[
-			LIMIT #limit#, #listSize#;
+			LIMIT #limit#, #listSize#
 		]]>
 	</select>
 	

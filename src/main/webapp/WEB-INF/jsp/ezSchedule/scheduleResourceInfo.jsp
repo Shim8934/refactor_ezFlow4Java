@@ -124,7 +124,7 @@
 	
 		                for (j = 0 ; j < GetChildNodes(listNode).length ; j++) {
 	
-		                    GetChildNodes(listNode)[j].style.backgroundColor = "#e9e9e9";
+		                    GetChildNodes(listNode)[j].style.backgroundColor = "#f8f8f8";
 		                    GetChildNodes(listNode)[j].style.paddingTop = "2";
 		                }	
 		                DisplayScheduleList(listNode, userID)
@@ -349,14 +349,14 @@
 			            	<td style="vertical-align:top"><img src="/images/i_timetable.gif" style="width:672px; height:33px" /></td>
 		            	</tr>
 	              	</table>
-	              	<div style="BORDER: #b6b6b6 1px solid; overflow-Y: scroll; WIDTH: 670px; HEIGHT: 300px; BACKGROUND-IMAGE:  url(/images/i_timetable_bg.gif);">
+	              	<div style="BORDER: #ddd 1px solid; overflow-Y: scroll; WIDTH: 670px; HEIGHT: 300px; BACKGROUND-IMAGE:  url(/images/i_timetable_bg.gif);">
 						<table style="border:0; border-collapse:collapse; border-spacing:0; padding:0; width:650px; text-align:left">
 	                   		<tr>
 	                     		<td>
 	                        		<div style ="background-color:none;BORDER:#FFFFFF 0px solid;OVERFLOW:auto;TEXT-ALIGN:left;HEIGHT:300px;">
 	                         			<table style="border:0; border-collapse:collapse; border-spacing:0; padding:0; width:650px" id="entryList">
 	                           				<tr>
-	                             				<td style="PADDING-TOP:2px;BACKGROUND-COLOR:#e9e9e9;border-collapse:collapse;border-bottom: solid 1px #b6b6b6; width:102px; height:25px; text-align:center"id="" deptid=""></td>
+	                             				<td style="PADDING-TOP:2px;BACKGROUND-COLOR:#f8f8f8;border-collapse:collapse;border-bottom: solid 1px #ddd; width:102px; height:25px; text-align:center"id="" deptid=""></td>
 	                             				<td style="padding-left:9px;border-collapse:collapse; border-bottom: solid 1px #dadada" >
 	                                				<table style="border:0; border-collapse:collapse; border-spacing:1; padding:0;">
 	                                 					<tr>

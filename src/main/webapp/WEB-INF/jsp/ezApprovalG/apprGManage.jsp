@@ -1331,6 +1331,7 @@
 		        	for (var i = 0; i < condition.length; i++) {
 		                if (condition[i] == null)
 		                    condition[i] = "";
+		                condition[i] = replaceCond(condition[i]);
 		                SearchCond[i] = condition[i];
 		            }
 		            pageNum = 1;
@@ -1528,20 +1529,20 @@
 			            }
 			
 			            if (radiosearch.item(0).checked) {
-			                SearchCond[1] = document.getElementById("txt_keyword").value;
+			                SearchCond[1] = replaceCond(document.getElementById("txt_keyword").value);
 			            }
 			            else if (radiosearch.item(1).checked) {
-			                SearchCond[2] = document.getElementById("txt_keyword").value;
+			                SearchCond[2] = replaceCond(document.getElementById("txt_keyword").value);
 			            }
 					} else {
 						for (i = 0; i < 11; i++)
 							condition[i] = "";
 
 		                if (radiosearch.item(0).checked) {
-		                	condition[1] = document.getElementById("txt_keyword").value;
+		                	condition[1] = replaceCond(document.getElementById("txt_keyword").value);
 		                }
 		                else if (radiosearch.item(1).checked) {
-		                	condition[2] = document.getElementById("txt_keyword").value;
+		                	condition[2] = replaceCond(document.getElementById("txt_keyword").value);
 		                }
 					}
 		        }
@@ -1689,6 +1690,11 @@
 		            }
 		        }
 		    }
+		    
+		    function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
+		    	return condStr.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+		    }
+		    
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	

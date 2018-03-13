@@ -1511,6 +1511,10 @@
 				    	//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
 				        break; 
+				    case "Circular":
+				    	//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+		        		OpenWindow2('top_menu02', "/ezCircular/circularIndex.do", "main", " ");
+				        break; 
 	        	}
 	        }
 		</script>

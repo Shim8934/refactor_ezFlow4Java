@@ -11,6 +11,15 @@
     <script type="text/javascript" src="/js/Common.js"></script>
     <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
+    <style>
+    	#attiBoardList td {
+    		overflow : hidden;
+    		white-space : nowrap;
+    		text-overflow : ellipsis;
+    		cursor : pointer;
+    	}
+    </style>
+    
     <script type="text/javascript">
     	var pCompanyId = ""; //현재 선택된 회사의 아이디
     	var searchUserName = ""; // 검색조건 (사원명)
@@ -18,20 +27,35 @@
     	var pageNum = 1; // 페이지 ==> 초기값 설정
     	var totalCount = "" // 게시물 총 갯수
     	var totalPage = ""; // 게시판의 총 페이지갯수
+    	var orderCell = ""; // 정렬 명
+    	var orderOption = ""; // 정렬 형식(ASC, DESC)
+    	
+    	//"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"
     	
     	$(function(){
     		company_change();
     		
-    		$(".mainlist").on('mouseover mouseleave', 'tr', function(e){
-    			if (e.type == "mouseover") {
-    				$(this).css("background-color", "rgb(244,245,245)");
-    			} else {
-    				$(this).css("background-color", "rgb(255,255,255)");
+    		//헤더 클릭 시 정렬
+    		$(document).on('click', '#attiBoardList th', function(){
+    			if (!$(this).find("input[type=checkbox]").length) { // checkbox는 sort에서 제외
+    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+    					src = "";
+    					orderOption = "";
+    					orderCell = $(this).attr("colname");
+    				}
+    			
+	    			if (orderOption == "" || orderOption == "DESC") {
+	    				src = '/images/etc/view-sortup.gif';
+	    				orderOption = "ASC";
+	    			} else {
+	    				src = '/images/etc/view-sortdown.gif';
+	    				orderOption = "DESC";
+	    			}
+	    			$("#attiBoardList th").find("img").remove();
+	    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+	    			
+	    			getUserConfList();
     			}
-    		})
-    		
-    		$(".mainlist").on('click', 'tr', function(){
-    			$(this).find("input[type='checkbox']").attr("checked", true);
     		})
     	})
     	
@@ -50,7 +74,9 @@
     					userName : searchUserName, 
     					deptName : searchDeptName, 
     					pageNum : pageNum, 
-    					listSize : listSize},
+    					listSize : listSize,
+    					orderCell : orderCell,
+    					orderOption : orderOption},
     			success : function(result){
     				totalCount = result.totalCount;
     				totalPage = parseInt(totalCount / blockSize);
@@ -61,7 +87,7 @@
     	
     	function getUserConfList_after(result){
     		var resultHtml = "";
-    		$(".mainlist tbody").html("");
+    		$("#attiBoardList tbody").html("");
     		
     		for (var resultLeng = 0; resultLeng < result.length; resultLeng ++) {
     			resultHtml += "<tr userid='" + result[resultLeng].userId + "'><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>"
@@ -75,8 +101,7 @@
     			resultHtml = "<tr><td colspan='5' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
     		}
     		
-    		$(".mainlist tbody").append(resultHtml);
-    		setTdStyle($(".mainlist td"));
+    		$("#attiBoardList tbody").append(resultHtml);
     		makePageSelPageAtti();
     	}
     	
@@ -174,14 +199,14 @@
 	  		<div class="shadow">
 	  		</div>
 	  	</div>
-		<table class="mainlist" style="width:100%;">
+		<table id="attiBoardList" class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
 					<th style="width:29px;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
-					<th style="width:300px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">이름</th>
-					<th style="width:200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">직위</th>
-					<th style="width:400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">부서</th>
-					<th style="width:620px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" onclick="setListOrder()">근무시간</th>
+					<th style="width:300px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
+					<th style="width:200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
+					<th style="width:400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
+					<th style="width:620px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="workstarttime">근무시간</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -190,11 +215,5 @@
 		<div id="tblPageRayer">
 		</div>
 	</body>
-	<script>
-		$("#HeaderAllCheckBox").on('click', function(){
-			alert($(".mainlist th").length);
-			alert($(".mainlist td").length);
-		});
-	</script>
 </body>
 </html>

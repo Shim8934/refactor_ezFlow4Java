@@ -294,12 +294,12 @@
 		  	<table class="layout">
 		  	<tr>
 		    	<td class="pad1" id="ItemOverflow" style="display:none;"  >
-		    		<iframe id="message" class="viewbox" name="message" style="display:none; border:1px solid #b6b6b6;"  onload ="displaytable()">
+		    		<iframe id="message" class="viewbox" name="message" style="display:none; border:1px solid #ddd;"  onload ="displaytable()">
 		    	</iframe></td> 
 		  	</tr>
 		    <tr>
 		    	<td class="pad1" style="height: 100%;">
-		        	<div id ="contenttable" class ="viewbox" style="line-height:20px; letter-spacing: 0.5px; border:1px solid #b6b6b6;"></div>
+		        	<div id ="contenttable" class ="viewbox" style="line-height:20px; letter-spacing: 0.5px; border:1px solid #ddd;"></div>
 		    	</td> 
 		  	</tr>
 		  	</table>

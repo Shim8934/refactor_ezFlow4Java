@@ -668,6 +668,9 @@
 			        case 13:
 			        	url = "/admin/ezSystem/systemMainMenu.do";
 			        	break;			            
+			        case 14:
+			        	url = "/admin/ezEmail/mailQuotaList.do";
+			        	break;			            
 				}
 				
 				window.open(url, "right");
@@ -696,12 +699,20 @@
 		        document.getElementById("folderPanel").style.display = "";
 		        document.getElementById("folderMenuDiv").style.left = EventMouseX + "px";
 		        document.getElementById("folderMenuDiv").style.top = EventMouseY + "px";
-		        document.getElementById("folderMenuDiv").style.display = ""; 
+		        document.getElementById("folderMenuDiv").style.display = "";
+		       
+		        if ( parent.frames["right"].document.getElementById("mailPanel").style.display == "none") {
+			        parent.frames["right"].document.getElementById("mailPanel").style.display = "";
+		        }
 		    }
 		    
 		    function HiddenFolderMenu(){
 		    	document.getElementById("folderPanel").style.display = "none";
 		        document.getElementById("folderMenuDiv").style.display = "none";
+		    	
+		        if (parent.frames["right"].document.getElementById("mailPanel").style.display == "") {
+		        	parent.frames["right"].document.getElementById("mailPanel").style.display = "none";
+		        }
 		    }
 		    
 		    //편지함 모두 읽기
@@ -838,6 +849,10 @@
   			</h2>  
   			<h2>
   				<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
+    			<ul></ul>
+  			</h2>  			
+  			<h2>
+  				<span onClick="goPage(14)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.lsd01' /></span>
     			<ul></ul>
   			</h2>  			
 			<h2>

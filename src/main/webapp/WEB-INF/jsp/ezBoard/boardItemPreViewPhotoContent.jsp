@@ -601,10 +601,10 @@
 			</script>
 		</head>
 		<body>
-			<table class="layout" style="border-spacing:0; border-bottom:1px solid #b6b6b6; border:0px; width:100%; margin-top:-1px;">
+			<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%; margin-top:-1px;">
 			  <tr>
 			    <td style="width:100%;  text-align:center; vertical-align:top;" >
-			        <table style="width:100%; border:1px solid #b6b6b6; border-left:1px solid #FFFFFF;">
+			        <table style="width:100%; border:1px solid #ddd; border-left:1px solid #FFFFFF;">
 					  <tr>
 			        	<td style="height:68px;" colspan="3">
 			            </td>
@@ -642,7 +642,7 @@
 		    </tr>
 		    <tr>
 		        <td>
-					<div style="background:#e5e5e5; border:1px solid #b6b6b6; border-top:0 none; height:70px; text-align:center; padding-top:30px;">
+					<div style="background:#e5e5e5; border:1px solid #ddd; border-top:0 none; height:70px; text-align:center; padding-top:30px;">
 		            <table border="0">
 		                <tr>
 		                    <td style="width:30px; padding-bottom:5px; vertical-align:bottom; text-align:left" onmouseover="pageimageover()" onmouseout="pageimageout()">

@@ -21248,7 +21248,23 @@
 		AND                
 			AprMemberID = #v_APRMEMBERID# 
 		AND 
-			(AprState = #v_AprState2# OR AprState = #v_AprState3# OR AprState = '000' ) 
+			(AprState = #v_AprState2# OR AprState = #v_AprState3# ) 
+		AND 
+			TENANT_ID= #v_TENANTID#
+		AND
+         	COMPANYID = #companyID#
+   	</update>
+   	
+   	<update id="EzApprovalG.updateBanSongChamJoAprLineInfo" parameterClass="Map"> 
+   		UPDATE 
+   			TBL_APRLINEINFO 
+   		SET 
+   			AprState = #v_AprState#, 
+   			ProcessDate = #v_SYSDATE#
+		WHERE 
+			DocID = #v_DOCID# 
+		AND 
+			(AprState = '000') 
 		AND 
 			TENANT_ID= #v_TENANTID#
 		AND
