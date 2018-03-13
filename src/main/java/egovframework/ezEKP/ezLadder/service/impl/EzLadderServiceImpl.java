@@ -34,12 +34,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
-		System.out.println("================");
-		System.out.println("================");
-		System.out.println("================");
-		System.out.println("================");
-		System.out.println("================");
-		System.out.println(tenantId);
+		
 		List<LadderVO> list = ezLadderDAO.getLadderList(map);
 		
 		logger.debug("getLadderList ended.");
@@ -47,10 +42,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public List<LadderVO> getPartLadderList(String userId) throws Exception {
+	public List<LadderVO> getPartLadderList(String userId, String tenantId) throws Exception {
 		logger.debug("getPartLadderList started.");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", userId);
+		map.put("tenantId", tenantId);
 		List<LadderVO> list = ezLadderDAO.getPartLadderList(map);
 		
 		logger.debug("getPartLadderList ended.");
@@ -58,7 +54,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public List<LadderVO> searchLadderList(String userId, List<String> allData) throws Exception {
+	public List<LadderVO> searchLadderList(String userId, String tenantId, List<String> allData) throws Exception {
 		logger.debug("searchLadderList started.");
 	
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -72,6 +68,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("searchSelect", searchSelect);
 		map.put("searchInput", searchInput);
 		map.put("mode", mode);
+		map.put("tenantId", tenantId);
 		
 		
 		List<LadderVO> list = null;
@@ -202,15 +199,16 @@ public class EzLadderServiceImpl implements EzLadderService {
 	/** hyh */
 	
 	@Override
-	public LadderVO getLadderGame(String userId, int ladderId) throws Exception {
+	public LadderVO getLadderGame(String tenantId, int ladderId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("ladderId", ladderId);
+		map.put("tenantId", tenantId);
 		LadderVO vo = ezLadderDAO.ladderContent(map);
 		return vo;
 	}
 
 	@Override
-	public List<LadderVO> deleteLadderList(String userId, List<String> allData) throws Exception {
+	public List<LadderVO> deleteLadderList(String userId, String tenantId, List<String> allData) throws Exception {
 		logger.debug("deleteLadder started.");
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -226,6 +224,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("searchInput", searchInput);
 		map.put("mode", mode);
 		map.put("ladderId", ladderId);
+		map.put("tenantId", tenantId);
 		
 		// mode가 참여인지, 일부인지에 따라
 		ezLadderDAO.deleteLadderList(map);

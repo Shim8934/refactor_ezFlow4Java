@@ -102,7 +102,11 @@
 			FROM
 				TBL_LADDER E
 			WHERE 
-				E.DELETEFLAG = 0 AND E.TENANT_ID = #tenantId# AND E.LADDERID in
+				E.DELETEFLAG = 0 
+			AND 
+				E.TENANT_ID = #tenantId# 
+			AND 
+				E.LADDERID in
 			(
 			SELECT
 				A.LADDERID
@@ -146,6 +150,8 @@
 			WHERE
 				A.DELETEFLAG = 0
 			AND 
+				A.TENANT_ID = #tenantId#
+			AND 
 				A.LADDERID = ANY(
 								SELECT 
 									B.LADDERID 
@@ -186,6 +192,8 @@
 			WHERE
 				A.DELETEFLAG = 0
 			AND 
+				A.TENANT_ID = #tenantId#
+			AND 
 				A.LADDERID = ANY(
 								SELECT 
 									B.LADDERID 
@@ -222,6 +230,8 @@
 					TBL_LADDER A
 				WHERE
 					A.DELETEFLAG = 0
+				AND 
+					A.TENANT_ID = #tenantId#
 				AND 
 					A.LADDERID = ANY(
 									SELECT 
@@ -286,6 +296,8 @@
 				D.LADDERID = E.LADDERID
 			WHERE
 				D.DELETEFLAG = 0
+			AND 
+				D.TENANT_ID = #tenantId#
 			AND
 				D.LADDERID IN 
 							(
@@ -332,6 +344,8 @@
 					TBL_LADDER D
 				WHERE
 					D.DELETEFLAG = 0
+				AND 
+					D.TENANT_ID = #tenantId#
 				AND
 					D.LADDERID IN 
 								(
@@ -394,6 +408,8 @@
 				WRITERID = #userId#
 			AND
 				LADDERID = #ladderId#
+			AND
+				TENANT_ID = #tenantId#
 		]]>
 	</update>
 	
@@ -413,6 +429,8 @@
 				TBL_LADDER 
 			WHERE
 				LADDERID = #ladderId#
+			AND
+				TENANT_ID = #tenantId#
 		]]>
 	</select> 
 	

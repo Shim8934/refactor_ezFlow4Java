@@ -136,7 +136,7 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -189,7 +189,8 @@ public class EzLadderController {
 							.queryParam("searchSelect", allData.get(0))
 							.queryParam("searchInput", allData.get(1))
 							.queryParam("mode", allData.get(2))
-							.queryParam("currPage", allData.get(3));
+							.queryParam("currPage", allData.get(3))
+							.queryParam("tenantId", userInfo.getTenantId());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -623,7 +624,7 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -681,7 +682,8 @@ public class EzLadderController {
 										.queryParam("searchSelect", allData.get(1))
 										.queryParam("searchInput", allData.get(2))
 										.queryParam("mode", allData.get(3))
-										.queryParam("currPage", allData.get(4));
+										.queryParam("currPage", allData.get(4))
+										.queryParam("tenantId", userInfo.getTenantId());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 

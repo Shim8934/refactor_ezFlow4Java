@@ -98,14 +98,14 @@ public class EzLadderGWController {
 		logger.debug("web G/W LADDER [GET /ladder/ladder-list/" + mode + "/" + currPage +"/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
-	
+		String tenantId = request.getParameter("tenantId");
 		try {
 			int page = Integer.parseInt(currPage);
 			List<LadderVO> list;
 			if(mode.equals("part")){	// 일부 참여자 선택
-				list = ezLadderService.getPartLadderList(userId);
+				list = ezLadderService.getPartLadderList(userId, tenantId);
 			} else {					// 전체 참여자 선택
-				list = ezLadderService.getLadderList(userId , userId);
+				list = ezLadderService.getLadderList(userId , tenantId);
 			}
 			
 			int block = 10;
@@ -142,6 +142,7 @@ public class EzLadderGWController {
 		logger.debug("web G/W LADDER [GET /ladder/search/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
+		String tenantId = request.getParameter("tenantId");
 		try {
 			List<LadderVO> list;
 							// 전체 참여자 선택
@@ -157,7 +158,7 @@ public class EzLadderGWController {
 			allData.add(searchInput);
 			allData.add(mode);
 			
-			list = ezLadderService.searchLadderList(userId, allData);
+			list = ezLadderService.searchLadderList(userId, tenantId, allData);
 			
 			int block = 10;
 			int totalLadder = list.size();
@@ -587,18 +588,15 @@ public class EzLadderGWController {
 	 * 사디리 게임 조회 
 	 */
 	@RequestMapping(value = "ladder/ladderGame/{ladderId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
-	public JSONObject gwGetLadderGame(@PathVariable String ladderId , @PathVariable String userId) {
+	public JSONObject gwGetLadderGame(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
 		
 		int ladId = Integer.parseInt(ladderId);
 		JSONObject result = new JSONObject();
+		String tenantId = request.getParameter("tenantId");
 		try {
-			LadderVO vo = ezLadderService.getLadderGame(userId, ladId);
-			System.out.println(vo);
-			System.out.println(vo.getLadderId());
-			System.out.println(vo.getType());
-			System.out.println(vo.getStatus());
-			System.out.println(vo.getSecretFlag());
+			LadderVO vo = ezLadderService.getLadderGame(tenantId, ladId);
+		
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -622,7 +620,7 @@ public class EzLadderGWController {
 		logger.debug("web G/W LADDER [GET /ladder/delete/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
-		
+		String tenantId = request.getParameter("tenantId");
 		try {
 			List<LadderVO> list;
 			
@@ -640,7 +638,7 @@ public class EzLadderGWController {
 			allData.add(searchInput);
 			allData.add(mode);
 			
-			list = ezLadderService.deleteLadderList(userId, allData);
+			list = ezLadderService.deleteLadderList(userId, tenantId, allData);
 			
 
 			int block = 10;

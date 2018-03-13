@@ -12,8 +12,8 @@ import egovframework.ezEKP.ezLadder.vo.LadderVO;
 public interface EzLadderService {
 
 	public List<LadderVO> getLadderList(String userId, String tenantId) throws Exception;
-	public List<LadderVO> getPartLadderList(String userId) throws Exception;
-	public List<LadderVO> searchLadderList(String userId, List<String> allData) throws Exception;
+	public List<LadderVO> getPartLadderList(String userId, String tenantId) throws Exception;
+	public List<LadderVO> searchLadderList(String userId, String tenantId, List<String> allData) throws Exception;
 	
 	/** boh */
 	public void insertLadder(LadderVO lad, List<LadderLineVO> ladLineList) throws Exception; // 사다리 게임 만들기
@@ -35,8 +35,8 @@ public interface EzLadderService {
 	
 	/** hyh	*/
 
-	public LadderVO getLadderGame(String userId, int ladderId) throws Exception; // 사다리 게임 조회
-	public List<LadderVO> deleteLadderList(String userId, List<String> allData) throws Exception; // 사다리 삭제
+	public LadderVO getLadderGame(String tenantId, int ladderId) throws Exception; // 사다리 게임 조회
+	public List<LadderVO> deleteLadderList(String userId, String tenantId, List<String> allData) throws Exception; // 사다리 삭제
 	public void setUserOrder(int LadderId, String userName1, String userName2) throws Exception; // 사용자 위치 바꾸기
 	public void setLadderStart(int LadderId, String userId, String lineArray) throws Exception;	// 사다리 게임 시작
 }
