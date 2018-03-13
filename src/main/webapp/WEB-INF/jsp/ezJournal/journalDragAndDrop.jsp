@@ -158,7 +158,7 @@
 
 		                if (filelist[i].resultUpload == "true") {
 		                    objTr = document.createElement("TR");
-		                    objTr.setAttribute("DATA2", newFileName + ";" + pFileName);
+		                    objTr.setAttribute("DATA2", newFileName + ";" + pFileName + ";" + fileSize);
 
 		                    var objTd = document.createElement("TD");
 		                    objTd.style.textAlign = "center";

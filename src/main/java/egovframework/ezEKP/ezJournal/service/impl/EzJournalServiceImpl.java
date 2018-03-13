@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezJournal.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +31,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.JsonUtil;
 
@@ -588,4 +592,142 @@ public class EzJournalServiceImpl implements EzJournalService{
 		
 		return ezJournalDAO.getAttachList(map);
 	}
+
+	@Override
+	public void insertJournal(JSONObject jsonParam, MCommonVO info, String realPath) throws Exception {
+		logger.debug("insertJournal started");
+		
+		//첨부파일 카운트
+		String hasattach = "N";
+		
+		logger.debug("fileList정보 : " + jsonParam.get("fileList"));
+		String fileList = jsonParam.get("fileList").toString();
+		
+//		if(jsonParam.get("fileList").etLength() > 0) {				
+//			hasattach = "Y";
+//		}
+//		//수신자정보 카운트
+//		String hasattendant = "N";
+//		
+//		if(attendantId.getLength() > 0) {				
+//			hasattendant = "Y";
+//		}			
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("writerId", info.getUserId());
+		map.put("tenantId", info.getTenantId());
+		map.put("title", jsonParam.get("title"));
+		map.put("content", jsonParam.get("content"));
+		map.put("writeDate", commonUtil.getTodayUTCTime(""));
+		map.put("deptId", info.getDeptId());
+		map.put("formId", jsonParam.get("formId"));
+		map.put("deptShare", jsonParam.get("deptShare"));
+		
+		logger.debug("insertJournal map" + map);
+		
+		String journalId = ezJournalDAO.insertJournal(map) + "";
+		
+		// 첨부파일 저장
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		String pDirPath = "";
+		
+		if (fileList != null && !fileList.equals("")) {
+			
+			pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
+			pDirPath = realPath + pDirPath;
+			
+			logger.debug("pDirPath : " + pDirPath + ",reapPath : " + realPath);
+			
+			
+			if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+				pDirPath = pDirPath + commonUtil.separator;
+			}
+			
+			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
+			
+			if (!file.exists()) {
+				file.mkdir();
+			}
+			
+			String[] attach = fileList.split(",");
+			
+			attachMap.put("journalId", journalId);
+			attachMap.put("tenantId", info.getTenantId());
+			
+			for (int i = 0; i < attach.length; i++) {
+				String[] files = attach[i].split(";");
+				String filePath = files[0];
+				String fileName = files[1];
+				String fileSize = files[2];
+				
+				logger.debug("filePath : " + filePath + " | fileName : " + fileName + " | fileSize : " + fileSize);
+				
+				String uploadFilePath = commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+			
+				attachMap.put("fileName", fileName);
+				attachMap.put("fileSize", fileSize);
+				attachMap.put("filePath", uploadFilePath);
+				
+				logger.debug("uploadFilePath : " + uploadFilePath);
+				
+				ezJournalDAO.insertJournalAttach(attachMap);
+				
+				fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+			}
+			
+		}
+		
+		// 수신자 정보 저장
+		String receiverIDs = jsonParam.get("receiverIDs").toString();
+		String receiverList = jsonParam.get("receiverList").toString();
+		
+		logger.debug("receiverIDs : " + receiverIDs + " | receiverList : " + receiverList);
+		
+		if (receiverIDs != null && !receiverIDs.equals("")) {
+			
+			Map<String, Object> receiverMap = new HashMap<String, Object>();
+			
+			String[] receiverID = receiverIDs.split(",");
+//			String[] receiverName = receiverList.split(",");
+			
+			receiverMap.put("journalId", journalId);
+			receiverMap.put("tenantId", info.getTenantId());
+
+			for (int i = 0; i < receiverID.length; i++) {
+				receiverMap.put("receiverId", receiverID[i]);
+				
+				ezJournalDAO.insertReceiver(receiverMap);
+			}
+			
+		}
+		
+		logger.debug("insertJournal ended");
+	}
+	
+	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
+		logger.debug("fileMove started.");
+		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
+		
+		File srcFile = new File(beforeFilePath);
+		File destFile = new File(afterFilePath);
+		
+		try {
+			boolean rename = srcFile.renameTo(destFile);
+			if (!rename) {
+				FileUtils.copyFile(srcFile, destFile);
+				if (!srcFile.delete()) {
+					FileUtils.deleteQuietly(destFile);
+					throw new IOException("Failed to delete original file '" + srcFile +
+							"' after copy to '" + destFile + "'");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("fileMove ended.");
+	}
+	
 }

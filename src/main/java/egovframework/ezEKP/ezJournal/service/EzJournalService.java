@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 
 public interface EzJournalService {
@@ -262,4 +263,14 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public List<JournalAttachVO> getAttachList(String journalId, int tenantId) throws Exception;
+
+	/**
+	 * 일지 저장하기
+	 * @param jsonParam
+	 * @param info
+	 * @param realPath
+	 * @return
+	 * @throws Exception
+	 */
+	public void insertJournal(JSONObject jsonParam, MCommonVO info, String realPath) throws Exception;
 }

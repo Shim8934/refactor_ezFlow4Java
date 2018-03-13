@@ -46,14 +46,12 @@
 		<div style="vertical-align: top; height: 440px; overflow: auto; width: 100%;" id="txtlist_Layer">
 			<table style="width:100%; border: 1px solid #B6B6B6;" class="mainlist">
 				<tr>
-				    <th style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t68'/></th>
-					<th style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></th>
+					<th style="width: 30%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></th>
 					<th style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></th>
-					<th style="width: 40%; font-weight: bold;"><spring:message code='main.t78'/></th>
+					<th style="width: 50%; font-weight: bold;"><spring:message code='main.t78'/></th>
 		        </tr>
 		        <c:forEach items="${userList}" var="user">
 			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
-				        <td><c:out value="${user.deptName }" /></td>
 						<td><c:out value="${user.userName }" /></td>
 						<td><c:out value="${user.jikwi }" /></td>
 						<td><c:out value="${user.mail }" /></td>

@@ -828,5 +828,38 @@
 	        tenant_id = #tenantId#
 	    AND
 	        journal_id = #journalId#
-  </select>
+  	</select>
+  
+  	<!-- 업무일지 등록 하기 -->
+	<insert id="insertJournal" parameterClass="map">
+		insert into tbl_journal (
+			tenant_id,		journal_title,		journal_content,		journal_date,		journal_writer,			form_id,		dept_share,		journal_dept		
+		)
+		values (
+			#tenantId#,		#title#,			#content#,				#writeDate#,		#writerId#,				#formId#,		#deptShare#,	#deptId#
+		)
+		<selectKey keyProperty="id" resultClass="Integer">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+	
+	<!-- 일지 등록시 첨부파일 정보 등록 -->
+	<insert id="insertJournalAttach" parameterClass="map">
+		insert into tbl_journal_file (
+			journal_id,		file_path,		file_size,		file_name,		tenant_id
+		)
+		values (
+			#journalId#,	#filePath#,		#fileSize#,		#fileName#,		#tenantId#		
+		)
+	</insert>
+	
+	<!-- 일지 등록시 수신자 정보 등록 -->
+	<insert id="insertReceiver" parameterClass="map">
+		insert into tbl_journal_recv (
+			journal_id,		user_id,		tenant_id
+		)
+		values (
+			#journalId#,	#receiverId#,	#tenantId#			
+		)
+	</insert>
 </sqlMap>
