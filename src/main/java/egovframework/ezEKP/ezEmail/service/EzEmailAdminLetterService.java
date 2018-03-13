@@ -7,39 +7,39 @@ public interface EzEmailAdminLetterService {
 	
 	/**
 	 * 전체 편지지함 목록 조회(기본)
-	 * @param company_id, tenant_id
+	 * @param companyId, companyId
 	 */
-	public JSONArray selectAllLetterBox(String company_id, String tenant_id) throws Exception;
+	public JSONArray selectAllLetterBox(String companyId, String tenantId) throws Exception;
 	
 	/**
 	 * 선택한 편지지함 조회
-	 * @param letterbox_no
+	 * @param letterBoxNo
 	 */
-	public JSONObject selectOneLetterBox(String letterbox_no) throws Exception;
+	public JSONObject selectOneLetterBox(String letterboxNo) throws Exception;
 	
 	/**
 	 * 편지지함명 조회
-	 * @param letterbox_no
+	 * @param letterBoxNo
 	 */
-	public JSONObject selectLetterBoxName(String letterbox_no) throws Exception;
+	public JSONObject selectLetterBoxName(String letterboxNo) throws Exception;
 	
 	/**
 	 * 편지지함 추가
-	 * @param parent_letterbox_no, displayname, displayname2, company_id, tenant_id
+	 * @param parentLetterboxNo, displayname, displayname2, companyId, tenantId
 	 */
-	public void insertLetterBox(String parent_letterbox_no, String displayname, String displayname2, String company_id, String tenant_id) throws Exception;
+	public void insertLetterBox(String parentLetterboxNo, String displayname, String displayname2, String companyId, String tenantId) throws Exception;
 	
 	/**
 	 * 편지지함 삭제 
-	 * @param letterbox_no
+	 * @param letterBoxNo
 	 */
-	public void deleteLetterBox(String letterbox_no) throws Exception;
+	public void deleteLetterBox(String letterboxNo) throws Exception;
 	
 	/**
 	 * 편지지함 수정
-	 * @param letterbox_no, parent_letterbox_no, displayname, displayname2, company_id, tenant_id
+	 * @param letterBoxNo, parentLetterboxNo, displayname, displayname2, companyId, tenantId
 	 */
-	public void updateLetterBox(String letterbox_no, String parent_letterbox_no, String displayname, String displayname2, String company_id, String tenant_id) throws Exception;
+	public void updateLetterBox(String letterboxNo, String parentLetterboxNo, String displayname, String displayname2, String companyId, String tenantId) throws Exception;
 	
 	/**
 	 * 편지지 순서 조회 (재은)
@@ -48,9 +48,9 @@ public interface EzEmailAdminLetterService {
 	
 	/**
 	 * 편지지 검색 (재은)
-	 * @param searchStr, company_id, tenant_id
+	 * @param searchStr, companyId, tenantId
 	 */
-	public JSONArray searchLetter(String search, String company_id, String tenant_id) throws Exception;
+	public JSONArray searchLetter(String search, String companyId, String tenantId) throws Exception;
 	
 	/**
 	 * 편지지 추가 (수아)

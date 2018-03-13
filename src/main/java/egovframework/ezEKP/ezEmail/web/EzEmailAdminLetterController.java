@@ -154,9 +154,9 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/createLetterBox.do")
 	@ResponseBody
-	public String createLetterBox(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterBoxVO letter_box) throws Exception {
+	public String createLetterBox(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterBoxVO letterBox) throws Exception {
 		logger.debug("createLetterBox started.");
-		logger.debug("letter_box=" + letter_box);
+		logger.debug("letterBox=" + letterBox);
 		
 		// 관리자 권한체크      
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
@@ -166,16 +166,16 @@ public class EzEmailAdminLetterController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Integer tenant = userInfo.getTenantId();
-		String tenant_id = Integer.toString(tenant);
-		Integer parentNo = letter_box.getParentLetterBoxNo();
-		String parent_letterbox_no = Integer.toString(parentNo);
-		String displayname = letter_box.getDisplayname();
-		String displayname2 = letter_box.getDisplayname2();
-		String company_id = letter_box.getCompanyID();
+		String tenantId = Integer.toString(tenant);
+		Integer parentNo = letterBox.getParentLetterBoxNo();
+		String parentLetterboxNo = Integer.toString(parentNo);
+		String displayname = letterBox.getDisplayname();
+		String displayname2 = letterBox.getDisplayname2();
+		String companyId = letterBox.getCompanyID();
 		String returnStr = "OK";
 		
 		try {
-			EzEmailAdminLetterService.insertLetterBox(parent_letterbox_no, displayname, displayname2, company_id, tenant_id);
+			EzEmailAdminLetterService.insertLetterBox(parentLetterboxNo, displayname, displayname2, companyId, tenantId);
 		} catch (Exception e) {
 			returnStr = "ERROR";
 		}
@@ -193,17 +193,17 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/readLetterBox.do")
 	@ResponseBody
-	public JSONObject readLetterBox(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterBoxVO letter_box) throws Exception {
+	public JSONObject readLetterBox(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterBoxVO letterBox) throws Exception {
 		logger.debug("readLetterBox started.");
-		logger.debug("letter_box=" + letter_box);
+		logger.debug("letterBox=" + letterBox);
 		
 		JSONObject json = null;
 		
-		Integer boxNo = letter_box.getLetterBoxNo();
-		String letterbox_no = Integer.toString(boxNo);
+		Integer boxNo = letterBox.getLetterBoxNo();
+		String letterBoxNo = Integer.toString(boxNo);
 		
 		try {
-			json = EzEmailAdminLetterService.selectOneLetterBox(letterbox_no);
+			json = EzEmailAdminLetterService.selectOneLetterBox(letterBoxNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -224,9 +224,9 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/updateLetterBox.do")
 	@ResponseBody
-	public String updateLetterBox(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterBoxVO letter_box) throws Exception {
+	public String updateLetterBox(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterBoxVO letterBox) throws Exception {
 		logger.debug("updateLetterBox started.");
-		logger.debug("letter_box=" + letter_box);
+		logger.debug("letterBox=" + letterBox);
 		
 		// 관리자 권한체크      
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
@@ -236,18 +236,18 @@ public class EzEmailAdminLetterController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Integer tenant = userInfo.getTenantId();
-		String tenant_id = Integer.toString(tenant);
-		Integer boxNo = letter_box.getLetterBoxNo();
-		String letterbox_no = Integer.toString(boxNo);
-		Integer parentNo = letter_box.getParentLetterBoxNo();
+		String tenantId = Integer.toString(tenant);
+		Integer boxNo = letterBox.getLetterBoxNo();
+		String letterBoxNo = Integer.toString(boxNo);
+		Integer parentNo = letterBox.getParentLetterBoxNo();
 		String parent_letterbox_no = Integer.toString(parentNo);
-		String displayname = letter_box.getDisplayname();
-		String displayname2 = letter_box.getDisplayname2();
-		String company_id = letter_box.getCompanyID();
+		String displayname = letterBox.getDisplayname();
+		String displayname2 = letterBox.getDisplayname2();
+		String companyId = letterBox.getCompanyID();
 		String returnStr = "OK";
 		
 		try {
-			EzEmailAdminLetterService.updateLetterBox(letterbox_no, parent_letterbox_no, displayname, displayname2, company_id, tenant_id);
+			EzEmailAdminLetterService.updateLetterBox(letterBoxNo, parent_letterbox_no, displayname, displayname2, companyId, tenantId);
 		} catch (Exception e) {
 			returnStr = "ERROR";
 		}
@@ -263,9 +263,9 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/deleteLetterBox.do")
 	@ResponseBody
-	public String deleteLetterBox(@CookieValue("loginCookie") String loginCookie, int letterbox_no) throws Exception {
+	public String deleteLetterBox(@CookieValue("loginCookie") String loginCookie, int letterBoxNo) throws Exception {
 		logger.debug("deleteLetterBox started.");
-		logger.debug("letterbox_No=" + letterbox_no);
+		logger.debug("letterBoxNo=" + letterBoxNo);
 		
 		// 관리자 권한체크      
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
@@ -273,11 +273,11 @@ public class EzEmailAdminLetterController {
 			return "cmm/error/adminDenied";
 		}
 		
-		String letterbox_num = Integer.toString(letterbox_no);
+		String letterboxNum = Integer.toString(letterBoxNo);
 		String returnStr = "OK";
 		
 		try {
-			EzEmailAdminLetterService.deleteLetterBox(letterbox_num);
+			EzEmailAdminLetterService.deleteLetterBox(letterboxNum);
 		} catch (Exception e) {
 			returnStr = "ERROR";
 		}

@@ -82,8 +82,8 @@ public class EzEmailLetterController {
 		logger.debug("search=" + search);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String company_id = userInfo.getCompanyID();
-		String tenant_id = Integer.toString(userInfo.getTenantId());
+		String companyId = userInfo.getCompanyID();
+		String tenantId = Integer.toString(userInfo.getTenantId());
 		
 		if (search == null || search.equals("")) {
 			search = "";
@@ -93,7 +93,7 @@ public class EzEmailLetterController {
 		
 		
 		try {
-			returnJsonArr = EzEmailAdminLetterService.searchLetter(search, company_id, tenant_id);
+			returnJsonArr = EzEmailAdminLetterService.searchLetter(search, companyId, tenantId);
 		} catch (Exception e) {
 			//e.printStackTrace();
 			logger.debug("no data");
@@ -112,15 +112,15 @@ public class EzEmailLetterController {
 	 */
 	@RequestMapping(value="/ezEmail/selectLetterBoxName.do")
 	@ResponseBody
-	public JSONObject selectLetterBoxName(@CookieValue("loginCookie") String loginCookie, String letterbox_no) throws Exception {
+	public JSONObject selectLetterBoxName(@CookieValue("loginCookie") String loginCookie, String letterBoxNo) throws Exception {
 		
 		logger.debug("selectLetterBoxName started.");
-		logger.debug("letterbox_no=" + letterbox_no);
+		logger.debug("letterBoxNo=" + letterBoxNo);
 		
 		JSONObject json = null;
 		
 		try {
-			json = EzEmailAdminLetterService.selectLetterBoxName(letterbox_no);
+			json = EzEmailAdminLetterService.selectLetterBoxName(letterBoxNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

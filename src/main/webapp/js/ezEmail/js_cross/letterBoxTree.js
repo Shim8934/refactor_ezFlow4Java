@@ -87,7 +87,7 @@ function selectBox(letterBoxNo) {
 
 // 편지지함 삭제
 function deleteBox(letterBoxNo) {
-	var query = "/admin/ezEmail/deleteLetterBox.do?letterbox_no=" + letterBoxNo;
+	var query = "/admin/ezEmail/deleteLetterBox.do?letterBoxNo=" + letterBoxNo;
 	
 	$.ajax({
 		type : "POST",
@@ -104,12 +104,19 @@ function deleteBox(letterBoxNo) {
 function readText() { 
 	if (xmlhttp == null || xmlhttp.readyState != 4) return;
 	responseResult = xmlhttp.response;
+	
+	console.log(responseResult);
+	
 	var displayname = 'displayname":"';
 	var displayname2 = 'displayname2":"';
 	var displayname_start = responseResult.indexOf(displayname) + displayname.length;
 	var displayname2_start = responseResult.indexOf(displayname2) + displayname2.length;
-	var displayname_end = responseResult.indexOf('","par');
-	var displayname2_end = responseResult.indexOf('","com');
+	
+	console.log(displayname_start);
+	console.log(displayname2_start);
+	
+	var displayname_end = responseResult.indexOf('"}');
+	var displayname2_end = responseResult.indexOf('","dis');
 	
 	letter_displayname = responseResult.substring(displayname_start, displayname_end);
 	letter_displayname2 = responseResult.substring(displayname2_start, displayname2_end);
@@ -120,16 +127,16 @@ function readText() {
 // 트리에서 필요한 아이들만 빼서 treeCollection 재구성
 function treeSet() {
 	for(var i = 0; i < result.length; i++) {
-		var treeId = result[i].letterbox_no;
-		var treeParent = result[i].parent_letterbox_no;
+		var treeId = result[i].letterBoxNo;
+		var treeParent = result[i].parentLetterboxNo;
 		var treeText = result[i].displayname;
-		var companyId = result[i].company_id;
+		var companyId = result[i].companyId;
 		
 		if (treeParent == '0') {
 			treeParent = '#'; 
 		}
 		
-		treeCollection.push({id:treeId, parent:treeParent, text:treeText, company_id:companyId});
+		treeCollection.push({id:treeId, parent:treeParent, text:treeText, companyId:companyId});
 	}
 	
 	
@@ -192,7 +199,7 @@ function boxNameCheck() {
 	var returnVal = false;
 	
 	for(var i = 0; i < result.length; i++) {
-		if(selectNode.node.parent == result[i].parent_letterbox_no) {
+		if(selectNode.node.parent == result[i].parentLetterboxNo) {
 			boxNamearr.push(result[i].displayname);
 		}
 	}
