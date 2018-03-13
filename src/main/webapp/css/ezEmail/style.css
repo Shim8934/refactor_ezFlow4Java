@@ -130,6 +130,10 @@ body {
 	text-align: center;
 }
 
+.lmLetterListWrap li span{
+	width: 250px;
+}
+
 .lmLetterListUl li {
 	height: 30px;
 	line-height: 30px;

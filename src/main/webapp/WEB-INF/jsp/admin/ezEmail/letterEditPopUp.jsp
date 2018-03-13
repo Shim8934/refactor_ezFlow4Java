@@ -53,14 +53,18 @@
 		
 		<script>
 			var letterPopUp = true; // 에디터에서 이미지 업로드 할때 편지지 팝업인지 구분 (ckImageUpload.jsp -> fileupload())
+			var letterId = $("#leSave").attr("data-letterId");
+			var letterBoxNo = $("#leSave").attr("data-boxNo");
 			
-			// 저장                                   btn -> this
+			// 저장 버튼 클릭시                  btn -> this
 			function letterSave(btn) {
 				//편지지명, 편지지명(영문), 편지지 내용, 편지지함, 편지지 고유 id
-				
 				var letterEditor = document.getElementById("tbContentElement").contentWindow;
-				var letterContentChk = letterEditor.GetEditorContent();
-				var letterContent = letterEditor.document.getElementsByTagName("iframe")[0].contentDocument.documentElement.outerHTML;
+				var letterEditorIframe = letterEditor.document.getElementsByTagName("iframe")[0].contentDocument.documentElement;
+				
+				letterEditorIframe.getElementsByTagName("body")[0].setAttribute("contenteditable",false); // 에디터 작성
+				var letterContentChk = letterEditor.GetEditorContent(); // 에디터에 작성한 내용
+				var letterContent = letterEditorIframe.outerHTML; // 에디터 html
 	
 				var letterJson = {
 					"displayname" : $("#displayname").val(),
@@ -84,6 +88,7 @@
 				letterUpload(letterJson);
 			}
 			
+			// 저장 기능
 			function letterUpload(letterJson) {
 				$.ajax({
 					type:"POST",
