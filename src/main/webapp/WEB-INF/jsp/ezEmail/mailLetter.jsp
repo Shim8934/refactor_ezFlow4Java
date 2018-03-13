@@ -44,10 +44,7 @@
 				if (letterNo !== "undefined") {
 		    		url = "/ezEmail/mailLetterPreview.do?" + "letterNo=" + letterNo;  
 		    		window.open(url,"_blank","width=890, height=660");
-		    	} /* else {
-		    		alert("편지를 선택해주세요.");
-		    		return;
-		    	} */
+		    	}
 		    }
 			
 			// 편지지 선택(mailWirte.jsp에 들어가도록)

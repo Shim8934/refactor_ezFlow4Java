@@ -43,8 +43,8 @@
 						<button onClick="letterEditPopUp(this, 'add')">편지지 추가</button>
 						<button onClick="letterBoxMove(this)">편지지 이동</button>
 						<img src="/images/i_bar.gif" alt="line">
-						<button class="lmBtnPrev"><img src="/images/ImgIcon/prev.gif" alt="prev"></button>
-						<button class="lmBtnNext"><img src="/images/ImgIcon/next.gif" alt="next"></button>
+						<button class="lmBtnPrev" onclick="orderPrev()"><img src="/images/ImgIcon/prev.gif" alt="prev"></button>
+						<button class="lmBtnNext" onclick="orderNext()"><img src="/images/ImgIcon/next.gif" alt="next"></button>
 						<button>순서 저장</button>
 					</div>
 				</div>
@@ -72,6 +72,18 @@
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록  (/js/ezEmail/js_cross/letterBoxTree.js)
 			}); // document on ready
+			
+			// 순서 번경(위로 올리기)
+			function orderPrev() {
+				var selectNodeId = $('body').find('.lmLetterSelect')[0].attributes[0].value;
+				var liArrId = $('div.lmLetter').find('li');
+				
+			}
+			
+			// 순서 변경(아래로 내리기)
+			function orderNext() {
+				
+			}
 			
 			// 편지지 추가, 수정 btn 클릭 시  ---- btn -> this, type -> 추가=add
 			function letterEditPopUp(btn, type) {
