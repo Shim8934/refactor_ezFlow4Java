@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
@@ -392,6 +391,16 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("tenantId",   tenantId);
 		
 		return ezWebFolderDAO.getAllSimpleDeptFolder(map);
+	}
+
+	@Override
+	public List<OrganDeptVO> getAllDepartments(String companyId, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId",  companyId);
+		map.put("primary",    primary);
+		map.put("tenantId",   tenantId);
+		
+		return ezWebFolderDAO.getAllDepartments(map);
 	}
 
 }

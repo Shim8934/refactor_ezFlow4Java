@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezWebFolder.service;
 
 import java.util.List;
+
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
@@ -42,4 +44,5 @@ public interface EzWebFolderService {
 	String getDeptPath(String deptId, int tenantId) throws Exception;
 	List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int tenantId) throws Exception;
 	List<FolderSimpleVO> getAllSimpleDeptFolder(String companyId, int tenantId) throws Exception;
+	List<OrganDeptVO> getAllDepartments(String companyId, String primary, int tenantId) throws Exception;
 }

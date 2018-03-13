@@ -148,4 +148,9 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public List<FolderSimpleVO> getAllSimpleDeptFolder(Map<String, Object> map) {
 		return (List<FolderSimpleVO>)list("EzWebFolderDAO.getAllSimpleDeptFolder", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getAllDepartments(Map<String, Object> map) {
+		return (List<OrganDeptVO>)list("EzWebFolderDAO.getAllDepartments", map);
+	}
 }

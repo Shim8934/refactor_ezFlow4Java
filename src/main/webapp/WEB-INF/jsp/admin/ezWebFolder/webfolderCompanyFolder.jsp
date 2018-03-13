@@ -494,6 +494,9 @@
 						
 						if (result == "ok") {
 							change();
+							document.getElementById("fldName").value  = "";
+							document.getElementById("fldName2").value = "";
+							updateTarget("");
 						}
 						else {
 							alert("<spring:message code='ezWebFolder.t225'/>");
@@ -516,7 +519,7 @@
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 				</c:forEach>
 			</select>
-			<a class="webfolderBttn3" id="addCompFolder" style="display: none;"><span onclick="newCompanyFolder();">새로운 회사폴더</span></a>
+			<a class="webfolderBttn3" id="addCompFolder" style="display: none;"><span onclick="newCompanyFolder();"><spring:message code='ezWebFolder.t229'/></span></a>
 		</div>
 		
 		<div style="height: 450px; width: 100%;">

@@ -9,6 +9,7 @@
 	<typeAlias  alias="FolderUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.FolderUserVO"  />
 	<typeAlias  alias="SimpleDeptVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO"  />
 	<typeAlias  alias="SimpleUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO"  />
+	<typeAlias  alias="OrganDeptVO"         type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	
 	<sql id="getAllFilesInFolderCont">
 		WHERE
@@ -864,6 +865,55 @@
 			ORDER BY
 				a.FOLDER_LEVEL ASC,
 				a.FOLDER_STEP  ASC
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllDepartments" parameterClass="Map" resultClass="OrganDeptVO">
+		<![CDATA[
+			SELECT 
+				cn,
+				cn deptid,
+				CASE #primary#
+					WHEN '1' THEN
+						displayname
+					ELSE
+						displayname2
+					END
+						displayname,
+				CASE #primary#
+					WHEN '1' THEN 
+						displayname
+					ELSE
+						displayname2
+					END
+						deptnm,
+				displayname displayname1,
+				displayname2,
+				mail,
+				extensionattribute1,
+				extensionattribute2,
+				extensionattribute3,
+				extensionattribute4,
+				extensionattribute5,
+				extensionattribute6,
+				extensionattribute7,
+				extensionattribute8,
+				extensionattribute9,
+				extensionattribute10,
+				extensionattribute11,
+				extensionattribute12,
+				extensionattribute13,
+				extensionattribute14,
+				extensionattribute15,
+				adspath,
+				updatedt,
+				'dept' type
+			FROM 
+				TBL_DEPTMASTER
+			WHERE
+				extensionattribute1 = #companyId#
+			AND
+				tenant_id           = #tenantId#
 		]]>
 	</select>
 </sqlMap>

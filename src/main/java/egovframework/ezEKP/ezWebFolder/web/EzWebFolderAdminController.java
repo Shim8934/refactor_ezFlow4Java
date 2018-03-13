@@ -1001,7 +1001,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		HttpEntity<?> entity          = new HttpEntity<>(headers);
 		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		
 		JSONParser jp                 = new JSONParser();
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
@@ -1015,6 +1015,44 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("Make Company Folder finishes!");
+		
+		return "json";
+	}
+
+	@RequestMapping(value="/admin/ezWebFolder/makeDeptFolder.do", method = RequestMethod.POST)
+	public String makeCompFolders(@CookieValue("loginCookie") String loginCookie,  Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("Make Dept Folders is running!");
+		
+		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
+		String companyId    = request.getParameter("companyId");
+		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
+		String url          = gwServerUrl + "/rest/ezwebfolderadmin/dept-folder/" + companyId;
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("primary", user.getLang())
+										.queryParam("offset", user.getOffset())
+										.queryParam("userId", user.getId());
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		
+		HttpEntity<?> entity          = new HttpEntity<>(headers);
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("result", "ok");
+		}
+		else {
+			model.addAttribute("result", "error");
+		}
+		
+		logger.debug("Make Dept Folders finishes!");
 		
 		return "json";
 	}

@@ -46,15 +46,19 @@
 			}
 			
 			function renderData(result) {
-				if (!result) {
-					alert("<spring:message code='ezWebFolder.t134'/>");
-					return;
-				}
+				var bttnAdd = document.getElementById("addFoldersBttn");
+				var divTree = document.getElementById("folderTree");
 				
-				var divTree  = document.getElementById("folderTree");
 				while (divTree.hasChildNodes()) {
 					divTree.removeChild(divTree.lastChild);
 				}
+				
+				if (!result || result.length == 0) {
+					bttnAdd.style.display = "";
+					return;
+				}
+				
+				bttnAdd.style.display = "none";
 				
 				for (var i = 0; i < result.length; i++) {
 					var divDept  = document.createElement("div");
@@ -441,6 +445,35 @@
 				arrSubFolder = [];
 				getData();
 			}
+			
+			function addAllFolders() {
+				$.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/makeDeptFolder.do",
+					data: {
+						"companyId" : document.getElementById("companyList").value
+					},
+					dataType: "JSON",
+					async: false,
+					success: function(data) {
+						var result = data.result;
+						
+						if (result == "ok") {
+							change();
+							document.getElementById("fldName").value  = "";
+							document.getElementById("fldName2").value = "";
+							updateTarget("");
+						}
+						else {
+							alert("<spring:message code='ezWebFolder.t225'/>");
+						}
+						
+					},
+					error: function (xhr, status, e){
+						alert("<spring:message code='ezWebFolder.t134'/>");
+					}
+				});
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -452,6 +485,7 @@
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 				</c:forEach>
 			</select>
+			<a class="webfolderBttn3" id="addFoldersBttn" style="display: none;"><span onclick="addAllFolders();"><spring:message code='ezWebFolder.t228'/></span></a>
 		</div>
 		
 		<div style="height: 450px; width: 100%;">
