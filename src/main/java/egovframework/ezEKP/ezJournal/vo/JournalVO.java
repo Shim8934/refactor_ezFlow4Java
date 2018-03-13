@@ -20,8 +20,15 @@ public class JournalVO {
 	private int checkRecv;
 	private String isView;
 	private String mine;
+	private String writerId;
 	private List<JournalFileVO> fileList;
 	
+	public String getWriterId() {
+		return writerId;
+	}
+	public void setWriterId(String writerId) {
+		this.writerId = writerId;
+	}
 	public String getMine() {
 		return mine;
 	}

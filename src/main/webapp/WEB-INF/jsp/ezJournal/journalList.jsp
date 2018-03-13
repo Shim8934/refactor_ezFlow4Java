@@ -3,13 +3,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <style>
- tr.noView td{
- 	font-weight: bold;
- }
 </style>
 <div style="width: 100%; overflow: AUTO;" id="divList">
 	<div id="lvBoardList">
-		<table id="BoardList" cellspacing="0" cellpadding="0"
+		<table id="journalList" cellspacing="0" cellpadding="0"
 		multiselectable="false" useocs="false"
 		rowonclick="ItemPreviewRead_click"
 		rowondblclick="ItemRead_onclick(this)" width="100%" border="0"
@@ -77,7 +74,7 @@
 		<c:choose>
 		<c:when test="${fn:length(journalList) ne 0}">
 			<c:forEach items="${journalList}" var="journal" varStatus="status">
-			<tr class="${journal.isView }" id="${journal.journalId }" onclick="goJournalDetail(this);" style="cursor: pointer;">
+			<tr class="${journal.isView }" id="${journal.journalId }" ondblclick="goJournalDetail(this);" style="cursor: pointer;">
 				<td class="cbTD"
 					style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><input onchange="checkedCheckbox(this);"
 					type="checkbox" name="journalCheckbox" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>

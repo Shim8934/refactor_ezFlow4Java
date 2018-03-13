@@ -249,5 +249,5 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public JournalVO getJournal(String journalId, String userId, String tenantId) throws Exception;
+	public JournalVO getJournal(String journalId, String userId, String viewDate, String tenantId) throws Exception;
 }

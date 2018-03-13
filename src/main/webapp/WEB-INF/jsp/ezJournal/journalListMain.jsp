@@ -64,6 +64,9 @@
 			.selectTR{
 				background-color: rgb(233, 241, 255);
 			}
+			 #lvBoardList #journalList tr.noView td{
+			 	font-weight: bold;
+			 }
 	    </style>
 	    
 		<script  type="text/javascript">
@@ -132,8 +135,8 @@
 	   				dataType:"html",
 	   				data:JSON.stringify(jsonParam),
 	   				url:url,
-	   				success: function(result){
-	   					$("#MailListRayer").html(result);
+	   				success: function(journalList){
+	   					$("#MailListRayer").html(journalList);
 	   					journalPreviewRayerChange("${journalEnv.viewenv}");
 	   					setInitOrder();
 	   				}
@@ -147,7 +150,7 @@
 	   				type:"post",
 	   				data:{listCnt:listCnt},
 	   				url:"/ezJournal/saveJournalEnv.do",
-	   				success: function(result){
+	   				success: function(){
 	   					setJournalList();
 	   				}
 	   			});
@@ -180,6 +183,20 @@
 				setJournalList();
 				BoardSearchOptionHidden();
 				SearchOptionHidden();
+			}
+			function quickSearch(){
+				var searchFlag = $("input[type='radio'][name='searchKey']:checked").val();
+				if(searchFlag == 'journalWriter'){
+					searchWriter = $("#searchValue").val();
+					setJournalList();
+					searchWriter = "";
+					$("#searchValue").val("");
+				} else if(searchFlag == 'journalTitle'){
+					searchTitle = $("#searchValue").val();
+					setJournalList();
+					searchTitle = "";
+					$("#searchValue").val("");
+				}
 			}
 			
 			//상세검색 레이어팝업
@@ -233,28 +250,35 @@
 			
 			//tr선택시
 			function selectedTR(elem){
-				onPreview=true;
 				var parentElem = $(elem).parent();
-				$("#BoardList tr").removeClass("selectTR");
-				$("#BoardList tr").find("input[type='checkbox']").removeProp("checked");
+				$("#journalList tr").removeClass("selectTR");
+				$("#journalList tr").find("input[type='checkbox']").removeProp("checked");
 	   			$(parentElem).addClass("selectTR");
 	   			var vc = $(parentElem).find(".viewCount");
-	   			if($(parentElem).hasClass("noView")){
-		   			$(vc).text(parseInt($(vc).text())+1);
-		   			$(parentElem).removeClass("noView");
-	   			}
 	   			$(parentElem).find("input[type='checkbox']").prop("checked","true");
 	   			var journalId=$(parentElem).attr("id");
 	   			if (pPreviewShow_HOW=='W' || pPreviewShow_HOW=='H') {
+		   			if($(parentElem).hasClass("noView")){
+			   			$(vc).text(parseInt($(vc).text())+1);
+			   			$(parentElem).removeClass("noView");
+		   			}
+// 	   				$("#ifrmPreViewH").attr("src","/ezJournal/journalPreview.do?journalId="+journalId);
 					$.ajax({
 		   				type:"post",
-		   				dataType:"json",
+		   				dataType:"html",
 		   				data:{journalId:journalId},
 		   				url:"/ezJournal/journalPreview.do",
-		   				success: function(data){
-							$("#Preview_ContentW").html(data.journalContent);
-							$("#Preview_ContentH").html(data.journalContent);
-							parent.left.setRecvCount();
+		   				success: function(journal){
+							$("#Preview_ContentW").html(journal);
+							$("#Preview_ContentH").html(journal);
+							if(listType=='recv'){
+								parent.left.setRecvCount();
+							}
+							var textContentSize;
+							textContentSize = $("#PreviewRayerH").height()-105;
+							$("#Preview_ContentH").css("height",textContentSize);
+							textContentSize = $("#PreviewRayerW").height()-120;
+							$("#Preview_ContentW").css("height",textContentSize);
 // 		   					ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 // 		   					ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 		   				}
@@ -287,9 +311,9 @@
 	   				type:"post",
 	   				dataType:"json",
 	   				url:url,
-	   				success: function(data){
+	   				success: function(forms){
 	   					var opts="<option value=''>양식선택</option>";
-	   					$(data).each(function(){
+	   					$(forms).each(function(){
 	   						opts +="<option value="+this.formId+">"+this.formName+"</option>";
 	   					})
 	   					$("#formId").html(opts);
@@ -328,7 +352,7 @@
 	   				type:"post",
 	   				data:{viewenv:viewHow},
 	   				url:"/ezJournal/saveJournalEnv.do",
-	   				success: function(result){
+	   				success: function(){
 	   					journalPreviewRayerChange(viewHow);
 	   				}
 	   			});
@@ -366,7 +390,7 @@
 						document.getElementById("PreviewRayerH").style.display = "none";
 
 						CurrenWidth = document.documentElement.clientWidth - 10;
-						CurrentHeight = document.documentElement.clientHeight - 152;
+						CurrentHeight = document.documentElement.clientHeight - 154;
 						document.getElementById("ResizeBarH").style.height = CurrentHeight
 								+ "px";
 						document.getElementById("ResizeBarW").style.width = (CurrenWidth - 10)
@@ -393,11 +417,11 @@
 						pMailPreVDiv = Math
 								.round((pMailPreHeightW / CurrentHeight) * 100);
 
-						document.getElementById("Preview_HeaderW").style.display = "";
-						document.getElementById("Preview_HeaderH").style.display = "none";
+// 						document.getElementById("Preview_HeaderW").style.display = "";
+// 						document.getElementById("Preview_HeaderH").style.display = "none";
 						g_bPrevShow = true;
 						if(onPreview==false){
-							$("#Preview_ContentW").html("<spring:message code='ezBoard.t10022' />");
+							$("#Preview_ContentW span").html("<spring:message code='ezBoard.t10022' />");
 // 							ifrmPreViewW.document
 // 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 						}
@@ -410,7 +434,7 @@
 						} else {
 							CurrenWidth = document.documentElement.clientWidth - 20;
 						}
-						CurrentHeight = document.documentElement.clientHeight - 151;
+						CurrentHeight = document.documentElement.clientHeight - 105;
 						pMailListWidthH = parseInt(CurrenWidth
 								* (pMailListDiv_H / 100));
 						pMailPreWidthH = parseInt(CurrenWidth
@@ -456,12 +480,12 @@
 						pMailPreVDiv_H = Math
 								.round((pMailPreWidthH / CurrenWidth) * 100);
 
-						document.getElementById("Preview_HeaderW").style.display = "none";
-						document.getElementById("Preview_HeaderH").style.display = "";
+// 						document.getElementById("Preview_HeaderW").style.display = "none";
+// 						document.getElementById("Preview_HeaderH").style.display = "";
 
 						g_bPrevShow = true;
 						if(onPreview==false){
-							$("#Preview_ContentH").html("<spring:message code='ezBoard.t10022' />");
+							$("#Preview_ContentH span").html("<spring:message code='ezBoard.t10022' />");
 // 							ifrmPreViewH.documentr
 // 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 						}
@@ -548,10 +572,16 @@
 
 			$(document).ready(function() {
 				setJournalList();
+// 				if(pPreviewShow_HOW=='H'){
+// 					PreviewH_Move = true;
+// 				} else if(pPreviewShow_HOW=='W'){
+// 					PreviewW_Move = true;
+// 				}
+// 				journalPreviewResize();
 			});
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:auto;" onmousemove="journalPreviewResize(event);" onmouseup="journalPreviewEnd(event);">
+	<body class="mainbody" style="overflow:hidden;" onmousemove="journalPreviewResize(event);" onmouseup="journalPreviewEnd(event);">
 			<c:choose>
 				<c:when test="${listType eq 'department' }">
 					<h1><spring:message code='ezJournal.t49'/>
@@ -578,8 +608,8 @@
 			  </c:if>
 			  &nbsp;
 			  <c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-			  <input id="SearchValue" style="width:150px;" onkeypress=""/> 
-	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
+			  <input id="searchValue" style="width:150px;" onkeypress="quickSearch()"/> 
+	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="quickSearch()"></a>
 			  </c:if>
 	        </span>
 		</h1>
@@ -679,12 +709,14 @@
 		        </span>
 		        <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
 		            <span style="width: 100%; height: 100px; display: block;">
-		                <span class="previewmail_info" style="display: block; width: 100%;">
-		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;">
-		                    </div>
-		                </span>
+<!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
+<!-- 		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;"> -->
+<!-- 		                    </div> -->
+<!-- 		                </span> -->
 		                
-		                <div id="Preview_ContentH" style="text-align: center;"></div>
+		                <div id="Preview_ContentH" style="text-align: center; border-top: 1px solid #eeeeee;">
+		                	<span style="margin-top:50px;height:10px;display:inline-block;"></span>
+		                </div>
 <!-- 		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe> -->
 		            </span>
 		        </span>
@@ -694,14 +726,18 @@
 		        <span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
 		            <img src="/images/prevview_bar_dotted.gif">
 		        </span>
+		        <span onmousedown="PreviewW_onMouserDown(event);" style="margin:2px; margin-bottom:-4.9px; cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="">
+		        </span>
 		        <span id="PreContent_RayerW" style="display: block;">
 		            <span style="width: 100%; height: 100px; display: block;">
-		                <span class="previewmail_info" style="display: block; width: 100%;">
-		                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;">
-		                    </div>
-		                </span>
+<!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
+<!-- 		                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;"> -->
+<!-- 		                    </div> -->
+<!-- 		                </span> -->
 		                
-		                <div id="Preview_ContentW" style="text-align: center;"></div>
+		                <div id="Preview_ContentW" style="text-align: center;">
+		                	<span style="margin-top:50px;height:10px;display:inline-block;"></span>
+		                </div>
 		            </span>
 		        </span>
 		    </span>
@@ -778,7 +814,7 @@
 	            document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
 	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
-	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 80) + "px";
+	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 105) + "px";
 	            pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
 	            pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
 
@@ -853,12 +889,25 @@
 	    }
 	}
 	
+	 function OpenUserInfo(pUserID) {
+	        var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
+	    }
+	
 	function goJournalDetail(elem){
+		var vc = $(elem).find(".viewCount");
+		if($(elem).hasClass("noView")){
+   			$(vc).text(parseInt($(vc).text())+1);
+   			$(elem).removeClass("noView");
+		}
+	 	var pheight = window.screen.availHeight;
+        var pwidth = window.screen.availWidth;
+        var pTop = (pheight - 720) / 2;
+        var pLeft = (pwidth - 765) / 2;
 		var journalId = $(elem).attr("id");
 		var feature = GetOpenPosition(820, 850);
-		window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "journalDetail",
-				"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
-					+ feature);
+		var Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "",
+				"toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		Openwin.focus();
 	}
 	</script>
 	</body>

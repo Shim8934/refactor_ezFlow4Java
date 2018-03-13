@@ -545,16 +545,18 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public JournalVO getJournal(String journalId,String userId,  String tenantId) throws Exception {
+	public JournalVO getJournal(String journalId,String userId, String viewDate, String tenantId) throws Exception {
 		logger.debug("getJournal started");
 		
 		logger.debug("journalId : "+journalId);
 		logger.debug("tenantId : "+tenantId);
 		logger.debug("userId : "+userId);
+		logger.debug("viewDate : "+viewDate);
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("journalId", journalId);
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
+		param.put("viewDate", viewDate);
 		
 		ezJournalDAO.insertViewInfo(param);
 		logger.debug("열람정보는 들어가나요?");

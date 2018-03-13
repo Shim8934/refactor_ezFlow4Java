@@ -187,7 +187,7 @@ public class EzJournalSBController {
 	 * @param loginCookie
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value="/ezJournal/journalList.do")
 	public String journalList(@RequestBody JSONObject jsonParam, HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("journalList started");
@@ -205,7 +205,6 @@ public class EzJournalSBController {
 		
 		param.put("companyId", userInfo.getCompanyID());
 		param.put("userId", userInfo.getId());
-		
 		switch (listType) {
 		case "department":
 			break;
@@ -261,6 +260,12 @@ public class EzJournalSBController {
 		if (status.equals("ok")) {			
 			JSONArray journalList =  (JSONArray) resultBody.get("data");
 			logger.debug(journalList.toJSONString());
+			for (int i = 0; i < journalList.size(); i++) {
+				JSONObject journal = (JSONObject) journalList.get(i);
+				String journalDate = (String) journal.get("journalDate");
+				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+				journal.put("journalDate", journalDate);
+			}
 			model.addAttribute("journalList", journalList);
 			model.addAttribute("listType",listType);
 		}
@@ -298,6 +303,7 @@ public class EzJournalSBController {
 	 * @param loginCookie
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezJournal/journalDetail.do")
 	public String getJournalDetail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getJournalDetail started");
@@ -322,6 +328,9 @@ public class EzJournalSBController {
 		JSONObject journal = null;
 		if (status.equals("ok")) {			
 			journal = (JSONObject) resultBody.get("data");
+			String journalDate = (String) journal.get("journalDate");
+			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+			journal.put("journalDate", journalDate);
 			model.addAttribute("journal",journal);
 		}
 		
@@ -337,15 +346,19 @@ public class EzJournalSBController {
 		 * @param loginCookie
 		 * @return
 		 */
+		@SuppressWarnings("unchecked")
 		@RequestMapping(value="/ezJournal/journalPreview.do")
-		@ResponseBody
-		public JSONObject getJournalPreview(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
+		public String getJournalPreview(HttpServletRequest request,Model model, @CookieValue("loginCookie") String loginCookie) {
 			logger.debug("getJournalPreview started");
 			
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-			
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("userId", userInfo.getId());
+			try {
+				param.put("viewDate",commonUtil.getTodayUTCTime(""));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			
 			String journalId = request.getParameter("journalId");
 			
@@ -356,13 +369,24 @@ public class EzJournalSBController {
 			JSONObject journal = null;
 			if (status.equals("ok")) {			
 				journal = (JSONObject) resultBody.get("data");
+				String journalDate = (String) journal.get("journalDate");
+				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+				journal.put("journalDate", journalDate);
+				model.addAttribute("journal",journal);
 			}
 			
 			logger.debug("getJournalPreview ended");
 			
-			return journal;
+			return "/ezJournal/journalPreviewContent";
 	}
 		
+	/**
+	 * 읽지않은 수신일지 갯수 가져오기
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
 	@RequestMapping(value="/ezJournal/leftRecvCount.do")
 	@ResponseBody
 	public String leftRecvCount(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {

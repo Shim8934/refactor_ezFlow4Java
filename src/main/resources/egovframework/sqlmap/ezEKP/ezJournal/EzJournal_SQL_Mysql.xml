@@ -20,6 +20,7 @@
 		<result property="journalContent" column="journal_content"/>
 		<result property="journalDate" column="journal_date"/>
 		<result property="writerName" column="writer_name"/>
+		<result property="writerId" column="writer_Id"/>
 		<result property="formName" column="form_name"/>
 		<result property="typeId" column="type_id"/>
 		<result property="replyCount" column="reply_count"/>
@@ -528,7 +529,11 @@
 		    count(v.view_date) as view_count,
 		    count(r.user_id) as total_recv, 
 		    count(r.recieve_date) as check_recv , 
-		    ifnull(ifnull(v.view_date,r.recieve_date),'noView') as is_view
+		    ifnull((select recieve_date as is_view
+			from jmocha.tbl_journal_recv where user_id=#userId# and tenant_id=#tenantId# and journal_id=j.journal_id
+			union
+			select view_date as is_view
+			from jmocha.tbl_journal_view where user_id=#userId# and tenant_id=#tenantId# and journal_id=j.journal_id),'noView') as is_view
 		from jmocha.tbl_journal j
 		inner join jmocha.tbl_journal_form f on (j.form_id=f.form_id and j.tenant_id = f.tenant_id)
 		inner join jmocha.tbl_journal_form_type ft on (f.type_id=ft.type_id and f.tenant_id=ft.tenant_id)
@@ -767,16 +772,8 @@
 		</selectKey>
 		<isEmpty property="isUser">
 			insert into jmocha.tbl_journal_view (user_id,tenant_id,journal_id, view_date)
-			select 
-			#userId#,#tenantId#,#journalId#,#viewDate#
-	        from dual
-			where not exists(
-	        select 
-	        user_id
-	        from jmocha.tbl_journal_view 
-	        where user_id=#userId# 
-	        and journal_id=#journalId# 
-	        and tenant_id=#tenantId#)
+			values (#userId#,#tenantId#,#journalId#,#viewDate#)
+	        on duplicate key update view_date=#viewDate#
 		</isEmpty>
 		<isNotEmpty property="isUser">
 			update jmocha.tbl_journal_recv
@@ -806,7 +803,8 @@
             case u.CN
 			when #userId# then 'yes'
 			else 'no'
-			end as mine
+			end as mine,
+			u.CN as writer_id
 		from jmocha.tbl_journal j
 		inner join jmocha.tbl_journal_form f on (j.form_id=f.form_id and j.tenant_id = f.tenant_id)
 		inner join jmocha.tbl_usermaster u on (j.journal_writer=u.CN and u.TENANT_ID=j.tenant_id)

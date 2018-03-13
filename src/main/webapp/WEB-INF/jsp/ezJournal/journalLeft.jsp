@@ -13,13 +13,13 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 	        window.onload = function () {
-	        	$(".department:first").click();
+	        	$("#left span:first").click();
 	        }
 	        
 	        function goJournalList(elem) {
 				var url = "/ezJournal/journalListMain.do";
 				
-				var listType = $(elem).attr("class");
+				var listType = $(elem).attr("listType");
 				url=url+"?listType="+listType;
 				var typeId = $(elem).attr("typeId");
 				if(typeId&&typeId!=undefined){
@@ -44,33 +44,33 @@
         <div class="left_pims" title="<spring:message code='ezJournal.t1'/>"></div>
 	        
 	    <div id="left">
-		    <h2><span class='department' onClick="goJournalList(this);" typeId='${typeList[0].journaltypeId }' style="width:100%;display:inline-block;"><spring:message code='ezJournal.t49'/></span></h2>
+		    <h2><span listType='department' onClick="goJournalList(this);" typeId='${typeList[0].journaltypeId }' style="width:100%;display:inline-block;"><spring:message code='ezJournal.t49'/></span></h2>
 		    <ul>
 		    	<c:choose>
 		    		<c:when test="${not empty typeList }">
 		    			<c:forEach items="${typeList }" var="type">
-						    <li><span class='department' typeId='${type.journaltypeId }' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code="${type.journaltypeId}"/></span></li>
+						    <li listType='department' typeId='${type.journaltypeId }' onClick="goJournalList(this);" ><spanstyle="width:100%;display:inline-block;"><spring:message code="${type.journaltypeId}"/></span></li>
 		    			</c:forEach>
 		    		</c:when>
 		    	</c:choose>
 		    </ul>
-		    <h2><span class='mine' onClick="goJournalList(this);" typeId='${typeList[0].journaltypeId }' style="width:100%;display:inline-block;"><spring:message code='ezJournal.t50'/></span></h2>
+		    <h2><span listType='mine' onClick="goJournalList(this);" typeId='${typeList[0].journaltypeId }' style="width:100%;display:inline-block;"><spring:message code='ezJournal.t50'/></span></h2>
 		    <ul>
 		    	<c:choose>
 		    		<c:when test="${not empty typeList }">
 		    			<c:forEach items="${typeList }" var="type">
-						    <li><span class='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code="${type.journaltypeId}"/></span></li>
+						    <li listType='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);" ><spanstyle="width:100%;display:inline-block;"><spring:message code="${type.journaltypeId}"/></span></li>
 		    			</c:forEach>
 		    		</c:when>
 		    	</c:choose>
 		    </ul>
-		    <h2><span class='recv' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t51'/>(<span id="recvCount">${recvCount }</span>)</span></h2>
+		    <h2><span listType='recv' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t51'/>(<span id="recvCount">${recvCount }</span>)</span></h2>
 		    <ul>
 		    </ul>
-		    <h2><span class='temp' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>
+		    <h2><span listType='temp' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>
 		    <ul>
 		    </ul>
-	        <h3><span class='journalEnv' onClick="" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t53'/></span></h3>
+	        <h3><span listType='journalEnv' onClick="" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t53'/></span></h3>
 		</div>		
 	    <script type="text/javascript">
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");

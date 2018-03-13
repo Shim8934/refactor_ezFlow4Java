@@ -515,8 +515,9 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String viewDate = request.getParameter("viewDate");
 			
-			JournalVO journal = ezJournalService.getJournal(journalId, userId, info.getTenantId()+"");
+			JournalVO journal = ezJournalService.getJournal(journalId, userId, viewDate, info.getTenantId()+"");
 			
 			result.put("data", journal);
 			result.put("status", "ok");
