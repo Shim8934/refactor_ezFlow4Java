@@ -107,10 +107,10 @@
 				A.COMPANYID = #companyId#
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="searchDeptName">
-				B.DESCRIPTION = #searchDeptName#
+				B.DESCRIPTION like CONCAT('%', #searchDeptName#, '%')
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="searchUserName">
-				B.DISPLAYNAME = #searchUserName#
+				B.DISPLAYNAME like CONCAT('%', #searchUserName#, '%')
 			</isNotEmpty>
 			<isNotEmpty prepend="" property="order">
 				ORDER BY $order$
