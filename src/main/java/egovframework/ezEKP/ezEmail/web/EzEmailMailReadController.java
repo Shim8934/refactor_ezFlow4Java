@@ -2385,6 +2385,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					if (decryptedFile.delete()) {
 						logger.debug("decryptedFile is deleted. fileName=" + decryptedFile.getName());
 					}
+					
+					model.addAttribute("c1", egovMessageSource.getMessage("ezEmail.c1", locale));
+					model.addAttribute("e1", egovMessageSource.getMessage("ezEmail.e1", locale));
+					model.addAttribute("t63", egovMessageSource.getMessage("ezEmail.t63", locale));
+					model.addAttribute("t161", egovMessageSource.getMessage("ezEmail.t161", locale));
+					model.addAttribute("t704", egovMessageSource.getMessage("ezEmail.t704", locale));
+					model.addAttribute("t66", egovMessageSource.getMessage("ezEmail.t66", locale));
+					model.addAttribute("lhm65", egovMessageSource.getMessage("ezEmail.lhm65", locale));
+					model.addAttribute("t555", egovMessageSource.getMessage("ezEmail.t555", locale));
+					model.addAttribute("t556", egovMessageSource.getMessage("ezEmail.t556", locale));
+					model.addAttribute("lhm66", egovMessageSource.getMessage("ezEmail.lhm66", locale));
 				}
 			}
 		} catch (Exception e) {
@@ -2833,6 +2844,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 				model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
 				model.addAttribute("isAttach", bodyInfoList.get(4));
+				
+				model.addAttribute("e1", egovMessageSource.getMessage("ezEmail.e1", locale));
+				model.addAttribute("t246", egovMessageSource.getMessage("main.t246", locale));
+				model.addAttribute("t901", egovMessageSource.getMessage("ezEmail.t901", locale));
+				model.addAttribute("t902", egovMessageSource.getMessage("ezEmail.t902", locale));
+				model.addAttribute("t903", egovMessageSource.getMessage("ezEmail.t903", locale));
+				model.addAttribute("t99000003", egovMessageSource.getMessage("ezEmail.t99000003", locale));
+				model.addAttribute("t99000004", egovMessageSource.getMessage("ezEmail.t99000004", locale));
+				model.addAttribute("t99000064", egovMessageSource.getMessage("ezEmail.t99000064", locale));
+				model.addAttribute("t99000065", egovMessageSource.getMessage("ezEmail.t99000065", locale));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
