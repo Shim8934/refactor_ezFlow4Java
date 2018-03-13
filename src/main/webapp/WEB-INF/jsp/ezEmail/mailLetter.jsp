@@ -53,6 +53,29 @@
 	            }
 		    }
 		    
+		 // 편지지 선택
+		    $(document).on("click", ".lmLetterListUl li", function(){
+		    	var letterNo = $(this).attr("data-letterno");
+		    	
+		    	$(this).css("background","#e9f1ff");
+		    	$(this).parents("ul").find(".lmLetterSelect").css("background","none").removeClass("lmLetterSelect");
+		    	$(this).addClass("lmLetterSelect");
+		    	
+		    	if (pageType != 'letter_user') {
+		    		letterPreView(letterNo); // 편지지 미리보기
+		    	}
+		    });
+
+		    // 편지지 마우스 올릴때 
+		    $(document).on("mouseover", ".lmLetterListUl li:not('.lmLetterSelect')", function(){
+		    	$(this).not(".lmLetterSelect").css("background","#f8f8f8");
+		    });
+
+		    // 편지지 마우스 땔때
+		    $(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect')",function(){
+		    	$(this).not(".lmLetterSelect").css("background","none");
+		    });
+		    
 		  
 		    
 		</script>
@@ -90,7 +113,7 @@
 			}
 			
 			.lmLetterBoxTitle>input {
-			    width: 388px;
+			    width: 68%;
 			    height: 22px;
 			    color: #393939;
 			    border: 1px solid #cbcbcb;
@@ -111,20 +134,14 @@
 				clear: none;
 			}
 			
-
-			/* 
 			.lmLetterListUl li {
+			    height: 30px;
+			    line-height: 30px;
+			    box-sizing: border-box;
+			    border-bottom: 1px solid #ebebed;
+			    padding: 0 4px;
 			    cursor: pointer;
 			}
-			
-			.lmLetterListUl li:hover{
-			    background: rgb(248, 248, 248);
-			}
-			
-			.lmLetterListUl li:click{
-			    background: rgb(233, 241, 255);
-			}
-			 */
 			
 		</style>
 	
@@ -136,15 +153,15 @@
 			<tr style="height:8%;">
 				<td colspan="2" align="center">
 					<div class="lmtitle lmLetterBoxTitle">
-						<input type="text" name="" id="lmSearchInput" placeholder="검색어를 입력해주세요">
-						<button id="lmSearch" onclick="letterSearch()">편지지 검색</button>
-						<button id="lmSearchReset" onclick="inputReset()">초기화</button>
+						<input type="text" name="" id="lmSearchInput" class="searchInput" placeholder="검색어를 입력해주세요">
+						<a id="lmSearch" class="imgbtn" onclick="letterSearch()"><span>편지지 검색</span></a>
+						<a id="lmSearchReset" class="imgbtn" onclick="inputReset()"><span>초기화</span></a>
 					</div>	
 				</td>
 			</tr>
 			<tr>
 				<td style="width:50%; vertical-align:top;">
-					<div id="divTree" style="height: 100%; width: 100%; overflow: auto;"></div>
+					<div id="divTree" style="height: 350px; width: 273px; overflow: auto;"></div>
 				</td>
 				<td style="width:50%; vertical-align:top; ">
 					<div class="lmtitle lmLetterTitle">
@@ -161,6 +178,7 @@
 			<a class="imgbtn" onclick="letterSelect()"><span>선택</span></a>
 			<a class="imgbtn" onclick="cancel()"><span>닫기</span></a>
 		</div>
+		
 				
 	</body>
 </html>

@@ -16,7 +16,7 @@ function letterSearch() {
 	
 	$.ajax({
 		type : "POST",
-		url : "/ezEmail/searchLetter.do?search=" + search,
+		url : "/ezEmail/searchLetter.do?search=" + encodeURI(encodeURIComponent(search)),
 		datatype : 'json',
 		error : function(data) {
 			alert("error");
@@ -120,7 +120,15 @@ function addLetterList(jsonArr) {
 
 	if (listCount != 0) {
 		for (i = 0; i < listCount; i++) {
-			letterListHtml += "<li data-letterNo='" + jsonArr[i].letter_no + "'>"; //수아 부분에서는 letterNo으로 해야됨
+			var letterNo;
+			
+			if (searchMode) {
+				letterNo = jsonArr[i].letter_no;
+			} else {
+				letterNo = jsonArr[i].letterNo;
+			}
+			
+			letterListHtml += "<li data-letterNo='" + letterNo + "'>";
 			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname + "</span>";
 			
 			if (pageType == 'letter_user') {

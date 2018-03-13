@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.net.URLDecoder;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -74,6 +76,8 @@ public class EzEmailLetterController {
 	@RequestMapping(value="/ezEmail/searchLetter.do")
 	@ResponseBody
 	public JSONArray searchLetter(@CookieValue("loginCookie") String loginCookie, String search) throws Exception {
+		search = URLDecoder.decode(search,"UTF-8");
+		
 		logger.debug("searchLetter started.");
 		logger.debug("search=" + search);
 		
