@@ -1,11 +1,16 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -24,9 +30,10 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 
 @Controller
-public class EzApprovalGHwpController {
+public class EzApprovalGHwpController extends EgovFileMngUtil{
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGHwpController.class);
 	
 	@Autowired
@@ -630,6 +637,93 @@ public class EzApprovalGHwpController {
 		
 		LOGGER.debug("ezDeptRecevUI_HWP ended");
 		return "ezApprovalG/apprGdeptRecevuiHWP";
+	}
+	
+
+	@RequestMapping(value = "/ezApprovalG/ezSimsaG_HWP.do")
+	public String ezSimsaG_HWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezSimsaG_HWP started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+	    String docID = request.getParameter("docID");
+	    String docHref = request.getParameter("docHref");
+	    String orgDocID = request.getParameter("orgDocID");
+	    String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+	    String Use_ImgTagTOAttah_body = "N";
+
+	    model.addAttribute("userInfo", userInfo);
+	    model.addAttribute("docID", docID);
+	    model.addAttribute("docHref", docHref);
+	    model.addAttribute("orgDocID", orgDocID);
+	    model.addAttribute("hwpToolbar", hwpToolbar);
+	    model.addAttribute("useEditor", useEditor);
+	    model.addAttribute("Use_ImgTagTOAttah_body", Use_ImgTagTOAttah_body);
+		
+		LOGGER.debug("ezSimsaG_HWP ended");
+		
+		return "ezApprovalG/apprGezSimsagHWP";
+	}	
+		
+	/**
+	 * 전자결재G 발송의뢰문서 발송 발송 저장 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/saveEndFileHwp.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveEndFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		LOGGER.debug("saveEndFileHwp started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String formText = request.getParameter("html");
+		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String path = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		try {
+		File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+		
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".hwp";
+	
+			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
+			
+			bos = new FileOutputStream(saveFileName);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[BUFF_SIZE];
+			
+			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+			
+		} catch (Exception e) {
+		} finally {
+			   if (bos != null) {
+					try {
+					    bos.close();
+					} catch (Exception ignore) {
+						LOGGER.debug("IGNORED: {}", ignore.getMessage());
+					}
+			    }
+			   if (stream != null) {
+					try {
+						stream.close();
+					} catch (Exception ignore) {
+						LOGGER.debug("IGNORED: {}", ignore.getMessage());
+					}
+			    }
+		}
+		
+		LOGGER.debug("saveEndFileHwp ended");
+		
+		return "SUCCESS";
 	}
 	
 	public String makeXMLString(String orgString) throws Exception{
