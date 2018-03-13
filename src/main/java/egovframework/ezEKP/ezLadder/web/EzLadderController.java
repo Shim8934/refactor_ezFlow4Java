@@ -238,9 +238,12 @@ public class EzLadderController {
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.GET)
 	public String setLadderView(@CookieValue("loginCookie") String loginCookie, String type, Model model) {
-		logger.debug("setLadder.do started.");
+		logger.debug("setLadder.do started." + type);
 		logger.debug("setLadder.do ended.");
 		
+		if(type.equals("reuse")) {
+			// 재사용 추가
+		}
 		model.addAttribute("ladType", type);
 		
 		return "ezLadder/setLadder";
@@ -630,18 +633,20 @@ public class EzLadderController {
 
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
+		JSONArray list = new JSONArray();
 		
 		
 		String status = jsonResult.get("status").toString();
 	
 		if (status.equals("ok")) {
-			
+			list = (JSONArray) jsonResult.get("participant");
 			model.addAttribute("id", userInfo.getId());
 			model.addAttribute("vo",jsonResult.get("data"));	// x번째 사다리 정보
 			model.addAttribute("searchSelect", allData[1] );
 			model.addAttribute("searchInput", allData[2] );
 			model.addAttribute("mode", allData[3] );
 			model.addAttribute("currPage", allData[4] );
+			model.addAttribute("list", list); 			// ladderLineList
 		} else {
 			return "error";
 		}

@@ -596,11 +596,13 @@ public class EzLadderGWController {
 		String tenantId = request.getParameter("tenantId");
 		try {
 			LadderVO vo = ezLadderService.getLadderGame(tenantId, ladId);
-		
+			List<LadderLineVO> list = ezLadderService.getLadderLineParticipant(tenantId, ladId);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", vo);
+			result.put("participant", list);
+	
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");

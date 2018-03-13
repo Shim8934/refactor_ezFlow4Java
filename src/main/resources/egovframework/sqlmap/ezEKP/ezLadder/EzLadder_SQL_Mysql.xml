@@ -424,7 +424,8 @@
 				WRITEDATE, 
 				STATUS, 
 				SECRETFLAG, 
-				DELETEFLAG
+				DELETEFLAG,
+				DEPTNAME
 			FROM
 				TBL_LADDER 
 			WHERE
@@ -560,5 +561,15 @@
 			LADDERBMID = #ladderBmId#
 	</delete>
 	
+	<select id="EzLadderDAO.ladderGameParticipant" resultClass="LadderLineVO">
+		SELECT
+			*
+		FROM
+			TBL_LADDER_LINE
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			LADDERID = #ladderId#
+	</select>
 
 </sqlMap>

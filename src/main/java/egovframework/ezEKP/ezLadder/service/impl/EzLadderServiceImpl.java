@@ -206,6 +206,17 @@ public class EzLadderServiceImpl implements EzLadderService {
 		LadderVO vo = ezLadderDAO.ladderContent(map);
 		return vo;
 	}
+	
+	@Override
+	public List<LadderLineVO> getLadderLineParticipant(String tenantId, int ladderId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		logger.debug("getLadderLineParticipant started.");
+		map.put("ladderId", ladderId);
+		map.put("tenantId", tenantId);
+		List<LadderLineVO> list = ezLadderDAO.ladderGameParticipant(map);
+		logger.debug("getLadderLineParticipant ended.");
+		return list;
+	}
 
 	@Override
 	public List<LadderVO> deleteLadderList(String userId, String tenantId, List<String> allData) throws Exception {

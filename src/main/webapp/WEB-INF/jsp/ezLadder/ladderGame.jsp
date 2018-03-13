@@ -26,25 +26,52 @@
 			window.location.href= '/ezLadder/deleteLadder.do?allData=' + allData;
 		}
 	}
+	
+	function reuse(idx) {
+		/*
+			재사용 추가 해야 됨
+		*/
+		if (confirm('재사용하시겠습니까?')) {
+			window.location.href= '/ezLadder/setLadder.do?type=reuse';
+			alert("ok");
+		}
+	}
 </script>
 </head>
-<body>
+<body style="min-width: 750px;">
 	<h3>
 	* 프론트 꾸며야 됨.<br>
 	* 웹소켓 - 참여자 바꾸기, 채팅
 	</h3>
-	<h2>${vo.title }</h2>
-	사다리 번호  : ${vo.ladderId }<br>
-	사다리 제목 : ${vo.type }<br>
-	사다리 상태 : ${vo.status }<br>
-	사다리 공개 : ${vo.secretFlag }<br>
-	<c:choose>
-		<c:when test="${id eq vo.writerId }">
-			사다리 삭제 가능 :  <a href="#" onclick="deleteLadder(${vo.ladderId})"><img src ='/images/ezLadder/trash.png' width='30' height ='30'/></a><br>
-		</c:when>
-		<c:otherwise>
-			사다리 삭제 불가 : <img src ='/images/ezLadder/trash.png' width='30' height ='30'/><br>
-		</c:otherwise>
-	</c:choose>
+	<div id="ladderInfo" style="margin-left: 30px; margin-right: 30px;">
+		<h2>${vo.title }
+			<span style="float: right; font-weight:normal;color:black;">
+				종류 : ${vo.type }, 상태 : ${vo.status }, 공개 : ${vo.secretFlag } | 작성자 ${vo.writerName }, 부서 ${vo.deptName }, 
+				<a href="#" onclick="reuse(${vo.ladderId})"><img src ='/images/ezLadder/reuse.png' width='30' height ='30'/></a>,
+				<c:choose>
+					<c:when test="${id eq vo.writerId }">
+						<a href="#" onclick="deleteLadder(${vo.ladderId})"><img src ='/images/ezLadder/trash.png' width='30' height ='30'/></a><br>
+					</c:when>
+					<c:otherwise>
+						<img src ='/images/ezLadder/trash.png' width='30' height ='30'/><br>
+					</c:otherwise>
+				</c:choose>
+			</span> 
+		</h2>
+	</div>
+	<div id="ladderGame" align="center">
+		<br><br><br><br>
+		상태가 대기이면 ladderWait.jsp 호출<br>
+		상태가 완료이면 ladderComplete.jsp 호출<br><br><br>
+		<c:forEach items="${list }" var="people">
+			<span id="userName">[${people.userName },</span>&nbsp;&nbsp;&nbsp;
+			<span id="userName">${people.resultUserName }]</span>&nbsp;&nbsp;&nbsp;
+		</c:forEach>
+		<br><br><br><br><br><br><br><br><br><br><br><br><br>
+	</div>
+	
+	<div id="chat" align="center">
+		ladderChat.jsp 호출
+	</div>
 </body>
 </html>

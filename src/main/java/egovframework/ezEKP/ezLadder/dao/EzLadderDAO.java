@@ -52,6 +52,10 @@ public class EzLadderDAO extends EgovAbstractDAO {
 		return (LadderVO) select("EzLadderDAO.ladderContent", map);
 	}
 	
+	public List<LadderLineVO> ladderGameParticipant(Map<String, Object> map) throws Exception {
+		return (List<LadderLineVO>) list("EzLadderDAO.ladderGameParticipant", map);
+	}
+	
 	/** boh */
 	/** 유저 즐겨찾기 관련 */
 	@SuppressWarnings("unchecked")
