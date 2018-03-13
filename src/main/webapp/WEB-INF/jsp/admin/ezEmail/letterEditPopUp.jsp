@@ -45,7 +45,7 @@
 			</div>
 			<!-- btns -->
 			<div class="leLetterBtns">
-				<button id="leSave" onClick="letterSave(this)" data-letterId="${letterId }" data-letterNo="${letterNo }" data-boxNo="${letterBoxNo }">저장</button>
+				<button id="leSave" onClick="letterSave(this)" data-letterId="${letterId }"  data-boxNo="${letterBoxNo }">저장</button>
 				<button id="leClose" onClick="letterPopUpClose()">취소</button>
 			</div>
 		</div> <!-- leLetter End -->
@@ -55,8 +55,31 @@
 			var letterPopUp = true; // 에디터에서 이미지 업로드 할때 편지지 팝업인지 구분 (ckImageUpload.jsp -> fileupload())
 			var letterId = $("#leSave").attr("data-letterId");
 			var letterBoxNo = $("#leSave").attr("data-boxNo");
-			var letter = "${letter}";
+			var letterNo = "${letterNo }";
 			var popUpType = "${popUpType}"; // add : 작성, modify : 수정
+			
+			window.onload = function(){
+				if (popUpType == "modify") {
+					modifyLoad(letterNo);
+				}
+			}
+			
+			// 수정하기 팝업일 때
+			function modifyLoad(letterNo){
+				$.ajax({
+					type:"POST",
+					data:{letterNo:letterNo,popUpType:popUpType},
+					url:"/admin/ezEmail/readLetter",
+					dataType:"json",
+					success:function(data){
+						$("#leSave").attr("data-letterId", data.letterId);
+						$("#displayname").val(data.displayname);
+						$("#displayname2").val(data.displayname2);
+						window.message.SetEditorContent(data.letterHtml);	
+					}
+				});
+			}
+			
 			
 			// 저장 버튼 클릭시                  btn -> this
 			function letterSave(btn) {
@@ -91,15 +114,23 @@
 			}
 			
 			// 저장 기능
-			function letterUpload(letterJson) {
+			function letterUpload(letterJson, type) {
+				var uploadUrl = type == "add" ? "/admin/ezEmail/createLetter" : "/admin/ezEmail/updateDisplayNameLetter";
+				var uploadData = {	displayname:letterJson.displayname,
+									displayname2:letterJson.displayname2,
+									letterBoxNo:letterJson.letterBoxNo,
+									letterId:letterJson.letterId,
+									letterContent:letterJson.letterContent
+									};
+				
+				if (popUpType == "modify") {
+					uploadData.letterNo = letterNo;
+				}
+				
 				$.ajax({
 					type:"POST",
-					data:{	displayname:letterJson.displayname,
-							displayname2:letterJson.displayname2,
-							letterBoxNo:letterJson.letterBoxNo,
-							letterId:letterJson.letterId,
-							letterContent:letterJson.letterContent},
-					url:"/admin/ezEmail/createLetter",
+					data:uploadData,
+					url:uploadUrl,
 					success:function(data){
 						alert("저장했습니다.");
 						opener.getLetterList(letterJson.letterBoxNo); // 편지지 리스트

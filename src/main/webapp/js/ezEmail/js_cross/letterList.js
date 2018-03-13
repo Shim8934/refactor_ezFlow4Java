@@ -78,6 +78,19 @@ $(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect') span",fu
 	$(this).parent("li").not(".lmLetterSelect").css("background","none");
 });
 
+// 편지지 개별조회
+function readLetter(letterNo) {
+	$.ajax({
+		type:"POST",
+		data:{letterNo:letterNo},
+		url:"/admin/ezEmail/readLetter",
+		dataType:"json",
+		success:function(data){
+			
+		}
+	});
+}
+
 // 편지지 미리보기
 function letterPreView(letterNo) {
 	$.ajax({

@@ -1,8 +1,12 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -339,7 +343,7 @@ public class EzEmailAdminLetterController {
 	public String letterAdminAddSetPopUp(@CookieValue("loginCookie") String loginCookie, String letterBoxNo, String popUpType , String letterNo, Model model) throws Exception{
 		logger.debug("letterAdminAddSetPopUp started.");
 		logger.debug("letterBoxNo=" + letterBoxNo + ", popUpType=" + popUpType);
-		
+
 		// 관리자 권한체크      
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		if (auth == null) {
@@ -348,13 +352,9 @@ public class EzEmailAdminLetterController {
 		
 		// 편지지 고유 id
 		UUID letterId = null;
-		JSONObject letter = new JSONObject();
 		
 		if (popUpType.equals("add")) { // 편지지 작성
 			letterId = UUID.randomUUID();
-		} else { // 편지지 수정
-			letter = EzEmailAdminLetterService.selectDetailLetter(letterNo);
-			model.addAttribute("letter", letter);
 		}
 		logger.debug("letterId=" + letterId);
 
@@ -496,9 +496,11 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping("/admin/ezEmail/updateDisplayNameLetter")
 	@ResponseBody
-	public String updateDisplayNameLetter(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailLetterVO letter) throws Exception{
+	public String updateDisplayNameLetter(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, @ModelAttribute MailLetterVO letter) throws Exception{
 		logger.debug("updateDisplayNameLetter started.");
 		logger.debug("letter=" + letter);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		// 관리자 권한체크      
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
@@ -509,10 +511,44 @@ public class EzEmailAdminLetterController {
 		String displayname = letter.getDisplayname();
 		String displayname2 = letter.getDisplayname2();
 		String letterNo = Integer.toString(letter.getLetterNo());
+		String letterBoxNo = Integer.toString(letter.getLetterBoxNo());
+		String letterId = letter.getLetterId();
+		String letterContent = letter.getLetterContent(); // 편지지 내용(html)
 		String returnStr = "OK";
 		
+		logger.debug("letterBoxNo=" + letterBoxNo + ", letterId=" + letterId + ", displayname:" + displayname
+				+ ", displayname2=" + displayname2 + ", letterContent=" + letterContent);
+
+		// 편지지 내용(html)저장
+		String fileType = "html";
+		String filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
+		String fileName = "letter." + fileType;
+		
+		// files/upload_mail/letterBoxUpload/.../...
+		filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId;
+		logger.debug("filePath=" + filePath);
+		
 		try {
-			EzEmailAdminLetterService.updateDisplayNameLetter(displayname, displayname2, letterNo);
+			
+			File file = new File(realPath + filePath);
+			File fileHtml = new File(realPath + filePath + "/" + fileName);
+			
+			if (fileHtml.exists()) {
+				fileHtml.delete();
+			}
+			
+			BufferedWriter fw = new BufferedWriter(new FileWriter(file + commonUtil.separator + fileName)); 
+			fw.write(letterContent);
+			fw.flush();
+			fw.close();
+			
+			if (file.exists()) {
+				EzEmailAdminLetterService.updateDisplayNameLetter(displayname, displayname2, letterNo);
+			} else {
+				returnStr = "파일생성이 안되었습니다.";
+			}
+			
 		} catch (Exception e) {
 			returnStr = "ERROR";
 			//e.printStackTrace();
@@ -668,7 +704,7 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping("/admin/ezEmail/readLetter")
 	@ResponseBody
-	public JSONObject readLetter(@CookieValue("loginCookie") String loginCookie, String letterNo, HttpServletRequest request) throws Exception{
+	public JSONObject readLetter(@CookieValue("loginCookie") String loginCookie, String letterNo,String popUpType, HttpServletRequest request) throws Exception{
 		logger.debug("readLetter started.");
 		logger.debug("letterNo=" + letterNo);
 
@@ -687,9 +723,24 @@ public class EzEmailAdminLetterController {
 
 			String letter = filePath + commonUtil.separator + returnJson.get("letterBoxNo") + "/" 
 						+ returnJson.get("letterId") + "/" + fileName;
+			File file = new File(realPath + letter);
 			
-			if (!new File(realPath + letter).exists()) {
+			if (!file.exists()) {
 				letter = "ERROR";
+			} else {
+				logger.debug("popUpType=" + popUpType);
+				if (popUpType != null && popUpType.equals("modify")) {
+					String letterHtml = "";
+					String letterHtmlTemp = "";
+					BufferedReader br = new BufferedReader(new FileReader(file));
+					
+					while ((letterHtmlTemp = br.readLine()) != null) {
+						letterHtml += letterHtmlTemp;
+					}
+					
+					returnJson.put("letterHtml", letterHtml);
+					logger.debug("letterHtml=" + letterHtml);
+				}
 			}
 			logger.debug("letter=" + letter);
 			
