@@ -266,6 +266,9 @@
 			<![CDATA[
 				SELECT 
 					COUNT(*)
+				FROM ( 
+				SELECT 
+					*
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -286,6 +289,32 @@
 					OR 
 				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
 			</isNotEmpty>
+			<![CDATA[
+				UNION ALL
+				
+				SELECT 
+					*
+				FROM 
+					VENDCHAMJODOCINFO 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				STARTDATE < #nowDate#
+	   			AND
+	   				APRMEMBERID IN ($id$) 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+			) as LIST
 		</isEqual>
 		<isEqual property="type" compareValue="DRAFT">
 			<![CDATA[
@@ -419,9 +448,12 @@
 	<select id="MApprovalG.getLeftCount" parameterClass="Map" resultClass="MApprGLeftVO">
 		<![CDATA[
 			SELECT
-				(SELECT 
+				(	SELECT 
 						COUNT(*)
 					FROM 
+					(SELECT
+						*
+					FROM
 						VAPRDOINGDOCLIST 
 		   			WHERE
 		   				TENANT_ID = #tenantID#
@@ -434,7 +466,26 @@
 		   			AND
 		   				APRTYPE <> '015' 
 		   			AND
-		   				APRMEMBERSN <> 1) as aprDoCount,
+		   				APRMEMBERSN <> 1
+		   				
+		   			UNION ALL
+				
+					SELECT 
+						*
+					FROM 
+						VENDCHAMJODOCINFO 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND
+		   				STARTDATE < #nowDate#
+		   			AND
+		   				APRMEMBERID IN ($id$) 
+		   			AND 
+		   				APRTYPE <> '015'
+		   			AND
+		   				APRMEMBERSN <> 1) as LIST ) as aprDoCount,
 				(SELECT 
 						COUNT(*)
 					FROM 

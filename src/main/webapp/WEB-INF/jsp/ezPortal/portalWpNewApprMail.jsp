@@ -234,7 +234,7 @@
 		                if (xmldom.getElementsByTagName("CELL").length > 0) {
 		                    listHTML = "<ul class=\"listtype_txt \">";
 		                    for (var i = 0; i < xmldom.getElementsByTagName("CELL").length; i++) {
-		                        var DOCTITLE = getNodeText(xmldom.getElementsByTagName("DOCTITLE").item(i));
+		                        var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("DOCTITLE").item(i)));
 		                        var WRITERNAME = getNodeText(xmldom.getElementsByTagName("WRITERNAME").item(i));
 		                        var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
 	

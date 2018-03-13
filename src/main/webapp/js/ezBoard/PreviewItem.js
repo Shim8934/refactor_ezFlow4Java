@@ -1,6 +1,10 @@
-﻿function MailOptionView(obj) {
+﻿function MailOptionView(obj, flag) {
     if (obj.getAttribute("mode") == "off") {
-        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
+        if (flag=='N') {
+        	document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
+        } else {
+        	document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+        }
         if(pAdminType == "y")
             document.getElementById("layer_Viewpopup").style.top = "50px";
         else
@@ -870,7 +874,7 @@ var lCount;
 function ListCount(pCount) {
     lCount = pCount;
     selobj = null;
-    MailOptionHidden();
+//    MailOptionHidden();
     Set_BoardConfig();
     CurPage = 1;
     getBoardList();

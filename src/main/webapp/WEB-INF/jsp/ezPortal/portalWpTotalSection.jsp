@@ -95,7 +95,7 @@
                     		</c:choose>
 						</ul>						
 					</a>
-					<a>
+					<a id="Circular" onClick="btnSumming_click(this)">
 						<ul class="last">
 							<li class="count">
 								<div>

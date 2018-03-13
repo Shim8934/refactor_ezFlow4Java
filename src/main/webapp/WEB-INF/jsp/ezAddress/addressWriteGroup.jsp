@@ -1874,7 +1874,7 @@
 	            </tr>
 	            <tr>
 	                <td style="width: 670px; height: 375px; vertical-align: top;">
-	                    <div id="ManualView" style="DISPLAY: none; height: 484px; width: 644px; padding: 10px; border-right: 1px solid #b6b6b6" class="box">
+	                    <div id="ManualView" style="DISPLAY: none; height: 484px; width: 644px; padding: 10px; border-right: 1px solid #ddd" class="box">
 	                        <table class="content">
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t124' /></th>
@@ -1894,7 +1894,7 @@
 	                        <div style="text-align: center"><a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a></div>
 	                    </div>
 	                    <div id="TreeViewPane" style="DISPLAY: none;">
-				            <div class="portlet_tabpart03_top" id="tab1" style="height:25px;border:1px solid #ccc;background-color: #e9e9e9">
+				            <div class="portlet_tabpart03_top" id="tab1" style="height:25px;border:1px solid #ccc;background-color: #f8f8f8">
 			    	           <table style="padding-top:5px;width:100%;">
 									<tr>
 			                       		<td>
@@ -1937,14 +1937,14 @@
 	                                        </tr>
 	                                    </table>
 	                                    <div style="vertical-align: top; height: 433px; overflow: auto; width: 440px;" id="txtlist_Layer">
-	                                        <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
+	                                        <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                            <tr>
 	                                                <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t124' /></td>
 	                                                <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t359' /></td>
 	                                                <td class="td_gray" style="font-weight: bold;"><spring:message code='ezAddress.t192' /></td>
 	                                            </tr>
 	                                        </table>
-	                                        <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
+	                                        <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                            <tr>
 	                                                <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t54' /></td>
 	                                                <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t358' /></td>
@@ -1954,7 +1954,7 @@
 	                                        </table>
 	                                    </div>
                                         <div style="vertical-align: top; text-align: center; height: 433px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>                                     
-	                                    <div id="tblPageRayer2" style="text-align:center;border-top:1px solid #B6B6B6;border-top:0px"></div>	                                    
+	                                    <div id="tblPageRayer2" style="text-align:center;border-top:1px solid #ddd;border-top:0px"></div>	                                    
 	                                </td>
 	                            </tr>
 	                        </table>
@@ -1966,13 +1966,13 @@
 	                                    <div class="box" style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 220px; HEIGHT: 495px; BACKGROUND-COLOR: #ffffff;padding-top:5px;border-right:0px" id="AddressTreeView"></div>
 	                                </td>	                                
 	                                <td>
-	                                    <div style="vertical-align: middle; border: 1px solid #bdbdbd; border-bottom: 0px; height: 20px; padding-top: 5px; padding-left: 5px;">
+	                                    <div style="vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 20px; padding-top: 5px; padding-left: 5px;">
 	                                    	<img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer"/>
 	                                    	<span id="addressFolderName" style="font-weight: bold;"></span>
 	                                    	-[<span id="addressFolderCnt" style="color: #017BEC; font-weight: bold;"></span>]
 	                            		</div>
-	                                    <div id="AddressListView" style="BORDER: #b6b6b6 1px solid; OVERFLOW: auto; WIDTH: 442px; HEIGHT: 440px; BACKGROUND-COLOR: white; border-bottom:0px;border-top:0px" class="listview"></div>
-	                                    <div id="tblPageRayer"  style="width:442px;border:#b6b6b6 1px solid;height:35px;border-top:0px;"></div>
+	                                    <div id="AddressListView" style="BORDER: #ddd 1px solid; OVERFLOW: auto; WIDTH: 442px; HEIGHT: 440px; BACKGROUND-COLOR: white; border-bottom:0px;border-top:0px" class="listview"></div>
+	                                    <div id="tblPageRayer"  style="width:442px;border:#ddd 1px solid;height:35px;border-top:0px;"></div>
 	                                </td>
 	                            </tr>
 	                        </table>
