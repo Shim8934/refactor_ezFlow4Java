@@ -1,6 +1,46 @@
 ﻿var blockSize = 10; // 화면에 보여질 블록갯수
 var listSize = 20; // 게시판에 보여질 게시물갯수
 
+/** jQuery 옵션*/
+//체크박스(전체선택/해제)
+$(document).on('click', '#HeaderAllCheckBox', function(){
+	$("input[type='checkbox']:not(#HeaderAllCheckBox)").each(function(){
+		$(this).prop("checked", $("#HeaderAllCheckBox").is(":checked"));
+	})
+})
+
+//tr클릭 시 체크박스 선택/해제
+$(document).on('click', 'tr:not(#attiBoardList tr:eq(0))', function(){
+	var checkValue = "";
+	if ($(this).find("input[type='checkbox']").is(":checked") == true) {
+		checkValue = false;
+	} else {
+		checkValue = true;
+	}
+	
+	$(this).find("input[type='checkbox']").prop("checked", checkValue);
+})
+
+//tr hover시 배경색 변경
+$(document).on('mouseover mouseleave', 'tr', function(e){
+	if (e.type == "mouseover") {
+		$(this).css("background-color", "rgb(244,245,245)");
+	} else {
+		$(this).css("background-color", "rgb(255,255,255)");
+	}
+})
+/** jQuery 옵션 끝*/
+
+//tr 클릭이벤트 부여
+function addTrClickEvent(func) {
+	$("#attiBoardList tr:not(#attiBoardList tr:eq(0))").unbind('click').on('click', func);
+}
+
+//tr 더블클릭이벤트 부여
+function addTrDblclickEvent(func) {
+	$("#attiBoardList tr:not(#attiBoardList tr:eq(0))").unbind('dblclick').on('dblclick', func);
+}
+
 //attitude 페이징 중복 함수, 페이징 셋팅
 function makePageSelPageAtti(){
 	$("#tblPageLayer").html("");
@@ -55,11 +95,4 @@ function makePageSelPageAtti(){
 	}
 	
 	$("#tblPageRayer").html(pagingHtml);
-}
-
-//td 스타일 적용 함수
-function setTdStyle(tdList){
-	tdList.each(function(index){
-		tdList.css({"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"});
-	})
 }
