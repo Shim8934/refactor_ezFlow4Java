@@ -20,7 +20,7 @@ function getCompanyData(companyId, mode, rootDiv) {
 
 function renderData(result, mode, rootDiv) {
 	if (!result) {
-		alert(strMessage);
+		alert(strMessage3);
 		return;
 	}
 	
@@ -208,7 +208,7 @@ function getDepartmentData(companyId, mode, rootDiv) {
 
 function renderData2(result, mode, rootDiv) {
 	if (!result || result.length == 0) {
-		alert(strMessage);
+		alert(strMessage2);
 		return;
 	}
 	

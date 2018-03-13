@@ -20,6 +20,8 @@
 			var primary           = "<c:out value='${primary}'/>";
 			var companyId         = "<c:out value='${company}'/>";
 			var strMessage        = "<spring:message code='ezWebFolder.t134'/>";
+			var strMessage2       = "<spring:message code='ezWebFolder.t230'/>";
+			var strMessage3       = "<spring:message code='ezWebFolder.t231'/>";
 			
 			document.onselectstart = function () { return false; };
 			window.onload = function () {
