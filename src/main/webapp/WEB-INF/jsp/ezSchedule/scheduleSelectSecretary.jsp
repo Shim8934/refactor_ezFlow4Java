@@ -357,7 +357,7 @@
 		                <input id="deptkeyword" onkeypress="deptsearch_press()" style="WIDTH:115px;margin-bottom:2px" />
 	                	<a href="#" class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezSchedule.t17' /></span></a>
 	            	</div>
-	            	<div style="border: 1px solid #b6b6b6; padding-top:2px;height: 414px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>	            	
+	            	<div style="border: 1px solid #ddd; padding-top:2px;height: 414px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>	            	
 	        	</td>
 	        	<td valign="top" style="padding-left:5px">
 	        		<div class="box" style="margin-bottom:7px" >
@@ -376,7 +376,7 @@
 		                <a href="#" class="imgbtn"><span onclick="search_click()"><spring:message code='ezSchedule.t24' /></span></a>
 		            </div>
 	            	<div class="listview" style="border-top:0px">
-	                	<div id="OrganListView" style="border: 0px solid #B6B6B6; Width: 416px; Height: 416px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto;"></div>
+	                	<div id="OrganListView" style="border: 0px solid #ddd; Width: 416px; Height: 416px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto;"></div>
 	            	</div>		            
 	        	</td>
 	      	</tr>

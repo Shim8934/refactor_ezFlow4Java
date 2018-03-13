@@ -179,7 +179,7 @@
 		                listNode.title = "";
 	
 		                for (j = 0 ; j < GetChildNodes(listNode).length ; j++) {
-		                    GetChildNodes(listNode)[j].style.backgroundColor = "#e9e9e9";
+		                    GetChildNodes(listNode)[j].style.backgroundColor = "#f8f8f8";
 		                    GetChildNodes(listNode)[j].style.paddingTop = "2";
 		                }	
 		                DisplayScheduleList(listNode, userID)
@@ -448,65 +448,65 @@
 							<td valign="top"><img src="/images/i_timetable.gif" style="width:672px; height:33px"></td>
 						</tr>
 					</table>
-	       			<div style="BORDER: #b6b6b6 1px solid; overflow-x: hidden; overflow-Y: scroll; WIDTH: 670px; HEIGHT: 260px; BACKGROUND-IMAGE:  url(/images/i_timetable_bg.gif);">
+	       			<div style="BORDER: #ddd 1px solid; overflow-x: hidden; overflow-Y: scroll; WIDTH: 670px; HEIGHT: 260px; BACKGROUND-IMAGE:  url(/images/i_timetable_bg.gif);">
 	         			<table style="width:650px; border:0px; text-align:left; padding:0px; border-collapse:collapse; border-spacing:0px">
 	           				<tr>
 	             				<td>
 	             					<div style ="background-color:none;BORDER:#FFFFFF 0px solid;OVERFLOW:hidden;TEXT-ALIGN:left;HEIGHT:100%;">
 	                 					<table style="border-collapse:collapse;border-spacing:0px; width:650px; border:0px" id="entryList">
 	                   						<tr>
-	                     						<td style="PADDING-TOP:2px;BACKGROUND-COLOR:#e9e9e9;border-collapse:collapse;border-bottom: solid 1px #b6b6b6; width:102px; height:25px; text-align:center" id="" deptid=""></td>
+	                     						<td style="PADDING-TOP:2px;BACKGROUND-COLOR:#f8f8f8;border-collapse:collapse;border-bottom: solid 1px #ddd; width:102px; height:25px; text-align:center" id="" deptid=""></td>
 	                     						<td style="padding-left:9px;border-collapse:collapse; border-bottom: solid 1px #dadada" >
 	                        						<table style="border:0px; padding:0px; border-collapse:collapse; border-spacing:0px" >
 	                         							<tr>
-	                           								<td style="BACKGROUND-COLOR: #e9e9e9; height:11px; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #e9e9e9; width:11px"></td>
+	                           								<td style="BACKGROUND-COLOR: #f8f8f8; height:11px; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
 	                        							 </tr>
 	                     							</table>
 	                     						</td>

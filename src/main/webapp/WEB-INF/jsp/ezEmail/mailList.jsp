@@ -863,7 +863,7 @@
            
         </div>
         <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
-            <table style="width:100%;border:1px solid #B6B6B6;" id="MailHeader" class="mainlist" >               
+            <table style="width:100%;border:1px solid #ddd;" id="MailHeader" class="mainlist" >               
             </table>
             <div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;" onblur  onscroll="ContextMenuHidden()">
                 <table class="mainlist" style="width:100%;" id="MailList" listpageCount="${mailGeneral.listCount}" curPage="1" MaxCount="0" MaxPage="0" oncontextmenu="event_listContextMenu(event); return false;">

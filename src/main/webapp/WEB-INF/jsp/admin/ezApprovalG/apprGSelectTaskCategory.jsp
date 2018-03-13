@@ -214,7 +214,7 @@
 	            <td id="descript">&nbsp;</td>
 	        </tr>
     	</table>
-    	<div style="BORDER: #b6b6b6 1px solid; OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 100%; HEIGHT: 260px; BACKGROUND-COLOR: #ffffff" id="TreeView"></div>
+    	<div style="BORDER: #ddd 1px solid; OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 100%; HEIGHT: 260px; BACKGROUND-COLOR: #ffffff" id="TreeView"></div>
     	<div class="btnposition">
         	<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code = 'ezApprovalG.t413' /></span></a>
         	<a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code = 'ezApprovalG.t414' /></span></a>

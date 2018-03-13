@@ -7,8 +7,8 @@
 	<head>
 		<title>${title}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<link rel="stylesheet" href="${c1}" type="text/css">
+		<script type="text/javascript" src="/js/ezEmail/${e1}"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -91,21 +91,21 @@
 		    <tr> 
 		        <td height="20">
 		        	<div id="menu"></div>
-		            <div id="close" style="display: none;"><ul><li><span onClick="OnBtnClose()"><spring:message code="ezEmail.t63" /></span></li></ul></div>	
+		            <div id="close" style="display: none;"><ul><li><span onClick="OnBtnClose()">${t63}</span></li></ul></div>	
 		        </td> 
 		    </tr>  
 		    <tr> 
 		        <td>
 		            <table class="content">
 		                <tr>
-		                    <th><spring:message code="ezEmail.t161" /></th>
+		                    <th>${t161}</th>
 		                    <td class="pos1" style="vertical-align:middle;">
 		                        <div id="MsgToPut" title="${fromEmail}" style="padding-left: 5px; vertical-align: middle;">	
 		                            <span id="LabelFromName">${fromStr}</span>
 		                            <span id="LabelSenderInfo"></span>	
 		                        </div>
 		                    </td>
-		                    <th><spring:message code="ezEmail.t704" /></th>
+		                    <th>${t704}</th>
 		                    <td style="border-right:0px;">
 		                        <div id="ReceiveDate" style="OVERFLOW-Y: auto;padding-top:2px;padding-left:5px;padding-right:5px; width:200px;"> 
 		                        <span id="LabelReceiveDate">${dateStr}</span> 
@@ -113,7 +113,7 @@
 		                    </td>
 		                </tr>
 		                <tr>
-		                    <th><spring:message code="ezEmail.t66" /></th>
+		                    <th>${t66}</th>
 		                    <td style="OVERFLOW-Y:auto;">
 			                    <div id="MsgToGot" style="padding-left:5px;"> 
 			                    	<span id="LabelTo">${toStr}</span> 
@@ -122,7 +122,7 @@
 			                    	<span id="LabelToHidden">${toHiddenStr}</span> 
 			                    </div>
 		                    </td>
-		                    <th><spring:message code="ezEmail.lhm65" /></th>
+		                    <th>${lhm65}</th>
 		                    <td>
 		                    	<div style="padding-left:5px;">${readCountStr}</div>
 		                    </td>
@@ -130,7 +130,7 @@
 		        
 						<c:if test="${pIsCCFg != 'N'}">
 			                <tr>
-				                <th><spring:message code="ezEmail.t555" /></th>
+				                <th>${t555}</th>
 				                <td style="OVERFLOW-Y:auto;height:100%;">
 				                	<div id="MsgCCGot" style="padding-left:5px;"> 
 				                		<span id="LabelCC">${ccStr}</span> 
@@ -139,14 +139,14 @@
 					                	<span id="LabelCCHidden">${ccHiddenStr}</span> 
 					                </div>
 				                </td>
-				                <th><spring:message code="ezEmail.lhm66" /></th>
+				                <th>${lhm66}</th>
 			                    <td>
 		                    		<div style="padding-left:5px;">${readDateStr}</div>
 		                    	</td>
 			                </tr>
 			                
 			                <tr>
-				                <th><spring:message code="ezEmail.t556" /></th>
+				                <th>${t556}</th>
 			                	<td colspan="3">
 			                		<div id="mailSubject" style="OVERFLOW-Y: auto;padding-left:5px;"> 
 			                			<span id="LabelSubject">${subject}</span>
@@ -157,13 +157,13 @@
 		        		
 		        		<c:if test="${pIsCCFg == 'N'}">
 		                <tr>
-			                <th><spring:message code="ezEmail.t556" /></th>
+			                <th>${t556}</th>
 		                	<td>
 		                		<div id="mailSubject" style="OVERFLOW-Y: auto;padding-left:5px;"> 
 		                			<span id="LabelSubject">${subject}</span>
 		                		</div>
 		                	</td>
-	                		<th><spring:message code="ezEmail.lhm66" /></th>
+	                		<th>${lhm66}</th>
 	                    	<td>
 	                    		<div style="padding-left:5px;">${readDateStr}</div>
 	                    	</td>
@@ -175,7 +175,7 @@
 		    </tr>
 		    <tr>
 		        <td class="pad1">
-		        <iframe  id="message" name="message" frameborder="0" style="width:100%;height:100%;BORDER:#b6b6b6 1px solid; background:#fff;" ></iframe>
+		        <iframe  id="message" name="message" frameborder="0" style="width:100%;height:100%;BORDER:#ddd 1px solid; background:#fff;" ></iframe>
 		        </td>
 		    </tr>
 		</table>

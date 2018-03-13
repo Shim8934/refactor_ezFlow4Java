@@ -35,8 +35,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -149,6 +147,8 @@ public class EzSystemAdminController {
 		
 		List<String> defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", Locale.KOREA).split(";"));
 		List<String> defaultFontSizeList = Arrays.asList("8px,9px,10px,11px,12px,13px,14px,16px,18px,20px,24px,30px,36px,54px,72px".split(","));
+		String useAllUserOldMailDelete = ezCommonService.getTenantConfig("useAllUserOldMailDelete", userInfo.getTenantId());
+		String useAllUserOldMailDeletePeriod = ezCommonService.getTenantConfig("useAllUserOldMailDeletePeriod", userInfo.getTenantId());
 		
 		model.addAttribute("configMap", configMap);
 		model.addAttribute("licensedUserCount", licensedUserCount);
@@ -156,6 +156,8 @@ public class EzSystemAdminController {
 		model.addAttribute("isDotNetAdmin", isDotNetAdmin);
 		model.addAttribute("defaultFontFamilyList", defaultFontFamilyList);
 		model.addAttribute("defaultFontSizeList", defaultFontSizeList);
+		model.addAttribute("useAllUserOldMailDelete", useAllUserOldMailDelete);
+		model.addAttribute("useAllUserOldMailDeletePeriod", useAllUserOldMailDeletePeriod);
 		
 		logger.debug("systemMainMenu ended");
 		
