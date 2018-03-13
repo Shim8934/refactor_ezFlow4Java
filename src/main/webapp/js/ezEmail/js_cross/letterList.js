@@ -16,7 +16,7 @@ function letterSearch() {
 	
 	$.ajax({
 		type : "POST",
-		url : "/ezEmail/searchLetter.do?search=" + search,
+		url : "/ezEmail/searchLetter.do?search=" + encodeURI(encodeURIComponent(search)),
 		datatype : 'json',
 		error : function(data) {
 			alert("error");
@@ -130,16 +130,16 @@ function addLetterList(jsonArr) {
 
 	if (listCount != 0) {
 		for (i = 0; i < listCount; i++) {
+			
 			letterListHtml += "<li data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + "'>"; 
 			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname + "</span>";
 			
 			if (pageType == 'letter_user') {
 				if (searchMode) {
 					var boxName;
-					
 					$.ajax({
 						type:"POST",
-						url:"/ezEmail/selectLetterBoxName.do?letterbox_no=" + jsonArr[i].letterbox_no,
+						url:"/ezEmail/selectLetterBoxName.do?letterBoxNo=" + jsonArr[i].letterBoxNo,
 						dataType:"json",
 						async: false,
 						success:function(data) {

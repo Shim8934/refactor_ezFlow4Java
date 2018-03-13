@@ -30,16 +30,18 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 	
 	/**
 	 * 전체 편지지함 목록 조회(기본)
-	 * @param company_id, tenant_id
+	 * @param companyId, companyId
 	 */
 	@Override
-	public JSONArray selectAllLetterBox(String company_id, String tenant_id) throws Exception {
+	public JSONArray selectAllLetterBox(String companyId, String tenantId) throws Exception {
 		logger.debug("selectAllLeterBox started.");
-		logger.debug("company_id=" + company_id + ",tenant_id=" + tenant_id);
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId);
 		
-		String tenantStr = "tenant_id=" + URLEncoder.encode(tenant_id, "UTF-8");
-		String companyIdStr = "company_id=" + URLEncoder.encode(company_id, "UTF-8");
+		String tenantStr = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		String companyIdStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
 		String inputParams = companyIdStr + "&" + tenantStr;
+		
+		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/getAllLetterBox", inputParams);
 		logger.debug("strJson=" + strJson);
@@ -64,13 +66,13 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 	
 	/**
 	 * 선택한 편지지함 조회
-	 * @param letterbox_no
+	 * @param letterBoxNo
 	 */
 	@Override
-	public JSONObject selectOneLetterBox(String letterbox_no) throws Exception {
-		logger.debug("selectOneLetterBox started. letterbox_no=" + letterbox_no);
+	public JSONObject selectOneLetterBox(String letterBoxNo) throws Exception {
+		logger.debug("selectOneLetterBox started. letterBoxNo=" + letterBoxNo);
 		
-		String letterBoxNoStr = "letterbox_no=" + URLEncoder.encode(letterbox_no, "UTF-8");
+		String letterBoxNoStr = "letterBoxNo=" + URLEncoder.encode(letterBoxNo, "UTF-8");
 		String inputParams = letterBoxNoStr;
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/getOneLetterBox", inputParams);
@@ -96,13 +98,13 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 	
 	/**
 	 * 편지지함명 조회
-	 * @param letterbox_no
+	 * @param letterBoxNo
 	 */
 	@Override
-	public JSONObject selectLetterBoxName(String letterbox_no) throws Exception {
-		logger.debug("selectLetterBoxName started. letterbox_no=" + letterbox_no);
+	public JSONObject selectLetterBoxName(String letterBoxNo) throws Exception {
+		logger.debug("selectLetterBoxName started. letterBoxNo=" + letterBoxNo);
 		
-		String letterBoxNoStr = "letterbox_no=" + URLEncoder.encode(letterbox_no, "UTF-8");
+		String letterBoxNoStr = "letterBoxNo=" + URLEncoder.encode(letterBoxNo, "UTF-8");
 		String inputParams = letterBoxNoStr;
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/getLetterBoxName", inputParams);
@@ -128,19 +130,19 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 	
 	/**
 	 * 편지지함 추가
-	 * @param parent_letterbox_no, displayname, displayname2, company_id, tenant_id
+	 * @param parentLetterboxNo, displayname, displayname2, companyId, tenantId
 	 */
 	@Override
-	public void insertLetterBox(String parent_letterbox_no, String displayname,
-			String displayname2, String company_id, String tenant_id) throws Exception {
+	public void insertLetterBox(String parentLetterboxNo, String displayname,
+			String displayname2, String companyId, String tenantId) throws Exception {
 		logger.debug("insertLetterBox started.");
-		logger.debug("parent_letterbox_no=" + parent_letterbox_no + ",displayname=" + displayname + ",displayname2=" + displayname2 + ",company_id" + company_id + ",tenant_id=" + tenant_id);
+		logger.debug("parentLetterboxNo=" + parentLetterboxNo + ",displayname=" + displayname + ",displayname2=" + displayname2 + ",companyId" + companyId + ",tenantId=" + tenantId);
 		
-		String tenantStr = "tenant_id=" + URLEncoder.encode(tenant_id, "UTF-8");
-		String parentLetterBoxNoStr = "parent_letterbox_no=" + URLEncoder.encode(parent_letterbox_no, "UTF-8");
+		String tenantStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
+		String parentLetterBoxNoStr = "parentLetterboxNo=" + URLEncoder.encode(parentLetterboxNo, "UTF-8");
 		String displayNameStr = "displayname=" + URLEncoder.encode(displayname, "UTF-8");
 		String displayName2Str = "displayname2=" + URLEncoder.encode(displayname2, "UTF-8");
-		String companyIdStr = "company_id=" + URLEncoder.encode(company_id, "UTF-8");
+		String companyIdStr = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
 		String inputParams = parentLetterBoxNoStr + "&" + displayNameStr + "&" + displayName2Str + "&" + companyIdStr + "&" + tenantStr;
 		logger.debug(inputParams);
 		
@@ -162,13 +164,13 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 	
 	/**
 	 * 편지지함 삭제 
-	 * @param letterbox_no
+	 * @param letterBoxNo
 	 */
 	@Override
-	public void deleteLetterBox(String letterbox_no) throws Exception {
-		logger.debug("deleteLetterBox started. letterbox_no=" + letterbox_no);
+	public void deleteLetterBox(String letterBoxNo) throws Exception {
+		logger.debug("deleteLetterBox started. letterBoxNo=" + letterBoxNo);
 		
-		String letterBoxNoStr = "letterbox_no=" + URLEncoder.encode(letterbox_no, "UTF-8");
+		String letterBoxNoStr = "letterBoxNo=" + URLEncoder.encode(letterBoxNo, "UTF-8");
 		String inputParams = letterBoxNoStr;
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/deleteLetterBox", inputParams);
@@ -189,23 +191,23 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 	
 	/**
 	 * 편지지함 수정
-	 * @param letterbox_no, parent_letterbox_no, displayname, displayname2, company_id, tenant_id
+	 * @param letterBoxNo, parentLetterboxNo, displayname, displayname2, companyId, tenantId
 	 */
 	@Override
-	public void updateLetterBox(String letterbox_no,
-			String parent_letterbox_no, String displayname,
-			String displayname2, String company_id, String tenant_id) throws Exception {
+	public void updateLetterBox(String letterBoxNo,
+			String parentLetterboxNo, String displayname,
+			String displayname2, String companyId, String tenantId) throws Exception {
 		
 		logger.debug("updateLetterBox started.");
-		logger.debug("letterbox_no=" + letterbox_no + ",parent_letterbox_no=" + parent_letterbox_no 
-				+ ",displayname=" + displayname + ",displayname2=" + displayname2 + ",company_id=" + company_id + ",tenant_id=" + tenant_id);
+		logger.debug("letterBoxNo=" + letterBoxNo + ",parentLetterboxNo=" + parentLetterboxNo 
+				+ ",displayname=" + displayname + ",displayname2=" + displayname2 + ",companyId=" + companyId + ",tenantId=" + tenantId);
 		
-		String tenantStr = "tenant_id=" + URLEncoder.encode(tenant_id, "UTF-8");
-		String letterBoxNoStr = "letterbox_no=" + URLEncoder.encode(letterbox_no, "UTF-8");
-		String parentLetterBoxNoStr = "parent_letterbox_no=" + URLEncoder.encode(parent_letterbox_no, "UTF-8");
+		String tenantStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
+		String letterBoxNoStr = "letterBoxNo=" + URLEncoder.encode(letterBoxNo, "UTF-8");
+		String parentLetterBoxNoStr = "parentLetterboxNo=" + URLEncoder.encode(parentLetterboxNo, "UTF-8");
 		String displayNameStr = "displayname=" + URLEncoder.encode(displayname, "UTF-8");
 		String displayName2Str = "displayname2=" + URLEncoder.encode(displayname2, "UTF-8");
-		String companyIdStr = "company_id=" + URLEncoder.encode(company_id, "UTF-8");
+		String companyIdStr = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
 		String inputParams = letterBoxNoStr + "&" + parentLetterBoxNoStr + "&" + displayNameStr + "&" + displayName2Str + "&" + companyIdStr + "&" + tenantStr;
 		logger.debug(inputParams);
 		
@@ -256,16 +258,16 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 
 	/**
 	 * 편지지 검색 (재은)
-	 * @param searchStr, company_id, tenant_id
+	 * @param searchStr, companyId, tenantId
 	 */
 	@Override
-	public JSONArray searchLetter(String search, String company_id, String tenant_id) throws Exception {
+	public JSONArray searchLetter(String search, String companyId, String tenantId) throws Exception {
 		logger.debug("searchLetter started.");
-		logger.debug("search=" + search +", company_id=" + company_id + ",tenant_id=" + tenant_id);
+		logger.debug("search=" + search +", companyId=" + companyId + ",tenantId=" + tenantId);
 		
 		String searchStr = "displayname=" + URLEncoder.encode(search, "UTF-8");
-		String companyIdStr = "company_id=" + URLEncoder.encode(company_id, "UTF-8");
-		String tenantStr = "tenant_id=" + URLEncoder.encode(tenant_id, "UTF-8");
+		String companyIdStr = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		String tenantStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
 		
 		String inputParams = searchStr + "&" + companyIdStr + "&" + tenantStr;
 		logger.debug("inputParams="+inputParams);
