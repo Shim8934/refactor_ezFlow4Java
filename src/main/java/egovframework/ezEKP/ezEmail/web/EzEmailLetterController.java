@@ -107,6 +107,25 @@ public class EzEmailLetterController {
 	
 	/**
 	 * 편지지함명 검색
+	 * @param String loginCookie, letterNo, Model model
+	 * @return String
+	 */
+	@RequestMapping(value="/ezEmail/mailLetterPreview.do")
+	public String mailLetterPreview(@CookieValue("loginCookie") String loginCookie, String letterNo, Model model) throws Exception {
+		
+		logger.debug("mailLetterPreview started.");
+		logger.debug("letterNo=" + letterNo);
+		
+		model.addAttribute("letterNo", letterNo);
+		
+		logger.debug("mailLetterPreview ended.");
+		
+		return "ezEmail/mailLetterPreview";
+		
+	}
+	
+	/**
+	 * 편지지함명 검색
 	 * @param String loginCookie, Model model
 	 * @return String
 	 */

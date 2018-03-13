@@ -37,14 +37,25 @@
 				
 			});
 			
-			function letterPreview() {
-		    	alert("미리보기");
+			// 편지지 미리보기
+		    function letterPreview(btn){
+				var letterNo = $(".lmLetterSelect").attr("data-letterno");
+				
+				if (letterNo !== "undefined") {
+		    		url = "/ezEmail/mailLetterPreview.do?" + "letterNo=" + letterNo;  
+		    		window.open(url,"_blank","width=890, height=660");
+		    	} /* else {
+		    		alert("편지를 선택해주세요.");
+		    		return;
+		    	} */
 		    }
-		    
-		    function letterSelect() {
+			
+			// 편지지 선택(mailWirte.jsp에 들어가도록)
+			function letterSelect() {
 		    	alert("선택");
 		    }
 		    
+			// 닫기버튼
 		    function cancel() {
 	             if (!isDivPopUp){
 	                window.close();
@@ -53,7 +64,7 @@
 	            }
 		    }
 		    
-		 // 편지지 선택
+		    // 편지지 선택
 		    $(document).on("click", ".lmLetterListUl li", function(){
 		    	var letterNo = $(this).attr("data-letterno");
 		    	
@@ -76,6 +87,8 @@
 		    	$(this).not(".lmLetterSelect").css("background","none");
 		    });
 		    
+		    
+
 		  
 		    
 		</script>
@@ -174,7 +187,7 @@
 			</tr>
 		</table>
 		<div class="btnposition btnpositionNew">
-			<a class="imgbtn" onclick="letterPreview()"><span>미리보기</span></a>
+			<a class="imgbtn" onclick="letterPreview(this)"><span>미리보기</span></a>
 			<a class="imgbtn" onclick="letterSelect()"><span>선택</span></a>
 			<a class="imgbtn" onclick="cancel()"><span>닫기</span></a>
 		</div>

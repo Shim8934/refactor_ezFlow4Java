@@ -65,7 +65,10 @@ $(document).on("click", ".lmLetterListUl li span", function(){
 	$(this).parents("ul").find(".lmLetterSelect").css("background","none").removeClass("lmLetterSelect");
 	$(this).parent("li").addClass("lmLetterSelect");
 	
-	letterPreView(letterNo); // 편지지 미리보기
+	if (pageType != 'letter_user') {
+		letterPreView(letterNo); // 편지지 미리보기
+	}
+	
 });
 
 // 편지지 마우스 올릴때 
