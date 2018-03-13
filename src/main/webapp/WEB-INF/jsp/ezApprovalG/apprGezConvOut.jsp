@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html style="height:97%">
 	<head>
@@ -18,7 +19,7 @@
 		<script type="text/javascript">
 			var pDocID = '${docID}';
 	        var pDocHref = '${docHref}';
-	        var pUserID = "<c:out value = '${userInfo.id}' />";
+	        var pUserID = "${userInfo.id}";
 	        var flag = false;
 	        var newDocID = "";
 	        var stampFlag = false;
@@ -29,7 +30,7 @@
 	        
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0] = "user";
-		    arr_userinfo[1]  = "<c:out value = '${userInfo.id} '/>";
+		    arr_userinfo[1]  = "${userInfo.id}";
 		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName} '/>";
 		    arr_userinfo[3]  = "<c:out value = '${userInfo.title} '/>";
 		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID} '/>";
@@ -64,7 +65,7 @@
 	        var isGPKI = new Array();
 	        var sendCNT = new Array();
 	        var pDocInfoXML = createXmlDom();
-	        var pDomainName = document.location.protocol + "//" + document.location.hostname
+// 	        var pDomainName = document.location.protocol + "//" + document.location.hostname
 	        var symbolPath = "";
 	        var symbolName = "";
 	        var logoPath = "";
@@ -207,7 +208,7 @@
 		    }
 		
 		    function SetSusinState() {
-		        var xmlhttp = createXMLHttpRequest();
+		        /* var xmlhttp = createXMLHttpRequest();
 		        var xmlpara = createXmlDom();
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -217,7 +218,27 @@
 		        createNodeAndInsertText(xmlpara, objNode, "pDeptID", "Address");
 		        xmlhttp.open("POST", "/myoffice/ezApprovalG/ezAPRRECEIVE/aspx/UpdateSusinState.aspx", false);
 		        xmlhttp.send(xmlpara);
-		        return getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]);
+		        return getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]); */
+		        
+		        var result = "";
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/updateSusinState.do",
+		    		data : {
+		    			docID : pDocID,
+		    			deptID : "Address",
+		    			recDate  : "",
+		    			mode : "send"
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}
+		    	});
+		        
+		        return result;
 		    }
 		
 		    function FieldsAvailable() {
@@ -296,7 +317,7 @@
 		
 		    function btnSend_onclick_Complete() {
 		        var rMatch = SaveFile();
-		        if (rMatch == "TRUE") {
+		        if (rMatch == "SUCCESS") {
 		            var rtnVal = SetSusinState();
 		            if (rtnVal == "TRUE") {
 		                var pAlertContent = "<spring:message code = 'ezApprovalG.t188' />";
@@ -322,7 +343,7 @@
 		    }
 		
 		    function SaveFile() {
-		        var xmlhttp = createXMLHttpRequest();
+		        /* var xmlhttp = createXMLHttpRequest();
 		        var xmlpara = createXmlDom();
 		        var mhtBody = "";
 		        mhtBody = message.Get_EditorBodyHTML()
@@ -333,7 +354,29 @@
 		        createNodeAndInsertText(xmlpara, objNode, "Html", mhtBody);
 		        xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/saveEndFile.aspx", false);
 		        xmlhttp.send(xmlpara);
-		        return xmlhttp.responseText;
+		        return xmlhttp.responseText; */
+		        
+		        var result = "";
+		    	var mhtBody = "";
+		        mhtBody = message.Get_EditorBodyHTML();
+		        mhtBody = "<HTML>" + mhtBody + "</HTML>";
+		        mhtBody = ConvertHTMLtoMHT(mhtBody);
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/saveEndFile.do",
+		    		data : {
+		    			docID : pDocID,
+		    			html  : mhtBody
+		    		},
+		    		success: function(xml){
+		    			result = xml;
+		    		}
+		    	});
+		        
+		        return result;
 		    }
 		
 		    function GetSealInfo() {
@@ -358,7 +401,7 @@
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
-		    		}        			
+		    		}
 		    	});
 	    		
 		        return result;
@@ -496,14 +539,15 @@
 		            return;
 		        }
 		        if (!NostampFlag) {
-		            var SealHref = "/Upload_ApprovalG/SealImg/nostamp.gif"
+		            var SealHref = "/files/sealImg/nostamp.gif"
 		            var SealWidth = 30;
 		            var SealHeight = 30;
 		            field = message.GetListItem(fields, "sealsign");
 		            if (field) {
 		                var signWidth = getPixel(SealWidth) + "px";
 		                var signHeight = getPixel(SealHeight) + "px";
-		                strimg = "<img src='" + pDomainName + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(SealHref) + "' border=0 embedding='1' >";
+// 		                strimg = "<img src='" + pDomainName + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(SealHref) + "' border=0 embedding='1' >";
+		                strimg = "<img src='" + encodeURI(SealHref) + "' border=0 embedding='1' >";
 		                var field2 = message.GetListItem(fields, "chief");
 		                var chiefwidth = 1;
 		                if (field2) {

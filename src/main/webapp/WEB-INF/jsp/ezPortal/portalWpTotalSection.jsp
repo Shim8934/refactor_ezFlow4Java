@@ -95,7 +95,7 @@
                     		</c:choose>
 						</ul>						
 					</a>
-					<a>
+					<a id="Circular" onClick="btnSumming_click(this)">
 						<ul class="last">
 							<li class="count">
 								<div>
@@ -153,14 +153,13 @@
 						</c:otherwise>
 					</c:choose>
 					<c:choose>
-					<c:when test="${host == 'gw.freet.co.kr'}">
-						<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
-					</c:when>
-					<c:otherwise>
-						<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
-					</c:otherwise>
+						<c:when test="${host == 'gw.freet.co.kr'}">
+							<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
+						</c:when>
+						<c:otherwise>
+							<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="62" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="62" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="62" height="85"></span></p>
+						</c:otherwise>
 					</c:choose>
-        			
         			<%--<span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner01.gif" width="58" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner02.gif" width="56" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner03.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner04.gif" width="58" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner05.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner06.gif" width="56" height="85"></span>--%>
     			</article>
     		</div>

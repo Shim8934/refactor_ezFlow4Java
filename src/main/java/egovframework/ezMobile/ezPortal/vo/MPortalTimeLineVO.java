@@ -29,6 +29,8 @@ public class MPortalTimeLineVO {
 	private String schID;
 	/** 일정/자원 종료날짜*/
 	private String endDate;
+	/**	전자결재 참조 진행 완료 여부*/
+	private String mode;
 	
 	public String getTitle() {
 		return title;
@@ -113,6 +115,12 @@ public class MPortalTimeLineVO {
 	}
 	public void setAprMemberSN(String aprMemberSN) {
 		this.aprMemberSN = aprMemberSN;
+	}
+	public String getMode() {
+		return mode;
+	}
+	public void setMode(String mode) {
+		this.mode = mode;
 	}
 }
 
