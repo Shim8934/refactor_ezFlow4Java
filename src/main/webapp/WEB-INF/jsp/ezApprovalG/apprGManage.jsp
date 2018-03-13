@@ -1088,49 +1088,50 @@
 		        var pHref = tr.getAttribute("DATA3");
 		        var openLocation;
 		        if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-		            if (CrossYN()) {
+		            if (/msie/i.test(navigator.userAgent)) {
 		                alert(strLang1103);
 		                return;
+		            } else {
+		                openLocation = "/ezApprovalG/ezSimsaG_HWP.do";
 		            }
-		            else {
-		                openLocation = "ezViewHWP/ezSimsaG_HWP.aspx";
-		            }
-		        }
-		        else {
+		        } else {
 	                openLocation = "/ezApprovalG/ezSimsaG.do";
 		        }
 		        openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pHref) + "&orgDocID=" + encodeURI(pOrgDocID);
 		        var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
 		        window.open(openLocation, "enforce", param);
 		    }
+		    
 		    window.onbeforeunload = function () {
 		        try {
 		            hideProgress();
 		        } catch (e) { }
 		    };
+		    
 		    function goToPage(page) {
 		        if (page == "front") {
-		            if (parseInt(pageNum) - 1 < 1)
+		            if (parseInt(pageNum) - 1 < 1) {
 		                return;
+		            }
 		            pageNum = pageNum - 1;
 		            openergetDocInfo();
-		        }
-		        else if (page == "next") {
+		        } else if (page == "next") {
 		            if (parseInt(pageNum) + 1 > parseInt(totalPages))
 		                return;
 		            pageNum = pageNum + 1;
 		            openergetDocInfo();
-		        }
-		        else if (page == "page") {
+		        } else if (page == "page") {
 		            if (event.keyCode == 13) {
 		                var goPage = document.all.txt_PageInputNum.value;
-		                if (parseInt(goPage) != goPage || parseInt(goPage) == "" || parseInt(goPage) < 1 || parseInt(goPage) > parseInt(totalPages))
+		                if (parseInt(goPage) != goPage || parseInt(goPage) == "" || parseInt(goPage) < 1 || parseInt(goPage) > parseInt(totalPages)) {
 		                    return;
+		                }
 		                pageNum = parseInt(goPage);
 		                openergetDocInfo();
 		            }
 		        }
 		    }
+		    
 		    function btnAddCabinet_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
