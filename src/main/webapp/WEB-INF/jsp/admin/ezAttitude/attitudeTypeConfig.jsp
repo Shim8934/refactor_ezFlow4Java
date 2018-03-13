@@ -41,7 +41,7 @@
 	        function listSet(result) {
                 var html = "";
                 for (var i = 0; i < result.length; i++) {
-                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick();'>";
+                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);'>";
                     html += "<td style='width:50%;color:gray;'>" + result[i].typeName + "</td>";
                     html += "<td style='width:30%;color:gray;'><select name='useSelectBox'><option value='1'>사용</option><option value='0'>사용안함</option></select></td>";
                     html += "<td style='width:20%;color:gray;'>" + result[i].imgPath + "</td>";
@@ -88,22 +88,33 @@
 	            });        	
 	        }
 	        
-// 	        var saveType_dialogArguments = new Array();
-// 	        function add_notice() {
-// 	            if (CrossYN()) {
-// 	            	saveType_dialogArguments[0] = document.all("ListCompany").value;
+	        var saveType_dialogArguments = new Array();
+	        //유형 추가
+	        function add_type() {
+	            if (CrossYN()) {
+	            	saveType_dialogArguments[0] = document.all("ListCompany").value;
 // 	            	saveType_dialogArguments[1] = save_type_Complete;
-//                     var OpenWin = window.open("/admin/ezAttitude/saveType.do", "SaveAttitudeType", GetOpenWindowfeature(800, 520));
-//                     try { OpenWin.focus(); } catch (e) { }
-// 	            } else {
-//                 	rtnValue = window.showModalDialog("/admin/ezAttitude/saveType.do", document.all("ListCompany").value,
-//                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do", "SaveAttitudeType", GetOpenWindowfeature(800, 520));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/admin/ezAttitude/addAttitudeType.do", document.all("ListCompany").value,
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
 	                
-// 	                if (typeof (rtnValue) != "undefined") {
-// 	                    company_change();
-// 	                }
-// 	            }
-// 	        }
+	                if (typeof (rtnValue) != "undefined") {
+	                    company_change();
+	                }
+	            }
+	        }
+	        //유형 상세보기
+	        function dbclick(obj) {
+	        	saveType_dialogArguments[0] = document.all("ListCompany").value;
+//             	saveType_dialogArguments[1] = save_type_Complete;
+            	var typeId = obj.id;
+	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId="+typeId, "SaveAttitudeType", GetOpenWindowfeature(800, 520));
+	        	
+	        	try { OpenWin.focus(); } catch (e) { }
+	        }
 		    
 	    </script>
 	</head>
@@ -117,7 +128,7 @@
 				</c:forEach>
 	      	</select>
 	      	<ul>
-	      		<li><span onclick="save_type()"><spring:message code='ezAttitude.t33' /></span></li>
+	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.t33' /></span></li>
 	      		<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 	      		<li><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></li>
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>

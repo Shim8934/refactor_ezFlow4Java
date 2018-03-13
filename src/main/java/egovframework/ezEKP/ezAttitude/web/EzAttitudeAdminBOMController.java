@@ -275,7 +275,10 @@ public class EzAttitudeAdminBOMController {
 		
 		return dataList;
 	}
-	
+	/**
+	 * 관리자 유형 사용여부 설정 일괄저장 함수
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeTypeConfig.do")
 	@ResponseBody
 	public void saveAttitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -307,6 +310,30 @@ public class EzAttitudeAdminBOMController {
 		String status = resultBody.get("status").toString();
 		
 		LOGGER.debug("saveAttitudeTypeConfig ended.");
+	}
+	
+	/**
+	 * 관리자 유형관리 유형추가 팝업창 호출 함수
+	 * @return
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/addAttitudeType.do")
+	public String addAttitudeType() {
+		return "admin/ezAttitude/saveAttitudeType";
+	}
+	
+	/**
+	 * 관리자 유형관리 유형수정 팝업창 호출 함수
+	 * @return
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/showAttitudeType.do")
+	public String  showAttitudeType() {
+		LOGGER.debug("showAttitudeType started.");
+		
+		
+		
+		LOGGER.debug("showAttitudeType ended.");
+		
+		return "admin/ezAttitude/saveAttitudeType";
 	}
 	
 }

@@ -1,0 +1,150 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>타이틀</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		
+		<script type="text/javascript">
+			var compid = "<c:out value = '${companyID}' />";
+			var itemseq = "<c:out value = '${personalPopupVO.itemSeq}' />";
+	        
+	        window.onload = window_onload;
+	        function window_onload() {
+	            //compid = window.dialogArguments;
+	        }
+	        
+//파일******************************************************************************
+			function btnimagefile_onclick() {
+	    		document.getElementById("file1").click();
+			}
+			
+			function btn_AttachAdd_onclick() {
+			    var extension = document.getElementById("file1").value.split('.');
+			    var check = false;
+			    check = compareExtension(check, extension[1]);
+
+			    if (!check) {
+	    		    alert("사진이미지" + " 파일을 선택하십시오.");
+	        		document.getElementById("file1").value = "";
+	    		} else {
+	    			var frm = document.getElementById('form');
+		    		frm.action = "/ezAttitude/iconUpload.do";
+		    		frm.submit();
+		    		document.form.file1.value = "";	
+	    		}
+			}
+			
+			function compareExtension(check, extension) {
+	    		var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
+	    		for (var i = 0; i < filterExtension.length; i++) {
+	        		if (extension.toLowerCase() == filterExtension[i]) {
+	            		check = true;
+	            		break;
+	        		}
+	    		}
+	    		return check;
+			}
+	        
+		    
+		    
+		    
+		    
+//여기까지 파일*********************************************************************************************************		    
+		    
+			
+			function OK_Click() {
+
+				$.ajax({
+		        	type : "POST",
+		        	url : "/admin/ezAttitude/",
+		        	async : false,
+		        	data : {companyID : compid,
+		        			itemSeq : itemseq, },
+		        	dataType : "text",
+		        	success : function (result) {
+		        			window.opener.company_change();
+							window.close();
+		        	}
+		        });
+			}
+			
+		</script>
+	</head>
+	<body class = "popup">
+<%-- 		<xmp id="sigBody" style="display:none;"><c:out value = '${personalPopupVO.content}' /></xmp>  --%>
+		<h1>근태유형추가/수정</h1>
+		<table class="content"> 
+  			<tr> 
+    			<th>유형명</th> 
+    			<td style="padding:0">
+    				<table width="100%">
+			        	<tr class="primary">
+<%-- 			          		<th><c:out value = '${langPrimary}' /></th> --%>
+			          		<th>한글</th>
+<%-- 			          		<td><input type="text" name="Input" id=Title style="WIDTH:98%" value="<c:out value = '${personalPopupVO.title}' />"></td> --%>
+			          		<td><input type="text" style="width:98%" value=""></td>
+			        	</tr>
+			        	<tr class="secondary">
+<%-- 			          		<th><c:out value = '${langSecondary}' /></th> --%>
+			          		<th>영문</th>
+<%-- 			          		<td><input type="text" id=Title2 style="WIDTH:98%" value="<c:out value = '${personalPopupVO.title2}' />"></td> --%>
+			          		<td><input type="text" style="width:98%" value=""></td>
+			        	</tr>
+			    	</table>
+    			</td> 
+  			</tr>
+  			<tr>
+  				<th>
+  					<a class="imgbtn" style="background:none; height:25px; padding-top: 4px;"><span onclick="btnimagefile_onclick()">아이콘등록</span></a>
+  				</th>
+  				<td style="height:45px;">
+  					<table width="100%;">
+  						<tr>
+	  						<td width="70%">사진크기는 ~이하로 해주세요!</td>
+	  						<td rowspan="2" style="padding-top: 2px; padding-right: 2%;">
+	  							<img id="preview" name="preview" src="/images/default_pic.jpg" width="40px;" height="40px;" alt="" border="0">
+	  						</td>
+	  					</tr>
+  						<tr>
+	  						<td colspan="2" width="70%"><input type="text" id="imgPath" value="" style="width:88%"></td>
+	  					</tr>
+  					</table>
+  				</td>
+  			</tr>
+  			<tr> 
+    			<th>html폼</th> 
+    			<td>
+					<select id="selectBox"> 
+						<option value="0">form1</option> 
+						<option value="1">form2</option> 
+						<option value="2">form3</option> 
+						<option value="3">form4</option> 
+						<option value="4">form5</option> 
+					</select> 
+				</td> 
+  			</tr>
+  			<tr> 
+    			<th>양식 미리보긩</th>     
+    			<td style="padding:0px; height:320px"></td>
+  			</tr>
+		</table> 
+		<div class="btnposition"> 
+		    <a class="imgbtn"><span onclick="OK_Click()">확인</span></a>
+		    <a class="imgbtn"><span onclick="window.close()">취소</span></a>
+		</div>
+		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezAttitude/iconUpload.do" target="ifrm" style="width: 1px; height: 1px;display:none">
+        	<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="false" />
+    	</form>
+<!-- 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	 -->
+<!-- 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel"> -->
+<%-- 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe> --%>
+<!-- 		</div> -->
+	</body>
+</html>
