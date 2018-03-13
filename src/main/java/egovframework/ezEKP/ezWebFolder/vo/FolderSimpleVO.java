@@ -6,6 +6,7 @@ import java.util.Map;
 public class FolderSimpleVO {
 	private String folderId;
 	private String folderName;
+	private String folderName2;
 	private int hasSubFolder;
 	private int folderLevel;
 	private List<FolderSimpleVO> listSubFolders;
@@ -49,4 +50,13 @@ public class FolderSimpleVO {
 	public void setFolderLevel(int folderLevel) {
 		this.folderLevel = folderLevel;
 	}
+
+	public String getFolderName2() {
+		return folderName2;
+	}
+
+	public void setFolderName2(String folderName2) {
+		this.folderName2 = folderName2;
+	}
+	
 }

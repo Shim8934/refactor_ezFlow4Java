@@ -309,8 +309,10 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/fileMoveConfirm.do")
 	public String fileMoveConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("File Move Confirm is running!");
-		String fileId     = request.getParameter("fileId")     != null ? request.getParameter("fileId")     : "";
-		String rootFolder = request.getParameter("rootFolder") != null ? request.getParameter("rootFolder") : "";
+		
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String fileId      = request.getParameter("fileId")     != null ? request.getParameter("fileId")     : "";
+		String rootFolder  = request.getParameter("rootFolder") != null ? request.getParameter("rootFolder") : "";
 		
 		if (fileId.equals("")) {
 			logger.debug("File Move Confirm illegal arguments!");
@@ -319,6 +321,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		model.addAttribute("fileId", fileId);
 		model.addAttribute("rootFolder", rootFolder);
+		model.addAttribute("primary", user.getLang());
 		logger.debug("File Move Confirm finishes!");
 		
 		return "/ezWebFolder/fileMove";
@@ -375,7 +378,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("lang", user.getLang())
 										.queryParam("rootFolder", rootFolder)
 										.queryParam("fileId", fileId)
 										.queryParam("folderId", folderId)

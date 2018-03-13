@@ -22,40 +22,43 @@ function initRangeData(initData) {
 	var userArray = jsonObj["user"];
 	
 	if (deptArray == null && userArray == null) {
-		alert();
 		return;
 	}
 	
 	var deptList = document.getElementById("DListView");
 	
-	for (var i = 0; i < deptArray.length; i++) {
-		var trElmt = document.createElement("tr");
-		var tdElmt = document.createElement("td");
-		trElmt.setAttribute("nodeId", deptArray[i]["deptId"]);
-		trElmt.setAttribute("deptName", deptArray[i]["deptName"]);
-		trElmt.setAttribute("class", "selectedUser");
-		trElmt.onclick    = function() {deptSelect(this);};
-		trElmt.ondblclick = function() {unselectDept(this)};
-		tdElmt.setAttribute("style", "text-align:center;");
-		tdElmt.textContent = deptArray[i]["deptName"];
-		trElmt.appendChild(tdElmt);
-		deptList.appendChild(trElmt);
+	if (deptArray != null && deptArray.length != 0) {
+		for (var i = 0; i < deptArray.length; i++) {
+			var trElmt = document.createElement("tr");
+			var tdElmt = document.createElement("td");
+			trElmt.setAttribute("nodeId", deptArray[i]["deptId"]);
+			trElmt.setAttribute("deptName", deptArray[i]["deptName"]);
+			trElmt.setAttribute("class", "selectedUser");
+			trElmt.onclick    = function() {deptSelect(this);};
+			trElmt.ondblclick = function() {unselectDept(this)};
+			tdElmt.setAttribute("style", "text-align:center;");
+			tdElmt.textContent = deptArray[i]["deptName"];
+			trElmt.appendChild(tdElmt);
+			deptList.appendChild(trElmt);
+		}
 	}
 	
 	var userList = document.getElementById("MListView");
 	
-	for (var j = 0; j < userArray.length; j++) {
-		var trElmt   = document.createElement("tr");
-		var tdElmt   = document.createElement("td");
-		trElmt.setAttribute("nodeId", userArray[j]["userId"]);
-		trElmt.setAttribute("userName", userArray[j]["userName"]);
-		trElmt.setAttribute("class", "selectedDept");
-		trElmt.onclick    = function() {userSelect(this);};
-		trElmt.ondblclick = function() {unselectUser(this)};
-		tdElmt.setAttribute("style", "text-align:center;");
-		tdElmt.textContent = userArray[j]["userName"];
-		trElmt.appendChild(tdElmt);
-		userList.appendChild(trElmt);
+	if (userArray != null && userArray.length != 0) {
+		for (var j = 0; j < userArray.length; j++) {
+			var trElmt   = document.createElement("tr");
+			var tdElmt   = document.createElement("td");
+			trElmt.setAttribute("nodeId", userArray[j]["userId"]);
+			trElmt.setAttribute("userName", userArray[j]["userName"]);
+			trElmt.setAttribute("class", "selectedDept");
+			trElmt.onclick    = function() {userSelect(this);};
+			trElmt.ondblclick = function() {unselectUser(this)};
+			tdElmt.setAttribute("style", "text-align:center;");
+			tdElmt.textContent = userArray[j]["userName"];
+			trElmt.appendChild(tdElmt);
+			userList.appendChild(trElmt);
+		}
 	}
 }
 
@@ -563,14 +566,15 @@ function set_range() {
 			jsonObj["user"] = userArray;
 		}
 		
-		listOfTarget = listOfTarget.slice(0, -2);
+		listOfTarget = listOfTarget.slice(0, -1);
+		
 		window.opener.updateTarget(listOfTarget);
 		window.opener.updateParent("rangeStr", JSON.stringify(jsonObj), "value");
 		
 		if (mode != null) {
 			window.opener.updateParent("mode", mode, "value");
 		}
-
+		
 		window.opener.closeWindow();
 	}
 	else {

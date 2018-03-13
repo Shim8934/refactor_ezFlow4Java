@@ -36,11 +36,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
@@ -76,6 +76,9 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzWebFolderService")
 	private EzWebFolderService ezWebFolderService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
@@ -974,6 +977,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String lang            = jsonObject.get("lang")         != null ? (String) jsonObject.get("lang")      : "";
 		String pFolderId       = jsonObject.get("pFolderId")    != null ? (String) jsonObject.get("pFolderId") : "";
 		String folderName      = jsonObject.get("fName")        != null ? (String) jsonObject.get("fName")     : "";
+		String folderName2     = jsonObject.get("fName2")       != null ? (String) jsonObject.get("fName2")    : "";
 		String folderUsers     = jsonObject.get("fUsers")       != null ? (String) jsonObject.get("fUsers")    : "";
 		JSONObject result      = new JSONObject();
 		
@@ -1016,7 +1020,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			folder.setFolderId(folderId);
 			folder.setFolderLevel(parentFolder.getFolderLevel() + 1);
 			folder.setFolderName1(folderName);
-			folder.setFolderName2("");
+			folder.setFolderName2(folderName2);
 			folder.setFolderPath(parentFolder.getFolderPath() + folderId + "|");
 			folder.setFolderStep(getMaxFolderStep(pFolderId, tenantId));
 			folder.setFolderType("C");
@@ -1055,6 +1059,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String offset          = jsonObject.get("offset")       != null ? (String) jsonObject.get("offset") : "";
 		String userId          = jsonObject.get("userId")       != null ? (String) jsonObject.get("userId") : "";
 		String folderName      = jsonObject.get("fName")        != null ? (String) jsonObject.get("fName")  : "";
+		String folderName2     = jsonObject.get("fName2")       != null ? (String) jsonObject.get("fName2") : "";
 		String folderUsers     = jsonObject.get("fUsers")       != null ? (String) jsonObject.get("fUsers") : "";
 		JSONObject result      = new JSONObject();
 		
@@ -1103,7 +1108,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			}
 			
 			folder.setFolderName1(folderName);
-			folder.setFolderName2(folderName);
+			folder.setFolderName2(folderName2);
 			folder.setUpdateId(userId);
 			folder.setTenantId(tenantId);
 			folder.setUpdateDate(timeUTC);
@@ -1130,17 +1135,16 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String fileId     = request.getParameter("fileId")     != null ? request.getParameter("fileId")                     : "";
 		String folderId   = request.getParameter("folderId")   != null ? request.getParameter("folderId")                   : "";
 		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")                     : "";
-		String primary    = request.getParameter("lang")       != null ? request.getParameter("lang")                       : "";
 		JSONObject result = new JSONObject();
 		
-		if (primary.equals("") || offset.equals("") || serverName.equals("")) {
+		if (offset.equals("") || serverName.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
 			return result;
 		}
 		
-		logger.debug("fileId: " + fileId + " || folderId: " + folderId + " || RootFolder: " + rootFolder + " || serverName: " + serverName + " || Offset: " + offset + " || Primary: " + primary);
+		logger.debug("fileId: " + fileId + " || folderId: " + folderId + " || RootFolder: " + rootFolder + " || serverName: " + serverName + " || Offset: " + offset);
 		
 		try {
 			int tenantId = loginService.getTenantId(serverName);
@@ -1150,25 +1154,25 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 				if (rootFolder.equals("")) {
 					//회사폴더
 					FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
-					List<FolderSimpleVO> listFolders = ezWebFolderService.getAllSimpleDeptFolder(folder.getCompanyId(), primary, tenantId);
+					List<FolderSimpleVO> listFolders = ezWebFolderService.getAllSimpleDeptFolder(folder.getCompanyId(), tenantId);
 					result.put("currentFolder", "");
 					result.put("data", listFolders);
 				}
 				else {
-					FolderSimpleVO company = ezWebFolderService.getSimpleFolder(rootFolder, primary, tenantId);
-					ezWebFolderService.getAllSubDepts(company, primary, tenantId, 2);
+					FolderSimpleVO company = ezWebFolderService.getSimpleFolder(rootFolder, tenantId);
+					ezWebFolderService.getAllSubDepts(company, tenantId, 2);
 					result.put("currentFolder", "");
 					result.put("data", company);
 				}
 			}
 			else {
-				FolderSimpleVO company  = ezWebFolderService.getSimpleFolder(rootFolder, primary, tenantId);
+				FolderSimpleVO company  = ezWebFolderService.getSimpleFolder(rootFolder, tenantId);
 				FileVO file             = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
 				FolderVO selectedFolder = ezWebFolderService.getFolderByFolderId(file.getFolderId(), offset, tenantId);
 				String folderPath       = selectedFolder.getFolderPath();
 				folderPath              = folderPath.substring(1, folderPath.length() - 1);
 				String[] path           = folderPath.split("\\|");
-				ezWebFolderService.getAllSubDepts(company, primary, tenantId, path, 1);
+				ezWebFolderService.getAllSubDepts(company, tenantId, path, 1);
 				result.put("currentFolder", file.getFolderId());
 				result.put("data", company);
 			}
@@ -1308,21 +1312,20 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String offset     = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String folderId   = request.getParameter("folderId")  != null ? request.getParameter("folderId")  : "";
-		String primary    = request.getParameter("primary")   != null ? request.getParameter("primary")   : "";
 		JSONObject result = new JSONObject();
 		
-		if (companyId.equals("") || primary.equals("") || offset.equals("") || serverName.equals("")) {
+		if (companyId.equals("") || offset.equals("") || serverName.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
 			return result;
 		}
 		
-		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset + " || Primary: " + primary);
+		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset);
 		
 		try {
 			int tenantId                     = loginService.getTenantId(serverName);
-			List<FolderSimpleVO> listFolders = ezWebFolderService.getAllSimpleDeptFolder(companyId, primary, tenantId);
+			List<FolderSimpleVO> listFolders = ezWebFolderService.getAllSimpleDeptFolder(companyId, tenantId);
 			
 			if (!folderId.equals("")) {
 				FolderVO selectedFolder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
@@ -1332,7 +1335,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 				
 				for (FolderSimpleVO deptFolder : listFolders) {
 					if (deptFolder.getFolderId().equals(path[0])) {
-						ezWebFolderService.getAllSubDepts(deptFolder, primary, tenantId, path, 1);
+						ezWebFolderService.getAllSubDepts(deptFolder, tenantId, path, 1);
 					}
 				}
 				
@@ -1358,32 +1361,39 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String offset     = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String folderId   = request.getParameter("folderId")  != null ? request.getParameter("folderId")  : "";
-		String primary    = request.getParameter("primary")   != null ? request.getParameter("primary")   : "";
 		JSONObject result = new JSONObject();
 		
-		if (companyId.equals("") || primary.equals("") || offset.equals("") || serverName.equals("")) {
+		if (companyId.equals("") || offset.equals("") || serverName.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
 			return result;
 		}
 		
-		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset + " || Primary: " + primary);
+		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset);
 		
 		try {
 			int tenantId           = loginService.getTenantId(serverName);
 			FolderVO folderVO      = ezWebFolderService.getCompanyFolderId(companyId, offset, tenantId);
-			FolderSimpleVO company = ezWebFolderService.getSimpleFolder(folderVO.getFolderId(), primary, tenantId);
+			
+			if (folderVO == null) {
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", folderVO);
+				return result;
+			}
+			
+			FolderSimpleVO company = ezWebFolderService.getSimpleFolder(folderVO.getFolderId(), tenantId);
 			
 			if (folderId.equals("")) {
-				ezWebFolderService.getAllSubDepts(company, primary, tenantId, 2);
+				ezWebFolderService.getAllSubDepts(company, tenantId, 2);
 			}
 			else {
 				FolderVO selectedFolder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 				String folderPath       = selectedFolder.getFolderPath();
 				folderPath              = folderPath.substring(1, folderPath.length() - 1);
 				String[] path           = folderPath.split("\\|");
-				ezWebFolderService.getAllSubDepts(company, primary, tenantId, path, 1);
+				ezWebFolderService.getAllSubDepts(company, tenantId, path, 1);
 			}
 			
 			result.put("status", "ok");
@@ -1403,12 +1413,11 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	@RequestMapping(value="/rest/ezwebfolderadmin/subfolder-tree/{folderid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSubFoldersTree(@PathVariable(value="folderid") String folderId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")  : "";
-		String primary    = request.getParameter("primary")  != null ? request.getParameter("primary") : "";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("folderId: " + folderId + " || serverName: " + serverName);
 		
-		if (folderId.equals("") || primary.equals("") || serverName.equals("")) {
+		if (folderId.equals("") || serverName.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
@@ -1417,8 +1426,8 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		
 		try {
 			int tenantId          = loginService.getTenantId(serverName);
-			FolderSimpleVO folder = ezWebFolderService.getSimpleFolder(folderId, primary, tenantId);
-			ezWebFolderService.getAllSubDepts(folder, primary, tenantId, 1);
+			FolderSimpleVO folder = ezWebFolderService.getSimpleFolder(folderId, tenantId);
+			ezWebFolderService.getAllSubDepts(folder, tenantId, 1);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1789,6 +1798,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String lang            = jsonObject.get("lang")         != null ? (String) jsonObject.get("lang")      : "";
 		String pFolderId       = jsonObject.get("pFolderId")    != null ? (String) jsonObject.get("pFolderId") : "";
 		String folderName      = jsonObject.get("fName")        != null ? (String) jsonObject.get("fName")     : "";
+		String folderName2     = jsonObject.get("fName2")       != null ? (String) jsonObject.get("fName2")    : "";
 		JSONObject result      = new JSONObject();
 		
 		if (pFolderId.equals("") || userId.equals("") || lang.equals("") || folderName.equals("") || offset.equals("") || serverName.equals("")) {
@@ -1815,7 +1825,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			folder.setFolderId(folderId);
 			folder.setFolderLevel(parentFolder.getFolderLevel() + 1);
 			folder.setFolderName1(folderName);
-			folder.setFolderName2("");
+			folder.setFolderName2(folderName2);
 			folder.setFolderPath(parentFolder.getFolderPath() + folderId + "|");
 			folder.setFolderStep(getMaxFolderStep(pFolderId, tenantId));
 			folder.setFolderType("D");
@@ -1854,7 +1864,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String offset          = jsonObject.get("offset")       != null ? (String) jsonObject.get("offset") : "";
 		String userId          = jsonObject.get("userId")       != null ? (String) jsonObject.get("userId") : "";
 		String folderName      = jsonObject.get("fName")        != null ? (String) jsonObject.get("fName")  : "";
-		//String folderUsers     = jsonObject.get("fUsers")       != null ? (String) jsonObject.get("fUsers") : "";
+		String folderName2     = jsonObject.get("fName2")       != null ? (String) jsonObject.get("fName2") : "";
 		JSONObject result      = new JSONObject();
 		
 		if (folderId.equals("") || userId.equals("") || folderName.equals("") || offset.equals("") || serverName.equals("")) {
@@ -1874,7 +1884,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			
 			folder.setFolderName1(folderName);
-			folder.setFolderName2(folderName);
+			folder.setFolderName2(folderName2);
 			folder.setUpdateId(userId);
 			folder.setUpdateDate(timeUTC);
 			
@@ -1888,6 +1898,66 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="rest/ezwebfolderadmin/company-folder/{companyid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putCompanyFolderMove(@PathVariable(value="companyid") String companyId, HttpServletRequest request) throws Exception {
+		String serverName   = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
+		String offset       = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
+		String primary      = request.getParameter("primary")   != null ? request.getParameter("primary")   : "";
+		String userId       = request.getParameter("userId")    != null ? request.getParameter("userId")    : "";
+		JSONObject result   = new JSONObject();
+		
+		logger.debug("serverName: " + serverName + " || offset: " + offset + " || companyId: " + companyId);
+		
+		if (serverName.equals("") || offset.equals("") || companyId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo           = commonUtil.getUserForGw(userId, serverName, primary, offset);
+			int tenantId               = userInfo.getTenantId();
+			OrganDeptVO company        = ezOrganService.getDeptInfo(companyId, primary, tenantId);
+			FolderVO folder            = new FolderVO();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date                  = new Date();
+			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+			String folderId            = getMaxFolderID(tenantId);
+			
+			folder.setFolderId(folderId);
+			folder.setFolderLevel(0);
+			folder.setFolderName1(company.getDisplayName1());
+			folder.setFolderName2(company.getDisplayName2());
+			folder.setFolderPath("|" + folderId + "|");
+			folder.setFolderStep(0);
+			folder.setFolderType("C");
+			folder.setFolderUpper("root");
+			folder.setOwnerId(company.getCn());
+			folder.setUseStatus("Y");
+			folder.setUpdateId(userId);
+			folder.setCreateName1(userInfo.getDisplayName1());
+			folder.setCreateName2(userInfo.getDisplayName2());
+			folder.setTenantId(tenantId);
+			folder.setCompanyId(company.getCn());
+			folder.setCreateId(userId);
+			folder.setCreateDate(timeUTC);
+			folder.setUpdateDate(timeUTC);
+			
+			ezWebFolderAdminService.insertFolder(folder);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
 		}
 		
 		return result;

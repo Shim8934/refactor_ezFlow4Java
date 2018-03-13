@@ -137,8 +137,9 @@
 	<resultMap id="folderSimpleVO" class="FolderSimpleVO">
 		<result property="folderId"             column="FOLDER_ID"              columnIndex="1"/>
 		<result property="folderName"           column="FOLDER_NAME"            columnIndex="2"/>
-		<result property="hasSubFolder"         column="HAS_SUB"                columnIndex="3"/>
-		<result property="folderLevel"          column="FOLDER_LEVEL"           columnIndex="4"/>
+		<result property="folderName2"          column="FOLDER_NAME2"           columnIndex="3"/>
+		<result property="hasSubFolder"         column="HAS_SUB"                columnIndex="4"/>
+		<result property="folderLevel"          column="FOLDER_LEVEL"           columnIndex="5"/>
 	</resultMap>
 	
 	<!-- Folder resultMap -->
@@ -545,7 +546,8 @@
 		<![CDATA[
 			SELECT
 				a.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
-				CASE WHEN #primary# = '1' THEN a.FOLDER_NAME1 ELSE a.FOLDER_NAME2 END                                                                                                 AS FOLDER_NAME,
+				a.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				a.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
 				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = a.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
 				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
 			FROM
@@ -582,7 +584,8 @@
 		<![CDATA[
 			SELECT
 				a.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
-				CASE WHEN #primary# = '1' THEN a.FOLDER_NAME1 ELSE a.FOLDER_NAME2 END                                                                                                 AS FOLDER_NAME,
+				a.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				a.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
 				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = a.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
 				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
 			FROM
@@ -842,7 +845,8 @@
 		<![CDATA[
 			SELECT
 				a.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
-				CASE WHEN #primary# = '1' THEN a.FOLDER_NAME1 ELSE a.FOLDER_NAME2 END                                                                                                 AS FOLDER_NAME,
+				a.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				a.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
 				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = a.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
 				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
 			FROM

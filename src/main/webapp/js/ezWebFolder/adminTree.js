@@ -69,7 +69,7 @@ function displaySubFolder(divTree, divElmt, list) {
 	imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
 	
 	var spanFolderName = document.createElement("span");
-	spanFolderName.textContent = list["folderName"];
+	spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
 	spanFolderName.setAttribute("class", "spanName");
 	spanFolderName.setAttribute("name", list["folderId"]);
 	spanFolderName.setAttribute("level", list["folderLevel"]);

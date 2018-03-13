@@ -17,6 +17,7 @@
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
 			var compFolderId      = null;
+			var primary           = "<c:out value='${primary}'/>";
 			var companyId         = "<c:out value='${company}'/>";
 			var strMessage        = "<spring:message code='ezWebFolder.t134'/>";
 			
@@ -37,6 +38,7 @@
 				var leftElmt    = document.getElementById("left");
 				var firstH2Elmt = leftElmt.getElementsByTagName("h2")[0];
 				firstH2Elmt.click();
+				displayPersonal();
 			}
 			
 			function goPage(idx) {

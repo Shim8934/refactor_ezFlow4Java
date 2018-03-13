@@ -20,11 +20,11 @@ public interface EzWebFolderService {
 	void moveFile(String fileId, String folderId, int tenantId) throws Exception;
 	String getFileLogSequence(int tenantId) throws Exception;
 	FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception;
-	FolderSimpleVO getSimpleFolder(String folderId, String primary, int tenantId) throws Exception;
-	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, String primary, int tenantId) throws Exception;
+	FolderSimpleVO getSimpleFolder(String folderId, int tenantId) throws Exception;
+	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId) throws Exception;
 	FolderVO getCompanyFolderId(String companyId, String offset, int tenantId) throws Exception;
-	void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, int i) throws Exception;
-	void getAllSubDepts(FolderSimpleVO company, String primary, int tenantId, String[] fdPath, int order) throws Exception;
+	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i) throws Exception;
+	void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order) throws Exception;
 	void updateDownCnt(String fileId, int tenantId) throws Exception;
 	List<FolderUserVO> getFolderUsers(String folderId, int tenantId) throws Exception;
 	String getFolderSequence(int tenantId) throws Exception;
@@ -41,5 +41,5 @@ public interface EzWebFolderService {
 	void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) throws Exception;
 	String getDeptPath(String deptId, int tenantId) throws Exception;
 	List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int tenantId) throws Exception;
-	List<FolderSimpleVO> getAllSimpleDeptFolder(String companyId, String primary, int tenantId) throws Exception;
+	List<FolderSimpleVO> getAllSimpleDeptFolder(String companyId, int tenantId) throws Exception;
 }

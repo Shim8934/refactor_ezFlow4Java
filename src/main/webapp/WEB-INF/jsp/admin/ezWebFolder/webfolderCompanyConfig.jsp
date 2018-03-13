@@ -28,7 +28,7 @@
 						"companyId" : document.getElementById("companyList").value
 					},
 					dataType: "JSON",
-					async: true,
+					async: false,
 					success : function(data) {
 						var result = data.webfolderConfig;
 						

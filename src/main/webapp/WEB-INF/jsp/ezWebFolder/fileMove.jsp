@@ -13,6 +13,7 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript">
+		var primary        = "<c:out value='${primary}'/>";
 		var fileId         = "<c:out value='${fileId}' />";
 		var selectedFolder = null;
 		var rootFld        = "<c:out value='${rootFolder}'/>";
@@ -84,7 +85,7 @@
 			imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
 			
 			var spanFolderName = document.createElement("span");
-			spanFolderName.innerHTML = list["folderName"];
+			spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
 			spanFolderName.setAttribute("class", "spanName");
 			spanFolderName.setAttribute("name", list["folderId"]);
 			spanFolderName.setAttribute("level", list["folderLevel"]);

@@ -13,6 +13,10 @@
 .webfolderBttn2 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 10px; height:25px; min-width: 40px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:25px; text-align: center;}
 .webfolderBttn2 span:hover{color: #004895; border: 1px solid #004895;}
 
+.webfolderBttn3{cursor: pointer; line-height: 27px;}
+.webfolderBttn3 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 10px; height:23px; min-width: 40px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:25px; text-align: center;}
+.webfolderBttn3 span:hover{color: #004895; border: 1px solid #004895;}
+
 .webfolderImg {width: 18px; height: 18px;}
 .spanName {height: 22px; line-height: 21px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
 
