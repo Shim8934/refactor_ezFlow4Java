@@ -630,6 +630,15 @@
 				
 				document.location.href = "/ezPoll/pollCreate.do?qstId=" + qstId + "&mode=modify" + "&params=" + params + "&search=" + searchStr + "&searchN=" + searchN;				
 		    }		
+			
+			//재사용 버튼 누르면 동작하는 함수
+			function voteReuse() {
+				var tenantId = "<c:out value='${question.tenantId}'/>";
+				var params = "<c:out value='${params}'/>";
+				var searchStr = "<c:out value='${searchStr}'/>";
+				var searchN = "<c:out value='${searchN}'/>";
+				document.location.href = "/ezPoll/pollCreate.do?qstId=" + qstId + "&mode=reuse" + "&params=" + params + "&search=" + searchStr + "&searchN=" + searchN;				
+			}
 		    
 		    function menuDetailSeenUserInfo(pQstID) {		    	 
 		    	 var feature = GetOpenPosition(420, 438);
@@ -2546,9 +2555,9 @@
 								<span class="questionFontS"><c:out value='${question.createDate}'/></span>
 							</div>
 					  </div>
-					  <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2)}">
+					  <%-- <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2)}">
 						  <div id="_editVote" onclick="voteEdit()"><span><spring:message code = 'ezEmail.t149'/></span></div>
-					  </c:if>
+					  </c:if> --%>
 					  <div class='voteIconDiv'>
 						  	<ul class='voteIcon_ul'>
 								<c:choose>
@@ -2662,6 +2671,21 @@
 								<%-- <li class='icon_title'>
 									<span><spring:message code = 'ezPoll.t123'/></span>
 								</li> --%>
+							</ul>
+							<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2)}">
+								<ul class='voteIcon_ul'>
+									<li class="voteIconImg_li icon nosecret">
+										<img src="/images/poll/editVote.png" class="voteIconImg" onclick="voteEdit()" title="<spring:message code = 'ezEmail.t149'/>"/>
+									</li>
+									<li class="img_description">
+										<div><span><spring:message code = 'ezEmail.t149'/></span></div>
+									</li>
+								</ul>
+							</c:if>
+							<ul class='voteIcon_ul'>
+								<li class="voteIconImg_li icon nosecret">
+									<img src="/images/poll/reuseVote.png" class="voteIconImg" onclick="voteReuse()"  style="width:45px" title="투표 재사용">재사용</img>
+								</li>
 							</ul>
 					  </div>
 					  
