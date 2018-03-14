@@ -103,26 +103,20 @@
 	<body scroll="no" class="popup">
 		<form method="post">
 			<div id="menu">
-		    	<ul>
-		      		<li><span onClick="accept_group('1')"><spring:message code='ezSchedule.t338'/></span></li>
-		      		<li><span onClick="accept_group('2')"><spring:message code='ezSchedule.t339'/></span></li>
-		    	</ul>
+		    	
 		  	</div>
-		   <div id="popuptitle" style="position:absolute;left:260px;top:5px;height:35px;"><h1><spring:message code='ezSchedule.t344'/></h1></div>
+		   <div id="popuptitle" style="position:absolute;left:10px;top:5px;height:35px;"><h1><spring:message code='ezSchedule.t344'/></h1></div>
 		  	<div id="close">
-		    	<ul>
-<%-- 		      		<li><span onClick="window.close()"><spring:message code='ezSchedule.t16'/></span></li> --%>
-		      		<li><span onClick="closePopup()"><spring:message code='ezSchedule.t16'/></span></li>
-		    	</ul>
+		    	
 		  	</div>
-		  	<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:295px">
+		  	<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:270px">
 		    	<table class="popuplist" style="WIDTH: 100%" >
 		      		<tr>
 				    	<th style="text-align:center; width:10px"><spring:message code='ezSchedule.t190'/></th>
 				        <th style="text-align:center; width:80px"><spring:message code='ezSchedule.t340'/></th>
 				        <th style="text-align:center; width:50px"><spring:message code='ezSchedule.t164'/></th>
 				        <th style="text-align:center; width:150px"><spring:message code='ezSchedule.t159'/></th>
-				        <th style="text-align:center"><spring:message code='ezSchedule.t260'/></th>
+				        <%-- <th style="text-align:center"><spring:message code='ezSchedule.t260'/></th> --%>
 				        <th style="text-align:center; width:80px"><spring:message code='ezSchedule.t345'/></th>
 					</tr>
 					<c:forEach var="item" items="${receiveList}">
@@ -139,15 +133,20 @@
 			            	<c:if test="${item.status != '0'}"><spring:message code='ezSchedule.t169'/></c:if>
 			            </td>
 			            <td style="word-break:break-all; width:150px">${item.groupName}</td>
-			            <td style="word-break:break-all; padding-top:3px; padding-bottom:3px;">${item.description}</td>
+			            <%-- <td style="word-break:break-all; padding-top:3px; padding-bottom:3px;">${item.description}</td> --%>
 			            <td style="white-space:nowrap; text-align:center">${fn:substring(item.responseDate,0,16)}</td>
 			        </tr>
 					</c:forEach>
 	    		</table>
+	    		<div class="btnpositionNew">
+		      		<a class="imgbtn"><span onClick="accept_group('1')"><spring:message code='ezSchedule.t338'/></span></a>
+		      		<a class="imgbtn"><span onClick="accept_group('2')"><spring:message code='ezSchedule.t339'/></span></a>
+		      		<a class="imgbtn"><span onClick="closePopup()"><spring:message code='ezSchedule.t16'/></span></a>
+		    	</div>		    	
 		  	</div>
 		  	<script type="text/javascript">
-				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
+				/* selToggleList(document.getElementById("menu"), "ul", "li", "0");
+				selToggleList(document.getElementById("close"), "ul", "li", "0"); */
 			</script>
 		</form>
 	</body>

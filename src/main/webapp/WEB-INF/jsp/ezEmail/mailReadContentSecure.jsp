@@ -7,7 +7,7 @@
 	<head>
 	    <title></title>
         <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<script type="text/javascript" src="/js/ezEmail/${e1}"></script>
         <script language="JavaScript" src="/js/ezEmail/js_cross/reademail.js"></script>
     	<script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     	<script language="javascript" type="text/javascript">
@@ -111,18 +111,18 @@
 		</script>
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
-		<img src='/images/minus.png' title="<spring:message code='ezEmail.t99000065' />" onclick='Smaller()' style='cursor: pointer;' />
-		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
+		<img src='/images/minus.png' title="${t99000065}" onclick='Smaller()' style='cursor: pointer;' />
+		<img src='/images/plus.png' title="${t99000064}" onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
 		<span id="ContentClassbtn" style="float:right;display:none;" >
-			<img src='/images/mtgrsp-accept.gif' width="20" height="20" title="<spring:message code='ezEmail.t901' />" onclick="Schedule_btn('ACCEPT');" style='cursor:pointer;' />
-			<img src='/images/mtgrsp-tent.gif' width="20" height="20" title="<spring:message code='ezEmail.t903' />" onclick="Schedule_btn('TENT');" style='cursor:pointer;' />
-			<img src='/images/mtgrsp-decline.gif' width="20" height="20" title="<spring:message code='ezEmail.t902' />" onclick="Schedule_btn('DECLINE');" style='cursor:pointer;' />
+			<img src='/images/mtgrsp-accept.gif' width="20" height="20" title="${t901}" onclick="Schedule_btn('ACCEPT');" style='cursor:pointer;' />
+			<img src='/images/mtgrsp-tent.gif' width="20" height="20" title="${t903}" onclick="Schedule_btn('TENT');" style='cursor:pointer;' />
+			<img src='/images/mtgrsp-decline.gif' width="20" height="20" title="${t902}" onclick="Schedule_btn('DECLINE');" style='cursor:pointer;' />
 		</span>
-		<div class="previewmail_addfile" id="ifrmPreViewRayer" style="display:none;margin-bottom:10px;font-family:<spring:message code='main.t246' />">
-			<p class="title"><spring:message code='ezEmail.t99000003' />
+		<div class="previewmail_addfile" id="ifrmPreViewRayer" style="display:none;margin-bottom:10px;font-family:${t246}">
+			<p class="title">${t99000003}
 				<span>${pAttachListHtmlSub}</span>
 				<span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
-				<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span>
+				<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();">${t99000004}</span>
 			</p>
 			<ul class="list" id="PreviewAttachList">${pAttachListHtml}</ul>
 		</div>

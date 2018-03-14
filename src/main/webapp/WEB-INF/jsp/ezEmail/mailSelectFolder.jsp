@@ -45,7 +45,7 @@
 	            }
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.getElementById("headerH1").style.marginTop = "0px";
-	                document.getElementById("PostTreeView").style.borderRight = "1px solid #B6B6B6";
+	                document.getElementById("PostTreeView").style.borderRight = "1px solid #ddd";
 	                document.getElementById("PostTreeView").style.marginTop = "0px";
 	            }
 	            PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
@@ -194,7 +194,7 @@
 	    <table class="popuplist" style="width: 100%;">
 	        <tr>
 	            <td>
-	                <div style="border: 0px solid #B6B6B6; behavior: url(/js/ezEmail/Controls/treeview.htc); height: 280px; width: 100%; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView" onrequestdata="requestdata()">
+	                <div style="border: 0px solid #ddd; behavior: url(/js/ezEmail/Controls/treeview.htc); height: 280px; width: 100%; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView" onrequestdata="requestdata()">
 	                </div>
 	            </td>
 	            <td style="width: 25px;">

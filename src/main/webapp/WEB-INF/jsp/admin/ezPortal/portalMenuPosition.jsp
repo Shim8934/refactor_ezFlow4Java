@@ -140,7 +140,7 @@
 				<td align="center">
 					<table width="100%" height="70" border="0" cellpadding="0" cellspacing="5"> 
 						<tr> 
-							<td id="tdpreview" style="border:1px solid #B6B6B6"><spring:message code='ezPortal.t120'/></td> 
+							<td id="tdpreview" style="border:1px solid #ddd"><spring:message code='ezPortal.t120'/></td> 
 						</tr> 
 					</table>			
 				</td> 

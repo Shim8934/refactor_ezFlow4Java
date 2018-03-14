@@ -100,7 +100,7 @@
 		//범례 색상
 		var cpuMemoryColor = ['#77B0A8', '#E96359'];
 		var diskioColor = ['#4641D9', '#2F9D27', '#FF5E00', '#FFBB00', '#99004C', 
-		                   '#000093', '#FF0000', '#BDBDBD', '#476600', '#FF00DD'];
+		                   '#000093', '#FF0000', '#ddd', '#476600', '#FF00DD'];
 		var networkColor = ['#000093', '#FF0000'];
 		
 		var oldTx = 0;
@@ -585,7 +585,7 @@
 	}	
 </script>
 <style type="text/css">
-.infoMain   { border : 1px solid; color : #b6b6b6; height : 700px; margin : 20px 0px 0px; background-color : #f3f3f3; }
+.infoMain   { border : 1px solid; color : #ddd; height : 700px; margin : 20px 0px 0px; background-color : #f8f8f8; }
 .serverInfo { float : left; width : 100%; height: 7%; color : #000000; background-color : #FFFFFF; }
 .graphInfo  { float : left; width : 100%; height : 46%; }
 
@@ -603,7 +603,7 @@
 	border : 10px solid; 
 	border-right: 5px solid; 
 	border-bottom: 5px solid; 
-	color : #f3f3f3;
+	color : #f8f8f8;
 }
 .diskioInfo { 
 	width : 50%; 
@@ -614,7 +614,7 @@
 	border : 10px solid; 
 	border-left: 5px solid; 
 	border-bottom: 5px solid; 
-	color : #f3f3f3;
+	color : #f8f8f8;
 }
 .networkInfo { 
 	width : 50%; 
@@ -625,7 +625,7 @@
 	border : 10px solid; 
 	border-right: 5px solid; 
 	border-top: 5px solid; 
-	color : #f3f3f3;
+	color : #f8f8f8;
 }
 .filesysInfo { 
 	width : 50%; 
@@ -636,7 +636,7 @@
 	border : 10px solid; 
 	border-left: 5px solid; 
 	border-top: 5px solid;
-	color : #f3f3f3;
+	color : #f8f8f8;
 }
 .filesysGraph { height: 60%; overflow: hidden; }
 .filesysUsed { height: 30%; padding-left: 5%; background-color : #FFFFFF; }

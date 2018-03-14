@@ -48,7 +48,7 @@
 		    	<tr>
 		      		<td style="word-break:break-all;" >
 		      			<div style="PADDING:0 10px 10px;overflow:auto;HEIGHT:420px;overflow:auto;">
-		      				<div style="border-bottom:1px dotted #b6b6b6; padding:5px 0px;margin:5px 0">
+		      				<div style="border-bottom:1px dotted #ddd; padding:5px 0px;margin:5px 0">
 		      					<c:out value = '${fn:substring(personalNoticeVO.postDate, 0, 10) }' />
 		        			</div>
 		          			${personalNoticeVO.content }

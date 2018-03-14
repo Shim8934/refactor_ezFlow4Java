@@ -627,7 +627,7 @@
 		        <td style="width:100%">
 		        	<table style="width:300px" >
 						<tr>
-							<td id="selColor" style="background-color:${boardProp.boardColor};border:1px solid #b6b6b6;">&nbsp;</td>
+							<td id="selColor" style="background-color:${boardProp.boardColor};border:1px solid #ddd;">&nbsp;</td>
 							<td style="width:100%">&nbsp;&nbsp;</td>
 							<td style="white-space:nowrap;" id="colorID">${boardProp.boardColor}</td>
 							<td style="width:100px;"><a class="imgbtn"><span onClick="change_brdColor()"><spring:message code = 'ezCommunity.t409' /></span></a></td>

@@ -2635,4 +2635,20 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("getContDocCount ended");
 	return "<RESULT>" + xmlDom.getElementsByTagName("TOTALCNT").item(0).getTextContent() + "</RESULT>";
 	}
+	
+	/** 전자결재 참조 원기안문서 진행상태*/
+	@RequestMapping(value = "/ezApprovalG/getLineMode.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getLineMode(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("getLineMode started");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+
+		String result = ezApprovalGService.getLineModeFlag(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("result = " + result);
+		logger.debug("getLineMode ended");
+	return result;
+	}
 }

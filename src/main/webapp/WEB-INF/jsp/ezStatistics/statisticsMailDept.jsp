@@ -583,7 +583,7 @@
 </head>
 <body class="mainbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
     <h1><spring:message code='ezStatistics.t1012' /></h1>
-    <table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2; margin-bottom: 5px">
+    <table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2; margin-bottom: 5px">
         <tr>
             <td style="width: 99%">
                 <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1002' /> :
@@ -616,10 +616,10 @@
     <h2 id="ToTitle" class="receiver_tltype01" style="border: 0px">
         <span style="min-width: 45px;"><spring:message code='ezStatistics.t1014' /></span>
     </h2>
-    <table style="width: 1150px;height:640px ;border:1px solid #b6b6b6"> 
+    <table style="width: 1150px;height:640px ;border:1px solid #ddd"> 
         <tr>
             <td style="vertical-align:top">
-                <div style="width: 300px; height: 640px; overflow-x: auto; overflow-y: auto;border-right:1px solid #b6b6b6;" id="TreeView"></div>
+                <div style="width: 300px; height: 640px; overflow-x: auto; overflow-y: auto;border-right:1px solid #ddd;" id="TreeView"></div>
             </td>
             <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
                 <div id="viewdata">

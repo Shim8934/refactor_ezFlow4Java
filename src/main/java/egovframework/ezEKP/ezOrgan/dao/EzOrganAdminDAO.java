@@ -1488,7 +1488,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	String getDN = getADdata(ctx, vo.getCn(), "group", "dn");
     	logger.debug("getDN : " + getDN);
     	
-    	ModificationItem[] mods = new ModificationItem[8];
+    	ModificationItem[] mods = new ModificationItem[9];
     	List<ModificationItem> mItems = new ArrayList<ModificationItem>();
     	
     	mods[0] = chkADAttribute(ctx, getDN, "displayName", vo.getDisplayName());
@@ -1499,6 +1499,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	mods[5] = chkADAttribute(ctx, getDN, "extensionAttribute9", vo.getExtensionAttribute9());
     	mods[6] = chkADAttribute(ctx, getDN, "extensionAttribute10", vo.getExtensionAttribute10());
     	mods[7] = chkADAttribute(ctx, getDN, "extensionAttribute15", vo.getExtensionAttribute15());
+    	mods[8] = chkADAttribute(ctx, getDN, "description", vo.getDisplayName());
     	
 		// attribute 값이 null 이 아닌 경우 추출.
     	for (int i = 0; i < mods.length; i ++) {

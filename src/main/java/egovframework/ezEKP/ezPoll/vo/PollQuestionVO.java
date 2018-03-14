@@ -27,6 +27,7 @@ public class PollQuestionVO implements Serializable {
 	private int isHidden;
 	private int isMofifying;
 	private int setDate;
+	private int isSorting;
 	
 	public int getQstId() {
 		return qstId;
@@ -202,6 +203,14 @@ public class PollQuestionVO implements Serializable {
 
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
+	}
+
+	public int getIsSorting() {
+		return isSorting;
+	}
+
+	public void setIsSorting(int isSorting) {
+		this.isSorting = isSorting;
 	}
 
 	public boolean equals(Object object) {

@@ -7,15 +7,19 @@
 		<title><spring:message code="ezBoard.t84" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href='/css/organ_tree.css' type="text/css" />
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">		
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
+	    <style>
+	    	.mainlist_free tr th {
+	    		border-top: 0px;
+	    	}
+	    </style>		
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" language="javascript">
-		
+		<script type="text/javascript" language="javascript">		
 			var topid = "<c:out value='${topid}'/>";
 		    var useOCS = "<c:out value='${useOCS}'/>";
 		    var g_xmlHTTP = null;
@@ -955,7 +959,7 @@
 		            return;
 		        }
 		        
-		        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=200px,width=450px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(450, 240));
+		        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=450px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(450, 240));
 		    }
 		    
 		    function mod_sign() {
@@ -1415,9 +1419,9 @@
 		<spring:message code='main.t24' />
 		</c:if>
 		</h1>
-		<table style="margin-top:10px">
+		<table style="margin-top:10px;width:900px;border:1px solid #ddd">
 			<tr>
-				<th><spring:message code='ezOrgan.t73' /></th>
+				<th style="height:30px"><spring:message code='ezOrgan.t73' /></th>
 				<th>
 					<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><spring:message code='ezOrgan.t74' />					
 					<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><spring:message code='ezOrgan.t75' />
@@ -1435,7 +1439,7 @@
 							<td><a class="imgbtn"><span onClick="del_company()"><spring:message code='ezOrgan.t78' /></span></a></td>
 						</tr>
 						<tr>
-							<td height="15"><img <spring:message code='ezOrgan.i1' />></td>
+							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
 						</tr>
 						<tr>
 							<td><a class="imgbtn"><span onClick="info_dept()"><spring:message code='ezOrgan.t79' /></span></a></td>
@@ -1450,7 +1454,7 @@
 							<td><a class="imgbtn" id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></a></td>
 						</tr>
 						<tr>
-							<td height="15"><img <spring:message code='ezOrgan.i1' />></td>
+							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
 						</tr>
 						<tr>
 							<td><a class="imgbtn" id="usermenu3"><span onClick="info_user()"><spring:message code='ezOrgan.t83' /></span></a></td>
@@ -1468,13 +1472,13 @@
 							<td><a class="imgbtn" id="userRetire"><span onClick="Retire_user()"><spring:message code='ezOrgan.t310' /></span></a></td>
 						</tr>      
 						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
-							<td height="15"><img <spring:message code='ezOrgan.i1' />></td>
+							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
 						</tr>
 						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
 							<td><a class="imgbtn" id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></a></td>
 						</tr>
 						<tr>
-							<td height="15"><img <spring:message code='ezOrgan.i1' />></td>
+							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
 						</tr>
 						<tr>
 							<td><a class="imgbtn" id="usermenu5"><span onClick="mod_password()"><spring:message code='ezOrgan.t90' /></span></a></td>
@@ -1484,7 +1488,7 @@
 							<td><a class="imgbtn" id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></a></td>
 						</tr>		
 						<tr>
-							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='ezOrgan.t92' /></span></a></td>
+							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></a></td>
 						</tr>		                
 						<c:if test="${useBizmekaTalk == 'YES'}">			
 						<tr>
@@ -1500,7 +1504,7 @@
 				</th>
 			</tr>
 			<tr>
-				<th>
+				<th style="height:30px">
 					<input id="deptkeyword" onKeyPress="deptsearch_press();" style="WIDTH:130px" />
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='ezOrgan.t93' /></span></a>
 				</th>
@@ -1523,15 +1527,15 @@
 			</tr>
 		    <tr>
 		        <th style="padding: 3px; text-align: left; font-weight: normal;vertical-align:top">
-		            <div style="border: 1px solid #b6b6b6; height: 510px; width: 280px; overflow: auto; background-color: #FFFFFF" id="TreeView"></div>
+		            <div style="border: 1px solid #ddd; height: 510px; width: 375px; margin:10px; overflow: auto; background-color: #FFFFFF" id="TreeView"></div>
 		        </th>
 		        <th style="padding: 3px; text-align: left;vertical-align:top">
-		            <div class="listview">
+		            <div class="listview" style="margin:10px;margin-bottom:2px">
 		            	<c:if test="${dotNetIntegration != 'YES'}">
-		                <div id="OrganListView" style="border: 0px solid #B6B6B6; Width: 350px; Height: 480px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; "></div>
+		                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 510px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; "></div>
 		                </c:if>
 		                <c:if test="${dotNetIntegration == 'YES'}">
-		                <div id="OrganListView" style="border: 0px solid #B6B6B6; Width: 350px; Height: 510px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; "></div>
+		                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 540px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; "></div>
 		                </c:if>
 		            </div>
 		            <div style="height: 5px; overflow: hidden">&nbsp;</div>

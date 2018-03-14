@@ -572,7 +572,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(600, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END");
+		        DivPopUpShow(580, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END");
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();

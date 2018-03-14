@@ -11,9 +11,10 @@
 	    <style>
 	    	.emptyDiv {
 	    		height: 140px;
-	    		border:	1px solid #ddd;
-	    		background-color: #fafafa;
 	    		padding-top: 60px;
+	    		color : #d0d0d0;
+	    		font-size : 12px;
+	    		font-weight: bold;
 	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -38,7 +39,7 @@
 	        var pMaxPage = "";
 	        var BlockSize = 10;
 	        var pFolderName = "";
-	        var m_strColorSelect = "rgb(233, 241, 255)";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var searchFlag = false;
@@ -861,7 +862,7 @@
 				<!-- 내용 -->
 			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
 			    	<tr>
-						<th style="border-color: rgb(0, 72, 149); color: white; background-color: rgb(0, 72, 149); text-align: center; height:30px" colspan="2"><spring:message code='ezAddress.t2003' /></th>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAddress.t2003' /></th>
 					</tr>
 					<tr>
 			  			<th style="width:90px;height:30px"><spring:message code='ezAddress.t124' /></th>
@@ -896,7 +897,7 @@
 			<div class="popupwrap3">
 				<table class="content" style="margin-top:10px;">  
 					<tr>
-						<th style="border-color: rgb(0, 72, 149); color: white; background-color: rgb(0, 72, 149); text-align: center; height:30px" colspan="2"><spring:message code='ezAddress.t312' /></th>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAddress.t312' /></th>
 					</tr>
 					<tr>
 						<th style="text-align:center;height:30px"><spring:message code='ezAddress.t314' /></th>

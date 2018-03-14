@@ -196,7 +196,7 @@
 		  <tr> 
 		    <th ><spring:message code='ezApprovalG.t999'/></th>
 		    <td> 
-		      <input type="text" name="txtOwner" id="txtOwner" class="text" disabled style="Width:100px;font-size:9pt">    </td>
+		      <input type="text" name="txtOwner" id="txtOwner" class="text" disabled style="width:auto; font-size:9pt"></td>
 		  </tr>
 		  <tr class="ptb2"> 
 		    <th ><spring:message code='ezApprovalG.t1000'/></th>

@@ -269,22 +269,22 @@
 			</ul>
 	    </div>
 	    
-		<table style="width:750px;height:385px;" border="0">
+		<table style="width:750px;height:215px;">
 	    	<tr>
 	            <td>
-					<div style="border:1px solid #dbdbda;width:435px;height:385px;border-top:0px">
+					<div style="border:1px solid #dbdbda;width:435px;height:215px;border-top:0px;overflow-y:auto;overflow-x:hidden">
 	                	<div id="lvDocList"></div>
 	<%--                <table class="mainlist" style="width:100%;">
 		                    <tr>
-		                        <td style="width:8%;background-color:#F3F3F3;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span><spring:message code = 'ezPersonal.t937' /></span></td>
-		                        <td style="width:60%;background-color:#F3F3F3;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span style="padding-left:10px;"><spring:message code = 'ezPersonal.t9' /></span></td>
-		                        <td style="width:32%;background-color:#F3F3F3;text-align:center;border-bottom:2px solid #dbdbda;"><span><spring:message code = 'ezPersonal.t1024' /></span></td>
+		                        <td style="width:8%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span><spring:message code = 'ezPersonal.t937' /></span></td>
+		                        <td style="width:60%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span style="padding-left:10px;"><spring:message code = 'ezPersonal.t9' /></span></td>
+		                        <td style="width:32%;background-color:#f8f8f8;text-align:center;border-bottom:2px solid #dbdbda;"><span><spring:message code = 'ezPersonal.t1024' /></span></td>
 		                    </tr>
 		                </table>--%>
 					</div>
 	            </td>
 	            <td style="vertical-align:top">
-	            	<div style="border:1px solid #dbdbda;width:477px;height:215px;overflow-y:auto;margin:0px 5px 5px 5px;">
+	            	<div style="border:1px solid #dbdbda;width:477px;height:215px;overflow-y:auto;margin:0px 5px 0px 5px;">
 	                	<div id="ContentDescription" style="margin-top:1px;margin:5px 5px 5px 5px;">
 	                	</div>
 	            	</div>

@@ -1328,13 +1328,13 @@
 	                    </div>
 	                </div>
 	                <div id="Organ">
-	                    <div style="overflow: auto; height: 550px; width: 395px; background-color: #FFFFFF; border: 1px solid #b6b6b6;border-top:0px" id="TreeView"></div>
+	                    <div style="overflow: auto; height: 550px; width: 395px; background-color: #FFFFFF; border: 1px solid #ddd;border-top:0px" id="TreeView"></div>
 	                </div>
 	                <!-- 즐겨찾기 -->
 	                <div id="ReceptTemp" style="display: none; padding-left: 5px">
 	                    <table>
 	                        <tr>
-	                            <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+	                            <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                <h2 class="h2_dot"><spring:message code='ezApprovalG.G0003'/></h2>
 	                                <div class="border_gray">
 	                                    <div id="RecSaveList" style="border: 0px; Width: 388px; Height: 237px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
