@@ -26,6 +26,12 @@
 		<script type="text/javascript">
 	
 			var offsetMin = "${offsetMin}";
+			
+		    var RetValue;
+		    var ReturnFunction;
+		    var CancelFunction;
+		    var isDivPopUp = false;
+			
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
@@ -90,10 +96,6 @@
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 		    
-		    var RetValue;
-		    var ReturnFunction;
-		    var CancelFunction;
-		    var isDivPopUp = false;
 		    window.onload = function () {
 		        var rgParams;
 		        try {
@@ -119,15 +121,20 @@
 		        else {
 		            document.getElementById("responseSendid").checked = false;
 		        }
-		
-		        if (rgParams["replyReadTime"] == "1" || rgParams["replyReadTime"] == "2") {
-		            responseReadType.value = rgParams["replyReadTime"];
-		            document.getElementById("responseReadid").checked = true;
-		        }
-		        else {
+		        
+		        var readTypeElement = document.getElementById("responseReadType");
+		        var replyReadTime = rgParams["replyReadTime"];
+		        
+		        if (replyReadTime === "0") {
 		            document.getElementById("responseReadid").checked = false;
+		            readTypeElement.selectedIndex = "0";
+		        } else {
+		        	document.getElementById("responseReadid").checked = true;
+		        	
+			        if ("${useOnlyInnerMail}" === "NO") {
+			        	readTypeElement.selectedIndex = rgParams["replyReadTime"] === "2" ? "1" : "0";
+			        }
 		        }
-		
 		
 		        var tmpStr = "";
 		        tmpStr = rgParams["delaySendDate"];
@@ -332,8 +339,8 @@
 				<td>
 					<input type="checkbox" name="responseRead" value="checkbox" onClick="" id = "responseReadid">
 					<span style="vertical-align:middle;"><spring:message code='ezEmail.t370' /> </span>
-					<c:choose>
-						<c:when test="${outMailReadCheck}">
+					<!-- <c:choose>
+						<c:when test="${isDefaultReceiptExternal == 'YES'}">
 							<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none"</c:if> id="responseReadType" onChange="">
 								<option value="1" selected><spring:message code='ezEmail.t371' /></option>
 								<option value="2"><spring:message code='ezEmail.t372' /></option>
@@ -344,7 +351,11 @@
 								<option value="1" selected><spring:message code='ezEmail.t371' /></option>
 							</select>
 						</c:otherwise>
-					</c:choose>
+					</c:choose> -->
+					<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none"</c:if>id="responseReadType" onChange="">
+						<option value="1"><spring:message code='ezEmail.t371' /></option>
+						<option value="2"><spring:message code='ezEmail.t372' /></option>
+					</select>
 				</td>
 			</tr>
 		</table>
