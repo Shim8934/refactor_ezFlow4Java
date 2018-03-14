@@ -61,7 +61,7 @@
 		</div>
 		
 		<div class="div_scroll" style="width:100%; height:500px; overflow: auto" id="divList">
-			<table  class="mainlist" style="width:100%;margin-top:30px;"> 
+			 <table  class="mainlist" style="width:100%;margin-top:30px;"> 
 			    <tr> 
 					<th width="30px"><spring:message code="ezLadder.t002"/></th> 					
 					<th width="20px"><spring:message code="ezLadder.t003"/></th> 
@@ -95,7 +95,7 @@
 						<td colspan="9" align="center"  bgcolor="#FFFFFF"> <spring:message code="ezLadder.t010" /></td>
 		       		</tr> 
 		        </c:if> 
-			</table> 
+			</table>  
 		</div>
 		<div id="tblPageRayer"></div>
 		 
