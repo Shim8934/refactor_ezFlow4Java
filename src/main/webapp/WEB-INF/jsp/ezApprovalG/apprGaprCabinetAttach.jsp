@@ -230,7 +230,7 @@
 	            <td>
 	                <div class="page">
 	                    <img src="/images/page_previous.gif" width="15" height="15" id="td_Previous" onclick="goToPage_lv('front')" style="vertical-align: middle;">
-	                    <span style="color:white;"><spring:message code='ezApprovalG.t103'/></span><span id="td_pTotalCount" style="color:white;"></span>&nbsp;&nbsp;<span style="color:white;"><spring:message code='ezApprovalG.t363'/></span>
+	                    <span style="color:black;"><spring:message code='ezApprovalG.t103'/></span><span id="td_pTotalCount" style="color:black;"></span>&nbsp;&nbsp;<span style="color:black;"><spring:message code='ezApprovalG.t363'/></span>
 	                    <input id="txt_PageInputNum" onkeydown="goToPage_lv('page', event)" onselectstart="event.cancelBubble=true;event.returnValue=true">
 	                    <img src="/images/page_next.gif" width="15" height="15" id="td_Next" onclick="goToPage_lv('next')" style="vertical-align: middle;">
 	                </div>
