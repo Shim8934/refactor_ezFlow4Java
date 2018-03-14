@@ -1306,8 +1306,8 @@
 		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
 		        }
 		        
-		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=600px,height=450px";
-		        feature = feature + GetOpenPosition(600, 450);
+		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=450px";
+		        feature = feature + GetOpenPosition(580, 450);
 		        window.open(url, "", feature);
 		    }
 		
