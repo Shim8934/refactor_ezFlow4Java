@@ -524,15 +524,15 @@
 		            </td>
 		        </tr>
 		    </table>
-		    <table id="formtable" style="margin-top: 5px;display:none">
+		    <table id="formtable" style="margin-top: 5px;width: 697px;display:none">
 		        <tr>
 		            <td rowspan="2" style="vertical-align: top;">
 		                <div id="TreeView" style="height: 384px; width: 280px; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff; padding: 4px,6px,6px,4px"></div>
-		            </td>
+		            </td> 
 		            <td style="padding-left: 5px; vertical-align: top;">
-		                <div class="border_gray" style="border-bottom: 0px;">
+		                <div class="border_gray" style="border-bottom: 0px; width:408px;"> 
 		                    <!-- 기존 class="listview" -->
-		                    <div id="divlvtForm" style="BORDER: 0; WIDTH: 406px; HEIGHT: 353px; margin: 0px 1px 1px 1px; overflow-y: auto; overflow-x: hidden;"></div>
+		                    <div id="divlvtForm" style="BORDER: 0; WIDTH: 407px; HEIGHT: 353px; margin:auto; overflow-y: auto; overflow-x: hidden;"></div>
 		                </div>
 		            </td>
 		        </tr>
@@ -541,7 +541,7 @@
 		                <table class="content">
 		                    <tr>
 		                        <th><spring:message code='ezApprovalG.t1543'/></th>
-		                        <td id="descrip" style="width: 340px">&nbsp;</td>
+		                        <td id="descrip" style="width: 339px;">&nbsp;</td>
 		                    </tr>
 		                </table>
 		            </td>
