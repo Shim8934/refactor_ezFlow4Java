@@ -291,29 +291,26 @@ public class EzEmailAdminLetterController {
 	}
 	
 	/**
-	 * 편지지 순서 조회 (재은)
-	 * @param String loginCookie, HttpServletRequest request
-	 * @return : int letterBoxNo
+	 * 편지지 순서 수정 (재은)
+	 * @param String loginCookie, String letterOrder, String letterNo
+	 * @return : String
 	 */
-	@RequestMapping(value="/admin/ezEmail/orderLetter.do")
+	@RequestMapping(value="/admin/ezEmail/updateLetterOrder.do")
 	@ResponseBody
-	public JSONArray orderLetter(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("orderLetter started.");
+	public String updateLetterOrder(@CookieValue("loginCookie") String loginCookie, String letterOrder, String letterNo) throws Exception {
+		logger.debug("updateLetterOrder started.");
+		logger.debug("letterOrder=" + letterOrder + ", letterNo=" + letterNo);
 		
-		JSONArray json = null;
+		String returnStr = "OK";
 		
 		try {
-			json = EzEmailAdminLetterService.selectLetterOrder();
+			EzEmailAdminLetterService.updateLetterOrder(letterOrder, letterNo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			returnStr = "ERROR";
 		}
 		
-		logger.debug("orderLetter ended.");
-		if (json != null) {
-			return json;
-		}
-		
-		return null;
+		logger.debug("updateLetterOrder ended.");
+		return returnStr;
 	}
 	
 	/**

@@ -42,9 +42,10 @@ public interface EzEmailAdminLetterService {
 	public void updateLetterBox(String letterboxNo, String parentLetterboxNo, String displayname, String displayname2, String companyId, String tenantId) throws Exception;
 	
 	/**
-	 * 편지지 순서 조회 (재은)
+	 * 편지지 순서 수정 (재은)
+	 * @param letterOrder, letterNo
 	 */
-	public JSONArray selectLetterOrder() throws Exception;
+	public void updateLetterOrder(String letterOrder, String letterNo) throws Exception;
 	
 	/**
 	 * 편지지 검색 (재은)

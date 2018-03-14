@@ -45,7 +45,7 @@
 						<img src="/images/i_bar.gif" alt="line">
 						<button class="lmBtnPrev" onclick="orderPrev()"><img src="/images/ImgIcon/prev.gif" alt="prev"></button>
 						<button class="lmBtnNext" onclick="orderNext()"><img src="/images/ImgIcon/next.gif" alt="next"></button>
-						<button>순서 저장</button>
+						<button onclick="orderChange()">순서 저장</button>
 					</div>
 				</div>
 			</div>
@@ -75,14 +75,48 @@
 			
 			// 순서 번경(위로 올리기)
 			function orderPrev() {
-				var selectNodeId = $('body').find('.lmLetterSelect')[0].attributes[0].value;
-				var liArrId = $('div.lmLetter').find('li');
+				var select= $('body').find('.lmLetterSelect');
+				
+				if (select.length == 0) {
+					alert("편지지를 선택하세요!");
+					return;
+				}
+				
+				select.prev().before(select);
 				
 			}
 			
 			// 순서 변경(아래로 내리기)
 			function orderNext() {
+				var select = $('body').find('.lmLetterSelect');
 				
+				if (select.length == 0) {
+					alert("편지지를 선택하세요!");
+					return;
+				}
+					
+				select.next().after(select);
+			}
+			
+			// 순서 저장 버튼 눌렀을때
+			function orderChange() {
+				var liArr = $('div.lmLetter').find('li');
+				
+				for (var i = 0; i < liArr.length; i++) {
+					var letterNo = liArr[i].attributes[0].value;
+					
+					$.ajax({
+						type:"POST",
+						url:"/admin/ezEmail/updateLetterOrder.do?letterOrder=" + (i + 1) + "&" + "letterNo=" + letterNo,
+						dataType:"json",
+						complete:function(data){
+							console.log(data);
+						}
+					});
+					
+				}
+				
+				alert("순서를 변경하였습니다");
 			}
 			
 			// 편지지 추가, 수정 btn 클릭 시  ---- btn -> this, type -> 추가=add

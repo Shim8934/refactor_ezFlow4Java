@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 
 
+
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 
@@ -226,35 +227,6 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		logger.debug("updateLetterBox ended.");
 		
 	}
-	
-	/**
-	 * 편지지 순서 조회 (재은)
-	 */
-	@Override
-	public JSONArray selectLetterOrder() throws Exception {
-		logger.debug("selectLetterOrder started.");
-		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/getLetterOrder", "");
-		logger.debug("strJson=" + strJson);
-		
-		JSONArray json = new JSONArray();
-		
-		if (!strJson.equals("")){
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-			
-			json = (JSONArray) object.get("result");
-			
-			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1 || json.size() <= 0) {
-				throw new Exception("JGwServer ERROR");
-			}
-		}
-		
-		logger.debug("selectLetterOrder ended.");
-		
-		return json;
-		
-	}
 
 	/**
 	 * 편지지 검색 (재은)
@@ -292,6 +264,34 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		
 		return json;
 		
+	}
+	
+	/**
+	 * 편지지 순서 수정 (재은)
+	 * @param letterOrder, letterNo
+	 */
+	public void updateLetterOrder(String letterOrder, String letterNo) throws Exception {
+		logger.debug("updateLetterBox started.");
+		logger.debug("letterOrder=" + letterOrder + ",letterNo=" + letterNo);
+		
+		String letterOrderStr = "letterOrder=" + URLEncoder.encode(letterOrder, "UTF-8");
+		String letterNoStr = "letterNo=" + URLEncoder.encode(letterNo, "UTF-8");
+		String inputParams = letterOrderStr + "&" + letterNoStr;
+		logger.debug(inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/setLetterOrder", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		if (!strJson.equals("")){
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+			
+			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1) {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("updateLetterBox ended.");
 	}
 	
 	

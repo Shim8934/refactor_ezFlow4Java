@@ -110,7 +110,8 @@
 					return;
 				}
 				
-				letterUpload(letterJson);
+				//letterUpload(letterJson);
+				letterUpload(letterJson,popUpType);
 			}
 			
 			// 저장 기능
@@ -123,7 +124,8 @@
 									letterContent:letterJson.letterContent
 									};
 				
-				if (popUpType == "modify") {
+				//if (popUpType == "modify") {
+				if (type == "modify") {
 					uploadData.letterNo = letterNo;
 				}
 				
