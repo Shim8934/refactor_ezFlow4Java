@@ -2684,7 +2684,7 @@
 							</c:if>
 							<ul class='voteIcon_ul'>
 								<li class="voteIconImg_li icon nosecret">
-									<img src="/images/poll/reuseVote.png" class="voteIconImg" onclick="voteReuse()"  style="width:45px" title="투표 재사용">재사용</img>
+									<img src="/images/poll/reuseVote.png" class="voteIconImg" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>"/>
 								</li>
 							</ul>
 					  </div>
