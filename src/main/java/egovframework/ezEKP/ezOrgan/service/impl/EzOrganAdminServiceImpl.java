@@ -1243,31 +1243,39 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		 logger.debug("response=" + response);
 		 
 		if (response != null) {
-			JSONParser jsonParser = new JSONParser();
-			JSONObject resopnseObj = (JSONObject) jsonParser.parse(response);
-			String targetAddress = (String) resopnseObj.get("targetAddress");
 			int isUser = -1;
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+			String targetAddress = (String) responseObj.get("targetAddress");
+			String resultCode = (String) responseObj.get("resultCode");
 			
-			if (!targetAddress.equals("")) {
-				arrAddress = targetAddress.split(";");
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long) responseObj.get("reasonCode"))
+						.intValue();
 				
-				for (int i = 0 ; i < arrAddress.length ; i++) {
-					int idx = arrAddress[i].indexOf("@");
-					memberList.add(arrAddress[i].substring(0, idx));
+				if (reasonCode == 0) {
+					if (!targetAddress.equals("")) {
+						arrAddress = targetAddress.split(";");
+						
+						for (int i = 0 ; i < arrAddress.length ; i++) {
+							int idx = arrAddress[i].indexOf("@");
+							memberList.add(arrAddress[i].substring(0, idx));
+						}
+						
+						for (int i = 0; i < memberList.size() ; i++) {
+							if (memberList.get(i).equals(memberId)) {
+								isUser = 1;
+							} else {
+								isUser = -1;
+							}
+						}
+						
+						if (isUser == -1 && !memberId.equals("")) {
+							memberList.add(memberId);
+						}
+					} 
 				}
-
-				for (int i = 0; i < memberList.size() ; i++) {
-					if (memberList.get(i).equals(memberId)) {
-						isUser = 1;
-					} else {
-						isUser = -1;
-					}
-				}
-				
-				if (isUser == -1 && !memberId.equals("")) {
-					memberList.add(memberId);
-				}
-			} 
+			}
 		} 
 		
 		logger.debug("meberId=" + memberList.toString());

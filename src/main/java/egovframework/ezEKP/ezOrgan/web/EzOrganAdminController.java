@@ -1266,7 +1266,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		// 기존 사용자를 수정하는 경우엔 parentCn의 값이 null 혹은 empty string 이다.
         } else if (vo.getParentCn() == null || vo.getParentCn().equals("")) {
         	try {
-        		String useRankMail = ezCommonService.getTenantConfig("UseRankMail", tenantID);
+        		String useRankMail = ezCommonService.getTenantConfig("useRankMail", tenantID);
         		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
     			String cn = vo.getCn();
 
@@ -1304,12 +1304,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, userName, companyId, tenantID, cn);
 						 } else {// 직책으로 공용배포그룹이 없을때 or 직책 을 변경할때
 							 result = ezOrganAdminService.deleteTargetAddressUser(tenantID, beforePosition, cn, companyId);
-							 result = ezOrganAdminService.mailAddDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, cn);
+							 
+							 if (result.equals("OK")) {
+								 result = ezOrganAdminService.mailAddDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, cn);
+							 }
 						 }
 					}
         		}
         		
         		ezOrganAdminService.updateDBData_user(vo);
+        		result = "OK";
         	} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
         		ezOrganAdminService.deleteTargetAddressUser(tenantID, jobTile2, vo.getCn(), companyId);//직위 공용배포 그룹에서 user 삭제
         		ezOrganAdminService.deleteTargetAddressUser(tenantID, jobPostion2, vo.getCn(), companyId);//직책 공용배포 그룹에서 user 삭제
@@ -1322,7 +1326,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         		e.printStackTrace();
         		result = "EMAIL_ERROR";
         	}
-	        result = "OK";
 		// 새로운 사용자를 등록한다.
 		} else {		    
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -1387,7 +1390,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								}
 							}
 							
-							String useRankMail = ezCommonService.getTenantConfig("UseRankMail", tenantID);
+							String useRankMail = ezCommonService.getTenantConfig("useRankMail", tenantID);
 							
 							if (useRankMail.equals("YES")) {//직위,직책별 메일 발송 여부
 								
@@ -1401,12 +1404,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 									jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 									logger.debug("jobTitle UUID=" + jobTile2);
 										
-										 if (!userName.equals("")) {//직위 로 공용 배포그룹 존재할때
-											 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, userName, companyId, tenantID, cn);
-										 } else {
-											 result = ezOrganAdminService.mailAddDistributionList(domain, jobTile, jobTile2, companyId, tenantID, cn);
-										 }
-										 
+									 if (!userName.equals("")) {//직위 로 공용 배포그룹 존재할때
+										 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, userName, companyId, tenantID, cn);
+									 } else {
+										 result = ezOrganAdminService.mailAddDistributionList(domain, jobTile, jobTile2, companyId, tenantID, cn);
+									 }
+									 
 									}
 									
 								if (!jobPostion.equals("")) {
