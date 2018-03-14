@@ -403,4 +403,15 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		return ezWebFolderDAO.getAllDepartments(map);
 	}
 
+	@Override
+	public List<FolderSimpleVO> getFolderTreeForUser(String userId, String deptId, String companyId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userId);
+		map.put("deptId",    deptId);
+		map.put("companyId", companyId);
+		map.put("tenantId",  tenantId);
+		
+		return ezWebFolderDAO.getFolderTreeForUser(map);
+	}
+
 }

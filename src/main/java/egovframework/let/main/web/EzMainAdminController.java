@@ -4,13 +4,13 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -25,6 +25,8 @@ public class EzMainAdminController {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzMainAdminController.class);
 	
 	@RequestMapping(value="/admin/main.do")
 	public String adminMain(HttpServletRequest request) throws Exception{		
@@ -50,6 +52,12 @@ public class EzMainAdminController {
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
 			model.addAttribute("firstScreen_Mail", "NO");
 		}
+		
+		//baonk added
+		if (userInfo.getRollInfo().indexOf("wf=1") != -1) {
+			model.addAttribute("isWFAdmin", "1");
+		}
+		//end
 		
 		model.addAttribute("AdminActiveX", AdminActiveX);
 		

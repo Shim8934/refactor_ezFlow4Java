@@ -154,6 +154,30 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	@Override
+	public void insertFolder2(FolderVO folder) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderId",    folder.getFolderId());
+		map.put("folerName1",  folder.getFolderName1());
+		map.put("folerName2",  folder.getFolderName2());
+		map.put("folderType",  folder.getFolderType());
+		map.put("folderPath",  folder.getFolderPath());
+		map.put("folderStep",  folder.getFolderStep());
+		map.put("folderLevel", folder.getFolderLevel());
+		map.put("folderUpper", folder.getFolderUpper());
+		map.put("useStatus",   folder.getUseStatus());
+		map.put("ownerId",     folder.getOwnerId());
+		map.put("createId",    folder.getCreateId());
+		map.put("createDate",  folder.getCreateDate());
+		map.put("createName1", folder.getCreateName1());
+		map.put("createName2", folder.getCreateName2());
+		map.put("updateId",    folder.getUpdateId());
+		map.put("updateDate",  folder.getUpdateDate());
+		map.put("companyId",   folder.getCompanyId());
+		map.put("tenantId",    folder.getTenantId());
+		ezWebFolderAdminDAO.insertFolder2(map);
+	}
+
+	@Override
 	public void insertFolderUser(String seq, String userId, String userType, String folderId, String createId, String createDate, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("seqId",      seq);

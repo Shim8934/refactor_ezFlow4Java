@@ -78,14 +78,14 @@ function getData(deptId, companyId) {
 			renderData(result, dept);
 		},
 		error : function(error) {
-			alert("<spring:message code='ezWebFolder.t134'/>" + error);
+			alert(strErrMsg + error);
 		}
 	});
 }
 
 function renderData(result, currentDept) {
 	if (!result) {
-		alert("<spring:message code='ezWebFolder.t134'/>");
+		alert(strErrMsg);
 		return;
 	} 
 	
@@ -205,7 +205,7 @@ function getDetailTree(obj) {
 				arrSubFolder.push(uniqueId);
 			},
 			error: function (xhr, status, e){
-				alert("<spring:message code='ezWebFolder.t134'/>");
+				alert(strErrMsg);
 			}
 		});	
 	}
@@ -213,7 +213,7 @@ function getDetailTree(obj) {
 
 function displaySubTree(result, divElmt) {
 	if (result["subDepts"] == null) {
-		alert("<spring:message code='ezWebFolder.t134'/>");
+		alert(strErrMsg);
 		return;
 	}
 	
@@ -255,7 +255,7 @@ function getSelected(obj) {
 			processUsersList(result);
 		},
 		error : function(error) {
-			alert("<spring:message code='ezWebFolder.t134'/>" + error);
+			alert(strErrMsg + error);
 		}
 	});
 }
@@ -273,7 +273,7 @@ function processUsersList(result) {
 		tdElmt.setAttribute("colspan", "3");
 		tdElmt.setAttribute("align", "center");
 		tdElmt.setAttribute("bgcolor", "#ffffff");
-		tdElmt.innerHTML = "<spring:message code='ezWebFolder.t144'/>";
+		tdElmt.innerHTML = strDataNotFound;
 		tdElmt.setAttribute("id", "nodataRow");
 		
 		trElmt.appendChild(tdElmt);
@@ -329,7 +329,7 @@ function addUser(obj) {
 	}
 	
 	if (check == 1) {
-		alert("<spring:message code='ezWebFolder.t169'/>");
+		alert(strAlreadyAdd);
 		return;
 	}
 	
@@ -360,7 +360,7 @@ function addDept(obj) {
 	}
 	
 	if (check == 1) {
-		alert("<spring:message code='ezWebFolder.t169'/>");
+		alert(strAlreadyAdd);
 		return;
 	}
 	
@@ -475,7 +475,7 @@ function cnsearch_press(e) {
 var checkname2_cross_dialogArguments = new Array();
 function cnsearch_click() {
 	if (cnkeyword.value == "") {
-		alert("<spring:message code='ezWebFolder.t171' />");
+		alert(strAlertMsg);
 		cnkeyword.focus();
 		return;
 	}
@@ -494,13 +494,13 @@ function cnsearch_click() {
 			adCount = xmlDOM.getElementsByTagName("ROW").length;
 		},
 		error : function(error){
-			alert("<spring:message code='ezBoard.t24'/>" + error);
+			alert(strSearchError + error);
 			xmlDOM = null;
 		}
 	});
 	
 	if (adCount == 0) {
-		alert("<spring:message code='ezWebFolder.t172' />");
+		alert(strSearchNotFound);
 		return;
 	} else if (adCount == 1) {
 		var deptId = getNodeText(GetElementsByTagName(xmlDOM, "DATA3")[0]);

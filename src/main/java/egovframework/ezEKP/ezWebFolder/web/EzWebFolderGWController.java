@@ -1131,6 +1131,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	@RequestMapping(value="/rest/ezwebfolder/foldersTree", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFolderTree(HttpServletRequest request) {
 		String offset     = request.getParameter("offset")     != null ? request.getParameter("offset")                     : "";
+		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")                     : "";
 		String rootFolder = request.getParameter("rootFolder") != null ? request.getParameter("rootFolder")                 : "";
 		String fileId     = request.getParameter("fileId")     != null ? request.getParameter("fileId")                     : "";
 		String folderId   = request.getParameter("folderId")   != null ? request.getParameter("folderId")                   : "";
@@ -1149,16 +1150,16 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		try {
 			int tenantId = loginService.getTenantId(serverName);
 			
-			
 			if (fileId.equals("")) {
 				if (rootFolder.equals("")) {
-					//회사폴더
+					//Department tree
 					FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 					List<FolderSimpleVO> listFolders = ezWebFolderService.getAllSimpleDeptFolder(folder.getCompanyId(), tenantId);
 					result.put("currentFolder", "");
 					result.put("data", listFolders);
 				}
 				else {
+					//Company tree
 					FolderSimpleVO company = ezWebFolderService.getSimpleFolder(rootFolder, tenantId);
 					ezWebFolderService.getAllSubDepts(company, tenantId, 2);
 					result.put("currentFolder", "");
@@ -1166,15 +1167,13 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 				}
 			}
 			else {
-				FolderSimpleVO company  = ezWebFolderService.getSimpleFolder(rootFolder, tenantId);
-				FileVO file             = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
-				FolderVO selectedFolder = ezWebFolderService.getFolderByFolderId(file.getFolderId(), offset, tenantId);
-				String folderPath       = selectedFolder.getFolderPath();
-				folderPath              = folderPath.substring(1, folderPath.length() - 1);
-				String[] path           = folderPath.split("\\|");
-				ezWebFolderService.getAllSubDepts(company, tenantId, path, 1);
+				// Company + Dept + User tree
+				LoginVO userInfo                 = commonUtil.getUserForGw(userId, serverName, "", offset);
+				FileVO file                      = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
+				List<FolderSimpleVO> listFolders = ezWebFolderService.getFolderTreeForUser(userId, userInfo.getDeptID(), userInfo.getCompanyID(), tenantId);
+				
 				result.put("currentFolder", file.getFolderId());
-				result.put("data", company);
+				result.put("data", listFolders);
 			}
 			
 			result.put("status", "ok");
@@ -1949,7 +1948,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			folder.setCreateDate(timeUTC);
 			folder.setUpdateDate(timeUTC);
 			
-			ezWebFolderAdminService.insertFolder(folder);
+			ezWebFolderAdminService.insertFolder2(folder);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2014,7 +2013,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 				folder.setCreateDate(timeUTC);
 				folder.setUpdateDate(timeUTC);
 				
-				ezWebFolderAdminService.insertFolder(folder);
+				ezWebFolderAdminService.insertFolder2(folder);
 			}
 			
 			result.put("status", "ok");

@@ -9,8 +9,19 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script>
 			function window_onload(){
+				//baonk changed
+				<c:if test="${isWFAdmin != '1'}">
+					process();
+				</c:if>
+				<c:if test="${isWFAdmin == '1'}">
+				window.open("/admin/ezWebFolder/webFolderConfig.do", "bottom");
+				</c:if>
+				//end
+			}
+			
+			function process() {
 			    <c:if test="${packageType != 'standard' || firstScreen_Mail == 'YES'}">
-			    	window.open("/admin/ezOrgan/organMain.do", "bottom");
+		    	window.open("/admin/ezOrgan/organMain.do", "bottom");
 			    </c:if>
 			    <c:if test="${packageType == 'standard' && firstScreen_Mail == 'NO'}">
 				//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
@@ -106,55 +117,62 @@
 		<form method="post">
 			<h1 title="logo"><spring:message code="ezBoard.t84" /></h1>
 			<div id="adminmenu">
-		    	<ul>		    		
-                    <c:if test="${firstScreen_Mail == 'YES'}">
-                    	<li><span id="menu10" onClick="menu_change(70, event)"><spring:message code="main.t22" /></span></li>
-                    	<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li> 
-                    	<li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
-                    </c:if>
-                    
-                    <c:if test="${firstScreen_Mail != 'YES'}">
-		      			<c:if test="${use_portal == 'YES' && packageType == 'standard'}">
-		      				<li><span id="menu10" onClick="menu_change(0, event)"><spring:message code="main.t22" /></span></li>
-		      			</c:if>
-		      					      
-                    	<c:if test="${packageType == 'standard'}">
-		      				<li><span id="menu01" onClick="menu_change(70, event)"><spring:message code="main.t7" /></span></li>
-                    	</c:if>
-                    	
-		      			<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li>
-		      			
-		      			<c:if test="${packageType != 'mail'}">      
-		      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="main.t14" /></span></li>
-		      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
-		      			</c:if>
-		      			
-		      			<%-- 전자결재 --%>
-		      			<%-- <li><span id="menu03" onClick="menu_change(450, event)"><spring:message code="main.t25" /></span></li> --%>
-                    	<c:if test="${use_approvalG == 'YES' && packageType == 'standard'}">
-		      				<%-- 전자결재 공공 --%>
-		      				<li><span id="menu04" onClick="menu_change(545, event)"><spring:message code="main.t25" /></span></li>
-		      			</c:if>
-		      				
-                    	<c:if test="${packageType == 'standard'}">
-		      				<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>
-                    	</c:if>
-                    	
-		      			<%-- 시스템 --%>          
-		      			<li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li>
-		      			<%-- 통계 --%>
-		      			<li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
-                    	<c:if test="${packageType == 'standard'}">
-		      				<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>
-                    	</c:if>		      		
-		      			<c:if test="${use_ezKMS == 'YES'}">
-		      				<li><span id="menu14" onClick="menu_change(920, event);"><spring:message code="main.t19" /></span></li>
-		      			</c:if>
-		      			<c:if test="${use_ezDMS == 'YES'}">
-		      				<li><span id="menu15" onClick="menu_change(920, event);"><spring:message code="main.t52" /></span></li>
-		      			</c:if>
-		      			<li><span id="menu21" onClick="menu_change(690, event)"><spring:message code="main.t29" /></span></li>
-                    </c:if>
+		    	<ul>
+		    		<c:choose>
+			    		<c:when test="${isWFAdmin != '1'}">
+		                    <c:if test="${firstScreen_Mail == 'YES'}">
+		                    	<li><span id="menu10" onClick="menu_change(70, event)"><spring:message code="main.t22" /></span></li>
+		                    	<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li> 
+		                    	<li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
+		                    </c:if>
+		                    
+		                    <c:if test="${firstScreen_Mail != 'YES'}">
+				      			<c:if test="${use_portal == 'YES' && packageType == 'standard'}">
+				      				<li><span id="menu10" onClick="menu_change(0, event)"><spring:message code="main.t22" /></span></li>
+				      			</c:if>
+				      					      
+		                    	<c:if test="${packageType == 'standard'}">
+				      				<li><span id="menu01" onClick="menu_change(70, event)"><spring:message code="main.t7" /></span></li>
+		                    	</c:if>
+		                    	
+				      			<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li>
+				      			
+				      			<c:if test="${packageType != 'mail'}">      
+				      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="main.t14" /></span></li>
+				      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
+				      			</c:if>
+				      			
+				      			<%-- 전자결재 --%>
+				      			<%-- <li><span id="menu03" onClick="menu_change(450, event)"><spring:message code="main.t25" /></span></li> --%>
+		                    	<c:if test="${use_approvalG == 'YES' && packageType == 'standard'}">
+				      				<%-- 전자결재 공공 --%>
+				      				<li><span id="menu04" onClick="menu_change(545, event)"><spring:message code="main.t25" /></span></li>
+				      			</c:if>
+				      				
+		                    	<c:if test="${packageType == 'standard'}">
+				      				<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>
+		                    	</c:if>
+		                    	
+				      			<%-- 시스템 --%>          
+				      			<li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li>
+				      			<%-- 통계 --%>
+				      			<li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
+		                    	<c:if test="${packageType == 'standard'}">
+				      				<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>
+		                    	</c:if>		      		
+				      			<c:if test="${use_ezKMS == 'YES'}">
+				      				<li><span id="menu14" onClick="menu_change(920, event);"><spring:message code="main.t19" /></span></li>
+				      			</c:if>
+				      			<c:if test="${use_ezDMS == 'YES'}">
+				      				<li><span id="menu15" onClick="menu_change(920, event);"><spring:message code="main.t52" /></span></li>
+				      			</c:if>
+				      			<li><span id="menu21" onClick="menu_change(690, event)"><spring:message code="main.t29" /></span></li>
+		                    </c:if>
+	                    </c:when>
+	                    <c:otherwise>
+	                    	<li><span id="menu21" onClick="menu_change(690, event)"><spring:message code="main.t29" /></span></li>
+	                    </c:otherwise>
+                    </c:choose>
                     <li class='btn_logout' style='float:right;'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'><spring:message code='ezPortal.t990043' /></span></li>
 		    	</ul>
 		  	</div>		  	

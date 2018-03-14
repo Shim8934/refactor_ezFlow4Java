@@ -916,4 +916,34 @@
 				tenant_id           = #tenantId#
 		]]>
 	</select>
+	<select id="EzWebFolderDAO.getFolderTreeForUser" resultMap="folderSimpleVO">
+		<![CDATA[
+			SELECT
+				f.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				f.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				f.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = f.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				f.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+			FROM
+				TBL_WEBFOLDER_FOLDER f LEFT JOIN 
+									(SELECT
+										d.* 
+									FROM
+										tbl_addjobmaster a LEFT JOIN tbl_deptmaster d ON d.CN = a.DEPTID AND d.TENANT_ID = a.TENANT_ID
+									WHERE
+										(a.CN = #userId# OR d.CN = #deptId#)
+									AND
+										a.TENANT_ID = 0) AS s ON f.OWNER_ID = s.CN AND f.TENANT_ID = s.TENANT_ID
+			WHERE
+				f.TENANT_ID = 0
+			AND
+				(f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'D' AND f.OWNER_ID = s.CN) OR (f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'C' AND f.OWNER_ID = #companyId#)
+				 OR (f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'U' AND f.OWNER_ID = #userId#)
+			AND
+				f.USE_STATUS = 'Y'
+			ORDER BY
+				f.FOLDER_LEVEL ASC,
+				f.FOLDER_STEP  ASC
+		]]>
+	</select>
 </sqlMap>

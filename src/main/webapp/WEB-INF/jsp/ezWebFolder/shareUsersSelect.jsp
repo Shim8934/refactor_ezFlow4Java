@@ -15,11 +15,17 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js" ></script>
 		<script type="text/javascript" src="/js/ezWebFolder/organJson.js"    ></script>
 		<script type="text/javascript">
-			var pCompanyID       = "<c:out value='${pCompanyID}'/>";
-			var primary          = "<c:out value='${primary}'/>";
-			var arrSubFolder     = [];
-			var selectedDept     = "";
-			var selectedUser     = "";
+			var pCompanyID        = "<c:out value='${pCompanyID}'/>";
+			var primary           = "<c:out value='${primary}'/>";
+			var arrSubFolder      = [];
+			var selectedDept      = "";
+			var selectedUser      = "";
+			var strErrMsg         = "<spring:message code='ezWebFolder.t134'/>";
+			var strDataNotFound   = "<spring:message code='ezWebFolder.t144'/>";
+			var strAlreadyAdd     = "<spring:message code='ezWebFolder.t169'/>";
+			var strAlertMsg       = "<spring:message code='ezWebFolder.t171'/>";
+			var strSearchError    = "<spring:message code='ezWebFolder.t232'/>";
+			var strSearchNotFound = "<spring:message code='ezWebFolder.t172'/>";
 			
 			window.onload = function () {
 				preProcess();

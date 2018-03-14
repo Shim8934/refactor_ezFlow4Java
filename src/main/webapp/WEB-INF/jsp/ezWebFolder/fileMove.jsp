@@ -29,8 +29,7 @@
 				type: "POST",
 				url: "/ezWebFolder/getFolderTree.do",
 				data: {
-					"rootFolder" : rootFld,
-					"fileId"     : fileId
+					"fileId" : fileId
 				},
 				dataType: "JSON",
 				async: true,
@@ -46,23 +45,21 @@
 		}
 		
 		function renderData(result) {
-			if (!result) {
+			var divTree   = document.getElementById("folderTree");
+			
+			while (divTree.hasChildNodes()) {
+				divTree.removeChild(divTree.lastChild);
+			}
+			
+			if (!result || result.length == 0) {
 				alert("<spring:message code='ezWebFolder.t134'/>");
 				return;
 			}
 			
-			var divTree   = document.getElementById("folderTree");
-			var divComp   = document.createElement("div");
-			compFolderId  = result["folderId"];
-			
-			while (divTree.hasChildNodes()) {
-				divTree.removeChild(divTree.lastChild);
-			}	
-			
-			displaySubFolder(divTree, divComp, result);
-			
-			var spanCompany = document.getElementById(currentFolder).nextSibling.nextSibling;
-			getSelected(spanCompany);
+			for (var i = 0; i < result.length; i++) {
+				var divDept  = document.createElement("div");
+				displaySubFolder(divTree, divDept, result[i]);
+			}
 		}
 		
 		function displaySubFolder(divTree, divElmt, list) {

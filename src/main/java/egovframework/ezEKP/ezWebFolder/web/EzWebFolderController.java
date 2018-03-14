@@ -378,6 +378,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("userId", user.getId())
 										.queryParam("rootFolder", rootFolder)
 										.queryParam("fileId", fileId)
 										.queryParam("folderId", folderId)
@@ -393,7 +394,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		if (status.equals("ok")) {
 			String currFolder = (String)resultBody.get("currentFolder");
 			
-			if (!fileId.equals("") || !rootFolder.equals("")) {
+			if (!rootFolder.equals("")) {
 				JSONObject folderTree = (JSONObject) resultBody.get("data");
 				model.addAttribute("folderTree", folderTree);
 			}
