@@ -29,6 +29,7 @@
 					makeLadder();
 				});
 				$("#ladderPreList").on("click", function() {
+					alert("팝업창만들기...");
 					ladder_prelistPopUp();
 				});
 				$("#addAttendant").on("click", function() {
@@ -165,7 +166,7 @@
 					} else{ // json value
 						console.log('json');
 						len = attendList["id"].length;
-						itemindex = g_item.length - 1;
+						itemlen = g_item.length;
 
 						if(typeof g_attendant === "undefined" || ladder_select_attendant_dialogArguments[2]) {
 							g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
@@ -175,26 +176,27 @@
 						}
 						
 						for(var i = 0; i < len; i++) {
-							g_attendant["name"][i] = attendList["name"][i];
-							g_attendant["name1"][i] = attendList["name"][i];
-							g_attendant["name2"][i] = attendList["name"][i];
+							totallen = g_attendant["id"].length;
+							g_attendant["name"][totallen] = attendList["name"][i];
+							g_attendant["name1"][totallen] = attendList["name1"][i];
+							g_attendant["name2"][totallen] = attendList["name2"][i];
 							
-							if(attendList["id"][i] === "anonyAttendant" || attendList["id"][i].substring(0, 15) === "anonyAttendant_") {
-								g_attendant["id"][i] = "anonyAttendant_" + i;
-								g_attendant["deptname"][i] = "";
-								g_attendant["deptname2"][i] = "";
-								$("#attendantList").append("<li class='attendant'><input type='text' value='" + g_attendant["name"][i] + "' /><span class='remove'>X</span></li>");
+							if(attendList["id"][i].substring(0, 14) === "anonyAttendant") {
+								g_attendant["id"][totallen] = "anonyAttendant_" + i;
+								g_attendant["deptname"][totallen] = "";
+								g_attendant["deptname2"][totallen] = "";
+								$("#attendantList").append("<li class='attendant'><input type='text' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
 							} else {
-								g_attendant["id"][i] = attendList["id"][i];
-								g_attendant["deptname"][i] = attendList["deptname"][i];
-								g_attendant["deptname2"][i] = attendList["deptname2"][i];
-								$("#attendantList").append("<li class='attendant'><input type='text' disabled='disabled' value='" + g_attendant["name"][i] + "' /><span class='remove'>X</span></li>");
+								g_attendant["id"][totallen] = attendList["id"][i];
+								g_attendant["deptname"][totallen] = attendList["deptname"][i];
+								g_attendant["deptname2"][totallen] = attendList["deptname2"][i];
+								$("#attendantList").append("<li class='attendant'><input type='text' disabled='disabled' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
 							}
-							if(i >= itemindex) {
-								g_item[i] = "";
+							if(totallen >= itemlen) {
+								g_item[totallen] = "";
 							}
 							
-			            	$("#itemList").append("<li class='item'><input type='text' value='" + g_item[i] + "' /></li>");
+			            	$("#itemList").append("<li class='item'><input type='text' value='" + g_item[totallen] + "' /></li>");
 						}
 					}
 				}
@@ -280,15 +282,25 @@
 			    		}    		
 			    	});
 			        
+		            if (g_attendant == null) {
+		            	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
+		            }
+		            
+		            var length = g_attendant["id"].length;
 			        if (adCount == 0) { // 검색결과 없을때 
-			            alert("'" + names[i] + "' <spring:message code='ezLadder.t110' />");
-			            continue;
+			        	var anonyAttendant = { "id": [], "name": [], "deptname": [], "name1": [], "name2": [], "deptname2": [] };
+			        	anonyAttendant["id"][0] = "anonyAttendant_" + length;
+			        	anonyAttendant["name"][0] = names[i];
+			        	anonyAttendant["name1"][0] = names[i];
+			        	anonyAttendant["name2"][0] = names[i];
+			        	anonyAttendant["deptname"][0] = "";
+			        	anonyAttendant["deptname2"][0] = "";
+			        	
+			        	console.log(anonyAttendant);
+			        	
+			        	manage_attendant_Complete(anonyAttendant, "nouser", "json")
+			        
 			        } else if (adCount == 1) { // 검색결과 한명일때 
-			            if (g_attendant == null) {
-			            	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
-			            }
-			            
-			            var length = g_attendant["name"].length;
 			            for (var j = 0; j < length; j++) {
 			            	if(g_attendant["id"][j] !== "anonyAttendant" && g_attendant["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
 			        			overlapAttendantXML.push(xmlDOM);
