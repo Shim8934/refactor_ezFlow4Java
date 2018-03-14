@@ -184,13 +184,14 @@
 		    }
 		
 		    function responseRead_onClick() {
-	            if (document.getElementById("responseReadid").checked == true) {
+		    	document.getElementById("responseReadType").disabled = !document.getElementById("responseReadid").checked;
+	            /* if (document.getElementById("responseReadid").checked == true) {
 	                RetValue["replyReadTime"] = document.getElementById("responseReadType").value
 	                document.getElementById("responseReadid").disabled = false;
 	            }
 	            else {
 	                RetValue["replyReadTime"] = "0";
-	            }
+	            } */
 		    }
 				    
 		    function msgCCDisplay_onClick() {
@@ -337,7 +338,7 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="checkbox" name="responseRead" value="checkbox" onClick="" id = "responseReadid">
+					<input type="checkbox" name="responseRead" value="checkbox" onChange="responseRead_onClick()" id = "responseReadid">
 					<span style="vertical-align:middle;"><spring:message code='ezEmail.t370' /> </span>
 					<!-- <c:choose>
 						<c:when test="${isDefaultReceiptExternal == 'YES'}">
