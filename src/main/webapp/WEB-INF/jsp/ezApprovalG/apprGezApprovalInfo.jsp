@@ -1829,7 +1829,7 @@
 	                </td>
 	                <!-- 2015-06-23 표준모듈:추가 - KSK -->
 	                <td class ="approvalG" style="width: 30px; text-align: center;" >
-	                    <div style="display: inline-block;" id="AddRemoveBTN">
+	                    <div style="display: inline-block; padding-left:2.5px;" id="AddRemoveBTN">
 	                        <img src="/images/arr_rr.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgInsertAll" onclick="return InsertRecAll();">
 	                        <br>
 	                        <img src="/images/arr_r.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgInsert" onclick="return InsertRec();">
