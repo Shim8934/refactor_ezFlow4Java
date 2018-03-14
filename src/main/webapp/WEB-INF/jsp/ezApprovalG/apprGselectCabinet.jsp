@@ -624,12 +624,12 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition btnpositionNew" style="text-align: right;">
-	        <h2 style="padding-right:10px;"><spring:message code='ezApprovalG.t1090'/>
-	            <input type="text" id="Cabinetkeyword" value="" onkeypress="CabinetSearch_Press(event)" style="cursor: text; padding: 0 0 0 0; border-top: 1px solid #bebebe; border-left: 1px solid #bebebe; background-color: White; width: 150px;color:black;font-weight:normal">
-	            <a class="imgbtn" onclick="return CabinetSearch_onclick()"><span><spring:message code='ezApprovalG.t111'/></span></a>
-	            <a class="imgbtn" onclick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-	            <a class="imgbtn" onclick="return cmdCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
+	    <div class="btnposition btnpositionNew" style="text-align: right; padding-bottom:1.5%;">
+	        <h2 style="padding-right:10px;"><spring:message code='ezApprovalG.t1090'/> :&nbsp;
+	            <input type="text" id="Cabinetkeyword" value="" onkeypress="CabinetSearch_Press(event)" style="cursor: text; padding: 0 0 0 0; border-top: 1px solid #bebebe; border-left: 1px solid #bebebe; vertical-align: middle; background-color: White; width: 150px; height:21px; color:black;font-weight:normal">
+	            <a class="imgbtn" style="vertical-align: middle;" onclick="return CabinetSearch_onclick()"><span><spring:message code='ezApprovalG.t111'/></span></a>
+	            <a class="imgbtn" style="vertical-align: middle;" onclick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
+	            <a class="imgbtn" style="vertical-align: middle;" onclick="return cmdCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
 	        </h2>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
