@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezConn.util.EzConnUtil;
@@ -323,4 +324,30 @@ public class EzConnController {
 		return resultVO;
 	}	
 	
+	@RequestMapping("/ezConn/changePassword.do")
+	@ResponseBody
+	public String changePassword(HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("changePassword started.");
+		String result = "ERROR";
+		
+		try {
+			String id = request.getParameter("id");
+			id = ezConnUtil.decryptAES(id);
+			logger.debug("id=" + id);
+			
+			String cn = id.split(":")[0];
+			String password = id.split(":")[1];
+			int tenantID = 0;
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+			
+			ezOrganAdminService.setPasswordWithEmailSystem(cn, domain, password, tenantID);
+			
+			result = "OK";
+		} catch (Exception e) {
+			result = "ERROR";
+		}
+		
+		logger.debug("changePassword ended. result=" + result);
+		return result;
+	}
 }

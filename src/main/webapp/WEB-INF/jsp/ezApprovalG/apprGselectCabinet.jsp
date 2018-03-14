@@ -519,8 +519,8 @@
 	    </style>
 	</head>
 	<body class="popup" style="margin-left: 0px; margin-top: 0px">
-	    <h1 style="height: 39px;"><spring:message code='ezApprovalG.t711'/></h1>
-	    <table style="margin-top: -8px;">
+	    <h1 style="height: 30px;"><spring:message code='ezApprovalG.t711'/></h1>
+	    <table>
 	        <tr>
 	            <%--기능분류선택--%>
 	            <td style="width: 190px; vertical-align: top">
@@ -548,15 +548,15 @@
 	            <%--단위업무 선택--%>
 	            <td style="padding-left: 5px; width: 190px; vertical-align: top">
 	                <h2 style="padding-top:7px;"><spring:message code='ezApprovalG.t1040'/></h2>
-	                <table style="width: 100%">
+	                <table>
 	                    <tr>
-	                        <th style="height: 23px; text-align: left; padding-left:3px;"><a class="imgbtn"><span onclick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></th>
+	                        <th style="height: 23px; text-align: left; padding-left:3px; "><a class="imgbtn"><span onclick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></th>
 	                    </tr>
 	                    <tr style="height: 2px;">
 	                        <td></td>
 	                    </tr>
 	                    <tr>
-	                        <td style="width: 190px">
+	                        <td>
 	                            <div class="listview">
 	                                <div id="TaskList" style="HEIGHT: 300px; WIDTH: 260px; overflow: auto;"></div>
 	                            </div>
@@ -595,11 +595,11 @@
 	                </table>
 	            </td>
 	            <%--선택된 기록물철--%>
-	            <td style="height: 25px; text-align: center">
-	                <img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16"
+	            <td style="width: 18px; text-align: center">
+	                <img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16px" height="16px"
 	                    onclick="return AddCabList_onclick()" style="cursor: pointer">
 	             <br>
-	                <img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16"
+	                <img id="RecvDel" border="0" src="/images/arr_left.gif" width="16px" height="16px"
 	                    onclick="return DelCabList_onclick()" style="cursor: pointer"></td>
 	
 	            <td style="width: 200px; vertical-align: top">
@@ -624,12 +624,12 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition btnpositionNew" style="text-align: right;">
-	        <h2 style="padding-right:10px;"><spring:message code='ezApprovalG.t1090'/>
-	            <input type="text" id="Cabinetkeyword" value="" onkeypress="CabinetSearch_Press(event)" style="cursor: text; padding: 0 0 0 0; border-top: 1px solid #bebebe; border-left: 1px solid #bebebe; background-color: White; width: 150px;color:black;font-weight:normal">
-	            <a class="imgbtn" onclick="return CabinetSearch_onclick()"><span><spring:message code='ezApprovalG.t111'/></span></a>
-	            <a class="imgbtn" onclick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-	            <a class="imgbtn" onclick="return cmdCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
+	    <div class="btnposition btnpositionNew" style="text-align: right; padding-bottom:1.5%;">
+	        <h2 style="padding-right:10px;"><spring:message code='ezApprovalG.t1090'/> :&nbsp;
+	            <input type="text" id="Cabinetkeyword" value="" onkeypress="CabinetSearch_Press(event)" style="cursor: text; padding: 0 0 0 0; border-top: 1px solid #bebebe; border-left: 1px solid #bebebe; vertical-align: middle; background-color: White; width: 150px; height:21px; color:black;font-weight:normal">
+	            <a class="imgbtn" style="vertical-align: middle;" onclick="return CabinetSearch_onclick()"><span><spring:message code='ezApprovalG.t111'/></span></a>
+	            <a class="imgbtn" style="vertical-align: middle;" onclick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
+	            <a class="imgbtn" style="vertical-align: middle;" onclick="return cmdCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
 	        </h2>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
