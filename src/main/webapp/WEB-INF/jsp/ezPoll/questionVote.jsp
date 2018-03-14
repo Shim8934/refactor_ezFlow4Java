@@ -787,8 +787,6 @@
  	    		var optId = votesArr[voteId][0]; 	    		
  	    		
 	 	    	if (obj.src.indexOf("/images/poll/unchecked_vote.png") !== -1) { 	    		   		
-	 	    		modifySelectedList(optId, 'add');
-	 	    		
 	 	    		if (votePrivilege == 0) {
 	 	    			alert("<spring:message code = 'ezPoll.t172'/>");
 	 					return;
@@ -798,6 +796,8 @@
 	 					alert("<spring:message code = 'ezPoll.t171'/>" + " " + numberOfMultiSelect + "<spring:message code = 'ezPoll.t173'/>");
 	 					return;
 	 	    		}
+	 	    		
+	 	    		modifySelectedList(optId, 'add');
 	 	    		
 	 	    		obj.onclick = null;
 	 	    		
