@@ -273,4 +273,15 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public void insertJournal(JSONObject jsonParam, MCommonVO info, String realPath) throws Exception;
+	
+	/**
+	 * 일지내용을 this와 next로 나누기
+	 * @param journalIdList
+	 * @param formId
+	 * @param companyId
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public JournalFormInfoVO getJournalDivideThisNext(List<String> journalIdList,String formId, String companyId, int tenantId) throws Exception;
 }

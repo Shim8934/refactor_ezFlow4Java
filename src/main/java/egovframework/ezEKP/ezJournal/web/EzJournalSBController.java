@@ -146,26 +146,25 @@ public class EzJournalSBController {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/journalListMainFormList.do")
+	@RequestMapping(value="/ezJournal/getFormList.do")
 	@ResponseBody
 	public JSONArray journalListMainFormList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("journalListMainFormList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String typeId = request.getParameter("typeId");
 		String deptId = "";
 		if (request.getParameter("deptId")!=null) {
 			deptId = request.getParameter("deptId");
-		}else{
-			deptId = userInfo.getDeptID();
 		}
-		String companyId = userInfo.getCompanyID();
+		String typeId = request.getParameter("typeId");
+		if (typeId == null || typeId.equals("")) {
+			typeId = "basic";
+		}
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("deptId",deptId);
-		param.put("companyId",companyId);
 		param.put("userId", userInfo.getId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types/"+typeId+"/forms", param, request,"get",null);
@@ -218,6 +217,7 @@ public class EzJournalSBController {
 			param.put("recvUser", userInfo.getId());
 			break;
 		case "temp":
+			param.put("journalWriter", userInfo.getId());
 			param.remove("typeId");
 			param.remove("deptId");
 			param.put("status", "temp");

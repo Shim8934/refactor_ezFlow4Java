@@ -11,6 +11,9 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -729,5 +732,49 @@ public class EzJournalServiceImpl implements EzJournalService{
 		
 		logger.debug("fileMove ended.");
 	}
-	
+
+	@Override
+	public JournalFormInfoVO getJournalDivideThisNext(List<String> journalIdList,String formId, String companyId, int tenantId) throws Exception {
+		logger.debug("getJournalDivideThisNext started.");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("formId", formId);
+		param.put("companyId", companyId);
+		
+		JournalFormInfoVO form = ezJournalDAO.getJournalFormInfo(param);
+		String formContent = form.getFormContent();
+		Document formDoc = Jsoup.parseBodyFragment(formContent);
+		Element formBody = formDoc.body();
+		Element formThis = formBody.getElementById("this");
+		Element formNext = formBody.getElementById("next");
+		
+		for (int i = 0; i < journalIdList.size(); i++) {
+			param.put("journalId", journalIdList.get(i));
+			
+			JournalVO journal = ezJournalDAO.selectJournal(param);
+			
+			String journalContent = journal.getJournalContent();
+			Document journalDoc = Jsoup.parseBodyFragment(journalContent);
+			Element journalBody = journalDoc.body();
+			
+			Element thisElem = journalBody.getElementById("this");
+			String thisContent = thisElem.html();
+			Element nextElem = journalBody.getElementById("this");
+			String nextContent = nextElem.html();
+			
+			String title = "<p>"+journal.getJournalTitle()+"</p>";
+			
+			formThis.append(title);
+			formNext.append(title);
+			
+			formThis.append(thisContent);
+			formNext.append(nextContent);
+		}
+		
+		form.setFormContent(formDoc.toString());
+		
+		logger.debug("getJournalDivideThisNext ended.");
+		return form;
+	}
 }

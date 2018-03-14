@@ -110,41 +110,6 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		return "/ezJournal/journalNewItem";
 	}
 	
-	
-	/**
-	 * 업무일지 일지함의 양식리스트 가져오기
-	 */
-	@RequestMapping(value = "/ezJournal/getFormList.do")
-	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
-		logger.debug("getFormList started");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String typeId = request.getParameter("typeId");
-		if (typeId == null || typeId.equals("")) {
-			typeId = "basic";
-		}
-		String deptId = request.getParameter("deptId");
-		
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userInfo.getId());
-		param.put("deptId", deptId);
-		
-		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms";
-		
-		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
-	
-		String status = result.get("status").toString();
-		
-		if (status.equals("ok")) {
-			JSONArray formList = (JSONArray) result.get("data");
-			model.addAttribute("formList", formList);
-			logger.debug("formList : " + formList);
-		}
-		
-		logger.debug("getFormList ended");
-		return "/ezJournal/journalFormList";
-	}
-	
 	/**
 	 * 수신자 선택화면 호출
 	 */

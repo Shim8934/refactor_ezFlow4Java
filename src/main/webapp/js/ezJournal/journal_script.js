@@ -30,13 +30,14 @@ function journal_layer_popup(el) {
 	}
 
 	$('.journal-layer').find('.journal-layerClose').click(function() {
-		$('.journal-layer').fadeOut(); // 닫기 버튼을 클릭하면 레이어가
-															// 닫힌다.
+		$('.journal-layer').hide(); // 닫기 버튼을 클릭하면 레이어가
+		sumSearchOptionHidden();							// 닫힌다.
 		return false;
 	});
 
 	$('.journal-layer .dimBg').click(function() {
-		$('.journal-layer').fadeOut();
+		$('.journal-layer').hide();
+		sumSearchOptionHidden();
 		return false;
 	});
 
