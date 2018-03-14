@@ -784,9 +784,17 @@
 				//end
 		    	
 		    	var voteId = obj.name;
- 	    		var optId = votesArr[voteId][0]; 	    		
+ 	    		var optId = votesArr[voteId][0];
+ 	    		var isUnchecked = obj.src.indexOf("/images/poll/unchecked_vote.png");
  	    		
-	 	    	if (obj.src.indexOf("/images/poll/unchecked_vote.png") !== -1) { 	    		   		
+	 	    	if (isUnchecked !== -1) { 	    		   		
+	 	    		if(selectOnlyOnce(isUnchecked)){
+	 	    			var msg = '한번 선택하면 변경할 수 없습니다. 이 항목을 선택하시겠습니까?';
+	 	    			if(!window.confirm(msg)){
+	 	    				return;
+	 	    			}
+	 	    		}
+	 	    		
 	 	    		if (votePrivilege == 0) {
 	 	    			alert("<spring:message code = 'ezPoll.t172'/>");
 	 					return;
@@ -796,7 +804,7 @@
 	 					alert("<spring:message code = 'ezPoll.t171'/>" + " " + numberOfMultiSelect + "<spring:message code = 'ezPoll.t173'/>");
 	 					return;
 	 	    		}
-	 	    		
+	 	    		  		  		
 	 	    		modifySelectedList(optId, 'add');
 	 	    		
 	 	    		obj.onclick = null;
@@ -828,6 +836,9 @@
 					});   		
 		    	}
 	 	    	else {
+	 	    		if(selectOnlyOnce(isUnchecked)){
+	 	    			return;
+	 	    		}
 	 	    		modifySelectedList(optId, 'remove');
 	 	    		
 	 	    		obj.onclick = null;
@@ -2530,6 +2541,20 @@
 		    		selectedList.push(optId);
 		    	}else{
 		    		selectedList.splice(optIdIdxInArr,1);
+		    	}
+		    }
+		    
+		    //낙장불입 처리
+		    function selectOnlyOnce(idx) {
+		    	var isSelOnlyOnce = ${question.isSelOnlyOnce};
+		    	
+		    	if(isSelOnlyOnce === 1){ //낙장불입 Y
+		    		if(idx === -1){ //remove 일경우 		
+		    			alert('선택을 변경할 수 없습니다.');
+		    		}
+	    			return true;
+		    	}else{ //낙장불입 N
+		    		return false;
 		    	}
 		    }
 		</script>

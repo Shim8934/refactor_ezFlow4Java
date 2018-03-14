@@ -176,6 +176,12 @@
 					$('#isSorting ').attr('checked', true);
 				}
 								
+				//Allow selecting option only once.
+				var _isSelOnlyOnce = "<c:out value='${question.isSelOnlyOnce}'/>";
+				if (_isSelOnlyOnce == 1) {
+					$('#isSelOnlyOnce ').attr('checked', true);
+				}
+				
 		    	$("#Sdatepicker").datepicker({
 		        	changeMonth: true,
 		        	changeYear: true,
@@ -685,6 +691,14 @@
 	        else{
 	        	$('#hidIsSorting').val("0");	
 	        }
+	       
+	        if ($('#isSelOnlyOnce').is(':checked')) {
+	        	$('#hidIsSelOnlyOnce').val("1");	
+	        }
+	        else{
+	        	$('#hidIsSelOnlyOnce').val("0");	
+	        }
+	        
 	        
     		if (form_check() == false) {
         		return;
@@ -939,6 +953,9 @@
 						<input id="isSorting" type="checkbox">
 						<span>득표순 정렬</span>
 						
+						<input id="isSelOnlyOnce" type="checkbox">
+						<span>낙장불입</span>
+						
 						<input id="endDate" type="checkbox">
 						<span><spring:message code="ezPoll.t159"/></span>
 						
@@ -996,6 +1013,7 @@
 						<input type="text" name="hidSetDate" id="hidSetDate" value="" style="display:none">
 						<input type="text" name="hidCreateDate" id="hidCreateDate" value="" style="display:none">		
 						<input type="text" name="hidIsSorting" id="hidIsSorting" value="" style="display:none">		
+						<input type="text" name="hidIsSelOnlyOnce" id="hidIsSelOnlyOnce" value="" style="display:none">		
 					</div>
 					</td>
 				</tr>						
