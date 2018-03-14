@@ -588,11 +588,7 @@ public class EzJournalGWController {
 			String mode = jsonParam.get("mode").toString();
 			LOGGER.debug("mode : " + mode);
 			
-			if (mode.equals("tempMod")) {
-		//		ezJournalService.modifyTempJournal(journalId, jsonParam, info.getTenantId(), realPath);
-			} else {
-				ezJournalService.updateJournal(journalId, jsonParam, info.getTenantId(), realPath);
-			}
+			ezJournalService.updateJournal(journalId, jsonParam, info.getTenantId(), realPath);
 			
 			result.put("data", "");
 			result.put("status", "ok");
@@ -942,6 +938,20 @@ public class EzJournalGWController {
 			
 			// journalId가 temp이면 임시파일 삭제의 의미 (있으면 journalId에 해당하는 일지의 첨부파일 삭제해야함)
 			if (journalId.equals("temp")) {
+				if (fileList.length() != 0) {
+					String[] data = fileList.split(","); 
+					
+					for (int i=0; i<data.length; i++) {
+						String sGUID = data[i].split(";")[0];
+						String fileName = data[i].split(";")[1];
+						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
+						
+						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+						
+						file.delete();
+					}			
+				}
+			} else {
 				if (fileList.length() != 0) {
 					String[] data = fileList.split(","); 
 					

@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -609,7 +610,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			journalId = "temp";
 		}
 
-		if (mode.equals("temp")) {
+		if (mode.equals("temp") || mode.equals("modify")) {
 			filePath = "uploadFile" + commonUtil.separator + journalId + "_uploadFile";
 		} else {
 			filePath = "tempUploadFile";
@@ -641,15 +642,12 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	 * 업무일지 저장
 	 */
 	@RequestMapping(value = "/ezJournal/saveJournal.do")
-	public void saveCircular(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public void saveJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("saveJournal started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 
-		String realPath = commonUtil.getRealPath(request);
 		String fileList = "";
-		String pDirPath = "";
-		
 		String restUrl = "";
 		String originJournalId = request.getParameter("oldJournalId");
 		String mode = request.getParameter("mode");
@@ -659,24 +657,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		String typeId = request.getParameter("typeId");
 		String formId = request.getParameter("formId");
 		
-		if (originJournalId != null && !originJournalId.equals("") && mode.equals("temp")) {
-			mode = "tempMod";
-		}
-
 		logger.debug("journalId:"+originJournalId+",mode:"+mode+",title:"+title+",isPublic:"+isPublic+",content:"+content+",formId:"+formId+",typeId:"+typeId);
-		
-		
-//		if (request.getParameter("fileList") != null && !request.getParameter("fileList").equals("")) {
-//			fileList = request.getParameter("fileList");
-//			
-//			pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", userInfo.getTenantId());
-//
-//	        pDirPath = realPath + pDirPath;	        
-//        
-//	        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
-//	        	pDirPath = pDirPath + commonUtil.separator;
-//	        }
-//		}
 		
 		fileList = request.getParameter("fileList");
 		logger.debug("fileList : " + fileList);
@@ -704,15 +685,118 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		
 		JSONObject result = new JSONObject();
 		
-		if (mode != null && mode.equals("modify") || mode.equals("tempMod")) {
-			restUrl = "/rest/ezjournal/types/" + typeId + "/journals/" + originJournalId;
-			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "put", jsonParam);
-		} else {
-			restUrl = "/rest/ezjournal/types/" + typeId + "/journals";
-			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
-		}
+//		if (!originJournalId.equals("") && mode.equals("temp") || mode.equals("modify")) {
+//			restUrl = "/rest/ezjournal/types/" + typeId + "/journals/" + originJournalId;
+//			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "put", jsonParam);
+//		} else {
+//			restUrl = "/rest/ezjournal/types/" + typeId + "/journals";
+//			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
+//		}
 
 		logger.debug("saveJournal ended");
+	}
+	
+	/**
+	 * 업무일지 임시저장
+	 */
+	@RequestMapping(value = "/ezJournal/saveTempJournal.do")
+	public void saveTempJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("saveTempJournal started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String fileList = "";
+		
+		String restUrl = "";
+		String originJournalId = request.getParameter("oldJournalId");
+		String mode = request.getParameter("mode");
+		String title = request.getParameter("title");
+		String isPublic = request.getParameter("isPublic");
+		String content = request.getParameter("content");
+		String typeId = request.getParameter("typeId");
+		String formId = request.getParameter("formId");
+		
+		logger.debug("journalId:"+originJournalId+",mode:"+mode+",title:"+title+",isPublic:"+isPublic+",content:"+content+",formId:"+formId+",typeId:"+typeId);
+		
+		fileList = request.getParameter("fileList");
+		logger.debug("fileList : " + fileList);
+		
+		String receiverIDs = request.getParameter("receiverID");
+		String receiverList = request.getParameter("receiverList");
+		
+		logger.debug("receiverIDs : " + receiverIDs);
+		logger.debug("receiverList : " + receiverList);
+		
+		JSONObject jsonParam = new JSONObject();
+		jsonParam.put("title", title);
+		jsonParam.put("content", content);
+		jsonParam.put("deptShare", isPublic);
+		jsonParam.put("formId", formId);
+		jsonParam.put("userId", userInfo.getId());
+		jsonParam.put("receiverIDs", receiverIDs);
+		jsonParam.put("receiverList", receiverList);
+		jsonParam.put("fileList", fileList);
+		jsonParam.put("mode", mode);
+		jsonParam.put("isTemp", "Y");
+		
+		JSONObject result = new JSONObject();
+		
+		if (originJournalId.trim().equals("0")) {
+			restUrl = "/rest/ezjournal/types/" + typeId + "/journals";
+			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
+		} else {
+			restUrl = "/rest/ezjournal/types/" + typeId + "/journals/" + originJournalId;
+			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "put", jsonParam);
+		}
+		
+		logger.debug("saveTempJournal ended");
+	}
+	
+	/**
+	 * 다른일지 가져오기 호출
+	 */
+	@RequestMapping(value = "/ezJournal/getOtherJournal.do")
+	@ResponseBody
+	public String getOtherJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getOtherJournal started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String userId = request.getParameter("userId");
+		String typeId = request.getParameter("typeId");
+		String formId = request.getParameter("formId");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userId", userId);
+		map.put("typeId", typeId);
+		map.put("formId", formId);
+		map.put("startCount", 1);
+		map.put("listCnt", 10);
+		map.put("orderNum", 3);
+		map.put("orderHow", "desc");
+		
+		String restUrl = "/rest/ezjournal/journals";
+		JSONObject result = new JSONObject();
+		
+		result = commonUtil.getJsonFromRestApi(restUrl, map, request, "get", null);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONArray journalList = (JSONArray) result.get("data");
+			logger.debug("journalList 확인 : " + journalList);
+			for (int i = 0; i < journalList.size(); i++) {
+				JSONObject journal = (JSONObject) journalList.get(i);
+				String journalDate = (String) journal.get("journalDate");
+				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+				journal.put("journalDate", journalDate);
+			}
+			model.addAttribute("journalList", journalList);
+		}
+		
+		logger.debug("getOtherJournal ended");
+		return "ezJournal/journalGetOther";
 	}
 	
 }

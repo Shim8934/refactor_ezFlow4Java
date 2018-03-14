@@ -725,6 +725,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	public void updateJournal(String journalId, JSONObject jsonParam, int tenantId, String realPath) throws Exception {
 
 		String mode = jsonParam.get("mode").toString();
+		String isTemp = jsonParam.get("isTemp").toString().trim();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", jsonParam.get("title"));
@@ -732,25 +733,25 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("deptShare", jsonParam.get("deptShare"));
 		map.put("journalId", journalId);
 		map.put("tenantId", tenantId);
-//		if (mode != null && mode.equals("temp")) {
-//			map.put("journalStatus", mode);
-//		}
+		
+		if (isTemp != null && !isTemp.equals("Y")) {
+			map.put("isTemp", isTemp);
+			map.put("journalStatus", "");
+		}
 		
 		logger.debug("updateJournal map" + map);
 		
 		ezJournalDAO.updateJournal(map);
 
-		String fileList = jsonParam.get("fileList").toString();
-		logger.debug("fileList정보 : " + fileList.toString());
 	
 		// 첨부파일 삭제 후 저장
 		ezJournalDAO.deleteJournalAttach(map);
 		
+		String fileList = jsonParam.get("fileList").toString();
+		
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
 		if (fileList != null && !fileList.equals("")) {
-			
-			
 			logger.debug("updateJournal fileList : " + fileList);
 			
 			String[] attach = fileList.split(",");
@@ -777,27 +778,25 @@ public class EzJournalServiceImpl implements EzJournalService{
 				ezJournalDAO.insertJournalAttach(attachMap);
 				
 				// mode 가 수정일때?? Temp폴더에서 첨부파일 이동
-				if (mode.equals("modify")) {
-					String pDirPath = "";
-					pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", tenantId);
-					pDirPath = realPath + pDirPath;
-							
-					if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
-						pDirPath = pDirPath + commonUtil.separator;
-					}
-							
-					File file = new File(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
-							
-					if (!file.exists()) {
-						file.mkdir();
-					}
-					
-					String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
-					String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
-					
-					fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
-					
+				String pDirPath = "";
+				pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", tenantId);
+				pDirPath = realPath + pDirPath;
+						
+				if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+					pDirPath = pDirPath + commonUtil.separator;
 				}
+						
+				File file = new File(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
+						
+				if (!file.exists()) {
+					file.mkdir();
+				}
+				
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				
+				fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+					
 			}
 		}
 		
@@ -807,11 +806,6 @@ public class EzJournalServiceImpl implements EzJournalService{
 		String receiverIDs = jsonParam.get("receiverIDs").toString();
 		logger.debug("receiverIDs : " + receiverIDs);
 
-		insertJournalReceiver(receiverIDs, journalId, tenantId);
-	}
-	
-	public void insertJournalReceiver(String receiverIDs, String journalId, int tenantId) {
-		logger.debug("insertJournalReceiver started");
 		if (receiverIDs != null && !receiverIDs.equals("")) {
 			
 			Map<String, Object> receiverMap = new HashMap<String, Object>();
@@ -823,10 +817,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 			
 			for (int i = 0; i < receiverID.length; i++) {
 				receiverMap.put("receiverId", receiverID[i]);
-				
 				ezJournalDAO.insertReceiver(receiverMap);
 			}
 		}
-		logger.debug("insertJournalReceiver ended");
 	}
+	
 }

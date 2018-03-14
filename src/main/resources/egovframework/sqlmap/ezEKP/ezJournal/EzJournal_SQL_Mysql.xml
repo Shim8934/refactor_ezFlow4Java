@@ -877,6 +877,10 @@
 			journal_title = #title#,
 			dept_share = #deptShare#,
 			journal_content = #content#
+			<isEmpty property="isTemp">
+			,journal_status = ""
+			,journal_date = utc_timestamp() 
+			</isEmpty>
 		where
 			journal_id = #journalId#
 		and
