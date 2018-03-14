@@ -829,10 +829,16 @@
   	<!-- 업무일지 등록 하기 -->
 	<insert id="insertJournal" parameterClass="map">
 		insert into tbl_journal (
-			tenant_id,		journal_title,		journal_content,		journal_date,		journal_writer,			form_id,		dept_share,		journal_dept		
+			tenant_id,		journal_title,		journal_content,		journal_date,		journal_writer,			form_id,		dept_share,		journal_dept
+			<isNotEmpty property="journalStatus">
+				,	journal_status
+			</isNotEmpty>		
 		)
 		values (
 			#tenantId#,		#title#,			#content#,				#writeDate#,		#writerId#,				#formId#,		#deptShare#,	#deptId#
+			<isEqual property="journalStatus" compareValue="temp">
+				,	#journalStatus#
+			</isEqual>	
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
 			select last_insert_id()
@@ -858,4 +864,43 @@
 			#journalId#,	#receiverId#,	#tenantId#			
 		)
 	</insert>
+	
+	<!-- 업무일지 수정 -->
+	<update id="updateJournal" parameterClass="map">
+		update
+			tbl_journal
+		set
+			journal_title = #title#,
+			dept_share = #deptShare#,
+			journal_content = #content#
+			<isEmpty property="isTemp">
+			,journal_status = ""
+			,journal_date = utc_timestamp() 
+			</isEmpty>
+		where
+			journal_id = #journalId#
+		and
+			tenant_id = #tenantId#
+	</update>
+	
+	<!-- 첨부파일 정보 삭제 -->
+	<delete id="deleteJournalAttach" parameterClass="map">
+		delete from
+			tbl_journal_file
+		where
+			journal_id = #journalId#
+		and
+			tenant_id = #tenantId#
+	</delete>
+	
+	<!-- 수신자 정보 삭제 -->
+	<delete id="deleteReceiver" parameterClass="map">
+		delete from
+			tbl_journal_recv
+		where
+			journal_id = #journalId#
+		and
+			tenant_id = #tenantId#
+	</delete>
+	
 </sqlMap>

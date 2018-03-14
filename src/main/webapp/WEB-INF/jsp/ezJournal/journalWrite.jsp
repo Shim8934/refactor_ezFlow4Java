@@ -17,14 +17,16 @@
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
 	    <link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 	    <link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
+	    <link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/composeappt.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/jstree/jstree.js"></script>
 	    <script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 	    <script type="text/javascript">
 			var companyId = "${info.companyID}"; 
+			var userId = "${userId}";
 			// 작성자 이름 // lang에 따라 가져오는값 바꿔야함..
 			var userName = "${info.displayName1}";			
 			//트리조직도 JSON
@@ -50,15 +52,25 @@
 	    		typeId = $(elem).val();
 	    		$.ajax({
 	    			type : "POST",
-	    			dataType : "html",
+	    			dataType : "json",
 	    			async : false,
 	    			url : "/ezJournal/getFormList.do",
 	    			data : {"typeId" : typeId,
 	    					"deptId" : deptId},
 	    			success : function(result) {
-	    				$("#optForm").html(result);
+	    				console.log(result.length);
+	    				var str = "";
+	    				if (result.length > 0) {
+		    				$(result).each(function() {
+		    					str += "<option value=" + this.formId + ">" + this.formName + "</option>";
+		    				});
+	    				} else {
+	    					str += "<option><spring:message code='ezJournal.t134'/></option>";
+	    				}
+	    				$("#optForm").html(str);
 	    			}
 	    		});
+	    		
 	    		console.log("lastFormId 확인 : " + lastFormId);
 	    		if (lastFormId != null && lastFormId != "") {
 	    			lastFormId = parseInt(lastFormId);
@@ -93,7 +105,15 @@
    						console.log(title);
    						selFormId = formId;
    						$("#title").val(title);
-   						message.SetEditorContent(result.formContent);
+   						
+   						// 예약어 부분에 내용 추가
+   						var content = result.formContent;
+   						content.replace(/@journalDeptId/g, deptId);
+   						content.replace(/@journalWriterId/g, userId);
+   						content.replace(/@journalWriteDate/g, nowDate);
+   						
+   					//	message.SetEditorContent(result.formContent);
+   						message.SetEditorContent(content);
 	   				},
 	   				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);
@@ -233,10 +253,115 @@
 	                success: function(data) {	   
 	                  alert("<spring:message code='ezCircular.t70'/>");
 	                  
-	                  window.opener.refresh_onclick();
-	             	  window.close();
+	               // window.opener.refresh_onclick();
+	             	  window.opener.reload();
+          			  window.close();
 	                }
 	 			});
+	    	}
+	    	
+	    	// 임시 저장
+		    function btn_TempSave() {
+	        	if (doubleSubmitCheck()){
+	        		return;
+	        	}
+	
+				if ($("#title").val() == "") {
+					alert("<spring:message code='ezCircular.t52'/>");
+					doubleSubmitFlag = false;
+					
+					return;
+				}
+	
+				if ($.trim($("#title").val()) == "") {
+		        	alert("<spring:message code='ezCircular.t190' />");
+		        	doubleSubmitFlag = false;
+	
+		        	return;
+		        }
+				
+	        	var content = message.GetEditorContent();
+	    		
+				// 부서공유여부
+				var isPublic = $("input[type=radio][name=isPublic]:checked").val();
+				var journalId = 0;
+				
+				if (oldJournalId != "") {
+					journalId = oldJournalId;
+				}
+				
+				//파일 첨부된 목록 가져오기
+				var listtable = dadiframe.document.getElementById("filelist");
+				var filelist = GetChildNodes(listtable);
+				var fileList = "";
+	
+				for (var i = 0; i < filelist.length - 1; i++) {	    
+					if (i == 0) {
+						fileList = GetAttribute(filelist[i + 1], "data2");
+					} else {
+						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+	        		}
+				}
+				
+				// 수신자 있는 경우 수신자 가져오기
+				var receiverList = $("#receiverlist").html();
+				var receiverID = $("#receiverID").html();
+	
+	    		$.ajax ({
+	 			   	url : '/ezJournal/saveTempJournal.do?mode=temp',
+	 			   	type : 'POST',
+	                dataType : 'text',
+	                data : {	title : $("#title").val(),
+	                			typeId : typeId,
+	                			formId : selFormId,
+	                			isPublic : isPublic,
+	                			receiverList : receiverList,
+	                			receiverID : receiverID,
+	                			content : content,
+	                			fileList : fileList,
+	                			oldJournalId : journalId,
+	                },  
+	                cache: false,
+	                success: function(data) {	   
+	                  alert("<spring:message code='ezCircular.t70'/>");
+	                  
+	               // window.opener.refresh_onclick();
+	             	  window.opener.reload();
+          			  window.close();
+	                }
+	 			});
+	    	}
+	    	
+	    	// 다른일지 가져오기
+		    function getOtherJournal() {
+	    	//	var height = window.screen.availHeight;
+	    	//	var width = window.screen.availWidth;
+	    	//	var left = (width - 500) / 2;
+	    	//	var top = (height - 400) / 2;
+	    	/*
+	    		var url = "/ezJournal/getOtherJournal.do?userId=" + userId + "&typeId=" + typeId + "&formId=" + selFormId;
+	    		var feature = "status:no; dialogHeight:400px; dialogWidth:520px; help:no; resizable:yes;";
+	    		feature += GetShowModalPosition(400, 300);
+	    		var rtnVal = window.showModalDialog(url, "", feature);
+	    	*/
+	    	//	DivPopUpShow(520, 410, url);
+	    	
+	    	/*
+	    		$.ajax({
+	    			url : "/ezJournal/getOtherJournal.do",
+	    			type : "POST",
+					dataType : "text",
+					data : {	userId : userId,
+								typeId : typeId,
+								formId : selFormId
+					},
+					success : function (result) {
+						$("#selectOther").html(result);
+						$("#getOtherPopup").css("display", "");
+					}
+	    		})		
+	    	*/	
+	    	
 	    	}
 	    
 	    	// 닫기 버튼 클릭시
@@ -273,6 +398,9 @@
 	    </script>
 	</head>
 	<body class="popup" style="height: 97%;" ondragover="bodydragover(event)">
+	
+	 
+	 
 	    <table class="layout" style="width: 100%;">
 	        <tr>
 	            <td style="height: 20px">
@@ -294,7 +422,7 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li id="btnGetOther"><span onclick=""><spring:message code='ezJournal.t75' /></span></li>
+	                        <li id="btnGetOther"><span onclick="getOtherJournal()"><spring:message code='ezJournal.t75' /></span></li>
 	                        <li><span onclick="btn_Close();"><spring:message code='ezJournal.t27' /></span></li>
 	                    </ul>
 	                </div>
@@ -360,5 +488,22 @@
   				</td>
   			</tr>
 	    </table>
+	    <div id="getOtherPopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
+			<div class="popupwrap3">
+				<table id="selectOther" class="mainlist" style="margin-top:10px;">  
+					
+				</table>
+				<br />
+				<table style="width:100%">
+					<tr>
+						<td style="text-align:center;">
+							<a class="imgbtn"><span onClick="search_start()"><spring:message code='ezAddress.t142' /></span></a>
+							<a class="imgbtn"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="shadow"></div>	
 	</body>
 </html>

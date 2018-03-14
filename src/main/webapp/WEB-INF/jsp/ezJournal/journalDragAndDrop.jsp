@@ -5,6 +5,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css">
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>		
 		<style>
@@ -41,7 +42,7 @@
 		            evt.preventDefault();
 		        }
 		        if (isfileup) {
-		            alert(strLang258);
+		            alert("<spring:message code='ezCircular.t93'/>");
 		            return;
 		        }
 		        var filelist;
@@ -54,6 +55,7 @@
 	
 		        var tempfilesize = 0;
 		        var filecnt = file.length;
+		        
 		        for (var i = 0; i < filelist.length; i++) {
 		            if (filelist[i].size / 1024 / 1024 > 5) {
 		                alert(strLang25);
@@ -216,6 +218,8 @@
 		    function btnfiledel() {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		        var strRet = "";
+		        var fileList = "";
+		        var typeId = parent.typeId;
 	
 		        var isFileDelete = false;
 		        for (var i = 1; i < filecnt; i++) {
@@ -226,6 +230,14 @@
 		                var pNewNodeName = "";
 		                var Rtnval;
 	
+		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
+		                
+		                if (fileList == "") {
+							fileList = pAttachDelFileName;
+						} else {
+							fileList += "," + pAttachDelFileName;
+						}
+		                
 		                var delfilesize;
 		                delfilesize = getNodeText(document.getElementById("filelist").childNodes[i].lastChild);
 		                filesize -= delfilesize;
@@ -241,6 +253,29 @@
 		        if (!isFileDelete) {
 		            alert(strLang271);
 		        }
+		        
+		        if (mode == "modify" || mode == "temp") {
+ 		        	url = "/ezJournal/tempUploadFileDelete.do?mode=temp&journalId=" + journalId;
+ 		        } else {
+		        	url = "/ezJournal/tempUploadFileDelete.do";
+ 		        }
+
+		        // upload된 파일 tempUploadFile에서 삭제
+		        $.ajax({
+					async : false,
+					url : url,
+	                type : 'POST',
+	                dataType : 'json',
+	                data : {
+	                	typeId	 : typeId,
+	                	fileList : fileList
+	                },
+	                success: function() {
+	                },
+	                error: function() {
+	                	alert("<spring:message code='ezCircular.t102'/>");	
+	                }
+				});
 		    }
 	
 		    function checkall() {
