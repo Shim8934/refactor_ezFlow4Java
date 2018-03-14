@@ -1619,7 +1619,7 @@
 	                                  
 	                                        <c:if test="${approvalFlag == 'G' }">
 		                                        <div class="border_gray" style="margin-top:7px">
-		                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+		                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: auto; padding-top: 0px;">
 		                                        </div>
 		                                        </div>
 	                                        </c:if>
@@ -1828,15 +1828,16 @@
 	                    </div>
 	                </td>
 	                <!-- 2015-06-23 표준모듈:추가 - KSK -->
-	                <td class ="approvalG" style="width: 30px; text-align: center;" >
-	                    <div style="display: inline-block; padding-left:2.5px;" id="AddRemoveBTN">
-	                        <img src="/images/arr_rr.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgInsertAll" onclick="return InsertRecAll();">
+	                <td class ="approvalG" style="width: 16px; text-align: center;" >
+	                    <div style="display: inline-block; margin:auto; padding-left:2.5px;" id="AddRemoveBTN">
+	                        <img src="/images/arr_rr.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgInsertAll" onclick="return InsertRecAll();">
 	                        <br>
-	                        <img src="/images/arr_r.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgInsert" onclick="return InsertRec();">
+	                        <img src="/images/arr_r.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgInsert" onclick="return InsertRec();">
 	                        <br>
-	                        <img src="/images/arr_l.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgDelete" onclick="return DeleteRec();">
+	                        <img src="/images/arr_l.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgDelete" onclick="return DeleteRec();">
 	                        <br>
-	                        <img src="/images/arr_ll.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgDeleteAll" onclick="return DeleteRecAll();">
+	                        <img src="/images/arr_ll.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgDeleteAll" onclick="return DeleteRecAll();">
+	                        <br>
 	                    </div>
 	                </td>
 	                <td style="vertical-align: top">
@@ -1846,7 +1847,7 @@
 	                                <h2 class="h2_dot"> <c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t253'/></c:if> <c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t220'/></c:if></h2>
 	                                <div class="border_gray" style="margin-top: 7px">
 	                                <c:if test="${approvalFlag == 'G'}">
-	                                    <div id="RECEPTLIST" style="Width: 723px; Height: 524px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                    <div id="RECEPTLIST" style="Width: 703px; Height: 524px; overflow: auto; border: 0; font-size: 9pt; margin: auto; padding-top: 0px;">
 	                                    </div>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'S'}">
