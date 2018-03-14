@@ -230,13 +230,14 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String opinionFlag = request.getParameter("opinionFlag");
 		String docState = request.getParameter("docState");
 		String listSusin = request.getParameter("listSusin");
-		String orgDocID = request.getParameter("odoc");
+		String orgDocID = request.getParameter("oDoc");
 		String showOpinion = request.getParameter("isOpinion");
 		String listTypeValue = request.getParameter("listType");
 		String hasOpinionYN = "";
 		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		if (userInfo.getRollInfo().indexOf("a=1") > -1 ) {
 			susinAdmin = "YES";
 		} else {
@@ -265,6 +266,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("hasOpinionYN", hasOpinionYN);
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		LOGGER.debug("ezviewAprHWP ended");
 		
@@ -685,8 +687,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".hwp";
 	
-			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
-			
+		stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
+
 			bos = new FileOutputStream(saveFileName);
 			
 			int bytesRead = 0;

@@ -116,7 +116,7 @@
 
         function chk_Passwd(pPwd) {
             var parameter = pUserID
-            var url = "/myoffice/ezApprovalG/ezchkPasswd.aspx";
+            var url = "/ezApprovalG/ezchkPasswd.do";
             var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
             var ret = window.showModalDialog(url, parameter, feature);
             return ret
@@ -387,28 +387,35 @@
             if (ret != "cancel") {
                 SaveFile();
 
-                var xmlpara = createXmlDom();
-                var xmlhttp = createXMLHttpRequest();
-
-
-
-                var objNode;
-                createNodeInsert(xmlpara, objNode, "PARAMETERS");
-                createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-                createNodeAndInsertText(xmlpara, objNode, "SUserID", pUserID);
-
-
-                xmlhttp.open("POST", "/myoffice/ezApprovalG/enforce/aspx/sendOfferReject.aspx", false);
-                xmlhttp.send(xmlpara);
-
-                if (getNodeText(loadXMLString(xmlhttp.responseText)) == "TRUE") {
-                    var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";
-                    OpenAlertUI(pAlertContent);
-                    setBtnDisable();
-                } else {
-                    var pAlertContent = "<spring:message code='ezApprovalG.t258'/>";
-                    OpenAlertUI(pAlertContent);
-                }
+              	var result = "";
+		    	
+	    		$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/sendOfferReject.do",
+		    		data : {
+		    			docID : pDocID,
+		    			userID : pUserID
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		}, error: function () {
+		    			 var pAlertContent = "<spring:message code='ezApprovalG.t258'/>";
+			                OpenAlertUI(pAlertContent);
+		    		}        			
+		    	});
+	    		
+	            var ResultXML = result;
+	            if (getNodeText(GetChildNodes(ResultXML)[0]) == "TRUE") {
+	                var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";
+	                OpenAlertUI(pAlertContent);
+	                setBtnDisable();
+	            } else {
+	            	 var pAlertContent = "<spring:message code='ezApprovalG.t258'/>";
+	                    OpenAlertUI(pAlertContent);
+	                    setMenuDisable("btnSend", false);
+	            }
             }
         }
 
@@ -419,7 +426,7 @@
             parameter[2] = "002";
             parameter[3] = pOrgDocID;
 
-            var url = "/myoffice/ezApprovalG/ezAPROPINION/AprOpinion.aspx";
+            var url = "/ezApprovalG/aprOpinion.do";
             var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no;help:no"
             var ret = window.showModalDialog(url, parameter, feature);
             return ret;
@@ -438,25 +445,31 @@
         }
 
         function SetContainer() {
-            var xmlpara = createXmlDom();
-            var xmlhttp = createXMLHttpRequest();
-
-
-            var objNode;
-            createNodeInsert(xmlpara, objNode, "PARAMETER");
-            createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-            createNodeAndInsertText(xmlpara, objNode, "pOrgDocID", pOrgDocID);
-            createNodeAndInsertText(xmlpara, objNode, "SUserID", pUserID);
-            createNodeAndInsertText(xmlpara, objNode, "SUserName", arr_userinfo[11]);
-            createNodeAndInsertText(xmlpara, objNode, "SDeptID", arr_userinfo[4]);
-            createNodeAndInsertText(xmlpara, objNode, "SUserName2", arr_userinfo[12]);
-
-
-            xmlhttp.open("POST", "/myoffice/ezApprovalG/enforce/aspx/sendOfferAprove.aspx", false);
-            xmlhttp.send(xmlpara);
-
-            return getNodeText(loadXMLString(xmlhttp.responseText))
-        }
+        	var result = "";
+	    	
+    		$.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : false,
+	    		url : "/ezApprovalG/sendOfferAprove.do",
+	    		data : {
+	    			docID : pDocID,
+	    			orgDocID  : pOrgDocID,
+	    			userID : pUserID,
+	    			userName : arr_userinfo[11],
+	    			deptID   : arr_userinfo[4],
+	    			userName2: arr_userinfo[12]
+	    		},
+	    		success: function(xml){
+	    			result = loadXMLString(xml);
+	    		} , error: function() {
+	    			return "FALSE";
+	    		}     			
+	    	});
+	    	 
+	        var ResultXML = result;
+	        return getNodeText(GetChildNodes(ResultXML)[0]);
+	    }
 
         function setBtnDisable() {
             btnOpinion.style.display = "none";

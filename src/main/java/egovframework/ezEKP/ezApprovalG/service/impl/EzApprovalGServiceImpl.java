@@ -24784,7 +24784,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			result.append("<ReceivedDate>" + listXML.getElementsByTagName("RECEIVEDDATE").item(0).getTextContent() + "</ReceivedDate>");
 		}
 		result.append("</DATA>");
-		if (!listXML.getElementsByTagName("XDOCID").item(0).getTextContent().equals("")) {
+		if (listXML.getElementsByTagName("XDOCID").item(0) != null && !listXML.getElementsByTagName("XDOCID").item(0).getTextContent().equals("")) {
 			List<ApprGRelayVO> relayDocSignList = ezApprovalGDAO.getRelaySignInfo(map);
 			
 			StringBuffer sb2 = new StringBuffer();
