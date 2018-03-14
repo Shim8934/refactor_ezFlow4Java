@@ -858,7 +858,7 @@
 <body class="mainbody">
 	<form id="frmCreate" method="post" action="/ezPoll/pollComplete.do" name="frmCreate"> 	
 		<h1><spring:message code="ezPoll.t206" /></h1>
-		<div>
+		<div id="ballotSystemBody">
 			<table class="content content_poll" style="width: 100%;"> 
 				<tr>    <!------------Question title----------------> 
 					<%-- <th>Question</th>			--%>
