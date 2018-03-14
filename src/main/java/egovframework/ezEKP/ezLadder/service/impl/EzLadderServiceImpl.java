@@ -240,19 +240,19 @@ public class EzLadderServiceImpl implements EzLadderService {
 		ezLadderDAO.deleteLadderList(map);
 		
 		List<LadderVO> list = null;
-		if(mode.equals("part")) {		// 참여버튼 검색
-			if(searchSelect.equals("none")) {
-				list = ezLadderDAO.getPartLadderList(map);		// 검색이 아닐 때
-			} else {
-				list = ezLadderDAO.searchPartLadderList(map);	// 검색시
-			}
-		} else {						// 전체버튼 검색
-			if(searchSelect.equals("none")) {
-				list = ezLadderDAO.getLadderList(map);			// 검색이 아닐 때
-			} else {
-				list = ezLadderDAO.searchAllLadderList(map);	// 검색시
-			}
-		}
+//		if(mode.equals("part")) {		// 참여버튼 검색
+//			if(searchSelect.equals("none")) {
+//				list = ezLadderDAO.getPartLadderList(map);		// 검색이 아닐 때
+//			} else {
+//				list = ezLadderDAO.searchPartLadderList(map);	// 검색시
+//			}
+//		} else {						// 전체버튼 검색
+//			if(searchSelect.equals("none")) {
+//				list = ezLadderDAO.getLadderList(map);			// 검색이 아닐 때
+//			} else {
+//				list = ezLadderDAO.searchAllLadderList(map);	// 검색시
+//			}
+//		}
 		logger.debug("deleteLadder ended.");
 		return list;
 	}

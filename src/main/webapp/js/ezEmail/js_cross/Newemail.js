@@ -280,11 +280,11 @@ function all_reply_mail_onclick() {
 function reSend_onClick() {
 	
 	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLang45);
+        alert(strLangKYJ01);
     }
     
     if (listContentArry.length > 1 || listSubContentArry.length > 1) {
-        alert(strLang46);
+        alert(strLangKYJ02);
         return;
     } else {
         var pSelectItem;

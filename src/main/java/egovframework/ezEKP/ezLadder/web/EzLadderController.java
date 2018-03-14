@@ -70,13 +70,13 @@ public class EzLadderController {
 	 * 사다리 게임 목록
 	 * */
 	@RequestMapping(value = "/ezLadder/ladderMain.do")
-	public String ladderList(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("/ezLadder/ladderMain.do started.");
+	public String ladderMain(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("ladderMain started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/ladder/ladder-list/users/" + userInfo.getId();
-		userInfo.getTenantId();
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
@@ -115,14 +115,16 @@ public class EzLadderController {
 	}
 	
 	/**
-	 * 사다리 게임 참여자 목록 버튼
+	 * 사다리 게임 참여자 목록 버튼/검색
 	 */
-	@RequestMapping(value = "/ezLadder/viewLadderModeList.do")
-	public String viewLadderParticipant(String mode, String currPage, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	@RequestMapping(value = "/ezLadder/ladderList.do")
+	public String ladderList(String mode, String currPage, String searchSelect, String searchInput, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		
-		logger.debug("/ezLadder/viewLadderModeList.do started.");
+		logger.debug("ladderList started.");
 		logger.debug("mode : " + mode);
 		logger.debug("currPage : " + currPage);
+		logger.debug("searchSelect : " + searchSelect);
+		logger.debug("searchInput : " + searchInput);
 	
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
@@ -136,7 +138,10 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+								.queryParam("tenantId", userInfo.getTenantId())
+								.queryParam("searchSelect", searchSelect)
+								.queryParam("searchInput", searchInput);
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -159,69 +164,12 @@ public class EzLadderController {
 			return "error";
 		}
 		
-		logger.debug("/ezLadder/viewLadderParticipant.do ended");
+		logger.debug(" ended");
 
 		return "json";
 	}
-	
-	/**
-	 * 사다리 검색
-	 */
-	@RequestMapping(value = "/ezLadder/searchLadder.do")
-	public String searchLadder(@RequestParam(value="allData") List<String> allData, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
-		
-		logger.debug("/ezLadder/searchLadder.do started.");
-		logger.debug("searchSelect : " + allData.get(0) + ", searchInput " + allData.get(1) +  ", mode : " + allData.get(2));
-	
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/search/" + userInfo.getId();
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-							.queryParam("searchSelect", allData.get(0))
-							.queryParam("searchInput", allData.get(1))
-							.queryParam("mode", allData.get(2))
-							.queryParam("currPage", allData.get(3))
-							.queryParam("tenantId", userInfo.getTenantId());
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
-		JSONParser jp = new JSONParser();
-		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
-		
-		JSONArray list = new JSONArray();
-		String status = jsonResult.get("status").toString();
-		String page = jsonResult.get("currPage").toString();
-		String totalLadder = jsonResult.get("totalLadder").toString();
-		String totalPage = jsonResult.get("totalPage").toString();
-		
-		if (status.equals("ok")) {
-			list = (JSONArray) jsonResult.get("data");
-			
-			model.addAttribute("list", list);
-			model.addAttribute("currPage", page);
-			model.addAttribute("totalPage", totalPage);
-			model.addAttribute("totalLadder", totalLadder);
-		} else {
-			return "error";
-		}
-		
-		
-		
-		logger.debug("/ezLadder/searchLadder.do ended");
 
-		return "json";
-	}
-	/** boh */
-	
 	/**
 	 * 사다리 게임 종류 선택
 	 * */
@@ -735,19 +683,12 @@ public class EzLadderController {
 		
 		JSONArray list = new JSONArray();
 		String status = jsonResult.get("status").toString();
-		String page = jsonResult.get("currPage").toString();
-		String totalLadder = jsonResult.get("totalLadder").toString();
-		String totalPage = jsonResult.get("totalPage").toString();
-	
-		
-		
+
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
 			
 			model.addAttribute("list", list);
-			model.addAttribute("currPage", page);
-			model.addAttribute("totalPage", totalPage);
-			model.addAttribute("totalLadder", totalLadder);
+
 		} else {
 			return "error";
 		}

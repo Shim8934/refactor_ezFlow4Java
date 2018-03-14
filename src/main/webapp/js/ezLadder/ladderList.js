@@ -31,24 +31,10 @@ function participant() {
 		currPage = pageChange;
 		pageChange = 1;
 	}
-
-	$.ajax({
-		type : "GET",
-		dataType : "json",
-		async : false,
-		url : "/ezLadder/viewLadderModeList.do",
-		data : {
-			mode : mode,
-			currPage : currPage
-		},
-		success : function(data) {
-			viewList(data);
-			makePageSelPage();
-		}
-	});
+	view();
 }
 
-// 전체 버튼
+//전체 버튼
 function allPart() {
 	if (modeCheck !== 'all') {
 		currPage = 1;
@@ -70,46 +56,10 @@ function allPart() {
 		pageChange = 1;
 	}
 
-	$.ajax({
-		type : "GET",
-		dataType : "json",
-		async : false,
-		url : "/ezLadder/viewLadderModeList.do",
-		data : {
-			mode : mode,
-			currPage : currPage
-		},
-		success : function(data) {
-			viewList(data);
-			makePageSelPage();
-		}
-	});
+	view();
 }
 
-// 삭제
-function deleteLadder(ladderId) {
-
-	allData = [ ladderId, searchSelect, searchInput, mode, currPage, back ];
-
-	jQuery.ajaxSettings.traditional = true;
-	if (confirm('삭제 하시겠습니까?')) {
-		$.ajax({
-			type : "GET",
-			dataType : "json",
-			async : false,
-			url : "/ezLadder/deleteLadder.do",
-			data : {
-				"allData" : allData
-			},
-			success : function(data) {
-				viewList(data);
-				makePageSelPage();
-			}
-		});
-	}
-}
-
-// 검색 ajax
+//검색 ajax
 function searchLadder() {
 	modeCheck = "search";
 	if (searchSelect === 'none') {
@@ -129,20 +79,81 @@ function searchLadder() {
 	searchSelect = document.getElementById("searchOption").value;
 	searchInput = document.getElementById("searchInput").value;
 
-	allData = [ searchSelect, searchInput, mode, currPage ];
+
+	view();
+}
+
+//삭제
+function deleteLadder(ladderId) {
+
+	allData = [ ladderId, searchSelect, searchInput, mode, currPage, back ];
 
 	jQuery.ajaxSettings.traditional = true;
+	if (confirm('삭제 하시겠습니까?')) {
+		$.ajax({
+			type : "GET",
+			dataType : "json",
+			async : false,
+			url : "/ezLadder/deleteLadder.do",
+			data : {
+				"allData" : allData
+			},
+			success : function(data) {
+				view();
+			}
+		});
+	}
+}
 
+
+
+function view() {
 	$.ajax({
 		type : "GET",
 		dataType : "json",
 		async : false,
-		url : "/ezLadder/searchLadder.do",
+		url : "/ezLadder/ladderList.do",
 		data : {
-			"allData" : allData
+			mode : mode,
+			currPage : currPage,
+			searchSelect : searchSelect,
+			searchInput : searchInput
 		},
 		success : function(data) {
-			viewList(data);
+			var list = "";
+			list += "<table class='mainlist' style='width:100%;margin-top:30px;'>"
+					+ "<tr><th width='30px'>" + strLang2 + "</th>"
+					+ "<th width='20px'>" + strLang3 + "</th>"
+					+ "<th width='60px'>" + strLang4 + "</th>"
+					+ "<th width='40px'>" + strLang5 + "</th>"
+					+ "<th width='50px'>" + strLang6 + "</th>"
+					+ "<th width='50px'>" + strLang7 + "</th>"
+					+ "<th width='50px'>" + strLang8 + "</th></tr>";
+			if (data.list.length > 0) {
+
+				$.each(data.list, function(key, value) {
+
+					list += "<tr class='white'>" + "<td>" + value.type + "</td>"
+							+ "<td><a href='#' onclick='getLadderGame(" + value.ladderId + ")'>" + value.title + "</a></td>" 
+							+ "<td>" + value.writerName + "</td>"
+							+ "<td>" + value.writeDate.substring(0, 16) + "</td>"
+							+ "<td>" + value.status + "</td>" 
+							+ "<td>" + value.secretFlag	+ "</td>";
+					if (id == value.writerId) {
+						list += "<td><a href='#' onclick='deleteLadder(" + value.ladderId + ")'><img src = '/images/ezLadder/trash.png' width = '30' height = '30'/></a></td></tr>";
+					} else {
+						list += "<td><img src ='/images/ezLadder/trash.png' width='30' height ='30'/></td></tr>";
+					}
+				});
+			} else {
+				list += "<tr><td colspan='7' align='center' bgcolor='#FFFFFF'> <spring:message code='ezLadder.t010' /></td></tr>";
+			}
+			list += "</table>";
+			$("#divList").html(list);
+			totalLadder = data.totalLadder;
+			currPage = data.currPage;
+			totalPage = data.totalPage;
+			totalLadder = data.totalLadder;
 			makePageSelPage();
 		}
 	});
