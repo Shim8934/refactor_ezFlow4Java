@@ -61,7 +61,13 @@
 			#MailListRayer tr:not(.selectTR):hover{
 				background-color: rgb(244,245,245);
 			}
+			#basicFormList td:hover{
+				background-color: rgb(244,245,245);
+			}
 			.selectTR{
+				background-color: rgb(233, 241, 255);
+			}
+			.selectTD{
 				background-color: rgb(233, 241, 255);
 			}
 			 #lvBoardList #journalList tr.noView td{
@@ -103,6 +109,7 @@
 		    var pMailPreVDiv_H = 0;
 		    var normal=null;
 		    var onPreview=false;
+		    var sumFormId;
 			
 			window.onresize = function ()
 		    {
@@ -182,7 +189,6 @@
 				searchEndDate = document.getElementById("Edatepicker").value;
 				setJournalList();
 				BoardSearchOptionHidden();
-				SearchOptionHidden();
 			}
 			function quickSearch(){
 				var searchFlag = $("input[type='radio'][name='searchKey']:checked").val();
@@ -200,14 +206,22 @@
 			}
 			
 			//상세검색 레이어팝업
-			function doLayerPopup(obj) {
-				$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+			function doLayerPopup() {
+				$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
 	        	
 	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
 	        	
 	        	$("#srarchpopup").css("left", popupX);
 	        	
-				$("#srarchpopup").modal();
+				$("#srarchpopup").modal({
+					  escapeClose: false,
+					  clickClose: false,
+					  showClose: false
+					});
+	        	
+// 	        	$(".jquery-modal").on('hide', function(e){
+// 					BoardSearchOptionHidden();
+// 				});
 // 		        if (obj.getAttribute("mode") == "off") {
 // 		            document.getElementById("layer_popup").style.left = "10px";
 // 		            if (pAdminType == "y")
@@ -221,6 +235,7 @@
 // 		            BoardSearchOptionHidden();
 // 		        }
 		    }
+			
 			function btn_PostDate_Clear() {
 		        $("#Sdatepicker").val("");
 		        $("#Edatepicker").val("");
@@ -233,8 +248,79 @@
 		        document.getElementById("searchTitle").value = "";
 		        document.getElementById("layer_popup").style.display = "none";
 		        document.getElementById("SearchOption").setAttribute("mode", "off");
-		        SearchOptionHidden();
+		        $.modal.close();
 		    }
+			
+			function sumSearchOptionHidden() {
+		        document.getElementById("selectSumJournal").style.display = "none";
+		        $("#basicFormList").html("");
+		        sumFormId="";
+		        $.modal.close();
+		    }
+			
+			//취합양식 선택 레이어팝업
+			function doSelectSumJournal() {
+				var basicFormFlag = true;
+				var selects = $(".selectTR");
+				selects.each(function(){
+					if($(this).attr("formStatus")!='basic'){
+						basicFormFlag = false;
+					}
+				});
+				if(selects.length==0){
+					basicFormFlag = false;
+				}
+				if(basicFormFlag){
+					var url = "/ezJournal/getFormList.do";
+					$.ajax({
+		   				type:"post",
+		   				dataType:"json",
+		   				url:url,
+		   				success: function(forms){
+		   					var trs = "<tr><th style='text-align: center'><spring:message code='ezJournal.t72' /></th></tr>";
+		   					$(forms).each(function(){
+		   						trs += "<tr onclick='sumFormClick(this);' ondblclick='writeSumJournal();' style='cursor:pointer;' value="+this.formId+"><td>"+this.formName+"</td></tr>";
+		   					})
+	   						$("#basicFormList").html(trs);
+		   				}
+		   			});
+					
+					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].sumSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+		        	
+		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+		        	
+		        	$("#sumpopup").css("left", popupX);
+		        	
+					$("#sumpopup").modal();
+					
+// 					$("#sumpopup").on('hide', function(e){
+// 						sumSearchOptionHidden();
+// 					});
+				} else{
+					alert("<spring:message code='ezJournal.t146' />");
+				}
+		    }
+			
+			//취합하기
+			function writeSumJournal(){
+				if(sumFormId!=null && sumFormId!=undefined){
+					var journalIdList = [];
+					 $('input:checkbox[name="journalCheckbox"]:checked').each(function() {
+						 journalIdList.push($(this).parent().parent().attr("id"));
+					 });
+					 
+				} else {
+					alert("<spring:message code='ezJournal.t71' />");
+				}
+			} 
+			
+			//취합양식 한개 선택시
+			function sumFormClick(elem){
+				var parentElem = $(elem).parent();
+				$(parentElem).find("td").removeClass("selectTD");
+				sumFormId=$(elem).attr("value");
+				$(elem).find("td").addClass("selectTD");
+			}
 			
 			//부서에 의한 페이지 세팅
 			function goToPageByDeptId(){
@@ -303,7 +389,7 @@
 			
 			//양식명 세럭트박스 만들기
 			function setFormName(){
-				var url = "/ezJournal/journalListMainFormList.do?typeId="+typeId;
+				var url = "/ezJournal/getFormList.do?typeId="+typeId;
 				if(listType == "department"){
 					url += "&deptId="+$("#dept").val();
 				}
@@ -321,9 +407,6 @@
 	   			});
 			}
 	        	
-	        function SearchOptionHidden() {
-	        	$.modal.close();
-	        }	        
 	        function ShowQuickAddres() {
 	        	if (useAnyoneEdit != "YES") {
 		        	if (deptAdmin != "Y" && pFolderType == "D") {
@@ -629,7 +712,7 @@
 		  	</c:if>
 		  	<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine'}">
 	       	 <li><span id="SearchOption" onClick="doLayerPopup(this);" mode="off"><spring:message code='ezJournal.t59' /></span></li>
-	       	 <li><span onClick=""><spring:message code='ezJournal.t60' /></span></li>
+	       	 <li><span onClick="doSelectSumJournal();"><spring:message code='ezJournal.t60' /></span></li>
 		  	</c:if>
 	        <c:if test="${listType eq 'department'}">
 		        <li style="background:none">
@@ -778,7 +861,22 @@
 						</td>
 					</tr>
 				</table>
-			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
+		</div>
+	</div>
+	<div class="jquery-modal blocker current" id="selectSumJournal" style="display:none;">
+		<div id="sumpopup" class="popupwrap1 modal popup" style="width:175px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 500px; display: inline-block;">
+			<h1><spring:message code='ezJournal.t70' /></h1>
+			<table class="mainlist" id="basicFormList">
+			</table>
+				<br />
+				<table style="width: 100%">
+					<tr>
+						<td style="text-align: center;">
+							<a class="imgbtn"><span onClick="writeSumJournal();"><spring:message code='ezBoard.t188' /></span></a> 
+							<a class="imgbtn"><span onClick="sumSearchOptionHidden();"><spring:message code='ezBoard.t15' /></span></a>
+						</td>
+					</tr>
+				</table>
 		</div>
 	</div>
 	<c:if test="${listType eq 'department' or listType eq 'mine' }">

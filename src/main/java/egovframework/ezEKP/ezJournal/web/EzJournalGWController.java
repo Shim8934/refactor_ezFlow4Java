@@ -8,11 +8,11 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +31,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
@@ -42,7 +45,6 @@ import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
-import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -525,12 +527,36 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 일지 취합 후 내용 리턴 (금일, 익일 부분)
 	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals-sum", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject journalsSumContent(@PathVariable String typeId, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezjournal/journals-sum", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject journalsSumContent(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W journalsSumContent started.");
-		LOGGER.debug("typeId=" + typeId);
-		
+		Gson gson = new Gson();
 		JSONObject result = new JSONObject();
+		
+		try {
+			
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			
+			String journalIdArray = (String) jsonParam.get("journalIdList").toString();
+			
+			List<String> journalIdList = gson.fromJson(journalIdArray, new TypeToken<List<String>>(){}.getType());
+			
+			LOGGER.debug("companyId : " + companyId);
+			
+			JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalDivideThisNext(journalIdList, request.getParameter("formId"), companyId, info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", journalFormInfoVO);
+		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
 		
 		LOGGER.debug("ezJournal G/W journalsSumContent ended.");
 		return result;

@@ -47,33 +47,33 @@
 				});
 	   		}
 	   		
-	   		//레이어팝업의 부서
-	   		function setDeptListLayerPopup(){
-	   			$('#lptreeview').jstree({ 
-					'core' : {'data' : treeContent},
-					'plugins': ["wholerow"],
-					'themes' : {'responsive' : true}
-				}).on('changed.jstree', function (e, data) {
-					lpDeptId = data.instance.get_node(data.selected).id;
-					lpDeptName = data.instance.get_node(data.selected).text;
-				}).on('dblclick.jstree', function (e, data) {
-					addDeptInLP();
-				});
-	   		}
+// 	   		//레이어팝업의 부서
+// 	   		function setDeptListLayerPopup(){
+// 	   			$('#lptreeview').jstree({ 
+// 					'core' : {'data' : treeContent},
+// 					'plugins': ["wholerow"],
+// 					'themes' : {'responsive' : true}
+// 				}).on('changed.jstree', function (e, data) {
+// 					lpDeptId = data.instance.get_node(data.selected).id;
+// 					lpDeptName = data.instance.get_node(data.selected).text;
+// 				}).on('dblclick.jstree', function (e, data) {
+// 					addDeptInLP();
+// 				});
+// 	   		}
 	   		
-	   		//부서 리스트 오른쪽에 이동!
-	   		function addDeptInLP(){
-	   			var flag = true;
-	   			for (var i = 0; i < lpDepts.length ; i++) {
-					if(lpDepts[i] == lpDeptId){
-						flag=false;
-					}
-				}
-	   			if(flag){
-		   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
-		   			lpDepts.push(lpDeptId);
-	   			}
-	   		}
+// 	   		//부서 리스트 오른쪽에 이동!
+// 	   		function addDeptInLP(){
+// 	   			var flag = true;
+// 	   			for (var i = 0; i < lpDepts.length ; i++) {
+// 					if(lpDepts[i] == lpDeptId){
+// 						flag=false;
+// 					}
+// 				}
+// 	   			if(flag){
+// 		   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
+// 		   			lpDepts.push(lpDeptId);
+// 	   			}
+// 	   		}
 	   		
 	   		//사원 리스트 뿌리기
 	   		function setUserList(key,value){

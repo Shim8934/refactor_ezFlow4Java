@@ -13,7 +13,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 	        window.onload = function () {
-	        	$("#left span:first").click();
+	        	$("#fmenu").click();
 	        }
 	        
 	        function goJournalList(elem) {
@@ -45,7 +45,7 @@
 	        <div class="left_circular" title="<spring:message code='ezJournal.t1'/>">
 	        	<span><spring:message code='ezJournal.t1'/></span>
 	        </div>
-		    <h2><span listType='department' onClick="goJournalList(this);" typeId='${typeList[0].journaltypeId }' style="width:100%;display:inline-block;"><spring:message code='ezJournal.t49'/></span></h2>
+		    <h2><span listType='department' id="fmenu" onClick="goJournalList(this);" typeId='${typeList[0].journaltypeId }' style="width:100%;display:inline-block;"><spring:message code='ezJournal.t49'/></span></h2>
 		    <ul>
 		    	<c:choose>
 		    		<c:when test="${not empty typeList }">

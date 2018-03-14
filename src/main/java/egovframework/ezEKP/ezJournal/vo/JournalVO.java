@@ -22,7 +22,28 @@ public class JournalVO {
 	private String mine;
 	private String writerId;
 	private List<JournalFileVO> fileList;
+	private String thisContent;
+	private String nextContent;
+	private String formStatus;
 	
+	public String getFormStatus() {
+		return formStatus;
+	}
+	public void setFormStatus(String formStatus) {
+		this.formStatus = formStatus;
+	}
+	public String getThisContent() {
+		return thisContent;
+	}
+	public void setThisContent(String thisContent) {
+		this.thisContent = thisContent;
+	}
+	public String getNextContent() {
+		return nextContent;
+	}
+	public void setNextContent(String nextContent) {
+		this.nextContent = nextContent;
+	}
 	public String getWriterId() {
 		return writerId;
 	}
