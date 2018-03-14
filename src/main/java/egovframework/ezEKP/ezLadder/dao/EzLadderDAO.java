@@ -57,6 +57,10 @@ public class EzLadderDAO extends EgovAbstractDAO {
 	}
 	
 	/** boh */
+	public int selectRecentLadderId(String writerId) throws Exception {
+		return (int) select("EzLadderDAO.selectRecentLadderId", writerId);
+	}
+	
 	/** 유저 즐겨찾기 관련 */
 	@SuppressWarnings("unchecked")
 	public List<LadderBmVO> selectBMGroup(LadderBmVO bmGroup) throws Exception {

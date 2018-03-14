@@ -903,7 +903,6 @@ function ListView() {
 
     //리스트뷰에 Row 추가
     function AddDataRow(objTr, addXml) {
-
         objTr.style.cursor = "pointer";
         objTr.onmouseover = new Function("tr_mouseover(this)");
         objTr.onmouseout = new Function("tr_mouseout(this)");
@@ -930,8 +929,21 @@ function ListView() {
             var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
             var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
 
+            var oText = null;
+            var valueAttr = null;
+            
+            if(oDatas[0].firstChild.nodeValue.substring(0, 14) === "anonyAttendant") {
+            	oText = document.createElement("input");
+            	valueAttr = document.createAttribute("value");
+            	valueAttr.value = SelectSingleNodeValue(oCells[0], "VALUE");
+            	oText.setAttributeNode(valueAttr);
+            	valueAttr = document.createAttribute("class");
+            	valueAttr.value = "fullwidth";
+            	oText.setAttributeNode(valueAttr);
+            } else {
+            	oText = document.createTextNode(strValue);
+            }
 
-            var oText = document.createTextNode(strValue);
             var objTd = document.createElement("TD");
 
             if (strStyle != "") {

@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezLadder/TreeView.js"></script>
@@ -86,12 +87,11 @@
 	                try {
 	                    RetValue = opener.ladder_select_attendant_dialogArguments[0];
 	                    ReturnFunction = opener.ladder_select_attendant_dialogArguments[1];
-	                    console.log(RetValue);
 	                } catch (e) {
 	                    RetValue = window.dialogArguments;
 	                }
 	            }
-	
+	            
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
 	                document.body.style.WebkitUserSelect = 'none';
@@ -799,6 +799,7 @@
 				var i = 0;
 				var len = userlist.length;
 				var pparsingXML = "";
+				var totallen = 0;
 				         
 				var strId = "";
 				var strName = "";
@@ -836,7 +837,7 @@
 					pparsingXML += "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 					pparsingXML += "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 					pparsingXML += "<DATA8>" + phone + "</DATA8>";
-					pparsingXML += "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+					pparsingXML += "<VALUE>"  + strName + "</VALUE></CELL></ROW>";
 					pparsingXML += "</ROWS></LISTVIEWDATA2>";
 				
 					Resultxml = loadXMLString(pparsingXML);
@@ -869,7 +870,6 @@
 				}
 				var listid ="MsgToList";
 				_RowObjectID = null;
-				console.log(Resultxml);		
 			}	
 	    
 		    function CheckMailReceiver(selRow, option) {
@@ -1242,13 +1242,17 @@
 		        var totalRows = selList.GetDataRows();
 		        var totalLen = totalRows.length;
 		        
-		        console.log('total row  '+totalRows);
-		        console.log('total len  '+totalLen);
 		        for(var i = 0; i < totalLen; i++) {
 		        	rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
-		            rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
-		            rtn["name1"][i] = GetAttribute(totalRows[i], "DATA2");
-		            rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3");
+		        	if(GetAttribute(totalRows[i], "DATA1").substring(0, 14) === "anonyAttendant") {
+		        		rtn["name"][i] = $("#MsgToList_TR_" + (i + 1) + " input").val();
+		        		rtn["name1"][i] = $("#MsgToList_TR_" + (i + 1) + " input").val();
+		        		rtn["name2"][i] = $("#MsgToList_TR_" + (i + 1) + " input").val();
+		        	} else {
+			            rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
+			            rtn["name1"][i] = GetAttribute(totalRows[i], "DATA2");
+			            rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3");
+		        	}
 		            rtn["deptname"][i] = GetAttribute(totalRows[i], "DATA4");
 		            rtn["deptname2"][i] = GetAttribute(totalRows[i], "DATA5");
 		        }

@@ -200,38 +200,39 @@ public class EzLadderGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			String allLadData = request.getParameter("allLadData");
+			String ladder = request.getParameter("ladder");
+			String ladderLine = request.getParameter("ladderLine");
 			String writerName = request.getParameter("writerName");
 			String writerName2 = request.getParameter("writerName2");
 			String deptName = request.getParameter("deptName");
 			String deptName2 = request.getParameter("deptName2");
 			int tenant_id = Integer.parseInt(request.getParameter("tenant_id"));
+			String regdate = printDate();
 			
 			JSONParser jp = new JSONParser();
-			JSONObject ladObj = (JSONObject) jp.parse(allLadData);
+			JSONObject lad = (JSONObject) jp.parse(ladder);
 			
-			JSONObject lad = (JSONObject) ladObj.get("lad");
 			LadderVO ladVO = new LadderVO();
 			
 			ladVO.setTenant_id(tenant_id); 
 			ladVO.setTitle((String) lad.get("title"));
 			ladVO.setType(Integer.parseInt((String) lad.get("type")));
-			ladVO.setSecretFlag(Integer.parseInt((String) lad.get("secretflag")));
+			ladVO.setSecretFlag((int)(long) lad.get("secretflag"));
 			ladVO.setWriterId(writerId);
 			ladVO.setWriterName(writerName);
 			ladVO.setWriterName2(writerName2);
 			ladVO.setDeptName(deptName);
 			ladVO.setDeptName2(deptName2);
-			ladVO.setLineCnt(Integer.parseInt((String) lad.get("linecnt")));
-			ladVO.setWriteDate((String) lad.get("writedate"));
+			ladVO.setLineCnt((int)(long) lad.get("linecnt"));
+			ladVO.setWriteDate(regdate);
 			
-			JSONArray ladLineArr = (JSONArray) ladObj.get("ladline");
+			JSONArray ladLineArr = (JSONArray) jp.parse(ladderLine);
 			List<LadderLineVO> ladLineList = new ArrayList<LadderLineVO>();
-			LadderLineVO ladlineVO = new LadderLineVO();
 			JSONObject ladline = new JSONObject();
 			
 			int len = ladLineArr.size();
 			for(int i = 0; i < len; i++) {
+				LadderLineVO ladlineVO = new LadderLineVO();
 				ladline = (JSONObject) ladLineArr.get(i);
 				
 				ladlineVO.setTenant_id(tenant_id);
@@ -239,17 +240,18 @@ public class EzLadderGWController {
 				ladlineVO.setUserName((String) ladline.get("username"));
 				ladlineVO.setUserName2((String) ladline.get("username2"));
 				ladlineVO.setItem((String) ladline.get("item"));
-				ladlineVO.setLadderOrder(Integer.parseInt((String) ladline.get("ladderorder")));
+				ladlineVO.setLadderOrder((int)(long) ladline.get("ladderorder"));
 				ladlineVO.setWriterId(writerId);
 				
 				ladLineList.add(ladlineVO);
 			}
 			
 			ezLadderService.insertLadder(ladVO, ladLineList);
+			int ladderId = ezLadderService.selectRecentLadderId(writerId);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", null);
+			result.put("data", ladderId);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -330,9 +332,9 @@ public class EzLadderGWController {
 			int tenant_id = Integer.parseInt(request.getParameter("tenant_id"));
 			String bmName = request.getParameter("bmName");
 			String bmUsers = request.getParameter("bmUsers");
-			String dateStr = printDate();
+			String regdate = printDate();
 			
-			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, 0, bmName, userId, dateStr);
+			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, 0, bmName, userId, regdate);
 			List<LadderBmUserVO> bmUsersVO = makeBmUsersVO(tenant_id, 0, userId, bmUsers, "");
 			
 			ezLadderService.insertBM(bmGroupVO, bmUsersVO);
@@ -364,9 +366,9 @@ public class EzLadderGWController {
 			int tenant_id = Integer.parseInt(request.getParameter("tenant_id"));
 			String bmName = request.getParameter("bmName");
 			String bmUsers = request.getParameter("bmUsers");
-			String dateStr = printDate();
+			String regdate = printDate();
 			
-			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, ladderBMId, bmName, userId, dateStr);
+			LadderBmVO bmGroupVO = makeBmGroupVO(tenant_id, ladderBMId, bmName, userId, regdate);
 			List<LadderBmUserVO> bmUsersVO = makeBmUsersVO(tenant_id, ladderBMId, userId, bmUsers, "");
 			
 			ezLadderService.updateBM(bmGroupVO, bmUsersVO);

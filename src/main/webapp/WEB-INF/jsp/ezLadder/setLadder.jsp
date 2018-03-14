@@ -8,25 +8,28 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezLadder.t009" /></title>
+		<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 		<script type="text/javascript" src="/js/ezLadder/string_component.js"></script>
 		<script type="text/javascript" src="/js/ezLadder/ladderSetting.js"></script>
-		<script type="text/javascript" src="/css/ezLadder/ladder_CSS.css"></script>
-		<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 		
 		<script type="text/javascript">
-			var g_attendant = null;
-			var ladder_select_attendant_dialogArguments = new Array();
-		
 			$(function() {
-				$(".ladderType:eq(<c:out value='${ladType}' />)").addClass("active");
+				ladder_set_init();
+				
+				$(window).resize(function() {
+					ladder_window_resize();
+				});
 				
 				$("#makeLad").on("click", function() {
 					makeLadder();
+				});
+				$("#ladderPreList").on("click", function() {
+					ladder_prelistPopUp();
 				});
 				$("#addAttendant").on("click", function() {
 					_manage_attendant();
@@ -40,8 +43,8 @@
 					$(".ladderType").removeClass("active");
 					$(this).addClass("active");
 				});
-				$(".ladderSecret").on("click", function() {
-					$(".ladderSecret").toggleClass("active");
+				$("#ladderSecret").on("click", function() {
+					$("#ladderSecret").toggleClass("active");
 				});
 				$(document).on("click", "span.remove", function() {
 					attendant_remove($(this).closest("li").index());
@@ -52,7 +55,7 @@
 					min: 0,
 					max: 0,
 					slide: function( event, ui ) {
-						$("#amount").val(ui.value);
+						$("#amount").text(ui.value);
 					}
 				});
 				$("#amount").val($("#slider-range-min").slider("value"));
@@ -84,63 +87,86 @@
 				});
 				
 			});
+			
+			function ladder_set_init() {
+				$(".ladderType:eq(<c:out value='${ladType}' />)").addClass("active");
+				ladder_window_resize();
+			}
+			
+			function set_input_value() {
+				var len = 0;
+				var name = "";
+				
+				if(g_attendant !== null) {
+					len = g_attendant["id"].length;
+				}
+				
+				for(var i = 0; i < len; i++) {
+					if(g_attendant["id"][i].substring(0, 15) === "anonyAttendant_") {
+						name = $(".attendant:eq(" + i + ") input").val();
+						g_attendant["name"][i] = name;
+						g_attendant["name1"][i] = name;
+						g_attendant["name2"][i] = name;						
+					}
+					g_item[i] = $("#itemList li:eq(" + i + ") input").val();
+				}
+				
+			}
 
 			function _manage_attendant() {
 			    check_name("attendant");
 			}
-			
+
 			/** 조직도 호출 */
+			var g_item = [];
+			var g_attendant = null;
+			var ladder_select_attendant_dialogArguments = [];
 			function manage_attendant_after() {
+				set_input_value();
+				
 				ladder_select_attendant_dialogArguments[0] = g_attendant;
 			    ladder_select_attendant_dialogArguments[1] = manage_attendant_Complete;
 			    ladder_select_attendant_dialogArguments[2] = true;
 
 			    GetOpenWindow("/ezLadder/setLadderAttendant.do", "ladder_select_attendant", 970, 680);
 			}
-			
+
 			/** 참여자+아이템 추가 */
 			function manage_attendant_Complete(attendList, attendType, arrayType) {
-				console.log("manage_attendant_Complete");
-				var i = 0;
 				var len = 0;
+				var totallen = 0;
 				
 				if(typeof attendList !== "undefined") {
-					if(arrayType === "xml") { // 바로 입력
+					if(arrayType === "xml") { // xml value
 						console.log('xml');
-						i = 0;
 						len = attendList.length;
-	
-						if(typeof g_attendant === "undefined") {
-							g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
-						}
 						
-						console.log('i  '+i);
-						console.log('len  '+len);
-						for(; i < len; i++) {
-							g_attendant["name"].push(getNodeText(GetChildNodes(SelectNodes(attendList[i], "LISTVIEWDATA/ROWS/ROW")[0])[3]));
-							g_attendant["name1"].push(getNodeText(attendList[i].getElementsByTagName("DATA5")[0]));
-							g_attendant["name2"].push(getNodeText(attendList[i].getElementsByTagName("DATA6")[0]));
+						for(var i = 0; i < len; i++) {
+							totallen = g_attendant["id"].length;
+							g_attendant["name"][totallen] = getNodeText(GetChildNodes(SelectNodes(attendList[i], "LISTVIEWDATA/ROWS/ROW")[0])[3]);
+							g_attendant["name1"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA5")[0]);
+							g_attendant["name2"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA6")[0]);
 							
 							if(attendType == "anonyuser") {
-								g_attendant["id"].push("anonyAttendant");
-								g_attendant["deptname"].push("");
-								g_attendant["deptname2"].push("");
-								$("#attendantList").append("<li class='attendant'><input type='text' value='" +g_attendant["name"][g_attendant["id"].length - 1]+ "' /><span class='remove'>X</span></li>");
+								g_attendant["id"][totallen] = "anonyAttendant_" + totallen;
+								g_attendant["deptname"][totallen] = "";
+								g_attendant["deptname2"][totallen] = "";
+								$("#attendantList").append("<li class='attendant'><input type='text' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
 							} else {
-								g_attendant["id"].push(getNodeText(attendList[i].getElementsByTagName("DATA2")[0]));
-								g_attendant["deptname"].push(getNodeText(attendList[i].getElementsByTagName("DATA4")[0]));
-								g_attendant["deptname2"].push(getNodeText(attendList[i].getElementsByTagName("DATA7")[0]));
-								$("#attendantList").append("<li class='attendant'>" + g_attendant["name"][g_attendant["id"].length - 1] + "<span class='remove'>X</span></li>");
+								g_attendant["id"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA2")[0]);
+								g_attendant["deptname"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA4")[0]);
+								g_attendant["deptname2"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA7")[0]);
+								$("#attendantList").append("<li class='attendant'><input type='text' disabled='disabled' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
 							}
 							
-			            	$("#itemList").append("<li class='item'><input type='text' value='" +g_attendant["name"][g_attendant["id"].length - 1]+ " item' /></li>");
+							g_item[totallen] = "";
+			            	$("#itemList").append("<li class='item'><input type='text' value='" + g_item[i] + "' /></li>");
 						}
-					} else{ // 조직도에서 불러옴
+					} else{ // json value
 						console.log('json');
-						i = 0;
 						len = attendList["id"].length;
-						console.log('len  '+len);
-	
+						itemindex = g_item.length - 1;
+
 						if(typeof g_attendant === "undefined" || ladder_select_attendant_dialogArguments[2]) {
 							g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 							$("#attendantList").html("");
@@ -148,37 +174,49 @@
 							ladder_select_attendant_dialogArguments[2] = false;
 						}
 						
-						for(; i < len; i++) {
-							g_attendant["name"].push(attendList["name"][i]);
-							g_attendant["name1"].push(attendList["name"][i]);
-							g_attendant["name2"].push(attendList["name"][i]);
+						for(var i = 0; i < len; i++) {
+							g_attendant["name"][i] = attendList["name"][i];
+							g_attendant["name1"][i] = attendList["name"][i];
+							g_attendant["name2"][i] = attendList["name"][i];
 							
-							if(attendType == "anonyuser" || attendList["id"][i] === "anonyAttendant") {
-								g_attendant["id"].push("anonyAttendant");
-								g_attendant["deptname"].push("");
-								g_attendant["deptname2"].push("");
-								$("#attendantList").append("<li class='attendant'><input type='text' value='" +g_attendant["name"][g_attendant["id"].length - 1]+ "' /><span class='remove'>X</span></li>");
+							if(attendList["id"][i] === "anonyAttendant" || attendList["id"][i].substring(0, 15) === "anonyAttendant_") {
+								g_attendant["id"][i] = "anonyAttendant_" + i;
+								g_attendant["deptname"][i] = "";
+								g_attendant["deptname2"][i] = "";
+								$("#attendantList").append("<li class='attendant'><input type='text' value='" + g_attendant["name"][i] + "' /><span class='remove'>X</span></li>");
 							} else {
-								g_attendant["id"].push(attendList["id"][i]);
-								g_attendant["deptname"].push(attendList["deptname"][i]);
-								g_attendant["deptname2"].push(attendList["deptname2"][i]);
-								$("#attendantList").append("<li class='attendant'>" + g_attendant["name"][g_attendant["id"].length - 1] + "<span class='remove'>X</span></li>");
+								g_attendant["id"][i] = attendList["id"][i];
+								g_attendant["deptname"][i] = attendList["deptname"][i];
+								g_attendant["deptname2"][i] = attendList["deptname2"][i];
+								$("#attendantList").append("<li class='attendant'><input type='text' disabled='disabled' value='" + g_attendant["name"][i] + "' /><span class='remove'>X</span></li>");
+							}
+							if(i >= itemindex) {
+								g_item[i] = "";
 							}
 							
-			            	$("#itemList").append("<li class='item'><input type='text' value='" +g_attendant["name"][g_attendant["id"].length - 1]+ " item' /></li>");
+			            	$("#itemList").append("<li class='item'><input type='text' value='" + g_item[i] + "' /></li>");
 						}
 					}
 				}
 				changeSliderValue();
+				add_user_change_ulsize(g_attendant["id"].length);
 			}
-			
-			/** 참여자 추가할때마다 슬라이더 바 조절 */
+
+			/** 참여자 변경될때 슬라이더 바 조절 */
+			var maxLine = 5;
 			function changeSliderValue() { 
-				$("#slider-range-min").slider("option", "max", g_attendant["id"].length * 5);
-				$("#slider-range-min").slider("option", "value", Math.round(g_attendant["id"].length * 5 / 2));
-				$("#amount").val($("#slider-range-min").slider("value"));
+				var len = g_attendant["id"].length;
+				if(len >= 2) {
+					$("#slider-range-min").slider("option", "min", len);
+					$("#slider-range-min").slider("option", "max", len * maxLine);
+					$("#slider-range-min").slider("option", "value", Math.round(len * maxLine / 2));
+				} else {
+					$("#slider-range-min").slider("option", "max", 0);
+					$("#slider-range-min").slider("option", "value", 0);
+				}
+				$("#amount").text($("#slider-range-min").slider("value"));
 			}
-			
+
 			/** 참여자 삭제 */
 			function attendant_remove(index) {
 				g_attendant["id"].splice(index, 1);
@@ -187,59 +225,16 @@
 				g_attendant["name2"].splice(index, 1);
 				g_attendant["deptname"].splice(index, 1);
 				g_attendant["deptname2"].splice(index, 1);
+				g_item.splice(index, 1);
 				
 				$(".attendant:eq(" + index + ")").remove();
 				$(".item:eq(" + index + ")").remove();
+				add_user_change_ulsize(g_attendant["id"].length);
+				
+				changeSliderValue()
 			}
-			
-			/** 사다리 만들기 */
-			function makeLadder() {
-				var lad = {};
-				var ladline = { "userid": [], "username": [], "username2": [], "item": [], "ladderorder": [] };
-				var ladstr = "";
-				var ladlinestr = "";
-				var today = GetDateTimeFormatString();
-				var i = 0;
-				var len = $("#attendantList li").length;
-				
-				lad.title = $("#title").val();
-				lad.type = $(".ladderType.active").attr("typeNumber");
-				lad.secretflag = $(".ladderSecret.active").length;
-				lad.linecnt = $("#slider-range-min").slider("option", "value");
-				lad.writedate = today;
-				
-				for(; i < len; i++) {
-					ladline["userid"].push(g_attendant["id"][i]);
-					if (g_attendant["id"][i] !== "anonyAttendant") {
-						ladline["username"].push(g_attendant["name"][i]);
-						ladline["username2"].push(g_attendant["name2"][i]);
-					} else {
-						ladline["username"].push($(".attendant:eq(" + i + ") input").val());
-						ladline["username2"].push($(".attendant:eq(" + i + ") input").val());
-					}
-					ladline["item"].push($(".item:eq(" + i + ") input").val());
-					ladline["ladderorder"].push(i);
-				}
-				
-				ladstr = JSON.stringify(lad);
-				ladlinestr = JSON.stringify(ladline);
-				
-				console.log(lad);
-				console.log(ladline);
-				
-				/* $.ajax({ //수정하기
-					type: "POST",
-					url: "/ezLadder/setLadder.do",
-					data: { 
-						allLadData: ladstr
-					},
-					dataType: "json",
-					success: function(result) {
-						console.log('make ladder success');
-					}
-				}); */
-			} 
-			
+
+			/** 이름 검색 */
 			var ladder_check_Attendant_dialogArguments = [];
 			var i = 0;
 			var namelength = 0;
@@ -247,7 +242,7 @@
 			var AttendantXML = [];
 			var overlapAttendantXML = [];
 			function check_name(type) {
-			    if (type != undefined)
+			    if (type !== undefined)
 			        checknametype = type;
 			    else
 			        checknametype = "";
@@ -293,19 +288,19 @@
 			            	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 			            }
 			            
-		                var length = g_attendant["name"].length;
-		                for (var j = 0; j < length; j++) {
-		                	if(g_attendant["id"][j] !== "anonyAttendant" && g_attendant["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
-	                			overlapAttendantXML.push(xmlDOM);
+			            var length = g_attendant["name"].length;
+			            for (var j = 0; j < length; j++) {
+			            	if(g_attendant["id"][j] !== "anonyAttendant" && g_attendant["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
+			        			overlapAttendantXML.push(xmlDOM);
 			                	break;
-		                	}		   
-		                }
-		                
-		                if(typeof overlapAttendantXML == "undefined" || g_attendant["id"].indexOf(getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) === -1) {
-		                	AttendantXML.push(xmlDOM);
-		                }
-		                
-			        } else { // 검색결과 여러명일때 
+			            	}		   
+			            }
+			            
+			            if(typeof overlapAttendantXML == "undefined" || g_attendant["id"].indexOf(getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) === -1) {
+			            	AttendantXML.push(xmlDOM);
+			            }
+			            
+			        } else { // 검색결과 여러명일때 >수정
 			            var rgParams = new Array();
 			            rgParams["addrBook"] = xmlDOM;
 			            rgParams["name"] = "";
@@ -345,37 +340,32 @@
 			    if (checknametype != "")
 			        manage_attendant_after();
 			}
-			
+
 			function check_name_Complete(rgParams) {
 				console.log('check name com');
 			    DivPopUpHidden();
-			    
-			    console.log('name:'+rgParams["name"]);
 			    
 			    if (rgParams["name"] != "") {
 			        if (g_attendant == null)
 			            g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 
-		            var length = g_attendant["id"].length;
-		            for (var j = 0; j < length; j++) {
-		                if (g_attendant["id"][j] == rgParams["id"]) {
-		                    console.log('중복사용자');
-		                    return;
-		                }
-		            }
+			        var length = g_attendant["id"].length;
+			        for (var j = 0; j < length; j++) {
+			            if (g_attendant["id"][j] == rgParams["id"]) {
+			                console.log('중복사용자');
+			                return;
+			            }
+			        }
 
 			        var length = g_attendant["name"].length;
 
-		        	g_attendant["name"].push(rgParams["name"]);
+			    	g_attendant["name"].push(rgParams["name"]);
 			        g_attendant["id"].push(rgParams["id"]);
-		        	g_attendant["deptname"].push(rgParams["deptname"]);
-		        	g_attendant["name1"].push(rgParams["name1"]);
-		        	g_attendant["name2"].push(rgParams["name2"]);
-		        	g_attendant["deptname2"].push(rgParams["deptname2"]);
-		        	
-			        console.log('g attend');
-			        console.log(g_attendant);
-
+			    	g_attendant["deptname"].push(rgParams["deptname"]);
+			    	g_attendant["name1"].push(rgParams["name1"]);
+			    	g_attendant["name2"].push(rgParams["name2"]);
+			    	g_attendant["deptname2"].push(rgParams["deptname2"]);
+			    	
 			        if (length == 0)
 			        	$("#attendantList").append("<li class='attendant'>" + g_attendant["name"][length] + "</li>");
 			        else
@@ -391,55 +381,118 @@
 			    if (checknametype != "")
 			        manage_attendant_after();
 			}
+			
+			/** 사다리 만들기 */
+			function makeLadder() {
+				var lad = { "title": {}, "type": {}, "secretflag": {}, "linecnt": {} };
+				var ladline = [];
+				
+				lad["title"] = $("#title").val();
+				lad["type"] = $(".ladderType.active").attr("num");
+				lad["secretflag"] = $("#ladderSecret.active").length;
+				lad["linecnt"] = $("#slider-range-min").slider("option", "value");
+				
+				var len = g_attendant["id"].length;
+				for(var i = 0; i < len; i++) {
+					var temp_ladline = { "userid": {}, "username": {}, "username2": {}, "item": {}, "ladderorder": {} };
+					temp_ladline["userid"] = g_attendant["id"][i];
+					if (g_attendant["id"][i].substring(0, 15) !== "anonyAttendant_") {
+						temp_ladline["username"] = g_attendant["name"][i];
+						temp_ladline["username2"] = g_attendant["name2"][i];
+					} else {
+						temp_ladline["username"] = $(".attendant:eq(" + i + ") input").val();
+						temp_ladline["username2"] = $(".attendant:eq(" + i + ") input").val();
+					}
+					temp_ladline["item"] = $(".item:eq(" + i + ") input").val();
+					temp_ladline["ladderorder"] = i;
+					ladline[i] = temp_ladline;
+				}
+				
+				var ladstr = JSON.stringify(lad);
+				var ladlinestr = JSON.stringify(ladline);
+				
+				$.ajax({ 
+					type: "POST",
+					url: "/ezLadder/setLadder.do",
+					data: { 
+						ladder: ladstr,
+						ladderLine: ladlinestr
+					},
+					dataType: "json",
+					success: function(result) {
+						console.log('make ladder success');
+					}
+				});
+			} 
+			
+			
 
 		</script>
 	</head>
-	<body>
-		<div>
-			<table class="ladder_table">
+	<body class="mainbody">
+		<h1>사다리 게임</h1>
+		<div class="fullwidth">
+			<table class="setTable">
 				<tr>
-					<td>
-						<input type="text" id="title" placeholder="제목" />
-					</td>
+					<td></td><td style="width: 5000px;"></td><td></td>
 				</tr>
 				<tr>
-					<td>
-						<label for="amount">line count: </label>
-						<input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-						<div id="slider-range-min"></div>
+					<td colspan="2" style="width: 98%;">
+						<div class="wrap left">
+							<div class="title floatL">
+								<div class="icondiv" id="ladderPreList">이전사다리</div>
+								<input type="text" class="input" id="title" style="height: 100%; width: 100%;" placeholder="제목" />
+							</div>
+						</div>
 					</td>
-				</tr>
-				<tr>
 					<td>
-						<div class="Seldiv ladderSecret">비밀옵션</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div class="Seldiv ladderType" typeNumber="0">꽝</div>
-						<div class="Seldiv ladderType" typeNumber="1">돈</div>
-						<div class="Seldiv ladderType" typeNumber="2">순서</div>
-						<div class="Seldiv ladderType" typeNumber="3">직접</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input type="text" id="inputAttendant" placeholder="참여자추가" />
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<button id="addAttendant">참여자추가</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div id="ladderLineBox">
-							<ul id="attendantList"></ul>
-							<ul id="itemList"></ul>
+						<div class="wrap right">
+							<div class="icondiv floatR fullwidth" id="ladderSecret">비밀글</div>
 						</div>
 					</td>
 				</tr>
+				<tr>
+					<td>
+						<div class="wrap left">
+							<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px;" placeholder="참여자추가" />
+						</div>
+					</td>
+					<td colspan="2">
+						<div class="wrap right">
+							<div class="floatR" style="width: 212px;">
+								<div class="icondiv ladderType" num="0">꽝</div>
+								<div class="icondiv ladderType" num="1">돈</div>
+								<div class="icondiv ladderType" num="2">순서</div>
+								<div class="icondiv ladderType" num="3">직접</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<div class="wrap left">
+							<div class="floatL icondiv" id="amount">0</div>
+							<div id="slider-range-min" style="width: 300px;"></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" style="height: 700px; padding: 10px 0px;">
+						<div class="wrap center" style="height: 100%; width: 100%;">
+							<div id="addAttendant" class="icondiv">add</div>
+							<div id="ladderLineBox" style="height: 100%; width: 100%; border: 1px solid gray">
+								<ul id="attendantList"></ul>
+								<ul id="itemList"></ul>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="wrap center">
+				<div class="ladderBtn" id="makeLad" style="float: right;">사다리 게임 만들기</div>
+			</div>
+			<table>
+				
 				<tr>
 					<td>
 						<button id="bmtest">bmtest</button>

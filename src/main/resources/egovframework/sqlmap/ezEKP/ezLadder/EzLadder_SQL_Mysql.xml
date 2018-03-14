@@ -448,7 +448,7 @@
 			TBL_LADDER_LINE (TENANT_ID, LADDERID, USERID, USERNAME, USERNAME2, ITEM, LADDERORDER)
 		VALUES
 			(#tenant_id#, #ladderId#, #userId#, #userName#, #userName2#, #item#, #ladderOrder#)
-		<selectKey keyProperty="ladderId" resultClass="Integer">
+		<selectKey keyProperty="ladderId" resultClass="Integer" type="pre">
 			SELECT 
 				MAX(LADDERID) 
 			FROM 
@@ -457,6 +457,17 @@
 				WRITERID = #writerId#
 		</selectKey>
 	</insert>
+	
+	<select id="EzLadderDAO.selectRecentLadderId" parameterClass="String" resultClass="Integer">
+		<![CDATA[
+		SELECT 
+			MAX(LADDERID) 
+		FROM 
+			TBL_LADDER 
+		WHERE 
+			WRITERID = #writerId#
+		]]>
+	</select>
 	
 	<select id="EzLadderDAO.selectLadderBMGroupList" parameterClass="LadderBmVO" resultClass="LadderBmVO">
 		SELECT 

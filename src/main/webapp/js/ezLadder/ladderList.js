@@ -321,3 +321,5 @@ function goToPageByNum(page) {
 	}
 	makePageSelPage();
 }
+
+/** boh - 이전사다리목록관련 */

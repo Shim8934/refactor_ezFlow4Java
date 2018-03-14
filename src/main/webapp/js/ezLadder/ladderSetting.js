@@ -1,21 +1,12 @@
-/** 날짜, 시간 구하기 */
-function GetDateTimeFormatString() {
-	var today = new Date();
-	var year = today.getFullYear();
-	var month = today.getMonth();
-	var day = today.getDate();
-	var hour = today.getHours();
-	var minutes = today.getMinutes();
-	var seconds = today.getSeconds();
-	var resultDate = new Date(year, month, day);
-	year = resultDate.getFullYear();
-	month = resultDate.getMonth() + 1;
-	day = resultDate.getDate();
-	if (month < 10)
-	    month = "0" + month;
-	if (day < 10)
-	    day = "0" + day;
-	return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+function ladder_window_resize() {
+	var win_width = $(window).width() - 20;
+	
+	$(".setTable").css("width", win_width + "px");
+	$("#ladderLineBox").css("width", (win_width - 40) + "px");
+}
+
+function add_user_change_ulsize(usernum) {
+	$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
 }
 
 /** 중복 처리 팝업 */

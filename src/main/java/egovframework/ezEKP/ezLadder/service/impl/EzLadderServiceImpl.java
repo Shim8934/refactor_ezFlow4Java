@@ -85,11 +85,16 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 	@Override
 	public void insertLadder(LadderVO lad, List<LadderLineVO> ladLineList) throws Exception {
-		/*ezLadderDAO.insertLadderSet(lad);
+		ezLadderDAO.insertLadderSet(lad);
 		
 		for(LadderLineVO ladLine : ladLineList) {
 			ezLadderDAO.insertLadderLine(ladLine);
-		}*/
+		}
+	}
+
+	@Override
+	public int selectRecentLadderId(String writerId) throws Exception {
+		return ezLadderDAO.selectRecentLadderId(writerId);
 	}
 
 	@Override
@@ -114,12 +119,6 @@ public class EzLadderServiceImpl implements EzLadderService {
 
 	@Override
 	public void insertBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUsers) throws Exception {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		Date date = new Date();
-		String regdate = formatter.format(date);
-		
-		logger.debug("### regdate "+regdate);
-		
 		ezLadderDAO.insertBMGroup(bmGroup);
 		
 		for(LadderBmUserVO bmuser : bmUsers) {
