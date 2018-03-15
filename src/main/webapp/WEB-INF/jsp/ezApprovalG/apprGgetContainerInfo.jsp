@@ -1131,7 +1131,7 @@
 		            var width = window.screen.availWidth;
 		            var left = (parseInt(width) - 525) / 2;
 		            var top = (parseInt(heigth) - 220) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=789px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=793px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		
@@ -1148,8 +1148,8 @@
 		            pDocID = tr[0].getAttribute("DATA1");
 		
 		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END";
-		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=600px,height=450px";
-		        feature = feature + GetOpenPosition(600, 450);
+		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=450px";
+		        feature = feature + GetOpenPosition(580, 450);
 		        window.open(url, "", feature);
 		    }
 		

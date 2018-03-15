@@ -29,7 +29,6 @@
 		        if (document.all("ListCompany").length == 0)
 		            alert("<spring:message code='ezEmail.t49' />");
 		        else {
-		            document.all("ListCompany").selectedIndex = 0;
 		            company_change();
 		        }
 		    }
@@ -253,7 +252,9 @@
 		<div id="mainmenu">
 			<span><b> <spring:message code='ezEmail.t59' /></b></span>
 			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
-	      		${listCompany}
+				<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>	      		
 	      	</select>
 			<ul>
 				<li><span onClick="add_dl()"><spring:message code='ezEmail.t60' /></span></li>
