@@ -659,8 +659,8 @@
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t868'/></th>
-      <td style="text-align:left;vertical-align:middle"><Input type="radio" style="vertical-align:text-bottom" name="rdoElectronicFlag" value="1" checked><spring:message code='ezApprovalG.t981'/>
-        <Input type="radio" style="vertical-align:text-bottom" name="rdoElectronicFlag" value="2"><spring:message code='ezApprovalG.t982'/></td>
+      <td style="text-align:left;"><Input type="radio" name="rdoElectronicFlag" value="1" checked><span style="vertical-align:middle;"> <spring:message code='ezApprovalG.t981'/></span>
+        <Input type="radio" name="rdoElectronicFlag" value="2"><span style="vertical-align:middle;"> <spring:message code='ezApprovalG.t982'/></span></td>
     </tr>
   </table>
 </Div>
@@ -681,12 +681,12 @@
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t109'/></th>
-      <td style="vertical-align:middle"><Input type="radio" style="vertical-align:text-bottom;" name="rdoSecType" value="1" checked onClick="return rdoSecType_onclick(this.value)">
-        <spring:message code='ezApprovalG.t47'/>
-        <Input type="radio" style="vertical-align:text-bottom;" name="rdoSecType" value="2" onClick="return rdoSecType_onclick(this.value)">
-        <spring:message code='ezApprovalG.t150'/>
-        <Input type="radio" style="vertical-align:text-bottom;" name="rdoSecType" value="3" onClick="return rdoSecType_onclick(this.value)">
-        <spring:message code='ezApprovalG.t988'/>
+      <td><Input type="radio" name="rdoSecType" value="1" checked onClick="return rdoSecType_onclick(this.value)">
+        <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t47'/></span>
+        <Input type="radio" name="rdoSecType" value="2" onClick="return rdoSecType_onclick(this.value)">
+        <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t150'/></span>
+        <Input type="radio"  name="rdoSecType" value="3" onClick="return rdoSecType_onclick(this.value)">
+        <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t988'/></span>
         <Select id="selSecLevel" style="width:60px;display:none">
         </Select>
       </td>
