@@ -1155,7 +1155,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, "", offset);
 			int tenantId     = userInfo.getTenantId();
 			
-			if (checkWfAdmin(userInfo) == true) {
+			if (checkWfAdmin(userInfo) == false) {
 				logger.debug("Privileges!");
 				result.put("status", "error");
 				result.put("code", "1");

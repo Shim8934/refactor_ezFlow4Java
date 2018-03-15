@@ -42,8 +42,6 @@
 					var result    = data.folderTree;
 					currentFolder = data.currentFolder;
 					
-					console.log(result);
-					
 					renderData(result, type == "dept" ? "0" : "1");
 				},
 				error : function(error) {

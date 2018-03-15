@@ -36,6 +36,7 @@
 				async: true,
 				success : function(data) {
 					var result = data.folderTree;
+					
 					renderData(result, type == "dept" ? "0" : "1");
 				},
  				error : function(error) {
