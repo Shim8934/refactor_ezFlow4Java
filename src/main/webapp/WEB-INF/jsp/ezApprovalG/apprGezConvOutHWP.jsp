@@ -21,7 +21,7 @@
 <%-- 	    	var pNoneActiveX = "<%=NoneActiveX%>"; --%>
 	        var pDocID = "${docID}";
 	        var pDocHref = "${docHref}";
-	        var pUserID = "{userinfo.id}";
+	        var pUserID = "${userinfo.id}";
 	        var flag = false;
 	        var flag2 = false;
 	        var newDocID = "";
@@ -134,7 +134,7 @@
 	
 			function OpenInformationUI(pInformationContent) {
 			    var parameter = pInformationContent;
-			    var url = "/ezApprovalG/ezAPROPINION.do";
+			    var url = "/ezApprovalG/ezAprOpinion.do";
 			    var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 			    var RtnVal = window.showModalDialog(url, parameter, feature);
 			    return RtnVal;
@@ -142,7 +142,7 @@
 	
 			function OpenAlertUI(pAlertContent) {
 			    var parameter = pAlertContent;
-			    var url = "/ezApprovalG/ezAPRALERT.do";
+			    var url = "/ezApprovalG/ezAprAlert.do";
 			    var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 			    var RtnVal = window.showModelessDialog(url, parameter, feature);
 			}
@@ -161,7 +161,7 @@
 			    try {
 			        if (pDocHref != "") {
 			            showProgress("<spring:message code='ezApprovalG.t368'/>");
-					    var URL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pDocHref);
+					    var URL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref);
 					    var isTrue = HwpCtrl.LoadFile(URL, false);
 				
 					    FieldsAvailable(isTrue);
@@ -179,7 +179,8 @@
 			    if (isTrue) {
 			        setAttachInfo(pDocID, "END", lstAttachLink);
 			        GetExchInfo();
-			
+			        
+			        /* 이효진 2018-03-15 경로수정 필요할듯 */
 			        if ((attachxml.length > 0) && (attachxsl.length > 0)) {
 			            btnXMLEdit.style.display = "";
 			            attachxmlPath = "/Upload_ApprovalG/" + companyID + "/sendXML/" + attachxml;
@@ -187,8 +188,9 @@
 			            attachxslPath = "/Upload_ApprovalG/" + companyID + "/sendXML/" + attachxsl;
 			            attachxslName = attachxsl.replace(PackDocID, "");
 			        }
+			        
 			        hideProgress();
-			
+			        
 			        var Rtnval = CheckOpinionInfo();
 			        if (Rtnval) {
 			            var pInformationContent = "<spring:message code='ezApprovalG.t9'/><br> <spring:message code='ezApprovalG.t170'/>";
@@ -208,7 +210,27 @@
 			}
 	
 			function SetSusinState() {
-			    var xmlhttp = createXMLHttpRequest();
+				var result = "";
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/updateSusinState.do",
+		    		data : {
+		    			docID : pDocID,
+		    			deptID : "Address",
+		    			recDate  : "",
+		    			mode : "send"
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}
+		    	});
+		        
+		        return result;
+		        
+			    /* var xmlhttp = createXMLHttpRequest();
 			    var xmlpara = createXmlDom();
 			    var objNode;
 			    createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -220,11 +242,11 @@
 			    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezAPRRECEIVE/aspx/UpdateSusinState.aspx", false);
 			    xmlhttp.send(xmlpara);
 			
-			    return getNodeText(loadXMLString(xmlhttp.responseText));
+			    return getNodeText(loadXMLString(xmlhttp.responseText)); */
 			}
 	
 			function CheckOpinionInfo() {
-			    var xmlhttp = createXMLHttpRequest();
+			    /* var xmlhttp = createXMLHttpRequest();
 			    var xmlpara = createXmlDom();
 			    var objNode;
 			    createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -240,7 +262,32 @@
 			    if (NodeList.length > 0)
 			        return true;
 			    else
-			        return false;
+			        return false; */
+			    
+				var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getEndOpinionInfo.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		}
+		    	});
+		
+		        Resultxml = result;
+		
+		        var NodeList = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
+		
+		        if (NodeList.length != "0") {
+		            return true;
+		        } else {
+		            return false;
+		        }
 			}
 	
 			function btnOpinion_onclick() {
@@ -248,7 +295,7 @@
 			    parameter[0] = pDocID;
 			    parameter[1] = "Show";
 			
-			    var url = "/myoffice/ezApprovalG/formContainer/AprEndOpinion.aspx";
+			    var url = "/ezApprovalG/aprEndOpinion.do"
 			    var feature = "status:no;dialogWidth:387px;dialogHeight:304px;scroll:no;edge:sunken"
 			    var ret = window.showModalDialog(url, parameter, feature);
 			}
@@ -304,7 +351,25 @@
 			}
 	
 			function SaveFile() {
-			    var xmlhttp = createXMLHttpRequest();
+				var result = "";
+				
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/saveEndFileHwp.do",
+		    		data : {
+		    			docID : pDocID,
+		    			html  : HwpCtrl.GetCloneData("", "HWP")
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}
+		    	});
+		        
+		        return 
+		        
+			    /* var xmlhttp = createXMLHttpRequest();
 			    var xmlpara = createXmlDom();
 			    var objNode;
 			    createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -314,11 +379,11 @@
 			    xmlhttp.open("POST", "aspx/SaveEndFileHWP.aspx", false);
 			    xmlhttp.send(xmlpara);
 			
-			    return xmlhttp.responseText;
+			    return xmlhttp.responseText; */
 			}
 	
 			function GetSealInfo() {
-			    var xmlhttp = createXMLHttpRequest();
+			    /* var xmlhttp = createXMLHttpRequest();
 			    var xmlpara = createXmlDom();
 			    var objNode;
 			    createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -327,11 +392,28 @@
 			    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezSealInfo/aspx/GetSealList.aspx", false);
 			    xmlhttp.send(xmlpara);
 			
-			    return loadXMLString(xmlhttp.responseText);
+			    return loadXMLString(xmlhttp.responseText); */
+			    
+				var result = "";
+		    	
+	    		$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApprovalG/getSealList.do",
+		    		data : {
+		    			flag : "LIST"
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		}
+		    	});
+	    		
+		        return result;
 			}
 	
 			function GetDeptSealInfo() {
-			    var xmlhttp = createXMLHttpRequest();
+			    /* var xmlhttp = createXMLHttpRequest();
 			    var xmlpara = createXmlDom();
 			    var objNode;
 			    createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -341,7 +423,28 @@
 			    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezSealInfo/aspx/GetDeptSealList.aspx", false);
 			    xmlhttp.send(xmlpara);
 			
-			    return loadXMLString(xmlhttp.responseText);
+			    return loadXMLString(xmlhttp.responseText); */
+			    
+				var result = "";
+		    	
+	    		$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApprovalG/getDeptSealList.do",
+		    		data : {
+		    			flag : "LIST",
+		    			deptID  : arr_userinfo[4]
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		},
+		    		error : function(jqXHR, textStatus, errorThrown) {
+		        		alert("<spring:message code = 'ezApprovalG.t228' />" + jqXHR.statusText);
+		        	}
+		    	});
+	    		
+		        return result;
 			}
 	
 			function btnStamp_onclick() {
@@ -381,7 +484,7 @@
 			
 			        if (HwpCtrl.CheckFieldExist("sealsign")) {
 			            HwpCtrl.SetFieldText("sealsign", "");
-			            HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(SealHref));
+			            HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURIComponent(SealHref));
 			            SetDocumentElement(HwpCtrl, "surl", SealHref);
 			            stampFlag = true;
 			        }
@@ -404,13 +507,13 @@
 				}
 			
 			    if (!NostampFlag) {
-			        var SealHref = "/Upload_ApprovalG/SealImg/nostamp.gif"
+			        var SealHref = "/files/sealImg/nostamp.gif"
 			        var SealWidth = 30;
 			        var SealHeight = 10;
 			
 			        if (HwpCtrl.CheckFieldExist("sealsign")) {
 			            HwpCtrl.SetFieldText("sealsign", "");
-			            HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(SealHref), 12);
+			            HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(SealHref), 12);
 			            NostampFlag = true;
 			            SetDocumentElement(HwpCtrl, "surl", SealHref);
 			        }
@@ -459,7 +562,7 @@
 	        <tr>
 	            <td style="padding-bottom: 10px">
 	                <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<%=_HwpToolbar%>", "");</script>
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "");</script>
 	                    <%-- classid=CLSID:1D50E26E-E51E-4153-93DD-D08745457090 VIEWASTEXT>
 							<param name="StartMode" value="3">
 	                    <param name="StatusBar" value="0">
@@ -473,9 +576,7 @@
 	                <table class="file">
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t65'/></th>
-	                        <td>
-	                            <div id="lstAttachLink"></div>
-	                        </td>
+	                        <td><div id="lstAttachLink"></div></td>
 	                    </tr>
 	                </table>
 	            </td>

@@ -686,15 +686,15 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		OutputStream bos = null;
 		
 		try {
-		File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+			File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".hwp";
 		
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		
-		String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".hwp";
-	
-		stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
+			stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
 
 			bos = new FileOutputStream(saveFileName);
 			
@@ -704,23 +704,23 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
 				bos.write(buffer, 0, bytesRead);
 			}
-			
 		} catch (Exception e) {
 		} finally {
-			   if (bos != null) {
-					try {
-					    bos.close();
-					} catch (Exception ignore) {
-						LOGGER.debug("IGNORED: {}", ignore.getMessage());
-					}
-			    }
-			   if (stream != null) {
-					try {
-						stream.close();
-					} catch (Exception ignore) {
-						LOGGER.debug("IGNORED: {}", ignore.getMessage());
-					}
-			    }
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
 		}
 		
 		LOGGER.debug("saveEndFileHwp ended");
