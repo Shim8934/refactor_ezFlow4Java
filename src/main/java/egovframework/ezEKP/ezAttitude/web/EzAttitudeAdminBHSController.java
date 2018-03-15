@@ -81,7 +81,7 @@ public class EzAttitudeAdminBHSController {
 		LOGGER.debug("status : " + status);
 		
 		JSONArray list = new JSONArray();
-		if(status.equals("ok")){
+		if (status.equals("ok")) {
 			list = (JSONArray) resultBody.get("data");
 			
 			LOGGER.debug("list : " + list);

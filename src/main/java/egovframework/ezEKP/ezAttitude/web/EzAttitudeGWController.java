@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
-import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -61,10 +61,19 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String typeId = request.getParameter("typeId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			String UTCDate = commonUtil.getTodayUTCTime("");
+			String offset = info.getOffSet();
+			
+			List<AttitudeVO> resultList = ezAttitudeService.getAttitudeList(userId, "", typeId, UTCDate, offset, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
+			result.put("data", resultList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -84,14 +93,25 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			String typeId = request.getParameter("typeId");
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			String region = request.getParameter("region");
+			String mobile = request.getParameter("mobile");
+			String bizSub = request.getParameter("bizSub");
+			String content = request.getParameter("content");
+			String dateType = request.getParameter("dateType");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, info.getCompanyId(), info.getTenantId());
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", "");
+			result.put("code", 0);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/attitudes] ended.");
 		return result;

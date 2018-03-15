@@ -5,11 +5,12 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
-import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAttitudeDAO")
@@ -25,12 +26,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (List<AttitudeUserConfigVO>) list("ezAttitudeAdminDAO.getAttitudeUserConfigList", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public AttitudeConfigVO getAttitudeConfig(Map<String, Object> map) throws Exception{
 		return (AttitudeConfigVO) select("ezAttitudeAdminDAO.getAttitudeConfig", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void updateAttitudeConfig(Map<String, Object> map) {
 		update("ezAttitudeAdminDAO.updateAttitudeConfig", map);
 	}
@@ -64,6 +63,21 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (List<AttitudeFormVO>) list("ezAttitudeAdminDAO.getAttitudeFormList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<AttitudeVO> getAttitudeList(Map<String,Object> map) throws Exception{
+		return (List<AttitudeVO>) list("ezAttitude.getAttitudeList", map);
+	}
 	
-
+	public void insertAttitude(Map<String, Object> map) throws Exception {
+		insert("ezAttitude.insertAttitude", map);
+	}
+	
+	public String getIsAttitudeUserConf(Map<String, Object> map) throws Exception {
+		return (String) select("ezAttitude.getIsAttitudeUserConf", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public AttitudeUserConfigVO getAttitudeConfTime(Map<String,Object> map) throws Exception {
+		return (AttitudeUserConfigVO) select("ezAttitude.getAttitudeUserConfTime",map);
+	}
 }
