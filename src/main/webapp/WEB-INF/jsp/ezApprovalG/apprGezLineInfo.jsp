@@ -284,7 +284,7 @@
 		  </ul>
 		</div>
 		
-		<div id="tabnav" style="width:576px">
+		<div id="tabnav">
 		  <ul>
 		  	<c:choose>
 				<c:when test="${docState == '015'}">
@@ -298,7 +298,7 @@
 		    <li id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()" ><spring:message code='ezApprovalG.t946'/></span></li>
 		  </ul>
 		</div>
-		<div class="listview" style="overflow-x:auto;"><div id="lvAprLine" style="HEIGHT:120px;WIDTH:572px;"></div></div>
+		<div class="listview" style="overflow-x:auto;width:100%;"><div id="lvAprLine" style="HEIGHT:120px;WIDTH:100%;"></div></div>
 		<script type="text/javascript" >
 			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
