@@ -291,10 +291,11 @@ public interface EzJournalService {
 	 * @param journalIdList
 	 * @param formId
 	 * @param companyId
+	 * @param userId 
 	 * @param tenantId
 	 * @return
 	 * @throws Exception
 	 */
-	public JournalFormInfoVO getJournalDivideThisNext(List<String> journalIdList,String formId, String companyId, int tenantId) throws Exception;
+	public JournalFormInfoVO getJournalDivideThisNext(List<String> journalIdList,String formId, String companyId, String userId, int tenantId) throws Exception;
 
 }

@@ -529,7 +529,7 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 일지 취합 후 내용 리턴 (금일, 익일 부분)
 	 */
-	@RequestMapping(value="/rest/ezjournal/journals-sum", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/journals-sum", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject journalsSumContent(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W journalsSumContent started.");
 		Gson gson = new Gson();
@@ -537,18 +537,18 @@ public class EzJournalGWController {
 		
 		try {
 			
-			String userId = request.getParameter("userId");
+			String userId = (String) jsonParam.get("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
-			
+			String formId = (String) jsonParam.get("formId");
 			String journalIdArray = (String) jsonParam.get("journalIdList").toString();
 			
 			List<String> journalIdList = gson.fromJson(journalIdArray, new TypeToken<List<String>>(){}.getType());
 			
 			LOGGER.debug("companyId : " + companyId);
 			
-			JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalDivideThisNext(journalIdList, request.getParameter("formId"), companyId, info.getTenantId());
+			JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalDivideThisNext(journalIdList, formId, companyId,userId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -725,21 +725,21 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public JournalFormInfoVO getJournalDivideThisNext(List<String> journalIdList,String formId, String companyId, int tenantId) throws Exception {
+	public JournalFormInfoVO getJournalDivideThisNext(List<String> journalIdList,String formId, String companyId,String userId, int tenantId) throws Exception {
 		logger.debug("getJournalDivideThisNext started.");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("formId", formId);
 		param.put("companyId", companyId);
+		param.put("userId", userId);
 		
 		JournalFormInfoVO form = ezJournalDAO.getJournalFormInfo(param);
 		String formContent = form.getFormContent();
 		Document formDoc = Jsoup.parseBodyFragment(formContent);
 		Element formBody = formDoc.body();
-		Element formThis = formBody.getElementById("this");
-		Element formNext = formBody.getElementById("next");
-		
+		Element formThis = formBody.getElementById("thisJournal");
+		Element formNext = formBody.getElementById("nextJournal");
 		for (int i = 0; i < journalIdList.size(); i++) {
 			param.put("journalId", journalIdList.get(i));
 			
@@ -749,9 +749,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 			Document journalDoc = Jsoup.parseBodyFragment(journalContent);
 			Element journalBody = journalDoc.body();
 			
-			Element thisElem = journalBody.getElementById("this");
+			Element thisElem = journalBody.getElementById("thisJournal");
 			String thisContent = thisElem.html();
-			Element nextElem = journalBody.getElementById("this");
+			Element nextElem = journalBody.getElementById("nextJournal");
 			String nextContent = nextElem.html();
 			
 			String title = "<p>"+journal.getJournalTitle()+"</p>";
@@ -762,6 +762,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 			formThis.append(thisContent);
 			formNext.append(nextContent);
 		}
+		logger.debug("여기는 포문이 끝나는곳");
 		
 		form.setFormContent(formDoc.toString());
 		

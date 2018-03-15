@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
@@ -345,34 +346,76 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezJournal/journalGetForm.do", produces="application/json; charset=utf-8")
 	@ResponseBody
-	public String journalGetForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	public JSONObject journalGetForm(@RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("journalGetForm started");
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String formId = request.getParameter("formId");
-		String typeId = request.getParameter("typeId");
+		String mode = (String) jsonParam.get("mode");
+		String formId = (String) (jsonParam.get("formId")+"");
+		String typeId = (String) jsonParam.get("typeId");
+		String userId = userInfo.getId();
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userInfo.getId());
 		
-		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
-		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+		String restUrl="";
+		JSONObject result=null;
+		switch (mode) {
+		case "new":
+			param.put("userId", userId);
+			restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
+			result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+			break;
+		case "sum":
+			jsonParam.put("formId", formId);
+			jsonParam.put("userId", userId);
+			restUrl = "/rest/ezjournal/journals-sum" ;
+			logger.debug(jsonParam.toString());
+			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
+			break;
+		case "reuse":
+			
+			break;
+		case "modify":
+			
+			break;
+		case "temp":
+			
+			break;
+
+		default:
+			break;
+		}
+		
+		JSONObject resultForm = new JSONObject();
 		
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
-			JSONObject jsonResult = (JSONObject) result.get("data");
-			param.clear();
-			param.put("formName", jsonResult.get("formName"));
-			param.put("formContent", jsonResult.get("formContent"));
-			param.put("formStatus", jsonResult.get("formStatus"));
-			logger.debug("resultparam 확인 : " + param);
-			return JsonUtil.MapToJson(param);
+			String nowDate = commonUtil.getTodayUTCTime("yyyyMMdd");
+			JSONObject journal = (JSONObject) result.get("data");
+			String formName = (String) journal.get("formName");
+			
+			String journalTitle = "[" +formName+ "] " + nowDate + " (" + userInfo.getDeptName() + ")";
+			String journalContent = (String) journal.get("formContent");
+//			// 예약어 부분에 내용 추가
+//			var content = result.formContent;
+//			content.replace(/@journalDeptId/g, deptId);
+//			content.replace(/@journalWriterId/g, userId);
+//			content.replace(/@journalWriteDate/g, nowDate);
+			nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			journalContent = journalContent.replaceAll("@journalDeptId", userInfo.getDeptName());
+			journalContent = journalContent.replaceAll("@journalWriterId", userInfo.getDisplayName());
+			journalContent = journalContent.replaceAll("@journalWriteDate", nowDate);
+			
+			resultForm.put("journalTitle", journalTitle);
+			resultForm.put("journalContent", journalContent);
+			resultForm.put("formStatus", journal.get("formStatus"));
+			logger.debug("resultparam 확인 : " + resultForm);
 		}
 
 		logger.debug("journalGetForm ended");
-		return JsonUtil.OneStringToJson("json");
+		return resultForm;
 	}
 	
 	/**
@@ -391,20 +434,19 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("isGetForm", "isGetForm");
-		
 		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
-		
+		String resultString = "";
 		if (status.equals("ok")) {
 			String lastId = result.get("data").toString();
 			logger.debug("lastFormId : " + lastId);
-			return JsonUtil.OneStringToJson(lastId);
+			resultString= JsonUtil.OneStringToJson(lastId);
 		}
 		
 		logger.debug("journalGetLastForm ended");
-		return JsonUtil.OneStringToJson("json");
+		return resultString;
 	}
 	
 	/**
