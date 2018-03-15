@@ -8184,6 +8184,7 @@ CREATE TABLE `tbl_vote_question` (
   `IS_MODIFYING` tinyint(4) NOT NULL DEFAULT '0',
   `SET_DATE` tinyint(4) NOT NULL DEFAULT '0',
   `IS_SORTING` tinyint(4) NOT NULL DEFAULT '0',
+  `IS_SELONLYONCE` tinyint(4) NOT NULL DEFAULT '0',
   `VOTEOPTION1` tinyint(4) DEFAULT '0',
   `VOTEOPTION2` tinyint(4) DEFAULT '0',
   `VOTEOPTION3` tinyint(4) DEFAULT '0',
