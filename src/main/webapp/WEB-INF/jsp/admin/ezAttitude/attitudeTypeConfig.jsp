@@ -108,10 +108,10 @@
 	        }
 	        //유형 상세보기
 	        function dbclick(obj) {
-	        	saveType_dialogArguments[0] = document.all("ListCompany").value;
+	        	saveType_dialogArguments[0] = $("#ListCompany").val();
 //             	saveType_dialogArguments[1] = save_type_Complete;
             	var typeId = obj.id;
-	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId="+typeId, "SaveAttitudeType", GetOpenWindowfeature(800, 520));
+	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + typeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", GetOpenWindowfeature(800, 520));
 	        	
 	        	try { OpenWin.focus(); } catch (e) { }
 	        }
