@@ -728,8 +728,8 @@
 </Div>
 <table class="content" style="margin-top:10px">
   <tr>
-    <th  ><spring:message code='ezApprovalG.t626'/></th>
-    <td><TextArea style="width:97%; height:70px; resize:none;" id=txtChangeReason name=txtChangeReason></TextArea></td>
+    <th><spring:message code='ezApprovalG.t626'/></th>
+    <td><TextArea style="vertical-align:middle; border: 0; width:97.3%; height:70px; resize:none;" id=txtChangeReason name=txtChangeReason></TextArea></td>
   </tr>
 </table>
 <div class="btnposition btnpositionNew">
