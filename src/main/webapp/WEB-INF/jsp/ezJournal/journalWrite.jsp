@@ -34,7 +34,7 @@
 	    	// 수신자
 	    	var selReceiver = [];
 	    	// 마지막에 사용했던 양식아이디
-	    	var lastFormId;
+	    	var lastFormId = "";
 	    	// 일지함아이디
 	    	var typeId = "<c:out value='${typeId}'/>";
 	    	// 작성일
@@ -73,11 +73,10 @@
 	    		
 	    	}
 			
-	    	function changeType(elem){
-// 	    		getFormList(elem);
+	    	function changeType(elem) {
+ 	    		getFormList(elem);
 // 	    		getJournalForm(lastFormId);
 	    		var changeTypeId = $(elem).val();
-	    		getLastForm(changeTypeId);
 				
 	    		console.log("lastFormId 확인 : " + lastFormId);
 	    		if (lastFormId != null && lastFormId != "" ) {
@@ -125,7 +124,7 @@
 			function getLastForm(typeId) {
 				$.ajax({
 	    			type : "POST",
-	   				dataType : "json",
+	   				dataType : "text",
 	   				url : "/ezJournal/journalGetLastForm.do",
 	   				data : {"typeId" : typeId},
 	   				async : false,
@@ -180,6 +179,7 @@
 	    		switch (mode) {
 				case 'new':
 		    		getLastForm(typeId);
+					getFormList($("#optType"));
 				
 		    		console.log("lastFormId 확인 : " + lastFormId);
 		    		if (lastFormId != null && lastFormId != "" ) {
@@ -191,6 +191,7 @@
 		    			lastFormId = "";
 		    		} else {
 		    			selFormId = $("#optForm").find("option:selected").val();
+		    			console.log("selFormId : " + selFormId);
 			    		getJournalForm(selFormId);
 		    		}
 					break;

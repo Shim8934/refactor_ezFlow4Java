@@ -929,4 +929,16 @@
 			tenant_id = #tenantId#
 	</delete>
 	
+	<!-- 일지 수신자 삭제 -->
+	<delete id="deleteJournalReceiver" parameterClass="map">
+		delete from
+			tbl_journal_recv
+		where
+			user_id = #userId#
+		and
+			journal_id = #journalId#
+		and
+			tenant_id = #tenantId#
+	</delete>
+	
 </sqlMap>
