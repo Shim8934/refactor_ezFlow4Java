@@ -442,7 +442,7 @@
 <table class="content" style="margin-top:10px" >
   <tr>
     <th><spring:message code='ezApprovalG.t626'/></th>
-    <td style="padding-top:2px;"><TextArea style="width:96%;height:70px" id=txtChangeReason name=txtChangeReason></TextArea>
+    <td style="padding-top:2px;"><TextArea style="width:97%;height:70px; border: 0; resize:none;" id=txtChangeReason name=txtChangeReason></TextArea>
     </td>
   </tr>
 </table>
