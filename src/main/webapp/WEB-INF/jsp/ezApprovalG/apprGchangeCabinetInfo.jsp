@@ -424,17 +424,17 @@
     </tr>
     <tr id="trDisplayEndDate" >
       <th><spring:message code='ezApprovalG.t842'/></th>
-      <td><input type="text" class="text" style="Width:50px; " name="txtDisplayEndY" id="txtDisplayEndY" maxlength = "4">
+      <td><input type="text" class="text" style="Width:50px; height:18px;" name="txtDisplayEndY" id="txtDisplayEndY" maxlength = "4">
         <spring:message code='ezApprovalG.t456'/>
-        <input type="text" class="text" style="Width:30px; " name="txtDisplayEndM"  id="txtDisplayEndM" maxlength = "2">
+        <input type="text" class="text" style="Width:30px; height:18px;" name="txtDisplayEndM"  id="txtDisplayEndM" maxlength = "2">
         <spring:message code='ezApprovalG.t968'/>
-        <input type="text" class="text" style="Width:30px; " name="txtDisplayEndD"  id="txtDisplayEndD" maxlength = "2">
+        <input type="text" class="text" style="Width:30px; height:18px;" name="txtDisplayEndD"  id="txtDisplayEndD" maxlength = "2">
         <spring:message code='ezApprovalG.t643'/></td>
     </tr>
     <tr>
       <th id="trDisplayReason"><spring:message code='ezApprovalG.t843'/></th>
       <td id="trDisplayReasonData" style="padding-top:2px;">
-          <TextArea style="width:95%; height:40px" id=txtDisplayReason name=txtDisplayReason></TextArea>
+          <TextArea style="width:96.8%; height:40px; border: 0; resize:none;" id=txtDisplayReason name=txtDisplayReason></TextArea>
       </td>
     </tr>
   </table>
