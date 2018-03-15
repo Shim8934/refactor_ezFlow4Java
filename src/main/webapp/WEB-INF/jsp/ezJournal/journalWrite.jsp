@@ -73,6 +73,26 @@
 	    		
 	    	}
 			
+	    	function changeType(elem){
+// 	    		getFormList(elem);
+// 	    		getJournalForm(lastFormId);
+	    		var changeTypeId = $(elem).val();
+	    		getLastForm(changeTypeId);
+				
+	    		console.log("lastFormId 확인 : " + lastFormId);
+	    		if (lastFormId != null && lastFormId != "" ) {
+	    			lastFormId = parseInt(lastFormId);
+	    			console.log("이전양식가져올때는 여기로 : " + lastFormId);
+	    			selFormId = lastFormId;
+	    			getJournalForm(lastFormId);
+	    			$("#optForm option[value=" + lastFormId + "]").attr("selected", "selected");
+	    			lastFormId = "";
+	    		} else {
+	    			selFormId = $("#optForm").find("option:selected").val();
+		    		getJournalForm(selFormId);
+	    		}
+	    	}
+			
 			// 선택된 양식의 폼 호출
 			function getJournalForm(formId) {
 				var jsonString = JSON.stringify({"mode" : mode,"formId" : formId,"typeId" : typeId,"journalIdList" : opener.journalIdList});
@@ -453,7 +473,7 @@
 	                    <tr>
 	                        <th><spring:message code='ezJournal.t76'/></th>
 	                        <td style="width: 300px">
-	                        	<select id="optType" style="width: 110px;" onchange="getFormList(this)">
+	                        	<select id="optType" style="width: 110px;" onchange="changeType(this);">
 	                        		<c:forEach var="type" items="${typeList}">
 	                        			<option value="<c:out value='${type.journaltypeId }'/>"
 	                        				<c:if test="${type.journaltypeId eq typeId}">
