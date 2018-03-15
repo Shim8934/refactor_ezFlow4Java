@@ -16,7 +16,6 @@
 		var primary        = "<c:out value='${primary}'/>";
 		var folderId       = "<c:out value='${folderId}'/>";
 		var selectedFolder = null;
-		var rootFld        = "<c:out value='${rootFolder}'/>";
 		var arrSubFolder   = [];
 		
 		window.onload = function () {
@@ -24,20 +23,20 @@
 		};
 		
 		function getData() {
-			var mode = rootFld ? "1" : "0";
-			
+			var type = document.querySelector('input[name=treeType]:checked').value;
 			$.ajax({
 				type: "POST",
 				url: "/ezWebFolder/getFolderTree.do",
 				data: {
 					"folderId"   : folderId,
-					"rootFolder" : rootFld
+					"companyId"  : document.getElementById("companyList").value,
+					"type"       : type
 				},
 				dataType: "JSON",
 				async: true,
 				success : function(data) {
 					var result = data.folderTree;
-					renderData(result, mode);
+					renderData(result, type == "dept" ? "0" : "1");
 				},
  				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -46,21 +45,19 @@
 		}
 		
 		function renderData(result, mode) {
-			if (!result) {
-				alert("<spring:message code='ezWebFolder.t134'/>");
-				return;
-			} 
-			
 			var divTree   = document.getElementById("folderTree");
 			
 			while (divTree.hasChildNodes()) {
 				divTree.removeChild(divTree.lastChild);
 			}
 			
+			if (!result || (result.length == 0 && mode != "1")) {
+				alert("<spring:message code='ezWebFolder.t134'/>");
+				return;
+			}
+			
 			if (mode == "1") {
 				var divComp   = document.createElement("div");
-				compFolderId  = result["folderId"];
-
 				displaySubFolder(divTree, divComp, result);
 			}
 			else {
@@ -295,9 +292,18 @@
 		</ul>
 	</div>
 	
-	<div style="margin: 10px; border: 1px solid #666666; min-height: 380px; max-height: 380px; overflow: auto;" id="folderTree">
-	
+	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
+		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+		</select>
+		<div style="position: absolute; top: 0px; right: 0px;">
+			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="getData();"> <span><spring:message code="ezWebFolder.t233"/></span>
+			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="getData();"> <span><spring:message code="ezWebFolder.t234"/></span>
+		</div>
 	</div>
+	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto;" id="folderTree"></div>
 	
 	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
 		<a id="btnSave"  class="webfolderBttn" onClick="folderMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>

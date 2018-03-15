@@ -45,5 +45,8 @@ public interface EzWebFolderService {
 	List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int tenantId) throws Exception;
 	List<FolderSimpleVO> getAllSimpleDeptFolder(String companyId, int tenantId) throws Exception;
 	List<OrganDeptVO> getAllDepartments(String companyId, String primary, int tenantId) throws Exception;
-	List<FolderSimpleVO> getFolderTreeForUser(String userId, String deptID, String companyID, int tenantId) throws Exception;
+	List<FolderSimpleVO> getDeptFolderTreeForUser(String userId, String deptID, int tenantId) throws Exception;
+	FolderSimpleVO getCompanySimpleFolder(String companyID, int tenantId) throws Exception;
+	List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, int tenantId) throws Exception;
+	FolderSimpleVO getUserSimpleFolder(String userId, int tenantId) throws Exception;
 }

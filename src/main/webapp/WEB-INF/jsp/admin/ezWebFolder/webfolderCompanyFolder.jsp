@@ -433,7 +433,7 @@
 					return;
 				}
 				
-				DivPopUpShow(450, 480, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId);
+				DivPopUpShow(450, 480, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder);
 			}
 			
 			function deleteFolder() {

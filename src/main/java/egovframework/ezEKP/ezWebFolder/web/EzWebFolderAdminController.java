@@ -90,10 +90,34 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String folderId    = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
-		String rootFolder  = request.getParameter("rootFolder") != null ? request.getParameter("rootFolder") : "";
+		
+		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
+		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-list/" + user.getId();
+		
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("mode", "admin")
+										.queryParam("offset", user.getOffset())
+										.queryParam("lang", user.getLang());
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			String companyId      = (String) resultBody.get("userCompany");
+			JSONArray companyList = (JSONArray) resultBody.get("data");
+			model.addAttribute("userCompany", companyId);
+			model.addAttribute("list", companyList);
+		}
 		
 		model.addAttribute("folderId", folderId);
-		model.addAttribute("rootFolder", rootFolder);
 		model.addAttribute("primary", user.getLang());
 		logger.debug("Folder Move Confirm finishes!");
 		
@@ -539,7 +563,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String companyId     = request.getParameter("companyId");
 		String folderId      = request.getParameter("folderId");
 		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
-		String url           = gwServerUrl + "/rest/ezwebfolderadmin/foldersTree";
+		String url           = gwServerUrl + "/rest/ezwebfolderadmin/foldersTree/comp";
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -570,6 +594,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	public String getSubFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String folderId      = request.getParameter("folderId");
+		String mode          = request.getParameter("mode");
 		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/subfolder-tree/" + folderId;
 		
@@ -578,7 +603,10 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		headers.set("host-name", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url).queryParam("offset", user.getOffset());
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("userId", user.getId())
+										.queryParam("mode", mode)
+										.queryParam("offset", user.getOffset());
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);

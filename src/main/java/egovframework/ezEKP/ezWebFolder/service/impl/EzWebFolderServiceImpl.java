@@ -404,14 +404,42 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	}
 
 	@Override
-	public List<FolderSimpleVO> getFolderTreeForUser(String userId, String deptId, String companyId, int tenantId) throws Exception {
+	public List<FolderSimpleVO> getDeptFolderTreeForUser(String userId, String deptId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("userId",    userId);
 		map.put("deptId",    deptId);
-		map.put("companyId", companyId);
 		map.put("tenantId",  tenantId);
 		
-		return ezWebFolderDAO.getFolderTreeForUser(map);
+		return ezWebFolderDAO.getDeptFolderTreeForUser(map);
+	}
+
+	@Override
+	public FolderSimpleVO getCompanySimpleFolder(String companyID, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId",  companyID);
+		map.put("tenantId",   tenantId);
+		
+		return ezWebFolderDAO.getCompanySimpleFolder(map);
+	}
+
+	@Override
+	public List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userId);
+		map.put("deptId",    deptId);
+		map.put("compFolderId", compFolderId);
+		map.put("tenantId",  tenantId);
+		
+		return ezWebFolderDAO.getCompanySubSimpleFolder(map);
+	}
+
+	@Override
+	public FolderSimpleVO getUserSimpleFolder(String userId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userId);
+		map.put("tenantId",  tenantId);
+		
+		return ezWebFolderDAO.getUserSimpleFolder(map);
 	}
 
 }

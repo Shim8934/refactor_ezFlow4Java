@@ -155,7 +155,20 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<FolderSimpleVO> getFolderTreeForUser(Map<String, Object> map) {
-		return (List<FolderSimpleVO>)list("EzWebFolderDAO.getFolderTreeForUser", map);
+	public List<FolderSimpleVO> getDeptFolderTreeForUser(Map<String, Object> map) {
+		return (List<FolderSimpleVO>)list("EzWebFolderDAO.getDeptFolderTreeForUser", map);
+	}
+
+	public FolderSimpleVO getCompanySimpleFolder(Map<String, Object> map) {
+		return (FolderSimpleVO)select("EzWebFolderDAO.getCompanySimpleFolder", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<FolderSimpleVO> getCompanySubSimpleFolder(Map<String, Object> map) {
+		return (List<FolderSimpleVO>)list("EzWebFolderDAO.getCompanySubSimpleFolder", map);
+	}
+
+	public FolderSimpleVO getUserSimpleFolder(Map<String, Object> map) {
+		return (FolderSimpleVO)select("EzWebFolderDAO.getUserSimpleFolder", map);
 	}
 }

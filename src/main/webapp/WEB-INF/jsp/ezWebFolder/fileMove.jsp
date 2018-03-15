@@ -14,29 +14,37 @@
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript">
 		var primary        = "<c:out value='${primary}'/>";
-		var fileId         = "<c:out value='${fileId}' />";
+		var fileId         = "<c:out value='${fileId}'/>";
 		var selectedFolder = null;
-		var rootFld        = "<c:out value='${rootFolder}'/>";
 		var currentFolder  = null;
 		var arrSubFolder   = [];
+		var mode           = "<c:out value='${mode}'/>";
 		
 		window.onload = function () {
 			getData();
 		};
 		
 		function getData() {
+			var type = document.querySelector('input[name=treeType]:checked').value;
+			
 			$.ajax({
 				type: "POST",
-				url: "/ezWebFolder/getFolderTree.do",
+				url: "/ezWebFolder/getFileFolderTree.do",
 				data: {
-					"fileId" : fileId
+					"fileId"    : fileId,
+					"companyId" : document.getElementById("companyList").value,
+					"type"      : type,
+					"mode"      : mode
 				},
 				dataType: "JSON",
 				async: true,
 				success : function(data) {
 					var result    = data.folderTree;
 					currentFolder = data.currentFolder;
-					renderData(result);
+					
+					console.log(result);
+					
+					renderData(result, type == "dept" ? "0" : "1");
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -44,21 +52,27 @@
 			});
 		}
 		
-		function renderData(result) {
+		function renderData(result, mode) {
 			var divTree   = document.getElementById("folderTree");
 			
 			while (divTree.hasChildNodes()) {
 				divTree.removeChild(divTree.lastChild);
 			}
 			
-			if (!result || result.length == 0) {
+			if (!result || (result.length == 0 && mode != "1")) {
 				alert("<spring:message code='ezWebFolder.t134'/>");
 				return;
 			}
 			
-			for (var i = 0; i < result.length; i++) {
+			if (mode == "1") {
 				var divDept  = document.createElement("div");
-				displaySubFolder(divTree, divDept, result[i]);
+				displaySubFolder(divTree, divDept, result);
+			}
+			else {
+				for (var i = 0; i < result.length; i++) {
+					var divDept  = document.createElement("div");
+					displaySubFolder(divTree, divDept, result[i]);
+				}
 			}
 		}
 		
@@ -85,7 +99,7 @@
 			spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
 			spanFolderName.setAttribute("class", "spanName");
 			spanFolderName.setAttribute("name", list["folderId"]);
-			spanFolderName.setAttribute("level", list["folderLevel"]);
+			spanFolderName.setAttribute("level", level);
 			spanFolderName.onclick = function() {getSelected(this);};
 			
 			divElmt.appendChild(imgElmt);
@@ -98,7 +112,12 @@
 				imgElmt.setAttribute("class", "webfolderImg");
 			}
 			else {
-				imgElmt.onclick = function() {getDetailTree(this);};
+				if (document.querySelector('input[name=treeType]:checked').value == "comp" && mode =="normal" && level == "0") {
+					imgElmt.onclick = function() {getDetailTree(this, "1");};
+				}
+				else {
+					imgElmt.onclick = function() {getDetailTree(this, "0");};
+				}
 				
 				if (list["listSubFolders"] == null) {
 					imgElmt.src = "/images/OrganTree_cross/plus_normal.gif";
@@ -138,7 +157,7 @@
 			obj.style.color = "#e04343";
 		}
 		
-		function getDetailTree(obj) {
+		function getDetailTree(obj, mode) {
 			//Check if already in arrSubFolder
 			var uniqueId = obj.getAttribute("id");
 			
@@ -164,7 +183,8 @@
 					type: "POST",
 					url: "/admin/ezWebFolder/getSubFolderTree.do",
 					data: {
-						"folderId" : uniqueId
+						"folderId" : uniqueId,
+						"mode"     : mode
 					},
 					dataType: "JSON",
 					async: true,
@@ -266,6 +286,13 @@
 				}
 			});
 		}
+		
+		function change() {
+			var selectedFolder = null;
+			var currentFolder  = null;
+			var arrSubFolder   = [];
+			getData();
+		}
 	</script>
 </head>
 <body class="popup">
@@ -277,10 +304,21 @@
 			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110' /></span></li>
 		</ul>
 	</div>
-	
-	<div style="margin: 10px; border: 1px solid #666666; min-height: 380px;" id="folderTree">
-	
+	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
+		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+		</select>
+		<div style="position: absolute; top: 0px; right: 0px;">
+			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="getData();"> <span><spring:message code="ezWebFolder.t233"/></span>
+			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="getData();"> <span><spring:message code="ezWebFolder.t234"/></span>
+			<c:if test="${mode == 'normal'}">
+				<input name="treeType" id="radio2" type="radio" value="user"     style="margin:0px;padding:0px;width:13px;height:13px;" onclick="getData();"> <span><spring:message code="ezWebFolder.t235"/></span>
+			</c:if>
+		</div>
 	</div>
+	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto;" id="folderTree"></div>
 	
 	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
 		<a id="btnSave"   class="webfolderBttn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>

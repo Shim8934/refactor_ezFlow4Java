@@ -312,16 +312,42 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String fileId      = request.getParameter("fileId")     != null ? request.getParameter("fileId")     : "";
-		String rootFolder  = request.getParameter("rootFolder") != null ? request.getParameter("rootFolder") : "";
+		String mode        = request.getParameter("mode")       != null ? request.getParameter("mode")       : "normal";
 		
 		if (fileId.equals("")) {
 			logger.debug("File Move Confirm illegal arguments!");
 			return "cmm/error/egovError";
 		}
 		
+		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
+		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-list/" + user.getId();
+		
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("mode", mode)
+										.queryParam("offset", user.getOffset())
+										.queryParam("lang", user.getLang());
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			String companyId      = (String) resultBody.get("userCompany");
+			JSONArray companyList = (JSONArray) resultBody.get("data");
+			model.addAttribute("userCompany", companyId);
+			model.addAttribute("list", companyList);
+		}
+		
 		model.addAttribute("fileId", fileId);
-		model.addAttribute("rootFolder", rootFolder);
 		model.addAttribute("primary", user.getLang());
+		model.addAttribute("mode", mode);
 		logger.debug("File Move Confirm finishes!");
 		
 		return "/ezWebFolder/fileMove";
@@ -365,10 +391,9 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/getFolderTree.do", method = RequestMethod.POST)
 	public String getFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String rootFolder  = request.getParameter("rootFolder") != null ? request.getParameter("rootFolder") : "";
-		String fileId      = request.getParameter("fileId")     != null ? request.getParameter("fileId")     : "";
-		String folderId    = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
-		
+		String companyId   = request.getParameter("companyId");
+		String folderId    = request.getParameter("folderId");
+		String type        = request.getParameter("type");
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/foldersTree";
 		
@@ -379,9 +404,9 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("rootFolder", rootFolder)
-										.queryParam("fileId", fileId)
+										.queryParam("companyId", companyId)
 										.queryParam("folderId", folderId)
+										.queryParam("type", type)
 										.queryParam("offset", user.getOffset());
 		
 		RestTemplate rest             = new RestTemplate();
@@ -394,7 +419,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		if (status.equals("ok")) {
 			String currFolder = (String)resultBody.get("currentFolder");
 			
-			if (!rootFolder.equals("")) {
+			if (!type.equals("dept")) {
 				JSONObject folderTree = (JSONObject) resultBody.get("data");
 				model.addAttribute("folderTree", folderTree);
 			}
@@ -544,5 +569,56 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		return "json";
 	}
-	
+
+	@RequestMapping(value="/ezWebFolder/getFileFolderTree.do", method = RequestMethod.POST)
+	public String getFileFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String fileId      = request.getParameter("fileId");
+		String mode        = request.getParameter("mode");
+		String companyId   = request.getParameter("companyId");
+		String type        = request.getParameter("type");
+		
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/rest/ezwebfolder/foldersTree/file";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("userId", user.getId())
+										.queryParam("companyId", companyId)
+										.queryParam("fileId", fileId)
+										.queryParam("type", type)
+										.queryParam("mode", mode)
+										.queryParam("offset", user.getOffset());
+		
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			String currFolder = (String)resultBody.get("currentFolder");
+			
+			if (!type.equals("dept")) {
+				JSONObject folderTree = (JSONObject) resultBody.get("data");
+				model.addAttribute("folderTree", folderTree);
+			}
+			else {
+				JSONArray folderTree = (JSONArray) resultBody.get("data");
+				model.addAttribute("folderTree", folderTree);
+			}
+			
+			if (!currFolder.equals("")) {
+				model.addAttribute("currentFolder", currFolder);
+			}
+			
+		}
+		
+		return "json";
+	}
 }
