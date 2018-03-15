@@ -726,6 +726,32 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		return "SUCCESS";
 	}
 	
+	/**
+	 * 직인의뢰접수HWP화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/ezConvOutHWP.do")
+	public String ezConvOutHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezConvOutHWP started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		
+		String docID = request.getParameter("docID");
+		String docHref = request.getParameter("docHref");
+		
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		
+		LOGGER.debug("ezConvOutHWP ended.");
+		
+		return "/ezApprovalG/apprGezConvOutHWP";
+	}
+	
 	public String makeXMLString(String orgString) throws Exception{
 		return orgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 	}

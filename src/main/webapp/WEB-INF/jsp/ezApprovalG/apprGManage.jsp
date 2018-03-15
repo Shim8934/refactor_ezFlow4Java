@@ -691,7 +691,7 @@
 		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
 		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
 		                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		                    if (CrossYN()) {
+		                    if (CrossYN() && !(/netscape/i.test(navigator.appName) && /trident/i.test(navigator.userAgent) || /msie/i.test(navigator.userAgent))) {
 		                        alert(strLang1103);
 		                        return;
 		                    } else {

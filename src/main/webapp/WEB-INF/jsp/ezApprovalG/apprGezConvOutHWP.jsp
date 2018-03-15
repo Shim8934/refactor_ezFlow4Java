@@ -16,36 +16,38 @@
 		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+		
 	    <script type="text/javascript">
-	    	var pNoneActiveX = "<%=NoneActiveX%>";
-	        var pDocID = '<%=_DocID%>';
-	        var pDocHref = '<%=_DocHref%>';
-	        var pUserID = "<%=userinfo.UserID%>";
+<%-- 	    	var pNoneActiveX = "<%=NoneActiveX%>"; --%>
+	        var pDocID = "${docID}";
+	        var pDocHref = "${docHref}";
+	        var pUserID = "{userinfo.id}";
 	        var flag = false;
 	        var flag2 = false;
 	        var newDocID = "";
 	        var stampFlag = false;
 	        var NostampFlag = false;
 	        var modeflag = false;
-	        var companyID = "<%=userinfo.CompanyID%>"
+	        var companyID = "${userinfo.companyID}"
 			var arr_userinfo = new Array();
 			var maxwidth = 659;
+			
 			var arr_userinfo = new Array();
-			arr_userinfo[0] = "user";
-			arr_userinfo[1] = "<%=userinfo.UserID%>";
-			arr_userinfo[2] = "<%=userinfo.DisplayName%>";
-	        arr_userinfo[3] = "<%=userinfo.Title%>";
-	        arr_userinfo[4] = "<%=userinfo.DeptID%>";
-	        arr_userinfo[5] = "<%=userinfo.DeptName%>";
-	        arr_userinfo[6] = "<%=userinfo.Jikchek%>";
-	        arr_userinfo[8] = "<%=userinfo.Email%>";
+		    arr_userinfo[0] = "user";
+		    arr_userinfo[1]  = "${userInfo.id}";
+		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName} '/>";
+		    arr_userinfo[3]  = "<c:out value = '${userInfo.title} '/>";
+		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID} '/>";
+		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName} '/>";
+		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek} '/>";
+		    arr_userinfo[8]  = "<c:out value = '${userInfo.email} '/>";
 	        arr_userinfo[9] = companyID;
-	        arr_userinfo[11] = "<%=userinfo.DisplayName1%>";
-			arr_userinfo[12] = "<%=userinfo.DisplayName2%>";
-	        arr_userinfo[13] = "<%=userinfo.Title1%>";
-	        arr_userinfo[14] = "<%=userinfo.Title2%>";
-	        arr_userinfo[15] = "<%=userinfo.DeptName1%>";
-	        arr_userinfo[16] = "<%=userinfo.DeptName2%>";
+	        arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1} '/>";
+		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2} '/>";
+		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1} '/>";
+		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2} '/>";
+		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1} '/>";
+		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";
 	
 	        var is_Enc = "NONE";
 	        var isExternal = false;
@@ -78,11 +80,11 @@
 	        var logoName = "";
 	        var pAprType = "";
 	        var tempAttachSN = 0;
-	        var pUse_Editor = "<%= Use_Editor%>";
+<%-- 	        var pUse_Editor = "<%= Use_Editor%>"; --%>
 			var g_progresswin = null;
 			
 			function showProgress(inforstring) {
-			    g_progresswin = window.showModelessDialog("/myoffice/common/show_progress.aspx?fileinfo=" + escape(inforstring), "", "dialogWidth=390px; dialogHeight:185px; center:yes; status:no; help:no; edge:sunken;");
+			    g_progresswin = window.showModelessDialog("/ezApprovalG/showProgress.do?fileInfo=" + encodeURI(inforstring), "", "dialogWidth=390px; dialogHeight:185px; center:yes; status:no; help:no; edge:sunken;");
 			}
 			
 			function hideProgress() {
@@ -132,7 +134,7 @@
 	
 			function OpenInformationUI(pInformationContent) {
 			    var parameter = pInformationContent;
-			    var url = "/myoffice/ezApprovalG/ezAPROPINION.aspx";
+			    var url = "/ezApprovalG/ezAPROPINION.do";
 			    var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 			    var RtnVal = window.showModalDialog(url, parameter, feature);
 			    return RtnVal;
@@ -140,14 +142,14 @@
 	
 			function OpenAlertUI(pAlertContent) {
 			    var parameter = pAlertContent;
-			    var url = "/myoffice/ezApprovalG/ezAPRALERT.aspx";
+			    var url = "/ezApprovalG/ezAPRALERT.do";
 			    var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 			    var RtnVal = window.showModelessDialog(url, parameter, feature);
 			}
 	
 			function chk_Passwd(pPwd) {
 			    var parameter = pUserID;
-			    var url = "/myoffice/ezApprovalG/ezchkPasswd.aspx";
+			    var url = "/ezApprovalG/ezchkPasswd.do";
 			    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
 			    var ret = window.showModalDialog(url, parameter, feature);
 			    return ret
@@ -228,7 +230,7 @@
 			    createNodeInsert(xmlpara, objNode, "PARAMETER");
 			    createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
 			
-			    xmlhttp.open("POST", "/myoffice/ezApprovalG/formContainer/aspx/getEndOpinionInfo.aspx", false);
+			    xmlhttp.open("POST", "/ezApprovalG/getEndOpinionInfo.do", false);
 			    xmlhttp.send(xmlpara);
 			
 			    Resultxml = loadXMLString(xmlhttp.responseText);
@@ -458,11 +460,11 @@
 	            <td style="padding-bottom: 10px">
 	                <div style="height: 100%">
 	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<%=_HwpToolbar%>", "");</script>
-	                    classid=CLSID:1D50E26E-E51E-4153-93DD-D08745457090 VIEWASTEXT>
+	                    <%-- classid=CLSID:1D50E26E-E51E-4153-93DD-D08745457090 VIEWASTEXT>
 							<param name="StartMode" value="3">
 	                    <param name="StatusBar" value="0">
 	                    <param name="ToolBar" value="<%=_HwpToolbar%>">
-	                    </OBJECT-->
+	                    </OBJECT--> --%>
 	                </div>
 	            </td>
 	        </tr>
