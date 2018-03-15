@@ -12,32 +12,36 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
-			var compid = "<c:out value = '${companyID}' />";
-			var itemseq = "<c:out value = '${personalPopupVO.itemSeq}' />";
-	        
+// 			var compid = "<c:out value = '${companyID}' />";
+// 			var itemseq = "<c:out value = '${personalPopupVO.itemSeq}' />";
+			var typeId = "<c:out value = '${viewInfo.typeInfo.typeId}' />";
+			
 	        window.onload = window_onload;
 	        function window_onload() {
-	            //compid = window.dialogArguments;
+	            $('#formSelect').val("<c:out value = '${viewInfo.typeInfo.formId}' />").prop('selected', true);
 	        }
 	        
 //파일******************************************************************************
 			function btnimagefile_onclick() {
-	    		document.getElementById("file1").click();
+	    		$("#file1").click();
 			}
 			
 			function btn_AttachAdd_onclick() {
-			    var extension = document.getElementById("file1").value.split('.');
+			    var extension = $("#file1").val().split('.');
 			    var check = false;
 			    check = compareExtension(check, extension[1]);
 
 			    if (!check) {
 	    		    alert("사진이미지" + " 파일을 선택하십시오.");
-	        		document.getElementById("file1").value = "";
+	        		$("#file1").value = "";
 	    		} else {
-	    			var frm = document.getElementById('form');
-		    		frm.action = "/ezAttitude/iconUpload.do";
+	    			if (typeId == null || typeId =="") {
+	    				typeId = "<c:out value = '${viewInfo.typeId}' />";
+	    			}
+	    			var frm = $('#form');
+		    		frm.action = "/ezAttitude/iconUpload.do?typeId=" + typeId;
 		    		frm.submit();
-		    		document.form.file1.value = "";	
+		    		$('#form input[id=file1]').val("");	
 	    		}
 			}
 			
@@ -61,18 +65,18 @@
 			
 			function OK_Click() {
 
-				$.ajax({
-		        	type : "POST",
-		        	url : "/admin/ezAttitude/",
-		        	async : false,
-		        	data : {companyID : compid,
-		        			itemSeq : itemseq, },
-		        	dataType : "text",
-		        	success : function (result) {
-		        			window.opener.company_change();
-							window.close();
-		        	}
-		        });
+// 				$.ajax({
+// 		        	type : "POST",
+// 		        	url : "/admin/ezAttitude/",
+// 		        	async : false,
+// 		        	data : {companyID : compid,
+// 		        			itemSeq : itemseq, },
+// 		        	dataType : "text",
+// 		        	success : function (result) {
+// 		        			window.opener.company_change();
+// 							window.close();
+// 		        	}
+// 		        });
 			}
 			
 		</script>
@@ -88,14 +92,12 @@
 			        	<tr class="primary">
 <%-- 			          		<th><c:out value = '${langPrimary}' /></th> --%>
 			          		<th>한글</th>
-<%-- 			          		<td><input type="text" name="Input" id=Title style="WIDTH:98%" value="<c:out value = '${personalPopupVO.title}' />"></td> --%>
-			          		<td><input type="text" style="width:98%" value=""></td>
+			          		<td><input type="text" style="width:98%" value="<c:out value = '${viewInfo.typeInfo.typeName}' />"></td>
 			        	</tr>
 			        	<tr class="secondary">
 <%-- 			          		<th><c:out value = '${langSecondary}' /></th> --%>
 			          		<th>영문</th>
-<%-- 			          		<td><input type="text" id=Title2 style="WIDTH:98%" value="<c:out value = '${personalPopupVO.title2}' />"></td> --%>
-			          		<td><input type="text" style="width:98%" value=""></td>
+			          		<td><input type="text" style="width:98%" value="<c:out value = '${viewInfo.typeInfo.typeName2}' />"></td>
 			        	</tr>
 			    	</table>
     			</td> 
@@ -107,8 +109,8 @@
   				<td style="height:45px;">
   					<table width="100%;">
   						<tr>
-	  						<td width="70%">사진크기는 ~이하로 해주세요!</td>
-	  						<td rowspan="2" style="padding-top: 2px; padding-right: 2%;">
+	  						<td style="width:88%">사진크기는 ~이하로 해주세요!</td>
+	  						<td rowspan="2" style="padding-top: 2px;">
 	  							<img id="preview" name="preview" src="/images/default_pic.jpg" width="40px;" height="40px;" alt="" border="0">
 	  						</td>
 	  					</tr>
@@ -121,12 +123,10 @@
   			<tr> 
     			<th>html폼</th> 
     			<td>
-					<select id="selectBox"> 
-						<option value="0">form1</option> 
-						<option value="1">form2</option> 
-						<option value="2">form3</option> 
-						<option value="3">form4</option> 
-						<option value="4">form5</option> 
+					<select id="formSelect" style="width:80px;">
+						<c:forEach var="item" items="${viewInfo.formList}">
+							<option value="<c:out value='${item.formId}'/>"><c:out value='${item.formName}'/></option>
+						</c:forEach>
 					</select> 
 				</td> 
   			</tr>

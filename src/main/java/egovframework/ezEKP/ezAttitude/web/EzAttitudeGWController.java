@@ -20,6 +20,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
@@ -529,7 +530,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 근태유형 조회
+	 * G/W 근태관리 [GET] 근태유형 리스트 조회
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeTypeList(@PathVariable String companyId, HttpServletRequest request) {
@@ -583,6 +584,45 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
+	 * G/W 근태관리 [GET] 근태유형 추가팝업에 필요한 데이터 조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/info", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getSaveAttitudeTypePopupInfo(@PathVariable String companyId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes/info] started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			//typeId 구하기
+			String MaxTypeId = ezAttitudeService.getAttitudeTypeMaxTypeId(companyId, info.getTenantId());
+			String typeId = "";
+			if (MaxTypeId.length() == 1) {
+				typeId = "A0" + MaxTypeId;
+			} else {
+				typeId = "A" + MaxTypeId;
+			}
+			//formList 구하기
+			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
+			
+			data.put("typeId", typeId);
+			data.put("formList", formList);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes/info] ended.");
+		return result;
+	}
+	
+	/**
 	 * G/W 근태관리 [POST] 근태유형 추가
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
@@ -602,6 +642,39 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 근태유형 상세보기
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getAttitudeTypeInfo(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			AttitudeTypeVO typeInfo = ezAttitudeService.getAttitudeTypeInfo(info.getTenantId(), companyId, attitudetypeId);
+			//formList 구하기
+			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
+			
+			data.put("typeInfo", typeInfo);
+			data.put("formList", formList);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId + "] ended.");
 		return result;
 	}
 	
@@ -788,6 +861,29 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/exceldown] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 근태유형관리 아이콘 업로드
+	 */
+	@RequestMapping(value = "/rest/ezattitudee/companies/{companyId}/attitudetype/iconupload/{typeId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject iconUpload(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitudee/companies/{companyId}/attitudetype/iconupload/{typeId}] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitudee/companies/{companyId}/attitudetype/iconupload/{typeId}] ended.");
 		return result;
 	}
 }

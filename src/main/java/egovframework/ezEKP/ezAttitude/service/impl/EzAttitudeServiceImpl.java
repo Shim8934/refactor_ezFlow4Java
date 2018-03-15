@@ -18,6 +18,7 @@ import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
@@ -339,8 +340,16 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId,
 			String typeId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.debug("getAttitudeTypeInfo started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("typeId", typeId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		LOGGER.debug("getAttitudeTypeInfo ended");
+		return ezAttitudeDAO.getAttitudeTypeInfo(map);
 	}
 
 	@Override
@@ -411,5 +420,33 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("getAttitudeUserConfigListCount ended");
 		return totalCount;
+	}
+	
+	@Override
+	public String getAttitudeTypeMaxTypeId(String companyId, int tenantId)
+			throws Exception {
+		LOGGER.debug("getAttitudeTypeMaxTypeId started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+
+		LOGGER.debug("getAttitudeTypeMaxTypeId ended");
+
+		return ezAttitudeDAO.getAttitudeTypeMaxTypeId(map);
+	}
+	
+	@Override
+	public List<AttitudeFormVO> getAttitudeFormList(int tenantId) throws Exception {
+		LOGGER.debug("getAttitudeFormList started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("tenantId", tenantId);
+
+		LOGGER.debug("getAttitudeFormList ended");
+
+		return ezAttitudeDAO.getAttitudeFormList(map);
 	}
 }

@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
@@ -83,4 +84,8 @@ public interface EzAttitudeService {
 	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId) throws Exception;
 	
 	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName) throws Exception;
+
+	public String getAttitudeTypeMaxTypeId(String companyId, int tenantId) throws Exception;
+
+	public List<AttitudeFormVO> getAttitudeFormList(int tenantId) throws Exception;
 }

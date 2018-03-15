@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
@@ -45,6 +46,21 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public void updateAttitudeTypeConfig(Map<String, Object> map) {
 		update("ezAttitudeAdminDAO.updateAttitudeTypeConfig", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public AttitudeTypeVO getAttitudeTypeInfo(Map<String, Object> map) {
+		return (AttitudeTypeVO) select("ezAttitudeAdminDAO.getAttitudeTypeInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public String getAttitudeTypeMaxTypeId(Map<String, Object> map) {
+		return (String) select("ezAttitudeAdminDAO.getAttitudeTypeMaxTypeId", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<AttitudeFormVO> getAttitudeFormList(Map<String, Object> map) {
+		return (List<AttitudeFormVO>) list("ezAttitudeAdminDAO.getAttitudeFormList", map);
 	}
 	
 	@SuppressWarnings("unchecked")

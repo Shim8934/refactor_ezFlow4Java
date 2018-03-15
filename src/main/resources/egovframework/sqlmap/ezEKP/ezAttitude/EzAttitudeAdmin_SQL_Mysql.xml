@@ -6,6 +6,7 @@
 	<typeAlias alias="AttitudeConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO"/>
 	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
 	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
+	<typeAlias alias="AttitudeFormVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO"/>
 	
 	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
 		<result property="userId" 					column="USER_ID" 				columnIndex="1"/>
@@ -14,6 +15,37 @@
 		<result property="userTitle"				column="TITLE"					columnIndex="4"/>
 		<result property="userName" 				column="DISPLAYNAME" 			columnIndex="5"/>
 		<result property="deptName" 				column="DESCRIPTION" 			columnIndex="6"/>
+	</resultMap>
+	
+	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
+		<result property="companyId"				column="COMPANY_ID"				columnIndex="1"/>
+		<result property="tenantId"					column="TENANT_ID"				columnIndex="2"/>
+		<result property="workStartTime"			column="WORK_STARTTIME"			columnIndex="3"/>
+		<result property="workEndTime"				column="WORK_ENDTIME"			columnIndex="4"/>
+		<result property="closedDay"				column="CLOSED_DAY"				columnIndex="5"/>
+		<result property="attitudeModAppl"			column="ATTITUDE_MOD_APPL"		columnIndex="6"/>
+		<result property="closedDateAttitude"		column="CLOSED_DATE_ATTITUDE"	columnIndex="7"/>
+		<result property="confSetDate"				column="CONF_SET_DATE"			columnIndex="8"/>
+	</resultMap>
+	
+	<resultMap id="attitudeType" class="AttitudeTypeVO">
+		<result property="typeId"					column="TYPE_ID"				columnIndex="1"/>
+		<result property="companyId"				column="COMPANY_ID"				columnIndex="2"/>
+		<result property="tenantId"					column="TENANT_ID"				columnIndex="3"/>
+		<result property="typeName"					column="TYPE_NAME"				columnIndex="4"/>
+		<result property="typeName2"				column="TYPE_NAME2"				columnIndex="5"/>
+		<result property="isuse"					column="ISUSE"					columnIndex="6"/>
+		<result property="imgPath"					column="IMG_PATH"				columnIndex="7"/>
+		<result property="parentId"					column="PARENTID"				columnIndex="8"/>
+		<result property="formId"					column="FORM_ID"				columnIndex="9"/>
+	</resultMap>
+	
+	<resultMap id="attitudeForm" class="AttitudeFormVO">
+		<result property="formId"					column="FORM_ID"				columnIndex="1"/>
+		<result property="tenantId"					column="TENANT_ID"				columnIndex="2"/>
+		<result property="formName"					column="FORM_NAME"				columnIndex="3"/>
+		<result property="formName2"				column="FORM_NAME2"				columnIndex="4"/>
+		<result property="formHtml"					column="FORM_HTML"				columnIndex="5"/>
 	</resultMap>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
@@ -46,21 +78,21 @@
 		]]>
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.getAttitudeConfig" parameterClass="Map" resultClass="AttitudeConfigVO">
+	<select id="ezAttitudeAdminDAO.getAttitudeConfig" parameterClass="Map" resultMap="attitudeConfig">
 		<![CDATA[
 			SELECT
-				COMPANYID,
+				COMPANY_ID,
 				TENANT_ID,
-				WORKSTARTTIME,
-				WORKENDTIME,
-				CLOSEDDAY,
-				ATTITUDEMODAPPL,
-				CLOSEDDATEATTITUDE,
-				date_format(CONFSETDATE, '%Y-%m-%d') as CONFSETDATE
+				WORK_STARTTIME,
+				WORK_ENDTIME,
+				CLOSED_DAY,
+				ATTITUDE_MOD_APPL,
+				CLOSED_DATE_ATTITUDE,
+				date_format(CONF_SET_DATE, '%Y-%m-%d') as CONF_SET_DATE
 			FROM
 				TBL_ATTITUDE_CONF
 			WHERE
-				COMPANYID = #companyId#
+				COMPANY_ID = #companyId#
 			AND
 				TENANT_ID = #tenantId#
 		]]>
@@ -70,14 +102,14 @@
 		<![CDATA[
 			UPDATE TBL_ATTITUDE_CONF
 			SET
-				WORKSTARTTIME = #workStartTime#,
-				WORKENDTIME = #workEndTime#,
-				CLOSEDDAY = #closedDay#,
-				ATTITUDEMODAPPL = #attitudeModAppl#,
-				CLOSEDDATEATTITUDE = #closedDateAttitude#,
-				CONFSETDATE = str_to_date(#confSetDate#, '%Y-%m-%d') 
+				WORK_STARTTIME = #workStartTime#,
+				WORK_ENDTIME = #workEndTime#,
+				CLOSED_DAY = #closedDay#,
+				ATTITUDE_MOD_APPL = #attitudeModAppl#,
+				CLOSED_DATE_ATTITUDE = #closedDateAttitude#,
+				CONF_SET_DATE = str_to_date(#confSetDate#, '%Y-%m-%d') 
 			WHERE
-				COMPANYID = #companyId#
+				COMPANY_ID = #companyId#
 			AND
 				TENANT_ID = #tenantId#
 		]]>
@@ -148,22 +180,22 @@
 		
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.getAttitudeTypeList" parameterClass="Map" resultClass="AttitudeTypeVO">
+	<select id="ezAttitudeAdminDAO.getAttitudeTypeList" parameterClass="Map" resultMap="attitudeType">
 		<![CDATA[
 			SELECT
-				TYPEID,
-				COMPANYID,
-				TENANT_ID AS TENANTID,
-				TYPENAME,
-				TYPENAME2,
+				TYPE_ID,
+				COMPANY_ID,
+				TENANT_ID,
+				TYPE_NAME,
+				TYPE_NAME2,
 				ISUSE,
-				IFNULL(IMGPATH,'') AS IMGPATH,
+				IFNULL(IMG_PATH,'') AS IMG_PATH,
 				IFNULL(PARENTID,'') AS PARENTID,
-				FORMID
+				FORM_ID
 			FROM
 				TBL_ATTITUDE_TYPE
 			WHERE
-				COMPANYID = #companyId#
+				COMPANY_ID = #companyId#
 			AND
 				TENANT_ID = #tenantId#
 		]]>
@@ -175,11 +207,63 @@
 			SET
 				ISUSE = #isuse#
 			WHERE
-				COMPANYID = #companyId#
+				COMPANY_ID = #companyId#
 			AND
 				TENANT_ID = #tenantId#
 			AND
-				TYPEID = #typeId#
+				TYPE_ID = #typeId#
 		]]>
 	</update>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeTypeInfo" parameterClass="Map" resultMap="attitudeType">
+		<![CDATA[
+			SELECT
+				TYPE_ID,
+				COMPANY_ID,
+				TENANT_ID,
+				TYPE_NAME,
+				TYPE_NAME2,
+				ISUSE,
+				IFNULL(IMG_PATH,'') AS IMG_PATH,
+				IFNULL(PARENTID,'') AS PARENTID,
+				FORM_ID
+			FROM
+				TBL_ATTITUDE_TYPE
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				TYPE_ID = #typeId#
+		]]>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeTypeMaxTypeId" parameterClass="Map" resultClass="string">
+		<![CDATA[
+			SELECT 
+			    MAX(cast(substring(TYPE_ID,2) as unsigned)) + 1 AS MAXTYPEID
+			FROM
+			    TBL_ATTITUDE_TYPE
+			WHERE
+			    COMPANY_ID = #companyId#
+			AND
+			    TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeFormList" parameterClass="Map" resultMap="attitudeForm">
+		<![CDATA[
+			SELECT
+				FORM_ID,
+				TENANT_ID,
+				FORM_NAME,
+				FORM_NAME2,
+				FORM_HTML
+			FROM
+				TBL_ATTITUDE_FORM
+			WHERE
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
 </sqlMap>

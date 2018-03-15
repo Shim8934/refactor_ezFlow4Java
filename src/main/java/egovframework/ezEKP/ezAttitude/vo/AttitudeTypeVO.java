@@ -5,7 +5,7 @@ public class AttitudeTypeVO {
 	private String typeId;
 	/** 회사아이디 */
 	private String companyId;
-	/** 테넌트 */
+	/** 테넌트아이디 */
 	private int tenantId;
 	/** 유형명 */
 	private String typeName;

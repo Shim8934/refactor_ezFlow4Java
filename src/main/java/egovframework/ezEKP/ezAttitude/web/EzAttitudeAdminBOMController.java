@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.gson.Gson;
@@ -283,7 +285,7 @@ public class EzAttitudeAdminBOMController {
 	@ResponseBody
 	public void saveAttitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("saveAttitudeTypeConfig started.");
-		//TODO===============================================================================================================================================
+		
 		String typeConfigList = request.getParameter("typelist");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -317,7 +319,41 @@ public class EzAttitudeAdminBOMController {
 	 * @return
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/addAttitudeType.do")
-	public String addAttitudeType() {
+	public String addAttitudeType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("addAttitudeType started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = userInfo.getCompanyID();
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/info";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		Object viewInfo = "";
+		if (status.equals("ok")) {
+			viewInfo = resultBody.get("data");
+			
+			model.addAttribute("viewInfo", viewInfo);
+		}
+		
+		LOGGER.debug("addAttitudeType ended.");
+		
 		return "admin/ezAttitude/saveAttitudeType";
 	}
 	
@@ -326,14 +362,84 @@ public class EzAttitudeAdminBOMController {
 	 * @return
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/showAttitudeType.do")
-	public String  showAttitudeType() {
+	public String  showAttitudeType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("showAttitudeType started.");
+				
+		String attitudetypeId = request.getParameter("typeId");
+		String companyId = request.getParameter("companyId");
 		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId;
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
 		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+//		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//		
+//		JSONParser jp = new JSONParser();
+//		
+//		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+//		
+//		String status = resultBody.get("status").toString();
+//		
+//		if (status.equals("ok")) {
+//			JSONObject dataObject = (JSONObject) resultBody.get("data");
+//			model.addAttribute("typeInfo", dataObject);
+//		}
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		Object viewInfo = "";
+		if (status.equals("ok")) {
+			viewInfo = resultBody.get("data");
+			
+			model.addAttribute("viewInfo", viewInfo);
+		}
 		
 		LOGGER.debug("showAttitudeType ended.");
 		
 		return "admin/ezAttitude/saveAttitudeType";
+	}
+	
+	@RequestMapping(value = "/ezAttitude/iconUpload.do")
+	public void iconUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) {
+		
+		LOGGER.debug("iconUpload started.");
+		
+		String typeId = request.getParameter("typeId");
+		MultipartFile file = request.getFile("file1");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
+		String url = gwServerUrl + "/rest/ezattitudee/companies/{companyId}/attitudetype/iconupload/{typeId}";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		LOGGER.debug("iconUpload ended.");
 	}
 	
 }
