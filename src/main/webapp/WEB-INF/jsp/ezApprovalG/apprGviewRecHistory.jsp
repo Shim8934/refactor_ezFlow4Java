@@ -106,7 +106,7 @@
 </div>
 						
 <h2 style="margin-top:5px" > <spring:message code='ezApprovalG.t626'/></h2>
-<TextArea id="txtChangeReason" style="Width:99%; height:80px" readonly="readonly"></TextArea>
+<TextArea id="txtChangeReason" style="width:99%; height:80px; resize:none;" readonly="readonly"></TextArea>
 
 <script type="text/javascript" >
 	selToggleList(document.getElementById("close"), "ul", "li", "0");
