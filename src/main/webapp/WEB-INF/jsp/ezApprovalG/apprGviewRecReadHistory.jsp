@@ -78,8 +78,8 @@
 <h1><spring:message code='ezApprovalG.t1184'/></h1>
 <div id="close"><ul><li><span onClick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
 <h2 id="tdTitle"> <spring:message code='ezApprovalG.t1186'/></h2>
-<div class="listview" style="WIDTH: 593px;"> 
-<DIV id=lvList style="overflow:auto; border:0;HEIGHT: 300px; WIDTH: 591px;"></DIV>
+<div class="listview" style="width:100%;"> 
+<div id=lvList style="overflow:auto; border:0;HEIGHT: 300px; width:100%;"></div>
 </div>
 </body>
 </html>
