@@ -17,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -132,4 +133,35 @@ public class EzAttitudeBHSController {
 		LOGGER.debug("/attitude/attitudeSave ended");
 	}
 	
+	/**
+	 * attitude Main
+	 */
+	@RequestMapping(value = "/ezAttitude/attitudeMain.do")
+	public String attitudeMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeMain started");
+		LOGGER.debug("/ezAttitude/attitudeMain ended");
+		return "/ezAttitude/attitudeMain";
+	}
+	
+	/**
+	 * attitude Main Left
+	 */
+	@RequestMapping(value = "/ezAttitude/attitudeLeft.do")
+	public String attitudeLeft(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeLeft started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userOffset = userInfo.getOffset().split("\\|")[1];
+		boolean attitudeAdminCheck = true;
+		
+		if (userInfo.getRollInfo().indexOf("d=1") == -1) {
+			attitudeAdminCheck = false;
+		}
+		
+		model.addAttribute("userOffset", userOffset);
+		model.addAttribute("attitudeAdminCheck", attitudeAdminCheck);
+		
+		LOGGER.debug("/ezAttitude/attitudeLeft ended");
+		return "/ezAttitude/attitudeLeft";
+	}
 }
