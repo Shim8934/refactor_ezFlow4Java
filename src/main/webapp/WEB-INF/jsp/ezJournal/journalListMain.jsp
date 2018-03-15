@@ -61,7 +61,7 @@
 			#MailListRayer tr:not(.selectTR):hover{
 				background-color: rgb(244,245,245);
 			}
-			#basicFormList td:hover{
+			#basicFormList td:not(.selectTD):hover{
 				background-color: rgb(244,245,245);
 			}
 			.selectTR{
@@ -110,6 +110,8 @@
 		    var normal=null;
 		    var onPreview=false;
 		    var sumFormId;
+		    var sumTypeId;
+		    var journalIdList = [];
 			
 			window.onresize = function ()
 		    {
@@ -255,6 +257,8 @@
 		        document.getElementById("selectSumJournal").style.display = "none";
 		        $("#basicFormList").html("");
 		        sumFormId="";
+		        sumTypeId="";
+		        journalIdList=[];
 		        $.modal.close();
 		    }
 			
@@ -279,7 +283,7 @@
 		   				success: function(forms){
 		   					var trs = "<tr><th style='text-align: center'><spring:message code='ezJournal.t72' /></th></tr>";
 		   					$(forms).each(function(){
-		   						trs += "<tr onclick='sumFormClick(this);' ondblclick='writeSumJournal();' style='cursor:pointer;' value="+this.formId+"><td>"+this.formName+"</td></tr>";
+		   						trs += "<tr onclick='sumFormClick(this);' ondblclick='writeSumJournal();' style='cursor:pointer;' sumTypeId="+this.typeId+" sumFormId="+this.formId+"><td>"+this.formName+"</td></tr>";
 		   					})
 	   						$("#basicFormList").html(trs);
 		   				}
@@ -304,11 +308,18 @@
 			//취합하기
 			function writeSumJournal(){
 				if(sumFormId!=null && sumFormId!=undefined){
-					var journalIdList = [];
 					 $('input:checkbox[name="journalCheckbox"]:checked').each(function() {
 						 journalIdList.push($(this).parent().parent().attr("id"));
 					 });
-					 
+				 	var feature = GetOpenPosition(820, 850);
+					var Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + sumTypeId + "&mode=sum", "",
+									"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
+										+ feature);
+					Openwin.focus();
+					document.getElementById("selectSumJournal").style.display = "none";
+			        $("#basicFormList").html("");
+			        sumTypeId="";
+			        $.modal.close();
 				} else {
 					alert("<spring:message code='ezJournal.t71' />");
 				}
@@ -318,7 +329,8 @@
 			function sumFormClick(elem){
 				var parentElem = $(elem).parent();
 				$(parentElem).find("td").removeClass("selectTD");
-				sumFormId=$(elem).attr("value");
+				sumFormId=$(elem).attr("sumFormId");
+				sumTypeId=$(elem).attr("sumTypeId");
 				$(elem).find("td").addClass("selectTD");
 			}
 			

@@ -71,50 +71,29 @@
 	    			}
 	    		});
 	    		
-	    		console.log("lastFormId 확인 : " + lastFormId);
-	    		if (lastFormId != null && lastFormId != "") {
-	    			lastFormId = parseInt(lastFormId);
-	    			console.log("이전양식가져올때는 여기로 : " + lastFormId);
-	    			getJournalForm(lastFormId);
-	    			selFormId = lastFormId;
-	    			$("#optForm option[value=" + lastFormId + "]").attr("selected", "selected");
-	    			lastFormId = "";
-	    		} else {
-	    			selFormId = $("#optForm").find("option:selected").val();
-		    		getJournalForm(selFormId);
-	    		}
 	    	}
 			
 			// 선택된 양식의 폼 호출
 			function getJournalForm(formId) {
+				var jsonString = JSON.stringify({"mode" : mode,"formId" : formId,"typeId" : typeId,"journalIdList" : opener.journalIdList});
 				$.ajax({
 	    			type : "POST",
 	   				dataType : "json",
+	   				contentType:"application/json;",
 	   				url : "/ezJournal/journalGetForm.do",
-	   				data : {"formId" : formId,
-   							"typeId" : typeId},
+	   				data : jsonString,
    					success : function(result){
    						console.log(result);
-   						console.log(userName);
    						
    						if (result.formStatus == null) {
    							$("#btnGetOther").css("display", "none");
    						} else {
    							$("#btnGetOther").css("display", "");
    						}
-   						var title = "[" + result.formName + "] " + nowDate + " (" + userName + ")";
-   						console.log(title);
    						
-   						$("#title").val(title);
-   						
-   						// 예약어 부분에 내용 추가
-   						var content = result.formContent;
-	   					content = content.replace(/@journalDeptId/gim, deptId);
-   						content = content.replace(/@journalWriterId/gim, userId);
-   						content = content.replace(/@journalWriteDate/gim, nowDate);
-   						
-   					//	message.SetEditorContent(result.formContent);
-   						message.SetEditorContent(content);
+   						$("#title").val(result.journalTitle);
+   						message.SetEditorContent(result.journalContent);
+   						opener.journalIdList = [];
 	   				},
 	   				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);
@@ -124,12 +103,12 @@
 	    	
 			// 최근에 사용한 양식 호출
 			function getLastForm(typeId) {
-				
 				$.ajax({
 	    			type : "POST",
 	   				dataType : "json",
 	   				url : "/ezJournal/journalGetLastForm.do",
 	   				data : {"typeId" : typeId},
+	   				async : false,
    					success : function(result){
 						lastFormId = result;
 						var firstType = $("#optType").find("option:selected");
@@ -139,7 +118,6 @@
 		    			alert("code : " + request.status + "\nmessage : " + request.responseText + "\nerror : " + error);
 	   				}
 	    		});
-				
 			}
 			
 			// 수신자 선택화면 호출
@@ -179,7 +157,43 @@
 	    
 	    	// 양식내용을 에디터에 넣어주는 작업 
 		    function Editor_Complete() {
-	    		getLastForm(typeId);
+	    		switch (mode) {
+				case 'new':
+		    		getLastForm(typeId);
+				
+		    		console.log("lastFormId 확인 : " + lastFormId);
+		    		if (lastFormId != null && lastFormId != "" ) {
+		    			lastFormId = parseInt(lastFormId);
+		    			console.log("이전양식가져올때는 여기로 : " + lastFormId);
+		    			selFormId = lastFormId;
+		    			getJournalForm(lastFormId);
+		    			$("#optForm option[value=" + lastFormId + "]").attr("selected", "selected");
+		    			lastFormId = "";
+		    		} else {
+		    			selFormId = $("#optForm").find("option:selected").val();
+			    		getJournalForm(selFormId);
+		    		}
+					break;
+				case 'sum':
+					selFormId = opener.sumFormId;
+					var selectedType = $("#optType");
+					getFormList(selectedType);
+		    		getJournalForm(selFormId);
+		    		opener.sumFormId = "";
+					break;
+				case 'reuse':
+					
+					break;
+				case 'modify':
+					
+					break;
+				case 'temp':
+					
+					break;
+
+				default:
+					break;
+				}
 	    	}
 	    
 		 	// 버튼 중복클릭 방지

@@ -100,12 +100,13 @@
 	</resultMap>
 
  	<resultMap class="JournalFormInfoVO" id="JournalFormInfoVO">
-		<result property="formId"		column="form_id"			columnIndex="1"/>
-		<result property="formName"		column="form_name"			columnIndex="2"/>
-		<result property="formInfo"		column="form_info"			columnIndex="3"/>
-		<result property="formDate"		column="form_date"			columnIndex="4"/>
-		<result property="formWriter"	column="form_writer"		columnIndex="5"/>
-		<result property="formStatus"	column="form_status"		columnIndex="6"/>
+		<result property="formId"		column="form_id"			/>
+		<result property="formName"		column="form_name"			/>
+		<result property="formInfo"		column="form_info"			/>
+		<result property="formDate"		column="form_date"			/>
+		<result property="formWriter"	column="form_writer"		/>
+		<result property="formStatus"	column="form_status"		/>
+		<result property="typeId"		column="type_id"			/>
 	</resultMap> 
 	
 	<resultMap class="JournalFormInfoVO" id="BasicFormInfoVO">
@@ -181,7 +182,8 @@
 						a.form_info,
 						DATE_ADD(DATE_FORMAT(a.form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
 						a.form_writer,
-						a.form_status
+						a.form_status,
+						a.type_id
 					from 
 						tbl_journal_form a join tbl_journal_form_type b 
 					on 
@@ -204,7 +206,8 @@
 						form_info,
 						DATE_ADD(DATE_FORMAT(form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
 						form_writer,
-						form_status
+						form_status,
+						a.type_id
 					from 
 						tbl_journal_form 
 					where
@@ -225,7 +228,8 @@
 					a.form_info,
 					DATE_ADD(DATE_FORMAT(a.form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
 					a.form_writer,
-					a.form_status
+					a.form_status,
+					a.type_id
 				from 
 					tbl_journal_form a left join tbl_journal_form_use_dept b 
 				on 
@@ -469,7 +473,9 @@
 		inner join jmocha.tbl_journal_form_type ft on (f.type_id=ft.type_id and f.tenant_id=ft.tenant_id)
 		inner join jmocha.tbl_deptmaster d on (j.journal_dept=d.CN and d.TENANT_ID=j.tenant_id)
 		inner join jmocha.tbl_usermaster u on (j.journal_writer=u.CN and u.TENANT_ID=j.tenant_id)
+		<isNotEmpty property="recvUser">
 		left join jmocha.tbl_journal_recv r on (r.journal_id=j.journal_id and j.tenant_id=r.tenant_id)
+		</isNotEmpty>
 		where j.tenant_id=#tenantId#
 		and ft.company_id=#companyId#
 		<isNotEmpty property="typeId">
@@ -487,6 +493,9 @@
 		<isNotEmpty property="status">
 		and j.journal_status=#status#
 		</isNotEmpty>
+		<isEmpty property="status">
+		and j.journal_status is null
+		</isEmpty>
 		<isNotEmpty property="formId">
 		and f.form_id=#formId#
 		</isNotEmpty>
@@ -560,6 +569,9 @@
 		<isNotEmpty property="status">
 		and j.journal_status=#status#
 		</isNotEmpty>
+		<isEmpty property="status">
+		and j.journal_status is null
+		</isEmpty>
 		<isNotEmpty property="formId">
 		and f.form_id=#formId#
 		</isNotEmpty>
@@ -801,12 +813,12 @@
 		    count(r.recieve_date) as check_recv,
 			jf.file_path as file_path,
             jf.file_size as file_size,
-            jf.file_name as file_name,
-            case u.CN
+            jf.file_name as file_name
+            ,case u.CN
 			when #userId# then 'yes'
 			else 'no'
-			end as mine,
-			u.CN as writer_id
+			end as mine
+			,u.CN as writer_id
 		from jmocha.tbl_journal j
 		inner join jmocha.tbl_journal_form f on (j.form_id=f.form_id and j.tenant_id = f.tenant_id)
 		inner join jmocha.tbl_usermaster u on (j.journal_writer=u.CN and u.TENANT_ID=j.tenant_id)
