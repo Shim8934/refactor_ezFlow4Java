@@ -76,10 +76,11 @@
 	    			lastFormId = parseInt(lastFormId);
 	    			console.log("이전양식가져올때는 여기로 : " + lastFormId);
 	    			getJournalForm(lastFormId);
+	    			selFormId = lastFormId;
 	    			$("#optForm option[value=" + lastFormId + "]").attr("selected", "selected");
 	    			lastFormId = "";
 	    		} else {
-	    			var selFormId = $("#optForm").find("option:selected").val();
+	    			selFormId = $("#optForm").find("option:selected").val();
 		    		getJournalForm(selFormId);
 	    		}
 	    	}
@@ -103,14 +104,14 @@
    						}
    						var title = "[" + result.formName + "] " + nowDate + " (" + userName + ")";
    						console.log(title);
-   						selFormId = formId;
+   						
    						$("#title").val(title);
    						
    						// 예약어 부분에 내용 추가
    						var content = result.formContent;
-   						content.replace(/@journalDeptId/g, deptId);
-   						content.replace(/@journalWriterId/g, userId);
-   						content.replace(/@journalWriteDate/g, nowDate);
+	   					content = content.replace(/@journalDeptId/gim, deptId);
+   						content = content.replace(/@journalWriterId/gim, userId);
+   						content = content.replace(/@journalWriteDate/gim, nowDate);
    						
    					//	message.SetEditorContent(result.formContent);
    						message.SetEditorContent(content);

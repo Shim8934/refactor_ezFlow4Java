@@ -631,7 +631,55 @@ public class EzJournalGWController {
 	}
 	
 	/**
-	 * 업무일지 G/W [DELETE] 업무일지 삭제
+	 * 업무일지 G/W [DELETE] 업무일지 삭제 (여러건)
+	 */
+	@RequestMapping(value="/rest/ezjournal/journals", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	public JSONObject deleteJournalList(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezJournal G/W deleteJournalList started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
+			String realPath = commonUtil.getRealPath(request);
+			
+			Gson gson = new Gson();
+			List<String> journalIdList = gson.fromJson(jsonParam.get("journalIdList").toString(), new TypeToken<List<String>>(){}.getType());
+			LOGGER.debug("journalIdList : " + journalIdList);
+			
+			String pDirPath = "";
+			pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
+			pDirPath = realPath + pDirPath;
+					
+			if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+				pDirPath = pDirPath + commonUtil.separator;
+			}
+			
+			String listType = jsonParam.get("listType").toString();
+			LOGGER.debug("listType : " + listType);
+			
+			if (listType.equals("recv")) {
+				
+			} else {
+				ezJournalService.deleteJournalList(journalIdList, pDirPath, info.getTenantId());
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezJournal G/W deleteJournalList ended.");
+		return result;
+	}
+	
+	/**
+	 * 업무일지 G/W [DELETE] 업무일지 삭제 (1건)
 	 */
 	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteJournal(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {

@@ -281,7 +281,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezJournal/applyFavoriteUser.do")
 	@ResponseBody
-	public String applyFavoriteUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
+	public JSONArray applyFavoriteUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("applyFavoriteUser started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -299,14 +299,14 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
+		JSONArray userList = new JSONArray();
 		
 		if (status.equals("ok")) {
-			JSONArray userList = (JSONArray) result.get("data");
+			userList = (JSONArray) result.get("data");
 			logger.debug("userList : " + userList);
-			return JsonUtil.ListToJson(userList);
 		}
 		logger.debug("applyFavoriteUser ended");
-		return JsonUtil.OneStringToJson("json");
+		return userList;
 	}
 	
 	/**
@@ -314,7 +314,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezJournal/deleteFavorite.do")
 	@ResponseBody
-	public String deleteFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
+	public void deleteFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("deleteFavorite started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -337,7 +337,6 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			
 		}
 		logger.debug("deleteFavorite ended");
-		return JsonUtil.OneStringToJson("json");
 	}
 	
 	/**
@@ -396,15 +395,15 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
 		String status = result.get("status").toString();
+		String lastId = "";
 		
 		if (status.equals("ok")) {
-			String lastId = result.get("data").toString();
+			lastId = result.get("data").toString();
 			logger.debug("lastFormId : " + lastId);
-			return JsonUtil.OneStringToJson(lastId);
 		}
 		
 		logger.debug("journalGetLastForm ended");
-		return JsonUtil.OneStringToJson("json");
+		return lastId;
 	}
 	
 	/**
@@ -535,13 +534,13 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			data = resultBody.get("data");
 			logger.debug("xml데이터 확인 : " + data);
 			model.addAttribute("data", data.toString());
-			return data.toString();
+			data = data.toString();
 		}
 
 		logger.debug("status:"+status);
         logger.debug("uploadJournalAttach ended");
         
-        return "json";
+        return data.toString();
     }
 	
 	/**
@@ -762,5 +761,38 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		logger.debug("getOtherJournal ended");
 		return "ezJournal/journalGetOther";
 	}
+	
+	/**
+	 * 업무일지 리스트삭제
+	 */
+	@RequestMapping(value = "/ezJournal/journalDeleteList.do")
+	@ResponseBody
+	public void journalDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("journalDelete started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String listType = request.getParameter("listType");
+		String journalIdList = request.getParameter("journalIdList");
+		
+		JSONObject param = new JSONObject();
+		param.put("userId", userInfo.getId());
+		param.put("listType", listType);
+		param.put("journalIdList", journalIdList);
+		
+		String restUrl = "/rest/ezjournal/journals";
+		JSONObject result = new JSONObject();
+		
+		result = commonUtil.getJsonFromRestApi(restUrl, null, request, "delete", param);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		}
+		
+		logger.debug("journalDelete ended");
+	}
+	
 	
 }

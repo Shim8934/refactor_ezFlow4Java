@@ -236,7 +236,7 @@ public class EzJournalAdminJYController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezJournal/formSave.do", produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public String formSave (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public void formSave (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("formSave started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -286,8 +286,6 @@ public class EzJournalAdminJYController {
 		}
 		
 		logger.debug("formSave ended.");         
-		
-		return JsonUtil.OneStringToJson("json");
 	}
 	
 	/**
@@ -295,7 +293,7 @@ public class EzJournalAdminJYController {
 	 */
 	@RequestMapping(value = "/admin/ezJournal/deleteForm.do", produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public String deleteForm (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public void deleteForm (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("deleteForm started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -316,8 +314,6 @@ public class EzJournalAdminJYController {
 		String status = result.get("status").toString();
 		
 		logger.debug("deleteForm ended.");
-		
-		return JsonUtil.OneStringToJson("json");
 	}
 	
 }

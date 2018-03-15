@@ -634,6 +634,7 @@
 				})
 			}
 
+			// 일지작성
 			function writejournal() {
 				//	var feature = GetOpenWindowfeature(820, 880).replace("resizable=no","resizable=yes"); 
 				var feature = GetOpenPosition(820, 850);
@@ -650,6 +651,39 @@
 				} else {
 					$(elem).removeProp("checked");
 					$(elem).parent().parent().removeClass("selectTR");
+				}
+			}
+			
+			// 일지삭제
+			function deleteJournal() {
+				var journalIdList = [];
+				 $('input:checkbox[name="journalCheckbox"]:checked').each(function() {
+					 journalIdList.push($(this).parent().parent().attr("id"));
+				 });
+				 console.log(journalIdList); 
+				  
+				if (journalIdList.length == 0) {
+					alert("<spring:message code='ezJournal.t148'/>");
+					return;
+				}
+				
+				if (confirm("<spring:message code='ezJournal.t139'/>")) {
+					$.ajax ({
+						type : "POST",
+						dataType : "text",
+						async : "false",
+						url : "/ezJournal/journalDeleteList.do",
+						data : {
+							listType : listType,
+							journalIdList : JSON.stringify(journalIdList)
+						},
+						success : function() {
+							alert("<spring:message code='ezJournal.t138'/>");
+						},
+						error : function() {
+							alert("<spring:message code='ezJournal.t149'/>");
+						}
+					});
 				}
 			}
 
@@ -708,7 +742,7 @@
 	       	 <li><span onClick=""><spring:message code='ezJournal.t107' /></span></li>
 		  	</c:if>
 		  	<c:if test="${listType eq 'temp' or listType eq 'recv' or listType eq 'mine'}">
-	       	 <li><span onClick=""><spring:message code='ezJournal.t108' /></span></li>
+	       	 <li><span onClick="deleteJournal()"><spring:message code='ezJournal.t108' /></span></li>
 		  	</c:if>
 		  	<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine'}">
 	       	 <li><span id="SearchOption" onClick="doLayerPopup(this);" mode="off"><spring:message code='ezJournal.t59' /></span></li>

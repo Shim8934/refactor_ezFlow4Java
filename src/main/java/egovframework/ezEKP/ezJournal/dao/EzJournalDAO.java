@@ -381,4 +381,12 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public void deleteReceiver(Map<String, Object> map) {
 		delete("deleteReceiver", map);
 	}
+
+	/**
+	 * 일지 삭제
+	 * @param map
+	 */
+	public void deleteJournal(Map<String, Object> map) {
+		delete("deleteJournal", map);
+	}
 }

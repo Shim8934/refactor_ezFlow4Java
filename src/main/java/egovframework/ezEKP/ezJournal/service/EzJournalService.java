@@ -297,4 +297,14 @@ public interface EzJournalService {
 	 */
 	public JournalFormInfoVO getJournalDivideThisNext(List<String> journalIdList,String formId, String companyId, int tenantId) throws Exception;
 
+	/**
+	 * 일지삭제
+	 * @param journalIdList
+	 * @param pDirPath
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public void deleteJournalList(List<String> journalIdList, String pDirPath, int tenantId) throws Exception;
+
 }

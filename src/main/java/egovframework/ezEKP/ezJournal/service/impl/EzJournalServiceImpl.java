@@ -869,5 +869,45 @@ public class EzJournalServiceImpl implements EzJournalService{
 			}
 		}
 	}
+
+	@Override
+	public void deleteJournalList(List<String> journalIdList, String pDirPath, int tenantId) throws Exception {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		for (int i = 0; i < journalIdList.size(); i++) {
+			String journalId = journalIdList.get(i);
+			map.put("journalId", journalId);
+			
+			ezJournalDAO.deleteJournal(map);
+			ezJournalDAO.deleteReceiver(map);
+			ezJournalDAO.deleteJournalAttach(map);
+			deleteDirectory(journalId, pDirPath, tenantId);
+		}
+		
+	}
 	
+	private void deleteDirectory (String journalId, String pDirpath, int tenantID) throws Exception {
+		logger.debug("deleteDirectory ended.");
+		
+		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
+		File[] deleteFileList = directoryFile.listFiles();
+
+		if (directoryFile.exists()) {
+			// 디렉토리 하위의 파일을 모두 삭제 한뒤 디렉토리 삭제
+			if (deleteFileList.length >0) {
+				for (int i=0; i<deleteFileList.length; i++) {
+					if (deleteFileList[i].isFile()) {
+						deleteFileList[i].delete();
+					} else {
+						deleteDirectory(journalId, pDirpath, tenantID);
+					}
+				}
+			}
+			directoryFile.delete();
+		}
+
+		logger.debug("deleteDirectory ended.");
+	}
 }
