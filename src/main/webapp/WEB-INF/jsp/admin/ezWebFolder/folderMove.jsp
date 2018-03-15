@@ -281,6 +281,12 @@
 				}
 			});
 		}
+		
+		function change() {
+			var selectedFolder = null;
+			var arrSubFolder   = [];
+			getData();
+		}
 	</script>
 </head>
 <body class="popup">
