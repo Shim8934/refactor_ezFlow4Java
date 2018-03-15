@@ -70,7 +70,7 @@ public class EzLadderController {
 	 * 사다리 게임 목록
 	 * */
 	@RequestMapping(value = "/ezLadder/ladderMain.do")
-	public String ladderMain(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String ladderMain(String mode, String currPage, String searchSelect, String searchInput, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("ladderMain started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -85,7 +85,12 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+									.queryParam("tenantId", userInfo.getTenantId())
+									.queryParam("mode", mode)
+									.queryParam("currPage", currPage)
+									.queryParam("searchSelect", searchSelect)
+									.queryParam("searchInput", searchInput);
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -151,13 +156,14 @@ public class EzLadderController {
 		JSONArray list = new JSONArray();
 		String status = jsonResult.get("status").toString();
 		String totalLadder = jsonResult.get("totalLadder").toString();
+		String page = jsonResult.get("currPage").toString();
 		String totalPage = jsonResult.get("totalPage").toString();
 	
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
 			
 			model.addAttribute("list", list);
-			model.addAttribute("currPage", currPage);
+			model.addAttribute("currPage", page);
 			model.addAttribute("totalPage", totalPage);
 			model.addAttribute("totalLadder", totalLadder);
 		} else {
@@ -685,20 +691,15 @@ public class EzLadderController {
 		String status = jsonResult.get("status").toString();
 
 		if (status.equals("ok")) {
-			list = (JSONArray) jsonResult.get("data");
-			
-			model.addAttribute("list", list);
-
+			if(allData.get(5).equals("back")) {
+				return "redirect:/ezLadder/ladderMain.do";
+			}
+			logger.debug("ezLadder/deleteLadder.do ended.");
+			return "json";
 		} else {
 			return "error";
 		}
 		
-		if(allData.get(5).equals("back")) {
-			return "redirect:/ezLadder/ladderMain.do";
-		}
-	
-		logger.debug("ezLadder/deleteLadder.do ended.");
-		return "json";
 	}
 	
 	/**

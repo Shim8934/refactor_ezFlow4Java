@@ -11,9 +11,12 @@ import egovframework.ezEKP.ezLadder.vo.LadderVO;
 
 public interface EzLadderService {
 
-	public List<LadderVO> getLadderList(String userId, String tenantId) throws Exception;
-	public List<LadderVO> getPartLadderList(String userId, String tenantId) throws Exception;
-	public List<LadderVO> searchLadderList(String userId, String tenantId, List<String> allData) throws Exception;
+	public int ladderCount(String userId, String tenantId) throws Exception;
+	public int partLadderCount(String userId, String tenantId) throws Exception;
+	public int searchLadderCount(String userId, String tenantId, List<String> allData) throws Exception;
+	public List<LadderVO> getLadderList(String userId, String tenantId, int startPoint, int endPoint) throws Exception;
+	public List<LadderVO> getPartLadderList(String userId, String tenantId, int startPoint, int endPoint) throws Exception;
+	public List<LadderVO> searchLadderList(String userId, String tenantId, List<String> allData, int startPoint, int endPoint) throws Exception;
 	
 	/** boh */
 	public void insertLadder(LadderVO lad, List<LadderLineVO> ladLineList) throws Exception; // 사다리 게임 만들기

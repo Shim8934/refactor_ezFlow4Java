@@ -54,34 +54,70 @@ public class EzLadderGWController {
 	@Resource(name="EzLadderService")
 	private EzLadderService ezLadderService;
 	
+	public int[] paging(int currPage,int total) {
+		int[] pages = new int[3];
+		int block = 10;
+		pages[0] = total = (int) Math.ceil(total/(double) block);	// totalPage
+		if( currPage > pages[0]) {
+			currPage = pages[0];
+		}
+		pages[1] = (currPage-1)* block; // startPoint
+		pages[2] = 0;	//endPoint
+		if(currPage == pages[0]) {
+			pages[2] = total%block;
+			if(pages[2]==0) {
+				pages[2] = block;
+			}
+		} else {
+			pages[2] =block;
+		}
+		return  pages;
+	}
+	
 	@RequestMapping(value = "/ladder/ladder-list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
 	public JSONObject gwladderList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [GET /ladder/ladder-list/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
+		int page = Integer.parseInt(request.getParameter("currPage"));
+		String mode = request.getParameter("mode");
 		String tenantId = request.getParameter("tenantId");
-		try {
-			List<LadderVO> list = ezLadderService.getLadderList(userId, tenantId);
+		String searchSelect = request.getParameter("searchSelect");
+		String searchInput = request.getParameter("searchInput");
 		
-			int page = 1;
-			int block = 10;
-			int totalLadder = list.size();
-			int totalPage = (int) Math.ceil(list.size()/(double) 10);
-			int startPoint = (page - 1)*10;
-			int endPoint = 0;
-			if(page == totalPage) {
-				endPoint = totalLadder;
-			} else {
-				endPoint = page*block;
+		int totalLadder = 0;
+		int[] pages = new int[3]; //0 totalPage //1 startPoint //2 endPoint
+		
+		try {
+			List<LadderVO> list;
+			if(searchSelect.equals("none")) {				// 비검색
+				if(mode.equals("part")){	// 일부 참여자 선택
+					totalLadder = ezLadderService.partLadderCount(userId, tenantId);
+					list = ezLadderService.getPartLadderList(userId, tenantId, 0, 0);
+				} else {					// 전체 참여자 선택
+					totalLadder = ezLadderService.ladderCount(userId, tenantId);
+					
+					pages = paging(page, totalLadder);
+					list = ezLadderService.getLadderList(userId , tenantId, pages[1], pages[2]);
+				}
+			} else {										// 검색
+				List<String> allData = new ArrayList<String>();
+				allData.add(searchSelect);
+				allData.add(searchInput);
+				allData.add(mode);
+				
+				totalLadder = ezLadderService.searchLadderCount(userId, tenantId, allData);
+				pages = paging(page, totalLadder);
+				list = ezLadderService.getLadderList(userId , tenantId, pages[1], pages[2]);
+				list = ezLadderService.searchLadderList(userId, tenantId, allData, pages[1], pages[2]);
 			}
-			if(list.size()>0) {
-				list = list.subList(startPoint, endPoint);
-			}
+		
+			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", list);
 			result.put("currPage", page);
-			result.put("totalPage", totalPage);
+			result.put("totalPage", pages[0]);
 			result.put("totalLadder", totalLadder);
 		} catch (Exception e) {
 			result.put("status", "error");
@@ -101,43 +137,53 @@ public class EzLadderGWController {
 		String tenantId = request.getParameter("tenantId");
 		String searchSelect = request.getParameter("searchSelect");
 		String searchInput = request.getParameter("searchInput");
+		
+		int totalLadder = 0;
+		int[] pages = new int[3]; //0 totalPage //1 startPoint //2 endPoint
+		
 		try {
 			int page = Integer.parseInt(currPage);
 			List<LadderVO> list;
 			if(searchSelect.equals("none")) {				// 비검색
 				if(mode.equals("part")){	// 일부 참여자 선택
-					list = ezLadderService.getPartLadderList(userId, tenantId);
+					totalLadder = ezLadderService.partLadderCount(userId, tenantId);
+					
+					
+					pages = paging(page, totalLadder);
+					list = ezLadderService.getLadderList(userId , tenantId, pages[1], pages[2]);
+					
+					list = ezLadderService.getPartLadderList(userId, tenantId, pages[1], pages[2]);
 				} else {					// 전체 참여자 선택
-					list = ezLadderService.getLadderList(userId , tenantId);
+					totalLadder = ezLadderService.ladderCount(userId, tenantId);
+					
+					pages = paging(page, totalLadder);
+					list = ezLadderService.getLadderList(userId , tenantId, pages[1], pages[2]);
+					
+					list = ezLadderService.getLadderList(userId , tenantId, pages[1], pages[2]);
 				}
 			} else {										// 검색
 				List<String> allData = new ArrayList<String>();
+				
 				allData.add(searchSelect);
 				allData.add(searchInput);
 				allData.add(mode);
+				totalLadder = ezLadderService.searchLadderCount(userId, tenantId, allData);
 				
-				list = ezLadderService.searchLadderList(userId, tenantId, allData);
+				pages = paging(page, totalLadder);
+				list = ezLadderService.getLadderList(userId , tenantId, pages[1], pages[2]);
+				
+				list = ezLadderService.searchLadderList(userId, tenantId, allData, pages[1], pages[2]);
 			}
 			
-			
-			int block = 10;
-			int totalLadder = list.size();
-			int totalPage = (int) Math.ceil(list.size()/(double) 10);
-			int startPoint = (page - 1)*10;
-			int endPoint = 0;
-			if(page == totalPage) {
-				endPoint = totalLadder;
-			} else {
-				endPoint = page*block;
-			}
-			if(list.size()>0) {
-				list = list.subList(startPoint, endPoint);
-			}
+	
+//			if(list.size()>0) {
+//				list = list.subList(startPoint, endPoint);
+//			}
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", list);
 			result.put("currPage", page);
-			result.put("totalPage", totalPage);
+			result.put("totalPage", pages[0]);
 			result.put("totalLadder", totalLadder);
 		} catch (Exception e) {
 			result.put("status", "error");
@@ -510,7 +556,7 @@ public class EzLadderGWController {
 		try {
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", null);
+	
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");

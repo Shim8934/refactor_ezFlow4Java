@@ -19,7 +19,7 @@
 			var pageChange = 1;
 			var totalPage = ${totalPage};
 			var totalLadder = ${totalLadder};
-			var blockSize = 10;
+			var blockSize = 7;
 			var mode = "all";
 			var modeCheck = "all";
 			var searchSelect = "none";
@@ -54,8 +54,8 @@
 			<ul>
 				<li id="btnInsert" onClick="newLad()"><a  style="margin-top: 3px;"><span><spring:message code="ezLadder.t013"/></span></a></li>
 				<li style="float:right; font-weight:normal; color:black; padding-right: 20px;">
-					<button id="part" onclick="participant()" value="part"><spring:message code="ezLadder.t012"/></button>
-					<button id="all" onclick="allPart()" value="all"><spring:message code="ezLadder.t011"/></button>
+					<button id="part" onclick="participant(this.value)" value="part"><spring:message code="ezLadder.t012"/></button>
+					<button id="all" onclick="participant(this.value)" value="all"><spring:message code="ezLadder.t011"/></button>
 				</li>
 			</ul>
 		</div>
