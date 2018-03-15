@@ -53,7 +53,7 @@
 			<div class="lmright">
 				<div class="lmPreview">
 					<div class="lmPreViewTxt"style='text-align:center; position:relative; top:50%; tansform:translateY(-50%);'>미리보기</div>
-					<iframe src="" class="lmPreViewIframe" name="lmPreViewIframe" style="display:none; border:none; width:100%; height:100%;"></iframe>
+					<iframe src="" class="lmPreViewIframe" id="lmPreViewIframe" name="lmPreViewIframe" style="display:none; border:none; width:100%; height:100%;"></iframe>
 				</div>
 			</div>			
 		</div>
@@ -87,12 +87,12 @@
 			
 			// 편지지 추가, 수정 btn 클릭 시  ---- btn -> this, type -> 추가=add
 			function letterEditPopUp(btn, type) {
-				var letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
-				var letterNo = $(btn).parents("li").attr("data-letterno");
+				// letterBoxNo, letterNo (letterNo -> 저장일 경우 -1)
 				var popUpType = type == "add" ? type : "modify"; // 클릭된 버튼 구분(추가 or 수정)
+				var letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
+				var letterNo = popUpType == "add" ? -1 : $(btn).parents("li").attr("data-letterno");
 				
-				url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&popUpType=" + popUpType + "&letterNo=" + letterNo;  
-					
+				var url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&popUpType=" + popUpType + "&letterNo=" + letterNo;
 				window.open(url,"_blank","width=890, height=660");
 			}
 			

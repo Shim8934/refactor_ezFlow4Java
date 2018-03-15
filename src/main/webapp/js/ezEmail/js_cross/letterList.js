@@ -50,6 +50,11 @@ $(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
 			url:"/admin/ezEmail/deleteLetter",
 			success:function(){
 				getLetterList(letterBoxNo);
+				
+				$(".lmPreViewTxt").css("display","block");
+				$(".lmPreViewIframe").attr("src","");
+				$(".lmPreViewIframe").css("display","none");
+				$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
 				alert("삭제하였습니다.");
 			}
 		});
@@ -94,12 +99,12 @@ function readLetter(letterNo) {
 	});
 }
 
-// 편지지 미리보기
+// 편지지 미리보기 1
 function letterPreView(letterNo) {
 	$.ajax({
 		type:"POST",
 		data:{letterNo:letterNo},
-		url:"/admin/ezEmail/readLetter",
+		url:"/admin/ezEmail/readLetter?rand" + Math.random(),
 		dataType:"json",
 		success:function(data){
 			var filePath = data.filePath; 
@@ -111,13 +116,20 @@ function letterPreView(letterNo) {
 				iframeDisplay = "none";
 				$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
 			} else {
-				$(".lmPreViewIframe").attr("src",data.filePath);
+				preViewIframe(data.filePath);
 			}
 			
 			$(".lmPreViewTxt").css("display",txtDisplay);
 			$(".lmPreViewIframe").css("display",iframeDisplay);
 		}
 	});
+}
+
+function preViewIframe(filePath) {
+	var path = filePath + "?rand=" + Math.random() + "&d=" + new Date().getSeconds();
+	console.log(path);
+	
+	$(".lmPreViewIframe").attr("src", path);
 }
 
 // 편지지 리스트
