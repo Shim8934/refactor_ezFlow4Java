@@ -261,7 +261,7 @@
 	        <spring:message code='ezApprovalG.t423'/>
 	    </h2>
 	    <textarea id="txt_OpinionContent" name="txt_OpinionContent" class="textarea" style="width: 100%;
-	        height: 150px; box-sizing:border-box;-moz-box-sizing:border-box;"  onfocus="return txt_OpinionContent_onfocus()"
+	        height: 150px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none;"  onfocus="return txt_OpinionContent_onfocus()"
 	        onchange="return txt_OpinionContent_onchange()"></textarea>
 	    <div class="btnposition btnpositionNew">
 	    <a class="imgbtn" id="bbtn_OpinionAdd" ><span id="btn_OpinionAdd" onClick="return btn_OpinionAdd_onclick()" ><spring:message code='ezApprovalG.t268'/></span></a>
