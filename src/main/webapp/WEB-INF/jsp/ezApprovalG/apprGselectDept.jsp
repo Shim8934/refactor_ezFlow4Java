@@ -166,10 +166,10 @@
 		<table class="content">
 		  <tr> 
 		    <td colspan="2" > 
-			  <input type="radio" name="FindDept" id="FindDept" value="OrganTree" checked
-				onclick="FindDeptRdo_onclick(this.value)"><span style=" vertical-align:bottom"><spring:message code='ezApprovalG.t1128'/></span>
+			  <input type="radio" name="FindDept" id="FindDept" value="OrganTree" checked 
+				onclick="FindDeptRdo_onclick(this.value)"><span style=" vertical-align:middle;"><spring:message code='ezApprovalG.t1128'/></span>
 			  <input type="radio" name="FindDept" id="FindDept" value="FindByName"
-				onclick="FindDeptRdo_onclick(this.value)"><span style=" vertical-align:bottom"><spring:message code='ezApprovalG.t1129'/></span>
+				onclick="FindDeptRdo_onclick(this.value)"><span style=" vertical-align:middle;"><spring:message code='ezApprovalG.t1129'/></span>
 			</td>
 		  </tr>
 		  <tr> 
@@ -183,7 +183,8 @@
 		</div>
 		<table style="display:none" id=trFindDept >
 		  <tr> 
-			<th><input id= "textDeptName"type="text" class="text" style="Width:200px;margin:0;" name="text232422222" onKeyPress="return textDeptName_onkeypress()"><a  class="imgbtn"><span id=btSearchDept onclick= "return btSearchDept_onclick()"><spring:message code='ezApprovalG.t250'/></span></a></th>
+			<th><input id= "textDeptName"type="text" class="text" style="Width:200px;margin:0;" name="text232422222" onKeyPress="return textDeptName_onkeypress()">&nbsp;<a  class="imgbtn" style="vertical-align:middle;">
+			<span id=btSearchDept style="vertical-align:middle;" onclick= "return btSearchDept_onclick()"><spring:message code='ezApprovalG.t250'/></span></a></th>
 		  </tr>
 		  <tr> 
 			<td>
