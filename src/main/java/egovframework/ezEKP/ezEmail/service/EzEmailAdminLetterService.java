@@ -48,6 +48,12 @@ public interface EzEmailAdminLetterService {
 	public void updateLetterOrder(String letterOrder, String letterNo) throws Exception;
 	
 	/**
+	 * 편지지 편지지함 이동
+	 * @param letterNo, parentLetterBoxNo
+	 */
+	public void updateLetterMove(String letterNo, String parentLetterBoxNo) throws Exception;
+	
+	/**
 	 * 편지지 검색 (재은)
 	 * @param searchStr, companyId, tenantId
 	 */

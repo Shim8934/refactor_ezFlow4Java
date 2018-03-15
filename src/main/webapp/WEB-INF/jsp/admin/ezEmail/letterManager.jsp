@@ -108,17 +108,50 @@
 					$.ajax({
 						type:"POST",
 						url:"/admin/ezEmail/updateLetterOrder.do?letterOrder=" + (i + 1) + "&" + "letterNo=" + letterNo,
-						dataType:"json",
-						complete:function(data){
+						dataType:"text",
+						error:function(data) {
+							alert("error");
 							console.log(data);
+							return;
 						}
 					});
 					
 				}
 				
 				alert("순서를 변경하였습니다");
+				getLetterList(selectNode.node.id);
+				
 			}
 			
+			// 편지지 이동
+			function letterBoxMove(btn){
+				// 편지지함 no
+				//여기 수아랑 얘기해봐야됨
+				letterNo = $(".lmLetterSelect").attr("data-letterno");
+				var select = $('body').find('.lmLetterSelect');
+				
+				if (select.length == 0) {
+					alert("이동할 편지지를 선택해주세요!");
+					return;
+				} else {
+				//if (letterNo !== "undefined") {
+					//url
+					url = "/admin/ezEmail/letterBoxMovePopUp.do?" + "letterNo=" + letterNo;  
+					var win = window.open(url,"_blank","width=550, height=450");
+					
+					var interval = window.setInterval(function() {
+				        try {
+				            if (win == null || win.closed) {
+								getLetterList(selectNode.node.id);
+				            	window.clearInterval(interval);
+				                closeCallback(win);
+				            }
+				        } catch (e) {
+				        }
+				    }, 100);
+				}
+			}
+
 			// 편지지 추가, 수정 btn 클릭 시  ---- btn -> this, type -> 추가=add
 			function letterEditPopUp(btn, type) {
 				var letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no

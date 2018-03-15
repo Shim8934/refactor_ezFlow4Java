@@ -38,6 +38,7 @@ function treeOnclick() {
 	var parent;
 	
 	$('#divTree').on('changed.jstree', function (e, data) {
+		selectNode = data;
 		if (pageType === "letterBox") { // 편지지함 
     		if (addCheck == -1) {
     			//추가하면 다른 node 못누르게됨
@@ -46,8 +47,6 @@ function treeOnclick() {
     			return;
     		}
     		
-    		
-    		selectNode = data;
     		parent = selectNode.node.parent;
     		
     		if (parent == '#') {
@@ -64,6 +63,9 @@ function treeOnclick() {
     			selectBox(selectNode.node.id);
     		}
     		
+		} else if (pageType == 'letter_move') { 
+			
+			
 		} else { // 편지지
 			// letterBoxNo
 			var letterBoxNo = data.node.id === "undefined" ? "1" : data.node.id;

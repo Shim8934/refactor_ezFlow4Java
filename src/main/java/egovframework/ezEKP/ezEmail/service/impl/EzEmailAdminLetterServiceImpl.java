@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 
 
+
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 
@@ -292,6 +293,35 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		}
 		
 		logger.debug("updateLetterBox ended.");
+	}
+	
+	/**
+	 * 편지지 편지지함 이동 (재은)
+	 * @param letterNo, parentLetterBoxNo
+	 */
+	public void updateLetterMove(String letterNo, String parentLetterBoxNo) throws Exception {
+		logger.debug("updateLetterMove started.");
+		logger.debug("letterNo=" + letterNo + ", parentLetterBoxNo=" + parentLetterBoxNo);
+		
+		String letterNoStr = "letterNo=" + URLEncoder.encode(letterNo, "UTF-8");
+		String parentLetterBoxNoStr = "parentLetterboxNo=" + URLEncoder.encode(parentLetterBoxNo, "UTF-8");
+		
+		String inputParams = letterNoStr + "&" + parentLetterBoxNoStr;
+		logger.debug(inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/updateLetterMove", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		if (!strJson.equals("")){
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+			
+			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1) {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("updateLetterMove ended.");
 	}
 	
 	

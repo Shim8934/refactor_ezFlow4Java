@@ -313,6 +313,29 @@ public class EzEmailAdminLetterController {
 		return returnStr;
 	}
 	
+	
+	/**
+	 * 편지지 편지지함 이동
+	 * @param String loginCookie, String letterNo, String parentLetterBoxNo, String letterOrder
+	 * @return : String
+	 */
+	@RequestMapping(value="/admin/ezEmail/updateLetterMove.do")
+	@ResponseBody
+	public String updateLetterMove(@CookieValue("loginCookie") String loginCookie, String letterNo, String parentLetterBoxNo) throws Exception {
+		logger.debug("updateLetterMove started.");
+		logger.debug("letterNo=" + letterNo + ", parentLetterBoxNo=" + parentLetterBoxNo);
+		
+		String returnStr = "OK";
+		
+		try {
+			EzEmailAdminLetterService.updateLetterMove(letterNo, parentLetterBoxNo);
+		} catch (Exception e) {
+			returnStr = "ERROR";
+		}
+		
+		logger.debug("updateLetterMove ended.");
+		return returnStr;
+	}
 	/**
 	 * 편지지 관리페이지 (수아)
 	 */
@@ -370,7 +393,12 @@ public class EzEmailAdminLetterController {
 	@RequestMapping("/admin/ezEmail/letterBoxMovePopUp.do")
 	public String letterAdminBoxMovePopUp(@CookieValue("loginCookie") String loginCookie, @RequestParam("letterNo") String letterNo, Model model) throws Exception{
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = userInfo.getCompanyID();
+		
 		model.addAttribute("letterNo", letterNo);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("pageType", "letter_move");
 		
 		return "admin/ezEmail/letterBoxMovePopUp";
 	}

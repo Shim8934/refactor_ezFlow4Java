@@ -140,7 +140,6 @@ function getLetterList(letterBoxNo) {
 			    
 // 편지지 목록 추가 
 function addLetterList(jsonArr) {
-	
 	var letterListHtml = "";
 	var listCount = jsonArr.length;
 
@@ -182,17 +181,4 @@ function addLetterList(jsonArr) {
 	
 	searchMode = false;
 	$(".lmLetterListUl").html(letterListHtml);
-}
-
-// 편지지 이동
-function letterBoxMove(btn){
-	// 편지지함 no
-	letterNo = $(".lmLetterSelect").attr("data-letterno");
-	
-	if (letterNo !== "undefined") {
-		//url
-		url = "/admin/ezEmail/letterBoxMovePopUp.do?" + "letterNo=" + letterNo;  
-			
-		window.open(url,"_blank","width=890, height=660");
-	}
 }
