@@ -295,10 +295,30 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void updateAttitudeTypeConfig(String typeId, String isUse,
-			int tenantId, String companyId) throws Exception {
-		// TODO Auto-generated method stub
+	public void updateAttitudeTypeConfig(String typeConfigList, String companyId,
+			int tenantId) throws Exception {
+		LOGGER.debug("updateAttitudeTypeConfig started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		String[] typeList = typeConfigList.split(";");
+		
+		for (int i = 0; i < typeList.length; i++) {
+			
+			String[] typeInfo = typeList[i].split(",");
+			
+			LOGGER.debug("typeId = " + typeInfo[0]);
+			
+			map.put("typeId", typeInfo[0]);
+			map.put("isuse", typeInfo[1]);
+			
+			ezAttitudeDAO.updateAttitudeTypeConfig(map);
+		}
+		
+		LOGGER.debug("updateAttitudeTypeConfig ended");
 	}
 
 	@Override

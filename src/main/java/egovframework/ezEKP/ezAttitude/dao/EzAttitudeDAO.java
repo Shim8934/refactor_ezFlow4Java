@@ -41,6 +41,11 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public List<AttitudeTypeVO> getAttitudeTypeList(Map<String, Object> map) throws Exception{
 		return (List<AttitudeTypeVO>) list("ezAttitudeAdminDAO.getAttitudeTypeList", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public void updateAttitudeTypeConfig(Map<String, Object> map) {
+		update("ezAttitudeAdminDAO.updateAttitudeTypeConfig", map);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<AttitudeVO> getAttitudeList(Map<String,Object> map) throws Exception{

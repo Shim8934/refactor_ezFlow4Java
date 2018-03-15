@@ -62,7 +62,7 @@ public interface EzAttitudeService {
 	
 	public void updateAttitudeConfig(JSONObject jsonParam) throws Exception;
 	
-	public void updateAttitudeTypeConfig(String typeId, String isUse, int tenantId, String companyId) throws Exception;
+	public void updateAttitudeTypeConfig(String typeConfigList, String companyId, int tenantId) throws Exception;
 	
 	public void insertAttitudeType(String typeName, String typeName2, String imgPath, String formId, String parentId, int tenantId, String companyId) throws Exception;
 	
