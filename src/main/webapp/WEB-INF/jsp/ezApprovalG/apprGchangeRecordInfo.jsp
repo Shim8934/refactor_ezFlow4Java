@@ -552,6 +552,7 @@
     	        g_szSCListXml = rtn[1];
     	    }
     }
+    
     function selChangeType_onchange() {
         g_ModifyFlag = selChangeType.value;
 
@@ -562,15 +563,15 @@
         {
             divBasicInfo.style.display = "";
             divClassInfo.style.display = "none";
-
-            window.dialogHeight = "510px";
+			//팝업창 가로 사이즈 유지, 세로만 변경
+          	window.resizeTo(window.outerWidth, 577);
         }
         else if (g_ModifyFlag == "1")
         {
             divBasicInfo.style.display = "none";
             divClassInfo.style.display = "";
-
-            window.dialogHeight = "510px";
+            
+          	window.resizeTo(window.outerWidth, 640);
         }
     }
     function MM_swapImgRestore() {
@@ -596,7 +597,7 @@
     }
 </script>
 </head>
-<body style="margin-left:0px;margin-top:0px" class="popup">
+<body style="margin-left:0px; margin-top:0px;" class="popup">
 <h1><spring:message code='ezApprovalG.t969'/></h1>
 <table class="content">
   <tr>
@@ -732,7 +733,7 @@
     <td><TextArea style="vertical-align:middle; border: 0; width:97.3%; height:70px; resize:none;" id=txtChangeReason name=txtChangeReason></TextArea></td>
   </tr>
 </table>
-<div class="btnposition btnpositionNew">
+<div class="btnposition btnpositionNew" style="display:block;">
   <a class="imgbtn"><span id="btnReset" onclick="return btnReset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
   <a class="imgbtn"><span id="btnOK" onclick="return btnOK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
   <a class="imgbtn"><span id="btnClose" onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
