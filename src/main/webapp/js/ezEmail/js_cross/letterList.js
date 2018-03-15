@@ -104,7 +104,7 @@ function letterPreView(letterNo) {
 	$.ajax({
 		type:"POST",
 		data:{letterNo:letterNo},
-		url:"/admin/ezEmail/readLetter?rand" + Math.random(),
+		url:"/admin/ezEmail/readLetter",
 		dataType:"json",
 		success:function(data){
 			var filePath = data.filePath; 
@@ -116,7 +116,7 @@ function letterPreView(letterNo) {
 				iframeDisplay = "none";
 				$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
 			} else {
-				preViewIframe(data.filePath);
+				preViewIframe(filePath);
 			}
 			
 			$(".lmPreViewTxt").css("display",txtDisplay);

@@ -59,11 +59,10 @@
 			
 			var letterPopUp = true; // 에디터에서 이미지 업로드 할때 편지지 팝업인지 구분 (ckImageUpload.jsp -> fileupload())
 			
-			window.onload = function(){
+			// editor onload 됐을때
+			function Editor_Complete(){
 				if (popUpType == "modify") {
-					window.message.CKEDITOR.on('instanceReady', function(evt) {
-						modifyLoad(popLetterNo);
-					});
+					modifyLoad(popLetterNo);
 				}
 			}
 			
@@ -79,7 +78,8 @@
 						dataType:"json",
 						success:function(data){
 							
-							window.message.CKEDITOR.instances.editor1.editable().setHtml(data.letterHtml);
+							window.message.SetEditorContent(data.letterHtml);
+							//window.message.CKEDITOR.instances.editor1.editable().setHtml(data.letterHtml);
 							
 							$("#displayname").val(data.displayname);
 							$("#displayname2").val(data.displayname2);
@@ -88,7 +88,7 @@
 					});
 			}
 			
-			
+			//e
 			// 저장 버튼 클릭시                  btn -> this
 			function letterSave(btn) {
 				var letterEditor = document.getElementById("tbContentElement").contentWindow;
@@ -134,8 +134,10 @@
 					url:uploadUrl,
 					success:function(data){
 						alert("저장했습니다.");
+						if (type != "add") {
+							opener.letterPreView(letterJson.letterNo);	
+						}
 						opener.getLetterList(letterJson.letterBoxNo); // 편지지 리스트
-						opener.letterPreView(letterJson.letterNo);
 						letterPopUpClose(); // 편지지 팝업 닫기
 					},
 					error:function(e){
@@ -148,9 +150,6 @@
 				window.close();
 			}
 			
-			function Editor_Complete(){
-				console.log("솨솨");
-			}
 		</script>	
 	</body>
 </html>

@@ -455,6 +455,7 @@ public class EzEditorController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		MultipartFile multiFile = request.getFile("FILE_PATH");
+		String letterPopUp = request.getParameter("letterPopUp"); // 편지지 추가, 수정일때 체크
 		
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
 		String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
@@ -463,6 +464,21 @@ public class EzEditorController extends EgovFileMngUtil{
 		String fileName = UUID.randomUUID() + "." + fileType;
 		
 		filePath = filePath + commonUtil.separator + today;
+		
+		if (letterPopUp != null) { // 편지지 등록, 수정때의 업로드
+			String letterBoxNo = request.getParameter("letterBoxNo");
+			String letterId = request.getParameter("letterId");
+			logger.debug("letterBoxNo:" + letterBoxNo + "letterId:" + letterId);
+			
+			// /files/upload_mail/letterBoxUpload/
+			filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
+
+			// /files/upload_mail/letterBoxUpload/letterBoxNo/letterId/images
+			filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId + "/images"; 
+		}
+		logger.debug("filePath : "+filePath);
+
+		
 		File file = new File(realPath + filePath);
 	    if (!file.exists()) {
 	    	file.mkdirs();
@@ -485,6 +501,7 @@ public class EzEditorController extends EgovFileMngUtil{
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String letterPopUp = request.getParameter("letterPopUp"); // 편지지 추가, 수정일때 체크
 		String fileData = request.getParameter("clip_contents");
 		String fileType = request.getParameter("file_extension");
 		String rootId = request.getParameter("xfe_root_id");
@@ -516,6 +533,20 @@ public class EzEditorController extends EgovFileMngUtil{
 			String fileName = UUID.randomUUID() + "." + fileType;
 
 			filePath = filePath + commonUtil.separator + today;
+			
+			if (letterPopUp != null) { // 편지지 등록, 수정때의 업로드
+				String letterBoxNo = request.getParameter("letterBoxNo");
+				String letterId = request.getParameter("letterId");
+				logger.debug("letterBoxNo:" + letterBoxNo + "letterId:" + letterId);
+				
+				// /files/upload_mail/letterBoxUpload/
+				filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
+
+				// /files/upload_mail/letterBoxUpload/letterBoxNo/letterId/images
+				filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId + "/images"; 
+			}
+			logger.debug("filePath : "+filePath);
+
 			File file = new File(realPath + filePath);
 
 			if (!file.exists()) {
