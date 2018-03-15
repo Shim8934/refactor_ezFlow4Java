@@ -1580,11 +1580,11 @@
 	<body class="mainbody" style="margin-top: 0px">
 	    <h1><span id="imgTitle"></span>&nbsp;<span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 	        <span style="float:right;font-weight:normal;display:inline-block;vertical-align:middle;color:black;">
-	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;">&nbsp;<spring:message code='ezApprovalG.t106'/>
-		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><span id="searchwriter">&nbsp;<spring:message code='ezApprovalG.t445'/></span>
+	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px; width:13px;height:13px;vertical-align:middle;"><spring:message code='ezApprovalG.t106'/>
+		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px; width:13px;height:13px;vertical-align:middle;"><span id="searchwriter"><spring:message code='ezApprovalG.t445'/></span>
 		        &nbsp;
 		        <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	            <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle;margin:auto;" onClick="search()"></a>
+	            <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle; padding-bottom:2px;" onClick="search()"></a>
 	        </span>
 	    </h1>
 	
