@@ -111,18 +111,18 @@
 		  <tr>   
 		    <th><spring:message code='ezApprovalG.t842'/></th>
 		    <td style="width:100%">
-		      <input type="text"  name="txtDisplayEndY" id="txtDisplayEndY" maxlength = "4" size="4" />
+		      <input type="text"  name="txtDisplayEndY" id="txtDisplayEndY" maxlength = "4" size="4" style="height:20px;"/>
 						<spring:message code='ezApprovalG.t641'/>
-		      <input type="text"  name="txtDisplayEndM"  id="txtDisplayEndM" maxlength = "2" size="2" />
+		      <input type="text"  name="txtDisplayEndM"  id="txtDisplayEndM" maxlength = "2" size="2" style="height:20px;"/>
 						<spring:message code='ezApprovalG.t642'/>
-		      <input type="text"  name="txtDisplayEndD"  id="txtDisplayEndD" maxlength = "2" size="2" />
+		      <input type="text"  name="txtDisplayEndD"  id="txtDisplayEndD" maxlength = "2" size="2" style="height:20px;"/>
 						<spring:message code='ezApprovalG.t643'/>
 			  </td>
 		  </tr>	
 		  <tr> 		  
 		    <th><spring:message code='ezApprovalG.t843'/></th>
-		    <td >
-		      <TextArea style="width:100%;height:80px;padding:0px;" id="txtDisplayReason" name="txtDisplayReason"></TextArea>
+		    <td style="vertical-align:middle;">
+		      <TextArea style="width:100%; height:80px; padding:0px; border:0; resize:none;" id="txtDisplayReason" name="txtDisplayReason"></TextArea>
 			  </td>
 		  </tr>
 		</table>	
