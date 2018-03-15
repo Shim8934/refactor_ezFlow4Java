@@ -10,7 +10,7 @@
 	<typeAlias  alias="LadderOrderVO" type="egovframework.ezEKP.ezLadder.vo.LadderOrderVO"/>
 	<typeAlias  alias="LadderVO" type="egovframework.ezEKP.ezLadder.vo.LadderVO"/>
 	
-	<resultMap id="LadderBmUser" class="LadderBmUserVO">
+	<!-- <resultMap id="LadderBmUser" class="LadderBmUserVO">
 		<result property="tenant_id" column="TENANT_ID" columnIndex="1"/>
 		<result property="id" column="ID" columnIndex="2"/>
 		<result property="ladderBmId" column="LADDERBMID" columnIndex="3"/>
@@ -85,7 +85,7 @@
 		<result property="writeDate" column="WRITEDATE" columnIndex="15"/>
 		<result property="startDate" column="STARTDATE" columnIndex="16"/>
 		<result property="deleteDate" column="DELETEDATE" columnIndex="17"/>
-	</resultMap>
+	</resultMap> -->
 	
 	<select id="EzLadderDAO.getLadderList" resultClass="LadderVO">
 		<![CDATA[
@@ -455,10 +455,12 @@
 				TBL_LADDER 
 			WHERE 
 				WRITERID = #writerId#
+			AND
+				TENANT_ID = #tenant_id#
 		</selectKey>
 	</insert>
 	
-	<select id="EzLadderDAO.selectRecentLadderId" parameterClass="String" resultClass="Integer">
+	<select id="EzLadderDAO.selectRecentLadderId" parameterClass="LadderVO" resultClass="Integer">
 		<![CDATA[
 		SELECT 
 			MAX(LADDERID) 
@@ -466,6 +468,8 @@
 			TBL_LADDER 
 		WHERE 
 			WRITERID = #writerId#
+		AND
+			TENANT_ID = #tenant_id#
 		]]>
 	</select>
 	
@@ -482,9 +486,9 @@
 			LADDERBMID
 	</select>
 	
-	<select id="EzLadderDAO.selectLadderBMUserList" parameterClass="LadderBmVO" resultClass="LadderBmUserVO">
+	<select id="EzLadderDAO.selectLadderBMUserList" parameterClass="LadderBmUserVO" resultClass="LadderBmUserVO">
 		SELECT 
-			ID, USERID, USERNAME, USERNAME2
+			ID, LADDERBMID, USERID, USERNAME, USERNAME2
 		FROM 
 			TBL_LADDER_BMUSER
 		WHERE 
@@ -530,9 +534,12 @@
 			TBL_LADDER_BM 
 		SET 
 			BMNAME = #bmName#, REGDATE = #regdate#
-		WHERE TENANT_ID = #tenant_id#
-		AND LADDERBMID = #ladderBmId#
-		AND USERID = #userId#
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			LADDERBMID = #ladderBmId#
+		AND 
+			USERID = #userId#
 	</update>
 	
 	<delete id="EzLadderDAO.deleteLadderBMGroup" parameterClass="LadderBmVO">
@@ -542,6 +549,8 @@
 			TENANT_ID = #tenant_id#
 		AND 
 			LADDERBMID = #ladderBmId#
+		AND
+			USERID = #userId#
 	</delete>
 	
 	<delete id="EzLadderDAO.deleteLadderBMUser" parameterClass="LadderBmUserVO">
@@ -552,15 +561,9 @@
 		AND 
 			LADDERBMID = #ladderBmId#
 		AND 
-		USERID = #userId#
-		<isEqual property="lang" compareValue="0">
-			AND 
-				USERNAME = #userName#	
-		</isEqual>
-		<isEqual property="lang" compareValue="1">
-			AND 
-				USERNAME2 = #userName2#
-		</isEqual>
+			USERID = #userId#
+		AND 
+			USERNAME$lang$ = #userName#
 	</delete>
 	
 	<delete id="EzLadderDAO.deleteLadderBMUserAll" parameterClass="LadderBmVO">

@@ -35,6 +35,8 @@ public class LadderVO {
 	private String startDate;
 	/** 게임 삭제 날짜 */ 
 	private String deleteDate;
+	/** 다국어 */
+	private String lang;
 	
 	
 	public int getTenant_id() {
@@ -138,6 +140,24 @@ public class LadderVO {
 	}
 	public void setDeleteDate(String deleteDate) {
 		this.deleteDate = deleteDate;
+	}
+	public String getLang() {
+		return lang;
+	}
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+	@Override
+	public String toString() {
+		return "LadderVO [tenant_id=" + tenant_id + ", ladderId=" + ladderId
+				+ ", title=" + title + ", type=" + type + ", status=" + status
+				+ ", secretFlag=" + secretFlag + ", writerId=" + writerId
+				+ ", writerName=" + writerName + ", writerName2=" + writerName2
+				+ ", deptName=" + deptName + ", deptName2=" + deptName2
+				+ ", lineCnt=" + lineCnt + ", lineArray=" + lineArray
+				+ ", deleteFlag=" + deleteFlag + ", writeDate=" + writeDate
+				+ ", startDate=" + startDate + ", deleteDate=" + deleteDate
+				+ ", lang=" + lang + "]";
 	}
 
 }

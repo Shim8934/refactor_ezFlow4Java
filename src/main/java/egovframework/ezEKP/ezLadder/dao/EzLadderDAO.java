@@ -57,8 +57,8 @@ public class EzLadderDAO extends EgovAbstractDAO {
 	}
 	
 	/** boh */
-	public int selectRecentLadderId(String writerId) throws Exception {
-		return (int) select("EzLadderDAO.selectRecentLadderId", writerId);
+	public int selectRecentLadderId(LadderVO lad) throws Exception {
+		return (int) select("EzLadderDAO.selectRecentLadderId", lad);
 	}
 	
 	/** 유저 즐겨찾기 관련 */
@@ -68,8 +68,8 @@ public class EzLadderDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<LadderBmUserVO> selectBMUser(LadderBmVO bmGroup) throws Exception {
-		return (List<LadderBmUserVO>) list("EzLadderDAO.selectLadderBMUserList", bmGroup);
+	public List<LadderBmUserVO> selectBMUser(LadderBmUserVO bmUser) throws Exception {
+		return (List<LadderBmUserVO>) list("EzLadderDAO.selectLadderBMUserList", bmUser);
 	}
 	
 	@SuppressWarnings("unchecked")

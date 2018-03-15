@@ -1,11 +1,12 @@
 package egovframework.ezEKP.ezLadder.vo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LadderBmUserVO {
 	
 	/** 테넌트 id */
 	private int tenant_id;
-	/** ai, sequence */
-	private int id;
 	/** 사다리 즐겨찾기 번호 */
 	private int ladderBmId;
 	/** 해당 ladderBmId를 작성한 유저 */
@@ -19,17 +20,18 @@ public class LadderBmUserVO {
 	/** 다국어 설정 */
 	private String lang;
 	
+	/** 즐겨찾기에 포함된 멤버 아이디 */
+	private String [] userIds;
+	/** 즐겨찾기에 포함된 멤버 이름  */
+	private String [] userNames;
+	/** 즐겨찾기에 포함된 멤버 이름 (다국어)*/
+	private String [] userName2s;
+	
 	public int getTenant_id() {
 		return tenant_id;
 	}
 	public void setTenant_id(int tenant_id) {
 		this.tenant_id = tenant_id;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
 	}
 	public int getLadderBmId() {
 		return ladderBmId;
@@ -48,7 +50,7 @@ public class LadderBmUserVO {
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
+	}	
 	public String getUserName() {
 		return userName;
 	}
@@ -67,11 +69,24 @@ public class LadderBmUserVO {
 	public void setLang(String lang) {
 		this.lang = lang;
 	}
-	@Override
-	public String toString() {
-		return "LadderBmUserVO [tenant_id=" + tenant_id + ", id=" + id
-				+ ", ladderBmId=" + ladderBmId + ", writerId=" + writerId
-				+ ", userId=" + userId + ", userName=" + userName
-				+ ", userName2=" + userName2 + ", lang=" + lang + "]";
+	
+	/** 배열 */
+	public String[] getUserIds() {
+		return userIds;
+	}
+	public void setUserIds(String[] userIds) {
+		this.userIds = userIds;
+	}
+	public String[] getUserNames() {
+		return userNames;
+	}
+	public void setUserNames(String[] userNames) {
+		this.userNames = userNames;
+	}
+	public String[] getUserName2s() {
+		return userName2s;
+	}
+	public void setUserName2s(String[] userName2s) {
+		this.userName2s = userName2s;
 	}
 }

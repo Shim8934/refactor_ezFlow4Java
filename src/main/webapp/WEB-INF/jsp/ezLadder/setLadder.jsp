@@ -61,30 +61,45 @@
 				});
 				$("#amount").val($("#slider-range-min").slider("value"));
 				$("#bmtest").on("click", function() { /* 즐겨찾기 테스트 버튼 */
-					var flag = "add";
-					var ladderbmid = flag === "add" ? "0" : "68";
-					var bmname = "야뱡뱌얍야뱌얍얍야";
-					var bmuserid = ["id1", "id2", "id3", "id-add"];
-					var bmusername = ["name1", "name2", "name3", "name-add"];
-					var bmusername2 = ["name1", "name2", "name3", "name-add"];
-					var bmuserinfo = {"userid":bmuserid, "username":bmusername, "username2":bmusername2};
 					
-					var bmusers = JSON.stringify(bmuserinfo);
+					var flag = "delete";
+					var ladderbmid = flag === "add" ? "0" : "106";
+					var bmname = "수수ㅜㅅ수수저엉ㅇㅇㅇ제목제";
+					var bmuserid = [];
+					var bmusername = [];
+					var bmusername2 = [];
 					
+					/* 즐겨찾기 조회 */
 					$.ajax({
-						type: "POST",
-						url: "/ezLadder/setLadderBM.do",
-						data: { 
-							flag: flag,
-							ladderBMId: ladderbmid,
-							bmName: bmname,
-							bmUsers: bmusers 
-						},
+						type: "GET",
+						url: "/ezLadder/getLadderBM.do",
+						traditional: true,
 						dataType: "json",
+						data: { 
+							ladderBmId: ""
+						},
 						success: function(result) {
 							console.log(result);
 						}
 					});
+					/* 즐겨찾기 추가,수정,삭제 */
+					/* $.ajax({
+						type: "POST",
+						url: "/ezLadder/setLadderBM.do",
+						traditional: true,
+						dataType: "json",
+						data: { 
+							flag: flag,
+							ladderBmId: ladderbmid,
+							bmName: bmname,
+							userIds: bmuserid,
+							userNames: bmusername,
+							userName2s: bmusername2
+						},
+						success: function(result) {
+							console.log(result);
+						}
+					}); */
 				});
 				
 			});
@@ -145,19 +160,23 @@
 						for(var i = 0; i < len; i++) {
 							totallen = g_attendant["id"].length;
 							g_attendant["name"][totallen] = getNodeText(GetChildNodes(SelectNodes(attendList[i], "LISTVIEWDATA/ROWS/ROW")[0])[3]);
-							g_attendant["name1"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA5")[0]);
-							g_attendant["name2"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA6")[0]);
+							g_attendant["name1"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA6")[0]);
+							g_attendant["name2"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA7")[0]);
 							
 							if(attendType == "anonyuser") {
 								g_attendant["id"][totallen] = "anonyAttendant_" + totallen;
 								g_attendant["deptname"][totallen] = "";
+								g_attendant["deptname1"][totallen] = "";
 								g_attendant["deptname2"][totallen] = "";
+								g_attendant["pic"][totallen] = "";
 								$("#attendantList").append("<li class='attendant'><input type='text' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
 							} else {
 								g_attendant["id"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA2")[0]);
 								g_attendant["deptname"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA4")[0]);
-								g_attendant["deptname2"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA7")[0]);
-								$("#attendantList").append("<li class='attendant'><input type='text' disabled='disabled' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
+								g_attendant["deptname1"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA8")[0]);
+								g_attendant["deptname2"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA9")[0]);
+								g_attendant["pic"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA5")[0]);
+								$("#attendantList").append("<li class='attendant'><div><img src='/admin/ezOrgan/getPersonalInfo.do?fileName=" + g_attendant["pic"][totallen] + "' width='90px' height='90px' /></div><input type='text' disabled='disabled' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
 							}
 							
 							g_item[totallen] = "";
@@ -169,7 +188,7 @@
 						itemlen = g_item.length;
 
 						if(typeof g_attendant === "undefined" || ladder_select_attendant_dialogArguments[2]) {
-							g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
+							g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname1": new Array(), "deptname2": new Array(), "pic": new Array() };
 							$("#attendantList").html("");
 							$("#itemList").html("");
 							ladder_select_attendant_dialogArguments[2] = false;
@@ -182,15 +201,19 @@
 							g_attendant["name2"][totallen] = attendList["name2"][i];
 							
 							if(attendList["id"][i].substring(0, 14) === "anonyAttendant") {
-								g_attendant["id"][totallen] = "anonyAttendant_" + i;
+								g_attendant["id"][totallen] = "anonyAttendant_" + totallen;
 								g_attendant["deptname"][totallen] = "";
+								g_attendant["deptname1"][totallen] = "";
 								g_attendant["deptname2"][totallen] = "";
+								g_attendant["pic"][totallen] = "";
 								$("#attendantList").append("<li class='attendant'><input type='text' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
 							} else {
 								g_attendant["id"][totallen] = attendList["id"][i];
 								g_attendant["deptname"][totallen] = attendList["deptname"][i];
+								g_attendant["deptname1"][totallen] = attendList["deptname1"][i];;
 								g_attendant["deptname2"][totallen] = attendList["deptname2"][i];
-								$("#attendantList").append("<li class='attendant'><input type='text' disabled='disabled' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
+								g_attendant["pic"][totallen] = attendList["pic"][i];
+								$("#attendantList").append("<li class='attendant'><div><img src='/admin/ezOrgan/getPersonalInfo.do?fileName=" + g_attendant["pic"][totallen] + "' width='90px' height='90px' /></div><input type='text' disabled='disabled' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
 							}
 							if(totallen >= itemlen) {
 								g_item[totallen] = "";
@@ -202,6 +225,7 @@
 				}
 				changeSliderValue();
 				add_user_change_ulsize(g_attendant["id"].length);
+				console.log(g_attendant);
 			}
 
 			/** 참여자 변경될때 슬라이더 바 조절 */
@@ -226,7 +250,9 @@
 				g_attendant["name1"].splice(index, 1);
 				g_attendant["name2"].splice(index, 1);
 				g_attendant["deptname"].splice(index, 1);
+				g_attendant["deptname1"].splice(index, 1);
 				g_attendant["deptname2"].splice(index, 1);
+				g_attendant["pic"].splice(index, 1);
 				g_item.splice(index, 1);
 				
 				$(".attendant:eq(" + index + ")").remove();
@@ -273,28 +299,32 @@
 			    		data : {
 			    			search : "displayName::" + names[i],
 			    			cell   : "company;description;title;displayName;mail",
-			    			prop   : "displayName;description",
+			    			prop   : "displayName;description;extensionAttribute2",
 			    			type   : "user"
 			    		},
 			    		success: function(xml){
 			    			xmlDOM = loadXMLString(xml);
 			                adCount = xmlDOM.getElementsByTagName("ROW").length;
+			                console.log(xmlDOM);
 			    		}    		
 			    	});
 			        
 		            if (g_attendant == null) {
-		            	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
+		            	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname1": new Array(), "deptname2": new Array(), "pic": new Array() };
 		            }
 		            
 		            var length = g_attendant["id"].length;
+		            console.log(length);
 			        if (adCount == 0) { // 검색결과 없을때 
-			        	var anonyAttendant = { "id": [], "name": [], "deptname": [], "name1": [], "name2": [], "deptname2": [] };
+			        	var anonyAttendant = { "id": [], "name": [], "deptname": [], "name1": [], "name2": [], "deptname1": [], "deptname2": [], "pic": [] };
 			        	anonyAttendant["id"][0] = "anonyAttendant_" + length;
 			        	anonyAttendant["name"][0] = names[i];
 			        	anonyAttendant["name1"][0] = names[i];
 			        	anonyAttendant["name2"][0] = names[i];
 			        	anonyAttendant["deptname"][0] = "";
+			        	anonyAttendant["deptname1"][0] = "";
 			        	anonyAttendant["deptname2"][0] = "";
+			        	anonyAttendant["pic"][0] = "";
 			        	
 			        	console.log(anonyAttendant);
 			        	
@@ -359,7 +389,7 @@
 			    
 			    if (rgParams["name"] != "") {
 			        if (g_attendant == null)
-			            g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
+			            g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname1": new Array(), "deptname2": new Array(), "pic": new Array() };
 
 			        var length = g_attendant["id"].length;
 			        for (var j = 0; j < length; j++) {
@@ -376,7 +406,9 @@
 			    	g_attendant["deptname"].push(rgParams["deptname"]);
 			    	g_attendant["name1"].push(rgParams["name1"]);
 			    	g_attendant["name2"].push(rgParams["name2"]);
+			    	g_attendant["deptname1"].push(rgParams["deptname1"]);
 			    	g_attendant["deptname2"].push(rgParams["deptname2"]);
+			    	g_attendant["pic"].push(rgParams["pic"]);
 			    	
 			        if (length == 0)
 			        	$("#attendantList").append("<li class='attendant'>" + g_attendant["name"][length] + "</li>");
@@ -396,41 +428,53 @@
 			
 			/** 사다리 만들기 */
 			function makeLadder() {
-				var lad = { "title": {}, "type": {}, "secretflag": {}, "linecnt": {} };
-				var ladline = [];
+				var title = $("#title").val();
+				var type = $(".ladderType.active").attr("num");
+				var secretFlag = $("#ladderSecret.active").length;
+				var lineCnt = $("#slider-range-min").slider("option", "value");
 				
-				lad["title"] = $("#title").val();
-				lad["type"] = $(".ladderType.active").attr("num");
-				lad["secretflag"] = $("#ladderSecret.active").length;
-				lad["linecnt"] = $("#slider-range-min").slider("option", "value");
+				var userId = [];
+				var userName = [];
+				var userName2 = [];
+				var item = [];
+				var ladderOrder = [];
 				
 				var len = g_attendant["id"].length;
 				for(var i = 0; i < len; i++) {
-					var temp_ladline = { "userid": {}, "username": {}, "username2": {}, "item": {}, "ladderorder": {} };
-					temp_ladline["userid"] = g_attendant["id"][i];
-					if (g_attendant["id"][i].substring(0, 15) !== "anonyAttendant_") {
-						temp_ladline["username"] = g_attendant["name"][i];
-						temp_ladline["username2"] = g_attendant["name2"][i];
+					userId[i] = g_attendant["id"][i];
+					if (g_attendant["id"][i].substring(0, 14) !== "anonyAttendant") {
+						userName[i] = g_attendant["name"][i];
+						userName2[i] = g_attendant["name2"][i];
 					} else {
-						temp_ladline["username"] = $(".attendant:eq(" + i + ") input").val();
-						temp_ladline["username2"] = $(".attendant:eq(" + i + ") input").val();
+						userName[i] = $(".attendant:eq(" + i + ") input").val();
+						userName2[i] = $(".attendant:eq(" + i + ") input").val();
 					}
-					temp_ladline["item"] = $(".item:eq(" + i + ") input").val();
-					temp_ladline["ladderorder"] = i;
-					ladline[i] = temp_ladline;
+					item[i] = $(".item:eq(" + i + ") input").val();
+					ladderOrder[i] = i;
 				}
 				
-				var ladstr = JSON.stringify(lad);
-				var ladlinestr = JSON.stringify(ladline);
+				console.log(userId);
+				console.log(userName);
+				console.log(userName2);
+				console.log(item);
+				console.log(ladderOrder);
 				
 				$.ajax({ 
 					type: "POST",
 					url: "/ezLadder/setLadder.do",
-					data: { 
-						ladder: ladstr,
-						ladderLine: ladlinestr
-					},
+					traditional: true,
 					dataType: "json",
+					data: { 
+						'title': title,
+						'type': type,
+						'secretFlag': secretFlag,
+						'lineCnt': lineCnt,
+						'userId': userId,
+						'userName': userName,
+						'userName2': userName2,
+						'item': item,
+						'ladderOrder': ladderOrder
+					},
 					success: function(result) {
 						console.log('make ladder success');
 					}

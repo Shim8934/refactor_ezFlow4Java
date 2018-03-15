@@ -12,6 +12,8 @@ public class LadderBmVO {
 	private String userId;
 	/** 작성  날짜 */
 	private String regdate;
+	/** UTC DATE */
+	private String offset;
 	
 	public int getTenant_id() {
 		return tenant_id;
@@ -43,10 +45,10 @@ public class LadderBmVO {
 	public void setRegdate(String regdate) {
 		this.regdate = regdate;
 	}
-	@Override
-	public String toString() {
-		return "LadderBmVO [tenant_id=" + tenant_id + ", ladderBmId="
-				+ ladderBmId + ", bmName=" + bmName + ", userId=" + userId
-				+ ", regdate=" + regdate + "]";
+	public String getOffset() {
+		return offset;
+	}
+	public void setOffset(String offset) {
+		this.offset = offset;
 	}
 }
