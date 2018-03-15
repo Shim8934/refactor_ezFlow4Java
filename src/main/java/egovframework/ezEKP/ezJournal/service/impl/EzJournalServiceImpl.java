@@ -911,4 +911,18 @@ public class EzJournalServiceImpl implements EzJournalService{
 
 		logger.debug("deleteDirectory ended.");
 	}
+
+	@Override
+	public void deleteJournalReceiver(List<String> journalIdList, String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		
+		for (int i = 0; i < journalIdList.size(); i++) {
+			String journalId = journalIdList.get(i);
+			map.put("journalId", journalId);
+			
+			ezJournalDAO.deleteJournalReceiver(map);
+		}
+	}
 }

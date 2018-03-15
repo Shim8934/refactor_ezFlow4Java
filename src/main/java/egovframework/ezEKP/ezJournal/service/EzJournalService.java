@@ -308,4 +308,14 @@ public interface EzJournalService {
 	 */
 	public void deleteJournalList(List<String> journalIdList, String pDirPath, int tenantId) throws Exception;
 
+	/**
+	 * 일지 수신자 삭제
+	 * @param journalIdList
+	 * @param userId
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public void deleteJournalReceiver(List<String> journalIdList, String userId, int tenantId) throws Exception;
+
 }

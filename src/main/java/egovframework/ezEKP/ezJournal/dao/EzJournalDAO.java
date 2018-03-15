@@ -389,4 +389,12 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public void deleteJournal(Map<String, Object> map) {
 		delete("deleteJournal", map);
 	}
+
+	/**
+	 * 일지 수신자 삭제 (수신일지함의 일지를 삭제했을 때)
+	 * @param map
+	 */
+	public void deleteJournalReceiver(Map<String, Object> map) {
+		delete("deleteJournalReceiver", map);
+	}
 }

@@ -660,7 +660,7 @@ public class EzJournalGWController {
 			LOGGER.debug("listType : " + listType);
 			
 			if (listType.equals("recv")) {
-				
+				ezJournalService.deleteJournalReceiver(journalIdList, info.getUserId(), info.getTenantId());
 			} else {
 				ezJournalService.deleteJournalList(journalIdList, pDirPath, info.getTenantId());
 			}
