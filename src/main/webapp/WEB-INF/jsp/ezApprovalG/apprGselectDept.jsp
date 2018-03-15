@@ -183,13 +183,13 @@
 		</div>
 		<table style="display:none" id=trFindDept >
 		  <tr> 
-			<th><input id= "textDeptName"type="text" class="text" style="Width:200px;margin:0;" name="text232422222" onKeyPress="return textDeptName_onkeypress()">&nbsp;<a  class="imgbtn" style="vertical-align:middle;">
+			<th><input id= "textDeptName"type="text" class="text" style="Width:200px;" name="text232422222" onKeyPress="return textDeptName_onkeypress()">&nbsp;<a  class="imgbtn" style="vertical-align:middle;">
 			<span id=btSearchDept style="vertical-align:middle;" onclick= "return btSearchDept_onclick()"><spring:message code='ezApprovalG.t250'/></span></a></th>
 		  </tr>
 		  <tr> 
 			<td>
 		        <div class="listview" style="Width:328px; Height:159px;">
-			    <div id="OrgListView"  STYLE="overflow:auto;Width:327px; Height:159px;margin:1px 1px 1px 1px;"></div></div>
+			    <div id="OrgListView"  STYLE="overflow:auto;Width:327px; Height:159px;margin: 0px 1px 1px 1px 1px;"></div></div>
 			</td>
 		  </tr>
 		</table>
