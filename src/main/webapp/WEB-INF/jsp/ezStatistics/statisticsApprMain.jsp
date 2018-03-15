@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -306,7 +307,11 @@
 	        <tr>
 	            <td style="width: 99%">
 	                <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t195'/> :
-	            <select id="SCompID" name="SCompID" onchange="return getapprovalstatistics()">${companySel}</select>
+	            <select id="SCompID" name="SCompID" onchange="return getapprovalstatistics()">
+					<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            		</c:forEach>
+	            </select>
 	                    &nbsp;&nbsp;&nbsp;<spring:message code='ezStatistics.t1002'/> : 
 	                <select id="selyear" onchange="makeoptionyear(); getapprovalstatistics()"></select>
 	                    <spring:message code='ezStatistics.t55'/></span>

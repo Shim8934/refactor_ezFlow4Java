@@ -87,6 +87,44 @@
 		<result property="deleteDate" column="DELETEDATE" columnIndex="17"/>
 	</resultMap> -->
 	
+	<select id="EzLadderDAO.getLadderCount" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_LADDER E
+			WHERE 
+				E.DELETEFLAG = 0 
+			AND 
+				E.TENANT_ID = #tenantId# 
+			AND 
+				E.LADDERID in
+			(
+			SELECT
+				A.LADDERID
+			FROM 
+				TBL_LADDER A
+			WHERE 
+				A.SECRETFLAG = 0 or A.LADDERID = ANY(
+												SELECT 
+													B.LADDERID 
+                                        		FROM 
+                                        			TBL_LADDER B 
+                                        		JOIN 
+                                        			TBL_LADDER_LINE C
+                                        		ON 
+                                        			B.LADDERID = C.LADDERID
+												WHERE 
+													C.USERID = #userId#)
+			OR
+				A.WRITERID = #userId# 
+            )
+            ORDER BY 
+				E.LADDERID 
+			DESC
+		]]>
+	</select>
+	
 	<select id="EzLadderDAO.getLadderList" resultClass="LadderVO">
 		<![CDATA[
 			SELECT
@@ -130,6 +168,36 @@
             ORDER BY 
 				E.LADDERID 
 			DESC
+			LIMIT 
+				#startPoint#, #endPoint# 
+		]]>
+	</select>
+	
+	<select id="EzLadderDAO.getPartLadderCount" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM 
+				TBL_LADDER A
+			WHERE
+				A.DELETEFLAG = 0
+			AND 
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.LADDERID = ANY(
+								SELECT 
+									B.LADDERID 
+                                FROM 
+                                    TBL_LADDER B 
+                                JOIN 
+                                    TBL_LADDER_LINE C
+                                ON 
+                                    B.LADDERID = C.LADDERID
+								WHERE 
+									C.USERID = #userId#) 
+			ORDER BY 
+				A.LADDERID 
+			DESC
 		]]>
 	</select>
 	
@@ -162,11 +230,102 @@
                                 ON 
                                     B.LADDERID = C.LADDERID
 								WHERE 
-									C.USERID = #userId#) 
+									C.USERID = #userId#)
+			ORDER BY 
+				A.LADDERID 
+			DESC
+			LIMIT 
+				#startPoint#, #endPoint# 
+		]]>
+	</select>
+	
+	<select id="EzLadderDAO.searchSPartLadderCount" resultClass="Integer">
+		<isEqual property="searchSelect" compareValue="participant">
+		<![CDATA[
+			SELECT
+			DISTINCT 
+				COUNT(*)
+			FROM 
+				TBL_LADDER A 
+			JOIN 
+				TBL_LADDER_LINE D
+			ON
+				A.LADDERID = D.LADDERID
+			WHERE
+				A.DELETEFLAG = 0
+			AND 
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.LADDERID = ANY(
+								SELECT 
+									B.LADDERID 
+                                FROM 
+                                    TBL_LADDER B 
+                                JOIN 
+                                    TBL_LADDER_LINE C
+                                ON 
+                                    B.LADDERID = C.LADDERID
+								WHERE 
+									C.USERID = #userId#
+								) 
+			AND 
+				D.USERNAME
+			LIKE CONCAT('%', #searchInput#, '%')
 			ORDER BY 
 				A.LADDERID 
 			DESC
 		]]>
+		</isEqual>
+		<isNotEqual property="searchSelect" compareValue="participant">
+			<![CDATA[
+				SELECT
+					COUNT(*)
+				FROM 
+					TBL_LADDER A
+				WHERE
+					A.DELETEFLAG = 0
+				AND 
+					A.TENANT_ID = #tenantId#
+				AND 
+					A.LADDERID = ANY(
+									SELECT 
+										B.LADDERID 
+	                                FROM 
+	                                    TBL_LADDER B 
+	                                JOIN 
+	                                    TBL_LADDER_LINE C
+	                                ON 
+	                                    B.LADDERID = C.LADDERID
+									WHERE 
+										C.USERID = #userId#)
+				]]>
+				<isEqual property="searchSelect" compareValue="title">
+			  	<![CDATA[
+			  		AND
+						A.TITLE
+					LIKE CONCAT('%', #searchInput#, '%')
+				]]>	  
+				</isEqual>
+				<isEqual property="searchSelect" compareValue="kind">
+			  	<![CDATA[
+			  		AND
+						A.TYPE
+					LIKE CONCAT('%', #searchInput#, '%')
+				]]>	  
+				</isEqual>
+				<isEqual property="searchSelect" compareValue="writer">
+			  	<![CDATA[
+			  		AND
+						A.WRITERNAME
+					LIKE CONCAT('%', #searchInput#, '%')
+				]]>	  
+				</isEqual>
+				<![CDATA[
+					ORDER BY 
+						A.LADDERID 
+					DESC
+				]]>
+        </isNotEqual> 
 	</select>
 	
 	<select id="EzLadderDAO.searchPartLadderList" resultClass="LadderVO">
@@ -212,6 +371,8 @@
 			ORDER BY 
 				A.LADDERID 
 			DESC
+			LIMIT 
+				#startPoint#, #endPoint# 
 		]]>
 		</isEqual>
 		<isNotEqual property="searchSelect" compareValue="participant">
@@ -270,6 +431,116 @@
 					ORDER BY 
 						A.LADDERID 
 					DESC
+					LIMIT 
+						#startPoint#, #endPoint# 
+				]]>
+        </isNotEqual> 
+	</select>
+	
+	<select id="EzLadderDAO.searchAllSLadderCount" resultClass="Integer">
+		<isEqual property="searchSelect" compareValue="participant">
+		<![CDATA[
+			SELECT
+			DISTINCT
+				COUNT(*)
+			FROM
+				TBL_LADDER D
+			JOIN
+				TBL_LADDER_LINE E
+			ON
+				D.LADDERID = E.LADDERID
+			WHERE
+				D.DELETEFLAG = 0
+			AND 
+				D.TENANT_ID = #tenantId#
+			AND
+				D.LADDERID IN 
+							(
+							SELECT 
+								A.LADDERID
+							FROM 
+								TBL_LADDER A
+							WHERE 
+								A.SECRETFLAG = 0 or A.LADDERID = ANY(
+																SELECT 
+																	B.LADDERID 
+																FROM 
+																	TBL_LADDER B 
+																JOIN 
+																	TBL_LADDER_LINE C
+																ON 
+																	B.LADDERID = C.LADDERID
+																WHERE 
+																	C.USERID = #userId#)
+							OR
+								A.WRITERID = #userId#
+							)
+			AND 
+				E.USERNAME
+			LIKE CONCAT('%', #searchInput#, '%')
+			ORDER BY
+				D.LADDERID
+			DESC
+		]]>
+		</isEqual>
+		<isNotEqual property="searchSelect" compareValue="participant">
+			<![CDATA[
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_LADDER D
+				WHERE
+					D.DELETEFLAG = 0
+				AND 
+					D.TENANT_ID = #tenantId#
+				AND
+					D.LADDERID IN 
+								(
+								SELECT 
+									A.LADDERID
+								FROM 
+									TBL_LADDER A
+								WHERE 
+									A.SECRETFLAG = 0 or A.LADDERID = ANY(
+																	SELECT 
+																		B.LADDERID 
+																	FROM 
+																		TBL_LADDER B 
+																	JOIN 
+																		TBL_LADDER_LINE C
+																	ON 
+																		B.LADDERID = C.LADDERID
+																	WHERE 
+																		C.USERID = #userId#)
+								OR
+									A.WRITERID = #userId#
+								)
+				]]>
+				<isEqual property="searchSelect" compareValue="title">
+			  	<![CDATA[
+			  		AND
+						D.TITLE
+					LIKE CONCAT('%', #searchInput#, '%')
+				]]>	  
+				</isEqual>
+				<isEqual property="searchSelect" compareValue="kind">
+			  	<![CDATA[
+			  		AND
+						D.TYPE
+					LIKE CONCAT('%', #searchInput#, '%')
+				]]>	  
+				</isEqual>
+				<isEqual property="searchSelect" compareValue="writer">
+			  	<![CDATA[
+			  		AND
+						D.WRITERNAME
+					LIKE CONCAT('%', #searchInput#, '%')
+				]]>	  
+				</isEqual>
+				<![CDATA[
+					ORDER BY 
+						D.LADDERID 
+					DESC
 				]]>
         </isNotEqual> 
 	</select>
@@ -326,6 +597,8 @@
 			ORDER BY
 				D.LADDERID
 			DESC
+			LIMIT 
+				#startPoint#, #endPoint# 
 		]]>
 		</isEqual>
 		<isNotEqual property="searchSelect" compareValue="participant">
@@ -394,6 +667,8 @@
 					ORDER BY 
 						D.LADDERID 
 					DESC
+					LIMIT 
+						#startPoint#, #endPoint# 
 				]]>
         </isNotEqual> 
 	</select>

@@ -34,12 +34,66 @@ public class EzLadderServiceImpl implements EzLadderService {
 	private CommonUtil commonUtil;
 	
 	@Override
-	public List<LadderVO> getLadderList(String userId, String tenantId) throws Exception {
+	public int ladderCount(String userId, String tenantId) throws Exception {
+		logger.debug("ladderCount started.");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		int totalLadder = ezLadderDAO.getLadderCount(map);
+		logger.debug("totalLadder : " + totalLadder);
+		logger.debug("ladderCount ended.");
+		return totalLadder;
+	}
+	
+	@Override
+	public int partLadderCount(String userId, String tenantId) throws Exception {
+		logger.debug("partLadderCount started.");
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		int totalLadder = ezLadderDAO.getPartLadderCount(map);
+		logger.debug("totalLadder : " + totalLadder);
+		logger.debug("partLadderCount ended.");
+		return totalLadder;
+	}
+	
+	@Override
+	public int searchLadderCount(String userId, String tenantId, List<String> allData) throws Exception {
+		logger.debug("searchLadderCount started.");
+		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		String searchSelect = allData.get(0);
+		String searchInput = allData.get(1).trim();
+		String mode = allData.get(2);
+		
+		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
+		
+		map.put("userId", userId);
+		map.put("searchSelect", searchSelect);
+		map.put("searchInput", searchInput);
+		map.put("mode", mode);
+		map.put("tenantId", tenantId);
+		
+		int totalLadder = 0;
+		if(mode.equals("part")) {		// 참여버튼 검색
+			totalLadder = ezLadderDAO.getPartSLadderCount(map);
+			
+		} else {						// 전체버튼 검색
+			totalLadder = ezLadderDAO.getAllSLadderCount(map);
+		}
+		logger.debug("totalLadder : " + totalLadder);
+		logger.debug("searchLadderCount ended.");
+		return totalLadder;
+	}
+	
+	@Override
+	public List<LadderVO> getLadderList(String userId, String tenantId, int startPoint, int endPoint) throws Exception {
 		logger.debug("getLadderList started.");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
-		
+		map.put("startPoint", startPoint);
+		map.put("endPoint", endPoint);
 		List<LadderVO> list = ezLadderDAO.getLadderList(map);
 		
 		logger.debug("getLadderList ended.");
@@ -47,11 +101,13 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public List<LadderVO> getPartLadderList(String userId, String tenantId) throws Exception {
+	public List<LadderVO> getPartLadderList(String userId, String tenantId, int startPoint, int endPoint) throws Exception {
 		logger.debug("getPartLadderList started.");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
+		map.put("startPoint", startPoint);
+		map.put("endPoint", endPoint);
 		List<LadderVO> list = ezLadderDAO.getPartLadderList(map);
 		
 		logger.debug("getPartLadderList ended.");
@@ -59,7 +115,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public List<LadderVO> searchLadderList(String userId, String tenantId, List<String> allData) throws Exception {
+	public List<LadderVO> searchLadderList(String userId, String tenantId, List<String> allData, int startPoint, int endPoint) throws Exception {
 		logger.debug("searchLadderList started.");
 	
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -74,6 +130,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("searchInput", searchInput);
 		map.put("mode", mode);
 		map.put("tenantId", tenantId);
+		map.put("startPoint", startPoint);
+		map.put("endPoint", endPoint);
 		
 		
 		List<LadderVO> list = null;
@@ -315,4 +373,5 @@ public class EzLadderServiceImpl implements EzLadderService {
 		// TODO Auto-generated method stub
 		
 	}
+	
 }

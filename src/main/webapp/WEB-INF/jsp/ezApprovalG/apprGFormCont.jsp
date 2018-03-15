@@ -499,9 +499,9 @@
 		        <div class="portlet_tabpart01_top" id="tab1">
 		            <p><span id="1tab1" divname="favoritelist"><spring:message code='ezApprovalG.G0001'/></span></p>
 		            <p><span id="1tab2" divname="formlist"><spring:message code='ezApprovalG.t1537'/></span></p>
-		            <div style="float: right">
-		                <a id="addfav" class="imgbtn" style="display:none"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
-		                <a id="delfav" class="imgbtn"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
+		            <div style="float: right; padding-top: 1.5px;"> 
+		                <a id="addfav" class="imgbtn" style="display:none; vertical-align:middle;"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
+		                <a id="delfav" class="imgbtn" style="vertical-align:middle;"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
 		            </div>
 		        </div>
 		    </div>
@@ -518,21 +518,21 @@
 		                <table class="content">
 		                    <tr>
 		                        <th><spring:message code='ezApprovalG.t1543'/></th>
-		                        <td id="descrip2" style="width: 90%">&nbsp;</td>
+		                        <td id="descrip2" style="width: 95%">&nbsp;</td>
 		                    </tr>
 		                </table>
 		            </td>
 		        </tr>
 		    </table>
-		    <table id="formtable" style="margin-top: 5px;display:none">
+		    <table id="formtable" style="margin-top: 5px;width: 697px;display:none">
 		        <tr>
 		            <td rowspan="2" style="vertical-align: top;">
 		                <div id="TreeView" style="height: 384px; width: 280px; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff; padding: 4px,6px,6px,4px"></div>
-		            </td>
+		            </td> 
 		            <td style="padding-left: 5px; vertical-align: top;">
-		                <div class="border_gray" style="border-bottom: 0px">
+		                <div class="border_gray" style="border-bottom: 0px; width:408px;"> 
 		                    <!-- 기존 class="listview" -->
-		                    <div id="divlvtForm" style="BORDER: 0; WIDTH: 406px; HEIGHT: 353px; margin: 0px 1px 1px 1px; overflow-y: auto; overflow-x: hidden;"></div>
+		                    <div id="divlvtForm" style="BORDER: 0; WIDTH: 407px; HEIGHT: 353px; margin:auto; overflow-y: auto; overflow-x: hidden;"></div>
 		                </div>
 		            </td>
 		        </tr>
@@ -541,7 +541,7 @@
 		                <table class="content">
 		                    <tr>
 		                        <th><spring:message code='ezApprovalG.t1543'/></th>
-		                        <td id="descrip" style="width: 340px">&nbsp;</td>
+		                        <td id="descrip" style="width: 95%;">&nbsp;</td>
 		                    </tr>
 		                </table>
 		            </td>

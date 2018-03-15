@@ -14,6 +14,21 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @Repository("EzLadderDAO")
 public class EzLadderDAO extends EgovAbstractDAO {
 	
+	public int getLadderCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzLadderDAO.getLadderCount", map);
+	}
+	
+	public int getPartLadderCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzLadderDAO.getPartLadderCount", map);
+	}
+	
+	public int getPartSLadderCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzLadderDAO.searchSPartLadderCount", map);
+	}
+
+	public int getAllSLadderCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzLadderDAO.searchAllSLadderCount", map);
+	}
 	@SuppressWarnings("unchecked")
 	public List<LadderVO> getLadderList(Map<String, Object> map) throws Exception {
 		return (List<LadderVO>) list("EzLadderDAO.getLadderList", map);
