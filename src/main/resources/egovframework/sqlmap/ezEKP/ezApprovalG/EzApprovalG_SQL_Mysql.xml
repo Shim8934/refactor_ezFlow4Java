@@ -24203,4 +24203,69 @@
 				receiptpointid LIKE '$receiptPointID$%'
 		</isNotEqual>
 	</update>
+	
+	<select id="EzApprovalG.getCountDoingDocInfo" parameterClass="Map" resultClass="int" remapResults="true">
+		SELECT 
+			COUNT(*) 
+		FROM
+			(
+			SELECT
+				STARTDATE
+			FROM 
+				VAPRDOINGDOCLIST 
+			WHERE 
+				TENANT_ID = #v_TENANTID# 
+			AND 
+				COMPANYID = #companyID# 
+			AND 
+			<![CDATA[
+				APRMEMBERID IN ($v_PUSERIDS$) 
+			AND 
+				APRTYPE <> '015'
+			]]>
+			UNION ALL
+			SELECT 
+				STARTDATE
+			FROM
+				VENDCHAMJODOCINFO 
+			WHERE 
+				TENANT_ID = #v_TENANTID# 
+			AND 
+				COMPANYID = #companyID# 
+			AND 
+			<![CDATA[
+				APRMEMBERID IN ($v_PUSERIDS$) 
+			AND 
+				APRTYPE <> '015'
+			]]>
+			) AS A
+		WHERE
+			1 = 1
+		AND 
+		<isEqual property="v_COUNTTYPE" compareValue="SIXHGAP">
+			A.STARTDATE >= DATE_ADD(#v_NOWTIME#, INTERVAL -6 HOUR)
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="ONEDGAP">
+			A.STARTDATE >= DATE_ADD(#v_NOWTIME#, INTERVAL -1 DAY) 
+		AND 
+			DATE_ADD(#v_NOWTIME#, INTERVAL -6 HOUR) > A.STARTDATE
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="SEVENDGAP">
+			A.STARTDATE >= DATE_ADD(#v_NOWTIME#, INTERVAL -1 WEEK) 
+		AND 
+			DATE_ADD(#v_NOWTIME#, INTERVAL -1 DAY) > A.STARTDATE
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="ONEMGAP">
+			A.STARTDATE >= DATE_ADD(#v_NOWTIME#, INTERVAL -1 MONTH) 
+		AND 
+			DATE_ADD(#v_NOWTIME#, INTERVAL -1 WEEK) > A.STARTDATE
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="OTHER">
+			DATE_ADD(#v_NOWTIME#, INTERVAL -1 MONTH) > A.STARTDATE
+		</isEqual>
+	</select>
 </sqlMap>
