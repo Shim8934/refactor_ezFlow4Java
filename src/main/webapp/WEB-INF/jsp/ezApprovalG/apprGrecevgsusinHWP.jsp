@@ -787,7 +787,8 @@
 		        		data : {
 		        				docID    : pDocID, 
 		        				userID 	 : pUserID,
-		        				formID   : pFormID
+		        				formID   : pFormID,
+		        				mode     : ""
 		        				},
 		        		success: function(xml){
 		        			result = loadXMLString(xml);
@@ -894,7 +895,7 @@
 			      parameter[4] = getNodeText(RECEIPTDEPTID);
 			
 			      var url = "/ezApprovalG/ezReceiveDistributeUI.do";
-			      var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;edge:sunken;scroll:no"
+			      var feature = "status:no;dialogWidth:1000px;dialogHeight:760px;edge:sunken;scroll:no"
 			      var ret = window.showModalDialog(url, parameter, feature);
 			      if (ret == "true") {
 			          var pAlertContent = "<spring:message code='ezApprovalG.t1419'/>";
@@ -910,7 +911,7 @@
 			      parameter[2] = pAprState;
 			
 				  var url = "/ezApprovalG/ezReceiveAssignUI.do";
-			      var feature = "status:no;dialogWidth:600px;dialogHeight:365px;edge:sunken;scroll:no"
+			      var feature = "status:no;dialogWidth:600px;dialogHeight:380px;edge:sunken;scroll:no"
 			      var ret = window.showModalDialog(url, parameter, feature);
 			      if (ret == "OK") {
 			          var pAlertContent = "<spring:message code='ezApprovalG.t1420'/>";

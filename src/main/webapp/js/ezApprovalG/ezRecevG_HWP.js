@@ -6,30 +6,32 @@ var pRelayURL2 = "";
 var needDoubleFormFlag = false;
 var pPublicFlag = "";
 
-function GetRelayDocInfo()
-{
-	try
-	{
-		var xmlpara = createXmlDom();
-		var xmlhttp = createXMLHttpRequest();
-		var objNode;
-		createNodeInsert(xmlpara, objNode, "PARAMETER");
-		createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-		xmlhttp.open("POST","/myoffice/ezApprovalG/ReceivUI/aspx/getRelayDocInfo.aspx",false);
-		xmlhttp.send(xmlpara);
-		
-		pRelayDocInfo = loadXMLString(xmlhttp.responseText);
-		
-		if (pRelayDocInfo.documentElement.childNodes.length < 1) 
-			return false;
-		else
-			return true;
-	}
-	catch(e)
-	{
-		alert("GetRelayDocInfo : " + e.description);
-		return false;
-	}
+function GetRelayDocInfo() {
+    try {
+    	var result ="";
+      	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/getRelayDocInfo.do",
+    		data : {
+    			docID : pDocID
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+
+      	pRelayDocInfo = loadXMLString(result);
+        if (pRelayDocInfo.documentElement.childNodes.length < 1)
+            return false;
+        else
+            return true;
+
+    } catch (e) {
+        alert("GetRelayDocInfo : " + e.description);
+        return false;
+    }
 }
 
 function getPasswdEnd()
