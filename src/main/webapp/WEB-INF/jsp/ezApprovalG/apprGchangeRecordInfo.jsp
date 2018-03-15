@@ -618,15 +618,15 @@
     </tr>
     <tr>
       <th><spring:message code='ezApprovalG.t831'/></th>
-      <td><input type="text" style="Width:40px;" name="txtRegY" id="txtRegY" maxlength = "4">
+      <td><input type="text" style="Width:40px; height:18px;" name="txtRegY" id="txtRegY" maxlength = "4">
         <spring:message code='ezApprovalG.t456'/>
-        <input type="text" style="Width:25px;" name="txtRegM"  id="txtRegM" maxlength = "2">
+        <input type="text" style="Width:25px; height:18px;" name="txtRegM"  id="txtRegM" maxlength = "2">
         <spring:message code='ezApprovalG.t968'/>
-        <input type="text" style="Width:25px;" name="txtRegD"  id="txtRegD" maxlength = "2">
+        <input type="text" style="Width:25px; height:18px;" name="txtRegD"  id="txtRegD" maxlength = "2">
         <spring:message code='ezApprovalG.t662'/>
-        <input type="text" style="Width:25px;" name="txtRegH"  id="txtRegH" maxlength = "2">
+        <input type="text" style="Width:25px; height:18px;" name="txtRegH"  id="txtRegH" maxlength = "2">
         <spring:message code='ezApprovalG.t977'/>
-        <input type="text" style="Width:25px;" name="txtRegMi"  id="txtRegMi" maxlength = "2">
+        <input type="text" style="Width:25px; height:18px;" name="txtRegMi"  id="txtRegMi" maxlength = "2">
         <spring:message code='ezApprovalG.t978'/></td>
     </tr>
     <tr>
@@ -646,11 +646,11 @@
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t863'/></th>
-      <td ><input type="text" style="Width:40px;" name="txtExeY" id="txtExeY" maxlength = "4">
+      <td ><input type="text" style="Width:40px; height:18px;" name="txtExeY" id="txtExeY" maxlength = "4" >
         <spring:message code='ezApprovalG.t456'/>
-        <input type="text" style="Width:25px;" name="txtExeM"  id="txtExeM" maxlength = "2">
+        <input type="text" style="Width:25px; height:18px;" name="txtExeM"  id="txtExeM" maxlength = "2">
         <spring:message code='ezApprovalG.t968'/>
-        <input type="text" style="Width:25px;" name="txtExeD"  id="txtExeD" maxlength = "2">
+        <input type="text" style="Width:25px; height:18px;" name="txtExeD"  id="txtExeD" maxlength = "2">
         <spring:message code='ezApprovalG.t643'/></td>
     </tr>
     <tr>
