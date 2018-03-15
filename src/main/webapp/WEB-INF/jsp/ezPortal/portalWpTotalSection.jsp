@@ -143,8 +143,16 @@
     		<div class="blue_bar"></div>
     		<article class="time">
     			<p class="title"><spring:message code='main.t00023' /></p>
-    			<div id="clock_id" style="width: 120px; height: 120px; background: url(/images/WebPartSliderCI/analogu.png) no-repeat ; "></div>    
-    			<div id="timeinput" style=" margin-left:10px ;width:104px; height:25px; border:0px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px;"></div>    			
+<!--     			<div id="clock_id" style="width: 120px; height: 120px; background: url(/images/WebPartSliderCI/analogu.png) no-repeat ; "></div>     -->
+    			<div style=" margin-left:3px ;width:104px; height:67px; border:2px solid rgb(102,180,255); border-radius:27px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px; background-color:rgb(255,255,255);">
+    				<p id="timeinput" style="margin:21px 0px 0px 2px;"></p>
+    			</div>
+    			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center;">
+    				<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:13px;">출근 : 00:00:00</p>
+					<p id="outAttiClock" style="margin:5px 0px 8px 8px;  font-size:13px;">퇴근 : 00:00:00</p>
+					<span id="inAttiBtn" type="A01" datetype="3" onclick="addAttitude(this)">출근</span>
+					<span id="outAttiBtn" type="A02" datetype="3" onclick="addAttitude(this)">퇴근</span>
+    			</div>
    			</article>
    			<div class="blue_bar"></div>
 			<div class="bannerlink_area">
@@ -190,7 +198,31 @@
 		</c:choose>
 		
 		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>   
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<style>
+			#atti_area span{
+				width:35px;
+				margin-left:7px;
+				display:block;
+				float:left;
+				padding: 5px 4px;
+				font: 12px gulim;
+				padding-top: 7px;
+ 				border: 1px solid #ddd;
+ 				color: #666;
+				border-radius:3px
+			}
+			
+			.btn_hover{
+				cursor: pointer;
+				color: rgb(4, 112, 227) !important;
+				border-color: rgb(4, 112, 227) !important;
+			}
+			
+			.btn_disabled{
+				background-color: rgb(153, 153, 153);
+			}
+		</style>   
 		<script type="text/javascript">
 		    var pMode = "P";
 		    var date = "";
@@ -210,7 +242,9 @@
 			    
 			    CalendarMiniView("CalendarMini");
 
-			    draw_clock();
+// 			    draw_clock();
+				setAttiBtnHover();
+				getAttitudeList();
 			    yourClock();
 
 			    CalendarMiniDataSource();
@@ -236,7 +270,7 @@
 		            overflowY: "scroll" // auto, scroll
 		        });
 
-		        draw_clock();
+// 		        draw_clock();
 		        yourClock();
 
 		        try { top.onresize() } catch (e) { }
@@ -865,7 +899,58 @@
 		            }
 		        }
 		    }
-
+			
+		    /** 배현상 근태관리메서드 추가 */
+		    function getAttitudeList() {
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : true,
+		    		url : "/attitude/getAttitudeList.do",
+		    		data : {},
+		    		success : function(result) {
+		    			for (var i = 0; i < result.length; i++) {
+		    				if (result[i].typeId == "A01") {
+		    					$("#inAttiClock").text("출근 : " + result[i].startDate.split(" ")[1]);
+		    					$("#inAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
+		    				} else if (result[i].typeId == "A03") {
+		    					$("#inAttiClock").text("").append("출근 : <font color='red'>" + result[i].startDate.split(" ")[1] + "</font>");
+		    					$("#inAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
+		    				} else if (result[i].typeId == "A02") {
+		    					$("#outAttiClock").text("퇴근 : " + result[i].startDate.split(" ")[1]);
+		    					$("#outAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
+		    				}
+		    			}
+		    		}
+		    	})
+		    }
+		    
+		    function addAttitude(obj) {
+		    	var pTypeId = obj.getAttribute("type");
+		    	var pDateType = obj.getAttribute("datetype");
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		async : true,
+		    		url : "/attitude/attitudeSave.do",
+		    		data : {
+		    			typeId : pTypeId,
+		    			dateType : pDateType
+		    		},
+		    		success : function() {
+		    			getAttitudeList();
+		    		}
+		    	})
+		    }
+		    
+		    function setAttiBtnHover() {
+		    	$("#inAttiBtn, #outAttiBtn").hover(function(){
+		    		$(this).addClass("btn_hover");
+		    	}, function(){
+		    		$(this).removeClass("btn_hover");
+		    	})
+		    }
+		    
 		    window_onload_total();
 		</script>
 	</head>

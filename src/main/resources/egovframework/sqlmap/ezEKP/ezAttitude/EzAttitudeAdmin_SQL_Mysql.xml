@@ -8,9 +8,9 @@
 	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
 	
 	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
-		<result property="userId" 					column="USERID" 				columnIndex="1"/>
-		<result property="workStartTime"			column="WORKSTARTTIME"			columnIndex="2"/>
-		<result property="workEndTime" 				column="WORKENDTIME" 			columnIndex="3"/>
+		<result property="userId" 					column="USER_ID" 				columnIndex="1"/>
+		<result property="workStartTime"			column="WORK_STARTTIME"			columnIndex="2"/>
+		<result property="workEndTime" 				column="WORK_ENDTIME" 			columnIndex="3"/>
 		<result property="userTitle"				column="TITLE"					columnIndex="4"/>
 		<result property="userName" 				column="DISPLAYNAME" 			columnIndex="5"/>
 		<result property="deptName" 				column="DESCRIPTION" 			columnIndex="6"/>
@@ -86,9 +86,9 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultMap="attitudeUserConfig">
 		<![CDATA[
 			SELECT
-				A.USERID,
-				A.WORKSTARTTIME,
-				A.WORKENDTIME,
+				A.USER_ID,
+				A.WORK_STARTTIME,
+				A.WORK_ENDTIME,
 				B.TITLE,
 				B.DISPLAYNAME,
 				B.DESCRIPTION
