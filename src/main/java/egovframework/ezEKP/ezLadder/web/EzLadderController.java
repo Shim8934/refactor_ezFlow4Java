@@ -67,7 +67,7 @@ public class EzLadderController {
 	private EzLadderService ezLadderService;
 	
 	/**
-	 * 사다리 게임 목록
+	 * 사다리 게임 호출
 	 * */
 	@RequestMapping(value = "/ezLadder/ladderMain.do")
 	public String ladderMain(String mode, String currPage, String searchSelect, String searchInput, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
@@ -114,7 +114,7 @@ public class EzLadderController {
 			return "error";
 		}
 		
-		logger.debug("/ezLadder/ladderMain.do ended.");
+		logger.debug("/ezLadder/ladderMain ended.");
 
 		return "ezLadder/ladderMain";
 	}
@@ -124,7 +124,6 @@ public class EzLadderController {
 	 */
 	@RequestMapping(value = "/ezLadder/ladderList.do")
 	public String ladderList(String mode, String currPage, String searchSelect, String searchInput, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
-		
 		logger.debug("ladderList started.");
 		logger.debug("mode : " + mode);
 		logger.debug("currPage : " + currPage);
@@ -170,7 +169,7 @@ public class EzLadderController {
 			return "error";
 		}
 		
-		logger.debug(" ended");
+		logger.debug("ladderList ended");
 
 		return "json";
 	}
@@ -669,7 +668,7 @@ public class EzLadderController {
 	 */
 	@RequestMapping(value = "/ezLadder/deleteLadder.do")
 	public String deleteLadderList(@RequestParam(value="allData") List<String> allData, @CookieValue("loginCookie") String loginCookie, String ladderId, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("ezLadder/deleteLadder.do started.");
+		logger.debug("ezLadder/deleteLadder started.");
 		logger.debug("ladderId : " + allData.get(0));
 		logger.debug("searchSelect : " + allData.get(1));
 		logger.debug("searchInput " + allData.get(2));
@@ -707,9 +706,10 @@ public class EzLadderController {
 
 		if (status.equals("ok")) {
 			if(allData.get(5).equals("back")) {
-				return "redirect:/ezLadder/ladderMain.do";
+				return "redirect:/ezLadder/ladderMain.do?mode=" + allData.get(3) + ""
+						+ "&currPage=" + allData.get(4) + "&searchSelect=" + allData.get(1) + "&searchInput=" + allData.get(2);
 			}
-			logger.debug("ezLadder/deleteLadder.do ended.");
+			logger.debug("ezLadder/deleteLadder ended.");
 			return "json";
 		} else {
 			return "error";
