@@ -595,7 +595,7 @@
 	                </table>
 	            </td>
 	            <%--선택된 기록물철--%>
-	            <td style="width: 18px; text-align: center">
+	            <td style="width: 18px; text-align: center; padding-left:5px; padding-right:5px;">
 	                <img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16px" height="16px"
 	                    onclick="return AddCabList_onclick()" style="cursor: pointer">
 	             <br>
