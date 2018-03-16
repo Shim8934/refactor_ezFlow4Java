@@ -586,7 +586,7 @@
 		</div>
 		<%-- <canvas id='ladderCanvas' width="500px" height="500px" style="border: 1px solid black"></canvas> --%>
 		
-		<span id="makeLad"><h3>만들기</h3></span>
+		<span id="tetetest"><h3>만들기</h3></span>
 		
 		<!-- popup start -->
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

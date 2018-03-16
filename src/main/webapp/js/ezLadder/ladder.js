@@ -72,20 +72,18 @@ function changeUser(num, flag) { // 유저 추가
 	} else {
 		wInfo -= num;
 	}
-	console.log(wInfo + "set winfo");
 	setDefaultLad();
 }
 
 function setDefaultLad() { // 세로선, 유저, 아이템 나타나기
-	console.log("set info2");
 	if(wInfo * wSize + startXPoint * 2 > $("canvas").attr("width")) {
 		$("canvas").attr("width", (wInfo - 1) * wSize + startXPoint * 2);
 	}
 	for(var i = 0; i < wInfo; i++) {
 		drawLadLine('H', startXPoint + (wSize * i), startYPoint);
 		
-		$("#attendant").append("<div class='users' num='" + i + "' style='left: " + (wSize * i + startXPoint - userDiv / 2) + "px; top: " + (startYPoint - userDiv) + "px;'></div>");
-		$("#item").append("<div class='items' num='" + i + "' style='left: " + (wSize * i + startXPoint - userDiv) + "px;'><input type='text'></div>");
+		/*$("#attendant").append("<div class='users' num='" + i + "' style='left: " + (wSize * i + startXPoint - userDiv / 2) + "px; top: " + (startYPoint - userDiv) + "px;'></div>");
+		$("#item").append("<div class='items' num='" + i + "' style='left: " + (wSize * i + startXPoint - userDiv) + "px;'><input type='text'></div>");*/
 		userStatus[i] = 0;
 	}
 }
@@ -245,7 +243,6 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 }
 
 function drawLadLine(flag, startX, startY) {
-	console.log("set info3");
 	var canvas = document.getElementById('ladderCanvas');
 	
 	if(canvas.getContext) {
@@ -258,7 +255,6 @@ function drawLadLine(flag, startX, startY) {
 		cv.moveTo(startX, startY);
 		
 		if(flag == 'H') { // 세로선
-			console.log("set info4");
 			cv.lineCap = 'square';
 			cv.lineTo(startX, startY + hSize * hInfo);
 		} else if(flag == 'W') { // 가로선
