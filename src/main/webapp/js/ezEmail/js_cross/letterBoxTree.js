@@ -87,21 +87,6 @@ function selectBox(letterBoxNo) {
     xmlhttp.send();
 }
 
-// 편지지함 삭제
-function deleteBox(letterBoxNo) {
-	var query = "/admin/ezEmail/deleteLetterBox.do?letterBoxNo=" + letterBoxNo;
-	
-	$.ajax({
-		type : "POST",
-		url : query,
-		datatype : 'json',
-		error : function(data) {
-			alert("error");
-			console.log(data);
-		}
-	});
-}
-
 // 이름, 이름(영문) 가져오는 친구
 function readText() { 
 	if (xmlhttp == null || xmlhttp.readyState != 4) return;
@@ -217,10 +202,10 @@ function boxNameCheck() {
 
 // 편지지함 삭제 버튼 클릭 시
 function deleteLetterBox() {
-	var id = selectNode.node.id;
+	var letterBoxNo = selectNode.node.id;
 	var realCheck = false;
 	
-	if (id == treeCollection[0].id) {
+	if (letterBoxNo == treeCollection[0].id) {
 		alert("기본편지지함은 삭제가 불가능합니다.");
 		return;
 	}
@@ -236,10 +221,22 @@ function deleteLetterBox() {
 	}
 	
 	if (realCheck == true) {
-		$('#divTree').jstree().delete_node($('#'+id));
-		var a = deleteBox(id);
-		alert("삭제를 완료하였습니다.");
-		refreshLetterBox();
+		$('#divTree').jstree().delete_node($('#'+letterBoxNo));
+		var query = "/admin/ezEmail/deleteLetterBox.do?letterBoxNo=" + letterBoxNo;
+		
+		$.ajax({
+			type : "POST",
+			url : query,
+			datatype : 'json',
+			success : function(data) {
+				alert("삭제를 완료하였습니다.");
+				refreshLetterBox();
+			},
+			error : function(data) {
+				alert("error");
+				console.log(data);
+			}
+		});
 		
 	}
 	
