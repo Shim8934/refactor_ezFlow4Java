@@ -73,6 +73,7 @@
     width: 45px;
     height: 45px;
     margin: 0;
+    cursor: pointer;
 }
 
 #ladderPreList {
@@ -142,6 +143,7 @@
     top: 20px;
     right: 20px;
     margin-right: 20px;
+    z-index: 20;
 }
 
 .wrap {
@@ -193,11 +195,12 @@
     position: absolute;
     top: 5px;
     right: 0px;
+    cursor: pointer;
 }
 
 #ladderCanvas {
 	position: absolute;
     top: 0px;
     left: 0px;
-    z-index: -1000;
+    z-index: -20;
 }
