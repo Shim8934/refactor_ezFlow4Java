@@ -4063,6 +4063,22 @@
 		]]>
 	</update>
 	
+	<update id="EzApprovalGAdminDAO.deleteDocListjson" parameterClass="Map">
+		<![CDATA[
+			update tbl_expendaprdocinfo
+			set
+				delflag = 'Y'
+			where
+				tenant_id = #tenantID#
+		  	and
+		  		companyid = #companyID#
+		  	and
+		  		docid = #docid#
+		  	and 
+		  		delflag is null
+		]]>
+	</update>
+	
 	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -4103,4 +4119,244 @@
 		AND
 			FORMCONTID = #v_PARENTID#
 	</select>
+	
+	<select id="EzApprovalGAdminDAO.getContDocListjson" parameterClass="Map" resultClass="ApprGDocListVO">
+				SELECT 
+					* 
+				FROM (
+						SELECT 
+							*
+						FROM (
+								SELECT 
+									 DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
+									 		  TBL_ENDAPRDOCINFO.DOCTYPE,
+				   							  TBL_ENDAPRDOCINFO.DOCSTATE, 
+				   							  TBL_ENDAPRDOCINFO.FUNCTIONTYPE, 
+				   							  TBL_ENDAPRDOCINFO.HREF, 
+				   							  TBL_ENDAPRDOCINFO.DOCTITLE,
+				   							  TBL_ENDAPRDOCINFO.DOCNO, 
+				   							  TBL_ENDAPRDOCINFO.HASATTACHYN, 
+				   							  TBL_ENDAPRDOCINFO.HASOPINIONYN,
+				   							  TBL_ENDAPRDOCINFO.STARTDATE, 
+				   							  Date_ADD(DATE_FORMAT(tbl_endaprdocinfo.enddate, '%Y-%m-%d %H:%i:%S'), 
+											  INTERVAL #v_OFFSET# MINUTE) enddate,  
+				   							  TBL_ENDAPRDOCINFO.WRITERID,
+				   							  TBL_ENDAPRDOCINFO.WRITERNAME,
+				   							  TBL_ENDAPRDOCINFO.WRITERNAME2, 
+				   							  TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
+				   							  TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, 
+				   							  TBL_ENDAPRDOCINFO.WRITERDEPTID, 
+				   							  TBL_ENDAPRDOCINFO.WRITERDEPTNAME2,
+				   							  TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
+				   							  TBL_ENDAPRDOCINFO.FORMID, 
+				   							  TBL_ENDAPRDOCINFO.CONTAINERID,
+				   							  TBL_EXPENDAPRDOCINFO.FORMNAME, 
+				   							  TBL_EXPENDAPRDOCINFO.FORMNAME2, 
+				   							  TBL_EXPENDAPRDOCINFO.STATUS, 
+				   							  TBL_ENDAPRDOCINFO.ORGDOCID,
+				   							  TBL_ENDAPRDOCINFO.ISPUBLIC, 
+				   							  TBL_EXPENDAPRDOCINFO.EDMSYN, 
+				   							  (CASE WHEN TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL IS NULL THEN ''
+				   							  	   ELSE TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
+				   							  END)  AS SECURITYAPPROVAL
+				   						FROM 
+				   							  TBL_ENDAPRDOCINFO 
+				   						LEFT OUTER JOIN 
+				   							  TBL_ENDAPRLINEINFO 
+				   						ON 
+				   							  TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+				   						AND
+				   							  TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+				   						AND
+				   							  TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+				   						INNER JOIN 
+				   							  TBL_EXPENDAPRDOCINFO 
+				   						ON 
+				   							  TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+				   						AND
+				   							  TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+				   						AND
+				   							  TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID									
+									<isNotEmpty property="v_CONTID">
+										<isEqual property="v_CONTID" compareValue="ADMIN">
+											WHERE 
+												  CONTAINERID IS NOT NULL
+										</isEqual>
+										<isNotEqual property="v_CONTID" compareValue="ADMIN">
+										 	WHERE 	
+										 		  CONTAINERID IN (#v_CONTID#)
+										</isNotEqual>
+									</isNotEmpty>
+									    AND 
+									  		  TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 		
+									<isNotEqual property="v_USERSECCODE" compareValue="0">
+										<![CDATA[
+										AND 
+											#v_USERSECCODE# <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
+										]]>
+									</isNotEqual>
+									<isEqual property="v_PUBFLAG" compareValue="Y">
+										<isNotEmpty property="v_CONTID">
+											<![CDATA[
+											AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
+									      	]]>
+										</isNotEmpty>
+									</isEqual>
+									<isNotEmpty property="v_SUBQUERY">
+										AND 
+											$v_SUBQUERY$
+									</isNotEmpty>	
+										AND
+											TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+										AND
+											TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+									<isEmpty property="v_ORDEROPTION">
+										ORDER BY 
+											ENDDATE DESC
+									</isEmpty>
+									 <![CDATA[
+							   	 ) B 
+							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
+							   	 	) A 
+							   	 	ORDER BY ENDDATE desc 
+									  ]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getDeleteDocListjson" parameterClass="Map" resultClass="ApprGDocListVO">
+			SELECT 
+			TBL_DOCDELETEHISTORY.DOCID, 
+			TBL_DOCDELETEHISTORY.DOCNO, 
+			TBL_DOCDELETEHISTORY.DOCTITLE, 
+			TBL_DOCDELETEHISTORY.DEPTNAME AS WRITERDEPTNAME, 
+			TBL_DOCDELETEHISTORY.WRITERNAME, 
+			TBL_DOCDELETEHISTORY.DELETEUSERID, 
+			TBL_DOCDELETEHISTORY.DELETETIME AS ENDDATE,
+			TBL_DOCDELETEHISTORY.DELETEUSERID AS FORMNAME
+			FROM 
+				TBL_DOCDELETEHISTORY 
+			INNER JOIN 
+				TBL_ENDAPRDOCINFO 
+			ON 
+				TBL_DOCDELETEHISTORY.DOCID = TBL_ENDAPRDOCINFO.DOCID 
+			AND 
+				TBL_DOCDELETEHISTORY.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID 
+			AND 
+				TBL_DOCDELETEHISTORY.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+			<isNotEmpty property="v_SUBQUERY">
+			AND
+				$v_SUBQUERY$
+			</isNotEmpty>
+			AND
+				TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+			AND
+				TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+			ORDER BY 
+				ENDDATE DESC
+			LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
+			
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getContDocListCountjson" parameterClass="Map" resultClass="int">
+		SELECT 
+			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID)
+   		FROM 
+   			TBL_ENDAPRDOCINFO 
+   		LEFT OUTER JOIN 
+   			TBL_ENDAPRLINEINFO 
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+   		INNER JOIN 
+   			TBL_EXPENDAPRDOCINFO 
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+   		AND		
+   		   	TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+		<isNotEmpty property="v_CONTID">
+			<isEqual property="v_CONTID" compareValue="ADMIN">
+				WHERE 
+					  CONTAINERID IS NOT NULL
+			</isEqual>
+			<isNotEqual property="v_CONTID" compareValue="ADMIN">
+			 	WHERE 	
+			 		  CONTAINERID IN (#v_CONTID#)
+			</isNotEqual>
+		</isNotEmpty>
+		AND 
+			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+		<isNotEqual property="v_USERSECCODE" compareValue="0">
+			<![CDATA[
+			AND 
+				#v_USERSECCODE# <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
+			]]>
+		</isNotEqual>
+		<isEqual property="v_PUBFLAG" compareValue="Y">
+			<isNotEmpty property="v_CONTID">
+				<![CDATA[
+				AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
+		      	]]>
+			</isNotEmpty>
+		</isEqual>
+		<isNotEmpty property="v_SUBQUERY">
+			AND 
+				$v_SUBQUERY$
+		</isNotEmpty>
+		AND
+			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		AND
+			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+			
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getDeletetDocListCountjson" parameterClass="Map" resultClass="int">
+		SELECT COUNT(*) 
+		FROM 
+			TBL_DOCDELETEHISTORY 
+		INNER JOIN 
+		 	TBL_ENDAPRDOCINFO 
+		 ON 
+		 	TBL_DOCDELETEHISTORY.DOCID = TBL_ENDAPRDOCINFO.DOCID 
+		 AND 
+			TBL_DOCDELETEHISTORY.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID 
+		 AND 
+		 	TBL_DOCDELETEHISTORY.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+		 <isNotEmpty property="v_SUBQUERY">
+		AND
+			$v_SUBQUERY$
+		</isNotEmpty>
+		AND
+			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		AND
+			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+	</select>
+	
+	<insert id="EzApprovalGAdmin.insertDelDoc" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO TBL_DOCDELETEHISTORY
+			( DOCID, 
+			  DOCNO,
+			  DOCTITLE,
+			  DEPTNAME,
+			  WRITERNAME,
+			  DELETEUSERID,
+			  DELETETIME,
+			  TENANT_ID,
+			  COMPANYID )
+		  VALUES
+			  ( #docid#,
+			    #docno#,
+			    #doctitle#,
+			    #deptname#,
+			    #writername#,
+			    #deluserid#,
+			    DATE_FORMAT(#deleteday#, '%Y-%m-%d %H:%i:%s'),
+			    #tenantID#,
+			    #companyID# )
+		]]>				
+	</insert>
 </sqlMap>

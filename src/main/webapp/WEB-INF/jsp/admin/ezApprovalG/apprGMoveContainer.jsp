@@ -6,103 +6,504 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t1674'/></title>
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 	    <style>
-	    	.mainlist tr th {
-	    		border-top:0px;
-	    	}
+	    .mainlist tr th {
+	    	border-top:0px;
+	    }
+	    table, td {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
 	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/control_Cross/ListView_list.js" ></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/admin/MoveContainer_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/admin/Pagenation_Cross.js"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
-	        var xmlhttp = createXMLHttpRequest();
-	        var xmldoc = createXmlDom();
-	        var xmldoc2 = createXmlDom();
-	        var Check = false;
-	        var NodeList, curpage, nowblock, totalPage, block, p_page, p_nowblock, NodeListLen, Init_Flag, pChackYN, DocListType;
-	        var NodeList2, PageSize, ListView, ScontID;
-	        var P_CompanyID = "";
-	        var text1 = "<spring:message code='ezApprovalG.t440'/>";
-	        var text2 = "<spring:message code='ezApprovalG.t1092'/>";
-	        var SearchCond = new Array();
+	    var Check = false, PeriodDocList;
+	    var ScontID = "";
+	    var P_CompanyID = "";
+	    var ListIdx;
+	    var text1 = "<spring:message code='ezStatistics.t1008'/>";
+	    var text2 = "<spring:message code='ezApproval.t345'/>";
+	    var deleteTimes = 0;		    
+	    var pUse_Editor = "${useEditor}";
+	    
+	    var CurPage = "";
+		var totalPage = "";
+		var totalCount = "";
+		var BlockSize = 10;
+		var searchStartTime = "";
+		var searchEndTime = "";
+		var std = "";
+		var etd = "";
+		var startDate = "";
+		var endDate = "";
+		var usedate = false;
+		var strMoveListIDInfo = "";
+		var pSelectTab = "completedoclist";
+		var check = "false";
+		var selectelem = null;
+		
+	    function window_onload() {
+	   	
+	    	getTime();
+	    	P_CompanyID = $("#ListCompany").val();
+    	    $("#startDatepicker").datepicker('disable');
+	        $("#endDatepicker").datepicker('disable');
+	    }
+	    
+		// 검색값 입력 후 엔터키 입력 시 검색 호출
+		function keyword_onkeydown(e) {
+			
+		    if (!window.ActiveXObject) {
+		        var keyCode = e.keyCode;
+		    } else {
+		        var keyCode = event.keyCode;
+		    }
+		    
+	        if (keyCode == 13) {
+				search();
+				return false;
+			}
 	        
-	        window.onload = function () {
-	            P_CompanyID = document.getElementById("ListCompany").value;
-	            document.getElementById('lvSDoc').innerHTML = "";
-	            document.getElementById('lvTDoc').innerHTML = "";
+			return true;
+		}
+	    
+	    // 날짜 아이콘 적용 및 날짜 검색
+		 function getTime() {
+			
+			var dateObj = new Date();
+			var year = dateObj.getFullYear();
+			var month = dateObj.getMonth() + 1;
+			var date = dateObj.getDate();
+			
+			if (date < 10) {
+				date = '0' + date;
+			}
+			
+			if (month < 10) {
+				month = '0' + month;
+			}
+			
+			dateObj = year + "-" + month + "-" + date;
+			searchStartTime = dateObj;
+	    	searchEndTime = dateObj;
+	    	
+	    	$('#startDatepicker').val(dateObj);
+			$('#endDatepicker').val(dateObj);
+			
+			std = $('#startDatepicker').val();
+			etd = $('#endDatepicker').val();
+			
+		}
+	
+	    $(function() {
+	    	$('#startDatepicker').datepicker({
+	    		changeMonth: true,
+	    		changeYear: true,
+	    		autoSize: true,
+	    		showOn: "both",
+	    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+	    		buttonImageOnly: true,
+	    		maxDate: 0,
+	    		onSelect: function(selected) {
+	    			compareDateStart();
+    				etd = $('#endDatepicker').val();
+	    		}
+	    	});
+	    	
+	    	$('#endDatepicker').datepicker({
+	    		changeMonth: true,
+	    		changeYear: true,
+	    		autoSize: true,
+	    		showOn: "both",
+	    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+	    		buttonImageOnly: true,
+	    		maxDate: 0,
+	    		onSelect: function(selected) {
+	    			compareDateEnd();
+    				std = $('#startDatepicker').val();
+	    		}
+	    	});  
+	    	
+	    	 	var SDate = new Date();
+		        var EDate = new Date();
+		        
+		        $("#startDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#startDatepicker").datepicker('setDate', SDate);
+		
+		        $("#endDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#endDatepicker").datepicker('setDate', EDate);
+	    	
+	    });
+	    
+		function compareDateStart() {
+			startDate = new Date($("#startDatepicker").datepicker("getDate"));
+			endDate = new Date($("#endDatepicker").datepicker("getDate"));
+			
+			if (startDate - endDate > 0) {
+				std = $('#startDatepicker').val();
+				$('#endDatepicker').val(std);
+			}		
+			
+		}
+	   	
+	   	function compareDateEnd() {
+			startDate = new Date($("#startDatepicker").datepicker("getDate"));
+			endDate = new Date($("#endDatepicker").datepicker("getDate"));
+			
+			if (endDate - startDate < 0) {
+				etd = $('#endDatepicker').val();
+				$('#startDatepicker').val(etd);
+			} 
+			
+		}
+	   	
+	   	var dayMsg = "<spring:message code='main.kyj1'/>";
+		var dayStr = dayMsg.split(";");
+		var monthMsg = "<spring:message code='main.kyj2'/>";
+		var monthStr = monthMsg.split(";");
+	    
+		$(function() {
+			$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
+				closeText : "<spring:message code='main.t3'/>",
+				prevText : "<spring:message code='main.t0604'/>",
+				nextText : "<spring:message code='main.t0605'/>",
+				currentText : "<spring:message code='main.t0606' />",
+				monthNames : monthStr,
+				monthNamesShort : monthStr,
+				dayNames : dayStr,
+				dayNamesShort : dayStr,
+				dayNamesMin : dayStr,
+				weekHeader : 'Wk',
+				dateFormat : 'yy-mm-dd',
+				firstDay : 0,
+				isRTL : false,
+				duration : 200,
+				showAnim : 'show',
+				showMonthAfterYear : true
+			};
+			$.datepicker
+					.setDefaults($.datepicker.regional["<spring:message code='main.t0619'/>"]);
+		});
+		
+		// 페이징처리
+		function td_Create1(strtext) {
+			document.getElementById("tblPageRayer").innerHTML = strtext;
+		}
 
-	            listview = new ListView();
-	            listview.SetID("lvSDocForm");
-	            listview.SetMulSelectable(true);
-	            listview.SetRowOnClick("lvSDoc_onSel_Click");            
-	            listview.SetRowOnDblClick("lvSDoc_onSel_DBclick");       
-	            listview.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));                           
-	            listview.DataBind("lvSDoc");
-	
-	            listview2 = new ListView();
-	            listview2.SetID("lvTDocForm");
-	            listview2.SetMulSelectable(true);
-	            listview2.SetRowOnDblClick("lvTDoc_onSel_DBclick");
-	            listview2.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));
-	            listview2.DataBind("lvTDoc");
-	
-	            document.getElementsByName('SDeptName')[0].value = "";	
-	            PageSize = 300;
-	            pChackYN = "FALSE";
+		function makePageSelPage() {
+			var strtext;
+			var PagingHTML = "";
+			$("#tblpageRayer").html("");
+			$("#listInfo").html(" &nbsp;[<spring:message code='main.t252'/><span style='color:#017BEC;'> "
+					+ totalCount + " </span><spring:message code='ezSystem.kyj2'/>]")
+			strtext = "<div class='pagenavi'>";
+			PagingHTML += strtext;
+			var pageNum = CurPage;
+
+			if (totalPage > 1 && pageNum != 1) {
+				strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+				PagingHTML += strtext;
+			} else {
+				strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+				PagingHTML += strtext;
+			}
+
+			if (totalPage > BlockSize) {
+				if (pageNum > BlockSize) {
+					strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'><spring:message code='ezApproval.t931'/></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'><spring:message code='ezApproval.t931'/></span>";
+					PagingHTML += strtext;
+				}
+			} else {
+				strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'><spring:message code='ezApproval.t931'/></span>";
+				PagingHTML += strtext;
+			}
+
+			var MaxNum;
+			var i;
+			var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+
+			if (totalPage >= (startNum + parseInt(BlockSize))) {
+				MaxNum = (startNum + parseInt(BlockSize)) - 1;
+			} else {
+				MaxNum = totalPage;
+			}
+
+			for (i = startNum; i <= MaxNum; i++) {
+				if (i == pageNum) {
+					strtext = "<span class='on'>" + i + "</span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span onclick='goToPageByNum(" + i + ")'>"
+							+ i + "</span>";
+					PagingHTML += strtext;
+				}
+			}
+
+			if (totalPage > BlockSize) {
+				if (totalPage >= parseInt(((parseInt((pageNum - 1)
+						/ BlockSize) + 1) * BlockSize) + 1)) {
+					strtext = "<span class='ptxt' onclick='return selafterBlock_one()'><spring:message code='ezApproval.t932'/></span>";
+					strtext = strtext
+							+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='ptxt' onclick='return selafterBlock_one()'><spring:message code='ezApproval.t932'/></span>";
+					strtext = strtext
+							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+					PagingHTML += strtext;
+				}
+			} else {
+				strtext = "<span class='ptxt' onclick='return selafterBlock_one()'><spring:message code='ezApproval.t932'/></span>";
+				strtext = strtext
+						+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+				PagingHTML += strtext;
+			}
+
+			if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+				strtext = "<span class='btnimg' onclick='return goToPageByNum("
+						+ totalPage
+						+ ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+				PagingHTML += strtext;
+			} else {
+				strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+				PagingHTML += strtext;
+			}
+
+			PagingHTML += "</div>";
+			td_Create1(PagingHTML);
+		}
+		
+		function goToPageByNum(Value) {
+			
+			if ($("#checkboxAll").is(":checked")) {
+	    		$("#checkboxAll").prop("checked", false);
+	    		$(".row_body").css("background", "");
+	    	}
+			
+			strMoveListIDInfo = "";
+			
+			CurPage = Value;
+			makePageSelPage();
+			goToPage(CurPage);
+		}
+		
+		function selbeforeBlock() {
+			var pageNum = parseInt(CurPage);
+			pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+			goToPageByNum(pageNum);
+		}
+
+		function selbeforeBlock_one() {
+			var pageNum = parseInt(CurPage);
+
+			if (parseInt(pageNum - 1) > 0) {
+				goToPageByNum(parseInt(pageNum - 1));
+			} else {
+				return;
+			}
+		}
+
+		function selafterBlock() {
+			var pageNum = parseInt(CurPage);
+			pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+			goToPageByNum(pageNum);
+		}
+
+		function selafterBlock_one() {
+			var pageNum = parseInt(CurPage);
+
+			if (parseInt(pageNum + 1) <= totalPage) {
+				goToPageByNum(parseInt(pageNum + 1));
+			} else {
+				return;
+			}
+		}
+		
+		function goToPage(page) {
+			getDocListjson(page);
+		}
+		
+		function chk_onselect(obj) {
+			if (obj.checked) {
+	            strMoveListIDInfo += $(obj).attr("id") + ";";
+	            selectelem = null;
+	        } else {
+	            strMoveListIDInfo = ReplaceText(strMoveListIDInfo, $(obj).attr("id") + ";", "");
+	            selectelem = obj.parentNode.parentNode;
 	        }
-	
-	        function lvSDoc_onSel_Changed() {
+	    }
+		
+		function select_row(elem) {		    	
+			if ($("#checkboxAll").is(":checked")) {					
+				if ($("input[id='" + $(elem).attr("id") + "']").prop("checked") == true && selectelem != null) {//전체 선택 후 개별 선택 시 선택한것 해제
+					$("input[id='" + $(elem).attr("id") + "']").prop("checked", false);
+					$(".row_body[id='" + $(elem).attr("id") + "']").css("background", "#ffffff");
+					strMoveListIDInfo = ReplaceText(strMoveListIDInfo, $(elem).attr("id") + ";", "");
+		    		return;
+				}
+				
+				// 목록에서 하나씩 다른거 선택할 때
+				if ((selectelem != null && selectelem != elem)) {
+					strMoveListIDInfo += $(elem).attr("id") + ";";
+		            
+		        	selectelem = null;
+		    	}
+			} else {					
+				// 목록에서 하나씩 다른거 선택할 때
+		    	if ((selectelem != null && selectelem != elem)) {
+ 					$("input[name=myCheckbox]").prop("checked", false);
+ 					$(".row_body").css("background", "#ffffff");	 					
+					strMoveListIDInfo = $(elem).attr("id") + ";";
+		        	selectelem = null;
+		    	}
+			}
+
+			// 체크 후 체크박스 눌러서 체크 해제할 때
+	        if (selectelem != null) {
+				if ($("#checkboxAll").is(":checked")) {
+		        	$("input[id='" + $(elem).attr("id") + "']").prop("checked", false);
+		        	$(".row_body[id='" + $(elem).attr("id") + "']").css("background", "#ffffff");
+					return;
+				} else {
+		        	selectelem.style.backgroundColor = "#ffffff";
+		        	$("input[id='" + $(selectelem).attr("id") + "']").prop("checked", false);
+		            selectelem = null;
+		            return;
+				}
 	        }
-	
-	        function lvSDoc_onSel_Click() {
+
+	        selectelem = elem;
+	        elem.style.backgroundColor = "#edf4fd";
+	        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
+
+	        // 목록화면 나오고 처음 선택할 때 strMoveListIDInfo 값 셋팅
+	        if (strMoveListIDInfo == "") {
+	        	strMoveListIDInfo = $(elem).attr("id") + ";";
 	        }
-	
-	        function lvSDoc_onSel_DBclick() {
-	            listview.LoadFromID("lvSDocForm");
-	            listview2.LoadFromID("lvTDocForm");
-	            var openLocation = "";
-	            var oArrRows = listview.GetSelectedRows();
-	            var length = listview.GetSelectedIndexes();
-	            var DocID = GetAttribute(oArrRows[0], "DATA1");
-	            var pURL = GetAttribute(oArrRows[0], "DATA2");
-	            var formID = GetAttribute(oArrRows[0], "DATA6");
-	            var orgDocid = GetAttribute(oArrRows[0], "DATA5");
-	            if (trim_Cross(GetAttribute(oArrRows[0], "DATA5")) == "" || escape(orgDocid.replace(/ /gi, "")) == "%0A")
-	                orgDocid = "";
-	            else
-	                orgDocid = GetAttribute(oArrRows[0], "DATA5");
-	
-	            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-	                openLocation = "/myoffice/ezApproval/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
-	            }
-	            else {
-	                if (CrossYN()) {
-	                    openLocation = "/ezApprovalG/contDocView.do";
-	                } else {
-                        openLocation = "/ezApprovalG/contDocView.do";
-	                }
-	            }
-	            openLocation = openLocation + "?docID=" + encodeURIComponent(DocID) + "&docHref=" + encodeURIComponent(pURL) + "&formID=" + encodeURIComponent(formID) + "&orgDocID=" + encodeURIComponent(orgDocid) + "&admin=Y";
-	            var result = GetOpenWindow(openLocation, "", 1000, 950, "YES");
+	    }
+		
+		  function selectAll() {
+				$(selectelem).css("background", "#ffffff");
+
+				var deleteListID = [];
+				
+				if ($("#checkboxAll").is(":checked")) {
+					strMoveListIDInfo = "";
+
+					$(":checkbox[name=myCheckbox]").prop("checked", true);
+					$(".row_body").css("background", "#edf4fd");
+
+					$(":checkbox[name=myCheckbox]:checked").each(function(){
+						deleteListID.push($(this).attr("id") + ";")
+					});
+
+					for (var i = 0; i < deleteListID.length; i++) {
+						strMoveListIDInfo += deleteListID[i];
+					}
+				} else {
+					strMoveListIDInfo = "";
+					selectelem = null;
+
+					$(":checkbox[name=myCheckbox]").prop("checked", false);
+					$(".row_body").css("background", "");
+				}
+				
+		    }
+		  
+		// 검색 버튼 클릭시 이벤트
+		function search(pageNum) {
+			$(function() {
+
+				if ($('#DocNumber').val().trim() == "") {
+					$('#DocNumber').val('');
+				}
+
+				if ($('#startDatepicker').val() != ''
+						&& $('#endDatepicker').val() == '') {
+					alert(strLang5);
+					return false;
+				}
+
+				if ($('#startDatepicker').val() == ''
+						&& $('#endDatepicker').val() != '') {
+					alert(strLang6);
+					return false;
+				}
+				$("#checkboxAll").prop("checked", false);
+
+				getDocListjson(pageNum);
+
+			});
+		}
+		
+		function DateSearch_Click() {
+	        if(usedate){
+	        	usedate = false;
+	            $("#startDatepicker").datepicker('disable');
+	            $("#endDatepicker").datepicker('disable');
+	        } else {
+	        	usedate = true;
+	            $("#startDatepicker").datepicker('enable');
+	            $("#endDatepicker").datepicker('enable');
 	        }
+	    }
+		 
+		 function RefreshView(){
+		 
+			 getDocListjson(CurPage);
+			 search(CurPage);
+			 
+		 }
+		 
+		function reload() {
+			
+			$(":checkbox[id=usedate]").prop("checked", false);
+			usedate = false;
+			$("#checkboxAll").prop("checked", false);
+			$("#startDatepicker").datepicker('disable');
+	        $("#endDatepicker").datepicker('disable');
 	        
-	        function lvSDoc_onclick() {
-	        }
-	
-	        function lvTDoc_onSel_Changed() {
-	        }
-	
-	        function lvTDoc_onSel_Click() {
-	        }
-	
-	        function lvTDoc_onSel_DBclick() {
-	        }
-	
-	        function lvTDoc_onclick() {
-	        }
+	        $("#DocNumber").val("");
+			$("#DocTitle").val("");
+			$("#drafter").val("");
+			$("#drafterdept").val("");
+			
+			getDocListjson(1);
+		}
+		
+		function openDoc(obj) {
+			
+			var DocID = $(obj).attr("id");
+			var pURL = $(obj).attr("dochref");
+			var formID = $(obj).attr("formid");
+			var orgDocid = $(obj).attr("orgdocid");
+			
+			if ($(obj).attr("orgdocid") == "" || $(obj).attr("orgdocid") == "null" ||escape(orgDocid.replace(/ /gi, "")) == "%0A")
+	            orgDocid = "";
+	        else
+	            orgDocid = $(obj).attr("orgdocid");
+			
+			var openLocation = "/ezApprovalG/contDocView.do";
+			openLocation += "?docID=" + encodeURIComponent(DocID) + "&docHref=" + encodeURIComponent(pURL) + "&formID=" + encodeURIComponent(formID) + "&orgDocID=" + encodeURIComponent(orgDocid) + "&admin=Y";
+			console.log(openLocation);
+			GetOpenWindow(openLocation, "", 1000, 950, "YES");
+		}
+		 
+		
+	    /////////////////////////////////////////////////////////////
+	        var Init_Flag, pChackYN, DocListType;
 	
 	        var organ_dialogArguments = new Array();
 	        function bt_SDeptSelect_onclick() {
@@ -123,16 +524,15 @@
 	            ScontID = document.getElementsByName("selSContName")[0].value;
 				
 	            if (ScontID != "") {
-	            	getDocList();
+	            	getDocListjson(1);
 	            } else {
-	            	document.getElementById('lvSDoc').innerHTML = "";
-		            document.getElementById('lvTDoc').innerHTML = "";
-		            
-		            listview.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));                           
-		            listview.DataBind("lvSDoc");
-		            listview2.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));
-		            listview2.DataBind("lvTDoc");
+	            	if(retVal[0] != "" && retVal[1] !="") {
+	            		alert("<spring:message code='ezApprovalG.t1788'/>");
+	            	}
+	            	$('#DocCompleteListBody').empty().append("<tr><td colspan='7' style='text-align:center;'>"+text1+"</td></tr>");
 	            }
+				$("#checkboxAll").prop("checked", false);
+
 	        }
 	
 	        function bt_TDeptSelect_onclick() {
@@ -149,267 +549,168 @@
 	            }
 	            Flag = "TDeptName";
 	            getDocType(Flag);
+
 	        }	
 	
 	        function bt_selSContName_onclick() {
 	            if (document.getElementsByName("selSContName")[0].value != ScontID) {
 	                ScontID = document.getElementsByName("selSContName")[0].value;
 	                pChackYN == "FALSE"
-	                getDocList();
+	                getDocListjson(1);
 	            }
 	        }
 	
-	        function bt_selTContName_onclick() {	
-	            var TcontID = document.getElementsByName("selTContName")[0].value;
-	            Check = false;
-	        }
-	
-	        function btnIns_onclick() {
-	            if (MoveALL.checked == false)
-	                DocMove();
-	        }	
-	
-	        function btndel_onclick() {
-	            listview.LoadFromID("lvSDocForm");
-	            listview2.LoadFromID("lvTDocForm");
-	            var length = listview.GetRowCount(); 
-	            var length2 = listview2.GetRowCount();  
-	            var selLength = listview2.GetSelectedRows().length; 
-	            var unSelLength = length2 - selLength; 
-	            var unSelRows = listview2.GetUnSelectedIndexes().split(","); 
-	            var count1;
-	            var i = 0;
-	            var xmlRtn = createXmlDom();
-	
-	            if (document.getElementById("MoveALL").checked == false) {
-	                if (length > 0 && selLength > 0) {
-	                    var DocID = new Array();
-	                    var DocName = new Array();
-	                    var DocNum = new Array();	
-	                    
-	                    for (count1 = 0 ; count1 < unSelLength	; count1++) {
-	                        DocID[i] = GetAttribute(listview2.GetDataRows()[unSelRows[i]], "DATA1");
-	                        DocName[i] = getNodeText(listview2.GetDataRows()[unSelRows[i]].cells[1]);
-	                        DocNum[i] = getNodeText(listview2.GetDataRows()[unSelRows[i]].cells[0]);
-	                        i++;
-	                    }
-	                    i = 0;	
-	                    
-	                    for (count1 = length2 - 1 ; count1 >= 0 ; count1--) {
-	                        var tr = listview2.GetDataRows()[count1];
-	                        listview2.DeleteRow(GetAttribute(tr, "id"));
-	                    }	
-	                    
-	                    for (count1 = 0 ; count1 < unSelLength ; count1++) {
-	                        var strXML = listAdd(DocNum[i], DocName[i], DocID[i]);
-	                        var objTr = listview2.AddRow(i);
-	                        SetAttribute(objTr, "id", "lvTDocForm" + "_TR_" + i);
-	                        xmlRtn = loadXMLString(strXML);
-	                        listview2.AddDataRow(objTr, xmlRtn);
-	                        i++;
-	                    }
-	                } else {
-	                    alert("<spring:message code='ezApprovalG.t360'/>");
-	                }
-				}
-			}
-			
-			function btnTotalIns_onclick() {
-			    if (MoveALL.checked == false)
-			        DocTotalMove();
-			}
-			
-			function bt_OK_onclick() {
-			    listview2.LoadFromID("lvTDocForm");
-			    var noItems = document.getElementById("lvTDocForm").rows[1].id.indexOf("TR_noItems");
-			    var length = listview2.GetRowCount();
-			
-			    if (MoveALL.checked != true) {
-			        if (noItems < 0 && length > 0 && Check == false) {
-			            if (document.getElementsByName("selTContName")[0].value == "")
+	        function bt_OK_onclick() {
+	        	
+				var length = $("input:checkbox[name=myCheckbox]:checked").length;
+			        if (length > 0 && check == 'false') {
+			            if ($("select[name=selTContName]").val() == null || $("select[name=selTContName]").val() == '')
 			                alert("<spring:message code='ezApprovalG.t1676'/>")
 						else {
 						    var Ans = confirm("<spring:message code='ezApprovalG.t1677'/>");
 						    if (Ans) {
 						        ContMove();
-						        getDocList();
+						        getDocListjson(CurPage);
 						    }
 						}
 			        } else {
 			            alert("<spring:message code='ezApprovalG.t1570'/>");
 			        }
-			    } else {
-			        if (Check == false) {
-			            if (document.getElementsByName("selTContName")[0].value == "")
-			                alert("<spring:message code='ezApprovalG.t1676'/>")
-						else {
-						    var Ans = confirm("<spring:message code='ezApprovalG.t1677'/>");
-						    if (Ans) {
-						        ContMove();
-						        getDocList();
-						    }
-						}
-			        }
-			    }
+			        $("#checkboxAll").prop("checked", false);
 			}
-			
-			function bt_Cancle_onclick() {
-			    window.close();
-			}			
-			
-			function changeCompID() {				
-			    if (P_CompanyID != document.getElementById("ListCompany").value) {
-			        P_CompanyID = document.getElementById("ListCompany").value;
-			
-			        lvSDoc.DataSource = FORMLIST;
-			        lvTDoc.DataSource = FORMLIST;
-			
-					document.getElementsByName('SDeptName')[0].value = "";
-					document.getElementsByName("TDeptName")[0].value = "";
+	        
+	        function bt_All_onclick(){
+				check = "true";
+	        	
+	        	if ($("select[name=selTContName]").val() == null || $("select[name=selTContName]").val() == '' 
+	        			|| $("select[name=selSContName]").val() == null || $("select[name=selSContName]").val() == '') {
+	                alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
+	                
+	        	}
+				else {
+				    var Ans = confirm("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1677'/>");
+				    if (Ans) {
+				        ContMove();
+				        getDocListjson(1);
+				    }
+				}
+				        check = "false";
+	        	$("#checkboxAll").prop("checked", false);
+	        }
+	        
+	        function select_row(elem) {		    	
+				if ($("#checkboxAll").is(":checked")) {					
+					if ($("input[id='" + $(elem).attr("id") + "']").prop("checked") == true && selectelem != null) {//전체 선택 후 개별 선택 시 선택한것 해제
+						$("input[id='" + $(elem).attr("id") + "']").prop("checked", false);
+						$(".row_body[id='" + $(elem).attr("id") + "']").css("background", "#ffffff");
+						strMoveListIDInfo = ReplaceText(strMoveListIDInfo, $(elem).attr("id") + ";", "");
+			    		return;
+					}
 					
-					document.getElementById('lvSDoc').innerHTML = "";
-		            document.getElementById('lvTDoc').innerHTML = "";
-		            
-		            listview.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));                           
-		            listview.DataBind("lvSDoc");
-		            listview2.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));
-		            listview2.DataBind("lvTDoc");
-		            
-		            document.getElementsByName("selSContName")[0].innerHTML = "";
-		            document.getElementsByName("selTContName")[0].innerHTML = "";
-		            
-		            document.getElementsByName("MoveALL")[0].checked = false;
-		            document.getElementById("PageNum").innerHTML = "";
-			    }
-			}
+					// 목록에서 하나씩 다른거 선택할 때
+					if ((selectelem != null && selectelem != elem)) {
+						strMoveListIDInfo += $(elem).attr("id") + ";";
+			        	selectelem = null;
+			    	}
+				} else {					
+					// 목록에서 하나씩 다른거 선택할 때
+			    	if ((selectelem != null && selectelem != elem)) {
+	 					$("input[name=myCheckbox]").prop("checked", false);
+	 					$(".row_body").css("background", "#ffffff");	 					
+						strMoveListIDInfo = $(elem).attr("id") + ";";
+			        	selectelem = null;
+			    	}
+				}
+
+				// 체크 후 체크박스 눌러서 체크 해제할 때
+		        if (selectelem != null) {
+					if ($("#checkboxAll").is(":checked")) {
+			        	$("input[id='" + $(elem).attr("id") + "']").prop("checked", false);
+			        	$(".row_body[id='" + $(elem).attr("id") + "']").css("background", "#ffffff");
+						return;
+					} else {
+			        	selectelem.style.backgroundColor = "#ffffff";
+			        	$("input[id='" + $(selectelem).attr("id") + "']").prop("checked", false);
+			            selectelem = null;
+			            return;
+					}
+		        }
+
+		        selectelem = elem;
+		        elem.style.backgroundColor = "#edf4fd";
+		        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
+
+		        // 목록화면 나오고 처음 선택할 때 strMoveListIDInfo 값 셋팅
+		        if (strMoveListIDInfo == "") {
+		        	strMoveListIDInfo = $(elem).attr("id") + ";";
+		        	
+		        	
+		        }
+		    }
 			
-			var ezStatisticsSearch_dialogArguments = new Array();
-			function SearchCondi_onclick() {
-			    if (document.getElementsByName('SDeptName')[0].value == "") {
-			        alert("<spring:message code='ezApprovalG.t1219'/>");
-			        return;
-			    }
-			
-			    var url = "/admin/ezApprovalG/ezStatisticsSearch.do?ingFlag=END";
-			    ezStatisticsSearch_dialogArguments[1] = SearchCondi_onclick_Complete;
-			    var result = GetOpenWindow(url, "ezStatisticsSearch", 500, 330, "NO");
-			}
-			
-			function SearchCondi_onclick_Complete(retVal) {
-			    if (retVal) {
-			        pChackYN = "SEARCH";
-			        for (i = 0; i < 11; i++)
-			            SearchCond[i] = retVal[i];
-			
-			        getDocList();
-			    }
-			}
 	    </script>
 	</head>
 	
-	<body class="mainbody">
-		<xml id='FORMLIST' style="display: none">
-			<LISTVIEWDATA>
-				<HEADERS>
-					<HEADER>
-						<NAME><spring:message code='ezApprovalG.t440'/></NAME>
-						<WIDTH>135</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezApprovalG.t1092'/></NAME>
-						<WIDTH>205</WIDTH>
-					</HEADER>
-				</HEADERS>
-			</LISTVIEWDATA>
-		</xml>
-	    <h1><spring:message code='ezApprovalG.t1678'/></h1>
-	   	<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+	<body class="mainbody" onLoad="javascript:window_onload()">
+		<h1><spring:message code='ezApprovalG.t1678'/><span id="listInfo"></span></h1>
+		<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
 		    <select id="ListCompany" onChange="return changeCompID">
 	        	<c:forEach var="item" items="${list}">
             		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
             	</c:forEach>
 		    </select><br /><br />
 		</span>
-		
-	    <table class="table_manage">
-	        <tr>
-	            <td>
-	                <table class="content" style="width: 368px">	                	
-	                    <tr>
-	                        <th><spring:message code='ezApprovalG.t1011'/></th>
-	                        <td>
-	                            <input type="text" id="SDeptName" name="SDeptName" style="WIDTH: 130px" readonly="true" />
-	                            <a class="imgbtn" name="SDeptSelect"><span onclick="bt_SDeptSelect_onclick()"><spring:message code='ezApprovalG.t1011'/></span></a>
-							</td>   
-	                    </tr>
-	                    <tr>
-	                        <th style="white-space: nowrap"><spring:message code='ezApprovalG.t1549'/></th>
-	                        <td>
-	                            <select name="selSContName" style="WIDTH: 150px" onchange="return bt_selSContName_onclick()"></select>
-	                            <a class="imgbtn" name="Search"><span onclick="SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
-							</td>
-	                    </tr>
-	                    <tr>
-	                        <th style="white-space: nowrap"><spring:message code='ezApprovalG.t1679'/></th>
-	                        <td>
-	                            <input type="checkbox" id="MoveALL" name="MoveALL" />
-							</td>
-	                    </tr>
-	                </table>
-	            </td>
-	            <td style="width: 30px">&nbsp;</td>
-	            <td style="vertical-align: bottom">
-	                <table class="content" style="width: 368px">
-	                    <tr>
-	                        <th><spring:message code='ezApprovalG.t1011'/></th>
-	                        <td>
-	                            <input type="text" name="TDeptName" style="WIDTH: 130px;" readonly="true" />
-	                            <a class="imgbtn" name="TDeptSelect"><span onclick="bt_TDeptSelect_onclick()"><spring:message code='ezApprovalG.t1011'/></span></a>
-	                        </td>    
-	                    </tr>
-	                    <tr>
-	                        <th><spring:message code='ezApprovalG.t1549'/></th>
-	                        <td>
-	                            <select name="selTContName" style="WIDTH: 150px" onclick="bt_selTContName_onclick()"></select>
-							</td>
-	                    </tr>
-	                    <tr>
-	                        <td style="white-space: nowrap" colspan="2"></td>	                        
-	                    </tr>
-	                </table>
-	            </td>
-	        </tr>
-	    </table>	        
-	    <table style="margin-top:20px">
-	        <tr>
-	            <td>
-	                <div class="listview">
-	                    <div id="lvSDoc" style="BORDER: 0; HEIGHT: 297px; WIDTH: 367px; overflow-x: scroll; overflow-y: hidden" onclick="lvSDoc_onclick()" onrowdblclick="lvSDoc_onSel_DBclick()" onseldblclick="lvSDoc_onSel_DBclick()" onselclick="lvSDoc_onSel_Click()" onrowclick="lvSDoc_onSel_Click()" onselchanged="lvSDoc_onSel_Changed()"></div>
-	                </div>
-	                <div style="margin-top:5px;text-align:center;height:20px" align="center">
-	                	<table style="margin-top:5px;text-align:center" align="center">
-							<tr id="PageNum"></tr>
-						</table>					    
-					</div>
-	            </td>
-	            <td style="text-align: center; width: 30px">
-	                <img height="16" id="arrow_right" onclick="return  btnIns_onclick()" src="/images/arr_right.gif" style="cursor: pointer" width="16" /><br/>
-	                <img height="16" id="arrow_left" onclick="return  btndel_onclick()" src="/images/arr_left.gif" style="cursor: pointer" width="16" /><br/>
-	                <br/><br/><br/>
-	                <img height="16" id="arrow_all" onclick="return btnTotalIns_onclick()" src="/images/arr_rright.gif" style="cursor: pointer" width="16"/>
+		<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">		
+			<tr>
+				<td width="100%;" style="margin-bottom: 10px; padding: 5px 5px;">
+				보낼 <spring:message code='ezOrgan.t220'/> : <input type="text" id="SDeptName" name="SDeptName" style="WIDTH: 130px" readonly="true" />
+				 <spring:message code='ezApprovalG.t1549'/> : <select name="selSContName" style="WIDTH: 155px; height: 23px;" onchange="return bt_selSContName_onclick()"></select>
+	            <a class="imgbtn" name="SDeptSelect"><span onclick="bt_SDeptSelect_onclick()"><spring:message code='ezApprovalG.t1011'/></span></a>&nbsp;
+				<spring:message code='ezApproval.t434'/> : <input type="text" id="DocNumber" name="DocNumber" style="width: 10%" maxlength="50" />&nbsp;
+				<spring:message code='ezApproval.t435'/> : <input type="text" id="DocTitle" name="DocTitle" style="width: 10%" maxlength="50" />&nbsp;
+					<span id="topmenu" style="width: 500px">
+						<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/> : </label>
+						<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
+						<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
+					</span> 
 				</td>
-	            <td>
-	                <div class="listview">
-	                    <div id="lvTDoc" style="BORDER: 0; HEIGHT: 297px; WIDTH: 365px; overflow-x: hidden; overflow-y: auto"></div>
-	                </div>
-	                <div style="margin-top:5px;text-align:center;height:20px" align="center">
-	                						    
-					</div>
-	            </td>
-	        </tr>
-	    </table>	        
-	    <div class="btnposition" style="width: 768px; text-align: center;">
-	        <a class="imgbtn" onclick="bt_OK_onclick()"><span><spring:message code='ezApprovalG.t413'/></span></a>
-	    </div>
-	</body>
+			</tr>
+			<tr>
+				<td width="100%;" style="margin-bottom: 10px; padding: 5px 5px;">
+	                              받을 <spring:message code='ezOrgan.t220'/> : <input type="text" id="TDeptName" name="TDeptName" style="WIDTH: 130px" readonly="true" />
+				 <spring:message code='ezApprovalG.t1549'/> : <select name="selTContName" style="WIDTH: 155px; height: 23px;" onchange="return bt_selTContName_onclick()"></select>
+	            <a class="imgbtn" name="TDeptSelect"><span onclick="bt_TDeptSelect_onclick()"><spring:message code='ezApprovalG.t1011'/></span></a>&nbsp;
+	                <spring:message code='ezApproval.t437'/> : <input type="text" id="drafterdept" name="drafterdept" style="width: 10%" maxlength="50" />&nbsp;&nbsp;&nbsp;
+			  		<spring:message code='ezApproval.t436'/> : <input type="text" id="drafter" name="drafter" style="width: 10%" maxlength="50" />&nbsp;
+					<a class="imgbtn" >
+						<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
+					</a>&nbsp;
+					<a class="imgbtn">
+						<span onClick="reload()"><spring:message code='ezApprovalG.t165' /></span>
+					</a>&nbsp;
+					<a class="imgbtn">
+						<span onClick="bt_OK_onclick()"><spring:message code='ezApproval.t25005' /></span>
+					</a>&nbsp;
+					<a class="imgbtn">
+						<span onClick="bt_All_onclick()"><spring:message code='ezApprovalG.t1679' /></span>
+					</a>
+				</td>
+			</tr>
+		</table>
+		<table class="mainlist" style="width:100%; height:100%;">
+			<thead>
+				<tr id = "doclist">
+					<th style="width:5%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>
+					<th style="width:20%;"><spring:message code="ezApproval.t434"></spring:message></th>
+					<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>
+					<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
+					<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
+					<th style="width:15%;"><spring:message code="ezApproval.t448"></spring:message></th>
+					<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>
+				</tr>
+			</thead>
+			<tbody id="DocCompleteListBody" style="overflow: auto;">
+			<tr><td colspan="7" style="text-align: center; font-size: 15px;"><spring:message code="ezApprovalG.t1126"/></td></tr></tbody> 
+		</table>
+		<div id="tblPageRayer" style="padding-top: 10px;"></div>
 </html>

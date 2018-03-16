@@ -13,12 +13,17 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -33,6 +38,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAutoRuleVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
@@ -149,7 +155,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("</PARAMETER>");
 		}
 		
-		logger.debug("getContainerInfoManage ended.");
+		logger.debug("getContainerInfoManage ended." +sb.toString());
 		
 		return sb.toString();
 	}
@@ -3213,32 +3219,25 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public String moveDocList(String xmlPara, String companyID, int tenantID) throws Exception {
+	public String moveDocList(String strMoveListIDInfo, String sourceContID, String targetContID, String chkAll, String companyID, int tenantID) throws Exception {
 		logger.debug("moveDocList started");
-		Document docXML = commonUtil.convertStringToDocument(xmlPara);
-		
-		String sourceContID = docXML.getDocumentElement().getChildNodes().item(0).getTextContent();
-		String targetContID = docXML.getDocumentElement().getChildNodes().item(1).getTextContent();
-		String moveAll = docXML.getDocumentElement().getChildNodes().item(2).getTextContent();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("sourceContID", sourceContID);
 		map.put("targetContID", targetContID);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		if (moveAll.toLowerCase().equals("true")) {
+		if (chkAll.toLowerCase().equals("true")) {
 			ezApprovalGAdminDAO.moveAllDocListF(map);
 			ezApprovalGAdminDAO.moveAllDocListS(map);
 		} else {
 			String subQuery = "";
-			
-			for (int k = 3; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
-				if (k == 3) {
-					subQuery += " '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
-				} else {
-					subQuery += ", '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
+			String info[] = strMoveListIDInfo.split(";");
+			for (int k = 0; k < info.length; k++) {
+				subQuery += "'"+info[k]+"'";
+				if(k < info.length-1) {
+					subQuery += ",";
 				}
 			}
 			
@@ -3293,6 +3292,35 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("subQuery", subQuery);
 			
 			ezApprovalGAdminDAO.deleteDocList(map);
+		}
+		
+		
+		logger.debug("deleteDocList ended");
+		
+		return "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>";
+	}
+	
+	@Override
+	public String deleteDocListjson(String[] DocDelIDArr, String[] DocDelNoArr, String[] DocDelTitleArr, String[] DocDelWriterNameArr, String[] DocDelDeptNameArr,String deleteDay, String DelUserId,String offset, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteDocList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("deluserid", DelUserId);
+		map.put("deleteday",deleteDay);
+		
+		for (int i = 0; i < DocDelIDArr.length; i++) {
+			
+			map.put("docid", DocDelIDArr[i]);
+			map.put("docno", DocDelNoArr[i]);
+			map.put("doctitle", DocDelTitleArr[i]);
+			map.put("writername", DocDelWriterNameArr[i]);
+			map.put("deptname", DocDelDeptNameArr[i]);
+			
+			ezApprovalGAdminDAO.insertDelDoc(map);
+			ezApprovalGAdminDAO.deleteDocListjson(map);
 		}
 		
 		
@@ -3778,4 +3806,114 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return result;
 	};
+	
+	@Override
+	public String getIsUse(String code1, String code2, String companyID, String userLang, int tenantID) throws Exception{
+		logger.debug("getIsUse started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CODE1", code1);
+		map.put("v_CODE2", code2);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+		
+		logger.debug("getIsUse param : v_CODE1=" + code1 + " v_CODE2=" + code2 + " v_TENANTID=" + tenantID);
+
+		return ezApprovalGDAO.getIsUse(map);
+	}
+	
+	@Override
+	public List<ApprGDocListVO> getContDocList_json(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, int startRow, int pageSize, String pageNum, String orderCell, String orderOption, int totalcnt, String companyID, String lang, int tenantID, String offset) throws Exception {
+		StringBuilder resultXML = new StringBuilder();
+				
+		int querySize = pageSize * Integer.parseInt(pageNum);
+		int querySize2 = totalcnt - pageSize * (Integer.parseInt(pageNum) - 1);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CONTID", containerID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_USERSECCODE", userSecurityCode);
+		
+		if (publicFlag) {
+			map.put("v_PUBFLAG", "Y");
+		} else {
+			map.put("v_PUBFLAG", "N");
+		}
+		map.put("v_SUBQUERY", subQuery);
+		map.put("v_PAGESIZE", querySize);
+		map.put("v_PAGESIZE2", pageSize);
+		map.put("v_PAGESIZE3", startRow);
+		map.put("v_OFFSET",offset);
+		
+		List<ApprGDocListVO> list = ezApprovalGAdminDAO.getContDocListjson(map);
+		
+		
+		return list;
+	}
+	
+	@Override
+	public int getContDocListCountjson(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String companyID, int tenantID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CONTID", containerID);
+		map.put("companyID", companyID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_USERSECCODE", userSecurityCode);
+		
+		if (publicFlag) {
+			map.put("v_PUBFLAG", "Y");
+		} else {
+			map.put("v_PUBFLAG", "N"); 
+		}
+		map.put("v_SUBQUERY", subQuery);
+		
+		int totalCount = ezApprovalGAdminDAO.getContDocListCountjson(map);
+		
+		return totalCount;
+	}
+	
+	@Override
+	public int getDeleteDocListCountjson(String userID, String userSecurityCode, boolean publicFlag, String subQuery, String companyID, int tenantID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_USERSECCODE", userSecurityCode);
+		
+		if (publicFlag) {
+			map.put("v_PUBFLAG", "Y");
+		} else {
+			map.put("v_PUBFLAG", "N"); 
+		}
+		map.put("v_SUBQUERY", subQuery);
+		
+		int totalCount = ezApprovalGAdminDAO.getDeleteDocListCountjson(map);
+		
+		return totalCount;
+	}
+	
+	@Override
+	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset) throws Exception{
+		
+		int querySize = pageSize * Integer.parseInt(pageNum);
+		int querySize2 = totalcnt - pageSize * (Integer.parseInt(pageNum) - 1);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_SUBQUERY", subQuery);
+		map.put("v_PAGESIZE", querySize);
+		map.put("v_PAGESIZE2", pageSize);
+		map.put("v_PAGESIZE3", startRow);
+		map.put("v_OFFSET",offset);
+		
+		List<ApprGDocListVO> list = ezApprovalGAdminDAO.getDeleteDocListjson(map);
+		
+		
+		return list;
+	}
+
 }

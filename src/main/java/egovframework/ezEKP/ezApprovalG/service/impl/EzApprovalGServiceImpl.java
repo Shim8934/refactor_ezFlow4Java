@@ -4541,7 +4541,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return resultXML.toString();
 	}
-
+	
 	@Override
 	public String getGamSaSearchDocList(String containerID, String userID, String deptID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR,
 			String draftFromMONTH, String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR,
@@ -6804,7 +6804,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return sb.toString();
 	}
-
+	
+	
 	private int getContDocListCount(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String companyID, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -6816,7 +6817,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (publicFlag) {
 			map.put("v_PUBFLAG", "Y");
 		} else {
-			map.put("v_PUBFLAG", "N");
+			map.put("v_PUBFLAG", "N"); 
 		}
 		map.put("v_SUBQUERY", subQuery);
 		
@@ -6824,7 +6825,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return totalCount;
 	}
-
+	
 	@Override
 	public String deleteOpinionInfo(String docID, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("deleteOpinionInfo started");

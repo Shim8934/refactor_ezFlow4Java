@@ -196,6 +196,7 @@ function getDocList() {
     pChackYN = "FALSE"
 }
 
+
 function DocMove() {
     var pparsingXML = "";
     var xmlRtn = createXmlDom();
@@ -275,6 +276,7 @@ function ReplaceText(orgStr, findStr, replaceStr) {
         return orgStr
     }
 }
+
 function DocMoveParser() {
     listview2.LoadFromID("lvTDocForm");
     var x_ORGCONTID;
@@ -299,38 +301,38 @@ function DocMoveParser() {
     return xmlpara;
 }
 
-function ContMove() {
-    Check = true;
-    listview2.LoadFromID("lvTDocForm");
-    var length2 = listview2.GetRowCount();
-    var count1, selRow;
+//function ContMove() {
+//    Check = true;
+//    listview2.LoadFromID("lvTDocForm");
+//    var length2 = listview2.GetRowCount();
+//    var count1, selRow;
+//
+//    var xmlpara = createXmlDom();
+//    var xmlRtn = createXmlDom();
+//    var strXML = DocMoveParser();
+//
+//    xmlpara = strXML;
+//    xmlhttp.open("POST", "/admin/ezApprovalG/moveContainer.do", false);
+//    xmlhttp.send(xmlpara);
+//
+//    xmlRtn = createXMLDomFromXmlString(xmlhttp.responseText);
+//    Flag = xmlRtn.getElementsByTagName("RESULT")[0].childNodes[0].nodeValue;
+//    
+//    if (xmlhttp != null && xmlhttp.readyState == 4) {
+//		if (xmlhttp.statusText == "OK" && Flag == "TRUE") {
+//			alert(strLang818);
+//	        lvTDoc.DataSource = FORMLIST;
+//		} else {
+//			alert(strLang803);
+//		}
+//	} else {
+//		alert(strLang803);
+//	}
+//
+//    Check = false;
+//}
 
-    var xmlpara = createXmlDom();
-    var xmlRtn = createXmlDom();
-    var strXML = DocMoveParser();
-
-    xmlpara = strXML;
-    xmlhttp.open("POST", "/admin/ezApprovalG/moveContainer.do", false);
-    xmlhttp.send(xmlpara);
-
-    xmlRtn = createXMLDomFromXmlString(xmlhttp.responseText);
-    Flag = xmlRtn.getElementsByTagName("RESULT")[0].childNodes[0].nodeValue;
-    
-    if (xmlhttp != null && xmlhttp.readyState == 4) {
-		if (xmlhttp.statusText == "OK" && Flag == "TRUE") {
-			alert(strLang818);
-	        lvTDoc.DataSource = FORMLIST;
-		} else {
-			alert(strLang803);
-		}
-	} else {
-		alert(strLang803);
-	}
-
-    Check = false;
-}
-
-function DocTotalMove() {
+function DocTotal() {
     listview.LoadFromID("lvSDocForm");
     listview2.LoadFromID("lvTDocForm");
     var count1;
@@ -457,5 +459,224 @@ function reBuildXml() {
         }
     }
     return xmlpara;
+}
+
+////2018-03-13 김은석 추가
+function getDocListjson(pageNum) {
+	
+	var docnumber = $("#DocNumber").val();
+	var doctitle = $("#DocTitle").val();
+	var drafter = $("#drafter").val();
+	var drafterdept = $("#drafterdept").val();
+	
+	if (!$("#usedate").prop("checked")) {
+		searchStartTime = "";
+		searchEndTime = "";
+	} else {
+		searchStartTime = $('#startDatepicker').datepicker({dateFormat : 'yyyymmdd'}).val();
+		searchEndTime = $('#endDatepicker').datepicker({dateFormat : 'yyyymmdd'}).val();
+	}
+	var pURL = "/admin/ezApprovalG/getDocListjson.do";
+		
+	if (ScontID != null && ScontID !="") {
+		
+			$.ajax({
+				url : pURL,
+				type : "POST",
+				async : false,
+				dataType : 'json',
+				data : {
+					contID     : ScontID,
+					pageNum    : pageNum,
+					companyID  : $('#ListCompany').val(),
+					docNO  	   : docnumber,//문서번호
+					docTitle   : doctitle,//문서제목
+					drafter    : drafter,//기안자
+					aprFrom    : searchStartTime,//완료일자
+					aprTo      : searchEndTime,//완료일자
+					deptName   : drafterdept,//기안부서
+					pSelectTab : pSelectTab//탭구분	
+				},
+				success : function(res) {
+					
+					var html = "";
+					if (res.totalcnt < 1) {
+						html += "<tr><td colspan='7' style='text-align:center;'>"+text1+"</td></tr>";
+					} else {
+			
+							res.DocDeleteHistList.forEach(function(i, v) {
+								html += "<tr class='row_body' onclick='select_row(this)' ondblclick='openDoc(this)' docid='docID_" + i.docID + "' id='" + i.docID + "' writerName='" + i.writerName + "' " 
+									 + "DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "' style='cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'"
+									 + "formid='"+i.formID+"' dochref='"+i.href+"' orgdocid='"+i.orgDocID+"' >";
+								html += "   <td><input type ='checkbox' name='myCheckbox' id='" + i.docID + "' onclick='chk_onselect(this)' writerName='" 
+									 + i.writerName + "' DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "'></td>";
+								html += "	<td title=\'" + i.docNo + "'>"	+ i.docNo	+ "</td>";
+								html += "	<td>"	+ i.docTitle						+ "</td>";
+								html += "	<td>"	+ i.writerName						+ "</td>";
+								html += "	<td>"	+ i.writerDeptName					+ "</td>";
+								html += "	<td>"	+ i.endDate					        + "</td>";
+								html += "	<td>"	+ i.formName						+ "</td>";
+								html += "</tr>";
+							});
+					}
+				
+						$('#DocCompleteListBody').empty().append(html);
+					
+					
+					CurPage = res.currPage;
+					totalPage = res.totalPage;
+					totalCount = res.totalcnt;
+					searchStartTime = res.startdate;
+					searchEndTime = res.endDate;
+					
+				},
+				error : function(err) {
+					alert(err);
+				}
+			});
+		makePageSelPage();
+		} else {
+			alert(text2);
+		}
+}
+
+
+function makePageSelPage() {
+	var strtext;
+	var PagingHTML = "";
+	$("#tblpageRayer").html("");
+	$("#listInfo").html(" &nbsp;[<spring:message code='main.t252'/><span style='color:#017BEC;'> "
+			+ totalCount + " </span><spring:message code='ezSystem.kyj2'/>]")
+	strtext = "<div class='pagenavi'>";
+	PagingHTML += strtext;
+	var pageNum = CurPage;
+
+	if (totalPage > 1 && pageNum != 1) {
+		strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		PagingHTML += strtext;
+	} else {
+		strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		PagingHTML += strtext;
+	}
+
+	if (totalPage > BlockSize) {
+		if (pageNum > BlockSize) {
+			strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'><spring:message code='ezApproval.t931'/></span>";
+			PagingHTML += strtext;
+		} else {
+			strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'><spring:message code='ezApproval.t931'/></span>";
+			PagingHTML += strtext;
+		}
+	} else {
+		strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'><spring:message code='ezApproval.t931'/></span>";
+		PagingHTML += strtext;
+	}
+
+	var MaxNum;
+	var i;
+	var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+
+	if (totalPage >= (startNum + parseInt(BlockSize))) {
+		MaxNum = (startNum + parseInt(BlockSize)) - 1;
+	} else {
+		MaxNum = totalPage;
+	}
+
+	for (i = startNum; i <= MaxNum; i++) {
+		if (i == pageNum) {
+			strtext = "<span class='on'>" + i + "</span>";
+			PagingHTML += strtext;
+		} else {
+			strtext = "<span onclick='goToPageByNum(" + i + ")'>"
+					+ i + "</span>";
+			PagingHTML += strtext;
+		}
+	}
+
+	if (totalPage > BlockSize) {
+		if (totalPage >= parseInt(((parseInt((pageNum - 1)
+				/ BlockSize) + 1) * BlockSize) + 1)) {
+			strtext = "<span class='ptxt' onclick='return selafterBlock_one()'><spring:message code='ezApproval.t932'/></span>";
+			strtext = strtext
+					+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+			PagingHTML += strtext;
+		} else {
+			strtext = "<span class='ptxt' onclick='return selafterBlock_one()'><spring:message code='ezApproval.t932'/></span>";
+			strtext = strtext
+					+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+			PagingHTML += strtext;
+		}
+	} else {
+		strtext = "<span class='ptxt' onclick='return selafterBlock_one()'><spring:message code='ezApproval.t932'/></span>";
+		strtext = strtext
+				+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		PagingHTML += strtext;
+	}
+
+	if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+		strtext = "<span class='btnimg' onclick='return goToPageByNum("
+				+ totalPage
+				+ ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		PagingHTML += strtext;
+	} else {
+		strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		PagingHTML += strtext;
+	}
+
+	PagingHTML += "</div>";
+	td_Create1(PagingHTML);
+}
+
+function ContMove() {
+ 
+	var selSContName = $("select[name=selSContName]").val();
+	var selTContName = $("select[name=selTContName]").val();
+   
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/admin/ezApprovalG/moveContainer.do",
+		data : {
+			strMoveListIDInfo : strMoveListIDInfo,
+			SourceContID      : selSContName,
+			TargetContID  	  : selTContName,
+			chkAll			  : check
+		},
+		success: function(text){
+			result = text;
+		},
+		error : function() {
+			
+		}
+	});
+
+    Check = false;
+}
+
+function changeCompID() {				
+    if (P_CompanyID != document.getElementById("ListCompany").value) {
+        P_CompanyID = document.getElementById("ListCompany").value;
+
+        lvSDoc.DataSource = FORMLIST;
+        lvTDoc.DataSource = FORMLIST;
+
+		document.getElementsByName('SDeptName')[0].value = "";
+		document.getElementsByName("TDeptName")[0].value = "";
+		
+		document.getElementById('lvSDoc').innerHTML = "";
+        document.getElementById('lvTDoc').innerHTML = "";
+        
+        listview.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));                           
+        listview.DataBind("lvSDoc");
+        listview2.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));
+        listview2.DataBind("lvTDoc");
+        
+        document.getElementsByName("selSContName")[0].innerHTML = "";
+        document.getElementsByName("selTContName")[0].innerHTML = "";
+        
+        document.getElementsByName("MoveALL")[0].checked = false;
+        document.getElementById("PageNum").innerHTML = "";
+    }
 }
 
