@@ -286,8 +286,8 @@
 								<table width="100%">
 									<tr>
 										<td id="tdDisplayFlag">&nbsp;</td>
-										<td width="70" id="btnDisplayInfo">
-											<a class="imgbtn"><span onClick="return btnDisplayInfo_onclick()"><spring:message code='ezApprovalG.t1042'/></span></a>
+										<td width="70" id="btnDisplayInfo" style="vertical-align:middle;">
+											<a class="imgbtn" style="vertical-align:middle; margin:auto;"><span onClick="return btnDisplayInfo_onclick()"><spring:message code='ezApprovalG.t1042'/></span></a>
 										</td>
 									</tr>
 								</table>
