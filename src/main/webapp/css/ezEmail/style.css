@@ -102,6 +102,7 @@ body {
 .lmLetter {
 	height: 60%;
 	border: #b6b6b6 1px solid;
+	overflow: auto;
 }
 
 .lmBtns {
@@ -131,7 +132,7 @@ body {
 }
 
 .lmLetterListWrap li span{
-	width: 70%;
+	width: 69%;
 }
 
 .lmLetterListUl li {
