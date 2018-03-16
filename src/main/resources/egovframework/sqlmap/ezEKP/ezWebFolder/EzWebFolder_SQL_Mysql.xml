@@ -908,12 +908,16 @@
 				adspath,
 				updatedt,
 				'dept' type
-			FROM 
+			FROM
 				TBL_DEPTMASTER
 			WHERE
-				extensionattribute1 = #companyId#
+				extensionattribute2  = #companyId#
 			AND
-				tenant_id           = #tenantId#
+				extensionattribute1 != 'Top'
+			AND
+				useflag              = 'Y'
+			AND
+				tenant_id            = #tenantId#
 		]]>
 	</select>
 	
@@ -930,12 +934,14 @@
 									(SELECT
 										d.* 
 									FROM
-										tbl_addjobmaster a LEFT JOIN tbl_deptmaster d ON d.CN = a.DEPTID AND d.TENANT_ID = a.TENANT_ID
+										tbl_deptmaster d LEFT JOIN tbl_addjobmaster a ON d.CN = a.DEPTID AND d.TENANT_ID = a.TENANT_ID
 									WHERE
 										(a.CN = #userId# OR d.CN = #deptId#)
 									AND
-										a.TENANT_ID = 0) AS s ON f.OWNER_ID = s.CN AND f.TENANT_ID = s.TENANT_ID AND f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'D' AND f.OWNER_ID = s.CN
+										d.TENANT_ID = 0) AS s ON f.OWNER_ID = s.CN AND f.TENANT_ID = s.TENANT_ID AND f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'D' AND f.OWNER_ID = s.CN
 			WHERE
+				f.FOLDER_TYPE  = 'C'
+			AND
 				f.TENANT_ID = #tenantId#
 			AND
 				f.USE_STATUS = 'Y'
@@ -963,11 +969,11 @@
 																		(SELECT
 																			d.* 
 																		FROM
-																			tbl_addjobmaster a LEFT JOIN tbl_deptmaster d ON d.CN = a.DEPTID AND d.TENANT_ID = a.TENANT_ID
+																			tbl_deptmaster d LEFT JOIN tbl_addjobmaster a ON d.CN = a.DEPTID AND d.TENANT_ID = a.TENANT_ID
 																		WHERE
 																			(a.CN = #userId# OR d.CN = #deptId#)
 																		AND
-																			a.TENANT_ID = 0) AS s ON u.USER_ID = s.CN AND u.USER_TYPE = 'dept'  AND u.TENANT_ID = s.TENANT_ID
+																			d.TENANT_ID = 0) AS s ON u.USER_ID = s.CN AND u.USER_TYPE = 'dept'  AND u.TENANT_ID = s.TENANT_ID
 										WHERE
 											u.TENANT_ID = #tenantId#
 										AND

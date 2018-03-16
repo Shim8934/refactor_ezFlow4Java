@@ -54,7 +54,7 @@ public class EzMainAdminController {
 		}
 		
 		//baonk added
-		if (userInfo.getRollInfo().indexOf("wf=1") != -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1 && userInfo.getRollInfo().indexOf("wf=1") != -1) {
 			model.addAttribute("isWFAdmin", "1");
 		}
 		//end
