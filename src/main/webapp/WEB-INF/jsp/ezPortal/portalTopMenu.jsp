@@ -14,26 +14,7 @@
 			<c:otherwise>
 				<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 			</c:otherwise>
-		</c:choose>
-		
-		<c:choose>
-			<c:when test="${lang == '2'}">
-				<style type="text/css">
-					#input_search { background:#f2f2f2 url(/../images/us/cm/input_search_bg.gif) no-repeat 0 0 }
-				</style>
-			</c:when>
-			<c:when test="${lang == '3'}">
-				<style type="text/css">
-					#input_search { background:#f2f2f2 url(/../images/jp/cm/input_search_bg.gif) no-repeat 0 0 }
-				</style>
-			</c:when>
-			<c:when test="${lang == '4'}">
-				<style type="text/css">
-					#input_search { background:#f2f2f2 url(/../images/cn/cm/input_search_bg.gif) no-repeat 0 0 }
-				</style>
-			</c:when>
-		</c:choose>
-	
+		</c:choose>	
         <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>			
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -1141,81 +1122,48 @@
 				location.href = "/ezPortal/topMenu.do?mode=new";
 			}
 	
-			/* 현재 이미지 관리 및 롤오버시 이미지 변환 함수 */
-			var curImg = new Image;
-			var oldPath = "";
+			/* 2018-03-07 장진혁 서브메뉴 수정 현재 이미지 관리 및 롤오버시 이미지 변환 함수 */			
 			var subPath = "";
 			var menuName = "";
-			var tempclickmenuPath = "";
-			var temppNewPath;
-			var tempobj;
+			var tempobj;			
 			
-			function img_onMouseOver(pNewPath, obj) {
-			    temppNewPath = pNewPath;
-			    tempobj = obj;
-
-			    if (curImg == obj) {
-			        return;
-			    } else {
-			        oldPath = obj.src;
-			        obj.src = pNewPath;
-			        if (clickmenusub != "")
-			            document.getElementById(clickmenusub).style.display = "none";
-			        if (clickmenuName != "" && document.getElementsByName(clickmenuName)[0].src.indexOf(pNewPath) == -1) {
-			            tempclickmenuPath = document.getElementsByName(clickmenuName)[0].src;
-			            document.getElementsByName(clickmenuName)[0].src = clickmenuPath;
-			        }
-			    }
-			    
-			    if (document.getElementById("menu_" + obj.name) != null) {
-			        subPath = "menu_" + obj.name;
-			        menuName = obj.name;
-			        document.getElementById("menu_" + obj.name).style.left = 0;			        
-			        document.getElementById("menu_" + obj.name).style.display = "";
-			        var LeftMargin = parseInt(document.getElementsByName(menuName)[0].offsetLeft) - 50;
+			function img_onMouseOver(obj) {			    
+			    if (document.getElementById("menu_" + obj.id) != null) {
+			        subPath = "menu_" + obj.id;
+			        menuName = obj.id;
+			        document.getElementById("menu_" + obj.id).style.left = 0;			        
+			        document.getElementById("menu_" + obj.id).style.display = "";
+			        var LeftMargin = parseInt(document.getElementById(menuName).offsetLeft) - 60;
 			        
-			        /* $("#menu_" + obj.name).css("padding-left", LeftMargin + "px");
-			        $("#menu_" + obj.name).css("width", "100%"); */
-
-			        if (window.document.documentElement.clientWidth < document.getElementsByName(menuName)[0].offsetLeft + document.getElementById("menu_" + obj.name).clientWidth) {
-			            LeftMargin = LeftMargin - (document.getElementsByName(menuName)[0].offsetLeft + document.getElementById("menu_" + obj.name).clientWidth - window.document.documentElement.clientWidth);
-			            LeftMargin = LeftMargin - 30;
-			        }			        
-			        document.getElementById("menu_" + obj.name).style.left = LeftMargin + "px";
+			        if (window.document.documentElement.clientWidth < document.getElementById(menuName).offsetLeft + document.getElementById("menu_" + obj.id).clientWidth) {
+			            LeftMargin = LeftMargin - (document.getElementById(menuName).offsetLeft + document.getElementById("menu_" + obj.id).clientWidth - window.document.documentElement.clientWidth);
+			            LeftMargin = LeftMargin - 20;
+			        }
+					var cw = document.getElementById(obj.id).clientWidth;
+					
+			        document.getElementById("menu_" + obj.id).style.left = LeftMargin + "px";
+			        document.getElementById("menu_" + obj.id).style.width = cw + "px";
 			    } else {
-			        menuName = obj.name;
+			        menuName = obj.id;
 			        subPath = "";
 			    }
 			    
-			    /* parent.document.getElementById("topFrame").style.position = "relative"; */
+			    parent.document.getElementById("topFrame").style.position = "relative";
 			}
 	
 			function img_onMouseOut(obj){
 				tempobj = obj;
 				
-			    if (curImg == obj) {
-			        return;
-			    } else if (clickmenuPath == oldPath) {
-			    	
-			    } else {
-			        obj.src = oldPath;
-			        if (tempclickmenuPath != "" && obj != document.getElementsByName(clickmenuName)[0])
-			            document.getElementsByName(clickmenuName)[0].src = tempclickmenuPath;
-			    }
+				if (document.getElementById("menu_"+obj.id)) {
+					document.getElementById("menu_"+obj.id).style.display = "none";
+				}
 			    
-			    if (subPath != "" && document.getElementById(subPath).style.display == "" && subPath != clickmenusub) {
-			        document.getElementById(subPath).style.display = "none";
-			    }
-			    
-			    if (clickmenusub != "")
-			        document.getElementById(clickmenusub).style.display = "";
-			    
-			    /* parent.document.getElementById("topFrame").style.position = ""; */
+			    parent.document.getElementById("topFrame").style.position = "";
 			}
 	
-			function submenuover(subObj) {
-			    if (tempobj.name == subObj.id.replace("menu_", "")) {
-					img_onMouseOver(temppNewPath, tempobj);
+			function submenuover(subObj) {				
+			    if (tempobj.id == subObj.id.replace("menu_", "")) {
+					img_onMouseOver(tempobj);
 			    }
 			}
 	
@@ -1410,7 +1358,7 @@
 			var clickmenuName = "";
 			
 			function OpenWindow(evt, url, location, option) {
-				if (option != "") {
+				/* if (option != "") {
 	    			var width = 0, height = 0;
 	    			var leftPosition = "", topPosition = "";
 	    			var opt = option.split(',');
@@ -1448,8 +1396,7 @@
 	 		        	clickmenusub = targetName;
 	 		        	var tName = targetName.replace("menu_", "");
 	 		        	
-	 		            if (menuName != clickmenuName) {
-	 		                /* clickmenuPath = oldPath; */
+	 		            if (menuName != clickmenuName) {	 		                
 	 		                if (clickmenuPath != "") {
 	 		                	if (tName == clickmenuName) {
 									clickmenuPath = clickmenuPath;
@@ -1462,12 +1409,12 @@
 	 		                clickmenuName = targetName.split("menu_")[1];
 	 		            }
 	 		        }
-				}
+				} */
 				window.open(url, location, option);
 			}
 			
 			function OpenWindow2(targetid, url, location, option) {
-				if (option != "") {
+				/* if (option != "") {
 	    			var width = 0, height = 0;
 	    			var leftPosition = "", topPosition = "";
 	    			var opt = option.split(',');
@@ -1494,7 +1441,7 @@
             			clickmenuPath = oldPath;
             			clickmenuName = menuName;
         			}
-    			}
+    			} */
 				window.open(url, location, option);
 			}
 		    
@@ -1511,58 +1458,62 @@
 	        function topMenuToggle(menu) {
 	        	switch (menu) {
 		        	case "NewMail" : 
-		        		img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+		        		//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
 						break;						
 					case "ApprG" : 	
 						// 문서Type 선택 1=결재할문서 2=기안할문서  3=결재진행문서  4=수신문서처리(접수기)
 						var listType;
 						listType = 1;
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu04o(1).gif', document.getElementById("top_menu04(1)"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu04o(1).gif', document.getElementById("top_menu04(1)"));
 						OpenWindow2('top_menu04(1)', "/ezApprovalG/apprGMain.do?listType=" + listType, "main", " ");
 						break;
 					case "Appr" : 		
 						var listType;
 						listType = 1;
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu04o(1).gif', document.getElementById("top_menu04(1)"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu04o(1).gif', document.getElementById("top_menu04(1)"));
 		        		OpenWindow2('top_menu04(1)', "/ezApprovalG/apprMain.do?listType=" + listType, "main", " ");	
 						break;
 					// 표준모듈 (2007.03.23) 수정 : 메모보고 
 					case "Memo" : 					
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
 						break;
 						
 					case "Schedule" :
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu03o(8).gif', document.getElementById("top_menu03(4)"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu03o(8).gif', document.getElementById("top_menu03(4)"));
 		        		OpenWindow2('top_menu03(4)', "/ezSchedule/scheduleIndex.do?funCode=2", "main", " ");
 						break;
 						
 					case "Poll" :
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', document.getElementById("top_menu05"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', document.getElementById("top_menu05"));
 		        		OpenWindow2('top_menu05', "/ezBoard/boardMain.do?func=1", "main", " ");
 						break;
 						
 					case "pollnum" : 
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', document.getElementById("top_menu05"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', document.getElementById("top_menu05"));
 						OpenWindow2('top_menu05', "/ezBoard/boardMain.do?func=1", "main", " ");
 						break;
 					
 					case "Env" :
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
 						break;
 					case "My_Board" :
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
 						break;
 					case "Address" : 
-						img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+						//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
 						break;
 				    case "ModInfo":
-				    	img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+				    	//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
 		        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
+				        break; 
+				    case "Circular":
+				    	//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+		        		OpenWindow2('top_menu02', "/ezCircular/circularIndex.do", "main", " ");
 				        break; 
 	        	}
 	        }

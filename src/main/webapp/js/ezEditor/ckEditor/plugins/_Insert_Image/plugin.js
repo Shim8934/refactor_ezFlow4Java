@@ -19,15 +19,8 @@ function Insert_ImageCmd_Complete(rtn) {
 		{
 		    var selection = editor.getSelection();
 		    if (!CrossYN()) {
-		    	var rtn;
-		    	
-		    	if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignature.do") > -1) {
-		    		rtn = showModalDialog("/ezEditor/ckImageUploadMail.do", this, "dialogHeight:400px; dialogWidth:470px; status:no;scroll:no; help:no; edge:sunken");
-		    		parent.document.getElementById("iFramePanel").style.left = "165px";
-		    	} else {
-		    		rtn = showModalDialog("/ezEditor/ckImageUpload.do", this, "dialogHeight:400px; dialogWidth:470px; status:no;scroll:no; help:no; edge:sunken");
-		    		parent.document.getElementById("iFramePanel").style.left = "165px";
-		    	}
+		    	var rtn = showModalDialog("/ezEditor/ckImageUpload.do?type=" + type, this, "dialogHeight:400px; dialogWidth:470px; status:no;scroll:no; help:no; edge:sunken");
+		    	parent.document.getElementById("iFramePanel").style.left = "165px";
 		    	
 		        if (rtn == undefined)
 		            return;
@@ -63,6 +56,7 @@ function Insert_ImageCmd_Complete(rtn) {
 			    		}
 			    	}
 			    }
+		    	}
 		    }
 		}
 	};

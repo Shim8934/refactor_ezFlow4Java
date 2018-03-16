@@ -260,7 +260,7 @@
 		<form name="page">
 			<table class="content">			
 				<tr>
-					<td style="background-color: #f8f8f8;border:1px solid #ddd">
+					<td style="background-color: #f8f8fa;border:1px solid #ddd">
 						<select id="s_radio" name="s_radio" style="font-size: 13px;vertical-align: middle;text-align: center;height: 21px;cursor: pointer;margin-left:2px">
 							<option value="id"><spring:message code = 'ezCommunity.t512' /></option>
 							<option selected value="name"><spring:message code = 'ezCommunity.t10' /></option>

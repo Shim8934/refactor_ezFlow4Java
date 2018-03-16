@@ -338,7 +338,7 @@
 
                     var tr = document.createElement("TR");
                     if (j % 2 == 0) {
-                    	tr.style.backgroundColor = "#f8f8f8"; 
+                    	tr.style.backgroundColor = "rgb(250, 250, 250)"; 
                     }
                     var td = document.createElement("TD");
                     var td2 = document.createElement("TD");
@@ -385,7 +385,7 @@
                 
                 if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
                 	var str = "<spring:message code = 'ezCommunity.t926' />";
-                	document.getElementById("mycommunity").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='border:1px solid #ddd;height:430px;text-align:center;border-radius:3px;background-color:#fafafa'><img style='margin-top:160px' src='/images/nocomunitydata.png' /><div style='margin-top:10px;color:rgb(55, 54, 130)'>" + str + "</div></div>";
+                	document.getElementById("mycommunity").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='height:430px;text-align:center;'><img style='margin-top:160px' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>" + str + "</div></div>";
                 }
                 //document.getElementById("tblPageRayer").style.display = "none";
 	        }
@@ -863,7 +863,7 @@
 						if (result["clubVO"] != null) {
 							event_get_todaycop(result);
 						} else {
-							var h1 = document.createElement("H1");
+							/* var h1 = document.createElement("H1");
 			                var img = document.createElement("IMG");
 			                img.style.width = "156px";
 			                img.style.height = "28px";
@@ -875,26 +875,24 @@
 			                }
 			                img.alt = "today Community";
 
-			                h1.appendChild(img);
+			                h1.appendChild(img); */
 
 			                var div = document.createElement("DIV");
 			                div.className = "todayCommunity";			                
 
 			                var div2 = document.createElement("DIV");
-			                div2.className = "todayCommunityLayout";			                
-			                div2.innerHTML = "<div><img style='margin-top:20px;' src='/images/nocomunity.png' />&nbsp;<div style='margin-top:10px;color:rgb(55, 54, 130)'>"+strLang88+"</div></div>";
-			                div2.style.backgroundColor = "#fafafa";
-			                div2.style.borderColor = "#ccc";
-			                div2.style.borderRadius = "5px";
-			                div2.style.textAlign = "center";
-			                div2.style.height = "142px";
+			                div2.className = "todayCommunityLayout";
 			                
+			                var strHtml = "<p class='btn_CommunityMore' type='2' code='C_48'><img src='/images/kr/community/btn_todayCommunity.png' /></p>";
+			                strHtml += "<p class='todayCommunity_img'><img src='/images/ezCommunity/logo/default_logo_empty.png' /></p>";
+			                strHtml += "<dl class='todayCommunity_list'><div style='text-align:center'><img style='margin-top:13px;' src='/images/kr/main/nodata_plan.png' />&nbsp;<div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></dl>";
+			                
+			                div2.innerHTML = strHtml;
 			                div.appendChild(div2);
-
-			                document.getElementById("todaycop").appendChild(h1);
+			                
 			                document.getElementById("todaycop").appendChild(div);
 							
-							conts = "<div style='border:1px solid #ccc; background-color:#fafafa; height:172px; text-align:center;'><div><img style='margin-top:35px;' src='/images/nocomunity.png' /><div style='margin-top:10px;color:rgb(55, 54, 130)'>"+strLang88+"</div></div></div>";							
+							conts = "<div style='height:170px; text-align:center;margin-top:5px;'><div><img style='margin-top:28px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
 							$(".newCommunity_listLayout").html(conts);
 						}
 					}
@@ -902,7 +900,7 @@
 	        }
 	        
 	        function event_get_todaycop(result) {
-                var h1 = document.createElement("H1");
+                /* var h1 = document.createElement("H1");
                 var img = document.createElement("IMG");
                 img.style.width = "156px";
                 img.style.height = "28px";
@@ -914,7 +912,7 @@
                 }
                 img.alt = "today Community";
 
-                h1.appendChild(img);
+                h1.appendChild(img); */
 
                 var div = document.createElement("DIV");
                 div.className = "todayCommunity";
@@ -1039,7 +1037,7 @@
                 div2.appendChild(p3);
                 div.appendChild(div2);
 
-                document.getElementById("todaycop").appendChild(h1);
+                /* document.getElementById("todaycop").appendChild(h1); */
                 document.getElementById("todaycop").appendChild(div);
 	        }
 
@@ -1295,7 +1293,7 @@
 			<table style="width:100%" border="0" class="main_communityTop">
 				<tr>
 		    		<td>
-			            <div class="contents_todayCommunity" id="todaycop"></div>
+			            <div class="contents_todayCommunity" id="todaycop"><span class="todayComm"><spring:message code = "ezCommunity.jjh01" /></span></div>
 			        </td>
 			        <td style="width:30px"><p style="width:30px;"></p></td>
 			        <td style="width:331px">
@@ -1330,7 +1328,7 @@
 				   		<script type="text/javascript">
 				   			Tab1_NewTabIni("tab1");
 						</script>
-			            <div id ="mycommunity" style="height:497px"></div>
+			            <div id ="mycommunity" style="height:477px"></div>
 			            <div id ="categorycommunity" style="display:none;">
 			                <div class="tabpartMycommunity02" style="margin-top:18px">
 			                    <div class="left_tabpart">

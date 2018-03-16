@@ -838,7 +838,7 @@
     			</li>
   			</ul>
 		</div>
-		<div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;border:1px solid #d3d2d2">
+		<div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;border:1px solid #d3d2d2">
     		<a class="imgbtn" style="vertical-align:middle"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
     		<input id="writername" type="text" style="width: 80px" />
     		<a class="imgbtn" style="vertical-align:middle"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>

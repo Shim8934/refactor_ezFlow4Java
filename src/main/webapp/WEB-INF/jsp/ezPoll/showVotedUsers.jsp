@@ -70,7 +70,7 @@
 			<div style="height:313px; overflow-y: auto; overflow-x: hidden;" id="divTbl">
 				<table border=1 style="width:100%; border-color:grey;">
 					<c:forEach var="list" items="${listOfVotedUsers}"> 
-						<tr id="${list.userId}" class="white" style="border: 1px solid #b6b6b6;">
+						<tr id="${list.userId}" class="white" style="border: 1px solid #ddd;">
 							<td style="border-right:none; min-width: 200px; width: 200px;">
 								<img src="${list.userImage}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.userId}')">								
 								<a style="cursor:pointer; display:inline-block; padding: 0px 10px 0px 10px; float: left; line-height: 51px; overflow: hidden; text-overflow: ellipsis; max-width:120px; white-space: nowrap;" onClick="menuQst_DetailUserInfo('${list.userId}')">			

@@ -272,7 +272,7 @@
 	        </tr>
 	        <tr>
 	            <th><spring:message code = 'ezCommunity.t361' /></th>
-	            <td style="border-bottom:1px solid #b6b6b6">
+	            <td style="border-bottom:1px solid #ddd">
 	                <div class="listview" style="border:0px">
 	                    <div id="BoardList" style="BORDER: 0; HEIGHT: 250px; WIDTH: 440px; overflow: auto"></div>
 	                </div>

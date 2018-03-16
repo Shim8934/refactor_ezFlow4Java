@@ -875,6 +875,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 					return egovMessageSource.getMessage("main.t0601", locale);
 				}
 				
+//				배경이미지 url의 표현방법 수정//태그프리,CK는 정상으로 들어옴
+				if(m_strHTML.contains("url(//")){//NAMO
+					m_strHTML = m_strHTML.replace("url(//", "url(/");
+				}else if(m_strHTML.contains("url('fileroot")){//KUKUDOCS
+					m_strHTML = m_strHTML.replace("url('fileroot", "url(/fileroot");
+					m_strHTML = m_strHTML.replace("')", ")");
+				}
+
 				return m_strHTML;
 			}
 		} else {

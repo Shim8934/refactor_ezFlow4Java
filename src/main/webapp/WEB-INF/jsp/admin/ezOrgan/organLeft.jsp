@@ -116,23 +116,14 @@
 	</head>
 	<body class="leftbody" style="margin:0px 0px 0px 0px">
 		<div id="left">
-  			<div class="left_admin" title="<spring:message code='main.t23' />"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;
-  			<c:if test="${dotNetIntegration != 'YES'}">
-  			<spring:message code='main.t23' />
-  			</c:if>
-  			<c:if test="${dotNetIntegration == 'YES'}">
-  			<spring:message code='main.t24' />
-  			</c:if>
+  			<div class="left_admin" title="<spring:message code='main.t23' />"><img src="/images/admin/first.png" width="13px" height="13px"/>
+	  			<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t23' /></c:if>
+	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
   			</div>   
   			<h2>
   				<span onClick="goPage(1)" style="display:inline-block;width:100%;">
-  				<c:if test="${dotNetIntegration != 'YES'}">
-  				<spring:message code='main.t56' />
-  				</c:if>
-  				<c:if test="${dotNetIntegration == 'YES'}">
-  				<spring:message code='main.t24' />
-  				<ul></ul>
-  				</c:if>
+	  				<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t56' /></c:if>
+	  				<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
   				</span>
   			</h2>  
   			<c:if test="${dotNetIntegration != 'YES'}">

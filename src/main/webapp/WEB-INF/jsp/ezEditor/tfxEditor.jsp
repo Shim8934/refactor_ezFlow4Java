@@ -165,24 +165,11 @@
 	    	
 	    	
 	    	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
-	    	var uploadFilePath = "/ezEditor/tfxUpload.do";
-	    	var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do";
 
-	    	// 편지지
-	    	function mailLetterFun() {
-	    		var letterPopUp = parent.popLetterPopUp;
-	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
-	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
-	        	uploadFilePath = "/ezEditor/tfxUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" + letterBoxNo 
-	        			+ "&letterId=" + letterId;
-	        	uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" 
-	        			+ letterBoxNo + "&letterId=" + letterId;
-	    	}
+	    	var uploadFilePath = "/ezEditor/tfxUpload.do?type=" + type;
+	    	var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=" + type;
 	    	
-	    	if (type == "MAILSIGNATURE") {
-	   			uploadFilePath = "/ezEditor/tfxUploadMail.do";
-	   			uploadPasteContentsPath = "/ezEditor/tfxSimpleUploadMail.do";
-	   		} else if (type == "MAILOUTOFOFFICE") {
+	    	if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
 	   			uploadPasteContentsPath = "/ezEditor/tfxNoop.do";
 	   		} else if (type == "MAILLETTER") {
 	   			var letterPopUp = parent.popLetterPopUp;
@@ -209,12 +196,10 @@
 	        
 	        xfe.render('xfe');
 	        
-	        if (type == "MAILOUTOFOFFICE") {
-	        	xfe.showToolbarItem(0, 10, false);
-	        }
-	        
-	        if (type == "COMMUNITYPHOTO") {
-	        	xfe.showToolbarItem(0, 10, false);
+	        if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
+	        	xfe.showToolbarItem(0, 11, false);
+	        	xfe.showToolbarItem(0, 12, false);
+	        	xfe.showToolbarItem(0, 13, false);
 	        }
 	        
 	        if (useHTMLMode == "NO") {

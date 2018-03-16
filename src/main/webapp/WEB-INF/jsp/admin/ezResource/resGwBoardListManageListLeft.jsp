@@ -156,7 +156,7 @@
 	</head>
 	<body class="leftbody" style="overflow-y: auto;overflow-x: hidden">	
 		<div id="left">
-  			<div class="left_admin"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code="ezResource.t17" /></div>
+  			<div class="left_admin"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code="ezResource.t17" /></div>
 			<h2><span onClick="NavigateBrdAdmin_Res('MOD')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t22" /></span><ul></ul></h2>
 			<h2><span onClick="NavigateBrdAdmin_Res('NEW')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t23" /></span><ul></ul></h2>
 			<h2><span onClick="NavigateBrdAdmin_Res('ACL')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t24" /></span><ul></ul></h2>
@@ -172,7 +172,7 @@
 			</div>
     		<br />
     		<div id="TreeView" valign="top" style="behavior:url(/js/ezResource/organtreeview.htc);height:380px;width:174px;overflow-x:auto;overflow-y:auto;
-    			BORDER:#b6b6b6 0px solid; BACKGROUND-COLOR:#F8F8F8;margin-top:5px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
+    			BORDER:#ddd 0px solid; BACKGROUND-COLOR:#f8f8fa;margin-top:5px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
 				onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" onclick="brdlistsInit()">
 			</div>
     		
