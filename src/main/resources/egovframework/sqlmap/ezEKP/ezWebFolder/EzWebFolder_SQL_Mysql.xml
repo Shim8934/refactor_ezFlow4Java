@@ -908,12 +908,16 @@
 				adspath,
 				updatedt,
 				'dept' type
-			FROM 
+			FROM
 				TBL_DEPTMASTER
 			WHERE
-				extensionattribute1 = #companyId#
+				extensionattribute2  = #companyId#
 			AND
-				tenant_id           = #tenantId#
+				extensionattribute1 != 'Top'
+			AND
+				useflag              = 'Y'
+			AND
+				tenant_id            = #tenantId#
 		]]>
 	</select>
 	
@@ -936,6 +940,8 @@
 									AND
 										a.TENANT_ID = 0) AS s ON f.OWNER_ID = s.CN AND f.TENANT_ID = s.TENANT_ID AND f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'D' AND f.OWNER_ID = s.CN
 			WHERE
+				f.FOLDER_TYPE  = 'C'
+			AND
 				f.TENANT_ID = #tenantId#
 			AND
 				f.USE_STATUS = 'Y'
