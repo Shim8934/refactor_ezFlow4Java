@@ -932,15 +932,5 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		
-	<script>
-	   //ie에서만 imgbtn의 span 버튼 스타일 수정, default_kr.css 참고
-    var imgbtnSpans = document.getElementsByClassName(" imgbtn");
-    if(!CrossYN() ||  navigator.userAgent.search( "Trident" ) > -1 ){
-    	for(var i = 0; i<imgbtnSpans.length; i++){
-    		imgbtnSpans[i].firstChild.style.padding = "1.49px 12px 0px 0px";
-    	}  
-    }
-	</script>
 	</body>
 </html>
