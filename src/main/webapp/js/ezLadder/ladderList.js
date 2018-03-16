@@ -10,20 +10,18 @@ function getLadderGame(ladderId) {
 }
 
 // 참여자 버튼
-function participant() {
-	if (modeCheck !== 'part') {
+function participant(val) {
+	
+	if (modeCheck !== val) {
 		currPage = 1;
 	}
-	modeCheck = "part";
+	modeCheck = val;
 	searchSelect = "none";
 	if (searchSelect !== 'none') {
 		currPage = 1;
 	}
 
-	if (mode !== "part") {
-		currPage = 1;
-	}
-	mode = $('#part').val();
+	mode = val;
 
 	if (pageChange === parseInt(currPage)) {
 		currPage = 1;
@@ -34,32 +32,7 @@ function participant() {
 	view();
 }
 
-//전체 버튼
-function allPart() {
-	if (modeCheck !== 'all') {
-		currPage = 1;
-	}
-	modeCheck = "all";
-	searchSelect = "none";
-	if (searchSelect !== 'none') {
-		currPage = 1;
-	}
-	if (mode !== "all") {
-		currPage = 1;
-	}
-	mode = $('#all').val();
-
-	if (pageChange === parseInt(currPage)) {
-		currPage = 1;
-	} else {
-		currPage = pageChange;
-		pageChange = 1;
-	}
-
-	view();
-}
-
-//검색 ajax
+//검색 
 function searchLadder() {
 	modeCheck = "search";
 	if (searchSelect === 'none') {
@@ -104,7 +77,6 @@ function deleteLadder(ladderId) {
 		});
 	}
 }
-
 
 
 function view() {
@@ -295,7 +267,10 @@ function td_Create1(strtext) {
 
 function selbeforeBlock() {
 	var pageNum = parseInt(currPage);
-	pageNum = ((parseInt(pageNum / blockSize) - 1) * blockSize) + 1;
+	if(pageNum%blockSize == 0) {
+		pageNum = pageNum - blockSize;
+	}
+	pageNum = ((parseInt(pageNum / blockSize)) * blockSize);
 	goToPageByNum(pageNum);
 }
 
@@ -326,11 +301,11 @@ function goToPageByNum(page) {
 	if (searchSelect !== 'none') {
 		searchLadder();
 	} else if (mode === 'all') {
-		allPart();
+		var temp = 'all';
+		participant(temp);
 	} else {
-		participant();
+		var temp = 'part'
+		participant(temp);
 	}
 	makePageSelPage();
 }
-
-/** boh - 이전사다리목록관련 */

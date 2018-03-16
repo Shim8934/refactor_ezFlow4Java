@@ -20,11 +20,11 @@
 	
 	function deleteLadder(idx) {
 	
-		/* allData = [idx, searchSelect, searchInput, mode, currPage, back ];	
+		allData = [idx, searchSelect, searchInput, mode, currPage, back ];	
 	
 		if (confirm('삭제 하시겠습니까?')) {
 			window.location.href= '/ezLadder/deleteLadder.do?allData=' + allData;
-		} */
+		} 
 	}
 	
 	function reuse(idx) {

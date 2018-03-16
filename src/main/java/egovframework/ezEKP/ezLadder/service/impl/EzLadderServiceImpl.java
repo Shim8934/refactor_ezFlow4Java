@@ -30,7 +30,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 	@Override
 	public int ladderCount(String userId, String tenantId) throws Exception {
-		logger.debug("ladderCount started.");
+		logger.debug("ladderCount started.");		// 비검색 전체
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
@@ -42,7 +42,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 	@Override
 	public int partLadderCount(String userId, String tenantId) throws Exception {
-		logger.debug("partLadderCount started.");
+		logger.debug("partLadderCount started.");	// 비검색 참여자
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
@@ -54,7 +54,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 	@Override
 	public int searchLadderCount(String userId, String tenantId, List<String> allData) throws Exception {
-		logger.debug("searchLadderCount started.");
+		logger.debug("searchLadderCount started.");	// 검색
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
 		String searchSelect = allData.get(0);
@@ -83,7 +83,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 	@Override
 	public List<LadderVO> getLadderList(String userId, String tenantId, int startPoint, int endPoint) throws Exception {
-		logger.debug("getLadderList started.");
+		logger.debug("getLadderList started.");		// 비검색 전체
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
@@ -97,7 +97,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 	@Override
 	public List<LadderVO> getPartLadderList(String userId, String tenantId, int startPoint, int endPoint) throws Exception {
-		logger.debug("getPartLadderList started.");
+		logger.debug("getPartLadderList started.");		// 비검색 참여자
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
@@ -111,7 +111,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 	@Override
 	public List<LadderVO> searchLadderList(String userId, String tenantId, List<String> allData, int startPoint, int endPoint) throws Exception {
-		logger.debug("searchLadderList started.");
+		logger.debug("searchLadderList started.");		// 검색
 	
 		Map<String,Object> map = new HashMap<String, Object>();	
 		String searchSelect = allData.get(0);
@@ -256,7 +256,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	/** hyh */
 	
 	@Override
-	public LadderVO getLadderGame(String tenantId, int ladderId) throws Exception {
+	public LadderVO getLadderGame(String tenantId, int ladderId) throws Exception {	// 사다리 한개의 정보
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("ladderId", ladderId);
 		map.put("tenantId", tenantId);
@@ -276,8 +276,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public List<LadderVO> deleteLadderList(String userId, String tenantId, List<String> allData) throws Exception {
-		logger.debug("deleteLadder started.");
+	public void deleteLadderList(String userId, String tenantId, List<String> allData) throws Exception {
+		logger.debug("deleteLadder started.");			// 사다리 1개 삭제
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
 		String ladderId = allData.get(0);
@@ -294,25 +294,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("ladderId", ladderId);
 		map.put("tenantId", tenantId);
 		
-		// mode가 참여인지, 일부인지에 따라
 		ezLadderDAO.deleteLadderList(map);
 		
-		List<LadderVO> list = null;
-//		if(mode.equals("part")) {		// 참여버튼 검색
-//			if(searchSelect.equals("none")) {
-//				list = ezLadderDAO.getPartLadderList(map);		// 검색이 아닐 때
-//			} else {
-//				list = ezLadderDAO.searchPartLadderList(map);	// 검색시
-//			}
-//		} else {						// 전체버튼 검색
-//			if(searchSelect.equals("none")) {
-//				list = ezLadderDAO.getLadderList(map);			// 검색이 아닐 때
-//			} else {
-//				list = ezLadderDAO.searchAllLadderList(map);	// 검색시
-//			}
-//		}
 		logger.debug("deleteLadder ended.");
-		return list;
 	}
 
 	@Override
