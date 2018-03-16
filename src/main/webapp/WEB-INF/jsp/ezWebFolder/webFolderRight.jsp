@@ -21,10 +21,12 @@
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 	<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+	<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"                   ></script>
 	
 	<!-- time picker-->
 	<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<style type="text/css">
 		#layer_Viewpopup { 
 			z-index:1000; 
@@ -108,10 +110,10 @@
 		var checkedArr	= [];
 		var userId = "${userInfo.userId}";
 		var userName = "${userInfo.userName}";
-		var currPage = 1;
+		var currentPage = 1;
 		var totalPages = 0 ;
-		var totalCount = 0 ;
-		var listCount = 10;
+		var totalRows = 0 ;
+		var blockSize = 10;
 		var filelist = [];
 		var strLang39	= "<spring:message code = 'ezWebFolder.t135'/>";
 		var strLang40 	= "<spring:message code = 'ezWebFolder.t136'/>";
@@ -122,10 +124,18 @@
 		var folderId = "${folderId}";
 		var folderType = "${folderType}";
 		
+		window.onresize = function () {
+			var divList          = document.getElementById("dragDropArea");
+			var reheight         = document.documentElement.clientHeight - 220;
+			divList.style.height = reheight + "px";
+		};
 		window.onload = function () {
-			pEnd= pStart + listCount;
+			pEnd= pStart + blockSize;
 			getfileList();
 // 			insertTest();
+			var divList          = document.getElementById("dragDropArea");
+			var reheight         = document.documentElement.clientHeight - 220;
+			divList.style.height = reheight + "px";
 	    };
 	    function folder_Manage() {
         	var OpenWin = window.open("/ezWebFolder/folderManage.do", "", GetOpenWindowfeature(500, 500));
@@ -190,10 +200,10 @@
 				data : { 
 					 "folderId"   : folderId,
 					 "folderType" : folderType,
-					 "currPage"   : currPage,
+					 "currPage"   : currentPage,
 					 "totalPages" : totalPages,
-					 "listCount"  : listCount,
-					 "totalCount" : totalCount,
+					 "listCount"  : blockSize,
+					 "totalCount" : totalRows,
 					 "pStart" : pStart,
 					 "pEnd" : pEnd,
 					 "searchExt" : $('#searchExt').val(),
@@ -204,9 +214,17 @@
 				success : function (data) {
 					result = data.data;
 					
-					currPage = result.currPage;
-					totalCount = result.totalCount;
-					listCount = result.listCount;
+// 					var result  = data.fileList;
+// 					totalRows   = data.totalRows;
+// 					totalPages  = data.totalPages;
+// 					currentPage = pPage;
+					
+					
+					
+					
+					currentPage = result.currPage;
+					totalRows = result.totalCount;
+					blockSize = result.listCount;
 					totalPages = result.totalPages;
 					filelist = result.fileList;
 					$('#tblFileList tr td').parent().remove();
@@ -340,134 +358,15 @@
 	
 	    }
 
-	   	// 페이지 만드는 js
-	    function makePageSelPage(){
-	        var strtext="";
-	        var PagingHTML = "";
-	        document.getElementById("tblPageRayer").innerHTML = "";
-	        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
-	        strtext += "<div class='pagenavi'>";
-	        PagingHTML = strtext;
-	        var pageNum = currPage;
-	        
-	        if (totalPages > 1 && pageNum != 1) {
-	            strtext += "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
-	            PagingHTML += strtext;
-	        }
-	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
-	            PagingHTML += strtext;
-	        }
-	        
-	        if (totalPages > listCount) {
-	            if (pageNum > listCount) {
-	                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
-	                PagingHTML += strtext;
-	            }
-	            else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
-	                PagingHTML += strtext;
-	            }
-	        }
-	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
-	            PagingHTML += strtext;
-	        }
-	        
-	        var MaxNum;
-	        var i;
-	        var startNum = (parseInt((pageNum - 1) / listCount) * listCount) + 1;
-	        
-	        if (totalPages >= (startNum + parseInt(listCount))) {
-	            MaxNum = (startNum + parseInt(listCount)) - 1;
-	        }
-	        else {
-	            MaxNum = totalPages;
-	        }
-	        
-	        for (i = startNum; i <= MaxNum; i++) {
-	            if (i == pageNum) {
-	                strtext = "<span class='on'>" + i + "</span>";
-	                PagingHTML += strtext;
-	            }
-	            else {
-					strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i + "</span>";
-	                PagingHTML += strtext;
-	            }
-	        }
-	        
-	        if (totalPages > listCount) {
-	        	if (totalPages >= parseInt(((parseInt((pageNum - 1) / listCount) + 1) * listCount) + 1)) {
-	        	    strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
-	                PagingHTML += strtext;
-	        	}
-	        	else {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
-	                PagingHTML += strtext;
-	        	}
-	        }
-	        else {
-	            strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
-	            PagingHTML += strtext;
-	        }
-	        
-	        if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
-	            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
-	            PagingHTML += strtext;
-	        }
-	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
-	            PagingHTML += strtext;
-	        }
-	        
-	        PagingHTML += "</div>";
-	        td_Create1(PagingHTML);
-	    }
-	    
-	    function td_Create1(strtext) {
-	        document.getElementById("tblPageRayer").innerHTML = strtext;
-	    }
 	    
 	    function goToPageByNum(Value){
-	    	currPage = Value;
-	        pStart = (listCount * (currPage))- listCount;
-	        pEnd = listCount;
+	    	currentPage = Value;
+	        pStart = (blockSize * (currentPage))- blockSize;
+	        pEnd = blockSize;
 	        getfileList();
 	        makePageSelPage();
 	    }
 	    
-	    function selbeforeBlock(){
-	        var pageNum = parseInt(currPage);
-	        pageNum = ((parseInt(pageNum / listCount) - 1) * listCount) + 1;
-	        goToPageByNum(pageNum);
-	    }
-	    
-	    function selbeforeBlock_one(){
-	        var pageNum = parseInt(currPage);
-	        if(parseInt(pageNum - 1) > 0)
-	            goToPageByNum(parseInt(pageNum - 1));
-	        else
-	            return;
-	    }
-	    
-	    function selafterBlock(){
-	        var pageNum = parseInt(currPage);
-	        pageNum = ((parseInt((pageNum - 1) / listCount) + 1) * listCount) + 1;
-	        goToPageByNum(pageNum);
-	    }
-	    
-	    function selafterBlock_one(){
-	        var pageNum = parseInt(currPage);
-	        if(parseInt(pageNum + 1) <= totalPages)
-	            goToPageByNum(parseInt(pageNum + 1));
-	        else
-	            return;
-	    }
-	   	
-	   	
 	   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
    		function search(type) {
 	        if (type == "basic") {
