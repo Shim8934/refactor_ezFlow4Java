@@ -544,7 +544,9 @@
 		  ifnull((select recieve_date as is_view  
 		  from jmocha.tbl_journal_recv where user_id=#userId# and tenant_id=j.tenant_id and journal_id=j.journal_id   
 		  union    select view_date as is_view    
-		  from jmocha.tbl_journal_view where user_id=#userId# and tenant_id=j.tenant_id and journal_id=j.journal_id),'noView') as is_view   ,
+		  from jmocha.tbl_journal_view where user_id=#userId# and tenant_id=j.tenant_id and journal_id=j.journal_id
+		  union select journal_date from jmocha.tbl_journal where journal_writer=#userId# and journal_id=j.journal_id and tenant_id = j.tenant_id
+		  ),'noView') as is_view   ,
 		  f.form_status as form_status
 		  from jmocha.tbl_journal j   
 		  inner join jmocha.tbl_journal_form f on (j.form_id=f.form_id and j.tenant_id = f.tenant_id)   
@@ -786,8 +788,14 @@
 		</selectKey>
 		<isEmpty property="isUser">
 			insert into jmocha.tbl_journal_view (user_id,tenant_id,journal_id, view_date)
-			values (#userId#,#tenantId#,#journalId#,#viewDate#)
-	        on duplicate key update view_date=#viewDate#
+			select #userId#,#tenantId#,#journalId#,#viewDate#  
+			from dual
+			where not exists(
+	         select 
+	        journal_id
+	        from jmocha.tbl_journal where journal_id = #journalId# and journal_writer = #userId# and tenant_id = #tenantId#)
+<!-- 			values (#userId#,#tenantId#,#journalId#,#viewDate#) -->
+	        on duplicate key update tenant_id = #tenantId#
 		</isEmpty>
 		<isNotEmpty property="isUser">
 			update jmocha.tbl_journal_recv
