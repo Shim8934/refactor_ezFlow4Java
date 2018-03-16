@@ -159,12 +159,13 @@
 	                var pparsingXML2 = "";
 	
 	                pparsingXML2 = "<LISTVIEWDATA2><ROWS>"
-	                	var strName;
+	                var strName;
 	                var strId;
 	                var strName1;
 	                var strName2;
 	                var strDeptName1;
 	                var strDeptName2;
+	                var strPic;
 	
 	                strName = RetValue["name"][i];
 	                strId = RetValue["id"][i];
@@ -172,6 +173,7 @@
 	                strName2 = RetValue["name2"][i];
 	                strDeptName1 = RetValue["deptname"][i];
 	                strDeptName2 = RetValue["deptname2"][i];
+	                strPic = RetValue["pic"][i];
 	
 	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName1 + "]]></DATA2>";
@@ -179,6 +181,7 @@
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>";
 	                pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
+	                pparsingXML = pparsingXML + "<DATA9><![CDATA[" + strPic + "]]></DATA9>";
 	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName1 + "]]></VALUE></CELL></ROW>";
 	                
 	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -694,6 +697,7 @@
 	            	/** parsing 부분 따로 뺌 - parsingXMLUserList() */
 		            if (listContentArry != "") {
 		                for (var i = 0; i < listContentArry.length; i++) {
+		                	console.log(document.getElementById(listContentArry[i]));
 		                	strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
 		                    strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
 		                    strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
@@ -702,13 +706,14 @@
 		                    strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 		                    jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 		                    phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+		                    pic = document.getElementById(listContentArry[i]).getAttribute("_data9");
 		
 		                    var IsInsert = CheckMailReceiver(strId, "3"); //row, option (MsgToList로 넣어주고 유저가 그자리에 들어가면 IsInsert true(retvalue) 반환)
 		                    
 							if(!IsInsert){
-		                    	AttendantXML.push({ "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone });
+		                    	AttendantXML.push({ "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone, "pic": pic });
 		                    } else {
-		                    	overlapAttendantXML.push({ "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone });
+		                    	overlapAttendantXML.push({ "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone, "pic": pic });
 		                    }
 		                }
 		                if(AttendantXML.length !== 0) {
@@ -809,6 +814,7 @@
 				var strDeptNM2 = "";
 				var jickwe = "";
 				var phone = "";
+				var pic = "";
 				
 				for(; i < len; i++) {
 					strName = userlist[i]["name1"];
@@ -816,16 +822,13 @@
 					strEmail = userlist[i]["name1"];
 					if(attendtype === "anonyuser") {
 						strId = "anonyAttendant";
-						strDeptNM = "";
-						strDeptNM2 = "";
-						jickwe = "";
-						phone = "";
 					} else {
 						strId = userlist[i]["id"];
 						strDeptNM = userlist[i]["deptname1"];
 						strDeptNM2 = userlist[i]["deptname2"];
 						jickwe = userlist[i]["jickwe"];
 						phone = userlist[i]["phone"]; 
+						pic = userlist[i]["pic"];
 					}
 					
 					pparsingXML = "<LISTVIEWDATA2><ROWS>";
@@ -837,6 +840,7 @@
 					pparsingXML += "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 					pparsingXML += "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 					pparsingXML += "<DATA8>" + phone + "</DATA8>";
+					pparsingXML += "<DATA9>" + pic + "</DATA9>";
 					pparsingXML += "<VALUE>"  + strName + "</VALUE></CELL></ROW>";
 					pparsingXML += "</ROWS></LISTVIEWDATA2>";
 				
@@ -1233,7 +1237,7 @@
 		    
 		    var rtn;
 		    function btnok_onclick() {
-		    	rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
+		    	rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname1": new Array(), "deptname2": new Array(), "pic": new Array() };
 		    	
 		    	var listid = "MsgToList"; // ???
 		    	var selList = new ListView();
@@ -1254,7 +1258,9 @@
 			            rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3");
 		        	}
 		            rtn["deptname"][i] = GetAttribute(totalRows[i], "DATA4");
+		            rtn["deptname1"][i] = GetAttribute(totalRows[i], "DATA4");
 		            rtn["deptname2"][i] = GetAttribute(totalRows[i], "DATA5");
+		            rtn["pic"][i] = GetAttribute(totalRows[i], "DATA9");
 		        }
 		        
 		        if (!CrossYN()) {

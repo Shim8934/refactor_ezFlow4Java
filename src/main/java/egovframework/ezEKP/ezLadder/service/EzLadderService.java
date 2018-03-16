@@ -19,14 +19,14 @@ public interface EzLadderService {
 	public List<LadderVO> searchLadderList(String userId, String tenantId, List<String> allData, int startPoint, int endPoint) throws Exception;
 	
 	/** boh */
-	public void insertLadder(LadderVO lad, List<LadderLineVO> ladLineList) throws Exception; // 사다리 게임 만들기
-	public int selectRecentLadderId(String writerId) throws Exception; // 최근 등록한 사다리게임 아이디 조회
+	public void insertLadder(LadderVO lad, LadderLineVO ladLines) throws Exception; // 사다리 게임 만들기
+	public int selectRecentLadderId(LadderVO lad) throws Exception; // 최근 등록한 사다리게임 아이디 조회
 	
-	public List<LadderBmVO> selectBMGroup(String userId, int tenant_id) throws Exception; // 즐겨찾기 그룹 조회
-	public List<LadderBmUserVO> selectBMUser(int tenant_id, int ladderBMId) throws Exception; // 즐겨찾기 그룹 유저 조회
-	public void insertBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUser) throws Exception; // 즐겨찾기 그룹 추가
-	public void updateBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUser) throws Exception; // 즐겨찾기 그룹 수정
-	public void deleteBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUser) throws Exception; // 즐겨찾기 그룹 삭제
+	public List<LadderBmVO> selectBMGroup(LadderBmVO bmGroup) throws Exception; // 즐겨찾기 그룹 조회
+	public List<LadderBmUserVO> selectBMUser(LadderBmUserVO bmUser) throws Exception; // 즐겨찾기 그룹 유저 조회
+	public void insertBM(LadderBmVO bmGroup, LadderBmUserVO bmUsers) throws Exception; // 즐겨찾기 그룹 추가
+	public void updateBM(LadderBmVO bmGroup, LadderBmUserVO bmUsers) throws Exception; // 즐겨찾기 그룹 수정
+	public void deleteBM(LadderBmVO bmGroup, LadderBmUserVO bmUsers) throws Exception; // 즐겨찾기 그룹 삭제
 	
 	public List<LadderCommentVO> selectComment(int ladderId) throws Exception; // 댓글 조회
 	public void insertComment(LadderCommentVO ladCmt) throws Exception; // 댓글 추가

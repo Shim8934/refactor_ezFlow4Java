@@ -228,17 +228,18 @@ public class EzLadderController {
 	}
 	
 	/**
-	 * 사다리 게임 추가
+	 * 사다리 게임 추가 
 	 * @throws Exception 
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.POST)
-	public String setLadder(@CookieValue("loginCookie") String loginCookie, String ladder, String ladderLine, HttpServletRequest request, Model model) throws Exception {
+	public String setLadder(@CookieValue("loginCookie") String loginCookie, 
+			String title, String type, String secretFlag, String lineCnt,
+			String [] userId, String [] userName, String [] userName2, 
+			String [] item, String [] ladderOrder,
+			HttpServletRequest request, Model model) throws Exception {
 		logger.debug("POST setLadder.do started.");
 		
-		logger.debug("#### "+ladder);
-		logger.debug("#### "+ladderLine);
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		logger.debug("#### "+userInfo.getTenantId());
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/ladder/ladders/writers/" + userInfo.getId();
@@ -252,13 +253,20 @@ public class EzLadderController {
 		RestTemplate rest = new RestTemplate();
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("ladder", ladder)
-				.queryParam("ladderLine", ladderLine)
+				.queryParam("title", title)
+				.queryParam("type", type)
+				.queryParam("secretFlag", secretFlag)
+				.queryParam("lineCnt", lineCnt)
 				.queryParam("writerName", userInfo.getDisplayName())
 				.queryParam("writerName2", userInfo.getDisplayName2())
 				.queryParam("deptName", userInfo.getDeptName())
 				.queryParam("deptName2", userInfo.getDeptName2())
-				.queryParam("tenant_id", userInfo.getTenantId());
+				.queryParam("tenant_id", userInfo.getTenantId())
+				.queryParam("userIds", userId)
+				.queryParam("userNames", userName)
+				.queryParam("userName2s", userName2)
+				.queryParam("items", item)
+				.queryParam("ladderOrders", ladderOrder);
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 
@@ -267,8 +275,6 @@ public class EzLadderController {
 		
 		String data = jsonResult.get("data").toString();
 		String status = jsonResult.get("status").toString();
-		
-		logger.debug("###"+data);
 	
 		if (status.equals("ok")) {
 			model.addAttribute("ladderid", data);
@@ -280,13 +286,12 @@ public class EzLadderController {
 		return "json"; // redirect:조회창(ladderId값 파라미터로)
 	}
 	
-	
 	/**
 	 * 즐겨찾기 조회
 	 * @throws Exception 
 	 * */
 	@RequestMapping(value = "/ezLadder/getLadderBM.do")
-	public String getLadderBM(@CookieValue("loginCookie") String loginCookie, String ladderBMId, HttpServletRequest request, Model model) throws Exception {
+	public String getLadderBM(@CookieValue("loginCookie") String loginCookie, String ladderBmId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getLadderBM.do started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -294,10 +299,10 @@ public class EzLadderController {
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = "";
 		
-		if(ladderBMId == null || ladderBMId.equals("")) {
+		if(ladderBmId == null || ladderBmId.equals("")) {
 			url = gwServerUrl + "/ladder/BMs/users/" + userInfo.getId();
 		} else {
-			url = gwServerUrl + "/ladder/BMs/" + ladderBMId + "/users/" + userInfo.getId();
+			url = gwServerUrl + "/ladder/BMs/" + ladderBmId + "/users/" + userInfo.getId();
 		}
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -309,7 +314,9 @@ public class EzLadderController {
 		RestTemplate rest = new RestTemplate();
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("tenant_id", userInfo.getTenantId());
+				.queryParam("tenant_id", userInfo.getTenantId())
+				.queryParam("offset", userInfo.getOffset())
+				.queryParam("lang", userInfo.getLang());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -337,7 +344,10 @@ public class EzLadderController {
 	 * @throws Exception 
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadderBM.do", method = RequestMethod.POST)
-	public String setLadderBM(@CookieValue("loginCookie") String loginCookie, String flag, String ladderBMId, String bmName, String bmUsers, HttpServletRequest request, Model model) throws Exception {
+	public String setLadderBM(@CookieValue("loginCookie") String loginCookie, 
+			String flag, String ladderBmId, String bmName, 
+			String [] userIds, String [] userNames, String [] userName2s, 
+			HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setLadderBM.do started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -348,7 +358,7 @@ public class EzLadderController {
 		if(flag.equals("add")) {
 			url = gwServerUrl + "/ladder/BMs/users/" + userInfo.getId();
 		} else {
-			url = gwServerUrl + "/ladder/BMs/" + ladderBMId + "/users/" + userInfo.getId();
+			url = gwServerUrl + "/ladder/BMs/" + ladderBmId + "/users/" + userInfo.getId();
 		}
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -362,7 +372,12 @@ public class EzLadderController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
 				.queryParam("bmName", bmName)
-				.queryParam("bmUsers", bmUsers);
+				.queryParam("writerId", userInfo.getId())
+				.queryParam("userIds", userIds)
+				.queryParam("userNames", userNames)
+				.queryParam("userName2s", userName2s)
+				.queryParam("lang", userInfo.getLang())
+				.queryParam("offset", userInfo.getOffset());
 		
 		ResponseEntity<String> result = null;
 		

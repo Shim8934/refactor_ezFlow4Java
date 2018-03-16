@@ -22,7 +22,19 @@ public class LadderLineVO {
 	private String resultUserName2;
 	/** 생성자 아이디 */
 	private String writerId;
+	/** 다국어 */
+	private String lang;
 	
+	/** 참여자 아이디 배열 */
+	private String [] userIds;
+	/** 참여자 이름 배열 */
+	private String [] userNames;
+	/** 참여자 이름(다국어) 배열 */
+	private String [] userName2s;
+	/** 게임 아이템 - 결과값 배열 */
+	private String [] items;
+	/** 순서 배열 */
+	private int [] ladderOrders;
 	
 	public int getTenant_id() {
 		return tenant_id;
@@ -90,14 +102,42 @@ public class LadderLineVO {
 	public void setWriterId(String writerId) {
 		this.writerId = writerId;
 	}
-	
-	@Override
-	public String toString() {
-		return "LadderLineVO [tenant_id=" + tenant_id + ", userId=" + userId
-				+ ", userName=" + userName + ", userName2=" + userName2
-				+ ", item=" + item + ", ladderOrder=" + ladderOrder
-				+ ", resultUserId=" + resultUserId + ", resultUserName="
-				+ resultUserName + ", resultUserName2=" + resultUserName2 + "]";
+	public String getLang() {
+		return lang;
 	}
-
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+	
+	/** 배열 */
+	public String[] getUserIds() {
+		return userIds;
+	}
+	public void setUserIds(String[] userIds) {
+		this.userIds = userIds;
+	}
+	public String[] getUserNames() {
+		return userNames;
+	}
+	public void setUserNames(String[] userNames) {
+		this.userNames = userNames;
+	}
+	public String[] getUserName2s() {
+		return userName2s;
+	}
+	public void setUserName2s(String[] userName2s) {
+		this.userName2s = userName2s;
+	}
+	public String[] getItems() {
+		return items;
+	}
+	public void setItems(String[] items) {
+		this.items = items;
+	}
+	public int[] getLadderOrders() {
+		return ladderOrders;
+	}
+	public void setLadderOrders(int[] ladderOrders) {
+		this.ladderOrders = ladderOrders;
+	}
 }

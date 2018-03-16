@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DaoSupport;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
 import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzLadderService")
 public class EzLadderServiceImpl implements EzLadderService {
@@ -27,6 +29,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 	@Resource(name="EzLadderDAO")
 	private EzLadderDAO ezLadderDAO;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	@Override
 	public int ladderCount(String userId, String tenantId) throws Exception {
@@ -140,70 +145,110 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	/** boh */
-	
 	@Override
-	public void insertLadder(LadderVO lad, List<LadderLineVO> ladLineList) throws Exception {
+	public void insertLadder(LadderVO lad, LadderLineVO ladLines) throws Exception {
+		lad.setWriteDate(commonUtil.getTodayUTCTime(""));
+		
 		ezLadderDAO.insertLadderSet(lad);
 		
-		for(LadderLineVO ladLine : ladLineList) {
-			ezLadderDAO.insertLadderLine(ladLine);
+		int len = ladLines.getUserIds().length;
+		for(int i = 0; i < len; i++) {
+			ladLines.setUserId(ladLines.getUserIds()[i]);
+			ladLines.setUserName(ladLines.getUserNames()[i]);
+			ladLines.setUserName2(ladLines.getUserName2s()[i]);
+			ladLines.setItem(ladLines.getItems()[i]);
+			ladLines.setLadderOrder(ladLines.getLadderOrders()[i]);
+			
+			ezLadderDAO.insertLadderLine(ladLines);
 		}
 	}
 
 	@Override
-	public int selectRecentLadderId(String writerId) throws Exception {
-		return ezLadderDAO.selectRecentLadderId(writerId);
+	public int selectRecentLadderId(LadderVO lad) throws Exception {
+		return ezLadderDAO.selectRecentLadderId(lad);
 	}
 
 	@Override
-	public List<LadderBmVO> selectBMGroup(String userId, int tenant_id) throws Exception {
-		LadderBmVO bmGroup = new LadderBmVO();
+	public List<LadderBmVO> selectBMGroup(LadderBmVO bmGroup) throws Exception {
+		List<LadderBmVO> bmGroups = ezLadderDAO.selectBMGroup(bmGroup);
+		String offset = bmGroup.getOffset();
 		
-		bmGroup.setUserId(userId);
-		bmGroup.setTenant_id(tenant_id);
+		for(LadderBmVO groupVO : bmGroups) {
+			String dateStr = "";
+			dateStr = commonUtil.getDateStringInUTC(groupVO.getRegdate(), offset, false);
+			groupVO.setRegdate(dateStr);
+		}
 		
-		return ezLadderDAO.selectBMGroup(bmGroup);
+		return bmGroups;
 	}
 
 	@Override
-	public List<LadderBmUserVO> selectBMUser(int tenant_id, int ladderBMId) throws Exception {
-		LadderBmVO bmGroup = new LadderBmVO();
+	public List<LadderBmUserVO> selectBMUser(LadderBmUserVO bmUser) throws Exception {
+		List<LadderBmUserVO> bmUsers = ezLadderDAO.selectBMUser(bmUser);
 		
-		bmGroup.setLadderBmId(ladderBMId);
-		bmGroup.setTenant_id(tenant_id);
+		String lang = commonUtil.getMultiData(bmUser.getLang(), bmUser.getTenant_id());
+		if(lang.equals("2")) {
+			for(LadderBmUserVO userVO : bmUsers) {
+				userVO.setUserName(userVO.getUserName2());
+			}
+		}
 		
-		return ezLadderDAO.selectBMUser(bmGroup);
+		return bmUsers;
 	}
 
 	@Override
-	public void insertBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUsers) throws Exception {
+	public void insertBM(LadderBmVO bmGroup, LadderBmUserVO bmUsers) throws Exception {
+		bmGroup.setRegdate(commonUtil.getTodayUTCTime(""));
+		
 		ezLadderDAO.insertBMGroup(bmGroup);
 		
-		for(LadderBmUserVO bmuser : bmUsers) {
-			ezLadderDAO.insertBMUser(bmuser);
+		int len = bmUsers.getUserIds().length;
+		for(int i = 0; i < len; i++) {
+			bmUsers.setUserId(bmUsers.getUserIds()[i]);
+			bmUsers.setUserName(bmUsers.getUserNames()[i]);
+			bmUsers.setUserName2(bmUsers.getUserName2s()[i]);
+			
+			ezLadderDAO.insertBMUser(bmUsers);
 		}
 	}
 
 	@Override
-	public void updateBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUser) throws Exception {
+	public void updateBM(LadderBmVO bmGroup, LadderBmUserVO bmUsers) throws Exception {
+		bmGroup.setRegdate(commonUtil.getTodayUTCTime(""));
+		
 		ezLadderDAO.updateBMGroup(bmGroup);
 		
 		ezLadderDAO.deleteBMUserAll(bmGroup);
 		
-		int len = bmUser.size();
+		int len = bmUsers.getUserIds().length;
 		for(int i = 0; i < len; i++) {
-			ezLadderDAO.insertBMUser(bmUser.get(i));
+			bmUsers.setUserId(bmUsers.getUserIds()[i]);
+			bmUsers.setUserName(bmUsers.getUserNames()[i]);
+			bmUsers.setUserName2(bmUsers.getUserName2s()[i]);
+			
+			ezLadderDAO.insertBMUser(bmUsers);
 		}
 	}
 
 	@Override
-	public void deleteBM(LadderBmVO bmGroup, List<LadderBmUserVO> bmUser) throws Exception {
-		int len = bmUser.size();
-		if(len == 0) { // 즐겨찾기 그룹 삭제
+	public void deleteBM(LadderBmVO bmGroup, LadderBmUserVO bmUsers) throws Exception {
+		int len = bmUsers.getUserIds().length;
+		String lang = commonUtil.getMultiData(bmUsers.getLang(), bmUsers.getTenant_id());
+		bmUsers.setLang(lang);
+		
+		if(len == 0) {
 			ezLadderDAO.deleteBMGroup(bmGroup);
+			
 		} else {
-			for(int i = 0; i < len; i++) { // 특정 즐겨찾기의 멤버 삭제
-				ezLadderDAO.deleteBMUser(bmUser.get(i));
+			for(int i = 0; i < len; i++) {
+				bmUsers.setUserId(bmUsers.getUserIds()[i]);
+				if(lang.equals("")) {
+					bmUsers.setUserName(bmUsers.getUserNames()[i]);
+				} else {
+					bmUsers.setUserName(bmUsers.getUserName2s()[i]);
+				}
+				
+				ezLadderDAO.deleteBMUser(bmUsers);
 			}
 		}
 	}
