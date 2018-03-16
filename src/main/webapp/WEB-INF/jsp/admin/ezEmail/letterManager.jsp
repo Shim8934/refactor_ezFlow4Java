@@ -118,7 +118,7 @@
 					
 				}
 				
-				alert("순서를 변경하였습니다");
+				alert("순서를 저장하였습니다");
 				getLetterList(selectNode.node.id);
 				
 			}

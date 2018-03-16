@@ -49,7 +49,27 @@
 			
 			// 편지지 선택(mailWirte.jsp에 들어가도록)
 			function letterSelect() {
-		    	alert("선택");
+				var letterNo = $(".lmLetterSelect").attr("data-letterno");
+				
+				if (letterNo !== "undefined") {
+					$.ajax({
+						type:"POST",
+						data:{letterNo:letterNo,popUpType:"modify"},
+						url:"/admin/ezEmail/readLetter",
+						dataType:"json",
+						success:function(data){
+							
+							if (data.filePath == 'ERROR') {
+								alert("존재하지 않는 편지지입니다.");
+								return;
+							}
+							
+							parent.DivPopUpHidden();
+							parent.message.SetEditorContent(data.letterHtml);
+						}
+					});
+					
+		    	}
 		    }
 		    
 			// 닫기버튼
@@ -84,9 +104,6 @@
 		    	$(this).not(".lmLetterSelect").css("background","none");
 		    });
 		    
-		    
-
-		  
 		    
 		</script>
 		<style>
@@ -177,7 +194,7 @@
 					<div class="lmtitle lmLetterTitle">
 						편지지 목록
 					</div> 
-					<div class="lmLetterList boxNo" data-boxNo="" style="height:100%; overflow: auto;">
+					<div class="lmLetterList boxNo" data-boxNo="" style="height:320px; width:273px; overflow: auto;">
 						<ul class="lmLetterListUl"></ul>
 					</div>
 				</td>
