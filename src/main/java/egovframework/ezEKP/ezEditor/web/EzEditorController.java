@@ -413,22 +413,11 @@ public class EzEditorController extends EgovFileMngUtil{
 			BufferedImage bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));			    
 			width = bi.getWidth();
 			height = bi.getHeight();
-=======
 		if (type.equals("MAILSIGNATURE")) { //메일 서명 이미지 저장경로
 			filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 		} else {
 			filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
->>>>>>> master
 		}
-		
-		filePath = filePath + commonUtil.separator + today;
-		File file = new File(realPath + filePath);
-		
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		
-		writeUploadedFile(multiFile, fileName, realPath + filePath);
 		
 		logger.debug("ckSimpleUpload ended");
 		return "{\"uploaded\": 1,\"fileName\": \"" + fileName + "\", \"url\": \"" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "\"}";
@@ -442,12 +431,9 @@ public class EzEditorController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		MultipartFile multiFile = request.getFile("FILE_PATH");
-<<<<<<< HEAD
 		String letterPopUp = request.getParameter("letterPopUp"); // 편지지 추가, 수정일때 체크
-		
-=======
 		String type = request.getParameter("type");
->>>>>>> master
+		
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
 		String realPath = commonUtil.getRealPath(request);
 		String today = EgovDateUtil.getToday("");

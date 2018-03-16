@@ -58,6 +58,17 @@ function Insert_ImageCmd_Complete(rtn) {
 			    }
 		    	}
 		    }
+		    	if (parent.document.getElementById("mailPanel") != null) {
+		    		parent.DivPopUpShow(470, 400, "/ezEditor/ckImageUpload.do?type=" + type);
+		    	} else {
+		    		if (parent.document.location.href.indexOf("boardFormSave.do") > -1) {
+		    			parent.parent.DivPopUpShow(370, 300, "/ezEditor/ckImageUpload.do?type=" + type);
+		    		} else {
+		    			parent.parent.DivPopUpShow(470, 400, "/ezEditor/ckImageUpload.do?type=" + type);
+		    		}
+		    	}
+			    }
+>>>>>>> f02779b96eacf26d0a4deb1aeb9bc4bd63750139
 		}
 	};
 
