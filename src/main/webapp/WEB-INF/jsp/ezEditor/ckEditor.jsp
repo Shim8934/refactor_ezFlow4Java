@@ -232,6 +232,16 @@
 			var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
 			
+			// 편지지
+	    	function mailLetterFun() {
+	    		var letterPopUp = parent.popLetterPopUp;
+	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
+	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	
+	        	var uploadUrl = "/ezEditor/ckSimpleUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
+	        	CKEDITOR.config.imageUploadUrl = uploadUrl;
+			}
+			
 			if (type == "APPROVAL" || type == "APPROVALG") {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
 	            
@@ -250,7 +260,8 @@
 	        } else if (type == "MAILLETTER") { // 편지지 
 	        	var letterPopUp = parent.popLetterPopUp;
 	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
-	        	var letterId = parent.popLetterId // letterEditPopUp.jsp
+	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	
 	        	var uploadUrl = "/ezEditor/ckSimpleUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
 	        	
 	        	CKEDITOR.config.imageUploadUrl = uploadUrl;

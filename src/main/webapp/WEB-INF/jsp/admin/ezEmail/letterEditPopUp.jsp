@@ -35,7 +35,7 @@
 			</div> <!-- leLetterInfo End -->
 			<!-- editor -->
 			<div class="leLetterEditer">
-				<iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILLETTER" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+				<iframe id="tbContentElement" class="viewbox" src="" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 				<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; display:none;"></textarea>
 			</div>
 			<!-- 에디터에서 사용 -->
@@ -56,36 +56,46 @@
 			var popLetterBoxNo = "${letterBoxNo}";
 			var popLetterId = "${letterId}"; // 수정일 경우  null   modifyLoad()에서 저장됨
 			var popLetterNo = "${letterNo}"; // 저장일 경우 -1
+			var modifyData = "";
 			
 			var letterPopUp = true; // 에디터에서 이미지 업로드 할때 편지지 팝업인지 구분 (ckImageUpload.jsp -> fileupload())
+			
+			window.onload = function() {
+				if (popUpType == "modify") {
+					modifyLoad(popLetterNo);
+				}
+				
+				$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=MAILLETTER");
+			}
 			
 			// editor onload 됐을때
 			function Editor_Complete(){
 				if (popUpType == "modify") {
-					modifyLoad(popLetterNo);
+					modifyDataView();
 				}
 			}
 			
+			function modifyDataView() {
+				$("#displayname").val(modifyData.displayname);
+				$("#displayname2").val(modifyData.displayname2);
+				
+				window.message.SetEditorContent(modifyData.letterHtml);
+			}
 			// 수정하기 팝업일 때
 			function modifyLoad(letterNo){
-					$.ajax({
-						type:"POST",
-						data:{
-							letterNo:popLetterNo,
-							popUpType:popUpType
-						},
-						url:"/admin/ezEmail/readLetter",
-						dataType:"json",
-						success:function(data){
-							
-							window.message.SetEditorContent(data.letterHtml);
-							//window.message.CKEDITOR.instances.editor1.editable().setHtml(data.letterHtml);
-							
-							$("#displayname").val(data.displayname);
-							$("#displayname2").val(data.displayname2);
-							popLetterId = data.letterId;
-						}
-					});
+				$.ajax({
+					type:"POST",
+					data:{
+						letterNo:popLetterNo,
+						popUpType:popUpType
+					},
+					url:"/admin/ezEmail/readLetter",
+					dataType:"json",
+					success:function(data){
+						popLetterId = data.letterId;
+						modifyData = data;
+					}
+				});
 			}
 			
 			//e

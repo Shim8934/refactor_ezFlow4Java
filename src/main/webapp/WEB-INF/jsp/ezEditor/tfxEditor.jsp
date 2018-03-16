@@ -163,9 +163,21 @@
 		    		break;
 	    	}
 	    	
+	    	
 	    	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
 	    	var uploadFilePath = "/ezEditor/tfxUpload.do";
 	    	var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do";
+
+	    	// 편지지
+	    	function mailLetterFun() {
+	    		var letterPopUp = parent.popLetterPopUp;
+	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
+	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	uploadFilePath = "/ezEditor/tfxUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" + letterBoxNo 
+	        			+ "&letterId=" + letterId;
+	        	uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" 
+	        			+ letterBoxNo + "&letterId=" + letterId;
+	    	}
 	    	
 	    	if (type == "MAILSIGNATURE") {
 	   			uploadFilePath = "/ezEditor/tfxUploadMail.do";
@@ -173,11 +185,13 @@
 	   		} else if (type == "MAILOUTOFOFFICE") {
 	   			uploadPasteContentsPath = "/ezEditor/tfxNoop.do";
 	   		} else if (type == "MAILLETTER") {
-	        	var letterPopUp = parent.popLetterPopUp;
+	   			var letterPopUp = parent.popLetterPopUp;
 	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
-	        	var letterId = parent.popLetterId // letterEditPopUp.jsp
-	        	uploadFilePath += "?letterPopUp=" + letterPopUp + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
-	        	uploadPasteContentsPath += "?letterPopUp=" + letterPopUp + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
+	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	uploadFilePath = "/ezEditor/tfxUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" + letterBoxNo 
+	        			+ "&letterId=" + letterId;
+	        	uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" 
+	        			+ letterBoxNo + "&letterId=" + letterId;
 	   		}
 	    	
 	        xfe = new XFE({

@@ -468,7 +468,7 @@ public class EzEditorController extends EgovFileMngUtil{
 		if (letterPopUp != null) { // 편지지 등록, 수정때의 업로드
 			String letterBoxNo = request.getParameter("letterBoxNo");
 			String letterId = request.getParameter("letterId");
-			logger.debug("letterBoxNo:" + letterBoxNo + "letterId:" + letterId);
+			logger.debug("letterBoxNo:" + letterBoxNo + ", letterId:" + letterId);
 			
 			// /files/upload_mail/letterBoxUpload/
 			filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
