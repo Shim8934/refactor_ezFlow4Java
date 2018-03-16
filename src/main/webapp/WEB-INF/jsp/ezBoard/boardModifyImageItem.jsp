@@ -395,7 +395,7 @@
 	            <th style="height:28px; line-height:28px; border-bottom:0 none; background:#fff;"><spring:message code='ezBoard.t1012'/></th>
 	        </tr>
 	        <tr>
-	            <td style="width:100%; height:250px; border:1px solid #b6b6b6; padding:5px;background:#e5e5e5;" >
+	            <td style="width:100%; height:250px; border:1px solid #ddd; padding:5px;background:#e5e5e5;" >
 	                <div class="viewbox" style="width:100%; border:0 none; padding:0; background:none;">
 	                	<c:set var="result" value="${fn:split(listImages, ';')}"/>
 	                	<c:forEach var="res" items="${result}" varStatus="vs">

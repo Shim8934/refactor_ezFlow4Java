@@ -203,7 +203,9 @@ public class EzEditorController extends EgovFileMngUtil{
 	 * ck에디터 이미지 업로드 화면 호출 Method
 	 */
 	@RequestMapping(value = "/ezEditor/ckImageUpload.do")
-	public String ckImageUpload() {
+	public String ckImageUpload(HttpServletRequest request, Model model) {
+		String type = request.getParameter("type");
+		model.addAttribute("type", type);
 		return "ezEditor/ckImageUpload";
 	}
 	
@@ -216,14 +218,21 @@ public class EzEditorController extends EgovFileMngUtil{
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String type = request.getParameter("type");
 		MultipartFile multiFile = request.getFile("file1");
 		String letterPopUp = request.getParameter("letterPopUp"); // 편지지 추가, 수정일때 체크
 		
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
+		String filePath = "";
+		
+		if (type.equals("MAILSIGNATURE")) { //메일 서명 이미지 저장경로
+			filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+		} else {
+			filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+		}
 		
 		filePath = filePath + commonUtil.separator + today;
 		
@@ -327,15 +336,15 @@ public class EzEditorController extends EgovFileMngUtil{
 		logger.debug("ckSimpleUpload started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
 		String letterPopUp = request.getParameter("letterPopUp"); // 편지지 추가, 수정일때 체크
+		String type = request.getParameter("type");
+		
 		MultipartFile multiFile = request.getFile("upload");
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		
-		String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
+		String filePath = "";
 		
 		filePath = filePath + commonUtil.separator + today;
 		
@@ -404,35 +413,11 @@ public class EzEditorController extends EgovFileMngUtil{
 			BufferedImage bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));			    
 			width = bi.getWidth();
 			height = bi.getHeight();
+		if (type.equals("MAILSIGNATURE")) { //메일 서명 이미지 저장경로
+			filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+		} else {
+			filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		}
-		
-		String imgPath = (filePath + commonUtil.separator + fileName +  "|!|" + width + "|!|" + height).replace("\\", "/");
-		
-		model.addAttribute("imgPath", imgPath);
-		
-		logger.debug("imgPath=" + imgPath);
-		logger.debug("ckUploadMail ended.");
-		
-		return "ezEditor/ckUploadMail";
-	}
-	
-	/**
-	 * 메일 서명관리 ck에디터 심플업로드 실행 Method
-	 */
-	@RequestMapping(value = "/ezEditor/ckSimpleUploadMail.do", produces = "application/json; charset=utf-8")
-	@ResponseBody
-	public String ckSimpleUploadMail(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
-		logger.debug("ckSimpleUploadMail started");
-
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		MultipartFile multiFile = request.getFile("upload");
-		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		
-		String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
-		String realPath = commonUtil.getRealPath(request);
-		String today = EgovDateUtil.getToday("");
-		String fileName = UUID.randomUUID() + "." + fileType;
 		
 		filePath = filePath + commonUtil.separator + today;
 		File file = new File(realPath + filePath);
@@ -443,8 +428,8 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		writeUploadedFile(multiFile, fileName, realPath + filePath);
 		
-		logger.debug("ckSimpleUploadMail ended");
-		return "{\"uploaded\": 1,\"fileName\": \""+fileName+"\", \"url\": \"" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "\"}";
+		logger.debug("ckSimpleUpload ended");
+		return "{\"uploaded\": 1,\"fileName\": \"" + fileName + "\", \"url\": \"" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "\"}";
 	}
 	
 	/**
@@ -457,11 +442,18 @@ public class EzEditorController extends EgovFileMngUtil{
 		MultipartFile multiFile = request.getFile("FILE_PATH");
 		String letterPopUp = request.getParameter("letterPopUp"); // 편지지 추가, 수정일때 체크
 		
+		String type = request.getParameter("type");
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
+		String filePath = "";
+		
+		if (type.equals("MAILSIGNATURE")) { //메일 서명 이미지 저장경로
+			filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+		} else {
+			filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+		}
 		
 		filePath = filePath + commonUtil.separator + today;
 		
@@ -527,11 +519,18 @@ public class EzEditorController extends EgovFileMngUtil{
 				}
 			}
 			
-			String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+			String type = request.getParameter("type");
 			String realPath = commonUtil.getRealPath(request);
 			String today = EgovDateUtil.getToday("");
 			String fileName = UUID.randomUUID() + "." + fileType;
-
+			String filePath = "";
+			
+			if (type.equals("MAILSIGNATURE")) { //메일 서명 이미지 저장경로
+				filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+			} else {
+				filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+			}
+			
 			filePath = filePath + commonUtil.separator + today;
 			
 			if (letterPopUp != null) { // 편지지 등록, 수정때의 업로드
@@ -587,117 +586,6 @@ public class EzEditorController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 메일 서명관리 TagFree에디터 업로드 실행 Method
-	 */
-	@RequestMapping(value = "/ezEditor/tfxUploadMail.do")
-	public String tfxUploadMail(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
-		logger.debug("tfxUploadMail started");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		MultipartFile multiFile = request.getFile("FILE_PATH");
-		String contentType = request.getParameter("content_type");
-		
-		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
-		String realPath = commonUtil.getRealPath(request);
-		String today = EgovDateUtil.getToday("");
-		String fileName = UUID.randomUUID() + "." + fileType;
-		
-		filePath = filePath + commonUtil.separator + today;
-		File file = new File(realPath + filePath);
-	    if (!file.exists()) {
-	    	file.mkdirs();
-	    }
-		
-		writeUploadedFile(multiFile, fileName, realPath + filePath);
-		
-		model.addAttribute("sContentType", contentType);
-		model.addAttribute("sUploadedPath", filePath + commonUtil.separator + fileName);
-		
-		logger.debug("tfxUploadMail ended. contentType=" + contentType + ", sUploadedPath=" + filePath + commonUtil.separator + fileName);
-		return "ezEditor/tfxUpload";
-	}
-	
-	/**
-	 * 메일 서명관리 TagFree에디터 심플업로드(drag&drop) 실행 Method
-	 */
-	@RequestMapping(value = "/ezEditor/tfxSimpleUploadMail.do")
-	public String tfxSimpleUploadMail(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		logger.debug("tfxSimpleUploadMail started");
-
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String fileData = request.getParameter("clip_contents");
-		String fileType = request.getParameter("file_extension");
-		String rootId = request.getParameter("xfe_root_id");
-		String resultCode = "0";
-		
-		if (fileData == null) { //이미지가 너무 큰 경우 fileData가 null로 들어옴(tomcat server.xml의 maxPostSize설정에 따라 이미지 최대 업로드 사이즈 조절 가능함.)
-			logger.debug("The file size is too big.");
-			resultCode = "1";
-			
-		} else {
-			logger.debug("fileType=" + fileType + ", rootId=" + rootId);
-			
-			if (fileData.startsWith("data:")) { //fileData앞에 data:이 붙어있을 경우
-				logger.debug("The fileData start with data:.");
-				
-				String[] fileDatas = fileData.split(",");
-				if (fileDatas[0].indexOf("image") > -1) {
-					fileData = fileDatas[1];
-				} else {
-					model.addAttribute("resultCode", "2");
-					logger.debug("tfxSimpleUpload ended. resultCode=" + resultCode);
-					return "ezEditor/tfxSimpleUpload";
-				}
-			}
-			
-			String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
-			String realPath = commonUtil.getRealPath(request);
-			String today = EgovDateUtil.getToday("");
-			String fileName = UUID.randomUUID() + "." + fileType;
-
-			filePath = filePath + commonUtil.separator + today;
-			File file = new File(realPath + filePath);
-
-			if (!file.exists()) {
-				file.mkdirs();
-			}
-			
-			FileOutputStream fileOuputStream = null;
-			
-			try {
-				Decoder decoder = Base64.getDecoder();
-				byte[] imageByte = decoder.decode(fileData);
-				fileOuputStream = new FileOutputStream(realPath + filePath + commonUtil.separator + fileName); 
-				fileOuputStream.write(imageByte);
-				fileOuputStream.flush();
-				
-				logger.debug("rootId=" + rootId + ", sUploadedPath=" + filePath + commonUtil.separator + fileName);
-				
-				model.addAttribute("sRootId", rootId);
-				model.addAttribute("sUploadedPath", filePath + commonUtil.separator + fileName);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				
-				resultCode = "1";
-			} finally {
-				if (fileOuputStream != null) {
-					try { fileOuputStream.close(); } catch (Exception e) {}
-				}
-			}
-			
-		}
-		
-		model.addAttribute("resultCode", resultCode);
-		
-		logger.debug("tfxSimpleUploadMail ended. resultCode=" + resultCode);
-		return "ezEditor/tfxSimpleUpload";
-	}
-	
-	/**
 	 * 메일 부재중설정 TagFree에디터 심플업로드(drag&drop) 시 아무처리 안하는 Method
 	 */
 	@RequestMapping(value = "/ezEditor/tfxNoop.do")
@@ -724,9 +612,10 @@ public class EzEditorController extends EgovFileMngUtil{
 		try {
 			String type = request.getParameter("type");
 			logger.debug("type=" + type);
-			
-			if (type.equals("MAILOUTOFOFFICE")) { //메일 부재중설정 시 이미지 업로드되지 않도록.
-				logger.debug("type is MAILOUTOFOFFICE. no upload.");
+		
+			// 메일 부재중설정 또는 커뮤니티 포토게시판일 경우 이미지 업로드되지 않도록 한다.
+			if (type.equals("MAILOUTOFOFFICE") || type.equals("COMMUNITYPHOTO")) {
+				logger.debug("Cannot upload image. type=" + type);
 				result = "fail_image"; //TODO: 적절한 result가 필요함..
 			} else {
 				LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -859,6 +748,7 @@ public class EzEditorController extends EgovFileMngUtil{
 			String type = request.getParameter("type");
 			
 			// 메일 부재중설정 또는 커뮤니티 포토게시판일 경우 이미지 업로드되지 않도록 한다.
+			//TODO: ezEmail.lhm29 메시지 변경
 			if (type.equals("MAILOUTOFOFFICE") || type.equals("COMMUNITYPHOTO")) { 
 				msg = egovMessageSource.getMessage("ezEmail.lhm29", locale);
 				result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
@@ -876,10 +766,12 @@ public class EzEditorController extends EgovFileMngUtil{
 					FileOutputStream fileOuputStream = null;
 					
 					try {
-						String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+						String filePath = "";
 						
 						if (type.equals("MAILSIGNATURE")) { //메일 서명 저장경로로 이미지 저장
 							filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+						} else {
+							filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 						}
 						
 						String realPath = commonUtil.getRealPath(request);

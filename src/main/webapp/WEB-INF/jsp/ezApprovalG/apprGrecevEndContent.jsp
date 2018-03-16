@@ -43,7 +43,7 @@
 	                    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 
 	                    var Content = getNodeText(XmlBodyDATA);
-	                    if (Content.indexOf("error") > -1)
+	                    if (tempStr == "error")
 	                        parent.document.getElementById("btnRefresh").style.display = "";
 
 	                    var _DocContentHtml = Content;

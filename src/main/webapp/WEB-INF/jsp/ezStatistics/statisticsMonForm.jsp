@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -388,11 +389,15 @@
 	    </LISTVIEWDATA>
 	</xml>
 	    <h1><spring:message code='ezStatistics.t1031'/></h1>
-	    <table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2; margin-bottom: 5px">
+	    <table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2; margin-bottom: 5px">
 	        <tr>
 	            <td style="width: 99%">
 	                <span id="topmenu" style="float: left; width: 800px"><spring:message code='ezStatistics.t195'/> :
-	        		<select id="SCompID" name="SCompID" onchange="return getforminfo()">${companySel}</select>
+	        		<select id="SCompID" name="SCompID" onchange="return getforminfo()">
+	        			<c:forEach var="item" items="${list}">
+	            			<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            			</c:forEach>
+	        		</select>
 	                    &nbsp;&nbsp;&nbsp;<spring:message code='ezStatistics.t1002'/> : 
 	            	<select id="selyear" onchange="makeoptionyear(); getforminfo()"></select>
 	                    <spring:message code='ezStatistics.t55'/>
@@ -412,10 +417,10 @@
 	    </table>
 	    <br />
 	    <br />
-	    <table style="width: 1250px;height:690px ;border:1px solid #b6b6b6">
+	    <table style="width: 1250px;height:690px ;border:1px solid #ddd">
 	        <tr>
 	            <td style="vertical-align:top">
-	                <div id="formlist" style="Width: 300px; Height: 690px; overflow: auto;display:none;border-right:1px solid #b6b6b6;"></div>
+	                <div id="formlist" style="Width: 300px; Height: 690px; overflow: auto;display:none;border-right:1px solid #ddd;"></div>
 	            </td>
 	            <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
 	                <div id="colorbox" class="statistics_addition" style="display: none">

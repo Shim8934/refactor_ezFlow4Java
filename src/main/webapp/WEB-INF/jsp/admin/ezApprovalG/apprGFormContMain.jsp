@@ -475,7 +475,7 @@
 	    <table style="margin-top: 10px; width:100%">
 	        <tr>
 	            <td valign="top" style="width:43%; max-width: 336px;">
-	                <div id="TreeView" style="border: #b6b6b6 1px solid;width: 100%; height: 400px; background-color: #ffffff;overflow:auto"></div>
+	                <div id="TreeView" style="border: #ddd 1px solid;width: 100%; height: 400px; background-color: #ffffff;overflow:auto"></div>
 	            </td>
 	            <td class = 'approvalG' align="center" style="width:14%">
 	               <a class="imgbtn" id="btnManage" style="display:none"><span onclick="btnManage_onclick()"><spring:message code = 'ezApprovalG.t1661' /></span></a>
@@ -490,11 +490,11 @@
 	                <input class = 'approvalG' type="text" id="tbManage" name="tbManage" style="Width: 100%" readonly>
 	                <c:choose>
 	                	<c:when test="approvalS">
-			                <select id="selDept" name="selDept" size="2" style="border: #b6b6b6 1px solid; height: 400px; width: 100%; z-index: 100">
+			                <select id="selDept" name="selDept" size="2" style="border: #ddd 1px solid; height: 400px; width: 100%; z-index: 100">
 			                </select>
 	                	</c:when>
 	                	<c:otherwise>
-			                <select id="selDept" name="selDept" size="2" style="border: #b6b6b6 1px solid; height: 388px; width: 100%; z-index: 100">
+			                <select id="selDept" name="selDept" size="2" style="border: #ddd 1px solid; height: 388px; width: 100%; z-index: 100">
 			                </select>
 	                	</c:otherwise>
 	                </c:choose>

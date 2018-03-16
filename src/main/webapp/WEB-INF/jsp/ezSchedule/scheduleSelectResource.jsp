@@ -10,6 +10,11 @@
 	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 	    <link rel="stylesheet" href="/css/style.css" type="text/css" />
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
+	    <style>
+	    	.mainlist tr th {
+	    		border-top:0px;
+	    	}
+	    </style>
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezResource/organtreeview.htc.js"></script>
@@ -28,7 +33,7 @@
 		    var ReturnValue_NameEng = new Array();
 		    var pStartTime = "<c:out value='${startTime}'/>";
 		    var pEndTime = "<c:out value='${endTime}'/>";
-		    var m_strColorSelect = "rgb(233, 241, 255)";
+		    var m_strColorSelect = "#edf4fd";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var RetValue;
@@ -377,8 +382,8 @@
 	            </td>
 	        </tr>      
 	    </table>
-	    <div class="btnposition">
-	    <a class="imgbtn"><span onClick="Add_ResourceInfo()"><spring:message code='ezSchedule.t1106' /></span></a>
+	    <div class="btnpositionNew">
+	   		<a class="imgbtn"><span onClick="Add_ResourceInfo()"><spring:message code='ezSchedule.t1106' /></span></a>
 	        <a class="imgbtn"><span onClick="btn_OK()"><spring:message code='ezSchedule.t190' /></span></a>
 	        <a class="imgbtn"><span onClick="btn_close()"><spring:message code='ezSchedule.t5' /></span></a>
 	    </div>			

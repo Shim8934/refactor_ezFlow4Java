@@ -9,6 +9,20 @@
 		<title>left_community</title>
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
+		<style>
+			.btn_comm {
+				border: 1px solid rgb(208, 208, 208);
+			    border-radius: 4px;
+			    height: 45px;
+			    line-height:45px;
+			    padding-top: 12px;
+			    text-align: center;
+			    color: rgb(4, 112, 228);
+			    background-color: #fff;
+			    font-weight: bold;
+			    background: linear-gradient(#fff, #f8f8f8);
+			}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/TreeView.js"></script>
@@ -95,7 +109,7 @@
 						if (result["list"] != "") {
 							getCommunityList_after(result["list"]);
 						} else {
-							$("#MyCopList").html("<div style='height:200px;text-align:center;'><img style='margin-top:40px' src='/images/signcommunity.png' /><div style='margin-top:15px'><div>"+strLang86+"</div><div style='margin-top:5px'>"+strLang87+"</div></div></div>");
+							$("#MyCopList").html("<div style='height:200px;text-align:center;'><img style='margin-top:100px;margin-bottom:20px' src='/images/signcommunity.png' /><div style='margin-top:15px'><div style='color:#979797'>"+strLang86+"</div><div style='margin-top:5px;color:#979797'>"+strLang87+"</div></div></div>");
 						}
 					}
 				});
@@ -556,12 +570,8 @@
 	</head>
 	<body class="leftbody" id="body">
 	    <div id="left">
-	        <div class="left_cop" title="<spring:message code='main.t1006' />"></div>
-	        <!-- mylist -->
-	        <h2 class="community_lt">
-	        	<span><img src="/images/kr/left/icon_dialog.gif"></span>
-	        	<spring:message code='ezCommunity.t2000' />
-	        </h2>
+	        <div class="left_cop" title="<spring:message code='main.t1006' />"><span><spring:message code='main.t1006' /></span></div>
+	        <!-- mylist -->	        
 	        <div style="overflow: auto; overflow-x: hidden; height: 470px; background-color: white; border-bottom:1px solid #ddd" id="MyCopList">
 	            <!-- list -->
 	            <ul class="list_thumbnail" id="list_thumbnail">
@@ -584,7 +594,7 @@
 	        </div>
 	        <!-- /notice -->
 	
-	        <div class="community_banner commMake" onclick="make_Cop()" style="border:1px solid rgb(0, 72, 149);border-radius:4px;height:25px;padding-top:12px;text-align: center;color:rgb(0, 72, 149);background-color: white;font-weight: bold;">
+	        <div class="community_banner commMake btn_comm" onclick="make_Cop()">
 	        	<spring:message code="ezCommunity.t1011" />
 	            <%-- <img src="<spring:message code='ezCommunity.i4' />" width="181" height="90"> --%>
 	        </div>

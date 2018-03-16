@@ -979,10 +979,10 @@
                 <tr>
                     <td style="width:400px; vertical-align:top; padding-top:5px; border-right:none">
                         <h2><spring:message code='ezApprovalG.t232'/></h2>
-                        <div id="TreeView" style="<c:if test="${approvalFlag != 'S'}">height: 775px;</c:if><c:if test="${approvalFlag == 'S'}">height: 355px;</c:if> width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
+                        <div id="TreeView" style="<c:if test="${approvalFlag != 'S'}">height: 775px;</c:if><c:if test="${approvalFlag == 'S'}">height: 355px;</c:if> width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
                         <c:if test="${approvalFlag == 'S'}"><br /></c:if>
                         <div class="div_scroll" style="border:none; <c:if test="${approvalFlag != 'S'}">display:none;</c:if>">
-                            <div id="UserList" style="height: 405px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
+                            <div id="UserList" style="height: 405px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>
                     </td>
                     <td style="text-align:center; width:50px; border-left:none; border-right:none">
@@ -998,7 +998,7 @@
                     <td style="width:600px; vertical-align:top; padding-top:5px; border-left:none;">
                         <h2><spring:message code='ezApproval.t61'/></h2>
                         <div class="div_scroll" style="border:none; height:775px;">
-                            <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%;overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
+                            <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%;overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>
                     </td>
                 </tr>
@@ -1023,7 +1023,7 @@
                 </tr>
             	<tr>
                 	<td style="vertical-align:top;height: 135px;" colspan="2">
-                    	<div class="listview" style="border:1px solid #b6b6b6;width:100%">
+                    	<div class="listview" style="border:1px solid #ddd;width:100%">
                         	<div id="div_List_AutoRule" style="border: 0; font-size:9pt;width: 100%; height: 130px;overflow:auto;"></div>
                     	</div>
                 	</td>
@@ -1101,20 +1101,20 @@
 	                            <table style="margin-left:0px">
 	                                <tr>
 	                                    <td valign="top">
-	                                        <div id ="divLineUserTree" style="margin-top:5px;overflow-x:auto;overflow-y:auto;height:200px;width:330px;border:1px solid #b6b6b6;background-color:#FFFFFF;margin:1px 1px 1px 1px;">
+	                                        <div id ="divLineUserTree" style="margin-top:5px;overflow-x:auto;overflow-y:auto;height:200px;width:330px;border:1px solid #ddd;background-color:#FFFFFF;margin:1px 1px 1px 1px;">
 	                                    </div>
 	                                    </td>
 	                                </tr>
 	                                <tr>
 	                                    <td style="">
 	                                        <div class="listview" style="border:0px;">
-	                                            <div id= "LineUserList" style="border:0px;margin:0px;Width:330px; Height:220px;overflow:auto;border:1px solid #b6b6b6;margin:1px 1px 1px 1px;"></div>
+	                                            <div id= "LineUserList" style="border:0px;margin:0px;Width:330px; Height:220px;overflow:auto;border:1px solid #ddd;margin:1px 1px 1px 1px;"></div>
 	                                        </div>
 	                                    </td>
 	                                </tr>
 	                                <tr>
 	                                    <td height="30" style="background-color:transparent;border:0px;">
-	                                        <div style="border:1px solid #b6b6b6;margin:0px 1px 1px 1px;height:27px;">
+	                                        <div style="border:1px solid #ddd;margin:0px 1px 1px 1px;height:27px;">
 	                                    <input id="textUser" style="width:160px" name="textUser" onKeyPress="return textUser_onkeypress()" tabindex="1" maxlength="50">
 	                                    <a class="imgbtn" onKeyPress="return btn_searchUser_onclick()" onClick="return btn_searchUser_onclick()" name="btn_searchUser" id="btn_searchUser" tabindex="1"><span  style="width:60px;text-align:center" ><spring:message code='ezApproval.t175'/></span></a>
 	                                            </div>
@@ -1147,7 +1147,7 @@
 	                            </td>
 	                        </tr>
 	                        <tr>
-	                            <td style="height:30px;border:1px solid #b6b6b6;text-align:center;">
+	                            <td style="height:30px;border:1px solid #ddd;text-align:center;">
 	                                <input type="checkbox" name="FixYN" id="FixYN" value ="checkbox" onclick="return FixFlag_onclick()"><spring:message code='ezApproval.t990041'/> &nbsp;&nbsp;&nbsp;&nbsp;
 	                            </td>
 	                        </tr>

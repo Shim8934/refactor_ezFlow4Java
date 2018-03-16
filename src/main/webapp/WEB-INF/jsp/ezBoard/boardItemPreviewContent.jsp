@@ -13,6 +13,8 @@
 	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 	    <script type="text/javascript">
 	        var nowZoom = 100;
 	        var maxZoom = 200;
@@ -28,7 +30,24 @@
 	            document.getElementById("txtContent").style.textAlign = "center";
 	            window.parent.previewItemSet();
 	        };
-	
+			
+	        //보기설정 레이어팝업 바깥 클릭시 close되게 하기위한 코드 2018.03.05 강민수92
+	        $(document).ready(function() {
+	        	var maillistoption = parent.document.getElementById('maillistoptiondiv');
+	        	
+	        	$(document).mouseup(function(e) {
+	        		var container = $('#layer_Viewpopup');
+	        		var maillistoptionmode = $(maillistoption).attr('mode');
+	        		if (maillistoptionmode == "on") {
+	        			if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'maillistoptiondiv') {
+	        			    parent.document.getElementById("layer_Viewpopup").style.display = "none";
+	        			    parent.document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
+	        			    parent.document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif"); 
+	        			}
+	        		}
+	        	})
+	        });
+	        
 	        function Bigger() {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                if (MozNowZoom < MozMaxZoom) {

@@ -46,6 +46,8 @@
 		        }
 		
 		        setpause(500);
+		        var pMode = "";
+	      	    
 		        var xmlpara = createXmlDom();
 		        var objRoot, objNode, doc, objNode2, objNodes, objDocinfoNode;
 		        objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETER");
@@ -64,21 +66,49 @@
 		            	// 체크된 값의 정보만 xmlpara에 생성
 		                if (eval(document.frm.chk[i]).checked) {
 		                    doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
+		                    $.ajax({
+		    	      			type : "POST",
+		    	      			dataType : "text",
+		    	      			async : false,
+		    	      			url : "/ezApprovalG/getLineMode.do",
+		    	      			data : {
+		    	      					docID : document.frm.chk[i].value.split("|")[0]
+		    	      					},
+		    	      			success: function(xml){
+		    	      				pMode = xml;
+		    	      			}        			
+		    	      		});
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCID", document.frm.chk[i].value.split("|")[0]);
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ORGAPRUSERID", document.frm.chk[i].value.split("|")[1]);
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FORMID", document.frm.chk[i].value.split("|")[2]);
 		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", document.frm.chk[i].value.split("|")[3]);
+		                    createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCSTATE", document.frm.chk[i].value.split("|")[4]);
+		        			createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);
 		                }
 		            }
 		        }
 		        else {
 		        	// 리스트의 값이 하나인 경우
 		            if (eval(document.frm.chk).checked) {
+		            	$.ajax({
+	    	      			type : "POST",
+	    	      			dataType : "text",
+	    	      			async : false,
+	    	      			url : "/ezApprovalG/getLineMode.do",
+	    	      			data : {
+	    	      					docID : document.frm.chk[i].value.split("|")[0]
+	    	      					},
+	    	      			success: function(xml){
+	    	      				pMode = xml;
+	    	      			}        			
+	    	      		});
 		                doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCID", document.frm.chk.value.split("|")[0]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ORGAPRUSERID", document.frm.chk.value.split("|")[1]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FORMID", document.frm.chk.value.split("|")[2]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", document.frm.chk.value.split("|")[3]);
+		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCSTATE", document.frm.chk.value.split("|")[4]);
+		        		createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);
 		            }
 		        }
 		        xmlhttp = createXMLHttpRequest();
@@ -230,7 +260,7 @@
 		            <td >                
 		                <div id="close">
 		                    <ul>
-		                        <li id="btnApprove"><span onClick="return btnApprove_onclick('003')" ><spring:message code='ezApprovalG.t1'/></span></li>
+		                        <li id="btnApprove"><span onClick="return btnApprove_onclick('003')" ><spring:message code='ezApprovalG.t1'/>/<spring:message code='ezApprovalG.t1760'/></span></li>
 		                        <li id="btnClose" ><span onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
 		                    </ul>
 		                </div>

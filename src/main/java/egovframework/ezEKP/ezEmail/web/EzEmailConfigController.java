@@ -302,35 +302,17 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			double mailboxUsage = storageUsageAndLimit[0]; // in KBs
 			double mailboxQuota = storageUsageAndLimit[1]; // in KBs
 			
-			logger.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+			// 재은 수정
+			String[] mailUse = ezEmailUtil.getMailUsage(mailboxUsage, mailboxQuota);
 			
-			if (mailboxUsage < mailboxQuota) {
-				mailPercent = (int)((mailboxUsage/mailboxQuota) * 100);
-			} else {
-				mailPercent = 100;
+			if (mailUse != null) {
+				mailPercent = Integer.parseInt(mailUse[0]);
+				mailboxDetail = mailUse[1];
+				mailboxQuotaStr = mailUse[2];
 			}
-						
-			// 분자
-			if (mailboxUsage >= 1024*1024 ) {
-				mailboxDetail = String.format("%.1fG", mailboxUsage/(1024*1024));
-			} else if (mailboxUsage >= 1024) {
-				mailboxDetail = String.format("%.1fM", mailboxUsage/1024);
-			} else {
-				mailboxDetail = String.format("%.1fK", mailboxUsage);
-			}
-	
-			// 분모
-			if (mailboxQuota >= 1024*1024) {
-				mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
-				
-				if (mailboxQuotaStr.contains(".0")) {
-					mailboxQuotaStr = mailboxQuotaStr.substring(0, mailboxQuotaStr.indexOf(".")) + "G";
-				}
-			} else if (mailboxQuota >= 1024) {
-				mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
-			} else {
-				mailboxQuotaStr = (int)mailboxQuota + "K";
-			}		
+			
+			logger.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);		
+
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			e.printStackTrace();
@@ -1479,7 +1461,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ "<script type='text/javascript'>"
 				+ "selToggleList(document.getElementById('close'), 'ul', 'li', '0');"
 				+ "</script>"
-				+ "<div class='nobox' id='status_view' style='background-color:#FFFFFF; border-style:solid; border-width:1px; border-color:#B6B6B6; overflow-y:auto; height:265px; overflow-x:auto; width:100%; padding-top:5px; padding-left:5px; padding-right:3px; margin-top:7px;'>");
+				+ "<div class='nobox' id='status_view' style='background-color:#FFFFFF; border-style:solid; border-width:1px; border-color:#ddd; overflow-y:auto; height:265px; overflow-x:auto; width:98%; padding-top:5px; padding-left:5px; padding-right:3px; margin-top:7px;'>");
 		out.write(egovMessageSource.getMessage("ezEmail.t491", locale));
 		out.flush();
 
