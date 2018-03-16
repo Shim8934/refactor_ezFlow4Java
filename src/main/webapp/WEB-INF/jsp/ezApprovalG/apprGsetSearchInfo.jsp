@@ -850,6 +850,7 @@
 		
 		        return RtnVal;
 		    }
+		    
 		</script>
 	</head>
 	<body class="popup">
@@ -860,7 +861,7 @@
 		    <c:choose>
 		    	<c:when test="${userInfo.lang == '1'}">
 				    <td ><input type="text" id="FormName" name="FormName" style="width:200px" disabled>
-		      		<a  class="imgbtn" style="vertical-align:middle"><span onClick="return btn_FormSelect_onclick()"><spring:message code='ezApprovalG.t442'/></span></a></td>
+		      		<a  class="imgbtn" style="vertical-align:middle; margin-top:1.48px;"><span onClick="return btn_FormSelect_onclick()"><spring:message code='ezApprovalG.t442'/></span></a></td>
 		    	</c:when>
 		    	<c:otherwise>
 				    <td ><input type="text" id="FormName" name="FormName" style="width:193px" disabled>
@@ -931,5 +932,15 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		
+	<script>
+	   //ie에서만 imgbtn의 span 버튼 스타일 수정, default_kr.css 참고
+    var imgbtnSpans = document.getElementsByClassName(" imgbtn");
+    if(!CrossYN() ||  navigator.userAgent.search( "Trident" ) > -1 ){
+    	for(var i = 0; i<imgbtnSpans.length; i++){
+    		imgbtnSpans[i].firstChild.style.padding = "1.49px 12px 0px 0px";
+    	}  
+    }
+	</script>
 	</body>
 </html>
