@@ -109,7 +109,7 @@
 	
 	            $("#1tab1").click();
 	            ChangeTab(document.getElementById("1tab1"));
-	            getCircularDept();
+	            get_ladder_bmlist();
 	            ListTypeChangeIcon();
 	            recevieListview("MsgToList", "ListViewMsgTo");
 	            
@@ -204,6 +204,11 @@
 	                
 	                listview.AddDataRow(objTr, Resultxml);
 	            }
+	            
+	            /** boh */
+	            $("#ladderBmBtn").on("click", function() {
+	            	add_bm_group();
+	            });
 	        }
 	
 	        var schedule_add_user_cross_dialogArguments = new Array();
@@ -1235,11 +1240,56 @@
 		    	document.getElementById("keyword").value = "";
 			}
 		    
-		    var rtn;
-		    function btnok_onclick() {
-		    	rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname1": new Array(), "deptname2": new Array(), "pic": new Array() };
+		    var ladder_add_bmuser_dialogArguments = [];
+		    function add_bm_group() {
+		    	save_userlist();
+		    	ladder_add_bmuser_dialogArguments[0] = rtn;
+		    	ladder_add_bmuser_dialogArguments[1] = set_bm_group_complete;
 		    	
-		    	var listid = "MsgToList"; // ???
+		    	DivPopUpShow(300, 500, "/ezLadder/inputBmName.do");
+		    }
+		    
+		    function set_bm_group_complete(ret_g, ret_u) {
+		    	console.log('즐겨찾기 목록 갱신쓰');
+		    	if(ret_g[0] === "cancle") {
+		    		return;
+		    	}
+		    	
+		    	var flag = ret_g[0];
+		    	var ladderbmid = ret_g[1];
+		    	var bmname = ret_g[2];
+		    	var userids = ret_u[0];
+		    	var usernames = ret_u[1];
+		    	var username2s = ret_u[2];
+		    	
+		    	console.log(ret_g);
+		    	console.log(ret_u);
+		    	
+		    	$.ajax({
+            		type: "POST",
+            		url: "/ezLadder/setLadderBM.do",
+            		traditional: true,
+            		dataType: "json",
+            		data: {
+            			"flag": flag,
+            			"ladderBmId": ladderbmid,
+            			"bmName": bmname,
+            			"userIds": userids,
+            			"userNames": usernames,
+            			"userName2s": username2s
+            		},
+            		success: function(result) {
+            			console.log(result);
+            		}
+            	});
+		    	
+		    }
+		    
+		    var rtn;
+		    function save_userlist() {
+				rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname1": new Array(), "deptname2": new Array(), "pic": new Array() };
+		    	
+		    	var listid = "MsgToList"; 
 		    	var selList = new ListView();
 		        selList.LoadFromID(listid);
 		        
@@ -1247,12 +1297,13 @@
 		        var totalLen = totalRows.length;
 		        
 		        for(var i = 0; i < totalLen; i++) {
-		        	rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
 		        	if(GetAttribute(totalRows[i], "DATA1").substring(0, 14) === "anonyAttendant") {
+		        		rtn["id"][i] = "anonyAttendant_" + i;
 		        		rtn["name"][i] = $("#MsgToList_TR_" + (i + 1) + " input").val();
 		        		rtn["name1"][i] = $("#MsgToList_TR_" + (i + 1) + " input").val();
 		        		rtn["name2"][i] = $("#MsgToList_TR_" + (i + 1) + " input").val();
 		        	} else {
+			        	rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
 			            rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
 			            rtn["name1"][i] = GetAttribute(totalRows[i], "DATA2");
 			            rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3");
@@ -1262,6 +1313,10 @@
 		            rtn["deptname2"][i] = GetAttribute(totalRows[i], "DATA5");
 		            rtn["pic"][i] = GetAttribute(totalRows[i], "DATA9");
 		        }
+		    }
+		    
+		    function btnok_onclick() {
+		    	save_userlist();
 		        
 		        if (!CrossYN()) {
 		            window.returnValue = rtn;
@@ -1273,7 +1328,6 @@
 		        } else {
 		            window.returnValue = rtn;
 		        } 
-		        
 		        window.close();
 		    }
 		
@@ -1430,36 +1484,53 @@
 		        }
 		    }
 		    
-		    function getCircularDept() {
+	    	function get_ladder_bmlist(ladderbmid) {
+	    		var html = "";
+			    var bm_list = [];
+	    		
 		    	$.ajax({
-					url : '/ezCircular/getcircularDeptList.do',
-					type : 'POST',
+					url : '/ezLadder/getLadderBM.do',
+					type : 'GET',
 					dataType : "json",
-					data : {},
+					data : {
+						"ladderBmId": ladderbmid
+					},
    					success : function(result) {
-   						circularDeptList = "";
-   						list = result.circularDeptList;
-
-   						list.forEach(function(vo, index) {
-   							circularDeptList += ("<tr id='" + vo.circularBMID + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
-   							circularDeptList += ("<td style='width:5%'>" + (index + 1) + "</td>");
-   							circularDeptList += ("<td style='width:35%'>" + vo.title + "</td>");
-   							circularDeptList += ("<td style='width:27%'>" + vo.regDate.substring(0,16) + "</td>");
-   							
-   							if (vo.memberNameCount == 0) {
-   								circularDeptList += ("<td style='width:19%'>" + vo.memberName + "</td>");
-   							} else {
-   								circularDeptList += ("<td style='width:19%'>" + vo.memberName + " <spring:message code='ezCircular.t50' /> " + vo.memberNameCount + " <spring:message code='ezCircular.t51' />" + "</td>");
-   							}
-   							
-   							circularDeptList += ("<td style='width:13%'>");
-   							circularDeptList += ("</tr>");
-   						});
+   						bm_list = result["bmList"];
    						
-   						$("#List_TBODY").html("");
-   						$("#List_TBODY").append(circularDeptList);
-					}
-				});
+				    	if(typeof ladderbmid === "undefined") { // 즐겨찾기 그룹 부르기
+				    		console.log("그룹");
+				    	
+							bm_list.forEach(function(group, index) {
+								html += ("<tr id='" + group.ladderBmId + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
+								html += ("<td>" + (index + 1) + "</td>");
+								html += ("<td>" + group.bmName + "</td>");
+								html += ("<td>" + group.regdate + "</td>");
+								html += ("</tr>");
+							});
+							
+							$("#List_TBODY").html("");
+							$("#List_TBODY").append(html);
+				    	} else {
+				    		console.log("멤버들");
+
+				    		bm_list.forEach(function(user, index) {
+				    			html += ("<tr id='nameList" + index + "' name='nameList" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)'  onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
+				    			html += ("<td id='data1' style='width:55%'>" + (index + 1) + "</td>");
+				    			html += ("<td id='data2' style='width:15%'></td>");
+				    			html += ("<td id='data3' style='width:17%'></td>");
+				    			html += ("<td id='data4' style='width:12%'></td>");
+				    			html += ("<td id='data5' style='width:13%'>" + user.userName + "</td>");
+				    			html += ("<td id='data6' style='width:38%'></td>");
+				    			html += ("<td id='data7' style='display:none'>" + user.userId + "</td>");
+				    			html += ("</tr>");
+	   						});
+	   						
+	   						$("#List_TBODY2").html("");
+	   						$("#List_TBODY2").append(html);
+				    	}
+   					}
+   				});
 		    }
 		    
 		    function event_Mover(obj) {
@@ -1477,8 +1548,6 @@
 		    var _RowObject = null;
 		    var _RowObjectID = null;
 		    var _RowObjectName = null;
-		    var _RowObjectArray = new Array();
-
 		    function event_click(obj) {
 		    	if (_RowObject != null) {
 		    		_RowObject.style.backgroundColor = "#ffffff";
@@ -1490,33 +1559,9 @@
 
 		        obj.style.backgroundColor = "rgb(233, 241, 255)";
 		        
-		        $.ajax({
-		        	url : '/ezCircular/getcircularDeptName.do',
-					type : 'POST',
-					dataType : "json",
-					data : {
-						circularBMID : obj.id
-					},
-   					success : function(result) {
-   						circularDeptNamelist = "";
-   						list = result.circularDeptNamelist;
-
-   						list.forEach(function(vo, index) {
-   							circularDeptNamelist += ("<tr id='nameList" + index + "' name='nameList" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click2(this)' ondblclick='event_listDBclick(this)'>");
-   							circularDeptNamelist += ("<td id='data1' style='width:55%'>" + (index + 1) + "</td>");
-   							circularDeptNamelist += ("<td id='data2' style='width:15%'>" + vo.company + "</td>");
-   							circularDeptNamelist += ("<td id='data3' style='width:17%'>" + vo.description + "</td>");
-   							circularDeptNamelist += ("<td id='data4' style='width:12%'>" + vo.title + "</td>");
-   							circularDeptNamelist += ("<td id='data5' style='width:13%'>" + vo.memberName + "</td>");
-   							circularDeptNamelist += ("<td id='data6' style='width:38%'>" + vo.mail + "</td>");
-   							circularDeptNamelist += ("<td id='data7' style='display:none'>" + vo.memberID + "</td>");
-   							circularDeptNamelist += ("</tr>");
-   						});
-   						
-   						$("#List_TBODY2").html("");
-   						$("#List_TBODY2").append(circularDeptNamelist);
-   					}
-		        })
+		        if(_RowObjectID.substring(0, 8) !== "nameList") {
+			        get_ladder_bmlist(_RowObjectID);
+		        } 
 		    }
 		    
 		    function event_click2(obj) {
@@ -1547,6 +1592,8 @@
 		                if (document.getElementById("circularDept_content").style.display == "none") {
 		                    document.getElementById("circularOrgan_content").style.display = "none";
 		                    document.getElementById("circularDept_content").style.display = "";
+		                    $("#circularDept").scrollTop(0);
+		                    $("#List_TBODY2").html("");
 		                }
 		                break;
 		    	}
@@ -1661,11 +1708,9 @@
 	                                            	<table class="mainlist" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
-									                        	<th style="width: 5%;"><span><spring:message code='ezCircular.t31' /></span></th>
-									                            <th style="width: 35%; "><span><spring:message code='ezCircular.t32' /></span></th>
-									                            <th style="width: 27%; "><span><spring:message code='ezCircular.t33' /></span></th>
-									                            <th style="width: 19%; "><span><spring:message code='ezCircular.t34' /></span></th>
-									                            <th style="width: 13%; "></th>
+									                        	<th><span> </span></th>
+									                            <th><span>즐겨찾기 이름</span></th>
+									                            <th><span>등록일</span></th>
 									                        </tr>
 								                        </thead>
 								                        <tbody id="List_TBODY">					                        
@@ -1707,8 +1752,9 @@
 	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:4px;">
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezCircular.t34'/></span>
 	                            </h2>
-	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 516px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                            <div class="receiver_borderbox" style="position: relative;">
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 484px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ladderBmBtn">즐겨찾기 추가</div>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -1723,7 +1769,7 @@
 		
 		<!-- popup start -->
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
-		<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
+	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
 	    </div>
 	    <!-- end -->

@@ -320,9 +320,15 @@ public class EzLadderController {
 		}
 		
 		logger.debug("getLadderBM.do ended.");
-		
-		logger.debug("getLadderBM.do ended.");
 		return "json";
+	}
+	
+	/**
+	 * 즐겨찾기 추가 시 이름 입력 팝업
+	 * */
+	@RequestMapping(value = "/ezLadder/inputBmName.do")
+	public String setBmName() {
+		return "ezLadder/bmNamePopUp";
 	}
 	
 	/**

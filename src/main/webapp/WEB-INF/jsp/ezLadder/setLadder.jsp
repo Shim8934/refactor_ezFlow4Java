@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 		<script type="text/javascript" src="/js/ezLadder/string_component.js"></script>
 		<script type="text/javascript" src="/js/ezLadder/ladderSetting.js"></script>
+		<script type="text/javascript" src="/js/ezLadder/ladder.js"></script>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 		
 		<script type="text/javascript">
@@ -149,8 +150,10 @@
 
 			/** 참여자+아이템 추가 */
 			function manage_attendant_Complete(attendList, attendType, arrayType) {
+				console.log("manage attendant");
 				var len = 0;
 				var totallen = 0;
+				var picsrc = "";
 				
 				if(typeof attendList !== "undefined") {
 					if(arrayType === "xml") { // xml value
@@ -159,6 +162,8 @@
 						
 						for(var i = 0; i < len; i++) {
 							totallen = g_attendant["id"].length;
+							picsrc = "/images/OrganTree/porson_noimg.gif";
+							
 							g_attendant["name"][totallen] = getNodeText(GetChildNodes(SelectNodes(attendList[i], "LISTVIEWDATA/ROWS/ROW")[0])[3]);
 							g_attendant["name1"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA6")[0]);
 							g_attendant["name2"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA7")[0]);
@@ -169,18 +174,27 @@
 								g_attendant["deptname1"][totallen] = "";
 								g_attendant["deptname2"][totallen] = "";
 								g_attendant["pic"][totallen] = "";
-								$("#attendantList").append("<li class='attendant'><input type='text' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
+								$("#attendantList").append("<li class='attendant'><div><img src='" + picsrc + "' width='90px' height='90px' />" + 
+										"<input type='text' class='input' value='" + g_attendant["name"][totallen] + "' />" + 
+										"<span class='remove'>X</span></div></li>");
 							} else {
 								g_attendant["id"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA2")[0]);
 								g_attendant["deptname"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA4")[0]);
 								g_attendant["deptname1"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA8")[0]);
 								g_attendant["deptname2"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA9")[0]);
-								g_attendant["pic"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA5")[0]);
-								$("#attendantList").append("<li class='attendant'><div><img src='/admin/ezOrgan/getPersonalInfo.do?fileName=" + g_attendant["pic"][totallen] + "' width='90px' height='90px' /></div><input type='text' disabled='disabled' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
+								if(!!getNodeText(attendList[i].getElementsByTagName("DATA5")[0])) {
+									g_attendant["pic"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA5")[0]);
+									picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + g_attendant["pic"][totallen];
+								} else {
+									g_attendant["pic"][totallen] = "";
+								}
+								$("#attendantList").append("<li class='attendant'><div><img src='" + picsrc + "' width='90px' height='90px' />" +
+										"<input type='text' disabled='disabled' class='input' value='" + g_attendant["name"][totallen] + "' />" + 
+										"<span class='remove'>X</span></div></li>");
 							}
 							
 							g_item[totallen] = "";
-			            	$("#itemList").append("<li class='item'><input type='text' value='" + g_item[i] + "' /></li>");
+			            	$("#itemList").append("<li class='item'><input type='text' class='input' value='" + g_item[totallen] + "' /></li>");
 						}
 					} else{ // json value
 						console.log('json');
@@ -196,6 +210,8 @@
 						
 						for(var i = 0; i < len; i++) {
 							totallen = g_attendant["id"].length;
+							picsrc = "/images/OrganTree/porson_noimg.gif";
+							
 							g_attendant["name"][totallen] = attendList["name"][i];
 							g_attendant["name1"][totallen] = attendList["name1"][i];
 							g_attendant["name2"][totallen] = attendList["name2"][i];
@@ -206,25 +222,35 @@
 								g_attendant["deptname1"][totallen] = "";
 								g_attendant["deptname2"][totallen] = "";
 								g_attendant["pic"][totallen] = "";
-								$("#attendantList").append("<li class='attendant'><input type='text' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
+								$("#attendantList").append("<li class='attendant'><div><img src='" + picsrc + "' width='90px' height='90px' />" + 
+										"<input type='text' class='input' value='" + g_attendant["name"][totallen] + "' />" + 
+										"<span class='remove'>X</span></div></li>");
 							} else {
 								g_attendant["id"][totallen] = attendList["id"][i];
 								g_attendant["deptname"][totallen] = attendList["deptname"][i];
 								g_attendant["deptname1"][totallen] = attendList["deptname1"][i];;
 								g_attendant["deptname2"][totallen] = attendList["deptname2"][i];
-								g_attendant["pic"][totallen] = attendList["pic"][i];
-								$("#attendantList").append("<li class='attendant'><div><img src='/admin/ezOrgan/getPersonalInfo.do?fileName=" + g_attendant["pic"][totallen] + "' width='90px' height='90px' /></div><input type='text' disabled='disabled' value='" + g_attendant["name"][totallen] + "' /><span class='remove'>X</span></li>");
+								if(!!attendList["pic"][i]) {
+									g_attendant["pic"][totallen] = attendList["pic"][i];
+									picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + g_attendant["pic"][totallen];
+								} else {
+									g_attendant["pic"][totallen] = "";
+								}
+								$("#attendantList").append("<li class='attendant'><div><img src='" + picsrc + "' width='90px' height='90px' />" + 
+										"<input type='text' disabled='disabled' class='input' value='" + g_attendant["name"][totallen] + "' />" + 
+										"<span class='remove'>X</span></div></li>");
 							}
+							
 							if(totallen >= itemlen) {
 								g_item[totallen] = "";
 							}
-							
-			            	$("#itemList").append("<li class='item'><input type='text' value='" + g_item[totallen] + "' /></li>");
+			            	$("#itemList").append("<li class='item'><input type='text' class='input' value='" + g_item[totallen] + "' /></li>");
 						}
 					}
 				}
 				changeSliderValue();
 				add_user_change_ulsize(g_attendant["id"].length);
+				changeUser(len, "add");
 				console.log(g_attendant);
 			}
 
@@ -260,6 +286,7 @@
 				add_user_change_ulsize(g_attendant["id"].length);
 				
 				changeSliderValue()
+				changeUser(1);
 			}
 
 			/** 이름 검색 */
@@ -537,6 +564,7 @@
 						<div class="wrap center" style="height: 100%; width: 100%;">
 							<div id="addAttendant" class="icondiv">add</div>
 							<div id="ladderLineBox" style="height: 100%; width: 100%; border: 1px solid gray">
+								<canvas id='ladderCanvas' width="0" height="650"></canvas>
 								<ul id="attendantList"></ul>
 								<ul id="itemList"></ul>
 							</div>
@@ -556,8 +584,9 @@
 				</tr>
 			</table>
 		</div>
+		<%-- <canvas id='ladderCanvas' width="500px" height="500px" style="border: 1px solid black"></canvas> --%>
 		
-		<span id="makeLad"><h3>만들기</h3></span>
+		<span id="tetetest"><h3>만들기</h3></span>
 		
 		<!-- popup start -->
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
