@@ -35,7 +35,7 @@
 			</div> <!-- leLetterInfo End -->
 			<!-- editor -->
 			<div class="leLetterEditer">
-				<iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILLETTER" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+				<iframe id="tbContentElement" class="viewbox" src="" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 				<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; display:none;"></textarea>
 			</div>
 			<!-- 에디터에서 사용 -->
@@ -45,62 +45,71 @@
 			</div>
 			<!-- btns -->
 			<div class="leLetterBtns">
-				<button id="leSave" onClick="letterSave(this)" data-letterId="${letterId }"  data-boxNo="${letterBoxNo }">저장</button>
+				<button id="leSave" onClick="letterSave(this)">저장</button>
 				<button id="leClose" onClick="letterPopUpClose()">취소</button>
 			</div>
 		</div> <!-- leLetter End -->
 	</div>
 		
 		<script>
-			var letterPopUp = true; // 에디터에서 이미지 업로드 할때 편지지 팝업인지 구분 (ckImageUpload.jsp -> fileupload())
-			var letterId = $("#leSave").attr("data-letterId");
-			var letterBoxNo = $("#leSave").attr("data-boxNo");
-			var letterNo = "${letterNo }";
-			var popUpType = "${popUpType}"; // add : 작성, modify : 수정
+			var popUpType = "${popUpType}"; // add 작성, modify 수정
+			var popLetterBoxNo = "${letterBoxNo}";
+			var popLetterId = "${letterId}"; // 수정일 경우  null   modifyLoad()에서 저장됨
+			var popLetterNo = "${letterNo}"; // 저장일 경우 -1
+			var modifyData = "";
 			
-			window.onload = function(){
+			var letterPopUp = true; // 에디터에서 이미지 업로드 할때 편지지 팝업인지 구분 (ckImageUpload.jsp -> fileupload())
+			
+			window.onload = function() {
 				if (popUpType == "modify") {
-					modifyLoad(letterNo);
+					modifyLoad(popLetterNo);
+				}
+				
+				$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=MAILLETTER");
+			}
+			
+			// editor onload 됐을때
+			function Editor_Complete(){
+				if (popUpType == "modify") {
+					modifyDataView();
 				}
 			}
 			
+			function modifyDataView() {
+				$("#displayname").val(modifyData.displayname);
+				$("#displayname2").val(modifyData.displayname2);
+				
+				window.message.SetEditorContent(modifyData.letterHtml);
+			}
 			// 수정하기 팝업일 때
 			function modifyLoad(letterNo){
 				$.ajax({
 					type:"POST",
-					data:{letterNo:letterNo,popUpType:popUpType},
+					data:{
+						letterNo:popLetterNo,
+						popUpType:popUpType
+					},
 					url:"/admin/ezEmail/readLetter",
 					dataType:"json",
 					success:function(data){
-						$("#leSave").attr("data-letterId", data.letterId);
-						$("#displayname").val(data.displayname);
-						$("#displayname2").val(data.displayname2);
-						window.message.SetEditorContent(data.letterHtml);	
+						popLetterId = data.letterId;
+						modifyData = data;
 					}
 				});
 			}
 			
-			
+			//e
 			// 저장 버튼 클릭시                  btn -> this
 			function letterSave(btn) {
-				//편지지명, 편지지명(영문), 편지지 내용, 편지지함, 편지지 고유 id
 				var letterEditor = document.getElementById("tbContentElement").contentWindow;
 				var letterEditorIframe = letterEditor.document.getElementsByTagName("iframe")[0].contentDocument.documentElement;
-				
-				letterEditorIframe.getElementsByTagName("body")[0].setAttribute("contenteditable",false); // 에디터 작성
 				var letterContentChk = letterEditor.GetEditorContent(); // 에디터에 작성한 내용
-				var letterContent = letterEditorIframe.outerHTML; // 에디터 html
-	
-				var letterJson = {
-					"displayname" : $("#displayname").val(),
-					"displayname2" : $("#displayname2").val(),
-					"letterContent" : letterContent,
-					"letterBoxNo" : $(btn).attr("data-boxNo"),
-					"letterId" : $(btn).attr("data-letterId")
-				};
 				
+				var displayname = $("#displayname").val();
+				var displayname2 = $("#displayname2").val();
+	
 				// 편지지명 없을때 return
-				if (letterJson.displayname.trim() == "" || letterJson.displayname2.trim() == "") {
+				if (displayname.trim() == "" || displayname2.trim() == "") {
 					alert("편지지명을 입력해주세요.");
 					return;
 				}
@@ -109,6 +118,18 @@
 					alert("편지지를 작성해주세요.");
 					return;
 				}
+
+				letterEditorIframe.getElementsByTagName("body")[0].setAttribute("contenteditable",false); // 에디터 작성 
+				var letterContent = letterEditorIframe.outerHTML; // 에디터 html
+				
+				var letterJson = {
+					"displayname" : displayname,
+					"displayname2" : displayname2,
+					"letterContent" : letterContent,
+					"letterBoxNo" : popLetterBoxNo,
+					"letterId" : popLetterId,
+					"letterNo" : popLetterNo
+				};
 				
 				//letterUpload(letterJson);
 				letterUpload(letterJson,popUpType);
@@ -116,30 +137,22 @@
 			
 			// 저장 기능
 			function letterUpload(letterJson, type) {
-				var uploadUrl = type == "add" ? "/admin/ezEmail/createLetter" : "/admin/ezEmail/updateDisplayNameLetter";
-				var uploadData = {	displayname:letterJson.displayname,
-									displayname2:letterJson.displayname2,
-									letterBoxNo:letterJson.letterBoxNo,
-									letterId:letterJson.letterId,
-									letterContent:letterJson.letterContent
-									};
-				
-				//if (popUpType == "modify") {
-				if (type == "modify") {
-					uploadData.letterNo = letterNo;
-				}
+				var uploadUrl = type == "add" ? "/admin/ezEmail/createLetter.do" : "/admin/ezEmail/updateDisplayNameLetter.do";
 				
 				$.ajax({
 					type:"POST",
-					data:uploadData,
+					data:letterJson,
 					url:uploadUrl,
 					success:function(data){
 						alert("저장했습니다.");
+						if (type != "add") {
+							opener.letterPreView(letterJson.letterNo);	
+						}
 						opener.getLetterList(letterJson.letterBoxNo); // 편지지 리스트
 						letterPopUpClose(); // 편지지 팝업 닫기
 					},
 					error:function(e){
-						alert(e);
+						console.log(e);
 					}
 				});
 			}
@@ -148,9 +161,6 @@
 				window.close();
 			}
 			
-			/* function Editor_Complete(){
-				console.log("솨솨");
-			} */
 		</script>	
 	</body>
 </html>

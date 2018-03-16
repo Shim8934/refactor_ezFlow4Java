@@ -337,7 +337,7 @@ public class EzEmailAdminLetterController {
 		return returnStr;
 	}
 	/**
-	 * 편지지 관리페이지 (수아)
+	 * 편지지 관리페이지 화면 전환(수아)
 	 */
 	@RequestMapping("/admin/ezEmail/letterAdminPage.do")
 	public String letterAdminPage(@CookieValue("loginCookie") String loginCookie, String companyId, Model model) throws Exception{
@@ -357,12 +357,12 @@ public class EzEmailAdminLetterController {
 	}
 	
 	/**
-	 * 편지지 추가,수정 팝업  (수아)
+	 * 편지지 추가,수정 팝업  화면 전환(수아)
 	 */
 	@RequestMapping("/admin/ezEmail/letterEditPopUp.do")
 	public String letterAdminAddSetPopUp(@CookieValue("loginCookie") String loginCookie, String letterBoxNo, String popUpType , String letterNo, Model model) throws Exception{
 		logger.debug("letterAdminAddSetPopUp started.");
-		logger.debug("letterBoxNo=" + letterBoxNo + ", popUpType=" + popUpType);
+		logger.debug("letterBoxNo=" + letterBoxNo + ", popUpType=" + popUpType + ", letterNo=" + letterNo);
 
 		// 관리자 권한체크      
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
@@ -452,9 +452,9 @@ public class EzEmailAdminLetterController {
 	 * @param : displayname, displayname2, letterBoxNo
 	 * @return : "OK" or "ERROR" or "파일생성이 안되었습니다."
 	 */
-	@RequestMapping("/admin/ezEmail/createLetter")
+	@RequestMapping("/admin/ezEmail/createLetter.do")
 	@ResponseBody
-	public String createLetter(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, @ModelAttribute MailLetterVO letter) throws Exception{
+	public String createLetter(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @ModelAttribute MailLetterVO letter) throws Exception{
 		logger.debug("createLetter started.");
 		logger.debug("letter=" + letter);
 		
@@ -471,15 +471,15 @@ public class EzEmailAdminLetterController {
 		String letterBoxNo = Integer.toString(letter.getLetterBoxNo()); // 편지지함 번호
 		String letterId = letter.getLetterId(); // 편지지 uuid
 		String letterContent = letter.getLetterContent(); // 편지지 내용(html)
+		String letterNo = Integer.toString(letter.getLetterNo());
 		logger.debug("letterBoxNo=" + letterBoxNo + ", letterId=" + letterId + ", displayname:" + displayname
-				+ ", displayname2=" + displayname2 + ", letterContent=" + letterContent);
+				+ ", displayname2=" + displayname2 + ", letterContent=" + letterContent + ", letterNo=" + letterNo);
 
 		// 편지지 내용(html)저장
 		String fileType = "html";
 		String filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String fileName = "letter." + fileType;
-		// String fileName = UUID.randomUUID() + "." + fileType;
 		
 		// files/upload_mail/letterBoxUpload/.../...
 		filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId;
@@ -502,7 +502,7 @@ public class EzEmailAdminLetterController {
 			if (file.exists()) {
 				EzEmailAdminLetterService.addLetter(displayname, displayname2, letterBoxNo, letterId);
 			} else {
-				returnStr = "파일생성이 안되었습니다.";
+				throw new Exception();
 			}
 			
 		} catch (Exception e) {
@@ -519,7 +519,7 @@ public class EzEmailAdminLetterController {
 	 * @param displayname, displayname2, letterNo
 	 * @return : "OK" or "ERROR"
 	 */
-	@RequestMapping("/admin/ezEmail/updateDisplayNameLetter")
+	@RequestMapping("/admin/ezEmail/updateDisplayNameLetter.do")
 	@ResponseBody
 	public String updateDisplayNameLetter(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, @ModelAttribute MailLetterVO letter) throws Exception{
 		logger.debug("updateDisplayNameLetter started.");
@@ -588,7 +588,7 @@ public class EzEmailAdminLetterController {
 	 * @param letterOrder, letterNo (편지지 순서, 편지지 번호)
 	 * @return : "OK" or "ERROR"
 	 */
-	@RequestMapping("/admin/ezEmail/updateOrderLetter")
+	@RequestMapping("/admin/ezEmail/updateOrderLetter.do")
 	@ResponseBody
 	public String updateOrderLetter(@CookieValue("loginCookie") String loginCookie, String letterNo, String letterOrder) throws Exception{
 		logger.debug("updateOrderLetter started.");
@@ -618,7 +618,7 @@ public class EzEmailAdminLetterController {
 	 * @param letterNo, letterBoxNo (편지지 번호, 편지지함 번호)
 	 * @return : "OK" or "ERROR"
 	 */
-	@RequestMapping("/admin/ezEmail/updateBoxLetter")
+	@RequestMapping("/admin/ezEmail/updateBoxLetter.do")
 	@ResponseBody
 	public String updateBoxLetter(@CookieValue("loginCookie") String loginCookie, String letterNo, String letterBoxNo) throws Exception{
 		logger.debug("updateBoxLetter started.");
@@ -729,31 +729,31 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping("/admin/ezEmail/readLetter")
 	@ResponseBody
-	public JSONObject readLetter(@CookieValue("loginCookie") String loginCookie, String letterNo,String popUpType, HttpServletRequest request) throws Exception{
+	public JSONObject readLetter(@CookieValue("loginCookie") String loginCookie, String letterNo, String popUpType, HttpServletRequest request) throws Exception{
 		logger.debug("readLetter started.");
-		logger.debug("letterNo=" + letterNo);
+		logger.debug("letterNo=" + letterNo + ", popUpType=" + popUpType);
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		JSONObject returnJson = new JSONObject();
 		
 		String fileType = "html";
+		String fileName = "letter." + fileType;
 		String filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
-		String fileName = "letter." + fileType;
-		
 		logger.debug("filePath=" + filePath);
+		
 		try {
 			returnJson = EzEmailAdminLetterService.selectDetailLetter(letterNo);
 
 			String letter = filePath + commonUtil.separator + returnJson.get("letterBoxNo") + "/" 
 						+ returnJson.get("letterId") + "/" + fileName;
+			
 			File file = new File(realPath + letter);
 			
 			if (!file.exists()) {
 				letter = "ERROR";
 			} else {
-				logger.debug("popUpType=" + popUpType);
 				if (popUpType != null && popUpType.equals("modify")) {
 					String letterHtml = "";
 					String letterHtmlTemp = "";
