@@ -343,4 +343,26 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeUserConfigListCount ended");
 		return totalCount;
 	}
+
+	@Override
+	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId,
+			String userId, String startDate, String endDate, String apprUserName, String sysLang, String offSet) throws Exception {
+		LOGGER.debug("getUsersModiyAtt started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("apprUserName", apprUserName);
+		map.put("sysLang", sysLang);
+		map.put("offSet", offSet);
+		
+		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getUsersModiyAtt(map); 
+		
+		LOGGER.debug("getUsersModiyAtt started");
+		return attAppList;
+	}
 }

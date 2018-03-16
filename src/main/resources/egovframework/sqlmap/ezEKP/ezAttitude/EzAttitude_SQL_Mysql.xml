@@ -2,8 +2,73 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezAttitude">
-	
-	
+	<typeAlias alias="AttitudeDeptVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO"/>
+	<typeAlias alias="AttitudeConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO"/>
+	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
+	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
+	<typeAlias alias="AttitudeApplicationVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO"/>
 
-	
+	<resultMap id="attitudeApplicationVO" class="AttitudeApplicationVO">
+		<result property="attitudeId"		column="ATTITUDE_ID" 	columnIndex="1"/>
+		<result property="changeDate"		column="CHANGE_DATE" 	columnIndex="2"/>
+		<result property="apprUserName"		column="APPR_USER_NAME" columnIndex="3"/>
+		<result property="originDate"		column="START_DATE" 	columnIndex="4"/> 		
+		<result property="apprStatus"		column="APPR_STATUS" 	columnIndex="5"/>
+	</resultMap>
+		
+	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
+		<result property="userId" 					column="USERID" 				columnIndex="1"/>
+		<result property="workStartTime"			column="WORKSTARTTIME"			columnIndex="2"/>
+		<result property="workEndTime" 				column="WORKENDTIME" 			columnIndex="3"/>
+		<result property="userTitle"				column="TITLE"					columnIndex="4"/>
+		<result property="userName" 				column="DISPLAYNAME" 			columnIndex="5"/>
+		<result property="deptName" 				column="DESCRIPTION" 			columnIndex="6"/>
+	</resultMap>
+
+	<sql id="ezAttitudeDAO.searchQuery">
+		<isNotEmpty property="apprUserName" prepend="and">
+			<isNotEmpty property="apprUserName" >
+				<isEqual property="sysLang" compareValue="primary" >
+						APPR_USER_NAME LIKE CONCAT('%', #apprUserName#,'%')
+				</isEqual>
+				<isNotEqual property="sysLang" compareValue="primary">
+						APPR_USER_NAME2 LIKE CONCAT('%', #apprUserName#,'%')
+				</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offSet# MINUTE), '%Y-%m-%d') >= #startDate# 
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offSet# MINUTE), '%Y-%m-%d') <= #endDate#
+			]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="ezAttitudeDAO.getUsersModiyAtt" parameterClass="Map" resultMap="attitudeApplicationVO">
+		<![CDATA[
+			SELECT
+					a.attitude_id as ATTITUDE_ID,
+					a.change_date as CHANGE_DATE,
+					a.appr_user_name as APPR_USER_NAME,
+					b.start_date as START_DATE,
+					a.appr_status as APPR_STATUS
+			FROM 
+				jmocha.tbl_attitude_modappl a 
+			inner 
+				join tbl_attitude b 
+			on 
+				a.ATTITUDE_ID = b.ATTITUDE_ID
+			where 
+				a.COMPANY_ID = #companyId#
+			and 
+				a.TENANT_ID = #tenantId#
+			and 
+				a.WRITER_ID = #userId#
+		]]>
+		<include refid="ezAttitudeDAO.searchQuery"/>
+	</select>
 </sqlMap>
