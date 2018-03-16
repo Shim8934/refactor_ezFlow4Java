@@ -152,6 +152,10 @@
     margin-top: 15px;	
 }
 
+.popup .wrap {
+	margin-top: 50px;
+}
+
 .left {
 	padding: 0px 0px 0px 20px;	
 }
@@ -203,4 +207,14 @@
     top: 0px;
     left: 0px;
     z-index: -20;
+}
+
+#ladderBmBtn {
+	height: 32px;
+    position: absolute;
+    bottom: -32px;
+    right: -1px;
+    width: 252px;
+    border: 1px solid gray;
+    text-align: center;
 }
