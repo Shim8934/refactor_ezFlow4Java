@@ -99,17 +99,30 @@
 				folder.folder_id as id ,if( folder.folder_upper = 'root', '##', folder.folder_upper )  as parent, folder.folder_name1 as text
 			from TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
 			where  SUBSTRING_INDEX(SUBSTRING_INDEX(folder.FOLDER_PATH, '|' ,3), '|', -1) in(
-				select  distinct folder.folder_id
-				FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
-				where   folder.TENANT_ID = #tenantId# and user.TENANT_ID = #tenantId# and folder.folder_type = #folderType# and folder.company_id = #comId# 
-			    and (user.USER_ID IN (select cn as cn  
-										from tbl_deptmaster 
-										where DEPT_CD_PATH like concat('%',#deptId#,'%') or (select deptid as cn from tbl_addjobmaster where cn = #userId#)) 
-				or user.USER_ID = #userId# or user.USER_ID = #comId#)
-				) 
+						select  distinct folder.folder_id
+						FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
+						where   	 folder.TENANT_ID = #tenantId# 
+								 and user.TENANT_ID = #tenantId# 
+								 and folder.folder_type = #folderType# 
+								 and folder.company_id = #comId# 
+					   			 and (user.USER_ID IN (
+						    			select dept.cn 
+										from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
+										where addj.cn = #userId# or dept.cn = #deptId#) 
+									  or user.USER_ID = #userId# 
+									  or user.USER_ID = #comId#)
+						) 
 			    and folder.use_status = 'Y'
-		    or (folder.FOLDER_UPPER = 'root' and folder.folder_type = #folderType# AND folder.TENANT_ID = #tenantId# and folder.company_id =#comId# 
-			and folder.use_status = 'Y' )
+		    or (folder.FOLDER_UPPER = 'root' 
+		    	and folder.folder_type = #folderType# 
+		    	AND folder.TENANT_ID = #tenantId# 
+		    	and folder.company_id = #comId# 
+				and folder.use_status = 'Y' 
+				AND (	folder.OWNER_ID = #comId# 
+					 or folder.OWNER_ID IN (
+							select dept.cn 
+							from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
+							where addj.cn = #userId# or dept.cn = #deptId#) ))
 	        order by folder.create_date
 	        
 	                      
@@ -144,7 +157,7 @@
 				file.CREATE_ID	,
 				file.CREATE_NAME1,
 				file.CREATE_NAME2,
-				file.CREATE_DATE  ,
+				file.CREATE_DATE  as CREATE_DATE,
 				file.UPDATE_ID	,
 				file.UPDATE_DATE  ,        	 
 				file.TENANT_ID		
@@ -159,16 +172,7 @@
                 and file.USE_STATUS = 'Y'
                 and folder.company_id = #comId#
 		]]>	
-		<isEqual property="parentId" compareValue="root" prepend="AND">
-			<![CDATA[
-				folder.FOLDER_PATH like CONCAT ('|', #folderId#,'%')
-	   		]]>	
-		</isEqual>	
-		<isNotEqual property="parentId" compareValue="root" prepend="AND">
-			<![CDATA[
-				folder.FOLDER_ID = #folderId#
-	   		]]>	
-		</isNotEqual>	
+		
 		
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
 			<![CDATA[
@@ -190,11 +194,85 @@
 				file.FILE_NAME LIKE CONCAT('%', #searchFileName#, '%')
        		]]> 
 		</isNotEqual>	
-		<![CDATA[	
+		<isEqual property="parentId" compareValue="root">
+	   		<isNotEqual property="folderType" compareValue="U" >
+	   			<![CDATA[
+	   			and  SUBSTRING_INDEX(SUBSTRING_INDEX(folder.FOLDER_PATH, '|' ,3), '|', -1) in(
+				select  distinct folder.folder_id
+				FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
+				where   folder.TENANT_ID = #tenantId# and user.TENANT_ID = #tenantId# 
+					and folder.folder_type = #folderType# and folder.company_id = #comId#
+			    and (user.USER_ID IN (select dept.cn 
+										from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
+										where addj.cn = #userId# or dept.cn = #deptId#) 
+				or user.USER_ID = #userId# or user.USER_ID = #comId#)
+				)
+				
+				]]>	
+	   		</isNotEqual>
+	   		<isEqual property="folderType" compareValue="U" >
+		   		<![CDATA[
+		   			and folder.FOLDER_PATH like CONCAT ('|', #folderId#,'%')
+					ORDER BY CREATE_DATE 
+						LIMIT #pStart#, #pEnd#
+				]]>	
+			</isEqual>		
+		</isEqual>	
+		
+		
+		<isNotEqual property="parentId" compareValue="root" >
+			<isNotEqual property="folderType" compareValue="U" >
+	   			<![CDATA[
+	   			and  SUBSTRING_INDEX(SUBSTRING_INDEX(folder.FOLDER_PATH, '|' ,3), '|', -1) in(
+				select  distinct folder.folder_id
+				FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
+				where   folder.TENANT_ID = #tenantId# and user.TENANT_ID = #tenantId# 
+					and folder.folder_type = #folderType# and folder.company_id = #comId#
+			    and (user.USER_ID IN (select dept.cn 
+										from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
+										where addj.cn = #userId# or dept.cn = #deptId#) 
+				or user.USER_ID = #userId# or user.USER_ID = #comId#)
+				)
+				]]>	
+	   		</isNotEqual>
+			<![CDATA[
+					and	folder.FOLDER_ID = #folderId#
+				
+				union all
+	            	select DISTINCT
+						type.TYPE_ICON		AS TYPE_ICON    ,     
+						folder.FOLDER_PATH  AS FOLDER_PATH  ,     
+						folder.FOLDER_NAME1 AS FOLDER_NAME1 ,    
+						folder.FOLDER_ID    AS FILE_ID 	    ,     
+						folder.FOLDER_NAME1 AS FILE_NAME	,     
+						folder.FOLDER_PATH  AS FILE_PATH	,     
+						0 					AS FILE_SIZE	,     
+						"folder"			AS TYPE_ID		, 	  
+						0 					AS DOWN_COUNT   ,     
+						"folder"            AS FILE_EXT     ,     
+						folder.FOLDER_ID	AS FOLDER_ID    ,     
+						folder.USE_STATUS   AS USE_STATUS   ,     
+						folder.CREATE_ID	AS CREATE_ID    ,     
+						folder.CREATE_NAME1 AS CREATE_NAME1 ,     
+						folder.CREATE_NAME2 AS CREATE_NAME2 ,     
+						folder.CREATE_DATE  AS CREATE_DATE  ,     
+						folder.UPDATE_ID	AS UPDATE_ID    ,     
+						folder.UPDATE_DATE  AS UPDTAE_DATE ,     	 
+						folder.TENANT_ID	as TENANT_ID	      
+		            from 
+			            tbl_webfolder_filetype AS type LEFT OUTER JOIN  tbl_webfolder_folder as folder ON type.TYPE_NAME = "folder"
+		            where 
+							folder.tenant_id = #tenantId#	 
+						and folder.FOLDER_TYPE = #folderType#
+		                and folder.USE_STATUS = 'Y'
+		                and folder.folder_upper = #folderId#
+		                and folder.company_id = #comId#
+		                ORDER BY CREATE_DATE desc
+						LIMIT #pStart#, #pEnd#
+						
+	   		]]>	
+		</isNotEqual>
 			
-			ORDER BY file.CREATE_DATE 
-			LIMIT #pStart#, #pEnd#
-		]]> 	
 	</select>
 	
 	<select id="EzWebFolderDAO_y.getFileToTalCount" resultClass="Integer" parameterClass="Map">   
@@ -255,18 +333,21 @@
 			where  SUBSTRING_INDEX(SUBSTRING_INDEX(folder.FOLDER_PATH, '|' ,3), '|', -1) in(
 				select  distinct folder.folder_id
 				FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
-				where   folder.TENANT_ID = #tenantId# and user.TENANT_ID = #tenantId# and folder.company_id = #comId# 
-			    and (user.USER_ID IN (select cn as cn  
-										from tbl_deptmaster 
-										where DEPT_CD_PATH like concat('%',#deptId#,'%') or (select deptid as cn from tbl_addjobmaster where cn = #userId#)) 
+				where   folder.TENANT_ID = #tenantId# 
+					and user.TENANT_ID = #tenantId# 
+					and folder.company_id = #comId# 
+			    	and (user.USER_ID IN (select dept.cn 
+										from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
+										where addj.cn = #userId# or dept.cn = #deptId#) 
 				or user.USER_ID = #userId# or user.USER_ID = #comId#)
 				)
 			or (folder.FOLDER_UPPER = 'root' AND folder.TENANT_ID = #tenantId# and folder.company_id =#comId# 
-				and folder.use_status = 'Y' ) 
+				and folder.use_status = 'Y' and folder.OWNER_ID = #comId#) 
 			or (folder.use_status = 'Y'	AND folder.TENANT_ID = #tenantId# and folder.COMPANY_ID = #comId# 
-					and (folder.OWNER_ID = #userId# or  folder.OWNER_ID = #deptId# or folder.OWNER_ID IN (select cn as cn  
-										from tbl_deptmaster 
-										where DEPT_CD_PATH like concat('%',#deptId#,'%') or (select deptid as cn from tbl_addjobmaster where cn = #userId#))  ))
+					and (folder.OWNER_ID = #userId# or  folder.OWNER_ID = #deptId# or  folder.OWNER_ID = #comId# or folder.OWNER_ID IN (
+										select dept.cn 
+										from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
+										where addj.cn = #userId# or dept.cn = #deptId#)  ))
 	        order by folder.FOLDER_TYPE, folder.CREATE_DATE
 	    ]]>
 	        
@@ -288,24 +369,32 @@
 				folder.FOLDER_ID as id ,if( folder.folder_upper = 'root', '##', folder.FOLDER_UPPER )as parent,
 				folder.FOLDER_NAME1 as text
 			from TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.FOLDER_ID  = user.FOLDER_ID
-			where folder.folder_type = #folderType# and folder.use_status = 'Y'
-				AND folder.TENANT_ID = #tenantId# and folder.COMPANY_ID = #comId# and folder.OWNER_ID = #userId#
+			where 		folder.folder_type = #folderType# 
+					and folder.use_status = 'Y'
+					AND folder.TENANT_ID = #tenantId# 
+					and folder.COMPANY_ID = #comId# 
+					and folder.OWNER_ID = #userId#
 			order by folder.create_date
 		]]>
 	</select>
 	<select id="EzWebFolderDAO_y.getFolderList_D" resultClass="HashMap" parameterClass="Map" >
 		<![CDATA[
-			select distinct
-				folder.folder_id as id ,if( folder.folder_upper = 'root', '##', folder.folder_upper )as parent,
-				folder.folder_name1 as text
+			SELECT distinct
+				folder.folder_id as id ,if( folder.folder_upper = 'root', '##', folder.folder_upper )  as parent, folder.folder_name1 as text
 			from TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
-			where folder.folder_type = #folderType# AND folder.TENANT_ID = #tenantId# AND folder.COMPANY_ID = #comId# 
-				and folder.OWNER_ID IN (select cn as cn  
-										from tbl_deptmaster 
-										where DEPT_CD_PATH like concat('%',#deptId#,'%') or (select deptid as cn from tbl_addjobmaster where cn = #userId#)
-											and tenant_id = #tenantId#)
-				and folder.use_status = 'Y'	
-			order by folder.create_date 	
+			where  (		folder.folder_type = #folderType# 
+			            AND folder.TENANT_ID = #tenantId# 
+			            and folder.company_id = #comId# 
+						and folder.use_status = 'Y' 
+			            AND ( folder.OWNER_ID IN (
+								select dept.cn 
+								from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
+								where      DEPT_CD_PATH like concat('%',#deptId#,'%') 
+										or DEPT_CD_PATH regexp (select group_concat(deptid separator '|' ) as cn 
+																from tbl_addjobmaster 
+																where cn =#userId# )) ))
+			order by folder.create_date
+			
 		]]>
 	</select>
 	
@@ -398,10 +487,9 @@
 	</insert>
 	<insert id="EzWebFolderDAO_y.insertFolderUsr" parameterClass="Map">
 		<selectKey keyProperty="id" resultClass="int">
-			SELECT MAX(SEQ_ID) 
-			FROM TBL_WEBFOLDER_FOLDERUSR 
-			WHERE TENANT_ID = #tenantId# AND COMPANY_ID = #companyId#
-
+			SELECT MAX(CONVERT(SEQ_ID,UNSIGNED))+1 
+			FROM TBL_WEBFOLDER_FOLDERUSER 
+			WHERE TENANT_ID = #tenantId# 
 		</selectKey>
 		
 		<![CDATA[
@@ -421,6 +509,133 @@
 			SELECT if(MAX(FOLDER_STEP) is not null, +1,0)
 			FROM TBL_WEBFOLDER_FOLDER 
 			WHERE FOLDER_UPPER = #folderUppId# and tenant_id = #tenantId#
+		]]>
+	</select>
+	
+	
+	
+	<select id="EzWebFolderDAO_y.getDeptFolder" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			
+			SELECT distinct
+				folder.folder_id as id ,if( folder.folder_upper = 'root', '##', folder.folder_upper )  as parent, folder.folder_name1 as text,
+				folder.owner_id as owner
+			from TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
+			where  SUBSTRING_INDEX(SUBSTRING_INDEX(folder.FOLDER_PATH, '|' ,3), '|', -1) in(
+				select  distinct folder.folder_id
+				FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
+				where   folder.TENANT_ID = #tenantId# 
+						and user.TENANT_ID = #tenantId# 
+						and folder.folder_type = #folderType# 
+						and folder.company_id = #comId# 
+			   			and (user.USER_ID IN (
+				   				select dept.cn 
+								from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
+								where addj.cn = #userId# or dept.cn = #deptId#)
+							or user.USER_ID = #userId# or user.USER_ID = #comId#) 
+					
+				) 
+			    and folder.use_status = 'Y'
+		    or ( 		folder.FOLDER_UPPER = 'root' 
+					and folder.folder_type = #folderType#
+		    		AND folder.TENANT_ID = #tenantId# 
+		     		and folder.company_id = #comId# 
+					and folder.use_status = 'Y' AND folder.owner_id = #deptId# )
+	        order by folder.create_date
+			
+		]]>
+	</select>
+	<select id="EzWebFolderDAO_y.getAddJobList" parameterClass="Map" resultClass="HashMap"> 
+		<![CDATA[
+			select DEPTID as cn from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#
+		]]>
+	</select>
+	<select id="EzWebFolderDAO_y.getDeptAddJobList" parameterClass="Map" resultClass="HashMap"> 
+		<![CDATA[
+			select cn from tbl_addjobmaster where DEPTID = #deptId# and tenant_id = #tenantId#
+		]]>
+	</select>
+	<select id="EzWebFolderDAO_y.getDeptSub" parameterClass="Map" resultClass="HashMap"> 
+		<![CDATA[
+			select cn , EXTENSIONATTRIBUTE9 from tbl_deptmaster where DEPT_CD_PATH like concat('%',#deptId#,'%')
+		]]>
+	</select>
+	<select id="EzWebFolderDAO_y.existCheck" parameterClass="Map" resultClass="Integer"> 
+		<![CDATA[
+				SELECT count(owner_id)
+				FROM tbl_webfolder_folder 
+				WHERE tenant_id =#tenantId# and company_id = #comId# and folder_type = #folderType#  and folder_upper='root'
+		]]>
+		<isEqual property="folderType" compareValue="C" prepend="AND">
+			<![CDATA[
+				owner_id = #comId#
+	   		]]>	
+		</isEqual>
+		<isEqual property="folderType" compareValue="D" prepend="AND">
+			<![CDATA[
+				owner_id = #deptId#
+	   		]]>	
+		</isEqual>
+		<isEqual property="folderType" compareValue="U" prepend="AND">
+			<![CDATA[
+				owner_id = #userId#
+	   		]]>	
+		</isEqual>
+	</select>
+	
+<!-- 	<select id="EzWebFolderDAO_y.getdeptAllSub" parameterClass="Map" resultClass="HashMap">  -->
+<!-- 		<![CDATA[ -->
+<!-- 			select cn -->
+<!-- 			from tbl_deptmaster  -->
+<!-- 			where DEPT_CD_PATH like concat('%',#deptId#,'%') -->
+<!-- 		]]> -->
+<!-- 	</select> -->
+	
+	<select id="EzWebFolderDAO_y.getdeptInfo" parameterClass="Map" resultClass="HashMap"> 
+		<![CDATA[
+			select
+				cn , displayname, displayname2 ,EXTENSIONATTRIBUTE9 ,EXTENSIONATTRIBUTE1 
+			from tbl_deptmaster
+			WHERE tenant_id =#tenantId# and cn =#deptId#
+		]]>
+	</select>
+	<select id="EzWebFolderDAO_y.deptTest" parameterClass="Map" resultClass="HashMap"> 
+		<![CDATA[
+			SELECT   
+				f.folder_id 	   as id ,
+				if( f.folder_upper = 'root', '##', f.folder_upper )  as parent, f.folder_name1 as text,
+				f.owner_id as owner
+				
+			FROM   
+				TBL_WEBFOLDER_FOLDER f JOIN   
+				( 
+				select d1.* 
+				 
+				from tbl_deptmaster d1 left outer join tbl_addjobmaster a on(d1.cn = a.deptid AND d1.TENANT_ID = a.TENANT_ID )  
+				where  
+				(a.CN = #userId# OR d1.CN = #deptId#)   
+				AND   
+				d1.TENANT_ID = #tenantId# 
+				
+				union   
+				   
+				select    
+				d2.*   
+				from    
+				tbl_deptmaster d2 right join    
+				                     (select DEPT_CD_PATH,TENANT_ID  
+				                      from tbl_deptmaster 
+				                      where EXTENSIONATTRIBUTE9 = #userId# and tenant_id = #tenantId# ) as a   
+				                     on d2.DEPT_CD_PATH LIKE concat(a.DEPT_CD_PATH, "%") and d2.TENANT_ID = a.TENANT_ID   
+				   
+				) AS s ON f.OWNER_ID = s.CN AND f.TENANT_ID = s.TENANT_ID AND f.FOLDER_TYPE = #folderType# AND f.OWNER_ID = s.CN   
+			WHERE   
+				f.TENANT_ID = #tenantId# 
+				AND   
+				f.USE_STATUS = 'Y'   
+				ORDER BY   
+				f.FOLDER_LEVEL ASC,   
+				f.FOLDER_STEP  ASC
 		]]>
 	</select>
 	

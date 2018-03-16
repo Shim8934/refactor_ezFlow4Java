@@ -53,6 +53,9 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public String insertFolder(Map<String, Object> map) {
 		return  (String) insert("EzWebFolderDAO_y.insertFolder",map);
 	}
+	public String insertFolderUsr(Map<String, Object> map) {
+		return  (String) insert("EzWebFolderDAO_y.insertFolderUsr",map);
+	}
 
 	public LoginVO getUserInfo(Map<String, Object> map) {
 		return  (LoginVO) select("EzWebFolderDAO_y.getUserInfo", map);
@@ -60,6 +63,31 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public int getFolderStep(Map<String, Object> map) {
 		return  (int) select("EzWebFolderDAO_y.getFolderStep", map);
 	}
+	public List<Map<String, Object>> deptTest(Map<String, Object> map) {
+		return  (List<Map<String, Object>>) list("EzWebFolderDAO_y.deptTest",map );
+	}
+	public List<Map<String, Object>> getDeptFolder(Map<String, Object> map) {
+		return  (List<Map<String, Object>>) list("EzWebFolderDAO_y.getDeptFolder",map );
+	}
+	public List<Map<String, Object>> getAddJobList(Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getAddJobList",map );
+	}
+	public List<Map<String, Object>> getDeptAddJobList(Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getDeptAddJobList",map );
+	}
+	public List<Map<String, Object>> getDeptSub(Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getDeptSub",map );
+	}
+	public int existFolderChk(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.existCheck",map );
+	}
+//	public List<Map<String, Object>> getdeptAllSub(Map<String, Object> map) {
+//		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getdeptAllSub",map );
+//	}
+	public Map<String, Object> getdeptInfo(Map<String, Object> map) {
+		return (Map<String, Object>) select("EzWebFolderDAO_y.getdeptInfo",map );
+	}
 	
+
 	
 }

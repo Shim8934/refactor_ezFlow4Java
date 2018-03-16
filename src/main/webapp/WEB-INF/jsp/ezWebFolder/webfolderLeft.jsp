@@ -33,9 +33,44 @@
 				folderList('C');
 		    	folderType = 'C';
 		    	
-		    });
+// 		    	$($element).on('changed.jstree', function (e, data) {
+// 					var folderId = "";
+// 					folderId = data.selected[0]; 
+// 					alert(folderId);
+// 					if (folderId == undefined) {
+// 						alert(folderId);
+// 						console.log("The selected nodes are:" + folderId);
+// 					}else {
+// 						getFileList(folderId);
+// 					}
+// 				}).jstree();
+// 		    	$($element).bind('select_node.jstree', function(event, data){
+// 		    	    folderId = data.instance.get_node(data.selected).id; 
+// 		    	    alert(id);
+// 					getFileList(folderId);
+// 		    	});
+
+// 		    	$("#selectNode").click(function () {
+// 		    	$("#tree").jstree("select_node", "#30"); 
+// 		    	});
+// 				$($element).on('changed.jstree', function (e, data) {
+// 		    	    var i, j, r = [];
+// 		    	    for(i = 0, j = data.selected.length; i < j; i++) {
+// 		    	      r.push(data.instance.get_node(data.selected[i]).text);
+// 		    	    }
+// 		    	    $('#event_result').html('Selected: ' + r.join(', '));
+// 		    	    getFileList(folderId);
+// 		    	  })
+// 		    	  // create the instance
+// 		    	  .jstree();
+// 				$($element).on('ready.jstree', function() {
+// 					$($element).on('changed.jstree', onSelectionChanged);
+// 					getFileList(folderId);
+				});		
+// 		    });
+		    
 		    function folderList(obj) {
-		    	folderId = "";
+// 		    	folderId = "";
 				if ( obj == 'C') {
 					$element = '#tree';
 				}else if (obj == 'D') {
@@ -43,8 +78,6 @@
 				}else if (obj == 'U') {
 					$element = '#treePer';
 				}
-				$($element).jstree('refresh');
-// 				$($element).jstree('destroy');
 				folderType = obj;
 				$.ajax ({
 					type :"POST",
@@ -54,7 +87,6 @@
 							 "folderId"   : folderId
 							,"folderType" : obj
 							
-							
 						},
 					dataType: "JSON",
 					success : function (data) {
@@ -62,6 +94,7 @@
 							
 							'plugins': ["core","types","json_data","themes","ui"],
 							'core' : {
+								"animation" : 0,
 								'data' : data.data,
 								"multiple" : false,
 								'themes' : {
@@ -81,21 +114,27 @@
 								"width"       : "20",
 								"margin-left" : "10"
 							}
-						})
+						});
 						folderId = data.data[0].id;
+						$($element).jstree('refresh');
+// 				   		$($element).jstree("selected", folderId);
 						getFileList(folderId);
-				   		console.log("The selected nodes are:" + folderId);	
-				   		$($element).jstree("selected", folderId)
+				   		console.log("The selected nodes are--------:" + folderId);	
+				   		
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134' />" + error);
 					}
 				});
 				$($element).on('changed.jstree', function (e, data) {
-					   folderId = data.selected[0]; 
-					   console.log("The selected nodes are:" + folderId);
-					   getFileList(folderId);
-					});
+					var folderId = "";
+					folderId = data.selected[0]; 
+					if (folderId == undefined) {
+						console.log("The selected nodes are:" + folderId);
+					}else {
+						getFileList(folderId);
+					}
+				});
 		    }
 		    
 				
@@ -109,45 +148,9 @@
 		    	}
 		    }
 		    
-// 		    // 완정 수정해야함
-// 		    function getCompanyList(folderType) {
-// 		    	var folderID = null;
-// 		    	switch(folderType) {
-// 		    		case "1":
-// 		    			folderID = companyFolderId;
-// 		    			break;
-// 		    		case "2":
-// 		    			folderID = deptFolderId;
-// 		    			break;
-// 		    		case "3":
-// 		    			folderID = persFolderId;
-// 		    			break;
-// 		    	}
-		    	
-// 		    	$.ajax({
-// 					type: "POST",
-// 					url: "/ezWebFolder/folderList.do",
-// 					data: {
-// 						"folderType" : folderType,
-// 						"folderId"   : folderID
-// 					},
-// 					dataType: "JSON",
-// 					async: true,
-// 					success : function(data) {				
-// 						var result = data.folderList;												
-// 						console.log(result);						
-// 				    	folderList();
-// 					},
-// 					error : function(error) {
-// 						alert("<spring:message code='ezWebFolder.t134' />" + error);
-// 					}
-// 				});	
-// 		    }
 		    function getFileList(folderId) {
 		    	// + 버튼 누르면 오른쪽 화면 뜨고 오른쪽 화면에서 ajax로 띄움
-	    		
 		    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do?folderId="+folderId+"&folderType="+folderType;
-		   		
 		   	}
 		    function treeTest() {
 		    	window.parent.frames["right"].location.href = "/ezWebFolder/treeTest.do";

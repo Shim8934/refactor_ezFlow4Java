@@ -64,7 +64,6 @@ public class EzWebFolderController_y {
 			HttpServletResponse resp, Model model ){
 		
 		// tenantID, companyId, userId, folderType, folderId
-//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderType = request.getParameter("folderType") != null ? request.getParameter("folderType") : "";
 		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";

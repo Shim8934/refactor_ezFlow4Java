@@ -88,7 +88,7 @@
 				dataType: "JSON",
 				success : function (data) {
 // 					$("#PostTreeView2").jstree(true).settings.core.data.url ='/getstuff/@mapobj.id.toString/';
-					$('#jst_propl').jstree(true).refresh();
+// 					$('#jst_propl').jstree(true).refresh();
 // 		        	$('#PostTreeView2').jstree('destroy');
 					$('#PostTreeView2').jstree({
 						
@@ -101,7 +101,7 @@
 								"dots"       : false,
 								'responsive' : false,
 								'variant'    : 'small',
-								'stripes'    : false,
+								'stripes'    : false
 // 								'selected'	 : true
 							}
 						},
@@ -115,7 +115,7 @@
 							"margin-left" : "10"
 						},
 						'plugins': ["core","types","json_data","changed","themes"]
-					})
+					});
 			   		
 				},
 				error : function(error) {
