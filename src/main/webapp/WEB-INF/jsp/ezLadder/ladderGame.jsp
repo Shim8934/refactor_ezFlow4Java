@@ -8,70 +8,113 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
-<script type="text/javascript">
-
-	var id = "${id}";
-	var searchSelect = "${searchSelect}";
-	var searchInput =  "${searchInput}";
-	var mode = "${mode}";
-	var currPage = "${currPage}";
-	var back = "back";
-	var allData = [];
+	<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
+	<script type="text/javascript">
 	
-	function deleteLadder(idx) {
-	
-		allData = [idx, searchSelect, searchInput, mode, currPage, back ];	
-	
-		if (confirm('삭제 하시겠습니까?')) {
-			window.location.href= '/ezLadder/deleteLadder.do?allData=' + allData;
-		} 
-	}
-	
-	function reuse(idx) {
-		/*
-			재사용 추가 해야 됨
-		*/
-		if (confirm('재사용하시겠습니까?')) {
-			window.location.href= '/ezLadder/setLadder.do?type=reuse';
-			alert("ok");
+		var id = "${id}";
+		var searchSelect = "${searchSelect}";
+		var searchInput =  "${searchInput}";
+		var mode = "${mode}";
+		var currPage = "${currPage}";
+		var back = "back";
+		var allData = [];
+		
+		function deleteLadder(idx) {
+		
+			allData = [idx, searchSelect, searchInput, mode, currPage, back ];	
+		
+			if (confirm('삭제 하시겠습니까?')) {
+				window.location.href= '/ezLadder/deleteLadder.do?allData=' + allData;
+			} 
 		}
-	}
-</script>
+		
+		function reuse(idx) {
+			if (confirm('재사용하시겠습니까?')) {
+				window.location.href= '/ezLadder/setLadder.do?type=reuse&ladderId=' + ${vo.ladderId};
+			}
+		}
+	</script>
+	<style type="text/css">
+		ul {
+		    list-style:none;
+		    margin:0;
+		    padding:0;
+		}
+		
+		li {
+		    margin: 0 0 0 0;
+		    padding: 0 0 0 0;
+		    border : 0;
+		    float: left;
+		    text-align: center;
+		}
+	</style>
 </head>
-<body style="min-width: 750px;">
+	<body class="mainbody">
+		<div id="ladderInfo" style="margin-top: 50px; margin-left: 50px; margin-right: 50px;">
+			<h2>${vo.title }
+				<span style="float: right; font-weight:normal;color:black;">
+					종류 : ${vo.type }, 상태 : ${vo.status }, 공개 : ${vo.secretFlag } | 작성자 ${vo.writerName }, 부서 ${vo.deptName }, 
+					<a href="#" onclick="reuse(${vo.ladderId})"><img src ='/images/ezLadder/reuse.png' width='30' height ='30'/></a>,
+					<c:choose>
+						<c:when test="${id eq vo.writerId }">
+							<a href="#" onclick="deleteLadder(${vo.ladderId})"><img src ='/images/ezLadder/trash.png' width='30' height ='30'/></a><br>
+						</c:when>
+						<c:otherwise>
+							<img src ='/images/ezLadder/trash.png' width='30' height ='30'/><br>
+						</c:otherwise>
+					</c:choose>
+				</span> 
+			</h2>
+		</div>
+		<div class="fullwidth">
+			<table class="setTable">
+				<tr>
+					<td style="width: 5000px;"></td><td></td>
+				</tr>
+				
+				
+				<tr>
+					<td colspan="4" style="height: 700px; padding: 10px 0px;">
+						<div class="wrap center" style="height: 100%; width: 100%;">
+							<div id="ladderLineBox" style="height: 100%; width: 100%; border: 1px solid gray">
+								<ul id="attendantList"></ul>
+								<ul id="itemList"></ul>
+								<c:choose>
+									<c:when test="${vo.status eq 0 }">
+										<%@ include file="include/ladderWait.jsp"%> 
+									</c:when>
+									<c:otherwise>
+										<%@ include file="include/ladderComplete.jsp"%> 
+									</c:otherwise>
+								</c:choose>
+								<br><br><br><br>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+			
+			
+		</div>
+		
+
+		<div id="ladderGame" align="center" >
+			<br><br><br><br>
+			상태가 대기이면 ladderWait.jsp 호출<br>
+			상태가 완료이면 ladderComplete.jsp 호출<br><br><br>
+			
+			<br><br><br><br><br><br><br><br><br><br><br><br><br>
+		</div>
+		
+		
+		<div id="chat" align="center">
+			<%@ include file="include/ladderChat.jsp"%> 
+		</div>
 	<h3>
-	* 프론트 꾸며야 됨.<br>
-	* 웹소켓 - 참여자 바꾸기, 채팅
-	</h3>
-	<div id="ladderInfo" style="margin-left: 30px; margin-right: 30px;">
-		<h2>${vo.title }
-			<span style="float: right; font-weight:normal;color:black;">
-				종류 : ${vo.type }, 상태 : ${vo.status }, 공개 : ${vo.secretFlag } | 작성자 ${vo.writerName }, 부서 ${vo.deptName }, 
-				<a href="#" onclick="reuse(${vo.ladderId})"><img src ='/images/ezLadder/reuse.png' width='30' height ='30'/></a>,
-				<c:choose>
-					<c:when test="${id eq vo.writerId }">
-						<a href="#" onclick="deleteLadder(${vo.ladderId})"><img src ='/images/ezLadder/trash.png' width='30' height ='30'/></a><br>
-					</c:when>
-					<c:otherwise>
-						<img src ='/images/ezLadder/trash.png' width='30' height ='30'/><br>
-					</c:otherwise>
-				</c:choose>
-			</span> 
-		</h2>
-	</div>
-	<div id="ladderGame" align="center">
-		<br><br><br><br>
-		상태가 대기이면 ladderWait.jsp 호출<br>
-		상태가 완료이면 ladderComplete.jsp 호출<br><br><br>
-		<c:forEach items="${list }" var="people">
-			<span id="userName">[${people.userName },</span>&nbsp;&nbsp;&nbsp;
-			<span id="userName">${people.resultUserName }]</span>&nbsp;&nbsp;&nbsp;
-		</c:forEach>
-		<br><br><br><br><br><br><br><br><br><br><br><br><br>
-	</div>
+		* 프론트 꾸며야 됨.<br>
+		* 웹소켓 - 참여자 바꾸기, 채팅
+		</h3>
 	
-	<div id="chat" align="center">
-		ladderChat.jsp 호출
-	</div>
-</body>
+	</body>
 </html>

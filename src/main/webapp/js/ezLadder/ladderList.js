@@ -5,6 +5,7 @@ function newLad() {
 
 // 게임 조회로 이동
 function getLadderGame(ladderId) {
+	mode = modeCheck;
 	allData = [ ladderId, searchSelect, searchInput, mode, currPage ];
 	window.location.href = '/ezLadder/getLadderGame.do?allData=' + allData;
 }
@@ -20,7 +21,6 @@ function participant(val) {
 	if (searchSelect !== 'none') {
 		currPage = 1;
 	}
-
 	mode = val;
 
 	if (pageChange === parseInt(currPage)) {
@@ -34,7 +34,9 @@ function participant(val) {
 
 //검색 
 function searchLadder() {
+	mode = modeCheck;
 	modeCheck = "search";
+
 	if (searchSelect === 'none') {
 		currPage = 1;
 	}
@@ -52,13 +54,13 @@ function searchLadder() {
 	searchSelect = document.getElementById("searchOption").value;
 	searchInput = document.getElementById("searchInput").value;
 
-
 	view();
 }
 
 //삭제
 function deleteLadder(ladderId) {
 
+	mode = modeCheck;
 	allData = [ ladderId, searchSelect, searchInput, mode, currPage, back ];
 
 	jQuery.ajaxSettings.traditional = true;
@@ -80,93 +82,8 @@ function deleteLadder(ladderId) {
 
 
 function view() {
-	$.ajax({
-		type : "GET",
-		dataType : "json",
-		async : false,
-		url : "/ezLadder/ladderList.do",
-		data : {
-			mode : mode,
-			currPage : currPage,
-			searchSelect : searchSelect,
-			searchInput : searchInput
-		},
-		success : function(data) {
-			var list = "";
-			list += "<table class='mainlist' style='width:100%;margin-top:30px;'>"
-					+ "<tr><th width='30px'>" + strLang2 + "</th>"
-					+ "<th width='20px'>" + strLang3 + "</th>"
-					+ "<th width='60px'>" + strLang4 + "</th>"
-					+ "<th width='40px'>" + strLang5 + "</th>"
-					+ "<th width='50px'>" + strLang6 + "</th>"
-					+ "<th width='50px'>" + strLang7 + "</th>"
-					+ "<th width='50px'>" + strLang8 + "</th></tr>";
-			if (data.list.length > 0) {
-
-				$.each(data.list, function(key, value) {
-
-					list += "<tr class='white'>" + "<td>" + value.type + "</td>"
-							+ "<td><a href='#' onclick='getLadderGame(" + value.ladderId + ")'>" + value.title + "</a></td>" 
-							+ "<td>" + value.writerName + "</td>"
-							+ "<td>" + value.writeDate.substring(0, 16) + "</td>"
-							+ "<td>" + value.status + "</td>" 
-							+ "<td>" + value.secretFlag	+ "</td>";
-					if (id == value.writerId) {
-						list += "<td><a href='#' onclick='deleteLadder(" + value.ladderId + ")'><img src = '/images/ezLadder/trash.png' width = '30' height = '30'/></a></td></tr>";
-					} else {
-						list += "<td><img src ='/images/ezLadder/trash.png' width='30' height ='30'/></td></tr>";
-					}
-				});
-			} else {
-				list += "<tr><td colspan='7' align='center' bgcolor='#FFFFFF'> <spring:message code='ezLadder.t010' /></td></tr>";
-			}
-			list += "</table>";
-			$("#divList").html(list);
-			totalLadder = data.totalLadder;
-			currPage = data.currPage;
-			totalPage = data.totalPage;
-			totalLadder = data.totalLadder;
-			makePageSelPage();
-		}
-	});
-}
-
-// 리스트 출력
-function viewList(data) {
-	var list = "";
-	list += "<table class='mainlist' style='width:100%;margin-top:30px;'>"
-			+ "<tr><th width='30px'>" + strLang2 + "</th>"
-			+ "<th width='20px'>" + strLang3 + "</th>"
-			+ "<th width='60px'>" + strLang4 + "</th>"
-			+ "<th width='40px'>" + strLang5 + "</th>"
-			+ "<th width='50px'>" + strLang6 + "</th>"
-			+ "<th width='50px'>" + strLang7 + "</th>"
-			+ "<th width='50px'>" + strLang8 + "</th></tr>";
-	if (data.list.length > 0) {
-
-		$.each(data.list, function(key, value) {
-
-			list += "<tr class='white'>" + "<td>" + value.type + "</td>"
-					+ "<td><a href='#' onclick='getLadderGame(" + value.ladderId + ")'>" + value.title + "</a></td>" 
-					+ "<td>" + value.writerName + "</td>"
-					+ "<td>" + value.writeDate.substring(0, 16) + "</td>"
-					+ "<td>" + value.status + "</td>" 
-					+ "<td>" + value.secretFlag	+ "</td>";
-			if (id == value.writerId) {
-				list += "<td><a href='#' onclick='deleteLadder(" + value.ladderId + ")'><img src = '/images/ezLadder/trash.png' width = '30' height = '30'/></a></td></tr>";
-			} else {
-				list += "<td><img src ='/images/ezLadder/trash.png' width='30' height ='30'/></td></tr>";
-			}
-		});
-	} else {
-		list += "<tr><td colspan='7' align='center' bgcolor='#FFFFFF'> <spring:message code='ezLadder.t010' /></td></tr>";
-	}
-	list += "</table>";
-	$("#divList").html(list);
-	totalLadder = data.totalLadder;
-	currPage = data.currPage;
-	totalPage = data.totalPage;
-	totalLadder = data.totalLadder;
+	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=" + searchInput;
+	document.location.href = szUrl;
 }
 
 // 페이징 처리
@@ -297,10 +214,11 @@ function selafterBlock_one() {
 }
 
 function goToPageByNum(page) {
+	
 	pageChange = page;
-	if (searchSelect !== 'none') {
+	if (searchSelect !== '') {
 		searchLadder();
-	} else if (mode === 'all') {
+	} else if (modeCheck === 'all') {
 		var temp = 'all';
 		participant(temp);
 	} else {

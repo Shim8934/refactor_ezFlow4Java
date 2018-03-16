@@ -88,6 +88,11 @@ public class EzLadderGWController {
 		String searchSelect = request.getParameter("searchSelect");
 		String searchInput = request.getParameter("searchInput");
 		
+		logger.debug("mode : " + mode);
+		logger.debug("currPage : " + page);
+		logger.debug("searchSelect : " + searchSelect);
+		logger.debug("searchInput : " + searchInput);
+		
 		int totalLadder = 0;
 		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
 		
@@ -129,57 +134,6 @@ public class EzLadderGWController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/ladder/ladder-list/{mode}/{currPage}/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
-	public JSONObject gwViewLadderParticipant(@PathVariable String mode, @PathVariable String currPage, @PathVariable String userId, HttpServletRequest request) {
-		logger.debug("web G/W LADDER [GET /ladder/ladder-list/" + mode + "/" + currPage +"/" + userId + "] started.");
-
-		JSONObject result = new JSONObject();
-		String tenantId = request.getParameter("tenantId");
-		String searchSelect = request.getParameter("searchSelect");
-		String searchInput = request.getParameter("searchInput");
-		
-		int totalLadder = 0;
-		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
-		
-		try {
-			int page = Integer.parseInt(currPage);
-			List<LadderVO> list;
-			if(searchSelect.equals("none")) {	// 비검색
-				if(mode.equals("part")){		// 일부 참여자 선택
-					totalLadder = ezLadderService.partLadderCount(userId, tenantId);
-					pages = paging(page, totalLadder);
-					list = ezLadderService.getPartLadderList(userId, tenantId, pages[1], pages[2]);
-				} else {						// 전체 참여자 선택
-					totalLadder = ezLadderService.ladderCount(userId, tenantId);
-					pages = paging(page, totalLadder);
-					list = ezLadderService.getLadderList(userId , tenantId, pages[1], pages[2]);
-				}
-			} else {							// 검색
-				List<String> allData = new ArrayList<String>();
-				allData.add(searchSelect);
-				allData.add(searchInput);
-				allData.add(mode);
-				totalLadder = ezLadderService.searchLadderCount(userId, tenantId, allData);
-				pages = paging(page, totalLadder);
-				list = ezLadderService.searchLadderList(userId, tenantId, allData, pages[1], pages[2]);
-			}
-
-			result.put("status", "ok");
-			result.put("code", "0");
-			result.put("data", list);
-			result.put("currPage", pages[3]);
-			result.put("totalPage", pages[0]);
-			result.put("totalLadder", totalLadder);
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", "1");
-		}
-		
-		logger.debug("web G/W LADDER [GET /ladder/ladder-list/participant/" + userId + "] ended.");
-		
-		return result;
-	}
-
 	/** boh */
 	/**
 	 * 사다리 게임 추가

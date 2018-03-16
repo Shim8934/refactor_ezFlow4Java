@@ -491,7 +491,7 @@
 		    }
 			
 			function ladderFunc() {
-				window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?mode=all&currPage=1&searchSelect=none&searchInput=input";
+				window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?mode=all&currPage=1&searchSelect=&searchInput=";
 			}
 
 		    function toggleQuestionList() {

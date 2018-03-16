@@ -20,10 +20,10 @@
 			var totalPage = ${totalPage};
 			var totalLadder = ${totalLadder};
 			var blockSize = 7;
-			var mode = "all";
-			var modeCheck = "all";
-			var searchSelect = "none";
-			var searchInput = "input";
+			var mode = "";
+			var modeCheck = "${mode}";
+			var searchSelect = "${searchSelect}";
+			var searchInput = "${searchInput}";
 			var searchOption = "off";
 			var allData = [];
 			var id = "${id}";
@@ -40,13 +40,13 @@
 			<span id="mailBoxInfo"></span>
 			<span style="float: right; font-weight:normal;color:black;">
 				<select id="searchOption">
-				  <option value="title">사다리 제목</option>
-				  <option value="kind">사다리 종류</option>
-				  <option value="writer">작성자</option>
-				  <option value="participant">참여자</option>
+				  <option value="title" <c:if test = "${searchSelect eq 'title' }" >selected="selected"</c:if>>사다리 제목</option>
+				  <option value="kind" <c:if test = "${searchSelect eq 'kind' }" >selected="selected"</c:if>>사다리 종류</option>
+				  <option value="writer" <c:if test = "${searchSelect eq 'writer' }" >selected="selected"</c:if>>작성자</option>
+				  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>>참여자</option>
 				</select>
 
-				<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
+				<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" onkeypress="check_key(event);" value="<c:out value='${searchInput}'/>">
 				<a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle;" onclick="searchLadder()" ></a>
 			</span>
 		</h1>
