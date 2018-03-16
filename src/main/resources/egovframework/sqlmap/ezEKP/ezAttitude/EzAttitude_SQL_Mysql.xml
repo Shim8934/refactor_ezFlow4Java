@@ -7,6 +7,8 @@
 	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
 	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
 	<typeAlias alias="AttitudeApplicationVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO"/>
+	<typeAlias alias="AttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
+	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
 
 	<resultMap id="attitudeApplicationVO" class="AttitudeApplicationVO">
 		<result property="attitudeId"		column="ATTITUDE_ID" 	columnIndex="1"/>
@@ -24,7 +26,125 @@
 		<result property="userName" 				column="DISPLAYNAME" 			columnIndex="5"/>
 		<result property="deptName" 				column="DESCRIPTION" 			columnIndex="6"/>
 	</resultMap>
+	
+	<resultMap id="attitude" class="AttitudeVO">
+		<result  property="attitudeId" 			column="ATTITUDE_ID"			columnIndex="1"/>
+		<result  property="companyId" 			column="COMPANY_ID"				columnIndex="2"/>
+		<result  property="tenantId" 			column="TENANT_ID"				columnIndex="3"/>
+		<result  property="writerId" 			column="WRITER_ID"				columnIndex="4"/>
+		<result  property="deptId" 				column="DEPT_ID"				columnIndex="5"/>
+		<result  property="startDate" 			column="START_DATE"				columnIndex="6"/>
+		<result  property="endDate" 			column="END_DATE"				columnIndex="8"/>
+		<result  property="modAppl" 			column="MODAPPL"				columnIndex="10"/>
+		<result  property="region" 				column="REGION"					columnIndex="11"/>
+		<result  property="mobile" 				column="MOBILE"					columnIndex="12"/>
+		<result  property="bizSub" 				column="BIZSUB"					columnIndex="13"/>
+		<result  property="content" 			column="CONTENT"				columnIndex="14"/>
+		<result  property="ip" 					column="IP"						columnIndex="15"/>
+		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="16"/>
+		<result  property="typeId" 				column="TYPE_ID"				columnIndex="17"/>
+	</resultMap>
+	
+	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
+		<result property="workStartTime"			column="WORK_STARTTIME"			columnIndex="1"/>
+		<result property="workEndTime" 				column="WORK_ENDTIME" 			columnIndex="2"/>
+	</resultMap>
+	
+	<select id="ezAttitude.getAttitudeList" parameterClass="Map" resultMap="attitude">
+		<![CDATA[
+			SELECT 
+				ATTITUDE_ID,
+			    COMPANY_ID,
+		        TENANT_ID,
+		        WRITER_ID,
+		        DEPT_ID,
+		        START_DATE,
+		        END_DATE,
+		        MODAPPL,
+		        REGION,
+		        MOBILE,
+		        BIZSUB,
+		        CONTENT,
+		        IP,
+		        DATE_TYPE,
+		        TYPE_ID
+			FROM   tbl_attitude
+			WHERE  WRITER_ID = #pidList#
+			AND    TENANT_ID = #tenantId#
+			AND    DATE_FORMAT(CONCAT(START_DATE), '%Y-%m-%d %H:%i:%s') >= #UTCStartDate#
+			AND    DATE_FORMAT(CONCAT(START_DATE), '%Y-%m-%d %H:%i:%s') < #UTCEndDate#
+		]]>
+	</select>
 
+	<insert id="ezAttitude.insertAttitude" parameterClass="Map">
+		INSERT INTO tbl_attitude(
+			COMPANY_ID,
+			TENANT_ID,
+			WRITER_ID,
+			DEPT_ID,
+			START_DATE,
+			END_DATE,
+			REGION,
+			MOBILE,
+			BIZSUB,
+			CONTENT,
+			IP,
+			DATE_TYPE,
+			TYPE_ID)
+		VALUES(
+			#companyId#,
+			#tenantId#,
+			#writerId#,
+			#deptId#,
+			IFNULL(#startDate#, ''),
+			IFNULL(#endDate#, ''),
+			IFNULL(#region#, ''),
+			IFNULL(#mobile#, ''),
+			IFNULL(#bizSub#, ''),
+			IFNULL(#content#, ''),
+			IFNULL(#ipAddress#, ''),
+			#dateType#,
+			#typeId#)
+	</insert>
+	
+	<select id="ezAttitude.getIsAttitudeUserConf" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				tbl_attitude_user_conf
+			WHERE
+				USER_ID = #writerId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="ezAttitude.getAttitudeUserConfTime" parameterClass="Map" resultMap="attitudeUserConfTime">
+		<isEqual property="isValue" compareValue="1">
+			SELECT
+				WORK_STARTTIME,
+				WORK_ENDTIME
+			FROM
+				tbl_attitude_user_conf
+			WHERE
+				USER_ID = #writerId#
+			AND
+				TENANT_ID = #tenantId#
+		</isEqual>
+		<isEqual property="isValue" compareValue="0">
+			SELECT
+				WORK_STARTTIME,
+				WORK_ENDTIME
+			FROM
+				tbl_attitude_conf
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		</isEqual>
+	</select>
+	
 	<sql id="ezAttitudeDAO.searchQuery">
 		<isNotEmpty property="apprUserName" prepend="and">
 			<isNotEmpty property="apprUserName" >

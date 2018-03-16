@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,13 +11,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ibm.icu.text.SimpleDateFormat;
+
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzAttitudeService")
@@ -37,19 +42,84 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public int insertAttitude(String writerId, String deptId, String startdate,
-			String enddate, String starttime, String endtime, String region,
-			String mobile, String bizsub, String content, String ip,
-			String typeId, String companyId, int tenantId) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+	public void insertAttitude(String writerId, String deptId, String startDate,
+			String endDate, String region, String mobile, String bizsub, String content,
+			String ip, String typeId, String dateType, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("insertAttitude started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("writerId", writerId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		if (typeId.equals("A01") || typeId.equals("A02")) {
+			startDate = commonUtil.getTodayUTCTime("");
+			
+			if (typeId.equals("A01")) {
+				//사용자별 근태설정이 있는 지 검사
+				String isValue = ezAttitudeDAO.getIsAttitudeUserConf(map);
+				map.put("isValue", isValue);
+				
+				AttitudeUserConfigVO resultVO = ezAttitudeDAO.getAttitudeConfTime(map);
+				
+				String compareDate = commonUtil.getTodayUTCTime("HH:mm");
+				
+				LOGGER.debug("isValue : " + isValue + "////////" + resultVO.getWorkStartTime());
+				//시간을 비교해서 근태설정 시간보다 늦으면 지각 처리
+				SimpleDateFormat f = new SimpleDateFormat("HH:mm");
+				
+				Date userConfTime = f.parse(resultVO.getWorkStartTime());
+				Date userInTime = f.parse(compareDate);
+				
+				if (userInTime.after(userConfTime)) { //지각인 경우
+					typeId = "A03";
+				}
+				
+			}
+		}
+		
+		map.put("deptId", deptId);
+		map.put("startDate",  startDate);
+		map.put("endDate", endDate);
+		map.put("region", region);
+		map.put("mobile", mobile);
+		map.put("bizSub", bizsub);
+		map.put("content", content);
+		map.put("ipAddress", ip);
+		map.put("typeId", typeId);
+		map.put("dateType", dateType);
+		
+		ezAttitudeDAO.insertAttitude(map);
+		LOGGER.debug("insertAttitude ended");
 	}
 
 	@Override
-	public List<Object> getAttitudeList(String pidList, String yrmh,
-			String typeId, int tenantId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<AttitudeVO> getAttitudeList(String pidList, String yrmh,
+		String typeId, String UTCDate, String offset, int tenantId) throws Exception {
+		LOGGER.debug("getAttitudeList started");
+		Map<String, Object> map = new HashMap<String,Object>();
+		//if써서 하루꺼를 가져오려는 건지 한달꺼를 가져오려는 건지를 구분해야 될 꺼 같다.
+		//일단 하루치를 가져오는 것 부터
+		String localDate = commonUtil.getDateStringInUTC(UTCDate, offset, false).split(" ")[0];
+		
+		String localUTCStartDate = commonUtil.getDateStringInUTC(localDate + " " + "00:00:00", offset, true);
+		String localUTCEndDate = commonUtil.getDateStringInUTC(localDate + " " + "23:59:59", offset, true);
+		
+		map.put("pidList", pidList);
+		map.put("typeId", typeId);
+		map.put("tenantId", tenantId);
+		map.put("UTCStartDate", localUTCStartDate);
+		map.put("UTCEndDate", localUTCEndDate);
+		
+		List<AttitudeVO> resultList = ezAttitudeDAO.getAttitudeList(map);
+		
+		for (int i = 0; i < resultList.size(); i++) {
+			if (resultList.get(i).getDateType().equals("3")) {
+				resultList.get(i).setStartDate(commonUtil.getDateStringInUTC(resultList.get(i).getStartDate(), offset, false));
+			}
+		}
+		LOGGER.debug("getAttitudeList ended");
+		return resultList;
 	}
 
 	@Override
@@ -270,8 +340,16 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId,
 			String typeId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.debug("getAttitudeTypeInfo started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("typeId", typeId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		LOGGER.debug("getAttitudeTypeInfo ended");
+		return ezAttitudeDAO.getAttitudeTypeInfo(map);
 	}
 
 	@Override
@@ -364,5 +442,33 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("getUsersModiyAtt started");
 		return attAppList;
+	}
+	
+	@Override
+	public String getAttitudeTypeMaxTypeId(String companyId, int tenantId)
+			throws Exception {
+		LOGGER.debug("getAttitudeTypeMaxTypeId started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+
+		LOGGER.debug("getAttitudeTypeMaxTypeId ended");
+
+		return ezAttitudeDAO.getAttitudeTypeMaxTypeId(map);
+	}
+	
+	@Override
+	public List<AttitudeFormVO> getAttitudeFormList(int tenantId) throws Exception {
+		LOGGER.debug("getAttitudeFormList started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("tenantId", tenantId);
+
+		LOGGER.debug("getAttitudeFormList ended");
+
+		return ezAttitudeDAO.getAttitudeFormList(map);
 	}
 }

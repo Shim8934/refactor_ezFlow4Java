@@ -8,16 +8,18 @@ import org.json.simple.JSONObject;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 
 public interface EzAttitudeService {
 	public Object getAttitudeInfo(String userId, String date, String typeId, int tenantId) throws Exception;
 	
-	public int insertAttitude(String writerId, String deptId, String startdate, String enddate, String starttime, String endtime, String region,
-			String mobile, String bizsub, String content, String ip, String typeId, String companyId, int tenantId) throws Exception;
+	public void insertAttitude(String writerId, String deptId, String startDate, String endDate, String region,
+			String mobile, String bizSub, String content, String ip, String typeId, String dateType, String companyId, int tenantId) throws Exception;
 	
-	public List<Object> getAttitudeList(String pidList, String yrmh, String typeId, int tenantId) throws Exception;
+	public List<AttitudeVO> getAttitudeList(String pidList, String yrmh, String typeId, String UTCDate, String offset, int tenantId) throws Exception;
 	
 	public List<Object> getAttitudeStatisticsList(String pidList, String yrmh, int tenantId) throws Exception;
 	
@@ -84,4 +86,9 @@ public interface EzAttitudeService {
 	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName) throws Exception;
 	
 	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String sysLang, String offSet) throws Exception;
+
+	public String getAttitudeTypeMaxTypeId(String companyId, int tenantId) throws Exception;
+
+	public List<AttitudeFormVO> getAttitudeFormList(int tenantId) throws Exception;
+
 }

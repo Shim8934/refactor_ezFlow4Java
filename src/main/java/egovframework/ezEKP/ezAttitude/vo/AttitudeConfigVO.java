@@ -1,14 +1,21 @@
 package egovframework.ezEKP.ezAttitude.vo;
 
 public class AttitudeConfigVO {
-	
+	/** 회사아이디 */
 	private String companyId;
+	/** 테넌트아이디 */
 	private int tenantId;
+	/** 근무시작시간 */
 	private String workStartTime;
+	/** 근무종료시간 */
 	private String workEndTime;
+	/** 휴무요일 */
 	private String closedDay;
+	/** 근태수정신청 */
 	private String attitudeModAppl;
+	/** 휴무일근태등록 */
 	private String closedDateAttitude;
+	/** 설정일자 */
 	private String confSetDate;
 	
 	public String getCompanyId() {
