@@ -7,6 +7,7 @@ function ladder_window_resize() {
 
 function add_user_change_ulsize(usernum) {
 	$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
+	$("#ladderCanvas").attr("width", (usernum * 150) + "px");
 }
 
 /** 중복 처리 팝업 */
