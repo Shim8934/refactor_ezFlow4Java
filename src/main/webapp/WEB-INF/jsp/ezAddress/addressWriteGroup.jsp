@@ -1849,7 +1849,7 @@
 	                            <td style="height: 35px;">
 	                                <h2 id="subtitle" style="display: none"><spring:message code='ezAddress.t231' /></h2>
 	                                <div id="tabnav" style="float: left; width: 100%;">
-	                                    <ul>
+	                                    <ul style="margin:0;">
 	                                        <li id="orgTabButton"><span onclick="orgTabButton_onClick()">
 	                                            <spring:message code='ezAddress.t351' /></span></li>
 	                                        <li id="contactTabButton"><span onclick="contactTabButton_onClick()">
