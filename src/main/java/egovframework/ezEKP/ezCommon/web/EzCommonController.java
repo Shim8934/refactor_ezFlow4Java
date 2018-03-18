@@ -309,6 +309,8 @@ public class EzCommonController extends EgovFileMngUtil{
 			pDeptID = request.getParameter("dept");
 		}
 		
+		logger.debug("id=" + id + ",email=" + email + ",dept=" + pDeptID);
+		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", loginVO.getTenantId());
 		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginVO.getTenantId());
 		
@@ -318,13 +320,19 @@ public class EzCommonController extends EgovFileMngUtil{
 			String personId = "";		
 			String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", loginVO.getTenantId());
 			
-			int atSignPos = email.indexOf("@");
-			
-			if (atSignPos != -1) {									
-				personId = email.substring(0, atSignPos);
+			if (!email.isEmpty()) {
+				int atSignPos = email.indexOf("@");
+				
+				if (atSignPos != -1) {									
+					personId = email.substring(0, atSignPos);
+				}
+			} else if (!id.isEmpty()) {
+				personId = id;
 			}
 			
 			if (useEmpNumberLogin.equals("YES")) {
+				logger.debug("personId=" + personId);
+				
 				LoginVO login = new LoginVO();
 				login.setId(personId);
 				login.setDn("NOPASSWORD");
@@ -335,6 +343,8 @@ public class EzCommonController extends EgovFileMngUtil{
 				if (user != null && user.getSabun() != null) {
 					personId = user.getSabun();
 				}
+				
+				logger.debug("final personId=" + personId);
 			}
 			
 			return "redirect:" + dotNetUrl + "/myoffice/common/ShowPersonInfo.aspx?id=" + URLEncoder.encode(personId, "utf-8"); 
