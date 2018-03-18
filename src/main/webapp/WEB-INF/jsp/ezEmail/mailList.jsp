@@ -821,7 +821,7 @@
             <div class="popupwrap2">
               <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="list_element">
 		          <colgroup>
-	                <col style="width:80px;"><col>
+	                <col style="width:90px;"><col>
 	              </colgroup>
               	  <tr>
                     <th><spring:message code="ezEmail.t179" /></th>

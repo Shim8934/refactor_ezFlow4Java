@@ -202,8 +202,6 @@
     function SelectDept_OnClick(compare) {
         lang = compare;
         SelectDept(undefined, SelectDept_OnClick_Complete);
-
-       
     }
     function SelectDept_OnClick_Complete(rtn) {
         DivPopUpHidden();
@@ -231,7 +229,7 @@
 </head>
 <body class="popup" style="margin-left: 0px; margin-top: 0px;">
     <h1 style="height: 33px;"><spring:message code='ezApprovalG.t1774'/></h1>
-    <table class="content" style="width: 440px">
+    <table class="content" style="width: 440px; margin-top:15px;">
         <tr>
             <th style="WIDTH: 50px"><spring:message code='ezApprovalG.t99993'/></th>
             <td style="WIDTH: 270px">
@@ -266,8 +264,7 @@
             </td>
         </tr>
     </table>
-
-
+    
     <div class="btnposition btnpositionNew">
         <a class="imgbtn" id="reset" onclick="return reset_onclick()"><span><spring:message code='ezApprovalG.t621'/></span></a>
         <a class="imgbtn" id="Submit22223" onclick="return btnSearch_onclick()"><span><spring:message code='ezApprovalG.t111'/></span></a>
