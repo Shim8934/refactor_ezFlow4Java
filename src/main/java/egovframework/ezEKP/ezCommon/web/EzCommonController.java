@@ -29,6 +29,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -66,6 +67,9 @@ public class EzCommonController extends EgovFileMngUtil{
 	
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Resource(name="loginService")
+	private LoginService loginService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonController.class);
 	
@@ -314,13 +318,22 @@ public class EzCommonController extends EgovFileMngUtil{
 			String personId = "";		
 			String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", loginVO.getTenantId());
 			
+			int atSignPos = email.indexOf("@");
+			
+			if (atSignPos != -1) {									
+				personId = email.substring(0, atSignPos);
+			}
+			
 			if (useEmpNumberLogin.equals("YES")) {
-				personId = loginVO.getSabun();
-			} else {			
-				int atSignPos = email.indexOf("@");
+				LoginVO login = new LoginVO();
+				login.setId(personId);
+				login.setDn("NOPASSWORD");
+				login.setTenantId(loginVO.getTenantId());
 				
-				if (atSignPos != -1) {									
-					personId = email.substring(0, atSignPos);
+				LoginVO user = loginService.selectUser(login);
+				
+				if (user != null && user.getSabun() != null) {
+					personId = user.getSabun();
 				}
 			}
 			
