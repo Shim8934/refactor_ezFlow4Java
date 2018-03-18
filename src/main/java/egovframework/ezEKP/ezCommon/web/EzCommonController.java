@@ -5,6 +5,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -268,7 +269,9 @@ public class EzCommonController extends EgovFileMngUtil{
 	 * ID클릭시 사용자 정보화면 호출 Method
 	 */
 	@RequestMapping(value = "/ezCommon/showPersonInfo.do")
-	public String showPersonInfo(@CookieValue("loginCookie")String loginCookie, Locale locale,HttpServletRequest request, ModelMap model) throws Exception {
+	public String showPersonInfo(@CookieValue("loginCookie")String loginCookie, Locale locale,
+						HttpServletRequest request, HttpServletResponse response,
+						ModelMap model) throws Exception {
 		logger.debug("showPersonInfo started");
 
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
@@ -302,8 +305,29 @@ public class EzCommonController extends EgovFileMngUtil{
 			pDeptID = request.getParameter("dept");
 		}
 		
-		if (id.equals("")) {
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", loginVO.getTenantId());
+		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginVO.getTenantId());
+		
+		logger.debug("dotNetIntegration=" + dotNetIntegration);
+		
+		if (dotNetIntegration.equals("YES")) {
+			String personId = "";		
+			String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", loginVO.getTenantId());
 			
+			if (useEmpNumberLogin.equals("YES")) {
+				personId = loginVO.getSabun();
+			} else {			
+				int atSignPos = email.indexOf("@");
+				
+				if (atSignPos != -1) {									
+					personId = email.substring(0, atSignPos);
+				}
+			}
+			
+			return "redirect:" + dotNetUrl + "/myoffice/common/ShowPersonInfo.aspx?id=" + URLEncoder.encode(personId, "utf-8"); 
+		}
+		
+		if (id.equals("")) {
 			if (!email.equals("")) {
 				id = ezOrganService.getCNByEmail(email, loginVO.getTenantId());
 			}
