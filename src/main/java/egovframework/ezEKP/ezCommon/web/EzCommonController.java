@@ -29,6 +29,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -66,6 +67,9 @@ public class EzCommonController extends EgovFileMngUtil{
 	
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Resource(name="loginService")
+	private LoginService loginService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonController.class);
 	
@@ -305,6 +309,8 @@ public class EzCommonController extends EgovFileMngUtil{
 			pDeptID = request.getParameter("dept");
 		}
 		
+		logger.debug("id=" + id + ",email=" + email + ",dept=" + pDeptID);
+		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", loginVO.getTenantId());
 		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginVO.getTenantId());
 		
@@ -314,14 +320,31 @@ public class EzCommonController extends EgovFileMngUtil{
 			String personId = "";		
 			String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", loginVO.getTenantId());
 			
-			if (useEmpNumberLogin.equals("YES")) {
-				personId = loginVO.getSabun();
-			} else {			
+			if (!email.isEmpty()) {
 				int atSignPos = email.indexOf("@");
 				
 				if (atSignPos != -1) {									
 					personId = email.substring(0, atSignPos);
 				}
+			} else if (!id.isEmpty()) {
+				personId = id;
+			}
+			
+			if (useEmpNumberLogin.equals("YES")) {
+				logger.debug("personId=" + personId);
+				
+				LoginVO login = new LoginVO();
+				login.setId(personId);
+				login.setDn("NOPASSWORD");
+				login.setTenantId(loginVO.getTenantId());
+				
+				LoginVO user = loginService.selectUser(login);
+				
+				if (user != null && user.getSabun() != null) {
+					personId = user.getSabun();
+				}
+				
+				logger.debug("final personId=" + personId);
 			}
 			
 			return "redirect:" + dotNetUrl + "/myoffice/common/ShowPersonInfo.aspx?id=" + URLEncoder.encode(personId, "utf-8"); 
