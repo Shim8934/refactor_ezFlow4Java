@@ -105,7 +105,7 @@
 		<tr> 
 			<th><spring:message code='ezApprovalG.t1183'/></th>
 			<td colspan="3">
-			    <TextArea id="tdAVSummary" style="Width:98%; height:40px" readonly ="readonly"></TextArea>
+			    <TextArea id="tdAVSummary" style="Width:98%; height:40px; border:0; resize:none;" readonly ="readonly"></TextArea>
 			</td>
 		</tr>
 		<tr> 

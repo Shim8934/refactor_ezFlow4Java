@@ -787,8 +787,6 @@
  	    		var optId = votesArr[voteId][0]; 	    		
  	    		
 	 	    	if (obj.src.indexOf("/images/poll/unchecked_vote.png") !== -1) { 	    		   		
-	 	    		modifySelectedList(optId, 'add');
-	 	    		
 	 	    		if (votePrivilege == 0) {
 	 	    			alert("<spring:message code = 'ezPoll.t172'/>");
 	 					return;
@@ -798,6 +796,8 @@
 	 					alert("<spring:message code = 'ezPoll.t171'/>" + " " + numberOfMultiSelect + "<spring:message code = 'ezPoll.t173'/>");
 	 					return;
 	 	    		}
+	 	    		
+	 	    		modifySelectedList(optId, 'add');
 	 	    		
 	 	    		obj.onclick = null;
 	 	    		
@@ -2684,7 +2684,7 @@
 							</c:if>
 							<ul class='voteIcon_ul'>
 								<li class="voteIconImg_li icon nosecret">
-									<img src="/images/poll/reuseVote.png" class="voteIconImg" onclick="voteReuse()"  style="width:45px" title="투표 재사용">재사용</img>
+									<img src="/images/poll/reuseVote.png" class="voteIconImg" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>"/>
 								</li>
 							</ul>
 					  </div>

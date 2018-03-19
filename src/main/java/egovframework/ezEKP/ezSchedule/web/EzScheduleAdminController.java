@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezSchedule.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -191,21 +192,23 @@ public class EzScheduleAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		StringBuilder companySel = new StringBuilder();
-		StringBuilder companyList = new StringBuilder();
 		String primary = userInfo.getPrimary();
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(primary, userInfo.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		
-		for (int k = 0; k < deptVOs.size(); k++) {
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
-				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
-				companyList.append(deptVOs.get(k).getCn() + "," +deptVOs.get(k).getDisplayName() + ";");
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i =0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
 			}
 		}
+		
 		model.addAttribute("primary", primary);
-		model.addAttribute("companySel", companySel);
-		model.addAttribute("companyList", companyList);
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
 		
 		return "/admin/ezSchedule/scheduleAdminHolidayManage";
 	}
@@ -336,21 +339,22 @@ public class EzScheduleAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		StringBuilder companySel = new StringBuilder();
-		StringBuilder companyList = new StringBuilder();
 		String primary = userInfo.getPrimary();
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(primary, userInfo.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		
-		for (int k = 0; k < deptVOs.size(); k++) {
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
-				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
-				companyList.append(deptVOs.get(k).getCn() + "," +deptVOs.get(k).getDisplayName() + ";");
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i =0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
 			}
 		}
 		model.addAttribute("primary", primary);
-		model.addAttribute("companySel", companySel);
-		model.addAttribute("companyList", companyList);
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
 		
 		return "/admin/ezSchedule/scheduleAdminLunarUse";
 	}
@@ -391,21 +395,23 @@ public class EzScheduleAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		StringBuilder companySel = new StringBuilder();
-		StringBuilder companyList = new StringBuilder();
 		String primary = userInfo.getPrimary();
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(primary, userInfo.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		
-		for (int k = 0; k < deptVOs.size(); k++) {
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
-				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
-				companyList.append(deptVOs.get(k).getCn() + "," +deptVOs.get(k).getDisplayName() + ";");
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i =0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
 			}
 		}
+		
 		model.addAttribute("primary", primary);
-		model.addAttribute("companySel", companySel);
-		model.addAttribute("companyList", companyList);
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
 		
 		return "/admin/ezSchedule/scheduleAdminRegi";
 	}
