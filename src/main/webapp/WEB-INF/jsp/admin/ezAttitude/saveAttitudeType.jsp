@@ -56,14 +56,15 @@
 	    			frm.appendChild(companyIdInput);
 		    		
 		    		frm.submit();
-		    		$('#form input[id=file1]').val("");	
+// 		    		$("#file1").val("");
+// 		    		$("#preview").attr("src","");
 	    		}
 			}
 			
-			function compareExtension(check, extension) {
+			function compareExtension(check, imgext) {
 	    		var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
 	    		for (var i = 0; i < filterExtension.length; i++) {
-	        		if (extension.toLowerCase() == filterExtension[i]) {
+	        		if (imgext.toLowerCase() == filterExtension[i]) {
 	            		check = true;
 	            		break;
 	        		}
@@ -78,8 +79,7 @@
 //여기까지 파일*********************************************************************************************************		    
 		    
 			
-			function OK_Click() {
-
+// 			function OK_Click() {
 // 				$.ajax({
 // 		        	type : "POST",
 // 		        	url : "/admin/ezAttitude/",
@@ -92,7 +92,7 @@
 // 							window.close();
 // 		        	}
 // 		        });
-			}
+// 			}
 			
 		</script>
 	</head>
