@@ -781,7 +781,7 @@
 			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio3">&nbsp;<spring:message code="ezEmail.t161" /></label>
 			  </c:if>
 			  &nbsp;
-			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
+			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;height:22px" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" align="absmiddle" onClick="start_search()"></a>
 	      </span>
 	    </h1>	
