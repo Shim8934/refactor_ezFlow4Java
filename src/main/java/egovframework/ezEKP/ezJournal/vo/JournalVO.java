@@ -11,6 +11,7 @@ public class JournalVO {
 	private String deptShare;
 	private String writerName;
 	private String deptName;
+	private String formId;
 	private String formName;
 	private String typeId;
 	private int replyCount;
@@ -109,6 +110,12 @@ public class JournalVO {
 	}
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
+	}
+	public String getFormId() {
+		return formId;
+	}
+	public void setFormId(String formId) {
+		this.formId = formId;
 	}
 	public String getFormName() {
 		return formName;

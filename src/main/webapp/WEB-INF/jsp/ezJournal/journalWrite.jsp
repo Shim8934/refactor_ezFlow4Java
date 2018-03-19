@@ -6,11 +6,11 @@
 <html style="height: 99%;">
 	<head>
 		<c:choose>
-			<c:when test="${mode == 'new'}">
+			<c:when test="${mode == 'new' || mode == 'reuse' || mode == 'temp'}">
 			    <title><spring:message code='ezJournal.t131' /></title>
 			</c:when>
 			<c:otherwise>
-			    <title><spring:message code='ezJournal.t131' /></title>
+			    <title><spring:message code='ezJournal.t132' /></title>
 			</c:otherwise>
 		</c:choose>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -27,8 +27,6 @@
 	    <script type="text/javascript">
 			var companyId = "${info.companyID}"; 
 			var userId = "${userId}";
-			// 작성자 이름 // lang에 따라 가져오는값 바꿔야함..
-			var userName = "${info.displayName1}";			
 			//트리조직도 JSON
 	   		var treeContent;
 	    	// 수신자
@@ -37,8 +35,6 @@
 	    	var lastFormId = "";
 	    	// 일지함아이디
 	    	var typeId = "<c:out value='${typeId}'/>";
-	    	// 작성일
-	    	var nowDate = "${nowDate}";
 	    	// 부서아이디
 	    	var deptId = "${info.deptID}";
 	    	// 첨부파일 최대용량
@@ -46,6 +42,9 @@
 	    	var mode = "${mode}";
 	    	var oldJournalId = "${journalId}";
 	    	var selFormId = "";
+	    	// 수정, 임시저장, 재사용시 가져오는 수신자리스트
+	    	var receiverId = "";
+	    	var receiverName = "";
 	    	
 			// 선택된 일지함의 양식 리스트 가져오기
 	    	function getFormList(elem) {
@@ -167,15 +166,28 @@
 	    		$("#receiverID").html(strReceiverID);
 	    	}
 			
-	    /* 	
+	     	
 	    	$(document).ready(function() {
-	    		var firstType = $("#optType").find("option:first");
-	    		getFormList(firstType);
+				
+	    		if (mode == "modify" || mode == "reuse" || mode == "temp") {
+	    			$("#title").val("${journal.journalTitle}");
+	    			var receiverID = "${receiverIds}".slice(0, -2).split(", ");
+	    			var receiverName = "${receiverNames}".slice(0, -2).split(", ");
+	    			console.log("receiverId : " + receiverID);
+	    			console.log("receiverName : " + receiverName);
+	    			for (var i = 0; i < receiverID.length; i++) {
+	    				selReceiver.push({"userName" : receiverName[i], "userId" : receiverID[i]});
+	    			}
+	    			showReceiver();
+	    			
+	    		}
+	    	
 	    	}); 
-	    */
+	    
 	    
 	    	// 양식내용을 에디터에 넣어주는 작업 
 		    function Editor_Complete() {
+	    		
 	    		switch (mode) {
 				case 'new':
 		    		getLastForm(typeId);
@@ -207,6 +219,14 @@
 					break;
 				case 'modify':
 					
+					selFormId = "${formId}";
+					console.log("selFo : " + selFormId);
+					journalId = opener.journalId;
+					var selectedType = $("#optType");
+					getFormList(selectedType);
+					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
+					var content = '${journal.journalContent}';
+	    			message.SetEditorContent(content);
 					break;
 				case 'temp':
 					
@@ -286,12 +306,14 @@
 	                			mode : mode
 	                },  
 	                cache: false,
-	                success: function(data) {	   
-	                  alert("<spring:message code='ezCircular.t70'/>");
+	                success: function() {	   
+	                  	alert("<spring:message code='ezCircular.t70'/>");
 	                  
-	               // window.opener.refresh_onclick();
-	             	  window.opener.reload();
-          			  window.close();
+	             	  	opener.setJournalList();
+          			  	window.close();
+	                },
+	                error : function() {
+	                	alert("<spring:message code='ezCircular.t102'/>");
 	                }
 	 			});
 	    	}
@@ -359,21 +381,19 @@
 	                },  
 	                cache: false,
 	                success: function(data) {	   
-	                  alert("<spring:message code='ezCircular.t70'/>");
-	                  
-	               // window.opener.refresh_onclick();
-	             	  window.opener.reload();
-          			  window.close();
+		            	alert("<spring:message code='ezCircular.t70'/>");
+		                  
+		             	opener.setJournalList();
+	          			window.close();
+	                },
+	                error : function() {
+	                	alert("<spring:message code='ezCircular.t102'/>");
 	                }
 	 			});
 	    	}
 	    	
 	    	// 다른일지 가져오기
 		    function getOtherJournal() {
-	    	//	var height = window.screen.availHeight;
-	    	//	var width = window.screen.availWidth;
-	    	//	var left = (width - 500) / 2;
-	    	//	var top = (height - 400) / 2;
 	    	/*
 	    		var url = "/ezJournal/getOtherJournal.do?userId=" + userId + "&typeId=" + typeId + "&formId=" + selFormId;
 	    		var feature = "status:no; dialogHeight:400px; dialogWidth:520px; help:no; resizable:yes;";
@@ -381,8 +401,7 @@
 	    		var rtnVal = window.showModalDialog(url, "", feature);
 	    	*/
 	    	//	DivPopUpShow(520, 410, url);
-	    	
-	    	/*
+/*
 	    		$.ajax({
 	    			url : "/ezJournal/getOtherJournal.do",
 	    			type : "POST",
@@ -395,8 +414,15 @@
 						$("#selectOther").html(result);
 						$("#getOtherPopup").css("display", "");
 					}
-	    		})		
-	    	*/	
+	    		});
+*/	    		
+	    	//	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].sumSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        	
+	        //	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	        	
+	        //	$("#getOtherPopup").css("left", popupX);
+	        	
+				$("#getOtherPopup").modal();
 	    	
 	    	}
 	    
@@ -424,6 +450,7 @@
 	                	fileList : fileList
 	                },
 	                success: function() {
+	                	opener.setJournalList();
 						window.close();
 	                },
 	                error: function() {
@@ -489,8 +516,16 @@
 	                        </td>
 	                        <th><spring:message code='ezJournal.t77' /></th>
 	                        <td style="width: 300px;">
-	                        	<input type="radio" id="selPublic" name="isPublic" value="Y" checked/><label for="selPublic"><spring:message code='ezJournal.t78'/></label>
-	                        	<input type="radio" id="selPrivate" name="isPublic" value="N"/><label for="selPrivate"><spring:message code='ezJournal.t79'/></label>
+	                        	<c:choose>
+	                        		<c:when test="${deptShare eq 'N' && deptShare ne null }">
+			                        	<input type="radio" id="selPublic" name="isPublic" value="Y"/><label for="selPublic"><spring:message code='ezJournal.t78'/></label>
+			                        	<input type="radio" id="selPrivate" name="isPublic" value="N" checked/><label for="selPrivate"><spring:message code='ezJournal.t79'/></label>
+	                        		</c:when>
+	                        		<c:otherwise>
+			                        	<input type="radio" id="selPublic" name="isPublic" value="Y" checked/><label for="selPublic"><spring:message code='ezJournal.t78'/></label>
+			                        	<input type="radio" id="selPrivate" name="isPublic" value="N"/><label for="selPrivate"><spring:message code='ezJournal.t79'/></label>
+	                        		</c:otherwise>
+	                        	</c:choose>
 	                        </td>
 	                    </tr>
 	                    <tr>
@@ -524,13 +559,31 @@
   				</td>
   			</tr>
 	    </table>
+	    
+	    <div class="jquery-modal blocker current" id="selectOtherJournal" style="display:none;">
+			<div id="getOtherPopup" class="popupwrap1 modal popup" style="width:600px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; display: inline-block; left: 145px;">
+				<h1><spring:message code='ezJournal.t87' /></h1>
+				<table class="mainlist" id="getOtherFormList">
+				</table>
+					<br />
+					<table style="width: 100%">
+						<tr>
+							<td style="text-align: center;">
+								<a class="imgbtn"><span onClick=""><spring:message code='ezJournal.t86' /></span></a> 
+								<a class="imgbtn"><span onClick=""><spring:message code='ezJournal.t27' /></span></a>
+							</td>
+						</tr>
+					</table>
+			</div>
+		</div>
+	    <!-- 
 	    <div id="getOtherPopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
 			<div class="popupwrap3">
 				<table id="selectOther" class="mainlist" style="margin-top:10px;">  
 					
 				</table>
 				<br />
-				<table style="width:100%">
+				<table style="width:100% >
 					<tr>
 						<td style="text-align:center;">
 							<a class="imgbtn"><span onClick="search_start()"><spring:message code='ezAddress.t142' /></span></a>
@@ -541,5 +594,6 @@
 			</div>
 		</div>
 		<div class="shadow"></div>	
+		 -->
 	</body>
 </html>

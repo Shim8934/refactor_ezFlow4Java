@@ -21,6 +21,14 @@
 		<script type="text/javascript" src="/js/rsa/rng.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script  type="text/javascript">
+		
+			var formId = "${journal.formId}";
+			var journalId = "${journal.journalId}";
+			var typeId = "${journal.typeId}";
+			function journalModify() {
+				console.log("formId : " + formId + ",journalId : " + journalId);
+				window.location.href = "/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=modify";
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden; height:100%;">
@@ -31,7 +39,7 @@
 		        <ul>
 	        		<li><span onclick=''> <spring:message code='ezJournal.t102' /></span></li>
 		        	<c:if test="${journal.mine eq 'yes' }">
-	        		<li><span onclick=''> <spring:message code='ezJournal.t107' /></span></li>
+	        		<li><span onclick='journalModify()'> <spring:message code='ezJournal.t107' /></span></li>
 	        		<li><span onclick=''> <spring:message code='ezJournal.t108' /></span></li>
 		        	</c:if>
 	        		<li><span onclick=''> <spring:message code='ezJournal.t103' /></span></li>

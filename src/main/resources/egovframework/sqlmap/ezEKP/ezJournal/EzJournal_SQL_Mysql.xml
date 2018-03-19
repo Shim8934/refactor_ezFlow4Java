@@ -14,14 +14,17 @@
 	<typeAlias alias="journalVO" type="egovframework.ezEKP.ezJournal.vo.JournalVO"/>	
 	<typeAlias alias="fileVO" type="egovframework.ezEKP.ezJournal.vo.JournalFileVO"/>	
 	<typeAlias alias="JournalAttachVO" type="egovframework.ezEKP.ezJournal.vo.JournalAttachVO"/>	
+	<typeAlias alias="receiverVO" type="egovframework.ezEKP.ezJournal.vo.JournalReceiverVO"/>	
 	
 	<resultMap class="journalVO" id="journalMap" groupBy="journalId">
 		<result property="journalId" column="journal_id"/>
 		<result property="journalTitle" column="journal_title"/>
 		<result property="journalContent" column="journal_content"/>
 		<result property="journalDate" column="journal_date"/>
+		<result property="deptShare" column="dept_share"/>
 		<result property="writerName" column="writer_name"/>
 		<result property="writerId" column="writer_Id"/>
+		<result property="formId" column="form_id"/>
 		<result property="formName" column="form_name"/>
 		<result property="typeId" column="type_id"/>
 		<result property="replyCount" column="reply_count"/>
@@ -132,6 +135,23 @@
 		<result property="favoriteName"		column="favorite_name"/>			
 		<result property="favoriteDate"		column="favorite_date"/>			
 	</resultMap>
+
+	<resultMap class="receiverVO" id="receiverMap">
+		<result property="userId"			column="user_id"/>
+		<result property="userName"			column="user_name"/>			
+		<result property="userName2"		column="user_name2"/>
+		<result property="jikwi" 			column="jikwi"/>
+		<result property="mail" 			column="mail"/>
+		<result property="deptName" 		column="dept_name"/>			
+	</resultMap>
+	
+	<resultMap class="receiverVO" id="receiverVO">
+		<result property="userId"			column="user_id"/>
+		<result property="userName"			column="user_name"/>			
+		<result property="userName2"		column="user_name2"/>
+	</resultMap>
+	
+	
 	
 	<!-- 양식함 리스트 세럭트 -->
 	<select id="selectJournalTypeList" resultMap="JournaltypeMap" parameterClass="Map">
@@ -207,7 +227,7 @@
 						DATE_ADD(DATE_FORMAT(form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
 						form_writer,
 						form_status,
-						a.type_id
+						type_id
 					from 
 						tbl_journal_form 
 					where
@@ -644,14 +664,14 @@
 	</select>
 	
 	<!-- 즐겨찾기 아이디에 해당되는 수신자리스트 가져오기 -->
-	<select id="getFavoriteUserList" parameterClass="map" resultMap="userMap">
+	<select id="getFavoriteUserList" parameterClass="map" resultMap="receiverMap">
 		select 
 			a.DISPLAYNAME as user_name,
+			a.DISPLAYNAME2 as user_name2,
 			a.CN as user_id,
 			a.TITLE as jikwi,
 			a.MAIL as mail,
-			a.DESCRIPTION as dept_name,
-			a.EXTENSIONATTRIBUTE2 as user_img
+			a.DESCRIPTION as dept_name
 		from 
 			tbl_usermaster a join tbl_journal_recv_favorite_list b 
 		on 
@@ -811,6 +831,8 @@
 		    count(jr.reply_id) as reply_count, 
 		    count(r.user_id) as total_recv, 
 		    count(r.recieve_date) as check_recv,
+		    f.form_id as form_id,
+		    j.dept_share as dept_share,
 			jf.file_path as file_path,
             jf.file_size as file_size,
             jf.file_name as file_name
@@ -827,7 +849,7 @@
 		left join jmocha.tbl_journal_reply jr on (jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id)
 		where j.tenant_id=#tenantId#
 		and j.journal_id=#journalId#
-        group by 1,2,3,4,5,6,7,11,12,13,14
+        group by 1,2,3,4,5,6,7,11,12,13,14,15,16
 	</select>
 	
 	<!-- 첨부파일 리스트 가져오기 -->
@@ -889,10 +911,10 @@
 			journal_title = #title#,
 			dept_share = #deptShare#,
 			journal_content = #content#
-			<isEmpty property="isTemp">
+			<isNotEmpty property="isTemp">
 			,journal_status = ""
 			,journal_date = utc_timestamp() 
-			</isEmpty>
+			</isNotEmpty>
 		where
 			journal_id = #journalId#
 		and
@@ -929,16 +951,34 @@
 			tenant_id = #tenantId#
 	</delete>
 	
-	<!-- 일지 수신자 삭제 -->
-	<delete id="deleteJournalReceiver" parameterClass="map">
-		delete from
+	<!-- 일지 수신자 상태값변경 -->
+	<update id="updateJournalStatus" parameterClass="map">
+		update 
 			tbl_journal_recv
+		set
+			recv_status = 'N'
 		where
 			user_id = #userId#
 		and
 			journal_id = #journalId#
 		and
 			tenant_id = #tenantId#
-	</delete>
+	</update>
+	
+	<!-- 수신자 리스트 가져오기 -->
+	<select id="getReceiverList" parameterClass="map" resultMap="receiverVO">
+		select
+			b.user_id as user_id,
+			a.DISPLAYNAME as user_name,
+			a.DISPLAYNAME2 as user_name2
+		from 
+			tbl_usermaster a join tbl_journal_recv b 
+		on 
+			(a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
+		where 
+			b.journal_id = #journalId#
+		and
+			a.tenant_id = #tenantId#
+	</select>
 	
 </sqlMap>

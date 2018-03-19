@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalReceiverVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
@@ -578,7 +579,10 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String viewDate = request.getParameter("viewDate");
+			String viewDate = "";
+			if (request.getParameter("viewDate") != null) {
+				viewDate = request.getParameter("viewDate");
+			}
 			
 			JournalVO journal = ezJournalService.getJournal(journalId, userId, viewDate, info.getTenantId()+"");
 			
@@ -660,7 +664,7 @@ public class EzJournalGWController {
 			LOGGER.debug("listType : " + listType);
 			
 			if (listType.equals("recv")) {
-				ezJournalService.deleteJournalReceiver(journalIdList, info.getUserId(), info.getTenantId());
+				ezJournalService.updateJournalStatus(journalIdList, info.getUserId(), info.getTenantId());
 			} else {
 				ezJournalService.deleteJournalList(journalIdList, pDirPath, info.getTenantId());
 			}
@@ -1092,6 +1096,22 @@ public class EzJournalGWController {
 		
 		JSONObject result = new JSONObject();
 		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+			
+			List<JournalReceiverVO> receiverList = ezJournalService.getReceiverList(journalId, info.getTenantId());
+		
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", receiverList);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
 		LOGGER.debug("ezJournal G/W getReceiverList ended.");
 		return result;
 	}
@@ -1246,7 +1266,7 @@ public class EzJournalGWController {
 			LOGGER.debug("servername: " + serverName);
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			List<JournalAuthorVO> userList = ezJournalService.getFavoriteUserList(favoriteId, info.getTenantId() + "");
+			List<JournalReceiverVO> userList = ezJournalService.getFavoriteUserList(favoriteId, info.getTenantId() + "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);
