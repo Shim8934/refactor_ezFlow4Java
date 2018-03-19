@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -323,7 +325,7 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("addAttitudeType started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String companyId = userInfo.getCompanyID();
+		String companyId = request.getParameter("companyId");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/info";
@@ -350,6 +352,7 @@ public class EzAttitudeAdminBOMController {
 			viewInfo = resultBody.get("data");
 			
 			model.addAttribute("viewInfo", viewInfo);
+			model.addAttribute("companyId", companyId);
 		}
 		
 		LOGGER.debug("addAttitudeType ended.");
@@ -408,38 +411,77 @@ public class EzAttitudeAdminBOMController {
 			viewInfo = resultBody.get("data");
 			
 			model.addAttribute("viewInfo", viewInfo);
+			model.addAttribute("companyId", companyId);
 		}
 		
 		LOGGER.debug("showAttitudeType ended.");
 		
-		return "admin/ezAttitude/saveAttitudeType";
+		return "/admin/ezAttitude/saveAttitudeType";
 	}
 	
 	@RequestMapping(value = "/ezAttitude/iconUpload.do")
-	public void iconUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) {
+	public String iconUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		
 		LOGGER.debug("iconUpload started.");
 		
-		String typeId = request.getParameter("typeId");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		MultipartFile file = request.getFile("file1");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String typeId = request.getParameter("typeId");
+		String companyId = request.getParameter("companyId");
 
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
-		String url = gwServerUrl + "/rest/ezattitudee/companies/{companyId}/attitudetype/iconupload/{typeId}";
-									
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetype/iconupload/" + typeId;
+		
+		URI uri = URI.create(url); 
+		int maxSize = 0; 
+		
+		Long fileSize; 
+//		maxSize = Integer.parseInt(request.getParameter("maxSize")); 
+		JSONObject jsonObject = new JSONObject(); 
+		 
+		String realPath = commonUtil.getRealPath(request); 
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
+		StringBuffer sb = new StringBuffer(); 
+		byte[] b= new byte[4096]; 
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId());
+		JSONObject fileJson = new JSONObject();			 
+			 
+		byte[] bytes = file.getBytes(); 
+		fileSize = file.getSize(); 
+		String originalFilename = file.getOriginalFilename(); 
+		fileJson.put("bytes", bytes); 
+		fileJson.put("fileSize", fileSize); 
+		fileJson.put("originalFilename", originalFilename); 
+
+		jsonObject.put("fileObject", fileJson);
+//		jsonObject.put("maxSize",maxSize); //최대사이즈
+		jsonObject.put("userID",userInfo.getId());  
+		 
+		HttpEntity<JSONObject> entity = new HttpEntity(jsonObject, headers); 
+		     
+		RestTemplate rest = new RestTemplate(); 
+		 
+		ResponseEntity<JSONObject> result = rest.exchange(uri, HttpMethod.POST, entity, JSONObject.class); 				
 		
-		RestTemplate rest = new RestTemplate();
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		Object filePaths = "";
+		if (status.equals("ok")) {
+			filePaths = resultBody.get("data");
+			
+			model.addAttribute("filePaths", filePaths);
+		}
 		
 		LOGGER.debug("iconUpload ended.");
+		
+		return "/admin/ezAttitude/attitudeTypeIconUpload";
 	}
+	
 	
 }
