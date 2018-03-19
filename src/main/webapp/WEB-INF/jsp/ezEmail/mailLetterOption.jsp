@@ -26,7 +26,9 @@
 		<script type="text/javascript">
 	
 			var offsetMin = "${offsetMin}";
-		    $(function () {
+			var individualMailUser = parseInt("${individualMailUser}");
+		    
+			$(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
@@ -131,6 +133,7 @@
 		
 		        var tmpStr = "";
 		        tmpStr = rgParams["delaySendDate"];
+		        
 		        if (rgParams["delaySendDate"] != "") {
 		            document.getElementById("deliverySend").checked = true;
 		            tmpStr = rgParams["delaySendDate"];
@@ -139,18 +142,20 @@
 		            $("#Sdatepicker").datepicker('setDate', SetDate);
 		            $('#Stimepicker').timepicker('setTime', SetDate);
 		            $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
-		        }
-		        else {
+		        } else {
 		            document.getElementById("Stimepicker").disabled = true;
 		            $("#Sdatepicker").datepicker('disable');
-		        }		        
+		        }	
 		        
-		        if (rgParams["EachMail"] == "true") {
-		            document.getElementById("eachMailSend").checked = true;
+		        if (individualMailUser > 0) {
+
+		        	if (rgParams["EachMail"] == "true") {
+			            document.getElementById("eachMailSend").checked = true;
+			        } else {
+			            document.getElementById("eachMailSend").checked = false;
+			        }
 		        }
-		        else {
-		            document.getElementById("eachMailSend").checked = false;
-		        }
+		        
 		    }
 		    
 		    function cancel() {
@@ -267,12 +272,14 @@
 	                return;
 	            }
 		
-		        if (eachMailSend.checked == true) {
-		            RetValue["EachMail"] = "true";
-		        }
-		        else {
-		            RetValue["EachMail"] = "false";
-		        }
+	            if (individualMailUser > 0) {
+	            	
+			        if (eachMailSend.checked == true) {
+			            RetValue["EachMail"] = "true";
+			        } else {
+			            RetValue["EachMail"] = "false";
+			        }
+	            }
 	            
 		        if (ReturnFunction != null)
 		            ReturnFunction(RetValue);
