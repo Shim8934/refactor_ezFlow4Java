@@ -144,7 +144,7 @@
 		            taskcategoryinsert_cross_dialogArguments[0] = para;
 		            taskcategoryinsert_cross_dialogArguments[1] = btnAddTree_onclick_Complete;
 	
-		            TaskCategoryInsert_Cross = window.open("/admin/ezApprovalG/taskCategoryInsert.do?tCheck=ins&companyID=" + encodeURIComponent(companyID), "TaskCategoryInsert", GetOpenWindowfeature(470, 300));
+		            TaskCategoryInsert_Cross = window.open("/admin/ezApprovalG/taskCategoryInsert.do?tCheck=ins&companyID=" + encodeURIComponent(companyID), "TaskCategoryInsert", GetOpenWindowfeature(470, 310));
 		            try { TaskCategoryInsert_Cross.focus(); } catch (e) { }
 		        } else {
 		        	if (approvalFlag == 'S') {
@@ -194,7 +194,7 @@
 	
 	                taskcategoryinsert_cross_dialogArguments[0] = para;
 	                taskcategoryinsert_cross_dialogArguments[1] = btnEditTree_onclick_Complete;
-	                var TaskCategoryInsert_Cross = window.open("/admin/ezApprovalG/taskCategoryInsert.do?tCheck=update&companyID=" + encodeURIComponent(companyID), "TaskCategoryInsert", GetOpenWindowfeature(470, 300));
+	                var TaskCategoryInsert_Cross = window.open("/admin/ezApprovalG/taskCategoryInsert.do?tCheck=update&companyID=" + encodeURIComponent(companyID), "TaskCategoryInsert", GetOpenWindowfeature(470, 310));
 	                try { TaskCategoryInsert_Cross.focus(); } catch (e) { }
 		        } else {
 		        	if (approvalFlag == 'S') {
@@ -747,7 +747,7 @@
 			<tr>
 				<td>
 					<h2></h2>
-					<div style="border:#b6b6b6 1px solid; overflow-y:auto; overflow-x:auto; width:220px;height:400px; background-color:#ffffff"  id="TreeView"></div>
+					<div style="border:#ddd 1px solid; overflow-y:auto; overflow-x:auto; width:220px;height:400px; background-color:#ffffff"  id="TreeView"></div>
 				</td>
 				<td style="padding-left:5px">
 					<h2 id="descript"></h2>

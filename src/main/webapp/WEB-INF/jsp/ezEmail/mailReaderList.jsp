@@ -306,8 +306,8 @@
 	            </div>
 	        </div>
 	        <span id="MailListRayer" style="border: 0px solid blue; width: 500px; height: 100%; vertical-align: top; overflow: hidden;">
-	            <table style="width: 100%; border: 1px solid #B6B6B6;" id="MailHeader" class="mainlist">
-	                <table style="width: 100%; border: 1px solid #B6B6B6;" id="Table1" class="mainlist">
+	            <table style="width: 100%; border: 1px solid #ddd;" id="MailHeader" class="mainlist">
+	                <table style="width: 100%; border: 1px solid #ddd;" id="Table1" class="mainlist">
 	                    <tr>
 	                        <th style="width: 14px;">
 	                            <input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onclick="event_listCheckboxclick(this);"></th>

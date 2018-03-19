@@ -1328,13 +1328,13 @@
 	                    </div>
 	                </div>
 	                <div id="Organ">
-	                    <div style="overflow: auto; height: 550px; width: 395px; background-color: #FFFFFF; border: 1px solid #b6b6b6;border-top:0px" id="TreeView"></div>
+	                    <div style="overflow: auto; height: 550px; width: 395px; background-color: #FFFFFF; border: 1px solid #ddd;border-top:0px" id="TreeView"></div>
 	                </div>
 	                <!-- 즐겨찾기 -->
 	                <div id="ReceptTemp" style="display: none; padding-left: 5px">
 	                    <table>
 	                        <tr>
-	                            <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+	                            <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                <h2 class="h2_dot"><spring:message code='ezApprovalG.G0003'/></h2>
 	                                <div class="border_gray">
 	                                    <div id="RecSaveList" style="border: 0px; Width: 388px; Height: 237px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
@@ -1346,7 +1346,7 @@
 	                            <td style="background-color: transparent; text-align: center; height: 30px;">
 	                                <table class="content" style="margin-bottom: 5px; width: 100%;">
 	                                    <tr>
-	                                        <td style="text-align: center;">
+	                                        <td style="text-align: center; background-color:#f8f8fa; padding-top:1.5px;">
 	                                            <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
 	                                            <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
 	                                            <a class="imgbtn"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>

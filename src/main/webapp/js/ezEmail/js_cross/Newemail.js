@@ -277,6 +277,31 @@ function all_reply_mail_onclick() {
     }
 }
 
+function reSend_onClick() {
+	
+	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+        alert(strLangKYJ01);
+    }
+    
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLangKYJ02);
+        return;
+    } else {
+        var pSelectItem;
+        
+        if (listContentArry.length > 0) {
+            pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
+        } else {
+            pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        }
+        
+        var pURI = "/ezEmail/mailWrite.do?cmd=RESEND&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
+        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
+        newwin.focus();
+    }
+
+}
+
 function transmission_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang47);
@@ -1354,6 +1379,14 @@ function HiddenContextMenu() {
 function ContextMenuHidden() {
     if (document.getElementById("ContextMenuDiv").style.display == "")
         HiddenContextMenu();
+    
+    if (document.getElementById("mailPanel").style.display == "")
+    	HiddenContextMenu();
+    
+    if (parent.frames["left"].document.getElementById("folderMenuDiv").style.display == "") {
+    	parent.frames["left"].document.getElementById("folderPanel").style.display = "none";
+    	parent.frames["left"].document.getElementById("folderMenuDiv").style.display = "none";
+    }
 }
 function PopUpPreMail() {
     

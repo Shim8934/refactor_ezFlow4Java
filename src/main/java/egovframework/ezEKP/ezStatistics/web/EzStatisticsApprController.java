@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezStatistics.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -76,19 +77,20 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		
-		StringBuilder companySel = new StringBuilder();
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
-		for (OrganDeptVO vo : deptVOs) {
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				companySel.append("<option value='" + vo.getCn() + "' value2='" + vo.getDisplayName() + "'>");
-				companySel.append(vo.getDisplayName());
-				companySel.append("</option>");
+				resultList.add(vo);
 			}
 		}
 		
-		model.addAttribute("companySel", companySel);
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
 		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("statisticsApprMain ended");
@@ -150,23 +152,20 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		
-		StringBuilder companySel = new StringBuilder();
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
-		for (OrganDeptVO vo : deptVOs) {
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				if (vo.getCn().equals(userInfo.getCompanyID())) {
-					companySel.append("<option value='" + vo.getCn() + "' selected>");
-				} else {
-					companySel.append("<option value='" + vo.getCn() + "'>");
-				}
-				companySel.append(vo.getDisplayName());
-				companySel.append("</option>");
+				resultList.add(vo);
 			}
 		}
 		
-		model.addAttribute("companySel", companySel);
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
 		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("statisticsMonForm ended");
@@ -383,23 +382,20 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		
-		StringBuilder companySel = new StringBuilder();
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
-		for (OrganDeptVO vo : deptVOs) {
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				if (vo.getCn().equals(userInfo.getCompanyID())) {
-					companySel.append("<option value='" + vo.getCn() + "' selected>");
-				} else {
-					companySel.append("<option value='" + vo.getCn() + "'>");
-				}
-				companySel.append(vo.getDisplayName());
-				companySel.append("</option>");
+				resultList.add(vo);
 			}
 		}
 		
-		model.addAttribute("companySel", companySel);
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
 		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("statisticsTimeForm ended");
@@ -462,23 +458,20 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		
-		StringBuilder companySel = new StringBuilder();
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
-		for (OrganDeptVO vo : deptVOs) {
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				if (vo.getCn().equals(userInfo.getCompanyID())) {
-					companySel.append("<option value='" + vo.getCn() + "' selected>");
-				} else {
-					companySel.append("<option value='" + vo.getCn() + "'>");
-				}
-				companySel.append(vo.getDisplayName());
-				companySel.append("</option>");
+				resultList.add(vo);
 			}
 		}
-    	
-		model.addAttribute("companySel", companySel);
+		
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
 		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("statisticsForm ended");
