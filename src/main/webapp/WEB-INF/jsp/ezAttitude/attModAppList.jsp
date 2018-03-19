@@ -1,0 +1,367 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head>
+		<title>mail_list</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/Common.js"></script>		
+		<script type="text/javascript">
+		var totalAtt = ${totalAtt};
+		var startDate = "<c:out value='${startDate}'/>";
+		var endDate = "<c:out value='${endDate}'/>";
+		var currentPage = ${currentPage};  		
+		var totalPages = ${totalPages};
+		var blockSize = 10;
+		var g_userLang = "${userLang}";
+		var g_timezone = "${userTimeSet}";
+		var offsetMin = "${offsetMin}";
+		
+		$(function () {
+	        $("#Sdatepicker").datepicker({
+	            changeMonth: true,
+	            changeYear: true,
+	            autoSize: true,
+	            showOn: "both",
+	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImageOnly: true
+	        });
+	        $("#Edatepicker").datepicker({
+	            changeMonth: true,
+	            changeYear: true,
+	            autoSize: true,
+	            showOn: "both",
+	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImageOnly: true
+	        });
+	        var NowDate = utcDate2(offsetMin);
+	        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#Sdatepicker").datepicker('setDate', NowDate);
+	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#Edatepicker").datepicker('setDate', NowDate);
+	    });
+	    
+	    $(function () {
+	        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+	            closeText: "<spring:message code='main.t3' />",
+	            prevText: "<spring:message code='main.t0604' />",
+	            nextText: "<spring:message code='main.t0605' />",
+	            currentText: "<spring:message code='main.t0606' />",
+	            monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+	                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+	                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+	                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+	            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+	                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+	                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+	                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+	            dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+	                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+	                       "<spring:message code='main.t0627' />"],
+	            dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+			                       "<spring:message code='main.t0627' />"],
+	            dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+		                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+		                       "<spring:message code='main.t0627' />"],
+	            weekHeader: "Wk",
+	            dateFormat: "yy-mm-dd",
+	            firstDay: 0,
+	            isRTL: false,
+	            duration: 200,
+	            showAnim: "show",
+	            showMonthAfterYear: true
+	        };
+	        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+	    });
+		
+		window.onload = function() {
+			makePageSelPage();
+			
+			var obj = $("#search").offset();
+			
+			$("#layer_popup").css({
+				   "position" : "absolute",
+				   "top" : obj.top + $("#search").height(),
+				   "left" : obj.left
+				});
+		}
+		function makePageSelPage(){
+	        var strtext;
+	        var PagingHTML = "";
+	        document.getElementById("tblPageRayer").innerHTML = "";
+	        document.getElementById("mailBoxInfo").innerHTML = " - [" + "총"  + "<span style='color:#017BEC;'> " + totalAtt + " </span>" + "개 "+ "-" + startDate + "~" + endDate + "]";
+	        strtext = "<div class='pagenavi'>";
+	        PagingHTML += strtext;
+	        var pageNum = currentPage;
+	        
+	        if (totalPages > 1 && pageNum != 1) {
+	            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        else {
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        if (totalPages > blockSize) {
+	            if (pageNum > blockSize) {
+	                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + "이전" + "</span>";
+	                PagingHTML += strtext;
+	            }
+	            else {
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + "이전" + "</span>";
+	                PagingHTML += strtext;
+	            }
+	        }
+	        else {
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + "이전" + "</span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        var MaxNum;
+	        var i;
+	        var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1;
+	        
+	        if (totalPages >= (startNum + parseInt(blockSize))) {
+	            MaxNum = (startNum + parseInt(blockSize)) - 1;
+	        }
+	        else {
+	            MaxNum = totalPages;
+	        }
+	        
+	        for (i = startNum; i <= MaxNum; i++) {
+	            if (i == pageNum) {
+	                strtext = "<span class='on'>" + i + "</span>";
+	                PagingHTML += strtext;
+	            }
+	            else {
+					strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i + "</span>";
+	                PagingHTML += strtext;
+	            }
+	        }
+	        
+	        if (totalPages > blockSize) {
+	        	if (totalPages >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
+	        	    strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + "다음" + "</span>";
+	        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	        	}
+	        	else {
+	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "다음" + "</span>";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	        	}
+	        }
+	        else {
+	            strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + "다음" + "</span>";
+	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
+	            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        else {
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        PagingHTML += "</div>";
+	        td_Create1(PagingHTML);
+	    }
+	
+	    function td_Create1(strtext) {
+	        document.getElementById("tblPageRayer").innerHTML = strtext;
+	    }
+	    
+	    function search_popup() {
+	    	if ($("#layer_popup").css("display") == "none") {
+	       		$("#layer_popup").css("display","block");
+	       	} else {	
+	       		$("#layer_popup").css("display","none");
+	    	}
+	    }
+	    
+	    function popup_close() {
+	    	$("#layer_popup").css("display","none");
+	    	date_reset();
+	    }
+	    
+	    function att_search() {
+	    	console.log("search start");
+// 	    	popup_close();
+			get_att_list();
+	    	console.log("search end");
+	    }
+	    
+	    function get_att_list() {
+
+	    	var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	    	var obj = new Object();
+	    	
+		    obj.apprUserName = $('#appr_search').val();
+		    obj.startDate = startDate;
+		    obj.endDate = endDate;
+			
+		    //파라미터로 리스트 마지막 mail의 받은 날짜를 넘겨줘야 한다.
+		    $.ajax({
+				type : 'get',
+			    url : '/ezAttitude/getAttModAppList.do',
+			    data : obj,
+			    dataType : "json",
+			    error: function(xhr, status, error){
+			    	ajaxRunning = false;
+			    },
+			    success : function(json){
+			    	console.log(json.length);
+			    }
+		    });
+	    }
+	    
+	    function date_reset() {
+	    	$("#Sdatepicker").datepicker({
+	            changeMonth: true,
+	            changeYear: true,
+	            autoSize: true,
+	            showOn: "both",
+	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImageOnly: true
+	        });
+	        $("#Edatepicker").datepicker({
+	            changeMonth: true,
+	            changeYear: true,
+	            autoSize: true,
+	            showOn: "both",
+	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImageOnly: true
+	        });
+	        var NowDate = utcDate2(offsetMin);
+	        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#Sdatepicker").datepicker('setDate', NowDate);
+	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#Edatepicker").datepicker('setDate', NowDate);
+	    }
+	    
+	    function search_keypress(evt)
+		{	
+	        var curevent = (typeof event == 'undefined' ? evt : event)
+	        if (curevent.keyCode == "13") {
+				set_searchKey();
+	        }
+		}
+		</script>
+</head>
+	<body style="overflow:hidden;" id="theBody" class="mainbody">
+		<h1>근태수정현황<span id="mailBoxInfo">-신청관리현황[총 xxx개-xxxx년 xx월 xx일~xxxx년 xx월 xx일]</span>
+	    </h1>	
+        <div id="mainmenu">
+        <ul id="tb_Parent">
+          <li><span onClick="new_mail_onclick()">삭제</span></li>
+          <li id="reply"><span onClick="reply_mail_onclick()">엑셀 다운로드</span></li>
+          <li id="search"><span onClick="search_popup()">검색</span></li>
+		  <li id="right">
+			  <span style="float:right;font-weight:normal;color:black;border: none;">
+		          <input name="searchCheck" id="Radio1" type="radio" value="SUBJECT" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;전체</label>
+		          <input name="searchCheck" id="Radio2" type="radio" value="SUBJECT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;진행</label>
+		          <input name="searchCheck" id="Radio3" type="radio" value="SUBJECT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;승인</label>
+		          <input name="searchCheck" id="Radio4" type="radio" value="SUBJECT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;반려</label>
+		  </li> 
+        </ul>
+        </div>
+        <div id="layer_popup" style="width:400px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+          <div class="popupwrap1" style="background-color:#ffffff; position: relative;">
+            <div class="popupwrap2">
+              <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="content">
+              	  <tr>
+                    <th nowrap>승인자명</th>
+                    <td style="width:100%;"> 
+						<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="Key_event(event);">
+	                </td>
+                  </tr>
+                  <tr>
+                    <th>변경일자기간</th>
+                    <td>
+                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;">
+	                </td>
+                  </tr>
+              </table>
+              <div class="btnposition">
+		        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span>날짜초기화</span></a>
+		        <a class="imgbtn" id="cancelBtn" onclick="att_search()"><span>검색</span></a>
+		        <a class="imgbtn" id="cancelBtn" onclick="popup_close()"><span>취소</span></a>
+		      </div>
+            </div>
+          </div>
+        </div>
+        <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
+            <div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;" onblur>
+                <table class="mainlist" style="width:100%;" id="MailList" listpageCount="${mailGeneral.listCount}" curPage="1">
+                	<tr> 
+						<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
+							<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">
+						</th> 
+						<th width="60px">NO.</th> 
+						<th>변경일자</th> 					
+						<th width="150px">승인자</th> 
+						<th width="180px">출근시각</th>
+						<th width="180px">변경시각</th> 
+						<th width="80px">승인상태</th> 
+<%-- 						<th width="60px"><spring:message code="ezPoll.t109"/></th>			 --%>
+			    	</tr>
+			    	
+			    	<c:forEach var="list" items="${list}" varStatus="i"> 
+			        <tr id="${list.attitudeId}" class="white">
+			        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.attitudeId}" />+" value=<c:out value="${list.attitudeId}" />  onchange="javascript:getChecked(this)"></td>
+			          	<td>${i.count}</td>
+			          	<c:set var="changeDate" value="${list.changeDate}"/>
+						<td>${fn:substring(changeDate,0,10) }</td>
+						<td>${list.apprUserName}</td>
+						<td>${list.originDate}</td>
+						<td>${fn:substring(changeDate,11,19) }</td>
+						<c:if test="${list.apprStatus == 0}">
+			          		<td>진행</td>	
+			          	</c:if>
+			          	<c:if test="${list.apprStatus == 1}">
+			          		<td>승인</td>	
+			          	</c:if>
+			          	<c:if test="${list.apprStatus == 2}">
+			          		<td>반려</td>	
+			          	</c:if>
+<%-- 		          		<c:choose> --%>
+<%-- 							<c:when test="${primary == '1'}"> --%>
+<%-- 								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName1} </a> </td> --%>
+<%-- 							</c:when> --%>
+<%-- 							<c:otherwise> --%>
+<%-- 								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName2} </a> </td> --%>
+<%-- 							</c:otherwise> --%>
+<%-- 						</c:choose>	 --%>
+			        </tr>
+		        </c:forEach>
+		        
+			    <c:if test="${list.size() == 0}"> 
+			        <tr> 
+						<td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td>
+		       		</tr> 
+		        </c:if> 
+                </table>
+            </div>
+            <div id="tblPageRayer"  style="width:470px; margin:6px auto;"></div>
+        </span>
+	</body>
+</html>

@@ -10,9 +10,9 @@ public class AttitudeApplicationVO {
 	/** 신청자 아이디 */
 	private String writerId;
 	/** 신청자 이름 */
-	private String WriterName;
+	private String writerName;
 	/** 신청자 이름(영문) */
-	private String WriterName2;
+	private String writerName2;
 	/** 신청자 직위 */
 	private String writerTitle;
 	/** 신청자 직위(영문) */
@@ -23,6 +23,8 @@ public class AttitudeApplicationVO {
 	private String writerDeptName;
 	/** 신청자 부서명(영문) */
 	private String writerDeptName2;
+	/** 출근 날짜 */
+	private String originDate;
 	/** 변경 일자 */
 	private String changeDate;
 	/** 변경 시각 */
@@ -67,16 +69,16 @@ public class AttitudeApplicationVO {
 		this.writerId = writerId;
 	}
 	public String getWriterName() {
-		return WriterName;
+		return writerName;
 	}
 	public void setWriterName(String writerName) {
-		WriterName = writerName;
+		this.writerName = writerName;
 	}
 	public String getWriterName2() {
-		return WriterName2;
+		return writerName2;
 	}
 	public void setWriterName2(String writerName2) {
-		WriterName2 = writerName2;
+		this.writerName2 = writerName2;
 	}
 	public String getWriterTitle() {
 		return writerTitle;
@@ -162,6 +164,26 @@ public class AttitudeApplicationVO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-
+	public String getOriginDate() {
+		return originDate;
+	}
+	public void setOriginDate(String originDate) {
+		this.originDate = originDate;
+	}
+	@Override
+	public String toString() {
+		return "AttitudeApplicationVO [attitudeId=" + attitudeId
+				+ ", companuId=" + companuId + ", tenantId=" + tenantId
+				+ ", writerId=" + writerId + ", WriterName=" + writerName
+				+ ", WriterName2=" + writerName2 + ", writerTitle="
+				+ writerTitle + ", writerTitle2=" + writerTitle2
+				+ ", writerDeptId=" + writerDeptId + ", writerDeptName="
+				+ writerDeptName + ", writerDeptName2=" + writerDeptName2
+				+ ", originDate=" + originDate + ", changeDate=" + changeDate
+				+ ", changeTime=" + changeTime + ", delFlag=" + delFlag
+				+ ", apprUserId=" + apprUserId + ", apprUserName="
+				+ apprUserName + ", apprUserName2=" + apprUserName2
+				+ ", apprDate=" + apprDate + ", apprStatus=" + apprStatus
+				+ ", content=" + content + "]";
+	}
 }
