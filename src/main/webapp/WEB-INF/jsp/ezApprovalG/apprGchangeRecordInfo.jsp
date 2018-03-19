@@ -552,6 +552,7 @@
     	        g_szSCListXml = rtn[1];
     	    }
     }
+    
     function selChangeType_onchange() {
         g_ModifyFlag = selChangeType.value;
 
@@ -562,15 +563,15 @@
         {
             divBasicInfo.style.display = "";
             divClassInfo.style.display = "none";
-
-            window.dialogHeight = "510px";
+			//팝업창 가로 사이즈 유지, 세로만 변경
+          	window.resizeTo(window.outerWidth, 577);
         }
         else if (g_ModifyFlag == "1")
         {
             divBasicInfo.style.display = "none";
             divClassInfo.style.display = "";
-
-            window.dialogHeight = "510px";
+            
+          	window.resizeTo(window.outerWidth, 640);
         }
     }
     function MM_swapImgRestore() {
@@ -596,7 +597,7 @@
     }
 </script>
 </head>
-<body style="margin-left:0px;margin-top:0px" class="popup">
+<body style="margin-left:0px; margin-top:0px;" class="popup">
 <h1><spring:message code='ezApprovalG.t969'/></h1>
 <table class="content">
   <tr>
@@ -617,15 +618,15 @@
     </tr>
     <tr>
       <th><spring:message code='ezApprovalG.t831'/></th>
-      <td><input type="text" style="Width:40px;" name="txtRegY" id="txtRegY" maxlength = "4">
+      <td><input type="text" style="Width:40px; height:18px;" name="txtRegY" id="txtRegY" maxlength = "4">
         <spring:message code='ezApprovalG.t456'/>
-        <input type="text" style="Width:25px;" name="txtRegM"  id="txtRegM" maxlength = "2">
+        <input type="text" style="Width:25px; height:18px;" name="txtRegM"  id="txtRegM" maxlength = "2">
         <spring:message code='ezApprovalG.t968'/>
-        <input type="text" style="Width:25px;" name="txtRegD"  id="txtRegD" maxlength = "2">
+        <input type="text" style="Width:25px; height:18px;" name="txtRegD"  id="txtRegD" maxlength = "2">
         <spring:message code='ezApprovalG.t662'/>
-        <input type="text" style="Width:25px;" name="txtRegH"  id="txtRegH" maxlength = "2">
+        <input type="text" style="Width:25px; height:18px;" name="txtRegH"  id="txtRegH" maxlength = "2">
         <spring:message code='ezApprovalG.t977'/>
-        <input type="text" style="Width:25px;" name="txtRegMi"  id="txtRegMi" maxlength = "2">
+        <input type="text" style="Width:25px; height:18px;" name="txtRegMi"  id="txtRegMi" maxlength = "2">
         <spring:message code='ezApprovalG.t978'/></td>
     </tr>
     <tr>
@@ -645,11 +646,11 @@
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t863'/></th>
-      <td ><input type="text" style="Width:40px;" name="txtExeY" id="txtExeY" maxlength = "4">
+      <td ><input type="text" style="Width:40px; height:18px;" name="txtExeY" id="txtExeY" maxlength = "4" >
         <spring:message code='ezApprovalG.t456'/>
-        <input type="text" style="Width:25px;" name="txtExeM"  id="txtExeM" maxlength = "2">
+        <input type="text" style="Width:25px; height:18px;" name="txtExeM"  id="txtExeM" maxlength = "2">
         <spring:message code='ezApprovalG.t968'/>
-        <input type="text" style="Width:25px;" name="txtExeD"  id="txtExeD" maxlength = "2">
+        <input type="text" style="Width:25px; height:18px;" name="txtExeD"  id="txtExeD" maxlength = "2">
         <spring:message code='ezApprovalG.t643'/></td>
     </tr>
     <tr>
@@ -659,8 +660,8 @@
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t868'/></th>
-      <td style="text-align:left;vertical-align:middle"><Input type="radio" style="vertical-align:text-bottom" name="rdoElectronicFlag" value="1" checked><spring:message code='ezApprovalG.t981'/>
-        <Input type="radio" style="vertical-align:text-bottom" name="rdoElectronicFlag" value="2"><spring:message code='ezApprovalG.t982'/></td>
+      <td style="text-align:left;"><Input type="radio" name="rdoElectronicFlag" value="1" checked><span style="vertical-align:middle;"> <spring:message code='ezApprovalG.t981'/></span>
+        <Input type="radio" name="rdoElectronicFlag" value="2"><span style="vertical-align:middle;"> <spring:message code='ezApprovalG.t982'/></span></td>
     </tr>
   </table>
 </Div>
@@ -681,12 +682,12 @@
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t109'/></th>
-      <td style="vertical-align:middle"><Input type="radio" style="vertical-align:text-bottom;" name="rdoSecType" value="1" checked onClick="return rdoSecType_onclick(this.value)">
-        <spring:message code='ezApprovalG.t47'/>
-        <Input type="radio" style="vertical-align:text-bottom;" name="rdoSecType" value="2" onClick="return rdoSecType_onclick(this.value)">
-        <spring:message code='ezApprovalG.t150'/>
-        <Input type="radio" style="vertical-align:text-bottom;" name="rdoSecType" value="3" onClick="return rdoSecType_onclick(this.value)">
-        <spring:message code='ezApprovalG.t988'/>
+      <td><Input type="radio" name="rdoSecType" value="1" checked onClick="return rdoSecType_onclick(this.value)">
+        <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t47'/></span>
+        <Input type="radio" name="rdoSecType" value="2" onClick="return rdoSecType_onclick(this.value)">
+        <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t150'/></span>
+        <Input type="radio"  name="rdoSecType" value="3" onClick="return rdoSecType_onclick(this.value)">
+        <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t988'/></span>
         <Select id="selSecLevel" style="width:60px;display:none">
         </Select>
       </td>
@@ -728,11 +729,11 @@
 </Div>
 <table class="content" style="margin-top:10px">
   <tr>
-    <th  ><spring:message code='ezApprovalG.t626'/></th>
-    <td><TextArea style="width:97%; height:70px; resize:none;" id=txtChangeReason name=txtChangeReason></TextArea></td>
+    <th><spring:message code='ezApprovalG.t626'/></th>
+    <td><TextArea style="vertical-align:middle; border: 0; width:97.3%; height:70px; resize:none;" id=txtChangeReason name=txtChangeReason></TextArea></td>
   </tr>
 </table>
-<div class="btnposition btnpositionNew">
+<div class="btnposition btnpositionNew" style="display:block;">
   <a class="imgbtn"><span id="btnReset" onclick="return btnReset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
   <a class="imgbtn"><span id="btnOK" onclick="return btnOK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
   <a class="imgbtn"><span id="btnClose" onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  

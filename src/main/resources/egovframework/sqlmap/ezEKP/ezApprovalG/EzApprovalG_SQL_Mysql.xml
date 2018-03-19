@@ -6597,43 +6597,8 @@
    		<isEqual property="v_FLAG" compareValue="1">
 		<![CDATA[
    		AND
-   			STARTDATE < (SELECT 
-   							STARTDATE
-			   			 FROM 
-			   				VAPRDOINGDOCLIST 
-			   			 WHERE 
-			   				DOCSTATE <> '015' 
-			   			 AND
-			   				TENANT_ID = #v_TENANTID#
-			   			 AND
-			   				COMPANYID = #companyID#
-			   			 AND 
-			   				FUNCTIONTYPE IN ('002', '005', '000')
-			   			 AND 
-			   				APRMEMBERID IN ($v_USERIDS$)
-			   			 AND 
-			   				DOCID = #v_DOCID#
-			   				
-			   			UNION ALL
- 						SELECT     
- 						       STARTDATE         
-  						FROM            
-  							vendchamjodocinfo  
-  						WHERE            
-  								DOCSTATE <> '015' 
-			   			 AND
-			   				TENANT_ID = #v_TENANTID#
-			   			 AND
-			   				COMPANYID = #companyID#
-			   			 AND 
-			   				FUNCTIONTYPE IN ('002')
-			   			 AND 
-			   				APRMEMBERID IN ($v_USERIDS$)
-			   			 AND 
-			   				DOCID = #v_DOCID#
-  						LIMIT 1
-			   				)
-			   	]]>
+   			DOCID < #v_DOCID#
+		]]>
    		</isEqual>
    		<isEqual property="v_FLAG" compareValue="2">
 		<![CDATA[
@@ -24203,4 +24168,69 @@
 				receiptpointid LIKE '$receiptPointID$%'
 		</isNotEqual>
 	</update>
+	
+	<select id="EzApprovalG.getCountDoingDocInfo" parameterClass="Map" resultClass="int" remapResults="true">
+		SELECT 
+			COUNT(*) 
+		FROM
+			(
+			SELECT
+				STARTDATE
+			FROM 
+				VAPRDOINGDOCLIST 
+			WHERE 
+				TENANT_ID = #v_TENANTID# 
+			AND 
+				COMPANYID = #companyID# 
+			AND 
+			<![CDATA[
+				APRMEMBERID IN ($v_PUSERIDS$) 
+			AND 
+				APRTYPE <> '015'
+			]]>
+			UNION ALL
+			SELECT 
+				STARTDATE
+			FROM
+				VENDCHAMJODOCINFO 
+			WHERE 
+				TENANT_ID = #v_TENANTID# 
+			AND 
+				COMPANYID = #companyID# 
+			AND 
+			<![CDATA[
+				APRMEMBERID IN ($v_PUSERIDS$) 
+			AND 
+				APRTYPE <> '015'
+			]]>
+			) AS A
+		WHERE
+			1 = 1
+		AND 
+		<isEqual property="v_COUNTTYPE" compareValue="SIXHGAP">
+			A.STARTDATE >= DATE_ADD(#v_NOWTIME#, INTERVAL -6 HOUR)
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="ONEDGAP">
+			A.STARTDATE >= DATE_ADD(#v_NOWTIME#, INTERVAL -1 DAY) 
+		AND 
+			DATE_ADD(#v_NOWTIME#, INTERVAL -6 HOUR) > A.STARTDATE
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="SEVENDGAP">
+			A.STARTDATE >= DATE_ADD(#v_NOWTIME#, INTERVAL -1 WEEK) 
+		AND 
+			DATE_ADD(#v_NOWTIME#, INTERVAL -1 DAY) > A.STARTDATE
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="ONEMGAP">
+			A.STARTDATE >= DATE_ADD(#v_NOWTIME#, INTERVAL -1 MONTH) 
+		AND 
+			DATE_ADD(#v_NOWTIME#, INTERVAL -1 WEEK) > A.STARTDATE
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="OTHER">
+			DATE_ADD(#v_NOWTIME#, INTERVAL -1 MONTH) > A.STARTDATE
+		</isEqual>
+	</select>
 </sqlMap>

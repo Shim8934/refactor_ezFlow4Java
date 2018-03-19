@@ -63,6 +63,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("file_path", pollQuestionVO.getFilePath());	
 		map.put("result_first", pollQuestionVO.getResultFirst());
 		map.put("set_date", pollQuestionVO.getSetDate());
+		map.put("is_sorting", pollQuestionVO.getIsSorting());		
 		ezPollDAO.insertQuestion(map);
 	}
 

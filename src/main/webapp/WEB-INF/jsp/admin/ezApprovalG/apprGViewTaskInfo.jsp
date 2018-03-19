@@ -174,19 +174,19 @@
 		  	<tr>
 				<th><spring:message code = 'ezApprovalG.t672' /></th>
 		    	<td>
-		    		<textarea name="tdDesc" class="textarea" style="font-size:9pt;width:95%;height:60px" id=tdDesc readonly="readonly"></textarea>
+		    		<textarea name="tdDesc" class="textarea" style="font-size:9pt;width:97%;height:60px; border:0px; resize:none;" id=tdDesc readonly="readonly"></textarea>
 		    	</td>
 		  	</tr>
 		  	<tr>
 		    	<th><spring:message code = 'ezApprovalG.t117' /></th>
 		    	<td>
-		    		<Select id="selKeepPeriod" style="width:120px" disabled></Select>
+		    		<Select id="selKeepPeriod" style="width:120px;" disabled></Select>
 		    	</td>
 		  	</tr>
 		  	<tr>
 		    	<th><spring:message code = 'ezApprovalG.t678' /></th>
 		    	<td>
-		    		<textarea name="tdKPReason" class="textarea" style="font-size:9pt;width:95%;height:60px" id=tdKPReason readonly="readonly"></textarea>
+		    		<textarea name="tdKPReason" class="textarea" style="font-size:9pt;width:97%;height:60px; border:0px; resize:none;" id=tdKPReason readonly="readonly"></textarea>
 		    	</td>
 		  	</tr>
 		  	<tr>
