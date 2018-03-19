@@ -52,7 +52,7 @@
 				</c:if>
 				<th id="BoardList_TH_6" onclick="setListOrder(this)" order="3"
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
-					class="h5_center" width="120px"><spring:message code='ezJournal.t35'/></th>
+					class="h5_center" width="180px"><spring:message code='ezJournal.t35'/></th>
 				<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine' }">
 				<th id="BoardList_TH_8" onclick="setListOrder(this)" order="7" 
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
@@ -95,7 +95,7 @@
 				<c:when test="${journal.fileCount ne 0}">
 				<td onclick="selectedTR(this);"
 					style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;"><img
-					src="/images/i_notice.gif"></td>
+					src="/images/newAttach.gif"></td>
 				</c:when>
 				<c:otherwise>
 				<td onclick="selectedTR(this);"
@@ -115,7 +115,7 @@
 				<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 				${journal.journalTitle}
 				<c:if test="${journal.replyCount gt 0}">
-					<a onclick=""><span style="color: #2222ff">[${journal.replyCount }]</span></a>
+					<a onclick=""><span onclick="" style="color: #2222ff">[${journal.replyCount }]</span></a>
 				</c:if>
 				</td>
 				<c:if test="${listType eq 'recv' }">

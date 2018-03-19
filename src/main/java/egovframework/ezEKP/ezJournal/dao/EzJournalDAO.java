@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalReplyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
@@ -330,6 +331,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * 첨부파일 리스트
 	 * @param map
 	 */
+	@SuppressWarnings("unchecked")
 	public List<JournalAttachVO> getAttachList(Map<String, Object> map) {
 		return (List<JournalAttachVO>) list("getAttachList", map);
 	}
@@ -396,5 +398,30 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 */
 	public void deleteJournalReceiver(Map<String, Object> map) {
 		delete("deleteJournalReceiver", map);
+	}
+	
+	/**
+	 * 업무일지 댓글 리스트
+	 * @param map
+	 */
+	@SuppressWarnings("unchecked")
+	public List<JournalReplyVO> selectJournalReplyList(Map<String, Object> map) {
+		return (List<JournalReplyVO>) list("selectJournalReplyList", map);
+	}
+	
+	/**
+	 * 댓글 등록
+	 * @param map
+	 */
+	public void insertJournalReply(Map<String, Object>map) {
+		insert("insertJournalReply",map);
+	}
+	
+	/**
+	 * 댓글 삭제 
+	 * @param map
+	 */
+	public void deleteJournalReply(Map<String, Object>map) {
+		insert("deleteJournalReply",map);
 	}
 }

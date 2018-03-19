@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalReplyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
@@ -318,4 +319,36 @@ public interface EzJournalService {
 	 */
 	public void deleteJournalReceiver(List<String> journalIdList, String userId, int tenantId) throws Exception;
 
+	/**
+	 * 업무일지 댓글 리스트
+	 * @param journalId
+	 * @param userId
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId) throws Exception;
+	
+	/**
+	 * 업무일지 댓글 저장
+	 * @param journalId
+	 * @param userId
+	 * @param replyContent
+	 * @param replyDate
+	 * @param tenantId
+	 * @throws Exception
+	 */
+	public void saveJorunalReply(String journalId, String userId, String replyContent,String replyDate,int tenantId) throws Exception;
+	
+	/**
+	 * 업무일지 댓글 삭제
+	 * @param journalId
+	 * @param userId
+	 * @param userId2 
+	 * @param replyContent
+	 * @param replyDate
+	 * @param tenantId
+	 * @throws Exception
+	 */
+	public void removeJorunalReply(String journalId, String replyId, String userId, int tenantId) throws Exception;
 }

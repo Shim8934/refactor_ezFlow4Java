@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalReplyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
@@ -914,6 +915,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 
 	@Override
 	public void deleteJournalReceiver(List<String> journalIdList, String userId, int tenantId) throws Exception {
+		logger.debug("deleteJournalReceiver started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
@@ -924,5 +926,49 @@ public class EzJournalServiceImpl implements EzJournalService{
 			
 			ezJournalDAO.deleteJournalReceiver(map);
 		}
+		logger.debug("deleteJournalReceiver ended.");
+	}
+
+	@Override
+	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId) throws Exception {
+		logger.debug("getJournalReplyList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("journalId", journalId);
+		
+		List<JournalReplyVO> replyList = ezJournalDAO.selectJournalReplyList(map);
+		
+		logger.debug("getJournalReplyList ended.");
+		return replyList;
+	}
+
+	@Override
+	public void saveJorunalReply(String journalId, String userId, String replyContent, String replyDate, int tenantId)throws Exception {
+		logger.debug("saveJorunalReply started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("replyContent", replyContent);
+		map.put("replyDate", replyDate);
+		map.put("tenantId", tenantId);
+		map.put("journalId", journalId);
+		
+		ezJournalDAO.insertJournalReply(map);
+		
+		logger.debug("saveJorunalReply ended.");
+	}
+
+	@Override
+	public void removeJorunalReply(String journalId, String replyId, String userId, int tenantId) throws Exception {
+		logger.debug("removeJorunalReply started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("replyId", replyId);
+		map.put("journalId", journalId);
+		
+		ezJournalDAO.deleteJournalReply(map);
+		
+		logger.debug("removeJorunalReply ended.");
 	}
 }

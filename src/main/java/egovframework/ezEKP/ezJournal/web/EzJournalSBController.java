@@ -408,4 +408,102 @@ public class EzJournalSBController {
 		
 		return recvCount;
 	}
+	
+	/**
+	 * 업무일지 댓글화면 불러오기
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezJournal/journalReply.do")
+	public String journalReply(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("journalReply started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String journalId = request.getParameter("journalId");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId+"/replies", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		
+		JSONArray replyList = null;
+		if (status.equals("ok")) {			
+			replyList=  (JSONArray) resultBody.get("data");
+			for (Object reply : replyList) {
+				JSONObject JOReply = (JSONObject)reply;
+				String replyDate = (String) JOReply.get("replyDate");
+				replyDate = commonUtil.getDateStringInUTC(replyDate, userInfo.getOffset(), false);
+				JOReply.put("replyDate", replyDate);
+			}
+			model.addAttribute("replyList",replyList);
+		}
+		logger.debug("journalReply ended");
+		
+		return "/ezJournal/journalReplyList";
+	}
+	
+	/**
+	 * 업무일지 댓글 저장하기
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezJournal/saveJournalReply.do")
+	@ResponseBody
+	public String saveJournalReply(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("saveJournalReply started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String journalId = request.getParameter("journalId");
+		String replyContent = request.getParameter("replyContent");
+		String replyDate=null;
+		try {
+			replyDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("replyContent", replyContent);
+		param.put("replyDate", replyDate);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId+"/replies", param, request,"post",null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("saveJournalReply ended");
+		
+		return status;
+	}
+	
+	/**
+	 * 업무일지 댓글 삭제하기
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezJournal/removeJournalReply.do")
+	@ResponseBody
+	public String removeJournalReply(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("saveJournalReply started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String journalId = request.getParameter("journalId");
+		String replyId = request.getParameter("replyId");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId+"/replies/"+replyId, param, request,"delete",null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("saveJournalReply ended");
+		
+		return status;
+	}
 }

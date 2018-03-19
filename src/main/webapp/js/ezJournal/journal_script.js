@@ -42,3 +42,9 @@ function journal_layer_popup(el) {
 	});
 
 }
+
+//업무일지 팝업
+function openJournalReply() {
+	DivPopUpShow($('body').prop('scrollWidth') * 0.95, $('body').prop('scrollHeight') * 0.92, "/ezJournal/journalReply.do?journalId="+journalId);
+}
+

@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
+		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<!-- data picker-->
@@ -348,6 +349,7 @@
 			
 			//tr선택시
 			function selectedTR(elem){
+// 				onPreview = false;
 				var parentElem = $(elem).parent();
 				$("#journalList tr").removeClass("selectTR");
 				$("#journalList tr").find("input[type='checkbox']").removeProp("checked");
@@ -476,6 +478,9 @@
 						document.getElementById("divList").style.height = (CurrentHeight - 50)
 								+ "px";
 						g_bPrevShow = false;
+						onPreview=false;
+						$("#Preview_ContentH").html("<spring:message code='ezBoard.t10022' />");
+						$("#Preview_ContentW").html("<spring:message code='ezBoard.t10022' />");
 					} else if (pGubun == "W") {
 						pMailListDiv = 50;
 						pMailPreVDiv = 50;
@@ -516,10 +521,11 @@
 // 						document.getElementById("Preview_HeaderH").style.display = "none";
 						g_bPrevShow = true;
 						if(onPreview==false){
-							$("#Preview_ContentW span").html("<spring:message code='ezBoard.t10022' />");
+							$("#Preview_ContentW").html("<spring:message code='ezBoard.t10022' />");
 // 							ifrmPreViewW.document
 // 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 						}
+						onPreview=true;
 					} else if (pGubun == "H") {
 						pMailListDiv_H = 50;
 						pMailPreVDiv_H = 50;
@@ -580,10 +586,11 @@
 
 						g_bPrevShow = true;
 						if(onPreview==false){
-							$("#Preview_ContentH span").html("<spring:message code='ezBoard.t10022' />");
+							$("#Preview_ContentH").html("<spring:message code='ezBoard.t10022' />");
 // 							ifrmPreViewH.documentr
 // 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 						}
+						onPreview=true;
 					}
 					MailOptionHidden();
 					PreviewMode_ChangeBtn();
