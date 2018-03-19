@@ -92,13 +92,13 @@
 	        //유형 추가
 	        function add_type() {
 	            if (CrossYN()) {
-	            	saveType_dialogArguments[0] = document.all("ListCompany").value;
+	            	saveType_dialogArguments[0] = $("#ListCompany").val();
 // 	            	saveType_dialogArguments[1] = save_type_Complete;
-                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do", "SaveAttitudeType", GetOpenWindowfeature(800, 520));
+                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", GetOpenWindowfeature(800, 520));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
-                	rtnValue = window.showModalDialog("/admin/ezAttitude/addAttitudeType.do", document.all("ListCompany").value,
+                	rtnValue = window.showModalDialog("/admin/ezAttitude/addAttitudeType.do", $("#ListCompany").val(),
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
 	                
 	                if (typeof (rtnValue) != "undefined") {
