@@ -15,6 +15,14 @@
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/Common.js" ></script>
 		<script  type="text/javascript">
+		
+			var formId = "${journal.formId}";
+			var journalId = "${journal.journalId}";
+			var typeId = "${journal.typeId}";
+			function journalModify() {
+				console.log("formId : " + formId + ",journalId : " + journalId);
+				window.location.href = "/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=modify";
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden; height:100%;">
@@ -27,7 +35,7 @@
 	        		<li><span onclick='openJournalReply();'> <spring:message code='ezJournal.t102' />(${journal.replyCount })</span></li>
 		        	<c:if test="${journal.mine eq 'yes' }">
 <!-- 		        	수정 -->
-	        		<li><span onclick=''> <spring:message code='ezJournal.t107' /></span></li>
+	        		<li><span onclick='journalModify()'> <spring:message code='ezJournal.t107' /></span></li>
 <!-- 	        		삭제 -->
 	        		<li><span onclick=''> <spring:message code='ezJournal.t108' /></span></li>
 		        	</c:if>

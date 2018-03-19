@@ -12,11 +12,11 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalReceiverVO;
 import egovframework.ezEKP.ezJournal.vo.JournalReplyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
-import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("ezJournalDAO")
@@ -230,8 +230,8 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @param map
 	 */
 	@SuppressWarnings("unchecked")
-	public List<JournalAuthorVO> getFavoriteUserList(Map<String, Object> map) {
-		return (List<JournalAuthorVO>) list("getFavoriteUserList", map);
+	public List<JournalReceiverVO> getFavoriteUserList(Map<String, Object> map) {
+		return (List<JournalReceiverVO>) list("getFavoriteUserList", map);
 	}
 
 	/**
@@ -393,11 +393,19 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	}
 
 	/**
-	 * 일지 수신자 삭제 (수신일지함의 일지를 삭제했을 때)
+	 * 일지 수신자 상태 변경 (수신일지함에서 일지 삭제시 보여주는 상태값 변경)
 	 * @param map
 	 */
-	public void deleteJournalReceiver(Map<String, Object> map) {
-		delete("deleteJournalReceiver", map);
+	public void updateJournalStatus(Map<String, Object> map) {
+		update("updateJournalStatus", map);
+	}
+
+	/**
+	 * 수신자 리스트 가져오기
+	 * @param map
+	 */
+	public List<JournalReceiverVO> getReceiverList(Map<String, Object> map) {
+		return (List<JournalReceiverVO>) list("getReceiverList", map);
 	}
 	
 	/**

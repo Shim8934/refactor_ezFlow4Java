@@ -12,11 +12,11 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalReceiverVO;
 import egovframework.ezEKP.ezJournal.vo.JournalReplyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
-import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 
 public interface EzJournalService {
@@ -178,7 +178,7 @@ public interface EzJournalService {
 	 * @param tenantId
 	 * @throws Exception
 	 */
-	public List<JournalAuthorVO> getFavoriteUserList(String favoriteId, String tenantId) throws Exception;
+	public List<JournalReceiverVO> getFavoriteUserList(String favoriteId, String tenantId) throws Exception;
 
 	/**
 	 * 수신자 즐겨찾기 수정
@@ -310,14 +310,23 @@ public interface EzJournalService {
 	public void deleteJournalList(List<String> journalIdList, String pDirPath, int tenantId) throws Exception;
 
 	/**
-	 * 일지 수신자 삭제
+	 * 수신일지 상태 변경
 	 * @param journalIdList
 	 * @param userId
 	 * @param tenantId
 	 * @return
 	 * @throws Exception
 	 */
-	public void deleteJournalReceiver(List<String> journalIdList, String userId, int tenantId) throws Exception;
+	public void updateJournalStatus(List<String> journalIdList, String userId, int tenantId) throws Exception;
+
+	/**
+	 * 수신자 리스트 가져오기
+	 * @param journalId
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<JournalReceiverVO> getReceiverList(String journalId, int tenantId);
 
 	/**
 	 * 업무일지 댓글 리스트

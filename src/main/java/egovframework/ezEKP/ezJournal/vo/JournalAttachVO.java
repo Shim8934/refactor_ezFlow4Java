@@ -11,12 +11,6 @@ public class JournalAttachVO {
 	private String fileSize;
 	/** 첨부파일 이름*/
 	private String fileName;
-	/** 행번호*/
-	private int rnum;
-	/** 파일컨탠츠*/
-	private String fileContent;
-	/** 메인플래그*/
-	private String flag;
 	/** 인코딩 파일명*/
 	private String encodeFileName;
 	/** 인코딩 파일경로*/
@@ -52,24 +46,6 @@ public class JournalAttachVO {
 	}
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
-	}
-	public int getRnum() {
-		return rnum;
-	}
-	public void setRnum(int rnum) {
-		this.rnum = rnum;
-	}
-	public String getFileContent() {
-		return fileContent;
-	}
-	public void setFileContent(String fileContent) {
-		this.fileContent = fileContent;
-	}
-	public String getFlag() {
-		return flag;
-	}
-	public void setFlag(String flag) {
-		this.flag = flag;
 	}
 	public String getEncodeFileName() {
 		return encodeFileName;

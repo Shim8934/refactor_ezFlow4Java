@@ -42,6 +42,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezJournal.vo.JournalInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalReceiverVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -73,34 +74,78 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String offset = userInfo.getOffset();
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMdd"), offset, false);
-//		nowDate = nowDate.substring(0, 10);
-//		nowDate = nowDate.replace("-", "");
 		String mode = request.getParameter("mode");
 		String typeId = request.getParameter("typeId");
 		String useEditor = commonUtil.getTenantConfigRest("EDITOR", userInfo.getId(), request);
 		String journalId = "";
-		
-		if (request.getParameter("journalId") != null && !request.getParameter("journalId").equals("")) {
-			journalId = request.getParameter("journalId");
-		}
+		String receiverIds = "";
+		String receiverNames = "";
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("userId", userInfo.getId());
 		param.put("used", "use");
+	
+		String restUrl = "";
+		JSONObject result = new JSONObject();
+		String status = "";
+
+		if (request.getParameter("journalId") != null && !request.getParameter("journalId").equals("")) {
+			journalId = request.getParameter("journalId");
+			
+			// 일지 내용 및 정보 가져오기
+			restUrl = "/rest/ezjournal/journals/" + journalId;
+			result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+			
+			status = result.get("status").toString();
+			
+			if (status.equals("ok")) {
+				JSONObject journal = (JSONObject) result.get("data");
+				logger.debug("journal확인 : " + journal.toString());
+				model.addAttribute("journal", journal);
+				model.addAttribute("formId", journal.get("formId").toString());
+				model.addAttribute("deptShare", journal.get("deptShare").toString());
+			}
+			
+			// 수신자 리스트 가져오기
+			restUrl = "/rest/ezjournal/types/" + typeId + "/journals/" + journalId + "/receivers";
+			result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+			
+			status = result.get("status").toString();
+			
+			if (status.equals("ok")) {
+				JSONArray receiver =  (JSONArray) result.get("data");
+				
+				for (int i = 0; i < receiver.size(); i++) {
+					
+					logger.debug("receiver확인용 : " + receiver.get(i));
+					JSONObject obj = (JSONObject) receiver.get(i);
+					
+					receiverIds += obj.get("userId") + ", ";
+					
+					if (userInfo.getLang().equals("2")) {
+						receiverNames += obj.get("userName2") + ", ";
+					} else {
+						receiverNames += obj.get("userName") + ", ";
+					}
+				}
+				
+				model.addAttribute("receiverIds", receiverIds);
+				model.addAttribute("receiverNames", receiverNames);
+			}
+			
+		}
 		
-		String restUrl = "/rest/ezjournal/types";
-		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+		restUrl = "/rest/ezjournal/types";
+		result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 		
-		String status = result.get("status").toString();
+		status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
 			JSONArray typeList = (JSONArray) result.get("data");
 			model.addAttribute("typeList", typeList);
 		}
 		
-		model.addAttribute("nowDate", nowDate);
 		model.addAttribute("typeId", typeId);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("mode", mode);
@@ -395,7 +440,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			JSONObject journal = (JSONObject) result.get("data");
 			String formName = (String) journal.get("formName");
 			
-			String journalTitle = "[" +formName+ "] " + nowDate + " (" + userInfo.getDeptName() + ")";
+			String journalTitle = "[" +formName+ "] " + nowDate + " (" + userInfo.getDisplayName() + ")";
 			String journalContent = (String) journal.get("formContent");
 //			// 예약어 부분에 내용 추가
 //			var content = result.formContent;
@@ -690,13 +735,13 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		
 		JSONObject result = new JSONObject();
 		
-//		if (!originJournalId.equals("") && mode.equals("temp") || mode.equals("modify")) {
-//			restUrl = "/rest/ezjournal/types/" + typeId + "/journals/" + originJournalId;
-//			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "put", jsonParam);
-//		} else {
-//			restUrl = "/rest/ezjournal/types/" + typeId + "/journals";
-//			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
-//		}
+		if (!originJournalId.equals("") && mode.equals("temp") || mode.equals("modify")) {
+			restUrl = "/rest/ezjournal/types/" + typeId + "/journals/" + originJournalId;
+			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "put", jsonParam);
+		} else {
+			restUrl = "/rest/ezjournal/types/" + typeId + "/journals";
+			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
+		}
 
 		logger.debug("saveJournal ended");
 	}
