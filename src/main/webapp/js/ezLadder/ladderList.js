@@ -7,6 +7,10 @@ function newLad() {
 function getLadderGame(ladderId) {
 	mode = modeCheck;
 	allData = [ ladderId, searchSelect, searchInput, mode, currPage ];
+	if(modeCheck === "pre") {
+		console.log("enter pre");
+		return allData;
+	}
 	window.location.href = '/ezLadder/getLadderGame.do?allData=' + allData;
 }
 
@@ -93,9 +97,11 @@ function makePageSelPage() {
 	var pageNum = currPage;
 
 	document.getElementById("tblPageRayer").innerHTML = "";
-	document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang16
-			+ "<span style='color:#017BEC;'> " + totalLadder + " </span>"
-			+ strLang17 + "]";
+	if(document.getElementById("mailBoxInfo") !== null) {
+		document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang16
+		+ "<span style='color:#017BEC;'> " + totalLadder + " </span>"
+		+ strLang17 + "]";
+	}
 
 	if (totalPage > 1 && pageNum != 1) {
 		strtext = "<span class='btnimg' onClick='goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
@@ -216,11 +222,13 @@ function selafterBlock_one() {
 function goToPageByNum(page) {
 	
 	pageChange = page;
-	if (searchSelect !== '') {
+	if (searchSelect !== '' && searchSelect !== 'none') {
 		searchLadder();
 	} else if (modeCheck === 'all') {
 		var temp = 'all';
 		participant(temp);
+	} else if(modeCheck === 'pre') {
+		participant('pre');
 	} else {
 		var temp = 'part'
 		participant(temp);

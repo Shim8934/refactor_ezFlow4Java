@@ -125,7 +125,14 @@ public class EzLadderController {
 		
 		logger.debug("/ezLadder/ladderMain ended.");
 
-		return "ezLadder/ladderMain";
+		String retJSP = "";
+		if(mode.equals("pre")) {
+			retJSP = "ezLadder/ladderPreList";
+		} else {
+			retJSP = "ezLadder/ladderMain";
+		}
+		
+		return retJSP;
 	}
 	
 
@@ -269,7 +276,7 @@ public class EzLadderController {
 		}
 		
 		logger.debug("POST setLadder.do ended.");
-		return "json"; // redirect:조회창(ladderId값 파라미터로)
+		return "ezLadder/ladderMain"; // redirect:조회창(ladderId값 파라미터로)
 	}
 	
 	/**
@@ -491,10 +498,10 @@ public class EzLadderController {
 	}
 	
 	/**
-	 * 이전 사다리 목록 조회 팝업창
+	 * 이전 사다리 목록 조회 팝업창 -> get 
 	 * @throws Exception 
 	 * */
-	@RequestMapping(value = "/ezLadder/getPreLadderList.do")
+	/*@RequestMapping(value = "/ezLadder/getPreLadderList.do")
 	public String getPreLadderList(@CookieValue("loginCookie") String loginCookie, String currPage, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getPreLadderList.do started.");
 		
@@ -538,7 +545,7 @@ public class EzLadderController {
 		logger.debug("getPreLadderList.do ended.");
 		
 		return "ezLadder/ladderPreList";
-	}
+	}*/
 	
 	/**
 	 * 이전 사다리 미리보기
@@ -650,7 +657,14 @@ public class EzLadderController {
 		}
 		
 		logger.debug("ezLadder/getLadderGame.do ended.");
-		return "ezLadder/ladderGame";
+		
+		String retJSP = "";
+		if(allData[3].equals("pre")) {
+			retJSP = "json";
+		} else {
+			retJSP = "ezLadder/ladderGame";
+		}
+		return retJSP;
 	}
 	
 	/**

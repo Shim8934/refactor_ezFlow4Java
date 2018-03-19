@@ -34,11 +34,12 @@ public class EzLadderServiceImpl implements EzLadderService {
 	private CommonUtil commonUtil;
 	
 	@Override
-	public int ladderCount(String userId, String tenantId) throws Exception {
+	public int ladderCount(String userId, String tenantId, String mode) throws Exception {
 		logger.debug("ladderCount started.");		// 비검색 전체
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
+		map.put("mode", mode);
 		int totalLadder = ezLadderDAO.getLadderCount(map);
 		logger.debug("totalLadder : " + totalLadder);
 		logger.debug("ladderCount ended.");
@@ -87,13 +88,15 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public List<LadderVO> getLadderList(String userId, String tenantId, int startPoint, int endPoint) throws Exception {
+	public List<LadderVO> getLadderList(String userId, String tenantId, int startPoint, int endPoint, String mode) throws Exception {
 		logger.debug("getLadderList started.");		// 비검색 전체
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("startPoint", startPoint);
 		map.put("endPoint", endPoint);
+		map.put("mode", mode);
+		logger.debug("###mode : " + mode);
 		List<LadderVO> list = ezLadderDAO.getLadderList(map);
 		
 		logger.debug("getLadderList ended.");

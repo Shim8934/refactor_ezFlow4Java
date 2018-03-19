@@ -8,19 +8,6 @@
 	height: 100%;
 }
 
-.preList {
-	width: 30%;
-    float: left;
-    padding-right: 20px;
-}
-
-.preview {
-    width: 70%;
-    float: left;
-    background: seashell;
-    padding-left: 20px;
-}
-
 .preList table {
 	border: 1px solid black; 
 	width: 100%;
@@ -152,8 +139,17 @@
     margin-top: 15px;	
 }
 
-.popup .wrap {
+.popWrap {
+	position: relative;
+	height: 100%;
+	width: 100%;
 	margin-top: 50px;
+	padding: 0px 20px;
+}
+
+.pullHW {
+	width: 100%;
+	height: 100%;
 }
 
 .left {

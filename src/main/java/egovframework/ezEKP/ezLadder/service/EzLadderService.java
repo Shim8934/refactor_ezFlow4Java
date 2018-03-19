@@ -11,10 +11,10 @@ import egovframework.ezEKP.ezLadder.vo.LadderVO;
 
 public interface EzLadderService {
 
-	public int ladderCount(String userId, String tenantId) throws Exception;
+	public int ladderCount(String userId, String tenantId, String mode) throws Exception;
 	public int partLadderCount(String userId, String tenantId) throws Exception;
 	public int searchLadderCount(String userId, String tenantId, List<String> allData) throws Exception;
-	public List<LadderVO> getLadderList(String userId, String tenantId, int startPoint, int endPoint) throws Exception;
+	public List<LadderVO> getLadderList(String userId, String tenantId, int startPoint, int endPoint, String mode) throws Exception;
 	public List<LadderVO> getPartLadderList(String userId, String tenantId, int startPoint, int endPoint) throws Exception;
 	public List<LadderVO> searchLadderList(String userId, String tenantId, List<String> allData, int startPoint, int endPoint) throws Exception;
 	

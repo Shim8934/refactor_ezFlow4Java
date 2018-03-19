@@ -103,10 +103,14 @@ public class EzLadderGWController {
 					totalLadder = ezLadderService.partLadderCount(userId, tenantId);
 					pages = paging(page, totalLadder);
 					list = ezLadderService.getPartLadderList(userId, tenantId, pages[1], pages[2]);
-				} else {						// 전체 참여자 선택
-					totalLadder = ezLadderService.ladderCount(userId, tenantId);
+				} else if(mode.equals("pre")) { // 이전 사다리 리스트 출력 
+					totalLadder = ezLadderService.ladderCount(userId, tenantId, mode);
 					pages = paging(page, totalLadder);
-					list = ezLadderService.getLadderList(userId , tenantId, pages[1], pages[2]);
+					list = ezLadderService.getLadderList(userId , tenantId, pages[1], pages[2], mode);
+				} else {						// 전체 참여자 선택
+					totalLadder = ezLadderService.ladderCount(userId, tenantId, mode);
+					pages = paging(page, totalLadder);
+					list = ezLadderService.getLadderList(userId , tenantId, pages[1], pages[2], mode);
 				}
 			} else {							// 검색
 				List<String> allData = new ArrayList<String>();
@@ -430,10 +434,14 @@ public class EzLadderGWController {
 			result.put("code", "0");
 			result.put("data", vo);
 			result.put("participant", list);
+			
+			logger.debug("###data: "+vo);
+			logger.debug("###list: "+list);
 	
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			e.printStackTrace();
 		}
 		
 		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId + "users/" + userId + "] ended.");

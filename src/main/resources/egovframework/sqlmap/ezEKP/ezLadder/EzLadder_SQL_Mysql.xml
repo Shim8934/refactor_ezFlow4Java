@@ -105,6 +105,9 @@
 			FROM 
 				TBL_LADDER A
 			WHERE 
+			]]>
+			<isEqual property="mode" compareValue="all">
+				<![CDATA[
 				A.SECRETFLAG = 0 or A.LADDERID = ANY(
 												SELECT 
 													B.LADDERID 
@@ -117,6 +120,9 @@
 												WHERE 
 													C.USERID = #userId#)
 			OR
+			]]>
+			</isEqual>
+				<![CDATA[
 				A.WRITERID = #userId# 
             )
             ORDER BY 
@@ -151,6 +157,9 @@
 			FROM 
 				TBL_LADDER A
 			WHERE 
+			]]>
+			<isEqual property="mode" compareValue="all">
+				<![CDATA[
 				A.SECRETFLAG = 0 or A.LADDERID = ANY(
 												SELECT 
 													B.LADDERID 
@@ -163,6 +172,9 @@
 												WHERE 
 													C.USERID = #userId#)
 			OR
+			]]>
+			</isEqual>
+				<![CDATA[
 				A.WRITERID = #userId# 
             )
             ORDER BY 
@@ -501,6 +513,9 @@
 								FROM 
 									TBL_LADDER A
 								WHERE 
+								]]>
+								<isEqual property="mode" compareValue="all">
+									<![CDATA[
 									A.SECRETFLAG = 0 or A.LADDERID = ANY(
 																	SELECT 
 																		B.LADDERID 
@@ -513,6 +528,9 @@
 																	WHERE 
 																		C.USERID = #userId#)
 								OR
+								]]>
+								</isEqual>
+									<![CDATA[
 									A.WRITERID = #userId#
 								)
 				]]>
@@ -627,6 +645,9 @@
 								FROM 
 									TBL_LADDER A
 								WHERE 
+								]]>
+								<isEqual property="mode" compareValue="all">
+									<![CDATA[
 									A.SECRETFLAG = 0 or A.LADDERID = ANY(
 																	SELECT 
 																		B.LADDERID 
@@ -639,6 +660,9 @@
 																	WHERE 
 																		C.USERID = #userId#)
 								OR
+								]]>
+								</isEqual>
+									<![CDATA[
 									A.WRITERID = #userId#
 								)
 				]]>
@@ -700,7 +724,8 @@
 				STATUS, 
 				SECRETFLAG, 
 				DELETEFLAG,
-				DEPTNAME
+				DEPTNAME,
+				LINECNT
 			FROM
 				TBL_LADDER 
 			WHERE

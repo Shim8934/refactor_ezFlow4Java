@@ -30,8 +30,7 @@
 					makeLadder();
 				});
 				$("#ladderPreList").on("click", function() {
-					alert("팝업창만들기...");
-					ladder_prelistPopUp();
+					preLadderList();
 				});
 				$("#addAttendant").on("click", function() {
 					_manage_attendant();
@@ -110,6 +109,35 @@
 				ladder_window_resize();
 			}
 			
+			var ladder_pre_set_dialogArguments = [];
+			function preLadderList() {
+				ladder_pre_set_dialogArguments[0] = "";
+				ladder_pre_set_dialogArguments[1] = preLadderListComplete;
+				
+				GetOpenWindow("/ezLadder/ladderMain.do?mode=pre&currPage=1&searchSelect=none&searchInput=", "ladder_pre_set", 970, 680);
+			}
+			
+			function preLadderListComplete(ladderInfo, lineInfo) {
+				console.log(ladderInfo);
+				console.log(lineInfo);
+				
+				$("#title").val(ladderInfo["title"]);
+				$(".icondiv").removeClass("active");
+				$(".ladderType:eq(" + ladderInfo["type"] + ")").addClass("active");
+				if(ladderInfo["secretFlag"] === 1) {
+					$("#ladderSecret").addClass("active");
+				} 
+				
+				var len = lineInfo.length;
+				var names = "";
+				for(var i = 0; i < len; i++) {
+					names += lineInfo[i]["userName"] + ",";
+				}
+				console.log(names);
+				
+			}
+			
+			/** g_attendant, g_item 현재 input box 정보로 셋팅 */
 			function set_input_value() {
 				var len = 0;
 				var name = "";
@@ -296,13 +324,18 @@
 			var checknametype = "";
 			var AttendantXML = [];
 			var overlapAttendantXML = [];
-			function check_name(type) {
+			function check_name(type, inputname) {
 			    if (type !== undefined)
 			        checknametype = type;
 			    else
 			        checknametype = "";
 
-			    var name = document.getElementById("inputAttendant").value;
+			    var name = "";
+			    if(document.getElementById("inputAttendant") !== null) {
+				    name = document.getElementById("inputAttendant").value;
+			    } else {
+			    	name = inputname;
+			    }
 			    name = ReplaceText(name, ",", ";");
 			    
 			    var names = name.split(";");
