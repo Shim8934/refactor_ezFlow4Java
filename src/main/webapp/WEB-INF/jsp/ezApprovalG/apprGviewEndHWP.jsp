@@ -102,7 +102,7 @@
 	            window.onresize();
 	
 	            HwpCtrl.SetSaveMode(1);
-	
+				
 	            if ("${pass}" != "<RESULT>TRUE</RESULT>") {
 	                QuitWindow();
 	            } else if (docHref != "") {
