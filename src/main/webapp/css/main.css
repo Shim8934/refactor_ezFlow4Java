@@ -403,7 +403,7 @@ width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-
 
 .appr_mailcont .nodata_portlet { margin-top:15px; }
 .boardcont .nodata_portlet { margin-top:15px; }
-.pollcont .nodata_portlet { margin-top:15px; }
+.pollcont .nodata_portlet { margin-top:22px; }
 .graphcont .nodata_portlet { margin-top:15px; }
 .communitycont .nodata_portlet { margin-top:15px; }
 #BoardList_NewBoard .nodata_portlet { margin-top:25px; }
