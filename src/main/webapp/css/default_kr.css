@@ -1,4 +1,4 @@
-﻿﻿﻿.inputText {
+﻿.inputText {
 	border:1px solid #999
 }
 
@@ -103,7 +103,6 @@ form{display:inline;margin:0}
 	background-repeat:no-repeat;
 	height:20px;
 	padding-right:12px;	
-	padding-top:0.07em;
 	font:12px gulim;
 	letter-spacing:-1;
 	vertical-align:top;
@@ -587,7 +586,7 @@ form{display:inline;margin:0}
 .popup h1{
 	font-size:11pt;
 	font-weight:bold;
-	color:rgb(125, 145, 171);
+	color:black;
 	height:44px;
 	margin-left:1px;
 	margin-bottom:8px;

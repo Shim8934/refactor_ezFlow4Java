@@ -780,26 +780,35 @@
 		    }
 	    </script>
 		 <style type="text/css">
+		 		#myBar {		 			
+					margin-left:20px;
+				 	margin-top:-12px;
+		 		}
 				#myProgress {
 				  width: 80%;
 				  height:10px;
-				  background-color: #ddd;
+				  background-color: white;
+				  border: 1px solid #ddd;
 				  overflow:hidden;
 				}
 				.myBar_red {
 				  height: 10px;
+				  border: 1px solid #ff1616;
 				  background-color: #ff1616;
 				}
 				.myBar_orange {
 				  height: 10px;
+				  border: 1px solid #ff7f00;
 				  background-color: #ff7f00;
 				}
 				.myBar_yellow {
 				  height: 10px;
+				  border: 1px solid #ffb600;
 				  background-color: #ffb600;
 				}
 				.myBar_green {
 				  height: 10px;
+				  border: 1px solid #4CAF50;
 				  background-color: #4CAF50;
 				}
 			</style>
@@ -833,10 +842,13 @@
 	        <h3><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
 	        
 	    	<!-- 수정 수아 재은 -->
-		     <div id='myProgress' style='margin-left:20px;'>
-		    	<div id='myBar'></div>
+	    	<div style="border:1px solid #ddd;border-radius:3px;margin:3px 10px;background-color: white">
+			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
+			    <div style="width:80%">
+			    	<div id='myBar'></div>
+			    </div>	
+			    <div style='text-align:center; margin-top:10px;margin-bottom:5px;font-weight: bold;font-family: dotum;' class="volumes"></div>
 		    </div>
-		    <div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div>
 	        
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>
