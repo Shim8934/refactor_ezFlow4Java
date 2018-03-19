@@ -199,6 +199,11 @@
 			AND
 				TENANT_ID = #tenantId#
 		]]>
+			<isNotEmpty prepend="AND" property="isuse">
+			<![CDATA[
+				ISUSE = #isuse#
+			]]>
+			</isNotEmpty>
 	</select>
 	
 	<update id="ezAttitudeAdminDAO.updateAttitudeTypeConfig" parameterClass="Map">
