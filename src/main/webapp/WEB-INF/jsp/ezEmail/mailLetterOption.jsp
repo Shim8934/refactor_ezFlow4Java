@@ -132,7 +132,9 @@
 		        	document.getElementById("responseReadid").checked = true;
 		        	
 			        if ("${useOnlyInnerMail}" === "NO") {
-			        	readTypeElement.selectedIndex = rgParams["replyReadTime"] === "2" ? "1" : "0";
+			        	readTypeElement.selectedIndex = replyReadTime === "2" ? "1" : "0";
+			        } else {
+			        	readTypeElement.selectedIndex = "0";
 			        }
 		        }
 		
