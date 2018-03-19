@@ -9,6 +9,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/attachG.js"></script>
@@ -21,7 +22,7 @@
 <%-- 	    	var pNoneActiveX = "<%=NoneActiveX%>"; --%>
 	        var pDocID = "${docID}";
 	        var pDocHref = "${docHref}";
-	        var pUserID = "${userinfo.id}";
+	        var pUserID = "${userInfo.id}";
 	        var flag = false;
 	        var flag2 = false;
 	        var newDocID = "";
@@ -84,7 +85,7 @@
 			var g_progresswin = null;
 			
 			function showProgress(inforstring) {
-			    g_progresswin = window.showModelessDialog("/ezApprovalG/showProgress.do?fileInfo=" + encodeURI(inforstring), "", "dialogWidth=390px; dialogHeight:185px; center:yes; status:no; help:no; edge:sunken;");
+			    g_progresswin = window.showModelessDialog("/ezApprovalG/showProgress.do?fileInfo=" + escape(inforstring), "", "dialogWidth=390px; dialogHeight:185px; center:yes; status:no; help:no; edge:sunken;");
 			}
 			
 			function hideProgress() {
@@ -148,7 +149,7 @@
 			}
 	
 			function chk_Passwd(pPwd) {
-			    var parameter = pUserID;
+			    var parameter = pPwd;
 			    var url = "/ezApprovalG/ezchkPasswd.do";
 			    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
 			    var ret = window.showModalDialog(url, parameter, feature);
@@ -156,6 +157,7 @@
 			}
 	
 			function window_onload() {
+				window.onresize();
 			    HwpCtrl.SetSaveMode(1);
 			
 			    try {
@@ -166,14 +168,21 @@
 				
 					    FieldsAvailable(isTrue);
 				
-					    HwpCtrl.SetFieldFocus("doctitle");
-					    HwpCtrl.ezSetScrollPosInfo(0);
+					    HwpCtrl.ChangeMode(3);
+						
+			            HwpCtrl.SetFieldFocus("doctitle");
+			            HwpCtrl.ezSetScrollPosInfo(0);
 					}
 				} catch (e) {
 			    	alert("<spring:message code='ezApprovalG.t1373'/>" + e.description);
 			      	hideProgress();
 			  	}
 			}
+			
+			window.onresize = function () {
+	            HwpCtrl.style.height = null;
+	            HwpCtrl.height = document.documentElement.clientHeight - 150;
+	        }
 	
 			function FieldsAvailable(isTrue) {
 			    if (isTrue) {
@@ -296,7 +305,7 @@
 			    parameter[1] = "Show";
 			
 			    var url = "/ezApprovalG/aprEndOpinion.do"
-			    var feature = "status:no;dialogWidth:387px;dialogHeight:304px;scroll:no;edge:sunken"
+			    var feature = "status:no;dialogWidth:530px;dialogHeight:520px;scroll:no;edge:sunken"
 			    var ret = window.showModalDialog(url, parameter, feature);
 			}
 	
@@ -316,16 +325,15 @@
 			        var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
 				    OpenAlertUI(pAlertContent);
 				    return;
-				}
-				else if (chkpass == "cancel") {
+				} else if (chkpass == "cancel") {
 				    var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-					    OpenAlertUI(pAlertContent);
-					    return;
-					}
+				    OpenAlertUI(pAlertContent);
+				    return;
+				}
 			
 			    var rMatch = SaveFile();
-			    if (rMatch == "TRUE") {
-			
+			    alert(rMatch);
+			    if (rMatch == "SUCCESS") {
 			        var rtnVal = SetSusinState();
 			        if (rtnVal == "TRUE") {
 			            var pAlertContent = "<spring:message code='ezApprovalG.t188'/>";
@@ -367,7 +375,7 @@
 		    		}
 		    	});
 		        
-		        return 
+		        return result;
 		        
 			    /* var xmlhttp = createXMLHttpRequest();
 			    var xmlpara = createXmlDom();
@@ -458,7 +466,7 @@
 			        var DeptSealXML = GetDeptSealInfo();
 			        var CompSealXML = GetSealInfo();
 			
-			        if (DeptSealXML.selectNodes("ROWS/ROW").length > 0 && CompSealXML.selectNodes("ROWS/ROW").length > 0) {
+			        if (SelectNodes(DeptSealXML, "ROWS/ROW").length > 0 && SelectNodes(CompSealXML, "ROWS/ROW").length > 0) {
 			            var pInformationContent = "<spring:message code='ezApprovalG.t192'/><BR><spring:message code='ezApprovalG.t193'/>";
 					    var Ans = OpenInformationUI(pInformationContent);
 					    if (!Ans)
@@ -466,21 +474,26 @@
 					    else
 					        SealXML = DeptSealXML;
 					}
-					else if (DeptSealXML.selectNodes("ROWS/ROW").length <= 0 && CompSealXML.selectNodes("ROWS/ROW").length <= 0) {
+					else if (SelectNodes(DeptSealXML, "ROWS/ROW").length <= 0 && SelectNodes(CompSealXML, "ROWS/ROW").length <= 0) {
 					    var pAlertContent = "<spring:message code='ezApprovalG.t194'/><br><spring:message code='ezApprovalG.t195'/>";
 						    OpenAlertUI(pAlertContent);
 						    return;
 					}
-					else if (DeptSealXML.selectNodes("ROWS/ROW").length > 0) {
+					else if (SelectNodes(DeptSealXML, "ROWS/ROW").length > 0) {
 					    SealXML = DeptSealXML;
 					}
-					else if (CompSealXML.selectNodes("ROWS/ROW").length > 0) {
+					else if (SelectNodes(CompSealXML, "ROWS/ROW").length > 0) {
 					    SealXML = CompSealXML;
 					}
 			
-			        var SealHref = getNodeText(SealXML.selectNodes("ROWS/ROW/CELL").item(0).selectSingleNode("DATA2"));
-			        var SealWidth = parseInt(getNodeText(SealXML.selectNodes("ROWS/ROW/CELL").item(1).selectSingleNode("VALUE")));
-			        var SealHeight = parseInt(getNodeText(SealXML.selectNodes("ROWS/ROW/CELL").item(2).selectSingleNode("VALUE")));
+			        /* var SealHref = getNodeText(SelectNodes(SealXML, "ROWS/ROW/CELL").item(0).selectSingleNode("DATA2"));
+			        var SealWidth = parseInt(getNodeText(SelectNodes(SealXML, "ROWS/ROW/CELL").item(1).selectSingleNode("VALUE")));
+			        var SealHeight = parseInt(getNodeText(SelectNodes(SealXML, "ROWS/ROW/CELL").item(2).selectSingleNode("VALUE"))); */
+			        
+			        var SealHref = getNodeText(SelectNodes(SealXML, "ROWS/ROW/CELL")[0].getElementsByTagName("DATA2")[0]);
+		            var SealWidth = parseInt(getNodeText(GetChildNodes(SelectNodes(SealXML, "ROWS/ROW/CELL")[1])[0]));
+		            var SealHeight = parseInt(getNodeText(GetChildNodes(SelectNodes(SealXML, "ROWS/ROW/CELL")[2])[0]));
+		            
 			
 			        if (HwpCtrl.CheckFieldExist("sealsign")) {
 			            HwpCtrl.SetFieldText("sealsign", "");
@@ -509,7 +522,7 @@
 			    if (!NostampFlag) {
 			        var SealHref = "/files/sealImg/nostamp.gif"
 			        var SealWidth = 30;
-			        var SealHeight = 10;
+			        var SealHeight = 30;
 			
 			        if (HwpCtrl.CheckFieldExist("sealsign")) {
 			            HwpCtrl.SetFieldText("sealsign", "");
@@ -539,7 +552,7 @@
 			}
 	    </script>
 	</head>
-	<body class="popup" onload="return window_onload()" style="overflow: hidden" onbeforeunload="return window_onbeforeunload()">
+	<body class="popup" onload="javascript:window_onload()" style="overflow: hidden" onbeforeunload="javascript:window_onbeforeunload()">
 	    <table class="layout">
 	        <tr>
 	            <td height="20">
@@ -560,14 +573,9 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td style="padding-bottom: 10px">
+	            <td class="pad1">
 	                <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "");</script>
-	                    <%-- classid=CLSID:1D50E26E-E51E-4153-93DD-D08745457090 VIEWASTEXT>
-							<param name="StartMode" value="3">
-	                    <param name="StatusBar" value="0">
-	                    <param name="ToolBar" value="<%=_HwpToolbar%>">
-	                    </OBJECT--> --%>
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "1");</script>
 	                </div>
 	            </td>
 	        </tr>
