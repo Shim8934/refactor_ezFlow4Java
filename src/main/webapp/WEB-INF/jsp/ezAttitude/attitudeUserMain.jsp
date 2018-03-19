@@ -13,6 +13,56 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
 		<script>
+		
+			window.onload = function() {
+				getAttiTypeList();	
+			}
+			
+			/**
+			* 근태유형 메소드
+			*/
+			function getAttiTypeList() {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/attitudeTypeList.do",
+					data : {},
+					success : function(result) {
+						getAttiTypeList_After(result);
+					}
+				})
+			}
+			
+			//font-size:15px; text-align:center; border:1px solid #dedede; height:50px;
+			function getAttiTypeList_After(result) {
+					var objTable = $("<table></table>").css({"cellpadding":"0", "cellspacing":"0", "border":"0", "width":"100%"});
+					var objTbody = $("<tbody></tbody>");
+					var objTr = "";
+					var objTd = "";
+					var calendarHeight = $("#attiCalendar").css("height");
+					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1));
+					
+					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":tdHeight}).text($("#calTitle").text())));
+					for (var i = 0; i < result.length; i++) {
+						objTr = $("<tr></tr>");
+						objTd = $("<td></td>").css({"font-size":"15px", "text-align":"center", "border":"1px solid #dedede", "height": tdHeight + "px"}).attr("typeid",result[i].typeId);
+						objTd.text(result[i].typeName + " : 0일");
+						
+						objTr.append(objTd);
+						objTbody.append(objTr);
+					}
+					
+					objTable.append(objTbody);
+					$("#attiStatis").append(objTable);
+					
+					if (calendarHeight != $("#attiStatis").css("Height")) {
+						var statisHeight = $("#attiStatis").css("Height");
+						tdHeight = tdHeight + (calendarHeight.substr(0, calendarHeight.length - 2) - statisHeight.substr(0, statisHeight.length - 2));
+						$("#attiStatis tr:eq(0) th").css("height", tdHeight + "px");
+					}
+					
+			}
 			
 			/**
 			* 통계 메소드
@@ -56,63 +106,14 @@
 		
 		<table>
 			<tr>
-				<td style="vertical-align:top; width:100%;">
-					<div style="vertical-align:top;" id="Calendar"></div>
+				<td style="vertical-align:top; width:92%;">
+					<div style="vertical-align:top;" id="attiCalendar"></div>
 				</td>
 				<td style="vertical-align:top; width:10px;">&nbsp;</td>
-<!-- 				<td style="vertical-align:top; width:8%; margin-left:5px;"> -->
-<!-- 					<div style="vertical-align:top;" id="attiStatis"> -->
-<!-- 						<table cellpadding="0" cellspacing="0" border="0" width="100%"> -->
-<!-- 							<tbody> -->
-<!-- 								<tr> -->
-<!-- 									<th colspan="2" style="height:44px">2018년 3월</th> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td style="font-size:15px; text-align:center; border:1px solid #dedede; height:50px;">지각 : 0일</td> -->
-<!-- 								</tr> -->
-<!-- 							</tbody> -->
-<!-- 						</table> -->
-<!-- 					</div> -->
-<!-- 				</td> -->
+				<td style="vertical-align:top; width:8%; margin-left:5px;">
+					<div style="vertical-align:top;" id="attiStatis">
+					</div>
+				</td>
 			</tr>
 		</table>
 		
@@ -124,6 +125,6 @@
 		 -->
 	</body>
 	<script>
-		CalendarView("Calendar");
+		CalendarView("attiCalendar");
 	</script>
 </html>
