@@ -66,8 +66,8 @@
 	            parameter[0] = pDocID;
 	            parameter[1] = "Show";
 	
-	            var url = "/myoffice/ezApprovalG/formContainer/AprEndOpinion.aspx";
-	            var feature = "status:no;dialogWidth:530px;dialogHeight:420px;scroll:no;edge:sunken"
+	            var url = "/ezApprovalG/aprEndOpinion.do";
+	            var feature = "status:no;dialogWidth:530px;dialogHeight:520px;scroll:no;edge:sunken"
 	            var ret = window.showModalDialog(url, parameter, feature);
 	        }
 	
