@@ -6597,43 +6597,8 @@
    		<isEqual property="v_FLAG" compareValue="1">
 		<![CDATA[
    		AND
-   			STARTDATE < (SELECT 
-   							STARTDATE
-			   			 FROM 
-			   				VAPRDOINGDOCLIST 
-			   			 WHERE 
-			   				DOCSTATE <> '015' 
-			   			 AND
-			   				TENANT_ID = #v_TENANTID#
-			   			 AND
-			   				COMPANYID = #companyID#
-			   			 AND 
-			   				FUNCTIONTYPE IN ('002', '005', '000')
-			   			 AND 
-			   				APRMEMBERID IN ($v_USERIDS$)
-			   			 AND 
-			   				DOCID = #v_DOCID#
-			   				
-			   			UNION ALL
- 						SELECT     
- 						       STARTDATE         
-  						FROM            
-  							vendchamjodocinfo  
-  						WHERE            
-  								DOCSTATE <> '015' 
-			   			 AND
-			   				TENANT_ID = #v_TENANTID#
-			   			 AND
-			   				COMPANYID = #companyID#
-			   			 AND 
-			   				FUNCTIONTYPE IN ('002')
-			   			 AND 
-			   				APRMEMBERID IN ($v_USERIDS$)
-			   			 AND 
-			   				DOCID = #v_DOCID#
-  						LIMIT 1
-			   				)
-			   	]]>
+   			DOCID < #v_DOCID#
+		]]>
    		</isEqual>
    		<isEqual property="v_FLAG" compareValue="2">
 		<![CDATA[

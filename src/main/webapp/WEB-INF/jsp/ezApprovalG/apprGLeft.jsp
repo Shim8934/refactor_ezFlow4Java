@@ -1072,8 +1072,8 @@
 			<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'f=1')}">
 				<h2><span  style="width:100%;display:inline-block;" id="approvalForDoc" onClick="Open_Func(this)"><spring:message code='ezApprovalG.lhj13'/></span></h2>
 				<ul>
-					<li><span style="width:100%;display:inline-block;" id="approvalForDoc_sub01" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.lhj14'/></span></li>
-					<li><span style="width:100%;display:inline-block;" id="approvalForDoc_sub02" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.lhj15'/></span></li>
+					<li id="approvalForDoc_sub01" onClick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.lhj14'/></span></li>
+					<li id="approvalForDoc_sub02" onClick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.lhj15'/></span></li>
 				</ul>
 			</c:if>
 			</c:if>

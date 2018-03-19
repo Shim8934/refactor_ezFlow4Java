@@ -2107,7 +2107,7 @@
 		            </tr>
 		        </table>
 		        <h2 style="margin-left: 5px;"><spring:message code='ezApprovalG.t1203'/></h2>
-		        <textarea id="taSummery" name="taSummery" style="HEIGHT: 182px; WIDTH: 99.7%; box-sizing: border-box; -moz-box-sizing: border-box; margin-left:3px;"></textarea>
+		        <textarea id="taSummery" name="taSummery" style="HEIGHT: 182px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin-left:3px;"></textarea>
 		    </div>
 	    </c:if>
 	    
@@ -2193,7 +2193,7 @@
 		                	<th><spring:message code='ezApproval.t339'/></th>
 		                    <td>		                    	
 		                        <!-- <div class="nobox"> -->
-		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 337px; WIDTH: 99.7%; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
+		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 337px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
 		                        <!-- </div> -->
 		                    </td>
 		                </tr>
