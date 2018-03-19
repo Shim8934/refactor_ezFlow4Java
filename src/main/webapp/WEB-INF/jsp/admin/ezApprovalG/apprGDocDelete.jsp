@@ -79,21 +79,14 @@
 		    }
 		    
 			// 검색값 입력 후 엔터키 입력 시 검색 호출
-			function keyword_onkeydown(e) {
-				
-			    if (!window.ActiveXObject) {
-			        var keyCode = e.keyCode;
-			    } else {
-			        var keyCode = event.keyCode;
-			    }
-			    
-		        if (keyCode == 13) {
-					search();
-					return false;
-				}
-		        
-				return true;
-			}
+			 function search_keypress(evt) {
+	        var evtKeyCode = (window.event) ? event.keyCode : evt.which;
+	
+	        
+	        if (evtKeyCode == "13") {
+	            search(1);
+	        }
+	    }
 		    
 		    // 날짜 아이콘 적용 및 날짜 검색
 			 function getTime() {
@@ -825,8 +818,8 @@
 		<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-				<spring:message code='ezApproval.t434'/> : <input type="text" id="DocNumber" name="DocNumber" style="width: 10%" maxlength="50" />&nbsp;
-				<spring:message code='ezApproval.t435'/> : <input type="text" id="DocTitle" name="DocTitle" style="width: 10%" maxlength="50" />&nbsp;
+				<spring:message code='ezApproval.t434'/> : <input type="text" id="DocNumber" name="DocNumber" style="width: 10%" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
+				<spring:message code='ezApproval.t435'/> : <input type="text" id="DocTitle" name="DocTitle" style="width: 10%" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
 					<span id="topmenu" style="width: 500px">
 						<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/> : </label>
 						<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
@@ -836,8 +829,8 @@
 			</tr>
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-	                <spring:message code='ezApproval.t437'/> : <input type="text" id="drafterdept" name="drafterdept" style="width: 10%" maxlength="50" />&nbsp;&nbsp;&nbsp;
-					<spring:message code='ezApproval.t436'/> : <input type="text" id="drafter" name="drafter" style="width: 10%" maxlength="50" />&nbsp;
+	                <spring:message code='ezApproval.t437'/> : <input type="text" id="drafterdept" name="drafterdept" style="width: 10%" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;&nbsp;&nbsp;
+					<spring:message code='ezApproval.t436'/> : <input type="text" id="drafter" name="drafter" style="width: 10%" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
 					<a class="imgbtn" >
 						<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
 					</a>&nbsp;
