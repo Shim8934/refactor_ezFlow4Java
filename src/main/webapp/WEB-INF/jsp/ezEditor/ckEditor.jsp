@@ -10,6 +10,7 @@
 		<script  type="text/javascript">
 			var type = "${type}";
 			var height = "${height}";
+			
 		    CKEDITOR.on( 'instanceReady', function( ev ) {
 				console.log("type : "+type);
 			    ExecuteCommand("maximize");
@@ -245,12 +246,11 @@
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	            
 	        } else if (type == "MAILLETTER") { // 편지지 
-	        	var letterPopUp = parent.popLetterPopUp;
+	        	//var letterPopUp = parent.popLetterPopUp; (수)
 	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
 	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
 	        	
 	        	uploadUrl += "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
-	        	
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        } else {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;

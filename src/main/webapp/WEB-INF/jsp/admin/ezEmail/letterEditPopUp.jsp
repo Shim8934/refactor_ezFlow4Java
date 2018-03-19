@@ -58,8 +58,6 @@
 			var popLetterNo = "${letterNo}"; // 저장일 경우 -1
 			var modifyData = "";
 			
-			var letterPopUp = true; // 에디터에서 이미지 업로드 할때 편지지 팝업인지 구분 (ckImageUpload.jsp -> fileupload())
-			
 			window.onload = function() {
 				if (popUpType == "modify") {
 					modifyLoad(popLetterNo);
@@ -121,6 +119,12 @@
 
 				letterEditorIframe.getElementsByTagName("body")[0].setAttribute("contenteditable",false); // 에디터 작성 
 				var letterContent = letterEditorIframe.outerHTML; // 에디터 html
+				
+				// 쿠쿠닥스 에디터에서 letterContent로 html을 가져오면 본문내용이 안나옴 
+				var splitA = letterContent.split('<div id="pasteWrapper">');
+				var splitB = splitA[1].split('</div>');
+				letterContent = splitA[0] + letterContentChk + splitB[1];
+				
 				
 				var letterJson = {
 					"displayname" : displayname,

@@ -172,12 +172,10 @@
 	    	if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
 	   			uploadPasteContentsPath = "/ezEditor/tfxNoop.do";
 	   		} else if (type == "MAILLETTER") {
-	   			var letterPopUp = parent.popLetterPopUp;
 	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
 	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
-	        	uploadFilePath = "/ezEditor/tfxUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" + letterBoxNo 
-	        			+ "&letterId=" + letterId;
-	        	uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" 
+	        	uploadFilePath = "/ezEditor/tfxUpload.do?type=" + type + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
+	        	uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=" + type + "&letterBoxNo=" 
 	        			+ letterBoxNo + "&letterId=" + letterId;
 	   		}
 	    	

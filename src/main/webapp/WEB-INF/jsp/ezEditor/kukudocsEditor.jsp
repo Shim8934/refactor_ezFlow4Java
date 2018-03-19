@@ -96,6 +96,14 @@
 			// 이미지 업로드 URL 설정
 			var imageUploadURL = "/ezEditor/kukudocsUpload.do?type=" + type;
 			
+			if (type == "MAILLETTER") { // 편지지 
+	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
+	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	
+	        	imageUploadURL = "/ezEditor/kukudocsUpload.do?type=" + type + "&letterBoxNo=" + letterBoxNo 
+	        			+ "&letterId=" + letterId;
+	        }
+			
 			// TODO: 디폴트 폰트 설정
 			
 			var kukudocsEditor = new KuKudocsEditor('editor1', {
