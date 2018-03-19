@@ -132,16 +132,20 @@
 				});
 		    }
 		    
-				
+		 // 폴더관리
+		    function folder_Manage() {
+	        	var OpenWin = window.open("/ezWebFolder/folderManage.do", "", GetOpenWindowfeature(500, 500));
+	            try { OpenWin.focus(); } catch (e) { }
+	        }	
 		    
-		    function goPage(idx) {
-		    	switch (idx) {
-		    		case 3:
-		    			var url = "/ezWebFolder/test.do";
-		    			window.parent.frames["right"].location.href = url;
-		    			break;		    		
-		    	}
-		    }
+// 		    function goPage(idx) {
+// 		    	switch (idx) {
+// 		    		case 3:
+// 		    			var url = "/ezWebFolder/test.do";
+// 		    			window.parent.frames["right"].location.href = url;
+// 		    			break;		    		
+// 		    	}
+// 		    }
 		    
 		    function getFileList(folderId) {
 		    	// + 버튼 누르면 오른쪽 화면 뜨고 오른쪽 화면에서 ajax로 띄움
@@ -242,17 +246,24 @@
   			</h2>  
     		<ul>
 		    </ul>  	   
-		    <h2>
-  				<span style="display:inline-block;width:100%;">폴더관리</span>
-  			</h2>  
-		    <ul>
-		    </ul> 
+<!-- 		    <h2> -->
+<!--   				<span style="display:inline-block;width:100%;">폴더관리</span> -->
+<!--   			</h2>   -->
+<!-- 		    <ul> -->
+<!-- 		    </ul>  -->
 		    <h2>
   				<span style="display:inline-block;width:100%;">휴지통</span>
   			</h2>  
     		<ul>
-		    </ul>       
+		    </ul>   
+		        
 
+<!-- 			<h3> -->
+<!-- 		        <span onclick="boardConfig()" style="width:100%; display:inline-block;">휴지통</span> -->
+<!-- 		    </h3> -->
+			<h3>
+		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;">폴더관리</span>
+		    </h3>
 			<h3>
 		        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 		    </h3>
