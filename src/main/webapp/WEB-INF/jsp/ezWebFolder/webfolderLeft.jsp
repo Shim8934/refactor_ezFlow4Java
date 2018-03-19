@@ -113,13 +113,17 @@
 		    function getReceivedShare() {
 				window.parent.frames["right"].location.href = "/ezWebFolder/getShareListPage.do";
 			}
-		    
-		    function getGivenShare() {
-		    	window.parent.frames["right"].location.href = "/ezWebFolder/getGivenShareList.do";
-		    }
-	    </script>
-	    <style>
-		    .jstree-default a { 
+			
+			function getGivenShare() {
+				window.parent.frames["right"].location.href = "/ezWebFolder/getGivenShareList.do";
+			}
+			
+			function wfConfig() {
+				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderConfig.do";
+			}
+		</script>
+		<style>
+			.jstree-default a { 
 				white-space:normal ; height: auto; 
 			}
 			.jstree-anchor {
@@ -166,27 +170,26 @@
 				<span style="display:inline-block;width:100%;" onclick="getReceivedShare();">공유폴더</span>
 			</h2>
 			<ul>
-				<li><span id="organ"     style="width: 100%; display: inline-block;" onclick="getReceivedShare();">공유받은 폴더</span></li>
-				<li><span id="privilege" style="width: 100%; display: inline-block;" onclick="getGivenShare();"   >공유한 폴더</span></li>
+				<li><span style="width: 100%; display: inline-block;" onclick="getReceivedShare();">공유받은 폴더</span></li>
+				<li><span style="width: 100%; display: inline-block;" onclick="getGivenShare();"   >공유한 폴더</span></li>
 			</ul>
 		    
 		    <h2>
   				<span style="display:inline-block;width:100%;">츨겨찾기</span>
   			</h2>  
     		<ul>
-		    </ul>  	   
-<!-- 		    <h2> -->
-<!--   				<span style="display:inline-block;width:100%;">폴더관리</span> -->
-<!--   			</h2>   -->
-<!-- 		    <ul> -->
-<!-- 		    </ul>  -->
+		    </ul>
+		    <h2>
+  				<span style="display:inline-block;width:100%;">폴더관리</span>
+  			</h2>  
+		    <ul>
+		    </ul> 
+
 		    <h2>
   				<span style="display:inline-block;width:100%;">휴지통</span>
-  			</h2>  
+  			</h2>
     		<ul>
-		    </ul>   
-		        
-
+			</ul>
 <!-- 			<h3> -->
 <!-- 		        <span onclick="boardConfig()" style="width:100%; display:inline-block;">휴지통</span> -->
 <!-- 		    </h3> -->
@@ -194,13 +197,8 @@
 		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;">폴더관리</span>
 		    </h3>
 			<h3>
-		        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
-		    </h3>
-		    <c:if test="${applyFlag == 'OK'}">
-		        <h3 style="border-top:0px">
-		            <span onclick="Apprboard()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t999001" /></span>
-		        </h3>
-		    </c:if>
+				<span onclick="wfConfig();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t236" /></span>
+			</h3>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");	        

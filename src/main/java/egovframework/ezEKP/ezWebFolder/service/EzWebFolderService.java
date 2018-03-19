@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
+import egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO;
 
 public interface EzWebFolderService {
 	String getFileSequence(int tenantId) throws Exception;
@@ -49,4 +50,6 @@ public interface EzWebFolderService {
 	FolderSimpleVO getCompanySimpleFolder(String companyID, int tenantId) throws Exception;
 	List<FolderSimpleVO> getCompanySubSimpleFolder(String userId, String deptId, String compFolderId, int tenantId) throws Exception;
 	FolderSimpleVO getUserSimpleFolder(String userId, int tenantId) throws Exception;
+	boolean checkDepartChief(String userId, int tenantId) throws Exception;
+	WebfolderEnvVO getListCount(String userId, int tenantId) throws Exception;
 }

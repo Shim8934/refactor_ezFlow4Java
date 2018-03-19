@@ -39,10 +39,12 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
@@ -96,6 +98,63 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
 		return "ezWebFolder/fileFolderGivenShare";
+	}
+	
+	@RequestMapping(value="/ezWebFolder/webfolderConfig.do")
+	public String boardConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/rest/ezwebfolder/dept-chief/" + user.getId();
+		
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			String checkResult = (String) resultBody.get("data");
+			model.addAttribute("isChief", checkResult);
+		}
+		
+		return "ezWebFolder/webfolderConfig";
+	}
+	
+	@RequestMapping(value="/ezWebFolder/wefolderGeneral.do")
+	public String webfolderGeneral(@CookieValue("loginCookie") String loginCookie,  HttpServletRequest request, Model model) throws Exception {
+		logger.debug("webfolderGeneral started");
+		
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/env/list-count";
+		
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject wfListConfig = (JSONObject) resultBody.get("data");
+			model.addAttribute("wfListConfig", wfListConfig);
+		}
+		
+		logger.debug("webfolderGeneral ended");
+		return "ezWebFolder/webfolderGeneral";
 	}
 	
 	@SuppressWarnings("unchecked")

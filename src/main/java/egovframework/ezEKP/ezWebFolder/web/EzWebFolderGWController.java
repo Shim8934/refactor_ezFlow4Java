@@ -55,6 +55,7 @@ import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
+import egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -2121,6 +2122,79 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	@RequestMapping(value="/rest/ezwebfolder/dept-chief/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject checkChief(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || userId: " + userId);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			return result;
+		}
+		
+		try {
+			int tenantId  = loginService.getTenantId(serverName);
+			boolean check = ezWebFolderService.checkDepartChief(userId, tenantId);
+			
+			if (check == true) {
+				result.put("data", "1");
+			}
+			else {
+				result.put("data", "0");
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezwebfolder/users/{userid}/env/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getListCount(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || userId: " + userId);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			return result;
+		}
+		
+		try {
+			int tenantId         = loginService.getTenantId(serverName);
+			WebfolderEnvVO envVO = ezWebFolderService.getListCount(userId, tenantId);
+			
+			result.put("data", envVO);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		return result;
+	}
+	
 	
 	private boolean checkWfAdmin(LoginVO user) {
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1 && user.getRollInfo().indexOf("wf=1") == -1){

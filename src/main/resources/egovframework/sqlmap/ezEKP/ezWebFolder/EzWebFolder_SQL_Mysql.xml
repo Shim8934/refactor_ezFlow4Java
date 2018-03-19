@@ -9,7 +9,8 @@
 	<typeAlias  alias="FolderUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.FolderUserVO"  />
 	<typeAlias  alias="SimpleDeptVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO"  />
 	<typeAlias  alias="SimpleUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO"  />
-	<typeAlias  alias="OrganDeptVO"         type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
+	<typeAlias  alias="OrganDeptVO"         type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"       />
+	<typeAlias  alias="EnvVO"               type="egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO"/>
 	
 	<sql id="getAllFilesInFolderCont">
 		WHERE
@@ -191,6 +192,13 @@
 		<result property="deptName"             column="departmentName"         columnIndex="5"/>
 	</resultMap>
 	
+	<resultMap id="envVO" class="EnvVO">
+		<result property="cn"                   column="CN"                     columnIndex="1"/>
+		<result property="envType"              column="ENV_TYPE"               columnIndex="2"/>
+		<result property="envValue"             column="ENV_VALUE"              columnIndex="3"/>
+		<result property="tenantId"             column="TENANT_ID"              columnIndex="4"/>
+	</resultMap>
+	
 	<insert id="EzWebFolderDAO.insertFile" parameterClass="Map">
 		<selectKey keyProperty="v_temp" resultClass="Integer">
 			<![CDATA[
@@ -262,6 +270,19 @@
 				TBL_WEBFOLDER_FILE
 			WHERE
 				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.checkDepartChief" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				IFNULL(COUNT(*), 0) as maxno
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				EXTENSIONATTRIBUTE9 = #userId#
+			AND
+				TENANT_ID           = #tenantId#
 		]]>
 	</select>
 	
@@ -1035,4 +1056,18 @@
 		AND
 			f.USE_STATUS = 'Y'
 	</select>
+	
+	<select id="EzWebFolderDAO.getListCount" resultMap="envVO">
+		SELECT
+			*
+		FROM
+			TBL_WEBFOLDER_ENV
+		WHERE
+			CN        = #userId#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	
+	
 </sqlMap>

@@ -18,6 +18,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
+import egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderService")
@@ -440,6 +441,35 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("tenantId",  tenantId);
 		
 		return ezWebFolderDAO.getUserSimpleFolder(map);
+	}
+
+	@Override
+	public boolean checkDepartChief(String userId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userId);
+		map.put("tenantId",  tenantId);
+		int check = ezWebFolderDAO.checkDepartChief(map);
+		
+		return check == 0 ? false : true;
+	}
+
+	@Override
+	public WebfolderEnvVO getListCount(String userId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userId);
+		map.put("tenantId",  tenantId);
+		
+		WebfolderEnvVO env = ezWebFolderDAO.getListCount(map);
+		
+		if (env == null) {
+			env = new WebfolderEnvVO();
+			env.setTenantId(tenantId);
+			env.setCn(userId);
+			env.setEnvType("P");
+			env.setEnvValue("10");
+		}
+		
+		return env;
 	}
 
 }
