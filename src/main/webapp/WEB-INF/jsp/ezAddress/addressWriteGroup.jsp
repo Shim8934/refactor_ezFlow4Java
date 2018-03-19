@@ -53,7 +53,7 @@
 	        var strLang_2 = "<spring:message code='ezAddress.jsh04' />";
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
-                window.resizeTo(970, 680 + (window.outerHeight - window.innerHeight));
+                //window.resizeTo(970, 680 + (window.outerHeight - window.innerHeight));
 	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
@@ -1849,7 +1849,7 @@
 	                            <td style="height: 35px;">
 	                                <h2 id="subtitle" style="display: none"><spring:message code='ezAddress.t231' /></h2>
 	                                <div id="tabnav" style="float: left; width: 100%;">
-	                                    <ul>
+	                                    <ul style="margin:0;">
 	                                        <li id="orgTabButton"><span onclick="orgTabButton_onClick()">
 	                                            <spring:message code='ezAddress.t351' /></span></li>
 	                                        <li id="contactTabButton"><span onclick="contactTabButton_onClick()">
@@ -1894,11 +1894,11 @@
 	                        <div style="text-align: center"><a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a></div>
 	                    </div>
 	                    <div id="TreeViewPane" style="DISPLAY: none;">
-				            <div class="portlet_tabpart03_top" id="tab1" style="height:25px;border:1px solid #ccc;background-color: #f8f8f8">
-			    	           <table style="padding-top:5px;width:100%;">
+				            <div class="portlet_tabpart03_top" id="tab1" style="border:1px solid #ccc;background-color: #f8f8f8">
+			    	           <table style="margin-top:3px;width:100%;">
 									<tr>
 			                       		<td>
-			                           		<div style="margin-left:5px;margin-top:3px">
+			                           		<div style="margin-left:5px;">
 			                            		<select id="search_type">
 			                            			<option selected value="displayname" usedefault="1"><spring:message code='ezAddress.t124'/></option>
 			                            			<option value="description" usedefault="1"><spring:message code='ezAddress.t54'/></option>
@@ -1919,11 +1919,11 @@
 			            	</div>
 	                        <table style="border-collapse: collapse; border-spacing: 0; padding: 0px; margin-top:3px;">
 	                            <tr>
-	                                <td>
-	                                    <div class="box" style="height: 497px; width: 220px; overflow-x: auto; overflow-y: auto; border-right:0px" id="TreeView"></div>
+	                                <td class="box" style="border-right: 0px">
+	                                    <div style="height: 465px; width: 220px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 	                                </td>	                                
-	                                <td id ="OrganListView" class="listview" style="overflow-y: auto; overflow-x: auto; border-top:0px">
-	                                    <table style="width: 100%; margin-top: -3px;" class="popup_mainlist">
+	                                <td id ="OrganListView" class="listview" style="overflow-y: auto; overflow-x: auto;">
+	                                    <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                        <tr>
 	                                            <th style="white-space:normal">
 	                                                <span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
@@ -1936,7 +1936,7 @@
 	                                            </th>
 	                                        </tr>
 	                                    </table>
-	                                    <div style="vertical-align: top; height: 433px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                                    <div style="vertical-align: top; height: 410px; overflow: auto; width: 446px;" id="txtlist_Layer">
 	                                        <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                            <tr>
 	                                                <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t124' /></td>
@@ -1984,7 +1984,7 @@
 	                </td>
 	                <td style="vertical-align: top;">
 	                    <div class="listview">
-	                        <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event)" style="border: 0px solid; Width: 245px; Height: 503px; overflow:auto;" onrowdblclick="DeleteReceiver(this)" onclick="SelectReceiverWindow(this)"></div>
+	                        <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event)" style="border: 0px solid; width: 245px; height: 507px; overflow:auto;" onrowdblclick="DeleteReceiver(this)" onclick="SelectReceiverWindow(this)"></div>
 	                    </div>
 	                </td>
 	            </tr>

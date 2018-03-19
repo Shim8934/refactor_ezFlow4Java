@@ -118,7 +118,7 @@
 		  </ul>
 		</div>
 		<h2><spring:message code='ezApprovalG.t1203'/></h2>
-		<TEXTAREA id="taSummery" name="taSummery" style="HEIGHT: 142px; WIDTH:97%" readonly>${summary}</TEXTAREA>
+		<TEXTAREA id="taSummery" name="taSummery" style="HEIGHT: 142px; WIDTH:97%; resize:none;" readonly>${summary}</TEXTAREA>
 		
 		<h2><spring:message code='ezApprovalG.t1204'/></h2>
 		<table class="content">
