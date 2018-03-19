@@ -28,41 +28,7 @@
 				folderList('C');
 		    	folderType = 'C';
 		    	
-// 		    	$($element).on('changed.jstree', function (e, data) {
-// 					var folderId = "";
-// 					folderId = data.selected[0]; 
-// 					alert(folderId);
-// 					if (folderId == undefined) {
-// 						alert(folderId);
-// 						console.log("The selected nodes are:" + folderId);
-// 					}else {
-// 						getFileList(folderId);
-// 					}
-// 				}).jstree();
-// 		    	$($element).bind('select_node.jstree', function(event, data){
-// 		    	    folderId = data.instance.get_node(data.selected).id; 
-// 		    	    alert(id);
-// 					getFileList(folderId);
-// 		    	});
-
-// 		    	$("#selectNode").click(function () {
-// 		    	$("#tree").jstree("select_node", "#30"); 
-// 		    	});
-// 				$($element).on('changed.jstree', function (e, data) {
-// 		    	    var i, j, r = [];
-// 		    	    for(i = 0, j = data.selected.length; i < j; i++) {
-// 		    	      r.push(data.instance.get_node(data.selected[i]).text);
-// 		    	    }
-// 		    	    $('#event_result').html('Selected: ' + r.join(', '));
-// 		    	    getFileList(folderId);
-// 		    	  })
-// 		    	  // create the instance
-// 		    	  .jstree();
-// 				$($element).on('ready.jstree', function() {
-// 					$($element).on('changed.jstree', onSelectionChanged);
-// 					getFileList(folderId);
 				});		
-// 		    });
 		    
 		    function folderList(obj) {
 // 		    	folderId = "";
@@ -76,7 +42,7 @@
 				folderType = obj;
 				$.ajax ({
 					type :"POST",
-					async: true,
+					async: false,
 					url  : "/ezWebFolder/folderList.do",
 					data : { 
 							 "folderId"   : folderId
@@ -114,7 +80,6 @@
 						$($element).jstree('refresh');
 // 				   		$($element).jstree("selected", folderId);
 						getFileList(folderId);
-				   		console.log("The selected nodes are--------:" + folderId);	
 				   		
 					},
 					error : function(error) {
@@ -125,7 +90,7 @@
 					var folderId = "";
 					folderId = data.selected[0]; 
 					if (folderId == undefined) {
-						console.log("The selected nodes are:" + folderId);
+// 						console.log("The selected nodes are:" + folderId);
 					}else {
 						getFileList(folderId);
 					}
@@ -137,15 +102,6 @@
 	        	var OpenWin = window.open("/ezWebFolder/folderManage.do", "", GetOpenWindowfeature(500, 500));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }	
-		    
-// 		    function goPage(idx) {
-// 		    	switch (idx) {
-// 		    		case 3:
-// 		    			var url = "/ezWebFolder/test.do";
-// 		    			window.parent.frames["right"].location.href = url;
-// 		    			break;		    		
-// 		    	}
-// 		    }
 		    
 		    function getFileList(folderId) {
 		    	// + 버튼 누르면 오른쪽 화면 뜨고 오른쪽 화면에서 ajax로 띄움
@@ -177,33 +133,6 @@
 			}
 			.jstree-leaf a{
 			    height: auto !important;
-			}
-			.leftbody ul li ,.leftbody ul div{
-			    cursor: pointer;
- 			    border-bottom: 0px ; 
-/* 			    background: url(/images/kr/left/left_dot02.gif) 25px 9px no-repeat rgb(255, 255, 255); */
-			    padding: 4px 7px 4px 5px;
-			    margin-left : 5px;
-			}
-			#left ul{margin:0}
-			#left ul li, #left ul.on, #left ul.off, #left ul div, #left ul ol li.on{
-				cursor: pointer;
- 			    border-bottom: 0px ; 
-				list-style:none;
-				padding: 4px 7px 4px 5px;
-/* 			    margin-left : 5px; */
-			    background-color:#f8f8f8;
-			}
-			#left ul.on, #TopBoards ul.on {display: block;}
-			#left ul.off, #TopBoards ul.off {display: none;}
-			#left ul li.on, #TopBoards ul li.on, .leftbody ul div.on, , #left ul ol li.on{
-				font-weight:bold;
-				color:#333333;
-				
-			}
-			#left ul li ol, .leftbody ul div, #left ul ol li{
-				background-color:#f8f8f8;
-				margin:0;
 			}
 	    </style>
 	</head>
