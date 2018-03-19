@@ -13,12 +13,16 @@
 		
 		<script type="text/javascript">
 			var companyId = "<c:out value = '${companyId}' />";
-// 			var itemseq = "<c:out value = '${personalPopupVO.itemSeq}' />";
 			var typeId = "<c:out value = '${viewInfo.typeInfo.typeId}' />";
+			var saveMode = "";
 			
 	        window.onload = window_onload;
 	        function window_onload() {
 	            $('#formSelect').val("<c:out value = '${viewInfo.typeInfo.formId}' />").prop('selected', true);
+	            
+	            if(typeId != "") {
+	            	saveMode = "modify";
+	            }
 	        }
 	        
 //파일******************************************************************************
@@ -56,7 +60,7 @@
 	    			frm.appendChild(companyIdInput);
 		    		
 		    		frm.submit();
-// 		    		$("#file1").val("");
+		    		$("#file1").val("");
 // 		    		$("#preview").attr("src","");
 	    		}
 			}
@@ -71,28 +75,30 @@
 	    		}
 	    		return check;
 			}
-	        
-		    
-		    
-		    
-		    
-//여기까지 파일*********************************************************************************************************		    
-		    
+	        		    
+//여기까지 파일	    
 			
-// 			function OK_Click() {
-// 				$.ajax({
-// 		        	type : "POST",
-// 		        	url : "/admin/ezAttitude/",
-// 		        	async : false,
-// 		        	data : {companyID : compid,
-// 		        			itemSeq : itemseq, },
-// 		        	dataType : "text",
-// 		        	success : function (result) {
-// 		        			window.opener.company_change();
-// 							window.close();
-// 		        	}
-// 		        });
-// 			}
+			function OK_Click() {
+				$.ajax({
+		        	type : "POST",
+		        	url : "/admin/ezAttitude/saveAttitudeType.do",
+		        	async : false,
+		        	data : {
+		        		companyId : companyId,
+		        		typeId : typeId,
+		        		saveMode : saveMode,
+		        		typeName : $('#typeName').val(),
+		        		typeName2 : $('#typeName2').val(),
+		        		imgPath : $('#imagefile').val(),
+		        		formId : $('#formSelect').val()
+		        		
+		        	},
+		        	success : function (result) {
+		        			window.opener.company_change();
+							window.close();
+		        	}
+		        });
+			}
 			
 		</script>
 	</head>
@@ -107,12 +113,12 @@
 			        	<tr class="primary">
 <%-- 			          		<th><c:out value = '${langPrimary}' /></th> --%>
 			          		<th>한글</th>
-			          		<td><input type="text" style="width:98%" value="<c:out value = '${viewInfo.typeInfo.typeName}' />"></td>
+			          		<td><input id="typeName" type="text" style="width:98%" value="<c:out value = '${viewInfo.typeInfo.typeName}' />"></td>
 			        	</tr>
 			        	<tr class="secondary">
 <%-- 			          		<th><c:out value = '${langSecondary}' /></th> --%>
 			          		<th>영문</th>
-			          		<td><input type="text" style="width:98%" value="<c:out value = '${viewInfo.typeInfo.typeName2}' />"></td>
+			          		<td><input id="typeName2" type="text" style="width:98%" value="<c:out value = '${viewInfo.typeInfo.typeName2}' />"></td>
 			        	</tr>
 			    	</table>
     			</td> 

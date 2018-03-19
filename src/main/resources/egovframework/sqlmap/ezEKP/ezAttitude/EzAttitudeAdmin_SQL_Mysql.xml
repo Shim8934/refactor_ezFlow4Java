@@ -266,4 +266,20 @@
 		]]>
 	</select>
 	
+	<update id="ezAttitudeAdminDAO.updateAttitudeType" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_ATTITUDE_TYPE
+			SET
+				TYPE_NAME = #typeName#,
+				TYPE_NAME2 = #typeName2#,
+				IMG_PATH = #imgPath#
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				TYPE_ID = #typeId#
+		]]>
+	</update>
+	
 </sqlMap>

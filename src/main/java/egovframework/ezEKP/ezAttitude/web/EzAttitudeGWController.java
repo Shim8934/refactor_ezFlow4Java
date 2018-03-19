@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -75,7 +74,8 @@ public class EzAttitudeGWController {
 	 * G/W 근태관리 [GET] 개인, 부서, 부서+개인 근태현황조회
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject attitudeMainList(HttpServletRequest request) {
+	 public JSONObject attitudeMainList(HttpServletRequest request) {
+		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] started.");
 		
 		JSONObject result = new JSONObject();
@@ -702,12 +702,22 @@ public class EzAttitudeGWController {
 	 * G/W 근태관리 [PUT] 근태유형 수정
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject updateAttitudeType(@PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes/" + attitudetypeId+ "] started.");
+	public JSONObject updateAttitudeType(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			String typeId = request.getParameter("typeId");
+			String typeName = request.getParameter("typeName");
+			String typeName2 = request.getParameter("typeName2");
+			String imgPath = request.getParameter("imgPath");
+			
+			ezAttitudeService.updateAttitudeType(typeId, typeName, typeName2, imgPath, info.getTenantId(), companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
