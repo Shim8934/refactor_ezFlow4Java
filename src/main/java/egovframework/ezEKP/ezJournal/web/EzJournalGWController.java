@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
+import egovframework.ezEKP.ezJournal.vo.JournalReplyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
@@ -1265,12 +1266,29 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 댓글 리스트 조회
 	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/replies", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject getReplies(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/replies", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getReplies(@PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getReplies started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
+		LOGGER.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			List<JournalReplyVO> replyList = ezJournalService.getJournalReplyList(journalId, userId, tenantId);
+			
+			result.put("data", replyList);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("data", "");
+			result.put("status", "error");
+			result.put("code", 1);
+		}
 		
 		LOGGER.debug("ezJournal G/W getReplies ended.");
 		return result;
@@ -1279,12 +1297,30 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [POST] 댓글 저장
 	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/replies", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
-	public JSONObject saveReply(@PathVariable String typeId, @PathVariable String journalId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/replies", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	public JSONObject saveReply(@PathVariable String journalId,  HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W saveReply started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
+		LOGGER.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String replyContent = request.getParameter("replyContent");
+			String replyDate = request.getParameter("replyDate");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ezJournalService.saveJorunalReply(journalId, userId,replyContent,replyDate ,tenantId);
+			
+			result.put("data", "");
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("data", "");
+			result.put("status", "error");
+			result.put("code", 1);
+		}
 		
 		LOGGER.debug("ezJournal G/W saveReply ended.");
 		return result;
@@ -1293,12 +1329,13 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [PUT] 댓글 수정
 	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/replies/{replyId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
-	public JSONObject updateReply(@PathVariable String typeId, @PathVariable String journalId, @PathVariable String replyId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/replies/{replyId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	public JSONObject updateReply(@PathVariable String journalId, @PathVariable String replyId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W updateReply started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId + ",replyId=" + replyId);
+		LOGGER.debug("journalId=" + journalId + ",replyId=" + replyId);
 		
 		JSONObject result = new JSONObject();
+		
 		
 		LOGGER.debug("ezJournal G/W updateReply ended.");
 		return result;
@@ -1307,12 +1344,29 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [DELETE] 댓글 삭제
 	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/replies/{replyId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
-	public JSONObject deleteReply(@PathVariable String typeId, @PathVariable String journalId, @PathVariable String replyId, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/replies/{replyId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	public JSONObject deleteReply(@PathVariable String journalId, @PathVariable String replyId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W deleteReply started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId + ",replyId=" + replyId);
+		LOGGER.debug("journalId=" + journalId + ",replyId=" + replyId);
 		
 		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			ezJournalService.removeJorunalReply(journalId, replyId, userId, tenantId);
+			
+			result.put("data", "");
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("data", "");
+			result.put("status", "error");
+			result.put("code", 1);
+		}
 		
 		LOGGER.debug("ezJournal G/W deleteReply ended.");
 		return result;

@@ -11,15 +11,9 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/common.js"></script>
+		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/Common.js" ></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script  type="text/javascript">
 		</script>
 	</head>
@@ -29,17 +23,25 @@
 		    <td style="vertical-align: top; height: 10px;">
 		      <div id="menu">
 		        <ul>
-	        		<li><span onclick=''> <spring:message code='ezJournal.t102' /></span></li>
+<!-- 		        	댓글 -->
+	        		<li><span onclick='openJournalReply();'> <spring:message code='ezJournal.t102' />(${journal.replyCount })</span></li>
 		        	<c:if test="${journal.mine eq 'yes' }">
+<!-- 		        	수정 -->
 	        		<li><span onclick=''> <spring:message code='ezJournal.t107' /></span></li>
+<!-- 	        		삭제 -->
 	        		<li><span onclick=''> <spring:message code='ezJournal.t108' /></span></li>
 		        	</c:if>
+<!-- 		        	메일로발송 -->
 	        		<li><span onclick=''> <spring:message code='ezJournal.t103' /></span></li>
 		        	<c:if test="${journal.mine eq 'yes' }">
+<!-- 		        	재사용 -->
 	        		<li><span onclick=''> <spring:message code='ezQuestion.t700' /></span></li>
-	        		<li><span onclick=''> <spring:message code='ezJournal.t113' /></span></li>
+<!-- 	        		수신확인 -->
+	        		<li><span onclick=''> <spring:message code='ezJournal.t113' />(${journal.checkRecv }/${journal.totalRecv })</span></li>
 		        	</c:if>
+<!-- 		        	인쇄 -->
 	        		<li><span onclick=''> <spring:message code='main.t73' /></span></li>
+<!-- 	        		엑셀저장 -->
 	        		<li><span onclick=''> <spring:message code='ezJournal.t104' /></span></li>
 		        </ul>
 		      </div>    
@@ -111,7 +113,13 @@
 			        <tr>
 			          <th><spring:message code='ezBoard.t292' /></th>
                       <td>
-		            	<div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;background-color:white; text-align:left"></div>
+		            	<div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;background-color:white; text-align:left">
+		            		<c:forEach items="${journal.fileList }" var="file">
+		            			<input type="checkbox" name="fileSelect" value="${file.fileName }">
+<!-- 		            			<img src="/images/image.png">  -->
+		            			<a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }">${file.fileName }&nbsp;(${file.fileSize })</a><br>
+		            		</c:forEach>
+		            	</div>
 			          </td>
 			          <td class="pos2">
 			             <a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
@@ -136,6 +144,7 @@
 		    var nowZoom = 100;
 	        var maxZoom = 200;
 	        var minZoom = 80;
+	        var journalId = <c:out value="${journal.journalId}" />;
 	        
 	        function Bigger(doc) {     
                 if (nowZoom < maxZoom) {
@@ -193,7 +202,7 @@
 		    
 		    //작성자 정보창
 		    function OpenUserInfo(pUserID) {
-		        var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
+		        GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
 		    }
 			
 		    //메일로?
@@ -206,6 +215,7 @@
 		        var szUrl = "/ezEmail/mailWrite.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&cmd=board";
 		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		    }
+		    
 		</script>
 	    
 	    
