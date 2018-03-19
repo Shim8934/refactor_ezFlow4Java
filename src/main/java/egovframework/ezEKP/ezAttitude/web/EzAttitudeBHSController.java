@@ -27,6 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -163,5 +164,17 @@ public class EzAttitudeBHSController {
 		
 		LOGGER.debug("/ezAttitude/attitudeLeft ended");
 		return "/ezAttitude/attitudeLeft";
+	}
+	
+	/**
+	 * 개인근태현황 main
+	 */
+	@RequestMapping(value = "/ezAttitude/attitudeUserMain.do")
+	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userOffset = userInfo.getOffset().split("\\|")[1];
+		
+		model.addAttribute("userOffset", userOffset);
+		return "/ezAttitude/attitudeUserMain";
 	}
 }
