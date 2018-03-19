@@ -924,9 +924,9 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 근태유형관리 아이콘 업로드
 	 */
-	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetype/iconupload/{typeId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{typeId}/iconupload", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject iconUpload(@PathVariable String companyId, @PathVariable String typeId, @RequestBody JSONObject jsonObject, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetype/iconupload/" + typeId + "] started.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetype/" + typeId + "/iconupload] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1044,7 +1044,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetype/iconupload/" + typeId + "] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetype/" + typeId + "/iconupload] ended.");
 		return result;
 	}
 	
