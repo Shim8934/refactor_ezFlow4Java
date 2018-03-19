@@ -686,15 +686,15 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		OutputStream bos = null;
 		
 		try {
-		File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+			File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".hwp";
 		
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		
-		String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".hwp";
-	
-		stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
+			stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
 
 			bos = new FileOutputStream(saveFileName);
 			
@@ -704,28 +704,54 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
 				bos.write(buffer, 0, bytesRead);
 			}
-			
 		} catch (Exception e) {
 		} finally {
-			   if (bos != null) {
-					try {
-					    bos.close();
-					} catch (Exception ignore) {
-						LOGGER.debug("IGNORED: {}", ignore.getMessage());
-					}
-			    }
-			   if (stream != null) {
-					try {
-						stream.close();
-					} catch (Exception ignore) {
-						LOGGER.debug("IGNORED: {}", ignore.getMessage());
-					}
-			    }
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
 		}
 		
 		LOGGER.debug("saveEndFileHwp ended");
 		
 		return "SUCCESS";
+	}
+	
+	/**
+	 * 직인의뢰접수HWP화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/ezConvOutHWP.do")
+	public String ezConvOutHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezConvOutHWP started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		
+		String docID = request.getParameter("docID");
+		String docHref = request.getParameter("docHref");
+		
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		
+		LOGGER.debug("ezConvOutHWP ended.");
+		
+		return "/ezApprovalG/apprGezConvOutHWP";
 	}
 	
 	public String makeXMLString(String orgString) throws Exception{
