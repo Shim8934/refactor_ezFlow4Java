@@ -91,13 +91,7 @@
 			getAttitudeList();
 		    yourClock();
 		    
-		    if (navigator.userAgent.indexOf('Firefox') != -1) {
-                document.body.style.MozUserSelect = 'none';
-                document.body.style.WebkitUserSelect = 'none';
-                document.body.style.khtmlUserSelect = 'none';
-                document.body.style.oUserSelect = 'none';
-                document.body.style.UserSelect = 'none';
-            }
+		    document.getElementById('userAttitude').onclick();
 		    
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		}

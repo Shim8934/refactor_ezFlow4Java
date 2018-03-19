@@ -45,11 +45,11 @@ function SelectDept(opentype, CompleteFunction) {
         DivPopUpShow(350, 360, url);
     } else if (opentype != undefined && CompleteFunction == undefined) {
         selectdept_cross_dialogArguments[1] = SelectDept_Complete;
-        var OpenWin = window.open(url, "SelectDept_Cross", GetOpenWindowfeature(330, 360));
+        var OpenWin = window.open(url, "SelectDept_Cross", GetOpenWindowfeature(350, 360));
         try { OpenWin.focus(); } catch (e) { }
     } else {
         selectdept_cross_dialogArguments[1] = CompleteFunction;
-        var OpenWin = window.open(url, "SelectDept_Cross", GetOpenWindowfeature(330, 360));
+        var OpenWin = window.open(url, "SelectDept_Cross", GetOpenWindowfeature(350, 360));
         try { OpenWin.focus(); } catch (e) { }
     }
 }
