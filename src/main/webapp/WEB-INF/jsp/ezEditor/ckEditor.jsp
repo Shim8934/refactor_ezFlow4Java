@@ -231,16 +231,7 @@
 			var useHTMLMode = "${useHTMLMode}";
 			var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
-			
-			// 편지지
-	    	function mailLetterFun() {
-	    		var letterPopUp = parent.popLetterPopUp;
-	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
-	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
-	        	
-	        	var uploadUrl = "/ezEditor/ckSimpleUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
-	        	CKEDITOR.config.imageUploadUrl = uploadUrl;
-			}
+			var uploadUrl = "/ezEditor/ckSimpleUpload.do?type=" + type;
 			
 			if (type == "APPROVAL" || type == "APPROVALG") {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
@@ -258,9 +249,8 @@
 	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
 	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
 	        	
-	        	var uploadUrl = "/ezEditor/ckSimpleUpload.do?letterPopUp=" + letterPopUp + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
+	        	uploadUrl += "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
 	        	
-	        	CKEDITOR.config.imageUploadUrl = uploadUrl;
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        } else {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
@@ -270,7 +260,7 @@
 				CKEDITOR.config.removePlugins = "sourcearea";
 			}
 			
-			CKEDITOR.config.imageUploadUrl = "/ezEditor/ckSimpleUpload.do?type=" + type;
+			CKEDITOR.config.imageUploadUrl = uploadUrl;
 			CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
 		    CKEDITOR.config.font_defaultLabel = defaultFontFamily;
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";

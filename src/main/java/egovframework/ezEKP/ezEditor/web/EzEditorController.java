@@ -220,7 +220,6 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		String type = request.getParameter("type");
 		MultipartFile multiFile = request.getFile("file1");
-		String letterPopUp = request.getParameter("letterPopUp"); // 편지지 추가, 수정일때 체크
 		
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
 		String realPath = commonUtil.getRealPath(request);
@@ -230,13 +229,22 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		if (type.equals("MAILSIGNATURE")) { //메일 서명 이미지 저장경로
 			filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+		} else if (type.equals("MAILLETTER")) {
+			filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
 		} else {
 			filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		}
 		
-		filePath = filePath + commonUtil.separator + today;
-		
-		if (letterPopUp != null) { // 편지지 등록, 수정때의 업로드
+		if (type.equals("MAILLETTER")) {
+			String letterBoxNo = request.getParameter("letterBoxNo");
+			String letterId = request.getParameter("letterId");
+			logger.debug("letterBoxNo:" + letterBoxNo + "letterId:" + letterId);
+			
+			filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId + "/images"; 
+		} else {
+			filePath = filePath + commonUtil.separator + today;
+		}
+		/*if (letterPopUp != null) { // 편지지 등록, 수정때의 업로드
 			String letterBoxNo = request.getParameter("letterBoxNo");
 			String letterId = request.getParameter("letterId");
 			logger.debug("letterBoxNo:" + letterBoxNo + "letterId:" + letterId);
@@ -246,7 +254,7 @@ public class EzEditorController extends EgovFileMngUtil{
 
 			// /files/upload_mail/letterBoxUpload/letterBoxNo/letterId/images
 			filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId + "/images"; 
-		}
+		}*/
 		logger.debug("filePath : "+filePath);
 		
 		File file = new File(realPath + filePath);
@@ -336,7 +344,6 @@ public class EzEditorController extends EgovFileMngUtil{
 		logger.debug("ckSimpleUpload started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String letterPopUp = request.getParameter("letterPopUp"); // 편지지 추가, 수정일때 체크
 		String type = request.getParameter("type");
 		
 		MultipartFile multiFile = request.getFile("upload");
@@ -348,7 +355,7 @@ public class EzEditorController extends EgovFileMngUtil{
 		
 		filePath = filePath + commonUtil.separator + today;
 		
-		if (letterPopUp != null) { // 편지지 등록, 수정때의 업로드
+		if (type.equals("MAILLETTER")) { // 편지지 등록, 수정때의 업로드
 			String letterBoxNo = request.getParameter("letterBoxNo");
 			String letterId = request.getParameter("letterId");
 			logger.debug("letterBoxNo:" + letterBoxNo + "letterId:" + letterId);
