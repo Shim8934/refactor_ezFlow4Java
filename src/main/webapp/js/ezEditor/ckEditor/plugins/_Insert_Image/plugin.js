@@ -40,9 +40,9 @@ function Insert_ImageCmd_Complete(rtn) {
 			        }
 			    } else if (parent.document.location.href.toLowerCase().indexOf("/ezemail/lettereditpopup.do") > -1) { // 편지지 추가,수정 팝업(수아)
 			    	if (parent.document.getElementById("mailPanel") != null) {
-			    		parent.DivPopUpShow(470, 400, "/ezEditor/ckImageUpload.do?type" + type);
+			    		parent.DivPopUpShow(470, 400, "/ezEditor/ckImageUpload.do?type=" + type);
 			    	} else {
-			            parent.parent.DivPopUpShow(470, 400, "/ezEditor/ckImageUpload.do?type" + type);
+			            parent.parent.DivPopUpShow(470, 400, "/ezEditor/ckImageUpload.do?type=" + type);
 			            //parent.document.getElementById("iFramePanel").style.left = "165px";
 			        }
 			    } else {

@@ -160,7 +160,7 @@
 				var letterNo = popUpType == "add" ? -1 : $(btn).parents("li").attr("data-letterno");
 				
 				var url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&popUpType=" + popUpType + "&letterNo=" + letterNo;
-				window.open(url,"_blank","width=890, height=660");
+				var letterPopUp = window.open(url,"letterPopUp","width=890, height=660");
 			}
 			
 					

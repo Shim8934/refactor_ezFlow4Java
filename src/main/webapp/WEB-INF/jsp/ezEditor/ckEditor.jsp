@@ -12,7 +12,7 @@
 			var height = "${height}";
 			
 		    CKEDITOR.on( 'instanceReady', function( ev ) {
-				console.log("type : "+type);
+				console.log("ckEditor.jsp type : "+type);
 			    ExecuteCommand("maximize");
 			    
 			    parent.Editor_Complete();
@@ -246,7 +246,6 @@
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	            
 	        } else if (type == "MAILLETTER") { // 편지지 
-	        	//var letterPopUp = parent.popLetterPopUp; (수)
 	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
 	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
 	        	

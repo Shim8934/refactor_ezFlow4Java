@@ -99,9 +99,10 @@
 			//e
 			// 저장 버튼 클릭시                  btn -> this
 			function letterSave(btn) {
-				var letterEditor = document.getElementById("tbContentElement").contentWindow;
-				var letterEditorIframe = letterEditor.document.getElementsByTagName("iframe")[0].contentDocument.documentElement;
-				var letterContentChk = letterEditor.GetEditorContent(); // 에디터에 작성한 내용
+				//var letterEditor = document.getElementById("tbContentElement").contentWindow;
+				//var letterEditorIframe = letterEditor.document.getElementsByTagName("iframe")[0].contentDocument.documentElement;
+				//var letterContentChk = letterEditor.GetEditorContent(); // 에디터에 작성한 내용
+				var letterContentChk = window.message.GetEditorContent(); // 에디터에 작성한 내용
 				
 				var displayname = $("#displayname").val();
 				var displayname2 = $("#displayname2").val();
@@ -117,19 +118,19 @@
 					return;
 				}
 
-				letterEditorIframe.getElementsByTagName("body")[0].setAttribute("contenteditable",false); // 에디터 작성 
-				var letterContent = letterEditorIframe.outerHTML; // 에디터 html
+				//letterEditorIframe.getElementsByTagName("body")[0].setAttribute("contenteditable",false); // 에디터 작성 
+				//var letterContent = letterEditorIframe.outerHTML; // 에디터 html
 				
 				// 쿠쿠닥스 에디터에서 letterContent로 html을 가져오면 본문내용이 안나옴 
-				var splitA = letterContent.split('<div id="pasteWrapper">');
+				/* var splitA = letterContent.split('<div id="pasteWrapper">');
 				var splitB = splitA[1].split('</div>');
-				letterContent = splitA[0] + letterContentChk + splitB[1];
+				letterContent = splitA[0] + letterContentChk + splitB[1]; */
 				
 				
 				var letterJson = {
 					"displayname" : displayname,
 					"displayname2" : displayname2,
-					"letterContent" : letterContent,
+					"letterContent" : letterContentChk,
 					"letterBoxNo" : popLetterBoxNo,
 					"letterId" : popLetterId,
 					"letterNo" : popLetterNo
