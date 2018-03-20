@@ -80,35 +80,20 @@ function treeOnclick() {
 function selectBox(letterBoxNo) {
 	var query = "/admin/ezEmail/readLetterBox.do?letterBoxNo=" + letterBoxNo;
 	
-	xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", query, true);
-    xmlhttp.responseType = 'text'; 
-    xmlhttp.onreadystatechange = readText;
-    xmlhttp.send();
-}
-
-// 이름, 이름(영문) 가져오는 친구
-function readText() { 
-	if (xmlhttp == null || xmlhttp.readyState != 4) return;
-	responseResult = xmlhttp.response;
+	$.ajax({
+		type : "POST",
+		url : query,
+		cache : false,
+		dataType : 'json',
+		success : function(data) {
+			setDisplay(data.displayname, data.displayname2);
+		},
+		error : function(data) {
+			alert("error");
+			console.log(data);
+		}
+	});
 	
-	console.log(responseResult);
-	
-	var displayname = 'displayname":"';
-	var displayname2 = 'displayname2":"';
-	var displayname_start = responseResult.indexOf(displayname) + displayname.length;
-	var displayname2_start = responseResult.indexOf(displayname2) + displayname2.length;
-	
-	console.log(displayname_start);
-	console.log(displayname2_start);
-	
-	var displayname_end = responseResult.indexOf('"}');
-	var displayname2_end = responseResult.indexOf('","dis');
-	
-	letter_displayname = responseResult.substring(displayname_start, displayname_end);
-	letter_displayname2 = responseResult.substring(displayname2_start, displayname2_end);
-	
-	setDisplay(letter_displayname, letter_displayname2);
 }
 
 // 트리에서 필요한 아이들만 빼서 treeCollection 재구성
@@ -229,6 +214,28 @@ function deleteLetterBox() {
 			url : query,
 			datatype : 'json',
 			success : function(data) {
+				
+				
+				
+				/*for (var i = 0; i < data.legnth; i++) {
+					var letterId = data[i].letterId;
+					var letterBoxNo = data[i].letterBoxNo;
+					var letterNo = data[i].letterNo;
+					
+					$.ajax({
+						type:"POST",
+						async: false,
+						data:{letterNo:letterNo,letterBoxNo:letterBoxNo,letterId:letterId},
+						url:"/admin/ezEmail/deleteLetter",
+						success:function(){
+							console.log("편지지 삭제됨");
+						},
+						error:function() {
+							console.log("편지지 삭제안됨");
+						}
+					});
+				}*/
+				
 				alert("삭제를 완료하였습니다.");
 				refreshLetterBox();
 			},

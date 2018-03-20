@@ -25,8 +25,16 @@
 		#leTop {
 		}
 		.leTitle {
-		    padding: 3px;
-		    color: white;
+		    /* padding: 3px;
+		    color: white; */
+		    
+		    font-size: 11pt;
+		    font-weight: bold;
+		    color: rgb(125, 145, 171);
+		    height: 44px;
+		    margin-left: 1px;
+		    margin-bottom: 8px;
+		    line-height: 36px;
 		}
 		.leLetter {
 			margin-top: 15px;

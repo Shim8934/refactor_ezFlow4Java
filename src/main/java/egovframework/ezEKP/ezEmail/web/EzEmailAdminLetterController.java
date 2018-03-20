@@ -644,6 +644,73 @@ public class EzEmailAdminLetterController {
 	}
 	
 	/**
+	 * 편지지함 삭제 시 fileroot에 있는 편지지함도 삭제 (재은)
+	 * @param letterBoxNo (편지지함 번호)
+	 * @return : "OK" or "ERROR"
+	 */
+	@RequestMapping("/admin/ezEmail/deleteLetterFile")
+	@ResponseBody
+	public String deleteLetterFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, String letterBoxNo) throws Exception{
+		logger.debug("deleteLetterFile started.");
+		logger.debug("letterBoxNo=" + letterBoxNo);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		// 관리자 권한체크      
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String returnStr = "OK";
+		
+		String realPath = commonUtil.getRealPath(request);
+		String filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
+		filePath = filePath + commonUtil.separator + letterBoxNo;
+		
+		try {
+			deleteAllFiles(filePath);
+			
+		} catch (Exception e) {
+			returnStr = "ERROR";
+		}
+
+		logger.debug("deleteLetterFile ended.");
+		return returnStr;
+	}
+	
+	// 하위 폴더 및 파일까지 삭제하는 함수 (재은)
+	public static void deleteAllFiles(String path) {
+		logger.debug("deleteAllFiles started.");
+		logger.debug("path=" + path);
+		
+		File file = new File(path);
+		File[] tempFile = file.listFiles();
+		logger.debug(tempFile.toString());
+		
+		if (tempFile.length > 0) {
+			
+			for (int i = 0; i < tempFile.length; i++) {
+				
+				if (tempFile[i].isFile()) {
+					tempFile[i].delete();
+				} else {
+					deleteAllFiles(tempFile[i].getPath()); //재귀함수
+				}
+				tempFile[i].delete();
+			} // end for
+			
+			file.delete();
+		}
+		
+		logger.debug("deleteAllFiles ended.");
+		
+	}
+	
+	
+	
+	
+	/**
 	 * 편지지 삭제 (수아)
 	 * @param letterNo (편지지 번호)
 	 * @return : "OK" or "ERROR"
