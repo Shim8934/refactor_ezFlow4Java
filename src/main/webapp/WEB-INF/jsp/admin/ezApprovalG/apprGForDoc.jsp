@@ -465,7 +465,7 @@
 			        var openLocation = "";
 			        
 			        if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") { //한글기안
-			            openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP.aspx";
+			            openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 			        } else {
 		                openLocation = "/ezApprovalG/contDocView.do";
 			        }

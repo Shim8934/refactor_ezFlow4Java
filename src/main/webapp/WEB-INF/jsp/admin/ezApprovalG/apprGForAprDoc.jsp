@@ -566,8 +566,8 @@
 	                    var openLocation = "/myoffice/ezApprovalG/ezViewWord/ezViewApr_Word.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL);
 	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=";
 	                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") { //한글양식 읽기
-	                    var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL);
-	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=";
+	                    var openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL);
+	                    openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=";
 	                } else {
 	                    if (CrossYN()) {
 	                        var openLocation = "/ezApprovalG/aprDocView.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL);
