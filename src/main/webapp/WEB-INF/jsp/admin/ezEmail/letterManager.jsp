@@ -102,7 +102,9 @@
 				var liArr = $('div.lmLetter').find('li');
 				
 				for (var i = 0; i < liArr.length; i++) {
-					var letterNo = liArr[i].attributes[0].value;
+					//var letterNo = liArr[i].attributes[0].value;
+					var letterNo = $(liArr[i]).attr("data-letterno");
+					console.log(letterNo);
 					
 					$.ajax({
 						type:"POST",
