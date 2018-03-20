@@ -171,7 +171,8 @@ function boxNameCheck() {
 	var returnVal = false;
 	
 	for(var i = 0; i < result.length; i++) {
-		if(selectNode.node.parent == result[i].parentLetterboxNo) {
+		if(selectNode.node.parent == result[i].parentLetterboxNo && selectNode.node.id != result[i].letterBoxNo) { 
+			//selectNode.node.id != result[i].letterBoxNo 이거 해줘야 자기자신은 비교 x
 			boxNamearr.push(result[i].displayname);
 		}
 	}
@@ -240,8 +241,8 @@ function deleteLetterBox() {
 // '확인' 버튼 클릭 시, update로 할것인지 insert로 할것인지
 function submitClick() {
 	var formData = $("#myForm").serialize();
-	
 	var formUrl = "/admin/ezEmail/updateLetterBox.do";
+	
 	if (document.getElementById("letterbox_no").disabled) {
 		formUrl = "/admin/ezEmail/createLetterBox.do";
 	}
@@ -253,7 +254,7 @@ function submitClick() {
 		document.getElementById("display").focus();
 		return;
 	}
-	 
+	
 	$.ajax({
 		type : "POST",
 		url : formUrl,
