@@ -167,22 +167,15 @@ function addLetterBox() {
 
 // 폴더명 중복 체크
 function boxNameCheck() {
-	var boxNamearr = [];
 	var returnVal = false;
 	
 	for(var i = 0; i < result.length; i++) {
 		if(selectNode.node.parent == result[i].parentLetterboxNo && selectNode.node.id != result[i].letterBoxNo) { 
-			//selectNode.node.id != result[i].letterBoxNo 이거 해줘야 자기자신은 비교 x
-			boxNamearr.push(result[i].displayname);
+			if (document.getElementById("display").value == result[i].displayname) {
+				returnVal = true;
+			}
 		}
 	}
-	 
-	for (var i = 0; i < boxNamearr.length; i++) {
-		if (document.getElementById("display").value == boxNamearr[i]) {
-			returnVal = true;
-		}
-	}
-	
 	return returnVal;
 }
 
