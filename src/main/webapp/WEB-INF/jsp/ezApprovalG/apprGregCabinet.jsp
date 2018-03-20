@@ -206,7 +206,7 @@
 						<div id="TaskSCateList" style="height:233px" onClick="TaskSCateList_rowclick()"></div>
 					</div>
 				</td>
-				<td valign="top" style="padding:3px"><h2><spring:message code='ezApprovalG.t1040'/></h2>
+				<td valign="top" style="padding:3px;"><h2><spring:message code='ezApprovalG.t1040'/></h2>
 					<table>
 						<tr>
 							<th align="left"><a class="imgbtn"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></th>
@@ -222,7 +222,7 @@
 						</tr>
 					</table>
 				</td>
-				<td valign="top" style="padding:3px"><h2><spring:message code='ezApprovalG.t1018'/></h2>
+				<td valign="top" style="padding:3px; width:100%;"><h2><spring:message code='ezApprovalG.t1018'/></h2>
 					<table class="content">
 						<tr>
 							<th><spring:message code='ezApprovalG.t898'/>(<spring:message code='ezApprovalG.t1764'/>)</th>
