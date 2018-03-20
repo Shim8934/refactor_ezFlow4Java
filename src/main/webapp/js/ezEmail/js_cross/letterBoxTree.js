@@ -60,7 +60,6 @@ function treeOnclick() {
     		if (addCheck == -1) { 
     			$('#divTree').jstree().delete_node($('#temp'));
     			addCheck = 0;
-    			//document.getElementById("letterbox_no").disabled
     			$("#letterbox_no").removeAttr("disabled");
     			//추가하면 다른 node 못누르게됨
     			//$("#divTree").jstree('select_node', "#temp");
