@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -323,7 +325,7 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("addAttitudeType started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String companyId = userInfo.getCompanyID();
+		String companyId = request.getParameter("companyId");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/info";
@@ -350,6 +352,7 @@ public class EzAttitudeAdminBOMController {
 			viewInfo = resultBody.get("data");
 			
 			model.addAttribute("viewInfo", viewInfo);
+			model.addAttribute("companyId", companyId);
 		}
 		
 		LOGGER.debug("addAttitudeType ended.");
@@ -408,26 +411,102 @@ public class EzAttitudeAdminBOMController {
 			viewInfo = resultBody.get("data");
 			
 			model.addAttribute("viewInfo", viewInfo);
+			model.addAttribute("companyId", companyId);
 		}
 		
 		LOGGER.debug("showAttitudeType ended.");
 		
-		return "admin/ezAttitude/saveAttitudeType";
+		return "/admin/ezAttitude/saveAttitudeType";
 	}
-	
+	/**
+	 * 아이콘 업로드 함수
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/ezAttitude/iconUpload.do")
-	public void iconUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) {
+	public String iconUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		
 		LOGGER.debug("iconUpload started.");
 		
-		String typeId = request.getParameter("typeId");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		MultipartFile file = request.getFile("file1");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String typeId = request.getParameter("typeId");
+		String companyId = request.getParameter("companyId");
 
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
-		String url = gwServerUrl + "/rest/ezattitudee/companies/{companyId}/attitudetype/iconupload/{typeId}";
-									
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetype/" + typeId + "/iconupload";
+		
+		URI uri = URI.create(url); 
+//		int maxSize = 0; 
+		
+		Long fileSize; 
+//		maxSize = Integer.parseInt(request.getParameter("maxSize")); 
+		JSONObject jsonObject = new JSONObject(); 
+		 
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		JSONObject fileJson = new JSONObject();			 
+			 
+		byte[] bytes = file.getBytes(); 
+		fileSize = file.getSize(); 
+		String originalFilename = file.getOriginalFilename(); 
+		fileJson.put("bytes", bytes); 
+		fileJson.put("fileSize", fileSize); 
+		fileJson.put("originalFilename", originalFilename); 
+
+		jsonObject.put("fileObject", fileJson);
+//		jsonObject.put("maxSize",maxSize); //최대사이즈
+		jsonObject.put("userID",userInfo.getId());  
+		 
+		HttpEntity<JSONObject> entity = new HttpEntity(jsonObject, headers); 
+		     
+		RestTemplate rest = new RestTemplate(); 
+		 
+		ResponseEntity<JSONObject> result = rest.exchange(uri, HttpMethod.POST, entity, JSONObject.class); 				
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		Object filePaths = "";
+		if (status.equals("ok")) {
+			filePaths = resultBody.get("data");
+			
+			model.addAttribute("filePaths", filePaths);
+		}
+		
+		LOGGER.debug("iconUpload ended.");
+		
+		return "/admin/ezAttitude/attitudeTypeIconUpload";
+	}
+	
+	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeType.do")
+	public void saveAttutideType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		
+		LOGGER.debug("saveAttutideType started.");
+		
+		// 수정 /rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}    PUT
+		// 추가 /rest/ezattitude/companies/{companyId}/attitudetypes					   POST
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		String typeId = request.getParameter("typeId");
+		String saveMode = request.getParameter("saveMode");
+		String typeName = request.getParameter("typeName");
+		String typeName2 = request.getParameter("typeName2");
+		String imgPath = request.getParameter("imgPath");
+		String formId = request.getParameter("formId");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
+		String url = "";
+		if (saveMode != null && saveMode.equals("modify")) {
+			url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/" + typeId;
+		} else {
+			url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/";
+		}
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
@@ -435,11 +514,29 @@ public class EzAttitudeAdminBOMController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId());
+				.queryParam("userId", userInfo.getId())
+				.queryParam("typeId", typeId)
+				.queryParam("typeName", typeName)
+				.queryParam("typeName2", typeName2)
+				.queryParam("imgPath", imgPath)
+				.queryParam("formId", formId);
 		
 		RestTemplate rest = new RestTemplate();
 		
-		LOGGER.debug("iconUpload ended.");
+		ResponseEntity<?> result;
+		
+		if (saveMode != null && saveMode.equals("modify")) {
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
+		} else {
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
+		}
+		
+//		JSONObject resultBody = (JSONObject) result.getBody();
+		
+//		String status = resultBody.get("status").toString();
+		
+		LOGGER.debug("saveAttutideType ended.");
+		
 	}
 	
 }

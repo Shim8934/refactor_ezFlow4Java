@@ -17,7 +17,7 @@
 				 	<strong id="personName" style="position:absolute; width:240px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${displayName} ${mailAddress } </strong>
 				 </p>
 				<div class="info">
-    				<p class="pic">${userPhoto}</p>
+    				<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></p>
     				<dl class="info_txt">
         				<dt>${companyNm }<br></dt>
 			 			<dd>${department} ${title}</dd>
@@ -906,7 +906,7 @@
 		    		type : "POST",
 		    		dataType : "json",
 		    		async : true,
-		    		url : "/attitude/getAttitudeList.do",
+		    		url : "/ezAttitude/getAttitudeList.do",
 		    		data : {},
 		    		success : function(result) {
 		    			for (var i = 0; i < result.length; i++) {
@@ -932,7 +932,7 @@
 		    	$.ajax({
 		    		type : "POST",
 		    		async : true,
-		    		url : "/attitude/attitudeSave.do",
+		    		url : "/ezAttitude/attitudeSave.do",
 		    		data : {
 		    			typeId : pTypeId,
 		    			dateType : pDateType

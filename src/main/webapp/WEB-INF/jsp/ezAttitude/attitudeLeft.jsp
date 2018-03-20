@@ -91,13 +91,7 @@
 			getAttitudeList();
 		    yourClock();
 		    
-		    if (navigator.userAgent.indexOf('Firefox') != -1) {
-                document.body.style.MozUserSelect = 'none';
-                document.body.style.WebkitUserSelect = 'none';
-                document.body.style.khtmlUserSelect = 'none';
-                document.body.style.oUserSelect = 'none';
-                document.body.style.UserSelect = 'none';
-            }
+		    document.getElementById('userAttitude').onclick();
 		    
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		}
@@ -139,7 +133,7 @@
 	    		type : "POST",
 	    		dataType : "json",
 	    		async : true,
-	    		url : "/attitude/getAttitudeList.do",
+	    		url : "/ezAttitude/getAttitudeList.do",
 	    		data : {},
 	    		success : function(result) {
 	    			for (var i = 0; i < result.length; i++) {
@@ -165,7 +159,7 @@
 	    	$.ajax({
 	    		type : "POST",
 	    		async : true,
-	    		url : "/attitude/attitudeSave.do",
+	    		url : "/ezAttitude/attitudeSave.do",
 	    		data : {
 	    			typeId : pTypeId,
 	    			dateType : pDateType

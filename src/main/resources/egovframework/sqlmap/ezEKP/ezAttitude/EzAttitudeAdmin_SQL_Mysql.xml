@@ -199,6 +199,11 @@
 			AND
 				TENANT_ID = #tenantId#
 		]]>
+			<isNotEmpty prepend="AND" property="isuse">
+			<![CDATA[
+				ISUSE = #isuse#
+			]]>
+			</isNotEmpty>
 	</select>
 	
 	<update id="ezAttitudeAdminDAO.updateAttitudeTypeConfig" parameterClass="Map">
@@ -265,5 +270,21 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</select>
+	
+	<update id="ezAttitudeAdminDAO.updateAttitudeType" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_ATTITUDE_TYPE
+			SET
+				TYPE_NAME = #typeName#,
+				TYPE_NAME2 = #typeName2#,
+				IMG_PATH = #imgPath#
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				TYPE_ID = #typeId#
+		]]>
+	</update>
 	
 </sqlMap>

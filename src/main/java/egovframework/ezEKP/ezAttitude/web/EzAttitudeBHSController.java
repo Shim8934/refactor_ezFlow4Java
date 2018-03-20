@@ -27,6 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -48,10 +49,10 @@ public class EzAttitudeBHSController {
 	/**
 	 * 사용자 근태리스트 출력
 	 */
-	@RequestMapping(value = "/attitude/getAttitudeList.do", produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/ezAttitude/getAttitudeList.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONArray getAttitudeList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/attitude/getAttitudeList started");
+		LOGGER.debug("/ezAttitude/getAttitudeList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -85,17 +86,17 @@ public class EzAttitudeBHSController {
 			list = (JSONArray) resultBody.get("data");
 		}
 		
-		LOGGER.debug("/attitude/getAttitudeList ended");
+		LOGGER.debug("/ezAttitude/getAttitudeList ended");
 		return list;
 	}
 	
 	/**
 	 * 사용자 근태 추가 
 	 */
-	@RequestMapping(value = "/attitude/attitudeSave.do")
+	@RequestMapping(value = "/ezAttitude/attitudeSave.do")
 	@ResponseBody
 	public void attitudeSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/attitude/attitudeSave started");
+		LOGGER.debug("/ezAttitude/attitudeSave started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -130,7 +131,7 @@ public class EzAttitudeBHSController {
 			
 		}
 		
-		LOGGER.debug("/attitude/attitudeSave ended");
+		LOGGER.debug("/ezAttitude/attitudeSave ended");
 	}
 	
 	/**
@@ -163,5 +164,65 @@ public class EzAttitudeBHSController {
 		
 		LOGGER.debug("/ezAttitude/attitudeLeft ended");
 		return "/ezAttitude/attitudeLeft";
+	}
+	
+	/**
+	 * 개인근태현황 main
+	 */
+	@RequestMapping(value = "/ezAttitude/attitudeUserMain.do")
+	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeUserMain started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userOffset = userInfo.getOffset().split("\\|")[1];
+		
+		model.addAttribute("userOffset", userOffset);
+		
+		LOGGER.debug("/ezAttitude/attitudeUserMain ended");
+		return "/ezAttitude/attitudeUserMain";
+	}
+	
+	/**
+	 * 근태타입 리스트
+	 */
+	@RequestMapping(value = "/ezAttitude/attitudeTypeList.do")
+	@ResponseBody
+	public JSONArray attitudeTypeList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeTypeList started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String isuse = "1";
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudetypes";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId)
+				.queryParam("isuse", isuse);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONArray list = new JSONArray();
+		if (status.equals("ok")) {
+			list = (JSONArray) resultBody.get("data");
+		}
+		
+		LOGGER.debug("/ezAttitude/attitudeTypeList ended");
+		return list;
 	}
 }

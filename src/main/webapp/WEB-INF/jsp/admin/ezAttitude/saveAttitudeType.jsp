@@ -12,13 +12,17 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
-// 			var compid = "<c:out value = '${companyID}' />";
-// 			var itemseq = "<c:out value = '${personalPopupVO.itemSeq}' />";
+			var companyId = "<c:out value = '${companyId}' />";
 			var typeId = "<c:out value = '${viewInfo.typeInfo.typeId}' />";
+			var saveMode = "";
 			
 	        window.onload = window_onload;
 	        function window_onload() {
 	            $('#formSelect').val("<c:out value = '${viewInfo.typeInfo.formId}' />").prop('selected', true);
+	            
+	            if(typeId != "") {
+	            	saveMode = "modify";
+	            }
 	        }
 	        
 //파일******************************************************************************
@@ -38,45 +42,62 @@
 	    			if (typeId == null || typeId =="") {
 	    				typeId = "<c:out value = '${viewInfo.typeId}' />";
 	    			}
-	    			var frm = $('#form');
-		    		frm.action = "/ezAttitude/iconUpload.do?typeId=" + typeId;
+	    			
+	    			var frm = document.getElementById('form');
+		    		frm.action = "/ezAttitude/iconUpload.do";
+		    		frm.enctype="multipart/form-data";
+		    		
+	    			var typeIdInput = document.createElement("input");
+	    			typeIdInput.setAttribute("type", "hidden");
+	    			typeIdInput.setAttribute("name", "typeId");
+	    			typeIdInput.setAttribute("value", typeId);
+	    			frm.appendChild(typeIdInput);
+	    			
+	    			var companyIdInput = document.createElement("input");
+	    			companyIdInput.setAttribute("type", "hidden");
+	    			companyIdInput.setAttribute("name", "companyId");
+	    			companyIdInput.setAttribute("value", companyId);
+	    			frm.appendChild(companyIdInput);
+		    		
 		    		frm.submit();
-		    		$('#form input[id=file1]').val("");	
+		    		$("#file1").val("");
+// 		    		$("#preview").attr("src","");
 	    		}
 			}
 			
-			function compareExtension(check, extension) {
+			function compareExtension(check, imgext) {
 	    		var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
 	    		for (var i = 0; i < filterExtension.length; i++) {
-	        		if (extension.toLowerCase() == filterExtension[i]) {
+	        		if (imgext.toLowerCase() == filterExtension[i]) {
 	            		check = true;
 	            		break;
 	        		}
 	    		}
 	    		return check;
 			}
-	        
-		    
-		    
-		    
-		    
-//여기까지 파일*********************************************************************************************************		    
-		    
+	        		    
+//여기까지 파일	    
 			
 			function OK_Click() {
-
-// 				$.ajax({
-// 		        	type : "POST",
-// 		        	url : "/admin/ezAttitude/",
-// 		        	async : false,
-// 		        	data : {companyID : compid,
-// 		        			itemSeq : itemseq, },
-// 		        	dataType : "text",
-// 		        	success : function (result) {
-// 		        			window.opener.company_change();
-// 							window.close();
-// 		        	}
-// 		        });
+				$.ajax({
+		        	type : "POST",
+		        	url : "/admin/ezAttitude/saveAttitudeType.do",
+		        	async : false,
+		        	data : {
+		        		companyId : companyId,
+		        		typeId : typeId,
+		        		saveMode : saveMode,
+		        		typeName : $('#typeName').val(),
+		        		typeName2 : $('#typeName2').val(),
+		        		imgPath : $('#imagefile').val(),
+		        		formId : $('#formSelect').val()
+		        		
+		        	},
+		        	success : function (result) {
+		        			window.opener.company_change();
+							window.close();
+		        	}
+		        });
 			}
 			
 		</script>
@@ -92,12 +113,12 @@
 			        	<tr class="primary">
 <%-- 			          		<th><c:out value = '${langPrimary}' /></th> --%>
 			          		<th>한글</th>
-			          		<td><input type="text" style="width:98%" value="<c:out value = '${viewInfo.typeInfo.typeName}' />"></td>
+			          		<td><input id="typeName" type="text" style="width:98%" value="<c:out value = '${viewInfo.typeInfo.typeName}' />"></td>
 			        	</tr>
 			        	<tr class="secondary">
 <%-- 			          		<th><c:out value = '${langSecondary}' /></th> --%>
 			          		<th>영문</th>
-			          		<td><input type="text" style="width:98%" value="<c:out value = '${viewInfo.typeInfo.typeName2}' />"></td>
+			          		<td><input id="typeName2" type="text" style="width:98%" value="<c:out value = '${viewInfo.typeInfo.typeName2}' />"></td>
 			        	</tr>
 			    	</table>
     			</td> 
@@ -115,7 +136,7 @@
 	  						</td>
 	  					</tr>
   						<tr>
-	  						<td colspan="2" width="70%"><input type="text" id="imgPath" value="" style="width:88%"></td>
+	  						<td colspan="2" width="70%"><input type="text" id="imagefile" name="imagefile" value="" style="width:88%"></td>
 	  					</tr>
   					</table>
   				</td>
@@ -139,6 +160,7 @@
 		    <a class="imgbtn"><span onclick="OK_Click()">확인</span></a>
 		    <a class="imgbtn"><span onclick="window.close()">취소</span></a>
 		</div>
+		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezAttitude/iconUpload.do" target="ifrm" style="width: 1px; height: 1px;display:none">
         	<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="false" />
     	</form>

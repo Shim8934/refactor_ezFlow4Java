@@ -23,7 +23,7 @@ public interface EzAttitudeService {
 	
 	public List<Object> getAttitudeStatisticsList(String pidList, String yrmh, int tenantId) throws Exception;
 	
-	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, int tenantId) throws Exception;
+	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, int tenantId) throws Exception;
 	
 	public String getWriteFormHtml(String formId, int tenantId) throws Exception;
 	
@@ -71,7 +71,7 @@ public interface EzAttitudeService {
 	
 	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId, String typeId) throws Exception;
 	
-	public void updateAttitudeType(String typeName, String typeName2, String imgPath, int tenantId, String companyId) throws Exception;
+	public void updateAttitudeType(String typeId, String typeName, String typeName2, String imgPath, int tenantId, String companyId) throws Exception;
 	
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId, String searchUserName, String searchDeptName, String pageNum, String listSize, String order) throws Exception;
 	

@@ -131,13 +131,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId,
-			int tenantId) throws Exception {
+			String isuse, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeTypeList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		map.put("isuse", isuse);
 		
 		LOGGER.debug("getAttitudeTypeList ended");
 		
@@ -353,10 +354,22 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void updateAttitudeType(String typeName, String typeName2,
+	public void updateAttitudeType(String typeId, String typeName, String typeName2,
 			String imgPath, int tenantId, String companyId) throws Exception {
-		// TODO Auto-generated method stub
+		LOGGER.debug("updateAttitudeType started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("typeId", typeId);
+		map.put("typeName", typeName);
+		map.put("typeName2", typeName2);
+		map.put("imgPath", imgPath);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezAttitudeDAO.updateAttitudeType(map);
+		
+		LOGGER.debug("updateAttitudeType ended");
 	}
 
 	@Override
