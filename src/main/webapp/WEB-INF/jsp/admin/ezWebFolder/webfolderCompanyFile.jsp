@@ -305,7 +305,8 @@
 				
 				var fileId = checkedArr[0];
 				
-				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId + "&mode=admin");
+				//DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId + "&mode=admin");
+				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId);
 			}
 			
 			function getChecked(obj) {

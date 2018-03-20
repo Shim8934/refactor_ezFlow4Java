@@ -977,14 +977,16 @@
 				f.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
 			FROM
 				TBL_WEBFOLDER_FOLDER f JOIN
-									(SELECT
-										d.* 
-									FROM
-										tbl_deptmaster d LEFT JOIN tbl_addjobmaster a ON d.CN = a.DEPTID AND d.TENANT_ID = a.TENANT_ID
-									WHERE
-										(a.CN = #userId# OR d.CN = #deptId#)
-									AND
-										d.TENANT_ID = #tenantId#) AS s ON f.OWNER_ID = s.CN AND f.TENANT_ID = s.TENANT_ID AND f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'D' AND f.OWNER_ID = s.CN
+						(
+							SELECT
+								d.* 
+							FROM
+								tbl_deptmaster d LEFT JOIN tbl_addjobmaster a ON d.CN = a.DEPTID AND d.TENANT_ID = a.TENANT_ID
+							WHERE
+								(a.CN = #userId# OR d.CN = #deptId#)
+							AND
+								d.TENANT_ID = #tenantId#
+						) AS s ON f.OWNER_ID = s.CN AND f.TENANT_ID = s.TENANT_ID AND f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'D' AND f.OWNER_ID = s.CN
 			WHERE
 				f.FOLDER_TYPE  = 'D'
 			AND
@@ -1010,8 +1012,17 @@
 					SELECT
 						f1.*
 					FROM
-						tbl_webfolder_folder f1 JOIN tbl_deptmaster d
-							ON f1.OWNER_ID = d.CN AND f1.FOLDER_UPPER = 'root' AND d.CN = #deptId# AND f1.TENANT_ID = d.TENANT_ID
+						tbl_webfolder_folder f1 JOIN 
+								(
+									SELECT
+										d.* 
+									FROM
+										tbl_deptmaster d LEFT JOIN tbl_addjobmaster a ON d.CN = a.DEPTID AND d.TENANT_ID = a.TENANT_ID
+									WHERE
+										(a.CN = #userId# OR d.CN = #deptId#)
+									AND
+										d.TENANT_ID = #tenantId#
+								) AS s ON f1.OWNER_ID = s.CN AND f1.TENANT_ID = s.TENANT_ID AND f1.FOLDER_UPPER = 'root' AND f1.FOLDER_TYPE = 'D' AND f1.OWNER_ID = s.CN
 					WHERE
 						f1.TENANT_ID = #tenantId#
 						
@@ -1026,11 +1037,11 @@
 						f2.TENANT_ID = #tenantId#
 				) AS f
 			WHERE
-				f.FOLDER_TYPE  = 'D'
+				f.FOLDER_TYPE = 'D'
 			AND
-				f.TENANT_ID = #tenantId#
+				f.TENANT_ID   = #tenantId#
 			AND
-				f.USE_STATUS = 'Y'
+				f.USE_STATUS  = 'Y'
 			ORDER BY
 				f.FOLDER_LEVEL ASC,
 				f.FOLDER_STEP  ASC
@@ -1098,9 +1109,12 @@
 									SELECT
 										d1.*
 									FROM
-										tbl_deptmaster d1
+										TBL_DEPTMASTER d1 LEFT JOIN tbl_addjobmaster a
+												 ON d1.CN = a.DEPTID AND d1.TENANT_ID = a.TENANT_ID
 									WHERE
-										d1.CN = 'test1' AND d1.TENANT_ID = #tenantId#
+										(a.CN = #userId# OR d1.CN = #deptId#)
+									AND
+										d1.TENANT_ID = #tenantId#
 								UNION
 									SELECT
 										d2.*
@@ -1249,21 +1263,9 @@
 			#level#                                                                                                                                  AS LEVEL,
 			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE s.CN = b.EXTENSIONATTRIBUTE1 AND s.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
 		FROM
-			(
-				SELECT
-					d1.*
-				FROM
-					tbl_addjobmaster a JOIN tbl_deptmaster d1 ON d1.CN = a.DEPTID AND d1.TENANT_ID = a.TENANT_ID
-				WHERE
-					a.CN = #userId# AND  a.TENANT_ID = #tenantId# 
-			UNION
-				SELECT
-					d2.*
-				FROM
-					tbl_deptmaster d2
-				WHERE
-					EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
-			) AS s
+			tbl_deptmaster s
+		WHERE
+			EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
 		ORDER BY
 			LEVEL, lpad(ifnull(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
 	</select>
