@@ -173,6 +173,7 @@ body {
 .lmPreview {
 	height: 100%;
 	overflow: auto;
+	position: relative;
 }
 
 /* 수아 style (letterEditPopUp.jsp) */

@@ -66,12 +66,12 @@
 		    var responseResult;
 		    var selectNode;
 		    var noResult = false; 
-			var pageType = "${pageType}"; //letter
-			var returnCompany = '${companyId}'; //companyId
+			var pageType = "${pageType}"; // letter
+			var returnCompany = '${companyId}'; // companyId
 			
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록  (/js/ezEmail/js_cross/letterBoxTree.js)
-			}); // document on ready
+			});
 			
 			// 순서 번경(위로 올리기)
 			function orderPrev() {
@@ -83,7 +83,6 @@
 				}
 				
 				select.prev().before(select);
-				
 			}
 			
 			// 순서 변경(아래로 내리기)
@@ -115,12 +114,10 @@
 							return;
 						}
 					});
-					
 				}
 				
 				alert("순서를 저장하였습니다");
 				getLetterList(selectNode.node.id);
-				
 			}
 			
 			// 편지지 이동
@@ -152,18 +149,64 @@
 				}
 			}
 
-			// 편지지 추가, 수정 btn 클릭 시  ---- btn -> this, type -> 추가=add
+			// 편지지 추가, 수정 btn 클릭 시     btn -> this, type -> 추가=add, modify일때 type 안받음
 			function letterEditPopUp(btn, type) {
-				// letterBoxNo, letterNo (letterNo -> 저장일 경우 -1)
 				var popUpType = type == "add" ? type : "modify"; // 클릭된 버튼 구분(추가 or 수정)
 				var letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
-				var letterNo = popUpType == "add" ? -1 : $(btn).parents("li").attr("data-letterno");
+				var letterNo = type == "add" ? -1 : $(btn).parents("li").attr("data-letterno");
 				
 				var url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&popUpType=" + popUpType + "&letterNo=" + letterNo;
-				var letterPopUp = window.open(url,"letterPopUp","width=890, height=660");
+				var letterPopUp = window.open(url, "letterPopUp", "width=890, height=660");
 			}
 			
-					
+			
+			$(".lmPreview > .lmPreViewIframe").on("mouseover",function(){
+				var letterName = $(this).attr("data-letterName");
+				var letterNameSpan = "<span class='preViewLetterName'>" + letterName + "</span>";
+				
+				$(".lmPreview").prepend(letterNameSpan);
+				$(".preViewLetterName").css({
+					"padding" : "3px 10px",
+					"color" : "white",
+					"background" : "rgba(0,0,0,0.5)",
+					"position" : "absolute",
+					"right" : "5px",
+					"top" : "5px",
+					"font-size" : "14px"
+				});
+				
+			})
+			
+			
+			
+			/* $(".lmPreview > .lmPreViewIframe").on("mousemove",function(event){
+				
+				var letterName = $(this).attr("data-letterName");
+				var letterNameSpan = "<span class='preViewLetterName'>" + letterName + "</span>";
+				
+				$(".lmPreview").prepend(letterNameSpan);
+				$(".preViewLetterName").css({
+					"padding" : "3px 10px",
+					"color" : "white",
+					"background" : "rgba(0,0,0,0.5)",
+					"position" : "absolute"
+				});
+				
+				var mouseX = event.pageX;
+				var mouseY = event.pageY;
+
+				$(".preViewLetterName").css({
+					"left" : mouseX + 10 + "px",
+					"top" : mouseY + 10 + "px"
+				});
+				
+				
+			}) */
+			
+			$(".lmPreview > .lmPreViewIframe, .lmPreview > span:not('.preViewLetterName')").on("mouseleave",function(){
+				$(".lmPreview .preViewLetterName").remove();
+			})
+				
 		</script>
 	</body>
 </html>

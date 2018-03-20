@@ -64,8 +64,11 @@
 								return;
 							}
 							
+							var editorMailContent = parent.message.GetEditorContent();
+							var letterHtml = data.letterHtml;
+							
 							parent.DivPopUpHidden();
-							parent.message.SetEditorContent(data.letterHtml);
+							parent.message.SetEditorContent(letterHtml + editorMailContent);
 						}
 					});
 					

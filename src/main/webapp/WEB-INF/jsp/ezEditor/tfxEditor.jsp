@@ -174,9 +174,9 @@
 	   		} else if (type == "MAILLETTER") {
 	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
 	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	
 	        	uploadFilePath = "/ezEditor/tfxUpload.do?type=" + type + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
-	        	uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=" + type + "&letterBoxNo=" 
-	        			+ letterBoxNo + "&letterId=" + letterId;
+	        	uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=" + type + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
 	   		}
 	    	
 	        xfe = new XFE({
