@@ -405,7 +405,7 @@
 	                    <option value="S_HOMEPAGE"><spring:message code='ezAddress.t293' /></option>
 	                </select>
 	                <input type="text" name="search_text" id="search_text" class="textarea" onkeypress="return search_keypress()" onmousedown="Search_Clear();">
-	                <a href="#" class="imgbtn"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>
+	                <a href="#" class="imgbtn" style="vertical-align: middle;"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>
 	        </tr>
 	    </table>
 	    <br>

@@ -3099,7 +3099,7 @@ public class EzEmailUtil {
 		String mailboxQuotaStr = "";
 		
 		if (mailboxUsage < mailboxQuota) {
-			mailPercent = (int)((mailboxUsage/mailboxQuota) * 100);
+			mailPercent = (int)Math.round((mailboxUsage/mailboxQuota) * 100);
 		} else {
 			mailPercent = 100;
 		}

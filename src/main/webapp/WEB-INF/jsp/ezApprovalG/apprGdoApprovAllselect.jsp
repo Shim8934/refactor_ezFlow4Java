@@ -96,7 +96,7 @@
 	    	      			async : false,
 	    	      			url : "/ezApprovalG/getLineMode.do",
 	    	      			data : {
-	    	      					docID : document.frm.chk[i].value.split("|")[0]
+	    	      					docID : document.frm.chk.value.split("|")[0]
 	    	      					},
 	    	      			success: function(xml){
 	    	      				pMode = xml;

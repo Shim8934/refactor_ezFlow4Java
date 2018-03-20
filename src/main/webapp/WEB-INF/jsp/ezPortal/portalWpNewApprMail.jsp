@@ -62,7 +62,7 @@
     						
     						<dd>
     							<div class="point_count">
-        							<span id="OTHER" >000</span>
+        							<span id="OTHER" >0</span>
         						</div>
         					</dd>
     					</dl>

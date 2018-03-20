@@ -500,8 +500,8 @@
 		            <p><span id="1tab1" divname="favoritelist"><spring:message code='ezApprovalG.G0001'/></span></p>
 		            <p><span id="1tab2" divname="formlist"><spring:message code='ezApprovalG.t1537'/></span></p>
 		            <div style="float: right; padding-top: 1.5px;"> 
-		                <a id="addfav" class="imgbtn" style="display:none; vertical-align:middle;"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
-		                <a id="delfav" class="imgbtn" style="vertical-align:middle;"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
+		                <a id="addfav" class="imgbtn" style="display:none;"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
+		                <a id="delfav" class="imgbtn"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
 		            </div>
 		        </div>
 		    </div>
@@ -509,7 +509,7 @@
 		        <tr>
 		            <td style="vertical-align: top;">
 		                <div class="border_gray" style="border-bottom: 0px">
-		                    <div id="divlvtFavForm" style="border: 0; WIDTH: 100%; HEIGHT: 354px; overflow-x: auto; overflow-y: auto; padding: 0px"></div>
+		                    <div id="divlvtFavForm" style="border: 0; WIDTH: 100%; HEIGHT: 354px; overflow:auto; padding: 0px"></div>
 		                </div>
 		            </td>
 		        </tr>
@@ -558,8 +558,8 @@
 			<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 				<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 			</div>
-		    <script type="text/javascript">
+	    <script type="text/javascript">
 		        Tab1_NewTabIni("tab1");
-		</script>
+		</script> 
 	</body>
 </html>

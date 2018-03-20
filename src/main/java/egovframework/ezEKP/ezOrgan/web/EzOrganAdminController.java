@@ -2712,7 +2712,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					.replace("${fax}", _vo.getFacsimileTelephoneNumber() == null ? "" : _vo.getFacsimileTelephoneNumber()).replace("${mobile}", _vo.getMobile() == null ? "" : _vo.getMobile())
 					.replace("${zipCode}", _vo.getPostalCode() == null ? "" : _vo.getPostalCode()).replace("${address}", _vo.getStreetAddress() == null ? "" : _vo.getStreetAddress());
 			
-			ezEmailService.setMailSignature(_vo.getTenantId(), _vo.getCn(), mailSignatureVO.getUseFlag(), content1, content2, content3);
+			ezEmailService.setMailSignature(vo.getTenantId(), _vo.getCn(), mailSignatureVO.getUseFlag(), content1, content2, content3);
 			logger.debug("InitMailSign set.");
 		}
 	}
