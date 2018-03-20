@@ -432,4 +432,23 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public void deleteJournalReply(Map<String, Object>map) {
 		insert("deleteJournalReply",map);
 	}
+
+	/**
+	 * 일지 조회자 리스트
+	 * @param map
+	 * @return 
+	 */
+	@SuppressWarnings("unchecked")
+	public List<JournalReceiverVO> getViewerList(Map<String, Object>map) {
+		return (List<JournalReceiverVO>) list("getViewerList",map);
+	}
+	
+	/**
+	 * 일지 조회자 리스트
+	 * @param map
+	 * @return 
+	 */
+	public String getViewerCount(Map<String, Object>map) {
+		return (String) select("getViewerCount",map);
+	}
 }

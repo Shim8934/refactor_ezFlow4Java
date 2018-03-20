@@ -483,13 +483,12 @@ public class EzJournalSBController {
 	/**
 	 * 업무일지 댓글 삭제하기
 	 * @param request
-	 * @param model
 	 * @param loginCookie
 	 * @return
 	 */
 	@RequestMapping(value="/ezJournal/removeJournalReply.do")
 	@ResponseBody
-	public String removeJournalReply(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+	public String removeJournalReply(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("saveJournalReply started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -505,5 +504,64 @@ public class EzJournalSBController {
 		logger.debug("saveJournalReply ended");
 		
 		return status;
+	}
+	
+	/**
+	 * 업무일지 조회자 리스트
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezJournal/JournalViewerList.do")
+	public String getJournalViewerList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("getJournalViewerList started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String journalId = request.getParameter("journalId");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId+"/viewer-count", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		
+		String currentPageStr = request.getParameter("currentPage");
+		if (currentPageStr==null || currentPageStr.equals("")) {
+			currentPageStr = "1";
+		}
+		int currentPage = Integer.parseInt(currentPageStr);
+		int totalCount =0;
+		if (status.equals("ok")) {			
+			totalCount = Integer.parseInt((String) resultBody.get("data"));
+		}
+		int listCnt = 10;
+		JournalPagination paging = new JournalPagination(totalCount,listCnt,10,currentPage);
+		model.addAttribute("paging",paging);
+		
+		param.put("startCount", paging.getStartCount());
+		param.put("listCnt", listCnt);
+		
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId+"/viewer", param, request,"get",null);
+		status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			JSONArray viewerList=  (JSONArray) resultBody.get("data");
+			
+			for (Object viewer : viewerList) {
+				JSONObject JOViewer = (JSONObject)viewer;
+				String viewDate = (String) JOViewer.get("date");
+				viewDate = commonUtil.getDateStringInUTC(viewDate, userInfo.getOffset(), false);
+				logger.debug("며띠니????????????????????????"+viewDate);
+				JOViewer.put("date", viewDate);
+			}
+			
+			model.addAttribute("viewerList",viewerList);
+		}
+		
+		logger.debug("getJournalViewerList ended");
+		
+		return "/ezJournal/journalViewerList";
 	}
 }

@@ -360,4 +360,24 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public void removeJorunalReply(String journalId, String replyId, String userId, int tenantId) throws Exception;
+	
+	/**
+	 * 일지 조회자 리스트
+	 * @param journalId
+	 * @param listCnt 
+	 * @param startCount 
+	 * @param tenantId
+	 * @return 
+	 * @throws Exception
+	 */
+	public List<JournalReceiverVO> getJournalViewerList(String journalId, String startCount, String listCnt, int tenantId) throws Exception;
+	
+	/**
+	 * 일지 조회자 몇명?
+	 * @param journalId
+	 * @param tenantId
+	 * @return 
+	 * @throws Exception
+	 */
+	public String getJournalViewerCount(String journalId, int tenantId) throws Exception;
 }

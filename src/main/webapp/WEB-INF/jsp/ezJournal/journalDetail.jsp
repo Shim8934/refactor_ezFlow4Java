@@ -41,6 +41,8 @@
 		        	</c:if>
 <!-- 		        	메일로발송 -->
 	        		<li><span onclick=''> <spring:message code='ezJournal.t103' /></span></li>
+<!-- 		        	조회자정보 -->
+	        		<li><span onclick='journalViewerList();'> <spring:message code='ezBoard.t1006' /></span></li>
 		        	<c:if test="${journal.mine eq 'yes' }">
 <!-- 		        	재사용 -->
 	        		<li><span onclick=''> <spring:message code='ezQuestion.t700' /></span></li>
@@ -222,6 +224,20 @@
 		        var pLeft = (pwidth - 890) / 2;
 		        var szUrl = "/ezEmail/mailWrite.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&cmd=board";
 		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+		    }
+		    
+		    //조회자정보
+		    function journalViewerList(currentPage) {
+		    	if (!currentPage) {
+					currentPage = "";
+				}
+		        var heigth = window.screen.availHeight;
+		        var width = window.screen.availWidth;
+		        var left = (width - 500) / 2;
+		        var top = (heigth - 300) / 2;
+		        var szHref = "/ezJournal/JournalViewerList.do?journalId=" + journalId+"&currentPage="+currentPage;
+		        var strFeature = "status:no;dialogHeight: 500px;dialogWidth: 520px;help: no;resizable:yes";
+	            DivPopUpShow(520, 420, szHref);
 		    }
 		    
 		</script>

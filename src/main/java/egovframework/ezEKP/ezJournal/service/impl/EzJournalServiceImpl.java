@@ -997,4 +997,34 @@ public class EzJournalServiceImpl implements EzJournalService{
 		logger.debug("getReceiverList ended.");
 		return receiverList;
 	}
+
+	@Override
+	public List<JournalReceiverVO> getJournalViewerList(String journalId,String startCount, String listCnt, int tenantId) throws Exception {
+		logger.debug("getJournalViewerList started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("journalId", journalId);
+		map.put("tenantId", tenantId);
+		map.put("startCount", startCount);
+		map.put("listCnt", listCnt);
+		
+		List<JournalReceiverVO> viewerList = ezJournalDAO.getViewerList(map);
+		logger.debug("조회자리스트 확인용 : " + viewerList);
+		logger.debug("getJournalViewerList ended.");
+		return viewerList;
+	}
+
+	@Override
+	public String getJournalViewerCount(String journalId ,int tenantId) throws Exception {
+		logger.debug("getJournalViewerCount started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("journalId", journalId);
+		map.put("tenantId", tenantId);
+		
+		String viewerCount = ezJournalDAO.getViewerCount(map);
+		logger.debug("조회자몇명 ?   : " + viewerCount);
+		logger.debug("getJournalViewerCount ended.");
+		return viewerCount;
+	}
 }

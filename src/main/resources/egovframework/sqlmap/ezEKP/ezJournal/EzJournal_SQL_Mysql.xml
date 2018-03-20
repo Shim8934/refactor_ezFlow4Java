@@ -159,7 +159,9 @@
 	<resultMap class="receiverVO" id="receiverVO">
 		<result property="userId"			column="user_id"/>
 		<result property="userName"			column="user_name"/>			
-		<result property="userName2"		column="user_name2"/>
+		<result property="deptName"			column="dept_name"/>
+		<result property="jikwi"			column="jikwi"/>
+		<result property="date"				column="date"/>
 	</resultMap>
 
 	<!-- 양식함 리스트 세럭트 -->
@@ -669,7 +671,7 @@
 			and j.journal_status=#status#
 		</isNotEmpty>
 		<isEmpty property="status">
-			and j.journal_status is null
+			and NULLIF(j.journal_status,'') is null
 		</isEmpty>
 		<isNotEmpty property="formId">
 			and f.form_id=#formId#
@@ -1112,14 +1114,12 @@
 		and journal_id = #journalId#
 	</delete>
 	
-	<!-- 수신자 리스트 가져오기 -->
-	<select id="getReceiverList" parameterClass="map" resultMap="receiverVO">
+	<!-- 수신자 리스트 갯수 가져오기 -->
+	<select id="getReceiverCount" parameterClass="map" resultClass="String">
 		select
-			b.user_id as user_id,
-			a.DISPLAYNAME as user_name,
-			a.DISPLAYNAME2 as user_name2
+			count(b.user_id) as recvCount
 		from 
-			tbl_usermaster a join tbl_journal_recv b 
+			tbl_usermaster a inner join tbl_journal_recv b 
 		on 
 			(a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
 		where 
@@ -1128,5 +1128,53 @@
 			a.tenant_id = #tenantId#
 	</select>
 	
-
+	<!-- 수신자 리스트 가져오기 -->
+	<select id="getReceiverList" parameterClass="map" resultMap="receiverVO">
+		select
+			b.user_id as user_id,
+			a.DISPLAYNAME as user_name,
+			a.DESCRIPTION as dept_name,
+			a.TITLE as jikwi,
+			substring(ifnull(b.recv_date, '-'),1,16) as date
+		from 
+			tbl_usermaster a join tbl_journal_recv b 
+		on 
+			(a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
+		where 
+			b.journal_id = #journalId#
+		and
+			a.tenant_id = #tenantId#
+		<isNotEmpty property="startCount">
+			<isNotEmpty property="listCnt">
+				limit
+				#startCount#,#listCnt#
+			</isNotEmpty>
+		</isNotEmpty>
+	</select>
+	
+	<!-- 조회자 리스트 갯수 가져오기 -->
+	<select id="getViewerCount" parameterClass="map" resultClass="String">
+		select
+		count(u.cn) as viewCount
+		from jmocha.tbl_journal_view v
+		inner join jmocha.tbl_usermaster u on(v.tenant_id=u.TENANT_ID and u.CN=v.user_id)
+		where v.journal_id=#journalId#
+		and v.tenant_id =#tenantId#
+	</select>
+	
+	<!-- 조회자 리스트 가져오기 -->
+	<select id="getViewerList" parameterClass="map" resultMap="receiverVO">
+		select
+		u.cn as user_id,
+		u.DISPLAYNAME as user_name,
+		u.DESCRIPTION as dept_name,
+		u.TITLE as jikwi,
+		substring(v.view_date,1,16) as date
+		from jmocha.tbl_journal_view v
+		inner join jmocha.tbl_usermaster u on(v.tenant_id=u.TENANT_ID and u.CN=v.user_id)
+		where v.journal_id=#journalId#
+		and v.tenant_id =#tenantId#
+		limit
+		#startCount#,#listCnt#
+	</select>
 </sqlMap>

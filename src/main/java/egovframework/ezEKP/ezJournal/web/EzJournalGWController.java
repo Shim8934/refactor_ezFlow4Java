@@ -1599,4 +1599,64 @@ public class EzJournalGWController {
 		LOGGER.debug("ezJournal G/W getRecvJournalCount ended.");
 		return result;
 	}
+	
+	/**
+	 * 업무일지 G/W [GET] 일지 조회자 리스트 
+	 */
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/viewer", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getViewerList(@PathVariable String journalId,HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezJournal G/W getRecvJournalCount started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String startCount = request.getParameter("startCount");
+			String listCnt = request.getParameter("listCnt");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			List<JournalReceiverVO> viewerList= ezJournalService.getJournalViewerList(journalId,startCount,listCnt, info.getTenantId());
+			LOGGER.debug("viewerList.size***********"+viewerList.size());
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", viewerList);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezJournal G/W getRecvJournalCount ended.");
+		return result;
+	}
+	
+	/**
+	 * 업무일지 G/W [GET] 일지 조회자 갯수 
+	 */
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/viewer-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getViewerCount(@PathVariable String journalId,HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezJournal G/W getRecvJournalCount started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			String viewerCount= ezJournalService.getJournalViewerCount(journalId, info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", viewerCount);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezJournal G/W getRecvJournalCount ended.");
+		return result;
+	}
 }
