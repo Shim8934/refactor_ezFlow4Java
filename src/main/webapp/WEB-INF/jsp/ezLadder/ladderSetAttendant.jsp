@@ -151,7 +151,7 @@
 	            var totalLen = totalRows.length;
 	
 	            var stridlength = 0;
-	            if (RetValue != undefined && RetValue["id"] != undefined && RetValue["id"] != "")
+	            if (RetValue != undefined && RetValue != null && RetValue["id"] != undefined && RetValue["id"] != "")
 	                stridlength = RetValue["id"].length;
 	
 	            for (var i = 0; i < stridlength; i++) {
@@ -169,24 +169,24 @@
 	
 	                strName = RetValue["name"][i];
 	                strId = RetValue["id"][i];
-	                strName1 = RetValue["name1"][i];
+	                /* strName1 = RetValue["name1"][i]; */
 	                strName2 = RetValue["name2"][i];
-	                strDeptName1 = RetValue["deptname"][i];
-	                strDeptName2 = RetValue["deptname2"][i];
+	                /* strDeptName1 = RetValue["deptname"][i];
+	                strDeptName2 = RetValue["deptname2"][i]; */
 	                strPic = RetValue["pic"][i];
 	
 	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName1 + "]]></DATA2>";
+	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
-	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>";
-	                pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
+	                /* pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
+	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>"; */
+	                /* pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>"; */
 	                pparsingXML = pparsingXML + "<DATA9><![CDATA[" + strPic + "]]></DATA9>";
-	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName1 + "]]></VALUE></CELL></ROW>";
+	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                
 	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                var Resultxml = loadXMLString(pparsingXML2);
-	
+	                
 	                var listview = new ListView();
 	                listview.LoadFromID("MsgToList");
 	
@@ -722,10 +722,10 @@
 		                    }
 		                }
 		                if(AttendantXML.length !== 0) {
-			                parsingXMLUserList(AttendantXML);
+			                parsingXMLUserList(AttendantXML, "real-xml");
 		                }
 		                if(overlapAttendantXML.length !== 0) {
-		                	checkAttendant(overlapAttendantXML, function(overlapAttendantXML, attendType) {
+		                	popSelectUsertype(overlapAttendantXML, function(overlapAttendantXML, attendType) {
 			                	parsingXMLUserList(overlapAttendantXML, attendType);
 		                	});
 		                }
@@ -825,7 +825,7 @@
 					strName = userlist[i]["name1"];
 					strName2 = userlist[i]["name2"];
 					strEmail = userlist[i]["name1"];
-					if(attendtype === "anonyuser") {
+					if(attendtype === "anony-xml") {
 						strId = "anonyAttendant";
 					} else {
 						strId = userlist[i]["id"];
@@ -1287,8 +1287,9 @@
 		    
 		    var rtn;
 		    function save_userlist() {
-				rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname1": new Array(), "deptname2": new Array(), "pic": new Array() };
-		    	
+				/* rtn = { "id": new Array(), "name": new Array(), "name2": new Array(), "pic": new Array(), "item": new Array() }; */
+		    	rtn = [];
+				
 		    	var listid = "MsgToList"; 
 		    	var selList = new ListView();
 		        selList.LoadFromID(listid);
@@ -1298,20 +1299,17 @@
 		        
 		        for(var i = 0; i < totalLen; i++) {
 		        	if(GetAttribute(totalRows[i], "DATA1").substring(0, 14) === "anonyAttendant") {
-		        		rtn["id"][i] = "anonyAttendant_" + i;
+		        		rtn[i] = { "id": "anonyAttendant_" + i, "name": $("#MsgToList_TR_" + (i + 1) + " input").val(), "name2": $("#MsgToList_TR_" + (i + 1) + " input").val(), "pic": "" };
+		        		/* rtn["id"][i] = "anonyAttendant_" + i;
 		        		rtn["name"][i] = $("#MsgToList_TR_" + (i + 1) + " input").val();
-		        		rtn["name1"][i] = $("#MsgToList_TR_" + (i + 1) + " input").val();
-		        		rtn["name2"][i] = $("#MsgToList_TR_" + (i + 1) + " input").val();
+		        		rtn["name2"][i] = $("#MsgToList_TR_" + (i + 1) + " input").val(); */
 		        	} else {
-			        	rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
+		        		rtn[i] = { "id": GetAttribute(totalRows[i], "DATA1"), "name": GetAttribute(totalRows[i], "DATA2"), "name2": GetAttribute(totalRows[i], "DATA3"), "pic": GetAttribute(totalRows[i], "DATA9") };
+			        	/* rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
 			            rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
-			            rtn["name1"][i] = GetAttribute(totalRows[i], "DATA2");
-			            rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3");
+			            rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3"); */
 		        	}
-		            rtn["deptname"][i] = GetAttribute(totalRows[i], "DATA4");
-		            rtn["deptname1"][i] = GetAttribute(totalRows[i], "DATA4");
-		            rtn["deptname2"][i] = GetAttribute(totalRows[i], "DATA5");
-		            rtn["pic"][i] = GetAttribute(totalRows[i], "DATA9");
+		            /* rtn["pic"][i] = GetAttribute(totalRows[i], "DATA9"); */
 		        }
 		    }
 		    

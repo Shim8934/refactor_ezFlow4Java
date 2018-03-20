@@ -11,24 +11,20 @@ function add_user_change_ulsize(usernum) {
 }
 
 /** 중복 처리 팝업 */
-function checkAttendant(overlapAttendantList, addfunction) {
-	console.log("checkAttendant");
+function popSelectUsertype(attendantList, setFunc) {
+	console.log("popSelectUsertype");
    	$("#dialog").dialog({
    		modal: true,
    		buttons: [{
    			text: "조직도에서추가",
    			click: function() { // 조직도에서 추가
-   				if(typeof addfunction == "function") {
-   					addfunction(overlapAttendantList);
-   				}
+   				setFunc(attendantList, "real-xml");
    				$(this).dialog( "close" );
    			} 
    		}, {
    			text: "익명으로추가",
    			click: function() { // 익명으로 추가
-   				if(typeof addfunction == "function") {
-   					addfunction(overlapAttendantList, "anonyuser");
-   				}
+				setFunc(attendantList, "anony-xml");
    				$(this).dialog( "close" );
    			}
    		}, {

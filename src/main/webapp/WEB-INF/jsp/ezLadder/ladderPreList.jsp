@@ -84,9 +84,24 @@
 				console.log(retLad);
 				console.log(retLadLine);
 				console.log(retFunc);
-				if(typeof retFunc !== "undefined" && retFunc !== "") {
-					retFunc(retLad, retLadLine);
+				
+				/* var retJson = { "id": [], "name": [], "name2": [], "item": [] };
+				for(var i = 0; i < retLadLine.length; i++) {
+					retJson["id"][i] = retLadLine[i]["userId"];
+					retJson["name"][i] = retLadLine[i]["userName"];
+					retJson["name2"][i] = retLadLine[i]["userName2"];
+					retJson["item"][i] = retLadLine[i]["item"];
+				} */
+				
+				var retJson = [];
+				for(var i = 0; i < retLadLine.length; i++) {
+					retJson[i] = { "id": retLadLine[i]["userId"], "name": retLadLine[i]["userName"], "name2": retLadLine[i]["userName2"], "item": retLadLine[i]["item"] };
 				}
+				
+				if(typeof retFunc !== "undefined" && retFunc !== "") {
+					retFunc(retLad, retJson);
+				}
+				
 				window.close();
 			}
 		</script>
