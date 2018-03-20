@@ -207,34 +207,22 @@ function deleteLetterBox() {
 	
 	if (realCheck == true) {
 		$('#divTree').jstree().delete_node($('#'+letterBoxNo));
-		var query = "/admin/ezEmail/deleteLetterBox.do?letterBoxNo=" + letterBoxNo;
-		
 		$.ajax({
 			type : "POST",
-			url : query,
+			url : "/admin/ezEmail/deleteLetterBox.do?letterBoxNo=" + letterBoxNo,
 			datatype : 'json',
 			success : function(data) {
 				
-				
-				
-				/*for (var i = 0; i < data.legnth; i++) {
-					var letterId = data[i].letterId;
-					var letterBoxNo = data[i].letterBoxNo;
-					var letterNo = data[i].letterNo;
-					
-					$.ajax({
-						type:"POST",
-						async: false,
-						data:{letterNo:letterNo,letterBoxNo:letterBoxNo,letterId:letterId},
-						url:"/admin/ezEmail/deleteLetter",
-						success:function(){
-							console.log("편지지 삭제됨");
-						},
-						error:function() {
-							console.log("편지지 삭제안됨");
-						}
-					});
-				}*/
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezEmail/deleteLetterFile?letterBoxNo=" + letterBoxNo,
+					datatype : 'json',
+					success : function(data) {},
+					error : function(data) {
+						alert("error");
+						console.log(data);
+					}
+				});
 				
 				alert("삭제를 완료하였습니다.");
 				refreshLetterBox();

@@ -669,7 +669,7 @@ public class EzEmailAdminLetterController {
 		filePath = filePath + commonUtil.separator + letterBoxNo;
 		
 		try {
-			deleteAllFiles(filePath);
+			deleteDirectory(new File(realPath + filePath));
 			
 		} catch (Exception e) {
 			returnStr = "ERROR";
@@ -680,35 +680,22 @@ public class EzEmailAdminLetterController {
 	}
 	
 	// 하위 폴더 및 파일까지 삭제하는 함수 (재은)
-	public static void deleteAllFiles(String path) {
-		logger.debug("deleteAllFiles started.");
-		logger.debug("path=" + path);
-		
-		File file = new File(path);
-		File[] tempFile = file.listFiles();
-		logger.debug(tempFile.toString());
-		
-		if (tempFile.length > 0) {
-			
-			for (int i = 0; i < tempFile.length; i++) {
-				
-				if (tempFile[i].isFile()) {
-					tempFile[i].delete();
-				} else {
-					deleteAllFiles(tempFile[i].getPath()); //재귀함수
-				}
-				tempFile[i].delete();
-			} // end for
-			
-			file.delete();
+	public static boolean deleteDirectory(File path) {
+		if (!path.exists()) {
+			return false;
 		}
 		
-		logger.debug("deleteAllFiles ended.");
+		File[] files = path.listFiles();
+		for (File file : files) {
+			if (file.isDirectory()) {
+				deleteDirectory(file);
+			} else {
+				file.delete();
+			}
+		}
 		
+		return path.delete();
 	}
-	
-	
-	
 	
 	/**
 	 * 편지지 삭제 (수아)
