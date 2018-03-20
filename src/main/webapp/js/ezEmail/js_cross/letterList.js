@@ -46,20 +46,23 @@ $(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
 		
 		$.ajax({
 			type:"POST",
-			data:{letterNo:letterNo,letterBoxNo:letterBoxNo,letterId:letterId},
+			data:{
+				letterNo:letterNo,
+				letterBoxNo:letterBoxNo,
+				letterId:letterId
+			},
 			url:"/admin/ezEmail/deleteLetter",
 			success:function(){
 				getLetterList(letterBoxNo);
 				
 				$(".lmPreViewTxt").css("display","block");
+				$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
 				$(".lmPreViewIframe").attr("src","");
 				$(".lmPreViewIframe").css("display","none");
-				$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
 				alert("삭제하였습니다.");
 			}
 		});
 	}
-	
 });
 
 // 편지지 선택 (개별 조회)
@@ -99,7 +102,7 @@ function readLetter(letterNo) {
 	});
 }
 
-// 편지지 미리보기 1
+// 편지지 미리보기 
 function letterPreView(letterNo) {
 	$.ajax({
 		type:"POST",
@@ -114,9 +117,14 @@ function letterPreView(letterNo) {
 			if (filePath == "ERROR") {
 				txtDisplay = "block";
 				iframeDisplay = "none";
+				
+				$(".lmPreViewIframe").attr("src", "");
 				$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
 			} else {
 				preViewIframe(filePath);
+				
+				$(".lmPreViewTxt").text("");
+				$(".lmPreViewIframe").attr("data-letterName", data.displayname);
 			}
 			
 			$(".lmPreViewTxt").css("display",txtDisplay);
@@ -127,7 +135,6 @@ function letterPreView(letterNo) {
 
 function preViewIframe(filePath) {
 	var path = filePath + "?rand=" + Math.random() + "&d=" + new Date().getSeconds();
-	console.log(path);
 	
 	$(".lmPreViewIframe").attr("src", path);
 }

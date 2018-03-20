@@ -56,13 +56,10 @@
 		        	return;
 		        }		        
 		        
-		        // 편지지 추가, 수정 기능에서 넘길 데이터가 달라서 비교 (수아)
 		        if (type == "MAILLETTER") {
 		        	var letterId = parent.popLetterId // letterId(UUID)
 		        	var letterBoxNo = parent.popLetterBoxNo // letterBoxNo
 		        	
-		        	// class='letterPopUpData'
-		        	//$("#form").append("<input type='hidden' value='letterPopUp' class='letterPopUpData' name='letterPopUp'>");
 		        	$("#form").append("<input type='hidden' value='" + letterId + "' class='letterPopUpData' name='letterId'>");
 		        	$("#form").append("<input type='hidden' value='" + letterBoxNo + "' class='letterPopUpData' name='letterBoxNo'>");
 		        }
@@ -74,10 +71,9 @@
 		        document.form.file1.value = "";
 		        
 		        // 편지지 추가, 수정할 때 추가된 input들 삭제
-		        if ($("#form").find(".letterPopUpData")){
+		        if ($("#form").find(".letterPopUpData")) {
 		        	$(".letterPopUpData").remove();
 		        }
-		        
 		    }
 		
 		    var fileinfo = "";
