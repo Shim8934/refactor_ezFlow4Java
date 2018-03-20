@@ -15,7 +15,7 @@
 			var companyId = "${companyId}";
 			var typeId = "${typeInfo.typeId}";
 			var saveMode = "";
-			var formHtmlList = "${formList}";
+			var formHtmlList = '${formList}';
 // 			var formHtmlList = "<c:out value = '${formList}' />";
 			
 	        window.onload = window_onload;

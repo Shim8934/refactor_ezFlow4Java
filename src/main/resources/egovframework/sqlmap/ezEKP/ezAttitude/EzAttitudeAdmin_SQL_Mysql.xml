@@ -36,7 +36,7 @@
 		<result property="typeName2"				column="TYPE_NAME2"				columnIndex="5"/>
 		<result property="isuse"					column="ISUSE"					columnIndex="6"/>
 		<result property="imgPath"					column="IMG_PATH"				columnIndex="7"/>
-		<result property="parentId"					column="PARENTID"				columnIndex="8"/>
+		<result property="parentId"					column="PARENT_ID"				columnIndex="8"/>
 		<result property="formId"					column="FORM_ID"				columnIndex="9"/>
 	</resultMap>
 	
@@ -190,7 +190,7 @@
 				TYPE_NAME2,
 				ISUSE,
 				IFNULL(IMG_PATH,'') AS IMG_PATH,
-				IFNULL(PARENTID,'') AS PARENTID,
+				IFNULL(PARENT_ID,'') AS PARENT_ID,
 				FORM_ID
 			FROM
 				TBL_ATTITUDE_TYPE
@@ -230,7 +230,7 @@
 				TYPE_NAME2,
 				ISUSE,
 				IFNULL(IMG_PATH,'') AS IMG_PATH,
-				IFNULL(PARENTID,'') AS PARENTID,
+				IFNULL(PARENT_ID,'') AS PARENT_ID,
 				FORM_ID
 			FROM
 				TBL_ATTITUDE_TYPE
@@ -286,5 +286,14 @@
 				TYPE_ID = #typeId#
 		]]>
 	</update>
+	
+	<insert id="ezAttitudeAdminDAO.insertAttitudeType" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_ATTITUDE_TYPE
+				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, IMG_PATH, PARENT_ID, FORM_ID)
+			VALUES
+				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #imgPath#, 'A05', #formId#)
+		]]>
+	</insert>
 	
 </sqlMap>

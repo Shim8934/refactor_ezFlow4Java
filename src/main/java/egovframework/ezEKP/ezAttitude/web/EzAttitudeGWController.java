@@ -656,13 +656,22 @@ public class EzAttitudeGWController {
 	 * G/W 근태관리 [POST] 근태유형 추가
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject insertAttitudeType(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes] started.");
+	public JSONObject insertAttitudeType(@PathVariable String companyId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetypes] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
+			String typeId = request.getParameter("typeId");
+			String typeName = request.getParameter("typeName");
+			String typeName2 = request.getParameter("typeName2");
+			String imgPath = request.getParameter("imgPath");
+			String formId = request.getParameter("formId");
+			
+			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, imgPath, formId, info.getTenantId(), companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -672,7 +681,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
 		return result;
 	}
 	

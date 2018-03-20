@@ -324,12 +324,28 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void insertAttitudeType(String typeName, String typeName2,
-			String imgPath, String formId, String parentId, int tenantId,
+	public void insertAttitudeType(String typeId, String typeName, String typeName2,
+			String imgPath, String formId, int tenantId,
 			String companyId) throws Exception {
 		LOGGER.debug("insertAttitudeType started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("typeId", typeId);
+		map.put("typeName", typeName);
+//		if(!typeName2.equals("") || typeName2 != null){
+//			map.put("typeName2", typeName2);
+//		}
+//		if(!imgPath.equals("") || imgPath != null){
+//			map.put("imgPath", imgPath);
+//		}
+		map.put("typeName2", typeName2);
+		map.put("imgPath", imgPath);
+		map.put("formId", formId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezAttitudeDAO.insertAttitudeType(map);
 		
 		LOGGER.debug("insertAttitudeType ended");
 	}
