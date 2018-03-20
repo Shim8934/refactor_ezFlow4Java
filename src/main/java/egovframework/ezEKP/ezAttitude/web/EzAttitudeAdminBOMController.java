@@ -341,17 +341,25 @@ public class EzAttitudeAdminBOMController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
 		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+				
 		String status = resultBody.get("status").toString();
 		
-		Object viewInfo = "";
+		JSONObject data = new JSONObject();
+		JSONArray formList = new JSONArray();
+		String typeId = "";
+		
 		if (status.equals("ok")) {
-			viewInfo = resultBody.get("data");
+			data = (JSONObject) resultBody.get("data");
+			formList = (JSONArray) data.get("formList");
+			typeId = (String) data.get("typeId");
 			
-			model.addAttribute("viewInfo", viewInfo);
+			model.addAttribute("formList", formList);
+			model.addAttribute("typeId", typeId);
 			model.addAttribute("companyId", companyId);
 		}
 		
@@ -387,30 +395,25 @@ public class EzAttitudeAdminBOMController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-//		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-//		
-//		JSONParser jp = new JSONParser();
-//		
-//		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-//		
-//		String status = resultBody.get("status").toString();
-//		
-//		if (status.equals("ok")) {
-//			JSONObject dataObject = (JSONObject) resultBody.get("data");
-//			model.addAttribute("typeInfo", dataObject);
-//		}
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		JSONParser jp = new JSONParser();
 		
-		JSONObject resultBody = result.getBody();
-		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+				
 		String status = resultBody.get("status").toString();
 		
-		Object viewInfo = "";
+		JSONObject data = new JSONObject();
+		JSONArray formList = new JSONArray();
+		JSONObject typeInfo = new JSONObject();
+		
 		if (status.equals("ok")) {
-			viewInfo = resultBody.get("data");
+			data = (JSONObject) resultBody.get("data");
+			formList = (JSONArray) data.get("formList");
+			typeInfo = (JSONObject) data.get("typeInfo");
 			
-			model.addAttribute("viewInfo", viewInfo);
+			model.addAttribute("formList", formList);
+			model.addAttribute("typeInfo", typeInfo);
 			model.addAttribute("companyId", companyId);
 		}
 		
@@ -434,7 +437,7 @@ public class EzAttitudeAdminBOMController {
 		String companyId = request.getParameter("companyId");
 
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
-		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetype/" + typeId + "/iconupload";
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/" + typeId + "/iconupload";
 		
 		URI uri = URI.create(url); 
 //		int maxSize = 0; 

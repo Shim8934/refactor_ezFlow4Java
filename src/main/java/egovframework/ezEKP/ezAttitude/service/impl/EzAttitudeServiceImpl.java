@@ -327,8 +327,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void insertAttitudeType(String typeName, String typeName2,
 			String imgPath, String formId, String parentId, int tenantId,
 			String companyId) throws Exception {
-		// TODO Auto-generated method stub
+		LOGGER.debug("insertAttitudeType started");
 		
+		
+		
+		LOGGER.debug("insertAttitudeType ended");
 	}
 	
 	@Override
@@ -359,6 +362,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("updateAttitudeType started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int idx = imgPath.lastIndexOf("/");
+		imgPath = imgPath.substring(idx+1);
 		
 		map.put("typeId", typeId);
 		map.put("typeName", typeName);

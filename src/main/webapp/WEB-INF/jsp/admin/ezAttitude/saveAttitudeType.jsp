@@ -12,16 +12,32 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
-			var companyId = "<c:out value = '${companyId}' />";
-			var typeId = "<c:out value = '${viewInfo.typeInfo.typeId}' />";
+			var companyId = "${companyId}";
+			var typeId = "${typeInfo.typeId}";
 			var saveMode = "";
+			var formHtmlList = "${formList}";
+// 			var formHtmlList = "<c:out value = '${formList}' />";
 			
 	        window.onload = window_onload;
 	        function window_onload() {
-	            $('#formSelect').val("<c:out value = '${viewInfo.typeInfo.formId}' />").prop('selected', true);
-	            
+	            //수정모드일 때
 	            if(typeId != "") {
 	            	saveMode = "modify";
+	            	
+	            	//파일경로
+	            	var imgFilePath = "${typeInfo.imgPath}";
+	            	if (imgFilePath != "/images/default_pic.jpg") {
+		            	var idx = imgFilePath.lastIndexOf("=");
+		            	imgFilePath = imgFilePath.substring(idx+1);
+		            	$('#imagefile').val(imgFilePath);
+	            	}
+	            	
+	            	$('#formSelect').val("<c:out value = '${typeInfo.formId}' />").prop('selected', true);
+	            	$('#formSelect').prop("disabled", true);
+	            } else {
+	    			typeId = "<c:out value = '${typeId}' />";
+	    			
+	            	$('#formSelect').val(0).prop('selected', true);
 	            }
 	        }
 	        
@@ -39,10 +55,6 @@
 	    		    alert("사진이미지" + " 파일을 선택하십시오.");
 	        		$("#file1").value = "";
 	    		} else {
-	    			if (typeId == null || typeId =="") {
-	    				typeId = "<c:out value = '${viewInfo.typeId}' />";
-	    			}
-	    			
 	    			var frm = document.getElementById('form');
 		    		frm.action = "/ezAttitude/iconUpload.do";
 		    		frm.enctype="multipart/form-data";
@@ -75,9 +87,22 @@
 	    		}
 	    		return check;
 			}
-	        		    
 //여기까지 파일	    
-			
+	
+			function form_change() {
+				var formValue = $('#formSelect').val();
+				var formHtml = "";
+// 				alert(typeof(formHtmlList));	
+				$.each(formHtmlList, function(idx, formInfo) {
+					if (formInfo.formId == formValue) {
+						formHtml = formInfo.formHtml;
+					}
+				})
+
+
+				$('#preForm').html(formHtml);
+			}
+
 			function OK_Click() {
 				$.ajax({
 		        	type : "POST",
@@ -91,7 +116,6 @@
 		        		typeName2 : $('#typeName2').val(),
 		        		imgPath : $('#imagefile').val(),
 		        		formId : $('#formSelect').val()
-		        		
 		        	},
 		        	success : function (result) {
 		        			window.opener.company_change();
@@ -113,12 +137,12 @@
 			        	<tr class="primary">
 <%-- 			          		<th><c:out value = '${langPrimary}' /></th> --%>
 			          		<th>한글</th>
-			          		<td><input id="typeName" type="text" style="width:98%" value="<c:out value = '${viewInfo.typeInfo.typeName}' />"></td>
+			          		<td><input id="typeName" type="text" style="width:98%" value="<c:out value = '${typeInfo.typeName}' />"></td>
 			        	</tr>
 			        	<tr class="secondary">
 <%-- 			          		<th><c:out value = '${langSecondary}' /></th> --%>
 			          		<th>영문</th>
-			          		<td><input id="typeName2" type="text" style="width:98%" value="<c:out value = '${viewInfo.typeInfo.typeName2}' />"></td>
+			          		<td><input id="typeName2" type="text" style="width:98%" value="<c:out value = '${typeInfo.typeName2}' />"></td>
 			        	</tr>
 			    	</table>
     			</td> 
@@ -132,7 +156,7 @@
   						<tr>
 	  						<td style="width:88%">사진크기는 ~이하로 해주세요!</td>
 	  						<td rowspan="2" style="padding-top: 2px;">
-	  							<img id="preview" name="preview" src="/images/default_pic.jpg" width="40px;" height="40px;" alt="" border="0">
+	  							<img id="preview" name="preview" src="${typeInfo.imgPath}" width="40px;" height="40px;" alt="" border="0">
 	  						</td>
 	  					</tr>
   						<tr>
@@ -144,8 +168,8 @@
   			<tr> 
     			<th>html폼</th> 
     			<td>
-					<select id="formSelect" style="width:80px;">
-						<c:forEach var="item" items="${viewInfo.formList}">
+					<select id="formSelect" style="width:80px;" onchange="form_change()">
+						<c:forEach var="item" items="${formList}">
 							<option value="<c:out value='${item.formId}'/>"><c:out value='${item.formName}'/></option>
 						</c:forEach>
 					</select> 
@@ -153,7 +177,7 @@
   			</tr>
   			<tr> 
     			<th>양식 미리보긩</th>     
-    			<td style="padding:0px; height:320px"></td>
+    			<td id="preForm" style="padding:0px; height:320px"></td>
   			</tr>
 		</table> 
 		<div class="btnposition"> 

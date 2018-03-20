@@ -565,6 +565,15 @@ public class EzAttitudeGWController {
 			
 			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, info.getTenantId());
 			
+			//imgPath 셋팅
+			for (AttitudeTypeVO typeInfo : attitudeTypeList) {
+				String imgPath = typeInfo.getImgPath();
+				if (!imgPath.equals("")) {
+					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+					typeInfo.setImgPath(imgPath);
+				}
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", attitudeTypeList);
@@ -654,6 +663,7 @@ public class EzAttitudeGWController {
 		
 		try{
 			
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");
@@ -681,6 +691,15 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			AttitudeTypeVO typeInfo = ezAttitudeService.getAttitudeTypeInfo(info.getTenantId(), companyId, attitudetypeId);
+			//imgPath 셋팅
+			String imgPath = typeInfo.getImgPath();
+			if (!imgPath.equals("")) {
+				imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+				typeInfo.setImgPath(imgPath);
+			} else {
+				typeInfo.setImgPath("/images/default_pic.jpg");
+			}
+
 			//formList 구하기
 			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
 			
@@ -705,7 +724,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateAttitudeType(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
-		
+		//TODO
 		JSONObject result = new JSONObject();
 		
 		try{
