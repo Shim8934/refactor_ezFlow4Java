@@ -321,7 +321,7 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO.getCompanyFolderId" resultMap="folderVO">
+	<select id="EzWebFolderDAO.getRootFolderId" resultMap="folderVO">
 		<![CDATA[
 			SELECT
 				FOLDER_ID                                       AS FOLDER_ID,
@@ -345,9 +345,9 @@
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE
-				COMPANY_ID   = #companyId#
+				OWNER_ID     = #companyId#
 			AND
-				FOLDER_TYPE  = 'C'
+				FOLDER_TYPE  = #type#
 			AND
 				FOLDER_UPPER = 'root'
 			AND
@@ -696,6 +696,29 @@
 		]]>
 	</update>
 	
+	<update id="EzWebFolderDAO.updateStatusAllFilesInFolder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FILE f JOIN
+					(
+					SELECT
+					  *
+					FROM
+						TBL_WEBFOLDER_FOLDER
+								WHERE
+									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+								AND
+									TENANT_ID = #tenantId#
+					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
+			SET
+				f.USE_STATUS = 'T'
+			WHERE
+				f.TENANT_ID = #tenantId#
+			AND
+				f.USE_STATUS = 'Y'
+		]]>
+	</update>
+	
 	<update id="EzWebFolderDAO.updateFileName" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -703,7 +726,7 @@
 			SET
 				FILE_NAME = #name#
 			WHERE
-				FILE_ID = #fileId#
+				FILE_ID   = #fileId#
 			AND
 				TENANT_ID = #tenantId#
 		]]>
@@ -959,9 +982,49 @@
 									WHERE
 										(a.CN = #userId# OR d.CN = #deptId#)
 									AND
-										d.TENANT_ID = 0) AS s ON f.OWNER_ID = s.CN AND f.TENANT_ID = s.TENANT_ID AND f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'D' AND f.OWNER_ID = s.CN
+										d.TENANT_ID = #tenantId#) AS s ON f.OWNER_ID = s.CN AND f.TENANT_ID = s.TENANT_ID AND f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'D' AND f.OWNER_ID = s.CN
 			WHERE
-				f.FOLDER_TYPE  = 'C'
+				f.FOLDER_TYPE  = 'D'
+			AND
+				f.TENANT_ID = #tenantId#
+			AND
+				f.USE_STATUS = 'Y'
+			ORDER BY
+				f.FOLDER_LEVEL ASC,
+				f.FOLDER_STEP  ASC
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getDeptFolderTreeForChief" resultMap="folderSimpleVO">
+		<![CDATA[
+			SELECT
+				f.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				f.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				f.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = f.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				f.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+			FROM
+				(
+					SELECT
+						f1.*
+					FROM
+						tbl_webfolder_folder f1 JOIN tbl_deptmaster d
+							ON f1.OWNER_ID = d.CN AND f1.FOLDER_UPPER = 'root' AND d.CN = #deptId# AND f1.TENANT_ID = d.TENANT_ID
+					WHERE
+						f1.TENANT_ID = #tenantId#
+						
+					UNION
+					
+					SELECT
+						f2.*
+					FROM
+						tbl_webfolder_folder f2 JOIN tbl_webfolder_folderuser u 
+							ON f2.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f2.TENANT_ID = u.TENANT_ID
+					WHERE
+						f2.TENANT_ID = #tenantId#
+				) AS f
+			WHERE
+				f.FOLDER_TYPE  = 'D'
 			AND
 				f.TENANT_ID = #tenantId#
 			AND
@@ -994,7 +1057,7 @@
 																		WHERE
 																			(a.CN = #userId# OR d.CN = #deptId#)
 																		AND
-																			d.TENANT_ID = 0) AS s ON u.USER_ID = s.CN AND u.USER_TYPE = 'dept'  AND u.TENANT_ID = s.TENANT_ID
+																			d.TENANT_ID = #tenantId#) AS s ON u.USER_ID = s.CN AND u.USER_TYPE = 'dept'  AND u.TENANT_ID = s.TENANT_ID
 										WHERE
 											u.TENANT_ID = #tenantId#
 										AND
@@ -1003,9 +1066,69 @@
 			WHERE
 				f.FOLDER_TYPE  = 'C'
 			AND
+				f.USE_STATUS = 'Y'
+			AND
 				f.TENANT_ID    = #tenantId#
 			AND
 				f.FOLDER_UPPER = #compFolderId#
+			ORDER BY
+				f.FOLDER_LEVEL ASC,
+				f.FOLDER_STEP  ASC
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getCompanyFolderTreeForChief" resultMap="folderSimpleVO">
+		<![CDATA[
+			SELECT
+				f.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				f.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				f.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = f.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				f.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+			FROM
+				TBL_WEBFOLDER_FOLDER f JOIN
+					(
+						SELECT
+							u.*
+						FROM
+						 tbl_webfolder_folderuser u LEFT JOIN
+								(
+									SELECT
+										d1.*
+									FROM
+										tbl_deptmaster d1
+									WHERE
+										d1.CN = 'test1' AND d1.TENANT_ID = #tenantId#
+								UNION
+									SELECT
+										d2.*
+									FROM
+										TBL_DEPTMASTER d2 JOIN
+											(
+											SELECT
+												f.*
+											FROM
+												(
+													tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
+													ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
+												)
+											) AS a ON d2.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND d2.TENANT_ID = a.TENANT_ID
+									WHERE
+										d2.TENANT_ID = #tenantId#
+								) AS s ON u.USER_ID = s.CN AND u.USER_TYPE = 'dept' AND u.TENANT_ID = s.TENANT_ID
+						WHERE
+							u.TENANT_ID = #tenantId#
+						AND
+							((u.USER_ID = #userId# AND u.USER_TYPE = 'user') OR (u.USER_ID = s.CN AND u.USER_TYPE = 'dept'))
+					) AS s ON f.TENANT_ID = s.TENANT_ID AND f.FOLDER_ID = s.FOLDER_ID
+			WHERE
+				f.FOLDER_TYPE  = 'C'
+			AND
+				f.USE_STATUS   = 'Y'
+			AND
+				f.TENANT_ID    = #tenantId#
+			AND
+				f.FOLDER_UPPER = '1'
 			ORDER BY
 				f.FOLDER_LEVEL ASC,
 				f.FOLDER_STEP  ASC
@@ -1069,5 +1192,101 @@
 	</select>
 	
 	
+	<insert id="EzWebFolderDAO.updateListCount" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1
+				FROM
+					DUAL
+				WHERE
+					NOT EXISTS (SELECT
+									CN,
+									TENANT_ID
+									FROM
+										TBL_WEBFOLDER_ENV
+									WHERE
+										CN        = #userId#
+									AND
+										ENV_TYPE  = 'P'
+									AND
+										TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				INSERT INTO TBL_WEBFOLDER_ENV (
+					CN,              ENV_TYPE,         ENV_VALUE,           TENANT_ID
+				)
+				VALUES (
+					#userId#,         'P',             #listCount#,         #tenantId#
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_WEBFOLDER_ENV
+				SET
+					ENV_VALUE   = #listCount#
+				WHERE
+					CN          = #userId#
+				AND
+					ENV_TYPE    = 'P'
+				AND
+					TENANT_ID   = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
+	
+	<select id="EzWebFolderDAO.getAllDeptsForChief" resultMap="simpleDeptVO">
+		SELECT
+		 	s.CN                                                                                                                                     AS DEPT_ID,
+			CASE WHEN #primary# = '1' THEN s.DISPLAYNAME ELSE s.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
+			#level#                                                                                                                                  AS LEVEL,
+			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE s.CN = b.EXTENSIONATTRIBUTE1 AND s.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
+		FROM
+			(
+				SELECT
+					d1.*
+				FROM
+					tbl_addjobmaster a JOIN tbl_deptmaster d1 ON d1.CN = a.DEPTID AND d1.TENANT_ID = a.TENANT_ID
+				WHERE
+					a.CN = #userId# AND  a.TENANT_ID = #tenantId# 
+			UNION
+				SELECT
+					d2.*
+				FROM
+					tbl_deptmaster d2
+				WHERE
+					EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
+			) AS s
+		ORDER BY
+			LEVEL, lpad(ifnull(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
+	</select>
+	
+	<select id="EzWebFolderDAO.getSelectedDeptsForChief" resultMap="simpleDeptVO">
+		SELECT
+			s.CN                                                                                                                                     AS DEPT_ID,
+			CASE WHEN #primary# = '1' THEN s.DISPLAYNAME ELSE s.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
+			#level#                                                                                                                                  AS LEVEL,
+			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE s.CN = b.EXTENSIONATTRIBUTE1 AND s.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
+		FROM
+			TBL_DEPTMASTER s JOIN
+				(
+				SELECT 
+					f.* 
+				FROM
+					(
+						tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
+						ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
+					)
+				) AS a ON s.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND s.TENANT_ID = a.TENANT_ID
+		WHERE
+			s.TENANT_ID = #tenantId#
+		ORDER BY
+			LEVEL, lpad(ifnull(s.EXTENSIONATTRIBUTE15, 0),6,0), s.DISPLAYNAME
+	</select>
 	
 </sqlMap>

@@ -69,8 +69,8 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 		return (List<FolderSimpleVO>)list("EzWebFolderDAO.getAllSimpleSubFolders", map);
 	}
 
-	public FolderVO getCompanyFolderId(Map<String, Object> map) {
-		return (FolderVO)select("EzWebFolderDAO.getCompanyFolderId", map);
+	public FolderVO getRootFolderId(Map<String, Object> map) {
+		return (FolderVO)select("EzWebFolderDAO.getRootFolderId", map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -179,5 +179,37 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 
 	public WebfolderEnvVO getListCount(Map<String, Object> map) {
 		return (WebfolderEnvVO)select("EzWebFolderDAO.getListCount", map);
+	}
+
+	public void updateListCount(Map<String, Object> map) {
+		insert("EzWebFolderDAO.updateListCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<SimpleDeptVO> getAllDeptsForChief(Map<String, Object> map) {
+		return (List<SimpleDeptVO>)list("EzWebFolderDAO.getAllDeptsForChief", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<SimpleDeptVO> getSelectedDeptsForChief(Map<String, Object> map) {
+		return (List<SimpleDeptVO>)list("EzWebFolderDAO.getSelectedDeptsForChief", map);
+	}
+
+	public void updateListDeptEnv(Map<String, Object> map) {
+		insert("EzWebFolderDAO.updateListDeptEnv", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<FolderSimpleVO> getDeptFolderTreeForChief(Map<String, Object> map) {
+		return (List<FolderSimpleVO>)list("EzWebFolderDAO.getDeptFolderTreeForChief", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<FolderSimpleVO> getCompanyFolderTreeForChief(Map<String, Object> map) {
+		return (List<FolderSimpleVO>)list("EzWebFolderDAO.getCompanyFolderTreeForChief", map);
+	}
+
+	public void updateStatusAllFilesInFolder(Map<String, Object> map) {
+		update("EzWebFolderDAO.updateStatusAllFilesInFolder", map);
 	}
 }

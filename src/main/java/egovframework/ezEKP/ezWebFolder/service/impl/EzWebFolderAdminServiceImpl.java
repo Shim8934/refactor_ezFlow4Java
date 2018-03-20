@@ -198,4 +198,12 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("tenantId", tenantId);
 		ezWebFolderAdminDAO.deleteFolderUsers(map);
 	}
+
+	@Override
+	public void deleteFolderUsersOfChief(String userId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",   userId);
+		map.put("tenantId", tenantId);
+		ezWebFolderAdminDAO.deleteFolderUsersOfChief(map);
+	}
 }

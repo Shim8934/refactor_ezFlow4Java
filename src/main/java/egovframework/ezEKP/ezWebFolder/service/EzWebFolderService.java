@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.service;
 
 import java.util.List;
-
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -25,7 +24,7 @@ public interface EzWebFolderService {
 	FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception;
 	FolderSimpleVO getSimpleFolder(String folderId, int tenantId) throws Exception;
 	List<FolderSimpleVO> getAllSimpleSubFolders(String folderUpperId, int tenantId) throws Exception;
-	FolderVO getCompanyFolderId(String companyId, String offset, int tenantId) throws Exception;
+	FolderVO getRootFolderId(String companyId, String type, String offset, int tenantId) throws Exception;
 	void getAllSubDepts(FolderSimpleVO company, int tenantId, int i) throws Exception;
 	void getAllSubDepts(FolderSimpleVO company, int tenantId, String[] fdPath, int order) throws Exception;
 	void updateDownCnt(String fileId, int tenantId) throws Exception;
@@ -52,4 +51,7 @@ public interface EzWebFolderService {
 	FolderSimpleVO getUserSimpleFolder(String userId, int tenantId) throws Exception;
 	boolean checkDepartChief(String userId, int tenantId) throws Exception;
 	WebfolderEnvVO getListCount(String userId, int tenantId) throws Exception;
+	void updateListCount(String userId, String listCount, int tenantId) throws Exception;
+	List<SimpleDeptVO> getAllDeptsForChief(String userId, int level, String primary, int tenantId) throws Exception;
+	List<SimpleDeptVO> getSelectedDeptsForChief(String userId, int level, String primary, int tenantId) throws Exception;
 }

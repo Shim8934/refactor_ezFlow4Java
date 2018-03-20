@@ -9,8 +9,15 @@
 	<link rel="stylesheet" href="/css/Tab.css" type="text/css"/>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/organJson.js"   ></script>
 	<script type="text/javascript">
-		var listCnt = "<c:out value="${wfListConfig.envValue}"/>";
+		//var listCnt = "<c:out value="${wfListConfig.envValue}"/>";
+		var userDept        = null;
+		var arrSubFolder    = [];
+		var selectedDept    = "";
+		var strErrMsg       = "<spring:message code='ezWebFolder.t134'/>";
+		var strDataNotFound = "<spring:message code='ezWebFolder.t144'/>";
+		var strAlreadyAdd   = "<spring:message code='ezWebFolder.t169'/>";
 		document.onselectstart = function () { return false; };
 		
 		window.onload = function () {
@@ -21,27 +28,27 @@
 				document.body.style.oUserSelect      = 'none';
 				document.body.style.UserSelect       = 'none';
 			}
+			getDataForChief();
 		}
 		
 		function Cancel_Click() {
-			document.getElementById("listcount").value = listCnt;
+			getSelectedDeptsForChief();
 		}
 		
 		function Change_Click() {
-			var listCount = document.getElementById("listcount").value;
+			var jsonData = getJsonSelectedDepts();
 			
 			$.ajax({
-				url : '/ezWebFolder/saveGeneralList.do',
+				url : '/ezWebFolder/saveSelectedDeptsForChief.do',
 				method : 'POST',
 				dataType : 'JSON',
 				data : {
-					"listCount" : listCount
-				} ,
+					"deptList" : jsonData.toString()
+				},
 				success : function(data, textStatus, jqXHR) {
 					var result = data.resultValue;
 					if (result == "ok") {
 						alert('<spring:message code="ezWebFolder.t182"/>');
-						listCnt = listCount;
 					}
 					else {
 						alert('<spring:message code="ezWebFolder.t134"/>');
@@ -52,28 +59,30 @@
 				}
 			});
 		}
+		
 	</script>
 </head>
 <body style="margin-left: 10px; margin-right: 10px;">
 	<br/>
-	<h2><spring:message code="ezWebFolder.t238" /></h2>
-	<span class="txt">▒<spring:message code="ezWebFolder.t240"/></span>
+	<h2><spring:message code="ezWebFolder.t239" /></h2>
+	<span class="txt">▒<spring:message code="ezWebFolder.t242"/></span>
 	<br />
-	<table class="content" style="width: 623px;margin-top:5px">
+	<table class="content" style="width: 650px;margin-top:5px; border: none;">
 		<tr>
-			<th><spring:message code="ezWebFolder.t241" /></th>
-			<td>
-				<select id="listcount" name="pListCount" style="WIDTH: 100px">
-					<option value='10' ${wfListConfig.envValue eq '10'? 'selected' : ''}>10</option>
-					<option value='20' ${wfListConfig.envValue eq '20'? 'selected' : ''}>20</option>
-					<option value='30' ${wfListConfig.envValue eq '30'? 'selected' : ''}>30</option>
-					<option value='40' ${wfListConfig.envValue eq '40'? 'selected' : ''}>40</option>
-					<option value='50' ${wfListConfig.envValue eq '50'? 'selected' : ''}>50</option>
-				</select>
-				<spring:message code="ezWebFolder.t138" />
+			<td style="min-width: 350px;">
+				<div id="deptList" style="height: 350px; width: 100%; overflow: auto;">
+				</div>
+			</td>
+			<td style="min-width: 60px; border-top: none; border-bottom: none;">
+				<div style="text-align: center;"><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_dept2();" style="cursor:pointer"></div>
+				<div style="text-align: center;"><img src="/images/arr_left.gif"  width="16" height="16" vspace="3" onclick="unselect_dept2();" style="cursor:pointer"></div>
+			</td>
+			<td style="min-width: 240px; padding: 0px;">
+				<div id="selectedDepts" style="width: 100%; height: 350px; overflow: auto;">
+				</div>
 			</td>
 		</tr>
-		
+	
 	</table>
  	<br />
 	<div style="width:623px;text-align:center;">      

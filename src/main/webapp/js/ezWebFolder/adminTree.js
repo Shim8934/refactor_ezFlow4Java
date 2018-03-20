@@ -7,7 +7,7 @@ function getCompanyData(companyId, mode, rootDiv) {
 			"folderId"  : selectedFolder
 		},
 		dataType: "JSON",
-		async: true,
+		async: false,
 		success : function(data) {
 			var result = data.companyTree;
 			renderData(result, mode, rootDiv);
@@ -157,7 +157,7 @@ function getDetailTree(obj) {
 				"folderId" : uniqueId
 			},
 			dataType: "JSON",
-			async: true,
+			async: false,
 			success: function(data) {
 				var result = data.subTree;
 				displaySubTree(result, obj.parentElement);

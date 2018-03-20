@@ -583,3 +583,307 @@ function set_range() {
 		window.opener.closeWindow();
 	}
 }
+
+function getSelectedDeptsForChief() {
+	$.ajax({
+		url : '/ezWebFolder/getSelectedDeptForChief.do',
+		method : 'POST',
+		dataType : 'JSON',
+		data : {},
+		success : function(data, textStatus, jqXHR) {
+			var result = data.selectedDepts;
+			renderSelectedDepts(result);
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert('Error : ' + jqXHR.status + ", " + textStatus);
+		}
+	});
+}
+
+function getDataForChief() {
+	$.ajax({
+		type: "POST",
+		url: "/ezWebFolder/getDeptTreeForChief.do",
+		data: {},
+		dataType: "JSON",
+		async: false,
+		success : function(data) {
+			var result        = data.deptTree;
+			userDept          = data.userDept;
+			var selectedDepts = data.selectedDepts;
+			renderDepts(result, selectedDepts);
+		},
+		error : function(error) {
+			alert(strErrMsg + error);
+		}
+	});
+}
+
+function renderDepts(list, selectedDepts) {
+	var deptList = document.getElementById("deptList");
+	
+	while (deptList.hasChildNodes()) {
+		deptList.removeChild(deptList.lastChild);
+	}
+	
+	if (list == null || list.length == 0) {
+		alert(strErrMsg);
+		return;
+	}
+	
+	for (var i = 0; i < list.length; i++) {
+		var divDept = document.createElement("div");
+		displaySubDepts(deptList, divDept, list[i]);
+	}
+	
+	renderSelectedDepts(selectedDepts);
+}
+
+function renderSelectedDepts(selectedDepts) {
+	var selectedDeptElmt = document.getElementById("selectedDepts");
+	while (selectedDeptElmt.hasChildNodes()) {
+		selectedDeptElmt.removeChild(selectedDeptElmt.lastChild);
+	}
+	
+	if (selectedDepts != null && selectedDepts.length != 0) {
+		for (var i = 0; i < selectedDepts.length; i++) {
+			showSelectedDept(selectedDeptElmt, selectedDepts[i]["deptName"], selectedDepts[i]["deptId"]);
+		}
+	}
+}
+
+function showSelectedDept(mainElmt, deptName, deptId) {
+	var divElmt  = document.createElement("div");
+	var imgElmt  = document.createElement("img");
+	var spanElmt = document.createElement("span");
+	
+	imgElmt.setAttribute("class", "webFolderImg2");
+	imgElmt.src = "/images/OrganTree_cross/ic-open.gif";
+	spanElmt.setAttribute("class", "spanName2");
+	spanElmt.textContent = deptName;
+	divElmt.setAttribute("class", "webFolderDiv");
+	divElmt.setAttribute("nodeId", deptId);
+	divElmt.onclick    = function() {deptSelect2(this);};
+	divElmt.ondblclick = function() {unselectDept2(this)};
+	
+	divElmt.appendChild(imgElmt);
+	divElmt.appendChild(spanElmt);
+	mainElmt.appendChild(divElmt);
+}
+
+function addSelectedDept(obj) {
+	var deptName         = obj.textContent;
+	var deptId           = obj.getAttribute("name");
+	var check            = 0;
+	var selectedDeptList = document.getElementById("selectedDepts");
+	var listDivTags      = selectedDeptList.childNodes;
+	
+	for (var i = 0; i < listDivTags.length; i++) {
+		if (listDivTags[i].getAttribute("nodeId") == deptId) {
+			check = 1;
+			break;
+		}
+	}
+	
+	if (check == 1) {
+		alert(strAlreadyAdd);
+		return;
+	}
+	
+	showSelectedDept(selectedDeptList, deptName, deptId);
+}
+
+function displaySubDepts(divTree, divElmt, list) {
+	var level = list["level"];
+	
+	if (level > 0) {
+		for (var j = 0; j < level; j++) {
+			var imgTag = document.createElement("img");
+			imgTag.setAttribute("class", "webfolderImg");
+			imgTag.src="/images/OrganTree_cross/dot_continue.gif";
+			divElmt.appendChild(imgTag);
+		}
+	}
+	
+	var imgElmt = document.createElement("img");
+	imgElmt.setAttribute("id" , list["deptId"]);
+	imgElmt.setAttribute("level" , list["level"]);
+	
+	var imgElmt2 = document.createElement("img");
+	imgElmt2.setAttribute("class", "webfolderImg");
+	imgElmt2.src = "/images/OrganTree_cross/ic-open.gif";
+	
+	var spanDeptName = document.createElement("span");
+	spanDeptName.textContent = list["deptName"];
+	spanDeptName.setAttribute("class", "spanName");
+	spanDeptName.setAttribute("name", list["deptId"]);
+	spanDeptName.setAttribute("level", list["level"]);
+	spanDeptName.onclick    = function() {getSelectedDept(this);};
+	spanDeptName.ondblclick = function() {addSelectedDept(this)};
+	
+	divElmt.appendChild(imgElmt);
+	divElmt.appendChild(imgElmt2);
+	divElmt.appendChild(spanDeptName);
+	divTree.appendChild(divElmt);
+	
+	if (list["hasSub"] == "0") {
+		imgElmt.src = "/images/OrganTree_cross/dot_continue.gif";
+		imgElmt.setAttribute("class", "webfolderImg");
+	}
+	else {
+		imgElmt.onclick = function() {getDetailTree2(this);};
+		
+		if (list["subDepts"] == null) {
+			imgElmt.src = "/images/OrganTree_cross/plus.gif";
+			imgElmt.setAttribute("class", "webfolderPlus");
+			return;
+		}
+		
+		imgElmt.src = "/images/OrganTree_cross/minus.gif";
+		imgElmt.setAttribute("class", "webfolderMinus");
+		
+		var len = list["subDepts"].length;
+		arrSubFolder.push(list["deptId"]);
+		
+		var newDivElmt = document.createElement("div");
+		divElmt.appendChild(newDivElmt);
+		
+		for (var i = 0; i < len; i++) {
+			var subDivElmt = document.createElement("div");
+			displaySubDepts(newDivElmt, subDivElmt, list["subDepts"][i]);
+		}
+	}
+}
+
+function getDetailTree2(obj) {
+	//Check if already in arrSubFolder
+	var uniqueId = obj.getAttribute("id");
+	var level    = obj.getAttribute("level");
+	
+	if (arrSubFolder.indexOf(uniqueId) != -1) {
+		var childElmt = obj.parentElement.lastElementChild;
+		
+		if (obj.className == "webfolderMinus") {
+			obj.src= "/images/OrganTree_cross/plus.gif";
+			obj.setAttribute("class", "webfolderPlus");
+			childElmt.style.display = "none";
+		}
+		else {
+			obj.src= "/images/OrganTree_cross/minus.gif";
+			obj.setAttribute("class", "webfolderMinus");
+			childElmt.style.display = "";
+		}
+	}
+	else {
+		obj.src = "/images/OrganTree_cross/minus.gif";
+		obj.setAttribute("class", "webfolderMinus");
+		
+		$.ajax({
+			type: "POST",
+			url: "/ezWebFolder/getSubTree.do",
+			data: {
+				"deptId" : uniqueId,
+				"level"  : level
+			},
+			dataType: "JSON",
+			async: true,
+			success: function(data) {
+				var result = data.subTree;
+				displaySubTree2(result, obj.parentElement);
+				arrSubFolder.push(uniqueId);
+			},
+			error: function (xhr, status, e){
+				alert(strErrMsg);
+			}
+		});	
+	}
+}
+
+function displaySubTree2(result, divElmt) {
+	if (result["subDepts"] == null) {
+		alert(strErrMsg);
+		return;
+	}
+	
+	var len = result["subDepts"].length;
+	var newDivElmt = document.createElement("div");
+	divElmt.appendChild(newDivElmt);
+	
+	for (var i = 0; i < len; i++) {
+		var subDiv = document.createElement("div");
+		displaySubDepts(newDivElmt, subDiv, result["subDepts"][i]);
+	}
+}
+
+function getSelectedDept(obj) {
+	var previousElmt = document.getElementsByName(selectedDept)[0];
+	
+	if (previousElmt != null) {
+		if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {
+			previousElmt.style.color = "";
+		}
+		else {
+			return;
+		}
+	}
+	
+	selectedDept    = obj.getAttribute("name");
+	obj.style.color = "#e04343";
+}
+
+function add_dept2() {
+	if (!selectedDept) {
+		return;
+	}
+	
+	var listOfSelectedElmt = document.getElementsByName(selectedDept);
+	for (var i = 0; i < listOfSelectedElmt.length; i++) {
+		if (listOfSelectedElmt[i].getAttribute("level")) {
+			addSelectedDept(listOfSelectedElmt[i]);
+			break;
+		}
+	}
+}
+
+function unselect_dept2() {
+	var selectedDeptElmt = document.getElementById("selectedDepts");
+	var deptList         = selectedDeptElmt.childNodes;
+	
+	for (var i = 0; i < deptList.length; i++) {
+		if (deptList[i].className == "webFolderDiv2") {
+			selectedDeptElmt.removeChild(deptList[i]);
+			break;
+		}
+	}
+}
+
+function deptSelect2(obj) {
+	var deptList = document.getElementById("selectedDepts").childNodes;
+	
+	for (var i = 0; i < deptList.length; i++) {
+		if (deptList[i].className == "webFolderDiv2") {
+			deptList[i].className = "webFolderDiv";
+			break;
+		}
+	}
+	
+	obj.className = "webFolderDiv2";
+}
+
+function unselectDept2(obj) {
+	var selectedDeptElmt = document.getElementById("selectedDepts");
+	selectedDeptElmt.removeChild(obj);
+}
+
+function getJsonSelectedDepts() {
+	var result = [];
+	var deptList = document.getElementById("selectedDepts").childNodes;
+	
+	for (var i = 0; i < deptList.length; i++) {
+		if (deptList[i].getAttribute("nodeId")) {
+			result.push(deptList[i].getAttribute("nodeId"));
+		}
+	}
+	
+	return result;
+}

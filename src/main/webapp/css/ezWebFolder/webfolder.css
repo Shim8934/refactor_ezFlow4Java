@@ -1,5 +1,13 @@
-.webFolderImg {height: 20px; width: 20px;}
+.webFolderImg2 {height: 18px; width: 18px; padding: 7px 2px; margin-left: 80px;}
+.spanName2 {height: 32px; line-height: 32px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
+.webFolderDiv {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; cursor: pointer;}
+.webFolderDiv:hover {background-color: #f4f5f5;}
+
+.webFolderDiv2 {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; background-color:#e9f1f4; cursor: pointer;}
+
 .bnkWebFolder:hover {background-color: #f4f5f5;}
+
+.webFolderImg {height: 20px; width: 20px;}
 
 #progress-wrp {border: 1px solid #0099CC; padding: 1px; position: relative; border-radius: 3px; margin: 10px; text-align: left; background: #fff; box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);}
 #progress-wrp .progress-bar {height: 20px; border-radius: 3px; background-color: #66b3ff; width: 0; box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11); }

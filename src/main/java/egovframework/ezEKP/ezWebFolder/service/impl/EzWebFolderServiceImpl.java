@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -154,12 +155,13 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 	}
 
 	@Override
-	public FolderVO getCompanyFolderId(String companyId, String offset, int tenantId) throws Exception {
+	public FolderVO getRootFolderId(String companyId, String type, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
+		map.put("type",      type);
 		map.put("tenantId",  tenantId);
 		map.put("offset",    commonUtil.getMinuteUTC(offset));
-		return ezWebFolderDAO.getCompanyFolderId(map);
+		return ezWebFolderDAO.getRootFolderId(map);
 	}
 
 	@Override
@@ -205,6 +207,10 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath);
 		map.put("tenantId",   tenantId);
+		
+		//Update status for all files even in sub folders
+		ezWebFolderDAO.updateStatusAllFilesInFolder(map);
+		//Update status for all sub folders
 		ezWebFolderDAO.updateFolderUseStatus(map);
 	}
 
@@ -411,7 +417,18 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("deptId",    deptId);
 		map.put("tenantId",  tenantId);
 		
-		return ezWebFolderDAO.getDeptFolderTreeForUser(map);
+		List<FolderSimpleVO> listFolders = new ArrayList<FolderSimpleVO>();
+		//Check if user is dept chief
+		boolean check = checkDepartChief(userId, tenantId);
+		
+		if (check == true) {
+			listFolders = ezWebFolderDAO.getDeptFolderTreeForChief(map);
+		}
+		else {
+			listFolders = ezWebFolderDAO.getDeptFolderTreeForUser(map);
+		}
+		
+		return listFolders;
 	}
 
 	@Override
@@ -431,7 +448,19 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		map.put("compFolderId", compFolderId);
 		map.put("tenantId",  tenantId);
 		
-		return ezWebFolderDAO.getCompanySubSimpleFolder(map);
+		List<FolderSimpleVO> listFolders = new ArrayList<FolderSimpleVO>();
+		
+		//Check if user is dept chief
+		boolean check = checkDepartChief(userId, tenantId);
+		
+		if (check == true) {
+			listFolders = ezWebFolderDAO.getCompanyFolderTreeForChief(map);
+		}
+		else {
+			listFolders = ezWebFolderDAO.getCompanySubSimpleFolder(map);
+		}
+		
+		return listFolders;
 	}
 
 	@Override
@@ -470,6 +499,38 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		}
 		
 		return env;
+	}
+
+	@Override
+	public void updateListCount(String userId, String listCount, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userId);
+		map.put("listCount", listCount);
+		map.put("tenantId",  tenantId);
+		
+		ezWebFolderDAO.updateListCount(map);
+	}
+
+	@Override
+	public List<SimpleDeptVO> getAllDeptsForChief(String userId, int level, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userId);
+		map.put("level",     level);
+		map.put("primary",   primary);
+		map.put("tenantId",  tenantId);
+		
+		return ezWebFolderDAO.getAllDeptsForChief(map);
+	}
+
+	@Override
+	public List<SimpleDeptVO> getSelectedDeptsForChief(String userId, int level, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userId);
+		map.put("level",     level);
+		map.put("primary",   primary);
+		map.put("tenantId",  tenantId);
+		
+		return ezWebFolderDAO.getSelectedDeptsForChief(map);
 	}
 
 }

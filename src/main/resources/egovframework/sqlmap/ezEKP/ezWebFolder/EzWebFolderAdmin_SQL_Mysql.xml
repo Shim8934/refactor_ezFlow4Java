@@ -569,4 +569,16 @@
 		]]>
 	</delete>
 	
+	<delete id="EzWebFolderAdminDAO.deleteFolderUsersOfChief" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_FOLDERUSER
+			WHERE
+				USER_ID   = #userId#
+			AND
+				USER_TYPE = 'chief'
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</delete>
 </sqlMap>

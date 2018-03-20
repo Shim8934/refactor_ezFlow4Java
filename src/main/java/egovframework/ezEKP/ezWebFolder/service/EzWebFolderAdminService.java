@@ -19,4 +19,5 @@ public interface EzWebFolderAdminService {
 	void deleteFolderUsers(String folderId, int tenantId) throws Exception;
 	int getTotalFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, int startPoint, int endPoint, String primary, int tenantId) throws Exception;
 	int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception;
+	void deleteFolderUsersOfChief(String userId, int tenantId) throws Exception;
 }

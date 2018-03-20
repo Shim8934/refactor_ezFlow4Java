@@ -14,11 +14,11 @@
 		document.onselectstart = function () { return false; };
 		function window_onload() {
 			if (navigator.userAgent.indexOf('Firefox') != -1) {
-				document.body.style.MozUserSelect = 'none';
+				document.body.style.MozUserSelect    = 'none';
 				document.body.style.WebkitUserSelect = 'none';
-				document.body.style.khtmlUserSelect = 'none';
-				document.body.style.oUserSelect = 'none';
-				document.body.style.UserSelect = 'none';
+				document.body.style.khtmlUserSelect  = 'none';
+				document.body.style.oUserSelect      = 'none';
+				document.body.style.UserSelect       = 'none';
 			}
 			document.getElementById("1tab1").setAttribute("class", "tabon");
 			Tab1_SelectID = "1tab1";
@@ -90,7 +90,7 @@
 	<div class="portlet_tabpart01">
 		<div class="portlet_tabpart01_top" id="tab1">
 			<p ><span divname="wfEnv_div1" id="1tab1"><spring:message code="ezWebFolder.t238" /></span></p>
-			<p style="display: ${(isChief == 'YES') ? 'block' : 'none'};"><span divname="wfEnv_div2" id="1tab2"><spring:message code="ezWebFolder.t239" /></span></p>
+			<p style="display: ${(isChief == '1') ? 'block' : 'none'};"><span divname="wfEnv_div2" id="1tab2"><spring:message code="ezWebFolder.t239" /></span></p>
 		</div>
 	</div>
 	<iframe id="wfEnv_ifrm" style="width: 100%; height: 100%; border: none;"></iframe>
