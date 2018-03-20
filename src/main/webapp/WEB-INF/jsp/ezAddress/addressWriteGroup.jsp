@@ -1927,7 +1927,7 @@
 	                                        <tr>
 	                                            <th style="white-space:normal">
 	                                                <span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
-	                                                <span style="float:right;">
+	                                                <span style="float: right; position: relative;">
 	                                                    <span onclick="ChangeListView_onClick('TXT');">
 	                                                        <img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 	                                                    <span onclick="ChangeListView_onClick('IMG');">
