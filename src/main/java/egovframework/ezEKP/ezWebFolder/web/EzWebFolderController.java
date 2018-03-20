@@ -298,6 +298,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	public String deleteFileConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("Delete File Confirm is running!");
 		String listFileId = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
+		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
 		
 		if (listFileId.equals("")) {
 			logger.debug("Delete File Confirm illegal arguments!");
@@ -305,17 +306,19 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("fileList", listFileId);
+		model.addAttribute("mode", mode);
 		logger.debug("Delete File Confirm finishes!");
 		
 		return "/ezWebFolder/fileDelete";
 	}
 
 	@RequestMapping(value="/ezWebFolder/deleteFile.do", method = RequestMethod.POST)
-	public void deleteFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String deleteFile(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Delete File is running!");
 		
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String listFileId   = request.getParameter("fileList");
+		String mode         = request.getParameter("mode");
 		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/file-delete";
 		
@@ -324,6 +327,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())
 										.queryParam("lang", user.getLang())
+										.queryParam("mode", mode)
 										.queryParam("fileList", listFileId);
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -338,8 +342,15 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		String status                 = resultBody.get("status").toString();
 		
+		if (!status.equals("ok")) {
+			String reason = resultBody.get("reason").toString();
+			model.addAttribute("reason", reason);
+		}
+		
 		logger.debug("Status: " + status);
 		logger.debug("Delete File finishes!");
+		
+		return "json";
 	}
 
 	@RequestMapping(value="/ezWebFolder/fileRenameConfirm.do")

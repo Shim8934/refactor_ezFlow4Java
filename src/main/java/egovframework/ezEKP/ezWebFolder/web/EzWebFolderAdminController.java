@@ -803,7 +803,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/moveFolder.do", method = RequestMethod.POST)
-	public String moveFolder(@CookieValue("loginCookie") String loginCookie,  Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String moveFolder(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Move Folder is running!");
 		
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);

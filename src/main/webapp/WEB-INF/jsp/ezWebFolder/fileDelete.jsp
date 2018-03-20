@@ -14,6 +14,7 @@
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript">
 		var fileList = "<c:out value="${fileList}"/>";
+		var mode     = "<c:out value="${mode}"/>";
 		function wClose() {
 			parent.DivPopUpHidden();
 			window.close();
@@ -30,16 +31,25 @@
 				type: "POST",
 				url: "/ezWebFolder/deleteFile.do",
 				data: {
-					"fileList" : fileList
+					"fileList" : fileList,
+					"mode"     : mode
 				},
-				dataType: "text",
+				dataType: "JSON",
 				async: true,
-				success : function(data, textStatus, jqXHR) {
-					alert("<spring:message code='ezWebFolder.t113'/>");
-					afterDeleteSuccess();
+				success : function(data) {
+					var reason = data.reason;
+					
+					if (reason) {
+						alert(reason);
+						afterDeleteSuccess();
+					}
+					else {
+						alert("<spring:message code='ezWebFolder.t113'/>");
+						afterDeleteSuccess();
+					}
 				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					alert("<spring:message code='ezWebFolder.t114'/>" + jqXHR.status + ", " + textStatus);
+				error : function(error) {
+					alert("<spring:message code='ezWebFolder.t114'/>" + error);
 				}
 			});
 		}

@@ -273,7 +273,7 @@
 					checkedList = checkedList + "," + checkedArr[i];
 				}
 				
-				DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList);
+				DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList + "&mode=admin");
 			}
 			
 			function fileRename() {
@@ -305,8 +305,7 @@
 				
 				var fileId = checkedArr[0];
 				
-				//DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId + "&mode=admin");
-				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId);
+				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId + "&mode=admin");
 			}
 			
 			function getChecked(obj) {

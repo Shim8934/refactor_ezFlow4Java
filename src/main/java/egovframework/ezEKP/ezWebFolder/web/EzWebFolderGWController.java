@@ -618,18 +618,20 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value = "/rest/ezwebfolder/file-delete", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject delFileDelete(HttpServletRequest request) {
+	public JSONObject delFileDelete(Locale locale, HttpServletRequest request) {
 		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";
 		String listFileId   = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
 		String userId       = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
 		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
 		String lang         = request.getParameter("lang")     != null ? request.getParameter("lang")     : "";
+		String mode         = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
 		String[] fileIDList = listFileId.split(",");
 		JSONObject result   = new JSONObject();
 		
 		if (fileIDList.length == 0 || serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			result.put("code", "1");
 			return result;
 		}
@@ -641,12 +643,42 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			String companyId = userInfo.getCompanyID();
 			int tenantId     = userInfo.getTenantId();
 			
-			for (int i = 0; i < fileIDList.length; i++) {
-				FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
+			if (mode.equals("admin")) {
+				for (int i = 0; i < fileIDList.length; i++) {
+					FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
+					
+					//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
+					ezWebFolderService.updateFileUseStatus(fileIDList[i], tenantId);
+					saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				}
+			}
+			else {
+				int check = 0;
 				
-				//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
-				ezWebFolderService.updateFileUseStatus(fileIDList[i], tenantId);
-				saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				for (int i = 0; i < fileIDList.length; i++) {
+					FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
+					if (!fileVO.getCreateId().equals(userId)) {
+						check = 1;
+						break;
+					}
+				}
+				
+				if (check == 0) {
+					for (int i = 0; i < fileIDList.length; i++) {
+						FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
+						
+						//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
+						ezWebFolderService.updateFileUseStatus(fileIDList[i], tenantId);
+						saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+					}
+				}
+				else {
+					logger.debug("Privileges!");
+					result.put("status", "error");
+					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t243", locale));
+					result.put("code", "1");
+					return result;
+				}
 			}
 			
 			result.put("status", "ok");
@@ -654,6 +686,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 			result.put("status", "error");
 			result.put("code", "1");
 		}
