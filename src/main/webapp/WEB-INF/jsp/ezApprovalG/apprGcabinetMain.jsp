@@ -993,7 +993,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1110, 500));
+		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1105, 500));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1024,7 +1024,7 @@
 		            selectcabinet_cross_dialogArguments[0] = para;
 		            selectcabinet_cross_dialogArguments[1] = btnChangeRecCabinet_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(1096, 500));
+		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(1106, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		
 		           
