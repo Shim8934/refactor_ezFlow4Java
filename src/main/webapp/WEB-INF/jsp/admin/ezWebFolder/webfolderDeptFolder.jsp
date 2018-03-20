@@ -46,7 +46,7 @@
 			}
 			
 			function renderData(result) {
-				var bttnAdd = document.getElementById("addFoldersBttn");
+				//var bttnAdd = document.getElementById("addFoldersBttn");
 				var divTree = document.getElementById("folderTree");
 				
 				while (divTree.hasChildNodes()) {
@@ -54,11 +54,11 @@
 				}
 				
 				if (!result || result.length == 0) {
-					bttnAdd.style.display = "";
+					//bttnAdd.style.display = "";
 					return;
 				}
 				
-				bttnAdd.style.display = "none";
+				//bttnAdd.style.display = "none";
 				
 				for (var i = 0; i < result.length; i++) {
 					var divDept  = document.createElement("div");
@@ -485,7 +485,7 @@
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 				</c:forEach>
 			</select>
-			<a class="webfolderBttn3" id="addFoldersBttn" style="display: none;"><span onclick="addAllFolders();"><spring:message code='ezWebFolder.t228'/></span></a>
+			<a class="webfolderBttn3" id="addFoldersBttn" style=""><span onclick="addAllFolders();"><spring:message code='ezWebFolder.t228'/></span></a>
 		</div>
 		
 		<div style="height: 450px; width: 100%;">
