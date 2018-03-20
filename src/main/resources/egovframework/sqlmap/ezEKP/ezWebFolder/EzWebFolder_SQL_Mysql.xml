@@ -596,6 +596,8 @@
 			WHERE
 				u.FOLDER_ID = #folderId#
 			AND
+				(u.USER_TYPE = 'user' OR u.USER_TYPE = 'dept')
+			AND
 				u.TENANT_ID = #tenantId#
 			ORDER BY
 				USER_TYPE ASC
