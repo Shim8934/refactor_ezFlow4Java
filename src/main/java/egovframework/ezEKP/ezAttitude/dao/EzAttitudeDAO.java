@@ -85,4 +85,9 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public AttitudeUserConfigVO getAttitudeConfTime(Map<String,Object> map) throws Exception {
 		return (AttitudeUserConfigVO) select("ezAttitude.getAttitudeUserConfTime",map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public int getUsersModiyAttCount(Map<String, Object> map) {
+		return (int) select("ezAttitudeDAO.getUsersModiyAttCount", map);
+	}
 }

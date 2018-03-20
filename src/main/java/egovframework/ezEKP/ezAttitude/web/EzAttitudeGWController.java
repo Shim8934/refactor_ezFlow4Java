@@ -1,13 +1,11 @@
 package egovframework.ezEKP.ezAttitude.web;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -879,15 +877,17 @@ public class EzAttitudeGWController {
 			@RequestParam(value="endDate", required=false) String endDate,
 			@RequestParam(value="apprUserName", required=false) String apprUserName,
 			@RequestParam(value="sysLang", required=false) String sysLang,
-			@RequestParam(value="offset", required=false) String offset) {
+			@RequestParam(value="offset", required=false) String offset,
+			@RequestParam(value="startPoint", required=false) String startPoint,
+			@RequestParam(value="endPoint", required=false) String endPoint) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
 
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
-		
 		JSONObject attJson = new JSONObject();
+		
 		try{
-			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset);
+			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint);
 			for (int i = 0 ; i < attList.size(); i++ ) {
 				LOGGER.debug(attList.get(i).toString());
 			}
@@ -905,6 +905,41 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
 		return result;
 	}
+	
+	/**
+	 * G/W 근태관리 [GET] 수정신청 개수
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyattitudes/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getUsersModiyAttCount(@PathVariable String userId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="startDate", required=false) String startDate,
+			@RequestParam(value="endDate", required=false) String endDate,
+			@RequestParam(value="apprUserName", required=false) String apprUserName,
+			@RequestParam(value="sysLang", required=false) String sysLang,
+			@RequestParam(value="offset", required=false) String offset) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] started.");
+
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		JSONObject attJson = new JSONObject();
+		
+		try{
+			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset);
+
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", attListCount+"");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] ended.");
+		return result;
+	}
+	
 	/**
 	 * G/W 근태관리 [GET] 근태유형관리 아이콘 업로드
 	 */
