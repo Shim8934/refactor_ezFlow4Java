@@ -875,7 +875,7 @@
 			          <!-- <asp:PlaceHolder ID="HolderDocSend" Runat="server" Visible="false"> 
 			            <tr> 
 			                <td height="150">
-			                    <div id="docContentBorder" style="border:#B6B6B6 1px solid; BACKGROUND-COLOR: white; margin-top:5px;"> 
+			                    <div id="docContentBorder" style="border:#ddd 1px solid; BACKGROUND-COLOR: white; margin-top:5px;"> 
 			                       <iframe id="docContent" style="height:150px; width:100%" frameborder="0" ></iframe> 
 			                    </div>
 			                </td> 

@@ -460,6 +460,13 @@
 				xmlhttp.open("POST", "/admin/ezPortal/addParameter.do?mode=1", false);
 				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send(strXML);
+				if (xmlhttp.status == 200) {
+					if (xmlhttp.responseText == "Duplicate entry") {
+						alert("<spring:message code='ezEmail.t136'/>" + " <spring:message code='ezApprovalG.t730'/>");
+					}
+				} else {
+					alert("<spring:message code='main.sp12'/>");
+				}
 				xmlhttp = null;
 				
 				g_bSaved = true;

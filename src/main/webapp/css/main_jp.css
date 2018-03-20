@@ -68,14 +68,14 @@ header .logo {float:left;margin:0px; padding:5px 0px 0px 0px; width:200px;height
 /*------------ nav ------------*/
 nav .topmenu {margin:0 auto; padding:0px; height:49px; overflow:hidden;text-align:center; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 nav .topmenu li {list-style:none; cursor:pointer; display:inline-block;  text-align:center; margin:0px; padding:0px 30px; height:49px; line-height:47px; color:#333; font-size:17px; font-weight:bold; }
-nav .topmenu li:hover{ color:#146bb8;  background:url(../images/kr/cm/top_menuPoint.gif) no-repeat bottom center;}
+nav .topmenu li:hover{ color:#146bb8;  /*background:url(../images/kr/cm/top_menuPoint.gif) no-repeat bottom center;*/}
 nav .topmenu li  span { margin:0px; padding:0px;}
 
 
 /*------------ topSubMenu 추가 ------------*/
 .topSubMenu {position:relative; clear:both; height:25px;}
 .topSubMenu ul{min-width:80px;position:absolute; margin:0; margin:0px; padding:0px 10px; list-style:none; background:#fff;margin-left:50px;border:1px solid #424242;border-top:1px solid white;}
-.topSubMenu li {text-align:center; padding:9px 0px; font-size:12px; color:#333; cursor:pointer; margin:0px;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.topSubMenu li {text-align:center; padding:9px 0px; font-size:12px; color:#333; cursor:pointer; margin:0px;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .topSubMenu li:hover{ color:#146bb8;}
 .topSubMenu ul .left {background:url(../images/kr/cm/subMenubg_left.gif) no-repeat ; width:10px; cursor:none; display:none; padding:0px; margin:0px;}
 .topSubMenu ul .right {background:url(../images/kr/cm/subMenubg_right.gif) no-repeat ; width:10px; cursor:none;display:none; padding:0px; margin:0px;}
@@ -131,7 +131,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 .maintab01 .right_on {background:#0470e4; line-height:31px; color:#ffffff;}
 
 .schedule_list {list-style:none; margin:0 0 0 10px; padding:0px;}
-.schedule_list li {width:250px ;height:26px; line-height:25px; background:url(../images/kr/main/blueline_dotted.gif) bottom repeat-x;}
+.schedule_list li { padding:0px 0px 0px 4px; width:250px ;height:26px; line-height:25px; background:url(../images/kr/main/point-black.gif) no-repeat 0px 10px;}
 .schedule .calender { float:right; width:225px; }
 
 
@@ -278,7 +278,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 .listtype_photo dt{padding:5px 0;font-size:12px}
 .listtype_photo dt.tit{margin-left:98px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;color:#333}
 .listtype_photo dd.photo{position:relative;display:inline;float:left;margin:-23px 10px 0 0;color:#fff;text-align:center; border:1px solid #999;}
-.listtype_photo dd.photo .iconbest {position:absolute; top:-1px; left:-1px; z-index:15; background:url(../images/kr/main/icon_best_flag.png) no-repeat; display:block; width:34px; height:37px;}
+.listtype_photo dd.photo .iconbest {position:absolute; top:-1px; left:-1px; z-index:15; display:block; width:34px; height:37px;}
 .listtype_photo dd{line-height:16px; font-size:12px; padding:0px; color:#555; }
 .listtype_photo .txt { margin-top:3px ;height:32px; overflow:hidden;}
 .listtype_photo dd img{border:none}
@@ -297,8 +297,8 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 /*------------ poll ------------*/
 .pollbox {width:258px; background:#FFF; float:left;}
-.pollcont{position:relative; padding:15px 15px 10px; height:155px; vertical-align:top;}
-.qusetion { margin:0px 0px 10px 0px; padding:0px 0px 5px 0px; height:auto; border-bottom:1px solid #b8b7b7; overflow:hidden;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size:12px; vertical-align:middle; color:#333;}
+.pollcont{position:relative; padding:8px 15px 10px; height:160px; vertical-align:top;}
+.qusetion { margin:0px 0px 10px 0px; padding:0px 0px 3px 0px; height:auto; border-bottom:1px dotted #ccc; overflow:hidden;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size:12px; vertical-align:middle; color:#333;}
 
 .poll_list { margin:15px 0px; padding:0px; font-size:12px;}
 .poll_list dt { margin:0px; padding:0px ;color:#333; line-height:10px;}
@@ -380,8 +380,8 @@ width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-
 .info_set{display:inline-block; position:absolute; right:3px; top:6px;}
 .info_set span{display:inline-block; background:url(../images/kr/main/info_set.png) no-repeat top left; width:16px; height:16px; cursor:pointer;}
 
-.btn_blue {display:inline-block;padding:0px 4px 0px 0px;background:url(../images/kr/main/btn_bg_blue.gif) no-repeat top right; line-height:24px;*line-height:21px;text-decoration:none !important;white-space:nowrap;margin:0px; cursor:pointer;}
-.btn_blue span {display:block;padding:0px 0px 0 4px;background:url(../images/kr/main/btn_bg_blue.gif) no-repeat top left;height:21px; color:#fff; vertical-align:middle; font-size:11px; font-weight:bold;}
+.btn_blue {display:inline-block;padding:0px 10px 4px 0px; line-height:24px;*line-height:21px;text-decoration:none !important;white-space:nowrap;margin:0px; cursor:pointer;}
+.btn_blue span {display:block;padding:2px 0px 2px 4px; height:21px; color:#fff; vertical-align:middle; font-size:12px; font-weight:bold; width:100%; background-color: rgb(4, 112, 227); background-color: rgb(4, 112, 227);}
 
 
 .btn_white {display:inline-block;padding:0px 4px 0px 0px;background:url(../images/kr/main/btn_bg_white.gif) no-repeat top right; line-height:26px;text-decoration:none !important;white-space:nowrap;margin:0px; cursor:pointer;}
@@ -403,7 +403,7 @@ width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-
 
 .appr_mailcont .nodata_portlet { margin-top:15px; }
 .boardcont .nodata_portlet { margin-top:15px; }
-.pollcont .nodata_portlet { margin-top:15px; }
+.pollcont .nodata_portlet { margin-top:23px; }
 .graphcont .nodata_portlet { margin-top:15px; }
 .communitycont .nodata_portlet { margin-top:15px; }
 #BoardList_NewBoard .nodata_portlet { margin-top:25px; }
@@ -417,7 +417,7 @@ width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-
 .v_graph ul:after{display:block;clear:both;content:""}
 .v_graph li{display:inline;float:left;position:relative;width:49px;height:100%; margin:0px 5px;text-align:center;}
 .v_graph .g_term{display:inline-block;position:relative;width:100%;height:20px;margin:0 -100% -20px 0;padding:130px 0 0 0;color:#767676;line-height:20px;vertical-align:bottom; text-align:center;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.v_graph .g_bar1{ display:inline-block;position:relative;width:8px;border:1px solid #589cc7;border-bottom:0;background:#68bbef;vertical-align:bottom; margin:0 5px 0px 5px;}
+.v_graph .g_bar1{ display:inline-block;position:relative;width:8px;border:1px solid rgba(4, 112, 227, 1);border-bottom:0;background:rgba(4, 112, 227, 1);vertical-align:bottom; margin:0 5px 0px 5px;}
 .v_graph .g_bar2{;display:inline-block;position:relative;width:8px;border:1px solid #0fc274;border-bottom:0;background:#6ccc65;vertical-align:bottom; }
 .v_graph .g_bar span{position:absolute;top:-20px;left:0;width:100%;color:#767676}
 

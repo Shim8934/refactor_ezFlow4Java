@@ -16,7 +16,7 @@
 	            	</c:when>
 	            	<c:otherwise>
 		            	<img src="/images/WebPartSliderCI/img0.png" />
-			    		<img src="/images/WebPartSliderCI/img1.png" />
+<!-- 			    		<img src="/images/WebPartSliderCI/img1.png" /> -->
 			    		<img src="/images/WebPartSliderCI/img2.png" />
 			    		<img src="/images/WebPartSliderCI/img3.png" />
 	            	</c:otherwise>

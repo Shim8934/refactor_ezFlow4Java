@@ -196,7 +196,7 @@
 		  <tr> 
 		    <th ><spring:message code='ezApprovalG.t999'/></th>
 		    <td> 
-		      <input type="text" name="txtOwner" id="txtOwner" class="text" disabled style="Width:100px;font-size:9pt">    </td>
+		      <input type="text" name="txtOwner" id="txtOwner" class="text" disabled style="width:auto; font-size:9pt"></td>
 		  </tr>
 		  <tr class="ptb2"> 
 		    <th ><spring:message code='ezApprovalG.t1000'/></th>
@@ -214,7 +214,7 @@
 		      <table style="border:0;border-collapse:collapse; border-spacing:0;padding:0px;width:100%;">
 		        <tr> 
 		          <td id="tdDisplayFlag" >&nbsp;</td> 
-		          <td style="width:70px;"><a  class="imgbtn"  name="btnDisplayInfo" id="btnDisplayInfo"><span  onClick="return btnDisplayInfo_onclick()"><spring:message code='ezApprovalG.t1042'/></span></a></td>
+		          <td style="width:70px;"><a  class="imgbtn"  name="btnDisplayInfo" id="btnDisplayInfo" style="vertical-align:middle;margin:auto;"><span onClick="return btnDisplayInfo_onclick()"><spring:message code='ezApprovalG.t1042'/></span></a></td>
 		        </tr>
 		      </table>    </td>
 		  </tr>
