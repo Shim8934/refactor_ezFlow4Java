@@ -73,7 +73,7 @@ public class EzAttitudeKMSController {
 		int pageSize = 15;
 		int startPoint = 0;
 		int endPoint = 15;
-
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
@@ -236,8 +236,20 @@ public class EzAttitudeKMSController {
 	public JSONObject getAttModAppList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
 			@RequestParam(required=false)String apprUserName,
 			@RequestParam(required=false)String startDate,
-			@RequestParam(required=false)String endDate) throws Exception {
-
+			@RequestParam(required=false)String endDate,
+			@RequestParam(required=false)String pageNum) throws Exception {
+		
+		int currentPage = 1;
+		int pageSize = 15;
+		int startPoint = 0;
+		int endPoint = 15;
+		int totalPages = 0;
+		int totalAtt = 0;
+		
+		if (pageNum != null) {
+			currentPage = Integer.parseInt(pageNum);
+		}
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
@@ -249,8 +261,8 @@ public class EzAttitudeKMSController {
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
-		
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
+									
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
@@ -264,8 +276,9 @@ public class EzAttitudeKMSController {
 				.queryParam("startDate", startDate)
 				.queryParam("endDate", endDate)
 				.queryParam("sysLang", sysLang)
-				.queryParam("offset", offsetMin);
-
+				.queryParam("offset", offsetMin)
+				.queryParam("pageNum", pageNum);
+		
 		RestTemplate rest = new RestTemplate();
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -277,8 +290,63 @@ public class EzAttitudeKMSController {
 		String status = resultBody.get("status").toString();
 		
 		JSONObject data = new JSONObject();
-		JSONObject resultj = new JSONObject();
 		JSONArray list = new JSONArray();
+		
+		if(status.equals("ok")){
+			LOGGER.debug(resultBody.toJSONString());
+			totalAtt = Integer.parseInt(resultBody.get("data").toString());
+		}
+		totalPages = (totalAtt + pageSize - 1)/pageSize;
+		
+		gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+		
+		headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		entity = new HttpEntity<>(headers);
+		
+		if (totalPages == 0 || totalPages == 1) {
+
+		} else {
+			if (currentPage < totalPages) {
+				startPoint = (currentPage - 1)*pageSize;
+				endPoint = currentPage*pageSize;
+			}
+			else {
+				if (currentPage > totalPages) {
+					currentPage = totalPages;
+				}
+				startPoint = (currentPage - 1) * pageSize;
+				endPoint = totalAtt;
+			}
+		}
+
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("apprUserName", apprUserName)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate)
+				.queryParam("sysLang", sysLang)
+				.queryParam("offset", offsetMin)
+				.queryParam("startPoint", startPoint)
+				.queryParam("endPoint", endPoint);
+
+		rest = new RestTemplate();
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		data = new JSONObject();
+		JSONObject resultj = new JSONObject();
+		list = new JSONArray();
 		
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
@@ -286,12 +354,10 @@ public class EzAttitudeKMSController {
 			resultj.put("list", list);
 		}
 		
-		for (int i = 0 ; i < list.size(); i++ ) {
-			LOGGER.debug(list.get(i).toString());
-		}
-		
 		resultj.put("startDate", startDate);
 		resultj.put("endDate", endDate);
+		resultj.put("totalAtt", totalAtt);
+		resultj.put("totalPages", totalPages);
 		
 		return resultj;
 	}

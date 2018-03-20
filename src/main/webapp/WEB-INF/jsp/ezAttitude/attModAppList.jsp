@@ -98,6 +98,9 @@
 				   "top" : obj.top + $("#search").height(),
 				   "left" : obj.left
 				});
+			
+			$("#Sdatepicker").datepicker('disable');
+	        $("#Edatepicker").datepicker('disable');
 		}
 		function makePageSelPage(){
 	        var strtext;
@@ -211,16 +214,25 @@
 	    
 	    function get_att_list(pageNum) {
 	    	ShowAttProgress();
-	    	var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-	        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	    	
+	    	if (usepostDate) {
+	            var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+
+	            if (startDate > endDate) {
+	                alert("시작일 보다 종료일이 빠를 수 없습니다.");
+	                return;
+	            }
+	        }
 	    	var obj = new Object();
 	    	
 		    obj.apprUserName = $('#appr_search').val();
 		    obj.startDate = startDate;
 		    obj.endDate = endDate;
 			obj.pageNum = pageNum;
+			obj.totalPages = totalPages;
+			obj.totalAtt = totalAtt;
 			
-		    //파라미터로 리스트 마지막 mail의 받은 날짜를 넘겨줘야 한다.
 		    $.ajax({
 				type : 'get',
 			    url : '/ezAttitude/getAttModAppList.do',
@@ -240,14 +252,25 @@
 	    function getAttList_after(data) {
 	    	var attList = data.list;
 	    	var infoStr = "";
-	    	infoStr += ' - [총 <span style="color:#017BEC;">' + attList.length;
-	    	infoStr += '</span> 개 -' + 
-	    	data.startDate.substring(0,4) + '년' + 
-	    	data.startDate.substring(5,7) + '월' + 
-	    	data.startDate.substring(8,10) + '일~';
-	    	infoStr += data.endDate.substring(0,4) + '년' + 
-	    	data.endDate.substring(5,7) + '월' + 
-	    	data.endDate.substring(8,10) + '일]</span>';
+			
+	    	totalAtt = data.totalAtt;
+	    	totalPages = data.totalPages;
+	    	makePageSelPage();
+	    	
+	    	infoStr += ' - [총 <span style="color:#017BEC;">' + data.totalAtt;
+	    	
+	    	if (data.startDate != null && data.endDate != null) {
+	    		infoStr += '</span> 개 - ';
+	    		infoStr += data.startDate.substring(0,4) + '년' + 
+		    	data.startDate.substring(5,7) + '월' + 
+		    	data.startDate.substring(8,10) + '일~';
+		    	infoStr += data.endDate.substring(0,4) + '년' + 
+		    	data.endDate.substring(5,7) + '월' + 
+		    	data.endDate.substring(8,10) + '일]</span>';
+	    	} else {
+	    		infoStr += '</span> 개]';
+	    	}
+	    	
 	    	$("#mailBoxInfo").html(infoStr);
 	    	$('#AttList tbody').children( 'tr:not(:first)' ).remove();
 	    	if (attList.length == 0) { 
@@ -327,13 +350,13 @@
 	    function goToPageByNum(Value){
 	    	currentPage = Value;
 	        makePageSelPage();
-	        search_Set(currentPage);
+	        get_att_list(currentPage);
 	    }
 	    
 	    function selbeforeBlock(){
 	        var pageNum = parseInt(currentPage);
 	        pageNum = ((parseInt(pageNum / blockSize) - 1) * blockSize) + 1;
-	        goToPageByNum(pageNum);
+	        get_att_list(pageNum);
 	    }
 	    
 	    function selbeforeBlock_one(){
@@ -357,6 +380,21 @@
 	        else
 	            return;
 	    }
+	    
+	    var usepostDate = false;
+	    function DateSearch_Click() {
+	        if(usepostDate){
+	            usepostDate = false;
+	            $("#Sdatepicker").datepicker('disable');
+	            $("#Edatepicker").datepicker('disable');
+	        }
+	        else {
+	            usepostDate = true;
+	            $("#Sdatepicker").datepicker('enable');
+	            $("#Edatepicker").datepicker('enable');
+	        }
+	    }
+	    
 	    
 		</script>
 </head>
@@ -390,6 +428,7 @@
                   <tr>
                     <th>변경일자기간</th>
                     <td>
+                    	<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate">검색기간 사용</label>
                     	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;">
 	                </td>
                   </tr>
