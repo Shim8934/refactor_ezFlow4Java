@@ -9,6 +9,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 	<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
+	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	
 	<script type="text/javascript">
 	
 		var id = "${id}";
@@ -18,6 +20,13 @@
 		var currPage = "${currPage}";
 		var back = "back";
 		var allData = [];
+		
+		/** 180320 추가 : 사다리 재사용 */
+		$(function() {
+			$("#usePreladder").on("click", function() {
+				window.location.href = "/ezLadder/setLadder.do?ladderId=" + ${vo.ladderId};
+			});
+		});
 		
 		function deleteLadder(idx) {
 		
@@ -55,7 +64,9 @@
 			<h2>${vo.title }
 				<span style="float: right; font-weight:normal;color:black;">
 					종류 : ${vo.type }, 상태 : ${vo.status }, 공개 : ${vo.secretFlag } | 작성자 ${vo.writerName }, 부서 ${vo.deptName }, 
-					<a href="#" onclick="reuse(${vo.ladderId})"><img src ='/images/ezLadder/reuse.png' width='30' height ='30'/></a>,
+					<div id="usePreladder" style="display: inline-block; cursor: pointer;">
+						<img src ='/images/ezLadder/reuse.png' width='30' height ='30'/>
+					</div>,
 					<c:choose>
 						<c:when test="${id eq vo.writerId }">
 							<a href="#" onclick="deleteLadder(${vo.ladderId})"><img src ='/images/ezLadder/trash.png' width='30' height ='30'/></a><br>

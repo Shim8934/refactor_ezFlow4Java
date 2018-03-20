@@ -20,7 +20,6 @@
 		
 		<script type="text/javascript">
 			$(function() {
-				ladder_set_init();
 				
 				$(window).resize(function() {
 					ladder_window_resize();
@@ -103,11 +102,19 @@
 					}); */
 				});
 				
+				ladder_set_init();
 			});
 			
 			function ladder_set_init() {
-				$(".ladderType:eq(<c:out value='${ladType}' />)").addClass("active");
+				var retladinfo = [];
+				
 				ladder_window_resize();
+				if('${ladderId}' !== "") {
+					retladinfo = getPreLadder('${ladderId}');
+					preLadderListComplete(retladinfo["lad"], retladinfo["ladline"]);
+				} else {
+					$(".ladderType:eq(<c:out value='${ladType}' />)").addClass("active");
+				}
 			}
 			
 			/** 이전사다리 가져오기 */
@@ -265,7 +272,6 @@
 					console.log("arr 이전 사다리 불러올시 + 조직도에서 불러올시");
 					
 					attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
-					items = [];
 					
 					len = data.length;
 					
@@ -308,11 +314,14 @@
 						attendants["name2"][totallen] = userdata["name2"];
 					}
 				}
+				
 				if(typeof item !== "undefined") {
 					items[totallen] = item;
 				} else {
-					items[totallen] = "";
-				}
+					if(items.length < attendants["id"].length) {
+						items[totallen] = "";
+					}
+				} 
 				attendants["order"][totallen] = totallen;
 				
 				setAttendantsView();

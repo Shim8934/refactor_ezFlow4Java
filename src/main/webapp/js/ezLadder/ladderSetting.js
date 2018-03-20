@@ -35,3 +35,34 @@ function popSelectUsertype(attendantList, setFunc) {
    		}]
    	}); 
 }
+
+/** 재사용 사다리 정보 가져오기 */
+function getPreLadder(ladderID) {
+	var data = [];
+	var templist = [];
+	var ladinfo = [];
+	
+	data = [ladderID, "", "", "pre", ""];
+	
+	$.ajax({
+		type: "GET",
+		url: "/ezLadder/getLadderGame.do",
+		traditional: true,
+		dataType: "json",
+		async : false,
+		data: {
+			"allData": data
+		},
+		success: function(result) {
+			ladinfo["lad"] = result.vo;
+			templist = result.list;
+		}
+	});
+	
+	ladinfo["ladline"] = [];
+	for(var i = 0; i < templist.length; i++) {
+		ladinfo["ladline"][i] = { "id": templist[i]["userId"], "name": templist[i]["userName"], "name2": templist[i]["userName2"], "item": templist[i]["item"] };
+	}
+	
+	return ladinfo;
+}
