@@ -193,7 +193,9 @@
 			}
 	
 			function btnMail_onclick() {
-			    window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=" + docHref +"&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+// 			    window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=" + docHref +"&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+		        window.open("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+
 			}
 	
 			function btnBoard_onclick() {
@@ -205,7 +207,7 @@
 			
 			    var left = (width - wWeight) / 2;
 			    var top = (heigth - wHeight) / 2;
-			    var ret = window.showModalDialog("/myoffice/ezBoardSTD/WriteBoardSelect_Modal.aspx", "",
+			    var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
 			        "DialogHeight:660px;DialogWidth:345px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
 			
 			    if (typeof (ret) != "undefined") {
@@ -225,7 +227,7 @@
 			        }
 			        else {
 			            if (pUse_Editor == "" || pUse_Editor == "CK") {
-			                window.open("/myoffice/ezBoardSTD/NewBoardItem.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + docHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
+			                window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
 			            }
 			            else {
 			                window.open("/myoffice/ezBoardSTD/NewBoardItem_IE.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + docHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
@@ -362,17 +364,23 @@
 			}
 	
 			function SaveSignCheck() {
-			    var xmlhttp = createXMLHttpRequest();
-			    var xmlpara = createXmlDom();
-			    var objNode;
-			    createNodeInsert(xmlpara, objNode, "PARAMETER");
-			    createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-			    createNodeAndInsertText(xmlpara, objNode, "SignCheck", "Y");
-			
-			    xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/UpdateSignCheck.aspx", false);
-			    xmlhttp.send(xmlpara);
-			
-			    return xmlhttp.responseText;
+				var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/updateSignCheck.do",
+		    		data : {
+		    			docID : pDocID,
+		    			signCheck : "Y"
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}
+		    	});
+		    	
+		        return result;
 			}
 	    </script>
 	</head>
