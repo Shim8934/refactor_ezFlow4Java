@@ -273,7 +273,32 @@
 					checkedList = checkedList + "," + checkedArr[i];
 				}
 				
-				DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList + "&mode=admin");
+				//added to test
+ 				/*$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/checkPermission.do",
+					data: {
+						"fileList" : checkedList
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var result = data.resultValue;
+						
+						if (result != "ok") {
+							alert("<spring:message code='ezWebFolder.t243'/>");
+						}
+						else {
+							DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList);
+						}
+					},
+					error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					}
+				});*/
+				//end
+				
+				DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList);
 			}
 			
 			function fileRename() {
@@ -288,6 +313,31 @@
 				}
 				
 				var fileId = checkedArr[0];
+				
+				//added to test
+				/* $.ajax({
+					type: "POST",
+					url: "/ezWebFolder/checkPermission.do",
+					data: {
+						"fileId" : fileId
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var result = data.resultValue;
+						
+						if (result != "ok") {
+							alert("<spring:message code='ezWebFolder.t243'/>");
+						}
+						else {
+							DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
+						}
+					},
+					error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					}
+				}); */
+				//end
 				
 				DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 			}

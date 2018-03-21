@@ -298,7 +298,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	public String deleteFileConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("Delete File Confirm is running!");
 		String listFileId = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
-		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
 		
 		if (listFileId.equals("")) {
 			logger.debug("Delete File Confirm illegal arguments!");
@@ -306,7 +305,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("fileList", listFileId);
-		model.addAttribute("mode", mode);
 		logger.debug("Delete File Confirm finishes!");
 		
 		return "/ezWebFolder/fileDelete";
@@ -318,7 +316,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String listFileId   = request.getParameter("fileList");
-		String mode         = request.getParameter("mode");
 		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/file-delete";
 		
@@ -327,7 +324,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())
 										.queryParam("lang", user.getLang())
-										.queryParam("mode", mode)
 										.queryParam("fileList", listFileId);
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -841,6 +837,39 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		else {
 			model.addAttribute("resultValue", "error");
+		}
+		
+		return "json";
+	}
+
+	@RequestMapping(value="/ezWebFolder/checkPermission.do", method = RequestMethod.POST)
+	public String checkPermission(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String fileId      = request.getParameter("fileId");
+		String fileList    = request.getParameter("fileList");
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/rest/ezwebfolder/permission-check/" + user.getId();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("fileList", fileList)
+										.queryParam("offset", user.getOffset())
+										.queryParam("fileId", fileId);
+		
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			String check = resultBody.get("data").toString();
+			model.addAttribute("resultValue", check);
 		}
 		
 		return "json";

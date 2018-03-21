@@ -1293,4 +1293,18 @@
 			LEVEL, lpad(ifnull(s.EXTENSIONATTRIBUTE15, 0),6,0), s.DISPLAYNAME
 	</select>
 	
+	<select id="EzWebFolderDAO.checkFilesOwner" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_WEBFOLDER_FILE
+		WHERE
+			FILE_ID IN ($fileList$)
+		AND
+			CREATE_ID = #userId#
+		AND
+			TENANT_ID = #tenantId#
+		
+	</select>
+	
 </sqlMap>

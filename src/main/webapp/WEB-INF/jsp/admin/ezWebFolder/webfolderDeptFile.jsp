@@ -272,7 +272,7 @@
 					checkedList = checkedList + "," + checkedArr[i];
 				}
 				
-				DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList + "&mode=admin");
+				DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList);
 			}
 			
 			function fileRename() {

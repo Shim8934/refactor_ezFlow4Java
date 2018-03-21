@@ -14,7 +14,7 @@
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript">
 		var fileList = "<c:out value="${fileList}"/>";
-		var mode     = "<c:out value="${mode}"/>";
+		
 		function wClose() {
 			parent.DivPopUpHidden();
 			window.close();
@@ -31,8 +31,7 @@
 				type: "POST",
 				url: "/ezWebFolder/deleteFile.do",
 				data: {
-					"fileList" : fileList,
-					"mode"     : mode
+					"fileList" : fileList
 				},
 				dataType: "JSON",
 				async: true,

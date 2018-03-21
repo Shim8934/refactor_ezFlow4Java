@@ -54,4 +54,5 @@ public interface EzWebFolderService {
 	void updateListCount(String userId, String listCount, int tenantId) throws Exception;
 	List<SimpleDeptVO> getAllDeptsForChief(String userId, int level, String primary, int tenantId) throws Exception;
 	List<SimpleDeptVO> getSelectedDeptsForChief(String userId, int level, String primary, int tenantId) throws Exception;
+	int checkFilesOwner(String userId, String fileList, int tenantId) throws Exception;
 }

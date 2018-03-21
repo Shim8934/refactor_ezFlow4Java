@@ -533,4 +533,14 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		return ezWebFolderDAO.getSelectedDeptsForChief(map);
 	}
 
+	@Override
+	public int checkFilesOwner(String userId, String fileList, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userId);
+		map.put("fileList",  fileList);
+		map.put("tenantId",  tenantId);
+		
+		return ezWebFolderDAO.checkFilesOwner(map);
+	}
+
 }

@@ -212,4 +212,8 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public void updateStatusAllFilesInFolder(Map<String, Object> map) {
 		update("EzWebFolderDAO.updateStatusAllFilesInFolder", map);
 	}
+
+	public int checkFilesOwner(Map<String, Object> map) {
+		return (int)select("EzWebFolderDAO.checkFilesOwner", map);
+	}
 }

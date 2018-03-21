@@ -183,7 +183,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			totalUsers                            = ezWebFolderAdminService.getTotalListUserCapacity(companyId, searchStr, searchOpt, startPoint, pageSize, tenantId, primary);
 			totalPages                            = (totalUsers + pageSize - 1)/pageSize;
 			
-			for(UserCapacityVO capacity: listUserCapacity) {
+			for (UserCapacityVO capacity: listUserCapacity) {
 				if (capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity().equals("0")) {
 					capacity.setUsedRate(0);
 				}
@@ -225,10 +225,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		
 		try {
 			int tenantId = loginService.getTenantId(serverName);
-			
-			for (String userId : userList) {
-				ezWebFolderAdminService.updateNewAmount(userId, newValue, companyId, tenantId);
-			}
+			ezWebFolderAdminService.updateNewAmount(userList, newValue, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -267,9 +264,7 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 				totalAmount = webfolderConfig.getTotalLimit();
 			}
 			
-			for (String userId : userList) {
-				ezWebFolderAdminService.updateNewAmount(userId, totalAmount, companyId, tenantId);
-			}
+			ezWebFolderAdminService.updateNewAmount(userList, totalAmount, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -443,7 +438,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 				
 				if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {
 					writeUploadedFile(multiFileLists.get(i), pFileName[i], pDirPath);
-					//Save to database
 					FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(extend, tenantId);
 					Date date           = new Date();
 					FileVO fileVO       = new FileVO();
@@ -476,6 +470,9 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 					saveLog("C", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
 				}
 			}
+			
+			//Save to database
+			//ezWebFolderService.insertListFiles(list, companyId, offset, userId, userName1, userName2, getMaxLogID(tenantId), tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -624,7 +621,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		String userId       = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
 		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
 		String lang         = request.getParameter("lang")     != null ? request.getParameter("lang")     : "";
-		String mode         = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
 		String[] fileIDList = listFileId.split(",");
 		JSONObject result   = new JSONObject();
 		
@@ -643,42 +639,12 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			String companyId = userInfo.getCompanyID();
 			int tenantId     = userInfo.getTenantId();
 			
-			if (mode.equals("admin")) {
-				for (int i = 0; i < fileIDList.length; i++) {
-					FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
-					
-					//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
-					ezWebFolderService.updateFileUseStatus(fileIDList[i], tenantId);
-					saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
-				}
-			}
-			else {
-				int check = 0;
+			for (int i = 0; i < fileIDList.length; i++) {
+				FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
 				
-				for (int i = 0; i < fileIDList.length; i++) {
-					FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
-					if (!fileVO.getCreateId().equals(userId)) {
-						check = 1;
-						break;
-					}
-				}
-				
-				if (check == 0) {
-					for (int i = 0; i < fileIDList.length; i++) {
-						FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
-						
-						//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
-						ezWebFolderService.updateFileUseStatus(fileIDList[i], tenantId);
-						saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
-					}
-				}
-				else {
-					logger.debug("Privileges!");
-					result.put("status", "error");
-					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t243", locale));
-					result.put("code", "1");
-					return result;
-				}
+				//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
+				ezWebFolderService.updateFileUseStatus(fileIDList[i], tenantId);
+				saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 			}
 			
 			result.put("status", "ok");
@@ -2376,6 +2342,51 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 			}
 			
 			result.put("data", "");
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezwebfolder/permission-check/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject checkPermission(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+		String fileList   = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
+		String fileId     = request.getParameter("fileId")   != null ? request.getParameter("fileId")   : "";
+		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		JSONObject result = new JSONObject();
+		
+		if (userId.equals("") || serverName.equals("") || offset.equals("") || (fileId.equals("") && fileList.equals(""))) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		logger.debug("userId: " + userId + " || serverName: " + serverName + " || Offset: " + offset + " || fileList: " + fileList + " || fileId: " + fileId);
+		
+		try {
+			int tenantId = loginService.getTenantId(serverName);
+			
+			if (!fileId.equals("")) {
+				FileVO fileVO = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
+				result.put("data", fileVO.getCreateId().equals(userId) ? "ok" : "error");
+			}
+			else {
+				int totalFiles = fileList.split(",").length;
+				fileList       = "'" + fileList + "'";
+				fileList       = fileList.replace(",", "','");
+				int count      = ezWebFolderService.checkFilesOwner(userId, fileList, tenantId);
+				result.put("data", count == totalFiles ? "ok" : "error");
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 

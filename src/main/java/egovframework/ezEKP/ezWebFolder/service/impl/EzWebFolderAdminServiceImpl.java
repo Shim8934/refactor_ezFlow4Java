@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,13 +69,16 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	@Override
-	public void updateNewAmount(String userId, String newStorageValue, String companyId, int tenantId) throws Exception {
+	public void updateNewAmount(List<String> userList, String newStorageValue, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("userId",        userId);
 		map.put("totalCapacity", newStorageValue);
 		map.put("companyId",     companyId);
 		map.put("tenantId",      tenantId);
-		ezWebFolderAdminDAO.updateNewAmount(map);
+		
+		for (String userId : userList) {
+			map.put("userId", userId);
+			ezWebFolderAdminDAO.updateNewAmount(map);
+		}
 	}
 
 	@Override
@@ -206,4 +211,29 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("tenantId", tenantId);
 		ezWebFolderAdminDAO.deleteFolderUsersOfChief(map);
 	}
+
+	@Override
+	public void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, String fileSize, String fileExt, String fileType, String logId, int tenantId) throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		
+		//Save log to database
+		FileLogVO fileLog = new FileLogVO();
+		
+		fileLog.setLogType(type);
+		fileLog.setCompanyId(companyId);
+		fileLog.setCreateDate(timeUTC);
+		fileLog.setCreateId(userId);
+		fileLog.setCreateName1(userName1);
+		fileLog.setCreateName2(userName2);
+		fileLog.setFileName(filename);
+		fileLog.setFileSize(fileSize);
+		fileLog.setFileExt(fileExt);
+		fileLog.setFileType(fileType);
+		fileLog.setLogId(logId);
+		fileLog.setTenantId(tenantId);
+		insertFileLog(fileLog);
+	}
+	
 }
