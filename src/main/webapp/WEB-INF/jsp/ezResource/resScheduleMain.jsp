@@ -132,7 +132,9 @@
 	        
 	        var divH = document.getElementById("divExplain")
 			if(divH){
-				divH.style.height = document.documentElement.clientHeight - 617 + "px";
+				divH.style.height = document.documentElement.clientHeight - 616 + "px";
+				divH.style.minHeight = "15px";
+				divH.style.maxHeight = "220px";				
 			}
 	        
 	        if (typeCal == "2") {
@@ -399,7 +401,7 @@
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t271'/></b></td>
 									</tr>
 									<tr>
-										<td style="padding:2px 10px;"><div  id = "divExplain" style="min-height:203px;overflow-y: auto;word-break:break-all"><c:out value='${brdExplain}' /></div></td>
+										<td style="padding:2px 10px;"><div  id = "divExplain" style="min-height:15px;max-height:220px;overflow-y: auto;word-break:break-all"><c:out value='${brdExplain}' /></div></td>
 									</tr>
 								</table>
 	                    	</td>
