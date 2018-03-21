@@ -468,7 +468,7 @@ function getDocListjson(pageNum) {
 	var doctitle = $("#DocTitle").val();
 	var drafter = $("#drafter").val();
 	var drafterdept = $("#drafterdept").val();
-	
+	console.log("drafterdept :: "+drafterdept);
 	if (!$("#usedate").prop("checked")) {
 		searchStartTime = "";
 		searchEndTime = "";
@@ -501,7 +501,7 @@ function getDocListjson(pageNum) {
 					
 					var html = "";
 					if (res.totalcnt < 1) {
-						html += "<tr><td colspan='7' style='text-align:center;'>"+text1+"</td></tr>";
+						html += "<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>";
 					} else {
 			
 							res.DocDeleteHistList.forEach(function(i, v) {
@@ -511,11 +511,19 @@ function getDocListjson(pageNum) {
 								html += "   <td><input type ='checkbox' name='myCheckbox' id='" + i.docID + "' onclick='chk_onselect(this)' writerName='" 
 									 + i.writerName + "' DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "'></td>";
 								html += "	<td title=\'" + i.docNo + "'>"	+ i.docNo	+ "</td>";
+								if (i.hasAttachYn != "N") {
+									html += '<td><img src="\/images\/newAttach.gif"></td>';
+								} else {
+									html += "<td>"  +   		 " "   	 				+ "</td>";
+								}
 								html += "	<td>"	+ i.docTitle						+ "</td>";
-								html += "	<td>"	+ i.writerName						+ "</td>";
-								html += "	<td>"	+ i.writerDeptName					+ "</td>";
-								html += "	<td>"	+ i.endDate					        + "</td>";
 								html += "	<td>"	+ i.formName						+ "</td>";
+								html += "	<td>"	+ i.writerDeptName					+ "</td>";
+								html += "	<td>"	+ i.writerName						+ "</td>";
+								html += "	<td>"	+ i.docstateName					+ "</td>";
+								html += "	<td>"	+ i.sendFlag						+ "</td>";
+								html += "	<td>"	+ i.endDate					        + "</td>";
+								html += "	<td>"	+ i.isPublic						+ "</td>";
 								html += "</tr>";
 							});
 					}

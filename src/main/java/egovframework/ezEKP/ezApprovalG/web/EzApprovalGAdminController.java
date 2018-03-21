@@ -3324,11 +3324,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		if (pSelectTab.equals("completedoclist")) { 
 			
-			list = ezApprovalGAdminService.getContDocList_json(contID, "", userSecurityCode, publicFlag, subQuery.toString(), startRow, maxItemPerPage, pageNum, "", "", totalcnt, companyID, userInfo.getLang(), userInfo.getTenantId(), commonUtil.getMinuteUTC(userInfo.getOffset()));
+			list = ezApprovalGAdminService.getContDocList_json(contID, "", userSecurityCode, publicFlag, subQuery.toString(), startRow, maxItemPerPage, pageNum, "", "", totalcnt, companyID, userInfo.getLang(), userInfo.getTenantId(), commonUtil.getMinuteUTC(userInfo.getOffset()), userInfo.getLocale());
 			
 		} else {
 			
-			list = ezApprovalGAdminService.getDeleteDocList_json("", subQuery.toString(), startRow, maxItemPerPage, pageNum, totalcnt, companyID, userInfo.getTenantId(),commonUtil.getMinuteUTC(userInfo.getOffset()));
+			list = ezApprovalGAdminService.getDeleteDocList_json("", subQuery.toString(), startRow, maxItemPerPage, pageNum, totalcnt, companyID, userInfo.getTenantId(),commonUtil.getMinuteUTC(userInfo.getOffset()), userInfo.getLang(), userInfo.getLocale());
 			
 		}
 		model.addAttribute("DocDeleteHistList", list);

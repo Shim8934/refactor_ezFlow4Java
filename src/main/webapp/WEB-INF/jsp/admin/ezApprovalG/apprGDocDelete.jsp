@@ -26,6 +26,9 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
+		td {
+			padding: 8px 5px;
+		}
 		</style>
 		<SCRIPT type="text/javascript" ID="clientEventHandlersJS" >
 		    var Check = false, PeriodDocList;
@@ -76,6 +79,11 @@
 		    	
 	    	    $("#startDatepicker").datepicker('disable');
 		        $("#endDatepicker").datepicker('disable');
+		        
+		        //더블클릭으로 셀선택 방지
+		        $(document).bind("selectstart", function(event){event.preventDefault();});
+		        //드래그 방지
+		        $(document).bind("dragstart", function(event){event.preventDefault();});
 		    }
 		    
 			// 검색값 입력 후 엔터키 입력 시 검색 호출
@@ -390,26 +398,41 @@
 								var html = "";
 
 								if (res.totalcnt < 1) {
-									html += "<tr><td colspan='7' style='text-align:center;'>"+text1+"</td></tr>";
+									if (res.pSelectTab == "completedoclist") {
+										html += "<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>";
+									} else {
+										html += "<tr><td colspan='12' style='text-align:center;'>"+text1+"</td></tr>";
+									}
+										
 								} else {
 										if (res.pSelectTab == "completedoclist") {
 											$("#doclist").empty().append(
-													'<th style="width:5%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle;"/></th>'
-													+ '<th style="width:20%;"><spring:message code="ezApproval.t434"></spring:message></th>'
+													  '<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
+													+ '<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>'
+													+ '<th style="width:2%;"><img src="/images/newAttach.gif"></th>'
 													+ '<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
-													+ '<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
+													+ '<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>'
 													+ '<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>'
-													+ '<th style="width:15%;"><spring:message code="ezApproval.t448"></spring:message></th>'
-													+ '<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>')
+													+ '<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
+													+ '<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
+													+ '<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>'
+													+ '<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>'
+													+ '<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
+													)
 										} else {
 											$("#doclist").empty().append(
-													'<th style="width:5%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle;"/></th>'
-													+ '<th style="width:20%;"><spring:message code="ezApproval.t434"></spring:message></th>'
+													  '<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
+													+ '<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>'
+													+ '<th style="width:2%;"><img src="/images/newAttach.gif"></th>'
 													+ '<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
-													+ '<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
+													+ '<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>'
 													+ '<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>'
-													+ '<th style="width:15%;"><spring:message code="ezApprovalG.t1265"></spring:message></th>'
-													+ '<th style="width:10%;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
+													+ '<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
+													+ '<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
+													+ '<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>'
+													+ '<th style="width:10%;"><spring:message code="ezApproval.t368"></spring:message></th>'
+													+ '<th style="width:5%;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
+													+ '<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
 													)
 											
 										}
@@ -420,11 +443,22 @@
 											html += "   <td><input type ='checkbox' name='myCheckbox' id='" + i.docID + "' onclick='chk_onselect(this)' writerName='" 
 												 + i.writerName + "' DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "'></td>";
 											html += "	<td title=\'" + i.docNo + "'>"	+ i.docNo	+ "</td>";
+											if (i.hasAttachYn != "N") {
+												html += '<td><img src="\/images\/newAttach.gif"></td>';
+											} else {
+												html += "<td>"  +   		 " "   	 				+ "</td>";
+											}
 											html += "	<td>"	+ i.docTitle						+ "</td>";
-											html += "	<td>"	+ i.writerName						+ "</td>";
-											html += "	<td>"	+ i.writerDeptName					+ "</td>";
-											html += "	<td>"	+ i.endDate					        + "</td>";
 											html += "	<td>"	+ i.formName						+ "</td>";
+											html += "	<td>"	+ i.writerDeptName					+ "</td>";
+											html += "	<td>"	+ i.writerName						+ "</td>";
+											html += "	<td>"	+ i.docstateName					+ "</td>";
+											html += "	<td>"	+ i.sendFlag						+ "</td>";
+											html += "	<td>"	+ i.endDate					        + "</td>";
+											if (res.pSelectTab != "completedoclist") {
+												html += "	<td>"	+ i.receiptPointName			+ "</td>";
+											}
+											html += "	<td>"	+ i.isPublic						+ "</td>";
 											html += "</tr>";
 										});
 								}
@@ -790,12 +824,25 @@
 						strListDocTitleInfo = "";
 						strListDeptNameInfo = "";
 						
-						$('#DocCompleteListBody').empty().append("<tr><td colspan='7' style='text-align:center;'>"+text1+"</td></tr>");
+						$('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
 			            
 						$("#checkboxAll").prop("checked", false);
 			            getDocDeleteHist(1);
 				    }
 				}
+			    
+			    var organ_dialogArguments = new Array();
+			    function bt_TDeptSelect_onclick() {
+			    	organ_dialogArguments[0] = P_CompanyID;
+		            organ_dialogArguments[1] = bt_TDeptSelect_onclick_Complete;
+		            var result = GetOpenWindow("/admin/ezApprovalG/apprGOrgan.do", "Organ_Cross", 400, 485, "NO");
+		        }
+		        
+		        function bt_TDeptSelect_onclick_Complete(retVal) {
+		            if (typeof (retVal) != "undefined") {
+		                $("#drafterdept").val(retVal[1]);
+		            }
+		        }
 			    
 		</script>
 	</head>
@@ -815,44 +862,79 @@
 		        <p><span id="1tab2" divname="deletedoclist"><spring:message code='ezApprovalG.kes02' /></span></p>		        
 		    </div>
 		</div>
-		<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
+		<table style="width: 100%; background-color: #fcfcfc;">
 			<tr>
-				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-				<spring:message code='ezApproval.t434'/> : <input type="text" id="DocNumber" name="DocNumber" style="width: 10%" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
-				<spring:message code='ezApproval.t435'/> : <input type="text" id="DocTitle" name="DocTitle" style="width: 10%" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
-					<span id="topmenu" style="width: 500px">
-						<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/> : </label>
-						<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
-						<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
-					</span> 
-				</td>
+				<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8;">
+					<tr>
+						<td style="width:5%; ">
+							<spring:message code='ezApproval.t434'/> 
+						</td>
+						<td style="width:11%;">
+							<input type="text" id="DocNumber" name="DocNumber" style="width:97%;" maxlength="50" onkeypress="return search_keypress(event)" />
+						</td>
+						<td style="width:5%;">
+							<spring:message code='ezApproval.t435'/> 
+						</td>
+						<td style="width:11%;">
+							<input type="text" id="DocTitle" name="DocTitle" style="width:90%;" maxlength="50" onkeypress="return search_keypress(event)"/>
+						</td>
+						<td style="width:25%; margin-bottom: 10px;  ">
+							<span id="topmenu" style="width: 500px">
+								<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>&nbsp;
+								<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 25%; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
+								<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 25%; text-align: center" readonly="readonly" />
+							</span>
+						</td>
+						<td style="width:*;"></td>
+					</tr>
+				</table>
 			</tr>
 			<tr>
-				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-	                <spring:message code='ezApproval.t437'/> : <input type="text" id="drafterdept" name="drafterdept" style="width: 10%" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;&nbsp;&nbsp;
-					<spring:message code='ezApproval.t436'/> : <input type="text" id="drafter" name="drafter" style="width: 10%" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
-					<a class="imgbtn" >
-						<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
-					</a>&nbsp;
-					<a class="imgbtn">
-						<span onClick="reload()"><spring:message code='ezApprovalG.t165' /></span>
-					</a>&nbsp;
-					<a class="imgbtn" id ="delbtn">
-						<span onClick="DeleteDoc()"><spring:message code='ezApprovalG.t266' /></span>
-					</a>&nbsp;
-				</td>
+				<table style="width:100%; background-color: #fcfcfc; border-left: 1px solid #e8e8e8;border-right: 1px solid #e8e8e8;">
+					<tr>
+						<td style="width:5%;">
+							 <spring:message code='ezApproval.t437'/>
+						</td>
+						<td style="width:11%;">
+							<input type="text" id="drafterdept" name="drafterdept" style="width: 65%;" maxlength="50" readonly="readonly"/>
+							<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
+						</td>
+						<td style="width:5%;">
+						    <spring:message code='ezApproval.t436'/> 
+						</td>
+						<td style="width:11%;">
+							<input type="text" id="drafter" name="drafter" style="width: 90%;" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
+						</td>
+						<td style="width:*; margin-bottom: 10px;">
+							 
+							<a class="imgbtn" >
+								<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
+							</a>&nbsp; 
+							<a class="imgbtn">
+								<span onClick="reload()"><spring:message code='ezApprovalG.t165' /></span>
+							</a>&nbsp;
+							<a class="imgbtn" id ="delbtn">
+								<span onClick="DeleteDoc()"><spring:message code='ezApprovalG.t266' /></span>
+							</a>&nbsp;
+						</td>
+					</tr>
+				</table>
 			</tr>
 		</table>
 		<table class="mainlist" style="width:100%; height: 100%;">
 			<thead>
 				<tr id ="doclist">
-					<th style="width:5%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle;"/></th>
-					<th style="width:20%;"><spring:message code="ezApproval.t434"></spring:message></th>
+					<th style="width:1%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>
+					<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>
+					<th style="width:3%;"><spring:message code="ezApprovalG.t56"></spring:message></th>
 					<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
-					<th style="width:15%;"><spring:message code="ezApproval.t448"></spring:message></th>
 					<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>
+					<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
+					<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
+					<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>
+					<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>
+					<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>
+					<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>
 				</tr>
 			</thead>
 			<tbody id="DocCompleteListBody" style="overflow: auto;"></tbody> 

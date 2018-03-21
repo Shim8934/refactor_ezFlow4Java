@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
@@ -78,6 +79,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	
 	@Autowired
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name = "egovMessageSource")
+    private EgovMessageSource messageSource;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGAdminServiceImpl.class);
 
@@ -3823,7 +3827,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public List<ApprGDocListVO> getContDocList_json(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, int startRow, int pageSize, String pageNum, String orderCell, String orderOption, int totalcnt, String companyID, String lang, int tenantID, String offset) throws Exception {
+	public List<ApprGDocListVO> getContDocList_json(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, int startRow, int pageSize, String pageNum, 
+			String orderCell, String orderOption, int totalcnt, String companyID, String lang, int tenantID, String offset, Locale locale) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 				
 		int querySize = pageSize * Integer.parseInt(pageNum);
@@ -3846,6 +3851,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PAGESIZE2", pageSize);
 		map.put("v_PAGESIZE3", startRow);
 		map.put("v_OFFSET",offset);
+		map.put("v_PSTRLANG", lang);
+		
+		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
+		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
+		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
+		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));
 		
 		List<ApprGDocListVO> list = ezApprovalGAdminDAO.getContDocListjson(map);
 		
@@ -3895,7 +3906,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset) throws Exception{
+	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale) throws Exception{
 		
 		int querySize = pageSize * Integer.parseInt(pageNum);
 		int querySize2 = totalcnt - pageSize * (Integer.parseInt(pageNum) - 1);
@@ -3909,6 +3920,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PAGESIZE2", pageSize);
 		map.put("v_PAGESIZE3", startRow);
 		map.put("v_OFFSET",offset);
+		map.put("v_PSTRLANG", lang);
+		
+		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
+		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
+		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
+		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));	
 		
 		List<ApprGDocListVO> list = ezApprovalGAdminDAO.getDeleteDocListjson(map);
 		
