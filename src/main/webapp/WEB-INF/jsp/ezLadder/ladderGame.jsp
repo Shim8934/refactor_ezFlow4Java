@@ -10,6 +10,8 @@
 <title>Insert title here</title>
 	<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
+	<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
 	
 	<script type="text/javascript">
 	
@@ -22,13 +24,96 @@
 		var allData = [];
 		var size = "${ fn:length(list)}";
 		var lineCnt = "${vo.lineCnt}"
+		
+		var stompClient = null;
+		
+		$(window).unload(function() {
+			if (stompClient !== null) {
+		        stompClient.disconnect();
+		    }
+		});
 
 		/** 180320 추가 : 사다리 재사용 */
 		$(function() {
+			showComments();
+			getCmtSockConnect();
+			
 			$("#usePreladder").on("click", function() {
 				window.location.href = "/ezLadder/setLadder.do?ladderId=" + ${vo.ladderId};
 			});
 		});
+		
+		function getCmtSockConnect() {
+			var sock = new SockJS("/hello");
+			stompClient = Stomp.over(sock);
+			stompClient.connect({}, function() {
+				stompClient.subscribe("/ladcmt/subscribe/test", function(result) {
+					console.log(result);
+					console.log("ricieve---------");
+				});
+			});
+		}
+		
+		function sendTest() {
+			console.log("send---------");
+			var msg = "send test? 한글은?";
+			stompClient.send("/app/ladtest", {}, msg);
+		}
+		
+		function showComments() {
+			var html = ""
+			
+			$.ajax({
+				type: "GET",
+				url: "/ezLadder/getLadderComment.do",
+				dataType: "json",
+				data: {
+					"ladderId": "${vo.ladderId}"
+				},
+				success: function(result) {
+					console.log(result);
+					var cmtlist = result["cmtlist"];
+					
+					cmtlist.forEach(function(cmt) {
+						html += "<tr>";
+						html += "<td>" + cmt["userName"] + "</td>";
+						html += "<td>" + cmt["comment"] + "</td>";
+						html += "<td>" + cmt["writeDate"] + "</td>";
+						html += "</tr>";
+					});
+					
+					$("#cmtTable").append(html);
+				}
+			});
+		}
+		
+		/**해야함!*/
+		function setComment(flag) {
+			var html = "";
+			
+			$.ajax({
+				type: "GET",
+				url: "/ezLadder/setLadderComment.do",
+				dataType: "json",
+				data: {
+					"ladderId": "${vo.ladderId}"
+				},
+				success: function(result) {
+					console.log(result);
+					var cmtlist = result["cmtlist"];
+					
+					cmtlist.forEach(function(cmt) {
+						html += "<tr>";
+						html += "<td>" + cmt["userName"] + "</td>";
+						html += "<td>" + cmt["comment"] + "</td>";
+						html += "<td>" + cmt["writeDate"] + "</td>";
+						html += "</tr>";
+					});
+					
+					$("#cmtTable").append(html);
+				}
+			});
+		}
 		
 		function deleteLadder(idx) {
 		
@@ -124,14 +209,24 @@
 			
 		</div>
 		
-
-		<div id="ladderGame" align="center" >
+<div>
+	<table id="cmtTable" style="width: 100%;">
+		<tr>
+			<td colspan="3">
+				<input type="text" placeholder="댓글작성칸" style="width: 90%;"/>
+				<button id="saveCmtBtn">댓글 등록</button>
+			</td>
+		</tr>
+	</table>
+	<button onclick="sendTest()">socket test!!</button>
+</div>
+		<!-- <div id="ladderGame" align="center" >
 			<br><br><br><br>
 			상태가 대기이면 ladderWait.jsp 호출<br>
 			상태가 완료이면 ladderComplete.jsp 호출<br><br><br>
 			
 			<br><br><br><br><br><br><br><br><br><br><br><br><br>
-		</div>
+		</div> -->
 		
 		
 		<div id="chat" align="center">

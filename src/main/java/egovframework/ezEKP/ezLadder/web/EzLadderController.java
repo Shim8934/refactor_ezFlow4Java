@@ -21,6 +21,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -67,6 +69,9 @@ public class EzLadderController {
 	
 	@Resource(name="EzLadderService")
 	private EzLadderService ezLadderService;
+	
+	@Autowired
+	private SimpMessagingTemplate template;
 	
 	/**
 	 * 사다리 게임 호출
@@ -139,7 +144,8 @@ public class EzLadderController {
 		return retJSP;
 	}
 	
-
+	
+	/** boh */
 	/**
 	 * 사다리 게임 종류 선택
 	 * */
@@ -381,6 +387,24 @@ public class EzLadderController {
 		return "json";
 	}
 	
+	/** 웹소켓테스트 */
+	@SuppressWarnings("unchecked")
+	@MessageMapping("/ladtest")
+	public void stopmtestcont(String msg) {
+		logger.debug("### 웹소켓 send 테스트");
+		logger.debug("### " + msg);
+		
+		msg += "-----return"; 
+		logger.debug("### " + msg);
+		
+		// subscribe test
+		JSONObject json = new JSONObject();
+		json.put("retmsg", msg);
+		this.template.convertAndSend("/ladcmt/subscribe/test", json);
+		logger.debug("### 웹소켓 send 테스트 끝");
+		
+	}
+	
 	/**
 	 * 댓글 조회 : 사다리 조회 컨트롤러랑 합쳐져야함 
 	 * @throws Exception 
@@ -402,7 +426,10 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenant_id", userInfo.getTenantId())
+				.queryParam("offset", userInfo.getOffset())
+				.queryParam("lang", userInfo.getLang());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -415,13 +442,13 @@ public class EzLadderController {
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
 			
-			model.addAttribute("list", list);
+			model.addAttribute("cmtlist", list);
 		} else {
 			return "error";
 		}
 		
 		logger.debug("getLadderComment.do ended.");
-		return "";
+		return "json";
 	}
 
 	/**
@@ -544,12 +571,6 @@ public class EzLadderController {
 			ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		
 		logger.debug("ezLadder/getLadderGame.do started.");
-		
-//		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-//		String retJSP = "";
-//		logger.debug("### "+ requestURL);
-//		logger.debug("### ladderid:::searchSelect:::searchInput:::mode:::currPage");
-//		logger.debug("### "+ladderId+":::"+searchSelect+":::"+searchInput+":::"+mode+":::"+currPage);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");

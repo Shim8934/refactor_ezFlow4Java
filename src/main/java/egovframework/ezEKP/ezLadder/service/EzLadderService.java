@@ -28,7 +28,7 @@ public interface EzLadderService {
 	public void updateBM(LadderBmVO bmGroup, LadderBmUserVO bmUsers) throws Exception; // 즐겨찾기 그룹 수정
 	public void deleteBM(LadderBmVO bmGroup, LadderBmUserVO bmUsers) throws Exception; // 즐겨찾기 그룹 삭제
 	
-	public List<LadderCommentVO> selectComment(int ladderId) throws Exception; // 댓글 조회
+	public List<LadderCommentVO> selectComment(LadderCommentVO cmtVO) throws Exception; // 댓글 조회
 	public void insertComment(LadderCommentVO ladCmt) throws Exception; // 댓글 추가
 	public void updateComment(LadderCommentVO ladCmt) throws Exception; // 댓글 수정
 	public void deleteComment(String userId, LadderCommentVO ladCmt) throws Exception; // 댓글 삭제

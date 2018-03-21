@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezLadder.service.EzLadderService;
 import egovframework.ezEKP.ezLadder.vo.LadderBmUserVO;
 import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
+import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.let.user.login.service.LoginService;
@@ -304,15 +305,18 @@ public class EzLadderGWController {
 	 * 댓글 조회
 	 * */
 	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject gwSelectComment(@PathVariable String userId, @PathVariable String ladderId) {
+	public JSONObject gwSelectComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO) {
 		logger.debug("web G/W LADDER [GET /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			
+			List<LadderCommentVO> cmt = ezLadderService.selectComment(cmtVO);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", null);
+			result.put("data", cmt);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");

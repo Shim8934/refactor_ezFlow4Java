@@ -267,9 +267,20 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public List<LadderCommentVO> selectComment(int ladderId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<LadderCommentVO> selectComment(LadderCommentVO cmtVO) throws Exception {
+		List<LadderCommentVO> comments = ezLadderDAO.selectComment(cmtVO);
+		
+		String lang = commonUtil.getMultiData(cmtVO.getLang(), cmtVO.getTenant_id());
+		for(LadderCommentVO cmt : comments) {
+			String datdStr = "";
+			datdStr = commonUtil.getDateStringInUTC(cmt.getWriteDate(), cmtVO.getOffset(), false);
+			cmt.setWriteDate(datdStr);
+			if(lang.equals("2")) {
+				cmt.setUserName(cmt.getUserName2());
+			}
+		}
+		
+		return comments;
 	}
 
 	@Override

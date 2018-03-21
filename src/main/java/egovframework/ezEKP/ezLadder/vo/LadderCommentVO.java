@@ -5,6 +5,8 @@ public class LadderCommentVO {
 	private int tenant_id;
 	/** 댓글 아이디 */
 	private int id;
+	/** 사다리 아이디 */
+	private int ladderId;
 	/** 댓글 내용 */
 	private String comment;
 	/** 댓글 작성자 아이디 */
@@ -15,7 +17,10 @@ public class LadderCommentVO {
 	private String userName2;
 	/** 댓글 작성 날짜 */
 	private String writeDate;
-	
+	/** UTC time */
+	private String offset;
+	/** 다국어 */
+	private String lang;
 	
 	public int getTenant_id() {
 		return tenant_id;
@@ -28,6 +33,12 @@ public class LadderCommentVO {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public int getLadderId() {
+		return ladderId;
+	}
+	public void setLadderId(int ladderId) {
+		this.ladderId = ladderId;
 	}
 	public String getComment() {
 		return comment;
@@ -59,5 +70,25 @@ public class LadderCommentVO {
 	public void setWriteDate(String writeDate) {
 		this.writeDate = writeDate;
 	}
-
+	public String getOffset() {
+		return offset;
+	}
+	public void setOffset(String offset) {
+		this.offset = offset;
+	}
+	public String getLang() {
+		return lang;
+	}
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+	
+	@Override
+	public String toString() {
+		return "LadderCommentVO [tenant_id=" + tenant_id + ", id=" + id
+				+ ", ladderId=" + ladderId + ", comment=" + comment
+				+ ", userId=" + userId + ", userName=" + userName
+				+ ", userName2=" + userName2 + ", writeDate=" + writeDate
+				+ ", offset=" + offset + ", lang=" + lang + "]";
+	}
 }

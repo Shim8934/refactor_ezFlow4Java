@@ -56,6 +56,8 @@ function getPreLadder(ladderID) {
 		success: function(result) {
 			ladinfo["lad"] = result.vo;
 			templist = result.list;
+			
+			console.log(templist);
 		}
 	});
 	
