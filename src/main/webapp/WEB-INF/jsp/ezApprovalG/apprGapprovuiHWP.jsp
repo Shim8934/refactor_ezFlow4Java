@@ -317,7 +317,7 @@
 		
 		
 				        var isTrue = HwpCtrl.LoadFile(URL, false);
-		
+
 				        FieldsAvailable(isTrue);
 				    }
 		            HwpCtrl.ChangeMode(3);
