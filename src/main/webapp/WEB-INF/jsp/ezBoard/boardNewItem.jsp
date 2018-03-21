@@ -997,6 +997,11 @@
 		            Content = ReplaceText(Content, "id=doctitle", "");
 		            Content = ReplaceText(Content, "id=\"doctitle\"", "");
 		            Content = ReplaceText(Content, "id=\'doctitle\'", "");
+		            if (Content.indexOf("id=\"_BigAttachListHtml\"") != -1) {
+		            	Content = ReplaceText(Content, "<td width=\"75%\"", "<td width=\"65%\"");
+		            	Content = ReplaceText(Content, "<td width=\"30%\"", "<td width=\"35%\"");
+		            }
+		            
 		            message.SetEditorContent(Content);
 		            
 		            if (mailXml.getElementsByTagName("OVERSIZE").length > 0) {

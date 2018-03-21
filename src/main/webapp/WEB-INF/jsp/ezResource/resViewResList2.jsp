@@ -364,7 +364,7 @@
                     		<tr id="noapproval" style="display:none;">
                         		<td colspan="2" style="font-weight:bold;padding-top:15px;padding-left:5px;vertical-align:bottom;" ><h2>▒&nbsp;<spring:message code="ezResource.t402" /></h2></td>
                     		</tr>
-                    		<tr>
+                    		<tr style="border-top : 1px solid #dedede;">
                       			<td colspan="2" id='tdCalViewCell2'  class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->
                         			<div id="idCalendarViewer2" style='height:100%; text-align:center'> </div>
                         		</td>
