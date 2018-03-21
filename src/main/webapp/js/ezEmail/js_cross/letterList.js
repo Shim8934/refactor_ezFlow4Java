@@ -65,7 +65,7 @@ $(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
 	}
 });
 
-// 편지지 선택 (개별 조회)
+// 편지지 선택 (개별 조회 미리보기)
 $(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect) span", function(){
 	var letterNo = $(this).parent("li").attr("data-letterno");
 	
