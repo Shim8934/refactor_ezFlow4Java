@@ -50,14 +50,16 @@
 			// 편지지 선택(mailWirte.jsp에 들어가도록)
 			function letterSelect() {
 				var letterNo = $(".lmLetterSelect").attr("data-letterno");
-				
-				if (letterNo !== "undefined") {
+				var select = $('body').find('.lmLetterSelect');
+				if (select.length != 0) {
 					$.ajax({
 						type:"POST",
 						data:{letterNo:letterNo,popUpType:"modify"},
 						url:"/admin/ezEmail/readLetter",
 						dataType:"json",
 						success:function(data){
+							
+							console.log(data);
 							
 							if (data.filePath == 'ERROR') {
 								alert("존재하지 않는 편지지입니다.");
@@ -72,6 +74,9 @@
 						}
 					});
 					
+		    	} else {
+		    		alert("편지지를 선택하세요.");
+		    		return;
 		    	}
 		    }
 		    

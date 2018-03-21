@@ -142,7 +142,7 @@ function addLetterBox() {
 	var putParent;
 	
 	if (addCheck == -1) {
-		alert("추가 더이상 안돼"); // 이거 strLang으로 바꾸기
+		alert("현재 추가중인 편지지함이 있습니다."); // 이거 strLang으로 바꾸기
 		return;
 	}
 	
@@ -197,7 +197,7 @@ function deleteLetterBox() {
 		alert("하위 편지지함이 존재합니다. 하위편지지함을 삭제해주세요");
 		return;
 	} else {
-		var con = confirm("편지지함을 삭제하시겠습니까?");
+		var con = confirm("편지지함을 삭제하시겠습니까? \n(주의! 편지지가 존재하면 편지지 포함 삭제됩니다.)");
 		if (con == true) {
 			realCheck = true;
 		}
