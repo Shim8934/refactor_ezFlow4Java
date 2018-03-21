@@ -149,7 +149,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId,
-			String isuse, int tenantId) throws Exception {
+			String isuse, String isAdmin, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeTypeList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -157,6 +157,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("isuse", isuse);
+		if (!isAdmin.equals("")) {
+			map.put("isAdmin", isAdmin);
+		}
 		
 		LOGGER.debug("getAttitudeTypeList ended");
 		
@@ -351,14 +354,16 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		map.put("typeId", typeId);
 		map.put("typeName", typeName);
-//		if(!typeName2.equals("") || typeName2 != null){
-//			map.put("typeName2", typeName2);
-//		}
-//		if(!imgPath.equals("") || imgPath != null){
-//			map.put("imgPath", imgPath);
-//		}
-		map.put("typeName2", typeName2);
-		map.put("imgPath", imgPath);
+		if(!typeName2.equals("") || typeName2 != null){
+			map.put("typeName2", typeName2);
+		}
+		if(!imgPath.equals("") || imgPath != null){
+			int idx = imgPath.lastIndexOf("/");
+			imgPath = imgPath.substring(idx+1);
+			map.put("imgPath", imgPath);
+		}
+//		map.put("typeName2", typeName2);
+//		map.put("imgPath", imgPath);
 		map.put("formId", formId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);

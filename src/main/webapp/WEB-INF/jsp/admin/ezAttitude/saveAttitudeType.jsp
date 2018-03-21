@@ -16,7 +16,6 @@
 			var typeId = "${typeInfo.typeId}";
 			var saveMode = "";
 			var formHtmlList = ${formList};
-// 			var formHtmlList = "<c:out value = '${formList}' />";
 			
 	        window.onload = window_onload;
 	        function window_onload() {
@@ -38,6 +37,8 @@
 	    			typeId = "<c:out value = '${typeId}' />";
 	    			
 	            	$('#formSelect').val(0).prop('selected', true);
+	            	
+	            	$('#preview').attr('src','/images/default_pic.jpg');
 	            }
 	        }
 	        
@@ -125,21 +126,20 @@
 		</script>
 	</head>
 	<body class = "popup">
-<%-- 		<xmp id="sigBody" style="display:none;"><c:out value = '${personalPopupVO.content}' /></xmp>  --%>
-		<h1>근태유형추가/수정</h1>
+		<h1><spring:message code='ezAttitude.t39' /></h1>
 		<table class="content"> 
   			<tr> 
-    			<th>유형명</th> 
+    			<th><spring:message code='ezAttitude.t40' /></th> 
     			<td style="padding:0">
     				<table width="100%">
 			        	<tr class="primary">
 <%-- 			          		<th><c:out value = '${langPrimary}' /></th> --%>
-			          		<th>한글</th>
+			          		<th><spring:message code='ezAttitude.t41' /></th>
 			          		<td><input id="typeName" type="text" style="width:98%" value="<c:out value = '${typeInfo.typeName}' />"></td>
 			        	</tr>
 			        	<tr class="secondary">
 <%-- 			          		<th><c:out value = '${langSecondary}' /></th> --%>
-			          		<th>영문</th>
+			          		<th><spring:message code='ezAttitude.t42' /></th>
 			          		<td><input id="typeName2" type="text" style="width:98%" value="<c:out value = '${typeInfo.typeName2}' />"></td>
 			        	</tr>
 			    	</table>
@@ -147,12 +147,12 @@
   			</tr>
   			<tr>
   				<th>
-  					<a class="imgbtn" style="background:none; height:25px; padding-top: 4px;"><span onclick="btnimagefile_onclick()">아이콘등록</span></a>
+  					<a class="imgbtn" style="background:none; height:25px; padding-top: 4px;"><span onclick="btnimagefile_onclick()"><spring:message code='ezAttitude.t43' /></span></a>
   				</th>
   				<td style="height:45px;">
   					<table width="100%;">
   						<tr>
-	  						<td style="width:88%">사진크기는 ~이하로 해주세요!</td>
+	  						<td style="width:88%">사진크기는 ~이하로 해주세요</td>
 	  						<td rowspan="2" style="padding-top: 2px;">
 	  							<img id="preview" name="preview" src="${typeInfo.imgPath}" width="40px;" height="40px;" alt="" border="0">
 	  						</td>
@@ -164,7 +164,7 @@
   				</td>
   			</tr>
   			<tr> 
-    			<th>html폼</th> 
+    			<th><spring:message code='ezAttitude.t44' /></th> 
     			<td>
 					<select id="formSelect" style="width:80px;" onchange="form_change()">
 						<c:forEach var="item" items="${formList}">
@@ -174,13 +174,13 @@
 				</td> 
   			</tr>
   			<tr> 
-    			<th>양식 미리보긩</th>     
+    			<th><spring:message code='ezAttitude.t44' /> <spring:message code='ezAttitude.t45' /></th>     
     			<td id="preForm" style="padding:0px; height:320px"></td>
   			</tr>
 		</table> 
 		<div class="btnposition"> 
-		    <a class="imgbtn"><span onclick="OK_Click()">확인</span></a>
-		    <a class="imgbtn"><span onclick="window.close()">취소</span></a>
+		    <a class="imgbtn"><span onclick="OK_Click()"><spring:message code='ezAttitude.t38' /></span></a>
+		    <a class="imgbtn"><span onclick="window.close()"><spring:message code='ezAttitude.t34' /></span></a>
 		</div>
 		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezAttitude/iconUpload.do" target="ifrm" style="width: 1px; height: 1px;display:none">

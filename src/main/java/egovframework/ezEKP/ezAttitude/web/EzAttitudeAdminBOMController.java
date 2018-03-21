@@ -258,7 +258,8 @@ public class EzAttitudeAdminBOMController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId());
+				.queryParam("userId", userInfo.getId())
+				.queryParam("isAdmin", "y");
 		
 		RestTemplate rest = new RestTemplate();
 		

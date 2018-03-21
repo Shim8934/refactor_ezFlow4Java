@@ -24,7 +24,7 @@ public interface EzAttitudeService {
 	
 	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String offset, String startDate, String endDate, int tenantId) throws Exception;
 	
-	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, int tenantId) throws Exception;
+	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, int tenantId) throws Exception;
 	
 	public String getWriteFormHtml(String formId, int tenantId) throws Exception;
 	

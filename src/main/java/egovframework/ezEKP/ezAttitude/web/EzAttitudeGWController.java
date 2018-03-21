@@ -578,8 +578,9 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String isuse = request.getParameter("isuse");
+			String isAdmin = request.getParameter("isAdmin");
 			
-			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, info.getTenantId());
+			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, info.getTenantId());
 			
 			//imgPath 셋팅
 			for (AttitudeTypeVO typeInfo : attitudeTypeList) {

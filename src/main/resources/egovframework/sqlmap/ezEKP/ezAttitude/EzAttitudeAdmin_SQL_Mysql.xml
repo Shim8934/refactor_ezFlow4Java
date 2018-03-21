@@ -204,6 +204,11 @@
 				ISUSE = #isuse#
 			]]>
 			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="isAdmin">
+			<![CDATA[
+				PARENT_ID = 'A05'
+			]]>
+			</isNotEmpty>
 	</select>
 	
 	<update id="ezAttitudeAdminDAO.updateAttitudeTypeConfig" parameterClass="Map">
