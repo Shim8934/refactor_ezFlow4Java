@@ -32,12 +32,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ibm.icu.util.Calendar;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
@@ -84,12 +87,15 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			String typeId = request.getParameter("typeId");
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			String UTCDate = commonUtil.getTodayUTCTime("");
 			String offset = info.getOffSet();
 			
-			List<AttitudeVO> resultList = ezAttitudeService.getAttitudeList(userId, "", typeId, UTCDate, offset, info.getTenantId());
+			List<AttitudeVO> resultList = ezAttitudeService.getAttitudeList(userId, "", typeId, startDate, endDate, offset, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -421,12 +427,22 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-count] started.");
 		
 		JSONObject result = new JSONObject();
-		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			String offset = request.getParameter("offset");
+			String date = request.getParameter("date");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			Calendar cal = Calendar.getInstance();
+			cal.set(Integer.valueOf(date.substring(0, 4)), Integer.valueOf(date.substring(5)) - 1, 1);
+			
+			String startDate = date + "-01 00:00:00";
+			String endDate = date + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
+			List<AttitudeStatisVO> resultList = ezAttitudeService.getAttitudeStatisticsList(userId, offset, startDate, endDate, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
+			result.put("data", resultList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			

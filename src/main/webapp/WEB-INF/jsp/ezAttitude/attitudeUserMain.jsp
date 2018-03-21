@@ -12,10 +12,19 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
+		<style>
+			#attiStatis table td {
+				color : #777;
+				font-size : 13px;
+				text-align : center;
+				border : 1px solid #dedede;
+			}
+		</style>
 		<script>
 		
 			window.onload = function() {
-				getAttiTypeList();	
+				getAttiTypeList();
+				getAttitudeMainList();
 			}
 			
 			/**
@@ -34,7 +43,9 @@
 				})
 			}
 			
-			//font-size:15px; text-align:center; border:1px solid #dedede; height:50px;
+			/**
+			* 통계바 메소드
+			*/
 			function getAttiTypeList_After(result) {
 					var objTable = $("<table></table>").css({"cellpadding":"0", "cellspacing":"0", "border":"0", "width":"100%"});
 					var objTbody = $("<tbody></tbody>");
@@ -43,11 +54,10 @@
 					var calendarHeight = $("#attiCalendar").css("height");
 					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1));
 					
-					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":tdHeight}).text($("#calTitle").text())));
+					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":tdHeight, "background-color": "#edf4fd"}).text($("#calTitle").text())));
 					for (var i = 0; i < result.length; i++) {
-						objTr = $("<tr></tr>");
-						objTd = $("<td></td>").css({"font-size":"15px", "text-align":"center", "border":"1px solid #dedede", "height": tdHeight + "px"}).attr("typeid",result[i].typeId);
-						objTd.text(result[i].typeName + " : 0일");
+						objTr = $("<tr></tr>").append($("<th></th>").text(result[i].typeName));
+						objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일");
 						
 						objTr.append(objTd);
 						objTbody.append(objTr);
@@ -61,21 +71,26 @@
 						tdHeight = tdHeight + (calendarHeight.substr(0, calendarHeight.length - 2) - statisHeight.substr(0, statisHeight.length - 2));
 						$("#attiStatis tr:eq(0) th").css("height", tdHeight + "px");
 					}
-					
+					getAttiStatisList();
 			}
 			
 			/**
 			* 통계 메소드
 			*/
 			function getAttiStatisList() {
+				var pDate = $("#calTitle").text().trim(); 
 				$.ajax({
 					type : "POST",
 					dataType : "json",
 					async : true,
-					url : "",
-					data : {},
+					url : "/ezAttitude/attitudeStatisList.do",
+					data : {
+						date : pDate
+					},
 					success : function(result) {
-						
+						for (var i = 0; i < result.length; i++) {
+							$("#" + result[i].typeId).text(result[i].sumDate + "일");
+						}
 					}
 				})
 			}
@@ -84,14 +99,19 @@
 			* 근태 메소드
 			*/
 			function getAttitudeMainList() {
+				var startDate = $("#index_0").attr("day");
+				var endDate = $("#index_41").attr("day");
 				$.ajax({
 					type : "POST",
 					dataType : "json",
 					async : true,
-					url : "",
-					data : {},
+					url : "/ezAttitude/getAttitudeList.do",
+					data : {
+						startDate : startDate,
+						endDate : endDate
+					},
 					success : function(result) {
-						
+						alert(result[0].attitudeId);
 					}
 				})
 			}

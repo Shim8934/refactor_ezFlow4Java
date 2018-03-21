@@ -56,8 +56,6 @@
 	        		$("#file1").value = "";
 	    		} else {
 	    			var frm = document.getElementById('form');
-		    		frm.action = "/ezAttitude/iconUpload.do";
-		    		frm.enctype="multipart/form-data";
 		    		
 	    			var typeIdInput = document.createElement("input");
 	    			typeIdInput.setAttribute("type", "hidden");
@@ -73,7 +71,7 @@
 		    		
 		    		frm.submit();
 		    		$("#file1").val("");
-// 		    		$("#preview").attr("src","");
+		    		$("#preview").attr("src","");
 	    		}
 			}
 			
