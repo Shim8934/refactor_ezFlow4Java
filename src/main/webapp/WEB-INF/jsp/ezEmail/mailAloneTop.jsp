@@ -43,6 +43,7 @@
         // 2009.11.25 - 소스보기시 개인정보 유출방지
         var pwd = "";
         document.onselectstart = function () { return false; };
+        
         window.onload = function() {
             if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.body.style.MozUserSelect = 'none';
@@ -1166,134 +1167,106 @@
         }
 
         function newpage() {
-            location.href = "/ezPortal/topMenu.do?mode=new";
-        }
+			location.href = "/ezPortal/topMenu.do?mode=new";
+		}
 
-        /* 현재 이미지 관리 및 롤오버시 이미지 변환 함수 */
-        var curImg = new Image;
-        var oldPath = "";
-        var subPath = "";
-        var menuName = "";
-        var tempclickmenuPath = "";
-        var temppNewPath;
-        var tempobj;
+        /* 2018-03-07 장진혁 서브메뉴 수정 현재 이미지 관리 및 롤오버시 이미지 변환 함수 */			
+		var subPath = "";
+		var menuName = "";
+		var tempobj;
         
-        function img_onMouseOver(pNewPath, obj) {
-            temppNewPath = pNewPath;
-            tempobj = obj;
-            if (curImg == obj) {
-                return;
-            }
-            else {
-                oldPath = obj.src;
-                obj.src = pNewPath;
-                if (clickmenusub != "")
-                    document.getElementById(clickmenusub).style.display = "none";
-                if (clickmenuName != "" && document.getElementsByName(clickmenuName)[0].src.indexOf(pNewPath) == -1) {
-                    tempclickmenuPath = document.getElementsByName(clickmenuName)[0].src;
-                    document.getElementsByName(clickmenuName)[0].src = clickmenuPath;
-                }
-            }
-            if (document.getElementById("menu_" + obj.name) != null) {
-                subPath = "menu_" + obj.name;
-                menuName = obj.name;
-                document.getElementById("menu_" + obj.name).style.left = 0;
-                document.getElementById("menu_" + obj.name).style.display = "";
-                var LeftMargin = parseInt(document.getElementsByName(menuName)[0].offsetLeft);
-                if (window.document.documentElement.clientWidth < document.getElementsByName(menuName)[0].offsetLeft + document.getElementById("menu_" + obj.name).clientWidth) {
-                    LeftMargin = LeftMargin - (document.getElementsByName(menuName)[0].offsetLeft + document.getElementById("menu_" + obj.name).clientWidth - window.document.documentElement.clientWidth);
-                    LeftMargin = LeftMargin - 30;
-                }
-                document.getElementById("menu_" + obj.name).style.left = LeftMargin + "px";
-            }
-            else {
-                menuName = obj.name;
-                subPath = "";
-            }
-        }
+        function img_onMouseOver(obj) {			    
+		    if (document.getElementById("menu_" + obj.id) != null) {
+		        subPath = "menu_" + obj.id;
+		        menuName = obj.id;
+		        document.getElementById("menu_" + obj.id).style.left = 0;			        
+		        document.getElementById("menu_" + obj.id).style.display = "";
+		        var LeftMargin = parseInt(document.getElementById(menuName).offsetLeft) - 60;
+		        
+		        if (window.document.documentElement.clientWidth < document.getElementById(menuName).offsetLeft + document.getElementById("menu_" + obj.id).clientWidth) {
+		            LeftMargin = LeftMargin - (document.getElementById(menuName).offsetLeft + document.getElementById("menu_" + obj.id).clientWidth - window.document.documentElement.clientWidth);
+		            LeftMargin = LeftMargin - 20;
+		        }
+				var cw = document.getElementById(obj.id).clientWidth;
+				
+		        document.getElementById("menu_" + obj.id).style.left = LeftMargin + "px";
+		        document.getElementById("menu_" + obj.id).style.width = cw + "px";
+		    } else {
+		        menuName = obj.id;
+		        subPath = "";
+		    }
+		    
+		    parent.document.getElementById("topFrame").style.position = "relative";
+		}
 
         function img_onMouseOut(obj){
-            tempobj = obj;
-            if (curImg == obj) {
-                return;
-            }
-            else if (clickmenuPath == oldPath) {
-            }
-            else {
-                obj.src = oldPath;
-                if (tempclickmenuPath != "" && obj != document.getElementsByName(clickmenuName)[0])
-                    document.getElementsByName(clickmenuName)[0].src = tempclickmenuPath;
-            }
-            if (subPath != "" && document.getElementById(subPath).style.display == "" && subPath != clickmenusub) {
-                document.getElementById(subPath).style.display = "none";
-            }
-            if (clickmenusub != "")
-                document.getElementById(clickmenusub).style.display = "";
-        }
+			tempobj = obj;
+			
+			if (document.getElementById("menu_"+obj.id)) {
+				document.getElementById("menu_"+obj.id).style.display = "none";
+			}
+		    
+		    parent.document.getElementById("topFrame").style.position = "";
+		}
+
+        function submenuover(subObj) {				
+		    if (tempobj.id == subObj.id.replace("menu_", "")) {
+				img_onMouseOver(tempobj);
+		    }
+		}
+
+        function submenuout(subObj) {
+		    img_onMouseOut(tempobj);
+		}
         
-
-        function submenuover() {
-            img_onMouseOver(temppNewPath, tempobj);
-        }
-
-        function submenuout() {
-            img_onMouseOut(tempobj);
-        }
         window.onresize = function () {
-            if (clickmenusub != "") {
-                document.getElementById(clickmenusub).style.left = 0;
-                var LeftMargin = parseInt(document.getElementsByName(clickmenuName)[0].offsetLeft);
-                if (window.document.documentElement.clientWidth <= document.getElementsByName(clickmenuName)[0].offsetLeft + document.getElementById(clickmenusub).clientWidth) {
-                    LeftMargin = LeftMargin - (document.getElementsByName(clickmenuName)[0].offsetLeft + document.getElementById(clickmenusub).clientWidth - window.document.documentElement.clientWidth);
-                    LeftMargin = LeftMargin - 30;
-                }
-                document.getElementById(clickmenusub).style.left = LeftMargin + "px";
-            }
-        }
+		    if (clickmenusub != "") {
+		        document.getElementById(clickmenusub).style.left = 0;
+		        var LeftMargin = parseInt(document.getElementsByName(clickmenuName)[0].offsetLeft);
+		        
+		        if (window.document.documentElement.clientWidth <= document.getElementsByName(clickmenuName)[0].offsetLeft + document.getElementById(clickmenusub).clientWidth) {
+		            LeftMargin = LeftMargin - (document.getElementsByName(clickmenuName)[0].offsetLeft + document.getElementById(clickmenusub).clientWidth - window.document.documentElement.clientWidth);
+		            LeftMargin = LeftMargin - 30;
+		        }
+		        
+		        document.getElementById(clickmenusub).style.left = LeftMargin + "px";
+		    }
+		}
 
-        function sub_toggle(subfolder)
-        {
-            try
-            {
-                for (var i=0; i<subfolder.parentElement.children.length; i++)
-                {
-                    subfolder.parentElement.children.item(i).style.display = "none";
-                }
-            
-                subfolder.style.display = "block";      
-                //subfolder.firstChild.firstChild.firstChild.click();
-            }catch(e) {}
-            
-        }
+        function sub_toggle(subfolder) {
+			try {
+				for (var i=0; i<subfolder.parentElement.children.length; i++) {
+					subfolder.parentElement.children.item(i).style.display = "none";
+				}
+			
+				subfolder.style.display = "block";		
+				//subfolder.firstChild.firstChild.firstChild.click();
+			} catch(e) {}
+		}
         
-        function submenuclick(pSubMenuID)
-        {
-            
-        }
+        function submenuclick(pSubMenuID) {
+			
+		}
         
-        function layoutmode()
-        {
-            for (var i=0; i<document.getElementsByTagName("tr").length; i++)
-            {
-                var evtHandler = document.getElementsByTagName("tr").item(i).onclick;
-                if (evtHandler != null && evtHandler.toString().indexOf("selectcellTitle") > -1)
-                {
-                    document.getElementsByTagName("tr").item(i).style.display = "none";
-                }
-            }
-        }
+        function layoutmode() {
+			for (var i=0; i<document.getElementsByTagName("tr").length; i++) {
+			    var evtHandler = document.getElementsByTagName("tr").item(i).onclick;
+			    
+				if (evtHandler != null && evtHandler.toString().indexOf("selectcellTitle") > -1) {
+				    document.getElementsByTagName("tr").item(i).style.display = "none";
+				}
+			}
+		}
 
-        function editingmode()
-        {
-            for (var i = 0; i < document.getElementsByTagName("tr").length; i++)
-            {
-                var evtHandler = document.getElementsByTagName("tr").item(i).onclick;
-                if (evtHandler != null && evtHandler.toString().indexOf("selectcellTitle") > -1)
-                {
-                    document.getElementsByTagName("tr").item(i).style.display = "";
-                }
-            }
-        }
+        function editingmode() {
+		    for (var i = 0; i < document.getElementsByTagName("tr").length; i++) {
+		        var evtHandler = document.getElementsByTagName("tr").item(i).onclick;
+		        
+				if (evtHandler != null && evtHandler.toString().indexOf("selectcellTitle") > -1) {
+				    document.getElementsByTagName("tr").item(i).style.display = "";
+				}
+			}
+		}
         
         function resizeTable()
         {
@@ -1360,136 +1333,176 @@
             //event.cancelBubble = true;
         }
         
-        // 통합검색
-        function Search()
-        {
-            txtSearch.value = TrimText(ReplaceText(txtSearch.value, "'", ""));
-            var pSearchString = txtSearch.value;
-            
-            
-            parent.frames["main"].location.href = "/myoffice/ezsearch/index_search.aspx?Keyword=" + encodeURIComponent(pSearchString);
-        }
-        function keyword_Clear(obj) {
-            obj.value = "";
-        }
-        function Key_event(e,obj)
-        {
-            var curevent = (typeof event == 'undefined' ? e : event)
-                if (curevent.keyCode == "13") {
-                    Emp_Search();
-                }
-        }
-
-        function input_Onblur(obj)
-        {
-            if (obj.value.length == 0) { obj.className = 'input_text' } else { obj.className = 'input_text focusnot' }
-        }
-        // 직원조회
-        function Emp_Search() {
-            if (document.getElementById('input_search').value != "") {
-                var wHeight = 550;
-                var wWidth = 750;
-                var wVertical = Math.floor(screen.height / 2) - (wHeight / 2);
-                var wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
-
-                window.open("/ezPersonal/personSearch.do?searchString=" + document.getElementById('input_search').value, "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status=no, toolbar=no, menubar=no,location=no, resizable=0");
-
-                document.getElementById('input_search').value = '';
-            }
-        }
+     	// 통합검색
+		function Search() {
+			txtSearch.value = TrimText(ReplaceText(txtSearch.value, "'", ""));
+			var pSearchString = txtSearch.value;
+			
+			parent.frames["main"].location.href = "/myoffice/ezsearch/index_search.aspx?Keyword=" + escape(pSearchString);
+		}
         
-        // 2009.11.27 - 팝업창의 위치를 선택할 수 있는 기능 추가
-        function openPopup(popup_number, wWidth, wHeight, wPosition)
-        {
-            var wVertical, wHorizontal;
-            if(wPosition == 0)
-            {
-                wVertical = Math.floor(screen.height/2) - (wHeight/2); 
-                wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
-            }
-            else if(wPosition == 1)
-            {
-                wVertical = 100; 
-                wHorizontal = 100;
-            }
-            else if(wPosition == 2)
-            {
-                wVertical = screen.height - wHeight - 100; 
-                wHorizontal = 100;
-            }
-            else if(wPosition == 3)
-            {
-                wVertical = 100; 
-                wHorizontal = screen.width - wWidth - 100;
-            }
-            else if(wPosition == 4)
-            {
-                wVertical = screen.height - wHeight - 100; 
-                wHorizontal = screen.width - wWidth - 100;
-            }
-            else if(wPosition == 5)
-            {
-                wVertical = 100; 
-                wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
-            }
-            else if(wPosition == 6)
-            {
-                wVertical = screen.height - wHeight - 100; 
-                wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
-            }
-            else
-            {
-                wVertical = 0; 
-                wHorizontal = 0;
-            }
+        function keyword_Clear(obj) {
+		    obj.value = "";
+		}
+        
+        function Key_event(e,obj) {
+		    var curevent = (typeof event == 'undefined' ? e : event)
+		        if (curevent.keyCode == "13") {
+		            Emp_Search();
+		        }
+		}
 
-            if(wVertical < 0)
-                wVertical = 0;
+        function input_Onblur(obj) {
+		    if (obj.value.length == 0) { obj.className = 'input_text' } else { obj.className = 'input_text focusnot' }
+		}
+        
+     	// 직원조회
+		function Emp_Search() {
+		    if (document.getElementById('input_search').value != "") {
+		        var wHeight = 560;
+		        var wWidth = 750;
+		        var wVertical = Math.floor(screen.height / 2) - (wHeight / 2);
+		        var wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
 
-            if(wHorizontal < 0)
-                wHorizontal = 0;
+		        window.open("/ezPersonal/personSearch.do?searchString=" + encodeURI(document.getElementById('input_search').value), "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status=no, toolbar=no, menubar=no,location=no, resizable=0");
+		        document.getElementById('input_search').value = '';
+		    }
+		}
+        
+		// 2009.11.27 - 팝업창의 위치를 선택할 수 있는 기능 추가
+		function openPopup(popup_number, wWidth, wHeight, wPosition) {
+		    var wVertical, wHorizontal;
+		    
+			if(wPosition == 0) {
+		        wVertical = Math.floor(screen.height/2) - (wHeight/2); 
+		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
+		    } else if(wPosition == 1) {
+		        wVertical = 100; 
+		        wHorizontal = 100;
+		    } else if(wPosition == 2) {
+		        wVertical = screen.height - wHeight - 100; 
+		        wHorizontal = 100;
+		    } else if(wPosition == 3) {
+		        wVertical = 100; 
+		        wHorizontal = screen.width - wWidth - 100;
+		    } else if(wPosition == 4) {
+		        wVertical = screen.height - wHeight - 100; 
+		        wHorizontal = screen.width - wWidth - 100;
+		    } else if(wPosition == 5) {
+		        wVertical = 100; 
+		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
+		    } else if(wPosition == 6) {
+		        wVertical = screen.height - wHeight - 100; 
+		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
+		    } else {
+		        wVertical = 0; 
+		        wHorizontal = 0;
+		    }
 
-            if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
-                wHeight = eval(wHeight) - 60;
+		    if(wVertical < 0)
+		        wVertical = 0;
 
-            window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number + 
-                    "&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
-        }
+		    if(wHorizontal < 0)
+		        wHorizontal = 0;
+
+		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
+		        wHeight = eval(wHeight) - 60;
+
+		    window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number + 
+					"&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+		}
     
         var clickmenusub = "";
         var clickmenuPath = "";
         var clickmenuName = "";
+        
         function OpenWindow(evt, url, location, option) {
-            if (option != "") {
-                var width = 0, height = 0;
-                var leftPosition = "", topPosition = "";
-                var opt = option.split(',');
-                for (var i = 0 ; i < opt.length ; i++) {
-                    if (opt[i].indexOf('height') > -1) {
-                        height = opt[i].substring(opt[i].indexOf('=') + 1, opt[i].indexOf('px'))
-                        var top = (window.screen.height / 2) - ((height / 2) + 50);
-                        topPosition = ", top=" + top + ", screenY=" + top;
-                    }
-                    if (opt[i].indexOf('width') > -1) {
-                        width = opt[i].substring(opt[i].indexOf('=') + 1, opt[i].indexOf('px'))
-                        left = (window.screen.width / 2) - ((width / 2) + 10);
-                        leftPosition = ", left=" + left + ", screenX=" + left;
-                    }
-                }
-                option = option + topPosition + leftPosition;
-            }
-            if (evt != undefined) {
-                var targetid = evt.target ? evt.target.id : event.srcElement.id;
-                if (targetid != "") {
-                    clickmenusub = subPath;
-                    if (menuName != clickmenuName) {
-                        clickmenuPath = oldPath;
-                        clickmenuName = menuName;
-                    }
-                }
-            }
-            window.open(url, location, option);
-        }
+			/* if (option != "") {
+    			var width = 0, height = 0;
+    			var leftPosition = "", topPosition = "";
+    			var opt = option.split(',');
+    			
+    			for (var i = 0 ; i < opt.length ; i++) {
+        			if (opt[i].indexOf('height') > -1) {
+            			height = opt[i].substring(opt[i].indexOf('=') + 1, opt[i].indexOf('px'))
+            			var top = (window.screen.height / 2) - ((height / 2) + 50);
+            			topPosition = ", top=" + top + ", screenY=" + top;
+        			}
+        			
+        			if (opt[i].indexOf('width') > -1) {
+            			width = opt[i].substring(opt[i].indexOf('=') + 1, opt[i].indexOf('px'))
+            			left = (window.screen.width / 2) - ((width / 2) + 10);
+            			leftPosition = ", left=" + left + ", screenX=" + left;
+        			}
+    			}
+    			option = option + topPosition + leftPosition;
+			}
+			
+			if (evt != undefined) {
+    			var targetid = evt.target ? evt.target.id : event.srcElement.id;
+
+    			if (targetid != "") {
+        			clickmenusub = subPath;
+        			if (menuName != clickmenuName) {
+            			clickmenuPath = oldPath;
+            			clickmenuName = menuName;
+        			}
+    			}
+    			
+    			var targetName = evt.target ? evt.target.parentElement.id : event.srcElement.parentElement.id;
+
+    			if (targetName.indexOf("menu_") > -1) {
+ 		        	clickmenusub = targetName;
+ 		        	var tName = targetName.replace("menu_", "");
+ 		        	
+ 		            if (menuName != clickmenuName) {	 		                
+ 		                if (clickmenuPath != "") {
+ 		                	if (tName == clickmenuName) {
+								clickmenuPath = clickmenuPath;
+ 		                	} else {
+ 		                		clickmenuPath = oldPath;	
+ 		                	}
+						} else {
+ 		                	clickmenuPath = oldPath;
+						}
+ 		                clickmenuName = targetName.split("menu_")[1];
+ 		            }
+ 		        }
+			} */
+			window.open(url, location, option);
+		}
+		
+		function OpenWindow2(targetid, url, location, option) {
+			/* if (option != "") {
+    			var width = 0, height = 0;
+    			var leftPosition = "", topPosition = "";
+    			var opt = option.split(',');
+    			
+    			for (var i = 0 ; i < opt.length ; i++) {
+        			if (opt[i].indexOf('height') > -1) {
+            			height = opt[i].substring(opt[i].indexOf('=') + 1, opt[i].indexOf('px'))
+            			var top = (window.screen.height / 2) - ((height / 2) + 50);
+            			topPosition = ", top=" + top + ", screenY=" + top;
+        			}
+        			
+        			if (opt[i].indexOf('width') > -1) {
+            			width = opt[i].substring(opt[i].indexOf('=') + 1, opt[i].indexOf('px'))
+            			left = (window.screen.width / 2) - ((width / 2) + 10);
+            			leftPosition = ", left=" + left + ", screenX=" + left;
+        			}
+    			}
+    			option = option + topPosition + leftPosition;
+			}
+
+			if (targetid != "") {
+    			clickmenusub = subPath;
+    			if (menuName != clickmenuName) {
+        			clickmenuPath = oldPath;
+        			clickmenuName = menuName;
+    			}
+			} */
+			window.open(url, location, option);
+		}
         
         function showProgress() {
 		    document.getElementById("progressPanel").style.display = "block";
@@ -1500,11 +1513,73 @@
         function hideProgress() {
         	document.getElementById("progressPanel").style.display = "none";
         }
+        
+        function topMenuToggle(menu) {
+        	switch (menu) {
+	        	case "NewMail" : 
+	        		//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+	        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
+					break;						
+				case "ApprG" : 	
+					// 문서Type 선택 1=결재할문서 2=기안할문서  3=결재진행문서  4=수신문서처리(접수기)
+					var listType;
+					listType = 1;
+					//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu04o(1).gif', document.getElementById("top_menu04(1)"));
+					OpenWindow2('top_menu04(1)', "/ezApprovalG/apprGMain.do?listType=" + listType, "main", " ");
+					break;
+				case "Appr" : 		
+					var listType;
+					listType = 1;
+					//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu04o(1).gif', document.getElementById("top_menu04(1)"));
+	        		OpenWindow2('top_menu04(1)', "/ezApprovalG/apprMain.do?listType=" + listType, "main", " ");	
+					break;
+				// 표준모듈 (2007.03.23) 수정 : 메모보고 
+				case "Memo" : 					
+					//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+	        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
+					break;
+					
+				case "Schedule" :
+					//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu03o(8).gif', document.getElementById("top_menu03(4)"));
+	        		OpenWindow2('top_menu03(4)', "/ezSchedule/scheduleIndex.do?funCode=2", "main", " ");
+					break;
+					
+				case "Poll" :
+					//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', document.getElementById("top_menu05"));
+	        		OpenWindow2('top_menu05', "/ezBoard/boardMain.do?func=1", "main", " ");
+					break;
+					
+				case "pollnum" : 
+					//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', document.getElementById("top_menu05"));
+					OpenWindow2('top_menu05', "/ezBoard/boardMain.do?func=1", "main", " ");
+					break;
+				
+				case "Env" :
+					//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+	        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
+					break;
+				case "My_Board" :
+					//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+	        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
+					break;
+				case "Address" : 
+					//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+	        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
+					break;
+			    case "ModInfo":
+			    	//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+	        		OpenWindow2('top_menu02', "/ezEmail/mailMain.do", "main", " ");
+			        break; 
+			    case "Circular":
+			    	//img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', document.getElementById("top_menu02"));
+	        		OpenWindow2('top_menu02', "/ezCircular/circularIndex.do", "main", " ");
+			        break; 
+        	}
+        }
         </script>
     </head>
             
-        <body class="mainbody"> 
-        
+	<body> 
         <div id="objectDiv"></div>
         <div id= 'top'>
             <header>
@@ -1514,102 +1589,56 @@
                 <article class='utmenu'>
                     <ul>
                         <c:if test="${checkAdmin}">
-                            <li><span style='cursor:pointer' onclick='OpenWindow(event, "/admin/main.do", "", "")'><spring:message code='ezResource.t106' /></span></li>
+                        	<li><img title="<spring:message code='ezResource.t106' />" style="cursor: pointer;" onclick='OpenWindow(event, "/admin/main.do", "", "")' src="/images/kr/main/admin.png"></li>
                         </c:if>
-                        <li><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPersonal/personSearch.do", "null", "height=550px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0")'><spring:message code='ezPersonal.t210' /></span></li>
-                        <li><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPortal/environmentMain.do", "main", "")'><spring:message code='ezPersonal.t999900011' /></span></li>
-                        <li><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPortal/help/help.do", "helpWindow", "height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0")'><spring:message code='main.t00037' /></span></li>                        
-                        <li class='btn_logout'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'><spring:message code='ezPortal.t990043' /></span></li>
+                        <li><img title="<spring:message code='ezPersonal.t210' />" style="cursor: pointer;" onclick='OpenWindow(event, "/ezPersonal/personSearch.do", "", "height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0")' src="/images/kr/main/person.png"></li>
+                        <li><img title="<spring:message code='ezPersonal.t999900011' />" style="cursor: pointer;" onclick='OpenWindow(event, "/ezPortal/environmentMain.do", "main", "")' src="/images/kr/main/env.png"></li>
+						<li><img title="<spring:message code='main.t00037' />" style="cursor: pointer;" onclick='OpenWindow(event, "/ezPortal/help/help.do", "helpWindow", "height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0")' src="/images/kr/main/help.png"></li>
+						<li><img title="<spring:message code='ezPortal.t990043' />" style="cursor: pointer;" onclick='top.location.href = "/user/login/actionLogout.do"' src="/images/kr/main/logout.png"></li>
                     </ul>
                 </article>
                 <div class='top_search'>
-                    <input id='input_search' class='input_text' type='text' onfocus="this.className='input_text focus'; " onblur='input_Onblur(this)' onkeyup='Key_event(event);' onmousedown='keyword_Clear(this);' /><input type='image' src='/images/kr/cm/top_search_btn.gif' alt='' class='topsearch_btn' onclick="Emp_Search()">
+                	<input class="input_text" id="input_search" onmousedown="keyword_Clear(this);" onkeyup="Key_event(event);" onfocus="this.className='input_text focus'; " onblur="input_Onblur(this)" type="text"><input class="topsearch_btn" onclick="Emp_Search()" type="image" alt="" src="/images/kr/cm/top_search_btn.gif">
                 </div>
             </header>
             <nav>
                 <ul class='topmenu'>                    
-                    <li>
-                        <c:if test="${lang == '1'}">
-                        <img src='/files/upload_portal/S907000/Menu/top_menu02.gif' id="top_menu02" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', this);" onmouseout="img_onMouseOut(this);" name='09e1d12c-5ffd-4240-8791-020431a5c47b' style='cursor:pointer' onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")' width='94' height='33'>
-                        </c:if>
-                        <c:if test="${lang == '2'}">
-                        <img src='/files/upload_portal/S907000/Menu/top_menu02(3).gif' id="top_menu02" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o(1).gif', this);" onmouseout="img_onMouseOut(this);" name='09e1d12c-5ffd-4240-8791-020431a5c47b' style='cursor:pointer' onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")' width='94' height='33'>
-                        </c:if>
-                        <c:if test="${lang == '3'}">
-                        <img src='/files/upload_portal/S907000/Menu/top_menu02(5).gif' id="top_menu02" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o(3).gif', this);" onmouseout="img_onMouseOut(this);" name='09e1d12c-5ffd-4240-8791-020431a5c47b' style='cursor:pointer' onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")' width='94' height='33'>
-                        </c:if>           
-                        <c:if test="${lang == '4'}">
-                        <img src='/files/upload_portal/S907000/Menu/top_menu02(4).gif' id="top_menu02" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o(2).gif', this);" onmouseout="img_onMouseOut(this);" name='09e1d12c-5ffd-4240-8791-020431a5c47b' style='cursor:pointer' onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")' width='94' height='33'>
-                        </c:if>
-                    </li>
+                    <li id="09e1d12c-5ffd-4240-8791-020431a5c47b" onmouseover="img_onMouseOver(this);" onmouseout="img_onMouseOut(this);" onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")'><spring:message code='main.t78' /></li>
                     <c:if test="${packageType == 'basic'}">
-                    <li>
-                        <c:if test="${lang == '1'}">
-                        <img src='/files/upload_portal/S907000/Menu/top_menu03(4).gif' id="top_menu03(4)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu03o(8).gif', this);" onmouseout="img_onMouseOut(this);" name='6cdb78b7-ae72-48ce-990f-5c0f6838fbbc' style='cursor:pointer' onclick='OpenWindow(event, "/ezSchedule/scheduleIndex.do?funCode=2", "main", " ")' width='121' height='33'>
-                        </c:if>
-                        <c:if test="${lang == '3'}">
-                        <img src='/files/upload_portal/S907000/Menu/top_menu03(7).gif' id="top_menu03(7)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu03o(11).gif', this);" onmouseout="img_onMouseOut(this);" name='6cdb78b7-ae72-48ce-990f-5c0f6838fbbc' style='cursor:pointer' onclick='OpenWindow(event, "/ezSchedule/scheduleIndex.do?funCode=2", "main", " ")' width='121' height='33'>
-                        </c:if>
-                    </li>   
-                    <li>
-                        <c:if test="${lang == '1'}">
-                        <img src='/files/upload_portal/S907000/Menu/top_menu05.gif' id="top_menu05" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', this);" onmouseout="img_onMouseOut(this);" name='1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d' style='cursor:pointer' onclick='OpenWindow(event, "/EgovPageLink.do?menuNo=11&link=ezBoard%2FboardMain", "main", " ")' width='110' height='33'>
-                        </c:if>
-                        <c:if test="${lang == '3'}">
-                        <img src='/files/upload_portal/S907000/Menu/top_menu05(4).gif' id="top_menu05(4)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o(4).gif', this);" onmouseout="img_onMouseOut(this);" name='1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d' style='cursor:pointer' onclick='OpenWindow(event, "/EgovPageLink.do?menuNo=11&link=ezBoard%2FboardMain", "main", " ")' width='110' height='33'>
-                        </c:if>
-                    </li>        
+                    	<li id="6cdb78b7-ae72-48ce-990f-5c0f6838fbbc" onmouseover="img_onMouseOver(this);" onmouseout="img_onMouseOut(this);" onclick='OpenWindow(event, "/ezSchedule/scheduleIndex.do?funCode=2", "main", " ")'><spring:message code='main.t14' /></li>
+                    	<li id="1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d" onmouseover="img_onMouseOver(this);" onmouseout="img_onMouseOut(this);" onclick='OpenWindow(event, "/ezBoard/boardMain.do", "main", " ")'><spring:message code='ezBoard.t0006' /></li>
                     </c:if>                                                                                                                                                                                
                 </ul>
             </nav> 
             <div class="topSubMenu">
-                <ul id="menuc509b9ce-a545-4bde-bc38-77786cd87c41" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu7d3b9b37-5975-4cf5-9096-1adb43f7e755" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu4d0e8144-011d-4483-ac42-43c179b9dc87" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu8a485e8a-9162-479d-a21a-fda9585e0e3e" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu49e1b202-c2ae-4a4d-980a-29239b3e6e14" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu7431401e-6b06-4363-ba5b-fc7026757d63" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menuf31e5262-c633-4f0d-ac95-817843fc5f38" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu62ef609e-ab67-4b30-bde9-0412c3378290" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu_1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d" id="menu01_sub" style="DISPLAY:none;top:0px;left:100px" onmouseover="submenuover()" onmouseout="submenuout()">
-                    <li class="left">
-                    <li onclick="javascript:submenuclick('9f3651b2-fb17-429b-88db-b9d91cadfdbe');OpenWindow(event, '/ezBoard/boardMain.do', 'main', ' ')"><spring:message code='ezBoard.t360' /></li>
-                    <c:if test="${lang == '1'}">
-                    <li onclick="javascript:submenuclick('3a666e56-b5c5-4dc3-b455-2a4b607ce332');OpenWindow(event, '/ezBoard/boardMain.do?subFunc=1', 'main', ' ')">나의게시물</li>
-                    </c:if>
-                    <c:if test="${lang == '3'}">
-                    <li onclick="javascript:submenuclick('3a666e56-b5c5-4dc3-b455-2a4b607ce332');OpenWindow(event, '/ezBoard/boardMain.do?subFunc=1', 'main', ' ')">マイ掲示板</li>
-                    </c:if>
-                    <li onclick="javascript:submenuclick('451ef007-5316-472d-9a22-eeafbe8367e9');OpenWindow(event, '/ezBoard/boardMain.do?subFunc=2', 'main', ' ')"><spring:message code='ezBoard.t229' /></li>
-                    <li class="right">                
-                </ul>
-                <ul id="menu_09e1d12c-5ffd-4240-8791-020431a5c47b" id="menu01_sub" style="DISPLAY:none;top:0px;left:100px" onmouseover="submenuover()" onmouseout="submenuout()">
-                    <li class="left">
-                    <li onclick="javascript:submenuclick('c93e6f29-ac0a-46a4-84c2-ae809e9c7c9e');OpenWindow(event, '/ezEmail/mailMain.do?funCode=1', 'main', ' ')"><spring:message code='main.t78' /></li>
-                    <li onclick="javascript:submenuclick('8d13543c-7747-4828-a141-1e28045ff722');OpenWindow(event, '/ezEmail/mailMain.do?funCode=2', 'main', ' ')"><spring:message code='main.t205' /></li>
-                    <li class="right">
-                </ul>
-                <ul id="menu23ced55b-ace8-48cb-9834-19b8d9fb8d8b" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu0fbe027c-9241-4922-bf97-cc6d10e402c9" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menue254ef6f-d602-4d40-8e39-b44177a8737c" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu2016a429-cb39-4653-b92c-c9595c12acec" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu8593cc87-7630-420b-a6d5-f7a8577c5a31" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu8e9ebb41-5631-4c6f-9887-ec824464bce3" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menuf6f7ecd7-1969-4025-9bcc-bbc181e41073" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menuce2fd9b5-3934-4cba-b13f-a32d36a5d63a" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menuba0d5a0d-7ea9-469a-a981-a00e2b8825ec" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu698d7b32-1fe1-4fcc-af02-643b08fddfce" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menuf5c278f0-b62d-4437-8b08-1a81c2410497" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-            </div>
+                <ul id="menu_1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d" style="left: 875px; top: 0px; width: 111px; display: none;" onmouseover="submenuover(this)" onmouseout="submenuout(this)">
+					<li class="left">
+					<li onclick="OpenWindow(event, '/ezBoard/boardMain.do', 'main', ' ')"><spring:message code='ezBoard.t00010' /></li>
+					<li onclick="OpenWindow(event, '/ezBoard/boardMain.do?subFunc=1', 'main', ' ')"><spring:message code='ezBoard.t10032' /></li>
+					<li onclick="OpenWindow(event, '/ezBoard/boardMain.do?subFunc=2', 'main', ' ')"><spring:message code='ezBoard.t229' /></li>
+					<li onclick="OpenWindow(event, '/ezBoard/boardMain.do?func=1', 'main', ' ')"><spring:message code='ezBoard.t365' /></li>
+					<li onclick="OpenWindow(event, '/ezBoard/boardMain.do?func=3', 'main', ' ')"><spring:message code='ezBoard.t371' /></li>
+					<li class="right"></li>
+				</ul>
+				<ul id="menu_6cdb78b7-ae72-48ce-990f-5c0f6838fbbc" style="left: 619px; top: 0px; width: 128px; display: none;" onmouseover="submenuover(this)" onmouseout="submenuout(this)">
+					<li class="left">
+					<li onclick="OpenWindow(event, '/ezSchedule/scheduleIndex.do?funCode=2', 'main', '')"><spring:message code='ezSchedule.t1010' /></li>
+					<li onclick="OpenWindow(event, '/ezSchedule/scheduleIndex.do?funCode=3', 'main', ' ')"><spring:message code='ezSchedule.t1011' /></li>
+					<li class="right"></li>
+				</ul>
+				<ul id="menu_09e1d12c-5ffd-4240-8791-020431a5c47b" style="left: 525px; top: 0px; width: 94px; display: none;" onmouseover="submenuover(this)" onmouseout="submenuout(this)">
+					<li class="left">
+					<li onclick="OpenWindow(event, '/ezEmail/mailMain.do?funCode=1', 'main', ' ')"><spring:message code='main.t78' /></li>
+					<li onclick="OpenWindow(event, '/ezEmail/mailMain.do?funCode=2', 'main', ' ')"><spring:message code='main.t205' /></li>
+					<li class="right"></li>
+				</ul>
+			</div>
         </div>
-
                        
-        <!-- 표준모듈 (2007.03.15) 수정: .NET Framework 2.0에서는 RegisterStartupScript 메서드 지원하지 않음. -->
-        
-    
-    <div id="objectProgressDiv"></div>
-        
-        <iframe id=ifmpopup style="display:none" src=""></iframe>
-        <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
-    </body>
+		<div id="objectProgressDiv"></div>
+		
+		<iframe id="ifmpopup" src="" style="display: none;"></iframe>
+		<div id="progressPanel" style="left: 0px; top: 0px; width: 100%; height: 100%; display: none; position: absolute; z-index: 1000;">&nbsp;</div>
+	
+	</body>
 </html>
