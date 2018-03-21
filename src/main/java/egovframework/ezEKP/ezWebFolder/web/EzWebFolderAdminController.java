@@ -653,7 +653,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("userId", user.getId())
 										.queryParam("mode", mode)
 										.queryParam("offset", user.getOffset());
 		RestTemplate rest             = new RestTemplate();

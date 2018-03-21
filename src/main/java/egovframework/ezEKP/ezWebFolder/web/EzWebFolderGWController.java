@@ -1189,7 +1189,6 @@ public class EzWebFolderGWController {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
 		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset") : "";
 		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")   : "";
-		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId") : "";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("folderId: " + folderId + " || serverName: " + serverName);
@@ -1783,6 +1782,38 @@ public class EzWebFolderGWController {
 				case "user":
 					//Get personal folder tree
 					FolderSimpleVO personalFolder = ezWebFolderService.getUserSimpleFolder(userId, tenantId);
+					
+					//If not created then create
+					if (personalFolder == null) {
+						FolderVO folder            = new FolderVO();
+						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						Date date                  = new Date();
+						String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+						String folderId            = ezWebFolderAdminService.getMaxFolderID(tenantId);
+						
+						folder.setFolderId(folderId);
+						folder.setFolderLevel(0);
+						folder.setFolderName1(userInfo.getDisplayName1());
+						folder.setFolderName2(userInfo.getDisplayName2());
+						folder.setFolderPath("|" + folderId + "|");
+						folder.setFolderStep(0);
+						folder.setFolderType("U");
+						folder.setFolderUpper("root");
+						folder.setOwnerId(userInfo.getId());
+						folder.setUseStatus("Y");
+						folder.setUpdateId(userId);
+						folder.setCreateName1(userInfo.getDisplayName1());
+						folder.setCreateName2(userInfo.getDisplayName2());
+						folder.setTenantId(tenantId);
+						folder.setCompanyId(userInfo.getCompanyID());
+						folder.setCreateId(userId);
+						folder.setCreateDate(timeUTC);
+						folder.setUpdateDate(timeUTC);
+						
+						ezWebFolderAdminService.insertFolder(folder);
+						personalFolder = ezWebFolderService.getUserSimpleFolder(userId, tenantId);
+					}
+					
 					result.put("data", personalFolder);
 					break;
 			}
