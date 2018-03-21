@@ -15,8 +15,7 @@ public class JournalAttachVO {
 	private String encodeFileName;
 	/** 인코딩 파일경로*/
 	private String encodeFilePath;
-	
-	
+
 	public String getJournalId() {
 		return journalId;
 	}

@@ -163,6 +163,13 @@
 		<result property="jikwi"			column="jikwi"/>
 		<result property="date"				column="date"/>
 	</resultMap>
+	
+	<resultMap class="journalAttachVO" id="accachMap">
+		<result property="fileId"			column="file_id"/>
+		<result property="fileName"			column="file_name"/>			
+		<result property="filePath"			column="file_path"/>
+		<result property="fileSize"			column="file_size"/>
+	</resultMap>
 
 	<!-- 양식함 리스트 세럭트 -->
 	<select id="selectJournalTypeList" resultMap="JournaltypeMap"
@@ -961,15 +968,15 @@
 	</select>
 
 	<!-- 첨부파일 리스트 가져오기 -->
-	<select id="getAttachList" parameterClass="Map" resultClass="journalAttachVO">
+	<select id="getAttachList" parameterClass="Map" resultMap="accachMap">
 		select
 		*
 		from
 		tbl_journal_file
 		where
-		tenant_id = #tenantId#
-		and
 		journal_id = #journalId#
+		and
+		tenant_id = #tenantId#
 	</select>
 
 	<!-- 업무일지 등록 하기 -->
@@ -1024,10 +1031,13 @@
 			journal_title = #title#,
 			dept_share = #deptShare#,
 			journal_content = #content#
-			<isNotEmpty property="isTemp">
+			<isEqual property="isTemp" compareValue="N">
 			,journal_status = ""
 			,journal_date = utc_timestamp() 
-			</isNotEmpty>
+			</isEqual>
+			<isEqual property="isTemp" compareValue="Y">
+			,journal_date = utc_timestamp() 
+			</isEqual>
 		where
 		journal_id = #journalId#
 		and

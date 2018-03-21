@@ -123,6 +123,7 @@
 	
 		        oTable.appendChild(objTr);
 		        document.getElementById("lstAttachLink").appendChild(oTable);
+		        
 		    }
 	
 		    function uploadComplete(evt) {
@@ -145,6 +146,7 @@
 	
 		    function setAttachFileInfo(str) {
 		        var filelist = JSON.parse(str);
+		        console.log("fileList 드래그확인 : " + filelist);
 		        
 		        try {
 		            var listtable;
@@ -160,7 +162,7 @@
 
 		                if (filelist[i].resultUpload == "true") {
 		                    objTr = document.createElement("TR");
-		                    objTr.setAttribute("DATA2", newFileName + ";" + pFileName + ";" + fileSize);
+		                    objTr.setAttribute("fileInfo", newFileName + ";" + pFileName + ";" + fileSize);
 
 		                    var objTd = document.createElement("TD");
 		                    objTd.style.textAlign = "center";
@@ -230,7 +232,7 @@
 		                var pNewNodeName = "";
 		                var Rtnval;
 	
-		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
+		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("fileInfo");
 		                
 		                if (fileList == "") {
 							fileList = pAttachDelFileName;

@@ -103,8 +103,23 @@ public class EzJournalJYController extends EgovFileMngUtil {
 				JSONObject journal = (JSONObject) result.get("data");
 				logger.debug("journal확인 : " + journal.toString());
 				model.addAttribute("journal", journal);
+				model.addAttribute("content", journal.get("journalContent").toString());
 				model.addAttribute("formId", journal.get("formId").toString());
 				model.addAttribute("deptShare", journal.get("deptShare").toString());
+				JSONArray fileList = (JSONArray) journal.get("fileList");
+				if (fileList != null && fileList.size() > 0) {
+					for (int i = 0; i < fileList.size(); i++) {
+						JSONObject file = (JSONObject) fileList.get(i);
+						file.put("pFileName", file.get("fileName"));
+						String filePath = file.get("filePath").toString();
+						filePath = filePath.substring(filePath.indexOf("{"), filePath.indexOf("}") + 1);
+						file.put("pUploadSN", filePath);
+	//					file.put("fileSize", file.get("fileSize"));
+						file.put("resultUpload", "true");
+						fileList.set(i, file);
+					}
+					model.addAttribute("fileList", fileList.toString());
+				}
 			}
 			
 			// 수신자 리스트 가져오기
@@ -115,23 +130,21 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			
 			if (status.equals("ok")) {
 				JSONArray receiver =  (JSONArray) result.get("data");
-				
-				for (int i = 0; i < receiver.size(); i++) {
+				logger.debug("처음 receiver확인용 : " + receiver);
+				if (receiver.size() > 0 && receiver != null) {
 					
-					logger.debug("receiver확인용 : " + receiver.get(i));
-					JSONObject obj = (JSONObject) receiver.get(i);
-					
-					receiverIds += obj.get("userId") + ", ";
-					
-					if (userInfo.getLang().equals("2")) {
-						receiverNames += obj.get("userName2") + ", ";
-					} else {
+					for (int i = 0; i < receiver.size(); i++) {
+						
+						logger.debug("receiver확인용 : " + receiver.get(i));
+						JSONObject obj = (JSONObject) receiver.get(i);
+						
+						receiverIds += obj.get("userId") + ", ";
 						receiverNames += obj.get("userName") + ", ";
 					}
+					
+					model.addAttribute("receiverIds", receiverIds);
+					model.addAttribute("receiverNames", receiverNames);
 				}
-				
-				model.addAttribute("receiverIds", receiverIds);
-				model.addAttribute("receiverNames", receiverNames);
 			}
 			
 		}
@@ -417,17 +430,20 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			logger.debug(jsonParam.toString());
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
 			break;
-		case "reuse":
-			
-			break;
-		case "modify":
-			
-			break;
-		case "temp":
-			
-			break;
+//		case "reuse":
+//			
+//			break;
+//		case "modify":
+//			
+//			break;
+//		case "temp":
+//			
+//			break;
 
 		default:
+			param.put("userId", userId);
+			restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
+			result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 			break;
 		}
 		
@@ -519,7 +535,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		if (request.getParameter("journalId") != null && !request.getParameter("journalId").equals("")) {
 			journalId = request.getParameter("journalId");
 		}
-        
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("mode", mode);
@@ -692,6 +708,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	 * 업무일지 저장
 	 */
 	@RequestMapping(value = "/ezJournal/saveJournal.do")
+	@ResponseBody
 	public void saveJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("saveJournal started");
 		
@@ -732,6 +749,9 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		jsonParam.put("receiverList", receiverList);
 		jsonParam.put("fileList", fileList);
 		jsonParam.put("mode", mode);
+		if (mode.equals("temp")) {
+			jsonParam.put("isTemp", "N");
+		}
 		
 		JSONObject result = new JSONObject();
 		
@@ -750,6 +770,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	 * 업무일지 임시저장
 	 */
 	@RequestMapping(value = "/ezJournal/saveTempJournal.do")
+	@ResponseBody
 	public void saveTempJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("saveTempJournal started");
 		
@@ -777,6 +798,10 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
 		
+		if (mode.equals("reuse")) {
+			originJournalId = "0";
+		}
+		
 		JSONObject jsonParam = new JSONObject();
 		jsonParam.put("title", title);
 		jsonParam.put("content", content);
@@ -791,7 +816,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		
 		JSONObject result = new JSONObject();
 		
-		if (originJournalId.trim().equals("0")) {
+		if (originJournalId.trim().equals("0") || mode.trim().equals("reuse")) {
 			restUrl = "/rest/ezjournal/types/" + typeId + "/journals";
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
 		} else {
@@ -879,6 +904,39 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("journalDelete ended");
+	}
+	
+	/**
+	 * 업무일지 첨부파일 다운로드
+	 */
+	@RequestMapping(value = "/ezJournal/journalAttachDown.do")
+	public void journalAttachDown(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("journalAttachDown started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String typeId = request.getParameter("typeId");
+		String journalId = request.getParameter("journalId");
+		String filePath = request.getParameter("filePath");
+		String fileName = request.getParameter("fileName");
+				
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("filePath", filePath);
+		param.put("fileName", fileName);
+		
+		String restUrl = "/rest/ezjournal/types/" + typeId + "/journals/" + journalId + "/attachfiles";
+		JSONObject result = new JSONObject();
+		
+		result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		}
+		
+		logger.debug("journalAttachDown ended");
 	}
 	
 	
