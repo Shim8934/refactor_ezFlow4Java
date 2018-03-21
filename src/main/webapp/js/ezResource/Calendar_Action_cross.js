@@ -1331,7 +1331,6 @@ function onmouse_out_resource(td) {
 function onmouse_over_today(td, event) {
     td.style.cursor = "pointer";
     td.style.backgroundColor = "#2876b6";
- //   td.style.border = "1px solid #dedede";
     showTooltip_MouseOver(td, event);
 }
 //일보기 마우스임팩트
@@ -1408,11 +1407,13 @@ function showTooltip_MouseOver(obj, e) {
 
     var tTr = document.createElement("TR");
     var tTd = document.createElement("TD");
+    tTd.style.backgroundColor = "white";
     tTd.className = "text";
-
+    
     var sTable = document.createElement("TABLE");
     var sTr = document.createElement("TR");
     var sTd = document.createElement("TD");
+    sTable.style.backgroundColor = "white";
     sTable.className = "td_list";
     sTable.setAttribute("cellpadding", "0");
     sTable.setAttribute("cellspacing", "0");
