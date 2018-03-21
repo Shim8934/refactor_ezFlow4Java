@@ -1089,6 +1089,7 @@ function event_HeaderClick(obj) {
     var ContentObject = document.getElementById("MailList");
     GetListInfo(HeaderObject, ContentObject);
 }
+
 function event_SubHeaderClick(obj) {
     if (p_SubListOrderObject != null) {
         if (p_SubListOrderObject.childNodes.length > 1 && p_SubListOrderObject.childNodes[1].nodeName == "IMG")
@@ -1126,6 +1127,7 @@ function event_SubHeaderClick(obj) {
     var ContentObject = document.getElementById("GroupSubList");
     GetListInfo_SUB(HeaderObject, ContentObject);
 }
+
 function event_SubHeaderCheckBoxClick(obj) {
     if (obj.checked) {
         for (var i = 0; i < document.getElementById("GroupSubList").childNodes.length; i++) {
@@ -1143,24 +1145,64 @@ function event_SubHeaderCheckBoxClick(obj) {
     }
 }
 function event_HeaderCheckBoxClick(obj) {
+	
+	// mail list DomElement
+	var mailListElement = document.getElementById("MailList");
+	
+	// 메일 리스트가 비어있다면 함수 종료 (검색결과 없음 또는 메일 없음)
+	if (isEmptyMailList(mailListElement)) {
+		return;
+	}
+	
+	// tr 노드들 (메일 리스트의 전체 행)
+	var mailNodes = mailListElement.childNodes;
+	// tr 노드 (하나의 행)
+	var mailNode;
+	// tr 노드 개수
+	var nodeCount = mailNodes.length;
+	
     if (obj.checked) {
-        for (var i = 0; i < document.getElementById("MailList").childNodes.length; i++) {
-            document.getElementById("MailList").childNodes.item(i).childNodes.item(0).childNodes.item(0).checked = true;
-            document.getElementById("MailList").childNodes.item(i).style.backgroundColor = m_strColorSelect;
+    	
+        for (var i = 0; i < nodeCount; i++) {
+        	mailNode = mailNodes.item(i);
+        	
+        	mailNode.childNodes.item(0).childNodes.item(0).checked = true;
+        	mailNode.style.backgroundColor = m_strColorSelect;
             //TODO: 테스트해보기 2016-06-02
             // dhlee: modified so that existing elements aren't merged with new ones.
             //listContentArry[listContentArry.length] = document.getElementById("MailList").childNodes.item(i).getAttribute("id");
-            listContentArry[i] = document.getElementById("MailList").childNodes.item(i).getAttribute("id");
+            listContentArry[i] = mailNode.getAttribute("id");
         }
-    }
-    else {
-        for (var i = 0; i < document.getElementById("MailList").childNodes.length; i++) {
-            document.getElementById("MailList").childNodes.item(i).childNodes.item(0).childNodes.item(0).checked = false;
-            document.getElementById("MailList").childNodes.item(i).style.backgroundColor = m_strColorDefault;
+    } else {
+    	
+        for (var i = 0; i < nodeCount; i++) {
+        	mailNode = mailNodes.item(i);
+        	
+        	mailNode.childNodes.item(0).childNodes.item(0).checked = false;
+        	mailNode.style.backgroundColor = m_strColorDefault;
         }
+        
         listContentArry = new Array();
     }
 }
+
+// MailList id값을 가진 DomElement를 파라미터로 함
+// 메일 Row가 존재하지 않으면 true, 있다면 false
+function isEmptyMailList(mailListElement) {
+	
+	if (mailListElement === undefined || mailListElement === null) {
+		return true;
+	}
+	
+	if (mailListElement.childElementCount > 1) {
+		return false;
+	}
+	
+	var firstMailNode = mailListElement.childNodes.item(0);
+	
+	return firstMailNode.childElementCount === 1;
+}
+
 var PressShiftKey = false;
 var PressCtrlKey = false;
 function event_listOnkeyUp(event) {

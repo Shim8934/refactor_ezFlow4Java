@@ -9,7 +9,8 @@
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="/css/Tab.css" />
 		<link type="text/css" rel="stylesheet" href="/css/olstyle_nonIE.css" />
-		<link type="text/css" rel="stylesheet" href="/css/Calendar_cross.css" />
+		<!-- <link type="text/css" rel="stylesheet" href="/css/Calendar_cross.css" /> -->
+		 <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />  
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -128,6 +129,13 @@
 	        if (objRInfo) {
 	            objRInfo.style.height = document.documentElement.clientHeight - 376 + "px";
 	        }
+	        
+	        var divH = document.getElementById("divExplain")
+			if(divH){
+				divH.style.height = document.documentElement.clientHeight - 616 + "px";
+				divH.style.minHeight = "15px";
+				divH.style.maxHeight = "220px";				
+			}
 	        
 	        if (typeCal == "2") {
 	            var w = document.documentElement.clientHeight - 278;
@@ -373,7 +381,7 @@
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <spring:message code='ezResource.t148'/></td>
 									</tr>
 									<tr>
-										<td style="padding:2px 10px; word-break:break-all; height:20px">${resLocation}</td>
+										<td style="padding:2px 10px; word-break:break-all; height:20px;">${resLocation}</td>
 									</tr>
 									<tr>
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t149'/></b></td>
@@ -394,7 +402,7 @@
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t271'/></b></td>
 									</tr>
 									<tr>
-										<td style="padding:2px 10px"><div style="overflow: auto; height: 100%;word-break:break-all"><c:out value='${brdExplain}' /></div></td>
+										<td style="padding:2px 10px;"><div  id = "divExplain" style="min-height:15px;max-height:220px;overflow-y: auto;word-break:break-all"><c:out value='${brdExplain}' /></div></td>
 									</tr>
 								</table>
 	                    	</td>
@@ -402,6 +410,6 @@
            			</table>
 				</td>
 			</tr>
-		</table>
+		</table>	
 	</body>
 </html>

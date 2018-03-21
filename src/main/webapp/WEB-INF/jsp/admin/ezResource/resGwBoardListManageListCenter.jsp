@@ -28,21 +28,6 @@
 		</script>
 	</head>
 	<body class="mainbody">	
-		<h1><spring:message code="ezResource.t17" /></h1>
-    	<div style="text-align:center">
-			<div id="EmptyMsg">
-    			<div class="warningbox01" style="margin-top:100px;">
-        			<div class="warningbox02" style="height:130px;width:auto">
-  	        			<div class="warnintxt01" style="text-align:left">
-	        				<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style='margin:18px'></span>
-	        				<dl class="warningdl">
-	        					<dd><spring:message code="ezResource.t18" /><br><spring:message code="ezResource.t19" /></dd>
-	        				</dl>
-	        			</div>
-	    			</div>
-    			</div>
-			</div>
-		</div>
     	<form name="brds">
         	<input type="hidden" id="proc" name="proc" value="MOD">
     	</form>
