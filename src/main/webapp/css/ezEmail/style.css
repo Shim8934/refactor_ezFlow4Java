@@ -2,6 +2,9 @@
 /* #divTree {
 	
 } */
+#mainmenu li:hover span{
+	color: #0B790E;
+}
 
 #divInput {
 	float: left;
@@ -9,6 +12,41 @@
 	height: 350px;
 	margin-left: 20px;
 	position: relative;
+}
+#divInput b {
+	display: inline-block;
+	/* min-width: 90px; */
+	width: 28%;
+	font-size: 13px;
+	letter-spacing: -1px;
+}
+#divInput #myForm > input {
+	width: 70%;
+	box-sizing: border-box;
+	padding-left: 5px;
+	outline: none;	
+}
+#divInput .divInputBtn > input {
+	position: absolute; 
+	bottom: 0; 
+	right: 0;
+	
+    letter-spacing: 2px;
+    cursor: pointer;
+    box-sizing: border-box;
+    padding: 7px;
+    border-radius: 5px;
+    font-weight: bold;
+    outline: none;
+    
+    background: rgb(0, 72, 149);
+    border: 1px solid rgb(0, 72, 149);
+    color: white;
+}
+#divInput .divInputBtn > input:hover {
+	background: white;
+    border: 1px inset rgb(0, 72, 149);
+    color: rgb(0, 72, 149);   
 }
 
 .myScrollableBlock {
@@ -18,6 +56,8 @@
 	float: left;
 	display: block;
 	overflow: auto;
+	box-sizing: border-box;
+    padding: 4px;
 }
 
 /* 수아 style (letterManager.jsp) */
@@ -181,10 +221,12 @@ body {
 }
 .leTitle {
     padding: 3px;
-    color: white;
-}
-.leLetter {
-	margin-top: 15px;
+    font-size: 11pt;
+    font-weight: bold;
+    color: #424959;
+    height: 44px;
+    margin-left: 1px;
+    line-height: 36px;
 }
 .leLetterInfo {
     height: 50px;
@@ -217,6 +259,9 @@ body {
 .leLetterInfo table input {
 	width: 100%;
 	box-sizing: border-box;
+	outline: none;
+	box-sizing: border-box;
+	padding-left: 5px;
 }
 .leLetterEditer {
 	width: 100%;
@@ -232,15 +277,30 @@ body {
 	text-align: center;
 }
 .leLetterBtns button {
-    background: linear-gradient(#3a5382,#28416d);
-    color: white;
-    border: 1px solid #223151;
-    padding: 3px 10px;
-    border-radius: 4px;
+	display: inline-block;
+    background: white;
+    border: 1px solid rgba(188, 211, 224, 1);
+    height: 25px;
+    padding: 0px 8px 0px 8px;
+    border-radius: 3px;
+    line-height: 25px;
+    font-size: 12px;
+    color: #333;
+    
     cursor: pointer;
-   }
-.leLetterBtns button:hover {
-	background: linear-gradient(white,#f3f2f2);
+    /* background: linear-gradient(white,#f3f2f2);
     color: #393939;
     border: 1px solid #a5a3a3;
+    
+    padding: 3px 10px;
+    border-radius: 4px;
+    cursor: pointer; */
+   }
+.leLetterBtns button:hover {
+	color: #2058a6;
+    background: white;
+    border: 1px solid #6793d8;
+	/* background: linear-gradient(#3a5382,#28416d);
+    color: white;
+    border: 1px solid #223151; */
 }
