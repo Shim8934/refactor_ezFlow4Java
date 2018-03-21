@@ -65,8 +65,8 @@
 			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; overflow:hidden;">
 			<p id="inAttiClock" style="margin:5px 0px 0px 0px; font-size:13px;">출근 : 00:00:00</p>
 			<p id="outAttiClock" style="margin:5px 0px 8px 0px;  font-size:13px;">퇴근 : 00:00:00</p>
-			<span id="inAttiBtn" type="A01" datetype="3" onclick="addAttitude(this)" style="margin-left:0px;">출근</span>
-			<span id="outAttiBtn" type="A02" datetype="3" onclick="addAttitude(this)">퇴근</span>
+			<span id="inAttiBtn" type="A01" datetype="2" onclick="addAttitude(this)" style="margin-left:0px;">출근</span>
+			<span id="outAttiBtn" type="A02" datetype="2" onclick="addAttitude(this)">퇴근</span>
 		</div>
 	</article>
 	<div id="left" style="border-top:1px solid #dedede">
