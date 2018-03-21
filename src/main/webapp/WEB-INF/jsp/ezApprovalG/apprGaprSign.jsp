@@ -161,7 +161,7 @@
 		            <div id="SIGNLIST"  style="BORDER:0;WIDTH:150px;HEIGHT:160px;overflow:auto;margin:1px 1px 1px 1px;"></div>
 				</div>
 			  </td> 
-		    <td> <div id="SIGNVIEW" class="IMAGEVIEW" style="background-color:white; margin-left:5px; BORDER:#b6b6b6 1px solid; WIDTH:150px; HEIGHT:160px; overflow:hidden;"></div></td> 
+		    <td> <div id="SIGNVIEW" class="IMAGEVIEW" style="background-color:white; margin-left:5px; BORDER:#ddd 1px solid; WIDTH:150px; HEIGHT:160px; overflow:hidden;"></div></td> 
 		  </tr> 
 		</table> 
 		

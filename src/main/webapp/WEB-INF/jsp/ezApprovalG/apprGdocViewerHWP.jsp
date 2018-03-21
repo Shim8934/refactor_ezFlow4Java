@@ -52,7 +52,7 @@
 	    
 	    var g_progresswin = null;
 	    function showProgress(inforstring) {
-	        g_progresswin = window.showModelessDialog("/ezCommon/show_progress.do?fileInfo=" + escape(inforstring), "", "dialogWidth=390px; dialogHeight:185px; center:yes; status:no; help:no; edge:sunken;");
+	        g_progresswin = window.showModelessDialog("/ezApprovalG/showProgress.do?fileInfo=" + escape(inforstring), "", "dialogWidth=390px; dialogHeight:185px; center:yes; status:no; help:no; edge:sunken;");
 	    }
 	    
 	    function hideProgress() {

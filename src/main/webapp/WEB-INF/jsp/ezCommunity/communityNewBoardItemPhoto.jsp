@@ -1009,7 +1009,7 @@
   			</tr>
   			<tr id="docTR" style="display:none">
     			<td>
-    				<div id="docContentBorder" style="border:#B6B6B6 1px solid; BACKGROUND-COLOR: white; ">
+    				<div id="docContentBorder" style="border:#ddd 1px solid; BACKGROUND-COLOR: white; ">
         				<iframe id="docContent" style="width:100%;height:100%;" frameborder="0"></iframe>
       				</div>
       			</td>

@@ -244,6 +244,7 @@
 		    function FieldsAvailable() {
 		        setAttachInfo(pDocID, "END", lstAttachLink);
 		        GetExchInfo();
+		        
 		        if ((attachxml.length > 0) && (attachxsl.length > 0)) {
 		            btnXMLEdit.style.display = "";
 		            attachxmlPath = "/Upload_ApprovalG/" + companyID + "/sendXML/" + attachxml;
@@ -251,7 +252,9 @@
 		            attachxslPath = "/Upload_ApprovalG/" + companyID + "/sendXML/" + attachxsl;
 		            attachxslName = attachxsl.replace(PackDocID, "");
 		        }
+		        
 		        var Rtnval = CheckOpinionInfo();
+		        
 		        if (Rtnval) {
 		            var pInformationContent = "<spring:message code = 'ezApprovalG.t9' /><br> <spring:message code = 'ezApprovalG.t170' />";
 		            OpenInformationUI(pInformationContent, FieldsAvailable_Complete);
@@ -265,20 +268,30 @@
 		    }
 		
 		    function CheckOpinionInfo() {
-		        var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-		        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-		        xmlhttp.open("POST", "/myoffice/ezApprovalG/formContainer/aspx/getEndOpinionInfo.aspx", false);
-		        xmlhttp.send(xmlpara);
-		        Resultxml = loadXMLString(xmlhttp.responseText);
-		        var NodeList = SelectNodes(Resultxm, "LISTVIEWDATA/ROWS/ROW");
+				var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getEndOpinionInfo.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		}
+		    	});
 		
-		        if (NodeList.length > 0)
+		        Resultxml = result;
+		
+		        var NodeList = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
+		
+		        if (NodeList.length != "0") {
 		            return true;
-		        else
+		        } else {
 		            return false;
+		        }
 		    }
 		
 		    var aprendopinion_dialogArgument = new Array();
@@ -306,7 +319,10 @@
 		    }
 		
 		    function btnSend_onclick_Information(Ans) {
-		        if (!Ans) return;
+		        if (!Ans) {
+		        	DivPopUpHidden();
+		        	return;
+		        }
 		        
 		    	if ("${approvalPWD}" != "N") {
 		            chk_Passwd(pUserID, chk_Passwd_Complete);

@@ -781,7 +781,7 @@
 			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio3">&nbsp;<spring:message code="ezEmail.t161" /></label>
 			  </c:if>
 			  &nbsp;
-			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
+			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;height:22px" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" align="absmiddle" onClick="start_search()"></a>
 	      </span>
 	    </h1>	
@@ -821,7 +821,7 @@
             <div class="popupwrap2">
               <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="list_element">
 		          <colgroup>
-	                <col style="width:80px;"><col>
+	                <col style="width:90px;"><col>
 	              </colgroup>
               	  <tr>
                     <th><spring:message code="ezEmail.t179" /></th>
@@ -863,7 +863,7 @@
            
         </div>
         <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
-            <table style="width:100%;border:1px solid #B6B6B6;" id="MailHeader" class="mainlist" >               
+            <table style="width:100%;border:1px solid #ddd;" id="MailHeader" class="mainlist" >               
             </table>
             <div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;" onblur  onscroll="ContextMenuHidden()">
                 <table class="mainlist" style="width:100%;" id="MailList" listpageCount="${mailGeneral.listCount}" curPage="1" MaxCount="0" MaxPage="0" oncontextmenu="event_listContextMenu(event); return false;">

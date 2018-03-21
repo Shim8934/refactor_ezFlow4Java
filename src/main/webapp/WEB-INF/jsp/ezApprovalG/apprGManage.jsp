@@ -691,7 +691,7 @@
 		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
 		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
 		                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		                    if (CrossYN()) {
+		                    if (CrossYN() && !(/netscape/i.test(navigator.appName) && /trident/i.test(navigator.userAgent) || /msie/i.test(navigator.userAgent))) {
 		                        alert(strLang1103);
 		                        return;
 		                    } else {
@@ -1088,49 +1088,50 @@
 		        var pHref = tr.getAttribute("DATA3");
 		        var openLocation;
 		        if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-		            if (CrossYN()) {
+		            if (/msie/i.test(navigator.userAgent)) {
 		                alert(strLang1103);
 		                return;
+		            } else {
+		                openLocation = "/ezApprovalG/ezSimsaG_HWP.do";
 		            }
-		            else {
-		                openLocation = "ezViewHWP/ezSimsaG_HWP.aspx";
-		            }
-		        }
-		        else {
+		        } else {
 	                openLocation = "/ezApprovalG/ezSimsaG.do";
 		        }
 		        openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pHref) + "&orgDocID=" + encodeURI(pOrgDocID);
 		        var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
 		        window.open(openLocation, "enforce", param);
 		    }
+		    
 		    window.onbeforeunload = function () {
 		        try {
 		            hideProgress();
 		        } catch (e) { }
 		    };
+		    
 		    function goToPage(page) {
 		        if (page == "front") {
-		            if (parseInt(pageNum) - 1 < 1)
+		            if (parseInt(pageNum) - 1 < 1) {
 		                return;
+		            }
 		            pageNum = pageNum - 1;
 		            openergetDocInfo();
-		        }
-		        else if (page == "next") {
+		        } else if (page == "next") {
 		            if (parseInt(pageNum) + 1 > parseInt(totalPages))
 		                return;
 		            pageNum = pageNum + 1;
 		            openergetDocInfo();
-		        }
-		        else if (page == "page") {
+		        } else if (page == "page") {
 		            if (event.keyCode == 13) {
 		                var goPage = document.all.txt_PageInputNum.value;
-		                if (parseInt(goPage) != goPage || parseInt(goPage) == "" || parseInt(goPage) < 1 || parseInt(goPage) > parseInt(totalPages))
+		                if (parseInt(goPage) != goPage || parseInt(goPage) == "" || parseInt(goPage) < 1 || parseInt(goPage) > parseInt(totalPages)) {
 		                    return;
+		                }
 		                pageNum = parseInt(goPage);
 		                openergetDocInfo();
 		            }
 		        }
 		    }
+		    
 		    function btnAddCabinet_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -1200,7 +1201,7 @@
 		            var width = window.screen.availWidth;
 		            var left = (parseInt(width) - 600) / 2;
 		            var top = (parseInt(heigth) - 270) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=793px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    function GetBujaeFlag() {
@@ -1309,8 +1310,8 @@
 		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
 		        }
 		        
-		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=600px,height=450px";
-		        feature = feature + GetOpenPosition(600, 450);
+		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=450px";
+		        feature = feature + GetOpenPosition(580, 450);
 		        window.open(url, "", feature);
 		    }
 		
@@ -1704,11 +1705,11 @@
 		<h1>
 			<span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
-		        <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezApprovalG.t106'/></label>
-			    <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code='ezApprovalG.t445'/></label>
+		        <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1"><spring:message code='ezApprovalG.t106'/></label>
+			    <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2"><spring:message code='ezApprovalG.t445'/></label>
 			    &nbsp;
-			    <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		        <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search()"></a>
+			    <input id="txt_keyword" style="width:150px;height:22px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		        <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle;" onClick="search()"></a>
 		    </span>
 		</h1>
 		<div id="mainmenu">

@@ -19909,7 +19909,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		resultXML.append("<ROW>");
-		int docCnt = 0, sixHgap = 0, oneDgap = 0, sevenDgap = 0, oneMgap = 0, other = 0;
+		int docCnt = 0; // sixHgap = 0, oneDgap = 0, sevenDgap = 0, oneMgap = 0, other = 0; 사용안함
 		//for (int j=dLength-1; j>=0; j--) {
 		for (int j=0; j<dLength; j++) {
 			docCnt += 1;
@@ -19928,6 +19928,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resultXML.append("</CELL>");
 			}
 			
+			/*
 			if (pListType.equals("1")) {
 				String pReceivedDate = docList.get(j).getReceivedDate();
 				if (pReceivedDate == null || pReceivedDate.equals("")) {
@@ -19957,15 +19958,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} else {
 					other += 1;
 				}
-			}
+			}*/
 		}
 		resultXML.append("</ROW>");
 		if (pListType.equals("1")) {
-			resultXML.append("<SIXHGAP>" + sixHgap + "</SIXHGAP>");
-			resultXML.append("<ONEDGAP>" + oneDgap + "</ONEDGAP>");
-			resultXML.append("<SEVENDGAP>" + sevenDgap + "</SEVENDGAP>");
-			resultXML.append("<ONEMGAP>" + oneMgap + "</ONEMGAP>");
-			resultXML.append("<OTHER>" + other + "</OTHER>");
+			map.put("v_NOWTIME", commonUtil.getTodayUTCTime(""));
+			map.put("v_COUNTTYPE", "SIXHGAP");
+			resultXML.append("<SIXHGAP>" + ezApprovalGDAO.getCountDoingDocInfo(map) + "</SIXHGAP>");
+			map.put("v_COUNTTYPE", "ONEDGAP");
+			resultXML.append("<ONEDGAP>" + ezApprovalGDAO.getCountDoingDocInfo(map) + "</ONEDGAP>");
+			map.put("v_COUNTTYPE", "SEVENDGAP");
+			resultXML.append("<SEVENDGAP>" + ezApprovalGDAO.getCountDoingDocInfo(map) + "</SEVENDGAP>");
+			map.put("v_COUNTTYPE", "ONEMGAP");
+			resultXML.append("<ONEMGAP>" + ezApprovalGDAO.getCountDoingDocInfo(map) + "</ONEMGAP>");
+			map.put("v_COUNTTYPE", "OTHER");
+			resultXML.append("<OTHER>" + ezApprovalGDAO.getCountDoingDocInfo(map) + "</OTHER>");
 		}
 		
 		resultXML.append("</ROWS>");
@@ -25520,7 +25527,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			result.append("<ReceivedDate>" + listXML.getElementsByTagName("RECEIVEDDATE").item(0).getTextContent() + "</ReceivedDate>");
 		}
 		result.append("</DATA>");
-		if (!listXML.getElementsByTagName("XDOCID").item(0).getTextContent().equals("")) {
+		if (listXML.getElementsByTagName("XDOCID").item(0) != null && !listXML.getElementsByTagName("XDOCID").item(0).getTextContent().equals("")) {
 			List<ApprGRelayVO> relayDocSignList = ezApprovalGDAO.getRelaySignInfo(map);
 			
 			StringBuffer sb2 = new StringBuffer();

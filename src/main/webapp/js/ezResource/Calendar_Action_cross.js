@@ -764,7 +764,8 @@ function makeTable(xmldom, pNum, dayType) {
     _span.onmouseout = new Function("onmouse_out(this);");
     var pResourceName = "";
     pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();
-    _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + encodeURIComponent(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
+    // 2018-03-12 서주연 - 2일 이상 자원예약시 자원메인 주보기에서 자원이름이 깨지는 현상 수정
+    _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
     setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[pNum]));
     _td.appendChild(_span);
     _tr.appendChild(_td);
@@ -1365,7 +1366,7 @@ function onmouse_over_Week(td) {
 //일보기 마우스임팩트
 function onmouse_out_Week(td) {
     if (p_Type != "MAIN") {
-        //td.style.backgroundColor = "#F8F8F8";
+        //td.style.backgroundColor = "#f8f8fa";
         td.style.backgroundColor = "transparent";
     }
 }

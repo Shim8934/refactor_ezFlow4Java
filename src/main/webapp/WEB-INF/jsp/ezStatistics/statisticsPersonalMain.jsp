@@ -303,12 +303,16 @@
 </head>
 <h1><spring:message code='ezStatistics.t1047'/></h1>
 <body class="mainbody">
-    <table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2; margin-bottom: 5px">
+    <table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2; margin-bottom: 5px">
         <tr>
             <td style="width: 99%">
             <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t195'/> :
-            <select id="SCompID" name="SCompID" onchange="return getpersonalstatistics()">${companySel}</select>
-                <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1002'/> : 
+            <select id="SCompID" name="SCompID" onchange="return getpersonalstatistics()">
+           		<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+            </select>
+            <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1002'/> : 
             <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getpersonalstatistics()" readonly="readonly">
                     ~ 
             <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getpersonalstatistics()" readonly="readonly">

@@ -326,7 +326,7 @@
                 		<table style="width:100%">
                     		<tr class="primary">
                         		<th style="width:16%"><spring:message code='ezPortal.t403'/></th>
-                        		<td style="border-bottom:1px solid #b6b6b6;">
+                        		<td style="border-bottom:1px solid #ddd;">
                         			<c:choose>
                         				<c:when test="${mode == 'new'}">
                         					<input name="Input" id="Title1" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="255"/>
@@ -339,7 +339,7 @@
                     		</tr>
                     		<tr class="secondary">
                         		<th style="width:16%"><spring:message code='ezPortal.t404'/></th>
-                        		<td style="border-bottom:1px solid #b6b6b6;">
+                        		<td style="border-bottom:1px solid #ddd;">
                         			<c:choose>
                         				<c:when test="${mode == 'new'}">
                         					<input type="text" id="Title2" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="255"/>
@@ -352,7 +352,7 @@
                     		</tr>
                     		<tr class="secondary" style='display:none'">
                         		<th style="width:16%"><spring:message code='ezPortal.t4093'/></th>
-                        		<td style="border-bottom:1px solid #b6b6b6;">
+                        		<td style="border-bottom:1px solid #ddd;">
                         			<c:choose>
                         				<c:when test="${mode == 'new'}">
                         					<input type="text" id="Title3" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="255"/>
@@ -385,7 +385,7 @@
 		                <table style="width: 100%">
 	    	                <tr class="secondary">
 	        	                <th style="width:16%;border-top:0px;">URL</th>
-	            	            <td style="border-bottom:1px solid #b6b6b6;">
+	            	            <td style="border-bottom:1px solid #ddd;">
 	            	            		<c:choose>
 	                        				<c:when test="${mode == 'new'}">
 	                        					<input type="text" id="TopURL" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="500"/>
@@ -443,7 +443,7 @@
 	                    	            <p></p>
 	                    	            <div>(<spring:message code='ezPortal.t990012'/>)</div>
 								    </td>
-							    	<td style="border-left:1px solid #B6B6B6;" align="center">
+							    	<td style="border-left:1px solid #ddd;" align="center">
 								    	<a class="imgbtn" style="margin-left:2px;">
 								    		<span onclick="changeNormalImage()">
 										    	<spring:message code='ezPortal.t66'/><br />
@@ -463,7 +463,7 @@
 	    	</table>
 		</div>
 		<div id="Rolllayer">
-	    	<div style="width:100%;height:280px;overflow-x:hidden;overflow-y:auto;border:1px solid #B6B6B6;">
+	    	<div style="width:100%;height:280px;overflow-x:hidden;overflow-y:auto;border:1px solid #ddd;">
 		        <table class="content">
 	    	        <tr>
 						<th style="width:150px;" class="pstitle"><spring:message code='ezPortal.t91'/></th>

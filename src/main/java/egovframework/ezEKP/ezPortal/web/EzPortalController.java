@@ -1073,7 +1073,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		if (result != null && !result.equals("")) {
 			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
 		} else {
-			userPhoto = "<img src='/images/default_pic.jpg' width='61' height='64'>";
+			userPhoto = "";
 		}
 		logger.debug("userPhoto="+userPhoto);
 		

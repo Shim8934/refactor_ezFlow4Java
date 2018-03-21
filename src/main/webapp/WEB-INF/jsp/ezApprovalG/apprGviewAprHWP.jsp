@@ -67,6 +67,7 @@
 	        var pHasOpinion = "${hasOpinionYN}";
 			var pOpinionType = "Show";
 			var pUse_Editor = "${useEditor}";
+			var approvalFlag = "${approvalFlag}";
 			
 			function btnOpinion_onclick() {
 			    openOpinionViewUI();
@@ -155,21 +156,39 @@
 			}
 	
 			function btnGongRam_onclick() {
-			    var xmlhttp = createXMLHttpRequest();
-			    var xmlpara = createXmlDom();
-			    var objNode;
-			    createNodeInsert(xmlpara, objNode, "PARAMETER");
-			    createNodeAndInsertText(xmlpara, objNode, "docID", docID);
-			    createNodeAndInsertText(xmlpara, objNode, "userID", listSusin);
-			
-			    xmlhttp.open("Post", "/myoffice/ezApprovalG/ReceivUI/aspx/GongRamUpdate.aspx", false);
-			    xmlhttp.send(xmlpara);
-			
-			    if (getNodeText(loadXMLString(xmlhttp.responseText)) == "TRUE") {
-			        var pAlertContent = "<spring:message code='ezApprovalG.t1441'/>";
-				    OpenAlertUI(pAlertContent);
-				    window.close();
-				}
+			    
+				var result = "";
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/gongRamUpdate.do",
+		    		data : {
+		    			docID : docID,
+		    			userID: listSusin
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		},error: function() {
+		    			
+		    		}	
+		    	});
+		        
+		        var dataNodes = GetChildNodes(result);
+		        var tempValue = getNodeText(dataNodes[0]);
+		
+		        if (tempValue == "TRUE") {
+		        	var pAlertContent = "";
+		        	
+		        	if (approvalFlag == "G") {
+			            pAlertContent = "<spring:message code='ezApprovalG.t1441'/>";
+		        	} else {
+		        		pAlertContent = "<spring:message code='ezApprovalG.hyj23'/>";
+		        	}
+		        	 OpenAlertUI(pAlertContent);
+					    window.close();
+		        }
 			}
 	
 			function window_onbeforeunload() {

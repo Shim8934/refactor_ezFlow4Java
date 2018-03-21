@@ -566,8 +566,8 @@
 	                    var openLocation = "/myoffice/ezApprovalG/ezViewWord/ezViewApr_Word.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL);
 	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=";
 	                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") { //한글양식 읽기
-	                    var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL);
-	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=";
+	                    var openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL);
+	                    openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=";
 	                } else {
 	                    if (CrossYN()) {
 	                        var openLocation = "/ezApprovalG/aprDocView.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL);
@@ -879,7 +879,7 @@
 	        	<input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code = 'ezApprovalG.t106' /></label>
 				<input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code = 'ezApprovalG.t445' /></label>
 				&nbsp;
-				<input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+				<input id="txt_keyword" style="width:150px;height:22px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	        	<a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search()"></a>
 	        </span>
     	</h1>

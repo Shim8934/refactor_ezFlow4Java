@@ -1,11 +1,16 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -24,9 +30,10 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 
 @Controller
-public class EzApprovalGHwpController {
+public class EzApprovalGHwpController extends EgovFileMngUtil{
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGHwpController.class);
 	
 	@Autowired
@@ -223,13 +230,14 @@ public class EzApprovalGHwpController {
 		String opinionFlag = request.getParameter("opinionFlag");
 		String docState = request.getParameter("docState");
 		String listSusin = request.getParameter("listSusin");
-		String orgDocID = request.getParameter("odoc");
+		String orgDocID = request.getParameter("oDoc");
 		String showOpinion = request.getParameter("isOpinion");
 		String listTypeValue = request.getParameter("listType");
 		String hasOpinionYN = "";
 		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		if (userInfo.getRollInfo().indexOf("a=1") > -1 ) {
 			susinAdmin = "YES";
 		} else {
@@ -258,6 +266,7 @@ public class EzApprovalGHwpController {
 		model.addAttribute("hasOpinionYN", hasOpinionYN);
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		LOGGER.debug("ezviewAprHWP ended");
 		
@@ -436,6 +445,7 @@ public class EzApprovalGHwpController {
 		String docTitle = request.getParameter("title");
 		String susinAdmin = "";
         String SignCheck = "N";
+        String pass = "";
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
         String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
@@ -452,10 +462,14 @@ public class EzApprovalGHwpController {
 		}
 
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
-
-		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		
-		if (!pass.equals("<RESULT>TRUE</RESULT>")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
+			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+		} else {
+			pass = "<RESULT>TRUE</RESULT>";
+		}
+		
+		if (pass.equals("<RESULT>TRUE</RESULT>")) {
            if (docHref.trim().equals("") || docHref.indexOf("/1000/") >= 0) {
                 String strXML = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
 
@@ -468,10 +482,17 @@ public class EzApprovalGHwpController {
                 }
             }
 
-            String readRecXML = "<PARAMETER><DOCID>" + makeXMLString(docID) + "</DOCID><USERID>" + makeXMLString(userInfo.getId()) +
-                "</USERID><USERNAME>" + makeXMLString(userInfo.getDisplayName()) + "</USERNAME><USERTITLE>" + makeXMLString(userInfo.getTitle()) +
-                "</USERTITLE><DEPTCODE>" + makeXMLString(userInfo.getDeptID()) + "</DEPTCODE><DEPTNAME>" + makeXMLString(userInfo.getDeptName()) +
-                "</DEPTNAME><COMPANYID>" + makeXMLString(userInfo.getCompanyID()) + "</COMPANYID></PARAMETER>";
+            String readRecXML = "<PARAMETER><DOCID>" + makeXMLString(docID) +
+                    "</DOCID><USERID>" + makeXMLString(userInfo.getId()) +
+                    "</USERID><USERNAME>" + makeXMLString(userInfo.getDisplayName1()) +
+                    "</USERNAME><USERTITLE>" + makeXMLString((userInfo.getTitle1() == null ? "" : userInfo.getTitle1())) +
+                    "</USERTITLE><DEPTCODE>" + makeXMLString(userInfo.getDeptID()) +
+                    "</DEPTCODE><DEPTNAME>" + makeXMLString(userInfo.getDeptName1()) +
+                    "</DEPTNAME><COMPANYID>" + makeXMLString(userInfo.getCompanyID()) +
+                    "</COMPANYID><USERNAME2>" + makeXMLString(userInfo.getDisplayName2()) +
+                    "</USERNAME2><USERTITLE2>" + makeXMLString((userInfo.getTitle2() == null ? "" : userInfo.getTitle2())) +
+                    "</USERTITLE2><DEPTNAME2>" + makeXMLString(userInfo.getDeptName2()) +
+                    "</DEPTNAME2></PARAMETER>";
 
             ezApprovalGService.saveRecReadHist(readRecXML, userInfo.getTenantId());
 
@@ -623,6 +644,119 @@ public class EzApprovalGHwpController {
 		
 		LOGGER.debug("ezDeptRecevUI_HWP ended");
 		return "ezApprovalG/apprGdeptRecevuiHWP";
+	}
+	
+
+	@RequestMapping(value = "/ezApprovalG/ezSimsaG_HWP.do")
+	public String ezSimsaG_HWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezSimsaG_HWP started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+	    String docID = request.getParameter("docID");
+	    String docHref = request.getParameter("docHref");
+	    String orgDocID = request.getParameter("orgDocID");
+	    String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+	    String Use_ImgTagTOAttah_body = "N";
+
+	    model.addAttribute("userInfo", userInfo);
+	    model.addAttribute("docID", docID);
+	    model.addAttribute("docHref", docHref);
+	    model.addAttribute("orgDocID", orgDocID);
+	    model.addAttribute("hwpToolbar", hwpToolbar);
+	    model.addAttribute("useEditor", useEditor);
+	    model.addAttribute("Use_ImgTagTOAttah_body", Use_ImgTagTOAttah_body);
+		
+		LOGGER.debug("ezSimsaG_HWP ended");
+		
+		return "ezApprovalG/apprGezSimsagHWP";
+	}	
+		
+	/**
+	 * 전자결재G 발송의뢰문서 발송 발송 저장 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/saveEndFileHwp.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveEndFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		LOGGER.debug("saveEndFileHwp started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String formText = request.getParameter("html");
+		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String path = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		try {
+			File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".hwp";
+		
+			stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
+
+			bos = new FileOutputStream(saveFileName);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[BUFF_SIZE];
+			
+			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+		} catch (Exception e) {
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+		}
+		
+		LOGGER.debug("saveEndFileHwp ended");
+		
+		return "SUCCESS";
+	}
+	
+	/**
+	 * 직인의뢰접수HWP화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/ezConvOutHWP.do")
+	public String ezConvOutHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezConvOutHWP started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		
+		String docID = request.getParameter("docID");
+		String docHref = request.getParameter("docHref");
+		
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		
+		LOGGER.debug("ezConvOutHWP ended.");
+		
+		return "/ezApprovalG/apprGezConvOutHWP";
 	}
 	
 	public String makeXMLString(String orgString) throws Exception{

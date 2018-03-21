@@ -3088,4 +3088,50 @@ public class EzEmailUtil {
 		String fileName = senderName + "_[" + senderAddress + "]_" + "[" + dateStrExceptTime + "]_" + subject ;
 		return fileName;
 	}
+	
+	// 메일 용량(사용량 및 퍼센트) 리턴하는 함수
+	public String[] getMailUsage(double mailboxUsage, double mailboxQuota) {
+		logger.debug("getMailUsage started");
+		logger.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+		
+		int mailPercent = 0;
+		String mailboxDetail = "";
+		String mailboxQuotaStr = "";
+		
+		if (mailboxUsage < mailboxQuota) {
+			mailPercent = (int)Math.round((mailboxUsage/mailboxQuota) * 100);
+		} else {
+			mailPercent = 100;
+		}
+					
+		// 분자
+		if (mailboxUsage >= 1024*1024 ) {
+			mailboxDetail = String.format("%.1fG", mailboxUsage/(1024*1024));
+		} else if (mailboxUsage >= 1024) {
+			mailboxDetail = String.format("%.1fM", mailboxUsage/1024);
+		} else {
+			mailboxDetail = String.format("%.1fK", mailboxUsage);
+		}
+
+		// 분모
+		if (mailboxQuota >= 1024*1024) {
+			mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
+			
+			if (mailboxQuotaStr.contains(".0")) {
+				mailboxQuotaStr = mailboxQuotaStr.substring(0, mailboxQuotaStr.indexOf(".")) + "G";
+			}
+		} else if (mailboxQuota >= 1024) {
+			mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
+		} else {
+			mailboxQuotaStr = (int)mailboxQuota + "K";
+		}
+		
+		String[] returnStr = new String[3];
+		returnStr[0] = Integer.toString(mailPercent);
+		returnStr[1] = mailboxDetail;
+		returnStr[2] = mailboxQuotaStr;
+		
+		logger.debug("getMailUsage ended");
+		return returnStr;
 	}
+}
