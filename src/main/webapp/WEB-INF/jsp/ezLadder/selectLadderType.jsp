@@ -14,7 +14,7 @@
 		
 		<script type="text/javascript">
 			function selectLadType(type) {
-				window.location.href = '/ezLadder/setLadder.do?type='+type;
+				window.location.href = "/ezLadder/setLadder.do?type="+type;
 			}
 		
 		</script>

@@ -20,7 +20,6 @@
 		
 		<script type="text/javascript">
 			$(function() {
-				
 				$(window).resize(function() {
 					ladder_window_resize();
 				});
@@ -62,12 +61,12 @@
 				$("#amount").val($("#slider-range-min").slider("value"));
 				$("#bmtest").on("click", function() { /* 즐겨찾기 테스트 버튼 */
 					
-					var flag = "delete";
+					var flag = "add";
 					var ladderbmid = flag === "add" ? "0" : "106";
-					var bmname = "수수ㅜㅅ수수저엉ㅇㅇㅇ제목제";
-					var bmuserid = [];
-					var bmusername = [];
-					var bmusername2 = [];
+					var bmname = "이름이름";
+					var bmuserid = ["dd","dd","dd"];
+					var bmusername = ["nn","nn","nn"];
+					var bmusername2 = ["nn","nn","nn"];
 					
 					/* 즐겨찾기 조회 */
 					$.ajax({
@@ -75,6 +74,7 @@
 						url: "/ezLadder/getLadderBM.do",
 						traditional: true,
 						dataType: "json",
+						async : false,
 						data: { 
 							ladderBmId: ""
 						},
@@ -83,7 +83,7 @@
 						}
 					});
 					/* 즐겨찾기 추가,수정,삭제 */
-					/* $.ajax({
+					$.ajax({
 						type: "POST",
 						url: "/ezLadder/setLadderBM.do",
 						traditional: true,
@@ -99,7 +99,7 @@
 						success: function(result) {
 							console.log(result);
 						}
-					}); */
+					}); 
 				});
 				
 				ladder_set_init();
@@ -109,8 +109,8 @@
 				var retladinfo = [];
 				
 				ladder_window_resize();
-				if('${ladderId}' !== "") {
-					retladinfo = getPreLadder('${ladderId}');
+				if("${ladderId}" !== "") {
+					retladinfo = getPreLadder("${ladderId}");
 					preLadderListComplete(retladinfo["lad"], retladinfo["ladline"]);
 				} else {
 					$(".ladderType:eq(<c:out value='${ladType}' />)").addClass("active");
@@ -230,11 +230,11 @@
 					addIndex = attendants["id"].length;
 					for (; i < len; i++) {
 						names[i] = TrimText(names[i]);
-				    	
-				    	if(names[i] == "") {
-				    		continue;
-				    	}
-				    	
+						
+						if(names[i] == "") {
+							continue;
+						}
+						
 						getAttendantAJAX(names[i]);
 						
 						if(adCount === 0) { // 검색결과 없음 (완전 익명)
@@ -419,6 +419,7 @@
 					url: "/ezLadder/setLadder.do",
 					traditional: true,
 					dataType: "json",
+					async : false,
 					data: { 
 						'title': title,
 						'type': type,

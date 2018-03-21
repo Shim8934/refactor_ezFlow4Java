@@ -32,8 +32,25 @@
 			var retVal;
 			var retFunc;
 			var retladinfo = [];
+			var ladderID = "";
 						
 			$(function() {
+				$(document).on("click", "#myLadderList", function() {
+					ladderID = $(this).attr("ladid");
+					retladinfo = getPreLadder(ladderID);
+				});
+				
+				$("#searchInput").on("keyup", function(e) {
+					if(e.keyCode == "13") {
+						searchLadder();
+					}
+				});
+				$("#okBtn").on("click", function() {
+					/* opener.window.location.href = '/ezLadder/setLadder.do?ladderId=' + ladderID;
+					window.close(); */
+					loadPreLadderSetting();
+				});
+				
 				try {
 					retVal = parent.ladder_pre_set_dialogArguments[0];
 					retFunc = parent.ladder_pre_set_dialogArguments[1];                
@@ -112,7 +129,7 @@
 						</td>
 					</tr>			
 				</table>
-				<button onclick="loadPreLadderSetting()">ok</button>
+				<button id="okBtn">ok</button>
 				<button onclick="window.close()">close</button>
 			</div>
 	</body>

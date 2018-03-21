@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezLadder.vo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LadderBmUserVO {
@@ -88,5 +89,14 @@ public class LadderBmUserVO {
 	}
 	public void setUserName2s(String[] userName2s) {
 		this.userName2s = userName2s;
+	}
+	@Override
+	public String toString() {
+		return "LadderBmUserVO [tenant_id=" + tenant_id + ", ladderBmId="
+				+ ladderBmId + ", writerId=" + writerId + ", userId=" + userId
+				+ ", userName=" + userName + ", userName2=" + userName2
+				+ ", lang=" + lang + ", userIds=" + Arrays.toString(userIds)
+				+ ", userNames=" + Arrays.toString(userNames) + ", userName2s="
+				+ Arrays.toString(userName2s) + "]";
 	}
 }

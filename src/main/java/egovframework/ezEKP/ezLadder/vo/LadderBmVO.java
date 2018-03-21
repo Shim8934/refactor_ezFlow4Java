@@ -51,4 +51,10 @@ public class LadderBmVO {
 	public void setOffset(String offset) {
 		this.offset = offset;
 	}
+	@Override
+	public String toString() {
+		return "LadderBmVO [tenant_id=" + tenant_id + ", ladderBmId="
+				+ ladderBmId + ", bmName=" + bmName + ", userId=" + userId
+				+ ", regdate=" + regdate + ", offset=" + offset + "]";
+	}
 }

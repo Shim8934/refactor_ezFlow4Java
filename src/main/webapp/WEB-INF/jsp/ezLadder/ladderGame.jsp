@@ -37,11 +37,11 @@
 			} 
 		}
 		
-		function reuse(idx) {
+		/* function reuse(idx) {
 			if (confirm('재사용하시겠습니까?')) {
 				window.location.href= '/ezLadder/setLadder.do?type=reuse&ladderId=' + ${vo.ladderId};
 			}
-		}
+		} */
 	</script>
 	<style type="text/css">
 		ul {

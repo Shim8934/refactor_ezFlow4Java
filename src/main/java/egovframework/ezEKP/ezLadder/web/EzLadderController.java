@@ -4,7 +4,6 @@ package egovframework.ezEKP.ezLadder.web;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -33,11 +32,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezLadder.service.EzLadderService;
+import egovframework.ezEKP.ezLadder.vo.LadderBmUserVO;
+import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.let.user.login.service.LoginService;
@@ -152,10 +154,17 @@ public class EzLadderController {
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.GET)
 	public String setLadderView(@CookieValue("loginCookie") String loginCookie, String type, String ladderId, Model model, HttpServletRequest request) throws Exception {
-		logger.debug("setLadder.do ended.");
+		logger.debug("setLadder.do started.");
+		logger.debug("### type: "+type+" :: ladderid: "+ladderId);
+		
+		/*if(ladderId != null && !ladderId.equals("")) {
+			return "redirect:/ezLadder/getLadderGame.do?ladderId=" + ladderId + "&mode=pre";
+		}*/
 		
 		model.addAttribute("ladType", type);
 		model.addAttribute("ladderId", ladderId);
+		
+		logger.debug("setLadder.do ended.");
 		
 		return "ezLadder/setLadder";
 	}
@@ -165,14 +174,14 @@ public class EzLadderController {
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadderAttendant.do")
 	public String setLadderAttendant(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
-		logger.debug("GET setLadderAttendant.do started.");
+		logger.debug("setLadderAttendant.do started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID());
 		
-		logger.debug("GET setLadderAttendant.do ended.");
+		logger.debug("setLadderAttendant.do ended.");
 		
 		return "ezLadder/ladderSetAttendant";
 	}
@@ -296,11 +305,14 @@ public class EzLadderController {
 	}
 	
 	/**
-	 * 즐겨찾기 추가 시 이름 입력 팝업
+	 * 모든팝업
 	 * */
-	@RequestMapping(value = "/ezLadder/inputBmName.do")
-	public String setBmName() {
-		return "ezLadder/bmNamePopUp";
+	@RequestMapping(value = "/ezLadder/ladderPopup.do"/*value = "/ezLadder/inputBmName.do"*/)
+	public String setBmName(String popupType, Model model) {
+		
+		model.addAttribute("popupType", popupType);
+		
+		return "ezLadder/ladderPopup";
 	}
 	
 	/**
@@ -309,8 +321,7 @@ public class EzLadderController {
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadderBM.do", method = RequestMethod.POST)
 	public String setLadderBM(@CookieValue("loginCookie") String loginCookie, 
-			String flag, String ladderBmId, String bmName, 
-			String [] userIds, String [] userNames, String [] userName2s, 
+			LadderBmVO BMVO, LadderBmUserVO BMUserVO, String flag,
 			HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setLadderBM.do started.");
 		
@@ -322,7 +333,7 @@ public class EzLadderController {
 		if(flag.equals("add")) {
 			url = gwServerUrl + "/ladder/BMs/users/" + userInfo.getId();
 		} else {
-			url = gwServerUrl + "/ladder/BMs/" + ladderBmId + "/users/" + userInfo.getId();
+			url = gwServerUrl + "/ladder/BMs/" + BMVO.getLadderBmId() + "/users/" + userInfo.getId();
 		}
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -335,11 +346,11 @@ public class EzLadderController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
-				.queryParam("bmName", bmName)
+				.queryParam("bmName", BMVO.getBmName())
 				.queryParam("writerId", userInfo.getId())
-				.queryParam("userIds", userIds)
-				.queryParam("userNames", userNames)
-				.queryParam("userName2s", userName2s)
+				.queryParam("userIds", BMUserVO.getUserIds())
+				.queryParam("userNames", BMUserVO.getUserNames())
+				.queryParam("userName2s", BMUserVO.getUserName2s())
 				.queryParam("lang", userInfo.getLang())
 				.queryParam("offset", userInfo.getOffset());
 		
@@ -463,56 +474,6 @@ public class EzLadderController {
 	}
 	
 	/**
-	 * 이전 사다리 목록 조회 팝업창 -> get 
-	 * @throws Exception 
-	 * */
-	/*@RequestMapping(value = "/ezLadder/getPreLadderList.do")
-	public String getPreLadderList(@CookieValue("loginCookie") String loginCookie, String currPage, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("getPreLadderList.do started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladder-list/users/" + userInfo.getId();
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-
-		JSONParser jp = new JSONParser();
-		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
-		
-		JSONArray list = new JSONArray();
-		String status = jsonResult.get("status").toString();
-		String page = jsonResult.get("currPage").toString();
-		String totalLadder = jsonResult.get("totalLadder").toString();
-		String totalPage = jsonResult.get("totalPage").toString();
-	
-		if (status.equals("ok")) {
-			list = (JSONArray) jsonResult.get("data");
-			model.addAttribute("id", userInfo.getId());
-			model.addAttribute("list", list);
-			model.addAttribute("currPage", page);
-			model.addAttribute("totalPage", totalPage);
-			model.addAttribute("totalLadder", totalLadder);
-		} else {
-			return "error";
-		}
-		
-		logger.debug("getPreLadderList.do ended.");
-		
-		return "ezLadder/ladderPreList";
-	}*/
-	
-	/**
 	 * 이전 사다리 미리보기
 	 * @throws Exception 
 	 * */
@@ -576,14 +537,17 @@ public class EzLadderController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezLadder/getLadderGame.do", method = RequestMethod.GET)
-	public String getLadderGame(@CookieValue("loginCookie") String loginCookie, String[] allData, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String getLadderGame(@CookieValue("loginCookie") String loginCookie, String[] allData,
+			String ladderId, String searchSelect, String searchInput, String mode, String currPage,
+			ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		
 		logger.debug("ezLadder/getLadderGame.do started.");
-		logger.debug("ladderId : " + allData[0]);
-		logger.debug("searchSelect : " + allData[1]);
-		logger.debug("searchInput " + allData[2]);
-		logger.debug("mode : " + allData[3]);
-		logger.debug("currPage : " + allData[4]);
+		
+//		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+//		String retJSP = "";
+//		logger.debug("### "+ requestURL);
+//		logger.debug("### ladderid:::searchSelect:::searchInput:::mode:::currPage");
+//		logger.debug("### "+ladderId+":::"+searchSelect+":::"+searchInput+":::"+mode+":::"+currPage);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
@@ -600,28 +564,26 @@ public class EzLadderController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-
+		
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		JSONArray list = new JSONArray();
 		
 		
 		String status = jsonResult.get("status").toString();
-	
+		
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("participant");
 			model.addAttribute("id", userInfo.getId());
-			model.addAttribute("vo",jsonResult.get("data"));	// x번째 사다리 정보
-			model.addAttribute("searchSelect", allData[1] );
-			model.addAttribute("searchInput", allData[2] );
-			model.addAttribute("mode", allData[3] );
-			model.addAttribute("currPage", allData[4] );
+			model.addAttribute("vo", jsonResult.get("data"));	// x번째 사다리 정보
+			model.addAttribute("searchSelect", allData[1]);
+			model.addAttribute("searchInput", allData[2]);
+			model.addAttribute("mode", allData[3]);
+			model.addAttribute("currPage", allData[4]);
 			model.addAttribute("list", list); 			// ladderLineList
 		} else {
 			return "error";
 		}
-		
-		logger.debug("ezLadder/getLadderGame.do ended.");
 		
 		String retJSP = "";
 		if(allData[3].equals("pre")) {
@@ -629,6 +591,9 @@ public class EzLadderController {
 		} else {
 			retJSP = "ezLadder/ladderGame";
 		}
+		
+		logger.debug("ezLadder/getLadderGame.do ended.");
+		
 		return retJSP;
 	}
 	

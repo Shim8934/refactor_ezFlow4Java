@@ -207,7 +207,8 @@
 	            
 	            /** boh */
 	            $("#ladderBmBtn").on("click", function() {
-	            	add_bm_group();
+	            	setBmGroup("add");
+	            	/* add_bm_group(); */
 	            });
 	        }
 	
@@ -1240,49 +1241,52 @@
 		    	document.getElementById("keyword").value = "";
 			}
 		    
-		    var ladder_add_bmuser_dialogArguments = [];
-		    function add_bm_group() {
+		    /** 사다리 멤버 즐겨찾기 관련 */
+		    var retBmGroupInfo = [];
+		    function setBmGroup(type) {
 		    	save_userlist();
-		    	ladder_add_bmuser_dialogArguments[0] = rtn;
-		    	ladder_add_bmuser_dialogArguments[1] = set_bm_group_complete;
 		    	
-		    	DivPopUpShow(300, 500, "/ezLadder/inputBmName.do");
+		    	retBmGroupInfo[0] = type;
+		    	retBmGroupInfo[1] = setBmGroupComp;
+		    	
+		    	DivPopUpShow(360, 185, "/ezLadder/ladderPopup.do?popupType=addBmGroup");
 		    }
 		    
-		    function set_bm_group_complete(ret_g, ret_u) {
-		    	console.log('즐겨찾기 목록 갱신쓰');
-		    	if(ret_g[0] === "cancle") {
-		    		return;
+		    function setBmGroupComp(bmName, type) {
+		    	DivPopUpHidden();
+		    	console.log('즐겨찾기 추가..');
+		    	console.log(bmName+"   "+type);
+		    	console.log(rtn);
+		    	
+		    	var ladderbmid = 0;
+		    	var bmuserid = [];
+		    	var bmusername = [];
+		    	var bmusername2 = [];
+		    	
+		    	for(var i = 0; i < rtn.length; i++) {
+		    		bmuserid[i] = rtn[i]["id"];
+		    		bmusername[i] = rtn[i]["name"];
+		    		bmusername2[i] = rtn[i]["name2"];
 		    	}
 		    	
-		    	var flag = ret_g[0];
-		    	var ladderbmid = ret_g[1];
-		    	var bmname = ret_g[2];
-		    	var userids = ret_u[0];
-		    	var usernames = ret_u[1];
-		    	var username2s = ret_u[2];
-		    	
-		    	console.log(ret_g);
-		    	console.log(ret_u);
-		    	
 		    	$.ajax({
-            		type: "POST",
-            		url: "/ezLadder/setLadderBM.do",
-            		traditional: true,
-            		dataType: "json",
-            		data: {
-            			"flag": flag,
-            			"ladderBmId": ladderbmid,
-            			"bmName": bmname,
-            			"userIds": userids,
-            			"userNames": usernames,
-            			"userName2s": username2s
-            		},
-            		success: function(result) {
-            			console.log(result);
-            		}
-            	});
-		    	
+					type: "POST",
+					url: "/ezLadder/setLadderBM.do",
+					traditional: true,
+					dataType: "json",
+					data: { 
+						flag: type,
+						ladderBmId: ladderbmid,
+						bmName: bmName,
+						userIds: bmuserid,
+						userNames: bmusername,
+						userName2s: bmusername2
+					},
+					success: function(result) {
+						console.log("result:::"+result);
+						get_ladder_bmlist();
+					}
+				});
 		    }
 		    
 		    var rtn;
