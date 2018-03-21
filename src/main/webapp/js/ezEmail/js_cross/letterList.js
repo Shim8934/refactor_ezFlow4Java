@@ -66,7 +66,7 @@ $(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
 });
 
 // 편지지 선택 (개별 조회)
-$(document).on("click", ".lmLetterListUl li span", function(){
+$(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect) span", function(){
 	var letterNo = $(this).parent("li").attr("data-letterno");
 	
 	$(this).parent("li").css("background","#e9f1ff");
@@ -139,7 +139,7 @@ function preViewIframe(filePath) {
 	$(".lmPreViewIframe").attr("src", path);
 }
 
-// 편지지 리스트
+// 편지지 리스트 
 function getLetterList(letterBoxNo) {
 	$.ajax({
 		type:"POST",
@@ -165,7 +165,7 @@ function addLetterList(jsonArr) {
 	if (listCount != 0) {
 		for (i = 0; i < listCount; i++) {
 			
-			letterListHtml += "<li data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + "'>"; 
+			letterListHtml += "<li id='lt" + jsonArr[i].letterNo + "' data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + "'>"; 
 			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname + "</span>";
 			
 			if (pageType == 'letter_user') {
