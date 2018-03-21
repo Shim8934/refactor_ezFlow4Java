@@ -1119,10 +1119,12 @@ public class EzJournalGWController {
 		
 		try {
 			String userId = request.getParameter("userId");
+			String startCount = request.getParameter("startCount");
+			String listCnt = request.getParameter("listCnt");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
 			
-			List<JournalReceiverVO> receiverList = ezJournalService.getReceiverList(journalId, info.getTenantId());
+			List<JournalReceiverVO> receiverList = ezJournalService.getReceiverList(journalId, startCount,listCnt,info.getTenantId());
 		
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1134,6 +1136,38 @@ public class EzJournalGWController {
 		}
 		
 		LOGGER.debug("ezJournal G/W getReceiverList ended.");
+		return result;
+	}
+	
+	/**
+	 * 업무일지 G/W [GET] 일지 수신자 명수
+	 */
+	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/receivers-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getReceiverCount(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezJournal G/W getReceiverCount started.");
+		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String startCount = request.getParameter("startCount");
+			String listCnt = request.getParameter("listCnt");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+			
+			String receiverCount = ezJournalService.getReceiverCount(journalId, info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", receiverCount);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezJournal G/W getReceiverCount ended.");
 		return result;
 	}
 	

@@ -326,7 +326,16 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalReceiverVO> getReceiverList(String journalId, int tenantId);
+	public String getReceiverCount(String journalId,int tenantId);
+	
+	/**
+	 * 수신자 리스트 가져오기
+	 * @param journalId
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<JournalReceiverVO> getReceiverList(String journalId,String startCount, String listCnt, int tenantId);
 
 	/**
 	 * 업무일지 댓글 리스트

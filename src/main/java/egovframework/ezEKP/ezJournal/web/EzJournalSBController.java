@@ -553,7 +553,6 @@ public class EzJournalSBController {
 				JSONObject JOViewer = (JSONObject)viewer;
 				String viewDate = (String) JOViewer.get("date");
 				viewDate = commonUtil.getDateStringInUTC(viewDate, userInfo.getOffset(), false);
-				logger.debug("며띠니????????????????????????"+viewDate);
 				JOViewer.put("date", viewDate);
 			}
 			
@@ -561,6 +560,123 @@ public class EzJournalSBController {
 		}
 		
 		logger.debug("getJournalViewerList ended");
+		
+		return "/ezJournal/journalViewerList";
+	}
+	
+	/**
+	 * 업무일지 수신자 리스트
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezJournal/JournalReceiverList.do")
+	public String getJournalReveiberList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("getJournalViewerList started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String journalId = request.getParameter("journalId");
+		String typeId = request.getParameter("typeId");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types/"+typeId+"/journals/"+journalId+"/receivers-count", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		
+		String currentPageStr = request.getParameter("currentPage");
+		if (currentPageStr==null || currentPageStr.equals("")) {
+			currentPageStr = "1";
+		}
+		int currentPage = Integer.parseInt(currentPageStr);
+		int totalCount =0;
+		if (status.equals("ok")) {			
+			totalCount = Integer.parseInt((String) resultBody.get("data"));
+		}
+		int listCnt = 10;
+		JournalPagination paging = new JournalPagination(totalCount,listCnt,10,currentPage);
+		model.addAttribute("paging",paging);
+		
+		param.put("startCount", paging.getStartCount());
+		param.put("listCnt", listCnt);
+		
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types/"+typeId+"/journals/"+journalId+"/receivers", param, request,"get",null);
+		status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			JSONArray viewerList=  (JSONArray) resultBody.get("data");
+			
+			for (Object viewer : viewerList) {
+				JSONObject JOViewer = (JSONObject)viewer;
+				String viewDate = (String) JOViewer.get("date");
+				viewDate = commonUtil.getDateStringInUTC(viewDate, userInfo.getOffset(), false);
+				JOViewer.put("date", viewDate);
+			}
+			
+			model.addAttribute("viewerList",viewerList);
+		}
+		
+		logger.debug("getJournalViewerList ended");
+		
+		return "/ezJournal/journalViewerList";
+	}
+	
+	/**
+	 * 업무일지 조회자 리스트
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezJournal/otherJournalList.do")
+	public String getOtherJournalList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("getOtherJournalList started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String journalId = request.getParameter("journalId");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		
+		String currentPageStr = request.getParameter("currentPage");
+		if (currentPageStr==null || currentPageStr.equals("")) {
+			currentPageStr = "1";
+		}
+		int currentPage = Integer.parseInt(currentPageStr);
+		int totalCount =0;
+		if (status.equals("ok")) {			
+			totalCount = Integer.parseInt((String) resultBody.get("data"));
+		}
+		int listCnt = 10;
+		JournalPagination paging = new JournalPagination(totalCount,listCnt,10,currentPage);
+		model.addAttribute("paging",paging);
+		
+		param.put("startCount", paging.getStartCount());
+		param.put("listCnt", listCnt);
+		
+		resultBody = commonUtil.getJsonFromRestApi("", param, request,"get",null);
+		status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			JSONArray viewerList=  (JSONArray) resultBody.get("data");
+			
+			for (Object viewer : viewerList) {
+				JSONObject JOViewer = (JSONObject)viewer;
+				String viewDate = (String) JOViewer.get("date");
+				viewDate = commonUtil.getDateStringInUTC(viewDate, userInfo.getOffset(), false);
+				JOViewer.put("date", viewDate);
+			}
+			
+			model.addAttribute("viewerList",viewerList);
+		}
+		
+		logger.debug("getOtherJournalList ended");
 		
 		return "/ezJournal/journalViewerList";
 	}

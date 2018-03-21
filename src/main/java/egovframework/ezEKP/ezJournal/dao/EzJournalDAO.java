@@ -401,6 +401,14 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	}
 
 	/**
+	 * 수신자 리스트 갯수 가져오기
+	 * @param map
+	 */
+	public String getReceiverCount(Map<String, Object> map) {
+		return (String) select("getReceiverCount", map);
+	}
+	
+	/**
 	 * 수신자 리스트 가져오기
 	 * @param map
 	 */
