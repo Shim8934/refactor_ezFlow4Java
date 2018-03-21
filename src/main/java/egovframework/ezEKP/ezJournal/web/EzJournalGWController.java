@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Decoder;
@@ -37,13 +39,13 @@ import com.google.gson.reflect.TypeToken;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
-import egovframework.ezEKP.ezJournal.vo.JournalAttachVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
+import egovframework.ezEKP.ezJournal.vo.JournalFileVO;
 import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
-import egovframework.ezEKP.ezJournal.vo.JournalReplyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalReceiverVO;
+import egovframework.ezEKP.ezJournal.vo.JournalReplyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
@@ -587,6 +589,22 @@ public class EzJournalGWController {
 			
 			JournalVO journal = ezJournalService.getJournal(journalId, userId, viewDate, info.getTenantId()+"");
 			
+			if (journal.getFileList().size() > 0) {
+				List<JournalFileVO> fileList = journal.getFileList();
+				
+				for (JournalFileVO vo : fileList) {
+					String fileType = vo.getFileName().substring(vo.getFileName().lastIndexOf(".") + 1).toLowerCase();
+					vo.setFileType(fileType);
+					vo.setFileEncodeName(URLEncoder.encode(vo.getFileName(), "UTF-8"));
+						
+					String fileSize = commonUtil.byteCalculation(Long.toString(vo.getFileSize()));
+					vo.setFileTransSize(fileSize);
+					LOGGER.debug("##fileType: " + vo.getFileType() + ", EncodeFileName: " + vo.getFileEncodeName() + ", transSize: " + vo.getFileTransSize());
+				}
+				
+				journal.setFileList(fileList);
+			}
+			
 			result.put("data", journal);
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -636,7 +654,7 @@ public class EzJournalGWController {
 	}
 	
 	/**
-	 * 업무일지 G/W [DELETE] 업무일지 삭제 (여러건)
+	 * 업무일지 G/W [DELETE] 업무일지 삭제 
 	 */
 	@RequestMapping(value="/rest/ezjournal/journals", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteJournalList(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
@@ -648,9 +666,15 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
 			String realPath = commonUtil.getRealPath(request);
+			String journalId = jsonParam.get("journalId").toString();
+			List<String> journalIdList = new ArrayList<String>();
 			
-			Gson gson = new Gson();
-			List<String> journalIdList = gson.fromJson(jsonParam.get("journalIdList").toString(), new TypeToken<List<String>>(){}.getType());
+			if (journalId.contains("[")) {
+				Gson gson = new Gson();
+				journalIdList = gson.fromJson(jsonParam.get("journalId").toString(), new TypeToken<List<String>>(){}.getType());
+			} else {
+				journalIdList.add(journalId);
+			}
 			LOGGER.debug("journalIdList : " + journalIdList);
 			
 			String pDirPath = "";
@@ -684,7 +708,7 @@ public class EzJournalGWController {
 	}
 	
 	/**
-	 * 업무일지 G/W [DELETE] 업무일지 삭제 (1건)
+	 * 업무일지 G/W [DELETE] 업무일지 삭제 (단일건삭제로 사용하려했으나 사용안함)
 	 */
 	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteJournal(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
@@ -1067,9 +1091,9 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 첨부파일 다운로드
 	 */
 	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject downloadFile(@PathVariable String typeId, @PathVariable String journalId, @PathVariable String fileId, HttpServletRequest request) throws Exception {
+	public JSONObject downloadFile(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W downloadFile started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId + ",fileId=" + fileId);
+		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1080,13 +1104,39 @@ public class EzJournalGWController {
 			String uploadFilePath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
 			String filePath = request.getParameter("filePath");
 			String fileName = request.getParameter("fileName");
-			
-			String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;;
+			String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;
 
+			LOGGER.debug("fullFilePath : " + fullFilePath);
 			
+			File file = new File(fullFilePath);
+			
+			if (!file.exists()) {
+				throw new FileNotFoundException(fullFilePath);
+			}
+			
+			if (!file.isFile()) {
+				throw new FileNotFoundException(fullFilePath);
+			}
+			
+			int fileSize = (int)file.length();
+			
+			if (fileSize > 0) {
+				byte[] bytes = Files.readAllBytes(Paths.get(fullFilePath));
+				
+				JSONObject data = new JSONObject();
+				
+				data.put("bytes", bytes);
+				data.put("fileSize", fileSize);
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", data);
+			}
 			
 		} catch (Exception e) {
-			
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
 		}
 		
 		LOGGER.debug("ezJournal G/W downloadFile ended.");

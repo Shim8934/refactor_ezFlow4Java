@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezJournal.vo.DeptInfoVO;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
-import egovframework.ezEKP.ezJournal.vo.JournalAttachVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
@@ -325,15 +324,6 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 */
 	public void insertViewInfo(Map<String, Object> map){
 		insert("insertViewDate",map);
-	}
-
-	/**
-	 * 첨부파일 리스트
-	 * @param map
-	 */
-	@SuppressWarnings("unchecked")
-	public List<JournalAttachVO> getAttachList(Map<String, Object> map) {
-		return (List<JournalAttachVO>) list("getAttachList", map);
 	}
 
 	/**

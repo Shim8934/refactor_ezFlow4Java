@@ -13,7 +13,6 @@
 	<typeAlias alias="journalEnvVO" type="egovframework.ezEKP.ezJournal.vo.JournalEnvVO" />
 	<typeAlias alias="journalVO" type="egovframework.ezEKP.ezJournal.vo.JournalVO" />
 	<typeAlias alias="fileVO" type="egovframework.ezEKP.ezJournal.vo.JournalFileVO" />
-	<typeAlias alias="journalAttachVO" type="egovframework.ezEKP.ezJournal.vo.JournalAttachVO" />
 	<typeAlias alias="journalReplyVO" type="egovframework.ezEKP.ezJournal.vo.JournalReplyVO" />
 	<typeAlias alias="receiverVO" type="egovframework.ezEKP.ezJournal.vo.JournalReceiverVO"/>	
 
@@ -162,13 +161,6 @@
 		<result property="deptName"			column="dept_name"/>
 		<result property="jikwi"			column="jikwi"/>
 		<result property="date"				column="date"/>
-	</resultMap>
-	
-	<resultMap class="journalAttachVO" id="accachMap">
-		<result property="fileId"			column="file_id"/>
-		<result property="fileName"			column="file_name"/>			
-		<result property="filePath"			column="file_path"/>
-		<result property="fileSize"			column="file_size"/>
 	</resultMap>
 
 	<!-- 양식함 리스트 세럭트 -->
@@ -967,18 +959,6 @@
         group by 1,2,3,4,5,6,7,11,12,13,14,15,16
 	</select>
 
-	<!-- 첨부파일 리스트 가져오기 -->
-	<select id="getAttachList" parameterClass="Map" resultMap="accachMap">
-		select
-		*
-		from
-		tbl_journal_file
-		where
-		journal_id = #journalId#
-		and
-		tenant_id = #tenantId#
-	</select>
-
 	<!-- 업무일지 등록 하기 -->
 	<insert id="insertJournal" parameterClass="map">
 		insert into tbl_journal (
@@ -1145,7 +1125,7 @@
 			a.DISPLAYNAME as user_name,
 			a.DESCRIPTION as dept_name,
 			a.TITLE as jikwi,
-			substring(ifnull(b.recv_date, '-'),1,16) as date
+			substring(ifnull(b.recieve_date, '-'),1,16) as date
 		from 
 			tbl_usermaster a join tbl_journal_recv b 
 		on 

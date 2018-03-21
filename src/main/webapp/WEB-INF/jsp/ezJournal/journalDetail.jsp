@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html style="height:100%">
 	<head>
-		<title><spring:message code='ezBoard.t293' /></title>
+		<title><spring:message code='ezJournal.t133' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -19,21 +19,50 @@
 			var formId = "${journal.formId}";
 			var journalId = "${journal.journalId}";
 			var typeId = "${journal.typeId}";
+			
+			// 수정
 			function journalModify() {
 				console.log("formId : " + formId + ",journalId : " + journalId);
 				window.location.href = "/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=modify";
 			}
 			
+			// 재사용
 			function journalReuse() {
 				window.location.href = "/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=reuse";
 			}
 			
+			// 삭제
+			function journalDelete() {
+				
+				if (confirm("<spring:message code='ezJournal.t139'/>")) {
+					$.ajax ({
+						type : "POST",
+						dataType : "text",
+						async : "false",
+						url : "/ezJournal/journalDelete.do",
+						data : {
+							journalId : JSON.stringify(journalId)
+						},
+						success : function() {
+							alert("<spring:message code='ezJournal.t138'/>");
+							opener.setJournalList();
+							window.close();
+						},
+						error : function() {
+							alert("<spring:message code='ezJournal.t149'/>");
+						}
+					});
+				}
+			}
+			
+			// 첨부파일 모두 선택
 			function attach_SelectAll() {
 			    var checks = document.getElementById('lstAttachLink').getElementsByTagName("input");
 			    for (var i = 0; i < checks.length; i++)
 			        checks.item(i).checked = true;
 			}
         
+			// 첨부파일 다운로드
 			function attach_Download() {
 			    checks = document.getElementById('lstAttachLink').getElementsByTagName("input");
 			    downloadAll(checks)
@@ -41,10 +70,15 @@
 			
 			var suffix = 0;
 			function downloadAll(checks) {
-		        if (checks.getElementsByTagName("input").item(suffix)) {
-		            if (checks.getElementsByTagName("input").item(suffix).checked) {
-		                location.href = GetAttribute(checks.getElementsByTagName("a").item(suffix++), "href");
-		                setTimeout(function () { downloadAll(checks) }, 1000);
+		        if (checks.item(suffix)) {
+		            if (checks.item(suffix).checked) {
+		            	if (GetAttribute(checks.item(suffix), "attachid") != "" && GetAttribute(checks.item(suffix), "attachid") != null) {
+			                location.href = GetAttribute(checks.item(suffix++), "filepath");
+			            } else {
+			            	console.log("filePath : " + GetAttribute(checks.item(suffix), "filePath"));
+		                	location.href = "/ezJournal/journalAttachDown.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName") + "&typeId=" + typeId + "&journalId=" + journalId;
+			            }
+	                	setTimeout(function () { downloadAll(checks) }, 1000);
 		            }
 		            else {
 		                suffix++;
@@ -68,7 +102,7 @@
 <!-- 		        	수정 -->
 	        		<li><span onclick='journalModify()'> <spring:message code='ezJournal.t107' /></span></li>
 <!-- 	        		삭제 -->
-	        		<li><span onclick=''> <spring:message code='ezJournal.t108' /></span></li>
+	        		<li><span onclick='journalDelete()'> <spring:message code='ezJournal.t108' /></span></li>
 		        	</c:if>
 <!-- 		        	메일로발송 -->
 	        		<li><span onclick=''> <spring:message code='ezJournal.t103' /></span></li>
@@ -156,9 +190,38 @@
                       <td>
 		            	<div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;background-color:white; text-align:left">
 		            		<c:forEach items="${journal.fileList }" var="file">
-		            			<input type="checkbox" name="fileSelect" value="${file.fileName }">
-<!-- 		            			<img src="/images/image.png">  -->
-		            			<a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileName}&typeId=${journal.typeId}&journalId=${journal.journalId}">${file.fileName }&nbsp;(${file.fileSize })</a><br>
+		            			<div style="margin-top:3px;height:20px">
+                               		<c:set var="imagePath" value="/images/file.gif" />
+			            			<%-- <input type="checkbox" name="fileSelect" value="${file.fileName }"> --%>
+	<!-- 		            			<img src="/images/image.png">  -->
+										<input type="checkbox" filename="${file.fileEncodeName}" filepath="${file.filePath}">
+			            				<c:if test="${file.fileType == 'jpg' || file.fileType == 'jpeg' || file.fileType == 'bmp' || file.fileType == 'gif' || file.fileType == 'png' || file.fileType == 'tif' || file.fileType == 'tiff'}">
+                               				<c:set var="imagePath" value="/images/image.png" />
+                                   		</c:if>
+                                   		<c:if test="${file.fileType == 'doc' || file.fileType == 'docx'}">
+                                   			<c:set var="imagePath" value="/images/doc.png" />
+                                   		</c:if>
+                                   		<c:if test="${file.fileType == 'xls' || file.fileType == 'xlsx'}">
+                                   			<c:set var="imagePath" value="/images/xls.png" />
+                                   		</c:if>
+                                   		<c:if test="${file.fileType == 'ppt' || file.fileType == 'pptx' || file.fileType == 'pps' || file.fileType == 'ppsx'}">
+                                   			<c:set var="imagePath" value="/images/ppt.png" />
+                                   		</c:if>
+                                   		<c:if test="${file.fileType == 'txt'}">
+                                   			<c:set var="imagePath" value="/images/txt.png" />
+                                   		</c:if>
+                                   		<c:if test="${file.fileType == 'zip'}">
+                                   			<c:set var="imagePath" value="/images/zip.png" />
+                                   		</c:if>
+                                   		<c:if test="${file.fileType == 'pdf'}">
+                                   			<c:set var="imagePath" value="/images/pdf.png" />
+                                   		</c:if>
+                                   		<c:if test="${file.fileType == 'ecm'}">
+                                   			<c:set var="imagePath" value="/images/ecm.png" />
+                                   		</c:if>	                                    		
+                                   		<img src="${imagePath}" />&nbsp;
+			            				<a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&typeId=${journal.typeId}&journalId=${journal.journalId}">${file.fileName }&nbsp;(${file.fileTransSize })</a><br>
+		            			</div>
 		            		</c:forEach>
 		            	</div>
 			          </td>
