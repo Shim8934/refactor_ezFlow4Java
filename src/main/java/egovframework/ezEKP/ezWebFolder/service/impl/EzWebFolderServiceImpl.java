@@ -1,17 +1,38 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.zip.ZipOutputStream;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.zip.ZipEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOUtils;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
+import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
@@ -20,15 +41,22 @@ import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderService")
-public class EzWebFolderServiceImpl implements EzWebFolderService {
+public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFolderService {
 	@Resource(name = "EzWebFolderDAO")
 	private EzWebFolderDAO ezWebFolderDAO;
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzWebFolderAdminService ezWebFolderAdminService;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderServiceImpl.class);
 	
@@ -542,5 +570,274 @@ public class EzWebFolderServiceImpl implements EzWebFolderService {
 		
 		return ezWebFolderDAO.checkFilesOwner(map);
 	}
+	
+	@Override
+	public List<FileVO> saveUploadedFiles(List<MultipartFile> multiFileLists, JSONArray nameArray, String folderId, String realPath, LoginVO userInfo) throws Exception {
+		int tenantId               = userInfo.getTenantId();
+		String userName1           = userInfo.getDisplayName1();
+		String userName2           = userInfo.getDisplayName2();
+		String companyId           = userInfo.getCompanyID();
+		String offset              = userInfo.getOffset();
+		String userId              = userInfo.getId();
+		int cnt                    = multiFileLists.size();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String[] pFileName         = new String[cnt];
+		Long[] fileSize            = new Long[cnt];
+		String useExtension        = ezCommonService.getTenantConfig("USE_FileExtension", tenantId);
+		FolderVO folder            = getFolderByFolderId(folderId, offset, tenantId);
+		String folderPath          = folder.getFolderPath();
+		folderPath                 = folderPath.substring(1, folderPath.length() - 1);
+		String originalPath        = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
+		
+		if (((JSONObject)nameArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)nameArray.get(0)).get("originalFilename"))) {
+			for (int i = 0; i < cnt; i++) {
+				String _pFileName = (String)((JSONObject)nameArray.get(i)).get("originalFilename");
+				
+				if (_pFileName.indexOf(commonUtil.separator) > 0) {
+					_pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
+				}
+				
+				pFileName[i] = _pFileName;
+			}
+		}
+		
+		String pDirPath = getWebFolderDirPath(tenantId);
+		pDirPath        = realPath + pDirPath;
+		
+		if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+			pDirPath = pDirPath + commonUtil.separator;
+		}
+		
+		File file = new File(pDirPath);
+		
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		List<FileVO> list = new ArrayList<FileVO>();
+		
+		for (int i = 0; i < cnt; i++) {
+			fileSize[i]   = multiFileLists.get(i).getSize();
+			String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+			
+			if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {
+				writeUploadedFile(multiFileLists.get(i), pFileName[i], pDirPath);
+				FileTypeVO fileType = getFileTypeByFileExt(extend, tenantId);
+				Date date           = new Date();
+				FileVO fileVO       = new FileVO();
+				String timeUTC      = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+				
+				fileVO.setCreateDate(timeUTC);
+				fileVO.setUpdateDate(timeUTC);
+				fileVO.setFileExt(extend);
+				fileVO.setFileName(pFileName[i]);
+				fileVO.setDownloadCnt(0);
+				fileVO.setFilePath(getWebFolderDirPath(tenantId) + pFileName[i]);
+				fileVO.setFileSize(Long.toString(fileSize[i]));
+				fileVO.setFolderId(folderId);
+				fileVO.setTenantId(tenantId);
+				fileVO.setCreateId(userId);
+				fileVO.setUpdateId(userId);
+				fileVO.setFileIconUrl(fileType.getTypeIcon());
+				fileVO.setFileShareStatus("0");
+				fileVO.setUseStatus("Y");
+				fileVO.setTypeId(fileType.getTypeId());
+				fileVO.setFavouriteStatus("0");
+				fileVO.setCreateName1(userName1);
+				fileVO.setCreateName2(userName2);
+				fileVO.setFileId(getMaxFileID(tenantId));
+				fileVO.setFilePosition(originalPath + pFileName[i]); //baonk 02-09-2018
+				
+				insertFile(fileVO);
+				list.add(fileVO);
+				
+				saveLog("C", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
+			}
+		}
+		
+		return list;
+	}
 
+	@Override
+	public void getDownloadedFiles(String[] fileIDList, String realPath, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String userName1 = userInfo.getDisplayName1();
+		String userName2 = userInfo.getDisplayName2();
+		String offset    = userInfo.getOffset();
+		String userId    = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		int tenantId     = userInfo.getTenantId();
+		
+		if (fileIDList.length == 1) {
+			FileVO fileVO    = getFileByFileId(fileIDList[0], offset, tenantId);
+			String _fileName = fileVO.getFileName();
+			_fileName        = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), _fileName);
+			File file        = new File(realPath + fileVO.getFilePath());
+			
+			if (!file.exists()) {
+				throw new FileNotFoundException(fileVO.getFileName());
+			}
+		
+			if (!file.isFile()) {
+				throw new FileNotFoundException(fileVO.getFileName());
+			}
+			
+			BufferedInputStream in = null;
+			
+			try {
+				in              = new BufferedInputStream(new FileInputStream(file));
+				String mimetype = "application/octet-stream";
+				
+				response.setBufferSize(BUFF_SIZE);
+				response.setContentType(mimetype);
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");
+				response.setContentLength((int)file.length());
+				
+				FileCopyUtils.copy(in, response.getOutputStream());
+			}
+			finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+				}
+			}
+			
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+			
+			updateDownCnt(fileVO.getFileId(), tenantId);
+			saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+		}
+		else {
+			String guid                     = UUID.randomUUID().toString();
+			String fileName                 = guid + ".zip";
+			ZipOutputStream zipOutputStream = null;
+			FileInputStream fileInputStream = null;
+			
+			try {
+				//Setting headers
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+				zipOutputStream = new ZipOutputStream(response.getOutputStream());
+				
+				//Package files
+				for (int i = 0; i < fileIDList.length; i++) {
+					//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
+					FileVO fileVO = getFileByFileId(fileIDList[i], offset, tenantId);
+					File file     = new File(realPath + fileVO.getFilePath());
+					
+					if (!file.exists()) {
+						throw new FileNotFoundException(fileVO.getFileName());
+					}
+					
+					if (!file.isFile()) {
+						throw new FileNotFoundException(fileVO.getFileName());
+					}
+					
+					zipOutputStream.putNextEntry(new ZipEntry(fileVO.getFileName()));
+					fileInputStream = new FileInputStream(file);
+					
+					IOUtils.copy(fileInputStream, zipOutputStream);
+					
+					fileInputStream.close();
+					zipOutputStream.closeEntry();
+					
+					updateDownCnt(fileVO.getFileId(), tenantId);
+					saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				}
+				
+				zipOutputStream.close();
+			}
+			catch (Exception e) {
+				throw e;
+			}
+			finally {
+				if (fileInputStream != null) {
+					try { fileInputStream.close(); } catch (Exception e) {}
+				}
+				
+				if (zipOutputStream != null) {
+					try { zipOutputStream.closeEntry(); } catch (Exception e) {}
+					try { zipOutputStream.close(); } catch (Exception e) {}
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void deleteSelectedFiles(String[] fileIDList, LoginVO userInfo) throws Exception {
+		String userName1 = userInfo.getDisplayName1();
+		String userName2 = userInfo.getDisplayName2();
+		String companyId = userInfo.getCompanyID();
+		int tenantId     = userInfo.getTenantId();
+		String offset    = userInfo.getOffset();
+		String userId    = userInfo.getId();
+		
+		for (int i = 0; i < fileIDList.length; i++) {
+			FileVO fileVO = getFileByFileId(fileIDList[i], offset, tenantId);
+			
+			//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
+			updateFileUseStatus(fileIDList[i], tenantId);
+			saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+		}
+	}
+	
+	private String getWebFolderDirPath(int tenantId) {
+		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
+	}
+	
+	@Override
+	public String getMaxFileID(int tenantId) throws Exception {
+		int currentMaxFileId = -1;
+		String result        = getFileSequence(tenantId);
+		currentMaxFileId     = result.equals("")        ? 1 : Integer.parseInt(result);
+		currentMaxFileId     = (currentMaxFileId == -1) ? 1 : (currentMaxFileId + 1);
+		return Integer.toString(currentMaxFileId);
+	}
+	
+	@Override
+	public String getFolderPath(String[] path, String offset, int tenantId) throws Exception {
+		String result = "/";
+		
+		for (int i = 0; i < path.length - 1; i++) {
+			FolderVO parentFolder = getFolderByFolderId(path[i], offset, tenantId);
+			result               += parentFolder.getFolderName1() + "/";
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public void saveLog(String type, String companyId, String offset, String userId, String userName1, String userName2, String filename, String fileSize, String fileExt, String fileType, int tenantId) throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		
+		//Save log to database
+		FileLogVO fileLog = new FileLogVO();
+		
+		fileLog.setLogType(type);
+		fileLog.setCompanyId(companyId);
+		fileLog.setCreateDate(timeUTC);
+		fileLog.setCreateId(userId);
+		fileLog.setCreateName1(userName1);
+		fileLog.setCreateName2(userName2);
+		fileLog.setFileName(filename);
+		fileLog.setFileSize(fileSize);
+		fileLog.setFileExt(fileExt);
+		fileLog.setFileType(fileType);
+		fileLog.setLogId(getMaxLogID(tenantId));
+		fileLog.setTenantId(tenantId);
+		ezWebFolderAdminService.insertFileLog(fileLog);
+	}
+
+	private String getMaxLogID(int tenantId) throws Exception {
+		int currentMaxLogId = -1;
+		String result       = getFileLogSequence(tenantId);
+		currentMaxLogId     = result.equals("")       ? 1 : Integer.parseInt(result);
+		currentMaxLogId     = (currentMaxLogId == -1) ? 1 : (currentMaxLogId + 1);
+		return Integer.toString(currentMaxLogId);
+	}
 }

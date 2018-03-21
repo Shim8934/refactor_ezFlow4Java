@@ -1,6 +1,10 @@
 package egovframework.ezEKP.ezWebFolder.service;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.json.simple.JSONArray;
+import org.springframework.web.multipart.MultipartFile;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -10,6 +14,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzWebFolderService {
 	String getFileSequence(int tenantId) throws Exception;
@@ -55,4 +60,11 @@ public interface EzWebFolderService {
 	List<SimpleDeptVO> getAllDeptsForChief(String userId, int level, String primary, int tenantId) throws Exception;
 	List<SimpleDeptVO> getSelectedDeptsForChief(String userId, int level, String primary, int tenantId) throws Exception;
 	int checkFilesOwner(String userId, String fileList, int tenantId) throws Exception;
+	//Added
+	String getFolderPath(String[] split, String offset, int tenantId) throws Exception;
+	List<FileVO> saveUploadedFiles(List<MultipartFile> multiFileLists, JSONArray nameArray, String folderId, String realPath, LoginVO userInfo) throws Exception;
+	void getDownloadedFiles(String[] fileIDList, String realPath, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception;
+	void deleteSelectedFiles(String[] fileIDList, LoginVO userInfo) throws Exception;
+	void saveLog(String string, String companyId, String offset, String userId, String userName1, String userName2, String fileName, String fileSize, String fileExt, String fileTypeName, int tenantId) throws Exception;
+	String getMaxFileID(int tenantId) throws Exception;
 }
