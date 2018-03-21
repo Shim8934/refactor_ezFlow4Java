@@ -420,39 +420,6 @@
 	 			});
 	    	}
 	    	
-	    	// 다른일지 가져오기
-		    function getOtherJournal() {
-	    	/*
-	    		var url = "/ezJournal/getOtherJournal.do?userId=" + userId + "&typeId=" + typeId + "&formId=" + selFormId;
-	    		var feature = "status:no; dialogHeight:400px; dialogWidth:520px; help:no; resizable:yes;";
-	    		feature += GetShowModalPosition(400, 300);
-	    		var rtnVal = window.showModalDialog(url, "", feature);
-	    	*/
-	    	//	DivPopUpShow(520, 410, url);
-/*
-	    		$.ajax({
-	    			url : "/ezJournal/getOtherJournal.do",
-	    			type : "POST",
-					dataType : "text",
-					data : {	userId : userId,
-								typeId : typeId,
-								formId : selFormId
-					},
-					success : function (result) {
-						$("#selectOther").html(result);
-						$("#getOtherPopup").css("display", "");
-					}
-	    		});
-*/	    		
-	    	//	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].sumSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
-	        	
-	        //	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-	        	
-	        //	$("#getOtherPopup").css("left", popupX);
-	        	
-				$("#getOtherPopup").modal();
-	    	
-	    	}
 	    
 	    	// 닫기 버튼 클릭시
 		    function btn_Close() {
@@ -514,7 +481,7 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li id="btnGetOther"><span onclick="getOtherJournal()"><spring:message code='ezJournal.t75' /></span></li>
+	                        <li id="btnGetOther"><span onclick="getOtherJournalList()"><spring:message code='ezJournal.t75' /></span></li>
 	                        <li><span onclick="btn_Close();"><spring:message code='ezJournal.t27' /></span></li>
 	                    </ul>
 	                </div>
@@ -605,24 +572,17 @@
 					</table>
 			</div>
 		</div>
-	    <!-- 
-	    <div id="getOtherPopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
-			<div class="popupwrap3">
-				<table id="selectOther" class="mainlist" style="margin-top:10px;">  
-					
-				</table>
-				<br />
-				<table style="width:100% >
-					<tr>
-						<td style="text-align:center;">
-							<a class="imgbtn"><span onClick="search_start()"><spring:message code='ezAddress.t142' /></span></a>
-							<a class="imgbtn"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		<div class="shadow"></div>	
-		 -->
+		<script>
+		// 다른일지 가져오기 리스트
+	    function getOtherJournalList() {
+	        var heigth = window.screen.availHeight;
+	        var width = window.screen.availWidth;
+	        var left = (width - 500) / 2;
+	        var top = (heigth - 300) / 2;
+	        var szHref = "/ezJournal/otherJournalList.do?formId="+selFormId;
+	        var strFeature = "status:no;dialogHeight: 500px;dialogWidth: 520px;help: no;resizable:yes";
+            DivPopUpShow(520, 420, szHref);
+    	}
+		</script>
 	</body>
 </html>

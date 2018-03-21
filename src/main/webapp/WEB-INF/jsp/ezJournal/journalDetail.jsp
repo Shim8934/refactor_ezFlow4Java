@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/common.js"></script>
 		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
+		<script type="text/javascript" src="/js/ezJournal/excel.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/Common.js" ></script>
 		<script  type="text/javascript">
@@ -75,15 +76,17 @@
 <!-- 		        	조회자정보 -->
 	        		<li><span onclick='journalViewerList();'> <spring:message code='ezBoard.t1006' /></span></li>
 		        	<c:if test="${journal.mine eq 'yes' }">
+<!-- 	        		수신확인 -->
+					<c:if test="${journal.totalRecv gt 0 }">
+	        		<li><span onclick='journalReceiverList();'> <spring:message code='ezJournal.t113' />(${journal.checkRecv }/${journal.totalRecv })</span></li>
+					</c:if>
 <!-- 		        	재사용 -->
 	        		<li><span onclick='journalReuse()'> <spring:message code='ezQuestion.t700' /></span></li>
-<!-- 	        		수신확인 -->
-	        		<li><span onclick=''> <spring:message code='ezJournal.t113' />(${journal.checkRecv }/${journal.totalRecv })</span></li>
 		        	</c:if>
 <!-- 		        	인쇄 -->
-	        		<li><span onclick=''> <spring:message code='main.t73' /></span></li>
+	        		<li><span onclick='printJournal();'> <spring:message code='main.t73' /></span></li>
 <!-- 	        		엑셀저장 -->
-	        		<li><span onclick=''> <spring:message code='ezJournal.t104' /></span></li>
+	        		<li><a onclick='convertToExcel(this);' href="download" target="_blank"><span> <spring:message code='ezJournal.t104' /></span></a></li>
 		        </ul>
 		      </div>    
 		      <div id="close">
@@ -98,7 +101,7 @@
 		    </td>
 		    </tr>
 		    <tr>
-					<td style="vertical-align: top; height: 10px;">
+				<td style="vertical-align: top; height: 10px;">
 					<table class="content2" style="width:100%;">
 						<!-- 작성일  -->
 						<tr>
@@ -142,9 +145,13 @@
 					<img onclick="Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png">
 			        <img onclick="Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png">
 				</div>
-				<div id="journalContent" >
-		        	${journal.journalContent }
-				</div>
+				<table id="journalContent" >
+					<tr>
+						<td>
+			        	${journal.journalContent }
+			        	</td>
+		        	</tr>
+				</table>
 	        </div>
 		    </td>
 		  </tr>
@@ -271,6 +278,46 @@
 	            DivPopUpShow(520, 420, szHref);
 		    }
 		    
+		    function convertToExcel(elem){
+		    	var uri = $("#journalContent").battatech_excelexport({
+                    // 테이블 아이디
+                    containerid: "journalContent", 
+                    // 데이터 타입 설정
+                    datatype: 'table', 
+                    // URI return 여부
+                    returnUri: true
+                });
+                // 파일이름, URI 설정
+                $(elem).attr('download', 'ezJournalExcel.xls').attr('href', uri);
+		    }
+		    
+		    //수신자정보
+		    function journalReceiverList(currentPage) {
+		    	if (!currentPage) {
+					currentPage = "";
+				}
+		        var heigth = window.screen.availHeight;
+		        var width = window.screen.availWidth;
+		        var left = (width - 500) / 2;
+		        var top = (heigth - 300) / 2;
+		        var szHref = "/ezJournal/JournalReceiverList.do?typeId="+typeId+"&journalId=" + journalId+"&currentPage="+currentPage;
+		        var strFeature = "status:no;dialogHeight: 500px;dialogWidth: 520px;help: no;resizable:yes";
+	            DivPopUpShow(520, 420, szHref);
+		    }
+		    
+		    function printJournal(){
+		    	var data = $("#journalContent").html();
+		    	var mywindow = window.open('', 'journalContent', 'height=400,width=600');
+		    	mywindow.document.write('<html><head><title><spring:message code="ezJournal.t1" /></title>');
+		    	mywindow.document.write('</head><body >');
+		    	mywindow.document.write(data);
+		    	mywindow.document.write('</body></html>');
+		    	mywindow.document.close(); // IE >= 10에 필요
+		    	mywindow.focus(); // necessary for IE >= 10
+		    	mywindow.print();
+		    	mywindow.close();
+		    	return true;
+		    }
 		</script>
 	    
 	    

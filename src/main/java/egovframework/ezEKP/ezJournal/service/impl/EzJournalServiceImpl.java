@@ -993,7 +993,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 	
 	@Override
-	public List<JournalReceiverVO> getReceiverList(String journalId, int tenantId) {
+	public List<JournalReceiverVO> getReceiverList(String journalId,String startCount, String listCnt, int tenantId) {
 		logger.debug("getReceiverList started.");
 	
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1033,6 +1033,20 @@ public class EzJournalServiceImpl implements EzJournalService{
 		String viewerCount = ezJournalDAO.getViewerCount(map);
 		logger.debug("조회자몇명 ?   : " + viewerCount);
 		logger.debug("getJournalViewerCount ended.");
+		return viewerCount;
+	}
+
+	@Override
+	public String getReceiverCount(String journalId, int tenantId) {
+		logger.debug("getReceiverCount started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("journalId", journalId);
+		map.put("tenantId", tenantId);
+		
+		String viewerCount = ezJournalDAO.getReceiverCount(map);
+		logger.debug("수신자몇명 ?   : " + viewerCount);
+		logger.debug("getReceiverCount ended.");
 		return viewerCount;
 	}
 }

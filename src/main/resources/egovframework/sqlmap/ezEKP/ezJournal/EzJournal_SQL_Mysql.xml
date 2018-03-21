@@ -1145,7 +1145,7 @@
 			a.DISPLAYNAME as user_name,
 			a.DESCRIPTION as dept_name,
 			a.TITLE as jikwi,
-			substring(ifnull(b.recv_date, '-'),1,16) as date
+			substring(ifnull(b.recieve_date, '-'),1,16) as date
 		from 
 			tbl_usermaster a join tbl_journal_recv b 
 		on 

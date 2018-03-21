@@ -47,4 +47,3 @@ function journal_layer_popup(el) {
 function openJournalReply() {
 	DivPopUpShow($('body').prop('scrollWidth') * 0.95, $('body').prop('scrollHeight') * 0.92, "/ezJournal/journalReply.do?journalId="+journalId);
 }
-
