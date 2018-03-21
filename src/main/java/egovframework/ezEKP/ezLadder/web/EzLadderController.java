@@ -566,15 +566,18 @@ public class EzLadderController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezLadder/getLadderGame.do", method = RequestMethod.GET)
-	public String getLadderGame(@CookieValue("loginCookie") String loginCookie, String[] allData,
-			String ladderId, String searchSelect, String searchInput, String mode, String currPage,
-			ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String getLadderGame(@CookieValue("loginCookie") String loginCookie, String ladderId, String searchSelect, String searchInput, String mode, String currPage, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		
 		logger.debug("ezLadder/getLadderGame.do started.");
+		logger.debug("ladderId : " + ladderId);
+		logger.debug("searchSelect : " + searchSelect);
+		logger.debug("searchInput " + searchInput);
+		logger.debug("mode : " + mode);
+		logger.debug("currPage : " + currPage);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladderGame/" + allData[0] + "/users/" + userInfo.getId();
+		String url = gwServerUrl + "/ladder/ladderGame/" +ladderId + "/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -601,18 +604,18 @@ public class EzLadderController {
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("participant");
 			model.addAttribute("id", userInfo.getId());
-			model.addAttribute("vo", jsonResult.get("data"));	// x번째 사다리 정보
-			model.addAttribute("searchSelect", allData[1]);
-			model.addAttribute("searchInput", allData[2]);
-			model.addAttribute("mode", allData[3]);
-			model.addAttribute("currPage", allData[4]);
+			model.addAttribute("vo",jsonResult.get("data"));	// x번째 사다리 정보
+			model.addAttribute("searchSelect", searchSelect );
+			model.addAttribute("searchInput", searchInput );
+			model.addAttribute("mode", mode );
+			model.addAttribute("currPage", currPage);
 			model.addAttribute("list", list); 			// ladderLineList
 		} else {
 			return "error";
 		}
 		
 		String retJSP = "";
-		if(allData[3].equals("pre")) {
+		if(mode.equals("pre")) {
 			retJSP = "json";
 		} else {
 			retJSP = "ezLadder/ladderGame";
@@ -652,10 +655,6 @@ public class EzLadderController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("ladderId", allData.get(0))
-										.queryParam("searchSelect", allData.get(1))
-										.queryParam("searchInput", allData.get(2))
-										.queryParam("mode", allData.get(3))
-										.queryParam("currPage", allData.get(4))
 										.queryParam("tenant_Id", userInfo.getTenantId());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
@@ -753,7 +752,8 @@ public class EzLadderController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 							.queryParam("tenantId", userInfo.getTenantId())
 							.queryParam("size", allData[5])
-							.queryParam("lineCnt", allData[6]);
+							.queryParam("lineCnt", allData[6])
+							.queryParam("lang", userInfo.getLang());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 
@@ -766,7 +766,8 @@ public class EzLadderController {
 		
 		if (status.equals("ok")) {
 			// redirect 수정
-			return "redirect:/ezLadder/getLadderGame.do";
+			return "redirect:/ezLadder/getLadderGame.do?ladderId=" + allData[0] + "&searchSelect=" + allData[1] +
+					"&searchInput=" +  allData[2] + "&mode=" + allData[3] + "&currPage=" +  allData[4];
 		} else {
 			return "error";
 		}

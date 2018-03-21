@@ -11,7 +11,8 @@ function getLadderGame(ladderId) {
 		console.log("enter pre");
 		return allData;
 	}
-	window.location.href = '/ezLadder/getLadderGame.do?allData=' + allData;
+	window.location.href = '/ezLadder/getLadderGame.do?ladderId=' + ladderId + '&searchSelect=' + searchSelect +
+	'&searchInput=' + searchInput + '&mode=' + mode + '&currPage=' + currPage;
 }
 
 // 참여자 버튼

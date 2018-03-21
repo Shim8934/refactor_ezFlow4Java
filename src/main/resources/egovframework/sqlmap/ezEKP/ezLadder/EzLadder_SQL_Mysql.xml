@@ -929,6 +929,8 @@
 			TENANT_ID = #tenantId#
 		AND
 			LADDERID = #ladderId#
+		ORDER BY
+			LADDERORDER
 	</select>
 	
 	<update id="EzLadderDAO.updateLadderStart">
@@ -938,6 +940,19 @@
 			LINEARRAY = #lineArray#, status = 1, STARTDATE = #startDate#
 		WHERE
 			TENANT_ID = #tenantId#
+		AND
+			LADDERID = #ladderId#
+	</update>
+	
+	<update id="EzLadderDAO.updateLadderResult">
+		UPDATE
+			TBL_LADDER_LINE
+		SET
+			RESULTUSERID = #resultUserId#, RESULTUSERNAME = #resultUserName#, RESULTUSERNAME2 = #resultUserName2#
+		WHERE
+			LADDERORDER = #ladderOrder#
+		AND
+			TENANT_ID = #tenant_id#
 		AND
 			LADDERID = #ladderId#
 	</update>

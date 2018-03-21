@@ -83,6 +83,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		} else {						// 전체버튼 검색
 			totalLadder = ezLadderDAO.getAllSLadderCount(map);
 		}
+		
 		logger.debug("totalLadder : " + totalLadder);
 		logger.debug("searchLadderCount ended.");
 		return totalLadder;
@@ -104,6 +105,12 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 		List<LadderVO> list = ezLadderDAO.getLadderList(map);
 		
+		if(lang.equals("2")) {
+			for(LadderVO userVO : list) {
+				userVO.setWriterName(userVO.getWriterName2());
+			}
+		}
+		
 		logger.debug("getLadderList ended.");
 		return list;
 	}
@@ -121,7 +128,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("offset", commonUtil.getMinuteUTC(vo.getOffset()));
 		map.put("lang", lang);
 		List<LadderVO> list = ezLadderDAO.getPartLadderList(map);
-		
+		if(lang.equals("2")) {
+			for(LadderVO userVO : list) {
+				userVO.setWriterName(userVO.getWriterName2());
+			}
+		}
 		logger.debug("getPartLadderList ended.");
 		return list;
 	}
@@ -152,6 +163,12 @@ public class EzLadderServiceImpl implements EzLadderService {
 			list = ezLadderDAO.searchPartLadderList(map);
 		} else {						// 전체버튼 검색
 			list = ezLadderDAO.searchAllLadderList(map);
+		}
+		
+		if(lang.equals("2")) {
+			for(LadderVO userVO : list) {
+				userVO.setWriterName(userVO.getWriterName2());
+			}
 		}
 		logger.debug("searchLadderList ended.");
 		return list;
@@ -334,6 +351,10 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("offset", commonUtil.getMinuteUTC(ladVO.getOffset()));
 		map.put("lang", lang);
 		LadderVO vo = ezLadderDAO.ladderContent(map);
+		if(lang.equals("2")) {
+			vo.setWriterName(vo.getWriterName2());
+			vo.setDeptName(vo.getDeptName2());
+		}
 		logger.debug("getLadderGame ended.");
 		return vo;
 	}
@@ -348,28 +369,26 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("lang", lang);
 		List<LadderLineVO> list = ezLadderDAO.ladderGameParticipant(map);
 		logger.debug("getLadderLineParticipant ended.");
+		
+		if(lang.equals("2")) {
+			for(LadderLineVO userVO : list) {
+				userVO.setUserName(userVO.getUserName2());
+				userVO.setResultUserName(userVO.getResultUserName2());
+			}
+		}
 		return list;
 	}
 
 	@Override
-	public void deleteLadderList(String userId, String tenantId, List<String> allData) throws Exception {
+	public void deleteLadderList(String userId, String tenant_Id, String ladderId) throws Exception {
 		logger.debug("deleteLadder started.");			// 사다리 1개 삭제
-		
+		String deleteDate = commonUtil.getTodayUTCTime("");	// deleteDate UCT 타임 설정
 		Map<String,Object> map = new HashMap<String, Object>();	
-		String ladderId = allData.get(0);
-		String searchSelect = allData.get(1);
-		String searchInput = allData.get(2).trim();
-		String mode = allData.get(3);
-		String deleteDate = commonUtil.getTodayUTCTime("");	// startDate UCT 타임 설정
-		System.out.println(deleteDate);
-		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
+	
 		
 		map.put("userId", userId);
-		map.put("searchSelect", searchSelect);
-		map.put("searchInput", searchInput);
-		map.put("mode", mode);
 		map.put("ladderId", ladderId);
-		map.put("tenantId", tenantId);
+		map.put("tenantId", tenant_Id);
 		map.put("deleteDate", deleteDate);
 		ezLadderDAO.deleteLadderList(map);
 		
@@ -384,26 +403,63 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public void setLadderStart(int ladderId, String tenantId, int size, int lineCnt) throws Exception {
-		logger.debug("setLadderStart started.");	
+	public void setLadderStart(int ladderId, String tenantId, int size, int lineCnt, String lang) throws Exception {
+		logger.debug("setLadderStart started.");	// lang 추가 해줘야 됨
+		// lineCnt를 이용해 lineArray를 구함
+		int height = 10;
+		int[] lineArray = new int[lineCnt];
+		int[] lineMap = new int[size*height];
+		lineArray = getLineArray(size, lineCnt);
+		lineMap= getLine(size, lineArray);
+		String line="";
+		for(int i =0; i<lineMap.length; i++) {
+			line += Integer.toString(lineMap[i]);
+		}
+		String langs = commonUtil.getMultiData(lang, Integer.parseInt(tenantId));
 		String startDate = commonUtil.getTodayUTCTime("");	// startDate UCT 타임 설정
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("ladderId", ladderId);
 		map.put("tenantId", tenantId);
 		map.put("startDate", startDate);
-		
-		// lineCnt를 이용해 lineArray를 구함
-		int[] lineArray = new int[lineCnt];
-		lineArray = getLineArray(size, lineCnt);
-		String line = getLine(size, lineArray);
-		
 		map.put("lineArray", line);
-		
+		map.put("lang", langs);
 		ezLadderDAO.updateLadderStart(map);		// startDate, lineArray 업데이트
-		System.out.println(startDate);
-		System.out.println(ladderId);
-		System.out.println(tenantId);
-		System.out.println(line);
+		
+		
+		List<LadderLineVO> list = ezLadderDAO.ladderGameParticipant(map);	// 사다리 라인 배열
+		if(langs.equals("2")) {
+			for(LadderLineVO userVO : list) {
+				userVO.setUserName(userVO.getUserName2());
+				userVO.setResultUserName(userVO.getResultUserName2());
+			}
+		}
+		
+		int cnt = 0;
+		int[][] generateLine = new int[height][size];		// 지도 생성
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < size; j++) {
+				generateLine[i][j] = lineMap[cnt];
+				cnt++;
+			}
+		}
+
+		int[] load = new int[size];							// 방문 결과 배열에 넣기
+		for (int i = 0; i < size; i++) {
+			int a = visitLadder(generateLine, i);
+			load[a] = i; 
+		}
+	
+		for (int i = 0; i < size; i++) {
+			Map<String, Object> m = new HashMap<String, Object>();
+			m.put("ladderId", ladderId);
+			m.put("tenant_id", tenantId);
+			m.put("ladderOrder", i);
+			m.put("resultUserId", list.get(load[i]).getUserId());
+			m.put("resultUserName", list.get(load[i]).getUserName());
+			m.put("resultUserName2", list.get(load[i]).getUserName2());
+			ezLadderDAO.updateLadderResult(m);
+		}
+		
 		logger.debug("setLadderStart ended.");
 	}
 
@@ -456,7 +512,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public String getLine(int size, int[] lineArray) {
+	public int[] getLine(int size, int[] lineArray) {
 		logger.debug("getLine started.");
 		// height를 일단 10으로 통일함. 추후 height를 사용자 수(size)에 따라 유동적으로 줄지는 논의 필요
 		int height = 10;
@@ -468,11 +524,26 @@ public class EzLadderServiceImpl implements EzLadderService {
 			line[temp] = 1;
 			line[temp + 1] = 2;
 		}
-		
-		for(int i =0; i<line.length; i++) {
-			lineArr += Integer.toString(line[i]);
-		}
 		logger.debug("getLine ended.");
-		return lineArr;
+		return line;
+	}
+	
+	@Override
+	public int visitLadder(int[][] ladder, int start) {
+		int dest = -1;
+		int cursorX = start;
+		int cursorY = 0;
+		if (start < ladder[0].length) {
+			while (cursorY < ladder.length) {
+				if (ladder[cursorY][cursorX] == 1) {	// 1 우회전
+					cursorX++;
+				} else if (ladder[cursorY][cursorX] == 2) {	// 2 좌회전
+					cursorX--;
+				}
+				cursorY++;
+			}
+			dest = cursorX;
+		}
+		return dest;
 	}
 }
