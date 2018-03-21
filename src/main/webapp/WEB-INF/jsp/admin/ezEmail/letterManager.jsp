@@ -162,7 +162,7 @@
 			}
 			
 			
-			$(".lmPreview > .lmPreViewIframe").on("mouseover",function(){
+			$(document).on("mouseover", ".lmPreview > .lmPreViewIframe", function(){
 				var letterName = $(this).attr("data-letterName");
 				var letterNameSpan = "<span class='preViewLetterName'>" + letterName + "</span>";
 				
@@ -205,7 +205,7 @@
 				
 			}) */
 			
-			$(".lmPreview > .lmPreViewIframe, .lmPreview > span:not('.preViewLetterName')").on("mouseleave",function(){
+			$(document).on("mouseleave", ".lmPreview > .lmPreViewIframe:not(.preViewLetterName)", function(){
 				$(".lmPreview .preViewLetterName").remove();
 			})
 				

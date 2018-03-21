@@ -40,12 +40,6 @@ function treeOnclick() {
 	$('#divTree').on('changed.jstree', function (e, data) {
 		selectNode = data;
 		if (pageType === "letterBox") { // 편지지함 
-    		if (addCheck == -1) {
-    			//추가하면 다른 node 못누르게됨
-    			$("#divTree").jstree('select_node', "#temp");
-    			setDisplay("편지지함", "letterbox_temp");
-    			return;
-    		}
     		
     		parent = selectNode.node.parent;
     		
@@ -61,6 +55,17 @@ function treeOnclick() {
     			setDisplay("편지지함", "letterbox_temp");
     		} else { 
     			selectBox(selectNode.node.id);
+    		}
+    		
+    		if (addCheck == -1) { 
+    			$('#divTree').jstree().delete_node($('#temp'));
+    			addCheck = 0;
+    			//document.getElementById("letterbox_no").disabled
+    			$("#letterbox_no").removeAttr("disabled");
+    			//추가하면 다른 node 못누르게됨
+    			//$("#divTree").jstree('select_node', "#temp");
+    			//setDisplay("편지지함", "letterbox_temp");
+    			return;
     		}
     		
 		} else if (pageType == 'letter_move') { 
