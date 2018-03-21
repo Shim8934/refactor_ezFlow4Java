@@ -2253,7 +2253,7 @@
 	        </tr>
 	        <tr id="docTR" style="display: none">
 	            <td>
-	                <div id="docContentBorder" style="border: #B6B6B6 1px solid; BACKGROUND-COLOR: white; margin-top: 5px;">
+	                <div id="docContentBorder" style="border: #ddd 1px solid; BACKGROUND-COLOR: white; margin-top: 5px;">
 	                    <iframe id="docContent" name="docContent" style="width: 100%; height: 100%;"></iframe>
 	                </div>
 	            </td>

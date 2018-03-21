@@ -1511,29 +1511,25 @@
 	                            <table style="width:99.5%;table-layout: fixed">
 	                            <c:if test="${approvalFlag == 'G'}">
 									 <tr>
-                                    <td style="vertical-align: top;">                                    	
-                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
-                                        </div>
-                                    </td>
-                               	 	</tr>
-                                	<tr>
-                                    <td style="border: 1px solid #b6b6b6;">
-                                        <div class="border_gray" style="border: 0px;">
-                                            <div id="UserList" style="border: 0px; margin: 0px 1px 1px 1px; Width: 386px; Height: 229px; overflow: auto;">
-                                            </div>
-                                        </div>
-                                    </td>
-                                	</tr>
+	                                    <td style="vertical-align: top;">	                                    	
+	                                        <span>	                                        	
+	                                            <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 247px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 1px;"></div>
+	                                            <div class="border_gray" style="Width: 388px; Height: 273px;">
+	                                                <div id="UserList" style="margin: 0px 1px 1px 1px; Width: 386px; Height: 100%; overflow: auto;"></div>
+	                                            </div>
+	                                        </span>
+	                                    </td>
+	                                </tr>
 	                            </c:if>
 	                            <c:if test="${approvalFlag =='S'}">
 	                               <tr>
                                     <td style="vertical-align: top;">                                    	
-                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
                                         </div>
                                     </td>
                                	 	</tr>
                                 	<tr>
-                                    <td style="border: 1px solid #b6b6b6;">
+                                    <td style="border: 1px solid #ddd;">
                                         <div class="border_gray" style="border: 0px;">
                                             <div id="UserList" style="border: 0px; margin: 0px 1px 1px 1px; Width: 386px; Height: 223px; overflow: auto;">
                                             </div>
@@ -1550,10 +1546,10 @@
 	                                    </td>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'G'}">
-	                                    <td style="background-color: transparent; height: 28px; padding-top: 5px; vertical-align: top;">
-	                                    <input id="textUser" style="width: 150px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
-	                                        <a class="imgbtn"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
-	                                        <a class="imgbtn" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
+	                                    <td style="background-color: transparent; height: 38px; padding-right: 5px;margin-top: auto;margin-bottom: auto;" >
+	                                    	<input id="textUser" style="width: 150px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
+	                                    	<a class="imgbtn" style="vertical-align: middle; margin: auto;"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
+	                                    	<a class="imgbtn" style="vertical-align: middle; margin: auto;" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
 	                                    </td>
 	                                </c:if>
 	                                </tr>
@@ -1562,7 +1558,7 @@
 	                        <div id="TempLineTab" style="display: none;">
 	                            <table>
 	                                <tr>
-	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+	                                    <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                        <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezApprovalG.G0003'/></h2>
 	                                        <div class="border_gray"">
 	                                            <div id="APRTEMPLIST" style="border: 0px; Width: 386px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
@@ -1621,7 +1617,7 @@
 	                                  
 	                                        <c:if test="${approvalFlag == 'G' }">
 		                                        <div class="border_gray" style="margin-top:7px">
-		                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+		                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: auto; padding-top: 0px;">
 		                                        </div>
 		                                        </div>
 	                                        </c:if>
@@ -1708,18 +1704,18 @@
 	                            <tr>
 	                                <td style="vertical-align: top;">
 	                                	<c:if test="${approvalFlag =='G' }">
-		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 517px; width: 386px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 523px; width: 388px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 		                                    </div>
 	                                    </c:if>
 	                                    <c:if test="${approvalFlag == 'S' }">
-                                        	<div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 386px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+                                        	<div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 386px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 		                                    </div>
 	                                    </c:if>
 	                                </td>
 	                            </tr>
 	                            <c:if test="${approvalFlag == 'S' }">
 	                            <tr>
-                                    <td style="border: 1px solid #b6b6b6;">
+                                    <td style="border: 1px solid #ddd;">
                                         <div class="border_gray" style="border: 0px;">
                                             <div id="UserList2" style="border: 0px; margin: 0px 1px 1px 1px; Width: 386px; Height: 223px; overflow: auto;">
                                             </div>
@@ -1728,11 +1724,11 @@
                                 </tr>
                                 </c:if>
 	                            <tr>
-	                                <td height="30" style="background-color: transparent">
+	                                <td height="36px;" style="background-color: transparent; margin-top: auto;margin-bottom: auto;">
 	                                <c:if test="${approvalFlag == 'G'}">
-	                                    <input id="txtDeptName" style="width: 150px; margin-top: 7px;" name="textUser" onkeyup="return btnSearchDept_onKeyPress(event)"  maxlength="50">
-	                                    <a class="imgbtn" style="margin-top: 7px;"><span id="Span2" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
-	                                	<a class="imgbtn" style="margin-right: 5px; margin-top: 7px;" id="AprDeptAdd" onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApprovalG.G0002'/></span></a>
+	                                    <input id="txtDeptName" style="width: 150px;" name="textUser" onkeyup="return btnSearchDept_onKeyPress(event)"  maxlength="50">
+	                                    <a class="imgbtn" style="vertical-align: middle; margin: auto;"><span id="Span2" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
+	                                	<a class="imgbtn" style="vertical-align: middle; margin: auto;" id="AprDeptAdd" onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApprovalG.G0002'/></span></a>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'S'}">
 	                                 	<input id="textUser2" style="width: 200px;" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
@@ -1748,7 +1744,7 @@
 	                        <table style="margin-left: 0px;">
 	                            <tr>
 	                                <td style="vertical-align: top;">
-	                                    <div id="TreeView3" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 523px; width: 388px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+	                                    <div id="TreeView3" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 523px; width: 388px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 	                                    </div>
 	                                </td>
 	                            </tr>
@@ -1765,7 +1761,7 @@
 	                    <div id="ReceptTemp" style="display: none;">
 	                        <table>
 	                            <tr>
-	                                <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+	                                <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                    <h2 class="h2_dot" style="padding-top:2px;"><spring:message code='ezApprovalG.G0003'/></h2>
 	                                    <div class="border_gray">
 	                                        <div id="RecSaveList" style="border: 0px; Width: 386px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
@@ -1799,7 +1795,7 @@
 	                    <div id="ReceptGroup" style="display: none;">
 	                        <table>
 	                            <tr>
-	                                <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+	                                <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                    <h2 class="h2_dot" style="padding-top:2px;"><spring:message code='ezApprovalG.G0007'/></h2>
 	                                    <div class="border_gray">
 	                                        <div id="RecGroupList" style="border: 0px; Width: 386px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
@@ -1830,15 +1826,16 @@
 	                    </div>
 	                </td>
 	                <!-- 2015-06-23 표준모듈:추가 - KSK -->
-	                <td class ="approvalG" style="width: 30px; text-align: center;" >
-	                    <div style="display: inline-block;" id="AddRemoveBTN">
-	                        <img src="/images/arr_rr.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgInsertAll" onclick="return InsertRecAll();">
+	                <td class ="approvalG" style="width: 16px; text-align: center;" >
+	                    <div style="display: inline-block; margin:auto; padding-left:2.5px;" id="AddRemoveBTN">
+	                        <img src="/images/arr_rr.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgInsertAll" onclick="return InsertRecAll();">
 	                        <br>
-	                        <img src="/images/arr_r.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgInsert" onclick="return InsertRec();">
+	                        <img src="/images/arr_r.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgInsert" onclick="return InsertRec();">
 	                        <br>
-	                        <img src="/images/arr_l.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgDelete" onclick="return DeleteRec();">
+	                        <img src="/images/arr_l.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgDelete" onclick="return DeleteRec();">
 	                        <br>
-	                        <img src="/images/arr_ll.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgDeleteAll" onclick="return DeleteRecAll();">
+	                        <img src="/images/arr_ll.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgDeleteAll" onclick="return DeleteRecAll();">
+	                        <br>
 	                    </div>
 	                </td>
 	                <td style="vertical-align: top">
@@ -1848,7 +1845,7 @@
 	                                <h2 class="h2_dot"> <c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t253'/></c:if> <c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t220'/></c:if></h2>
 	                                <div class="border_gray" style="margin-top: 7px">
 	                                <c:if test="${approvalFlag == 'G'}">
-	                                    <div id="RECEPTLIST" style="Width: 710px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                    <div id="RECEPTLIST" style="Width: 703px; Height: 524px; overflow: auto; border: 0; font-size: 9pt; margin: auto; padding-top: 0px;">
 	                                    </div>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'S'}">
@@ -2108,7 +2105,7 @@
 		            </tr>
 		        </table>
 		        <h2 style="margin-left: 5px;"><spring:message code='ezApprovalG.t1203'/></h2>
-		        <textarea id="taSummery" name="taSummery" style="HEIGHT: 182px; WIDTH: 99.7%; box-sizing: border-box; -moz-box-sizing: border-box; margin-left:3px;"></textarea>
+		        <textarea id="taSummery" name="taSummery" style="HEIGHT: 182px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin-left:3px;"></textarea>
 		    </div>
 	    </c:if>
 	    
@@ -2194,7 +2191,7 @@
 		                	<th><spring:message code='ezApproval.t339'/></th>
 		                    <td>		                    	
 		                        <!-- <div class="nobox"> -->
-		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 337px; WIDTH: 99.7%; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
+		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 337px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
 		                        <!-- </div> -->
 		                    </td>
 		                </tr>
@@ -2219,12 +2216,12 @@
 			                	<table style="width:99.5%;table-layout: fixed">
 			                		<tr>
 	                                    <td style="vertical-align: top;">                                    	
-	                                        <div id="TreeViewCC" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+	                                        <div id="TreeViewCC" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 	                                        </div>
 	                                    </td>
                                	 	</tr>
                                 	<tr>
-	                                    <td style="border: 1px solid #b6b6b6;">
+	                                    <td style="border: 1px solid #ddd;">
                                         <div class="border_gray" style="border: 0px;">
                                             <div id="UserListCC" style="border: 0px; margin: 0px 1px 1px 1px; Width: 386px; Height: 223px; overflow: auto;">
                                             </div>
@@ -2245,7 +2242,7 @@
 			                <div id="ReceptTempCC" style="display: none">
 			                    <table style="padding-left: 5px;">
 			                        <tr>
-			                            <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+			                            <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 			                                <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezApprovalG.G0003'/></h2>
 			                                <div class="border_gray">
 			                                    <div id="RecSaveListCC" style="border: 0px; Width: 386px; Height: 237px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">

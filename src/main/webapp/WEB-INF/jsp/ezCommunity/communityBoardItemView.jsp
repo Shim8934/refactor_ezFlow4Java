@@ -1066,12 +1066,12 @@
 	        <c:choose>
 	        <c:when test="${boardInfo.gubun == '2'}"> 
 	            <td class="pad1" id="messagePad" style="vertical-align:top; height:460px">
-	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #b6b6b6;"></iframe>
+	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
 	            </td>
             </c:when>
             <c:otherwise>
 	           	<td class="pad1" id="messagePad" style="vertical-align:top; height:440px">
-	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #b6b6b6;"></iframe>
+	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
 	            </td>
             </c:otherwise>
 			</c:choose>

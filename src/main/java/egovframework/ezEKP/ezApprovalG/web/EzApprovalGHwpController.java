@@ -445,6 +445,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String docTitle = request.getParameter("title");
 		String susinAdmin = "";
         String SignCheck = "N";
+        String pass = "";
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
         String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
@@ -461,10 +462,14 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		}
 
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
-
-		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		
-		if (!pass.equals("<RESULT>TRUE</RESULT>")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("f=1")) {
+			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+		} else {
+			pass = "<RESULT>TRUE</RESULT>";
+		}
+		
+		if (pass.equals("<RESULT>TRUE</RESULT>")) {
            if (docHref.trim().equals("") || docHref.indexOf("/1000/") >= 0) {
                 String strXML = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
 

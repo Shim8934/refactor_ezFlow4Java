@@ -216,7 +216,7 @@
 		</div>
 		<table>
   			<tr> 
-				<td><div class="box" id="TreeView" style="border:1px solid #B6B6B6; height:400px;width:250px; overflow-x:auto;overflow-y:auto"></div></td>
+				<td><div class="box" id="TreeView" style="border:1px solid #ddd; height:400px;width:250px; overflow-x:auto;overflow-y:auto"></div></td>
 				<td style="padding-left:5px" >
         			<div class="listview">
             			<div id="lvtDoclist" style="OVERFLOW-Y:auto; overflow-x:auto;border:0;HEIGHT: 400px; WIDTH: 490px" onClick ="" onselchanged="lvtDoclist_onselchanged()" onrowdblclick="">

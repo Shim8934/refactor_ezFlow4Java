@@ -850,6 +850,7 @@
 		
 		        return RtnVal;
 		    }
+		    
 		</script>
 	</head>
 	<body class="popup">
@@ -860,7 +861,7 @@
 		    <c:choose>
 		    	<c:when test="${userInfo.lang == '1'}">
 				    <td ><input type="text" id="FormName" name="FormName" style="width:200px" disabled>
-		      		<a  class="imgbtn" style="vertical-align:middle"><span onClick="return btn_FormSelect_onclick()"><spring:message code='ezApprovalG.t442'/></span></a></td>
+		      		<a  class="imgbtn" style="vertical-align:middle; margin-top:1.48px;"><span onClick="return btn_FormSelect_onclick()"><spring:message code='ezApprovalG.t442'/></span></a></td>
 		    	</c:when>
 		    	<c:otherwise>
 				    <td ><input type="text" id="FormName" name="FormName" style="width:193px" disabled>

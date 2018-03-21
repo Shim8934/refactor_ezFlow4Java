@@ -1306,7 +1306,7 @@
 	                    <ul style="float:right;margin-right:50px">
 	                    	<li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">
 	                        	<input type="checkbox" id="chkSecureMail" />
-	                        	<label for="chkSecureMail" style="color:white"><spring:message code='ezEmail.lhm63' /></label>	                        	
+	                        	<label for="chkSecureMail" style="color:#333"><spring:message code='ezEmail.lhm63' /></label>	                        	
 	                        </li>
 	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;">
 	                            <img src="/images/pbar.gif">
@@ -1494,7 +1494,7 @@
                 		<!-- 2017-01-24 이효민 : 쓰이는 곳 없어서 우선 주석처리
                 		<tr id="HolderDocSend" style="display:none">
                             <td style="height:150px;">
-                                <div id="docContentBorder" style="border: #B6B6B6 1px solid; background-color: white;margin-top: 5px;overflow:auto;text-align:center;">
+                                <div id="docContentBorder" style="border: #ddd 1px solid; background-color: white;margin-top: 5px;overflow:auto;text-align:center;">
                                     <div id="docContent" style="height: 100%; margin:auto;width:620px;border:none;text-align:center;" ></div>
                                 </div>
                             </td>

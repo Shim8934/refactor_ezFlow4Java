@@ -506,8 +506,8 @@
 		    <table style="width:800px">
 		        <tr>
 		            <td style="width:800px">
-		                <div class="listview" style="Width:800px; border-top:0px;">
-		                    <div id="AddJobListView" style="border: 0px solid #B6B6B6; Width: 800px; Height:600PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		                <div class="listview" style="Width:800px; border-top:0px; margin-top:7px">
+		                    <div id="AddJobListView" style="border: 0px solid #ddd; Width: 800px; Height:600PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		                </div>
 		            </td>
 		            <td style="padding-left:3px; vertical-align:top">            

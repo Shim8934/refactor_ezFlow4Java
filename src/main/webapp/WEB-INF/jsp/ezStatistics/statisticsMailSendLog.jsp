@@ -400,7 +400,7 @@
 </head>
 <body class="mainbody">
 <h1><spring:message code="ezStatistics.kyj2"/></h1>
-	<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
+	<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2;">
 		<tr>
 			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1061'/> : &nbsp;
