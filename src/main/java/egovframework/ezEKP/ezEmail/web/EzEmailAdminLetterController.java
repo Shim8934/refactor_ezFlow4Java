@@ -3,10 +3,19 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
+import java.nio.channels.FileChannel;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -315,27 +324,62 @@ public class EzEmailAdminLetterController {
 	
 	
 	/**
-	 * 편지지 편지지함 이동
+	 * 편지지 편지지함 이동 (재은)
 	 * @param String loginCookie, String letterNo, String parentLetterBoxNo, String letterOrder
 	 * @return : String
 	 */
 	@RequestMapping(value="/admin/ezEmail/updateLetterMove.do")
 	@ResponseBody
-	public String updateLetterMove(@CookieValue("loginCookie") String loginCookie, String letterNo, String parentLetterBoxNo) throws Exception {
+	public String updateLetterMove(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, String letterBox, String letterNo, String parentLetterBoxNo, String letterId) throws Exception {
 		logger.debug("updateLetterMove started.");
-		logger.debug("letterNo=" + letterNo + ", parentLetterBoxNo=" + parentLetterBoxNo);
+		logger.debug("letterBox=" + letterBox + ",letterNo=" + letterNo + ", parentLetterBoxNo=" + parentLetterBoxNo +", letterId=" + letterId);
+		//letterBox = 기존 있던 폴더
+		//parentLetterBoxNo = 새로 옮길 폴더
 		
 		String returnStr = "OK";
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String fileType = "html";
+		String filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
+		String fileName = "letter." + fileType;
+		
+		filePath = filePath + commonUtil.separator + letterBox + "/" + letterId;
+		logger.debug(filePath);
+		
+		
 		try {
 			EzEmailAdminLetterService.updateLetterMove(letterNo, parentLetterBoxNo);
+			
+			String originPath = realPath + filePath + "/" + fileName;
+			filePath = realPath + commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId()) + commonUtil.separator;
+			String folderName = parentLetterBoxNo + "/" + letterId;
+			
+			String result = moveFile(folderName, fileName, originPath, filePath);
+			
+	        if (result!=null) {
+	        	File file = new File(filePath + letterBox + "/" + letterId);
+	        	if (file.exists()) {
+	        		file.delete();
+	        	}
+	        	
+	            logger.debug("SUCCESS: "+result);
+	            
+	        } else {
+	        	logger.debug("FAIL");
+	        }
+
 		} catch (Exception e) {
 			returnStr = "ERROR";
 		}
 		
 		logger.debug("updateLetterMove ended.");
 		return returnStr;
+		
+		
 	}
+	
 	/**
 	 * 편지지 관리페이지 화면 전환(수아)
 	 */
@@ -391,11 +435,13 @@ public class EzEmailAdminLetterController {
 	 * 편지지함 이동(변경) 팝업 (수아)
 	 */
 	@RequestMapping("/admin/ezEmail/letterBoxMovePopUp.do")
-	public String letterAdminBoxMovePopUp(@CookieValue("loginCookie") String loginCookie, @RequestParam("letterNo") String letterNo, Model model) throws Exception{
+	public String letterAdminBoxMovePopUp(@CookieValue("loginCookie") String loginCookie, String letterBox, @RequestParam("letterNo") String letterNo, @RequestParam("letterId") String letterId, Model model) throws Exception{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = userInfo.getCompanyID();
 		
+		model.addAttribute("letterBox", letterBox);
+		model.addAttribute("letterId", letterId);
 		model.addAttribute("letterNo", letterNo);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("pageType", "letter_move");
@@ -696,6 +742,34 @@ public class EzEmailAdminLetterController {
 		
 		return path.delete();
 	}
+	
+	
+	// 폴더 이동할때 fileroot를 옮기는 함수 (재은)
+	public String moveFile(String folderName, String fileName, String originPath, String copyPath) {
+        String path = copyPath + "/" + folderName;
+        String filePath = path + "/" + fileName;
+        File dir = new File(path);
+ 
+        if (!dir.exists()) { //폴더 없으면 폴더 생성
+            dir.mkdirs();
+        }
+ 
+        try{
+        	File file = new File(originPath);
+ 
+            if (file.renameTo(new File(filePath))) { //파일 이동
+                return filePath; //성공시 성공 파일 경로 return
+            } else {
+                return null;
+            }
+ 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+ 
+    }
+	
 	
 	/**
 	 * 편지지 삭제 (수아)

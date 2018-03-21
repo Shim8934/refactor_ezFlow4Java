@@ -126,16 +126,16 @@
 			function letterBoxMove(btn){
 				// 편지지함 no
 				//여기 수아랑 얘기해봐야됨
-				letterNo = $(".lmLetterSelect").attr("data-letterno");
+				var letterBox = selectNode.node.id;
+				var letterNo = $(".lmLetterSelect").attr("data-letterno");
+				var letterId = $(".lmLetterSelect").attr("data-letterid");
 				var select = $('body').find('.lmLetterSelect');
 				
 				if (select.length == 0) {
 					alert("이동할 편지지를 선택해주세요!");
 					return;
 				} else {
-				//if (letterNo !== "undefined") {
-					//url
-					url = "/admin/ezEmail/letterBoxMovePopUp.do?" + "letterNo=" + letterNo;  
+					url = "/admin/ezEmail/letterBoxMovePopUp.do?letterBox=" + letterBox + "&letterNo=" + letterNo + "&letterId=" + letterId;  
 					var win = window.open(url,"_blank","width=550, height=450");
 					
 					var interval = window.setInterval(function() {
