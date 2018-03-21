@@ -77,7 +77,8 @@ public class EzAttitudeGWController {
 	 * G/W 근태관리 [GET] 개인, 부서, 부서+개인 근태현황조회
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject attitudeMainList(HttpServletRequest request) {
+	 public JSONObject attitudeMainList(HttpServletRequest request) {
+		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] started.");
 		
 		JSONObject result = new JSONObject();
@@ -580,6 +581,15 @@ public class EzAttitudeGWController {
 			
 			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, info.getTenantId());
 			
+			//imgPath 셋팅
+			for (AttitudeTypeVO typeInfo : attitudeTypeList) {
+				String imgPath = typeInfo.getImgPath();
+				if (!imgPath.equals("")) {
+					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+					typeInfo.setImgPath(imgPath);
+				}
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", attitudeTypeList);
@@ -662,12 +672,22 @@ public class EzAttitudeGWController {
 	 * G/W 근태관리 [POST] 근태유형 추가
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject insertAttitudeType(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes] started.");
+	public JSONObject insertAttitudeType(@PathVariable String companyId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetypes] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			String typeId = request.getParameter("typeId");
+			String typeName = request.getParameter("typeName");
+			String typeName2 = request.getParameter("typeName2");
+			String imgPath = request.getParameter("imgPath");
+			String formId = request.getParameter("formId");
+			
+			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, imgPath, formId, info.getTenantId(), companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -677,7 +697,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
 		return result;
 	}
 	
@@ -696,6 +716,15 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			AttitudeTypeVO typeInfo = ezAttitudeService.getAttitudeTypeInfo(info.getTenantId(), companyId, attitudetypeId);
+			//imgPath 셋팅
+			String imgPath = typeInfo.getImgPath();
+			if (!imgPath.equals("")) {
+				imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+				typeInfo.setImgPath(imgPath);
+			} else {
+				typeInfo.setImgPath("/images/default_pic.jpg");
+			}
+
 			//formList 구하기
 			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
 			
@@ -718,12 +747,22 @@ public class EzAttitudeGWController {
 	 * G/W 근태관리 [PUT] 근태유형 수정
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject updateAttitudeType(@PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes/" + attitudetypeId+ "] started.");
-		
+	public JSONObject updateAttitudeType(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
+		//TODO
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			String typeId = request.getParameter("typeId");
+			String typeName = request.getParameter("typeName");
+			String typeName2 = request.getParameter("typeName2");
+			String imgPath = request.getParameter("imgPath");
+			
+			ezAttitudeService.updateAttitudeType(typeId, typeName, typeName2, imgPath, info.getTenantId(), companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -911,15 +950,17 @@ public class EzAttitudeGWController {
 			@RequestParam(value="endDate", required=false) String endDate,
 			@RequestParam(value="apprUserName", required=false) String apprUserName,
 			@RequestParam(value="sysLang", required=false) String sysLang,
-			@RequestParam(value="offset", required=false) String offset) {
+			@RequestParam(value="offset", required=false) String offset,
+			@RequestParam(value="startPoint", required=false) String startPoint,
+			@RequestParam(value="endPoint", required=false) String endPoint) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
 
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
-		
 		JSONObject attJson = new JSONObject();
+		
 		try{
-			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset);
+			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint);
 			for (int i = 0 ; i < attList.size(); i++ ) {
 				LOGGER.debug(attList.get(i).toString());
 			}
@@ -937,12 +978,47 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
 		return result;
 	}
+	
+	/**
+	 * G/W 근태관리 [GET] 수정신청 개수
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyattitudes/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getUsersModiyAttCount(@PathVariable String userId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="startDate", required=false) String startDate,
+			@RequestParam(value="endDate", required=false) String endDate,
+			@RequestParam(value="apprUserName", required=false) String apprUserName,
+			@RequestParam(value="sysLang", required=false) String sysLang,
+			@RequestParam(value="offset", required=false) String offset) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] started.");
+
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		JSONObject attJson = new JSONObject();
+		
+		try{
+			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset);
+
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", attListCount+"");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] ended.");
+		return result;
+	}
+	
 	/**
 	 * G/W 근태관리 [GET] 근태유형관리 아이콘 업로드
 	 */
-	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetype/iconupload/{typeId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{typeId}/iconupload", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject iconUpload(@PathVariable String companyId, @PathVariable String typeId, @RequestBody JSONObject jsonObject, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetype/iconupload/" + typeId + "] started.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetype/" + typeId + "/iconupload] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1060,7 +1136,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetype/iconupload/" + typeId + "] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetype/" + typeId + "/iconupload] ended.");
 		return result;
 	}
 	

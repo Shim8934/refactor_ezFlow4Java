@@ -20,15 +20,15 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>		
 		<script type="text/javascript">
-		var totalAtt = ${totalAtt};
-		var startDate = "<c:out value='${startDate}'/>";
-		var endDate = "<c:out value='${endDate}'/>";
-		var currentPage = ${currentPage};  		
-		var totalPages = ${totalPages};
-		var blockSize = 10;
-		var g_userLang = "${userLang}";
-		var g_timezone = "${userTimeSet}";
-		var offsetMin = "${offsetMin}";
+		var totalAtt 		  = ${totalAtt};
+		var startDate		  = "<c:out value='${startDate}'/>";
+		var endDate 		  = "<c:out value='${endDate}'/>";
+		var currentPage		  = ${currentPage};  		
+		var totalPages 		  = ${totalPages}; 		
+	    var blockSize 		  = 10;
+		var g_userLang 		  = "${userLang}";
+		var g_timezone 		  = "${userTimeSet}";
+		var offsetMin 		  = "${offsetMin}";
 		
 		$(function () {
 	        $("#Sdatepicker").datepicker({
@@ -103,7 +103,7 @@
 	        var strtext;
 	        var PagingHTML = "";
 	        document.getElementById("tblPageRayer").innerHTML = "";
-	        document.getElementById("mailBoxInfo").innerHTML = " - [" + "총"  + "<span style='color:#017BEC;'> " + totalAtt + " </span>" + "개 "+ "-" + startDate + "~" + endDate + "]";
+	        document.getElementById("mailBoxInfo").innerHTML = " - [" + "총"  + "<span style='color:#017BEC;'> " + totalAtt + " </span>" + "개]";
 	        strtext = "<div class='pagenavi'>";
 	        PagingHTML += strtext;
 	        var pageNum = currentPage;
@@ -135,14 +135,14 @@
 	        var MaxNum;
 	        var i;
 	        var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1;
-	        
+
 	        if (totalPages >= (startNum + parseInt(blockSize))) {
 	            MaxNum = (startNum + parseInt(blockSize)) - 1;
 	        }
 	        else {
 	            MaxNum = totalPages;
 	        }
-	        
+
 	        for (i = startNum; i <= MaxNum; i++) {
 	            if (i == pageNum) {
 	                strtext = "<span class='on'>" + i + "</span>";
@@ -209,8 +209,8 @@
 	    	console.log("search end");
 	    }
 	    
-	    function get_att_list() {
-
+	    function get_att_list(pageNum) {
+	    	ShowAttProgress();
 	    	var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 	        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 	    	var obj = new Object();
@@ -218,6 +218,7 @@
 		    obj.apprUserName = $('#appr_search').val();
 		    obj.startDate = startDate;
 		    obj.endDate = endDate;
+			obj.pageNum = pageNum;
 			
 		    //파라미터로 리스트 마지막 mail의 받은 날짜를 넘겨줘야 한다.
 		    $.ajax({
@@ -229,11 +230,56 @@
 			    	ajaxRunning = false;
 			    },
 			    success : function(json){
-			    	console.log(json.length);
-			    }
+			    	getAttList_after(json);
+			    },
+				complete : function() {
+					HiddenAttProgress();
+				}
 		    });
 	    }
-	    
+	    function getAttList_after(data) {
+	    	var attList = data.list;
+	    	var infoStr = "";
+	    	infoStr += ' - [총 <span style="color:#017BEC;">' + attList.length;
+	    	infoStr += '</span> 개 -' + 
+	    	data.startDate.substring(0,4) + '년' + 
+	    	data.startDate.substring(5,7) + '월' + 
+	    	data.startDate.substring(8,10) + '일~';
+	    	infoStr += data.endDate.substring(0,4) + '년' + 
+	    	data.endDate.substring(5,7) + '월' + 
+	    	data.endDate.substring(8,10) + '일]</span>';
+	    	$("#mailBoxInfo").html(infoStr);
+	    	$('#AttList tbody').children( 'tr:not(:first)' ).remove();
+	    	if (attList.length == 0) { 
+	    		$('#AttList tbody').append('<tr><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
+	    	}
+	    	for (var i = 0 ; i < attList.length; i ++) {
+	    		var htmlStr = "";
+	    		htmlStr += '<tr id=' + attList[i].attitudeId + 'class="white">';
+	    		htmlStr += '<td style="padding:0"> <input type="checkbox" class="checkBnk"' 
+	    		htmlStr += 'id="qstCheck+' + attList[i].attitudeId + '"';
+	    		htmlStr += 'value=' + attList[i].attitudeId ;
+	    		htmlStr += 'onchange="javascript:getChecked(this)"></td>';
+    			htmlStr += '<td>' + (parseInt(i) + 1) + '</td>';
+    			htmlStr += '<td>' + attList[i].changeDate.substring(0,10) + '</td>';
+    			htmlStr += '<td>' + attList[i].apprUserName + '</td>';
+    			htmlStr += '<td>' + attList[i].originDate + '</td>';
+    			htmlStr += '<td>' + attList[i].changeDate.substring(11,19) + '</td>';
+    			
+    			if (attList[i].apprStatus == 0) {
+    				htmlStr += '<td>진행</td>';	
+    			}
+    			if (attList[i].apprStatus == 1) {
+    				htmlStr += '<td>승인</td>';	
+    			}
+    			if (attList[i].apprStatus == 2) {
+    				htmlStr += '<td>반려</td>';	
+    			}
+    			
+    			htmlStr += '</tr>';
+    			$('#AttList tbody').append(htmlStr);
+	    	}
+	    }
 	    function date_reset() {
 	    	$("#Sdatepicker").datepicker({
 	            changeMonth: true,
@@ -262,9 +308,56 @@
 		{	
 	        var curevent = (typeof event == 'undefined' ? evt : event)
 	        if (curevent.keyCode == "13") {
-				set_searchKey();
+	        	att_search();
 	        }
 		}
+	    
+	    function ShowAttProgress() {
+	        document.getElementById("attPanel").style.display = "";
+	        document.getElementById("AttProgress").style.top = "300px";
+	        document.getElementById("AttProgress").style.left = (document.documentElement.clientWidth / 2) - 100 + "px";
+	        document.getElementById("AttProgress").style.display = "";
+	    }
+	    
+	    function HiddenAttProgress() {
+	        document.getElementById("attPanel").style.display = "none";
+	        document.getElementById("AttProgress").style.display = "none";
+	    }
+	    
+	    function goToPageByNum(Value){
+	    	currentPage = Value;
+	        makePageSelPage();
+	        search_Set(currentPage);
+	    }
+	    
+	    function selbeforeBlock(){
+	        var pageNum = parseInt(currentPage);
+	        pageNum = ((parseInt(pageNum / blockSize) - 1) * blockSize) + 1;
+	        goToPageByNum(pageNum);
+	    }
+	    
+	    function selbeforeBlock_one(){
+	        var pageNum = parseInt(currentPage);
+	        if(parseInt(pageNum - 1) > 0)
+	            goToPageByNum(parseInt(pageNum - 1));
+	        else
+	            return;
+	    }
+	    
+	    function selafterBlock(){
+	        var pageNum = parseInt(currentPage);
+	        pageNum = ((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1;
+	        goToPageByNum(pageNum);
+	    }
+	    
+	    function selafterBlock_one(){
+	        var pageNum = parseInt(currentPage);
+	        if(parseInt(pageNum + 1) <= totalPages)
+	            goToPageByNum(parseInt(pageNum + 1));
+	        else
+	            return;
+	    }
+	    
 		</script>
 </head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody">
@@ -291,7 +384,7 @@
               	  <tr>
                     <th nowrap>승인자명</th>
                     <td style="width:100%;"> 
-						<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="Key_event(event);">
+						<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);">
 	                </td>
                   </tr>
                   <tr>
@@ -311,7 +404,7 @@
         </div>
         <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
             <div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;" onblur>
-                <table class="mainlist" style="width:100%;" id="MailList" listpageCount="${mailGeneral.listCount}" curPage="1">
+                <table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
                 	<tr> 
 						<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
 							<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">
@@ -326,32 +419,32 @@
 			    	</tr>
 			    	
 			    	<c:forEach var="list" items="${list}" varStatus="i"> 
-			        <tr id="${list.attitudeId}" class="white">
-			        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.attitudeId}" />+" value=<c:out value="${list.attitudeId}" />  onchange="javascript:getChecked(this)"></td>
-			          	<td>${i.count}</td>
-			          	<c:set var="changeDate" value="${list.changeDate}"/>
-						<td>${fn:substring(changeDate,0,10) }</td>
-						<td>${list.apprUserName}</td>
-						<td>${list.originDate}</td>
-						<td>${fn:substring(changeDate,11,19) }</td>
-						<c:if test="${list.apprStatus == 0}">
-			          		<td>진행</td>	
-			          	</c:if>
-			          	<c:if test="${list.apprStatus == 1}">
-			          		<td>승인</td>	
-			          	</c:if>
-			          	<c:if test="${list.apprStatus == 2}">
-			          		<td>반려</td>	
-			          	</c:if>
-<%-- 		          		<c:choose> --%>
-<%-- 							<c:when test="${primary == '1'}"> --%>
-<%-- 								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName1} </a> </td> --%>
-<%-- 							</c:when> --%>
-<%-- 							<c:otherwise> --%>
-<%-- 								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName2} </a> </td> --%>
-<%-- 							</c:otherwise> --%>
-<%-- 						</c:choose>	 --%>
-			        </tr>
+				        <tr id="${list.attitudeId}" class="white">
+				        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.attitudeId}" />+" value=<c:out value="${list.attitudeId}" />  onchange="javascript:getChecked(this)"></td>
+				          	<td>${i.count}</td>
+				          	<c:set var="changeDate" value="${list.changeDate}"/>
+							<td>${fn:substring(changeDate,0,10) }</td>
+							<td>${list.apprUserName}</td>
+							<td>${list.originDate}</td>
+							<td>${fn:substring(changeDate,11,19) }</td>
+							<c:if test="${list.apprStatus == 0}">
+				          		<td>진행</td>	
+				          	</c:if>
+				          	<c:if test="${list.apprStatus == 1}">
+				          		<td>승인</td>	
+				          	</c:if>
+				          	<c:if test="${list.apprStatus == 2}">
+				          		<td>반려</td>	
+				          	</c:if>
+	<%-- 		          		<c:choose> --%>
+	<%-- 							<c:when test="${primary == '1'}"> --%>
+	<%-- 								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName1} </a> </td> --%>
+	<%-- 							</c:when> --%>
+	<%-- 							<c:otherwise> --%>
+	<%-- 								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName2} </a> </td> --%>
+	<%-- 							</c:otherwise> --%>
+	<%-- 						</c:choose>	 --%>
+				        </tr>
 		        </c:forEach>
 		        
 			    <c:if test="${list.size() == 0}"> 
@@ -363,5 +456,9 @@
             </div>
             <div id="tblPageRayer"  style="width:470px; margin:6px auto;"></div>
         </span>
+        <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="attPanel" onclick="ContextMenuHidden();" ></div>
+		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="AttProgress">
+		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
+		</div>
 	</body>
 </html>

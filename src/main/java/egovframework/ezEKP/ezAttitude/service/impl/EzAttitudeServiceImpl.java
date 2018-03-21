@@ -342,11 +342,30 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void insertAttitudeType(String typeName, String typeName2,
-			String imgPath, String formId, String parentId, int tenantId,
+	public void insertAttitudeType(String typeId, String typeName, String typeName2,
+			String imgPath, String formId, int tenantId,
 			String companyId) throws Exception {
-		// TODO Auto-generated method stub
+		LOGGER.debug("insertAttitudeType started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("typeId", typeId);
+		map.put("typeName", typeName);
+//		if(!typeName2.equals("") || typeName2 != null){
+//			map.put("typeName2", typeName2);
+//		}
+//		if(!imgPath.equals("") || imgPath != null){
+//			map.put("imgPath", imgPath);
+//		}
+		map.put("typeName2", typeName2);
+		map.put("imgPath", imgPath);
+		map.put("formId", formId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezAttitudeDAO.insertAttitudeType(map);
+		
+		LOGGER.debug("insertAttitudeType ended");
 	}
 	
 	@Override
@@ -372,10 +391,25 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void updateAttitudeType(String typeName, String typeName2,
+	public void updateAttitudeType(String typeId, String typeName, String typeName2,
 			String imgPath, int tenantId, String companyId) throws Exception {
-		// TODO Auto-generated method stub
+		LOGGER.debug("updateAttitudeType started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int idx = imgPath.lastIndexOf("/");
+		imgPath = imgPath.substring(idx+1);
+		
+		map.put("typeId", typeId);
+		map.put("typeName", typeName);
+		map.put("typeName2", typeName2);
+		map.put("imgPath", imgPath);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezAttitudeDAO.updateAttitudeType(map);
+		
+		LOGGER.debug("updateAttitudeType ended");
 	}
 
 	@Override
@@ -443,7 +477,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId,
-			String userId, String startDate, String endDate, String apprUserName, String sysLang, String offSet) throws Exception {
+			String userId, String startDate, String endDate, String apprUserName, String sysLang, String offset,String startPoint, String endPoint) throws Exception {
 		LOGGER.debug("getUsersModiyAtt started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -455,7 +489,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("endDate", endDate);
 		map.put("apprUserName", apprUserName);
 		map.put("sysLang", sysLang);
-		map.put("offSet", offSet);
+		map.put("offset", offset);
+		map.put("startPoint", startPoint);
+		map.put("endPoint", endPoint);
 		
 		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getUsersModiyAtt(map); 
 		
@@ -489,5 +525,27 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeFormList ended");
 
 		return ezAttitudeDAO.getAttitudeFormList(map);
+	}
+
+	@Override
+	public int getUsersModiyAttCount(String companyId, int tenantId,
+			String userId, String startDate, String endDate,
+			String apprUserName, String sysLang, String offset)
+			throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("apprUserName", apprUserName);
+		map.put("sysLang", sysLang);
+		map.put("offset", offset);
+		
+		int attAppListCount = ezAttitudeDAO.getUsersModiyAttCount(map);
+		
+		return attAppListCount;
 	}
 }

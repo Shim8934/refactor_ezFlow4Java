@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -31,6 +32,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -59,6 +61,7 @@ public class EzAttitudeKMSController {
 	 */
 	@RequestMapping(value="/ezAttitude/attModAppList.do")
 	public String getAttModAppList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=false)String pageNum,
 			@RequestParam(required=false)String apprUserName,
 			@RequestParam(required=false)String startDate,
 			@RequestParam(required=false)String endDate) throws Exception {
@@ -67,6 +70,9 @@ public class EzAttitudeKMSController {
 		int totalAtt = 0;
 		int currentPage = 1;
 		int totalPages = 0;
+		int pageSize = 15;
+		int startPoint = 0;
+		int endPoint = 15;
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -79,8 +85,8 @@ public class EzAttitudeKMSController {
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
-		
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
+									
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
@@ -94,7 +100,8 @@ public class EzAttitudeKMSController {
 				.queryParam("startDate", startDate)
 				.queryParam("endDate", endDate)
 				.queryParam("sysLang", sysLang)
-				.queryParam("offset", offsetMin);
+				.queryParam("offset", offsetMin)
+				.queryParam("pageNum", pageNum);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -108,6 +115,99 @@ public class EzAttitudeKMSController {
 		
 		JSONObject data = new JSONObject();
 		JSONArray list = new JSONArray();
+		
+		if(status.equals("ok")){
+			LOGGER.debug(resultBody.toJSONString());
+			totalAtt = Integer.parseInt(resultBody.get("data").toString());
+		}
+		totalPages = (totalAtt + pageSize - 1)/pageSize;
+		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("apprUserName", apprUserName)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate)
+				.queryParam("sysLang", sysLang)
+				.queryParam("offset", offsetMin)
+				.queryParam("pageNum", pageNum);
+		
+		if (totalPages == 0 || totalPages == 1) {
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			jp = new JSONParser();
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			
+			data = new JSONObject();
+			list = new JSONArray();
+			
+			if(status.equals("ok")){
+				data = (JSONObject) resultBody.get("data");
+				list = (JSONArray) data.get("list");
+				model.addAttribute("list", list);
+			}
+		}
+		else {
+			if (currentPage < totalPages) {
+				startPoint = (currentPage - 1)*pageSize;
+				endPoint = currentPage*pageSize;
+				
+			}
+			else {
+				if (currentPage > totalPages) {
+					currentPage = totalPages;
+				}
+				startPoint = (currentPage - 1) * pageSize;
+				endPoint = totalAtt;
+			}
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", userInfo.getCompanyID())
+					.queryParam("tenantId", userInfo.getTenantId())
+					.queryParam("apprUserName", apprUserName)
+					.queryParam("startDate", startDate)
+					.queryParam("endDate", endDate)
+					.queryParam("sysLang", sysLang)
+					.queryParam("offset", offsetMin)
+					.queryParam("pageNum", pageNum)
+					.queryParam("startPoint", startPoint)
+					.queryParam("endPoint", endPoint);
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			jp = new JSONParser();
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			
+			data = new JSONObject();
+			list = new JSONArray();
+			
+			if(status.equals("ok")){
+				data = (JSONObject) resultBody.get("data");
+				list = (JSONArray) data.get("list");
+				model.addAttribute("list", list);
+			}
+		}
+		
+		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		data = new JSONObject();
+		list = new JSONArray();
 		
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
@@ -125,8 +225,6 @@ public class EzAttitudeKMSController {
 		model.addAttribute("totalAtt", totalAtt);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("startDate", "xxxx년 xx월 xx일");
-		model.addAttribute("endDate", "xxxx년 xx월 xx일");
 		
 		LOGGER.debug("attModAppList ended");
 		
@@ -135,7 +233,7 @@ public class EzAttitudeKMSController {
 	
 	@RequestMapping(value="/ezAttitude/getAttModAppList.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
 	@ResponseBody
-	public JSONArray getAttModAppList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
+	public JSONObject getAttModAppList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
 			@RequestParam(required=false)String apprUserName,
 			@RequestParam(required=false)String startDate,
 			@RequestParam(required=false)String endDate) throws Exception {
@@ -179,17 +277,22 @@ public class EzAttitudeKMSController {
 		String status = resultBody.get("status").toString();
 		
 		JSONObject data = new JSONObject();
+		JSONObject resultj = new JSONObject();
 		JSONArray list = new JSONArray();
 		
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
 			list = (JSONArray) data.get("list");
+			resultj.put("list", list);
 		}
 		
 		for (int i = 0 ; i < list.size(); i++ ) {
 			LOGGER.debug(list.get(i).toString());
 		}
 		
-		return list;
+		resultj.put("startDate", startDate);
+		resultj.put("endDate", endDate);
+		
+		return resultj;
 	}
 }

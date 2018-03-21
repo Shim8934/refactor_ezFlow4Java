@@ -66,13 +66,13 @@ public interface EzAttitudeService {
 	
 	public void updateAttitudeTypeConfig(String typeConfigList, String companyId, int tenantId) throws Exception;
 	
-	public void insertAttitudeType(String typeName, String typeName2, String imgPath, String formId, String parentId, int tenantId, String companyId) throws Exception;
+	public void insertAttitudeType(String typeId, String typeName, String typeName2, String imgPath, String formId, int tenantId, String companyId) throws Exception;
 	
 	public void insertAttitudeTypeIcon(String typeId, String fileName, String realPath, int tenantId) throws Exception;
 	
 	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId, String typeId) throws Exception;
 	
-	public void updateAttitudeType(String typeName, String typeName2, String imgPath, int tenantId, String companyId) throws Exception;
+	public void updateAttitudeType(String typeId, String typeName, String typeName2, String imgPath, int tenantId, String companyId) throws Exception;
 	
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId, String searchUserName, String searchDeptName, String pageNum, String listSize, String order) throws Exception;
 	
@@ -86,10 +86,11 @@ public interface EzAttitudeService {
 	
 	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName) throws Exception;
 	
-	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String sysLang, String offSet) throws Exception;
+	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String sysLang, String offSet, String startPoint, String endPoint) throws Exception;
 
 	public String getAttitudeTypeMaxTypeId(String companyId, int tenantId) throws Exception;
 
 	public List<AttitudeFormVO> getAttitudeFormList(int tenantId) throws Exception;
 
+	public int getUsersModiyAttCount(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String sysLang, String offSet) throws Exception;
 }

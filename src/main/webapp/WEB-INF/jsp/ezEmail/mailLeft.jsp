@@ -780,26 +780,35 @@
 		    }
 	    </script>
 		 <style type="text/css">
+		 		#myBar {		 			
+					margin-left:20px;
+				 	margin-top:-9px;
+		 		}
 				#myProgress {
 				  width: 80%;
-				  height:10px;
-				  background-color: #ddd;
+				  height:7px;
+				  background-color: white;
+				  border: 1px solid #ddd;
 				  overflow:hidden;
 				}
 				.myBar_red {
-				  height: 10px;
+				  height: 7px;
+				  border: 1px solid #ee0606;
 				  background-color: #ff1616;
 				}
 				.myBar_orange {
-				  height: 10px;
+				  height: 7px;
+				  border: 1px solid #ee5e00;
 				  background-color: #ff7f00;
 				}
 				.myBar_yellow {
-				  height: 10px;
+				  height: 7px;
+				  border: 1px solid #eea600;
 				  background-color: #ffb600;
 				}
 				.myBar_green {
-				  height: 10px;
+				  height: 7px;
+				  border: 1px solid #2C8F30;
 				  background-color: #4CAF50;
 				}
 			</style>
@@ -828,16 +837,17 @@
 	        <ul>
 	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #dedede; overflow: auto; padding-left: 20px;" id="AddressTreeView"></div>
 	            <li><span id='Address_Search' onclick="address_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000042" /></span></li>
-	            <li evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
-	        </ul>
-	        <h3><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
-	        
+	            <li style="border-bottom-color:#dedede" evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
+	        </ul>	        
 	    	<!-- 수정 수아 재은 -->
-		     <div id='myProgress' style='margin-left:20px;'>
-		    	<div id='myBar'></div>
+	    	<div style="border:1px solid #ddd;border-radius:3px;margin:10px 10px 2px;background-color: white">
+			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
+			    <div style="width:80%">
+			    	<div id='myBar'></div>
+			    </div>	
+			    <div style='text-align:center; margin-top:10px;margin-bottom:5px;font-weight: bold;font-family: dotum;' class="volumes"></div>
 		    </div>
-		    <div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div>
-	        
+	        <h3 style="border-top:0px"><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>
   				<span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>

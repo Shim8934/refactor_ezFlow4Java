@@ -181,13 +181,20 @@
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
-			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offSet# MINUTE), '%Y-%m-%d') >= #startDate# 
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="endDate" prepend="and">
 			<![CDATA[
-			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offSet# MINUTE), '%Y-%m-%d') <= #endDate#
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
 			]]>
+		</isNotEmpty>
+		<isNotEmpty property="startPoint" prepend="limit">
+			<isNotEmpty property="endPoint">
+				<![CDATA[
+					#startPoint#, #endPoint#
+				]]>
+			</isNotEmpty>
 		</isNotEmpty>
 	</sql>
 
@@ -195,7 +202,7 @@
 		<![CDATA[
 			SELECT
 					a.attitude_id as ATTITUDE_ID,
-					a.change_date as CHANGE_DATE,
+					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
 					a.appr_user_name as APPR_USER_NAME,
 					b.start_date as START_DATE,
 					a.appr_status as APPR_STATUS
@@ -253,5 +260,25 @@
 			GROUP BY
 				TYPE_ID
 		]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.getUsersModiyAttCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+					count(*)
+			FROM 
+				jmocha.tbl_attitude_modappl a 
+			inner 
+				join tbl_attitude b 
+			on 
+				a.ATTITUDE_ID = b.ATTITUDE_ID
+			where 
+				a.COMPANY_ID = #companyId#
+			and 
+				a.TENANT_ID = #tenantId#
+			and 
+				a.WRITER_ID = #userId#
+		]]>
+		<include refid="ezAttitudeDAO.searchQuery"/>
 	</select>
 </sqlMap>
