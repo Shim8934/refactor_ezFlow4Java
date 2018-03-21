@@ -157,7 +157,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [GET] 왼쪽 슬라이드 메뉴에 편지함 목록 조회, 메일 이동 시 편지함 목록 출력
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object mMailFolderList(HttpServletRequest request, @PathVariable String userId, @RequestParam(value="folderId", required=false) String folderId) {
 		LOGGER.debug("MOBILE G/W MAIL mMailFolderList started.");		
 		LOGGER.debug("userId=" + userId + ",folderId=" + folderId);
@@ -254,7 +254,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [GET] (받은,보낸,임시,지운,개인,기타) 편지함 메일 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object mMailFolderMailList(HttpServletRequest request, @PathVariable String folderId, @PathVariable String userId, 
 			@RequestParam(value="start", required=true) String start,
 			@RequestParam(value="end", required=true) String end,
@@ -627,7 +627,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [POST] 쓰기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/write/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/write/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public Object mMailWrite(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject){
 		LOGGER.debug("MOBILE G/W MAIL mMailWrite started.");
 		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
@@ -1253,7 +1253,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [POST] 첨부파일 업로드
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/mails/attachs/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/mails/attachs/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public Object mMailFileUpload(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mMailFileUpload started.");
 		LOGGER.debug("userId=" + userId);
@@ -1507,7 +1507,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}		
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/mails/attachsmail/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/mails/attachsmail/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public Object mailInterAttach(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mailInterAttach started.");
@@ -1775,7 +1775,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 */
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/mails/deletesmail/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/mails/deletesmail/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public Object mailDelInterAttach(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mailDelInterAttach started.");
@@ -1918,7 +1918,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [POST] 메일발송(send) & 임시보관함 저장(save)
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/mail-send/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/mail-send/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public Object mMailSend(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {
 		LOGGER.debug("MOBILE G/W MAIL mMailSend started.");
 		LOGGER.debug("userId=" + userId);
@@ -2738,7 +2738,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [GET] 메일 읽기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object mMailRead(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mMailRead started.");
 		LOGGER.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
@@ -3214,7 +3214,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [GET] 파일 다운로드
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/attach/{index}/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/attach/{index}/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object mMailFileDown(HttpServletRequest request,
 			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mMailFileDown started.");
@@ -3355,7 +3355,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 메일 인라인 이미지 읽어오기 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/inlineattach/{index}/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/inlineattach/{index}/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object downloadInline(HttpServletRequest request,
 			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL downloadInline started.");
@@ -3448,7 +3448,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [PUT] 메일 이동 
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/move/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/move/users/{userId:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public Object mMailMove(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId,
 			@RequestBody JSONObject jsonobject) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mMailMove started.");
@@ -3523,7 +3523,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [PUT] 읽은 상태 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public Object mMailStatusChange(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId,
 			@RequestBody JSONObject jsonobject) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mMailStatusChange started.");
@@ -3604,7 +3604,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * @return 
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public Object mMailDelete(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mMailDelete started.");
 		LOGGER.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
@@ -3682,7 +3682,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/tempmail/{messageId}/users/{userId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/tempmail/{messageId}/users/{userId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public Object mTempMailDelete(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mTempMailDelete started.");
 		LOGGER.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
@@ -3756,7 +3756,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/write/checkname/users/{userId}", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/write/checkname/users/{userId:.+}", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
 	public Object mailNameCheck(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {		
 		LOGGER.debug("MOBILE G/W MAIL mailNameCheck started.");
 		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
