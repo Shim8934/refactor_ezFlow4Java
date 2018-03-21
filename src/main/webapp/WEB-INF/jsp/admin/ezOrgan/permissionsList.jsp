@@ -476,6 +476,7 @@
 	                <c:if test="${approvalForDoc == 'Y'}">
 	                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
 	                </c:if>
+	                <p id="Permission_sub10"><span divname="wa" id="1tab11">근태관리자</span></p>
 		        </div>
 		    </div>
 		
