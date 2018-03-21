@@ -78,48 +78,50 @@ public class EzLadderGWController {
 	}
 	
 	@RequestMapping(value = "/ladder/ladder-list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
-	public JSONObject gwladderList(@PathVariable String userId, HttpServletRequest request) {
+	public JSONObject gwladderList(@PathVariable String userId, LadderVO vo, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [GET /ladder/ladder-list/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		int page = Integer.parseInt(request.getParameter("currPage"));
 		String mode = request.getParameter("mode");
-		String tenantId = request.getParameter("tenantId");
 		String searchSelect = request.getParameter("searchSelect");
 		String searchInput = request.getParameter("searchInput");
+
 		
 		logger.debug("mode : " + mode);
 		logger.debug("currPage : " + page);
 		logger.debug("searchSelect : " + searchSelect);
-		logger.debug("searchInput : " + searchInput);
-		
+		logger.debug("searchInput : " + searchInput);	
+		vo.setUserId(userId);
+
+	
 		int totalLadder = 0;
 		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
 		
 		try {
 			List<LadderVO> list;
-			if(searchSelect.equals("none")) {	// 비검색
+			if(searchSelect.equals("")) {	// 비검색
 				if(mode.equals("part")){		// 일부 참여자 선택
-					totalLadder = ezLadderService.partLadderCount(userId, tenantId);
+					totalLadder = ezLadderService.partLadderCount(vo);
 					pages = paging(page, totalLadder);
-					list = ezLadderService.getPartLadderList(userId, tenantId, pages[1], pages[2]);
+					list = ezLadderService.getPartLadderList(vo, pages[1], pages[2]);
 				} else if(mode.equals("pre")) { // 이전 사다리 리스트 출력 
-					totalLadder = ezLadderService.ladderCount(userId, tenantId, mode);
+					totalLadder = ezLadderService.ladderCount(vo, mode);
 					pages = paging(page, totalLadder);
-					list = ezLadderService.getLadderList(userId , tenantId, pages[1], pages[2], mode);
+					list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode);
 				} else {						// 전체 참여자 선택
-					totalLadder = ezLadderService.ladderCount(userId, tenantId, mode);
+					totalLadder = ezLadderService.ladderCount(vo, mode);
 					pages = paging(page, totalLadder);
-					list = ezLadderService.getLadderList(userId , tenantId, pages[1], pages[2], mode);
+					list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode);
 				}
 			} else {							// 검색
 				List<String> allData = new ArrayList<String>();
 				allData.add(searchSelect);
 				allData.add(searchInput);
 				allData.add(mode);
-				totalLadder = ezLadderService.searchLadderCount(userId, tenantId, allData);
+				totalLadder = ezLadderService.searchLadderCount(vo, allData);
 				pages = paging(page, totalLadder);
-				list = ezLadderService.searchLadderList(userId, tenantId, allData, pages[1], pages[2]);
+				list = ezLadderService.searchLadderList(vo, allData, pages[1], pages[2]);
 			}
 		
 			result.put("status", "ok");
@@ -420,15 +422,17 @@ public class EzLadderGWController {
 	 * 사디리 게임 조회 
 	 */
 	@RequestMapping(value = "ladder/ladderGame/{ladderId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
-	public JSONObject gwGetLadderGame(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request) {
+	public JSONObject gwGetLadderGame(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request, LadderVO ladVO) {
 		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
 		
 		int ladId = Integer.parseInt(ladderId);
 		JSONObject result = new JSONObject();
-		String tenantId = request.getParameter("tenantId");
+		
+
+		ladVO.setLadderId(ladId);
 		try {
-			LadderVO vo = ezLadderService.getLadderGame(tenantId, ladId);
-			List<LadderLineVO> list = ezLadderService.getLadderLineParticipant(tenantId, ladId);
+			LadderVO vo = ezLadderService.getLadderGame(ladVO);
+			List<LadderLineVO> list = ezLadderService.getLadderLineParticipant(ladVO);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -517,13 +521,23 @@ public class EzLadderGWController {
 	/**
 	 * 사다리게임 시작
 	 */
-	@RequestMapping(value = "ladder/ladders/{allData}/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
-	public JSONObject gwSetLadderStart(@PathVariable String ladderId , @PathVariable String writerId) {
-		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId+ "users/" + writerId + "] started.");
-		
+	@RequestMapping(value = "ladder/start/{ladderId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
+	public JSONObject gwSetLadderStart(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request) {
+		logger.debug("web G/W LADDER [PUT /ladder/start/" + ladderId+ "/users/" + userId + "] started.");
+	
 		JSONObject result = new JSONObject();
-		
+		int ladId = Integer.parseInt(ladderId);
+		int size = Integer.parseInt(request.getParameter("size"));
+		int lineCnt = Integer.parseInt(request.getParameter("lineCnt"));
+		String tenantId = request.getParameter("tenantId");
+		logger.debug("ladderId : " + ladderId);
+		logger.debug("size : " + size);
+		logger.debug("lineCnt : " + lineCnt);
+		logger.debug("tenantId : " + tenantId);
+	
 		try {
+			
+			ezLadderService.setLadderStart(ladId, tenantId, size, lineCnt);
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", null);
@@ -532,7 +546,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId + "users/" + writerId + "] ended.");
+		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId + "users/" + userId + "] ended.");
 		
 		return result;
 	}

@@ -117,4 +117,7 @@ public class EzLadderDAO extends EgovAbstractDAO {
 		delete("EzLadderDAO.deleteLadderBMUserAll", bmGroupVO);
 	}
 
+	public void updateLadderStart(Map<String, Object> map) throws Exception {
+		update("EzLadderDAO.updateLadderStart", map);
+	}
 }

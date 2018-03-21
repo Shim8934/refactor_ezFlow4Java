@@ -20,7 +20,9 @@
 		var currPage = "${currPage}";
 		var back = "back";
 		var allData = [];
-		
+		var size = "${ fn:length(list)}";
+		var lineCnt = "${vo.lineCnt}"
+
 		/** 180320 추가 : 사다리 재사용 */
 		$(function() {
 			$("#usePreladder").on("click", function() {
@@ -39,7 +41,14 @@
 		
 		/* function reuse(idx) {
 			if (confirm('재사용하시겠습니까?')) {
-				window.location.href= '/ezLadder/setLadder.do?type=reuse&ladderId=' + ${vo.ladderId};
+				window.location.href= '/ezLadder/setLadder.do?type=reuse&ladderId=' + idx;
+			}
+		}
+		
+		function start(idx) {
+			allData = [idx, searchSelect, searchInput, mode, currPage, size, lineCnt ];	
+			if (confirm('시작하시겠습니까?')) {
+				window.location.href= '/ezladder/setLadderStart.do?allData=' + allData;
 			}
 		} */
 	</script>
@@ -56,6 +65,14 @@
 		    border : 0;
 		    float: left;
 		    text-align: center;
+		}
+		
+		.blackBox {
+			width:100%;height:500px;
+			border:30px solid transparent; 
+			color:black;
+			background: #010;
+			border-color:#010;
 		}
 	</style>
 </head>
@@ -89,8 +106,6 @@
 					<td colspan="4" style="height: 700px; padding: 10px 0px;">
 						<div class="wrap center" style="height: 100%; width: 100%;">
 							<div id="ladderLineBox" style="height: 100%; width: 100%; border: 1px solid gray">
-								<ul id="attendantList"></ul>
-								<ul id="itemList"></ul>
 								<c:choose>
 									<c:when test="${vo.status eq 0 }">
 										<%@ include file="include/ladderWait.jsp"%> 

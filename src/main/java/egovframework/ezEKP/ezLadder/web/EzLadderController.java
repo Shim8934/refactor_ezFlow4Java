@@ -93,11 +93,13 @@ public class EzLadderController {
 		RestTemplate rest = new RestTemplate();
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-									.queryParam("tenantId", userInfo.getTenantId())
+									.queryParam("tenant_id", userInfo.getTenantId())
 									.queryParam("mode", mode)
 									.queryParam("currPage", currPage)
 									.queryParam("searchSelect", searchSelect)
-									.queryParam("searchInput", searchInput);
+									.queryParam("searchInput", searchInput)
+									.queryParam("offset", userInfo.getOffset())
+									.queryParam("lang", userInfo.getLang());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -561,7 +563,10 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenant_id", userInfo.getTenantId())
+				.queryParam("offset", userInfo.getOffset())
+				.queryParam("lang", userInfo.getLang());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
@@ -630,14 +635,13 @@ public class EzLadderController {
 										.queryParam("searchInput", allData.get(2))
 										.queryParam("mode", allData.get(3))
 										.queryParam("currPage", allData.get(4))
-										.queryParam("tenantId", userInfo.getTenantId());
+										.queryParam("tenant_Id", userInfo.getTenantId());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		
-		JSONArray list = new JSONArray();
 		String status = jsonResult.get("status").toString();
 
 		if (status.equals("ok")) {
@@ -701,12 +705,20 @@ public class EzLadderController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezladder/setLadderStart.do")
-	public String setLadderStart(@CookieValue("loginCookie") String loginCookie, String ladderId,  String startDate,  HttpServletRequest request, Model model) throws Exception {
-		logger.debug("ezLadder/setLadderStart.do started.");
+	public String setLadderStart(@CookieValue("loginCookie") String loginCookie,  String[] allData, String size, String lineCnt, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("ezLadder/setLadderStart started.");
+		logger.debug("ladderId : " + allData[0]);
+		logger.debug("searchSelect : " + allData[1]);
+		logger.debug("searchInput " + allData[2]);
+		logger.debug("mode : " + allData[3]);
+		logger.debug("currPage : " + allData[4]);
+		logger.debug("size : " + allData[5]);
+		logger.debug("lineCnt : " + allData[6]);
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
+		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladders/" + ladderId + "users/" + userInfo.getId();
+		String url = gwServerUrl + "/ladder/start/" + allData[0] + "/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -715,26 +727,29 @@ public class EzLadderController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		RestTemplate rest = new RestTemplate();
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		System.out.println(userInfo.getTenantId());
+		System.out.println(userInfo.getOffset());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+							.queryParam("tenantId", userInfo.getTenantId())
+							.queryParam("size", allData[5])
+							.queryParam("lineCnt", allData[6]);
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		
-		JSONArray list = new JSONArray();
 		String status = jsonResult.get("status").toString();
 	
+		logger.debug("ezLadder/setLadderStart ended.");
+		
 		if (status.equals("ok")) {
-			list = (JSONArray) jsonResult.get("data");
-			
-			model.addAttribute("list", list);
+			// redirect 수정
+			return "redirect:/ezLadder/getLadderGame.do";
 		} else {
 			return "error";
 		}
 		
-		logger.debug("ezLadder/setLadderStart.do ended.");
-		return "json";
+		
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -34,11 +35,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 	private CommonUtil commonUtil;
 	
 	@Override
-	public int ladderCount(String userId, String tenantId, String mode) throws Exception {
+	public int ladderCount(LadderVO vo, String mode) throws Exception {
 		logger.debug("ladderCount started.");		// 비검색 전체
 		Map<String,Object> map = new HashMap<String, Object>();	
-		map.put("userId", userId);
-		map.put("tenantId", tenantId);
+		map.put("userId", vo.getUserId());
+		map.put("tenantId", vo.getTenant_id());
 		map.put("mode", mode);
 		int totalLadder = ezLadderDAO.getLadderCount(map);
 		logger.debug("totalLadder : " + totalLadder);
@@ -47,11 +48,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public int partLadderCount(String userId, String tenantId) throws Exception {
+	public int partLadderCount(LadderVO vo) throws Exception {
 		logger.debug("partLadderCount started.");	// 비검색 참여자
 		Map<String,Object> map = new HashMap<String, Object>();	
-		map.put("userId", userId);
-		map.put("tenantId", tenantId);
+		map.put("userId", vo.getUserId());
+		map.put("tenantId", vo.getTenant_id());
 		int totalLadder = ezLadderDAO.getPartLadderCount(map);
 		logger.debug("totalLadder : " + totalLadder);
 		logger.debug("partLadderCount ended.");
@@ -59,7 +60,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public int searchLadderCount(String userId, String tenantId, List<String> allData) throws Exception {
+	public int searchLadderCount(LadderVO vo, List<String> allData) throws Exception {
 		logger.debug("searchLadderCount started.");	// 검색
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -69,11 +70,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 		
 		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
 		
-		map.put("userId", userId);
+		map.put("userId", vo.getUserId());
 		map.put("searchSelect", searchSelect);
 		map.put("searchInput", searchInput);
 		map.put("mode", mode);
-		map.put("tenantId", tenantId);
+		map.put("tenantId", vo.getTenant_id());
 		
 		int totalLadder = 0;
 		if(mode.equals("part")) {		// 참여버튼 검색
@@ -88,15 +89,19 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public List<LadderVO> getLadderList(String userId, String tenantId, int startPoint, int endPoint, String mode) throws Exception {
+	public List<LadderVO> getLadderList(LadderVO vo, int startPoint, int endPoint, String mode) throws Exception {
 		logger.debug("getLadderList started.");		// 비검색 전체
+		String lang = commonUtil.getMultiData(vo.getLang(), vo.getTenant_id());
+		
 		Map<String,Object> map = new HashMap<String, Object>();	
-		map.put("userId", userId);
-		map.put("tenantId", tenantId);
+		map.put("userId", vo.getUserId());
+		map.put("tenantId", vo.getTenant_id());
 		map.put("startPoint", startPoint);
 		map.put("endPoint", endPoint);
 		map.put("mode", mode);
-		logger.debug("###mode : " + mode);
+		map.put("offset", commonUtil.getMinuteUTC(vo.getOffset()));
+		map.put("lang", lang);
+	
 		List<LadderVO> list = ezLadderDAO.getLadderList(map);
 		
 		logger.debug("getLadderList ended.");
@@ -104,13 +109,17 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public List<LadderVO> getPartLadderList(String userId, String tenantId, int startPoint, int endPoint) throws Exception {
+	public List<LadderVO> getPartLadderList(LadderVO vo, int startPoint, int endPoint) throws Exception {
 		logger.debug("getPartLadderList started.");		// 비검색 참여자
+		String lang = commonUtil.getMultiData(vo.getLang(), vo.getTenant_id());
+		
 		Map<String,Object> map = new HashMap<String, Object>();	
-		map.put("userId", userId);
-		map.put("tenantId", tenantId);
+		map.put("userId", vo.getUserId());
+		map.put("tenantId", vo.getTenant_id());
 		map.put("startPoint", startPoint);
 		map.put("endPoint", endPoint);
+		map.put("offset", commonUtil.getMinuteUTC(vo.getOffset()));
+		map.put("lang", lang);
 		List<LadderVO> list = ezLadderDAO.getPartLadderList(map);
 		
 		logger.debug("getPartLadderList ended.");
@@ -118,24 +127,25 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public List<LadderVO> searchLadderList(String userId, String tenantId, List<String> allData, int startPoint, int endPoint) throws Exception {
+	public List<LadderVO> searchLadderList(LadderVO vo, List<String> allData, int startPoint, int endPoint) throws Exception {
 		logger.debug("searchLadderList started.");		// 검색
-	
+		String lang = commonUtil.getMultiData(vo.getLang(), vo.getTenant_id());
 		Map<String,Object> map = new HashMap<String, Object>();	
 		String searchSelect = allData.get(0);
 		String searchInput = allData.get(1).trim();
 		String mode = allData.get(2);
 		
 		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
-		
-		map.put("userId", userId);
+	
+		map.put("userId", vo.getUserId());
 		map.put("searchSelect", searchSelect);
 		map.put("searchInput", searchInput);
 		map.put("mode", mode);
-		map.put("tenantId", tenantId);
+		map.put("tenantId", vo.getTenant_id());
 		map.put("startPoint", startPoint);
 		map.put("endPoint", endPoint);
-		
+		map.put("offset", commonUtil.getMinuteUTC(vo.getOffset()));
+		map.put("lang", lang);
 		
 		List<LadderVO> list = null;
 		if(mode.equals("part")) {		// 참여버튼 검색
@@ -304,20 +314,27 @@ public class EzLadderServiceImpl implements EzLadderService {
 	/** hyh */
 	
 	@Override
-	public LadderVO getLadderGame(String tenantId, int ladderId) throws Exception {	// 사다리 한개의 정보
+	public LadderVO getLadderGame(LadderVO ladVO) throws Exception {	// 사다리 한개의 정보
+		logger.debug("getLadderGame started.");
+		String lang = commonUtil.getMultiData(ladVO.getLang(), ladVO.getTenant_id());
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("ladderId", ladderId);
-		map.put("tenantId", tenantId);
+		map.put("ladderId", ladVO.getLadderId());
+		map.put("tenantId", ladVO.getTenant_id());
+		map.put("offset", commonUtil.getMinuteUTC(ladVO.getOffset()));
+		map.put("lang", lang);
 		LadderVO vo = ezLadderDAO.ladderContent(map);
+		logger.debug("getLadderGame ended.");
 		return vo;
 	}
 	
 	@Override
-	public List<LadderLineVO> getLadderLineParticipant(String tenantId, int ladderId) throws Exception {
+	public List<LadderLineVO> getLadderLineParticipant(LadderVO ladVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		logger.debug("getLadderLineParticipant started.");
-		map.put("ladderId", ladderId);
-		map.put("tenantId", tenantId);
+		String lang = commonUtil.getMultiData(ladVO.getLang(), ladVO.getTenant_id());
+		map.put("ladderId", ladVO.getLadderId());
+		map.put("tenantId", ladVO.getTenant_id());
+		map.put("lang", lang);
 		List<LadderLineVO> list = ezLadderDAO.ladderGameParticipant(map);
 		logger.debug("getLadderLineParticipant ended.");
 		return list;
@@ -332,7 +349,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 		String searchSelect = allData.get(1);
 		String searchInput = allData.get(2).trim();
 		String mode = allData.get(3);
-		
+		String deleteDate = commonUtil.getTodayUTCTime("");	// startDate UCT 타임 설정
+		System.out.println(deleteDate);
 		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
 		
 		map.put("userId", userId);
@@ -341,7 +359,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("mode", mode);
 		map.put("ladderId", ladderId);
 		map.put("tenantId", tenantId);
-		
+		map.put("deleteDate", deleteDate);
 		ezLadderDAO.deleteLadderList(map);
 		
 		logger.debug("deleteLadder ended.");
@@ -355,10 +373,95 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public void setLadderStart(int LadderId, String userId, String lineArray)
-			throws Exception {
-		// TODO Auto-generated method stub
+	public void setLadderStart(int ladderId, String tenantId, int size, int lineCnt) throws Exception {
+		logger.debug("setLadderStart started.");	
+		String startDate = commonUtil.getTodayUTCTime("");	// startDate UCT 타임 설정
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("ladderId", ladderId);
+		map.put("tenantId", tenantId);
+		map.put("startDate", startDate);
 		
+		// lineCnt를 이용해 lineArray를 구함
+		int[] lineArray = new int[lineCnt];
+		lineArray = getLineArray(size, lineCnt);
+		String line = getLine(size, lineArray);
+		
+		map.put("lineArray", line);
+		
+		ezLadderDAO.updateLadderStart(map);		// startDate, lineArray 업데이트
+		System.out.println(startDate);
+		System.out.println(ladderId);
+		System.out.println(tenantId);
+		System.out.println(line);
+		logger.debug("setLadderStart ended.");
 	}
-	
+
+	@Override
+	public int[] getLineArray(int size, int lineCnt) {
+		// height를 일단 10으로 통일함. 추후 height를 사용자 수(size)에 따라 유동적으로 줄지는 논의 필요
+		int height=10;
+		logger.debug("getLineArray started.");
+		logger.debug("size : " + size);
+		logger.debug("lineCnt : " + lineCnt);
+		Random random = new Random();
+		int[] choice = new int[lineCnt];// 선택된 선 번호
+		int jungbockCnt = 0;// 중복 카운트
+		lineCnt = 0;
+
+		while (true) {
+			int temp = random.nextInt(size * height - height);// 하나 고르기
+			boolean pass = true;// 유효성 체크
+
+			for (int i = 0; i <= lineCnt; i++) {
+				if (temp == choice[i]) {// 중복된 선이라면 false
+					pass = false;
+					break;
+				} else if (Math.abs(temp - choice[i]) == 1) {// 옆 사다리라면,
+					if (Math.abs((temp % (size - 1)) - (choice[i] % (size - 1))) == 1) {// 높이가 같다면 false
+						pass = false;
+						break;
+					}
+				}
+			}
+			if (pass == true) {// 옳은 값이면 넣어주기
+				choice[lineCnt++] = temp;
+			}
+
+			if (lineCnt == choice.length) {// 선 갯수를 만족한다면 break
+				break;
+			}
+
+			jungbockCnt++;// 만들 수 없는 사다리 배제
+			if (jungbockCnt >= 10000) {
+				jungbockCnt = 0;
+				lineCnt = 0;
+				for (int i = 0; i < choice.length; i++) {
+					choice[i] = 0;
+				}
+			}
+		}
+		logger.debug("getLineArray ended.");
+		return choice;
+	}
+
+	@Override
+	public String getLine(int size, int[] lineArray) {
+		logger.debug("getLine started.");
+		// height를 일단 10으로 통일함. 추후 height를 사용자 수(size)에 따라 유동적으로 줄지는 논의 필요
+		int height = 10;
+		String lineArr="";
+		int[] line = new int[size * height];
+		for (int i = 0; i < lineArray.length; i++) {
+			int temp = lineArray[i];
+			temp = (temp / (size - 1)) * size + temp % (size - 1);
+			line[temp] = 1;
+			line[temp + 1] = 2;
+		}
+		
+		for(int i =0; i<line.length; i++) {
+			lineArr += Integer.toString(line[i]);
+		}
+		logger.debug("getLine ended.");
+		return lineArr;
+	}
 }

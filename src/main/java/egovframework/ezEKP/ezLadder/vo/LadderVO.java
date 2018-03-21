@@ -37,6 +37,11 @@ public class LadderVO {
 	private String deleteDate;
 	/** 다국어 */
 	private String lang;
+	/** offset*/
+	private String offset;
+	/** 사용자 아이디*/
+	private String userId;
+	
 	
 	
 	public int getTenant_id() {
@@ -147,6 +152,20 @@ public class LadderVO {
 	public void setLang(String lang) {
 		this.lang = lang;
 	}
+	
+	public String getOffset() {
+		return offset;
+	}
+	public void setOffset(String offset) {
+		this.offset = offset;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	
 	@Override
 	public String toString() {
 		return "LadderVO [tenant_id=" + tenant_id + ", ladderId=" + ladderId
@@ -157,7 +176,7 @@ public class LadderVO {
 				+ ", lineCnt=" + lineCnt + ", lineArray=" + lineArray
 				+ ", deleteFlag=" + deleteFlag + ", writeDate=" + writeDate
 				+ ", startDate=" + startDate + ", deleteDate=" + deleteDate
-				+ ", lang=" + lang + "]";
+				+ ", lang=" + lang + ", offset=" + offset + ", userId=" + userId + "]";
 	}
 
 }
