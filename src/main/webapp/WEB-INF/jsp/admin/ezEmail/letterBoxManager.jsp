@@ -15,7 +15,7 @@
 	    
 	</head>
 	<body style="height: 95%; overflow:hidden;">
-	    <br><div><h3><b>편지지함 관리  · 수정 · 삭제</b></h3></div><br>
+	    <h5 style="padding: 10px 1px;">편지지함 관리  · 수정 · 삭제</h5>
 	    <div id="mainmenu">
 		    <ul class="on">
 		        <li><span onclick="addLetterBox()">&nbsp;&nbsp;+ 편지지함 <spring:message code='ezQuestion.t176'/>&nbsp;&nbsp;</span></li>
@@ -25,13 +25,28 @@
 		<div id="divTree" class="myScrollableBlock">
 		</div>
 		<div id="divInput">
-			<form id="myForm" action="/admin/ezEmail/updateLetterBox.do" method="post"><br>
-				<b><spring:message code='main.t76'/></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="display" name="displayname" size="30"><br><br>
-				<b><spring:message code='main.t76'/>(<spring:message code='ezSchedule.t4014'/>)</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="display2" name="displayname2" size="30"><br>
+			<form id="myForm" action="/admin/ezEmail/updateLetterBox.do" method="post">
+				<label for="display">
+					<b><spring:message code='main.t76'/></b>
+				</label>
+				<input type="text" id="display" name="displayname" size="30">
+				
+				<br><br>
+				
+				<label for="display2">
+					<b><spring:message code='main.t76'/>(<spring:message code='ezSchedule.t4014'/>)</b>
+				</label>
+				<input type="text" id="display2" name="displayname2" size="30">
+				
+				<br>
+				
 				<input type="hidden" id="letterbox_no" name="letterBoxNo">
 				<input type="hidden" id="parent_letterbox_no" name="parentLetterBoxNo">
 				<input type="hidden" id="company_id" name="companyID" value="${companyId}">
-				<div style="position:absolute; bottom:20px; right:50px;"><input type="button" id="submitBtn" onclick="submitClick()" value=" 확인 "></div>
+				
+				<div class="divInputBtn">
+					<input type="button" id="submitBtn" onclick="submitClick()" value=" 확인 ">
+				</div>
 			</form>
 		</div>
 		
