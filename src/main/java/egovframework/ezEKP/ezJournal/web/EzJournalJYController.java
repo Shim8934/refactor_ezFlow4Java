@@ -1,7 +1,9 @@
 package egovframework.ezEKP.ezJournal.web;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -26,32 +28,24 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezCircular.vo.CircularListVO;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezJournal.vo.JournalInfoVO;
-import egovframework.ezEKP.ezJournal.vo.JournalReceiverVO;
-import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.JsonUtil;
 
 @Controller
 public class EzJournalJYController extends EgovFileMngUtil {
-
+	public static final int BUFF_SIZE = 2048;
+	
 	private static final Logger logger = LoggerFactory.getLogger(EzJournalJYController.class);
 	
 	@Autowired
@@ -59,9 +53,6 @@ public class EzJournalJYController extends EgovFileMngUtil {
 
 	@Autowired
 	private Properties config;
-	
-	@Autowired
-	private EzCommonService ezCommonService;
 	
 	/**
 	 * 업무일지 작성 화면 호출
@@ -875,22 +866,27 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 업무일지 리스트삭제
+	 * 업무일지 삭제 (한건 또는 여러건)
 	 */
-	@RequestMapping(value = "/ezJournal/journalDeleteList.do")
+	@RequestMapping(value = "/ezJournal/journalDelete.do")
 	@ResponseBody
 	public void journalDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("journalDelete started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		String listType = request.getParameter("listType");
-		String journalIdList = request.getParameter("journalIdList");
+		String journalId = request.getParameter("journalId");
+		String listType = "";
+		logger.debug("journalId는? : " + journalId);
+		
+		if (request.getParameter("listType") != null) {
+			listType = request.getParameter("listType");
+		}
 		
 		JSONObject param = new JSONObject();
 		param.put("userId", userInfo.getId());
 		param.put("listType", listType);
-		param.put("journalIdList", journalIdList);
+		param.put("journalId", journalId);
 		
 		String restUrl = "/rest/ezjournal/journals";
 		JSONObject result = new JSONObject();
@@ -910,7 +906,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	 * 업무일지 첨부파일 다운로드
 	 */
 	@RequestMapping(value = "/ezJournal/journalAttachDown.do")
-	public void journalAttachDown(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public void journalAttachDown(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("journalAttachDown started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -933,11 +929,62 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) result.get("data");
+			String bytes = (String) data.get("bytes");
+			int fileSize = ((Number) data.get("fileSize")).intValue();
 			
+			String mimetype = "application/octet-stream";
+		    byte[] tempBytes = Base64.getDecoder().decode(bytes);
+		    
+		    fileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), fileName);
+		    
+		    try (InputStream is = new ByteArrayInputStream(tempBytes)) {
+		    	response.setBufferSize(BUFF_SIZE);
+		    	response.setContentType(mimetype);
+		    	response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+		    	response.setContentLength(fileSize);
+		    	
+		    	FileCopyUtils.copy(is, response.getOutputStream());
+		    	
+		    	response.getOutputStream().flush();
+		    	response.getOutputStream().close();
+			} catch (Exception e) {
+				logger.debug("error");
+			}
 		}
 		
 		logger.debug("journalAttachDown ended");
 	}
 	
+	/**
+	 * 환경설정 화면 호출
+	 */
+	@RequestMapping(value = "/ezJournal/journalConfig.do")
+	public String journalConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+		logger.debug("journalConfig started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String userId = userInfo.getId();
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String restUrl = "/rest/ezjournal/users/" + userId + "/options";
+		JSONObject result = new JSONObject();
+		
+		result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject journalEnv = (JSONObject) result.get("data");
+			logger.debug("journalEnv:" + journalEnv);
+			model.addAttribute("journalEnv", journalEnv);
+		}
+		
+		logger.debug("journalConfig ended");
+		
+		return "/ezJournal/journalConfig";
+	}
 	
 }

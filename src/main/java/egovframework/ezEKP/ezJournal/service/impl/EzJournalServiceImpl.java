@@ -26,7 +26,6 @@ import egovframework.ezEKP.ezJournal.dao.EzJournalDAO;
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
 import egovframework.ezEKP.ezJournal.vo.DeptInfoVO;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
-import egovframework.ezEKP.ezJournal.vo.JournalAttachVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
@@ -584,22 +583,6 @@ public class EzJournalServiceImpl implements EzJournalService{
 		logger.debug("getJournal ended");
 		
 		return result;
-	}
-
-	@Override
-	public List<JournalAttachVO> getAttachList(String journalId, int tenantId) throws Exception {
-		logger.debug("getAttachList started");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("journalId", journalId);
-		map.put("tenantId", tenantId);
-		logger.debug("getAttachList 맵확인 : " + map);
-		
-		List<JournalAttachVO> fileList = ezJournalDAO.getAttachList(map);
-		
-		logger.debug("getAttachList ended");
-		
-		return fileList;
 	}
 
 	@Override

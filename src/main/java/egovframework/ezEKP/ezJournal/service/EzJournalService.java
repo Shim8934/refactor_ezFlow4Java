@@ -7,7 +7,6 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
-import egovframework.ezEKP.ezJournal.vo.JournalAttachVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
@@ -255,15 +254,6 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public JournalVO getJournal(String journalId, String userId, String viewDate, String tenantId) throws Exception;
-
-	/**
-	 * 첨부파일 리스트 가져오기
-	 * @param journalId
-	 * @param tenantId
-	 * @return
-	 * @throws Exception
-	 */
-	public List<JournalAttachVO> getAttachList(String journalId, int tenantId) throws Exception;
 
 	/**
 	 * 일지 저장하기

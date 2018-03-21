@@ -95,6 +95,7 @@
 			function getJournalForm(formId) {
 				var jsonString = JSON.stringify({"mode" : mode,"formId" : formId,"typeId" : typeId,"journalIdList" : opener.journalIdList});
 				console.log("formId확인 :" + formId);
+				selFormId = formId;
 				if (mode == "temp" || mode == "reuse") {
 					if (!confirm("양식 변경시 저장된 내용은 사라집니다.")) {
 						// 취소시 현재의 타입과 양식을 선택하게해야함..
@@ -410,7 +411,6 @@
 	                cache: false,
 	                success: function(data) {	   
 		            	alert("<spring:message code='ezJournal.t137'/>");
-		                  
 		             	opener.setJournalList();
 	          			window.close();
 	                },
@@ -456,9 +456,6 @@
 	    </script>
 	</head>
 	<body class="popup" style="height: 97%;" ondragover="bodydragover(event)">
-	
-	 
-	 
 	    <table class="layout" style="width: 100%;">
 	        <tr>
 	            <td style="height: 20px">

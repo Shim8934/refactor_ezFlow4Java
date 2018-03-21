@@ -26,9 +26,10 @@
 					url=url+"&typeId="+typeId;
 				}
 				window.open(url,"right");
+				setRecvCount();
 			}
 	        
-	        function setRecvCount(){
+	        function setRecvCount() {
         		$.ajax({
 	   				type:"post",
 	   				url:"/ezJournal/leftRecvCount.do",
@@ -36,6 +37,11 @@
 	   					$("#recvCount").text(data);
 	   				}
 	   			});
+	        }
+	        
+	        function journalConfig() {
+	        	window.parent.frames["right"].location.href = "/ezJournal/journalConfig.do";
+	        	setRecvCount();
 	        }
 	        
 	    </script>
@@ -71,7 +77,7 @@
 		    <h2><span listType='temp' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>
 		    <ul>
 		    </ul>
-	        <h3><span listType='journalEnv' onClick="" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t53'/></span></h3>
+	        <h3><span listType='journalEnv' onClick="journalConfig()" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t53'/></span></h3>
 		</div>		
 	    <script type="text/javascript">
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");

@@ -691,13 +691,14 @@
 						type : "POST",
 						dataType : "text",
 						async : "false",
-						url : "/ezJournal/journalDeleteList.do",
+						url : "/ezJournal/journalDelete.do",
 						data : {
 							listType : listType,
-							journalIdList : JSON.stringify(journalIdList)
+							journalId : JSON.stringify(journalIdList)
 						},
 						success : function() {
 							alert("<spring:message code='ezJournal.t138'/>");
+							setJournalList();
 						},
 						error : function() {
 							alert("<spring:message code='ezJournal.t149'/>");
