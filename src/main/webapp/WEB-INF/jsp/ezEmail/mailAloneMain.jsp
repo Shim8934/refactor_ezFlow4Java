@@ -27,7 +27,9 @@
 			var topHeight = "100";
 			var topUrl = "/ezEmail/mailAloneTop.do";
 			var mainUrl = "/ezEmail/mailMain.do";
-
+			
+			topHeight = "104";
+			
 		 	window.onresize = function () {
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("mainFrame").style.height = MainHeight + "px";
@@ -39,8 +41,8 @@
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
-		<div style="height:100px"><iframe src="/ezEmail/mailAloneTop.do" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe></div>
-		<iframe src="/ezEmail/mailMain.do" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe>
+		<div style="height:104px"><iframe src="/ezEmail/mailAloneTop.do" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;min-height:400px;" frameborder="0"></iframe></div>
+		<iframe src="/ezEmail/mailMain.do" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;height:100%;" frameborder="0"></iframe>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
     		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
@@ -48,7 +50,8 @@
 	</body>
 	<script type="text/javascript">
     	var Main_DialogArguments = new Array();
-    	var MainHeight = document.documentElement.clientHeight - parseInt("100");
+    	var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
+    	/* var MainHeight = document.documentElement.clientHeight - parseInt("100"); */
     	document.getElementById("mainFrame").style.height = MainHeight + "px";
     	
 	</script>

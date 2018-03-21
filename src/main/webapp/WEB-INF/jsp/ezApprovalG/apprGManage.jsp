@@ -1197,7 +1197,7 @@
 		            var width = window.screen.availWidth;
 		            var left = (parseInt(width) - 600) / 2;
 		            var top = (parseInt(heigth) - 270) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=793px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    function GetBujaeFlag() {
@@ -1280,7 +1280,7 @@
 		        var top = 0;
 		        left = (parseInt(width) - parseInt(wWeigth)) / 2;
 		        top = (parseInt(heigth) - parseInt(wHeigth)) / 2;
-		        window.open("secondApprovalInfo.do", '', "status=0,menubar=0,scrollbars=0,resizable=1,height=310,width=410,top=" + top + ",left =" + left);
+		        window.open("secondApprovalInfo.do", '', "status=0,menubar=0,scrollbars=0,resizable=1,height=220,width=468,top=" + top + ",left =" + left);
 		    }
 		    function TextReplace(pStr, pStr1, pStr2) {
 		        TextReplace = pStr.replace(pStr1, pStr2);
@@ -1306,8 +1306,8 @@
 		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
 		        }
 		        
-		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=600px,height=450px";
-		        feature = feature + GetOpenPosition(600, 450);
+		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=450px";
+		        feature = feature + GetOpenPosition(580, 450);
 		        window.open(url, "", feature);
 		    }
 		
@@ -1701,11 +1701,11 @@
 		<h1>
 			<span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
-		        <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezApprovalG.t106'/></label>
-			    <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code='ezApprovalG.t445'/></label>
+		        <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1"><spring:message code='ezApprovalG.t106'/></label>
+			    <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2"><spring:message code='ezApprovalG.t445'/></label>
 			    &nbsp;
-			    <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		        <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search()"></a>
+			    <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		        <a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		<div id="mainmenu">

@@ -75,10 +75,17 @@
 		    	containment: "#columnsbnk",
 		    	tolerance: 'pointer',
 		    	update: function() {
-					for(var i = 0; i < $('#columnsbnk li').length; i++){
+					/* for(var i = 0; i < $('#columnsbnk li').length; i++){
 						$('#columnsbnk li').eq(i).children("span").text(i + 1);
 						//$('#columnsbnk li').eq(i).removeClass("myBorder");
-					}
+					} */
+					
+					//항목 드래그 버튼으로 순서 정해주기 위해 수정.
+		    		for(var i = 0; i < $('#columnsbnk li').length; i++){
+		    		    $('#columnsbnk li').eq(i).children("span").text(i + 1);
+		    		    $('#columnsbnk li').eq(i).children("input").get(0).id = 'option'+(i+1);
+		    		    $('#columnsbnk li').eq(i).children("input").get(0).name = 'option'+(i+1);
+		    		}
 					//setBorder();
 		    	}
 				
@@ -95,7 +102,7 @@
         	var sConfigTime = null;
         	var eConfigTime = null;
 			
-			if (mode == "modify") {
+			if (mode == "modify" || mode == "reuse") {
 				//Modify the vote
 				//var questionTitle = "<c:out value='${question.title}'/>";
 				//document.getElementById("qst_title").value = questionTitle;
@@ -162,6 +169,12 @@
 				
 				//Set end date	
 				var _setDate = "<c:out value='${question.setDate}'/>";	
+				
+				//Allow sorting option.
+				var _isSorting = "<c:out value='${question.isSorting}'/>";
+				if (_isSorting == 1) {
+					$('#isSorting ').attr('checked', true);
+				}
 								
 		    	$("#Sdatepicker").datepicker({
 		        	changeMonth: true,
@@ -284,6 +297,7 @@
 				$('#anonymousVote').removeAttr('checked');	
 				$('#endDate').removeAttr('checked');			
 				$('#_dateTimePicker').hide();			
+				//$('#isSorting').removeAttr('checked');
 				//$('#receiverBttn').hide();										
 			}
 			
@@ -664,6 +678,14 @@
 	        else {
 	        	$('#multiSelectNumber').val('1');
 	        }
+	        
+	        if ($('#isSorting').is(':checked')) {
+	        	$('#hidIsSorting').val("1");	
+	        }
+	        else{
+	        	$('#hidIsSorting').val("0");	
+	        }
+	        
     		if (form_check() == false) {
         		return;
         	} 
@@ -914,6 +936,9 @@
 						<input id="anonymousVote" type="checkbox">
 						<span><spring:message code="ezPoll.t253"/></span>
 						
+						<input id="isSorting" type="checkbox">
+						<span>득표순 정렬</span>
+						
 						<input id="endDate" type="checkbox">
 						<span><spring:message code="ezPoll.t159"/></span>
 						
@@ -924,6 +949,7 @@
 							<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
 							<select id="eTimePicker"></select>						
 						</div>
+						
 					</div>
 <%-- 					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 						<input id="anonymousVote" type="checkbox">
@@ -969,6 +995,7 @@
 						<input type="text" name="hidFilePath" id="hidFilePath" value="" style="display:none">	
 						<input type="text" name="hidSetDate" id="hidSetDate" value="" style="display:none">
 						<input type="text" name="hidCreateDate" id="hidCreateDate" value="" style="display:none">		
+						<input type="text" name="hidIsSorting" id="hidIsSorting" value="" style="display:none">		
 					</div>
 					</td>
 				</tr>						

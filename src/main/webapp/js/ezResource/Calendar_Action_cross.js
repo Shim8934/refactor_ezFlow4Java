@@ -764,7 +764,8 @@ function makeTable(xmldom, pNum, dayType) {
     _span.onmouseout = new Function("onmouse_out(this);");
     var pResourceName = "";
     pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();
-    _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + encodeURIComponent(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
+    // 2018-03-12 서주연 - 2일 이상 자원예약시 자원메인 주보기에서 자원이름이 깨지는 현상 수정
+    _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
     setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[pNum]));
     _td.appendChild(_span);
     _tr.appendChild(_td);
@@ -1030,7 +1031,7 @@ function tableListControl_today() {
                             document.getElementById(pObjectId + "_" + TCnt).setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
 
                             document.getElementById(pObjectId + "_" + TCnt).style.backgroundColor = "#0090d0";
-                            document.getElementById(pObjectId + "_" + TCnt).style.border = "1px solid #0090d0";
+                            document.getElementById(pObjectId + "_" + TCnt).style.border = "1.1px solid #005980";//일보기>공유자원 td border
                             document.getElementById(pObjectId + "_" + TCnt).style.cursor = "pointer";
                             document.getElementById(pObjectId + "_" + TCnt).onmouseover = function (event) { onmouse_over_today(this, event); };
                             document.getElementById(pObjectId + "_" + TCnt).onmouseout = new Function("onmouse_out_today(this);");
@@ -1064,7 +1065,7 @@ function tableListControl_today() {
                     document.getElementById(pObjectId + "_1").setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
 
                     document.getElementById(pObjectId + "_1").style.backgroundColor = "#0090d0";
-                    document.getElementById(pObjectId + "_1").style.border = "1px solid #0090d0";
+                    document.getElementById(pObjectId + "_1").style.border = "1.1px solid #005980";//주보기?
                     document.getElementById(pObjectId + "_1").style.cursor = "pointer";
                     document.getElementById(pObjectId + "_1").onmouseover = function (event) { onmouse_over_today(this, event); };
                     document.getElementById(pObjectId + "_1").onmouseout = new Function("onmouse_out_today(this);");
@@ -1121,12 +1122,14 @@ function tableListControl_today() {
                         _TD.style.cursor = "pointer";
                         _TD.setAttribute("class", "todaytd_01");
                         _TD.align = "left";
+                        _TD.style.padding = "3px 0 3px 0"
+                        _TD.style.lineHeight = "18px";
                         _TD.onselectstart = function () { return false; };
 
                         if (title_name[k].split("/")[2] == "1")
-                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + " <br>[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         else
-                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + " <br>[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         
                         _TD.style.verticalAlign = "middle";
                         _Tr2.appendChild(_TD);
@@ -1190,7 +1193,7 @@ function tableListControl_today() {
                                     _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
                                     _TD.align = "center";
                                     _TD.style.backgroundColor = "#0090d0";
-                                    _TD.style.border = "1px solid #0090d0";
+                                    _TD.style.border = "1.1px solid #005980";
                                     _TD.style.width = Math.floor((100/48)*width_td) + "%";
                                     _TD.setAttribute("class", "todaytd_02");
                                     _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
@@ -1242,7 +1245,7 @@ function tableListControl_today() {
                             _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
                             _TD.align = "center";
                             _TD.style.backgroundColor = "#0090d0";
-                            _TD.style.border = "1px solid #0090d0";
+                            _TD.style.border = "1.1px solid #005980";//일보기>허가요청중인 자원 td border
                             _TD.style.width = 100 + "%";
                             _TD.setAttribute("class", "todaytd_02");
                             _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
@@ -1330,7 +1333,6 @@ function onmouse_out_resource(td) {
 function onmouse_over_today(td, event) {
     td.style.cursor = "pointer";
     td.style.backgroundColor = "#2876b6";
-
     showTooltip_MouseOver(td, event);
 }
 //일보기 마우스임팩트
@@ -1407,11 +1409,13 @@ function showTooltip_MouseOver(obj, e) {
 
     var tTr = document.createElement("TR");
     var tTd = document.createElement("TD");
+    tTd.style.backgroundColor = "white";
     tTd.className = "text";
-
+    
     var sTable = document.createElement("TABLE");
     var sTr = document.createElement("TR");
     var sTd = document.createElement("TD");
+    sTable.style.backgroundColor = "white";
     sTable.className = "td_list";
     sTable.setAttribute("cellpadding", "0");
     sTable.setAttribute("cellspacing", "0");

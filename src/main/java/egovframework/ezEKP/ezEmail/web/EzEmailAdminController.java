@@ -20,6 +20,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.tomcat.jni.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -119,17 +120,18 @@ public class EzEmailAdminController {
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(
 				auth.getPrimary(), auth.getTenantId());
 
-		StringBuilder listCompany = new StringBuilder();
-		for (OrganDeptVO vo : list) {
-			if (auth.getRollInfo().indexOf("c=1") > -1
-					|| vo.getCn().equals(auth.getCompanyID())) {
-				listCompany.append("<option value='" + vo.getCn() + "'>");
-				listCompany.append(vo.getDisplayName());
-				listCompany.append("</option>");
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(auth.getCompanyID())) {
+				resultList.add(vo);
 			}
 		}
-
-		model.addAttribute("listCompany", listCompany);
+		
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", auth.getCompanyID());
 		model.addAttribute("useOcs", config.getProperty("config.USE_OCS"));
 		
 		logger.debug("mailDistributionList ended.");
