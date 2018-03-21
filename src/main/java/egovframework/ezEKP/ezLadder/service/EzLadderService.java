@@ -11,12 +11,12 @@ import egovframework.ezEKP.ezLadder.vo.LadderVO;
 
 public interface EzLadderService {
 
-	public int ladderCount(String userId, String tenantId, String mode) throws Exception;
-	public int partLadderCount(String userId, String tenantId) throws Exception;
-	public int searchLadderCount(String userId, String tenantId, List<String> allData) throws Exception;
-	public List<LadderVO> getLadderList(String userId, String tenantId, int startPoint, int endPoint, String mode) throws Exception;
-	public List<LadderVO> getPartLadderList(String userId, String tenantId, int startPoint, int endPoint) throws Exception;
-	public List<LadderVO> searchLadderList(String userId, String tenantId, List<String> allData, int startPoint, int endPoint) throws Exception;
+	public int ladderCount(LadderVO vo, String mode) throws Exception;
+	public int partLadderCount(LadderVO vo) throws Exception;
+	public int searchLadderCount(LadderVO vo, List<String> allData) throws Exception;
+	public List<LadderVO> getLadderList(LadderVO vo, int startPoint, int endPoint, String mode) throws Exception;
+	public List<LadderVO> getPartLadderList(LadderVO vo, int startPoint, int endPoint) throws Exception;
+	public List<LadderVO> searchLadderList(LadderVO vo, List<String> allData, int startPoint, int endPoint) throws Exception;
 	
 	/** boh */
 	public void insertLadder(LadderVO lad, LadderLineVO ladLines) throws Exception; // 사다리 게임 만들기
@@ -39,9 +39,11 @@ public interface EzLadderService {
 	
 	/** hyh	*/
 
-	public LadderVO getLadderGame(String tenantId, int ladderId) throws Exception; // 사다리 게임 조회
-	public List<LadderLineVO> getLadderLineParticipant(String tenantId, int ladderId) throws Exception;
+	public LadderVO getLadderGame(LadderVO ladVO) throws Exception; // 사다리 게임 조회
+	public List<LadderLineVO> getLadderLineParticipant(LadderVO ladVO) throws Exception;
 	public void deleteLadderList(String userId, String tenantId, List<String> allData) throws Exception; // 사다리 삭제
 	public void setUserOrder(int LadderId, String userName1, String userName2) throws Exception; // 사용자 위치 바꾸기
-	public void setLadderStart(int LadderId, String userId, String lineArray) throws Exception;	// 사다리 게임 시작
+	public void setLadderStart(int ladderId, String tenantId, int size, int lineCnt) throws Exception;	// 사다리 게임 시작
+	public int[] getLineArray(int size, int lineCnt);	// 사다리 그려줄 선 고르기
+	public String getLine(int size, int[] lineArray);	// 사다리 방향성 넣어주기
 }

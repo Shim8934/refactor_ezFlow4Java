@@ -138,8 +138,8 @@
 				E.TYPE, 
 				E.TITLE,
 				E.WRITERID, 
-				E.WRITERNAME, 
-				E.WRITEDATE, 
+				E.WRITERNAME$lang$, 
+				DATE_FORMAT(DATE_ADD(E.WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE,
 				E.STATUS, 
 				E.SECRETFLAG, 
 				E.DELETEFLAG
@@ -220,8 +220,8 @@
 				A.TYPE, 
 				A.TITLE,
 				A.WRITERID, 
-				A.WRITERNAME, 
-				A.WRITEDATE, 
+				A.WRITERNAME$lang$, 
+				DATE_FORMAT(DATE_ADD(A.WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE,
 				A.STATUS, 
 				A.SECRETFLAG, 
 				A.DELETEFLAG
@@ -349,8 +349,8 @@
 				A.TYPE, 
 				A.TITLE,
 				A.WRITERID, 
-				A.WRITERNAME, 
-				A.WRITEDATE, 
+				A.WRITERNAME$lang$, 
+				DATE_FORMAT(DATE_ADD(A.WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE,
 				A.STATUS, 
 				A.SECRETFLAG, 
 				A.DELETEFLAG
@@ -394,8 +394,8 @@
 					A.TYPE, 
 					A.TITLE,
 					A.WRITERID, 
-					A.WRITERNAME, 
-					A.WRITEDATE, 
+					A.WRITERNAME$lang$, 
+					DATE_FORMAT(DATE_ADD(A.WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE,
 					A.STATUS, 
 					A.SECRETFLAG, 
 					A.DELETEFLAG
@@ -572,8 +572,8 @@
 				D.TYPE, 
 				D.TITLE,
 				D.WRITERID, 
-				D.WRITERNAME, 
-				D.WRITEDATE, 
+				D.WRITERNAME$lang$, 
+				DATE_FORMAT(DATE_ADD(D.WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE,
 				D.STATUS, 
 				D.SECRETFLAG, 
 				D.DELETEFLAG
@@ -625,9 +625,9 @@
 					D.LADDERID, 
 					D.TYPE, 
 					D.TITLE,
-					D.WRITERID, 
-					D.WRITERNAME, 
-					D.WRITEDATE, 
+					D.WRITERID,
+					D.WRITERNAME$lang$,
+					DATE_FORMAT(DATE_ADD(D.WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE,
 					D.STATUS, 
 					D.SECRETFLAG, 
 					D.DELETEFLAG
@@ -702,7 +702,7 @@
 			UPDATE
 				TBL_LADDER
 			SET
-				DELETEFLAG = 1
+				DELETEFLAG = 1, DELETEDATE = #deleteDate#
 			WHERE
 				WRITERID = #userId#
 			AND
@@ -719,12 +719,12 @@
 				TYPE, 
 				TITLE,
 				WRITERID, 
-				WRITERNAME, 
-				WRITEDATE, 
+				WRITERNAME$lang$, 
+				DATE_FORMAT(DATE_ADD(WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE, 
 				STATUS, 
 				SECRETFLAG, 
 				DELETEFLAG,
-				DEPTNAME,
+				DEPTNAME$lang$,
 				LINECNT
 			FROM
 				TBL_LADDER 
@@ -877,7 +877,12 @@
 	
 	<select id="EzLadderDAO.ladderGameParticipant" resultClass="LadderLineVO">
 		SELECT
-			*
+			TENANT_ID,
+			LADDERID,
+			USERNAME$lang$,
+			ITEM,
+			RESULTUSERID,
+			RESULTUSERNAME$lang$
 		FROM
 			TBL_LADDER_LINE
 		WHERE
@@ -885,5 +890,15 @@
 		AND
 			LADDERID = #ladderId#
 	</select>
-
+	
+	<update id="EzLadderDAO.updateLadderStart">
+		UPDATE 
+			TBL_LADDER
+		SET
+			LINEARRAY = #lineArray#, status = 1, STARTDATE = #startDate#
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			LADDERID = #ladderId#
+	</update>
 </sqlMap>
