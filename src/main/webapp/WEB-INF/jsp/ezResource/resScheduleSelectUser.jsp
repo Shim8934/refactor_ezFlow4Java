@@ -171,8 +171,10 @@
 		    }
 
 		    function search_click() {
-		        if (keyword.value == "") {
+		    	/* 2018-03-21 서주연 - 예약자 keyword input 공백제거 */
+		        if (keyword.value.trim() == "") {
 		            alert("<spring:message code='ezResource.t129'/>");
+		            keyword.value = "";
 		            keyword.focus();
 		            return;
 		        }
@@ -224,6 +226,7 @@
 		    	
 		        if (deptKeyword == 0) {
 		            alert("<spring:message code='ezResource.t129'/>");
+		            deptkeyword.value = "";
 		            deptkeyword.focus();
 		            return;
 		        }
