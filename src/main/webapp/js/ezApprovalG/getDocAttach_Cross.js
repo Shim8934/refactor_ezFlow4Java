@@ -140,7 +140,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                     strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
                 }             
                 else if (FileExt == "hwp") {
-                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) +
+                    openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) +
 						"&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
                     strAttach = strAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
                     strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";

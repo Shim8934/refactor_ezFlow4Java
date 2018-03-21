@@ -621,7 +621,11 @@
 		            pURL = tr.getAttribute("DATA2");
 		
 		            var formid = tr.getAttribute("DATA6");
-		            var docState =  tr.getAttribute("DATA12");
+		            if (approvalFlag == 'S' ) {
+			            var docState =  tr.getAttribute("DATA12");
+		            } else {
+			            var docState =  tr.getAttribute("DATA7");
+		            }
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
 		            var openLocation;
 		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
