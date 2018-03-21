@@ -940,8 +940,9 @@ public class EzJournalGWController {
     }
 	
 	/**
-	 * 업무일지 G/W [GET] 첨부파일 리스트
+	 * 업무일지 G/W [GET] 첨부파일 리스트 (안씀)
 	 */
+    /*
 	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject attachList(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W attachList started.");
@@ -956,9 +957,10 @@ public class EzJournalGWController {
 			
 			List<JournalAttachVO> list = ezJournalService.getAttachList(journalId, info.getTenantId());
 			
-			//파일사이즈 단위 수정
+			// 파일사이즈수정
 			String fileSize = "";
 			for (int i=0; i<list.size(); i++) {
+				
 				fileSize = list.get(i).getFileSize();
 				double fs = Double.parseDouble(fileSize);
 				
@@ -971,6 +973,7 @@ public class EzJournalGWController {
 				}
 				
 				list.get(i).setFileSize(fileSize);
+								
 				//filePath 및 fileName 인코딩
 				list.get(i).setEncodeFilePath(URLEncoder.encode(list.get(i).getFilePath(), "UTF-8"));
 				list.get(i).setEncodeFileName(URLEncoder.encode(list.get(i).getFileName(), "UTF-8"));
@@ -989,6 +992,7 @@ public class EzJournalGWController {
 	
 		return result;
 	}
+	*/
 	
 	/**
 	 * 업무일지 G/W [DELETE] 첨부파일 삭제
@@ -1062,12 +1066,28 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [GET] 첨부파일 다운로드
 	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/attachfiles/{fileId}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject downloadFile(@PathVariable String typeId, @PathVariable String journalId, @PathVariable String fileId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W downloadFile started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId + ",fileId=" + fileId);
 		
 		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String realPath = commonUtil.getRealPath(request);
+			String uploadFilePath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
+			String filePath = request.getParameter("filePath");
+			String fileName = request.getParameter("fileName");
+			
+			String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;;
+
+			
+			
+		} catch (Exception e) {
+			
+		}
 		
 		LOGGER.debug("ezJournal G/W downloadFile ended.");
 		return result;

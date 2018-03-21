@@ -592,10 +592,14 @@ public class EzJournalServiceImpl implements EzJournalService{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("journalId", journalId);
-		map.put("tenantID", tenantId);
+		map.put("tenantId", tenantId);
+		logger.debug("getAttachList 맵확인 : " + map);
+		
+		List<JournalAttachVO> fileList = ezJournalDAO.getAttachList(map);
+		
 		logger.debug("getAttachList ended");
 		
-		return ezJournalDAO.getAttachList(map);
+		return fileList;
 	}
 
 	@Override
@@ -603,6 +607,10 @@ public class EzJournalServiceImpl implements EzJournalService{
 		logger.debug("insertJournal started");
 		
 		String mode = jsonParam.get("mode").toString();
+		String isTemp = "";
+		if (jsonParam.get("isTemp") != null) {
+			isTemp = jsonParam.get("isTemp").toString();
+		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("writerId", jsonParam.get("userId"));
@@ -613,7 +621,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("deptId", deptId);
 		map.put("formId", jsonParam.get("formId"));
 		map.put("deptShare", jsonParam.get("deptShare"));
-		if (mode != null && mode.equals("temp")) {
+		if (mode != null && mode.equals("temp") || !isTemp.equals("")) {
 			map.put("journalStatus", mode);
 		}
 		
@@ -792,7 +800,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("journalId", journalId);
 		map.put("tenantId", tenantId);
 		
-		if (isTemp != null && !isTemp.equals("Y")) {
+		if (isTemp != null) {
 			map.put("isTemp", isTemp);
 			map.put("journalStatus", "");
 		}
@@ -801,7 +809,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 		
 		ezJournalDAO.updateJournal(map);
 
-		/*
+		
 		// 첨부파일 삭제 후 저장
 		ezJournalDAO.deleteJournalAttach(map);
 		
@@ -857,7 +865,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 					
 			}
 		}
-		*/
+		
 		// 수신자 삭제 후 저장
 		ezJournalDAO.deleteReceiver(map);
 		

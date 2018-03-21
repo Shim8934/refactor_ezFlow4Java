@@ -94,6 +94,15 @@
 			// 선택된 양식의 폼 호출
 			function getJournalForm(formId) {
 				var jsonString = JSON.stringify({"mode" : mode,"formId" : formId,"typeId" : typeId,"journalIdList" : opener.journalIdList});
+				console.log("formId확인 :" + formId);
+				if (mode == "temp" || mode == "reuse") {
+					if (!confirm("양식 변경시 저장된 내용은 사라집니다.")) {
+						// 취소시 현재의 타입과 양식을 선택하게해야함..
+//						$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
+						return;
+					}
+				}
+				
 				$.ajax({
 	    			type : "POST",
 	   				dataType : "json",
@@ -167,22 +176,28 @@
 	    	}
 			
 	     	
-	    	$(document).ready(function() {
+	    	window.onload = function () {
 				
 	    		if (mode == "modify" || mode == "reuse" || mode == "temp") {
 	    			$("#title").val("${journal.journalTitle}");
-	    			var receiverID = "${receiverIds}".slice(0, -2).split(", ");
-	    			var receiverName = "${receiverNames}".slice(0, -2).split(", ");
-	    			console.log("receiverId : " + receiverID);
-	    			console.log("receiverName : " + receiverName);
-	    			for (var i = 0; i < receiverID.length; i++) {
-	    				selReceiver.push({"userName" : receiverName[i], "userId" : receiverID[i]});
-	    			}
-	    			showReceiver();
+	    			var receiverID = "${receiverIds}";
+	    			var receiverName = "${receiverNames}";
 	    			
+	    			if (receiverID != null && receiverName != null) {
+	    				receiverID = receiverID.slice(0, -2).split(", ");
+	    				receiverName = receiverName.slice(0, -2).split(", ");
+		    			for (var i = 0; i < receiverID.length; i++) {
+		    				selReceiver.push({"userName" : receiverName[i], "userId" : receiverID[i]});
+		    			}
+		    			showReceiver();
+	    			}
+	    			
+	    			var fileList = '${fileList}';
+	    			console.log(fileList);
+	    			dadiframe.setAttachFileInfo(fileList);
 	    		}
 	    	
-	    	}); 
+	    	}; 
 	    
 	    
 	    	// 양식내용을 에디터에 넣어주는 작업 
@@ -215,21 +230,34 @@
 		    		opener.sumFormId = "";
 					break;
 				case 'reuse':
-					
-					break;
-				case 'modify':
-					
 					selFormId = "${formId}";
-					console.log("selFo : " + selFormId);
-					journalId = opener.journalId;
+					
 					var selectedType = $("#optType");
 					getFormList(selectedType);
 					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
-					var content = '${journal.journalContent}';
+					var content = '${content}';
 	    			message.SetEditorContent(content);
 					break;
-				case 'temp':
-					
+				case 'modify': 
+					selFormId = "${formId}";
+				//	journalId = opener.journalId;
+					var selectedType = $("#optType");
+					getFormList(selectedType);
+					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
+					$("#optType").attr("disabled", "true");
+					$("#optForm").attr("disabled", "true");
+					var content = '${content}';
+			//		content.replace(/[\r\n]/gm, "");
+	    			message.SetEditorContent(content);
+					break;
+				case 'temp': 
+					selFormId = "${formId}";
+				//	journalId = "${journalId}";
+					var selectedType = $("#optType");
+					getFormList(selectedType);
+					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
+					var content = '${content}';
+	    			message.SetEditorContent(content);
 					break;
 
 				default:
@@ -280,9 +308,9 @@
 	
 				for (var i = 0; i < filelist.length - 1; i++) {	    
 					if (i == 0) {
-						fileList = GetAttribute(filelist[i + 1], "data2");
+						fileList = GetAttribute(filelist[i + 1], "fileinfo");
 					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
 	        		}
 				}
 				
@@ -307,19 +335,19 @@
 	                },  
 	                cache: false,
 	                success: function() {	   
-	                  	alert("<spring:message code='ezCircular.t70'/>");
+	                  	alert("<spring:message code='ezJournal.t137'/>");
 	                  
 	             	  	opener.setJournalList();
           			  	window.close();
 	                },
 	                error : function() {
-	                	alert("<spring:message code='ezCircular.t102'/>");
+	                	alert("<spring:message code='ezJournal.t149'/>");
 	                }
 	 			});
 	    	}
 	    	
 	    	// 임시 저장
-		    function btn_TempSave() {
+		    function btn_TempSave(mode) {
 	        	if (doubleSubmitCheck()){
 	        		return;
 	        	}
@@ -355,9 +383,9 @@
 	
 				for (var i = 0; i < filelist.length - 1; i++) {	    
 					if (i == 0) {
-						fileList = GetAttribute(filelist[i + 1], "data2");
+						fileList = GetAttribute(filelist[i + 1], "fileinfo");
 					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
 	        		}
 				}
 				
@@ -366,7 +394,7 @@
 				var receiverID = $("#receiverID").html();
 	
 	    		$.ajax ({
-	 			   	url : '/ezJournal/saveTempJournal.do?mode=temp',
+	 			   	url : '/ezJournal/saveTempJournal.do?mode=' + mode,
 	 			   	type : 'POST',
 	                dataType : 'text',
 	                data : {	title : $("#title").val(),
@@ -381,13 +409,13 @@
 	                },  
 	                cache: false,
 	                success: function(data) {	   
-		            	alert("<spring:message code='ezCircular.t70'/>");
+		            	alert("<spring:message code='ezJournal.t137'/>");
 		                  
 		             	opener.setJournalList();
 	          			window.close();
 	                },
 	                error : function() {
-	                	alert("<spring:message code='ezCircular.t102'/>");
+	                	alert("<spring:message code='ezJournal.t149'/>");
 	                }
 	 			});
 	    	}
@@ -435,9 +463,9 @@
 	
 				for (var i = 0; i < filelist.length - 1; i++) {	    
 					if (i == 0) {
-						fileList = GetAttribute(filelist[i + 1], "data2");
+						fileList = GetAttribute(filelist[i + 1], "fileinfo");
 					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
 	        		}
 				}
 				console.log("fileList : " + fileList);
@@ -454,7 +482,7 @@
 						window.close();
 	                },
 	                error: function() {
-	                	alert("<spring:message code='ezCircular.t102'/>");	
+	                	alert("<spring:message code='ezJournal.t149'/>");	
 	                }
 				});
 			}
@@ -472,13 +500,14 @@
 	                    	<c:choose>
 	                    		<c:when test="${mode eq 'reuse'}">
 			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t73' /></span></li>
+			                        <li><span onclick="btn_TempSave('reuse')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:when>
 	                    		<c:when test="${mode eq 'modify'}">
 			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t73' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
 			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t73' /></span></li>
-			                        <li><span onclick="btn_TempSave()"><spring:message code='ezJournal.t74' /></span></li>
+			                        <li><span onclick="btn_TempSave('temp')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
 	                    </ul>

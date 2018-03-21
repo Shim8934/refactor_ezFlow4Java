@@ -1297,7 +1297,7 @@ function printpr() {
 function onbeforeprint() {
     g_documentTitle = document.title;
     document.title = title.value;
-
+    
     setNodeText(document.getElementById("printOwner"), getNodeText(document.getElementById("displayNM")));
 
     //중요도 낮음	importance1.value의 값음 schedule_add.asp 화면에서 직접가지고 온다.

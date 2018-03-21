@@ -23,6 +23,37 @@
 				console.log("formId : " + formId + ",journalId : " + journalId);
 				window.location.href = "/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=modify";
 			}
+			
+			function journalReuse() {
+				window.location.href = "/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=reuse";
+			}
+			
+			function attach_SelectAll() {
+			    var checks = document.getElementById('lstAttachLink').getElementsByTagName("input");
+			    for (var i = 0; i < checks.length; i++)
+			        checks.item(i).checked = true;
+			}
+        
+			function attach_Download() {
+			    checks = document.getElementById('lstAttachLink').getElementsByTagName("input");
+			    downloadAll(checks)
+			}
+			
+			var suffix = 0;
+			function downloadAll(checks) {
+		        if (checks.getElementsByTagName("input").item(suffix)) {
+		            if (checks.getElementsByTagName("input").item(suffix).checked) {
+		                location.href = GetAttribute(checks.getElementsByTagName("a").item(suffix++), "href");
+		                setTimeout(function () { downloadAll(checks) }, 1000);
+		            }
+		            else {
+		                suffix++;
+		                downloadAll(checks);
+		            }
+		        }
+		        else
+		            suffix = 0;
+		    }
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden; height:100%;">
@@ -43,7 +74,7 @@
 	        		<li><span onclick=''> <spring:message code='ezJournal.t103' /></span></li>
 		        	<c:if test="${journal.mine eq 'yes' }">
 <!-- 		        	재사용 -->
-	        		<li><span onclick=''> <spring:message code='ezQuestion.t700' /></span></li>
+	        		<li><span onclick='journalReuse()'> <spring:message code='ezQuestion.t700' /></span></li>
 <!-- 	        		수신확인 -->
 	        		<li><span onclick=''> <spring:message code='ezJournal.t113' />(${journal.checkRecv }/${journal.totalRecv })</span></li>
 		        	</c:if>
@@ -118,20 +149,20 @@
 		 	<tr>
 			    <td class="pad1" style="vertical-align: top; ">
 			        <table class="file">
-			        <tr>
-			          <th><spring:message code='ezBoard.t292' /></th>
+			        <tr class="pos1">
+			          <th><spring:message code='ezJournal.t105' /></th>
                       <td>
 		            	<div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;background-color:white; text-align:left">
 		            		<c:forEach items="${journal.fileList }" var="file">
 		            			<input type="checkbox" name="fileSelect" value="${file.fileName }">
 <!-- 		            			<img src="/images/image.png">  -->
-		            			<a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }">${file.fileName }&nbsp;(${file.fileSize })</a><br>
+		            			<a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileName}&typeId=${journal.typeId}&journalId=${journal.journalId}">${file.fileName }&nbsp;(${file.fileSize })</a><br>
 		            		</c:forEach>
 		            	</div>
 			          </td>
 			          <td class="pos2">
-			             <a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-			             <a class="imgbtn"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+			             <a class="imgbtn"><span style="width: 57px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+			             <a class="imgbtn"><span style="width: 57px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 			          </td>
 			          <td id="Td2" style="display:none"></td>
 			        </tr>

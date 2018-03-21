@@ -1056,10 +1056,21 @@
 //         var pLeft = (pwidth - 765) / 2;
 		var journalId = $(elem).attr("id");
 		var feature = GetOpenPosition(820, 850);
-		var Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "journalDetail",
-				"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
-				+ feature);
-		Openwin.focus();
+		var Openwin;
+		if (listType === "temp") {
+			var typeId = $(elem).attr("typeId");
+			var formId = $(elem).attr("formId");
+			Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + typeId + "&formId=" + formId + "&journalId=" + journalId + "&mode=temp", "",
+							"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
+								+ feature);
+			Openwin.focus();
+		} else {
+			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "journalDetail",
+					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
+					+ feature);
+			
+			Openwin.focus();
+		}
 	}
 	</script>
 	</body>
