@@ -367,6 +367,14 @@
 				getData();
 			}
 			
+			function refreshViewAfterUpdate() {
+				change();
+				document.getElementById("fldName").value  = "";
+				document.getElementById("fldName2").value = "";
+				document.getElementById("rangeStr").value = "";
+				updateTarget("");
+			}
+			
 			function saveChanges() {
 				if (!selectedFolder) {
 					alert("<spring:message code='ezWebFolder.t181'/>");
@@ -447,31 +455,7 @@
 					return;
 				}
 				
-				var _confirm = confirm("<spring:message code='ezWebFolder.t222' />");
-				
-				if (!_confirm) {
-					return;
-				}
-				
-				$.ajax({
-					type: "POST",
-					url: "/admin/ezWebFolder/delCompanyFolder.do",
-					data: {
-						"folderId" : selectedFolder
-					},
-					dataType: "JSON",
-					async: false,
-					success: function(data) {
-						change();
-						document.getElementById("fldName").value  = "";
-						document.getElementById("fldName2").value = "";
-						document.getElementById("rangeStr").value = "";
-						updateTarget("");
-					},
-					error: function (xhr, status, e){
-						alert("<spring:message code='ezWebFolder.t134'/>");
-					}
-				});
+				DivPopUpShow(450, 140, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder);
 			}
 			
 			function change() {
@@ -493,10 +477,7 @@
 						var result = data.result;
 						
 						if (result == "ok") {
-							change();
-							document.getElementById("fldName").value  = "";
-							document.getElementById("fldName2").value = "";
-							updateTarget("");
+							refreshViewAfterUpdate();
 						}
 						else {
 							alert("<spring:message code='ezWebFolder.t225'/>");

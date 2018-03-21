@@ -128,28 +128,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezWebFolder/deptChiefSetting.do")
 	public String deptChiefConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		/*String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/dept-chief/" + user.getId();
-		
-		HttpHeaders headers  = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		String status                 = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			String checkResult = (String) resultBody.get("data");
-			model.addAttribute("isChief", checkResult);
-		}*/
-		
 		return "ezWebFolder/deptChiefConfig";
 	}
 	
@@ -446,13 +424,14 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value="/ezWebFolder/moveFile.do", method = RequestMethod.POST)
-	public void moveFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String moveFile(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Move File is running!");
 		
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String fileId       = request.getParameter("fileId");
 		String folderId     = request.getParameter("folderId");
 		String mode         = request.getParameter("mode");
+		String privileges   = request.getParameter("privileges");
 		
 		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/filemove/fileid/" + fileId + "/modes/" + mode;
@@ -462,6 +441,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())
 										.queryParam("lang", user.getLang())
+										.queryParam("privileges", privileges)
 										.queryParam("folderId", folderId);
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -476,8 +456,15 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		String status                 = resultBody.get("status").toString();
 		
+		if (!status.equals("ok")) {
+			String reason = resultBody.get("reason").toString();
+			model.addAttribute("reason", reason);
+		}
+		
 		logger.debug("Status: " + status);
 		logger.debug("Move File finishes!");
+		
+		return "json";
 	}
 
 	@RequestMapping(value="/ezWebFolder/getFolderTree.do", method = RequestMethod.POST)

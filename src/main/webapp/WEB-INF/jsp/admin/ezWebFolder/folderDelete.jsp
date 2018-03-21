@@ -4,7 +4,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	<title>Insert title here</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
@@ -13,7 +12,7 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript">
-		var fileList = "<c:out value="${fileList}"/>";
+		var folderId = "<c:out value="${folderId}"/>";
 		
 		function wClose() {
 			parent.DivPopUpHidden();
@@ -21,33 +20,24 @@
 		}
 		
 		function afterDeleteSuccess() {
-			parent.refreshView();
+			parent.refreshViewAfterUpdate();
 			wClose();
 		}
 		
 		function ok_Click() {
 			$.ajax({
 				type: "POST",
-				url: "/ezWebFolder/deleteFile.do",
+				url: "/admin/ezWebFolder/delCompanyFolder.do",
 				data: {
-					"fileList" : fileList
+					"folderId" : folderId
 				},
 				dataType: "JSON",
-				async: true,
-				success : function(data) {
-					var reason = data.reason;
-					
-					if (reason) {
-						alert(reason);
-						afterDeleteSuccess();
-					}
-					else {
-						alert("<spring:message code='ezWebFolder.t113'/>");
-						afterDeleteSuccess();
-					}
+				async: false,
+				success: function(data) {
+					afterDeleteSuccess();
 				},
-				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t114'/>" + error);
+				error: function (xhr, status, e){
+					alert("<spring:message code='ezWebFolder.t134'/>");
 					wClose();
 				}
 			});
@@ -56,7 +46,7 @@
 </head>
 <body class="popup"> 
 	<div id="menu">
-		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t117'/></div>
+		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t246'/></div>
 	</div>
 	<div id="close">
 		<ul>
@@ -64,7 +54,7 @@
 		</ul>
 	</div>
 	
-	<div style="margin: 10px;"><spring:message code='ezWebFolder.t109'/></div>
+	<div style="margin: 10px;"><spring:message code='ezWebFolder.t222'/></div>
 	
 	<div style="margin-top: 15px;"><hr size="0" style="color:#fff; background-color:#fff; margin: 0px 10px; border-top: 1px solid #304D7F;"></div>
 	

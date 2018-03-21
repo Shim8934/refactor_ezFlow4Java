@@ -25,7 +25,10 @@
 		};
 		
 		function getData() {
-			var type = document.querySelector('input[name=treeType]:checked').value;
+			arrSubFolder   = [];
+			selectedFolder = null;
+			currentFolder  = null;
+			var type       = document.querySelector('input[name=treeType]:checked').value;
 			
 			$.ajax({
 				type: "POST",
@@ -221,8 +224,7 @@
 		
 		function afterSuccess() {
 			parent.refreshView();
-			parent.DivPopUpHidden();
-			window.close();
+			wClose();
 		}
 		
 		function fileCopy() {
@@ -247,6 +249,7 @@
 				dataType: "text",
 				async: true,
 				success : function(data, textStatus, jqXHR) {
+					alert("<spring:message code='ezWebFolder.t248'/>");
 					afterSuccess();
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
@@ -270,26 +273,28 @@
 				type: "POST",
 				url: "/ezWebFolder/moveFile.do",
 				data: {
-					"fileId"   : fileId,
-					"folderId" : selectedFolder,
-					"mode"     : "move"
+					"fileId"     : fileId,
+					"folderId"   : selectedFolder,
+					"privileges" : mode,
+					"mode"       : "move"
 				},
-				dataType: "text",
+				dataType: "JSON",
 				async: true,
-				success : function(data, textStatus, jqXHR) {
-					afterSuccess();
+				success : function(data) {
+					var reason = data.reason;
+					
+					if (reason) {
+						alert(reason);
+					}
+					else {
+						alert("<spring:message code='ezWebFolder.t247'/>");
+						afterSuccess();
+					}
 				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					alert("<spring:message code='ezWebFolder.t134'/>" + jqXHR.status + ", " + textStatus);
+				error : function(error) {
+					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			});
-		}
-		
-		function change() {
-			var selectedFolder = null;
-			var currentFolder  = null;
-			var arrSubFolder   = [];
-			getData();
 		}
 	</script>
 </head>
@@ -303,7 +308,7 @@
 		</ul>
 	</div>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
-		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
+		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="getData();">
 				<c:forEach var="item" items="${list}">
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 				</c:forEach>

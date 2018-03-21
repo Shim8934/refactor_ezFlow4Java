@@ -84,6 +84,22 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/webfolderAdminLeft";
 	}
 
+	@RequestMapping(value="/admin/ezWebFolder/deleteFolderConfirm.do")
+	public String deleteFolderConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("Folder delete confirm is running!");
+		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
+		
+		if (folderId.equals("")) {
+			logger.debug("Folder delete confirm illegal arguments!");
+			return "cmm/error/egovError";
+		}
+		
+		model.addAttribute("folderId", folderId);
+		logger.debug("Folder delete confirm finishes!");
+		
+		return "admin/ezWebFolder/folderDelete";
+	}
+
 	@RequestMapping(value="/admin/ezWebFolder/folderMoveConfirm.do")
 	public String folderMoveConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("Folder Move Confirm is running!");

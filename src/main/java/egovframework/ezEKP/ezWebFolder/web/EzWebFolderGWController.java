@@ -498,17 +498,19 @@ public class EzWebFolderGWController {
 	}
 
 	@RequestMapping(value="/rest/ezwebfolder/filemove/fileid/{fileid}/modes/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject putFileMove(@PathVariable(value="fileid") String fileId, @PathVariable(value="mode") String mode, HttpServletRequest request) {
-		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";
-		String userId       = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
-		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
-		String lang         = request.getParameter("lang")     != null ? request.getParameter("lang")     : "";
-		String folderId     = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
+	public JSONObject putFileMove(@PathVariable(value="fileid") String fileId, @PathVariable(value="mode") String mode, Locale locale, HttpServletRequest request) {
+		String offset       = request.getParameter("offset")     != null ? request.getParameter("offset")     : "";
+		String userId       = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+		String serverName   = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String lang         = request.getParameter("lang")       != null ? request.getParameter("lang")       : "";
+		String folderId     = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
+		String privileges   = request.getParameter("privileges") != null ? request.getParameter("privileges") : "";
 		JSONObject result   = new JSONObject();
 		
 		if (fileId.equals("") || fileId.equals("") || mode.equals("") || serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			result.put("code", "1");
 			return result;
 		}
@@ -523,8 +525,24 @@ public class EzWebFolderGWController {
 			FileVO fileVO    = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
 			
 			if (mode.equals("move")) {
-				//move file
-				ezWebFolderService.moveFile(fileId, folderId, tenantId);
+				//Check privileges
+				if (!privileges.equals("normal")) {
+					//move file
+					ezWebFolderService.moveFile(fileId, folderId, tenantId);
+				}
+				else {
+					if (fileVO.getCreateId().equals(userId)) {
+						//move file
+						ezWebFolderService.moveFile(fileId, folderId, tenantId);
+					}
+					else {
+						logger.debug("Privileges!");
+						result.put("status", "error");
+						result.put("reason", egovMessageSource.getMessage("ezWebFolder.t243", locale));
+						result.put("code", "1");
+						return result;
+					}
+				}
 			}
 			else {
 				//copy file
@@ -547,6 +565,7 @@ public class EzWebFolderGWController {
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 			result.put("code", 1);
 		}
 		
@@ -1183,31 +1202,19 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
+			int tenantId                 = loginService.getTenantId(serverName);
 			List<FolderUserVO> listUsers = new ArrayList<FolderUserVO>();
+			FolderVO folder              = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			String folderPath            = folder.getFolderPath();
+			folderPath                   = folderPath.substring(1, folderPath.length() - 1);
 			
 			if (mode.equals("")) {
-				int tenantId      = loginService.getTenantId(serverName);
-				FolderVO folder   = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
-				String folderPath = folder.getFolderPath();
-				folderPath        = folderPath.substring(1, folderPath.length() - 1);
 				String ancestorId = folderPath.split("\\|")[1];
 				listUsers         = ezWebFolderService.getFolderUsers(ancestorId, tenantId);
 			}
 			else {
-				LoginVO userInfo  = commonUtil.getUserForGw(userId, serverName, "", "");
-				int tenantId      = userInfo.getTenantId();
-				listUsers         = ezWebFolderService.getFolderUsers(folderId, tenantId);
-				
-				if (listUsers == null || listUsers.size() == 0) {
-					FolderVO folder            = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
-					String deptId              = folder.getOwnerId();
-					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					Date date                  = new Date();
-					String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-					String maxSeq              = ezWebFolderAdminService.getMaxFolderUserSeq(tenantId);
-					ezWebFolderAdminService.insertFolderUser(maxSeq, deptId, "dept", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
-					listUsers = ezWebFolderService.getFolderUsers(folderId, tenantId);
-				}
+				String ancestorId = folderPath.split("\\|")[0];
+				listUsers         = ezWebFolderService.getFolderUsers(ancestorId, tenantId);
 			}
 			
 			result.put("status", "ok");
@@ -1291,7 +1298,7 @@ public class EzWebFolderGWController {
 			for (FolderVO subFld : listSubFolder) {
 				if (subFld.getFolderId().equals(destFolderId)) {
 					result.put("status", "error");
-					result.put("reason", "Cannot move/copy to a sub folder!");
+					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t245", locale));
 					result.put("code", 1);
 					return result;
 				}

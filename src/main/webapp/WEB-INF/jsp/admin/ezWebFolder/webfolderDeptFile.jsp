@@ -41,7 +41,7 @@
 			
 			window.onresize = function () {
 				var divList          = document.getElementById("dragDropArea");
-				var reheight         = document.documentElement.clientHeight - 170;
+				var reheight         = document.documentElement.clientHeight - 185;
 				divList.style.height = reheight + "px";
 			};
 			
@@ -72,7 +72,7 @@
 			
 			function preProcessing() {
 				var divList          = document.getElementById("dragDropArea");
-				var reheight         = document.documentElement.clientHeight - 170;
+				var reheight         = document.documentElement.clientHeight - 185;
 				divList.style.height = reheight + "px";
 			}
 			
@@ -433,7 +433,7 @@
 			<div class="progress-bar"></div ><div class="status">0%</div>
 		</div>
 		
-		<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;">
+		<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px; overflow-y: auto;">
 			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 				<tr>
 					<th width="10px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
