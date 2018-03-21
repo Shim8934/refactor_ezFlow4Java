@@ -24,7 +24,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;import org.slf4j.Logger;
+import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -225,7 +226,10 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 		
 		try {
 			int tenantId = loginService.getTenantId(serverName);
-			ezWebFolderAdminService.updateNewAmount(userList, newValue, companyId, tenantId);
+			
+			for (String userId : userList) {
+				ezWebFolderAdminService.updateNewAmount(userId, newValue, companyId, tenantId);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -264,7 +268,9 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 				totalAmount = webfolderConfig.getTotalLimit();
 			}
 			
-			ezWebFolderAdminService.updateNewAmount(userList, totalAmount, companyId, tenantId);
+			for (String userId : userList) {
+				ezWebFolderAdminService.updateNewAmount(userId, totalAmount, companyId, tenantId);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -470,9 +476,6 @@ public class EzWebFolderGWController extends EgovFileMngUtil {
 					saveLog("C", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileType.getTypeName(), tenantId);
 				}
 			}
-			
-			//Save to database
-			//ezWebFolderService.insertListFiles(list, companyId, offset, userId, userName1, userName2, getMaxLogID(tenantId), tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
