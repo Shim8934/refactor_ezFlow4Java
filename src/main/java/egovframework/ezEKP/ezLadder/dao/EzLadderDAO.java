@@ -120,4 +120,8 @@ public class EzLadderDAO extends EgovAbstractDAO {
 	public void updateLadderStart(Map<String, Object> map) throws Exception {
 		update("EzLadderDAO.updateLadderStart", map);
 	}
+	
+	public void updateLadderResult(Map<String, Object> map) throws Exception {
+		update("EzLadderDAO.updateLadderResult", map);
+	}
 }

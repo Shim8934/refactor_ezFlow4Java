@@ -462,25 +462,14 @@ public class EzLadderGWController {
 		logger.debug("web G/W LADDER [GET /ladder/delete/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
-		String tenantId = request.getParameter("tenantId");
+		String tenant_Id = request.getParameter("tenant_Id");
+		String ladderId = request.getParameter("ladderId");
+		logger.debug("ladderId : " + ladderId );
+		logger.debug("tenant_Id : " + tenant_Id );
+
 		try {
-			
-			
-			String ladderId = request.getParameter("ladderId");
-			String searchSelect = request.getParameter("searchSelect");
-			String searchInput = request.getParameter("searchInput");
-			String mode = request.getParameter("mode");
-			int page = Integer.parseInt(request.getParameter("currPage"));
-			
-			logger.debug("ladderId : " + ladderId + ", searchSelect : " + searchSelect + ", searchInput : " + searchInput + ", mode : " + mode);
-			
-			List<String> allData = new ArrayList<String>();
-			allData.add(ladderId);
-			allData.add(searchSelect);
-			allData.add(searchInput);
-			allData.add(mode);
-			
-			ezLadderService.deleteLadderList(userId, tenantId, allData);
+	
+			ezLadderService.deleteLadderList(userId, tenant_Id, ladderId);
 
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -530,6 +519,7 @@ public class EzLadderGWController {
 		int size = Integer.parseInt(request.getParameter("size"));
 		int lineCnt = Integer.parseInt(request.getParameter("lineCnt"));
 		String tenantId = request.getParameter("tenantId");
+		String lang = request.getParameter("lang");
 		logger.debug("ladderId : " + ladderId);
 		logger.debug("size : " + size);
 		logger.debug("lineCnt : " + lineCnt);
@@ -537,7 +527,7 @@ public class EzLadderGWController {
 	
 		try {
 			
-			ezLadderService.setLadderStart(ladId, tenantId, size, lineCnt);
+			ezLadderService.setLadderStart(ladId, tenantId, size, lineCnt, lang);
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", null);
