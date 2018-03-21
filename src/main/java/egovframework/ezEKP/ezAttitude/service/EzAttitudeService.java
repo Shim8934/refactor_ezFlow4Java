@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
@@ -19,9 +20,9 @@ public interface EzAttitudeService {
 	public void insertAttitude(String writerId, String deptId, String startDate, String endDate, String region,
 			String mobile, String bizSub, String content, String ip, String typeId, String dateType, String companyId, int tenantId) throws Exception;
 	
-	public List<AttitudeVO> getAttitudeList(String pidList, String yrmh, String typeId, String UTCDate, String offset, int tenantId) throws Exception;
+	public List<AttitudeVO> getAttitudeList(String pidList, String yrmh, String typeId, String startDate, String endDate, String offset, int tenantId) throws Exception;
 	
-	public List<Object> getAttitudeStatisticsList(String pidList, String yrmh, int tenantId) throws Exception;
+	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String offset, String startDate, String endDate, int tenantId) throws Exception;
 	
 	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, int tenantId) throws Exception;
 	
