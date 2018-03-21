@@ -11,24 +11,20 @@ function add_user_change_ulsize(usernum) {
 }
 
 /** 중복 처리 팝업 */
-function checkAttendant(overlapAttendantList, addfunction) {
-	console.log("checkAttendant");
+function popSelectUsertype(attendantList, setFunc) {
+	console.log("popSelectUsertype");
    	$("#dialog").dialog({
    		modal: true,
    		buttons: [{
    			text: "조직도에서추가",
    			click: function() { // 조직도에서 추가
-   				if(typeof addfunction == "function") {
-   					addfunction(overlapAttendantList);
-   				}
+   				setFunc(attendantList, "real-xml");
    				$(this).dialog( "close" );
    			} 
    		}, {
    			text: "익명으로추가",
    			click: function() { // 익명으로 추가
-   				if(typeof addfunction == "function") {
-   					addfunction(overlapAttendantList, "anonyuser");
-   				}
+				setFunc(attendantList, "anony-xml");
    				$(this).dialog( "close" );
    			}
    		}, {
@@ -38,4 +34,35 @@ function checkAttendant(overlapAttendantList, addfunction) {
    			}
    		}]
    	}); 
+}
+
+/** 재사용 사다리 정보 가져오기 */
+function getPreLadder(ladderID) {
+	var data = [];
+	var templist = [];
+	var ladinfo = [];
+	
+	data = [ladderID, "", "", "pre", ""];
+	
+	$.ajax({
+		type: "GET",
+		url: "/ezLadder/getLadderGame.do",
+		traditional: true,
+		dataType: "json",
+		async : false,
+		data: {
+			"allData": data
+		},
+		success: function(result) {
+			ladinfo["lad"] = result.vo;
+			templist = result.list;
+		}
+	});
+	
+	ladinfo["ladline"] = [];
+	for(var i = 0; i < templist.length; i++) {
+		ladinfo["ladline"][i] = { "id": templist[i]["userId"], "name": templist[i]["userName"], "name2": templist[i]["userName2"], "item": templist[i]["item"] };
+	}
+	
+	return ladinfo;
 }

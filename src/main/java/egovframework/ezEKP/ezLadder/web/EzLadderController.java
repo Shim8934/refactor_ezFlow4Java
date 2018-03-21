@@ -153,46 +153,11 @@ public class EzLadderController {
 	 * 사다리 게임 설정 작성
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.GET)
-	public String setLadderView(@CookieValue("loginCookie") String loginCookie, String type, Model model, String ladderId, HttpServletRequest request) throws Exception {
-		logger.debug("setLadder.do started." + type);
+	public String setLadderView(@CookieValue("loginCookie") String loginCookie, String type, String ladderId, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("setLadder.do ended.");
 		
-		if(type.equals("reuse")) {
-			// 재사용 추가
-			
-			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-			String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-			String url = gwServerUrl + "/ladder/ladderGame/" + ladderId + "/users/" + userInfo.getId();
-			
-			HttpHeaders headers = new HttpHeaders();
-			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-			headers.set("x-user-host", request.getServerName());
-			
-			HttpEntity<?> entity = new HttpEntity<>(headers);
-			
-			RestTemplate rest = new RestTemplate();
-			
-			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("tenantId", userInfo.getTenantId());
-			
-			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-
-			JSONParser jp = new JSONParser();
-			JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
-			JSONArray list = new JSONArray();
-			
-			
-			String status = jsonResult.get("status").toString();
-		
-			if (status.equals("ok")) {
-				list = (JSONArray) jsonResult.get("participant");
-				model.addAttribute("id", userInfo.getId());
-				model.addAttribute("vo",jsonResult.get("data"));	// x번째 사다리 정보
-				model.addAttribute("list", list); 					// ladderLineList
-			} else {
-				return "error";
-			}
-		}
 		model.addAttribute("ladType", type);
+		model.addAttribute("ladderId", ladderId);
 		
 		return "ezLadder/setLadder";
 	}

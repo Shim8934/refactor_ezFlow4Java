@@ -66,12 +66,13 @@ function changeSpeed(speed, flag) { // 속도 변화
 	}
 }
 
-function changeUser(num, flag) { // 유저 추가
-	if(flag === "add") {
+function changeUser(num) { // 유저 추가
+	wInfo = num;
+	/*if(flag === "add") {
 		wInfo += num;
 	} else {
 		wInfo -= num;
-	}
+	}*/
 	setDefaultLad();
 }
 

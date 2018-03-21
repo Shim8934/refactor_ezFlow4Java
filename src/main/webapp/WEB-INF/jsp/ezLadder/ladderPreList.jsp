@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezLadder/ladderList.js"></script>
+		<script type="text/javascript" src="/js/ezLadder/ladderSetting.js"></script>
 		
 		<script type="text/javascript">
 			var currPage = ${currPage};
@@ -30,8 +31,7 @@
 			var back = "none";
 			var retVal;
 			var retFunc;
-			var retLad;
-			var retLadLine;
+			var retladinfo = [];
 						
 			$(function() {
 				try {
@@ -50,7 +50,7 @@
 				
 				$(document).on("click", "#myLadderList", function() {
 					var ladderID = $(this).attr("ladid");
-					getPreLadderPreview(ladderID);
+					retladinfo = getPreLadder(ladderID);
 				});
 				
 				$("#searchInput").on("keyup", function(e) {
@@ -60,33 +60,12 @@
 				});
 			});
 			
-			function getPreLadderPreview(ladderID) {
-				var allData = [];
-				allData = getLadderGame(ladderID);
-				
-				$.ajax({
-					type: "GET",
-					url: "/ezLadder/getLadderGame.do",
-					traditional: true,
-					dataType: "json",
-					data: {
-						"allData": allData
-					},
-					success: function(result) {
-						console.log(result);
-						retLad = result.vo;
-						retLadLine = result.list;
-					}
-				});
-			}
-			
 			function loadPreLadderSetting() {
-				console.log(retLad);
-				console.log(retLadLine);
-				console.log(retFunc);
+				console.log(retladinfo);
 				if(typeof retFunc !== "undefined" && retFunc !== "") {
-					retFunc(retLad, retLadLine);
+					retFunc(retladinfo["lad"], retladinfo["ladline"]);
 				}
+				
 				window.close();
 			}
 		</script>

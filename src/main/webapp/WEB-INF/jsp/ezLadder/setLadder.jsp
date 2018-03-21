@@ -20,7 +20,6 @@
 		
 		<script type="text/javascript">
 			$(function() {
-				ladder_set_init();
 				
 				$(window).resize(function() {
 					ladder_window_resize();
@@ -36,8 +35,9 @@
 					_manage_attendant();
 				});
 				$("#inputAttendant").on("keyup", function(e) {
-					if(e.keyCode == "13") {
-						check_name();
+					var inputNames = $("#inputAttendant").val();
+					if(e.keyCode == "13" && inputNames !== "") {
+						checkAttendant(inputNames);
 					}
 				});
 				$(".ladderType").on("click", function() {
@@ -102,25 +102,30 @@
 					}); */
 				});
 				
+				ladder_set_init();
 			});
 			
 			function ladder_set_init() {
-				$(".ladderType:eq(<c:out value='${ladType}' />)").addClass("active");
+				var retladinfo = [];
+				
 				ladder_window_resize();
+				if('${ladderId}' !== "") {
+					retladinfo = getPreLadder('${ladderId}');
+					preLadderListComplete(retladinfo["lad"], retladinfo["ladline"]);
+				} else {
+					$(".ladderType:eq(<c:out value='${ladType}' />)").addClass("active");
+				}
 			}
 			
+			/** 이전사다리 가져오기 */
 			var ladder_pre_set_dialogArguments = [];
 			function preLadderList() {
 				ladder_pre_set_dialogArguments[0] = "";
 				ladder_pre_set_dialogArguments[1] = preLadderListComplete;
 				
 				GetOpenWindow("/ezLadder/ladderMain.do?mode=pre&currPage=1&searchSelect=none&searchInput=", "ladder_pre_set", 970, 680);
-			}
-			
+			}			
 			function preLadderListComplete(ladderInfo, lineInfo) {
-				console.log(ladderInfo);
-				console.log(lineInfo);
-				
 				$("#title").val(ladderInfo["title"]);
 				$(".icondiv").removeClass("active");
 				$(".ladderType:eq(" + ladderInfo["type"] + ")").addClass("active");
@@ -128,164 +133,48 @@
 					$("#ladderSecret").addClass("active");
 				} 
 				
-				var len = lineInfo.length;
-				var names = "";
-				for(var i = 0; i < len; i++) {
-					names += lineInfo[i]["userName"] + ",";
-				}
-				console.log(names);
-				
+				checkAttendant(lineInfo);
 			}
 			
-			/** g_attendant, g_item 현재 input box 정보로 셋팅 */
-			function set_input_value() {
-				var len = 0;
+			/** 참여자, 아이템 배열을 현재 input box 정보로 셋팅 */
+			function setInputValue() {
+				var userlen = 0;
 				var name = "";
+				var i = 0;
 				
-				if(g_attendant !== null) {
-					len = g_attendant["id"].length;
+				if(attendants !== null) {
+					userlen = attendants["id"].length;
 				}
 				
-				for(var i = 0; i < len; i++) {
-					if(g_attendant["id"][i].substring(0, 15) === "anonyAttendant_") {
+				for(; i < userlen; i++) {
+					if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
 						name = $(".attendant:eq(" + i + ") input").val();
-						g_attendant["name"][i] = name;
-						g_attendant["name1"][i] = name;
-						g_attendant["name2"][i] = name;						
+						attendants["name"][i] = name;
+						attendants["name2"][i] = name;						
 					}
-					g_item[i] = $("#itemList li:eq(" + i + ") input").val();
+					items[i] = $("#itemList li:eq(" + i + ") input").val();
 				}
-				
 			}
 
 			function _manage_attendant() {
-			    check_name("attendant");
+				manage_attendant_after();
 			}
 
 			/** 조직도 호출 */
-			var g_item = [];
-			var g_attendant = null;
 			var ladder_select_attendant_dialogArguments = [];
 			function manage_attendant_after() {
-				set_input_value();
+				setInputValue();
 				
-				ladder_select_attendant_dialogArguments[0] = g_attendant;
-			    ladder_select_attendant_dialogArguments[1] = manage_attendant_Complete;
-			    ladder_select_attendant_dialogArguments[2] = true;
+				ladder_select_attendant_dialogArguments[0] = attendants;
+			    ladder_select_attendant_dialogArguments[1] = checkAttendant;
 
 			    GetOpenWindow("/ezLadder/setLadderAttendant.do", "ladder_select_attendant", 970, 680);
-			}
-
-			/** 참여자+아이템 추가 */
-			function manage_attendant_Complete(attendList, attendType, arrayType) {
-				console.log("manage attendant");
-				var len = 0;
-				var totallen = 0;
-				var picsrc = "";
-				
-				if(typeof attendList !== "undefined") {
-					if(arrayType === "xml") { // xml value
-						console.log('xml');
-						len = attendList.length;
-						
-						for(var i = 0; i < len; i++) {
-							totallen = g_attendant["id"].length;
-							picsrc = "/images/OrganTree/porson_noimg.gif";
-							
-							g_attendant["name"][totallen] = getNodeText(GetChildNodes(SelectNodes(attendList[i], "LISTVIEWDATA/ROWS/ROW")[0])[3]);
-							g_attendant["name1"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA6")[0]);
-							g_attendant["name2"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA7")[0]);
-							
-							if(attendType == "anonyuser") {
-								g_attendant["id"][totallen] = "anonyAttendant_" + totallen;
-								g_attendant["deptname"][totallen] = "";
-								g_attendant["deptname1"][totallen] = "";
-								g_attendant["deptname2"][totallen] = "";
-								g_attendant["pic"][totallen] = "";
-								$("#attendantList").append("<li class='attendant'><div><img src='" + picsrc + "' width='90px' height='90px' />" + 
-										"<input type='text' class='input' value='" + g_attendant["name"][totallen] + "' />" + 
-										"<span class='remove'>X</span></div></li>");
-							} else {
-								g_attendant["id"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA2")[0]);
-								g_attendant["deptname"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA4")[0]);
-								g_attendant["deptname1"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA8")[0]);
-								g_attendant["deptname2"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA9")[0]);
-								if(!!getNodeText(attendList[i].getElementsByTagName("DATA5")[0])) {
-									g_attendant["pic"][totallen] = getNodeText(attendList[i].getElementsByTagName("DATA5")[0]);
-									picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + g_attendant["pic"][totallen];
-								} else {
-									g_attendant["pic"][totallen] = "";
-								}
-								$("#attendantList").append("<li class='attendant'><div><img src='" + picsrc + "' width='90px' height='90px' />" +
-										"<input type='text' disabled='disabled' class='input' value='" + g_attendant["name"][totallen] + "' />" + 
-										"<span class='remove'>X</span></div></li>");
-							}
-							
-							g_item[totallen] = "";
-			            	$("#itemList").append("<li class='item'><input type='text' class='input' value='" + g_item[totallen] + "' /></li>");
-						}
-					} else{ // json value
-						console.log('json');
-						len = attendList["id"].length;
-						itemlen = g_item.length;
-
-						if(typeof g_attendant === "undefined" || ladder_select_attendant_dialogArguments[2]) {
-							g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname1": new Array(), "deptname2": new Array(), "pic": new Array() };
-							$("#attendantList").html("");
-							$("#itemList").html("");
-							ladder_select_attendant_dialogArguments[2] = false;
-						}
-						
-						for(var i = 0; i < len; i++) {
-							totallen = g_attendant["id"].length;
-							picsrc = "/images/OrganTree/porson_noimg.gif";
-							
-							g_attendant["name"][totallen] = attendList["name"][i];
-							g_attendant["name1"][totallen] = attendList["name1"][i];
-							g_attendant["name2"][totallen] = attendList["name2"][i];
-							
-							if(attendList["id"][i].substring(0, 14) === "anonyAttendant") {
-								g_attendant["id"][totallen] = "anonyAttendant_" + totallen;
-								g_attendant["deptname"][totallen] = "";
-								g_attendant["deptname1"][totallen] = "";
-								g_attendant["deptname2"][totallen] = "";
-								g_attendant["pic"][totallen] = "";
-								$("#attendantList").append("<li class='attendant'><div><img src='" + picsrc + "' width='90px' height='90px' />" + 
-										"<input type='text' class='input' value='" + g_attendant["name"][totallen] + "' />" + 
-										"<span class='remove'>X</span></div></li>");
-							} else {
-								g_attendant["id"][totallen] = attendList["id"][i];
-								g_attendant["deptname"][totallen] = attendList["deptname"][i];
-								g_attendant["deptname1"][totallen] = attendList["deptname1"][i];;
-								g_attendant["deptname2"][totallen] = attendList["deptname2"][i];
-								if(!!attendList["pic"][i]) {
-									g_attendant["pic"][totallen] = attendList["pic"][i];
-									picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + g_attendant["pic"][totallen];
-								} else {
-									g_attendant["pic"][totallen] = "";
-								}
-								$("#attendantList").append("<li class='attendant'><div><img src='" + picsrc + "' width='90px' height='90px' />" + 
-										"<input type='text' disabled='disabled' class='input' value='" + g_attendant["name"][totallen] + "' />" + 
-										"<span class='remove'>X</span></div></li>");
-							}
-							
-							if(totallen >= itemlen) {
-								g_item[totallen] = "";
-							}
-			            	$("#itemList").append("<li class='item'><input type='text' class='input' value='" + g_item[totallen] + "' /></li>");
-						}
-					}
-				}
-				changeSliderValue();
-				add_user_change_ulsize(g_attendant["id"].length);
-				changeUser(len, "add");
-				console.log(g_attendant);
 			}
 
 			/** 참여자 변경될때 슬라이더 바 조절 */
 			var maxLine = 5;
 			function changeSliderValue() { 
-				var len = g_attendant["id"].length;
+				var len = attendants["id"].length;
 				if(len >= 2) {
 					$("#slider-range-min").slider("option", "min", len);
 					$("#slider-range-min").slider("option", "max", len * maxLine);
@@ -299,191 +188,209 @@
 
 			/** 참여자 삭제 */
 			function attendant_remove(index) {
-				g_attendant["id"].splice(index, 1);
-				g_attendant["name"].splice(index, 1);
-				g_attendant["name1"].splice(index, 1);
-				g_attendant["name2"].splice(index, 1);
-				g_attendant["deptname"].splice(index, 1);
-				g_attendant["deptname1"].splice(index, 1);
-				g_attendant["deptname2"].splice(index, 1);
-				g_attendant["pic"].splice(index, 1);
-				g_item.splice(index, 1);
+				attendants["id"].splice(index, 1);
+				attendants["name"].splice(index, 1);
+				attendants["name2"].splice(index, 1);
+				attendants["pic"].splice(index, 1);
+				items.splice(index, 1);
 				
 				$(".attendant:eq(" + index + ")").remove();
 				$(".item:eq(" + index + ")").remove();
-				add_user_change_ulsize(g_attendant["id"].length);
+				add_user_change_ulsize(attendants["id"].length);
 				
 				changeSliderValue()
-				changeUser(1);
+				changeUser(attendants["id"].length);
 			}
 
-			/** 이름 검색 */
-			var ladder_check_Attendant_dialogArguments = [];
-			var i = 0;
-			var namelength = 0;
-			var checknametype = "";
-			var AttendantXML = [];
-			var overlapAttendantXML = [];
-			function check_name(type, inputname) {
-			    if (type !== undefined)
-			        checknametype = type;
-			    else
-			        checknametype = "";
-
-			    var name = "";
-			    if(document.getElementById("inputAttendant") !== null) {
-				    name = document.getElementById("inputAttendant").value;
-			    } else {
-			    	name = inputname;
-			    }
-			    name = ReplaceText(name, ",", ";");
-			    
-			    var names = name.split(";");
-			    namelength = names.length;
-			    
-			    for (; i < names.length; i++) {
-			    	names[i] = TrimText(names[i]);
-			    	
-			    	if(names[i] == "") {
-			    		continue;
-			    	}
-			    	
-			    	var adCount = 0;        
-			        var xmlDOM = createXmlDom();
-			        
-			        $.ajax({
-			    		url : "/ezOrgan/getSearchList.do",
-			    		type : "POST",
-			    		dataType : "text",
-			    		async : false,
-			    		data : {
-			    			search : "displayName::" + names[i],
-			    			cell   : "company;description;title;displayName;mail",
-			    			prop   : "displayName;description;extensionAttribute2",
-			    			type   : "user"
-			    		},
-			    		success: function(xml){
-			    			xmlDOM = loadXMLString(xml);
-			                adCount = xmlDOM.getElementsByTagName("ROW").length;
-			                console.log(xmlDOM);
-			    		}    		
-			    	});
-			        
-		            if (g_attendant == null) {
-		            	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname1": new Array(), "deptname2": new Array(), "pic": new Array() };
-		            }
-		            
-		            var length = g_attendant["id"].length;
-		            console.log(length);
-			        if (adCount == 0) { // 검색결과 없을때 
-			        	var anonyAttendant = { "id": [], "name": [], "deptname": [], "name1": [], "name2": [], "deptname1": [], "deptname2": [], "pic": [] };
-			        	anonyAttendant["id"][0] = "anonyAttendant_" + length;
-			        	anonyAttendant["name"][0] = names[i];
-			        	anonyAttendant["name1"][0] = names[i];
-			        	anonyAttendant["name2"][0] = names[i];
-			        	anonyAttendant["deptname"][0] = "";
-			        	anonyAttendant["deptname1"][0] = "";
-			        	anonyAttendant["deptname2"][0] = "";
-			        	anonyAttendant["pic"][0] = "";
-			        	
-			        	console.log(anonyAttendant);
-			        	
-			        	manage_attendant_Complete(anonyAttendant, "nouser", "json")
-			        
-			        } else if (adCount == 1) { // 검색결과 한명일때 
-			            for (var j = 0; j < length; j++) {
-			            	if(g_attendant["id"][j] !== "anonyAttendant" && g_attendant["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
-			        			overlapAttendantXML.push(xmlDOM);
-			                	break;
-			            	}		   
-			            }
-			            
-			            if(typeof overlapAttendantXML == "undefined" || g_attendant["id"].indexOf(getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) === -1) {
-			            	AttendantXML.push(xmlDOM);
-			            }
-			            
-			        } else { // 검색결과 여러명일때 >수정
-			            var rgParams = new Array();
-			            rgParams["addrBook"] = xmlDOM;
-			            rgParams["name"] = "";
-			            rgParams["id"] = "";
-			            rgParams["deptname"] = "";
-			            rgParams["name1"] = "";
-			            rgParams["name2"] = "";
-			            rgParams["deptname2"] = "";
-
-			            ladder_check_Attendant_dialogArguments[0] = rgParams;
-			            ladder_check_Attendant_dialogArguments[1] = check_name_Complete;
-			            
-			            GetOpenWindow("/ezLadder/checkName.do", "ladder_check_attendant", 610, 353);
-			            /* checkname_cross_dialogArguments[0] = rgParams;
-			            checkname_cross_dialogArguments[1] = check_name_Complete;
-			            
-			            GetOpenWindow("/ezLadder/checkName.do", "ladder_check_attendant", 610, 353); */
-			            
-			            i++;
-			            return;
-			        }
-			    }
-			    document.getElementById("inputAttendant").value = "";
-			    
-			    if(AttendantXML.length !== 0) {
-			    	manage_attendant_Complete(AttendantXML, "", "xml");			    	
-				    AttendantXML = [];
-			    } 
-			    if(overlapAttendantXML.length !== 0) {
-			    	checkAttendant(overlapAttendantXML, function(overlapAttendantXML, attendType) {
-			    		manage_attendant_Complete(overlapAttendantXML, attendType, "xml");
-			    	});
-				    overlapAttendantXML = [];
-			    } 
-			    
-			    i = 0;
-			    if (checknametype != "")
-			        manage_attendant_after();
+			/** 아이디+이름 검사 (익명인지 아닌지) */
+			var attendants = null;
+			var items = null;
+			function checkAttendant(data) {
+				var overlapXML = [];
+				var noOverlapXML = [];
+				var anonyJson = {};
+				var len = 0;
+				var i = 0;
+				var returnXML;
+				
+				if(attendants === null) {
+					attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
+					items = [];
+				}
+				
+				var addIndex = 0;
+				if(typeof data === "string") {
+					console.log("string 이름으로검색시");
+					
+					data = ReplaceText(data, ",", ";");
+					
+					var names = data.split(";");
+					len = names.length;
+					
+					addIndex = attendants["id"].length;
+					for (; i < len; i++) {
+						names[i] = TrimText(names[i]);
+				    	
+				    	if(names[i] == "") {
+				    		continue;
+				    	}
+				    	
+						getAttendantAJAX(names[i]);
+						
+						if(adCount === 0) { // 검색결과 없음 (완전 익명)
+							anonyJson = { "name": names[i], "name2": names[i] };
+							setAllUser(anonyJson, "anony-json");
+						
+						} else if(adCount === 1) { // 검색결과 하나
+							var checkOverlap1 = attendants["id"].findIndex(function(id) {
+								return id == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]);
+							});
+							
+							if(checkOverlap1 !== -1) { // 중복 유저
+								overlapXML.push(xmlDOM);
+							
+							} else { // 중복 아닌 유저
+								setAllUser(xmlDOM, "real-xml");
+							}
+						} else { // 검색결과 여럿
+							console.log("-----**");
+						}
+						
+					}
+					
+					$("#inputAttendant").val("");
+					
+					if(overlapXML.length !== 0) {
+						popSelectUsertype(overlapXML, function(overlapXML, attendantType) {
+							for(i = 0; i < overlapXML.length; i++) {
+								setAllUser(overlapXML[i], attendantType);
+							}
+						});
+					}
+					
+				} else {
+					console.log("arr 이전 사다리 불러올시 + 조직도에서 불러올시");
+					
+					attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
+					
+					len = data.length;
+					
+					for(; i < len; i++) {
+						if(data[i]["id"].substring(0, 14) !== "anonyAttendant") {
+							getAttendantAJAX(data[i]["name"]);
+							setAllUser(xmlDOM, "real-xml", data[i]["item"]);
+						} else {
+							setAllUser(data[i], "anony-json", data[i]["item"]);
+						}
+					}
+				}
 			}
-
-			function check_name_Complete(rgParams) {
-				console.log('check name com');
-			    DivPopUpHidden();
-			    
-			    if (rgParams["name"] != "") {
-			        if (g_attendant == null)
-			            g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname1": new Array(), "deptname2": new Array(), "pic": new Array() };
-
-			        var length = g_attendant["id"].length;
-			        for (var j = 0; j < length; j++) {
-			            if (g_attendant["id"][j] == rgParams["id"]) {
-			                console.log('중복사용자');
-			                return;
-			            }
-			        }
-
-			        var length = g_attendant["name"].length;
-
-			    	g_attendant["name"].push(rgParams["name"]);
-			        g_attendant["id"].push(rgParams["id"]);
-			    	g_attendant["deptname"].push(rgParams["deptname"]);
-			    	g_attendant["name1"].push(rgParams["name1"]);
-			    	g_attendant["name2"].push(rgParams["name2"]);
-			    	g_attendant["deptname1"].push(rgParams["deptname1"]);
-			    	g_attendant["deptname2"].push(rgParams["deptname2"]);
-			    	g_attendant["pic"].push(rgParams["pic"]);
-			    	
-			        if (length == 0)
-			        	$("#attendantList").append("<li class='attendant'>" + g_attendant["name"][length] + "</li>");
-			        else
-			        	$("#attendantList").append("<li class='attendant'>" + g_attendant["name"][length] + "</li>");
-
-			        if (i != namelength)
-			            check_name();
-			    }
-			    if (i == namelength) {
-			        i = 0;
-			        document.getElementById("inputAttendant").value = "";
-			    }
-			    if (checknametype != "")
-			        manage_attendant_after();
+			
+			/** 참여자 셋팅 */
+			function setAllUser(userdata, flag, item) {
+				var totallen = attendants["id"].length;
+				var flagarr = flag.split("-");
+				
+				if(flagarr[0] === "real") { // 일반 유저
+					if(flagarr[1] === "xml") { // xml
+						attendants["id"][totallen] = getNodeText(userdata.getElementsByTagName("DATA2")[0]);
+						attendants["name"][totallen] = getNodeText(userdata.getElementsByTagName("DATA6")[0]);
+						attendants["name2"][totallen] = getNodeText(userdata.getElementsByTagName("DATA7")[0]);
+						attendants["pic"][totallen] = getNodeText(userdata.getElementsByTagName("DATA5")[0]);
+					} else { // json
+						attendants["id"][totallen] = userdata["id"];
+						attendants["name"][totallen] = userdata["name"];
+						attendants["name2"][totallen] = userdata["name2"];
+						attendants["pic"][totallen] = userdata["pic"];
+					}
+				} else { // 익명 유저
+					attendants["id"][totallen] = "anonyAttendant_" + totallen;
+					attendants["pic"][totallen] = "";
+					if(flagarr[1] === "xml") { // xml
+						attendants["name"][totallen] = getNodeText(userdata.getElementsByTagName("DATA3")[0]);
+						attendants["name2"][totallen] = getNodeText(userdata.getElementsByTagName("DATA3")[0]);
+					} else { // json
+						attendants["name"][totallen] = userdata["name"];
+						attendants["name2"][totallen] = userdata["name2"];
+					}
+				}
+				
+				if(typeof item !== "undefined") {
+					items[totallen] = item;
+				} else {
+					if(items.length < attendants["id"].length) {
+						items[totallen] = "";
+					}
+				} 
+				attendants["order"][totallen] = totallen;
+				
+				setAttendantsView();
+			}
+			
+			/** 화면에 참여자 나타내기 */
+			function setAttendantsView() {
+				var len = attendants["id"].length;
+				var picsrc = "";
+				var html = "";
+				
+				if(attendants !== null) {
+					$("#attendantList").html("");
+					$("#itemList").html("");
+					
+					for(var i = 0; i < len; i++) {
+						html = "";
+						picsrc = "/images/OrganTree/porson_noimg.gif";
+						
+						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
+							html += "<li class='attendant'>";
+							html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";
+							html += "<input type='text' class='input' value='" + attendants["name"][i] + "' />";
+							html += "<span class='remove'>X</span></div></li>";							
+						} else {
+							if(attendants["pic"][i] !== "") {
+								picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
+							}
+							html += "<li class='attendant'>";
+							html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";
+							html += "<input type='text' class='input' disabled='disabled' value='" + attendants["name"][i] + "' />";
+							html += "<span class='remove'>X</span></div></li>";	
+						}
+						
+						$("#attendantList").append(html);
+						$("#itemList").append("<li class='item'><input type='text' class='input' value='" + items[i] + "' /></li>");
+						
+					}
+					changeSliderValue();
+					add_user_change_ulsize(attendants["id"].length);
+					changeUser(len);
+				}
+				
+				console.log(attendants);
+			}
+			
+			/** 유저 정보 xml로 가져오기 */
+			var adCount;        
+	        var xmlDOM;
+			function getAttendantAJAX(attendantName) {
+				adCount = 0;
+				xmlDOM = createXmlDom();
+		        
+		        $.ajax({
+		    		url : "/ezOrgan/getSearchList.do",
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		data : {
+		    			search : "displayName::" + attendantName,
+		    			cell   : "company;description;title;displayName;mail",
+		    			prop   : "displayName;description;extensionAttribute2",
+		    			type   : "user"
+		    		},
+		    		success: function(xml){
+		    			xmlDOM = loadXMLString(xml);
+		                adCount = xmlDOM.getElementsByTagName("ROW").length;
+		    		}    		
+		    	});
 			}
 			
 			/** 사다리 만들기 */
@@ -493,25 +400,13 @@
 				var secretFlag = $("#ladderSecret.active").length;
 				var lineCnt = $("#slider-range-min").slider("option", "value");
 				
-				var userId = [];
-				var userName = [];
-				var userName2 = [];
-				var item = [];
-				var ladderOrder = [];
+				setInputValue()
 				
-				var len = g_attendant["id"].length;
-				for(var i = 0; i < len; i++) {
-					userId[i] = g_attendant["id"][i];
-					if (g_attendant["id"][i].substring(0, 14) !== "anonyAttendant") {
-						userName[i] = g_attendant["name"][i];
-						userName2[i] = g_attendant["name2"][i];
-					} else {
-						userName[i] = $(".attendant:eq(" + i + ") input").val();
-						userName2[i] = $(".attendant:eq(" + i + ") input").val();
-					}
-					item[i] = $(".item:eq(" + i + ") input").val();
-					ladderOrder[i] = i;
-				}
+				var userId = attendants["id"];
+				var userName = attendants["name"];
+				var userName2 = attendants["name2"];
+				var item = items;
+				var ladderOrder = attendants["order"];
 				
 				console.log(userId);
 				console.log(userName);
