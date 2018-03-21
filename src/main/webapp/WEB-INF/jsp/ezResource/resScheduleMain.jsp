@@ -130,6 +130,11 @@
 	            objRInfo.style.height = document.documentElement.clientHeight - 376 + "px";
 	        }
 	        
+	        var divH = document.getElementById("divExplain")
+			if(divH){
+				divH.style.height = document.documentElement.clientHeight - 617 + "px";
+			}
+	        
 	        if (typeCal == "2") {
 	            var w = document.documentElement.clientHeight - 278;
 	        } else if (typeCal == "1") {
@@ -373,7 +378,7 @@
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <spring:message code='ezResource.t148'/></td>
 									</tr>
 									<tr>
-										<td style="padding:2px 10px; word-break:break-all; height:20px">${resLocation}</td>
+										<td style="padding:2px 10px; word-break:break-all; height:20px;">${resLocation}</td>
 									</tr>
 									<tr>
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t149'/></b></td>
@@ -394,7 +399,7 @@
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t271'/></b></td>
 									</tr>
 									<tr>
-										<td style="padding:2px 10px"><div style="overflow: auto; height: 100%;word-break:break-all"><c:out value='${brdExplain}' /></div></td>
+										<td style="padding:2px 10px;"><div  id = "divExplain" style="min-height:203px;overflow-y: auto;word-break:break-all"><c:out value='${brdExplain}' /></div></td>
 									</tr>
 								</table>
 	                    	</td>
@@ -402,6 +407,6 @@
            			</table>
 				</td>
 			</tr>
-		</table>
+		</table>	
 	</body>
 </html>
