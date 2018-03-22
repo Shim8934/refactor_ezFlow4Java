@@ -29,6 +29,7 @@
 		var g_userLang 		  = "${userLang}";
 		var g_timezone 		  = "${userTimeSet}";
 		var offsetMin 		  = "${offsetMin}";
+		var type 			  = "all";
 		
 		$(function () {
 	        $("#Sdatepicker").datepicker({
@@ -87,10 +88,12 @@
 	        };
 	        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	    });
-		
+
+	    $(function() {
+	    	makePageSelPage();
+	    });
+	    
 		window.onload = function() {
-			makePageSelPage();
-			
 			var obj = $("#search").offset();
 			
 			$("#layer_popup").css({
@@ -98,6 +101,9 @@
 				   "top" : obj.top + $("#search").height(),
 				   "left" : obj.left
 				});
+			
+			$("#Sdatepicker").datepicker('disable');
+	        $("#Edatepicker").datepicker('disable');
 		}
 		function makePageSelPage(){
 	        var strtext;
@@ -199,7 +205,7 @@
 	    
 	    function popup_close() {
 	    	$("#layer_popup").css("display","none");
-	    	date_reset();
+// 	    	date_reset();
 	    }
 	    
 	    function att_search() {
@@ -211,16 +217,26 @@
 	    
 	    function get_att_list(pageNum) {
 	    	ShowAttProgress();
-	    	var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-	        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	    	
+	    	if (usepostDate) {
+	            var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+
+	            if (startDate > endDate) {
+	                alert("시작일 보다 종료일이 빠를 수 없습니다.");
+	                return;
+	            }
+	        }
 	    	var obj = new Object();
 	    	
 		    obj.apprUserName = $('#appr_search').val();
 		    obj.startDate = startDate;
 		    obj.endDate = endDate;
 			obj.pageNum = pageNum;
+			obj.totalPages = totalPages;
+			obj.totalAtt = totalAtt;
+			obj.type = type;
 			
-		    //파라미터로 리스트 마지막 mail의 받은 날짜를 넘겨줘야 한다.
 		    $.ajax({
 				type : 'get',
 			    url : '/ezAttitude/getAttModAppList.do',
@@ -237,29 +253,85 @@
 				}
 		    });
 	    }
-	    function getAttList_after(data) {
+	    
+	    function get_excelAtt_list() {
+	    	ShowAttProgress();
+	    	
+	    	if (usepostDate) {
+	            var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+
+	            if (startDate > endDate) {
+	                alert("시작일 보다 종료일이 빠를 수 없습니다.");
+	                return;
+	            }
+	        }
+	    	var obj = new Object();
+	    	
+		    obj.apprUserName = $('#appr_search').val();
+		    obj.startDate = startDate;
+		    obj.endDate = endDate;
+		    obj.excelReq = "true";
+			
+		    $.ajax({
+				type : 'get',
+			    url : '/ezAttitude/getAttModAppList.do',
+			    data : obj,
+			    dataType : "json",
+			    error: function(xhr, status, error){
+			    	ajaxRunning = false;
+			    },
+			    success : function(json){
+			    	getAttList_after(json, true);
+			    },
+				complete : function() {
+					HiddenAttProgress();
+				}
+		    });
+	    }
+	    
+	    function getAttList_after(data, excel) {
 	    	var attList = data.list;
 	    	var infoStr = "";
-	    	infoStr += ' - [총 <span style="color:#017BEC;">' + attList.length;
-	    	infoStr += '</span> 개 -' + 
-	    	data.startDate.substring(0,4) + '년' + 
-	    	data.startDate.substring(5,7) + '월' + 
-	    	data.startDate.substring(8,10) + '일~';
-	    	infoStr += data.endDate.substring(0,4) + '년' + 
-	    	data.endDate.substring(5,7) + '월' + 
-	    	data.endDate.substring(8,10) + '일]</span>';
-	    	$("#mailBoxInfo").html(infoStr);
-	    	$('#AttList tbody').children( 'tr:not(:first)' ).remove();
+			
+	    	if (excel == true) {
+	    		$('#ExcelAttList tbody').children( 'tr:not(:first)' ).remove();
+	    	} else {
+	    		totalAtt = data.totalAtt;
+		    	totalPages = data.totalPages;
+		    	makePageSelPage();
+		    	
+		    	infoStr += ' - [총 <span style="color:#017BEC;">' + data.totalAtt;
+		    	
+		    	if (data.startDate != null && data.endDate != null) {
+		    		infoStr += '</span> 개 - ';
+		    		infoStr += data.startDate.substring(0,4) + '년' + 
+			    	data.startDate.substring(5,7) + '월' + 
+			    	data.startDate.substring(8,10) + '일~';
+			    	infoStr += data.endDate.substring(0,4) + '년' + 
+			    	data.endDate.substring(5,7) + '월' + 
+			    	data.endDate.substring(8,10) + '일]</span>';
+		    	} else {
+		    		infoStr += '</span> 개]';
+		    	}
+		    	
+		    	$("#mailBoxInfo").html(infoStr);
+		    	$('#AttList tbody').children( 'tr:not(:first)' ).remove();
+	    	}
+	    	
 	    	if (attList.length == 0) { 
 	    		$('#AttList tbody').append('<tr><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
 	    	}
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
-	    		htmlStr += '<tr id=' + attList[i].attitudeId + 'class="white">';
-	    		htmlStr += '<td style="padding:0"> <input type="checkbox" class="checkBnk"' 
-	    		htmlStr += 'id="qstCheck+' + attList[i].attitudeId + '"';
-	    		htmlStr += 'value=' + attList[i].attitudeId ;
-	    		htmlStr += 'onchange="javascript:getChecked(this)"></td>';
+	    		htmlStr += '<tr id="' + attList[i].attitudeId + '" class="white">';
+	    		if (excel == true) {
+	    		} else {
+	    			htmlStr += '<td style="padding:0"> <input type="checkbox" class="checkBnk"' 
+	    	    	htmlStr += 'id="qstCheck+' + attList[i].attitudeId + '"';
+	    	    	htmlStr += 'value=' + attList[i].attitudeId ;
+	    	    	htmlStr += 'onchange="javascript:getChecked(this)"/></td>';	
+	    		}
     			htmlStr += '<td>' + (parseInt(i) + 1) + '</td>';
     			htmlStr += '<td>' + attList[i].changeDate.substring(0,10) + '</td>';
     			htmlStr += '<td>' + attList[i].apprUserName + '</td>';
@@ -277,7 +349,12 @@
     			}
     			
     			htmlStr += '</tr>';
-    			$('#AttList tbody').append(htmlStr);
+    			if  (excel == true) {
+    				$('#ExcelAttList tbody').append(htmlStr);
+    				btnexportexcel_onclick();
+    			} else {
+    				$('#AttList tbody').append(htmlStr);
+    			}
 	    	}
 	    }
 	    function date_reset() {
@@ -327,13 +404,13 @@
 	    function goToPageByNum(Value){
 	    	currentPage = Value;
 	        makePageSelPage();
-	        search_Set(currentPage);
+	        get_att_list(currentPage);
 	    }
 	    
 	    function selbeforeBlock(){
 	        var pageNum = parseInt(currentPage);
 	        pageNum = ((parseInt(pageNum / blockSize) - 1) * blockSize) + 1;
-	        goToPageByNum(pageNum);
+	        get_att_list(pageNum);
 	    }
 	    
 	    function selbeforeBlock_one(){
@@ -358,6 +435,30 @@
 	            return;
 	    }
 	    
+	    var usepostDate = false;
+	    function DateSearch_Click() {
+	        if(usepostDate){
+	            usepostDate = false;
+	            $("#Sdatepicker").datepicker('disable');
+	            $("#Edatepicker").datepicker('disable');
+	        }
+	        else {
+	            usepostDate = true;
+	            $("#Sdatepicker").datepicker('enable');
+	            $("#Edatepicker").datepicker('enable');
+	        }
+	    }
+	    
+	    function btnexportexcel_onclick() {
+            document.getElementById("saveExcelData").value = $("#ExcelAttList")[0].outerHTML;
+            document.getElementById("formAgent").target = "saveExcel";
+            document.getElementById("formAgent").submit();
+        }
+	    
+	    function type_change(){
+	    	type = $("input:radio[name=searchCheck]:checked").val();
+	    	get_att_list();
+	    }
 		</script>
 </head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody">
@@ -366,14 +467,14 @@
         <div id="mainmenu">
         <ul id="tb_Parent">
           <li><span onClick="new_mail_onclick()">삭제</span></li>
-          <li id="reply"><span onClick="reply_mail_onclick()">엑셀 다운로드</span></li>
+          <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
           <li id="search"><span onClick="search_popup()">검색</span></li>
 		  <li id="right">
 			  <span style="float:right;font-weight:normal;color:black;border: none;">
-		          <input name="searchCheck" id="Radio1" type="radio" value="SUBJECT" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;전체</label>
-		          <input name="searchCheck" id="Radio2" type="radio" value="SUBJECT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;진행</label>
-		          <input name="searchCheck" id="Radio3" type="radio" value="SUBJECT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;승인</label>
-		          <input name="searchCheck" id="Radio4" type="radio" value="SUBJECT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;반려</label>
+		          <input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
+		          <input name="searchCheck" id="Radio2" type="radio" value="ing" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;진행</label>
+		          <input name="searchCheck" id="Radio3" type="radio" value="confirm" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;승인</label>
+		          <input name="searchCheck" id="Radio4" type="radio" value="reject" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;반려</label>
 		  </li> 
         </ul>
         </div>
@@ -384,13 +485,14 @@
               	  <tr>
                     <th nowrap>승인자명</th>
                     <td style="width:100%;"> 
-						<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);">
+						<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);"/>
 	                </td>
                   </tr>
                   <tr>
                     <th>변경일자기간</th>
                     <td>
-                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;">
+                    	<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate">검색기간 사용</label>
+                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
 	                </td>
                   </tr>
               </table>
@@ -407,7 +509,7 @@
                 <table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
                 	<tr> 
 						<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
-							<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">
+							<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)"/>
 						</th> 
 						<th width="60px">NO.</th> 
 						<th>변경일자</th> 					
@@ -420,7 +522,7 @@
 			    	
 			    	<c:forEach var="list" items="${list}" varStatus="i"> 
 				        <tr id="${list.attitudeId}" class="white">
-				        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.attitudeId}" />+" value=<c:out value="${list.attitudeId}" />  onchange="javascript:getChecked(this)"></td>
+				        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.attitudeId}" />+" value=<c:out value="${list.attitudeId}" />  onchange="javascript:getChecked(this)"/></td>
 				          	<td>${i.count}</td>
 				          	<c:set var="changeDate" value="${list.changeDate}"/>
 							<td>${fn:substring(changeDate,0,10) }</td>
@@ -460,5 +562,23 @@
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="AttProgress">
 		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>
+		<div id ="forExcel">
+		</div>
+        <table class="mainlist" style="width:100%;display:none;" id="ExcelAttList">
+        	<tr>
+				<th width="60px">NO.</th>
+				<th>변경일자</th>
+				<th width="150px">승인자</th>
+				<th width="180px">출근시각</th>
+				<th width="180px">변경시각</th>
+				<th width="80px">승인상태</th>
+			</tr>
+		</table>
+		
+		<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezAttitude/saticGetXlsAtt.do">
+	        <input type="hidden" id="saveExcelData" name="saveExcelData" value=""/>
+	        <input type="hidden" id="userAgent" name="userAgent" value=""/>
+	    </form>
+	    <iframe id="saveExcel" name="saveExcel" style="display: none"></iframe>
 	</body>
 </html>

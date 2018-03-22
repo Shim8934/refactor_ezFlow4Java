@@ -6,7 +6,14 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -29,12 +36,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -73,7 +83,7 @@ public class EzAttitudeKMSController {
 		int pageSize = 15;
 		int startPoint = 0;
 		int endPoint = 15;
-
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
@@ -236,8 +246,26 @@ public class EzAttitudeKMSController {
 	public JSONObject getAttModAppList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
 			@RequestParam(required=false)String apprUserName,
 			@RequestParam(required=false)String startDate,
-			@RequestParam(required=false)String endDate) throws Exception {
-
+			@RequestParam(required=false)String endDate,
+			@RequestParam(required=false)String pageNum,
+			@RequestParam(required=false)String type,
+			@RequestParam(required=false)String excelReq) throws Exception {
+		
+		int currentPage = 1;
+		int pageSize = 15;
+		int startPoint = 0;
+		int endPoint = 15;
+		int totalPages = 0;
+		int totalAtt = 0;
+		
+		if (pageNum != null) {
+			currentPage = Integer.parseInt(pageNum);
+		}
+		
+		if (excelReq == null) {
+			excelReq = "false";
+		}
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
@@ -249,8 +277,8 @@ public class EzAttitudeKMSController {
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
-		
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
+									
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
@@ -264,8 +292,10 @@ public class EzAttitudeKMSController {
 				.queryParam("startDate", startDate)
 				.queryParam("endDate", endDate)
 				.queryParam("sysLang", sysLang)
-				.queryParam("offset", offsetMin);
-
+				.queryParam("offset", offsetMin)
+				.queryParam("pageNum", pageNum)
+				.queryParam("type", type);
+		
 		RestTemplate rest = new RestTemplate();
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -277,8 +307,75 @@ public class EzAttitudeKMSController {
 		String status = resultBody.get("status").toString();
 		
 		JSONObject data = new JSONObject();
-		JSONObject resultj = new JSONObject();
 		JSONArray list = new JSONArray();
+		
+		if(status.equals("ok")){
+			LOGGER.debug(resultBody.toJSONString());
+			totalAtt = Integer.parseInt(resultBody.get("data").toString());
+		}
+		totalPages = (totalAtt + pageSize - 1)/pageSize;
+		
+		gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+		
+		headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		entity = new HttpEntity<>(headers);
+		
+		if (totalPages == 0 || totalPages == 1) {
+
+		} else {
+			if (currentPage < totalPages) {
+				startPoint = (currentPage - 1)*pageSize;
+				endPoint = currentPage*pageSize;
+			}
+			else {
+				if (currentPage > totalPages) {
+					currentPage = totalPages;
+				}
+				startPoint = (currentPage - 1) * pageSize;
+				endPoint = totalAtt;
+			}
+		}
+		if (excelReq.equals("true")) {
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", userInfo.getCompanyID())
+					.queryParam("tenantId", userInfo.getTenantId())
+					.queryParam("apprUserName", apprUserName)
+					.queryParam("startDate", startDate)
+					.queryParam("endDate", endDate)
+					.queryParam("sysLang", sysLang)
+					.queryParam("offset", offsetMin)
+					.queryParam("type", type);
+		} else {
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", userInfo.getCompanyID())
+					.queryParam("tenantId", userInfo.getTenantId())
+					.queryParam("apprUserName", apprUserName)
+					.queryParam("startDate", startDate)
+					.queryParam("endDate", endDate)
+					.queryParam("sysLang", sysLang)
+					.queryParam("offset", offsetMin)
+					.queryParam("startPoint", startPoint)
+					.queryParam("endPoint", endPoint)
+					.queryParam("type", type);
+		}
+
+		rest = new RestTemplate();
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		data = new JSONObject();
+		JSONObject resultj = new JSONObject();
+		list = new JSONArray();
 		
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
@@ -286,13 +383,81 @@ public class EzAttitudeKMSController {
 			resultj.put("list", list);
 		}
 		
-		for (int i = 0 ; i < list.size(); i++ ) {
-			LOGGER.debug(list.get(i).toString());
-		}
-		
 		resultj.put("startDate", startDate);
 		resultj.put("endDate", endDate);
+		resultj.put("totalAtt", totalAtt);
+		resultj.put("totalPages", totalPages);
 		
 		return resultj;
 	}
+	
+	@RequestMapping(value = "/ezAttitude/saticGetXlsAtt.do")
+	   public void qstResultAnalysisSaveApproval(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	      LOGGER.debug("saticGetXlsAtt started");
+	      
+	      String headerFLAG = "";
+	      
+	      if (request.getParameter("headerFlag") != null) {
+	         headerFLAG = request.getParameter("headerFlag");
+	        }
+	  
+	      HSSFWorkbook workbook = new HSSFWorkbook();
+	      HSSFSheet sheet;
+	      
+	      HSSFCellStyle headerStyle= workbook.createCellStyle();
+	      headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+	      headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+	      headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+	      headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+	      headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+	      headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+	      
+	      HSSFCellStyle bodyStyle= workbook.createCellStyle();
+	      bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+	      bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+	      bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+	      bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+	      
+	      Row row;
+	      Cell cell;
+	      
+	      String pFileName = "";
+	      String strDate = EgovDateUtil.getToday("-");
+	      pFileName = strDate+"_Report.xls";
+	      
+	      String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
+	      Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
+	      Node tbodyNode = analysisData.getElementsByTagName("tbody").item(0);
+	      Node tableHeadNode;
+	      Node tableBodyNode;
+	      
+	      tableHeadNode = tbodyNode.getChildNodes().item(0);
+	      
+	      sheet = workbook.createSheet("report");
+
+		  row = sheet.createRow(0);
+		  for (int i = 0; i <tableHeadNode.getChildNodes().getLength(); i++) {
+			  cell = row.createCell(i);
+			  cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
+			  cell.setCellStyle(headerStyle);
+		  }
+		  //header
+
+		  for (int i = 1; i < tbodyNode.getChildNodes().getLength() ; i++){
+			  row = sheet.createRow(i);
+			  tableBodyNode = tbodyNode.getChildNodes().item(i);
+			  for (int j = 0; j < tableBodyNode.getChildNodes().getLength(); j++) {
+				  cell = row.createCell(j);
+				  cell.setCellValue(tableBodyNode.getChildNodes().item(j).getTextContent());
+				  cell.setCellStyle(bodyStyle);
+			  }
+		  }//body
+
+	      response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+	      workbook.write(response.getOutputStream());
+	      
+	      workbook.close();
+	      
+	      LOGGER.debug("saticGetXlsAtt ended");
+	   }
 }

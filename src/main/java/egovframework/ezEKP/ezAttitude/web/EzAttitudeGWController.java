@@ -750,7 +750,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateAttitudeType(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
-		//TODO
+		
 		JSONObject result = new JSONObject();
 		
 		try{
@@ -953,7 +953,8 @@ public class EzAttitudeGWController {
 			@RequestParam(value="sysLang", required=false) String sysLang,
 			@RequestParam(value="offset", required=false) String offset,
 			@RequestParam(value="startPoint", required=false) String startPoint,
-			@RequestParam(value="endPoint", required=false) String endPoint) {
+			@RequestParam(value="endPoint", required=false) String endPoint,
+			@RequestParam(value="type", required=false) String type) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
 
 		JSONObject result = new JSONObject();
@@ -961,7 +962,7 @@ public class EzAttitudeGWController {
 		JSONObject attJson = new JSONObject();
 		
 		try{
-			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint);
+			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint, type);
 			for (int i = 0 ; i < attList.size(); i++ ) {
 				LOGGER.debug(attList.get(i).toString());
 			}
@@ -991,7 +992,8 @@ public class EzAttitudeGWController {
 			@RequestParam(value="endDate", required=false) String endDate,
 			@RequestParam(value="apprUserName", required=false) String apprUserName,
 			@RequestParam(value="sysLang", required=false) String sysLang,
-			@RequestParam(value="offset", required=false) String offset) {
+			@RequestParam(value="offset", required=false) String offset,
+			@RequestParam(value="type", required=false) String type) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] started.");
 
 		JSONObject result = new JSONObject();
@@ -999,7 +1001,7 @@ public class EzAttitudeGWController {
 		JSONObject attJson = new JSONObject();
 		
 		try{
-			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset);
+			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, type);
 
 			result.put("status", "ok");
 			result.put("code", 0);			
