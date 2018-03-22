@@ -270,7 +270,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 /*------------ community ------------*/
 .communitybox { width:328px; float:right; background:#FFF;}
-.communitycont{ height:164px; padding:15px 15px 10px;}
+.communitycont{ height:169px; padding:10px 15px 10px;}
 
 
 /*------------ list_type_photo ------------*/
@@ -297,20 +297,20 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 /*------------ poll ------------*/
 .pollbox {width:258px; background:#FFF; float:left;}
-.pollcont{position:relative; padding:8px 15px 10px; height:160px; vertical-align:top;}
+.pollcont{position:relative; padding:8px 15px 10px; height:160px; vertical-align:top; overflow-x:hidden; overflow-y:auto}
 .qusetion { margin:0px 0px 10px 0px; padding:0px 0px 3px 0px; height:auto; border-bottom:1px dotted #ccc; overflow:hidden;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size:12px; vertical-align:middle; color:#333;}
 
 .poll_list { margin:15px 0px; padding:0px; font-size:12px;}
 .poll_list dt { margin:0px; padding:0px ;color:#333; line-height:10px;}
-.poll_list .graphbar{ margin:5px 0px 10px 0px; padding:0px ;border:1px solid #c9c9c9;height:7px; width:230px; background:url(../images/kr/main/garphbar_bg.gif) repeat-x;}
-.poll_list .graphbar .gx_bar1 {background:#68bbef; height:7px; margin:0px; padding:0px;}
+.poll_list .graphbar{ margin:8px 0px 10px 0px; padding:0px ;border:1px solid #eee;height:7px;background-color: #f8f8fa;}
+.poll_list .graphbar .gx_bar1 {background:rgb(245, 117, 120); height:7px; margin:0px; padding:0px; border:1px solid rgb(225, 97, 100); margin-top:-1px }
 .poll_list .graphbar .gx_bar2 {background:#6ccc65; height:7px; margin:0px; padding:0px;}
 
 /*------------ birth ------------*/
 .birthbox { width:328px; float:right; background:#fff;}
 .birthcont {padding:12px 15px 15px; height:100px; overflow:hidden;}
 .birthcont .fl { float:left; list-style:none; margin:0px; padding:0px; color:#333; font-size:12px;}
-.birthcont .fl li { float:left ;height:20px; background:url(../images/kr/main/point-black.gif) no-repeat 0px 5px; padding:0px 0px 0px 8px;
+.birthcont .fl li { float:left ;height:23px; background:url(../images/kr/main/point-black.gif) no-repeat 0px 5px; padding:0px 0px 0px 8px;
 width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .t11 { font-size:11px; font-weight:normal; color:#666; margin-left:5px;}
 
