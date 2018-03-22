@@ -49,43 +49,43 @@
 
 /* 주보기 */
 .calendar_week_navi{table-layout:fixed; border:1px solid #9b9b9b; border-bottom:0px solid #014b88;}
-.calendar_week_navi th{height:29px; line-height:29px; padding:0; margin:0; color:#777;background-color: white}
+.calendar_week_navi th{height:33px; line-height:29px; padding:0px 0px 2px 0px; font-family:Malgun Gothic; margin:0; color:#2f2f2f; background-color: #edf4fd; font-size:15px; border:1px solid #d1ddec;}
 .calendar_week_navi th .btn_prev{display: inline-block; vertical-align: top; margin: 3px 12px 0px; height:17px;cursor:pointer;}
 .calendar_week_navi th .btn_next{display: inline-block; vertical-align: top; margin: 3px 0px 0px 12px; height:17px;cursor:pointer;}
-.calendar_week_title{table-layout:fixed; height:26px; line-height:26px; vertical-align:top; border-bottom:1px solid #9b9b9b;}
+.calendar_week_title{table-layout:fixed; height:26px; line-height:26px; vertical-align:top; border-bottom:1px solid rgb(181, 181, 181);}
 .calendar_week_title th{background:#f6f6f6; border-top:1px solid #cbcbcb; border-right:1px solid #cbcbcb; border-bottom:1px solid #ddd; border-left:1px solid #cbcbcb; padding:0; margin:0;}
-.calendar_week_title .calendar_th_time{width:69px; background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #ddd; border-left:1px solid #b5b5b5; margin:0; text-align:left;}
-.calendar_week_title .calendar_th_list{color:#666;background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #ddd; border-left:1px solid #b5b5b5; padding:0px 0px 0px 8px; margin:0;}
-.calendar_week_title .calendar_th_last{width:16px; background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #ddd; border-left:1px solid #b5b5b5; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 th last영역 */
-.calendar_week_title .calendar_td_last{width:16px; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #ddd; border-left:1px solid #b5b5b5; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 td last영역 */
+.calendar_week_title .calendar_th_time{width:69px; background:#fff; border-top:0 none; border-right:1px solid #dedede; border-bottom:1px solid #dedede; border-left:1px solid #dedede; margin:0; text-align:left;}
+.calendar_week_title .calendar_th_list{color:#2f2f2f;background:#fff; height:26px; border-top:0 none; border-right:1px solid #dedede; border-bottom:1px solid #dedede; border-left:1px solid #dedede; padding:0px 0px 0px 0px; margin:0;}
+.calendar_week_title .calendar_th_last{width:16px; background:#fff; border-top:0 none; border-right:1px solid #dedede; border-bottom:1px solid #dedede; border-left:1px solid #dedede; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 th last영역 */
+.calendar_week_title .calendar_td_last{width:16px; border-top:0 none; border-right:1px solid #dedede; border-bottom:1px solid #dedede; border-left:1px solid #dedede; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 td last영역 */
 .calendar_week_title .sun{color:#ee1c25; }
 .calendar_week_title .sat{color:rgb(0, 72, 149);}
 .calendar_week_title .today{background:rgb(233, 240, 255);}
-.calendar_week_title .calendar_time{width:69px; border-top:0 none; border-right:1px solid #ddd; border-left:1px solid #ddd; background:#eaeaea; vertical-align: top;}
+.calendar_week_title .calendar_time{width:69px; border-top:0 none; border-right:1px solid #dedede; border-left:1px solid #dedede; background:#f8f8fa; vertical-align: top;}
 .calendar_week_title .calendar_time .calendar_row{table-layout:fixed; vertical-align:top; margin:0; padding:0; width:69px; }
 .calendar_week_title .calendar_time .calendar_row td{height:22px; color:#898989; text-align:right; padding:0px 8px 0px 0px;}
 .calendar_week_title .calendar_time .calendar_row .calendar_t_time{height:21px; }
 .calendar_week_title .calendar_time .calendar_row td .point{color:#656565; font-weight:bold;}
-.calendar_week_title .td_list{vertical-align:top; margin:0; padding:0; border-right:1px solid #ddd; overflow:hidden; position:relative;}
+.calendar_week_title .td_list{vertical-align:top; margin:0; padding:0; border-right:1px solid #dedede; overflow:hidden; position:relative;}
 .calendar_week_title .td_list .calendar_row{table-layout:fixed; vertical-align:top; margin:0; padding:0; width:100% ; }
 .calendar_week_title .td_list .calendar_row td{height:22px; padding:0px 0px 0px 0px; cursor:pointer; white-space:nowrap;}
 .calendar_week_title .td_list .calendar_row .calendar_t_time{height:21px;  vertical-align:top;}
 .calendar_week_title .td_list .calendar_row .calendar_t_text{vertical-align:top;}
 
 .calendar_week{width:100%; table-layout:fixed;}
-.calendar_week .calendar_time{width:69px; border-top:0 none; border-right:1px solid #ddd; border-left:1px solid #ddd; background:#eaeaea; vertical-align: top;}
-.calendar_week .calendar_time .calendar_row{table-layout:fixed; vertical-align:top; margin:0; padding:0; width:69px; border-bottom:1px solid #9b9b9b;}
+.calendar_week .calendar_time{width:69px; border-top:0 none; border-right:1px solid #dedede; border-left:1px solid #dedede; background:#f8f8fa; vertical-align: top;}
+.calendar_week .calendar_time .calendar_row{table-layout:fixed;vertical-align:top; margin:0; padding:0; width:69px; border-bottom:1px solid #dedede;}
 .calendar_week .calendar_time .calendar_row td{height:22px; color:#898989; text-align:right; padding:0px 8px 0px 0px;}
-.calendar_week .calendar_time .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #eaeaea;}
+.calendar_week .calendar_time .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #dedede;}
 .calendar_week .calendar_time .calendar_row td .point{color:#656565; font-weight:bold;}
-.calendar_week .td_list{vertical-align:top; margin:0; padding:0; border-right:1px solid #ddd; overflow:hidden; position:relative;}
-.calendar_week .td_list .calendar_row{table-layout:fixed; vertical-align:top; margin:0; padding:0; width:100% ;border-bottom:1px solid #9b9b9b; }
+.calendar_week .td_list{vertical-align:top; margin:0; padding:0; border-right:1px solid #dedede; overflow:hidden; position:relative;}
+.calendar_week .td_list .calendar_row{table-layout:fixed;vertical-align:top; margin:0; padding:0; width:100% ;border-bottom:1px solid #dedede; }
 .calendar_week .td_list .calendar_row td{height:22px; padding:0px 0px 0px 0px; cursor:pointer; white-space:nowrap;}
-.calendar_week .td_list .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #e6e6e8; vertical-align:top;}
+.calendar_week .td_list .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #dedede; vertical-align:top;}
 .calendar_week .td_list .calendar_row .calendar_t_text{vertical-align:top;}
 /*.calendar_week .td_list .calendar_t_time table{margin:0px 2px 0px 1px;} */
 /*.calendar_week .td_list .calendar_t_text table{margin:0px 2px 0px 1px;} */
-.calendar_week .td_list .today td{background:#f2f2f2;}/* 오늘의 일 표시배경 */
+.calendar_week .td_list .today td{background:#edf4fd;}/* 오늘의 일 표시배경 */
 
 
 .calendar_data_ok{background:#f2f2f2; border:1px solid #f2f2f2; line-height:150%; color:black;}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
@@ -98,11 +98,11 @@
 
 /* 일보기 */
 .calendar_day_title{vertical-align:top;}
-.calendar_day_title th{height:29px; line-height:29px; border-top:1px solid #9b9b9b; border-right:1px solid #b5b5b5; border-bottom:1px solid #b5b5b5; border-left:1px solid #b5b5b5; padding:0; margin:0; color:#777;background-color: white}
+.calendar_day_title th{height:33px; line-height:29px; padding:0px 0px 2px 0px; font-family:Malgun Gothic; border-top:1px solid #d1ddec; border-right:1px solid #d1ddec; border-bottom:1px solid #d1ddec; border-left:1px solid #d1ddec; padding:0; margin:0; color:#2f2f2f; background-color: #edf4fd;}
 .calendar_day_title th .btn_prev{display: inline-block; vertical-align: top; margin: 3px 12px 0px; height:17px;cursor:pointer;}
 .calendar_day_title th .btn_next{display: inline-block; vertical-align: top; margin: 3px 0px 0px 12px; height:17px;cursor:pointer;}
-.calendar_day_title .calendar_time{width:61px; border:1px solid #9b9b9b; border-right:1px solid #ddd; border-top:0 none; background:#eaeaea;vertical-align: top;}
-.calendar_day_title .td_list{border:1px solid #9b9b9b; border-left:0 none; border-top:0 none; vertical-align:top;}
+.calendar_day_title .calendar_time{width:61px; border:1px solid #dedede; border-right:1px solid #dedede; border-top:0 none; background:#f8f8fa; border-bottom:1px solid rgb(181, 181, 181); vertical-align: top;}
+.calendar_day_title .td_list{border:1px solid #dedede; border-bottom:1px solid rgb(181, 181, 181); border-left:0 none; border-top:0 none; vertical-align:top;}
 .calendar_day_title .calendar_time .calendar_row{vertical-align:top; margin:0; padding:0; width:69px; }
 .calendar_day_title .calendar_time .calendar_row td{height:22px; padding:0px 8px 0px 0px; text-align:right; color:#898989;}
 .calendar_day_title .calendar_time .calendar_row .calendar_t_time{height:21px; }
@@ -113,17 +113,17 @@
 .calendar_day_title .td_list .calendar_row .calendar_t_text{vertical-align:top;}
 .calendar_day_title .td_list .today td{background:rgb(233, 240, 255);}
 .calendar_day{vertical-align:top;}
-.calendar_day .calendar_time{width:61px; border:1px solid #9b9b9b; border-right:1px solid #ddd; border-top:0 none; background:#eaeaea;vertical-align: top;}
-.calendar_day .td_list{width:100%; border:1px solid #9b9b9b; border-left:0 none; border-top:0 none; vertical-align:top;}
-.calendar_day .calendar_time .calendar_row{vertical-align:top; margin:0; padding:0; width:69px; border-bottom:1px solid #9b9b9b;}
+.calendar_day .calendar_time{width:61px; border:1px solid #dedede; border-right:1px solid #dedede; border-top:0 none; background:#f8f8fa;vertical-align: top;}
+.calendar_day .td_list{width:100%; border:1px solid #dedede; border-left:0 none; border-top:0 none; vertical-align:top;}
+.calendar_day .calendar_time .calendar_row{vertical-align:top; margin:0; padding:0; width:69px; border-bottom:1px solid #dedede;}
 .calendar_day .calendar_time .calendar_row td{height:22px; padding:0px 8px 0px 0px; text-align:right; color:#898989;}
-.calendar_day .calendar_time .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #eaeaea;}
+.calendar_day .calendar_time .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #dedede;}
 .calendar_day .calendar_time .calendar_row td .point{color:#656565; font-weight:bold;}
-.calendar_day .td_list .calendar_row{vertical-align:top; margin:0; padding:0; width:100%; border-bottom:1px solid #9b9b9b;}
+.calendar_day .td_list .calendar_row{vertical-align:top; margin:0; padding:0; width:100%; border-bottom:1px solid #dedede;}
 .calendar_day .td_list .calendar_row td{height:22px; padding:0px 0px 0px 0px; cursor:pointer;}
-.calendar_day .td_list .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #e6e6e8; vertical-align:top;}
+.calendar_day .td_list .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #dedede; vertical-align:top;}
 .calendar_day .td_list .calendar_row .calendar_t_text{vertical-align:top;}
-.calendar_day .td_list .today td{background:rgb(233, 240, 255);}
+.calendar_day .td_list .today td{background:#edf4fd;}
 
 /* //일보기 */
 
