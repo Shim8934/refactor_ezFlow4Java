@@ -4421,6 +4421,34 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
  	
+ 	<select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
+ 		SELECT
+ 			*
+ 		FROM
+ 			(SELECT
+ 				ROW_NUMBER() OVER (order by CN) as RNUM,
+ 				CN,
+ 				displayName,
+ 				department,
+ 				description
+ 			FROM
+ 				TBL_USERMASTER
+ 			WHERE
+ 				tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+ 				<include refid="EzOrganAdminDAO.searchQuery"/>
+ 			ORDER BY
+ 				displayName
+ 			)
+ 		<isNotEqual property="v_start" compareValue="-1">
+ 			<![CDATA[
+	 			WHERE
+	 				RNUM >= #v_start#
+	 			AND
+	 				RNUM <= #v_end#
+ 			]]>
+ 		</isNotEqual>
+ 	</select>
+ 	
  	<select id="EzOrganAdminDAO.getUserCount" parameterClass="map" resultClass="int">
 		SELECT 	
 			COUNT(CN) 
