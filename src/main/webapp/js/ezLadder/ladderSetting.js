@@ -38,11 +38,8 @@ function popSelectUsertype(attendantList, setFunc) {
 
 /** 재사용 사다리 정보 가져오기 */
 function getPreLadder(ladderID) {
-	var data = [];
 	var templist = [];
 	var ladinfo = [];
-	
-	data = [ladderID, "", "", "pre", ""];
 	
 	$.ajax({
 		type: "GET",
@@ -51,7 +48,8 @@ function getPreLadder(ladderID) {
 		dataType: "json",
 		async : false,
 		data: {
-			"allData": data
+			"ladderId": ladderID,
+			"mode": "pre"
 		},
 		success: function(result) {
 			ladinfo["lad"] = result.vo;
