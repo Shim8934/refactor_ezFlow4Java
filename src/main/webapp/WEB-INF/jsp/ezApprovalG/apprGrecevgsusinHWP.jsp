@@ -943,6 +943,9 @@
 			    else
 			        parameter[4] = "N";
 			
+			    //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+			    parameter[99] = "hwp";
+			    
 			    var url = "/ezApprovalG/aprOpinion.do";
 			    var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no;help:no"
 			    var ret = window.showModalDialog(url, parameter, feature);
@@ -1290,7 +1293,7 @@
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
 		        } else {
-		        	  url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun;
+		        	  url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "hwp";
 				      feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 					  ret = window.showModalDialog(url, parameter, feature);
 		        }

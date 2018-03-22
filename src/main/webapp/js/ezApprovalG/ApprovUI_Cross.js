@@ -851,6 +851,9 @@ function openOpinionUI(ret, CompleteFunction) {
     parameter[2] = KuyjeType;
     parameter[3] = pOrgDocID;
     parameter[5] = window;
+    
+    //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+    parameter[99] = ext;
 
     apropinion_cross_dialogArguments[0] = parameter;
     if (CompleteFunction != undefined)
@@ -915,7 +918,7 @@ function makeOpinionList(OpinionXML) {
 var aprattach_cross_dialogArguments = new Array();
 function openFileAttachUI() {
     var parameter = pDocID;
-    url = "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID);
+    url = "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&ext=" + ext;
 
     aprattach_cross_dialogArguments[0] = parameter;
     aprattach_cross_dialogArguments[1] = openFileAttachUI_Complete;
@@ -2704,7 +2707,9 @@ function HabyuiResultOpinion() {
         parameter[1] = "N";
         parameter[2] = KuyjeType;
         parameter[3] = pOrgDocID;
-
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = ext;
+        
         var url = "/ezApprovalG/aprOpinion.do";
         var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
         feature = feature + GetShowModalPosition(530, 520);
@@ -2746,15 +2751,14 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-    if (CrossYN()) {
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
         else
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
         DivPopUpShow(330, 205, url);
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
 

@@ -874,8 +874,7 @@
 		        }
 		        check_openSingUI();
 		    }
-		    function btnReject_onclick()
-		    {
+		    function btnReject_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t36'/>";
 		        OpenInformationUI(pInformationContent, btnReject_onclick_Complete);
 		    }
@@ -949,8 +948,7 @@
 		            OpenAlertUI(pAlertContent);
 		        }
 		    }
-		    function btnStay_onclick() 
-		    {
+		    function btnStay_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t39'/>";
 		       OpenInformationUI(pInformationContent, btnStay_onclick_Complete);
 		    }
@@ -1322,7 +1320,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun , "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "mht", "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		

@@ -408,7 +408,7 @@ function btnRemoveDoc_onclick() {
     var OpinionContent = strLangS387;
     var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
     
-    if (!CrossYN()) {
+    if (rtn) {
         RemoveDoc_Complete(rtn);
     }
 }

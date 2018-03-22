@@ -2372,7 +2372,9 @@ function openOpinionUI(pOpinionFlag) {
         parameter[1] = pOpinionFlag;
         parameter[2] = KuyjeType;
         parameter[3] = pDraftFlag;
-
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = "mht";
+        
         apropinion_cross_dialogArguments[0] = parameter;
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
@@ -2438,7 +2440,7 @@ function openFileAttachUI() {
         aprattach_cross_dialogArguments[0] = "";
         aprattach_cross_dialogArguments[1] = "";
 
-        DivPopUpShow(540, 390, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag);
+        DivPopUpShow(540, 390, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag + "&ext=" + ext);
     } catch (e) {
         alert("openFileAttachUI()" + e.description);
     }
@@ -2984,16 +2986,15 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
-    if (CrossYN()) {
+ 
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
         else
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
         DivPopUpShow(330, 205, url);
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
 
@@ -3070,7 +3071,9 @@ function HabyuiResultOpinion() {
         parameter[1] = "N";
         parameter[2] = KuyjeType;
         parameter[3] = pOrgDocID;
-
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = "mht";
+        
         var url = "/ezApprovalG/aprOpinion.do";
         var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no";
         feature = feature + GetShowModalPosition(530, 520);

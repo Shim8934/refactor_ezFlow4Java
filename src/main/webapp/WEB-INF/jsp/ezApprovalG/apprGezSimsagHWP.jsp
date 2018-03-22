@@ -84,7 +84,8 @@
         arrDelFiles[0] = "c:\\" + pDocID + ".xml";
         arrDelFiles[1] = "c:\\" + pOrgDocID + ".xml";
         var pUse_Editor = "${useEditor}";
-
+        var ext = "hwp";
+        
         function btnPrint_onclick() {
             HwpCtrl.PrintDocument("", true);
         }
@@ -425,7 +426,9 @@
             parameter[1] = ret;
             parameter[2] = "002";
             parameter[3] = pOrgDocID;
-
+            //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+            parameter[99] = "hwp";
+            
             var url = "/ezApprovalG/aprOpinion.do";
             var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no;help:no"
             var ret = window.showModalDialog(url, parameter, feature);

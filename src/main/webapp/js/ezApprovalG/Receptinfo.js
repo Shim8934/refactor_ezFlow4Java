@@ -2255,8 +2255,7 @@ function AprLineAddDeptAddress(AddressName) {
 var SelDivName = "";
 function InsertRecAll() {
     try {
-
-        if (CrossYN()) {
+        if (CrossYN() && ext != 'hwp') {
             var pAlertContent = T1361andT1362;
             var Ans = OpenInformationUI(pAlertContent, InsertRecAll_Complete);
         } else {
@@ -2271,7 +2270,6 @@ function InsertRecAll() {
 }
 
 function InsertRecAll_Complete(_RESPONSE) {
-
     if (SelDivName == "Organ" && _RESPONSE == true) {
         var treeNode = new TreeNode();
         treeNode.LoadFromID(nodeIdx);

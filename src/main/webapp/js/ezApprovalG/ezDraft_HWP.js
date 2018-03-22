@@ -1147,7 +1147,9 @@ function openOpinionUI(pOpinionFlag)
     parameter[1]	= pOpinionFlag;
     parameter[2]	= KuyjeType;
     parameter[3]	= pDraftFlag;
-  
+    //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+    parameter[99] = "hwp";
+    
     var url = "/ezApprovalG/aprOpinion.do";
 	var feature = "status:no;dialogWidth:530px;dialogHeight:495px;edge:sunken;scroll:no"
 	var ret = window.showModalDialog(url,parameter,feature);
@@ -1220,7 +1222,7 @@ function openFileAttachUI()
 {
   try{
 	var parameter = pDocID;
-	var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag;
+	var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&ext=" + "hwp";
 	var feature	= "status:no;dialogWidth:540px;dialogHeight:390px;edge:sunken;scroll:no"; 
 	var ret = window.showModalDialog(url, parameter, feature);
 

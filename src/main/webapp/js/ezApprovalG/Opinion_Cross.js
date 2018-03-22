@@ -550,7 +550,7 @@ function deleteOpinion(pSelectedRow) {
             else {
                 var pInformationContent = "" + strLang406 + "";
                 var Rtnval = OpenInformationUI(pInformationContent, deleteOpinion_Complete);
-                if (!CrossYN() && Rtnval) {
+                if (Rtnval) {
                     var selIdx = GetAttribute(tr, "id");
                     OpinionList.DeleteRow(selIdx);
                     document.getElementById("txt_OpinionContent").value = "";
@@ -941,15 +941,14 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN()) {
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
         else
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
         DivPopUpShow(330, 205, url);
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
         var RtnVal = window.showModalDialog(url, parameter, feature);

@@ -5,7 +5,9 @@ function openOpinionViewUI() {
 	parameter[1]  = pOpinionType;   
 	parameter[2]  = "";
 	parameter[3]  = ""; 
-	
+    //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+    parameter[99] = "hwp";
+    
 	var url = "/ezApprovalG/aprOpinion.do";
 	var feature = "status:no;dialogWidth:530px;dialogHeight:520px;scroll:no;edge:sunken"
 	var ret = window.showModalDialog(url,parameter,feature);

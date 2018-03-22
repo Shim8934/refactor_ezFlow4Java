@@ -1045,7 +1045,9 @@ function openOpinionUI(pOpinionFlag) {
     parameter[1]	= pOpinionFlag;
     parameter[2]	= "002";
     parameter[3]	= pDraftFlag;
-
+    //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+    parameter[99] = "hwp";
+    
     var url = "/ezApprovalG/aprOpinion.do";
 	var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
 	var ret = window.showModalDialog(url,parameter,feature);
@@ -1501,8 +1503,7 @@ function setSusinUpdataDocID()
   }
 }
 
-function OpenInformationUI(pInformationContent)
-{
+function OpenInformationUI(pInformationContent) {
 	var parameter = pInformationContent;
 	var url = "/myoffice/ezApprovalG/ezAPROPINION.aspx";
 	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";

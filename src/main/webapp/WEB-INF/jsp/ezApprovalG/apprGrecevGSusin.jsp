@@ -882,6 +882,9 @@
 		            parameter[4] = "Y";
 		        else
 		            parameter[4] = "N";
+		        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+		        parameter[99] = ext;
+		        
 		        temppDocSN = pDocSN;
 		        apropinion_cross_dialogArguments[0] = parameter;
 		        apropinion_cross_dialogArguments[1] = btnReturn_onclick_Complete;
@@ -1293,7 +1296,7 @@
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
 		        } else {
-		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "mht", "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        	try { OpenWin.focus(); } catch (e) { }
 		        }
 

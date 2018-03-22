@@ -364,8 +364,9 @@
 		            var pInformationContent = "<spring:message code='ezApprovalG.t1374'/><br> <spring:message code='ezApprovalG.t10'/>";
 			        var Ans = OpenInformationUI(pInformationContent);
 		
-			        if (Ans)
+			        if (Ans) {
 			            openOpinionUI("Display");
+			        }
 			    }
 		
 		        if (pDraftFlag == "SUSIN")
@@ -743,12 +744,11 @@
 			            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
 				        OpenAlertUI(pAlertContent);
 				        return;
-				    }
-				    else if (chkpass == "cancel") {
+				    } else if (chkpass == "cancel") {
 				        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
 					        OpenAlertUI(pAlertContent);
 					        return;
-					    }
+					}
 			
 			        var ret = openOpinionUI("BanSong");
 			        if (ret != "cancel") {
@@ -798,8 +798,7 @@
 			            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
 				        OpenAlertUI(pAlertContent);
 				        return;
-				    }
-				    else if (chkpass == "cancel") {
+				    } else if (chkpass == "cancel") {
 				        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
 				        OpenAlertUI(pAlertContent);
 				        return;
@@ -869,10 +868,10 @@
 				        setNodeText(btnEdit.childNodes[0], "<spring:message code='ezApprovalG.t44'/>");
 			
 					    if (Ans) {
-					        if (FirstHtml == "")
+					        if (FirstHtml == "") {
 					            FirstHtml = beforeHwp;
-					    }
-					    else {
+					        }
+					    } else {
 					        HwpCtrl.SetCloneData(beforeHwp, "", "HWP");
 					    }
 			
@@ -1087,7 +1086,7 @@
 			
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
-			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun;
+			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "hwp";
 			        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			        var ret = window.showModalDialog(url, parameter, feature);
 			

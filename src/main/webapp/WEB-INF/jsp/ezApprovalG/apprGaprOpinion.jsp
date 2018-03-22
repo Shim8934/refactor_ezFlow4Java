@@ -58,7 +58,7 @@
 		    var move_on, frameLeft, frameTop;
 		    var layerStartX, layerStartY;
 		    var iFramePanel = window.parent.document.getElementById("iFramePanel");
-		    
+		    var ext;
 		    window.onload = function () {
 		        try {
 		            var ua = navigator.userAgent;
@@ -89,12 +89,15 @@
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }
+
 		            pDocID = RetValue[0];
 		            pDisplay = RetValue[1];
 		            pKuyjeType = RetValue[2];
 		            pOrgDocID = RetValue[3];
 		            pWindow = RetValue[5];
 		            pHeSongFlag = RetValue[4];
+		            ext = RetValue[99];
+		            
 		            if (pHeSongFlag == "Y")
 		                TDHeSongMsg.style.display = "";
 		            CheckOpinionType();

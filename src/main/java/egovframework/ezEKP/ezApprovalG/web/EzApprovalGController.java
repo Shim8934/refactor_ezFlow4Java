@@ -1000,6 +1000,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String isUsed = request.getParameter("isUsed");
 		String beforeDocID = request.getParameter("beforeDocID");
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
+		String ext = request.getParameter("ext");
 		
 		if (isUsed == null) {
 			isUsed = "";
@@ -1049,6 +1050,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isUsed", isUsed);
 		model.addAttribute("beforeDocID", beforeDocID);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
+		model.addAttribute("ext", ext);
 		
 		logger.debug("ezApprovalInfo ended.");
 		
@@ -1858,6 +1860,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		//2017-11-09 장진혁 전자결재 총 첨부용량 제한 기능 추가
 		String apprTotalAttachLimit = ezCommonService.getTenantConfig("ApprTotalAttachLimit", userInfo.getTenantId());
+		String ext = request.getParameter("ext");
 		
 		// a=1은 수발신담당자
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -1897,6 +1900,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//2017-11-09 장진혁 전자결재 총 첨부용량 제한 기능 추가
 		model.addAttribute("apprTotalAttachLimit", apprTotalAttachLimit);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("ext", ext);
 		
 		logger.debug("aprAttach ended");
 		

@@ -186,6 +186,7 @@
 			var isUsed = "${isUsed}";
 			var beforeDocID = "${beforeDocID}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
+	        var ext = "${ext}";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){

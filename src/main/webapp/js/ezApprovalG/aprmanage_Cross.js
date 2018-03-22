@@ -1118,6 +1118,9 @@ function OpenOpinionUI(pSelectedRow, pOpinionFlag) {
         parameter[2] = KuyjeType;
         parameter[3] = "";
         temppSelectedRow = pSelectedRow;
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = ext;
+        
         var url = "/ezApprovalG/aprOpinion.do";
 
         apropinion_cross_dialogArguments[0] = parameter;
@@ -1471,8 +1474,7 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction, type) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
-    if (CrossYN()) {
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (type == undefined && CompleteFunction != undefined) {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;

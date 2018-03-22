@@ -55,7 +55,8 @@
 	        var pUserID = arr_userinfo[1];
 	        var SignCheckFlag = "${SignCheck}";
 	        var pUse_Editor = "${useEditor}";
-	
+			var ext = "hwp";
+			
 	        window.onresize = function () {
 	            HwpCtrl.style.height = null;
 	            HwpCtrl.height = document.documentElement.clientHeight - 150;
@@ -177,7 +178,6 @@
 				var parameter = pInformationContent;
 				var url = "/ezApprovalG/ezAprOpinion.do";
 				var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-// 				feature =  feature + GetShowModalPosition(330, 205);
 				
 				var RtnVal = window.showModalDialog(url,parameter,feature);	
 				return RtnVal;

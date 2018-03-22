@@ -59,6 +59,7 @@
 			var apprTotalAttachLimit = "${apprTotalAttachLimit}";
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			var totalSize = 0;
+			var ext = "${ext}";
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()
@@ -293,8 +294,7 @@
 						var pInformationContent = "<spring:message code='ezApprovalG.t279'/>";
 					    var Ans = OpenInformationUI(pInformationContent, btn_AttachDel_onclick_Complete);
 			
-						if(!CrossYN() && Ans)
-						{
+						if(Ans) {
 							var pAttachRow = listview.GetSelectedRows();
 							var delfileSize = GetChildNodes(pAttachRow[0])[2].innerHTML;
 							var Rtnval = DeleteFileAtServer(pAttachCurSel[0]);

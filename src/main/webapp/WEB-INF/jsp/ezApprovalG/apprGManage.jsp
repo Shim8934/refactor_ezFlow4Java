@@ -97,6 +97,7 @@
 		    var SubQuery = "${SubQuery}";
 		    var condition = new Array();
 		    var nowDate = "${nowDateUTC}";
+		    var ext;
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -345,6 +346,7 @@
 		        SelList.LoadFromID("DocList");
 		        var oArrRows = SelList.GetSelectedRows();
 		        var tr = oArrRows[0];
+		        ext =  tr.getAttribute("DATA3").substr(tr.getAttribute("DATA3").length - 3, tr.getAttribute("DATA3").length).toLowerCase();
 		        if (tr.length != 0) {
 		            if (pListTypeValue != "5") {
 		                if (pDocInfoValue == "1")
@@ -357,7 +359,7 @@
 		                if (tr) {
 		                    pDocID = tr.getAttribute("DATA1");
 		                    pURL = tr.getAttribute("DATA2");
-		
+							
 		                    switch (pDocInfoValue) {
 		                        case "4":
 		                            getDataInfo("3");

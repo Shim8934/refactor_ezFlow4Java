@@ -83,6 +83,7 @@
 	        var tempAttachSN = 0;
 <%-- 	        var pUse_Editor = "<%= Use_Editor%>"; --%>
 			var g_progresswin = null;
+			var ext = 'hwp';
 			
 			function showProgress(inforstring) {
 			    g_progresswin = window.showModelessDialog("/ezApprovalG/showProgress.do?fileInfo=" + escape(inforstring), "", "dialogWidth=390px; dialogHeight:185px; center:yes; status:no; help:no; edge:sunken;");

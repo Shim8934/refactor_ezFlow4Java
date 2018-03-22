@@ -1746,7 +1746,7 @@ function openOpinionUI(pOpinionFlag) {
         parameter[1] = pOpinionFlag;
         parameter[2] = KuyjeType;
         parameter[3] = pDraftFlag;
-
+        parameter[99] = "mht";
         apropinion_cross_dialogArguments[0] = parameter;
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
