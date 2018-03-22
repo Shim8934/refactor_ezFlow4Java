@@ -111,10 +111,62 @@
 						endDate : endDate
 					},
 					success : function(result) {
-						alert(result[0].attitudeId);
+						getAttitudeMainList_after(result);
 					}
 				})
 			}
+			
+			function getAttitudeMainList_after(result) {
+				var startDate = "";
+				var startTime = "";
+				var endDate = "";
+				var endTime = "";
+				for (var i = 0; i < result.length; i++) {
+					if (result[i].dateType == '4' || result[i].dateType == '5') {
+						startDate = result[i].startDate.split(" ")[0];
+						endDate = result[i].endDate.split(" ")[0];
+						var betweenDate = calDateRange(startDate, endDate);
+						
+						startDate = new Date(startDate);
+						for (var j = 0; j < betweenDate; j++) {
+							startDate.setDate(startDate.getDate() + 1);
+							var tdAttrDay = startDate.getFullYear() + "-" + leadingZeros(startDate.getMonth() + 1, 2) + "-" + leadingZeros(startDate.getDate(),2);
+							
+							$("td[day=" + tdAttrDay + "]").find("table#TD_" + tdAttrDay + "_Value").append("<tr><td>" + result[i].typeId + "</td></tr>");
+						}
+						
+					} else if (result[i].dateType == '3') {
+						
+					} else {
+						startDate = result[i].startDate.split(" ")[0];
+						startTime = result[i].startDate.split(" ")[1];
+						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td>" + startTime + " : " + result[i].typeId + "</td></tr>");
+					}
+				}
+			}
+			
+			/**
+			* 두 날짜의 차이를 구하는 메소드
+			* val1 = startDate, val2 = endDate
+			*/
+		    function calDateRange(val1, val2)
+		    {
+		        var FORMAT = "-";
+
+		        // 년도, 월, 일로 분리
+		        var start_dt = val1.split(FORMAT);
+		        var end_dt = val2.split(FORMAT);
+
+		        // Number()를 이용하여 08, 09월을 10진수로 인식하게 함.
+		        start_dt[1] = (Number(start_dt[1]) - 1) + "";
+		        end_dt[1] = (Number(end_dt[1]) - 1) + "";
+
+		        var from_dt = new Date(start_dt[0], start_dt[1], start_dt[2]);
+		        var to_dt = new Date(end_dt[0], end_dt[1], end_dt[2]);
+
+		        return (to_dt.getTime() - from_dt.getTime()) / 1000 / 60 / 60 / 24;
+		    }
+			
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">
