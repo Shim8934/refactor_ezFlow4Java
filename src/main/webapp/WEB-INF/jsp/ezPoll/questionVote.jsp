@@ -2588,7 +2588,7 @@
 								<c:choose>
 									<c:when test="${question.resultFirst == 1}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t255'/>" >
+											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t258'/>" >
 										</li>
 									</c:when>
 									<c:otherwise>
@@ -2701,9 +2701,6 @@
 								<ul class='voteIcon_ul'>
 									<li class="voteIconImg_li icon nosecret">
 										<img src="/images/poll/editVote.png" class="voteIconImg" onclick="voteEdit()" title="<spring:message code = 'ezEmail.t149'/>"/>
-									</li>
-									<li class="img_description">
-										<div><span><spring:message code = 'ezEmail.t149'/></span></div>
 									</li>
 								</ul>
 							</c:if>
