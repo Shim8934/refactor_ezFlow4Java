@@ -64,6 +64,183 @@
 	            } catch (e) {
 	            }
 	        }
+	        
+	        function GetFieldsList() {
+	            var FieldsList = new Array();
+	            FieldsList[0] = kukudocsEditor.GetElement("MailSign");
+	            return FieldsList;
+	        }
+	        
+	        function GetListItem(pList, str) {
+	            for (i = 0; i < pList.length; i++) {
+	                if (pList[i].id == str)
+	                    return pList[i];
+	            }
+	        }
+	        
+	        function CellCheckField() {
+	            if (parent.Attribute_Write != undefined) {
+	                var selectE = kukudocsEditor.GetCurrentElement("TD");
+	
+	                if (Array.isArray(selectE)) {
+	                    if (selectE.length > 1) {
+	                        selectE = selectE[0];
+	                    }
+	                }
+	                
+	                if (selectE != null && selectE.tagName == "TD") {
+	                    parent.Attribute_Write(GetAttribute(selectE, "id"));
+	                }
+	            }
+	        }
+			/* mouseup, keyup 에 등록해야하는 function */
+	        function View_CellProperty(g_toggleFlag) {
+	            var TotalTag = GetElementsByTagName(kukudocsEditor.getContentViewElement()[0], "TD");
+	            
+	            for (var i = 0; i < TotalTag.length; i++) {
+	                if (TotalTag[i].id != "") {
+	                    if (TotalTag[i].classList != null) {
+	                        if (TotalTag[i].classList.contains("FIELD")) {
+	                            if (g_toggleFlag) {
+	                                TotalTag[i].setAttribute("beforebgcolor", TotalTag[i].style.backgroundColor);
+	                                TotalTag[i].style.backgroundColor = "#BEE7FC";
+	                            }
+	                            else {
+	                                TotalTag[i].style.backgroundColor = TotalTag[i].getAttribute("beforebgcolor");
+	                                TotalTag[i].removeAttribute("beforebgcolor");
+	                            }
+	                        }
+	                    }
+	                    else {
+	                        if (TotalTag[i].className.indexOf("FIELD") > -1) {
+	                            if (g_toggleFlag) {
+	                                TotalTag[i].setAttribute("beforebgcolor", TotalTag[i].style.backgroundColor);
+	                                TotalTag[i].style.backgroundColor = "#BEE7FC";
+	                            }
+	                            else {
+	                                TotalTag[i].style.backgroundColor = TotalTag[i].getAttribute("beforebgcolor");
+	                                TotalTag[i].removeAttribute("beforebgcolor");
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	
+	            return g_toggleFlag;
+	        }
+			
+	        function SetAttribute(type, id, classname) {
+	            var selCell = kukudocsEditor.GetCurrentElement("TD");
+	
+	            if (Array.isArray(selCell)) {
+	                selCell = selCell[0];
+	            } else if (selCell == null) {
+	                return false;
+	            }
+	
+	            while (selCell && !selCell.previousElementSibling && !selCell.nextElementSibling) {
+	                selCell = selCell.parentNode;
+	                
+	                if (selCell.tagName == "TD" || selCell.tagName == "TH") {
+	                    break;
+	                }
+	            }
+	
+	            if (type == "DEL") {
+	                selCell.removeAttribute("id");
+	
+	                if (selCell.classList != null) {
+	                    if (selCell.classList.contains("FIELD")) {
+	                        selCell.classList.remove("FIELD");
+	                    }
+	                } else {
+	                    if (selCell.className.indexOf("FIELD") > -1) {
+	                        selCell.className = selCell.className.replace("FIELD ", "").replace(" FIELD", "").replace("FIELD", "");
+	                    }
+	                }
+	
+	                parent.Attribute_Write("");
+	                ChangeCell_display(selCell);
+	            } else if (type == "LOCK") {
+                    if (selCell.getAttribute("free") != null) {
+                        selCell.removeAttribute("free");
+                    } else {
+                        selCell.setAttribute("free", "free");
+                    }
+
+                    ChangeCell_display(selCell);
+	            } else {
+	                selCell.setAttribute("id", id);
+	
+	                if (selCell.classList != null) {
+	                    if (!selCell.classList.contains("FIELD")) {
+	                        selCell.classList.add("FIELD");
+	                    }
+	                } else {
+	                    if (selCell.className.indexOf("FIELD") < 0) {
+	                        if (selCell.className === "") {
+	                            selCell.className = "FIELD";
+	                        } else {
+	                            selCell.className = selCell.className + " FIELD";
+	                        }
+	                    }
+	                }
+	
+	                ChangeCell_display(selCell);
+	            }
+	        }
+	        
+	        function ChangeCell_display(selectCell) {
+	            // 셀설정시 설정 셀 배경색 변경표시후 0.5초뒤 원복
+	            selectCell.setAttribute("beforebgcolor", selectCell.style.backgroundColor);
+	            selectCell.style.backgroundColor = "#BEE7FC";
+	
+	            setTimeout(function () {
+	                selectCell.style.backgroundColor = selectCell.getAttribute("beforebgcolor");
+	                selectCell.removeAttribute("beforebgcolor");
+	            }, 500);
+	        }
+	
+	        /* function FormInfoCheck(type) {
+	            try {
+	                switch (type) {
+	                    case "null":
+	                        if (xfe.getBodyValue() == "")
+	                            return true;
+	                        else
+	                            return false;
+	                        break;
+	                    case "body":
+	                        var CheckCount = 0;
+	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        for (var i = 0 ; i < HtmlTag.length; i++) {
+	                            if (GetAttribute(HtmlTag[i], "id") == "body")
+	                                CheckCount++;
+	                        }
+	                        return CheckCount;
+	                        break;
+	                    case "doctitle":
+	                        var CheckCount = 0;
+	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        for (var i = 0 ; i < HtmlTag.length; i++) {
+	                            if (GetAttribute(HtmlTag[i], "id") == "doctitle")
+	                                CheckCount++;
+	                        }
+	                        return CheckCount;
+	                        break;
+	                    case "doctitlefield":
+	                        var CheckCount = 0;
+	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        for (var i = 0 ; i < HtmlTag.length; i++) {
+	                            if (GetAttribute(HtmlTag[i], "id") == "body")
+	                                return GetAttribute(HtmlTag[i], "doctitlefield");
+	                        }
+	                        break;
+	                    default:
+	                }
+	            } catch (e) {
+	            }
+	        } */
 		</script> 
 	</head>
 	<body>

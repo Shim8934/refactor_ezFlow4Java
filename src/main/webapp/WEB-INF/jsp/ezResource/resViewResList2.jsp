@@ -344,8 +344,8 @@
         	</tr>
         	<tr>
             	<td style="vertical-align:top;">
-                	<div id="mainlistlayout" style="width:100%;height:780px;overflow-y: auto;overflow-x:hidden;" >
-                		<table style="width:100%;margin-top:10px;">
+                	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;overflow-y: auto;overflow-x:hidden;" >
+                		<table style="width:100%;">
                     		<tr id="weeklyline">
                 				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #edf4fd;">
                 					<div style="border:1px solid #d1ddec;height:35px;line-height: 33px">
@@ -364,7 +364,7 @@
                     		<tr id="noapproval" style="display:none;">
                         		<td colspan="2" style="font-weight:bold;padding-top:15px;padding-left:5px;vertical-align:bottom;" ><h2>▒&nbsp;<spring:message code="ezResource.t402" /></h2></td>
                     		</tr>
-                    		<tr style="border-top : 1px solid #dedede;">
+                    		<tr>
                       			<td colspan="2" id='tdCalViewCell2'  class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->
                         			<div id="idCalendarViewer2" style='height:100%; text-align:center'> </div>
                         		</td>

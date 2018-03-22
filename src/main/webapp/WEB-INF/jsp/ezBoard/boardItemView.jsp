@@ -993,11 +993,11 @@
 		        }
 		    }
 		    function Retrans_boardContent() {
-		        var feature = GetOpenWindowfeature(765, 820);
+		        var feature = GetOpenWindowfeature(790, 820);
 	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=boardContent&itemID=" + pItemID, "", feature, "");
 		    }
 		    function Retrans_boardAttach() {
-		        var feature = GetOpenWindowfeature(765, 820);
+		        var feature = GetOpenWindowfeature(790, 820);
 	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=boardAttach&itemID=" + pItemID, "", feature, "");
 		    }
 		    function Retrans_mailContent() {
