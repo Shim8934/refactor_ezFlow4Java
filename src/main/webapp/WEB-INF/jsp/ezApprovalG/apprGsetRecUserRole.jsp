@@ -525,7 +525,7 @@
 						<option value="description"><spring:message code='ezApprovalG.t108'/></option>
 						<option value="title"><spring:message code='ezApprovalG.t230'/></option>
 					</select>
-					<input id="txtKeyword" value="" onKeyPress="txtKeyword_onKeyPress()" style="width:90px">&nbsp<a class="imgbtn" style="vertical-align:middle"><span onClick="btnSearch_Click()" style="width:40px" ><spring:message code='ezApprovalG.t111'/></span></a></th>
+					<input id="txtKeyword" value="" onKeyPress="txtKeyword_onKeyPress()" style="width:90px;height:20px;">&nbsp;<a class="imgbtn" style="vertical-align:middle"><span onClick="btnSearch_Click()" style="width:40px" ><spring:message code='ezApprovalG.t111'/></span></a></th>
 				</tr>
 				<tr style="height:2px">
 				<td></td>
