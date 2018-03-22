@@ -80,11 +80,14 @@ function SendMailApproveMember(aprLineList,  aprsn, pdrafttitle, pdraftname, pdr
 }
 
 function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method) {
+	//alert("to : " + to + ", eSubject : " + eSubject + ", Drafter : " + Drafter + ", pDraftDate : " + pDraftDate + ", type : " + type );
+	//alert("type : " + type);
     var dosend = GetNoticeMail(to, type);  
         if (!dosend && isCheck == undefined)
         return;
     var id = to;
     var to = getmailaddress(id);
+    //alert("to : " + to);
     var deptid = to.split(",")[2];
     to = to.split(",")[0] + "," + to.split(",")[1];
     var from = "\"" + arr_userinfo[2] + "\" <" + arr_userinfo[8] + ">\ ";
@@ -149,8 +152,6 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
         } 
     }
     Content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + Approv_a + Content +"</td></tr></table>";
-    
-    console.log("Approv_a  : "+Approv_a)
     
     try {
         var Result = "";

@@ -437,5 +437,23 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		return result;
 	}
 
+	@Override
+	public String getMailId(String docid, int aprmemberSN, int tenantId) throws Exception {
+		LOGGER.debug("GetMailId started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docid", docid);
+		map.put("aprmemberSN", aprmemberSN);
+		map.put("tenantId", tenantId);
+		
+		String result = mApprovalGDAO.getMailId(map);
+		
+		if (result == null) {
+			return "null";
+		}
+		
+		LOGGER.debug("GetMailId ended");
+		return result;
+	}
+
 	
 }
