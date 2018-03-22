@@ -29,6 +29,18 @@ $(document).on('mouseover mouseleave', 'tr', function(e){
 		$(this).css("background-color", "rgb(255,255,255)");
 	}
 })
+
+//td클릭 시 체크박스 선택/해제
+$(document).on('click', "#attiBoardList tr input[type='checkbox']", function(){
+	var checkValue = "";
+	if ($(this).is(":checked") == true) {
+		checkValue = false;
+	} else {
+		checkValue = true;
+	}
+	
+	$(this).prop("checked", checkValue);
+})
 /** jQuery 옵션 끝*/
 
 //tr 클릭이벤트 부여
