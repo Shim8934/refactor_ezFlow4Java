@@ -65,13 +65,13 @@ $(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
 	}
 });
 
-// 편지지 선택 (개별 조회)
-$(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect) span", function(){
-	var letterNo = $(this).parent("li").attr("data-letterno");
+// 편지지 선택 (개별 조회 미리보기)
+$(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect)", function(){
+	var letterNo = $(this).attr("data-letterno");
 	
-	$(this).parent("li").css("background","#e9f1ff");
+	$(this).css("background","#e9f1ff");
 	$(this).parents("ul").find(".lmLetterSelect").css("background","none").removeClass("lmLetterSelect");
-	$(this).parent("li").addClass("lmLetterSelect");
+	$(this).addClass("lmLetterSelect");
 	
 	if (pageType != 'letter_user') {
 		letterPreView(letterNo); // 편지지 미리보기
@@ -124,7 +124,7 @@ function letterPreView(letterNo) {
 				preViewIframe(filePath);
 				
 				$(".lmPreViewTxt").text("");
-				$(".lmPreViewIframe").attr("data-letterName", data.displayname);
+				$(".lmPreViewIframe").attr("data-letterName", data.displayname.replace(/</gi, "&lt;"));
 			}
 			
 			$(".lmPreViewTxt").css("display",txtDisplay);
@@ -139,17 +139,18 @@ function preViewIframe(filePath) {
 	$(".lmPreViewIframe").attr("src", path);
 }
 
-// 편지지 리스트 
-function getLetterList(letterBoxNo) {
+// 편지지 리스트  nowSelect -> 선택 유지 시킬 id
+function getLetterList(letterBoxNo, nowSelect) {
 	$.ajax({
 		type:"POST",
 		data:{letterBoxNo:letterBoxNo},
 		url:"/admin/ezEmail/readLetterList",
 		dataType:"json",
 		success:function(data){
-			addLetterList(data); // 편지지 리스트 html
+			addLetterList(data, nowSelect); // 편지지 리스트 html
 			
 	    	$(".boxNo").attr("data-boxNo", letterBoxNo); // 편지지 리스트 div, 편지지 버튼 div => letterBoxNo
+	    	
 		},
 		error:function(d){
 			console.log(d);
@@ -158,7 +159,7 @@ function getLetterList(letterBoxNo) {
 }
 			    
 // 편지지 목록 추가 
-function addLetterList(jsonArr) {
+function addLetterList(jsonArr, nowSelect) {
 	var letterListHtml = "";
 	var listCount = jsonArr.length;
 
@@ -166,7 +167,7 @@ function addLetterList(jsonArr) {
 		for (i = 0; i < listCount; i++) {
 			
 			letterListHtml += "<li id='lt" + jsonArr[i].letterNo + "' data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + "'>"; 
-			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname + "</span>";
+			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname.replace(/</gi, "&lt;") + "</span>";
 			
 			if (pageType == 'letter_user') {
 				if (searchMode) {
@@ -185,7 +186,7 @@ function addLetterList(jsonArr) {
 						}
 					});
 					
-					letterListHtml += "<span style='float:right'>" + boxName + "</span>";
+					letterListHtml += "<b>" + boxName + "</b>";
 				}
 			} else {
 				letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp(this)'>수정</button>";
@@ -198,6 +199,67 @@ function addLetterList(jsonArr) {
     	letterListHtml = "<li class='lmNoData'>데이터가 없습니다.</li>";
 	}
 	
-	searchMode = false;
 	$(".lmLetterListUl").html(letterListHtml);
+
+	// 선택한 편지지 목록 유지
+	if (nowSelect !== undefined) {
+		$(document).find("#" + nowSelect).addClass("lmLetterSelect");
+		$(".lmLetterSelect").css("background","#e9f1ff");
+	}
+	
+	letterListCss(pageType, searchMode);
+	searchMode = false;
 }
+
+function letterListCss(pageType, searchMode) {
+	if (pageType == 'letter_user' && searchMode == true) {
+		$(".lmLetterListUl li > span").css({
+			"width":"70%",
+			"margin":"0"
+		});
+		
+		$(".lmLetterListUl li > b").css({
+			"width":"30%",
+			"display":"inline-block",
+			"overflow":"hidden",
+			"text-overflow":"ellipsis",
+			"white-space":"nowrap"
+		});
+	}
+}
+
+
+// 예외처리  strChk(문자, 특수문자 허용여부, 길이)
+function strChk(str, speChar, strLen) {
+	// 공백, 특수문자, 길이
+	var strTrim = str.trim();
+	var msg = "";
+	var reJson = {};
+	
+	if (strTrim != "") {
+		// true : 특수문자허용
+		if (!speChar) { 
+			var speCha = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			
+			if (speCha.test(strTrim)) {
+				msg = "특수문자는 입력이 불가능합니다.";
+			}	
+		}
+		
+		// 길이
+		if (typeof strLen != "undefined") {
+			if (strTrim.length >= strLen) {
+				msg = strLen + "자 이하로 입력 가능합니다."
+			} 
+		}
+		
+	}else {
+		msg = "입력해주세요.";
+	}
+	
+	reJson.str = strTrim;
+	reJson.msg = msg;
+	
+	return reJson;
+}
+
