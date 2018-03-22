@@ -1082,6 +1082,7 @@ function tableListControl_today() {
         var _table = document.createElement("TABLE");
         _table.setAttribute("class", "table_layout");
         var _tr = document.createElement("TR");
+        _tr.style.borderTop="1px solid #dedede";
         var _th = document.createElement("TH");
         _th.style.textAlign = "center";
         _th.style.verticalAlign = "middle";
