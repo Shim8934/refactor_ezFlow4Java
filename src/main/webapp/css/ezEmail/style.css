@@ -181,12 +181,12 @@ body {
 	box-sizing: border-box;
 	border-bottom: 1px solid #ebebed;
 	padding: 0 4px;
+	cursor: pointer;
 }
 
 .lmLetterListUl li span {
 	margin-right: 10px;
 	display: inline-block;
-	cursor: pointer;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

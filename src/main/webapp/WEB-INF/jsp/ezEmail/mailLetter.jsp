@@ -84,30 +84,6 @@
 	            }
 		    }
 		    
-		    // 편지지 선택
-		    $(document).on("click", ".lmLetterListUl li", function(){
-		    	var letterNo = $(this).attr("data-letterno");
-		    	
-		    	$(this).css("background","#e9f1ff");
-		    	$(this).parents("ul").find(".lmLetterSelect").css("background","none").removeClass("lmLetterSelect");
-		    	$(this).addClass("lmLetterSelect");
-		    	
-		    	if (pageType != 'letter_user') {
-		    		letterPreView(letterNo); // 편지지 미리보기
-		    	}
-		    });
-
-		    // 편지지 마우스 올릴때 
-		    $(document).on("mouseover", ".lmLetterListUl li:not('.lmLetterSelect')", function(){
-		    	$(this).not(".lmLetterSelect").css("background","#f8f8f8");
-		    });
-
-		    // 편지지 마우스 땔때
-		    $(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect')",function(){
-		    	$(this).not(".lmLetterSelect").css("background","none");
-		    });
-		    
-		    
 		</script>
 		<style>
 			.imgbtn {
@@ -160,18 +136,18 @@
 				text-align: center;
 			}
 			
-			span {
+			/* span {
 				clear: none;
-			}
+			} */
 			
-			.lmLetterListUl li {
+			/* .lmLetterListUl li {
 			    height: 30px;
 			    line-height: 30px;
 			    box-sizing: border-box;
 			    border-bottom: 1px solid #ebebed;
 			    padding: 0 4px;
 			    cursor: pointer;
-			}
+			} */
 			
 		</style>
 	
