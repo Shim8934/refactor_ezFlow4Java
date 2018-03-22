@@ -1813,7 +1813,7 @@
 				JOIN
 					TBL_C_CATEGORY
 				ON
-					TBL_C_CLUB.c_cate_a = TBL_C_CATEGORY.c_code
+					RTRIM(TBL_C_CLUB.c_cate_a) = TBL_C_CATEGORY.c_code
 				AND
 					TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
 				JOIN
@@ -1823,7 +1823,7 @@
 				AND
 					TBL_C_CLUB.tenant_id = TBL_USERMASTER.tenant_id
 				WHERE
-					c_cate_a = #code#
+					RTRIM(c_cate_a) = #code#
 				AND
 					TBL_C_CATEGORY.c_cat = #cat#
 				AND
@@ -1847,7 +1847,7 @@
 				JOIN
 					TBL_C_CATEGORY
 				ON
-					TBL_C_CLUB.c_cate_b = TBL_C_CATEGORY.c_code
+					RTRIM(TBL_C_CLUB.c_cate_b) = TBL_C_CATEGORY.c_code
 				AND
 					TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
 				JOIN
@@ -1857,7 +1857,7 @@
 				AND
 					TBL_C_CLUB.tenant_id = TBL_USERMASTER.tenant_id
 				WHERE
-					c_cate_b = #code#
+					RTRIM(c_cate_b) = #code#
 				AND
 					TBL_C_CATEGORY.c_cat = #cat#
 				AND
@@ -1901,7 +1901,7 @@
 					JOIN
 						TBL_C_CATEGORY
 					ON
-						TBL_C_CLUB.c_cate_a = TBL_C_CATEGORY.c_code
+						RTRIM(TBL_C_CLUB.c_cate_a) = TBL_C_CATEGORY.c_code
 					AND
 						TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
 					JOIN
@@ -1914,6 +1914,8 @@
 						c_cate_a = #code#
 					AND
 						TBL_C_CATEGORY.c_cat = LOWER(#cat#)
+					AND
+						TBL_C_CLUB.C_ADMINCONFIRM = 'Y'
 					AND
 						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
@@ -1950,7 +1952,7 @@
 					JOIN
 						TBL_C_CATEGORY
 					ON
-						TBL_C_CLUB.c_cate_b = TBL_C_CATEGORY.c_code
+						RTRIM(TBL_C_CLUB.c_cate_b) = TBL_C_CATEGORY.c_code
 					AND
 						TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
 					JOIN
@@ -2637,7 +2639,7 @@
                     writername,
                     writername2,
                     writerdeptname,
-                    TO_DATE(writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)),
+                    TO_DATE(writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
                     title,
                     itemcnt,
                     c_membercnt,
@@ -3959,7 +3961,7 @@
 				WHERE
 					c_cat = 'a'
 				AND
-					c_code = #v_CATE#
+					c_code = RTRIM(#v_CATE#)
 				AND
 					tenant_id = #tenantID#
 			]]>
@@ -3973,7 +3975,7 @@
 				WHERE
 					c_cat = 'b'
 				AND
-					c_code = #v_CATE#
+					c_code = RTRIM(#v_CATE#)
 				AND
 					tenant_id = #tenantID#
 			]]>
@@ -4207,7 +4209,7 @@
 				TBL_C_CATEGORY
 			WHERE
 				c_code=(SELECT
-							c_cate_a
+							RTRIM(c_cate_a) C_CATE_A
 						FROM
 							TBL_C_CLUB
 						WHERE
@@ -4232,7 +4234,7 @@
 				TBL_C_CATEGORY
 			WHERE
 				c_code=(SELECT
-							c_cate_b
+							RTRIM(c_cate_b) C_CATE_B
 						FROM
 							TBL_C_CLUB
 						WHERE

@@ -440,9 +440,9 @@
 				c_clubdesc,
 				c_clubconfirmtype,
 				c_clubname$v_USERINFO_LANG$ AS c_clubname,
-				c_cate_a,
-				c_cate_b,
-				c_cate_c
+				RTRIM(c_cate_a) AS C_CATE_A,
+				RTRIM(c_cate_b) AS C_CATE_B,
+				RTRIM(c_cate_c) AS C_CATE_C
 			FROM
 				TBL_C_CLUB
 			WHERE
