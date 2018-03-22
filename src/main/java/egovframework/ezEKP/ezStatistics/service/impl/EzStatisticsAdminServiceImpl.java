@@ -348,7 +348,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/getMailLogList";
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams); 
-		logger.debug("response=" + response);		
+		//logger.debug("response=" + response);		
 		
 		if (response != null) {
 			JSONParser jsonParser = new JSONParser();
@@ -379,8 +379,6 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 						SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd a hh:mm:ss", new Locale("en","US"));
 						dateStr = newFormat.format(dbDate);
 					}
-					
-					logger.debug("LogTime=" + dateStr);
 					
 					map.put("LogTime", dateStr);
 					map.put("senderName", obj.get("senderName"));
