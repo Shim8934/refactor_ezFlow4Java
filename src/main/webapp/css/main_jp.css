@@ -381,7 +381,7 @@ width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-
 .info_set span{display:inline-block; background:url(../images/kr/main/info_set.png) no-repeat top left; width:16px; height:16px; cursor:pointer;}
 
 .btn_blue {display:inline-block;padding:0px 10px 4px 0px; line-height:24px;*line-height:21px;text-decoration:none !important;white-space:nowrap;margin:0px; cursor:pointer;}
-.btn_blue span {display:block;padding:2px 0px 2px 4px; height:21px; color:#fff; vertical-align:middle; font-size:12px; font-weight:bold; width:100%; background-color: rgb(4, 112, 227); background-color: rgb(4, 112, 227);}
+.btn_blue span {display:block;padding:1px 0px 1px 4px; height:21px; color:#fff; vertical-align:middle; font-size:12px; font-weight:bold; width:100%; background-color: rgb(4, 112, 227); background-color: rgb(4, 112, 227);}
 
 
 .btn_white {display:inline-block;padding:0px 4px 0px 0px;background:url(../images/kr/main/btn_bg_white.gif) no-repeat top right; line-height:26px;text-decoration:none !important;white-space:nowrap;margin:0px; cursor:pointer;}
