@@ -1283,8 +1283,9 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			int tenantId    = loginService.getTenantId(serverName);
-			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, primary, offset);
+			int tenantId     = userInfo.getTenantId();
+			FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			
 			//Check copy/move conditions
 			if (folder.getFolderUpper().equals(destFolderId)) {
@@ -1305,7 +1306,7 @@ public class EzWebFolderGWController {
 				}
 			}
 			
-			ezWebFolderAdminService.moveCompanyFolder(folder, listSubFolder, destFolderId, mode, userId, primary, offset, tenantId);
+			ezWebFolderAdminService.moveCompanyFolder(folder, listSubFolder, destFolderId, mode, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1787,32 +1788,7 @@ public class EzWebFolderGWController {
 					
 					//If not created then create
 					if (personalFolder == null) {
-						FolderVO folder            = new FolderVO();
-						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						Date date                  = new Date();
-						String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-						String folderId            = ezWebFolderAdminService.getMaxFolderID(tenantId);
-						
-						folder.setFolderId(folderId);
-						folder.setFolderLevel(0);
-						folder.setFolderName1(userInfo.getDisplayName1());
-						folder.setFolderName2(userInfo.getDisplayName2());
-						folder.setFolderPath("|" + folderId + "|");
-						folder.setFolderStep(0);
-						folder.setFolderType("U");
-						folder.setFolderUpper("root");
-						folder.setOwnerId(userInfo.getId());
-						folder.setUseStatus("Y");
-						folder.setUpdateId(userId);
-						folder.setCreateName1(userInfo.getDisplayName1());
-						folder.setCreateName2(userInfo.getDisplayName2());
-						folder.setTenantId(tenantId);
-						folder.setCompanyId(userInfo.getCompanyID());
-						folder.setCreateId(userId);
-						folder.setCreateDate(timeUTC);
-						folder.setUpdateDate(timeUTC);
-						
-						ezWebFolderAdminService.insertFolder(folder);
+						ezWebFolderAdminService.addPersonalFolder(userInfo);
 						personalFolder = ezWebFolderService.getUserSimpleFolder(userId, tenantId);
 					}
 					

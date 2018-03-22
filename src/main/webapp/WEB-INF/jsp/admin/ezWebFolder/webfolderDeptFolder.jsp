@@ -164,9 +164,6 @@
 					async: true,
 					success : function(data) {
 						var result = data.folderUsers;
-						
-						console.log(result);
-						
 						processUsersList(result, obj.getAttribute("fldName1"), obj.getAttribute("fldName2"), level);
 					},
 					error : function(error) {
@@ -317,7 +314,10 @@
 			function refreshView() {
 				var spanElmt   = document.getElementsByName(selectedFolder)[0];
 				selectedFolder = "";
-				getSelected(spanElmt);
+				
+				if (spanElmt) {
+					getSelected(spanElmt);
+				}
 			}
 			
 			function refreshView2() {

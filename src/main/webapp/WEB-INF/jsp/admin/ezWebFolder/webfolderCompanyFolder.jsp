@@ -359,7 +359,10 @@
 			function refreshView() {
 				var spanElmt   = document.getElementsByName(selectedFolder)[0];
 				selectedFolder = "";
-				getSelected(spanElmt);
+				
+				if (spanElmt) {
+					getSelected(spanElmt);
+				}
 			}
 			
 			function refreshView2() {
