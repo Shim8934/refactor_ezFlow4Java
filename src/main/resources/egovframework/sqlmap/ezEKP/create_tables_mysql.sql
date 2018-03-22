@@ -8251,6 +8251,27 @@ CREATE TABLE `tbl_vote_user_and_question` (
 -- Temporary view structure for view `v_ajsb_emp`
 --
 
+DROP TABLE IF EXISTS `tbl_docdeletehistory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_docdeletehistory` (
+  `DOCID` varchar(100) NOT NULL,
+  `DOCNO` varchar(45) DEFAULT NULL,
+  `DOCTITLE` varchar(255) DEFAULT NULL,
+  `DEPTNAME` varchar(50) DEFAULT NULL,
+  `WRITERNAME` varchar(45) DEFAULT NULL,
+  `DELETEUSERID` varchar(40) DEFAULT NULL,
+  `DELETETIME` datetime DEFAULT NULL,
+  `TENANT_ID` varchar(45) NOT NULL,
+  `COMPANYID` varchar(45) NOT NULL,
+  PRIMARY KEY (`DOCID`,`COMPANYID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary view structure for view `v_ajsb_emp`
+--
+
 DROP TABLE IF EXISTS `v_ajsb_emp`;
 /*!50001 DROP VIEW IF EXISTS `v_ajsb_emp`*/;
 SET @saved_cs_client     = @@character_set_client;
