@@ -44,6 +44,8 @@
 		<result  property="ip" 					column="IP"						columnIndex="15"/>
 		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="16"/>
 		<result  property="typeId" 				column="TYPE_ID"				columnIndex="17"/>
+		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="18"/>
+		<result  property="imgPath"				column="IMG_PATH"				columnIndex="19"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -60,8 +62,8 @@
 		<![CDATA[
 			SELECT 
 				ATTITUDE_ID,
-				COMPANY_ID,
-				TENANT_ID,
+				A.COMPANY_ID,
+				A.TENANT_ID,
 				WRITER_ID,
 				DEPT_ID,
 				IF(
@@ -81,13 +83,15 @@
 				CONTENT,
 				IP,
 				DATE_TYPE,
-				TYPE_ID
+				A.TYPE_ID,
+				B.TYPE_NAME,
+				B.IMG_PATH
 			FROM   
-				tbl_attitude
+				tbl_attitude A INNER JOIN tbl_attitude_type B ON (A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
 			WHERE  
 				WRITER_ID = #pidList#
 			AND    
-				TENANT_ID = #tenantId#
+				A.TENANT_ID = #tenantId#
 			AND  
 				(
 					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
@@ -95,7 +99,9 @@
 					(END_DATE >= #startDate# and END_DATE < #endDate#) 
 					or
 					(START_DATE < #startDate# and END_DATE >= #endDate#)
-				);
+				)
+			ORDER BY
+				A.TYPE_ID
 		]]>
 	</select>
 

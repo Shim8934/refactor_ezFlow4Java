@@ -92,11 +92,20 @@ public class EzAttitudeGWController {
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			String UTCDate = commonUtil.getTodayUTCTime("");
 			String offset = info.getOffSet();
 			
 			List<AttitudeVO> resultList = ezAttitudeService.getAttitudeList(userId, "", typeId, startDate, endDate, offset, info.getTenantId());
 			
+			//imgPath 셋팅
+			
+			for (int i = 0; i < resultList.size(); i++) {
+				String imgPath = resultList.get(i).getImgPath();
+				if (imgPath != null && !imgPath.equals("")) {
+					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + info.getCompanyId() + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+					resultList.get(i).setImgPath(imgPath);
+				}
+			}
+	         
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", resultList);

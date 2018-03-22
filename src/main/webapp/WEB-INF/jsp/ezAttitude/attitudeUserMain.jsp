@@ -117,30 +117,30 @@
 			}
 			
 			function getAttitudeMainList_after(result) {
-				var startDate = "";
-				var startTime = "";
-				var endDate = "";
-				var endTime = "";
+				var startDate = "";   // 근태의 시작일
+				var endDate = "";     // 근태의 종료일
+				var betweenDate = ""; // 연속일자로 등록된 근태의 날짜 차이를 저장
 				for (var i = 0; i < result.length; i++) {
 					if (result[i].dateType == '4' || result[i].dateType == '5') {
 						startDate = result[i].startDate.split(" ")[0];
 						endDate = result[i].endDate.split(" ")[0];
-						var betweenDate = calDateRange(startDate, endDate);
+						betweenDate = calDateRange(startDate, endDate);
 						
 						startDate = new Date(startDate);
-						for (var j = 0; j < betweenDate; j++) {
-							startDate.setDate(startDate.getDate() + 1);
+						for (var j = 0; j <= betweenDate; j++) {
+							startDate.setDate(startDate.getDate() + ( j == 0 ? 0 : 1));
 							var tdAttrDay = startDate.getFullYear() + "-" + leadingZeros(startDate.getMonth() + 1, 2) + "-" + leadingZeros(startDate.getDate(),2);
 							
-							$("td[day=" + tdAttrDay + "]").find("table#TD_" + tdAttrDay + "_Value").append("<tr><td>" + result[i].typeId + "</td></tr>");
+							$("td[day=" + tdAttrDay + "]").find("table#TD_" + tdAttrDay + "_Value")
+														  .append("<tr><td><img width='20px' height='20px' style='vertical-align:top; margin-right:3px;' src='"+ result[i].imgPath +"'/>" + result[i].typeName + " : " + result[i].region + "</td></tr>");
 						}
 						
 					} else if (result[i].dateType == '3') {
 						
 					} else {
 						startDate = result[i].startDate.split(" ")[0];
-						startTime = result[i].startDate.split(" ")[1];
-						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td>" + startTime + " : " + result[i].typeId + "</td></tr>");
+						var startTime = result[i].startDate.split(" ")[1];
+						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td>" + result[i].typeName + " : " + startTime + "</td></tr>");
 					}
 				}
 			}
@@ -166,6 +166,13 @@
 
 		        return (to_dt.getTime() - from_dt.getTime()) / 1000 / 60 / 60 / 24;
 		    }
+			
+			/**
+			* 근태 더블클릭 이벤트
+			*/
+			function attitudeInfo(obj) {
+				alert(obj);	
+			}
 			
 		</script>
 	</head>
