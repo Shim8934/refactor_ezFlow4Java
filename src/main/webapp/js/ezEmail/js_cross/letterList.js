@@ -139,17 +139,18 @@ function preViewIframe(filePath) {
 	$(".lmPreViewIframe").attr("src", path);
 }
 
-// 편지지 리스트 
-function getLetterList(letterBoxNo) {
+// 편지지 리스트  nowSelect -> 선택 유지 시킬 id
+function getLetterList(letterBoxNo, nowSelect) {
 	$.ajax({
 		type:"POST",
 		data:{letterBoxNo:letterBoxNo},
 		url:"/admin/ezEmail/readLetterList",
 		dataType:"json",
 		success:function(data){
-			addLetterList(data); // 편지지 리스트 html
+			addLetterList(data, nowSelect); // 편지지 리스트 html
 			
 	    	$(".boxNo").attr("data-boxNo", letterBoxNo); // 편지지 리스트 div, 편지지 버튼 div => letterBoxNo
+	    	
 		},
 		error:function(d){
 			console.log(d);
@@ -158,7 +159,7 @@ function getLetterList(letterBoxNo) {
 }
 			    
 // 편지지 목록 추가 
-function addLetterList(jsonArr) {
+function addLetterList(jsonArr, nowSelect) {
 	var letterListHtml = "";
 	var listCount = jsonArr.length;
 
@@ -199,6 +200,12 @@ function addLetterList(jsonArr) {
 	}
 	
 	$(".lmLetterListUl").html(letterListHtml);
+
+	// 선택한 편지지 목록 유지
+	if (nowSelect !== undefined) {
+		$(document).find("#" + nowSelect).addClass("lmLetterSelect");
+		$(".lmLetterSelect").css("background","#e9f1ff");
+	}
 	
 	letterListCss(pageType, searchMode);
 	searchMode = false;
