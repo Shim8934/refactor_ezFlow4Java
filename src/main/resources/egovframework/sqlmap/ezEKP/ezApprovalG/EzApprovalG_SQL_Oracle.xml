@@ -18310,24 +18310,23 @@
 
 	 <update id="EzApprovalG.updateAprLineInfo1" parameterClass="Map">
 	   		<isEqual property="v_MODE" compareValue="APR">
-	   			UPDATE 
-	   				TBL_APRLINEINFO 
+		   		UPDATE TBL_APRLINEINFO 
 		   		SET 
 		   			AprState = #aprState#, 
-		   			ProcessDate = #nowDate#
+		   			ProcessDate = TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS')
 					<isEqual property="beforeAprMemberSN" compareValue="1">
-						, ReceivedDate = #nowDate#
+						, ReceivedDate = TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 					</isEqual>
 				WHERE
-					TENANT_ID = #tenantID#
-				AND
-					COMPANYID = #companyID# 
+					TENANT_ID= #tenantID# 
 				AND
 					DocID = #docID# 
 				AND 
 					AprMemberID = #userID# 
 				AND 
 					AprMemberSN = #curAprMemberSN#
+				AND
+					COMPANYID = #companyID# 
 	   		</isEqual>
 	   		
 	   		<isEqual property="v_MODE" compareValue="END">
@@ -18335,9 +18334,9 @@
 	   				TBL_ENDAPRLINEINFO 
 	   			SET 
 		   			AprState = #aprState#, 
-		   			ProcessDate = #nowDate#
+		   			ProcessDate = TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS')
 					<isEqual property="beforeAprMemberSN" compareValue="1">
-						, ReceivedDate = #nowDate#
+						, ReceivedDate = TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 					</isEqual>
 				WHERE
 					TENANT_ID = #tenantID#
