@@ -24,8 +24,10 @@
 		var allData = [];
 		var size = "${ fn:length(list)}";
 		var lineCnt = "${vo.lineCnt}"
+		var ladderId = "${vo.ladderId}";
 		
 		var stompClient = null;
+		var servername = null;
 		
 		$(window).unload(function() {
 			if (stompClient !== null) {
@@ -41,9 +43,30 @@
 			$("#usePreladder").on("click", function() {
 				window.location.href = "/ezLadder/setLadder.do?ladderId=" + ${vo.ladderId};
 			});
+			$("#saveCmtBtn").on("click", function() {
+				setComment("add");
+			});
+			$(document).on("click", ".cmtmodify", function() {
+				var cmtId = $(this).attr("id").substring(4);
+				if($(this).attr("data") === "OK") {
+					setComment("modify", cmtId);
+				} else {
+					createModifyInput(cmtId);
+				}
+			});
+			$(document).on("click", "#mod_cancle", function() {
+				$(".modiTd").remove();
+				$("#cmtTable td").removeClass("hideTd").css("display", "");
+			});
+			$(document).on("click", ".cmtdelete", function() {
+				var cmtId = $(this).attr("id").substring(4);
+				setComment("delete", cmtId);
+			})
 		});
 		
+		/** 웹소켓 */
 		function getCmtSockConnect() {
+			servername = location.hostname;
 			var sock = new SockJS("/hello");
 			stompClient = Stomp.over(sock);
 			stompClient.connect({}, function() {
@@ -51,16 +74,90 @@
 					console.log(result);
 					console.log("ricieve---------");
 				});
+				stompClient.subscribe("/lad/cmt/" + id + "/addCmt/" + ladderId, function(result) {
+					var cmtjson = JSON.parse(result.body);
+					var html = "";
+					
+					html += "<tr id='cmtTr_" + cmtjson["id"] + "'>";
+					html += "<td>" + cmtjson["userName"] + "</td>";
+					html += "<td>" + cmtjson["comment"] + "</td>";
+					html += "<td>" + cmtjson["writeDate"] + "</td>";
+					html += "<td><div id='mod_" + cmtjson["id"] + "' class='cmtmodify'>modify</div></td>";
+					html += "<td><div id='del_" + cmtjson["id"] + "' class='cmtdelete'>delete</div></td>";
+					html += "</tr>";
+					
+					$("#cmtTable").prepend(html);
+				});
+				stompClient.subscribe("/lad/cmt/" + id + "/modifyCmt/" + ladderId, function(result) {
+					var cmtjson = JSON.parse(result.body);
+					var html = "";
+					
+					$("#cmtTr_" + cmtjson["id"]).remove();
+					
+					html += "<tr id='cmtTr_" + cmtjson["id"] + "'>";
+					html += "<td>" + cmtjson["userName"] + "</td>";
+					html += "<td>" + cmtjson["comment"] + "</td>";
+					html += "<td>" + cmtjson["writeDate"] + "</td>";
+					html += "<td><div id='mod_" + cmtjson["id"] + "' class='cmtmodify'>modify</div></td>";
+					html += "<td><div id='del_" + cmtjson["id"] + "' class='cmtdelete'>delete</div></td>";
+					html += "</tr>";
+					
+					$("#cmtTable").prepend(html);					
+				});
+				stompClient.subscribe("/lad/cmt/" + id + "/deleteCmt/" + ladderId, function(result) {
+					var cmtjson = JSON.parse(result.body);
+					
+					$("#cmtTr_" + cmtjson["id"]).remove();
+				});
+			});
+		}
+		
+		function createModifyInput(cmtId) {
+			var origCmt = $("#cmtTr_" + cmtId + " td:eq(1)").text();
+			$(".modiTd").remove();
+			$("#cmtTable td").removeClass("hideTd").css("display", "");
+			$("#cmtTr_" + cmtId + " td").not("td:eq(0)").addClass("hideTd").css("display", "none");
+			
+			var html = "";
+			html += "<td colspan='2' class='modiTd'><input type='text' id='modifyCmtBox' value='" + origCmt + "' style='width: 100%;' /></td>";
+			html += "<td class='modiTd'><div id='mod_" + cmtId + "' data='OK' class='cmtmodify'>확인</div></td>";
+			html += "<td class='modiTd'><div id='mod_cancle' class='cmtmodify'>취소</div></td>";
+			
+			$("#cmtTr_" + cmtId).append(html);
+		}
+		
+		function setComment(flag, cmtId) { // 댓글 추가, 수정, 삭제 (flag: add, modify, delete)
+			var comment = "";
+			if(flag === "add") {
+				comment = $("#inputCmtBox").val();					
+			} else if(flag === "modify") {
+				comment = $("#cmtTr_" + cmtId + " input").val();
+			} 
+			
+			$.ajax({
+				type: "POST",
+				url: "/ezLadder/setLadderComment.do",
+				dataType: "json",
+				data: {
+					"flag": flag,
+					"id": cmtId,
+					"ladderId": ladderId,
+					"comment": comment
+				},
+				success: function(result) {
+					console.log(result);
+				}
 			});
 		}
 		
 		function sendTest() {
 			console.log("send---------");
 			var msg = "send test? 한글은?";
-			stompClient.send("/app/ladtest", {}, msg);
+			var json = {"msg": "send test? 한글은?", "msg2": "json"};
+			stompClient.send("/app/ladtest", {}, JSON.stringify(json));
 		}
 		
-		function showComments() {
+		function showComments() { // 댓글 조회
 			var html = ""
 			
 			$.ajax({
@@ -71,42 +168,15 @@
 					"ladderId": "${vo.ladderId}"
 				},
 				success: function(result) {
-					console.log(result);
 					var cmtlist = result["cmtlist"];
 					
 					cmtlist.forEach(function(cmt) {
-						html += "<tr>";
+						html += "<tr id='cmtTr_" + cmt["id"] + "'>";
 						html += "<td>" + cmt["userName"] + "</td>";
 						html += "<td>" + cmt["comment"] + "</td>";
 						html += "<td>" + cmt["writeDate"] + "</td>";
-						html += "</tr>";
-					});
-					
-					$("#cmtTable").append(html);
-				}
-			});
-		}
-		
-		/**해야함!*/
-		function setComment(flag) {
-			var html = "";
-			
-			$.ajax({
-				type: "GET",
-				url: "/ezLadder/setLadderComment.do",
-				dataType: "json",
-				data: {
-					"ladderId": "${vo.ladderId}"
-				},
-				success: function(result) {
-					console.log(result);
-					var cmtlist = result["cmtlist"];
-					
-					cmtlist.forEach(function(cmt) {
-						html += "<tr>";
-						html += "<td>" + cmt["userName"] + "</td>";
-						html += "<td>" + cmt["comment"] + "</td>";
-						html += "<td>" + cmt["writeDate"] + "</td>";
+						html += "<td><div id='mod_" + cmt["id"] + "' class='cmtmodify'>modify</div></td>";
+						html += "<td><div id='del_" + cmt["id"] + "' class='cmtdelete'>delete</div></td>";
 						html += "</tr>";
 					});
 					
@@ -124,12 +194,7 @@
 			} 
 		}
 		
-		/* function reuse(idx) {
-			if (confirm('재사용하시겠습니까?')) {
-				window.location.href= '/ezLadder/setLadder.do?type=reuse&ladderId=' + idx;
-			}
-		}
-		
+		/* 
 		function start(idx) {
 			allData = [idx, searchSelect, searchInput, mode, currPage, size, lineCnt ];	
 			if (confirm('시작하시겠습니까?')) {
@@ -158,6 +223,13 @@
 			color:black;
 			background: #010;
 			border-color:#010;
+		}
+		
+		.cmtdelete, .cmtmodify {
+			cursor: pointer;
+		}
+		.cmtdelete:HOVER, .cmtmodify:HOVER {
+			background: beige;
 		}
 	</style>
 </head>
@@ -210,14 +282,16 @@
 		</div>
 		
 <div>
-	<table id="cmtTable" style="width: 100%;">
+	<table style="width: 100%;">
 		<tr>
-			<td colspan="3">
-				<input type="text" placeholder="댓글작성칸" style="width: 90%;"/>
+			<td>
+				<input type="text" id="inputCmtBox" placeholder="댓글작성칸" style="width: 90%;"/>
 				<button id="saveCmtBtn">댓글 등록</button>
 			</td>
 		</tr>
 	</table>
+	<table id="cmtTable" style="width: 100%;"></table>
+
 	<button onclick="sendTest()">socket test!!</button>
 </div>
 		<!-- <div id="ladderGame" align="center" >

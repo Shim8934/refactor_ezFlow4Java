@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezLadder.web;
 
 
+import java.lang.annotation.Native;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +23,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +48,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezLadder.service.EzLadderService;
 import egovframework.ezEKP.ezLadder.vo.LadderBmUserVO;
 import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
+import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.let.user.login.service.LoginService;
@@ -390,17 +397,21 @@ public class EzLadderController {
 	/** 웹소켓테스트 */
 	@SuppressWarnings("unchecked")
 	@MessageMapping("/ladtest")
-	public void stopmtestcont(String msg) {
+	public void stopmtestcont(/*String msg*/JSONObject reqjson) {
 		logger.debug("### 웹소켓 send 테스트");
-		logger.debug("### " + msg);
+//		logger.debug("### " + msg);
+//		
+//		msg += "-----return"; 
+//		logger.debug("### " + msg);
+		logger.debug("### " + reqjson);
 		
-		msg += "-----return"; 
-		logger.debug("### " + msg);
+		reqjson.put("add", ".....");
+		logger.debug("### " + reqjson);
 		
 		// subscribe test
 		JSONObject json = new JSONObject();
-		json.put("retmsg", msg);
-		this.template.convertAndSend("/ladcmt/subscribe/test", json);
+//		json.put("retmsg", msg);
+		this.template.convertAndSend("/ladcmt/subscribe/test", reqjson);
 		logger.debug("### 웹소켓 send 테스트 끝");
 		
 	}
@@ -455,14 +466,15 @@ public class EzLadderController {
 	 * 댓글 추가, 수정, 삭제 : 웹소켓 이용... 수정될듯..
 	 * @throws Exception 
 	 * */
-	@RequestMapping(value = "/ezLadder/setLadderComment.do")
-	public String setLadderComment(@CookieValue("loginCookie") String loginCookie, String mark, String ladderId, String comment, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("setLadderComment.do started.");
+	@RequestMapping(value = "/ezLadder/setLadderComment.do", method = RequestMethod.POST)
+	public String setLadderComment(@CookieValue("loginCookie") String loginCookie, String flag, LadderCommentVO cmtVO, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("%%% setLadderComment.do started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
 
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladders/" + ladderId + "/comment/users/" + userInfo.getId();
+		String url = gwServerUrl + "/ladder/ladders/" + cmtVO.getLadderId() + "/comment/users/" + userId;
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -472,28 +484,44 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenant_id", userInfo.getTenantId())
+				.queryParam("id", cmtVO.getId())
+				.queryParam("comment", cmtVO.getComment())
+				.queryParam("userId", userId)
+				.queryParam("userName", userInfo.getDisplayName())
+				.queryParam("userName2", userInfo.getDisplayName2())
+				.queryParam("offset", userInfo.getOffset())
+				.queryParam("lang", userInfo.getLang());
 		
 		ResponseEntity<String> result = null;
 		
-		if(mark.equals("add")) {
+		String retDestination = "";
+		JSONObject retjson = new JSONObject();
+		if(flag.equals("add")) {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-		} else if(mark.equals("modify")) {
+			retDestination = "/lad/cmt/" + userId + "/addCmt/";
+		} else if(flag.equals("modify")) {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-		} else if(mark.equals("delete")) {
+			retDestination = "/lad/cmt/" + userId + "/modifyCmt/";
+		} else if(flag.equals("delete")) {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+			retDestination = "/lad/cmt/" + userId + "/deleteCmt/";
 		}
 
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		
-		JSONArray list = new JSONArray();
 		String status = jsonResult.get("status").toString();
 	
 		if (status.equals("ok")) {
-			list = (JSONArray) jsonResult.get("data");
+			retjson = (JSONObject) jsonResult.get("data");
 			
-			model.addAttribute("list", list);
+			model.addAttribute("status", status);
+			
+			retDestination += cmtVO.getLadderId();
+			this.template.convertAndSend(retDestination, retjson);
+			
 		} else {
 			return "error";
 		}
@@ -582,6 +610,8 @@ public class EzLadderController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
+		
+		logger.debug("###servername : " + request.getServerName());
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		

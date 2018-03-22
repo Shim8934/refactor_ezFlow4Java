@@ -794,6 +794,43 @@
 			(#tenant_id#, #ladderId#, #comment#, #userId#, #userName#, #userName2#, #writeDate#)
 	</insert>
 	
+	<!-- 밑에 잘 실행되면 삭제하기... -->
+	<select id="EzLadderDAO.selectRecentCommentId" parameterClass="LadderCommentVO" resultClass="Integer">
+		SELECT 
+			MAX(ID)
+		FROM 
+			TBL_LADDER_COMMENT
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			USERID = #userId#
+	</select>
+	
+	<select id="EzLadderDAO.selectLadderComment" parameterClass="LadderCommentVO" resultClass="LadderCommentVO">
+	SELECT 
+		ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE
+	FROM 
+		TBL_LADDER_COMMENT
+	WHERE 
+		TENANT_ID = #tenant_id#
+	AND 
+		<isEqual property="id" compareValue="0">
+			<![CDATA[
+			ID = (SELECT 
+				MAX(ID) 
+			FROM 
+				TBL_LADDER_COMMENT 
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				USERID = #userId#)
+			]]>
+		</isEqual>
+		<isNotEqual property="id" compareValue="0">
+			ID = #id#
+		</isNotEqual>
+	</select>
+	
 	<update id="EzLadderDAO.updateLadderComment" parameterClass="LadderCommentVO">
 		UPDATE 
 			TBL_LADDER_COMMENT

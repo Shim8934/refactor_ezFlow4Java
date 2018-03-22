@@ -79,12 +79,20 @@ public class EzLadderDAO extends EgovAbstractDAO {
 	
 	/** 댓글 관련 */
 	@SuppressWarnings("unchecked")
-	public List<LadderCommentVO> selectComment(LadderCommentVO cmt) {
+	public List<LadderCommentVO> selectComments(LadderCommentVO cmt) {
 		return (List<LadderCommentVO>) list("EzLadderDAO.selectLadderCommentList", cmt);
+	}
+	
+	public LadderCommentVO selectComment(LadderCommentVO cmt) {
+		return (LadderCommentVO) select("EzLadderDAO.selectLadderComment", cmt);
 	}
 	
 	public void insertComment(LadderCommentVO cmt) {
 		insert("EzLadderDAO.insertLadderComment", cmt);
+	}
+	
+	public int selectRecentCommentId(LadderCommentVO cmt) {
+		return (int) select("EzLadderDAO.selectRecentCommentId", cmt);
 	}
 	
 	public void updateComment(LadderCommentVO cmt) {

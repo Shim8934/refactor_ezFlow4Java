@@ -312,7 +312,7 @@ public class EzLadderGWController {
 		
 		try {
 			
-			List<LadderCommentVO> cmt = ezLadderService.selectComment(cmtVO);
+			List<LadderCommentVO> cmt = ezLadderService.selectComments(cmtVO);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -331,15 +331,18 @@ public class EzLadderGWController {
 	 * 댓글 추가
 	 * */
 	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwInsertComment(@PathVariable String userId, @PathVariable String ladderId) {
+	public JSONObject gwInsertComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO) {
 		logger.debug("web G/W LADDER [POST /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			
+			LadderCommentVO resultVO = ezLadderService.insertComment(cmtVO);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", null);
+			result.put("data", resultVO);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -354,15 +357,18 @@ public class EzLadderGWController {
 	 * 댓글 수정
 	 * */
 	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject gwUpdateComment(@PathVariable String userId, @PathVariable String ladderId) {
+	public JSONObject gwUpdateComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO) {
 		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			
+			LadderCommentVO resultVO = ezLadderService.updateComment(cmtVO);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", null);
+			result.put("data", resultVO);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -377,15 +383,21 @@ public class EzLadderGWController {
 	 * 댓글 삭제
 	 * */
 	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject gwDeleteComment(@PathVariable String userId, @PathVariable String ladderId) {
+	public JSONObject gwDeleteComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO) {
 		logger.debug("web G/W LADDER [DELETE /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			
+			ezLadderService.deleteComment(cmtVO);
+			
+			JSONObject deleteCmtId = new JSONObject();
+			deleteCmtId.put("id", cmtVO.getId());
+			
 			result.put("status", "ok");
 			result.put("code", "0");
-	
+			result.put("data", deleteCmtId);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");

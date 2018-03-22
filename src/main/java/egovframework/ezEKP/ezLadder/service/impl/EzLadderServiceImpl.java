@@ -284,13 +284,12 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public List<LadderCommentVO> selectComment(LadderCommentVO cmtVO) throws Exception {
-		List<LadderCommentVO> comments = ezLadderDAO.selectComment(cmtVO);
+	public List<LadderCommentVO> selectComments(LadderCommentVO cmtVO) throws Exception {
+		List<LadderCommentVO> comments = ezLadderDAO.selectComments(cmtVO);
 		
 		String lang = commonUtil.getMultiData(cmtVO.getLang(), cmtVO.getTenant_id());
 		for(LadderCommentVO cmt : comments) {
-			String datdStr = "";
-			datdStr = commonUtil.getDateStringInUTC(cmt.getWriteDate(), cmtVO.getOffset(), false);
+			String datdStr = commonUtil.getDateStringInUTC(cmt.getWriteDate(), cmtVO.getOffset(), false);
 			cmt.setWriteDate(datdStr);
 			if(lang.equals("2")) {
 				cmt.setUserName(cmt.getUserName2());
@@ -299,24 +298,52 @@ public class EzLadderServiceImpl implements EzLadderService {
 		
 		return comments;
 	}
-
+	
 	@Override
-	public void insertComment(LadderCommentVO ladCmt) throws Exception {
-		// TODO Auto-generated method stub
+	public LadderCommentVO selectComment(LadderCommentVO cmtVO) throws Exception {
+		LadderCommentVO retCmtVO = new LadderCommentVO();
 		
+		retCmtVO = ezLadderDAO.selectComment(cmtVO);
+		
+		String dataStr = commonUtil.getDateStringInUTC(retCmtVO.getWriteDate(), cmtVO.getOffset(), false);
+		retCmtVO.setWriteDate(dataStr);
+		
+		String lang = commonUtil.getMultiData(cmtVO.getLang(), cmtVO.getTenant_id());
+		if(lang.equals("2")) {
+			retCmtVO.setUserName(retCmtVO.getUserName2());
+		}
+		
+		return retCmtVO;
 	}
 
 	@Override
-	public void updateComment(LadderCommentVO ladCmt) throws Exception {
-		// TODO Auto-generated method stub
+	public LadderCommentVO insertComment(LadderCommentVO cmtVO) throws Exception {
+		String dataStr = commonUtil.getTodayUTCTime("");
+		cmtVO.setWriteDate(dataStr);
 		
+		ezLadderDAO.insertComment(cmtVO);
+		
+		LadderCommentVO resultCmtVO = selectComment(cmtVO);
+		
+		return resultCmtVO;
 	}
 
 	@Override
-	public void deleteComment(String userId, LadderCommentVO ladCmt)
-			throws Exception {
-		// TODO Auto-generated method stub
+	public LadderCommentVO updateComment(LadderCommentVO cmtVO) throws Exception {
+		String dataStr = commonUtil.getTodayUTCTime("");
+		cmtVO.setWriteDate(dataStr);
 		
+		ezLadderDAO.updateComment(cmtVO);
+		
+		LadderCommentVO resultCmtVO = selectComment(cmtVO);
+		
+		return resultCmtVO;
+	}
+
+	@Override
+	public void deleteComment(LadderCommentVO cmtVO) throws Exception {
+		
+		ezLadderDAO.deleteComment(cmtVO);
 	}
 
 	@Override
