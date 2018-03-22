@@ -21,8 +21,8 @@
 }
 
 .poll_list1 {margin:0px; padding:0px; font-size:12px;}
-.poll_list1 .graphbar1{margin:5px 0px 10px 0px; padding:0px; border:1px solid #eee; height:7px; width:220px; background-color:#f8f8fa;}
-.poll_list1 .graphbar1 .gx_bar11 {background:rgb(245, 117, 120); height:7px; margin:0px; padding:0px;}
+.poll_list1 .graphbar1{margin:3px 0px 10px 0px; padding:0px; border:1px solid #eee; height:7px; background-color:#f8f8fa;}
+.poll_list1 .graphbar1 .gx_bar11 {background:rgb(245, 117, 120); height:7px; margin:0px; padding:0px; border:1px solid rgb(225, 97, 100); margin-top:-1px}
 
 /* 20171115 */
 .voteInfo{height:68px;}

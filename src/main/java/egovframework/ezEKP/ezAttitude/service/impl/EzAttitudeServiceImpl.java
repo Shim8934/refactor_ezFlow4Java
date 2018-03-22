@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bouncycastle.asn1.x509.qualified.TypeOfBiometricData;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
@@ -95,43 +97,59 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeVO> getAttitudeList(String pidList, String yrmh,
-		String typeId, String UTCDate, String offset, int tenantId) throws Exception {
+		String typeId, String startDate, String endDate, String offset, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeList started");
 		Map<String, Object> map = new HashMap<String,Object>();
 		//if써서 하루꺼를 가져오려는 건지 한달꺼를 가져오려는 건지를 구분해야 될 꺼 같다.
 		//일단 하루치를 가져오는 것 부터
-		String localDate = commonUtil.getDateStringInUTC(UTCDate, offset, false).split(" ")[0];
+		//true면 UTC false면 local
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		//startDate와 endDate가 없는 경우 당일의 근태를  출력
+		LOGGER.debug("startDate : " + (startDate == null) + "startDate : " + (startDate.equals("")));
+		if (startDate.equals("") && endDate.equals("")) {
+			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
+			startDate = localDate + " 00:00:00";
+			endDate = localDate + " 23:59:59";
+		} else { //startDate와 endDate가 있는 경우 한달의 근태를 출력 
+			startDate = startDate + " 00:00:00";
+			endDate = endDate + " 23:59:59";
+		}
 		
-		String localUTCStartDate = commonUtil.getDateStringInUTC(localDate + " " + "00:00:00", offset, true);
-		String localUTCEndDate = commonUtil.getDateStringInUTC(localDate + " " + "23:59:59", offset, true);
-		
-		map.put("pidList", pidList);
-		map.put("typeId", typeId);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
-		map.put("UTCStartDate", localUTCStartDate);
-		map.put("UTCEndDate", localUTCEndDate);
+		map.put("offsetMin", offsetMin);
+		map.put("typeId", typeId);
+		map.put("pidList", pidList);
 		
 		List<AttitudeVO> resultList = ezAttitudeDAO.getAttitudeList(map);
 		
-		for (int i = 0; i < resultList.size(); i++) {
-			if (resultList.get(i).getDateType().equals("3")) {
-				resultList.get(i).setStartDate(commonUtil.getDateStringInUTC(resultList.get(i).getStartDate(), offset, false));
-			}
-		}
 		LOGGER.debug("getAttitudeList ended");
 		return resultList;
 	}
 
 	@Override
-	public List<Object> getAttitudeStatisticsList(String pidList, String yrmh,
-			int tenantId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String offset,
+			String startDate, String endDate, int tenantId) throws Exception {
+		LOGGER.debug("getAttitudeStatisticsList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		map.put("pidList", pidList);
+		map.put("offsetMin", offsetMin);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("tenantId", tenantId);
+		
+		
+		LOGGER.debug("getAttitudeStatisticsList ended");
+		return ezAttitudeDAO.getAttitudeStatisList(map);
 	}
 
 	@Override
 	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId,
-			String isuse, int tenantId) throws Exception {
+			String isuse, String isAdmin, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeTypeList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -139,6 +157,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("isuse", isuse);
+		if (!isAdmin.equals("")) {
+			map.put("isAdmin", isAdmin);
+		}
 		
 		LOGGER.debug("getAttitudeTypeList ended");
 		
@@ -324,11 +345,32 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void insertAttitudeType(String typeName, String typeName2,
-			String imgPath, String formId, String parentId, int tenantId,
+	public void insertAttitudeType(String typeId, String typeName, String typeName2,
+			String imgPath, String formId, int tenantId,
 			String companyId) throws Exception {
-		// TODO Auto-generated method stub
+		LOGGER.debug("insertAttitudeType started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("typeId", typeId);
+		map.put("typeName", typeName);
+		if(!typeName2.equals("") || typeName2 != null){
+			map.put("typeName2", typeName2);
+		}
+		if(!imgPath.equals("") || imgPath != null){
+			int idx = imgPath.lastIndexOf("/");
+			imgPath = imgPath.substring(idx+1);
+			map.put("imgPath", imgPath);
+		}
+//		map.put("typeName2", typeName2);
+//		map.put("imgPath", imgPath);
+		map.put("formId", formId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezAttitudeDAO.insertAttitudeType(map);
+		
+		LOGGER.debug("insertAttitudeType ended");
 	}
 	
 	@Override
@@ -359,6 +401,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("updateAttitudeType started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int idx = imgPath.lastIndexOf("/");
+		imgPath = imgPath.substring(idx+1);
 		
 		map.put("typeId", typeId);
 		map.put("typeName", typeName);

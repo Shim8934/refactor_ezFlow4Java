@@ -242,7 +242,7 @@
 	        <tr>
 	            <td style="vertical-align: top;">
 	                <div class="listview">
-	                    <div id="lvtDoclist" style="border: 0; width: 448px; height: 360px; overflow: auto;"></div>
+	                    <div id="lvtDoclist" style="border: 0; width: 448px; height: 360px; overflow-x: auto; overflow-y:hidden;"></div>
 	                </div>
 	            </td>
 	            <td style="width: 25px; text-align: center;">

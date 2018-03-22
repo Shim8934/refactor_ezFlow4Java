@@ -32,12 +32,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ibm.icu.util.Calendar;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
@@ -84,12 +87,15 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			String typeId = request.getParameter("typeId");
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			String UTCDate = commonUtil.getTodayUTCTime("");
 			String offset = info.getOffSet();
 			
-			List<AttitudeVO> resultList = ezAttitudeService.getAttitudeList(userId, "", typeId, UTCDate, offset, info.getTenantId());
+			List<AttitudeVO> resultList = ezAttitudeService.getAttitudeList(userId, "", typeId, startDate, endDate, offset, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -421,12 +427,22 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-count] started.");
 		
 		JSONObject result = new JSONObject();
-		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			String offset = request.getParameter("offset");
+			String date = request.getParameter("date");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			Calendar cal = Calendar.getInstance();
+			cal.set(Integer.valueOf(date.substring(0, 4)), Integer.valueOf(date.substring(5)) - 1, 1);
+			
+			String startDate = date + "-01 00:00:00";
+			String endDate = date + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
+			List<AttitudeStatisVO> resultList = ezAttitudeService.getAttitudeStatisticsList(userId, offset, startDate, endDate, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
+			result.put("data", resultList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -562,8 +578,18 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String isuse = request.getParameter("isuse");
+			String isAdmin = request.getParameter("isAdmin");
 			
-			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, info.getTenantId());
+			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, info.getTenantId());
+			
+			//imgPath 셋팅
+			for (AttitudeTypeVO typeInfo : attitudeTypeList) {
+				String imgPath = typeInfo.getImgPath();
+				if (!imgPath.equals("")) {
+					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+					typeInfo.setImgPath(imgPath);
+				}
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -647,12 +673,22 @@ public class EzAttitudeGWController {
 	 * G/W 근태관리 [POST] 근태유형 추가
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject insertAttitudeType(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes] started.");
+	public JSONObject insertAttitudeType(@PathVariable String companyId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetypes] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			String typeId = request.getParameter("typeId");
+			String typeName = request.getParameter("typeName");
+			String typeName2 = request.getParameter("typeName2");
+			String imgPath = request.getParameter("imgPath");
+			String formId = request.getParameter("formId");
+			
+			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, imgPath, formId, info.getTenantId(), companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -662,7 +698,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
 		return result;
 	}
 	
@@ -681,6 +717,15 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			AttitudeTypeVO typeInfo = ezAttitudeService.getAttitudeTypeInfo(info.getTenantId(), companyId, attitudetypeId);
+			//imgPath 셋팅
+			String imgPath = typeInfo.getImgPath();
+			if (!imgPath.equals("")) {
+				imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+				typeInfo.setImgPath(imgPath);
+			} else {
+				typeInfo.setImgPath("/images/default_pic.jpg");
+			}
+
 			//formList 구하기
 			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
 			

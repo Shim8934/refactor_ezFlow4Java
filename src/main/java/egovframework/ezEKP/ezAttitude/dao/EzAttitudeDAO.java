@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
@@ -85,7 +86,12 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public AttitudeUserConfigVO getAttitudeConfTime(Map<String,Object> map) throws Exception {
 		return (AttitudeUserConfigVO) select("ezAttitude.getAttitudeUserConfTime",map);
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public List<AttitudeStatisVO> getAttitudeStatisList(Map<String, Object> map) throws Exception {
+		return (List<AttitudeStatisVO>) list("ezAttitudeDAO.getAttitudeStatisList", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public int getUsersModiyAttCount(Map<String, Object> map) {
 		return (int) select("ezAttitudeDAO.getUsersModiyAttCount", map);
@@ -94,5 +100,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public void updateAttitudeType(Map<String, Object> map) throws Exception {
 		update("ezAttitudeAdminDAO.updateAttitudeType", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void insertAttitudeType(Map<String, Object> map) {
+		insert("ezAttitudeAdminDAO.insertAttitudeType", map);
 	}
 }
