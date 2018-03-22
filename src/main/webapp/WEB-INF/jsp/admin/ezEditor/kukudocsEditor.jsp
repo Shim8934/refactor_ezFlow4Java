@@ -64,6 +64,12 @@
 	            } catch (e) {
 	            }
 	        }
+	        
+	        function GetFieldsList() {
+	            var FieldsList = new Array();
+	            FieldsList[0] = kukudocsEditor.GetElement("MailSign");
+	            return FieldsList;
+	        }
 		</script> 
 	</head>
 	<body>
