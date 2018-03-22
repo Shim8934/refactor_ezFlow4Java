@@ -16,7 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -92,9 +91,6 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties config;
 	
 	@Resource(name = "loginService")
 	private LoginService loginService;
