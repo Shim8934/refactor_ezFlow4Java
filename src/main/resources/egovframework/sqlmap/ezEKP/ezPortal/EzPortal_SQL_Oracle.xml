@@ -1100,7 +1100,8 @@
 				OWNERPAGEID = #v_pOWNERPAGEID#
 			AND
 				TENANT_ID = #tenantID#	
-        	ORDER BY COLUMNPOS ASC
+        	ORDER BY 
+        		COLUMNPOS ASC
 		]]>
 	</select>
 	
@@ -1144,6 +1145,8 @@
 				UID_ = #v_pPORTLETID#
 			AND
 				TENANT_ID = #tenantID#
+			AND
+                COMPANYID = #companyID#
 			AND	
 				ROWNUM <= 1
 		]]>
@@ -1976,7 +1979,9 @@
 			FROM
 				TBL_PORTLET_GENERAL 
 			WHERE
-				DISPLAYNAME LIKE '%' || #v_pDISPLAYNAME# || '%' AND ROWNUM <= #v_pENDROW#
+				DISPLAYNAME LIKE '%' || #v_pDISPLAYNAME# || '%' 
+			AND 
+				ROWNUM <= #v_pENDROW#
 			AND
 				TENANT_ID = #tenantID#	
 		]]>
@@ -2019,7 +2024,8 @@
 	<select id="EzPortalDAO.searchMenuItem" parameterClass="Map" resultClass="PortalSearchMenuItemVO">
 		<![CDATA[
 			SELECT
-				*
+				UID_,
+				DISPLAYNAME
 			FROM (
    					SELECT
    						ROW_NUMBER() OVER(ORDER BY DISPLAYNAME ASC) AS RNUM, UID_, DISPLAYNAME
@@ -2029,6 +2035,8 @@
    					)
           	WHERE
           		RNUM <= $v_pENDROW$
+          	ORDER BY
+          		DISPLAYNAME ASC
 		]]>
 	</select>
 	
