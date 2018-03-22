@@ -373,6 +373,7 @@
 					dataType: "JSON",
 					async: false,
 					success: function(data) {
+						alert("<spring:message code='ezWebFolder.t182'/>");
 						refreshView2();
 					},
 					error: function (xhr, status, e){

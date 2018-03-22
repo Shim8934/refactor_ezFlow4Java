@@ -505,15 +505,15 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 		int levelDistance          = parentFolder.getFolderLevel() + 1 - folder.getFolderLevel();
 		
-		if (folder.getFolderLevel() + levelDistance == 1) {
+		if ((folder.getFolderLevel() + levelDistance == 1) && parentFolder.getFolderType().equals("C")) {
 			String folderPath = folder.getFolderPath();
 			folderPath        = folderPath.substring(1, folderPath.length() - 1);
-			String ancestorId = folderPath.split("\\|")[1];
+			String ancestorId = folder.getFolderType().equals("C") ? folderPath.split("\\|")[1] : folderPath.split("\\|")[0];
 			
 			List<FolderUserVO> listUsers = ezWebFolderService.getFolderUsers(ancestorId, tenantId);
 			
 			for (FolderUserVO folderUser: listUsers) {
-				insertFolderUser(getMaxFolderUserSeq(tenantId), folderUser.getUserId(), folderUser.getUserType(), folder.getFolderId(), userId, timeUTC, folder.getCompanyId(), tenantId);
+				insertFolderUser(getMaxFolderUserSeq(tenantId), folderUser.getUserId(), folderUser.getUserType(), newId, userId, timeUTC, folder.getCompanyId(), tenantId);
 			}
 		}
 		
