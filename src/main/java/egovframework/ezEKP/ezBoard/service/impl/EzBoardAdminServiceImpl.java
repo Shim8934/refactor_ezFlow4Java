@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 
@@ -40,9 +39,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	@Resource(name="EzBoardAdminDAO")
 	private EzBoardAdminDAO ezBoardAdminDAO;
-	
-	@Autowired
-	private Properties config;
 	
 	@Autowired
 	private CommonUtil commonUtil;
