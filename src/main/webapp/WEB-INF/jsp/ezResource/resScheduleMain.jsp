@@ -9,8 +9,7 @@
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="/css/Tab.css" />
 		<link type="text/css" rel="stylesheet" href="/css/olstyle_nonIE.css" />
-		<!-- <link type="text/css" rel="stylesheet" href="/css/Calendar_cross.css" /> -->
-		 <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />  
+		<link type="text/css" rel="stylesheet" href="/css/Calendar_cross.css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
