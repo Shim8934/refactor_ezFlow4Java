@@ -70,6 +70,64 @@
 	            FieldsList[0] = kukudocsEditor.GetElement("MailSign");
 	            return FieldsList;
 	        }
+	        
+	        function GetListItem(pList, str) {
+	            for (i = 0; i < pList.length; i++) {
+	                if (pList[i].id == str)
+	                    return pList[i];
+	            }
+	        }
+	        
+	        function CellCheckField() {
+	            if (parent.Attribute_Write != undefined) {
+	                var selectE = kukudocsEditor.GetCurrentElement("TD");
+	
+	                if (Array.isArray(selectE)) {
+	                    if (selectE.length > 1) {
+	                        selectE = selectE[0];
+	                    }
+	                }
+	                
+	                if (selectE != null && selectE.tagName == "TD") {
+	                    parent.Attribute_Write(GetAttribute(selectE, "id"));
+	                }
+	            }
+	        }
+			/* mouseup, keyup 에 등록해야하는 function */
+	        function View_CellProperty(g_toggleFlag) {
+	            var TotalTag = GetElementsByTagName(kukudocsEditor.getContentViewElement()[0], "TD");
+	            
+	            for (var i = 0; i < TotalTag.length; i++) {
+	                if (TotalTag[i].id != "") {
+	                    if (TotalTag[i].classList != null) {
+	                        if (TotalTag[i].classList.contains("FIELD")) {
+	                            if (g_toggleFlag) {
+	                                TotalTag[i].setAttribute("beforebgcolor", TotalTag[i].style.backgroundColor);
+	                                TotalTag[i].style.backgroundColor = "#BEE7FC";
+	                            }
+	                            else {
+	                                TotalTag[i].style.backgroundColor = TotalTag[i].getAttribute("beforebgcolor");
+	                                TotalTag[i].removeAttribute("beforebgcolor");
+	                            }
+	                        }
+	                    }
+	                    else {
+	                        if (TotalTag[i].className.indexOf("FIELD") > -1) {
+	                            if (g_toggleFlag) {
+	                                TotalTag[i].setAttribute("beforebgcolor", TotalTag[i].style.backgroundColor);
+	                                TotalTag[i].style.backgroundColor = "#BEE7FC";
+	                            }
+	                            else {
+	                                TotalTag[i].style.backgroundColor = TotalTag[i].getAttribute("beforebgcolor");
+	                                TotalTag[i].removeAttribute("beforebgcolor");
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	
+	            return g_toggleFlag;
+	        }
 		</script> 
 	</head>
 	<body>
