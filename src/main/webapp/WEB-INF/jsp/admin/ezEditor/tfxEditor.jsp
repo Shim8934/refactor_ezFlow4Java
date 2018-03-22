@@ -146,7 +146,7 @@
 	            }
 	        }
 	
-	        function CellCkeckField() {
+	        function CellCheckField() {
 	            if (parent.Attribute_Write != undefined) {
 	                // 태그프리 블록지정시 xfe.getCurrentElement()는 배열로 리턴. 블록지정이 아닐경우는 1개만 리턴
 	                var selectE = xfe.getCurrentElement();
@@ -407,8 +407,8 @@
 	            skin : "classic",
 	            uploadFilePath : uploadFilePath,
 	            uploadPasteContentsPath : uploadPasteContentsPath,
-	            onMouseUp : CellCkeckField,
-	            onKeyUp : CellCkeckField
+	            onMouseUp : CellCheckField,
+	            onKeyUp : CellCheckField
 	        });
 	        
 	        xfe.render('xfe');
