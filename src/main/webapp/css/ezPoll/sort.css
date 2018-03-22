@@ -190,3 +190,5 @@ input[type=text]::-ms-clear{ display:none;}
 .voteSeenTbl th{height:40px; background:#edf5ff; color:#304d7f; border:1px solid #c4d3e6; position:relative;}
 #seenUser_{ color:#304d7f; position: absolute; top:16px; left:15px;}
 .voteUnseenTbl th{height:40px; background:#efefef; color:#000; border:1px solid #ddd; position:relative;}
+
+#ballotSystemBody{min-width: 800px}

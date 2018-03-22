@@ -20,8 +20,8 @@
 	        CKEDITOR.on('instanceCreated', function (e) {
 	            e.editor.on('mode', function (e) {
 	                if (e.editor.mode == 'wysiwyg') {
-	                    e.editor.editable().on('keyup', function () { CellCkeckField(); });
-	                    e.editor.editable().on('mouseup', function () { CellCkeckField(); });
+	                    e.editor.editable().on('keyup', function () { CellCheckField(); });
+	                    e.editor.editable().on('mouseup', function () { CellCheckField(); });
 	                }
 	            });
 	        });
@@ -248,7 +248,7 @@
 	            return g_toggleFlag;
 	        }
 	
-	        function CellCkeckField() {
+	        function CellCheckField() {
 	            var selectE = null;
 	            if (parent.Attribute_Write != undefined) {
 	                var selection = CKEDITOR.instances.editor1.getSelection();

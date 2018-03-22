@@ -6,7 +6,6 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -57,9 +56,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 	@Autowired
 	private CommonUtil commonUtil;
-
-	@Autowired
-	private Properties config;
 
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
