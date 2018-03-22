@@ -73,6 +73,8 @@
 		<result property="viewenv" column="viewenv" />
 		<result property="recvAlert" column="recv_alert" />
 		<result property="replyAlert" column="reply_alert" />
+		<result property="previewWcontent" column="preview_wcontent" />
+		<result property="previewHcontent" column="preview_hcontent" />
 	</resultMap>
 
 	<resultMap class="deptViewVO" id="deptViewMap">
@@ -710,7 +712,16 @@
 			and dept_share='Y'
 		</isEqual>
 		group by 1,2,3,4,5,6,7,8,14,15
-		order by $orderNum$ $orderHow$
+		<isEmpty property="orderNum">
+			<isEmpty property="orderHow">
+			order by 3 desc
+			</isEmpty>
+		</isEmpty>
+		<isNotEmpty property="orderNum">
+			<isNotEmpty property="orderHow">
+			order by $orderNum$ $orderHow$
+			</isNotEmpty>
+		</isNotEmpty>
 		limit
 		#startCount#,#listCnt#
 	</select>
@@ -813,10 +824,13 @@
 
 	<!-- 환경설정을 가져오기 -->
 	<select id="selectUserEnv" parameterClass="Map" resultMap="journalEnvMap">
-		select count(user_id),ifnull(list_cnt,20) as list_cnt
+		select count(user_id)
+		,ifnull(list_cnt,20) as list_cnt
 		,ifnull(viewenv,'NONE') as viewenv
 		,ifnull(recv_alert,'Y') as recv_alert
 		,ifnull(reply_alert,'Y') as reply_alert
+		,ifnull(preview_wcontent,'50') as preview_wcontent
+		,ifnull(preview_hcontent,'50') as preview_hcontent
 		from jmocha.tbl_journal_env
 		where user_id=#userId#
 		and
@@ -840,6 +854,12 @@
 		<isNotEmpty property="recvAlert">
 			,recv_alert
 		</isNotEmpty>
+		<isNotEmpty property="previewWcontent">
+			,preview_wcontent
+		</isNotEmpty>
+		<isNotEmpty property="previewHcontent">
+			,preview_hcontent
+		</isNotEmpty>
 		)
 		VALUES
 		(#userId#,
@@ -856,6 +876,12 @@
 		<isNotEmpty property="recvAlert">
 			,#recvAlert#
 		</isNotEmpty>
+		<isNotEmpty property="previewWcontent">
+			,#previewWcontent#
+		</isNotEmpty>
+		<isNotEmpty property="previewHcontent">
+			,#previewHcontent#
+		</isNotEmpty>
 		)
 		ON DUPLICATE KEY UPDATE
 		user_id=#userId#
@@ -870,6 +896,12 @@
 		</isNotEmpty>
 		<isNotEmpty property="recvAlert">
 			,recv_alert=#recvAlert#
+		</isNotEmpty>
+		<isNotEmpty property="previewWcontent">
+			,preview_wcontent=#previewWcontent#
+		</isNotEmpty>
+		<isNotEmpty property="previewHcontent">
+			,preview_hcontent=#previewHcontent#
 		</isNotEmpty>
 	</insert>
 

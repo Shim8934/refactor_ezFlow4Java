@@ -102,12 +102,12 @@
 		    var CurrenWidth = 0;
 		    var pMailListHeightW = 0;
 		    var pMailPreHeightW = 0;
-		    var pMailListDiv = 0;
-		    var pMailPreVDiv = 0;
+		    var pMailListDiv = "${100-journalEnv.previewWcontent}";
+		    var pMailPreVDiv = "${journalEnv.previewWcontent}";
 		    var pMailListWidthH = 0;
 		    var pMailPreWidthH = 0;
-		    var pMailListDiv_H = 0;
-		    var pMailPreVDiv_H = 0;
+		    var pMailListDiv_H = "${100-journalEnv.previewHcontent}";
+		    var pMailPreVDiv_H = "${journalEnv.previewHcontent}";
 		    var normal=null;
 		    var onPreview=false;
 		    var sumFormId;
@@ -454,6 +454,15 @@
 	   				}
 	   			});
 			}
+			function saveJournalEnv(){
+				$.ajax({
+	   				type:"post",
+	   				data:{"previewWcontent":pMailPreVDiv,"previewHcontent":pMailPreVDiv_H},
+	   				url:"/ezJournal/saveJournalEnv.do",
+	   				success: function(){
+	   				}
+	   			});
+			}
 			
 
 			//분할보기 설정
@@ -482,9 +491,6 @@
 						$("#Preview_ContentH").html("<spring:message code='ezBoard.t10022' />");
 						$("#Preview_ContentW").html("<spring:message code='ezBoard.t10022' />");
 					} else if (pGubun == "W") {
-						pMailListDiv = 50;
-						pMailPreVDiv = 50;
-
 						document.getElementById("MailListRayer").style.display = "inline-block";
 						document.getElementById("PreviewRayerW").style.display = "block";
 						document.getElementById("PreviewRayerH").style.display = "none";
@@ -527,9 +533,6 @@
 						}
 						onPreview=true;
 					} else if (pGubun == "H") {
-						pMailListDiv_H = 50;
-						pMailPreVDiv_H = 50;
-
 						if (parent.document.getElementById("tab1")) {
 							CurrenWidth = document.documentElement.clientWidth + 7;
 						} else {
@@ -993,6 +996,7 @@
 	        }
 	        PreviewH_Move = false;
 	        PreviewW_Move = false;
+	        saveJournalEnv();
 	    }
 	}
 

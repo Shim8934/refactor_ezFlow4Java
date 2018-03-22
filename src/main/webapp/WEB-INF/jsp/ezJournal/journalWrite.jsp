@@ -555,23 +555,12 @@
   				</td>
   			</tr>
 	    </table>
+
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	    </div>
 	    
-	    <div class="jquery-modal blocker current" id="selectOtherJournal" style="display:none;">
-			<div id="getOtherPopup" class="popupwrap1 modal popup" style="width:600px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; display: inline-block; left: 145px;">
-				<h1><spring:message code='ezJournal.t87' /></h1>
-				<table class="mainlist" id="getOtherFormList">
-				</table>
-					<br />
-					<table style="width: 100%">
-						<tr>
-							<td style="text-align: center;">
-								<a class="imgbtn"><span onClick=""><spring:message code='ezJournal.t86' /></span></a> 
-								<a class="imgbtn"><span onClick=""><spring:message code='ezJournal.t27' /></span></a>
-							</td>
-						</tr>
-					</table>
-			</div>
-		</div>
 		<script>
 		// 다른일지 가져오기 리스트
 	    function getOtherJournalList() {
@@ -580,9 +569,21 @@
 	        var left = (width - 500) / 2;
 	        var top = (heigth - 300) / 2;
 	        var szHref = "/ezJournal/otherJournalList.do?formId="+selFormId;
-	        var strFeature = "status:no;dialogHeight: 500px;dialogWidth: 520px;help: no;resizable:yes";
-            DivPopUpShow(520, 420, szHref);
+            DivPopUpShow(520, 390, szHref);
     	}
+		
+		function getOtherJournal(journalId){
+			$.ajax({
+    			type : "POST",
+    			dataType : "html",
+    			url : "/ezJournal/getOtherJournalContent.do",
+    			data : {"journalId" : journalId},
+    			success : function(result) {
+					message.SetEditorContent(result);
+					DivPopUpHidden();
+    			}
+    		});
+		}
 		</script>
 	</body>
 </html>

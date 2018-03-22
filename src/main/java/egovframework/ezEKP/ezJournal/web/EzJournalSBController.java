@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezJournal.vo.JournalPagination;
+import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -624,7 +628,7 @@ public class EzJournalSBController {
 	}
 	
 	/**
-	 * 업무일지 조회자 리스트
+	 * 다른일지 가져오기 리스트
 	 * @param request
 	 * @param model
 	 * @param loginCookie
@@ -636,48 +640,75 @@ public class EzJournalSBController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String journalId = request.getParameter("journalId");
+		String formId = request.getParameter("formId");
 		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("journalWriter", userInfo.getId());
 		param.put("userId", userInfo.getId());
-		
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("", param, request,"get",null);
+		param.put("formId",formId);
+		param.put("companyId",userInfo.getCompanyID());
+		param.put("startCount",1);
+		param.put("listCnt",10);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals", param, request,"get",null);
 		String status = resultBody.get("status").toString();
 		
-		String currentPageStr = request.getParameter("currentPage");
-		if (currentPageStr==null || currentPageStr.equals("")) {
-			currentPageStr = "1";
-		}
-		int currentPage = Integer.parseInt(currentPageStr);
-		int totalCount =0;
 		if (status.equals("ok")) {			
-			totalCount = Integer.parseInt((String) resultBody.get("data"));
-		}
-		int listCnt = 10;
-		JournalPagination paging = new JournalPagination(totalCount,listCnt,10,currentPage);
-		model.addAttribute("paging",paging);
-		
-		param.put("startCount", paging.getStartCount());
-		param.put("listCnt", listCnt);
-		
-		resultBody = commonUtil.getJsonFromRestApi("", param, request,"get",null);
-		status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {			
-			JSONArray viewerList=  (JSONArray) resultBody.get("data");
-			
-			for (Object viewer : viewerList) {
-				JSONObject JOViewer = (JSONObject)viewer;
-				String viewDate = (String) JOViewer.get("date");
-				viewDate = commonUtil.getDateStringInUTC(viewDate, userInfo.getOffset(), false);
-				JOViewer.put("date", viewDate);
+			JSONArray journalList=  (JSONArray) resultBody.get("data");
+			for (Object journalObject : journalList) {
+				JSONObject journal = (JSONObject)journalObject;
+				String journalDate = (String) journal.get("journalDate");
+				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+				journal.put("journalDate", journalDate);
 			}
-			
-			model.addAttribute("viewerList",viewerList);
+			model.addAttribute("journalList",journalList);
 		}
 		
 		logger.debug("getOtherJournalList ended");
 		
-		return "/ezJournal/journalViewerList";
+		return "/ezJournal/otherJournalList";
+	}
+	
+	/**
+	 * 선택된 다른일지 내용 가져오기
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezJournal/getOtherJournalContent.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String getOtherJournal(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("getOtherJournal started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String journalId = request.getParameter("journalId");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId, param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		
+		String result = "";
+		
+		if (status.equals("ok")) {			
+			JSONObject journal=  (JSONObject) resultBody.get("data");
+			String journalContent = (String) journal.get("journalContent");
+			
+			Document journalDoc = Jsoup.parseBodyFragment(journalContent);
+			Element journalBody = journalDoc.body();
+			
+			Element thisElem = journalBody.getElementById("thisJournal");
+			Element nextElem = journalBody.getElementById("nextJournal");
+			String nextContent = nextElem.html();
+			
+			thisElem.html(nextContent);
+			nextElem.html("");
+			
+			result = journalDoc.toString();
+			logger.debug(result);
+		}
+		
+		logger.debug("getOtherJournal ended");
+		
+		return result;
 	}
 }
