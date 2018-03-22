@@ -157,9 +157,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("isuse", isuse);
-		if (!isAdmin.equals("")) {
-			map.put("isAdmin", isAdmin);
-		}
+		map.put("isAdmin", isAdmin);
 		
 		LOGGER.debug("getAttitudeTypeList ended");
 		
