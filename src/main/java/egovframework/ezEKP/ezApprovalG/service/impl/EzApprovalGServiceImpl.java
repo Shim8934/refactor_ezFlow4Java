@@ -11908,6 +11908,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		boolean rtnVal = true;
 		String result = "";
 		
+		if (!dirPath.substring(dirPath.length() - 1).equals(commonUtil.separator)) {
+			dirPath += commonUtil.separator;
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID.trim());
 		map.put("companyID", companyID);
@@ -13107,6 +13111,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("updateCirculation started");
 
 		String gongRamDocID = gongRamDocInfo(docID, companyID, userInfo.getTenantId());
+		
+		if (!dirPath.substring(dirPath.length() - 1).equals(commonUtil.separator)) {
+			dirPath += commonUtil.separator;
+		}
 		
 		logger.debug("gongRamDocID : " + gongRamDocID);
 		
