@@ -6,7 +6,14 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -29,12 +36,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -237,7 +247,9 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String apprUserName,
 			@RequestParam(required=false)String startDate,
 			@RequestParam(required=false)String endDate,
-			@RequestParam(required=false)String pageNum) throws Exception {
+			@RequestParam(required=false)String pageNum,
+			@RequestParam(required=false)String type,
+			@RequestParam(required=false)String excelReq) throws Exception {
 		
 		int currentPage = 1;
 		int pageSize = 15;
@@ -248,6 +260,10 @@ public class EzAttitudeKMSController {
 		
 		if (pageNum != null) {
 			currentPage = Integer.parseInt(pageNum);
+		}
+		
+		if (excelReq == null) {
+			excelReq = "false";
 		}
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -277,7 +293,8 @@ public class EzAttitudeKMSController {
 				.queryParam("endDate", endDate)
 				.queryParam("sysLang", sysLang)
 				.queryParam("offset", offsetMin)
-				.queryParam("pageNum", pageNum);
+				.queryParam("pageNum", pageNum)
+				.queryParam("type", type);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -322,17 +339,29 @@ public class EzAttitudeKMSController {
 				endPoint = totalAtt;
 			}
 		}
-
-		builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", userInfo.getCompanyID())
-				.queryParam("tenantId", userInfo.getTenantId())
-				.queryParam("apprUserName", apprUserName)
-				.queryParam("startDate", startDate)
-				.queryParam("endDate", endDate)
-				.queryParam("sysLang", sysLang)
-				.queryParam("offset", offsetMin)
-				.queryParam("startPoint", startPoint)
-				.queryParam("endPoint", endPoint);
+		if (excelReq.equals("true")) {
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", userInfo.getCompanyID())
+					.queryParam("tenantId", userInfo.getTenantId())
+					.queryParam("apprUserName", apprUserName)
+					.queryParam("startDate", startDate)
+					.queryParam("endDate", endDate)
+					.queryParam("sysLang", sysLang)
+					.queryParam("offset", offsetMin)
+					.queryParam("type", type);
+		} else {
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", userInfo.getCompanyID())
+					.queryParam("tenantId", userInfo.getTenantId())
+					.queryParam("apprUserName", apprUserName)
+					.queryParam("startDate", startDate)
+					.queryParam("endDate", endDate)
+					.queryParam("sysLang", sysLang)
+					.queryParam("offset", offsetMin)
+					.queryParam("startPoint", startPoint)
+					.queryParam("endPoint", endPoint)
+					.queryParam("type", type);
+		}
 
 		rest = new RestTemplate();
 		
@@ -361,4 +390,74 @@ public class EzAttitudeKMSController {
 		
 		return resultj;
 	}
+	
+	@RequestMapping(value = "/ezAttitude/saticGetXlsAtt.do")
+	   public void qstResultAnalysisSaveApproval(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	      LOGGER.debug("saticGetXlsAtt started");
+	      
+	      String headerFLAG = "";
+	      
+	      if (request.getParameter("headerFlag") != null) {
+	         headerFLAG = request.getParameter("headerFlag");
+	        }
+	  
+	      HSSFWorkbook workbook = new HSSFWorkbook();
+	      HSSFSheet sheet;
+	      
+	      HSSFCellStyle headerStyle= workbook.createCellStyle();
+	      headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+	      headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+	      headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+	      headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+	      headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+	      headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+	      
+	      HSSFCellStyle bodyStyle= workbook.createCellStyle();
+	      bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+	      bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+	      bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+	      bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+	      
+	      Row row;
+	      Cell cell;
+	      
+	      String pFileName = "";
+	      String strDate = EgovDateUtil.getToday("-");
+	      pFileName = strDate+"_Report.xls";
+	      
+	      String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
+	      Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
+	      Node tbodyNode = analysisData.getElementsByTagName("tbody").item(0);
+	      Node tableHeadNode;
+	      Node tableBodyNode;
+	      
+	      tableHeadNode = tbodyNode.getChildNodes().item(0);
+	      
+	      sheet = workbook.createSheet("report");
+
+		  row = sheet.createRow(0);
+		  for (int i = 0; i <tableHeadNode.getChildNodes().getLength(); i++) {
+			  cell = row.createCell(i);
+			  cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
+			  cell.setCellStyle(headerStyle);
+		  }
+		  //header
+
+		  for (int i = 1; i < tbodyNode.getChildNodes().getLength() ; i++){
+			  row = sheet.createRow(i);
+			  tableBodyNode = tbodyNode.getChildNodes().item(i);
+			  for (int j = 0; j < tableBodyNode.getChildNodes().getLength(); j++) {
+				  cell = row.createCell(j);
+				  cell.setCellValue(tableBodyNode.getChildNodes().item(j).getTextContent());
+				  cell.setCellStyle(bodyStyle);
+			  }
+		  }//body
+
+	      response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+	      workbook.write(response.getOutputStream());
+	      
+	      workbook.close();
+	      
+	      LOGGER.debug("saticGetXlsAtt ended");
+	   }
 }

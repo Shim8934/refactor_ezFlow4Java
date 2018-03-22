@@ -437,7 +437,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId,
-			String userId, String startDate, String endDate, String apprUserName, String sysLang, String offset,String startPoint, String endPoint) throws Exception {
+			String userId, String startDate, String endDate, String apprUserName, String sysLang, String offset,String startPoint, String endPoint, String type) throws Exception {
 		LOGGER.debug("getUsersModiyAtt started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -490,7 +490,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public int getUsersModiyAttCount(String companyId, int tenantId,
 			String userId, String startDate, String endDate,
-			String apprUserName, String sysLang, String offset)
+			String apprUserName, String sysLang, String offset, String type)
 			throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
