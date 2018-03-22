@@ -18,6 +18,7 @@ public class FolderVO {
 	private String updateId;
 	private String updateDate;
 	private String companyId;
+	private String deleterId;
 	private int    tenantId;
 
 	public String getFolderId() {
@@ -163,4 +164,13 @@ public class FolderVO {
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
 	}
+
+	public String getDeleterId() {
+		return deleterId;
+	}
+
+	public void setDeleterId(String deleterId) {
+		this.deleterId = deleterId;
+	}
+
 }

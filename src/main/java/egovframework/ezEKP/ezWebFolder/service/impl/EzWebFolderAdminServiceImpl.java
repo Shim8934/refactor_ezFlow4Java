@@ -169,6 +169,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("updateId",    folder.getUpdateId());
 		map.put("updateDate",  folder.getUpdateDate());
 		map.put("companyId",   folder.getCompanyId());
+		map.put("deleterId",   folder.getDeleterId());
 		map.put("tenantId",    folder.getTenantId());
 		ezWebFolderAdminDAO.insertFolder(map);
 	}
@@ -193,6 +194,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("updateId",    folder.getUpdateId());
 		map.put("updateDate",  folder.getUpdateDate());
 		map.put("companyId",   folder.getCompanyId());
+		map.put("deleterId",   folder.getDeleterId());
 		map.put("tenantId",    folder.getTenantId());
 		ezWebFolderAdminDAO.insertFolder2(map);
 	}

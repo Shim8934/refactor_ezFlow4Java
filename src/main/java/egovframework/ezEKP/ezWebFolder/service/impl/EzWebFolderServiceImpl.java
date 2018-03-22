@@ -85,6 +85,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("createDate",  fileVO.getCreateDate());
 		map.put("updateId",    fileVO.getUpdateId());
 		map.put("updateDate",  fileVO.getUpdateDate());
+		map.put("deleterId",   fileVO.getDeleterId());
 		map.put("tenantId",    fileVO.getTenantId());
 		ezWebFolderDAO.insertFile(map);
 	}
@@ -115,8 +116,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public void updateFileUseStatus(String fileId, int tenantId) throws Exception {
+	public void updateFileUseStatus(String userId, String fileId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",   userId);
 		map.put("fileId",   fileId);
 		map.put("tenantId", tenantId);
 		ezWebFolderDAO.updateFileUseStatus(map);
@@ -231,10 +233,17 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public void updateFolderUseStatus(String folderPath, int tenantId) throws Exception {
+	public void updateFolderUseStatus(FolderVO folder, LoginVO userInfo) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderPath", folderPath);
-		map.put("tenantId",   tenantId);
+		map.put("folderPath", folder.getFolderPath());
+		map.put("tenantId",   userInfo.getTenantId());
+		
+		//saveLog
+		List<FileVO> listFiles = getAllFilesInFolder(folder.getFolderId(), "", "0", "", "", "", "", "", "1", 0, 0, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
+		
+		for (FileVO file : listFiles) {
+			saveLog("R", userInfo.getCompanyID(), userInfo.getOffset(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), file.getFileName(), file.getFileSize(), file.getFileExt(), file.getFileTypeName(), userInfo.getTenantId());
+		}
 		
 		//Update status for all files even in sub folders
 		ezWebFolderDAO.updateStatusAllFilesInFolder(map);
@@ -779,7 +788,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			FileVO fileVO = getFileByFileId(fileIDList[i], offset, tenantId);
 			
 			//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
-			updateFileUseStatus(fileIDList[i], tenantId);
+			updateFileUseStatus(userId, fileIDList[i], tenantId);
 			saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 		}
 	}

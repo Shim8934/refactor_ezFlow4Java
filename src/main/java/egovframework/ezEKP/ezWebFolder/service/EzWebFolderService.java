@@ -22,7 +22,7 @@ public interface EzWebFolderService {
 	FileVO getFileByFileId(String fileId, String offset, int tenantId) throws Exception;
 	FileTypeVO getFileTypeByFileExt(String extend, int tenantId) throws Exception;
 	void deleteFileByFileId(String fileId, int tenantId) throws Exception;
-	void updateFileUseStatus(String fileId, int tenantId) throws Exception;
+	void updateFileUseStatus(String userId, String fileId, int tenantId) throws Exception;
 	void updateFileName(String fileId, String newName, int tenantId) throws Exception;
 	void moveFile(String fileId, String folderId, int tenantId) throws Exception;
 	String getFileLogSequence(int tenantId) throws Exception;
@@ -37,7 +37,7 @@ public interface EzWebFolderService {
 	String getFolderSequence(int tenantId) throws Exception;
 	String getMaxFolderStep(String folderId, int tenantId) throws Exception;
 	String getFolderUserSequence(int tenantId) throws Exception;
-	void updateFolderUseStatus(String folderPath, int tenantId) throws Exception;
+	void updateFolderUseStatus(FolderVO folder, LoginVO userInfo) throws Exception;
 	List<FileVO> getAllFilesInFolder(String folderId, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception;
 	List<FileVO> getAllFiles(String folderPath, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception;
 	int getTotalFileCnt(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, int tenantId) throws Exception;

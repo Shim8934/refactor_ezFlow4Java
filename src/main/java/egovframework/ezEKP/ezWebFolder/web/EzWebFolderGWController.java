@@ -1232,8 +1232,10 @@ public class EzWebFolderGWController {
 
 	@RequestMapping(value="/rest/ezwebfolderadmin/folders/{folderid}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject delCompanyFolder(@PathVariable(value="folderid") String folderId, HttpServletRequest request) throws Exception {
-		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
-		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset") : "";
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")  : "";
+		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset")  : "";
+		String primary    = request.getParameter("primary")  != null ? request.getParameter("primary") : "";
+		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")  : "";
 		JSONObject result = new JSONObject();
 		
 		if (folderId.equals("") || serverName.equals("")) {
@@ -1246,9 +1248,9 @@ public class EzWebFolderGWController {
 		logger.debug("FolderId: " + folderId + " || serverName: " + serverName);
 		
 		try {
-			int tenantId    = loginService.getTenantId(serverName);
-			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
-			ezWebFolderService.updateFolderUseStatus(folder.getFolderPath(), tenantId);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, primary, offset);
+			FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
+			ezWebFolderService.updateFolderUseStatus(folder, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -39,7 +39,7 @@
 			
 			window.onresize = function () {
 				var divList          = document.getElementById("mainSetting");
-				var reheight         = document.documentElement.clientHeight - 170;
+				var reheight         = document.documentElement.clientHeight - 185;
 				divList.style.height = reheight + "px";
 			};
 			
@@ -70,7 +70,7 @@
 			
 			function preProcessing() {
 				var divList          = document.getElementById("mainSetting");
-				var reheight         = document.documentElement.clientHeight - 170;
+				var reheight         = document.documentElement.clientHeight - 185;
 				divList.style.height = reheight + "px";
 			}
 			

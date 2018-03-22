@@ -98,6 +98,7 @@
 		<result property="fileTypeId"           column="filetype_id"            columnIndex="16" />
 		<result property="fileTypeName"         column="filetype_name"          columnIndex="17" />
 		<result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" />
+		<result property="deleterId"            column="deleter_id"             columnIndex="19" />
 		<result property="tenantId"             column="tenant_id"              columnIndex="20" />
 	</resultMap>
 	
@@ -124,7 +125,8 @@
 		<result property="filePosition"         column="file_position"          columnIndex="19" />
 		<result property="folderName"           column="folder_name"            columnIndex="20" />
 		<result property="folderPath"           column="folder_path"            columnIndex="21" />
-		<result property="tenantId"             column="tenant_id"              columnIndex="22" />
+		<result property="deleterId"            column="deleter_id"             columnIndex="22" />
+		<result property="tenantId"             column="tenant_id"              columnIndex="23" />
 	</resultMap>
 	
 	<!-- 로그인  resultMap -->
@@ -163,7 +165,8 @@
 		<result property="updateId"             column="UPDATE_ID"                columnIndex="15" />
 		<result property="updateDate"           column="UPDATE_DATE"              columnIndex="16" />
 		<result property="companyId"            column="COMPANY_ID"               columnIndex="17" />
-		<result property="tenantId"             column="TENANT_ID"                columnIndex="18" />
+		<result property="deleterId"            column="DELETER_ID"               columnIndex="18" />
+		<result property="tenantId"             column="TENANT_ID"                columnIndex="19" />
 	</resultMap>
 	
 	<!-- FolderSimple resultMap -->
@@ -225,13 +228,13 @@
 					FILE_ID,            FILE_NAME,         FILE_PATH,           FILE_SIZE,          TYPE_ID,
 					DOWN_COUNT,         FILE_EXT,          FOLDER_ID,           USE_STATUS,         CREATE_ID,
 					CREATE_NAME1,       CREATE_NAME2,      CREATE_DATE,         UPDATE_ID,          UPDATE_DATE,
-					TENANT_ID
+					DELETER_ID,         TENANT_ID
 				)
 				VALUES (
 					#fileId#,           #fileName#,        #filePath#,          #fileSize#,         #typeId#, 
 					#downloadCnt#,      #fileExt#,         #folderId#,          #useStatus#,        #createId#,
 					#createName1#,      #createName2#,     #createDate#,        #updateId#,         #updateDate#,
-					#tenantId#
+					#deleterId#,        #tenantId#
 				)
 			]]>
 		</isEqual>
@@ -253,7 +256,8 @@
 					CREATE_NAME2   = #createName2#,
 					CREATE_DATE    = #createDate#,
 					UPDATE_ID      = #updateId#,
-					UPDATE_DATE    = #updateDate#
+					UPDATE_DATE    = #updateDate#,
+					DELETER_ID     = #deleterId#
 				WHERE
 						FILE_ID    = #fileId#
 					AND
@@ -341,6 +345,7 @@
 				UPDATE_ID                                       AS UPDATE_ID,
 				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
 				COMPANY_ID                                      AS COMPANY_ID,
+				DELETER_ID                                      AS DELETER_ID,
 				TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FOLDER
@@ -400,6 +405,7 @@
 				t.TYPE_ID                                         AS FILETYPE_ID,
 				t.TYPE_NAME                                       AS FILETYPE_NAME,
 				t.TYPE_ICON                                       AS FILETYPE_ICON,
+				f.DELETER_ID                                      AS DELETER_ID,
 				f.TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
@@ -434,6 +440,7 @@
 				CONCAT(#originalPath#, f.FILE_NAME)               AS FILE_POSITION,
 				""                                                AS FOLDER_NAME,
 				""                                                AS FOLDER_PATH,
+				f.DELETER_ID                                      AS DELETER_ID,
 				f.TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
@@ -486,6 +493,7 @@
 				)                                                 AS FILE_POSITION,
 				u.FOLDER_NAME1                                    AS FOLDER_NAME,
 				u.FOLDER_PATH                                     AS FOLDER_PATH,
+				f.DELETER_ID                                      AS DELETER_ID,
 				f.TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
@@ -554,6 +562,7 @@
 				UPDATE_ID                                       AS UPDATE_ID,
 				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
 				COMPANY_ID                                      AS COMPANY_ID,
+				DELETER_ID                                      AS DELETER_ID,
 				TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FOLDER
@@ -646,6 +655,7 @@
 				UPDATE_ID                                       AS UPDATE_ID,
 				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
 				COMPANY_ID                                      AS COMPANY_ID,
+				DELETER_ID                                      AS DELETER_ID,
 				TENANT_ID                                       AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FOLDER
@@ -678,10 +688,11 @@
 				TBL_WEBFOLDER_FILE
 			SET
 				USE_STATUS = 'T'
+				USE_STATUS = #userId#
 			WHERE
-				FILE_ID = #fileId#
+				FILE_ID    = #fileId#
 			AND
-				TENANT_ID = #tenantId#
+				TENANT_ID  = #tenantId#
 		]]>
 	</update>
 	
