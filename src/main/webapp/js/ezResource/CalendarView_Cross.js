@@ -57,6 +57,8 @@ function CalendarView(pTagetID) {
             oTable.setAttribute("border", "0");
             oTable.setAttribute("width", "100%");
             oTh.setAttribute("id", "calTitle");
+            oTh.style.verticalAlign = "middle";
+            oTh.style.padding = "1px 0px 1px 0px";
             oTh.style.fontSize = "15px";
             oTh.colSpan = "2";
             if (typeCal == 2) {
@@ -146,6 +148,7 @@ function CalendarView(pTagetID) {
             var mImg = document.createElement("IMG");
             mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
             mImg.setAttribute("border", "0");
+            mImg.style.padding = "0.5px 0px 0px 0px";
             if (typeCal == 0)
                 mImg.setAttribute("onclick", "preMonth()");
             else
@@ -161,7 +164,8 @@ function CalendarView(pTagetID) {
             mSpan.className = "btn_next";
             var mImg = document.createElement("IMG");
             mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
-            mImg.setAttribute("border", "0");
+            mImg.setAttribute("border", "0"); 
+            mImg.style.padding = "0.5px 0px 0px 0px";
             if (typeCal == 0)
                 mImg.setAttribute("onclick", "nextMonth()");
             else
@@ -250,6 +254,7 @@ function CalendarView(pTagetID) {
             var objTd = document.createElement("TH");
             objTd.setAttribute("id", "list_Top");
             objTd.colSpan = "9";
+            objTd.style.padding = "1px 0px 1px 0px";
             objTr.appendChild(objTd);
             oTbody.appendChild(objTr);
             oTable.appendChild(oTbody);
@@ -687,6 +692,7 @@ function GetWeekBodyObj() {
     var mImg = document.createElement("IMG");
     mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
     mImg.setAttribute("border", "0");
+    mImg.style.padding = "0.5px 0px 0px 0px";
     mImg.setAttribute("onclick", "preWeek()");
     mSpan.appendChild(mImg);
     document.getElementById("list_Top").appendChild(mSpan);
@@ -698,6 +704,7 @@ function GetWeekBodyObj() {
     var mImg = document.createElement("IMG");
     mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
     mImg.setAttribute("border", "0");
+    mImg.style.padding = "0.5px 0px 0px 0px";
     mImg.setAttribute("onclick", "nextWeek()");
     mSpan.appendChild(mImg);
     document.getElementById("list_Top").appendChild(mSpan);
