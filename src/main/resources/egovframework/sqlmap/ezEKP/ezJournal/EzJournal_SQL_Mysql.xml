@@ -70,6 +70,8 @@
 	<resultMap class="journalEnvVO" id="journalEnvMap">
 		<result property="listCnt" column="list_cnt" />
 		<result property="viewenv" column="viewenv" />
+		<result property="previewWContent" column="preview_wcontent" />
+		<result property="previewHContent" column="preview_hcontent" />
 		<result property="recvAlert" column="recv_alert" />
 		<result property="replyAlert" column="reply_alert" />
 		<result property="previewWcontent" column="preview_wcontent" />

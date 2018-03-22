@@ -25,12 +25,17 @@
             document.getElementById("1tab1").setAttribute("class", "tabon");
             Tab1_SelectID = "1tab1";
             ChangeTab(document.getElementById("1tab1"));
-            window_resize();
+//            window_resize();
+            
+            var recvAlert = "${journalEnv.recvAlert}";
+            var replyAlert = "${journalEnv.replyAlert}";
+            
+            console.log("recvAlert:" + recvAlert + ", replyAlert:" + replyAlert);
         }
-        window.onresize = window_resize;
+//      window.onresize = window_resize;
 //        function window_resize() {
- //           document.getElementById("JournalEnv_ifrm").style.height = (document.documentElement.clientHeight - 120) + "PX";
-  //      }
+//           document.getElementById("JournalEnv_ifrm").style.height = (document.documentElement.clientHeight - 120) + "PX";
+//      }
         function ChangeTab(obj) {
             var pSelectTab = obj.getAttribute("divname");
             switch (pSelectTab) {
@@ -85,6 +90,56 @@
                 }
             }
         }
+        
+        function Cancel_Click() {
+    		document.getElementById("listcount").value = 10;
+    		document.getElementById("PreviewMode").value = 0;
+  			document.getElementById("PreviewDiv").style.display = "none";        		
+    	}
+    	function saveListEnv() {
+    		var listCount = document.getElementById("listcount").value;
+ 			var Preview = document.getElementById("PreviewMode").value;
+ 			var previewListValue = document.getElementById("previewListValue").value;
+ 			var previewContentValue = document.getElementById("previewContentValue").value;
+
+ 			$.ajax({
+ 				url : '/ezJournal/saveJournalConfig.do',
+ 				method : 'POST',
+ 				dataType : 'text',
+ 				data : {
+     				listCnt : listCount ,
+	 				isPreview : Preview,
+	 				previewListValue : previewListValue,
+	 				previewContentValue : previewContentValue
+ 				},
+     			success : function(data, textStatus, jqXHR) {
+     				alert('저장했습니다.');
+ 				},
+ 				error : function(jqXHR, textStatus, errorThrown) {
+            	    alert('Error : ' + jqXHR.status + ", " + textStatus);
+ 				}
+ 			});       
+    	}
+    	
+    	function saveMailAlert() {
+    		var recvAlert = ($("#recvAlert").checked) ? "Y" : "N";
+    		var replyAlert = ($("#replyAlert").checked) ? "Y" : "N";
+    		
+    		$.ajax({
+    			type : "POST",
+    			dataType : "text",
+    			async : false,
+    			url : "/ezJournal/saveJournalConfig.do",
+    			data : {
+    				recvAlert : recvAlert,
+    				replyAlert : replyAlert
+    			},
+    			success : function() {
+    				
+    			}
+    		});
+    		
+    	}
     </script>
 </head>
 <body class="mainbody">
@@ -97,8 +152,8 @@
     </div>
     <div id="JournalEnv_content1" style="width:100%;height:90%; padding-top:10px; display:none">
     	<br/>	
-   		<h2><spring:message code="ezCircular.t11" /></h2>
-   		<span class="txt">▒ <spring:message code="ezCircular.t16" /></span>
+   		<h2><spring:message code="ezJournal.t115" /></h2>
+   		<span class="txt"><spring:message code="ezJournal.t117" /></span>
        	<br />    
        	<table class="content" style="width: 623px;margin-top:5px">
            	<tr>
@@ -141,11 +196,41 @@
        	</table>       
    		<br />
    		<div style="width:623px;text-align:center;">      
-       		<a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezCircular.t25" /></span></a>
+       		<a class="imgbtn" onclick="saveListEnv()"><span><spring:message code="ezCircular.t25" /></span></a>
        		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezCircular.t26" /></span></a>
    		</div>
 	</div>		
     <div id="JournalEnv_content2" style="width:100%;height:90%; padding-top:10px; display:none">
+	    <br/>	
+   		<h2><spring:message code="ezJournal.t116" /></h2>
+   		<span class="txt"><spring:message code="ezJournal.t121" /></span>
+       	<br />    
+    	<table class="content" style="width:520px; margin-top:5px">
+    		<tr>
+    			<th style="white-space: nowrap;">
+    				<input type="checkbox" id="recvMail"
+    					<c:if test="${journalEnv.recvAlert eq 'yes'}">
+	    					checked
+    					</c:if> 
+    				>	
+    			</th>
+    			<td><spring:message code="ezJournal.t122"/></td>
+    		</tr>
+    		<tr>
+    			<th style="white-space: nowrap;">
+    				<input type="checkbox" id="replyMail"
+    					<c:if test="${journalEnv.replyAlert eq 'yes'}">
+	    					checked
+    					</c:if> 
+    				>	
+    			</th>
+    			<td><spring:message code="ezJournal.t123"/></td>
+    		</tr>
+    	</table>
+    	<br/>
+    	<div style="width:520px;text-align:center;">      
+       		<a class="imgbtn" onclick="saveMailAlert()"><span><spring:message code="ezCircular.t25" /></span></a>
+   		</div>
 	</div>		
     
     

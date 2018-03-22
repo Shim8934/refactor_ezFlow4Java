@@ -987,4 +987,35 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		return "/ezJournal/journalConfig";
 	}
 	
+	/**
+	 * 환경설정 저장
+	 */
+	@RequestMapping(value = "/ezJournal/saveJournalConfig.do")
+	public String saveJournalConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+		logger.debug("saveJournalConfig started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String userId = userInfo.getId();
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String restUrl = "/rest/ezjournal/users/" + userId + "/options";
+		JSONObject result = new JSONObject();
+		
+		result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject journalEnv = (JSONObject) result.get("data");
+			logger.debug("journalEnv:" + journalEnv);
+			model.addAttribute("journalEnv", journalEnv);
+		}
+		
+		logger.debug("saveJournalConfig ended");
+		
+		return "/ezJournal/journalConfig";
+	}
+	
 }
