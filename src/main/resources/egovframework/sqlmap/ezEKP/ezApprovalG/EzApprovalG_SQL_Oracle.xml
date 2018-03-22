@@ -5811,9 +5811,11 @@
          <isEqual property="v_CHAMSTATE" compareValue="017">
           AND
           		DOCSTATE = #v_CHAMSTATE#
-         </isEqual>       		
+         </isEqual> 
+           	<![CDATA[    		
           AND 
           		ROWNUM <= 1 
+             ]]>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSignInfo" parameterClass="Map" resultClass="ApprGSignInfoVO"> -->
 <!-- 		{CALL EZSP_GETSIGNINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -24002,4 +24004,95 @@
 	  		AND
 	  			DOCID = #v_habDocID#
 	  </select>
+	  
+	  <update id="EzApprovalG.updateSusinState" parameterClass="Map">1
+	  	<![CDATA[
+	  		UPDATE
+	  			TBL_ENDRECEIPTPOINTINFO
+			SET
+				processdate = #processDate#,
+				processyn = #processYN#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid = #docID#
+	  	]]>
+	  	
+	  	<isEqual property="address" compareValue="N">
+	  		AND
+				receiptpointid = #receiptPointID#
+		</isEqual>
+		
+		<isNotEqual property="address" compareValue="N">
+	  		AND
+				receiptpointid LIKE '$receiptPointID$%'
+		</isNotEqual>
+	</update>
+	
+	<select id="EzApprovalG.getCountDoingDocInfo" parameterClass="Map" resultClass="int" remapResults="true">
+		SELECT 
+			COUNT(*) 
+		FROM
+			(
+			SELECT
+				STARTDATE
+			FROM 
+				VAPRDOINGDOCLIST 
+			WHERE 
+				TENANT_ID = #v_TENANTID# 
+			AND 
+				COMPANYID = #companyID# 
+			AND 
+			<![CDATA[
+				APRMEMBERID IN ($v_PUSERIDS$) 
+			AND 
+				APRTYPE <> '015'
+			]]>
+			UNION ALL
+			SELECT 
+				STARTDATE
+			FROM
+				VENDCHAMJODOCINFO 
+			WHERE 
+				TENANT_ID = #v_TENANTID# 
+			AND 
+				COMPANYID = #companyID# 
+			AND 
+			<![CDATA[
+				APRMEMBERID IN ($v_PUSERIDS$) 
+			AND 
+				APRTYPE <> '015'
+			]]>
+			) AS A
+		WHERE
+			1 = 1
+		AND 
+		<isEqual property="v_COUNTTYPE" compareValue="SIXHGAP">
+			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 6/(24)
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="ONEDGAP">
+			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 1
+		AND 
+			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 6/(24) > A.STARTDATE
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="SEVENDGAP">
+			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 7
+		AND 
+			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 1 > A.STARTDATE
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="ONEMGAP">
+			A.STARTDATE >= ADD_MONTHS(#v_NOWTIME# , 1)
+		AND 
+			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 7 > A.STARTDATE
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="OTHER">
+			ADD_MONTHS(#v_NOWTIME# , 1) > A.STARTDATE
+		</isEqual>
+	</select>
 </sqlMap>
