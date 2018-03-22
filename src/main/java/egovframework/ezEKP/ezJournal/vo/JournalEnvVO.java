@@ -6,7 +6,21 @@ public class JournalEnvVO {
 	private String viewenv;
 	private String recvAlert;
 	private String replyAlert;
+	private String previewHcontent;
+	private String previewWcontent;
 	
+	public String getPreviewHcontent() {
+		return previewHcontent;
+	}
+	public void setPreviewHcontent(String previewHcontent) {
+		this.previewHcontent = previewHcontent;
+	}
+	public String getPreviewWcontent() {
+		return previewWcontent;
+	}
+	public void setPreviewWcontent(String previewWcontent) {
+		this.previewWcontent = previewWcontent;
+	}
 	public String getListCnt() {
 		return listCnt;
 	}
