@@ -767,8 +767,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		// 2018-02-19 천성준 : 게시글 수정,답변시 인풋박스에 특수문자 '\'가 사라지는 버그 해결로직 ['\' -> '\\']
 		if(pMode.equals("modify") || pMode.equals("reply")){
-			if (item.getTitle().contains("\\") || item.getAbsTract().contains("\\")) {
+			if (item.getTitle() != null && item.getTitle().contains("\\")) {
 				item.setTitle(item.getTitle().replace("\\", "\\\\"));
+			}
+			if (item.getAbsTract() != null && item.getAbsTract().contains("\\")) {
 				item.setAbsTract(item.getAbsTract().replace("\\", "\\\\"));
 			}
 		}
