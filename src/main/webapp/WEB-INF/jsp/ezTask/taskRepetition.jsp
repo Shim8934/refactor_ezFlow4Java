@@ -469,7 +469,7 @@
 					</div>
 					<div id='divRecurPatterns1'>&nbsp;<spring:message code='ezTask.t41' />
 						<label for="txt_We" accesskey="C">
-						<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px" value="1">
+						<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px;height:18px" value="1">
 						<spring:message code='ezTask.t42' /></label>
 						<table id="daytable">
 							<tr>
@@ -589,14 +589,17 @@
 			<tr style="height:90px;">
 				<th><spring:message code='ezTask.t65' /></th>
 				<td style="padding:0px;">
-					<input type="text" id="Sdatepicker" style="width:80px;text-align:center;margin-left:5px;margin-bottom:1px;" readonly="readonly">
-					<br>
-					<input type="radio" name="optRangeEnd" id="range1" value="-1" checked style="vertical-align:middle;margin-top:3px"><span style="vertical-align:bottom"><spring:message code='ezTask.t73' /></span><br>
-					<input type="radio" id="range2" name="optRangeEnd" value="1" style="vertical-align:middle;margin-top:5px"><span style="vertical-align:bottom"><spring:message code='ezTask.t74' /></span>
-					<input id="list_ReCount" maxlength="3" onFocus="range2.checked = true" size="4" value='10'>
-					<span style="vertical-align:middle"><spring:message code='ezTask.t75' /></span><br>
-					<input id="range3" type="radio" name="optRangeEnd" value="0" style="margin-top:0px"><span style="vertical-align:middle"><spring:message code='ezTask.t76' /></span>
-					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+					<div style="height:25px;margin-top:5px"><input type="text" id="Sdatepicker" style="width:80px;text-align:center;margin-left:5px;margin-bottom:1px;" readonly="readonly"></div>					
+					<div style="height:25px;"><input type="radio" name="optRangeEnd" id="range1" value="-1" checked style="vertical-align:middle;margin-top:3px"><span><spring:message code='ezTask.t73' /></span></div>
+					<div style="height:32px;">
+						<input type="radio" id="range2" name="optRangeEnd" value="1" style="vertical-align:middle;margin-top:5px"><span><spring:message code='ezTask.t74' /></span>
+						<input id="list_ReCount" maxlength="3" onFocus="range2.checked = true" size="4" value='10'>
+						<span style="vertical-align:middle"><spring:message code='ezTask.t75' /></span>
+					</div>
+					<div style="height:32px">
+						<input id="range3" type="radio" name="optRangeEnd" value="0" style="margin-top:0px"><span style="vertical-align:middle"><spring:message code='ezTask.t76' /></span>
+						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+					</div>	
 				</td>
 			</tr>
 		</table>
