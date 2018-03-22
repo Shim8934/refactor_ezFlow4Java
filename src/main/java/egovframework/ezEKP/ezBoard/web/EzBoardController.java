@@ -5442,8 +5442,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			sb.append("<IMAGENAME>" + commonUtil.cleanValue(photoViewList.get(k).getImageName()) + "</IMAGENAME>");
 			
 			String filePath = photoViewList.get(k).getFilePath();
-			String orgpDirPath = realPath + commonUtil.separator + filePath;
-			String despPath = filePath.replace("/files/upload_board", "/files/upload_board/tempUploadFile");
+			String orgpDirPath = realPath + filePath;
+			String despPath = orgpDirPath.replace("/files/upload_board", "/files/upload_board/tempUploadFile");
 			
 			File file = new File(orgpDirPath);
 			File file2 = new File(despPath);
