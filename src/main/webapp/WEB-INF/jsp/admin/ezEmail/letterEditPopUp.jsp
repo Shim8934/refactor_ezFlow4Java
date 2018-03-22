@@ -25,11 +25,11 @@
 						</colgroup>
 						<tr>
 							<th>편지지명</th>
-							<td><input type="text" id="displayname" name="displayname" placeholder="편지지명을 입력해주세요"></td>
+							<td><input type="text" id="displayname" name="displayname" maxlength="40" placeholder="편지지명을 입력해주세요"></td>
 						</tr>
 						<tr>
 							<th>편지지명(영문)</th>
-							<td><input type="text" id="displayname2" name="displayname2" placeholder="편지지명(영문)을 입력해주세요"></td>
+							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" placeholder="편지지명(영문)을 입력해주세요"></td>
 						</tr>
 					</table>
 				</div> <!-- leLetterInfo End -->
@@ -96,6 +96,39 @@
 					}
 				});
 			}
+			// 예외처리  strChk(문자, 특수문자 허용여부, 길이)
+			function strChk(str, speChar, strLen) {
+				// 공백, 특수문자, 길이
+				var strTrim = str.trim();
+				var msg = "";
+				var reJson = {};
+				
+				if (strTrim != "") {
+					// true : 특수문자허용
+					if (!speChar) { 
+						var speCha = /[`~!<>@#$%^&*|\\\"\';:\/?]/gi;
+						
+						if (speCha.test(strTrim)) {
+							msg = "특수문자는 입력이 불가능합니다.";
+						}	
+					}
+					
+					// 길이
+					if (typeof strLen != "undefined") {
+						if (strTrim.length >= strLen) {
+							msg = strLen + "자 이하로 입력 가능합니다."
+						} 
+					}
+					
+				}else {
+					msg = "내용을 입력해주세요.";
+				}
+				
+				reJson.str = strTrim;
+				reJson.msg = msg;
+				
+				return reJson;
+			}
 			
 			// 저장 버튼 클릭시                  btn -> this
 			function letterSave(btn) {
@@ -103,12 +136,12 @@
 				var displayname = $("#displayname").val();
 				var displayname2 = $("#displayname2").val();
 				var letterJson = {};
-	
-				if (displayname.trim() == "" || displayname2.trim() == "") { // 편지지명 없을때 return
-					alert("편지지명을 입력해주세요.");
-					return;
-				} else if (letterContent.replace(/&nbsp;/gi,"").replace(/<br \/>/gi,"").trim() == "") { // 편지지 작성 X
-					alert("편지지를 작성해주세요.");
+				
+				var disName = strChk(displayname, true, 40);
+				var disName2 = strChk(displayname2, true, 40);
+				var msg = disName.msg != "" ? disName.msg : disName2.msg != "" ? disName2.msg : "";
+				if (msg != "") { // 편지지명 없을때 return
+					alert(msg);
 					return;
 				}
 				

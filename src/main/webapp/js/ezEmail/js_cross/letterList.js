@@ -124,7 +124,7 @@ function letterPreView(letterNo) {
 				preViewIframe(filePath);
 				
 				$(".lmPreViewTxt").text("");
-				$(".lmPreViewIframe").attr("data-letterName", data.displayname);
+				$(".lmPreViewIframe").attr("data-letterName", data.displayname.replace(/</gi, "&lt;"));
 			}
 			
 			$(".lmPreViewTxt").css("display",txtDisplay);
@@ -166,7 +166,7 @@ function addLetterList(jsonArr) {
 		for (i = 0; i < listCount; i++) {
 			
 			letterListHtml += "<li id='lt" + jsonArr[i].letterNo + "' data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + "'>"; 
-			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname + "</span>";
+			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname.replace(/</gi, "&lt;") + "</span>";
 			
 			if (pageType == 'letter_user') {
 				if (searchMode) {
@@ -201,3 +201,39 @@ function addLetterList(jsonArr) {
 	searchMode = false;
 	$(".lmLetterListUl").html(letterListHtml);
 }
+
+
+// 예외처리  strChk(문자, 특수문자 허용여부, 길이)
+function strChk(str, speChar, strLen) {
+	// 공백, 특수문자, 길이
+	var strTrim = str.trim();
+	var msg = "";
+	var reJson = {};
+	
+	if (strTrim != "") {
+		// true : 특수문자허용
+		if (!speChar) { 
+			var speCha = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			
+			if (speCha.test(strTrim)) {
+				msg = "특수문자는 입력이 불가능합니다.";
+			}	
+		}
+		
+		// 길이
+		if (typeof strLen != "undefined") {
+			if (strTrim.length >= strLen) {
+				msg = strLen + "자 이하로 입력 가능합니다."
+			} 
+		}
+		
+	}else {
+		msg = "입력해주세요.";
+	}
+	
+	reJson.str = strTrim;
+	reJson.msg = msg;
+	
+	return reJson;
+}
+

@@ -31,7 +31,7 @@
 				<!-- 편지지 목록 -->
 				<div class="lmLetter">
 					<div class="lmtitle lmLetterTitle">
-						편지지 목록
+						편지지 목록 
 					</div> 
 					<div class="lmLetterList boxNo" data-boxNo=""> <!-- boxNo -->
 						<ul class="lmLetterListUl lmLetterListWrap"></ul>
