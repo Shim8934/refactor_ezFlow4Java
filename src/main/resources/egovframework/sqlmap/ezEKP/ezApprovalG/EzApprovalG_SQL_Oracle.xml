@@ -6047,10 +6047,15 @@
           		APRMEMBERID = #v_USERID#) AS B
      ]]>
           WHERE
+          	1 = 1
+          <isNotNull property="v_CHAMSTATE">
+          <isNotEmpty property="v_CHAMSTATE">
+          AND
           		DOCSTATE = #v_CHAMSTATE#
-         </isEqual> 
+          </isNotEmpty>
+          </isNotNull> 
            	<![CDATA[    		
-          AND 
+         	 AND 
           		ROWNUM <= 1 
              ]]>
 
