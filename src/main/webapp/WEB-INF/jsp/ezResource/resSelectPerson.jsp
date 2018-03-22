@@ -588,7 +588,7 @@
 		            }
 		        }
 		    }
-		    var m_strColorSelect = "rgb(233, 241, 255)";
+		    var m_strColorSelect = "#edf4fd";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
@@ -837,14 +837,14 @@
                 	</table>
 				</div>
           		<div style="vertical-align:top;height:340px;overflow:auto;width:425px;" id="txtlist_Layer">
-          			<table style="width:100%;border:1px solid #B6B6B6;display:none;" id="txtlist_table" class="mainlist" > 
+          			<table style="width:100%;border:1px solid #ddd;display:none;" id="txtlist_table" class="mainlist" > 
               			<tr>
                   			<td style="width:170px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t9"/></td>
                   			<td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t10"/></td>
                   			<td class="td_gray" style="font-weight:bold;"><spring:message code="ezResource.t11"/></td>
               			</tr>
           			</table>
-          			<table style="width:100%;border:1px solid #B6B6B6;display:none;" id="Search_txtlist_table" class="mainlist" > 
+          			<table style="width:100%;border:1px solid #ddd;display:none;" id="Search_txtlist_table" class="mainlist" > 
               			<tr>
                   			<td style="width:130px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t132"/></td>
                   			<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t9"/></td>
@@ -854,7 +854,7 @@
           			</table>
           		</div>
 		  		<div style="vertical-align:top;text-align:center;height:340px;overflow:auto;display:none;width:425px;" id="DeptUserImgList"></div>
-                <div id="tblPageRayer" style="text-align:center;border-top:1px solid #B6B6B6"></div>
+                <div id="tblPageRayer" style="text-align:center;border-top:1px solid #ddd"></div>
             	</td>
         	</tr>
     	</table>

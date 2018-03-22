@@ -9,7 +9,7 @@
       <link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
       <link type="text/css" rel="stylesheet" href="<spring:message code="main.lhm01" />" />
       <style>
-         .box{border:1px solid #b6b6b6; padding:1px 18px 1px 1px; background-color:#fff;}
+         .box{border:1px solid #ddd; padding:1px 18px 1px 1px; background-color:#fff;}
       </style>
       <script type="text/javascript" src="<spring:message code='ezResource.e1'/>?ver=0.2"></script>
       <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -551,7 +551,7 @@
                <td>
                    <h2><span id="Span1" ><spring:message code="ezResource.t374" /></span></h2>
                    <div class="listview">
-                       <div id="pListView" STYLE="border:0px solid #B6B6B6; Width:242px; Height:301px; overflow : auto;"  ></div>
+                       <div id="pListView" STYLE="border:0px solid #ddd; Width:242px; Height:301px; overflow : auto;"  ></div>
                    </div>
                </td>
            </tr>

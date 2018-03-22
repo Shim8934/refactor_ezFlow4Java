@@ -50,12 +50,22 @@
 		    var pContentClass = "${pContentClass}";
 		    var pNoneActiveX = "${NoneActiveX}";
 		    var isSecureMail = "${isSecureMail}";
+		    var useReSend = "${useReSend}";
+		    var compareFolderName = "<spring:message code="ezEmail.t645" />";
+		    
 		    window.onresize = window_onresize;
 		    
 			function window_onload()
 			{
 			    window_onresize();
-				if (g_notiSSO == "1")
+				
+				var g_szRootFolderName = g_paramURL.split('/');
+			    
+			    if (useReSend == "YES" && g_szRootFolderName[0] == compareFolderName) {
+		    		$('#liReSend').css('display', 'block');
+		    	} 
+			    
+			    if (g_notiSSO == "1")
 				{
 		            if(navigator.appVersion.indexOf("MSIE 6")>-1) 
 		            { 
@@ -409,6 +419,13 @@
 		    function secureInfo_onClick() {
 		    	DivPopUpShow(550, 500, "/ezEmail/secureMailInfo.do?url=" + encodeURIComponent(g_paramURL));
 		    }
+		    
+		    function reSend_onClick() {
+		        var pURI = "/ezEmail/mailWrite.do?cmd=RESEND&URL=" + encodeURIComponent(g_paramURL);
+		        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
+		        newwin.focus();
+		    }
+		 
 		</script>
 	</head>
 
@@ -422,6 +439,7 @@
 		                    <li><span id="btnReply" onClick="reply_onClick()"><spring:message code="ezEmail.t511" /></span></li>
 		                    <li><span id="btnAllReply" onClick="allreply_onClick()"><spring:message code="ezEmail.t512" /></span></li>
 		                    <li><span id="btnForward" onClick="pass_onClick()"><spring:message code="ezEmail.t513" /></span></li>
+		                    <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
 		                    <li><span id="btnPrint" onClick="btnPrint_onClick()"><spring:message code="ezEmail.t546" /></span></li>
 		                    <li><span id="btnMove" onClick="move_onClick()"><spring:message code="ezEmail.t482" /></span></li>
 		                    <li><span id="btnDelete" onClick="delete_mail()"><spring:message code="ezEmail.t95" /></span></li>
@@ -517,7 +535,7 @@
 		    </tr>
 		    <tr>
 		        <td class="pad1">
-		        <iframe  id="message" name="message" frameborder="0" style="width:100%;height:100%;BORDER:#b6b6b6 1px solid; background:#fff;" ></iframe>
+		        <iframe  id="message" name="message" frameborder="0" style="width:100%;height:100%;BORDER:#ddd 1px solid; background:#fff;" ></iframe>
 		        </td>
 		    </tr>
 		</table>

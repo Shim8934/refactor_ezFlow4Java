@@ -48,6 +48,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -135,6 +136,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
+		String useReSend = ezCommonService.getTenantConfig("useReSend", loginInfo.getTenantId());
 		logger.debug("userEmail=" + userEmail);
 		
 		// retrieve the passed in parameters
@@ -473,6 +475,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("pIsCCFg", pIsCCFg);
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("dotNetUrl", dotNetUrl);
+		model.addAttribute("useReSend", useReSend);
 		
 		logger.debug("readMail ended.");
 		
@@ -2382,6 +2385,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					if (decryptedFile.delete()) {
 						logger.debug("decryptedFile is deleted. fileName=" + decryptedFile.getName());
 					}
+					
+					model.addAttribute("c1", egovMessageSource.getMessage("ezEmail.c1", locale));
+					model.addAttribute("e1", egovMessageSource.getMessage("ezEmail.e1", locale));
+					model.addAttribute("t63", egovMessageSource.getMessage("ezEmail.t63", locale));
+					model.addAttribute("t161", egovMessageSource.getMessage("ezEmail.t161", locale));
+					model.addAttribute("t704", egovMessageSource.getMessage("ezEmail.t704", locale));
+					model.addAttribute("t66", egovMessageSource.getMessage("ezEmail.t66", locale));
+					model.addAttribute("lhm65", egovMessageSource.getMessage("ezEmail.lhm65", locale));
+					model.addAttribute("t555", egovMessageSource.getMessage("ezEmail.t555", locale));
+					model.addAttribute("t556", egovMessageSource.getMessage("ezEmail.t556", locale));
+					model.addAttribute("lhm66", egovMessageSource.getMessage("ezEmail.lhm66", locale));
 				}
 			}
 		} catch (Exception e) {
@@ -2830,6 +2844,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 				model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
 				model.addAttribute("isAttach", bodyInfoList.get(4));
+				
+				model.addAttribute("e1", egovMessageSource.getMessage("ezEmail.e1", locale));
+				model.addAttribute("t246", egovMessageSource.getMessage("main.t246", locale));
+				model.addAttribute("t901", egovMessageSource.getMessage("ezEmail.t901", locale));
+				model.addAttribute("t902", egovMessageSource.getMessage("ezEmail.t902", locale));
+				model.addAttribute("t903", egovMessageSource.getMessage("ezEmail.t903", locale));
+				model.addAttribute("t99000003", egovMessageSource.getMessage("ezEmail.t99000003", locale));
+				model.addAttribute("t99000004", egovMessageSource.getMessage("ezEmail.t99000004", locale));
+				model.addAttribute("t99000064", egovMessageSource.getMessage("ezEmail.t99000064", locale));
+				model.addAttribute("t99000065", egovMessageSource.getMessage("ezEmail.t99000065", locale));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2981,4 +3005,63 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("processAutoMDN ended.");
 	}
 	
+	/**
+	 *  편지함 모두 읽기
+	 */
+	@RequestMapping(value="/ezEmail/folderSetReadChange.do",method=RequestMethod.POST,
+			produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String folderSetReadChange(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, Locale locale, Model model) throws Exception{
+		logger.debug("folderSetReadChange started.");
+		
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String password = userIdAndPassword.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userInfo.getId() + "@" + domainName;
+		
+		String folderId = request.getParameter("url");
+		String isRead = request.getParameter("isRead");
+		
+		
+		logger.debug("url: " + folderId);
+		logger.debug("userAccount=" + userAccount);
+			
+		
+		String returnData = "<DATA>OK</DATA>";
+		
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userAccount, password, egovMessageSource, locale);
+			
+			IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderId);
+			sourceFolder.open(Folder.READ_WRITE);
+			
+			Message[] msgs = sourceFolder.getMessages();
+			
+			if (isRead.equals("TRUE")) {
+				sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
+			} 
+			else {
+				sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), false);
+			}
+			
+			sourceFolder.close(true);
+		} catch (Exception e) {
+			returnData = "<DATA>ERROR</DATA>";
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("returnData=" + returnData);
+		logger.debug("folderSetReadChange started.");
+		
+		return returnData;
+	}
 }

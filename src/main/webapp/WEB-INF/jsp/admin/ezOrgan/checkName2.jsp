@@ -137,7 +137,7 @@
 	    <h1><spring:message code='ezOrgan.t105' /></h1>
 	    <h2><spring:message code='ezOrgan.t109' /></h2>
 	    <div class="listview" style="width: 570px;">
-	        <div id="OrganListView" style="border: 0px solid #B6B6B6; Width: 570px; Height: 160px; overflow: auto; BACKGROUND-COLOR: white;"></div>
+	        <div id="OrganListView" style="border: 0px solid #ddd; Width: 570px; Height: 160px; overflow: auto; BACKGROUND-COLOR: white;"></div>
 	    </div>
 	    <div class="btnposition">
 	        <a class="imgbtn"><span onClick="change_onClick()"><spring:message code='ezOrgan.t110' /></span></a>

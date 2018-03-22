@@ -2,8 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
-<HTML>
-	<HEAD>
+<html>
+	<head>
 		<title>mail_search</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
@@ -33,7 +33,7 @@
 			var g_timezone = "${userTimeSet}";
 			var offsetMin = "${offsetMin}";
 		    var checkval = "f";
-		    var m_strColorSelect = "rgb(233, 241, 255)";
+		    var m_strColorSelect = "#edf4fd";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var pNoneActiveX = "YES";
@@ -136,32 +136,64 @@
 				event.cancelBubble = true;
 				event.returnValue = false;
 			}
+			
 			function check_change(checkbox) {
-			    if (checkval == "f") {
-			        var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
-			        for (var i = 0; i < Rows.length; i++) {
-			            if (!Rows.item(i).childNodes.item(0).childNodes.item(0).disabled) {
-			                Rows.item(i).childNodes.item(0).childNodes.item(0).checked = true;
-			                for (var RowCnt = 0; RowCnt < Rows.item(i).childNodes.length; RowCnt++) {
-			                    Rows.item(i).childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
-			                }
-			                listContentArry[listContentArry.length] = Rows.item(i).getAttribute("id");
-			            }
-			        }
-			        checkval = "t";
-			    }
-			    else if (checkval == "t") {
-			        var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
-			        for (var i = 0; i < Rows.length; i++) {
-			            Rows.item(i).childNodes.item(0).childNodes.item(0).checked = false;
-			            for (var RowCnt = 0; RowCnt < Rows.item(i).childNodes.length; RowCnt++) {
-			                Rows.item(i).childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
-			            }
-			        }
-			        listContentArry = new Array();
-			        checkval = "f";
-		
-			    }
+
+		    	// mail list DomElement
+		    	var mailListElement = resultTD.childNodes.item(0).childNodes.item(0);
+		    	
+		    	// 메일 리스트가 비어있다면 함수 종료 (검색결과 없음 또는 메일 없음)
+		    	if (isEmptyMailList(mailListElement)) {
+		    		return;
+		    	}
+		    	
+		    	// tr 노드들 (메일 리스트의 전체 행)
+		    	var mailNodes = mailListElement.childNodes;
+		    	// tr 노드 (하나의 행)
+		    	var mailNode;
+		    	// tr 노드 개수
+		    	var nodeCount = mailNodes.length;
+		    	
+		    	if (checkbox.checked) {
+		        	
+		            for (var i = 0; i < nodeCount; i++) {
+		            	mailNode = mailNodes.item(i);
+		            	
+		            	mailNode.childNodes.item(0).childNodes.item(0).checked = true;
+		            	mailNode.style.backgroundColor = m_strColorSelect;
+		                //TODO: 테스트해보기 2016-06-02
+		                // dhlee: modified so that existing elements aren't merged with new ones.
+		                //listContentArry[listContentArry.length] = document.getElementById("MailList").childNodes.item(i).getAttribute("id");
+		                listContentArry[i] = mailNode.getAttribute("id");
+		            }
+		        } else {
+		        	
+		            for (var i = 0; i < nodeCount; i++) {
+		            	mailNode = mailNodes.item(i);
+		            	
+		            	mailNode.childNodes.item(0).childNodes.item(0).checked = false;
+		            	mailNode.style.backgroundColor = m_strColorDefault;
+		            }
+		            
+		            listContentArry = new Array();
+		        }
+			}
+			
+			// MailList id값을 가진 DomElement를 파라미터로 함
+			// 메일 Row가 존재하지 않으면 true, 있다면 false
+			function isEmptyMailList(mailListElement) {
+				
+				if (mailListElement === undefined || mailListElement === null) {
+					return true;
+				}
+				
+				if (mailListElement.childElementCount > 1) {
+					return false;
+				}
+				
+				var firstMailNode = mailListElement.childNodes.item(0);
+				
+				return firstMailNode.childElementCount === 1;
 			}
 		
 			function new_mail_onclick() 
@@ -342,10 +374,10 @@
 			                        Rows.item(i).onclick = function () { return false; };
 			                        Rows.item(i).onmouseover = function () { return false; }
 			                        Rows.item(i).onmouseout = function () { return false; }
-			                        for (var RowCnt = 0; RowCnt < Rows.item(i).childNodes.length; RowCnt++) {
-			                            Rows.item(i).childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
-			                            Rows.item(i).childNodes.item(RowCnt).disabled = true;
-			                        }
+			                        //for (var RowCnt = 0; RowCnt < Rows.item(i).childNodes.length; RowCnt++) {
+			                        Rows.item(i).style.backgroundColor = m_strColorDefault;
+			                           // Rows.item(i).childNodes.item(RowCnt).disabled = true;
+			                        //}
 			                    }
 			                }
 			            }
@@ -372,10 +404,10 @@
 		                    Rows.item(i).onclick = function () { return false; };
 		                    Rows.item(i).onmouseover = function () { return false; }
 		                    Rows.item(i).onmouseout = function () { return false; }
-		                    for (var RowCnt = 0; RowCnt < Rows.item(i).childNodes.length; RowCnt++) {
-		                        Rows.item(i).childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
-		                        Rows.item(i).childNodes.item(RowCnt).disabled = true;
-		                    }
+		                    //for (var RowCnt = 0; RowCnt < Rows.item(i).childNodes.length; RowCnt++) {
+		                        Rows.item(i).style.backgroundColor = m_strColorDefault;
+		                        //Rows.item(i).childNodes.item(RowCnt).disabled = true;
+		                    //}
 		                }
 		            }
 		        }
@@ -659,7 +691,7 @@
 		            start_search();
 		    }
 		</script>
-	</HEAD>
+	</head>
 	
 	<body style="overflow:auto" id="theBody" class="mainbody"> 
 		<span id="normalblock"> 
@@ -747,5 +779,4 @@
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
-</HTML>
-
+</html>

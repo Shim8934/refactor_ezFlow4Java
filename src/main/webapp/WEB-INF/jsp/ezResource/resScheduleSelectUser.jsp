@@ -171,8 +171,10 @@
 		    }
 
 		    function search_click() {
-		        if (keyword.value == "") {
+		    	/* 2018-03-21 서주연 - 예약자 keyword input 공백제거 */
+		        if (keyword.value.trim() == "") {
 		            alert("<spring:message code='ezResource.t129'/>");
+		            keyword.value = "";
 		            keyword.focus();
 		            return;
 		        }
@@ -224,6 +226,7 @@
 		    	
 		        if (deptKeyword == 0) {
 		            alert("<spring:message code='ezResource.t129'/>");
+		            deptkeyword.value = "";
 		            deptkeyword.focus();
 		            return;
 		        }
@@ -387,7 +390,7 @@
     		<table>
       			<tr>
         			<td style="padding-right:5px">
-            			<div style="border: 1px solid #b6b6b6; height: 416px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
+            			<div style="border: 1px solid #ddd; height: 416px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
 			            <div class="box" style="margin-top:3px" >
             			    <input id="deptkeyword" onkeypress="deptsearch_press()" style="WIDTH:115px;margin-bottom:2px" />
                 			<a href="#" class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezResource.t134'/></span></a>
@@ -395,7 +398,7 @@
         			</td>
         			<td valign="top" style="padding-left:5px">
             			<div class="listview">
-                			<div id="OrganListView" style="border: 0px solid #B6B6B6; Width: 416px; Height: 416px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto; "></div>
+                			<div id="OrganListView" style="border: 0px solid #ddd; Width: 416px; Height: 416px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto; "></div>
             			</div>
             			<div class="box" style="margin-top:3px" >
                 			<select id="search_type" style="margin-bottom:2px">

@@ -21,7 +21,7 @@
 	        var pMaxPage = "";
 	        var BlockSize = 10;
 	        var pFolderName = "";
-	        var m_strColorSelect = "rgb(233, 241, 255)";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var CardHeader1 = "<spring:message code='ezAddress.t263' />";
@@ -405,7 +405,7 @@
 	                    <option value="S_HOMEPAGE"><spring:message code='ezAddress.t293' /></option>
 	                </select>
 	                <input type="text" name="search_text" id="search_text" class="textarea" onkeypress="return search_keypress()" onmousedown="Search_Clear();">
-	                <a href="#" class="imgbtn"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>
+	                <a href="#" class="imgbtn" style="vertical-align: middle;"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>
 	        </tr>
 	    </table>
 	    <br>

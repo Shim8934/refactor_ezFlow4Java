@@ -145,10 +145,10 @@
 		    </script>
 		    <table class="popuplist" style="width:100%; table-layout: fixed; ">
 		          <tr>
-		            <th width="15%"><spring:message code='ezAddress.t124' /></th>
-		            <td style="width:35%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName" title="${addressInfo.sName}"> <c:out value='${addressInfo.sName}' /></span></td>
-		            <th width="15%"><spring:message code='ezAddress.t286' /></th>
-		            <td title="<spring:message code='ezAddress.t287' />" style="width:35%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span onClick="show_personinfo(0)" style="cursor:pointer"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></span></td>
+		            <th width="20%"><spring:message code='ezAddress.t124' /></th>
+		            <td style="width:30%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName" title="${addressInfo.sName}"> <c:out value='${addressInfo.sName}' /></span></td>
+		            <th width="20%"><spring:message code='ezAddress.t286' /></th>
+		            <td title="<spring:message code='ezAddress.t287' />" style="width:30%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span onClick="show_personinfo(0)" style="cursor:pointer"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></span></td>
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t51' /></th>
@@ -188,7 +188,7 @@
 		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="<spring:message code='ezAddress.t294' />" ><span onClick="open_homepage()" style="cursor:pointer"><span id="TextHomePage" style="width:100%"><c:out value='${addressInfo.sHomePage}' /></span></span></td>
 		          </tr>
 		          <tr>
-		            <th rowSpan="2"><spring:message code='ezAddress.t295' /></th>
+		            <th rowSpan="2" style="white-space:normal;"><spring:message code='ezAddress.t295' /></th>
 		            <td colSpan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextComZip" style="width:70px" ReadOnly="true"><c:out value='${addressInfo.sCompanyZip}' /></span></td>
 		          </tr>
 		          <tr>

@@ -21,8 +21,8 @@
 }
 
 .poll_list1 {margin:0px; padding:0px; font-size:12px;}
-.poll_list1 .graphbar1{margin:5px 0px 10px 0px; padding:0px; border:1px solid #c9c9c9; height:7px; width:220px; background-color:#E8E8E8;}
-.poll_list1 .graphbar1 .gx_bar11 {background:#68bbef; height:7px; margin:0px; padding:0px;}
+.poll_list1 .graphbar1{margin:3px 0px 10px 0px; padding:0px; border:1px solid #eee; height:7px; background-color:#f8f8fa;}
+.poll_list1 .graphbar1 .gx_bar11 {background:rgb(245, 117, 120); height:7px; margin:0px; padding:0px; border:1px solid rgb(225, 97, 100); margin-top:-1px}
 
 /* 20171115 */
 .voteInfo{height:68px;}
@@ -62,11 +62,11 @@
 .voteTextTest span.questionFontS{color:#aaa9a9; padding:6px 0px 0px 0px;}
 
 #titleAndContent{ overflow:hidden; border:1px solid #dddddd; margin-bottom:20px;}
-#titleAndContent .baonkTest{ font-size:16px; color:#004896; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#titleAndContent .baonkTest{ font-size:16px; color:#004896; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:bold;}
 .questionTitle{display:inline-block;float:left; width:100%; height:39px; line-height:39px; padding:0px 10px; background:#f9f9f9; border-bottom:1px solid #dddddd; color:#FFF; font-size:18px;}
 
-#_editVote{float:right; display:block; font-size:16px; color:#004896; border:1px solid #e1ebf7; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; height:43px; line-height:43px; background:#f4f9ff; padding:0px 20px; overflow:hidden; cursor:pointer; margin:10px 0px 0px 0px;}
-#_editVote span{background:url(/images/poll/poll_editIcon.png) no-repeat left center; padding:0px 0px 0px 25px; display:inline-block; overflow:hidden; font-size:14px;}
+/* #_editVote{float:right; display:block; font-size:16px; color:#004896; border:1px solid #e1ebf7; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; height:43px; line-height:43px; background:#f4f9ff; padding:0px 20px; overflow:hidden; cursor:pointer; margin:10px 0px 0px 0px;}
+#_editVote span{background:url(/images/poll/poll_editIcon.png) no-repeat left center; padding:0px 0px 0px 25px; display:inline-block; overflow:hidden; font-size:14px;} */
 
 .voteTdBg{background:#f9f9f9 !important; margin:0px !important; padding:0px !important; height:68px !important; border:1px solid #dddddd !important;}
 .voteTdBg .voteTdBg_layout{margin:0; text-align:center;}
@@ -86,13 +86,14 @@
 .commentBtn{ float:right; display:block; width: 96px; height:45px; border:none; margin:0px; padding:6px 6px 0px 0px;}
 
 #sendComment{min-width: 800px}
+.voteFileInput{width: 0px; height: 0px; display: none;}
 
 #ballotSystemBody{min-width: 800px}
 
 #commentArea table tbody tr [id *= toolCmt]{margin-left: 11px}
 
 .voterNumber{float:left; display:block; font-size:16px; margin:-2px 10px 0px 10px;}
-._resultPercentage{padding-bottom: 3px; padding-left: 20px;}
+._resultPercentage{padding-bottom: 3px; padding-left: 20px; font-weight:bold;}
 
 /* vote popup css */
 
@@ -103,12 +104,14 @@
 .voteIconDiv{margin:0 20px 0 20px; float:right;}
 .voteIcon_ul{position:relative; float: left; width: 70px; height: 68px; /* overflow: hidden; */ margin: 0; padding: 0px 0 0 0; list-style: none;}
 .voteIcon_ul .icon_title{clear: both; display:block; text-align: center;height: 20px;line-height: 19px;overflow: hidden;vertical-align: top;font-size: 12px;color: #000;}
-.voteIcon_ul .img_description{position: absolute;right: -5px;top: 0px;z-index: 5;}
+.voteIcon_ul .img_description{position: absolute;right: -5px;top: -2px;z-index: 5;}
 .voteIcon_ul .img_description div{display:inline-block; line-height:190%; color:#fff; padding:0px 0 0 8px; font-size:11px; background: url(../../images/kr/main/count_l.png) no-repeat left;}
 .voteIcon_ul .img_description div span{display: inline-block;color: #fff;padding: 2px 10px 0 0px;font-size: 11px;background: url(../../images/kr/main/count_r.gif) no-repeat right;font-weight: bold;}
 /* .voteIcon_ul .icon_title{display:none;} */
 .voteIconImg_li{width:45px; float:left;}
-.voteIconDiv ul li.icon{display:inline-block; width:50px; height:50px; padding:9px 0px 0px 17px; overflow: hidden;}
+.voteIconDiv ul li.icon{display:inline-block; width:50px; height:50px; padding:11px 0px 0px 17px; overflow: hidden;}
 .voteIconDiv ul li.icon.nosecret{cursor:pointer;}
 .voteIconImg{vertical-align: top;}
 
+/* vote graph area */
+.voterNumber_ {float:left;display:none;width:100% ;font-weight:bold;}
