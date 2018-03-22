@@ -322,9 +322,16 @@ function ListView() {
 
             var oTable = document.createElement("TABLE");
             oTable.id = _thisID;
-
+            /*추가*/
+            var oDiv = document.createElement("DIV");
+            oDiv.style.height = "645px";
+            oDiv.style.overflow = "auto";
+            
             oTable.cellSpacing = 0;
             oTable.cellPadding = 0;
+            /*추가*/
+            oDiv.cellSpacing = 0;
+            oDiv.cellPadding = 0;
 
             oTable.setAttribute("multiselectable", _isMultiSelectable);
             oTable.setAttribute("useocs", _useOcs);
@@ -343,16 +350,24 @@ function ListView() {
                 oTable.onselectstart = function() { return false; }
             else if (typeof (document.body.style.MozUserSelect) != "undefined") //Firefox route
                 oTable.style.MozUserSelect = "none";
-
+            /*추가*/
+            /*var oHeaderColgroup = GetColgroupObj();*/
             var oTHeader = GetTableHeaderObj();
+            /*var oBodyColgroup = GetColgroupObj();*/
             var oTBody = GetTableBodyObj();
 
             if (_SelectFlag && _firstRowID != "") {
                 oTable.setAttribute("lastSelectedRowID", _firstRowID);
             }
-
+            /*추가*/
+            /*oTable.appendChild(oHeaderColgroup);*/
+            
             oTable.appendChild(oTHeader);
-            oTable.appendChild(oTBody);
+            /*변경*/
+            /*oTable.appendChild(oTBody);*/
+            /*추가*/
+            /*oDiv.appendChild(oBodyColgroup);*/
+            oDiv.appendChild(oTBody);
 
             if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
 
@@ -360,17 +375,27 @@ function ListView() {
                     oTable.setAttribute("width", _TableWidth);
                 else*/
                     oTable.setAttribute("width", "100%");
+                    /*추가*/
+                    oDiv.setAttribute("width", "100%");
 
                 oTable.setAttribute("border", "0");
                 oTable.setAttribute("cellpadding", "0");
                 oTable.setAttribute("cellspacing", "0");
+                /*추가*/
+                oDiv.setAttribute("border", "0");
+                oDiv.setAttribute("cellpadding", "0");
+                oDiv.setAttribute("cellspacing", "0");
                 if(_SetHeightFree)
                 {
                     oTable.setAttribute("class", "mainlist_free");
+                    /*추가*/
+                    oDiv.setAttribute("class", "mainlist_free");
                 }
                 else
                 {
                     oTable.setAttribute("class", "mainlist");
+                    /*추가*/
+                    oDiv.setAttribute("class", "mainlist");
                 }
                 
                 //비 IE 브라우저에서 table-layout:fixed;를 지정하기 위해서는 
@@ -384,13 +409,21 @@ function ListView() {
                 oTable.cellSpacing = 0;
                 oTable.cellPadding = 0;
                 //oTable.className = "mainlist";
+                /*추가*/
+                oDiv.border = 0;
+                oDiv.cellSpacing = 0;
+                oDiv.cellPadding = 0;
                 if(_SetHeightFree)
                 {
                     oTable.className = "mainlist_free";
+                    /*추가*/
+                    oDiv.className = "mainlist_free";
                 }
                 else
                 {
                     oTable.className = "mainlist";
+                    /*추가*/
+                    oDiv.className = "mainlist";
                 }
 
                 /*oTable.style.tableLayout = "fixed";
@@ -398,10 +431,13 @@ function ListView() {
                     oTable.width = _TableWidth;
                 else*/
                     oTable.width = "100%";
+                    /*추가*/
+                    oDiv.width = "100%";
             }
-
-            objElm.appendChild(oTable);
-
+            
+            objElm.appendChild(oTable);           
+            /*추가*/
+            objElm.appendChild(oDiv);
             if (_debugMode) yjTest("oTable", objElm.innerHTML);
 
             objElm = null;
@@ -461,12 +497,30 @@ function ListView() {
     	return oHeaderMinWidth + 150;
     }
     
+    // 리스트뷰 헤더 콜그룹 생성
+    function GetColgroupObj() {
+    	var objColgroup = document.createElement("COLGROUP");
+    	
+    	var oHeaders = _dataSource.getElementsByTagName("HEADER");
+    	
+    	for (var i = 0; i < oHeaders.length; i++) {
+    		var strWidth = SelectSingleNodeValue(oHeaders[i], "WIDTH");
+    		var objCol = document.createElement("COL");
+    		objCol.width = strWidth;
+    		objColgroup.appendChild(objCol);
+    	}
+    	
+    	return objColgroup;
+    } 
+    
     //리스트뷰 헤더 생성
     function GetTableHeaderObj() {
         var objTr = document.createElement("TR");
         objTr.id = _thisID + "_TH";
 
+        
         var oHeaders = _dataSource.getElementsByTagName("HEADER");        
+        console.log(oHeaders);
         
 
         var Chkbox = false;
@@ -490,6 +544,9 @@ function ListView() {
 
                 var objTd = document.createElement("TH");
                 objTd.id = _thisID + "_TH_" + i;
+                /*추가*/
+                objTd.scope="col";
+                
 
                 if (_headeronclick != null && _headeronclick != "" ) {
                     objTd.style.cursor = "pointer";
@@ -618,8 +675,13 @@ function ListView() {
 
     //리스트뷰 바디 생성
     function GetTableBodyObj() {
-        var oTbody = document.createElement("TBODY");
+        /*var oTbody = document.createElement("TBODY");
+        oTbody.style.backgroundColor = m_strColorDefault;*/
+        
+        var oTbody = document.createElement("TABLE");
         oTbody.style.backgroundColor = m_strColorDefault;
+        oTbody.id = _thisID + "Div";
+        oTbody.style.width = "100%";
 
         var oRows = _dataSource.getElementsByTagName("ROW");
         _rowCount = oRows.length;
@@ -708,8 +770,11 @@ function ListView() {
                 }
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
+                	/*objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");*/
+                	/*objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");*/
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
                     objTd.style.margin = "0";
-                    objTd.style.width = "80%";
+                    objTd.style.width = "50%";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
@@ -737,20 +802,30 @@ function ListView() {
                     
                 }
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "BOARDNAME") {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
                     objTd.style.textAlign = "left";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
                 } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
                     objTd.style.textAlign = "left";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
                 } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITEDATE') > -1) {
+                	objTd.width = "120px";
                 	objTd.style.textAlign = "left";
                 	objTd.style.overflow = "hidden";
                 	objTd.style.whiteSpace = "nowrap";
-                	objTd.style.width = "120px";
+                	/*변경*/
+                	/*objTd.style.width = "120px";*/
+                } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERCOMPANYNAME') > -1) {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                	objTd.style.textAlign = "left";
+                	objTd.style.overflow = "hidden";
+                	objTd.style.whiteSpace = "nowrap";
+                	objTd.style.textOverflow = "ellipsis";
                 } else {
                 	objTd.style.textAlign = "left";
                 	objTd.style.overflow = "hidden";
@@ -759,6 +834,7 @@ function ListView() {
                 }
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ATTACHMENTS") {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
                     objTd.style.textAlign = "center";  
                     if (strValue == "1") {
                         titleImage = titleImage + "<img src='/images/newAttach.gif'>";
@@ -784,9 +860,11 @@ function ListView() {
                 }
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT") {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
                     objTd.style.textAlign = "center";
                 }
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
                     var _TDCheckBox_Sub = document.createElement("INPUT");
                     _TDCheckBox_Sub.type = "checkbox";
                     _TDCheckBox_Sub.id = strValue + "," + getNodeText(oDatas[2]) + ";";
@@ -797,18 +875,21 @@ function ListView() {
                 }
                 else {
                     if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERNAME') > -1) {
+                    	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
                         if (getNodeText(oDatas[10]) != "0") {
                             objTd.innerHTML += MakeXMLString(strValue) + " " + titleOneLineCnt;
                         } else {
                             objTd.innerHTML += MakeXMLString(strValue);
                         }
                     } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1){
+                    	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
                         if (getNodeText(oDatas[10]) != "0"){
                             objTd.innerHTML = titleImage + strValue + " " + titleOneLineCnt;
                         }else{
                         	objTd.innerHTML = titleImage + strValue;
                         }
                     } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('DOCNO') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
+                    	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
                     	if (getNodeText(oDatas[8]) == "1") {
                     		objTd.style.padding = "0";
                     		objTd.innerHTML = "<img src='/images/i_notice.gif'>";

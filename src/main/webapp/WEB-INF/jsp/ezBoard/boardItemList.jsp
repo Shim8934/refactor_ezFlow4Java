@@ -1258,7 +1258,10 @@
 		    <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 		
 		    <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
-		        <div style="width:100%; overflow:AUTO;" id="divList">
+		        <!-- 변경 -->
+		        <!-- <div style="width:100%; overflow:AUTO;" id="divList"> -->
+		        <!-- 추가 -->
+		        <div style="width:100%" id="divList">
 		            <div id="lvBoardList"></div>
 		        </div>
 		        <div id='runtime' style="color:#666;padding-top:5px"></div>
