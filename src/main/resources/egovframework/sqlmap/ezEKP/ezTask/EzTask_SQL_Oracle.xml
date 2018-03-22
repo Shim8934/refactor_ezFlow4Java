@@ -1056,11 +1056,4 @@
 		VALUES 
 			(#userID#, #initColor#, #initColor2# , ' ' , ' ' , #tenantID#)
 	</insert>
-    
-
-    
-    
-    
-    
-
 </sqlMap>
