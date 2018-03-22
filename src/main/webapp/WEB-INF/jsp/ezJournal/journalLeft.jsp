@@ -34,7 +34,11 @@
 	   				type:"post",
 	   				url:"/ezJournal/leftRecvCount.do",
 	   				success: function(data){
-	   					$("#recvCount").text(data);
+	   					if(data!=0){
+		   					$("#recvCount").text("("+data+")");
+	   					}else{
+		   					$("#recvCount").text("");
+	   					}
 	   				}
 	   			});
 	        }
@@ -71,7 +75,7 @@
 		    		</c:when>
 		    	</c:choose>
 		    </ul>
-		    <h2><span listType='recv' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t51'/>(<span id="recvCount">${recvCount }</span>)</span></h2>
+		    <h2><span listType='recv' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t51'/><c:if test="${recvCount ne 0 }"><span id="recvCount">(${recvCount })</span></c:if></span></h2>
 		    <ul>
 		    </ul>
 		    <h2><span listType='temp' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t52'/></span></h2>

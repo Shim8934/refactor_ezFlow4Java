@@ -147,7 +147,7 @@
 	   				url:url,
 	   				success: function(journalList){
 	   					$("#MailListRayer").html(journalList);
-	   					journalPreviewRayerChange("${journalEnv.viewenv}");
+	   					journalPreviewRayerChange(pPreviewShow_HOW);
 	   					setInitOrder();
 	   				}
 	   			});
@@ -185,7 +185,9 @@
 			
 			//검색에 의한 셋팅
 			function goToPageBySearch(){
-				searchWriter = document.getElementById("searchWriter").value;   
+				if(document.getElementById("searchWriter")){
+					searchWriter = document.getElementById("searchWriter").value;   
+				}
 				searchTitle = document.getElementById("searchTitle").value;    
 				searchFormName = document.getElementById("searchFormName").value;
 				searchStartDate = document.getElementById("Sdatepicker").value;
@@ -246,7 +248,9 @@
 		    }
 			function BoardSearchOptionHidden() {
 				btn_PostDate_Clear();
-				document.getElementById("searchWriter").value = "";
+				if(document.getElementById("searchWriter")){
+					document.getElementById("searchWriter").value = "";
+				}
 				document.getElementById("searchFormName").value = "";
 		        document.getElementById("searchTitle").value = "";
 		        document.getElementById("layer_popup").style.display = "none";
@@ -920,6 +924,10 @@
 				</table>
 		</div>
 	</div>
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
+    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel_sub">
+        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer_sub"></iframe>
+    </div>
 	<div class="jquery-modal blocker current" id="selectSumJournal" style="display:none;">
 		<div id="sumpopup" class="popupwrap1 modal popup" style="width:175px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 500px; display: inline-block;">
 			<h1><spring:message code='ezJournal.t70' /></h1>
@@ -1001,6 +1009,7 @@
 	    }
 	}
 
+	//미리보기화면 사이즈 조절
 	function journalPreviewResize(e) {
 	    if (PreviewH_Move) {
 	        curevent = (typeof event == 'undefined' ? e : event);
@@ -1045,17 +1054,19 @@
 	    }
 	}
 	
+	//유저정보
 	 function OpenUserInfo(pUserID) {
 	        var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
 	    }
 	
+	 //일지 상세화면
 	function goJournalDetail(elem){
 		var vc = $(elem).find(".viewCount");
 		if($(elem).hasClass("noView")){
    			$(vc).text(parseInt($(vc).text())+1);
    			$(elem).removeClass("noView");
 		}
-// 	 	var pheight = window.screen.availHeight;
+// 	 	var pheight = window.sc reen.availHeight;
 //         var pwidth = window.screen.availWidth;
 //         var pTop = (pheight - 720) / 2;
 //         var pLeft = (pwidth - 765) / 2;
@@ -1075,8 +1086,21 @@
 					+ feature);
 			
 			Openwin.focus();
+			if(listType=='recv'){
+				parent.left.setRecvCount();
+			}
 		}
 	}
+	 
+	 function quickReply(journalId){
+// 		var heigth = window.screen.availHeight;
+//         var width = window.screen.availWidth;
+//         var left = (width - 500) / 2;
+//         var top = (heigth - 300) / 2;
+//         var szHref = "/ezJournal/journalReply.do?journalId="+journalId;
+//         DivPopUpShow_sub(520, 420, szHref);
+		 DivPopUpShow_sub($('body').prop('scrollWidth') * 0.6, $('body').prop('scrollHeight') * 0.6, "/ezJournal/journalReply.do?journalId="+journalId);
+	 }
 	</script>
 	</body>
 </html>

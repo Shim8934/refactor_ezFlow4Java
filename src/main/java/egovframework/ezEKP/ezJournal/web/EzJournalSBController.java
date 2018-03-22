@@ -443,6 +443,7 @@ public class EzJournalSBController {
 				JOReply.put("replyDate", replyDate);
 			}
 			model.addAttribute("replyList",replyList);
+			model.addAttribute("journalId",journalId);
 		}
 		logger.debug("journalReply ended");
 		
