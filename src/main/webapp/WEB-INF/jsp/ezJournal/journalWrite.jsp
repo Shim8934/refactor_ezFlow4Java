@@ -179,6 +179,7 @@
 	     	
 	    	window.onload = function () {
 				
+	    		// 수정, 임시, 재사용 모드에서는 수신자 정보와 파일정보를 가져와 화면에 적용
 	    		if (mode == "modify" || mode == "reuse" || mode == "temp") {
 	    			$("#title").val("${journal.journalTitle}");
 	    			var receiverID = "${receiverIds}";
@@ -200,18 +201,16 @@
 	    	
 	    	}; 
 	    
-	    
 	    	// 양식내용을 에디터에 넣어주는 작업 
 		    function Editor_Complete() {
 	    		
 	    		switch (mode) {
 				case 'new':
-		    		getLastForm(typeId);
 					getFormList($("#optType"));
+		    		getLastForm(typeId);
 				
 		    		console.log("lastFormId 확인 : " + lastFormId);
 		    		if (lastFormId != null && lastFormId != "" ) {
-		    			lastFormId = parseInt(lastFormId);
 		    			console.log("이전양식가져올때는 여기로 : " + lastFormId);
 		    			selFormId = lastFormId;
 		    			getJournalForm(lastFormId);

@@ -70,6 +70,8 @@
 	<resultMap class="journalEnvVO" id="journalEnvMap">
 		<result property="listCnt" column="list_cnt" />
 		<result property="viewenv" column="viewenv" />
+		<result property="previewWContent" column="preview_wcontent" />
+		<result property="previewHContent" column="preview_hcontent" />
 		<result property="recvAlert" column="recv_alert" />
 		<result property="replyAlert" column="reply_alert" />
 	</resultMap>
@@ -806,7 +808,9 @@
 	<!-- 환경설정을 가져오기 -->
 	<select id="selectUserEnv" parameterClass="Map" resultMap="journalEnvMap">
 		select count(user_id),ifnull(list_cnt,20) as list_cnt
-		,ifnull(viewenv,'NONE') as viewenv
+		,ifnull(viewenv,'N') as viewenv
+		,ifnull(preview_wcontent, 50) as preview_wcontent
+		,ifnull(preview_hcontent, 50) as preview_hcontent
 		,ifnull(recv_alert,'Y') as recv_alert
 		,ifnull(reply_alert,'Y') as reply_alert
 		from jmocha.tbl_journal_env
