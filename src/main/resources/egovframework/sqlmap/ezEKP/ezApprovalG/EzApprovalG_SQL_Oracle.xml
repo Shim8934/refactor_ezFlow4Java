@@ -99,46 +99,21 @@
 									* 
 								FROM 
 									(
-									SELECT
-									   *
-									FROM
-										( SELECT 
+										SELECT 
 											* 
-										  FROM 
-											 VAPRDOINGDOCLIST 
-										  WHERE 
-					      					 aprmemberid IN ($v_USERIDS$) 
-					      				  AND 
-					      					 aprtype <> '015'  
-					      				  AND 
-					      					 tenant_id = #v_TENANTID#
-					      				  AND
-					      					 COMPANYID = #companyID# 	
-					      				]]>
-					      				  <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
-							      		  AND 
-							      		 	 $v_SPSUBQUERY$
-				      					 </isGreaterThan>
-				      					 <![CDATA[
-										  UNION ALL
-											
-										  SELECT 
-											*
-										  FROM 
-											 VENDCHAMJODOCINFO 
-										  WHERE 
+										FROM 
+											VAPRDOINGDOCLIST 
+					      				WHERE 
 					      					aprmemberid IN ($v_USERIDS$) 
-					      				  AND 
+					      				AND 
 					      					aprtype <> '015'  
-					      				  AND 
-					      					tenant_id = #v_TENANTID#
-					      				  AND
-					      					COMPANYID = #companyID# 
-					      					]]>
-					      				<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
-							      		  AND 
+					      				AND 
+					      					tenant_id = #v_TENANTID# 
+	      		]]>
+				      		<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
+							      		AND 
 							      		 	$v_SPSUBQUERY$
-				      					</isGreaterThan> ) AS B 
+				      		</isGreaterThan>
 				      		<isNotEmpty property="v_ORDEROPTION"> 
 				      		<isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="9" >
 								<isEqual property="v_ORDEROPTIONVALUE" compareValue="startdate">
@@ -161,8 +136,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							
-							)C WHERE ROWNUM <= #v_PAGESIZE#) A 
+							)WHERE ROWNUM <= #v_PAGESIZE#) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -186,8 +160,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							
-							) WHERE ROWNUM <= #v_PAGESIZE2#
+							)WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="2">
@@ -216,9 +189,7 @@
 		         					AND 
 		         						DocState <> '017'
 		         					AND 
-					      				TENANT_ID = #v_TENANTID#
-					      			AND
-					      				COMPANYID = #companyID# 
+					      				TENANT_ID = #v_TENANTID# 
          		]]>
 			         		<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 				      			    AND 
@@ -247,8 +218,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-								
-								)C WHERE ROWNUM <= #v_PAGESIZE#	) A 
+								)WHERE ROWNUM <= #v_PAGESIZE#) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -272,10 +242,11 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							) WHERE ROWNUM <= #v_PAGESIZE2#
+							)WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="3">
+			
 			<![CDATA[
 			SELECT 
 				* 
@@ -316,22 +287,12 @@
 			            			FROM 
 			            				VAPRWILLDOCLIST  
 			            			WHERE 
-			            				APRMEMBERID = #v_USERID#
-			            				 ]]>
-			            		<isEqual property="MineViewYN" compareValue="YES">
-			            			AND	    
-										AprState != '001'
-			            		</isEqual>
-			            			
-			            	<![CDATA[				            				  
+			            				APRMEMBERID = #v_USERID# 
 			            			AND 
 			            				AprType <> '015'
-							]]>			            				
 			            			AND 
-					      				TENANT_ID = #v_TENANTID# 
-					      			AND
-					      				COMPANYID = #companyID#	
-            
+					      				TENANT_ID = #v_TENANTID# 	
+            ]]>
 			                <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 				      		 		AND 
 				      		 			$v_SPSUBQUERY$
@@ -358,8 +319,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							
-							) WHERE ROWNUM <= #v_PAGESIZE# ) A
+							)WHERE ROWNUM <= #v_PAGESIZE#) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -383,8 +343,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							
-							) WHERE ROWNUM <= #v_PAGESIZE2#
+							)WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="99">
@@ -401,15 +360,14 @@
 								SELECT 
 									* 
 									FROM 
-										vgongramaprdoingdoclist 
+										VAPRDOINGDOCLIST 
 		               				WHERE 
 		               					APRMEMBERID IN ($v_USERIDS$) 
 		               				AND 
 		               					APRTYPE = '015'
 		               				AND 
 					      				TENANT_ID = #v_TENANTID# 
-              ]]>					AND
-              							COMPANYID = #companyID#
+              ]]>
 			               	<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 				      		 		AND 
 				      		 			$v_SPSUBQUERY$
@@ -437,8 +395,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							
-							) WHERE ROWNUM <= #v_PAGESIZE# ) A
+							)WHERE ROWNUM <= #v_PAGESIZE#) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -462,8 +419,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							
-							) WHERE ROWNUM <= #v_PAGESIZE2#
+							)WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="10">
@@ -524,16 +480,12 @@
 		                  		TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID 
 		                    AND 
 		                  		TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID  
-		                  	AND
-		                  		TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID  		                  		
 		                  	INNER JOIN 
 		                  		TBL_EXPAPRDOCINFO 
 		                  	ON 
 		                  		TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID
 		                  	AND 
-		                  		TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID 
-		                  	AND
-		                  		TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID 
+		                  		TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID  
 		                  	WHERE 
 		                  		TBL_APRLINEINFO.APRMEMBERID IN ($v_USERIDS$) 
 		                  	AND 
@@ -542,8 +494,6 @@
 		                  		TBL_APRLINEINFO.AprState = '010'
 		                  	AND 
 					      		TBL_APRLINEINFO.TENANT_ID = #v_TENANTID# 
-					      	AND
-					      		TBL_APRLINEINFO.COMPANYID = #companyID#					      		
                 ]]>
 		                <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 			      		    AND 
@@ -571,8 +521,7 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						
-						) WHERE ROWNUM <= #v_PAGESIZE#  ) A
+						)WHERE ROWNUM <= #v_PAGESIZE#) A 
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -596,7 +545,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							) WHERE ROWNUM <= #v_PAGESIZE2#
+							)WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="21">
@@ -646,16 +595,12 @@
 		                         A.OWNERID=B.OWNERID
 		                     AND 
 		                     	 A.TENANT_ID = B.TENANT_ID
-		                     AND
-		                     	 A.COMPANYID = B.COMPANYID		                     	 
 		                     AND 
 		                     	 A.SN=B.SN 
 		                     WHERE 
 		                         A.OWNERID= #v_USERID#
 		                     AND 
 		                     	A.TENANT_ID = #v_TENANTID#
-		                     AND
-		                     	A.COMPANYID = #companyID#		                     	
                  ]]>
 		                 <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 			      		 	AND 
@@ -683,7 +628,7 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						) WHERE ROWNUM <= #v_PAGESIZE# ) A
+						)WHERE ROWNUM <= #v_PAGESIZE#) A
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -707,7 +652,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							) WHERE ROWNUM <= #v_PAGESIZE2#
+							)WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isNotEqual property="v_LISTTYPE" compareValue="1">
@@ -735,8 +680,6 @@
 		                     							APRMEMBERID IN ($v_USERIDS$)
 		                     						AND 
 		                     							TENANT_ID = #v_TENANTID#
-		                     						AND
-		                     							COMPANYID = #companyID#		                     							
                      				]]>
 		                     						<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 										      		AND 
@@ -764,7 +707,7 @@
 														</isNotEqual>
 													</isEmpty>
 													<![CDATA[
-													) WHERE ROWNUM <= #v_PAGESIZE# ) A
+													)WHERE ROWNUM <= #v_PAGESIZE#) A
 													]]>
 														<isNotEmpty property="v_ORDEROPTION2"> 
 														<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -788,8 +731,7 @@
 															</isNotEqual>
 														</isEmpty>
 														<![CDATA[
-														
-														) WHERE ROWNUM <= #v_PAGESIZE2#
+														)WHERE ROWNUM <= #v_PAGESIZE2#
 														]]>
                      			</isNotEqual>
                      		</isNotEqual>
