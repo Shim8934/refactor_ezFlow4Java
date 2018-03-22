@@ -81,9 +81,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@Autowired
 	private Properties config;
 	
-	@Autowired
-	private Properties globals;
-	
 	@Resource(name = "crypto") 
     private EgovFileScrty egovFileScrty;
 
@@ -755,6 +752,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		int tenantID = userInfo.getTenantId();        
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
+		String realPath = commonUtil.getRealPath(request);
 		String susinAdmin = "";
 		String formURL = request.getParameter("formURL");
 		String draftFlag = request.getParameter("draftFlag");
@@ -799,7 +797,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0,4) + commonUtil.separator;
+		String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0,4) + commonUtil.separator;
 		String mode = "APR";
 		String docID = isTmpDoc;
 		
@@ -7264,14 +7262,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String path = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		String subFolder = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMdd"), userInfo.getOffset(), false);
 		
-		path = path + commonUtil.separator + subFolder + commonUtil.separator;
+		path += commonUtil.separator + subFolder + commonUtil.separator;
 		
-		File file = new File(path);
+		File file = new File(realPath + path);
 		
 		if (!file.exists()) {
 			file.mkdirs();
 		}
-		
+		 
 		String saveFilePath = path + docTitle + ".mht";
 		
 		FileUtils.copyFile(new File(realPath + docHref), new File(realPath + saveFilePath));

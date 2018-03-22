@@ -1077,6 +1077,9 @@
 				
 			</table>
 		</div>
+		<c:if test="${ mode == '1'}">
+			<div class="btnpositionNew">&nbsp;</div>
+		</c:if>	
 		<div id="printScreen" style="display: none">
 			<table class="content">
 				<tr>

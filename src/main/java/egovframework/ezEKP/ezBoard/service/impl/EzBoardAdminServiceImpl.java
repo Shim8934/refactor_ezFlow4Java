@@ -42,9 +42,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	private EzBoardAdminDAO ezBoardAdminDAO;
 	
 	@Autowired
-	private Properties config;
-	
-	@Autowired
 	private Properties globals;
 	
 	@Autowired

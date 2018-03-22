@@ -332,7 +332,7 @@ function config_repeat() {
     task_repetition_cross_dialogArguments[0] = prameter;
     task_repetition_cross_dialogArguments[1] = config_repeat_Complete;
    
-    DivPopUpShow(450, 345, "/ezTask/taskRepetition.do");
+    DivPopUpShow(450, 375, "/ezTask/taskRepetition.do");
 }
 
 function config_repeat_Complete(retVal) {
