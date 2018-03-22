@@ -125,10 +125,10 @@
     	function userConfAddModify(){
     		if (CrossYN()) {
     			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
-    			OpenWin = GetOpenWindow("url", "", "1140", "550");
+    			OpenWin = GetOpenWindow("/admin/ezAttitude/saveAttitudeUserConf.do", "", "1140", "550");
     			try { OpenWin.focus();} catch (e) { }
     		} else {
-    			showModalDialog("url", null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
+    			showModalDialog("/admin/ezAttitude/saveAttitudeUserConf.do", null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
     		}
     	}
     	
@@ -202,11 +202,11 @@
 		<table id="attiBoardList" class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
-					<th style="width:29px;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
-					<th style="width:300px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
-					<th style="width:200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
-					<th style="width:400px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
-					<th style="width:620px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="workstarttime">근무시간</th>
+					<th style="width:10%;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
+					<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
+					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
+					<th style="width:30%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
+					<th style="width:25%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="work_starttime">근무시간</th>
 				</tr>
 			</thead>
 			<tbody>

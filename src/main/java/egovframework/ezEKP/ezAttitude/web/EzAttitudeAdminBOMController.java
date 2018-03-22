@@ -651,4 +651,11 @@ public class EzAttitudeAdminBOMController {
 		return jObject;
 	}
 	
+	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeUserConf.do")
+	public String saveAttitudeUserConf() {
+		
+		
+		return "admin/ezAttitude/saveAttitudeUserConf";
+	}
+	
 }
