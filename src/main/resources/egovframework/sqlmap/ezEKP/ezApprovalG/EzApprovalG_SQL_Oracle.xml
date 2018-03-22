@@ -161,8 +161,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							WHERE ROWNUM <= #v_PAGESIZE#
-							)C ) A 
+							
+							)C WHERE ROWNUM <= #v_PAGESIZE#) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -186,8 +186,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							WHERE ROWNUM <= #v_PAGESIZE2#
-							)D
+							
+							) WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="2">
@@ -247,8 +247,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-								WHERE ROWNUM <= #v_PAGESIZE#
-								)C	) A 
+								
+								)C WHERE ROWNUM <= #v_PAGESIZE#	) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -272,8 +272,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							WHERE ROWNUM <= #v_PAGESIZE2#
-							)D
+							) WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="3">
@@ -359,8 +358,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							WHERE ROWNUM <= #v_PAGESIZE#
-							)C ) A
+							
+							) WHERE ROWNUM <= #v_PAGESIZE# ) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -384,8 +383,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							WHERE ROWNUM <= #v_PAGESIZE2#
-							)D
+							
+							) WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="99">
@@ -438,8 +437,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							WHERE ROWNUM <= #v_PAGESIZE#
-							)C ) A
+							
+							) WHERE ROWNUM <= #v_PAGESIZE# ) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -463,8 +462,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							WHERE ROWNUM <= #v_PAGESIZE2#
-							)D
+							
+							) WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="10">
@@ -572,8 +571,8 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						WHERE ROWNUM <= #v_PAGESIZE# 
-						)C ) A
+						
+						) WHERE ROWNUM <= #v_PAGESIZE#  ) A
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -597,8 +596,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							WHERE ROWNUM <= #v_PAGESIZE2#
-							)D
+							) WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="21">
@@ -685,8 +683,7 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						WHERE ROWNUM <= #v_PAGESIZE#
-						)C ) A
+						) WHERE ROWNUM <= #v_PAGESIZE# ) A
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -710,8 +707,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							WHERE ROWNUM <= #v_PAGESIZE2#
-							)D
+							) WHERE ROWNUM <= #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isNotEqual property="v_LISTTYPE" compareValue="1">
@@ -768,8 +764,7 @@
 														</isNotEqual>
 													</isEmpty>
 													<![CDATA[
-													WHERE ROWNUM <= #v_PAGESIZE#
-													)C ) A
+													) WHERE ROWNUM <= #v_PAGESIZE# ) A
 													]]>
 														<isNotEmpty property="v_ORDEROPTION2"> 
 														<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -793,8 +788,8 @@
 															</isNotEqual>
 														</isEmpty>
 														<![CDATA[
-														WHERE ROWNUM <= #v_PAGESIZE2#
-														)D
+														
+														) WHERE ROWNUM <= #v_PAGESIZE2#
 														]]>
                      			</isNotEqual>
                      		</isNotEqual>
@@ -841,8 +836,7 @@
   							isPublic,
   							orgDocID,
   							receivedDate,
-  							DATE_ADD(DATE_FORMAT(startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
-  							urgentApproval,
+							to_date(A.startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,  							urgentApproval,
   							writerDeptID,
   							writerDeptName,
   							writerDeptName2,
@@ -898,8 +892,7 @@
 				  E.isPublic,
 				  E.orgDocID,
 				  E.receivedDate,
-				  DATE_ADD(DATE_FORMAT(E.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
-				  E.urgentApproval,
+				  to_date(E.startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,				  E.urgentApproval,
 				  E.writerDeptID,
 				  E.writerDeptName,
 				  E.writerDeptName2,
@@ -933,8 +926,8 @@
 	  		</isGreaterThan>
 	    			$v_PORDERBYSUB$	 
 				<![CDATA[
-						WHERE 
-							rownum <= #v_PQUERYSIZESUB#
+						AND 
+							ROWNUM <= #v_PQUERYSIZESUB#
 								) B 
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
@@ -943,7 +936,8 @@
 		    		]]>
 	  		</isGreaterThan>
 					<![CDATA[
-								rownum <= #v_PQUERYSIZEMAIN# 
+					AND
+								ROWNUM <= #v_PQUERYSIZEMAIN# 
 								]]>
 		</isEqual>
 		
@@ -981,7 +975,7 @@
   							href,
   							isPublic,
   							orgDocID,
-  							DATE_ADD(DATE_FORMAT(startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
+  							to_date(startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,
   							urgentApproval,
   							writerDeptID,
   							writerDeptName,
@@ -1070,8 +1064,8 @@
 	  		</isGreaterThan>
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$ 
-						WHERE 
-							rownum <= #v_PQUERYSIZESUB# 
+						AND 
+							ROWNUM <= #v_PQUERYSIZESUB# 
 										) B
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
@@ -1080,7 +1074,8 @@
 		    		]]>
 	  		</isGreaterThan>
 						<![CDATA[
-								rownum <= #v_PQUERYSIZEMAIN# 
+						AND
+								ROWNUM <= #v_PQUERYSIZEMAIN# 
 								]]>
 		</isEqual>
 		
@@ -1100,8 +1095,7 @@
                       				 A.DOCNO,
                       				 A.HASATTACHYN, 
                       				 A.HASOPINIONYN,
-                      				DATE_ADD(DATE_FORMAT(A.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as A.startDate,
-                      				 A.ENDDATE,
+									 to_date(A.startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as A.startDate,                      				 A.ENDDATE,
                       				 A.WRITERID,
                       				 A.WRITERNAME,
                       				 A.WRITERNAME2,
@@ -1136,8 +1130,8 @@
 	  		</isGreaterThan>
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
-						WHERE 
-							rownum <= #v_PQUERYSIZESUB# 
+						AND 
+							ROWNUM <= #v_PQUERYSIZESUB# 
 										) B 
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
@@ -1145,9 +1139,10 @@
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
-	  		<![CDATA[
-								rownum <= #v_PQUERYSIZEMAIN# 
-								]]>
+	  				<![CDATA[
+	  					AND
+						ROWNUM <= #v_PQUERYSIZEMAIN# 
+					]]>
 		</isEqual>
 		
 		<isEqual property="v_PLISTTYPE" compareValue="4">
@@ -1214,8 +1209,8 @@
 	  		</isGreaterThan>
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
-						WHERE 
-							rownum <= #v_PQUERYSIZESUB#
+						AND 
+							ROWNUM <= #v_PQUERYSIZESUB#
 									) B  
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
@@ -1224,7 +1219,8 @@
 		    		]]>
 	  		</isGreaterThan>
 								<![CDATA[
-								rownum <= #v_PQUERYSIZEMAIN# 
+								AND
+								ROWNUM <= #v_PQUERYSIZEMAIN# 
 								]]>
 		</isEqual>
 		
@@ -1289,8 +1285,8 @@
 				  		</isGreaterThan>
 				  			<![CDATA[
 						  		$v_PORDERBYSUB$
-									WHERE 
-										rownum <= #v_PQUERYSIZESUB# 
+									AND 
+										ROWNUM <= #v_PQUERYSIZESUB# 
 													) B
 							]]>
 						<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
@@ -1298,9 +1294,10 @@
 				    			$v_PORDERBYMAIN$
 				    		]]>
 			  			</isGreaterThan>
-			  			<![CDATA[
-											rownum <= #v_PQUERYSIZEMAIN# 
-											]]>
+			  				<![CDATA[
+			  						AND
+										ROWNUM <= #v_PQUERYSIZEMAIN# 
+							]]>
 					</isNotEqual>
 				</isNotEqual>
 			</isNotEqual>
@@ -6670,7 +6667,8 @@
 			   				APRMEMBERID IN ($v_USERIDS$)
 			   			 AND 
 			   				DOCID = #v_DOCID#
-  						ROWNUM <= 1
+			   			 AND
+  							ROWNUM <= 1
 			   				)
 			   	]]>
    		</isEqual>
@@ -7144,8 +7142,10 @@
                             		A.COMPANYID = #companyID#	                       			
 	                        ORDER BY 
 	                       			FLAG DESC, DOCID DESC ) D
-            WHERE 
-            		 ) C ORDER BY DOCID DESC ROWNUM <= 1
+	                       	ORDER BY 
+	                       			DOCID DESC
+            		 ) C  WHERE 
+            		 		ROWNUM <= 1
          ]]>
 		</isNotEqual>
 		</isNotEqual>
@@ -24071,7 +24071,10 @@
 			APRMEMBERID = #v_USERID#
 		AND
 			DOCID = #v_DOCID#
-		LIMIT 1
+		<![CDATA[
+		AND
+			ROWNUM <= 1
+		]]>
 	</select>
 		  
 	  <update id="EzApprovalG.updateRelayCabinetDocInfo" parameterClass="Map">
