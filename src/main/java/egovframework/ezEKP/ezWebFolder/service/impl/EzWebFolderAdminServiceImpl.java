@@ -484,6 +484,8 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 			subFld.setFolderPath(folderPath);
 			subFld.setUpdateDate(timeUTC);
 			subFld.setUpdateId(userId);
+			subFld.setFolderType(parentFolder.getFolderType());
+			subFld.setOwnerId(parentFolder.getOwnerId());
 			subFld.setFolderLevel(subFld.getFolderLevel() + levelDistance);
 			
 			//Update Folder
@@ -518,6 +520,8 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		}
 		
 		folder.setFolderPath(newPath);
+		folder.setOwnerId(parentFolder.getOwnerId());
+		folder.setFolderType(parentFolder.getFolderType());
 		folder.setUpdateId(userId);
 		folder.setUpdateDate(timeUTC);
 		folder.setFolderUpper(destFolderId);
@@ -537,6 +541,8 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 			folderPath        = folderPath.replace("|" + subFld.getFolderId() + "|", "|" + newSubId + "|");
 			
 			subFld.setFolderPath(folderPath);
+			subFld.setFolderType(parentFolder.getFolderType());
+			subFld.setOwnerId(parentFolder.getOwnerId());
 			subFld.setUpdateDate(timeUTC);
 			subFld.setUpdateId(userId);
 			subFld.setFolderLevel(subFld.getFolderLevel() + levelDistance);
