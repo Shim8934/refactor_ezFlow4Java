@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezConn.util.EzConnUtil;
@@ -100,7 +101,13 @@ public class EzConnController {
 	        
 	        logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 			
-			boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
+			boolean isUserExists = false;
+			
+			LoginVO	resultVO = getUserInfo(orgId, orgPw, tenantId);
+			
+			if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
+				isUserExists = true;
+			} 
 			
 			logger.debug("isUserExists=" + isUserExists);
 			
@@ -109,7 +116,7 @@ public class EzConnController {
 					OrganUserVO organUserVO = new OrganUserVO();	
 					
 					organUserVO.setTenantId(tenantId);
-					organUserVO.setCn(orgId);
+					organUserVO.setCn(resultVO.getId());
 					
 				    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			        date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -133,11 +140,11 @@ public class EzConnController {
 				if (params.length > 4) {
 					try {
 						// 이미 사용자 레코드가 있으면 Exception이 발생한다.
-						ezCommonService.insertTblUserLocalInfo(orgId, userTimeZone, userLang, tenantId);
+						ezCommonService.insertTblUserLocalInfo(resultVO.getId(), userTimeZone, userLang, tenantId);
 					} catch (Exception e) {
 						LoginVO userInfo = new LoginVO();
 						
-						userInfo.setId(orgId);
+						userInfo.setId(resultVO.getId());
 						userInfo.setTenantId(tenantId);
 						userInfo.setOffset(userTimeZone);
 						userInfo.setLang(userLang);		
@@ -147,9 +154,9 @@ public class EzConnController {
 					}
 				}
 				
-				String encryptedPw = EgovFileScrty.encryptPassword(orgPw, orgId);
+				String encryptedPw = EgovFileScrty.encryptPassword(orgPw, resultVO.getId());
 				
-				loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response);
+				loginController.createLoginCookie(resultVO.getId(), orgPw, encryptedPw, tenantId, request, response);
 				
 				// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
 				// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
@@ -223,11 +230,9 @@ public class EzConnController {
 		response.sendRedirect(resultPage);
 	}
 	
-	private boolean checkIfUserExists(String id, String pw, int tenantId) throws Exception {
+	private LoginVO getUserInfo(String id, String pw, int tenantId) throws Exception {
 		logger.debug("checkIfUserExists started. id=" + id + ",tenantId=" + tenantId);
-		
-		boolean isUserExists = false;
-		
+				
 //		String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
 		
 //		logger.debug("encryptedPw=" + encryptedPw);
@@ -241,14 +246,10 @@ public class EzConnController {
 		LoginVO	resultVO = loginService.selectUser(loginVO);			
 		
 		logger.debug("resultVO=" + resultVO);
-		
-		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
-			isUserExists = true;
-		} 
-		
+				
 		logger.debug("checkIfUserExists ended.");
 		
-		return isUserExists;
+		return resultVO;
 	}	
     
 	@RequestMapping("/ezConn/approvalMain.do")
@@ -275,12 +276,18 @@ public class EzConnController {
 			        
 			        logger.debug("tenantId=" + tenantId);
 					
-					boolean isUserExists = checkIfUserExistsById(id, tenantId);
+					boolean isUserExists = false;
+					
+					LoginVO resultVO = getUserInfoById(id, tenantId);
+					
+					if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
+						isUserExists = true;
+					} 
 					
 					logger.debug("isUserExists=" + isUserExists);
 					
 					if (isUserExists) {
-						loginController.createLoginCookie(id, "", "", tenantId, request, response);
+						loginController.createLoginCookie(resultVO.getId(), "", "", tenantId, request, response);
 						
 						// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
 						// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
@@ -299,11 +306,9 @@ public class EzConnController {
 		return resultPage;
 	}
 	
-	private boolean checkIfUserExistsById(String id, int tenantId) throws Exception {
-		logger.debug("checkIfUserExistsById started. id=" + id + ",tenantId=" + tenantId);
-		
-		boolean isUserExists = false;
-				
+	private LoginVO getUserInfoById(String id, int tenantId) throws Exception {
+		logger.debug("getUserInfoById started. id=" + id + ",tenantId=" + tenantId);
+						
 		LoginVO loginVO = new LoginVO();	
 		
 		loginVO.setId(id);
@@ -313,14 +318,36 @@ public class EzConnController {
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		
 		logger.debug("resultVO=" + resultVO);
+				
+		logger.debug("getUserInfoById ended.");
 		
-		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
-			isUserExists = true;
-		} 
-		
-		logger.debug("checkIfUserExistsById ended.");
-		
-		return isUserExists;
+		return resultVO;
 	}	
 	
+	@RequestMapping("/ezConn/changePassword.do")
+	@ResponseBody
+	public String changePassword(HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("changePassword started.");
+		String result = "ERROR";
+		
+		try {
+			String id = request.getParameter("id");
+			id = ezConnUtil.decryptAES(id);
+			logger.debug("id=" + id);
+			
+			String cn = id.split(":")[0];
+			String password = id.split(":")[1];
+			int tenantID = 0;
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+			
+			ezOrganAdminService.setPasswordWithEmailSystem(cn, domain, password, tenantID);
+			
+			result = "OK";
+		} catch (Exception e) {
+			result = "ERROR";
+		}
+		
+		logger.debug("changePassword ended. result=" + result);
+		return result;
+	}
 }

@@ -65,6 +65,7 @@ function CalendarView(pTagetID) {
             oTable.setAttribute("border", "0");
             oTable.setAttribute("width", "100%");
             oTh.setAttribute("id", "calTitle");
+            oTh.style.fontSize = "15px";
             oTh.colSpan = "2";
             if (typeCal == 2) {
                 var tempyear = sDate.getFullYear();
@@ -560,7 +561,7 @@ function MultiSelectItems(obj, event) {
 
         for (var i = 0; i <= 41; i++) {
             if (StartIdex <= i && Endidex >= i)
-                document.getElementById("index_" + i).style.backgroundColor = "rgb(233, 241, 255)";
+                document.getElementById("index_" + i).style.backgroundColor = "#edf4fd";
             else
                 document.getElementById("index_" + i).style.backgroundColor = "";
         }
@@ -575,7 +576,7 @@ function MultiSelectEnd(obj, event) {
         DragEndItemID = "";
         return;
     }
-    obj.style.backgroundColor = "rgb(233, 241, 255)";
+    obj.style.backgroundColor = "#edf4fd";
     Write();
 }
 function Write() {

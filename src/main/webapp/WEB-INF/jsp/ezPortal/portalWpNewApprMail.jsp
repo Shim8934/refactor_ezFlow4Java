@@ -62,7 +62,7 @@
     						
     						<dd>
     							<div class="point_count">
-        							<span id="OTHER" >000</span>
+        							<span id="OTHER" >0</span>
         						</div>
         					</dd>
     					</dl>
@@ -234,7 +234,7 @@
 		                if (xmldom.getElementsByTagName("CELL").length > 0) {
 		                    listHTML = "<ul class=\"listtype_txt \">";
 		                    for (var i = 0; i < xmldom.getElementsByTagName("CELL").length; i++) {
-		                        var DOCTITLE = getNodeText(xmldom.getElementsByTagName("DOCTITLE").item(i));
+		                        var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("DOCTITLE").item(i)));
 		                        var WRITERNAME = getNodeText(xmldom.getElementsByTagName("WRITERNAME").item(i));
 		                        var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
 	
@@ -252,7 +252,7 @@
 		                    listHTML += "</ul>";
 		                } else {
 		                    listHTML = "<div class='nodata_portlet '>";
-		                    listHTML += "<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_white.gif' width='107' height='70'></p>";
+		                    listHTML += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
 		                    listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
 		                }
 		                
@@ -461,7 +461,7 @@
 
 	                openLocation = openLocation + escape(pArgument[0]);
 	                openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]);
-	                openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0";
+	                openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0" + "&docState=" + escape(pDocState);
 	            }
 	            openwindow(openLocation, "", 880, 550);       
 		    }
@@ -596,7 +596,7 @@
 		                listHTML += "</ul>";
 		            } else {
 		                listHTML = "<div class='nodata_portlet '>";
-		                listHTML += "<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_white.gif' width='107' height='70'></p>";
+		                listHTML += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
 		                listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
 		            }
 	

@@ -58,7 +58,7 @@
 		        
 // 		        $("#btnAppdept").closest("a").hide();
 // 	            $("#btnDeldept").closest("a").hide();
-	            document.getElementById("selUseDept").disabled = true;
+//	            document.getElementById("selUseDept").disabled = true;
 		        
 		        if (gState == "U") {
 		            initVal(RetValue);
@@ -345,7 +345,7 @@
 			</tr>
 			<tr>
 				<td style="vertical-align:top;">
-					<div id="TreeView" style="padding-top:5px;BORDER:#b6b6b6 1px solid; OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:260px; HEIGHT:230px; BACKGROUND-COLOR:#ffffff"></div>
+					<div id="TreeView" style="padding-top:5px;BORDER:#ddd 1px solid; OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:260px; HEIGHT:230px; BACKGROUND-COLOR:#ffffff"></div>
 				</td>
 				<td style="width:50px;text-align:center;white-space:nowrap;">
 					<a class="imgbtn"><span id="btnAppdept" onClick="return btnAppdept_onclick()"><spring:message code='ezApprovalG.t1649'/></span></a><br/>					

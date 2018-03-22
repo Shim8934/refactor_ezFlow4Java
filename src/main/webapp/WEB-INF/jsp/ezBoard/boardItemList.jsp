@@ -168,7 +168,11 @@
 		    	try {
 		    		leftDocument = $(window.parent.frames['left'].document);
 		    	} catch (e) {
-		    		leftDocument = $(window.parent.parent.frames['left'].document);
+		    		try {
+		    			leftDocument = $(window.parent.parent.frames['left'].document);
+		    		} catch (e) {
+		    			leftDocument = $(window.parent.parent.frames['board_menu'].document);
+		    		}
 		    	}
 		    	
 		    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
@@ -1169,8 +1173,8 @@
 			          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezBoard.t208' /></label>
 					  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code='ezBoard.t223' /></label>
 					  &nbsp;
-					  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-			          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
+					  <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+			          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onClick="search('quick')"></a>
 			        </span>
 				</h1>
 			</c:when>
@@ -1182,8 +1186,8 @@
 		          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t208' />
 				  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t223' />
 				  &nbsp;
-				  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
+				  <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onClick="search('quick')"></a>
 		        </span>
 			    <br />
 			</c:otherwise>
@@ -1208,25 +1212,19 @@
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
-				</li>         
+				</li>
+				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li> 
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
 			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
 		        </c:if>
-		        <li style="background:none">
-		            <select id="viewtype" onchange="getBoardList('1')">
-		                <option value="1"><spring:message code='ezBoard.t4001' /></option>
-		                <option value="2"><spring:message code='ezBoard.t4002' /></option>
-		                <option value="3"><spring:message code='ezBoard.t4003' /></option>
-		            </select>
-		        </li>
 			  </ul>
 			</div>
 			<script type="text/javascript">
 			    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
 		</c:if>
-		    <div id="layer_Viewpopup" style="width: 150px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
+		    <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
 		        <div class="popupwrap1">
 		            <div class="popupwrap2">
 		                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
@@ -1245,6 +1243,16 @@
 		                                <option value="40">40</option>
 		                                <option value="50">50</option>
 		                            </select>    
+		                        </td>
+		                    </tr>
+		                    <tr>
+		                        <th><spring:message code="ezEmail.t99000035" /></th>
+		                        <td>
+		                            <select id="viewtype" onchange="getBoardList('1')">
+						                <option value="1"><spring:message code='ezBoard.t4001' /></option>
+						                <option value="2"><spring:message code='ezBoard.t4002' /></option>
+						                <option value="3"><spring:message code='ezBoard.t4003' /></option>
+		            				</select>
 		                        </td>
 		                    </tr>
 		                </table>

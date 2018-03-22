@@ -209,13 +209,13 @@
 		        }
 	
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "rgb(233, 241, 255)";
-		        obj.childNodes.item(1).style.backgroundColor = "rgb(233, 241, 255)";
-		        obj.childNodes.item(2).style.backgroundColor = "rgb(233, 241, 255)";
-		        obj.childNodes.item(3).style.backgroundColor = "rgb(233, 241, 255)";
-		        obj.childNodes.item(4).style.backgroundColor = "rgb(233, 241, 255)";
-		        obj.childNodes.item(5).style.backgroundColor = "rgb(233, 241, 255)";
-		        obj.childNodes.item(6).style.backgroundColor = "rgb(233, 241, 255)";
+		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(3).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(4).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(5).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(6).style.backgroundColor = "#edf4fd";
 		    }
 	
 	
@@ -224,7 +224,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 280) / 2;
 		        var pLeft = (pwidth - 450) / 2;
-		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?company="+document.getElementById('ListCompany')[document.getElementById('ListCompany').selectedIndex].value,"", "height = 280px, width = 450px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?company="+document.getElementById('ListCompany')[document.getElementById('ListCompany').selectedIndex].value,"", "height = 290px, width = 450px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		    }
 	
 		    function event_dbclick() {    	
@@ -247,7 +247,7 @@
 		        var company = _RowObject.getAttribute("company");
 	
 		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?id=" + id + "&name=" + encodeURIComponent(holidayname) + "&name2=" + encodeURIComponent(holidayname2) + "&date=" + holidaydate + "&isSolar=" + issolar + "&isRepeat=" + isrepeat + "&isRest=" + isrest + "&company=" + company
-		            , "", "height = 280px, width = 450px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		            , "", "height = 290px, width = 450px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		    }
 	
 		    function del_holiday() {
@@ -299,7 +299,11 @@
 			<div id="mainmenu">
 				<ul>
 			        <li style="background:none;padding-top:4px;height:24px">
-			            <select id="ListCompany" onchange="schedule_get_holiday()">${companySel}</select>
+			            <select id="ListCompany" onchange="schedule_get_holiday()">
+			            	<c:forEach var="item" items="${list}">
+	            				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            				</c:forEach>
+			            </select>
 			        </li>
 			    </ul>
 			    <ul style="margin-left:3px">

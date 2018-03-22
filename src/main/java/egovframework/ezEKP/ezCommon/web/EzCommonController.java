@@ -5,6 +5,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -28,6 +29,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -65,6 +67,9 @@ public class EzCommonController extends EgovFileMngUtil{
 	
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Resource(name="loginService")
+	private LoginService loginService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonController.class);
 	
@@ -268,7 +273,9 @@ public class EzCommonController extends EgovFileMngUtil{
 	 * ID클릭시 사용자 정보화면 호출 Method
 	 */
 	@RequestMapping(value = "/ezCommon/showPersonInfo.do")
-	public String showPersonInfo(@CookieValue("loginCookie")String loginCookie, Locale locale,HttpServletRequest request, ModelMap model) throws Exception {
+	public String showPersonInfo(@CookieValue("loginCookie")String loginCookie, Locale locale,
+						HttpServletRequest request, HttpServletResponse response,
+						ModelMap model) throws Exception {
 		logger.debug("showPersonInfo started");
 
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
@@ -302,8 +309,48 @@ public class EzCommonController extends EgovFileMngUtil{
 			pDeptID = request.getParameter("dept");
 		}
 		
-		if (id.equals("")) {
+		logger.debug("id=" + id + ",email=" + email + ",dept=" + pDeptID);
+		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", loginVO.getTenantId());
+		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginVO.getTenantId());
+		
+		logger.debug("dotNetIntegration=" + dotNetIntegration);
+		
+		if (dotNetIntegration.equals("YES")) {
+			String personId = "";		
+			String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", loginVO.getTenantId());
 			
+			if (!email.isEmpty()) {
+				int atSignPos = email.indexOf("@");
+				
+				if (atSignPos != -1) {									
+					personId = email.substring(0, atSignPos);
+				}
+			} else if (!id.isEmpty()) {
+				personId = id;
+			}
+			
+			if (useEmpNumberLogin.equals("YES")) {
+				logger.debug("personId=" + personId);
+				
+				LoginVO login = new LoginVO();
+				login.setId(personId);
+				login.setDn("NOPASSWORD");
+				login.setTenantId(loginVO.getTenantId());
+				
+				LoginVO user = loginService.selectUser(login);
+				
+				if (user != null && user.getSabun() != null) {
+					personId = user.getSabun();
+				}
+				
+				logger.debug("final personId=" + personId);
+			}
+			
+			return "redirect:" + dotNetUrl + "/myoffice/common/ShowPersonInfo.aspx?id=" + URLEncoder.encode(personId, "utf-8"); 
+		}
+		
+		if (id.equals("")) {
 			if (!email.equals("")) {
 				id = ezOrganService.getCNByEmail(email, loginVO.getTenantId());
 			}

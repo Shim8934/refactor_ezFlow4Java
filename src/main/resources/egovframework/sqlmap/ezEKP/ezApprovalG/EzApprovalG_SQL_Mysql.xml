@@ -99,23 +99,48 @@
 									* 
 								FROM 
 									(
-										SELECT 
+									SELECT
+									   *
+									FROM
+										( SELECT 
 											* 
-										FROM 
-											VAPRDOINGDOCLIST 
-					      				WHERE 
+										  FROM 
+											 VAPRDOINGDOCLIST 
+										  WHERE 
+					      					 aprmemberid IN ($v_USERIDS$) 
+					      				  AND 
+					      					 aprtype <> '015'  
+					      				  AND 
+					      					 tenant_id = #v_TENANTID#
+					      				  AND
+					      					 COMPANYID = #companyID# 	
+					      				]]>
+					      				  <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
+							      		  AND 
+							      		 	 $v_SPSUBQUERY$
+				      					 </isGreaterThan>
+				      					 <![CDATA[
+										  UNION ALL
+											
+										  SELECT 
+											*
+										  FROM 
+											 VENDCHAMJODOCINFO 
+										  WHERE 
 					      					aprmemberid IN ($v_USERIDS$) 
-					      				AND 
+					      				  AND 
 					      					aprtype <> '015'  
-					      				AND 
+					      				  AND 
 					      					tenant_id = #v_TENANTID#
-					      				AND
+					      				  AND
 					      					COMPANYID = #companyID# 
-	      		]]>
-				      		<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
-							      		AND 
+					      					]]>
+					      				<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
+							      		  AND 
 							      		 	$v_SPSUBQUERY$
-				      		</isGreaterThan>
+				      					</isGreaterThan> ) AS B 
+<!-- 				      				WHERE (DOCTYPE != '017' AND FUNCTIONTYPE != '004') -->
+					      				
 				      		<isNotEmpty property="v_ORDEROPTION"> 
 				      		<isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="9" >
 								<isEqual property="v_ORDEROPTIONVALUE" compareValue="startdate">
@@ -139,7 +164,7 @@
 							</isEmpty>
 							<![CDATA[
 							LIMIT #v_PAGESIZE#
-							)C ) A 
+							)C  ) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -379,7 +404,7 @@
 								SELECT 
 									* 
 									FROM 
-										VAPRDOINGDOCLIST 
+										vgongramaprdoingdoclist 
 		               				WHERE 
 		               					APRMEMBERID IN ($v_USERIDS$) 
 		               				AND 
@@ -787,46 +812,49 @@
 		<isEqual property="v_PLISTTYPE" compareValue="1">
 			    SELECT * 		
 	   				FROM (
+	   				SELECT
+	   				 * 
+	   				FROM (
 						SELECT 
-							A.aprMemberDeptID,
-							A.aprMemberDeptName,
-							A.aprMemberDeptName2,
-							A.aprMemberID,
-							A.aprMemberJobTitle,
-							A.aprMemberJobTitle2,
-							A.aprMemberName,
-  							A.aprMemberName2,
-  							A.aprMemberSN,
-  							A.aprState,
-  							A.aprType,
-  							A.companyID,
-  							A.docID,
-  							A.docNo,
-  							A.docState,
-  							A.docTitle,
-  							A.docType,
-  							A.formID,
-  							A.formName,
-  							A.formName2,
-  							A.functionType,
-  							A.hasAttachYn,
-  							A.hasOpinionYn,
-  							A.href,
-  							A.isPublic,
-  							A.orgDocID,
-  							A.receivedDate,
-  							DATE_ADD(DATE_FORMAT(A.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
-  							A.urgentApproval,
-  							A.writerDeptID,
-  							A.writerDeptName,
-  							A.writerDeptName2,
-  							A.writerID,
-  							A.writerJobTitle,
-  							A.writerJobTitle2,
-  							A.writerName,
-  							A.writerName2
+							aprMemberDeptID,
+							aprMemberDeptName,
+							aprMemberDeptName2,
+							aprMemberID,
+							aprMemberJobTitle,
+							aprMemberJobTitle2,
+							aprMemberName,
+  							aprMemberName2,
+  							aprMemberSN,
+  							aprState,
+  							aprType,
+  							companyID,
+  							docID,
+  							docNo,
+  							docState,
+  							docTitle,
+  							docType,
+  							formID,
+  							formName,
+  							formName2,
+  							functionType,
+  							hasAttachYn,
+  							hasOpinionYn,
+  							href,
+  							isPublic,
+  							orgDocID,
+  							receivedDate,
+  							DATE_ADD(DATE_FORMAT(startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
+  							urgentApproval,
+  							writerDeptID,
+  							writerDeptName,
+  							writerDeptName2,
+  							writerID,
+  							writerJobTitle,
+  							writerJobTitle2,
+  							writerName,
+  							writerName2
 						FROM 
-							VAPRDOINGDOCLIST A  
+							VAPRDOINGDOCLIST  
 						WHERE 
 							TENANT_ID = #v_TENANTID#
 						AND
@@ -841,6 +869,66 @@
             			AND	    
 							AprState != '001'
 			 </isEqual>
+			 
+			  UNION ALL
+          		
+	          SELECT 
+				  E.aprMemberDeptID,
+				  E.aprMemberDeptName,
+				  E.aprMemberDeptName2,
+				  E.aprMemberID,
+				  E.aprMemberJobTitle,
+				  E.aprMemberJobTitle2,
+				  E.aprMemberName,
+				  E.aprMemberName2,
+				  E.aprMemberSN,
+				  E.aprState,
+				  E.aprType,
+				  E.companyID,
+				  E.docID,
+				  E.docNo,
+				  E.docState,
+				  E.docTitle,
+				  E.docType,
+				  E.formID,
+				  E.formName,
+				  E.formName2,
+				  E.functionType,
+				  E.hasAttachYn,
+				  E.hasOpinionYn,
+				  E.href,
+				  E.isPublic,
+				  E.orgDocID,
+				  E.receivedDate,
+				  DATE_ADD(DATE_FORMAT(E.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
+				  E.urgentApproval,
+				  E.writerDeptID,
+				  E.writerDeptName,
+				  E.writerDeptName2,
+				  E.writerID,
+				  E.writerJobTitle,
+				  E.writerJobTitle2,
+				  E.writerName,
+				  E.writerName2
+			  FROM 
+				    VENDCHAMJODOCINFO E
+			  WHERE 
+					TENANT_ID = #v_TENANTID#
+			  AND
+					COMPANYID = #companyID#
+			<![CDATA[
+			  AND 
+				    APRMEMBERID IN ($v_PUSERIDS$)  
+			  AND 
+				   APRTYPE <> '015' 
+		    ]]>
+		    <isEqual property="MineViewYN" compareValue="YES">
+        	  AND	    
+					AprState != '001'
+			 </isEqual>
+			 ) AS A
+          	WHERE 
+          		1=1
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 	    			AND 
 	    				#v_PSUBQUERY#
@@ -861,45 +949,48 @@
 		    <![CDATA[
 		    SELECT * 		
 	   				FROM (
+	   					 SELECT
+	   					  *
+	   					 FROM (
 						 SELECT 
-						 	A.aprMemberDeptID,
-							A.aprMemberDeptName,
-							A.aprMemberDeptName2,
-							A.aprMemberID,
-							A.aprMemberJobTitle,
-							A.aprMemberJobTitle2,
-							A.aprMemberName,
-  							A.aprMemberName2,
-  							A.aprMemberSN,
-  							A.aprState,
-  							A.aprType,
-  							A.companyID,
-  							A.docID,
-  							A.docNo,
-  							A.docState,
-  							A.docTitle,
-  							A.docType,
-  							A.formID,
-  							A.formName,
-  							A.formName2,
-  							A.functionType,
-  							A.hasAttachYn,
-  							A.hasOpinionYn,
-  							A.href,
-  							A.isPublic,
-  							A.orgDocID,
-  							DATE_ADD(DATE_FORMAT(A.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
-  							A.urgentApproval,
-  							A.writerDeptID,
-  							A.writerDeptName,
-  							A.writerDeptName2,
-  							A.writerID,
-  							A.writerJobTitle,
-  							A.writerJobTitle2,
-  							A.writerName,
-  							A.writerName2 
+						 	aprMemberDeptID,
+							aprMemberDeptName,
+							aprMemberDeptName2,
+							aprMemberID,
+							aprMemberJobTitle,
+							aprMemberJobTitle2,
+							aprMemberName,
+  							aprMemberName2,
+  							aprMemberSN,
+  							aprState,
+  							aprType,
+  							companyID,
+  							docID,
+  							docNo,
+  							docState,
+  							docTitle,
+  							docType,
+  							formID,
+  							formName,
+  							formName2,
+  							functionType,
+  							hasAttachYn,
+  							hasOpinionYn,
+  							href,
+  							isPublic,
+  							orgDocID,
+  							DATE_ADD(DATE_FORMAT(startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
+  							urgentApproval,
+  							writerDeptID,
+  							writerDeptName,
+  							writerDeptName2,
+  							writerID,
+  							writerJobTitle,
+  							writerJobTitle2,
+  							writerName,
+  							writerName2 
 						 FROM 
-							VAPRWILLDOCLIST A  
+							VAPRWILLDOCLIST 
 						 WHERE 
 							TENANT_ID = #v_TENANTID#
 						 AND
@@ -911,7 +1002,64 @@
 						 AND 
 						 	APRTYPE <> '015'
 						 AND 
-						 	APRTYPE <> '007'
+						 	DOCSTATE <> '007'
+		    ]]>
+		    		
+		    <![CDATA[ 
+		      UNION ALL
+          		
+	          SELECT 
+					E.aprMemberDeptID,
+					E.aprMemberDeptName,
+					E.aprMemberDeptName2,
+					E.aprMemberID,
+					E.aprMemberJobTitle,
+					E.aprMemberJobTitle2,
+					E.aprMemberName,
+					E.aprMemberName2,
+					E.aprMemberSN,
+					E.aprState,
+					E.aprType,
+					E.companyID,
+					E.docID,
+					E.docNo,
+					E.docState,
+					E.docTitle,
+					E.docType,
+					E.formID,
+					E.formName,
+					E.formName2,
+					E.functionType,
+					E.hasAttachYn,
+					E.hasOpinionYn,
+					E.href,
+					E.isPublic,
+					E.orgDocID,
+					DATE_ADD(DATE_FORMAT(E.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
+					E.urgentApproval,
+					E.writerDeptID,
+					E.writerDeptName,
+					E.writerDeptName2,
+					E.writerID,
+					E.writerJobTitle,
+					E.writerJobTitle2,
+					E.writerName,
+					E.writerName2 
+			  FROM 
+				    VENDCHAMJODOCINFO E
+			  WHERE 
+				    TENANT_ID = #v_TENANTID#
+			  AND
+					COMPANYID = #companyID#
+			  AND 
+			 		APRMEMBERID = #v_PUSERID# 
+			  AND 
+			 		APRMEMBERSN = 1  
+			  AND 
+			 		APRTYPE <> '015'
+			  AND 
+			 		DOCSTATE <> '007'
+		    ) AS A
 		    ]]>
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 				<![CDATA[
@@ -1078,42 +1226,42 @@
 	   						FROM (
 								SELECT 
 									A.aprMemberDeptID,
-							A.aprMemberDeptName,
-							A.aprMemberDeptName2,
-							A.aprMemberID,
-							A.aprMemberJobTitle,
-							A.aprMemberJobTitle2,
-							A.aprMemberName,
-  							A.aprMemberName2,
-  							A.aprMemberSN,
-  							A.aprState,
-  							A.aprType,
-  							A.companyID,
-  							A.docID,
-  							A.docNo,
-  							A.docState,
-  							A.docTitle,
-  							A.docType,
-  							A.formID,
-  							A.formName,
-  							A.formName2,
-  							A.functionType,
-  							A.hasAttachYn,
-  							A.hasOpinionYn,
-  							A.href,
-  							A.isPublic,
-  							A.orgDocID,
-  							A.receivedDate,
-  							DATE_ADD(DATE_FORMAT(A.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
-  							A.urgentApproval,
-  							A.writerDeptID,
-  							A.writerDeptName,
-  							A.writerDeptName2,
-  							A.writerID,
-  							A.writerJobTitle,
-  							A.writerJobTitle2,
-  							A.writerName,
-  							A.writerName2   
+									A.aprMemberDeptName,
+									A.aprMemberDeptName2,
+									A.aprMemberID,
+									A.aprMemberJobTitle,
+									A.aprMemberJobTitle2,
+									A.aprMemberName,
+		  							A.aprMemberName2,
+		  							A.aprMemberSN,
+		  							A.aprState,
+		  							A.aprType,
+		  							A.companyID,
+		  							A.docID,
+		  							A.docNo,
+		  							A.docState,
+		  							A.docTitle,
+		  							A.docType,
+		  							A.formID,
+		  							A.formName,
+		  							A.formName2,
+		  							A.functionType,
+		  							A.hasAttachYn,
+		  							A.hasOpinionYn,
+		  							A.href,
+		  							A.isPublic,
+		  							A.orgDocID,
+		  							A.receivedDate,
+		  							DATE_ADD(DATE_FORMAT(A.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
+		  							A.urgentApproval,
+		  							A.writerDeptID,
+		  							A.writerDeptName,
+		  							A.writerDeptName2,
+		  							A.writerID,
+		  							A.writerJobTitle,
+		  							A.writerJobTitle2,
+		  							A.writerName,
+		  							A.writerName2   
 								FROM 
 									VAPRDOINGDOCLIST A  
 								WHERE 
@@ -1315,6 +1463,7 @@
 	<select id ="EzApprovalG.getAprLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
 		<isNotEqual property="isUsed" compareValue="reuse">
 		<isEqual property="v_FLAG" compareValue="1">
+		<isNotEqual property="v_MODE" compareValue="END">
 			<![CDATA[
 				SELECT 
 					TBL_APRLINEINFO.DocID ,
@@ -1366,6 +1515,60 @@
 				ORDER BY 
 					TBL_APRLINEINFO.AprMemberSN DESC 
 			]]>
+		</isNotEqual>
+		
+		<isEqual property="v_MODE" compareValue="END">
+			<![CDATA[
+				SELECT 
+					TBL_ENDAPRLINEINFO.DocID ,
+	                TBL_ENDAPRLINEINFO.AprMemberSN ,
+	                TBL_ENDAPRLINEINFO.AprType ,
+	                TBL_ENDAPRLINEINFO.AprState ,
+	                TBL_ENDAPRLINEINFO.AprMemberID ,
+	                TBL_ENDAPRLINEINFO.AprMemberIsDeptYN ,
+	                TBL_ENDAPRLINEINFO.AprMemberName ,
+	                IFNULL(TBL_ENDAPRLINEINFO.AprMemberName2, TBL_ENDAPRLINEINFO.AprMemberName) APRMEMBERNAME2  ,
+	                TBL_ENDAPRLINEINFO.AprMemberJobTitle ,
+	                TBL_ENDAPRLINEINFO.AprMemberJobTitle2,
+	                TBL_ENDAPRLINEINFO.AprMemberDeptID ,
+	                TBL_ENDAPRLINEINFO.AprMemberDeptName ,
+	                IFNULL(TBL_ENDAPRLINEINFO.AprMemberDeptName2, TBL_ENDAPRLINEINFO.AprMemberDeptName) APRMEMBERDEPTNAME2  ,
+	                TBL_ENDAPRLINEINFO.AprMemberLDAPPath ,
+	                TBL_ENDAPRLINEINFO.ReceivedDate ,
+	                TBL_ENDAPRLINEINFO.ProcessDate ,
+	                TBL_ENDAPRLINEINFO.isProposerYN ,
+	                TBL_ENDAPRLINEINFO.isBriefUserYN ,
+	                TBL_EXPENDAPRLINE.orguserid ,
+	                TBL_EXPENDAPRLINE.proxyuserid ,
+	                TBL_EXPENDAPRLINE.proxyusername ,
+	                IFNULL(TBL_EXPENDAPRLINE.proxyusername2, TBL_EXPENDAPRLINE.proxyusername) PROXYUSERNAME2  ,
+	                TBL_EXPENDAPRLINE.proxyuserjobtitle ,
+	                IFNULL(TBL_EXPENDAPRLINE.proxyuserjobtitle2, TBL_EXPENDAPRLINE.proxyuserjobtitle) PROXYUSERJOBTITLE2  ,
+	                TBL_EXPENDAPRLINE.proxyuserdeptid ,
+	                TBL_EXPENDAPRLINE.proxyuserdeptname ,
+	                IFNULL(TBL_EXPENDAPRLINE.proxyuserdeptname2, TBL_EXPENDAPRLINE.proxyuserdeptname) PROXYUSERDEPTNAME2  
+				FROM 
+					TBL_ENDAPRLINEINFO 
+				JOIN
+					TBL_EXPENDAPRLINE    
+				ON 
+					TBL_ENDAPRLINEINFO.DocID = TBL_EXPENDAPRLINE.docid
+				AND 
+					TBL_ENDAPRLINEINFO.AprMemberSN = TBL_EXPENDAPRLINE.aprmemberSN
+				AND 
+					TBL_ENDAPRLINEINFO.TENANT_ID = TBL_EXPENDAPRLINE.TENANT_ID
+				AND 
+					TBL_ENDAPRLINEINFO.COMPANYID = TBL_EXPENDAPRLINE.COMPANYID
+				WHERE  
+					TBL_ENDAPRLINEINFO.DocID = #v_DOCID#
+				AND 
+					TBL_ENDAPRLINEINFO.TENANT_ID = #v_TENANTID#
+				AND 
+					TBL_ENDAPRLINEINFO.COMPANYID = #companyID#
+				ORDER BY 
+					TBL_ENDAPRLINEINFO.AprMemberSN DESC 
+			]]>
+		</isEqual>
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="2">
 			<![CDATA[
@@ -2015,7 +2218,7 @@
             AND 
             	APRMEMBERID = #v_PAPRUSERID#
             AND 
-            	( APRSTATE = '002' OR APRSTATE = '005' )
+            	( APRSTATE = '002' OR APRSTATE = '005'  OR APRSTATE = '000' )
             AND
 				TENANT_ID = #v_TENANTID#     
 			AND
@@ -2484,27 +2687,56 @@
 	<select id="EzApprovalG.getWebPartList" parameterClass="Map" resultClass="ApprGWebPartVO">
 		<isEqual property="v_LISTTYPE" compareValue="1">
 			<![CDATA[
-			SELECT 
-				DOCID, 
-				APRMEMBERID, 
-				APRMEMBERNAME$v_LANGTYPE$, 
-				APRMEMBERDEPTID,
-      			HREF, 
-      			DOCTITLE, 
-      			FUNCTIONTYPE, 
-      			DOCSTATE, 
-      			WRITERNAME, 
-      			WRITERNAME$v_LANGTYPE$, 
-      			'0' AS RECEIVESN, 
-      			DOCTYPE
-      		FROM 
-      			VAPRDOINGDOCLIST 
-      		WHERE 
-      			TENANT_ID = #v_TENANTID#
-      		AND
-      			COMPANYID = #companyID#
-      		AND
-      			APRMEMBERID IN ($v_USERIDS$) 
+			SELECT
+				*
+			FROM (
+					SELECT 
+						DOCID, 
+						APRMEMBERID, 
+						APRMEMBERNAME$v_LANGTYPE$, 
+						APRMEMBERDEPTID,
+		      			HREF, 
+		      			DOCTITLE, 
+		      			FUNCTIONTYPE, 
+		      			DOCSTATE, 
+		      			WRITERNAME, 
+		      			WRITERNAME$v_LANGTYPE$, 
+		      			'0' AS RECEIVESN, 
+		      			DOCTYPE,
+		      			STARTDATE
+		      		FROM 
+		      			VAPRDOINGDOCLIST 
+		      		WHERE 
+		      			TENANT_ID = #v_TENANTID#
+		      		AND
+		      			COMPANYID = #companyID#
+		      		AND
+		      			APRMEMBERID IN ($v_USERIDS$) 
+		      		
+		      		 UNION ALL
+					   		SELECT
+				   				DOCID, 
+								APRMEMBERID, 
+								APRMEMBERNAME, 
+								APRMEMBERNAME$v_LANGTYPE$, 
+								APRMEMBERDEPTID,
+				                HREF, 
+				                DOCTITLE, 
+				                FUNCTIONTYPE, 
+				                DOCSTATE, 
+				                WRITERNAME, 
+				                WRITERNAME$v_LANGTYPE$, 
+				                '0' AS RECEIVESN, 
+				                DOCTYPE,
+				                STARTDATE
+				   			FROM
+				   				VENDCHAMJODOCINFO
+				   			WHERE
+				   				TENANT_ID = #v_TENANTID#
+				            AND
+				            	COMPANYID = #companyID#
+				            AND
+				            	APRMEMBERID IN ($v_USERIDS$)) AS B
       		ORDER BY 
       			STARTDATE $v_BASICORDER$
       		LIMIT #v_LISTCOUNT#
@@ -2663,28 +2895,59 @@
 		<isNotEqual property="v_LISTTYPE" compareValue="4">
 		<isNotEqual property="v_LISTTYPE" compareValue="5">
 			<![CDATA[
+			
 			SELECT 
-				DOCID, 
-				APRMEMBERID, 
-				APRMEMBERNAME, 
-				APRMEMBERNAME$v_LANGTYPE$, 
-				APRMEMBERDEPTID,
-                HREF, 
-                DOCTITLE, 
-                FUNCTIONTYPE, 
-                DOCSTATE, 
-                WRITERNAME, 
-                WRITERNAME$v_LANGTYPE$, 
-                '0' AS RECEIVESN, 
-                DOCTYPE
-            FROM 
-            	VAPRDOINGDOCLIST 
-            WHERE 
-            	TENANT_ID = #v_TENANTID#
-            AND
-            	COMPANYID = #companyID#
-            AND
-            	APRMEMBERID IN ($v_USERIDS$) 
+				* 
+			FROM (
+					SELECT 
+						DOCID, 
+						APRMEMBERID, 
+						APRMEMBERNAME, 
+						APRMEMBERNAME$v_LANGTYPE$, 
+						APRMEMBERDEPTID,
+		                HREF, 
+		                DOCTITLE, 
+		                FUNCTIONTYPE, 
+		                DOCSTATE, 
+		                WRITERNAME, 
+		                WRITERNAME$v_LANGTYPE$, 
+		                '0' AS RECEIVESN, 
+		                DOCTYPE,
+		                STARTDATE
+		            FROM 
+		            	VAPRDOINGDOCLIST 
+		            WHERE 
+		            	TENANT_ID = #v_TENANTID#
+		            AND
+		            	COMPANYID = #companyID#
+		            AND
+		            	APRMEMBERID IN ($v_USERIDS$) 
+		            	
+		            UNION ALL
+					   			
+			   		SELECT
+		   				DOCID, 
+						APRMEMBERID, 
+						APRMEMBERNAME, 
+						APRMEMBERNAME$v_LANGTYPE$, 
+						APRMEMBERDEPTID,
+		                HREF, 
+		                DOCTITLE, 
+		                FUNCTIONTYPE, 
+		                DOCSTATE, 
+		                WRITERNAME, 
+		                WRITERNAME$v_LANGTYPE$, 
+		                '0' AS RECEIVESN, 
+		                DOCTYPE,
+		                STARTDATE
+		   			FROM
+		   				VENDCHAMJODOCINFO
+		   			WHERE
+		   				TENANT_ID = #v_TENANTID#
+		            AND
+		            	COMPANYID = #companyID#
+		            AND
+		            	APRMEMBERID IN ($v_USERIDS$)) AS B
             ORDER BY 
             	STARTDATE $v_BASICORDER$
              LIMIT #v_LISTCOUNT#
@@ -4493,7 +4756,29 @@
       		AND
       				TBL_APRDOCINFO.COMPANYID = #companyID#
 		</isEqual>
+		<isEqual property="v_MODE" compareValue="CHAMJOAPR">
+			SELECT 
+					$v_COLS$ 
+			FROM 
+					TBL_APRDOCINFO 
+      		INNER JOIN 
+      				TBL_EXPAPRDOCINFO 
+      		ON 
+      				TBL_APRDOCINFO.DOCID = TBL_EXPAPRDOCINFO.DOCID
+      		AND
+      				TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID
+      		AND
+      				TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
+      		WHERE 
+      				TBL_APRDOCINFO.DOCID = #v_DOCID#
+      		AND
+      				TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
+      		AND
+      				TBL_APRDOCINFO.COMPANYID = #companyID#
+		</isEqual>
+		
 		<isNotEqual  property="v_MODE" compareValue="APR">
+		<isNotEqual  property="v_MODE" compareValue="CHAMJOAPR">
 			SELECT 
 					$v_COLS$ 
 			FROM 
@@ -4512,6 +4797,7 @@
       				TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
       	 	AND		
       	 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
 		
@@ -4991,6 +5277,7 @@
 <!-- 		{CALL EZSP_DOAPPROVE_LINEINFO(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.doApproveLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+		<isEqual property="v_MODE" compareValue="APR">
 			SELECT 
 				APRMEMBERSN ,
 		        APRTYPE ,
@@ -5003,12 +5290,49 @@
 		    	DOCID = #v_DOCID#
 		    AND 
 		    	APRMEMBERID = #v_USERID#
+		      <isEqual property="v_CHAMSTATE" compareValue="017">
+	      	AND 
+	      	 	(APRSTATE = '000' OR APRSTATE = '002') 
+	      	AND
+	      		APRTYPE = '007'
+		      </isEqual> 
+		      <isNotEqual property="v_CHAMSTATE" compareValue="017">
 		    AND 
-		    	( APRSTATE = '002' OR APRSTATE = '005' ) 
+		       ( APRSTATE = '002' OR APRSTATE = '005')
+		      </isNotEqual>
 		    AND
 		    	TENANT_ID = #v_TENANTID#
 		    AND
 		    	COMPANYID = #companyID#
+		</isEqual>
+		
+		<isEqual property="v_MODE" compareValue="END">
+			SELECT 
+				APRMEMBERSN ,
+		        APRTYPE ,
+		        APRSTATE ,
+		        PROCESSDATE ,
+		        RECEIVEDDATE 
+		    FROM 
+		    	TBL_ENDAPRLINEINFO 
+		    WHERE  
+		    	DOCID = #v_DOCID#
+		    AND 
+		    	APRMEMBERID = #v_USERID#
+		      <isEqual property="v_CHAMSTATE" compareValue="017">
+	      	AND 
+	      	 	APRSTATE = '000'
+		      </isEqual> 
+		      <isNotEqual property="v_CHAMSTATE" compareValue="017">
+		    AND 
+		       ( APRSTATE = '002' OR APRSTATE = '005')
+		      </isNotEqual> 
+		    AND
+		    	TENANT_ID = #v_TENANTID#
+		    AND
+		    	COMPANYID = #companyID#
+		</isEqual>
+			
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.doApproveLineList" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
@@ -5634,6 +5958,10 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getApproveDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
 	<![CDATA[
+	
+		SELECT 
+			*
+		FROM (
 	      SELECT 
 	      		DOCSTATE ,
              	DOCTYPE ,
@@ -5647,8 +5975,34 @@
           		TENANT_ID = #v_TENANTID#
           AND
               	COMPANYID = #companyID#
-        LIMIT 1
-         ]]>
+          		
+          UNION ALL
+          		
+          SELECT 
+			  DOCSTATE ,
+           	  DOCTYPE ,
+           	  ORGDOCID ,
+           	  HREF 
+		  FROM 
+			    VENDCHAMJODOCINFO 
+		  WHERE 
+			   	DOCID = #v_DOCID#
+          AND
+          		TENANT_ID = #v_TENANTID#
+          AND
+              	COMPANYID = #companyID#
+          ) AS B
+     ]]>
+          WHERE
+          	1 = 1
+          <isNotNull property="v_CHAMSTATE">
+          <isNotEmpty property="v_CHAMSTATE">
+          AND
+          		DOCSTATE = #v_CHAMSTATE#
+          </isNotEmpty>
+          </isNotNull>
+         
+	        LIMIT 1
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSignInfo" parameterClass="Map" resultClass="ApprGSignInfoVO"> -->
 <!-- 		{CALL EZSP_GETSIGNINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -5715,6 +6069,8 @@
                                           AND 
                                                 APRSTATE = '003'
                                           AND
+                                          		APRTYPE != '007'
+                                          AND
                                           		TENANT_ID = #v_TENANTID#
                                           AND
                                           		COMPANYID = #companyID#
@@ -5728,6 +6084,8 @@
                           TENANT_ID = #v_TENANTID#
                     AND
                           COMPANYID = #companyID#
+                    AND
+                          APRTYPE != '007'
                     ORDER BY 
                            APRMEMBERSN 
                LIMIT 2
@@ -6174,6 +6532,10 @@
 <!-- 		{CALL EZSP_GETNEXTDOCINFO(#v_USERIDS#, #v_BASICORDER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getNextDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+	
+	SELECT
+		*
+	FROM (
 		SELECT 
 			DOCID, 
 			APRMEMBERID, 
@@ -6184,7 +6546,8 @@
    			DOCSTATE, 
    			WRITERID, 
    			APRTYPE, 
-   			HREF
+   			HREF,
+   			STARTDATE
    		FROM 
    			VAPRDOINGDOCLIST 
    			<![CDATA[
@@ -6196,20 +6559,116 @@
    		AND
    			COMPANYID = #companyID#
    		AND 
-   			FUNCTIONTYPE IN ('002', '005')
+   			FUNCTIONTYPE IN ('002', '005', '000')
    		AND 
    			APRMEMBERID IN ($v_USERIDS$)
+   		
+   		UNION 
+  
+		SELECT     
+		  	DOCID,     
+		  	APRMEMBERID,     
+		  	APRMEMBERNAME,     
+		  	APRMEMBERNAME2,     
+		  	APRMEMBERDEPTID,       
+		  	DOCTYPE,        
+		  	DOCSTATE,        
+		  	WRITERID,      
+		  	APRTYPE,        
+		  	HREF,       
+		  	STARTDATE   
+		 FROM        
+				vendchamjodocinfo           
+		 	<![CDATA[
+   		 WHERE 
+   			DOCSTATE <> '015' 
+   			]]>
+   		 AND
+   			TENANT_ID = #v_TENANTID#
+   		 AND
+   			COMPANYID = #companyID#
+   		 AND 
+   			FUNCTIONTYPE IN ('002')
+   		 AND 
+   			APRMEMBERID IN ($v_USERIDS$)
+		  ) AS B
+		  WHERE
+		   	1=1
    		<isEqual property="v_FLAG" compareValue="1">
 		<![CDATA[
    		AND
-   			DOCID < #v_DOCID#
-   		]]>
+   			STARTDATE < (SELECT 
+                            STARTDATE
+                         FROM 
+                            VAPRDOINGDOCLIST 
+                         WHERE 
+                            DOCSTATE <> '015' 
+       
+                         AND
+                            TENANT_ID = #v_TENANTID#
+                         AND
+                            COMPANYID = #companyID#
+                         AND 
+                            FUNCTIONTYPE IN ('002', '005', '000')
+                         AND 
+                            APRMEMBERID IN ($v_USERIDS$)
+                         AND 
+                            DOCID = #v_DOCID#
+                            
+                         UNION
+                         
+                         SELECT 
+                            STARTDATE
+                         FROM 
+                            TBL_ENDAPRDOCINFO 
+                         WHERE 
+                            DOCSTATE <> '015' 
+        ]]>
+                        AND
+                            TENANT_ID = #v_TENANTID#
+                        AND
+                            COMPANYID = #companyID#
+                        AND 
+                            DOCID = #v_DOCID#  
+                        )    
    		</isEqual>
    		<isEqual property="v_FLAG" compareValue="2">
 		<![CDATA[
    		AND
-   			DOCID > #v_DOCID#
-   		]]>
+   			STARTDATE > (SELECT 
+                            STARTDATE
+                         FROM 
+                            VAPRDOINGDOCLIST 
+                         WHERE 
+                            DOCSTATE <> '015' 
+       
+                        AND
+                            TENANT_ID = #v_TENANTID#
+                        AND
+                            COMPANYID = #companyID#
+                        AND 
+                            FUNCTIONTYPE IN ('002', '005', '000')
+                        AND 
+                            APRMEMBERID IN ($v_USERIDS$)
+                        AND 
+                            DOCID = #v_DOCID#
+                            
+                        UNION
+                        
+                        SELECT 
+                            STARTDATE
+                        FROM 
+                            TBL_ENDAPRDOCINFO 
+                        WHERE 
+                            DOCSTATE <> '015' 
+        ]]>
+                        AND
+                            TENANT_ID = #v_TENANTID#
+                        AND
+                            COMPANYID = #companyID#
+                        AND 
+                            DOCID = #v_DOCID#  
+                        )    
    		</isEqual>
    		ORDER BY 
    			STARTDATE $v_BASICORDER$, DOCID DESC
@@ -6423,14 +6882,77 @@
 		             A.AprState <> '003'
 		        AND 
 		             A.AprState <> '010'
+                ]]>
+                <isEqual property="strType"  compareValue="007">
+                AND 
+                     A.AprType = #strType#
+                </isEqual>                
 		        AND
 		        	 A.TENANT_ID = #v_TENANTID# 
 		       	AND
 		       		 A.COMPANYID = #companyID#
 		        ORDER BY 
 		         	  A.AprMemberSN ASC
-		 ]]>
 	</select>
+    
+    <select id="EzApprovalG.getAprLineInfoAprStateChamJo" parameterClass="Map" resultClass="ApprGAprLineVO">
+     <![CDATA[
+              SELECT 
+                     A.DocID ,
+                     A.AprMemberSN ,
+                     A.AprType ,
+                     A.AprState ,
+                     A.AprMemberID ,
+                     A.AprMemberIsDeptYN ,
+                     A.AprMemberName ,
+                     A.AprMemberName2 ,
+                     A.AprMemberJobTitle ,
+                     A.AprMemberJobTitle2 ,
+                     A.AprMemberDeptID ,
+                     A.AprMemberDeptName ,
+                     A.AprMemberDeptName2 ,
+                     A.AprMemberLDAPPath ,
+                     A.ReceivedDate ,
+                     A.ProcessDate ,
+                     A.isProposerYN ,
+                     A.isBriefUserYN ,
+                     B.orguserid ,
+                     B.proxyuserid ,
+                     B.proxyusername ,
+                     B.proxyusername2 ,
+                     B.proxyuserjobtitle ,
+                     B.proxyuserjobtitle2 ,
+                     B.proxyuserdeptid ,
+                     B.proxyuserdeptname ,
+                     B.proxyuserdeptname2 
+                FROM 
+                     TBL_ENDAPRLINEINFO A
+                JOIN 
+                     TBL_EXPENDAPRLINE B   
+                ON 
+                     A.DocID = B.docid
+                AND 
+                     A.AprMemberSN = B.aprmemberSN
+                AND
+                     A.TENANT_ID = B.TENANT_ID
+                AND
+                     A.COMPANYID = B.COMPANYID
+                WHERE  
+                     A.DocID = #v_PDOCID#
+                AND 
+                     A.AprMemberID = #v_PUSERID#
+                AND 
+                     A.AprState <> '003'
+                AND 
+                     A.AprState <> '010'
+                AND
+                     A.TENANT_ID = #v_TENANTID# 
+                AND
+                     A.COMPANYID = #companyID#
+                ORDER BY 
+                      A.AprMemberSN ASC
+         ]]>
+    </select>
 	
 <!-- 	<procedure id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_GETINNERLINEINFO(#v_DOCID#, #v_DOCSTATE#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -8050,20 +8572,42 @@
 		<![CDATA[
 			SELECT 
 				COUNT(DOCID) AS COUNT 
-			FROM 
-				VAPRDOINGDOCLIST 
-	   		WHERE 
-	   			APRMEMBERID IN ($v_USERIDS$) 
-	   		AND 
-	   			APRTYPE <> '015' 
-	   		AND 
-	   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
-	   		AND 
-	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
-	   		AND	
-	   			TENANT_ID = #v_TENANTID#
-	   		AND
-	   			COMPANYID = #companyID#
+			FROM (
+					SELECT
+						*
+					FROM 
+						VAPRDOINGDOCLIST 
+			   		WHERE 
+			   			APRMEMBERID IN ($v_USERIDS$) 
+			   		AND 
+			   			APRTYPE <> '015' 
+			   		AND 
+			   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+			   		AND 
+			   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
+			   		AND	
+			   			TENANT_ID = #v_TENANTID#
+			   		AND
+			   			COMPANYID = #companyID#
+			   		
+			   		UNION ALL
+			   			
+			   		SELECT
+		   				*
+		   			FROM
+		   				VENDCHAMJODOCINFO
+		   			WHERE
+		   				APRMEMBERID IN ($v_USERIDS$) 
+			   		AND 
+			   			APRTYPE <> '015' 
+			   		AND 
+			   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+			   		AND 
+			   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
+			   		AND	
+			   			TENANT_ID = #v_TENANTID#
+			   		AND
+			   			COMPANYID = #companyID# ) AS B
    			]]>
    		UNION ALL 
 	<!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
@@ -8082,6 +8626,8 @@
 		<![CDATA[
            	AND
 	   			AprType <> '015'  
+	   		AND
+	   			DOCSTATE <> '017'
 	   		AND 
 	   			STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')  
 	   		AND 
@@ -8295,7 +8841,7 @@
    			SELECT 
    				COUNT(DOCID) 
    			FROM 
-   				VAPRDOINGDOCLIST 
+   				VGONGRAMAPRDOINGDOCLIST 
    			WHERE 
    				APRMEMBERID IN ($v_USERIDS$) 
    			AND 
@@ -9184,8 +9730,11 @@
 		<!-- 결재할 문서, 공람문서는 제외한다. AprType <> ''015'' -->
 		<isEqual property="v_LISTTYPE" compareValue="1">
 		<![CDATA[
+		SELECT 
+			COUNT(DOCID)
+		FROM (
 			SELECT 
-				COUNT(DOCID) 
+				* 
 			FROM 
 				VAPRDOINGDOCLIST  
 			WHERE 
@@ -9196,6 +9745,23 @@
 				TENANT_ID = #v_TENANTID#
 			AND
 				COMPANYID = #companyID#
+				
+			UNION ALL
+			
+			SELECT 
+			    *
+			FROM 
+				VENDCHAMJODOCINFO 
+			WHERE 
+				APRMEMBERID IN ($v_USERIDS$) 
+			AND 
+				APRTYPE <> '015'
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#) AS B
+			WHERE 
+				1 = 1
 		]]>
 		</isEqual>
 		<!-- 기안한 문서 -->
@@ -9212,7 +9778,7 @@
          	AND 
          		APRTYPE <> '015' 
          	AND 
-         		DocState <> '017' 
+         		DocState <> '017'
          	AND
 				TENANT_ID = #v_TENANTID#
 			AND
@@ -9231,6 +9797,8 @@
            		APRMEMBERID = #v_USERID# 
            	AND 
            		AprType <> '015'
+           	AND 
+         		DocState <> '017' 
           ]]>
           <isEqual property="MineViewYN" compareValue="YES">
 			AND	    
@@ -9248,7 +9816,7 @@
 			 SELECT 
 			 	COUNT(DOCID) 
 			 FROM 
-			 	VAPRDOINGDOCLIST  
+			 	vgongramaprdoingdoclist  
 			 WHERE 
 			 	APRMEMBERID IN ($v_USERIDS$) 
 			 AND 
@@ -9317,14 +9885,32 @@
 		<isNotEqual property="v_LISTTYPE" compareValue="21">
 			SELECT 
 				COUNT(DOCID) 
-			FROM 
-				VAPRDOINGDOCLIST  
-			WHERE 
-				APRMEMBERID IN ($v_USERIDS$)
-			AND
-				TENANT_ID = #v_TENANTID#
-			AND
-				COMPANYID = #companyID# 
+			FROM (
+					SELECT
+						*
+					FROM 
+						VAPRDOINGDOCLIST  
+					WHERE 
+						APRMEMBERID IN ($v_USERIDS$)
+					AND
+						TENANT_ID = #v_TENANTID#
+					AND
+						COMPANYID = #companyID# 
+						
+					UNION ALL
+					
+					SELECT 
+					    *
+					FROM 
+						VENDCHAMJODOCINFO 
+					WHERE 
+						APRMEMBERID IN ($v_USERIDS$) 
+					AND
+						TENANT_ID = #v_TENANTID#
+					AND
+						COMPANYID = #companyID#) AS B
+					WHERE 
+						1 = 1
 		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
@@ -9871,7 +10457,7 @@
 					a.EXTENSIONATTRIBUTE1 like '%a=1%'
 				AND 
 					a.TENANT_ID = #v_TENANTID#
-			) as Z;		         	
+			) as Z
 		</select>
 	
 <!-- 	<procedure id="EzApprovalG.doProcessCount" parameterClass="Map" resultClass="int"> -->
@@ -9889,7 +10475,9 @@
 	      		APRMEMBERID = #v_USERID#
 	      AND ( 	APRSTATE = '002'
 	            OR  
-	            	APRSTATE = '005' ) 
+	            	APRSTATE = '005'
+	            OR
+	            	APRSTATE = '000' ) 
 	      AND
 	      		TENANT_ID = #v_TENANTID#
 	      AND
@@ -11202,26 +11790,55 @@
 			<![CDATA[
 				SELECT 
 					COUNT(DOCID) 
-				FROM 
-					VAPRDOINGDOCLIST  
-				WHERE 
-					TENANT_ID = #v_TENANTID#
-				AND
-					COMPANYID = #companyID#
-				AND	
-					APRMEMBERID IN ($v_PUSERIDS$) 
-				AND 
-					APRTYPE <> '015' 
-			]]>
-			<isEqual property="MineViewYN" compareValue="YES">
-            			AND	    
-							AprState != '001'
-			 </isEqual>
-			<isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
-				<![CDATA[
-	    			AND #v_PSUBQUERY#
-	    		]]>
-	  		</isGreaterThan>
+				FROM (
+						SELECT
+							*
+						FROM 
+							VAPRDOINGDOCLIST  
+						WHERE 
+							TENANT_ID = #v_TENANTID#
+						AND
+							COMPANYID = #companyID#
+						AND	
+							APRMEMBERID IN ($v_PUSERIDS$) 
+						AND 
+							APRTYPE <> '015' 
+					]]>
+					<isEqual property="MineViewYN" compareValue="YES">
+		            			AND	    
+									AprState != '001'
+					 </isEqual>
+					<isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
+						<![CDATA[
+			    			AND #v_PSUBQUERY#
+			    		]]>
+			  		</isGreaterThan>
+			  		
+			  		UNION ALL
+			  		<![CDATA[
+			  		SELECT
+			  			*
+			  		FROM 
+							VENDCHAMJODOCINFO  
+			  		WHERE 
+							TENANT_ID = #v_TENANTID#
+						AND
+							COMPANYID = #companyID#
+						AND	
+							APRMEMBERID IN ($v_PUSERIDS$) 
+						AND 
+							APRTYPE <> '015' 
+					]]>
+					<isEqual property="MineViewYN" compareValue="YES">
+		            			AND	    
+									AprState != '001'
+					 </isEqual>
+					<isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
+						<![CDATA[
+			    			AND #v_PSUBQUERY#
+			    		]]>
+			  		</isGreaterThan>
+			  		) AS B
 		</isEqual>
 		
 		<isEqual property="v_PLISTTYPE" compareValue="2">
@@ -11240,8 +11857,8 @@
 					APRMEMBERSN = 1 
 				AND 
 					APRTYPE <> '015' 
-				AND 
-					APRTYPE <> '007'
+				AND         
+					DocState <> '017'
 			]]>
 			<isEqual property="MineViewYN" compareValue="YES">
             			AND	    
@@ -11266,6 +11883,8 @@
 					COMPANYID = #companyID# 
 				AND
 					APRMEMBERID = #v_PUSERID#
+				AND         
+					DocState <> '017'
 			]]>
 			<isEqual property="MineViewYN" compareValue="YES">
             			AND	    
@@ -11280,8 +11899,8 @@
 		
 		<isEqual property="v_PLISTTYPE" compareValue="4">
 		<![CDATA[
-			SELECT 
-				COUNT(DOCID)  
+			SELECT
+				COUNT(DOCID)
 			FROM 	
 				VAPRDOINGDOCLIST  
 			WHERE 
@@ -11298,6 +11917,7 @@
 	    			AND #v_PSUBQUERY#
 	    		]]>
 	  		</isGreaterThan>
+			  	
 		</isEqual>
 		
 		<isNotEqual property="v_PLISTTYPE" compareValue="1">
@@ -11525,16 +12145,34 @@
 			<![CDATA[
 				SELECT 
 					COUNT(DOCID) 
-				FROM 
-					VAPRDOINGDOCLIST 
-      			WHERE
-      				TENANT_ID = #v_TENANTID#
-      			AND
-      				COMPANYID = #companyID#
-      			AND 
-      				APRMEMBERID IN ($v_USERIDS$) 
-      			AND 
-      				APRTYPE <> '015' 
+				FROM (
+						SELECT
+							*	
+						FROM 
+							VAPRDOINGDOCLIST 
+		      			WHERE
+		      				TENANT_ID = #v_TENANTID#
+		      			AND
+		      				COMPANYID = #companyID#
+		      			AND 
+		      				APRMEMBERID IN ($v_USERIDS$) 
+		      			AND 
+		      				APRTYPE <> '015' 
+		      			
+		      			UNION ALL
+		      			
+		      			SELECT
+		      				*
+		      			FROM
+		      				VENDCHAMJODOCINFO
+		      			WHERE
+		      				TENANT_ID = #v_TENANTID#
+		      			AND
+		      				COMPANYID = #companyID#
+		      			AND 
+		      				APRMEMBERID IN ($v_USERIDS$) 
+		      			AND 
+		      				APRTYPE <> '015' )AS B
 			]]>
 		</isEqual>
 		
@@ -11543,7 +12181,7 @@
 				SELECT 
 					COUNT(DOCID) 
 				FROM 
-					VAPRDOINGDOCLIST 
+					vgongramaprdoingdoclist 
          		WHERE 
          			TENANT_ID = #v_TENANTID#
          		AND
@@ -11571,8 +12209,6 @@
             		APRMEMBERSN = 1 
             	AND 
             		APRTYPE <> '015' 
-            	AND 
-            		DocState <> '017'
 			]]>
 		</isEqual>
 		
@@ -11580,16 +12216,34 @@
 			<![CDATA[
 				SELECT 
 					COUNT(DISTINCT DOCID) 
-				FROM 
-					VAPRDOINGDOCLIST 
-            	WHERE 
-         			TENANT_ID = #v_TENANTID#
-         		AND
-      				COMPANYID = #companyID#
-         		AND 
-               		APRMEMBERID = #v_USERID# 
-               	AND 
-               		AprType <> '015'
+				FROM ( 
+						SELECT
+							*
+						FROM 
+							VAPRDOINGDOCLIST 
+		            	WHERE 
+		         			TENANT_ID = #v_TENANTID#
+		         		AND
+		      				COMPANYID = #companyID#
+		         		AND 
+		               		APRMEMBERID = #v_USERID# 
+		               	AND 
+		               		AprType <> '015'
+		               		
+		               	UNION ALL
+		               	
+		               	SELECT
+		               		*
+		               	FROM
+		               		VENDCHAMJODOCINFO
+		               	WHERE 
+		         			TENANT_ID = #v_TENANTID#
+		         		AND
+		      				COMPANYID = #companyID#
+		         		AND 
+		               		APRMEMBERID = #v_USERID# 
+		               	AND 
+		               		AprType <> '015' ) AS B
 			]]>
 		</isEqual>
 		
@@ -11763,14 +12417,30 @@
 										<![CDATA[
 											SELECT 
 												COUNT(DOCID) 
-											FROM 
-												VAPRDOINGDOCLIST 
-							                WHERE 
-							                	APRMEMBERID IN ($v_USERIDS$)
-							                AND
-							                	TENANT_ID = #v_TENANTID#
-							                AND
-							                	COMPANYID = #companyID#
+											FROM ( 
+													SELECT
+														*
+													FROM 
+														VAPRDOINGDOCLIST 
+									                WHERE 
+									                	APRMEMBERID IN ($v_USERIDS$)
+									                AND
+									                	TENANT_ID = #v_TENANTID#
+									                AND
+									                	COMPANYID = #companyID#
+									                 
+									                UNION ALL 
+									                
+													SELECT         
+													  *   
+													FROM      
+														VENDCHAMJODOCINFO  
+													WHERE      
+														APRMEMBERID IN ($v_USERIDS$)
+									                AND
+									                	TENANT_ID = #v_TENANTID#
+									                AND
+									                	COMPANYID = #companyID# ) AS B
 										]]>
 									</isNotEqual>
 								</isNotEqual>
@@ -14750,6 +15420,8 @@
            		APRMEMBERID = #v_USERID#
            	AND 
            		APRSTATE = '003'
+            AND
+            	APRTYPE != '007'
    			ORDER BY 
    				APRMEMBERSN DESC 
    			LIMIT
@@ -14783,6 +15455,8 @@
    			 COMPANYID = #companyID#
          AND 
          	 DOCID = #v_DOCID#
+         AND
+        	 APRTYPE != '007'
          AND 
          	 APRMEMBERSN = #v_APRMEMBERSN#
 	</update>
@@ -14800,6 +15474,10 @@
    			 COMPANYID = #companyID#
         AND   
         	 DOCID = #v_DOCID#
+       	<isNotEqual property="v_curAprSN" compareValue="1">
+        AND
+        	 APRTYPE != '007'
+       	</isNotEqual>
         AND 
         	 APRMEMBERSN >= #v_APRMEMBERSN#
 	</update>
@@ -17739,23 +18417,48 @@
    </update>
    
    <update id="EzApprovalG.updateAprLineInfo1" parameterClass="Map">
-   		UPDATE TBL_APRLINEINFO 
-   		SET 
-   			AprState = #aprState#, 
-   			ProcessDate = #nowDate#
-			<isEqual property="beforeAprMemberSN" compareValue="1">
-				, ReceivedDate = #nowDate#
-			</isEqual>
-		WHERE
-			TENANT_ID = #tenantID#
-		AND
-			COMPANYID = #companyID# 
-		AND
-			DocID = #docID# 
-		AND 
-			AprMemberID = #userID# 
-		AND 
-			AprMemberSN = #curAprMemberSN#
+   		<isEqual property="v_MODE" compareValue="APR">
+   			UPDATE 
+   				TBL_APRLINEINFO 
+	   		SET 
+	   			AprState = #aprState#, 
+	   			ProcessDate = #nowDate#
+				<isEqual property="beforeAprMemberSN" compareValue="1">
+					, ReceivedDate = #nowDate#
+				</isEqual>
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID# 
+			AND
+				DocID = #docID# 
+			AND 
+				AprMemberID = #userID# 
+			AND 
+				AprMemberSN = #curAprMemberSN#
+   		</isEqual>
+   		
+   		<isEqual property="v_MODE" compareValue="END">
+   			UPDATE 
+   				TBL_ENDAPRLINEINFO 
+   			SET 
+	   			AprState = #aprState#, 
+	   			ProcessDate = #nowDate#
+				<isEqual property="beforeAprMemberSN" compareValue="1">
+					, ReceivedDate = #nowDate#
+				</isEqual>
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID# 
+			AND
+				DocID = #docID# 
+			AND 
+				AprMemberID = #userID# 
+			AND 
+				AprMemberSN = #curAprMemberSN#
+   		</isEqual>
+   		
    </update>
    
    <delete id="EzApprovalG.deleteLastDeptLine" parameterClass="Map">
@@ -20574,7 +21277,23 @@
 		AND                
 			AprMemberID = #v_APRMEMBERID# 
 		AND 
-			(AprState = #v_AprState2# OR AprState = #v_AprState3#) 
+			(AprState = #v_AprState2# OR AprState = #v_AprState3# ) 
+		AND 
+			TENANT_ID= #v_TENANTID#
+		AND
+         	COMPANYID = #companyID#
+   	</update>
+   	
+   	<update id="EzApprovalG.updateBanSongChamJoAprLineInfo" parameterClass="Map"> 
+   		UPDATE 
+   			TBL_APRLINEINFO 
+   		SET 
+   			AprState = #v_AprState#, 
+   			ProcessDate = #v_SYSDATE#
+		WHERE 
+			DocID = #v_DOCID# 
+		AND 
+			(AprState = '000') 
 		AND 
 			TENANT_ID= #v_TENANTID#
 		AND
@@ -23341,4 +24060,190 @@
 	  		AND
 	  			DOCID = #v_habDocID#
 	  </select>
+	  
+	  <select id="EzApprovalG.getChamJoLineList" parameterClass="Map" resultClass="ApprGAprLineVO">
+	  	SELECT
+			*
+		FROM
+			TBL_APRLINEINFO
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			DOCID = #v_DOCID#
+		AND
+			APRTYPE = '007'
+		AND
+			APRSTATE = '001'
+	</select>
+	
+	<update id="EzApprovalG.updateChamJoLineState" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRLINEINFO 
+   		SET 
+   			AprState = #v_APRSTATE#
+		WHERE 
+			DocID = #v_DOCID#
+		AND
+			APRTYPE = '007'
+		AND 
+			TENANT_ID= #v_TENANTID#
+		AND
+   		 	COMPANYID = #companyID#
+   		AND
+			APRSTATE = '001'
+   </update>
+   
+   <select  id="EzApprovalG.getLineAprMode" parameterClass="Map" resultClass="int">
+		<isEqual property="v_APRSTATE" compareValue="APR">
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_APRDOCINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #v_DOCID#
+		</isEqual>
+		
+		<isEqual property="v_APRSTATE" compareValue="END">
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_ENDAPRDOCINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #v_DOCID#
+		</isEqual>
+	</select>
+	
+	<select id ="EzApprovalG.chamJoEndPerMission" parameterClass="Map" resultClass="ApprGAprLineVO">
+		SELECT 
+			DOCID ,
+            'NULL' PROCESSORID  ,
+            'NULL' RECEIVEDDEPTID  
+         FROM 
+           	TBL_ENDAPRLINEINFO 
+         WHERE  
+           	DOCID = #v_PDOCID#
+         AND 
+           	APRMEMBERID = #v_PAPRUSERID#
+         AND
+			TENANT_ID = #v_TENANTID#
+		 AND
+			COMPANYID = #companyID#   
+	</select>
+	
+	<select id ="EzApprovalG.getChamJoDocID" parameterClass="Map" resultClass="String">
+		SELECT
+			DOCID
+		FROM
+			TBL_ENDAPRLINEINFO
+		WHERE 
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			APRMEMBERID = #v_USERID#
+		AND
+			DOCID = #v_DOCID#
+		LIMIT 1
+	</select>
+	
+	<update id="EzApprovalG.updateSusinState" parameterClass="Map">
+	  	<![CDATA[
+	  		UPDATE
+	  			TBL_ENDRECEIPTPOINTINFO
+			SET
+				processdate = #processDate#,
+				processyn = #processYN#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid = #docID#
+	  	]]>
+	  	
+	  	<isEqual property="address" compareValue="N">
+	  		AND
+				receiptpointid = #receiptPointID#
+		</isEqual>
+		
+		<isNotEqual property="address" compareValue="N">
+	  		AND
+				receiptpointid LIKE '$receiptPointID$%'
+		</isNotEqual>
+	</update>
+	
+	<select id="EzApprovalG.getCountDoingDocInfo" parameterClass="Map" resultClass="int" remapResults="true">
+		SELECT 
+			COUNT(*) 
+		FROM
+			(
+			SELECT
+				STARTDATE
+			FROM 
+				VAPRDOINGDOCLIST 
+			WHERE 
+				TENANT_ID = #v_TENANTID# 
+			AND 
+				COMPANYID = #companyID# 
+			AND 
+			<![CDATA[
+				APRMEMBERID IN ($v_PUSERIDS$) 
+			AND 
+				APRTYPE <> '015'
+			]]>
+			UNION ALL
+			SELECT 
+				STARTDATE
+			FROM
+				VENDCHAMJODOCINFO 
+			WHERE 
+				TENANT_ID = #v_TENANTID# 
+			AND 
+				COMPANYID = #companyID# 
+			AND 
+			<![CDATA[
+				APRMEMBERID IN ($v_PUSERIDS$) 
+			AND 
+				APRTYPE <> '015'
+			]]>
+			) AS A
+		WHERE
+			1 = 1
+		AND 
+		<isEqual property="v_COUNTTYPE" compareValue="SIXHGAP">
+			A.STARTDATE >= DATE_ADD(#v_NOWTIME#, INTERVAL -6 HOUR)
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="ONEDGAP">
+			A.STARTDATE >= DATE_ADD(#v_NOWTIME#, INTERVAL -1 DAY) 
+		AND 
+			DATE_ADD(#v_NOWTIME#, INTERVAL -6 HOUR) > A.STARTDATE
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="SEVENDGAP">
+			A.STARTDATE >= DATE_ADD(#v_NOWTIME#, INTERVAL -1 WEEK) 
+		AND 
+			DATE_ADD(#v_NOWTIME#, INTERVAL -1 DAY) > A.STARTDATE
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="ONEMGAP">
+			A.STARTDATE >= DATE_ADD(#v_NOWTIME#, INTERVAL -1 MONTH) 
+		AND 
+			DATE_ADD(#v_NOWTIME#, INTERVAL -1 WEEK) > A.STARTDATE
+		</isEqual>
+		
+		<isEqual property="v_COUNTTYPE" compareValue="OTHER">
+			DATE_ADD(#v_NOWTIME#, INTERVAL -1 MONTH) > A.STARTDATE
+		</isEqual>
+	</select>
 </sqlMap>

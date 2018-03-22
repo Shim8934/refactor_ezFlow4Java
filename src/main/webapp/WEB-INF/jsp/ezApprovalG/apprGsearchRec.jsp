@@ -296,7 +296,7 @@
 		  </tr>
 		  </table>
 		  
-		<h2><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1"><spring:message code='ezApprovalG.t1116'/></h2>
+		<h2><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1"  style="vertical-align:middle;"><spring:message code='ezApprovalG.t1116'/></h2>
 		
 		<div class="btnposition btnpositionNew">
 			<a class="imgbtn"><span id="reset" onclick="return reset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>

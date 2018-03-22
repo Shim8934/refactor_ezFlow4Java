@@ -1,6 +1,10 @@
-﻿function MailOptionView(obj) {
+﻿function MailOptionView(obj, flag) {
     if (obj.getAttribute("mode") == "off") {
-        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
+        if (flag=='N') {
+        	document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
+        } else {
+        	document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+        }
         if(pAdminType == "y")
             document.getElementById("layer_Viewpopup").style.top = "50px";
         else
@@ -21,10 +25,9 @@ function MailOptionHidden() {
 //레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
 function MailOptionHiddenOutside(e) {
 	var container = $('#layer_Viewpopup');
-	var btncontainer = $('#maillistoptiondiv');
 	var maillistoptionmode = $('#maillistoptiondiv').attr('mode');
 	if (maillistoptionmode == "on") {
-		if (container.has(e.target).length === 0 && !$(e.target).hasClass("maillistoptiondivbtn")) {
+		if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'maillistoptiondiv') {
 			MailOptionHidden();
 		}
 	}
@@ -871,7 +874,7 @@ var lCount;
 function ListCount(pCount) {
     lCount = pCount;
     selobj = null;
-    MailOptionHidden();
+//    MailOptionHidden();
     Set_BoardConfig();
     CurPage = 1;
     getBoardList();

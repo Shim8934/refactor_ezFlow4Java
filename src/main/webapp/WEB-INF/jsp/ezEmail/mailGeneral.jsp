@@ -211,7 +211,7 @@
 			        _popObj.style.backgroundColor = "#ffffff";
 			    }
 			    _popObj = obj;
-			    obj.style.backgroundColor = "rgb(233, 241, 255)";
+			    obj.style.backgroundColor = "#edf4fd";
 			}
 			var ConCellRow = null;
 			function pop_modify(obj) {
@@ -303,17 +303,17 @@
 	<body style="margin-left:10px;margin-right:10px;">
 		<br>
 		<h2><spring:message code='ezEmail.t311' /></h2>
-		    <div align="center" style="width:618px;border:1px solid #d6d6d6;margin-top:5px">
+		    <div align="center" style="width:677px;border:1px solid #d6d6d6;margin-top:5px">
 		        <div id="mailquatersize" style="width:400px; height:200px;display: inline-block;"></div>
 		    </div>
 		<br />
 		<h2><spring:message code='ezEmail.t177' /></h2>
 		<span class="txt">▒ <spring:message code='ezEmail.t178' /></span> <br>
 		<span class="txt">▒ <spring:message code='ezEmail.t99000033' /></span> <br><br>
-		<table class="content" style="width:623px;">
+		<table class="content" style="width:680px;">
 		  <tr>
-		    <th><spring:message code='ezEmail.t179' /></th>
-		    <td>
+		    <th style="width:40%;"><spring:message code='ezEmail.t179' /></th>
+		    <td style="width:60%;">
 		       <select id="listcount" style="WIDTH:100px">
 		            <option value=10 <c:if test="${listCount == '10'}">selected</c:if>>10</option>
 		            <option value=20 <c:if test="${listCount == '20'}">selected</c:if>>20</option>

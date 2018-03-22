@@ -43,6 +43,8 @@ public class MApprovalGDocInfoVO {
 	private String functionType;
 	/** 긴급결재여부 Y or N*/
 	private String urgentApproval;
+	/** 결재진행중  or 완료 여부*/
+	private String mode;
 	
 	public String getDocID() {
 		return docID;
@@ -169,6 +171,12 @@ public class MApprovalGDocInfoVO {
 	}
 	public void setAprMemberSN(String aprMemberSN) {
 		this.aprMemberSN = aprMemberSN;
+	}
+	public String getMode() {
+		return mode;
+	}
+	public void setMode(String mode) {
+		this.mode = mode;
 	}
 	
 }
