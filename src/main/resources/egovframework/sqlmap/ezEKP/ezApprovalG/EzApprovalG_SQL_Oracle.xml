@@ -5967,8 +5967,6 @@
           		TENANT_ID = #v_TENANTID#
           AND
               	COMPANYID = #companyID#
-          AND
-          		APRMEMBERID = #v_USERID#
           		
           UNION ALL
           		
@@ -5986,7 +5984,7 @@
           AND
               	COMPANYID = #companyID#
           AND
-          		APRMEMBERID = #v_USERID#) AS B
+          		APRMEMBERID = #v_USERID#) 
      ]]>
           WHERE
           	1 = 1
