@@ -1426,12 +1426,12 @@
 	                TBL_APRLINEINFO.AprMemberID ,
 	                TBL_APRLINEINFO.AprMemberIsDeptYN ,
 	                TBL_APRLINEINFO.AprMemberName ,
-	                IFNULL(TBL_APRLINEINFO.AprMemberName2, TBL_APRLINEINFO.AprMemberName) APRMEMBERNAME2  ,
+	                NVL(TBL_APRLINEINFO.AprMemberName2, TBL_APRLINEINFO.AprMemberName) APRMEMBERNAME2  ,
 	                TBL_APRLINEINFO.AprMemberJobTitle ,
 	                TBL_APRLINEINFO.AprMemberJobTitle2,
 	                TBL_APRLINEINFO.AprMemberDeptID ,
 	                TBL_APRLINEINFO.AprMemberDeptName ,
-	                IFNULL(TBL_APRLINEINFO.AprMemberDeptName2, TBL_APRLINEINFO.AprMemberDeptName) APRMEMBERDEPTNAME2  ,
+	                NVL(TBL_APRLINEINFO.AprMemberDeptName2, TBL_APRLINEINFO.AprMemberDeptName) APRMEMBERDEPTNAME2  ,
 	                TBL_APRLINEINFO.AprMemberLDAPPath ,
 	                TBL_APRLINEINFO.ReceivedDate ,
 	                TBL_APRLINEINFO.ProcessDate ,
@@ -1441,12 +1441,12 @@
 	                TBL_EXPAPRLINE.orguserid ,
 	                TBL_EXPAPRLINE.proxyuserid ,
 	                TBL_EXPAPRLINE.proxyusername ,
-	                IFNULL(TBL_EXPAPRLINE.proxyusername2, TBL_EXPAPRLINE.proxyusername) PROXYUSERNAME2  ,
+	                NVL(TBL_EXPAPRLINE.proxyusername2, TBL_EXPAPRLINE.proxyusername) PROXYUSERNAME2  ,
 	                TBL_EXPAPRLINE.proxyuserjobtitle ,
-	                IFNULL(TBL_EXPAPRLINE.proxyuserjobtitle2, TBL_EXPAPRLINE.proxyuserjobtitle) PROXYUSERJOBTITLE2  ,
+	                NVL(TBL_EXPAPRLINE.proxyuserjobtitle2, TBL_EXPAPRLINE.proxyuserjobtitle) PROXYUSERJOBTITLE2  ,
 	                TBL_EXPAPRLINE.proxyuserdeptid ,
 	                TBL_EXPAPRLINE.proxyuserdeptname ,
-	                IFNULL(TBL_EXPAPRLINE.proxyuserdeptname2, TBL_EXPAPRLINE.proxyuserdeptname) PROXYUSERDEPTNAME2  
+	                NVL(TBL_EXPAPRLINE.proxyuserdeptname2, TBL_EXPAPRLINE.proxyuserdeptname) PROXYUSERDEPTNAME2  
 				FROM 
 					TBL_APRLINEINFO 
 				JOIN
@@ -1480,7 +1480,7 @@
 	                TBL_ENDAPRLINEINFO.AprMemberID ,
 	                TBL_ENDAPRLINEINFO.AprMemberIsDeptYN ,
 	                TBL_ENDAPRLINEINFO.AprMemberName ,
-	                IFNULL(TBL_ENDAPRLINEINFO.AprMemberName2, TBL_ENDAPRLINEINFO.AprMemberName) APRMEMBERNAME2  ,
+	                NVL(TBL_ENDAPRLINEINFO.AprMemberName2, TBL_ENDAPRLINEINFO.AprMemberName) APRMEMBERNAME2  ,
 	                TBL_ENDAPRLINEINFO.AprMemberJobTitle ,
 	                TBL_ENDAPRLINEINFO.AprMemberJobTitle2,
 	                TBL_ENDAPRLINEINFO.AprMemberDeptID ,
@@ -1494,12 +1494,12 @@
 	                TBL_EXPENDAPRLINE.orguserid ,
 	                TBL_EXPENDAPRLINE.proxyuserid ,
 	                TBL_EXPENDAPRLINE.proxyusername ,
-	                IFNULL(TBL_EXPENDAPRLINE.proxyusername2, TBL_EXPENDAPRLINE.proxyusername) PROXYUSERNAME2  ,
+	                NVL(TBL_EXPENDAPRLINE.proxyusername2, TBL_EXPENDAPRLINE.proxyusername) PROXYUSERNAME2  ,
 	                TBL_EXPENDAPRLINE.proxyuserjobtitle ,
-	                IFNULL(TBL_EXPENDAPRLINE.proxyuserjobtitle2, TBL_EXPENDAPRLINE.proxyuserjobtitle) PROXYUSERJOBTITLE2  ,
+	                NVL(TBL_EXPENDAPRLINE.proxyuserjobtitle2, TBL_EXPENDAPRLINE.proxyuserjobtitle) PROXYUSERJOBTITLE2  ,
 	                TBL_EXPENDAPRLINE.proxyuserdeptid ,
 	                TBL_EXPENDAPRLINE.proxyuserdeptname ,
-	                IFNULL(TBL_EXPENDAPRLINE.proxyuserdeptname2, TBL_EXPENDAPRLINE.proxyuserdeptname) PROXYUSERDEPTNAME2  
+	                NVL(TBL_EXPENDAPRLINE.proxyuserdeptname2, TBL_EXPENDAPRLINE.proxyuserdeptname) PROXYUSERDEPTNAME2  
 				FROM 
 					TBL_ENDAPRLINEINFO 
 				JOIN
