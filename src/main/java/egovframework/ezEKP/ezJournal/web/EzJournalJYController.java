@@ -991,31 +991,42 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	 * 환경설정 저장
 	 */
 	@RequestMapping(value = "/ezJournal/saveJournalConfig.do")
-	public String saveJournalConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	@ResponseBody
+	public void saveJournalConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("saveJournalConfig started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = userInfo.getId();
 		
+		String listCnt = request.getParameter("listCnt");
+		String viewEnv = request.getParameter("viewenv");
+		String previewHContent = request.getParameter("previewHContent");
+		String previewWContent = request.getParameter("previewWContent");
+		String recvAlert = request.getParameter("recvAlert");
+		String replyAlert = request.getParameter("replyAlert");
+		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("listCnt", listCnt);
+		param.put("viewenv", viewEnv);
+		param.put("previewHcontent", previewHContent);
+		param.put("previewWcontent", previewWContent);
+		param.put("recvAlert", recvAlert);
+		param.put("replyAlert", replyAlert);
 		
 		String restUrl = "/rest/ezjournal/users/" + userId + "/options";
 		JSONObject result = new JSONObject();
 		
-		result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+		result = commonUtil.getJsonFromRestApi(restUrl, param, request, "post", null);
 		
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
-			JSONObject journalEnv = (JSONObject) result.get("data");
-			logger.debug("journalEnv:" + journalEnv);
-			model.addAttribute("journalEnv", journalEnv);
+			
 		}
 		
 		logger.debug("saveJournalConfig ended");
 		
-		return "/ezJournal/journalConfig";
 	}
 	
 }

@@ -25,7 +25,7 @@
 	    <script type="text/javascript" src="/js/jstree/jstree.js"></script>
 	    <script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 	    <script type="text/javascript">
-			var companyId = "${info.companyID}"; 
+		//	var companyId = "${info.companyID}"; 
 			var userId = "${userId}";
 			//트리조직도 JSON
 	   		var treeContent;
@@ -139,8 +139,8 @@
 	   				async : false,
    					success : function(result){
 						lastFormId = result;
-						var firstType = $("#optType").find("option:selected");
-			    		getFormList(firstType);
+			//			var firstType = $("#optType").find("option:selected");
+			//    		getFormList(firstType);
 	   				},
 	   				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nmessage : " + request.responseText + "\nerror : " + error);
@@ -151,7 +151,7 @@
 			// 수신자 선택화면 호출
 	    	function selectReceiver(){			
 				var url = "/ezJournal/selectReceiver.do";
-				url += "?companyId=" + companyId;
+			//	url += "?companyId=" + companyId;
 				GetOpenWindow(url, "selectReceiver", 980, 600);
 			}
 	    	
@@ -175,7 +175,6 @@
 	    		$("#receiverlist").html(strReceiver);
 	    		$("#receiverID").html(strReceiverID);
 	    	}
-			
 	     	
 	    	window.onload = function () {
 				
@@ -203,13 +202,13 @@
 	    
 	    	// 양식내용을 에디터에 넣어주는 작업 
 		    function Editor_Complete() {
+				getFormList($("#optType"));
 	    		
 	    		switch (mode) {
 				case 'new':
-					getFormList($("#optType"));
+//					getFormList($("#optType"));
 		    		getLastForm(typeId);
 				
-		    		console.log("lastFormId 확인 : " + lastFormId);
 		    		if (lastFormId != null && lastFormId != "" ) {
 		    			console.log("이전양식가져올때는 여기로 : " + lastFormId);
 		    			selFormId = lastFormId;
@@ -229,37 +228,41 @@
 		    		getJournalForm(selFormId);
 		    		opener.sumFormId = "";
 					break;
-				case 'reuse':
+				case 'reuse': case 'modify': case 'temp':
 					selFormId = "${formId}";
-					
-					var selectedType = $("#optType");
-					getFormList(selectedType);
+			//		var selectedType = $("#optType");
+			//		getFormList(selectedType);
 					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
 					var content = '${content}';
 	    			message.SetEditorContent(content);
+	    			
+	    			if (mode == 'modify') {
+	    				$("#optType").attr("disabled", "true");
+						$("#optForm").attr("disabled", "true");
+	    			}
+	    			
 					break;
+				/*	
 				case 'modify': 
 					selFormId = "${formId}";
-				//	journalId = opener.journalId;
-					var selectedType = $("#optType");
-					getFormList(selectedType);
+			//		var selectedType = $("#optType");
+			//		getFormList(selectedType);
 					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
 					$("#optType").attr("disabled", "true");
 					$("#optForm").attr("disabled", "true");
 					var content = '${content}';
-			//		content.replace(/[\r\n]/gm, "");
 	    			message.SetEditorContent(content);
 					break;
 				case 'temp': 
 					selFormId = "${formId}";
 				//	journalId = "${journalId}";
-					var selectedType = $("#optType");
-					getFormList(selectedType);
+				//	var selectedType = $("#optType");
+				//	getFormList(selectedType);
 					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
 					var content = '${content}';
 	    			message.SetEditorContent(content);
 					break;
-
+				*/
 				default:
 					break;
 				}

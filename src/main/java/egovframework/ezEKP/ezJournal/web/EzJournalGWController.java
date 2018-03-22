@@ -1514,7 +1514,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [POST] 환경설정 정보 저장
 	 */
 	@RequestMapping(value="/rest/ezjournal/users/{userId}/options", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
-	public JSONObject saveOption(@RequestParam Map<String,Object> param,@PathVariable String userId, HttpServletRequest request) throws Exception {
+	public JSONObject saveOption(@RequestParam Map<String,Object> param, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W saveOption started.");
 
 		JSONObject result = new JSONObject();

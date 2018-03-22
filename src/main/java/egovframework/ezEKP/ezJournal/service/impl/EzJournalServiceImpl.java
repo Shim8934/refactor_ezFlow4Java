@@ -594,6 +594,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 		if (jsonParam.get("isTemp") != null) {
 			isTemp = jsonParam.get("isTemp").toString();
 		}
+		logger.debug("isTemp : " + isTemp + ",mode : " + mode);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("writerId", jsonParam.get("userId"));
@@ -605,7 +606,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("formId", jsonParam.get("formId"));
 		map.put("deptShare", jsonParam.get("deptShare"));
 		if (mode != null && mode.equals("temp") || !isTemp.equals("")) {
-			map.put("journalStatus", mode);
+			map.put("journalStatus", "temp");
 		}
 		
 		logger.debug("insertJournal map" + map);
