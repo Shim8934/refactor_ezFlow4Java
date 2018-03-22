@@ -102,9 +102,7 @@
 				var liArr = $('div.lmLetter').find('li');
 				
 				for (var i = 0; i < liArr.length; i++) {
-					//var letterNo = liArr[i].attributes[0].value;
 					var letterNo = $(liArr[i]).attr("data-letterno");
-					console.log(letterNo);
 					
 					$.ajax({
 						type:"POST",
@@ -124,17 +122,12 @@
 			
 			// 편지지 이동
 			function letterBoxMove(btn){
-				// 편지지함 no
-				//여기 수아랑 얘기해봐야됨
 				var letterBox = selectNode.node.id;
 				var letterNo = $(".lmLetterSelect").attr("data-letterno");
 				var letterId = $(".lmLetterSelect").attr("data-letterid");
-				var select = $('body').find('.lmLetterSelect');
 				
-				if (select.length == 0) {
-					alert("이동할 편지지를 선택해주세요!");
-					return;
-				} else {
+				if (typeof letterNo !== "undefined") {
+					
 					url = "/admin/ezEmail/letterBoxMovePopUp.do?letterBox=" + letterBox + "&letterNo=" + letterNo + "&letterId=" + letterId;  
 					var win = window.open(url,"_blank","width=550, height=450");
 					
@@ -148,6 +141,10 @@
 				        } catch (e) {
 				        }
 				    }, 100);
+					
+				} else {
+					alert("이동할 편지지를 선택해주세요!");
+					return;
 				}
 			}
 

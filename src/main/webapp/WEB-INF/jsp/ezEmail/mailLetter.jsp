@@ -50,8 +50,7 @@
 			// 편지지 선택(mailWirte.jsp에 들어가도록)
 			function letterSelect() {
 				var letterNo = $(".lmLetterSelect").attr("data-letterno");
-				var select = $('body').find('.lmLetterSelect');
-				if (select.length != 0) {
+				if (typeof letterNo !== "undefined") {
 					$.ajax({
 						type:"POST",
 						data:{letterNo:letterNo,popUpType:"modify"},

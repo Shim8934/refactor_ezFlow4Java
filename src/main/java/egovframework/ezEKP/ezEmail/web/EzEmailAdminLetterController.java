@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -19,6 +20,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -352,16 +356,19 @@ public class EzEmailAdminLetterController {
 		try {
 			EzEmailAdminLetterService.updateLetterMove(letterNo, parentLetterBoxNo);
 			
-			String originPath = realPath + filePath + "/" + fileName;
-			filePath = realPath + commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId()) + commonUtil.separator;
+			String originPath = realPath + filePath;
+			String filePath2 = realPath + commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId()) + commonUtil.separator;
 			String folderName = parentLetterBoxNo + "/" + letterId;
 			
-			String result = moveFile(folderName, fileName, originPath, filePath);
+			String result = moveFile(folderName, fileName, originPath, filePath2);
+			String uploadPath =  commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
+			// 여기 정리좀 할것
+			updateFile(new File(filePath2 + folderName + "/" + fileName), uploadPath + "/" + letterBox + "/" + letterId, uploadPath + "/" + folderName); //html img src 경로 고쳐주기
 			
-	        if (result!=null) {
-	        	File file = new File(filePath + letterBox + "/" + letterId);
+	        if (result != null) {
+	        	File file = new File(filePath2 + letterBox + "/" + letterId);
 	        	if (file.exists()) {
-	        		file.delete();
+	        		deleteDirectory(file);
 	        	}
 	        	
 	            logger.debug("SUCCESS: "+result);
@@ -755,10 +762,27 @@ public class EzEmailAdminLetterController {
         }
  
         try{
-        	File file = new File(originPath);
+        	File file = new File(originPath + "/" + fileName);
  
             if (file.renameTo(new File(filePath))) { //파일 이동
-                return filePath; //성공시 성공 파일 경로 return
+            	
+            	dir = new File(originPath + "/images"); //이미지 있으면 이미지도 이동시켜줄것
+            	if (dir.exists()) {
+            		
+            		File newImages = new File(path + "/images");
+            		newImages.mkdir();
+            		
+            		File[] imgs = dir.listFiles();
+            		
+            		for (int i = 0; i < imgs.length; i++) {
+            			imgs[i].renameTo(new File(newImages.toString() + "/" + imgs[i].getName()));
+            		}
+            		
+            		
+            		
+            	}
+            	
+                return originPath; //성공시 성공 파일 경로 return
             } else {
                 return null;
             }
@@ -769,6 +793,50 @@ public class EzEmailAdminLetterController {
         }
  
     }
+	
+	// html파일의 img src 경로 바꿔주는 함수 (재은)
+	public String updateFile(File htmlFile, String originPath, String copyPath) {
+		//file, originPath, path
+		
+		String resultReturn = "OK";
+		FileReader reader = null;
+		FileWriter writer = null;
+		String result = null;
+		try {
+			reader = new FileReader(htmlFile);
+			result = "";
+			String newResult = "";
+			
+			int c;
+			
+			while (true) {
+				c = reader.read();
+				if (c == -1) {
+					break;
+				}
+				result += String.valueOf((char)c);
+			}
+			
+			String replaceResult = "";
+			if (result != null && result.length() > 0) {
+				if (result.contains("<img src=\"")) {
+					replaceResult = result.replaceAll(originPath, copyPath);
+				}
+			}
+			
+			writer = new FileWriter(htmlFile);
+			writer.write(replaceResult);
+			writer.flush();
+			writer.close();
+			reader.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			resultReturn = "ERROR";
+		}
+		
+		return resultReturn;
+	}
 	
 	
 	/**
