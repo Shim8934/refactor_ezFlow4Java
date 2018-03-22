@@ -44,15 +44,32 @@
 				window.location.href = "/ezLadder/setLadder.do?ladderId=" + ${vo.ladderId};
 			});
 			$("#saveCmtBtn").on("click", function() {
-				setComment("add");
+				if($("#inputCmtBox").val() !== "") {
+					setComment("add");
+				}
+			});
+			$("#inputCmtBox").on("keyup", function(e) {
+				if(e.keyCode === 13 && $("#inputCmtBox").val() !== "") {
+					setComment("add");
+				} 
 			});
 			$(document).on("click", ".cmtmodify", function() {
 				var cmtId = $(this).attr("id").substring(4);
 				if($(this).attr("data") === "OK") {
-					setComment("modify", cmtId);
+					if($("#modifyCmtBox").val() !== "") {
+						setComment("modify", cmtId);
+					} else {
+						$("#modifyCmtBox").focus();
+					}
 				} else {
 					createModifyInput(cmtId);
 				}
+			});
+			$(document).on("keyup", "#modifyCmtBox", function(e) {
+				if(e.keyCode === 13 && $("#modifyCmtBox").val() !== "") {
+					var cmtId = $("#modifyCmtBox").closest("tr").attr("id").substring(6);
+					setComment("modify", cmtId);
+				} 
 			});
 			$(document).on("click", "#mod_cancle", function() {
 				$(".modiTd").remove();
@@ -65,6 +82,7 @@
 		});
 		
 		/** 웹소켓 */
+		var addCommentView = [];
 		function getCmtSockConnect() {
 			servername = location.hostname;
 			var sock = new SockJS("/hello");
@@ -74,37 +92,25 @@
 					console.log(result);
 					console.log("ricieve---------");
 				});
-				stompClient.subscribe("/lad/cmt/" + id + "/addCmt/" + ladderId, function(result) {
+				stompClient.subscribe("/lad/cmt/addCmt/" + ladderId, function(result) {
 					var cmtjson = JSON.parse(result.body);
-					var html = "";
 					
-					html += "<tr id='cmtTr_" + cmtjson["id"] + "'>";
-					html += "<td>" + cmtjson["userName"] + "</td>";
-					html += "<td>" + cmtjson["comment"] + "</td>";
-					html += "<td>" + cmtjson["writeDate"] + "</td>";
-					html += "<td><div id='mod_" + cmtjson["id"] + "' class='cmtmodify'>modify</div></td>";
-					html += "<td><div id='del_" + cmtjson["id"] + "' class='cmtdelete'>delete</div></td>";
-					html += "</tr>";
+					addCommentView["type"] = "prepend";
+					addCommentView["contents"] = cmtjson;
 					
-					$("#cmtTable").prepend(html);
+					showCommentList(addCommentView)
 				});
-				stompClient.subscribe("/lad/cmt/" + id + "/modifyCmt/" + ladderId, function(result) {
+				stompClient.subscribe("/lad/cmt/modifyCmt/" + ladderId, function(result) {
 					var cmtjson = JSON.parse(result.body);
-					var html = "";
 					
 					$("#cmtTr_" + cmtjson["id"]).remove();
 					
-					html += "<tr id='cmtTr_" + cmtjson["id"] + "'>";
-					html += "<td>" + cmtjson["userName"] + "</td>";
-					html += "<td>" + cmtjson["comment"] + "</td>";
-					html += "<td>" + cmtjson["writeDate"] + "</td>";
-					html += "<td><div id='mod_" + cmtjson["id"] + "' class='cmtmodify'>modify</div></td>";
-					html += "<td><div id='del_" + cmtjson["id"] + "' class='cmtdelete'>delete</div></td>";
-					html += "</tr>";
+					addCommentView["type"] = "prepend";
+					addCommentView["contents"] = cmtjson;
 					
-					$("#cmtTable").prepend(html);					
+					showCommentList(addCommentView)
 				});
-				stompClient.subscribe("/lad/cmt/" + id + "/deleteCmt/" + ladderId, function(result) {
+				stompClient.subscribe("/lad/cmt/deleteCmt/" + ladderId, function(result) {
 					var cmtjson = JSON.parse(result.body);
 					
 					$("#cmtTr_" + cmtjson["id"]).remove();
@@ -124,14 +130,18 @@
 			html += "<td class='modiTd'><div id='mod_cancle' class='cmtmodify'>취소</div></td>";
 			
 			$("#cmtTr_" + cmtId).append(html);
+			$("#modifyCmtBox").select();
 		}
 		
 		function setComment(flag, cmtId) { // 댓글 추가, 수정, 삭제 (flag: add, modify, delete)
 			var comment = "";
 			if(flag === "add") {
-				comment = $("#inputCmtBox").val();					
+				comment = $("#inputCmtBox").val();	
+				$("#inputCmtBox").val("");
 			} else if(flag === "modify") {
+				console.log(cmtId);
 				comment = $("#cmtTr_" + cmtId + " input").val();
+				$("#cmtTr_" + cmtId + " input").val("");
 			} 
 			
 			$.ajax({
@@ -143,9 +153,6 @@
 					"id": cmtId,
 					"ladderId": ladderId,
 					"comment": comment
-				},
-				success: function(result) {
-					console.log(result);
 				}
 			});
 		}
@@ -158,8 +165,6 @@
 		}
 		
 		function showComments() { // 댓글 조회
-			var html = ""
-			
 			$.ajax({
 				type: "GET",
 				url: "/ezLadder/getLadderComment.do",
@@ -169,20 +174,44 @@
 				},
 				success: function(result) {
 					var cmtlist = result["cmtlist"];
+					var addCommentView = [];
 					
+					addCommentView["type"] = "append";
 					cmtlist.forEach(function(cmt) {
-						html += "<tr id='cmtTr_" + cmt["id"] + "'>";
-						html += "<td>" + cmt["userName"] + "</td>";
-						html += "<td>" + cmt["comment"] + "</td>";
-						html += "<td>" + cmt["writeDate"] + "</td>";
-						html += "<td><div id='mod_" + cmt["id"] + "' class='cmtmodify'>modify</div></td>";
-						html += "<td><div id='del_" + cmt["id"] + "' class='cmtdelete'>delete</div></td>";
-						html += "</tr>";
+						addCommentView["contents"] = cmt;
+						
+						showCommentList(addCommentView);
 					});
 					
-					$("#cmtTable").append(html);
 				}
 			});
+		}
+		
+		function showCommentList(addCommentView) {
+			var html = "";
+			var cmt = addCommentView["contents"];
+			var type = addCommentView["type"];
+			
+			html += "<tr id='cmtTr_" + cmt["id"] + "'>";
+			html += "<td>" + cmt["userName"] + "</td>";
+			html += "<td>" + cmt["comment"] + "</td>";
+			html += "<td>" + cmt["writeDate"] + "</td>";
+			if(id === cmt["userId"]) {
+				html += "<td><div id='mod_" + cmt["id"] + "' class='cmtmodify'>modify</div></td>";
+				html += "<td><div id='del_" + cmt["id"] + "' class='cmtdelete'>delete</div></td>";
+			} else {
+				html += "<td><div style='color: beige;'>modify</div></td>";
+				html += "<td><div style='color: beige;'>delete</div></td>";
+			}
+			html += "</tr>";
+			
+			if(type === "append") {
+				$("#cmtTable").append(html);
+			} else {
+				$("#cmtTable").prepend(html);
+			}
+			
+			addCommentView = [];
 		}
 		
 		function deleteLadder(idx) {

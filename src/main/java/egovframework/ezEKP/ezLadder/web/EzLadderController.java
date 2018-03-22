@@ -468,7 +468,7 @@ public class EzLadderController {
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadderComment.do", method = RequestMethod.POST)
 	public String setLadderComment(@CookieValue("loginCookie") String loginCookie, String flag, LadderCommentVO cmtVO, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("%%% setLadderComment.do started.");
+		logger.debug("setLadderComment.do started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -500,13 +500,13 @@ public class EzLadderController {
 		JSONObject retjson = new JSONObject();
 		if(flag.equals("add")) {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-			retDestination = "/lad/cmt/" + userId + "/addCmt/";
+			retDestination = "/lad/cmt/addCmt/";
 		} else if(flag.equals("modify")) {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-			retDestination = "/lad/cmt/" + userId + "/modifyCmt/";
+			retDestination = "/lad/cmt/modifyCmt/";
 		} else if(flag.equals("delete")) {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
-			retDestination = "/lad/cmt/" + userId + "/deleteCmt/";
+			retDestination = "/lad/cmt/deleteCmt/";
 		}
 
 		JSONParser jp = new JSONParser();
