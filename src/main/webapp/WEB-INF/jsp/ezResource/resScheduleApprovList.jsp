@@ -593,11 +593,13 @@
 	        	var MaxNum;
 	        	var i;
 	        	var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+	        	
 	        	if (totalPage >= (startNum + parseInt(BlockSize))) {
 		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
 	    	    } else {
 	            	MaxNum = totalPage;
 	        	}
+	        	
 	        	for (i = startNum; i <= MaxNum; i++) {
 		            if (i == pageNum) {
 		                strtext = "<span class='on'>" + i + "</span>";
@@ -607,6 +609,13 @@
 	                	PagingHTML += strtext;
 	            	}
 	        	}
+	        	
+	        	/* 2018.03.23 서주연 - #12123 데이터없는경우 페이지네이션 1이 없는 문제해결 */
+	        	if (i == 1) {
+		           	strtext = "<span class='off'>" + i + "</span>";
+	                PagingHTML += strtext;
+	            }
+	        	
 	        	if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang1001 + "</span>";

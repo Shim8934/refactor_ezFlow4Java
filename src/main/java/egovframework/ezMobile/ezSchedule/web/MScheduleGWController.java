@@ -81,7 +81,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (월간,주간,일정검색)
 	 */	
-	@RequestMapping(value="/mobile/ezschedule/list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezschedule/list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleList(@PathVariable String userId, HttpServletRequest request){
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] started.");
 		
@@ -146,7 +146,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 카운트 (월간,주간,일정검색)
 	 */
-	@RequestMapping(value="/mobile/ezschedule/list-count/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezschedule/list-count/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleListCount(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] started.");
 		
@@ -345,7 +345,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 종류 리스트 (개인/부서/회사)
 	 */
-	@RequestMapping(value="/mobile/ezschedule/type-List/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezschedule/type-List/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleTypeList(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/type-List] started.");
 		
@@ -644,7 +644,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (주간)
 	 */
-	@RequestMapping(value="/mobile/ezschedule/week-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezschedule/week-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleWeekList(@PathVariable String userId, HttpServletRequest request, Locale locale){
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/week-list/users/{userId}] started.");
 		

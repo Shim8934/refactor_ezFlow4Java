@@ -118,7 +118,7 @@
 			<img src='/images/mtgrsp-tent.gif' width="20" height="20" title="${t903}" onclick="Schedule_btn('TENT');" style='cursor:pointer;' />
 			<img src='/images/mtgrsp-decline.gif' width="20" height="20" title="${t902}" onclick="Schedule_btn('DECLINE');" style='cursor:pointer;' />
 		</span>
-		<div class="previewmail_addfile" id="ifrmPreViewRayer" style="display:none;margin-bottom:10px;font-family:${t246}">
+		<div class="previewmail_addfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:${t246}">
 			<p class="title">${t99000003}
 				<span>${pAttachListHtmlSub}</span>
 				<span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
@@ -128,16 +128,7 @@
 		</div>
 		<div id="MailBigAttachRayer" class="previewmail_addfile">
 		</div>
-		<div class='margin' id="normalScreen" style="margin-top:5px; word-wrap:break-word;">${htmlBody}</div>
+		<div class='margin' id="normalScreen" style="margin-top:5px; word-wrap:break-word;">${htmlBody}<!--  --></div>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>  
 	</body>
-	<script language="javascript" type="text/javascript">
-	    try {
-	        var pisAttach = "${isAttach}";
-	        if (pisAttach == "OK")
-	            document.getElementById("ifrmPreViewRayer").style.display = "";
-	        else
-	            document.getElementById("ifrmPreViewRayer").style.display = "none";
-	    } catch (e) { }
-	</script>
 </html>
