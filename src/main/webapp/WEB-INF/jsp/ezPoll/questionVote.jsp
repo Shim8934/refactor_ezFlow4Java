@@ -788,12 +788,6 @@
  	    		var isUnchecked = obj.src.indexOf("/images/poll/unchecked_vote.png");
  	    		
 	 	    	if (isUnchecked !== -1) { 	    		   		
-	 	    		if(selectOnlyOnce(isUnchecked)){
-	 	    			var msg = '한번 선택하면 변경할 수 없습니다. 이 항목을 선택하시겠습니까?';
-	 	    			if(!window.confirm(msg)){
-	 	    				return;
-	 	    			}
-	 	    		}
 	 	    		
 	 	    		if (votePrivilege == 0) {
 	 	    			alert("<spring:message code = 'ezPoll.t172'/>");
@@ -803,6 +797,13 @@
 	 	    		if (numberOfMultiSelect != 0 && numberOfSelected >= numberOfMultiSelect) {
 	 					alert("<spring:message code = 'ezPoll.t171'/>" + " " + numberOfMultiSelect + "<spring:message code = 'ezPoll.t173'/>");
 	 					return;
+	 	    		}
+	 	    		
+	 	    		if(selectOnlyOnce(isUnchecked)){
+	 	    			var msg = '한번 선택하면 변경할 수 없습니다. 이 항목을 선택하시겠습니까?';
+	 	    			if(!window.confirm(msg)){
+	 	    				return;
+	 	    			}
 	 	    		}
 	 	    		  		  		
 	 	    		modifySelectedList(optId, 'add');
