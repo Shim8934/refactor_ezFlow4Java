@@ -3950,7 +3950,6 @@
 				SELECT 
 					* 
 				FROM (
-						SELECT 
 							SELECT  
   								ROWNUM AS RNUM,
                                 B.DOCID,
