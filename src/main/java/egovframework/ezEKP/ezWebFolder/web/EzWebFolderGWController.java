@@ -1283,9 +1283,10 @@ public class EzWebFolderGWController {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, primary, offset);
-			int tenantId     = userInfo.getTenantId();
-			FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			LoginVO userInfo    = commonUtil.getUserForGw(userId, serverName, primary, offset);
+			int tenantId        = userInfo.getTenantId();
+			FolderVO folder     = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			FolderVO destFolder = ezWebFolderService.getFolderByFolderId(destFolderId, offset, tenantId);
 			
 			//Check copy/move conditions
 			if (folder.getFolderUpper().equals(destFolderId)) {
@@ -1295,18 +1296,16 @@ public class EzWebFolderGWController {
 				return result;
 			}
 			
-			List<FolderVO> listSubFolder = ezWebFolderService.getAllSubFolders(folderId, offset, tenantId);
+			int pos = destFolder.getFolderPath().indexOf(folder.getFolderPath());
 			
-			for (FolderVO subFld : listSubFolder) {
-				if (subFld.getFolderId().equals(destFolderId)) {
-					result.put("status", "error");
-					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t245", locale));
-					result.put("code", 1);
-					return result;
-				}
+			if (pos != -1) {
+				result.put("status", "error");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t245", locale));
+				result.put("code", 1);
+				return result;
 			}
 			
-			ezWebFolderAdminService.moveCompanyFolder(folder, listSubFolder, destFolderId, mode, userInfo);
+			ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

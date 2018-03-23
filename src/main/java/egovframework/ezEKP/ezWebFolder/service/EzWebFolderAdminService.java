@@ -28,6 +28,6 @@ public interface EzWebFolderAdminService {
 	void addDeptFolders(String companyId, LoginVO userInfo) throws Exception;
 	String getMaxFolderUserSeq(int tenantId) throws Exception;
 	void updateSelectedDeptsForChief(List<String> deptsList, String userId, String offset, int tenantId) throws Exception;
-	void moveCompanyFolder(FolderVO folder, List<FolderVO> listSubFolder, String destFolderId, String mode, LoginVO userInfo) throws Exception;
+	void moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, LoginVO userInfo) throws Exception;
 	void addPersonalFolder(LoginVO userInfo) throws Exception;
 }

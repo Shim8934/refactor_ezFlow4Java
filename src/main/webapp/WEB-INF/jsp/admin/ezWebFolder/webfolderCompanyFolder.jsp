@@ -511,7 +511,7 @@
 			<table style="border-collapse: collapse; width: 100%;">
 				<tr>
 					<td style="width: 350px; min-width: 350px;">
-						<div id="folderTree" style="width: 350px; height: 450px; border: 1px solid #666666;"></div>
+						<div id="folderTree" style="width: 350px; height: 450px; border: 1px solid #666666; overflow: auto; white-space: nowrap;"></div>
 					</td>
 					<td>
 						<div style="width: 500px; height: 450px; border: 1px solid #cccccc; margin-left: 10px;">

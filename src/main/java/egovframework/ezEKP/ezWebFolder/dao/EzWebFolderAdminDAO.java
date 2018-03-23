@@ -64,4 +64,8 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 	public void deleteFolderUsersOfChief(Map<String, Object> map) {
 		delete("EzWebFolderAdminDAO.deleteFolderUsersOfChief", map);
 	}
+
+	public void moveListSubFolders(Map<String, Object> map) {
+		update("EzWebFolderAdminDAO.moveListSubFolders", map);
+	}
 }

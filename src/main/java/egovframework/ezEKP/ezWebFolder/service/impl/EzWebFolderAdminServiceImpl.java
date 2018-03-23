@@ -408,13 +408,12 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 	
 	@Override
-	public void moveCompanyFolder(FolderVO folder, List<FolderVO> listSubFolder, String destFolderId, String mode, LoginVO userInfo) throws Exception {
-		
+	public void moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, LoginVO userInfo) throws Exception {
 		if (mode.equals("move")) {
-			moveFolder(folder, listSubFolder, destFolderId, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
+			moveFolder(folder, destFolder, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
 		}
 		else {
-			copyFolder(folder, listSubFolder, destFolderId, userInfo);
+			copyFolder(folder, destFolder, userInfo);
 		}
 	}
 	
@@ -443,8 +442,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		return currentMaxStep;
 	}
 	
-	private void moveFolder(FolderVO folder, List<FolderVO> listSubFolder, String destFolderId, String userId, String offset, int tenantId) throws Exception {
-		FolderVO parentFolder      = ezWebFolderService.getFolderByFolderId(destFolderId, offset, tenantId);
+	private void moveFolder(FolderVO folder, FolderVO parentFolder, String userId, String offset, int tenantId) throws Exception {
 		String oldPath             = folder.getFolderPath();
 		String newPath             = parentFolder.getFolderPath() + folder.getFolderId() + "|";
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -473,39 +471,41 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		folder.setFolderType(parentFolder.getFolderType());
 		folder.setUpdateId(userId);
 		folder.setUpdateDate(timeUTC);
-		folder.setFolderUpper(destFolderId);
+		folder.setFolderUpper(parentFolder.getFolderId());
 		folder.setFolderLevel(folder.getFolderLevel() + levelDistance);
-		folder.setFolderStep(getMaxFolderStep(destFolderId, tenantId));
+		folder.setFolderStep(getMaxFolderStep(parentFolder.getFolderId(), tenantId));
 		insertFolder(folder);
 		
-		for (FolderVO subFld : listSubFolder) {
-			String folderPath = subFld.getFolderPath();
-			folderPath        = folderPath.replace(oldPath, newPath);
-			subFld.setFolderPath(folderPath);
-			subFld.setUpdateDate(timeUTC);
-			subFld.setUpdateId(userId);
-			subFld.setFolderType(parentFolder.getFolderType());
-			subFld.setOwnerId(parentFolder.getOwnerId());
-			subFld.setFolderLevel(subFld.getFolderLevel() + levelDistance);
-			
-			//Update Folder
-			insertFolder(subFld);
-		}
+		//Update list sub folders
+		moveListSubFolders(userId, parentFolder.getFolderType(), oldPath, newPath, timeUTC, parentFolder.getOwnerId(), levelDistance, tenantId);
 	}
 	
-	private void copyFolder(FolderVO folder, List<FolderVO> listSubFolder, String destFolderId, LoginVO userInfo) throws Exception {
-		String userId              = userInfo.getId();
-		String offset              = userInfo.getOffset();
-		int tenantId               = userInfo.getTenantId();
-		FolderVO parentFolder      = ezWebFolderService.getFolderByFolderId(destFolderId, offset, tenantId);
-		String folderId            = folder.getFolderId();
-		String oldPath             = folder.getFolderPath();
-		String newId               = getMaxFolderID(tenantId);
-		String newPath             = parentFolder.getFolderPath() + newId + "|";
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date                  = new Date();
-		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-		int levelDistance          = parentFolder.getFolderLevel() + 1 - folder.getFolderLevel();
+	private void moveListSubFolders(String userId, String folderType, String oldPath, String newPath, String timeUTC, String ownerId, int levelDistance, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",        userId);
+		map.put("folderType",    folderType);
+		map.put("oldPath",       oldPath);
+		map.put("newPath",       newPath);
+		map.put("updateTime",    timeUTC);
+		map.put("ownerId",       ownerId);
+		map.put("levelDistance", levelDistance);
+		map.put("tenantId",      tenantId);
+		
+		ezWebFolderAdminDAO.moveListSubFolders(map);
+	}
+
+	private void copyFolder(FolderVO folder, FolderVO parentFolder, LoginVO userInfo) throws Exception {
+		String userId                = userInfo.getId();
+		String offset                = userInfo.getOffset();
+		int tenantId                 = userInfo.getTenantId();
+		String folderId              = folder.getFolderId();
+		//String oldPath               = folder.getFolderPath();
+		String newId                 = getMaxFolderID(tenantId);
+		String newPath               = parentFolder.getFolderPath() + newId + "|";
+		SimpleDateFormat formatter   = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                    = new Date();
+		String timeUTC               = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		int levelDistance            = parentFolder.getFolderLevel() + 1 - folder.getFolderLevel();
 		
 		if ((folder.getFolderLevel() + levelDistance == 1) && parentFolder.getFolderType().equals("C")) {
 			String folderPath = folder.getFolderPath();
@@ -524,42 +524,54 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		folder.setFolderType(parentFolder.getFolderType());
 		folder.setUpdateId(userId);
 		folder.setUpdateDate(timeUTC);
-		folder.setFolderUpper(destFolderId);
+		folder.setFolderUpper(parentFolder.getFolderId());
 		folder.setFolderLevel(folder.getFolderLevel() + levelDistance);
-		folder.setFolderStep(getMaxFolderStep(destFolderId, tenantId));
+		folder.setFolderStep(getMaxFolderStep(parentFolder.getFolderId(), tenantId));
 		folder.setFolderId(newId);
 		
+		//Create new folder
 		insertFolder(folder);
 		copyFile(folderId, newId, timeUTC, userInfo);
 		
-		for (int i = 0; i < listSubFolder.size(); i++) {
-			FolderVO subFld   = listSubFolder.get(i);
-			String oldId      = subFld.getFolderId();
-			String newSubId   = getMaxFolderID(tenantId);
-			String folderPath = subFld.getFolderPath();
-			folderPath        = folderPath.replace(oldPath, newPath);
-			folderPath        = folderPath.replace("|" + subFld.getFolderId() + "|", "|" + newSubId + "|");
-			
-			subFld.setFolderPath(folderPath);
-			subFld.setFolderType(parentFolder.getFolderType());
-			subFld.setOwnerId(parentFolder.getOwnerId());
-			subFld.setUpdateDate(timeUTC);
-			subFld.setUpdateId(userId);
-			subFld.setFolderLevel(subFld.getFolderLevel() + levelDistance);
-			subFld.setFolderId(newSubId);
-			
-			folderPath           = folderPath.substring(1, folderPath.length() - 1);
-			String[] folderArry  = folderPath.split("\\|");
-			String upperFolderId = folderArry[folderArry.length - 2];
-			
-			subFld.setFolderUpper(upperFolderId);
-			
-			//Update Folder
-			insertFolder(subFld);
-			copyFile(oldId, newSubId, timeUTC, userInfo);
+		//copy all sub folders
+		copySubFolders(folderId, parentFolder.getFolderType(), newPath, timeUTC, parentFolder.getOwnerId(), levelDistance, userInfo);
+	}
+
+
+	private void copySubFolders(String folderId, String folderType, String newPath, String timeUTC, String ownerId, int levelDistance, LoginVO userInfo) throws Exception {
+		List<FolderVO> listSubFolder = ezWebFolderService.getAllSubFolders(folderId, userInfo.getOffset(), userInfo.getTenantId());
+		
+		if (listSubFolder != null && listSubFolder.size() > 0) {
+			for (int i = 0; i < listSubFolder.size(); i++) {
+				FolderVO subFld   = listSubFolder.get(i);
+				String oldId      = subFld.getFolderId();
+				String newSubId   = getMaxFolderID(userInfo.getTenantId());
+				String folderPath = newPath + newSubId + "|";
+				
+				subFld.setFolderPath(folderPath);
+				subFld.setFolderType(folderType);
+				subFld.setOwnerId(ownerId);
+				subFld.setUpdateDate(timeUTC);
+				subFld.setUpdateId(userInfo.getId());
+				subFld.setFolderLevel(subFld.getFolderLevel() + levelDistance);
+				subFld.setFolderId(newSubId);
+				
+				folderPath           = folderPath.substring(1, folderPath.length() - 1);
+				String[] folderArry  = folderPath.split("\\|");
+				String upperFolderId = folderArry[folderArry.length - 2];
+				
+				subFld.setFolderUpper(upperFolderId);
+				
+				//Create new folder
+				insertFolder(subFld);
+				copyFile(oldId, newSubId, timeUTC, userInfo);
+				
+				//copy all sub folders
+				copySubFolders(oldId, folderType, subFld.getFolderPath(), timeUTC, ownerId, levelDistance, userInfo);
+			}
 		}
 	}
-	
+
 	private void copyFile(String folderId, String newId, String timeUTC, LoginVO userInfo) throws Exception {
 		List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder(folderId, "", "0", "", "", "", "", "", "1", 0, 0, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
 		
