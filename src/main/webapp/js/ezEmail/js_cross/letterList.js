@@ -137,7 +137,8 @@ function addLetterList(jsonArr, nowSelect) {
 	if (listCount !== 0) {
 		for (i = 0; i < listCount; i++) {
 			
-			letterListHtml += "<li id='lt" + jsonArr[i].letterNo + "' data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + "'>"; 
+			letterListHtml += "<li id='lt" + jsonArr[i].letterNo + "' data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + 
+			"' data-letterBoxNo='" + jsonArr[i].letterBoxNo + "'>"; 
 			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname.replace(/</gi, "&lt;") + "</span>";
 			
 			if (pageType == 'letter_user') {

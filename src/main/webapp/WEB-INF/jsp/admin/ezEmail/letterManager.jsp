@@ -14,6 +14,12 @@
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterBoxTree.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
 	</head>
+	
+	<style>
+	
+	
+	</style>
+	
 	<body>
 		<div id="lmTop">
 			
@@ -120,7 +126,7 @@
 				var letterId = $(".lmLetterSelect").attr("data-letterid");
 				
 				//편지지 목록이 선택 되었을때
-				if (typeof letterNo !== undefined) {
+				if (letterNo !== undefined) {
 					
 					url = "/admin/ezEmail/letterBoxMovePopUp.do?letterBox=" + letterBox + "&letterNo=" + letterNo + "&letterId=" + letterId;  
 					var win = window.open(url,"_blank","width=550, height=450");
@@ -146,7 +152,7 @@
 			// 편지지 추가, 수정 btn 클릭 시     btn -> this, type -> 추가=add, modify일때 type 안받음
 			function letterEditPopUp(btn, type) {
 				var popUpType = type == "add" ? type : "modify"; // 클릭된 버튼 구분(추가 or 수정)
-				var letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
+				var letterBoxNo = $(btn).parents("li").attr("data-letterboxno"); // 편지지함 no
 				var letterNo = type == "add" ? -1 : $(btn).parents("li").attr("data-letterno");
 				
 				var url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&popUpType=" + popUpType + "&letterNo=" + letterNo;

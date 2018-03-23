@@ -126,16 +126,19 @@
 		    function letterPreview(btn){
 				var letterNo = $(".lmLetterSelect").attr("data-letterno");
 				
-				if (typeof letterNo !== undefined) {
+				if (letterNo !== undefined) {
 		    		url = "/ezEmail/mailLetterPreview.do?" + "letterNo=" + letterNo;  
 		    		window.open(url,"_blank","width=890, height=660");
+		    	} else {
+		    		alert("편지지를 선택하세요.");
+		    		return;
 		    	}
 		    }
 			
 			// 편지지 선택(mailWirte.jsp에 들어가도록)
 			function letterSelect() {
 				var letterNo = $(".lmLetterSelect").attr("data-letterno");
-				if (typeof letterNo !== undefined) {
+				if (letterNo !== undefined) {
 					$.ajax({
 						type:"POST",
 						data:{letterNo:letterNo,popUpType:"modify"},

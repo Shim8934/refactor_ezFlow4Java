@@ -169,6 +169,8 @@ body {
 
 .lmNoData {
 	text-align: center;
+	cursor: auto;
+	pointer-events: none;
 }
 
 .lmLetterListWrap li span{
