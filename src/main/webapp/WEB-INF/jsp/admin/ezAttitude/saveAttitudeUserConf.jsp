@@ -7,7 +7,7 @@
 		<title>title</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-<!-- 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css"> -->
+	    <link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 	    <style>
 	    	.box {
 	    		border-right:0px;
@@ -133,7 +133,7 @@
 	                                        <a class="imgbtn"><span onclick="search_click()">검색</span></a>
 	                                    </div>
 	                                </td>    
-	                                <td></td>
+<!-- 	                          삭제?      <td></td> -->
 	                            </tr>
 	                        </table>
 	                    </div>
@@ -156,7 +156,7 @@
 	                                    </th>
 	                                </tr>
 	                            </table>
-	                            <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                            <div style="vertical-align: top; height: 440px; overflow: auto; width: 100%;" id="txtlist_Layer">
 	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                    <tr>
 	                                    <!-- 이름 직위 전화번호 -->
@@ -186,7 +186,7 @@
 	                            <img src="../../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()" />
 	            </td>
 	            <!-- 위에까지 화살표 -->     
-	            <td style="width:450px;">
+	            <td style="width:450px; height:480px; vertical-align: top;">
 	                <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
 	                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2; text-align:center;">
 	                        <table style="margin-top: 3px; width: 100%;">
@@ -204,34 +204,41 @@
 	                        </table>
 	                    </div>
 	                </div>
-	                <table style="margin-top: 3px;">
-	                    <tr>
-	                        <td></td>
-	                        <td class="listview" style="width: 100%" id="orglistView">
-	                            <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
-	                                <tr>
-	                                    <th style="white-space:normal; padding-left:60px;">
-	                                    	이름
-	                                    </th>
-	                                    <th style="white-space:normal">
-	                                    	근무시간
-	                                    </th>
-	                                </tr>
-	                            </table>
-	                            <div style="vertical-align: top; overflow: auto; width: 340px;  height: 440px;" id="txtlist_Layer">
-	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
-	                                    <tr>
-	                                     <!-- 이름 직위 전화번호 -->
-	                                    
-<%-- 	                                        <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td> --%>
-<%-- 	                                        <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td> --%>
-<%-- 	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td> --%>
-	                                    </tr>
-	                                </table>
-	                            </div>
-	                        </td>    
-	                    </tr>
-	                </table>
+	                <div>
+		                <table style="margin-top: 3px;">
+		                    <tr>
+		                        <td></td>
+		                        <td class="listview" style="width: 100%" id="orglistView">
+		                            <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
+		                                <tr>
+		                                    <th style="white-space:normal; padding-left:60px;">
+		                                    	이름
+		                                    </th>
+		                                    <th style="white-space:normal">
+		                                    	근무시간
+		                                    </th>
+		                                </tr>
+		                            </table>
+		                            <div style="vertical-align: top; overflow: auto; width: 340px;  height: 440px;" id="txtlist_Layer">
+		                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
+		                                    <tr>
+		                                     <!-- 이름 직위 전화번호 -->
+		                                    
+	<%-- 	                                        <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td> --%>
+	<%-- 	                                        <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td> --%>
+	<%-- 	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td> --%>
+		                                    </tr>
+		                                </table>
+		                            </div>
+		                        </td>    
+		                    </tr>
+		                </table>
+	                </div>
+		            <div style="vertical-align: middle;">
+		                <table>
+			                	<a class="imgbtn"><span>기본설정적용</span></a><a class="imgbtn"><span>변경시간적용</span></a>
+		                </table>
+		            </div>
 	            </td>
 	        </tr>
 	    </table>
