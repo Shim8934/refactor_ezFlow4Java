@@ -135,6 +135,7 @@
 				var letterContent = window.message.GetEditorContent(); // 에디터에 작성한 내용
 				var displayname = $("#displayname").val();
 				var displayname2 = $("#displayname2").val();
+				var searchTxt = opener.$("#lmSearchInput").val()
 				var letterJson = {};
 				
 				var disName = strChk(displayname, true, 40);
@@ -170,9 +171,11 @@
 						if (type != "add") { // 수정일때 미리보기창 다시 보여주기
 							opener.letterPreView(letterJson.letterNo);	
 						}
-						
-						opener.getLetterList(letterJson.letterBoxNo, nowSelect); // 편지지 리스트
-						
+						if (opener.searchTxt != "") {
+							opener.letterSearch();
+						} else {
+							opener.getLetterList(letterJson.letterBoxNo, nowSelect); // 편지지 리스트
+						}
 						alert("저장했습니다.");
 						letterPopUpClose(); // 편지지 팝업 닫기
 					},
