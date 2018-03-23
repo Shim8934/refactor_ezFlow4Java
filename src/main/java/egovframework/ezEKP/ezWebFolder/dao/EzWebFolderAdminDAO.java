@@ -68,4 +68,8 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 	public void moveListSubFolders(Map<String, Object> map) {
 		update("EzWebFolderAdminDAO.moveListSubFolders", map);
 	}
+
+	public UserCapacityVO getUserCapacity(Map<String, Object> map) {
+		return (UserCapacityVO)select("EzWebFolderAdminDAO.getUserCapacity", map);
+	}
 }

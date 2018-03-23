@@ -107,8 +107,33 @@ function fileupload() {
 			}
 			return xhr;
 		},
-		mimeType:"multipart/form-data"
-	}).complete(function(res){
+		mimeType:"multipart/form-data",
+		success : function(data) {
+			var reason   = data.reason;
+			var listFile = data.listFile;
+			
+			if (reason) {
+				alert(reason);
+			}
+			else {
+				if (folderType == null) {
+					renderResult(listFile);
+				}
+				else {
+					renderResult2(listFile);
+				}
+			}
+		},
+		error : function(error) {
+			alert(strErr);
+		}
+	})
+	.complete(function(res){
+		$(progress_bar_id + " .progress-bar").css("width", "0%");
+		$(progress_bar_id + " .status").text("0%");
+		document.getElementById('progress-wrp').style.display = "none";
+	});
+	/*.complete(function(res){
 		$(progress_bar_id + " .progress-bar").css("width", "0%");
 		$(progress_bar_id + " .status").text("0%");
 		document.getElementById('progress-wrp').style.display = "none";
@@ -119,7 +144,7 @@ function fileupload() {
 		else {
 			renderResult2(JSON.parse(res.responseText));
 		}
-	});
+	});*/
 	
 }
 
@@ -298,7 +323,10 @@ function renderResult2(result) {
 function getFileSize(fileSize) {
 	var fileSize_ = "";
 	
-	if (fileSize / 1024 / 1024 > 1) {
+	if (fileSize / 1024 / 1024 / 1024 > 1) {
+		fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 / 1024 * 10)) / 10).toFixed(1) + "GB";
+	}
+	else if (fileSize / 1024 / 1024 > 1) {
 		fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
 	}
 	else if (fileSize / 1024 > 1) {

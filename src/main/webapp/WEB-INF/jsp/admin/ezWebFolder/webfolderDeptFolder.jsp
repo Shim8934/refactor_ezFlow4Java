@@ -512,7 +512,7 @@
 										<div style="margin: 0px 96px;" id="listBttn1">
 											<a class="webfolderBttn"><span onclick="saveChanges();" ><spring:message code='ezWebFolder.t133'/></span></a>
 											<a class="webfolderBttn"><span onclick="newFolder();"   ><spring:message code='ezWebFolder.t206'/></span></a>
-											<a class="webfolderBttn"><span onclick="moveFolder();"  ><spring:message code='ezWebFolder.t121'/></span></a>
+											<a class="webfolderBttn"><span onclick="moveFolder();"  ><spring:message code='ezWebFolder.t251'/></span></a>
 											<a class="webfolderBttn"><span onclick="deleteFolder();"><spring:message code='ezWebFolder.t111'/></span></a>
 										</div>
 										<div style="margin: 0px 176px; display: none;" id="listBttn2">

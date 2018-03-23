@@ -236,6 +236,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	public void updateFolderUseStatus(FolderVO folder, LoginVO userInfo) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folder.getFolderPath());
+		map.put("userId",     userInfo.getId());
 		map.put("tenantId",   userInfo.getTenantId());
 		
 		//saveLog
@@ -581,7 +582,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	@Override
-	public List<FileVO> saveUploadedFiles(List<MultipartFile> multiFileLists, JSONArray nameArray, String folderId, String realPath, LoginVO userInfo) throws Exception {
+	public List<FileVO> saveUploadedFiles(List<MultipartFile> multiFileLists, JSONArray nameArray, FolderVO folder, String realPath, LoginVO userInfo) throws Exception {
 		int tenantId               = userInfo.getTenantId();
 		String userName1           = userInfo.getDisplayName1();
 		String userName2           = userInfo.getDisplayName2();
@@ -593,7 +594,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		String[] pFileName         = new String[cnt];
 		Long[] fileSize            = new Long[cnt];
 		String useExtension        = ezCommonService.getTenantConfig("USE_FileExtension", tenantId);
-		FolderVO folder            = getFolderByFolderId(folderId, offset, tenantId);
 		String folderPath          = folder.getFolderPath();
 		folderPath                 = folderPath.substring(1, folderPath.length() - 1);
 		String originalPath        = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
@@ -643,7 +643,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				fileVO.setDownloadCnt(0);
 				fileVO.setFilePath(getWebFolderDirPath(tenantId) + pFileName[i]);
 				fileVO.setFileSize(Long.toString(fileSize[i]));
-				fileVO.setFolderId(folderId);
+				fileVO.setFolderId(folder.getFolderId());
 				fileVO.setTenantId(tenantId);
 				fileVO.setCreateId(userId);
 				fileVO.setUpdateId(userId);

@@ -162,9 +162,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezWebFolder/uploadFile.do")
-	@ResponseBody
-	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {
+	@RequestMapping(value="/ezWebFolder/uploadFile.do", method = RequestMethod.POST)
+	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("Upload file is running!");
 		
 		LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
@@ -219,14 +218,16 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		if (status.equals("ok")) {
 			listFileVO = (JSONArray) resultBody.get("data");
+			model.addAttribute("listFile", listFileVO);
 		}
 		else {
-			return "";
+			String reason = resultBody.get("reason").toString();
+			model.addAttribute("reason", reason);
 		}
 		
 		logger.debug("Upload file finishes!");
 		
-		return listFileVO.toString();
+		return "json";
 	}
 
 	@RequestMapping(value="/ezWebFolder/downloadAttach.do", produces="application/zip")

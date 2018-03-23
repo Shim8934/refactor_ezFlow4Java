@@ -194,6 +194,46 @@
 		]]>
 	</select>
 	
+	<select id="EzWebFolderAdminDAO.getUserCapacity" resultMap="userCapacityVO">
+		<![CDATA[
+			SELECT
+				U.CN                                                                         AS CN,
+				CASE WHEN #primary# = '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END         AS DISPLAY_NAME,
+				U.DEPARTMENT                                                                 AS DEPARTMENT_ID,
+				CASE WHEN #primary# = '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END         AS DEPARTMENT_NAME,
+				U.PHYSICALDELIVERYOFFICENAME                                                 AS COMPANY_ID,
+				CASE WHEN #primary# = '1' THEN U.COMPANY ELSE U.COMPANY2 END                 AS COMPANY_NAME,
+				IF(W.TOTAL_CAPACITY IS NOT NULL, W.TOTAL_CAPACITY, IFNULL(C.TOTAL_LIMIT, 0)) AS TOTAL_CAPACITY,
+				CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END                     AS JOB_TITLE,
+				(
+					SELECT IFNULL(SUM(CAST(F.FILE_SIZE AS INT)), 0)
+						FROM
+							(
+								TBL_WEBFOLDER_FOLDER S INNER JOIN TBL_WEBFOLDER_FILE F ON S.FOLDER_ID = F.FOLDER_ID
+							)
+						WHERE
+							F.TENANT_ID   = #tenantId#
+						AND
+							S.FOLDER_TYPE = 'U'
+						AND
+							F.USE_STATUS != 'N'
+						AND
+							S.OWNER_ID    = U.CN
+						AND
+							U.CN          = #userId#
+				)                                                                            AS TOTAL_USED,
+				U.TENANT_ID                                                                  AS TENANT_ID
+			FROM
+				TBL_USERMASTER U
+								LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN AND U.TENANT_ID = W.TENANT_ID
+								LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID AND U.TENANT_ID = C.TENANT_ID
+			WHERE
+				U.CN        = #userId#
+			AND
+				U.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
 	<select id="EzWebFolderAdminDAO.getListUserCapacity" resultMap="userCapacityVO">
 		<![CDATA[
 			SELECT
@@ -212,11 +252,13 @@
 								TBL_WEBFOLDER_FOLDER S INNER JOIN TBL_WEBFOLDER_FILE F ON S.FOLDER_ID = F.FOLDER_ID
 							)
 						WHERE
-							F.TENANT_ID = 0
+							F.TENANT_ID   = #tenantId#
 						AND
 							S.FOLDER_TYPE = 'U'
 						AND
-							S.OWNER_ID = U.CN
+							F.USE_STATUS != 'N'
+						AND
+							S.OWNER_ID    = U.CN
 				)                                                                            AS TOTAL_USED,
 				U.TENANT_ID                                                                  AS TENANT_ID
 			FROM
@@ -598,7 +640,7 @@
 			WHERE
 				FOLDER_PATH like concat(concat(#oldPath#, '_'), '%')
 			AND
-				TENANT_ID = 0
+				TENANT_ID    = #tenantId#
 		]]>
 	</update>
 </sqlMap>

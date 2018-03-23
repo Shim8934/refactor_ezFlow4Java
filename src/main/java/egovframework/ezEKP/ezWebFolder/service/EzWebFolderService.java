@@ -62,7 +62,7 @@ public interface EzWebFolderService {
 	int checkFilesOwner(String userId, String fileList, int tenantId) throws Exception;
 	//Added
 	String getFolderPath(String[] split, String offset, int tenantId) throws Exception;
-	List<FileVO> saveUploadedFiles(List<MultipartFile> multiFileLists, JSONArray nameArray, String folderId, String realPath, LoginVO userInfo) throws Exception;
+	List<FileVO> saveUploadedFiles(List<MultipartFile> multiFileLists, JSONArray nameArray, FolderVO folder, String realPath, LoginVO userInfo) throws Exception;
 	void getDownloadedFiles(String[] fileIDList, String realPath, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	void deleteSelectedFiles(String[] fileIDList, LoginVO userInfo) throws Exception;
 	void saveLog(String string, String companyId, String offset, String userId, String userName1, String userName2, String fileName, String fileSize, String fileExt, String fileTypeName, int tenantId) throws Exception;

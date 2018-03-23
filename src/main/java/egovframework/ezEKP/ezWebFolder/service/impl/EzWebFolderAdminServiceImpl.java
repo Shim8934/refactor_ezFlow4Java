@@ -587,4 +587,13 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 			}
 		}
 	}
+
+	@Override
+	public UserCapacityVO getUserCapacity(String userId, String lang, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",   userId);
+		map.put("primary",  lang);
+		map.put("tenantId", tenantId);
+		return ezWebFolderAdminDAO.getUserCapacity(map);
+	}
 }

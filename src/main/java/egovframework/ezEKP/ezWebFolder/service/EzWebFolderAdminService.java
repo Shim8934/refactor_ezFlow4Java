@@ -30,4 +30,5 @@ public interface EzWebFolderAdminService {
 	void updateSelectedDeptsForChief(List<String> deptsList, String userId, String offset, int tenantId) throws Exception;
 	void moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, LoginVO userInfo) throws Exception;
 	void addPersonalFolder(LoginVO userInfo) throws Exception;
+	UserCapacityVO getUserCapacity(String userId, String lang, int tenantId) throws Exception;
 }

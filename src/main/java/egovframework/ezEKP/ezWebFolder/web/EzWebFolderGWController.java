@@ -350,7 +350,7 @@ public class EzWebFolderGWController {
 	}
 
 	@RequestMapping(value="/rest/ezwebfolder/filemanage/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, HttpServletRequest request) throws Exception {
+	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) throws Exception {
 		JSONParser jp          = new JSONParser();
 		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);
 		
@@ -373,6 +373,7 @@ public class EzWebFolderGWController {
 		if (nameArray.size() != multiFileLists.size()) {
 			logger.debug("Some files upload failed!");
 			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			result.put("code", 1);
 			result.put("data", "");
 			return result;
@@ -380,8 +381,46 @@ public class EzWebFolderGWController {
 		
 		try {
 			LoginVO userInfo  = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			
+			//Check upload conditions
+			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
+			
+			if (folder.getFolderType().equals("U")) {
+				WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(userInfo.getCompanyID(), userInfo.getTenantId());
+				long limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Long.parseLong(webfolderConfig.getUploadLimit());
+				long totalUploadSize              = 0;
+				
+				for (int i = 0; i < multiFileLists.size(); i++) {
+					totalUploadSize += multiFileLists.get(i).getSize();
+				}
+				
+				if (limitUploadValue * 1073741824 < totalUploadSize) {
+					logger.debug("limited upload value!");
+					result.put("status", "error");
+					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t249", locale));
+					result.put("code", 1);
+					result.put("data", "");
+					return result;
+				}
+				else {
+					UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, lang, userInfo.getTenantId());
+					
+					long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
+					long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+					
+					if (totalUploadSize > (totalCapa - totalUsed)) {
+						logger.debug("Not enough storage to upload these files!");
+						result.put("status", "error");
+						result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
+						result.put("code", 1);
+						result.put("data", "");
+						return result;
+					}
+				}
+			}
+			
 			String realPath   = request.getServletContext().getRealPath("");
-			List<FileVO> list = ezWebFolderService.saveUploadedFiles(multiFileLists, nameArray, folderId, realPath, userInfo);
+			List<FileVO> list = ezWebFolderService.saveUploadedFiles(multiFileLists, nameArray, folder, realPath, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
