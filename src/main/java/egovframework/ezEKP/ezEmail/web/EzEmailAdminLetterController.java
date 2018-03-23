@@ -357,16 +357,14 @@ public class EzEmailAdminLetterController {
 			EzEmailAdminLetterService.updateLetterMove(letterNo, parentLetterBoxNo);
 			
 			String originPath = realPath + filePath;
-			String filePath2 = realPath + commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId()) + commonUtil.separator;
+			String path = realPath + commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId()) + commonUtil.separator;
 			String folderName = parentLetterBoxNo + "/" + letterId;
-			
-			
 			String uploadPath =  commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
-			String result = moveFile(folderName, fileName, originPath, filePath2, filePath2, uploadPath, letterBox, letterId);
+			String result = moveFile(folderName, fileName, originPath, path, uploadPath, letterBox, letterId);
 			
 			
 	        if (result != null) {
-	        	File file = new File(filePath2 + letterBox + "/" + letterId);
+	        	File file = new File(path + letterBox + "/" + letterId);
 	        	if (file.exists()) {
 	        		deleteDirectory(file);
 	        	}
@@ -752,7 +750,7 @@ public class EzEmailAdminLetterController {
 	
 	
 	// 폴더 이동할때 fileroot를 옮기는 함수 (재은)
-	public String moveFile(String folderName, String fileName, String originPath, String copyPath, String filePath2, String uploadPath, String letterBox, String letterId) {
+	public String moveFile(String folderName, String fileName, String originPath, String copyPath, String uploadPath, String letterBox, String letterId) {
         String path = copyPath + "/" + folderName;
         String filePath = path + "/" + fileName;
         File dir = new File(path);
@@ -777,8 +775,8 @@ public class EzEmailAdminLetterController {
             		for (int i = 0; i < imgs.length; i++) {
             			imgs[i].renameTo(new File(newImages.toString() + "/" + imgs[i].getName()));
             		}
-            		// 여기 정리좀 할것
-        			updateFile(new File(filePath2 + folderName + "/" + fileName), uploadPath + "/" + letterBox + "/" + letterId, uploadPath + "/" + folderName); //html img src 경로 고쳐주기
+            		
+        			updateFile(new File(copyPath + folderName + "/" + fileName), uploadPath + "/" + letterBox + "/" + letterId, uploadPath + "/" + folderName); //html img src 경로 고쳐주기
 
             	}
             	
