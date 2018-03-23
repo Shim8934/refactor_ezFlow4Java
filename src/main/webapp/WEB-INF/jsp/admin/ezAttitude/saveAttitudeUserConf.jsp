@@ -19,7 +19,7 @@
 	    <script type="text/javascript" src="/js/ezEmail/Controls/ListView_list.js"></script>	    
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" language="javascript">
-// 		    var ReturnFunction;
+		    var ReturnFunction;
 			
 // 		    $(document).ready(function(){
 // 		    	try {
@@ -38,6 +38,13 @@
 // 		                }
 // 		            }
 // 		        } catch (e) {}
+
+	        function close_Click() {
+	            if (ReturnFunction!=null) {
+	                ReturnFunction();
+	            }
+	            window.close();
+	        }
 	    </script>
 	</head>
 	<body class="popup">
@@ -93,7 +100,7 @@
 	                            <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 	                        </td>
 	                        <td></td>
-	                        <td class="listview" style="width: 426px" id="orglistView">
+	                        <td class="listview" style="width: 326px" id="orglistView">
 	                            <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                <tr>
 	                                    <th style="white-space:normal">
@@ -105,20 +112,22 @@
 	                                    </th>
 	                                </tr>
 	                            </table>
-	                            <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                            <div style="vertical-align: top; height: 440px; overflow: auto; width: 340px;" id="txtlist_Layer">
 	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                    <tr>
-	                                        <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-	                                        <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td>
+	                                    <!-- 이름 직위 전화번호 -->
+<%-- 	                                        <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td> --%>
+<%-- 	                                        <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td> --%>
+<%-- 	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td> --%>
 	                                    </tr>
 	                                </table>
 	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                    <tr>
-	                                        <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t68'/></td>
-	                                        <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-	                                        <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td>
+	                                    <!-- 이름 부서 직위 전화번호 -->
+<%-- 	                                        <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t68'/></td> --%>
+<%-- 	                                        <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td> --%>
+<%-- 	                                        <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td> --%>
+<%-- 	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td> --%>
 	                                    </tr>
 	                                </table>
 	                            </div>
@@ -165,24 +174,17 @@
 	                                    </th>
 	                                </tr>
 	                            </table>
-	                            <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                            <div style="vertical-align: top; overflow: auto; width: 340px;  height: 440px;" id="txtlist_Layer">
 	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                    <tr>
-	                                        <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-	                                        <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td>
-	                                    </tr>
-	                                </table>
-	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
-	                                    <tr>
-	                                        <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t68'/></td>
-	                                        <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-	                                        <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td>
+	                                     <!-- 이름 직위 전화번호 -->
+	                                    
+<%-- 	                                        <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td> --%>
+<%-- 	                                        <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td> --%>
+<%-- 	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td> --%>
 	                                    </tr>
 	                                </table>
 	                            </div>
-	                            <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
 	                        </td>    
 	                    </tr>
 	                </table>

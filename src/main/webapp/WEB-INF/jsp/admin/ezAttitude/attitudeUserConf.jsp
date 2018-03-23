@@ -125,7 +125,7 @@
     	function userConfAddModify(){
     		if (CrossYN()) {
     			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
-    			OpenWin = GetOpenWindow("/admin/ezAttitude/saveAttitudeUserConf.do", "", "1140", "550");
+    			OpenWin = GetOpenWindow("/admin/ezAttitude/saveAttitudeUserConf.do", "", "1140", "630");
     			try { OpenWin.focus();} catch (e) { }
     		} else {
     			showModalDialog("/admin/ezAttitude/saveAttitudeUserConf.do", null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
