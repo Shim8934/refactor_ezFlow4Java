@@ -250,6 +250,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String displayNamePrintable = userInfo.getDisplayName();
 		
+		// set useLetter
+		String useLetter = ezCommonService.getTenantConfig("useLetter", loginInfo.getTenantId());
+		if (useLetter == null || useLetter.equals("")) {
+			useLetter = "NO";
+		}
+		
+		logger.debug("useLetter=" + useLetter);
+		
 		// set serverName
 		String serverName = loginInfo.getServerName();
 		String useMailLinkHostname = ezCommonService.getTenantConfig("useMailLinkHostname", loginInfo.getTenantId());
@@ -1085,6 +1093,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
+		model.addAttribute("useLetter", useLetter);
 		
 		response.setHeader("X-XSS-Protection", "0");
 		
