@@ -291,6 +291,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		for(LadderCommentVO cmt : comments) {
 			String datdStr = commonUtil.getDateStringInUTC(cmt.getWriteDate(), cmtVO.getOffset(), false);
 			cmt.setWriteDate(datdStr);
+			
 			if(lang.equals("2")) {
 				cmt.setUserName(cmt.getUserName2());
 			}
@@ -342,7 +343,6 @@ public class EzLadderServiceImpl implements EzLadderService {
 
 	@Override
 	public void deleteComment(LadderCommentVO cmtVO) throws Exception {
-		
 		ezLadderDAO.deleteComment(cmtVO);
 	}
 

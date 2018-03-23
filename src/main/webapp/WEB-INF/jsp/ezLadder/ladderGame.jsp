@@ -6,8 +6,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Insert title here</title>
+	<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 	<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
@@ -53,10 +54,10 @@
 					setComment("add");
 				} 
 			});
-			$(document).on("click", ".cmtmodify", function() {
-				var cmtId = $(this).attr("id").substring(4);
+			$(document).on("click", "#modify", function() {
+				var cmtId = $(this).attr("cmtid");
 				if($(this).attr("data") === "OK") {
-					if($("#modifyCmtBox").val() !== "") {
+					if($("#modifyCmtBox").text() !== "") {
 						setComment("modify", cmtId);
 					} else {
 						$("#modifyCmtBox").focus();
@@ -65,18 +66,19 @@
 					createModifyInput(cmtId);
 				}
 			});
+			/*:: 인풋박스를 텍스트에리어로 바꾸면서 적용안됨
 			$(document).on("keyup", "#modifyCmtBox", function(e) {
 				if(e.keyCode === 13 && $("#modifyCmtBox").val() !== "") {
-					var cmtId = $("#modifyCmtBox").closest("tr").attr("id").substring(6);
+					var cmtId = $("#modifyCmtBox").parent("div").parent("div").attr("id").substring(6);
 					setComment("modify", cmtId);
 				} 
-			});
+			}); */
 			$(document).on("click", "#mod_cancle", function() {
-				$(".modiTd").remove();
-				$("#cmtTable td").removeClass("hideTd").css("display", "");
+				$(".modiDiv").remove();
+				$("#commentDiv div").css("display", "");
 			});
-			$(document).on("click", ".cmtdelete", function() {
-				var cmtId = $(this).attr("id").substring(4);
+			$(document).on("click", "#delete", function() {
+				var cmtId = $(this).attr("cmtid");
 				setComment("delete", cmtId);
 			})
 		});
@@ -88,10 +90,6 @@
 			var sock = new SockJS("/hello");
 			stompClient = Stomp.over(sock);
 			stompClient.connect({}, function() {
-				stompClient.subscribe("/ladcmt/subscribe/test", function(result) {
-					console.log(result);
-					console.log("ricieve---------");
-				});
 				stompClient.subscribe("/lad/cmt/addCmt/" + ladderId, function(result) {
 					var cmtjson = JSON.parse(result.body);
 					
@@ -103,7 +101,7 @@
 				stompClient.subscribe("/lad/cmt/modifyCmt/" + ladderId, function(result) {
 					var cmtjson = JSON.parse(result.body);
 					
-					$("#cmtTr_" + cmtjson["id"]).remove();
+					$("#cmt_" + cmtjson["id"]).parent(".cmt_wrap").remove();
 					
 					addCommentView["type"] = "prepend";
 					addCommentView["contents"] = cmtjson;
@@ -113,23 +111,31 @@
 				stompClient.subscribe("/lad/cmt/deleteCmt/" + ladderId, function(result) {
 					var cmtjson = JSON.parse(result.body);
 					
-					$("#cmtTr_" + cmtjson["id"]).remove();
+					$("#cmt_" + cmtjson["id"]).parent(".cmt_wrap").remove();
 				});
 			});
 		}
 		
 		function createModifyInput(cmtId) {
-			var origCmt = $("#cmtTr_" + cmtId + " td:eq(1)").text();
-			$(".modiTd").remove();
-			$("#cmtTable td").removeClass("hideTd").css("display", "");
-			$("#cmtTr_" + cmtId + " td").not("td:eq(0)").addClass("hideTd").css("display", "none");
+			var origCmt = $("#cmt_" + cmtId + " #comment").text();
+			var cmtH = $("#cmt_" + cmtId).css("height").substring(0, $("#cmt_" + cmtId).css("height").length-2) - 4;
+			
+			$(".modiDiv").remove();
+			$("#commentDiv div").css("display", "");
+			$("#cmt_" + cmtId + " div").not("#name").css("display", "none");
 			
 			var html = "";
-			html += "<td colspan='2' class='modiTd'><input type='text' id='modifyCmtBox' value='" + origCmt + "' style='width: 100%;' /></td>";
-			html += "<td class='modiTd'><div id='mod_" + cmtId + "' data='OK' class='cmtmodify'>확인</div></td>";
-			html += "<td class='modiTd'><div id='mod_cancle' class='cmtmodify'>취소</div></td>";
+			html += "<div class='modiDiv'><textarea id='modifyCmtBox' style='height: " + cmtH + "px'>" + origCmt + "</textarea></div>"
+			html += "<div class='modiDiv icon_wrap'>";
+			html += "<div id='modify' cmtid='" + cmtId + "' data='OK' class='icondiv' style='left: 0;'>확인</div>";
+			html += "<div id='mod_cancle' class='icondiv' style='right: 0;'>취소</div>";
+			html += "</div>";
 			
-			$("#cmtTr_" + cmtId).append(html);
+			/* html += "<td colspan='2' class='modiTd'><input type='text' id='modifyCmtBox' value='" + origCmt + "' style='width: 100%;' /></td>";
+			html += "<td class='modiTd'><div id='mod_" + cmtId + "' data='OK' class='cmtmodify'>확인</div></td>";
+			html += "<td class='modiTd'><div id='mod_cancle' class='cmtmodify'>취소</div></td>"; */
+			
+			$("#cmt_" + cmtId).append(html);
 			$("#modifyCmtBox").select();
 		}
 		
@@ -140,8 +146,8 @@
 				$("#inputCmtBox").val("");
 			} else if(flag === "modify") {
 				console.log(cmtId);
-				comment = $("#cmtTr_" + cmtId + " input").val();
-				$("#cmtTr_" + cmtId + " input").val("");
+				comment = $("#cmt_" + cmtId + " #modifyCmtBox").text();
+				$("#cmt_" + cmtId + " #modifyCmtBox").text("");
 			} 
 			
 			$.ajax({
@@ -192,7 +198,22 @@
 			var cmt = addCommentView["contents"];
 			var type = addCommentView["type"];
 			
-			html += "<tr id='cmtTr_" + cmt["id"] + "'>";
+			html += "<div class='cmt_wrap'>";
+			html += "<div id='cmt_" + cmt["id"] + "' class='cmt'>";
+			html += "<div id='name'>" + cmt["userName"] + "</div>";
+			html += "<div id='comment'>" + cmt["comment"] + "</div>";
+			html += "<div id='date'>" + cmt["writeDate"] + "</div>";
+			html += "<div class='icon_wrap'>";
+			if(id === cmt["userId"]) {
+				html += "<div id='modify' cmtid='" + cmt["id"] + "' class='icondiv' style='left: 0;'>수정</div>";
+				html += "<div id='delete' cmtid='" + cmt["id"] + "' class='icondiv' style='right: 0;'>삭제</div>";
+			} else {
+				html += "<div class='icondiv' style='left: 0; background: beige; cursor: default;'>수정</div>";
+				html += "<div class='icondiv' style='right: 0; background: beige; cursor: default;'>삭제</div>";
+			}
+			html += "</div></div></div>";
+			
+			/* html += "<tr id='cmtTr_" + cmt["id"] + "'>";
 			html += "<td>" + cmt["userName"] + "</td>";
 			html += "<td>" + cmt["comment"] + "</td>";
 			html += "<td>" + cmt["writeDate"] + "</td>";
@@ -203,12 +224,12 @@
 				html += "<td><div style='color: beige;'>modify</div></td>";
 				html += "<td><div style='color: beige;'>delete</div></td>";
 			}
-			html += "</tr>";
+			html += "</tr>"; */
 			
 			if(type === "append") {
-				$("#cmtTable").append(html);
+				$("#commentDiv").append(html);
 			} else {
-				$("#cmtTable").prepend(html);
+				$("#commentDiv").prepend(html);
 			}
 			
 			addCommentView = [];
@@ -310,16 +331,12 @@
 			
 		</div>
 		
-<div>
-	<table style="width: 100%;">
-		<tr>
-			<td>
-				<input type="text" id="inputCmtBox" placeholder="댓글작성칸" style="width: 90%;"/>
-				<button id="saveCmtBtn">댓글 등록</button>
-			</td>
-		</tr>
-	</table>
-	<table id="cmtTable" style="width: 100%;"></table>
+<div style="padding: 0px 50px;">
+	<div class="cmtInput_wrap">
+		<div class="cmtInputDiv"><input type="text" id="inputCmtBox" style="width: 100%; height: 100%; padding: 0px 30px;"></div>
+		<div id="saveCmtBtn">댓글 등록</div>
+	</div>
+	<div id="commentDiv" style="width: 100%"></div>
 
 	<button onclick="sendTest()">socket test!!</button>
 </div>

@@ -63,6 +63,10 @@
     cursor: pointer;
 }
 
+.icondiv:HOVER {
+	background: beige;
+}
+
 #ladderPreList {
 	position: absolute;
     right: 0px;
@@ -213,4 +217,89 @@
     width: 252px;
     border: 1px solid gray;
     text-align: center;
+}
+
+/** 사다리 조회창 */
+.cmtInput_wrap {
+    width: 100%;
+    min-width: 1000px;
+	height: 45px;
+    position: relative;
+    display: block;
+    margin: 20px 0px;
+}
+
+.cmtInputDiv {
+	height: 45px;
+    display: inline-block;
+    margin-right: 10px;
+    float: left;
+    position: absolute;
+    left: 0px;
+    right: 130px;
+}
+
+#saveCmtBtn {
+	height: 100%;
+    width: 130px;
+    border: 1px solid black;
+    display: inline-block;
+    float: right;
+    cursor: pointer;
+}
+
+.cmt_wrap {
+	width: 100%;
+    min-width: 1000px;
+    border: 1px solid #cfcfcf;
+    padding: 10px 30px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.cmt {
+	position: relative;
+    display: table;
+    width: 100%;
+}
+
+.cmt > div {
+	display: table-cell;
+	padding: 0px 30px 0px 10px;
+	vertical-align: middle;
+}
+
+.cmt #name {
+	width: 180px;
+    border-right: 1px solid #999;
+}
+
+.cmt #date {
+	width: 200px;
+}
+
+.icon_wrap {
+	width: 100px;
+    position: relative;
+    height: 45px;
+}
+
+.icon_wrap > .icondiv {
+	position: absolute;
+	top: 0;
+}
+
+.hideDiv {
+	display: none;
+}
+
+#modifyCmtBox {
+	display: block;
+    padding: 0;
+    position: relative;
+    top: -2px;
+    left: 0;
+    width: 100%;
+    overflow-y: auto;
+    resize: none;
 }
