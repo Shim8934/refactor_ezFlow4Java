@@ -7,21 +7,24 @@
 		<title>title</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+<!-- 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css"> -->
 	    <style>
 	    	.box {
 	    		border-right:0px;
 	    	}
 	    </style>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls/ListView_list.js"></script>	    
+<!-- 	    <script type="text/javascript" src="/js/mouseeffect.js"></script> -->
+<!-- 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script> -->
+<!-- 	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script> -->
+<!-- 	    <script type="text/javascript" src="/js/ezEmail/Controls/ListView_list.js"></script>	     -->
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/jstree/jstree.js"></script>
 		<script type="text/javascript" language="javascript">
 		    var ReturnFunction;
+		    var treeContent = ${deptList};
 			
-// 		    $(document).ready(function(){
+		    $(document).ready(function(){
+		    	setDeptList();
 // 		    	try {
 // 	                ReturnFunction = opener.permissions_check_dialogArguments[1];
 // 	            } catch (e) {}	        
@@ -38,7 +41,48 @@
 // 		                }
 // 		            }
 // 		        } catch (e) {}
-
+		    })
+		    //부서 리스트
+	   		function setDeptList(){
+				$('#treeView').on('changed.jstree', function (e, data) {
+			     	var id = data.instance.get_node(data.selected).id;
+					setUserList("DEPARTMENT",id);
+				  })
+				.jstree({ 
+					'core' : {'data' : treeContent},
+					'plugins': ["wholerow"],
+					 'themes' : {'responsive' : true}
+				});
+	   		}
+	   		//사원 리스트 뿌리기
+	   		function setUserList(key,value){
+	   			$.ajax({
+	   				type:"post",
+	   				dataType:"html",
+	   				url:"/admin/ezJournal/userList.do",
+	   				data:{"key":key, "value":value},
+	   				success: function(result){
+	   					$("#orglistView").html(result);
+	   				}
+	   			});
+	   		}
+	   		//선택된 사원의 권한 부서 보여주기
+	   		function setUserAuthorDept(elem){
+	   			selectedUser = $(elem).attr("id");
+	   			selectedUserName = $(elem).attr("name");
+	   			$("*").removeClass("selectTR");
+	   			$(elem).addClass("selectTR");
+	   			$.ajax({
+	   				type:"post",
+	   				dataType:"html",
+	   				url:"/admin/ezJournal/authorDeptList.do",
+	   				data:{"userId":$(elem).attr("id")},
+	   				success: function(result){
+	   					$("#authorDeptList").html(result);
+	   				}
+	   			});
+	   		}
+		    
 	        function close_Click() {
 	            if (ReturnFunction!=null) {
 	                ReturnFunction();
@@ -60,7 +104,7 @@
 	    </div>
 	    <table id="TreeViewTD">
 	        <tr>
-	        	<td style="width: 450px;">
+	        	<td style="width: 650px;">
 	                <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
 	                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
 	                        <table style="margin-top: 3px; width: 100%;">
@@ -97,10 +141,10 @@
 	                <table style="margin-top: 3px;">
 	                    <tr>
 	                        <td class="box">
-	                            <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+	                            <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="treeView"></div>
 	                        </td>
 	                        <td></td>
-	                        <td class="listview" style="width: 326px" id="orglistView">
+	                        <td class="listview" style="width: 426px" id="orglistView">
 	                            <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                <tr>
 	                                    <th style="white-space:normal">
@@ -112,13 +156,13 @@
 	                                    </th>
 	                                </tr>
 	                            </table>
-	                            <div style="vertical-align: top; height: 440px; overflow: auto; width: 340px;" id="txtlist_Layer">
+	                            <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                    <tr>
 	                                    <!-- 이름 직위 전화번호 -->
-<%-- 	                                        <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td> --%>
-<%-- 	                                        <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td> --%>
-<%-- 	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td> --%>
+	                                        <td style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
+	                                        <td style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
+	                                        <td class="td_gray" style="width: 60%;font-weight: bold;"><spring:message code='ezOrgan.t97'/></td>
 	                                    </tr>
 	                                </table>
 	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">

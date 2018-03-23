@@ -491,8 +491,6 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("saveAttutideType started.");
 		
-		// 수정 /rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}    PUT
-		// 추가 /rest/ezattitude/companies/{companyId}/attitudetypes					   POST
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String companyId = request.getParameter("companyId");
@@ -652,8 +650,61 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeUserConf.do")
-	public String saveAttitudeUserConf() {
+	public String saveAttitudeUserConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		
+		LOGGER.debug("/admin/ezAttitude/saveAttitudeUserConf started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezjournal/depts";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		
+		JSONObject jObject = new JSONObject();
+		if (status.equals("ok")) {
+			JSONArray deptList = (JSONArray) resultBody.get("data");
+			
+			for (int i = 0; i < deptList.size(); i++) {
+				JSONObject dept =  (JSONObject) deptList.get(i);
+				if (dept.get("isComp").equals("comp")) {
+					dept.put("icon", "icon-company");
+				} else{
+					dept.put("icon", "icon-dept");
+				}
+				if (dept.get("myDept").equals("yes")) {
+					JSONObject state = new JSONObject();
+					state.put("opened", "true");
+					state.put("selected", "true");
+					dept.put("state", state);
+				}
+			}
+			
+			model.addAttribute("deptList", deptList);
+		}
+		
+		
+		LOGGER.debug("/admin/ezAttitude/saveAttitudeUserConf ended");
 		
 		return "admin/ezAttitude/saveAttitudeUserConf";
 	}

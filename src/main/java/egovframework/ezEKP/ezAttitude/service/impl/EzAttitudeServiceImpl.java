@@ -423,7 +423,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeUserConfigList started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		int limit = (Integer.valueOf(pageNum) - 1) * 10;
+		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("searchUserName", searchUserName);

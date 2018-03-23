@@ -1631,7 +1631,7 @@ public class EzJournalGWController {
 			
 			LOGGER.debug("userId : " + userId);
 			
-			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, info.getCompanyId(), info.getTenantId() + "");
+			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, request.getParameter("companyId"), info.getTenantId() + "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);
