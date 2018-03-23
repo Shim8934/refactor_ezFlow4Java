@@ -220,16 +220,17 @@
 	        }
 	        var selsd = "", seled = "";
 
-	        if (GetAttribute(srcEl,"dispDate") == null) {
-	            if (GetAttribute(srcEl,"dispTime") != null) {
+	        if (srcEl.getAttribute("dispdate") == null) {
+	            if (srcEl.getAttribute("disptime") != null) {
 
-	                selsd = GetAttribute(srcEl,"dispTime");
+	                selsd = srcEl.getAttribute("disptime");
 	                seled = selsd.replace(":00:", ":30:");
 	            }
 	        } else {
-	            selsd = GetAttribute(srcEl,"dispDate");
-            	seled = GetAttribute(srcEl,"dispDate");
+	            selsd = srcEl.getAttribute("dispdate");
+            	seled = srcEl.getAttribute("dispdate");
 	        }
+	       
 	        var feature = GetOpenPosition(820, 700);
 	        if (CrossYN() || pNoneActiveX == "YES") {
 	        	window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}&brdName=" + encodeURIComponent("${brdNm}"), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
