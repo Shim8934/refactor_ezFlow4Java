@@ -92,28 +92,53 @@
 				SELECT 
 					* 
 				FROM (
-						SELECT 
-							* 
-						FROM ( 
-								SELECT 
-									* 
-								FROM 
-									(
-										SELECT 
-											* 
-										FROM 
-											VAPRDOINGDOCLIST 
-					      				WHERE 
-					      					aprmemberid IN ($v_USERIDS$) 
-					      				AND 
-					      					aprtype <> '015'  
-					      				AND 
-					      					tenant_id = #v_TENANTID# 
+					SELECT 
+						* 
+					FROM (
+							SELECT 
+								* 
+							FROM ( 
+									SELECT 
+										* 
+									FROM 
+										(
+											SELECT 
+												* 
+											FROM 
+												VAPRDOINGDOCLIST 
+						      				WHERE 
+						      					aprmemberid IN ($v_USERIDS$) 
+						      				AND 
+						      					aprtype <> '015'  
+						      				AND 
+						      					tenant_id = #v_TENANTID# 
+						      				AND 
+						      					COMPANYID = #companyID#
 	      		]]>
 				      		<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 							      		AND 
 							      		 	$v_SPSUBQUERY$
 				      		</isGreaterThan>
+				      		 <![CDATA[
+							  UNION ALL
+								
+							  SELECT 
+								*
+							  FROM 
+								 VENDCHAMJODOCINFO 
+							  WHERE 
+		      					aprmemberid IN ($v_USERIDS$) 
+		      				  AND 
+		      					aprtype <> '015'  
+		      				  AND 
+		      					tenant_id = #v_TENANTID#
+		      				  AND
+		      					COMPANYID = #companyID# 
+					      	]]>
+					      	<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
+							      		  AND 
+							      		 	$v_SPSUBQUERY$
+		      				</isGreaterThan> )
 				      		<isNotEmpty property="v_ORDEROPTION"> 
 				      		<isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="9" >
 								<isEqual property="v_ORDEROPTIONVALUE" compareValue="startdate">
@@ -190,6 +215,8 @@
 		         						DocState <> '017'
 		         					AND 
 					      				TENANT_ID = #v_TENANTID# 
+					      			AND
+					      				COMPANYID = #companyID#
          		]]>
 			         		<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 				      			    AND 
@@ -288,11 +315,20 @@
 			            				VAPRWILLDOCLIST  
 			            			WHERE 
 			            				APRMEMBERID = #v_USERID# 
-			            			AND 
+			            			]]>
+			            		<isEqual property="MineViewYN" compareValue="YES">
+			            			AND	    
+										AprState != '001'
+			            		</isEqual>
+			            		    
+								<![CDATA[
+									AND
 			            				AprType <> '015'
+			            		]]>
 			            			AND 
-					      				TENANT_ID = #v_TENANTID# 	
-            ]]>
+					      				TENANT_ID = #v_TENANTID# 
+					      			AND
+					      				COMPANYID = #companyID#	
 			                <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 				      		 		AND 
 				      		 			$v_SPSUBQUERY$
@@ -367,6 +403,8 @@
 		               					APRTYPE = '015'
 		               				AND 
 					      				TENANT_ID = #v_TENANTID# 
+					      			AND
+              							COMPANYID = #companyID#
               ]]>
 			               	<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 				      		 		AND 
@@ -479,7 +517,9 @@
 		                  	ON 
 		                  		TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID 
 		                    AND 
-		                  		TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID  
+		                  		TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID 
+		                  	AND
+		                  		TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID  
 		                  	INNER JOIN 
 		                  		TBL_EXPAPRDOCINFO 
 		                  	ON 
@@ -494,6 +534,8 @@
 		                  		TBL_APRLINEINFO.AprState = '010'
 		                  	AND 
 					      		TBL_APRLINEINFO.TENANT_ID = #v_TENANTID# 
+					      	AND
+					      		TBL_APRLINEINFO.COMPANYID = #companyID#
                 ]]>
 		                <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 			      		    AND 
@@ -601,6 +643,8 @@
 		                         A.OWNERID= #v_USERID#
 		                     AND 
 		                     	A.TENANT_ID = #v_TENANTID#
+		                     AND
+		                     	A.COMPANYID = #companyID#
                  ]]>
 		                 <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 			      		 	AND 
@@ -680,6 +724,8 @@
 		                     							APRMEMBERID IN ($v_USERIDS$)
 		                     						AND 
 		                     							TENANT_ID = #v_TENANTID#
+		                     						AND
+		                     							COMPANYID = #companyID#
                      				]]>
 		                     						<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 										      		AND 
