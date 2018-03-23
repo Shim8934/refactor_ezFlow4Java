@@ -33,12 +33,15 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGAdminServiceImpl;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -77,6 +80,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzApprovalGAdminService ezApprovalGAdminService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private EgovMessageSource egovMessageSource;
@@ -3208,16 +3214,151 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 전자결재g 관리자 문서이동 문서함 문서 표출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getDocListjson.do")
+	public String getDocList_json(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model  model) throws Exception {
+		logger.debug("getDocListjson started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String contID = request.getParameter("contID");
+		String pageNum = request.getParameter("pageNum");
+		String companyID = request.getParameter("companyID");
+		String pSelectTab = request.getParameter("pSelectTab");
+		StringBuilder subQuery = new StringBuilder();
+		boolean publicFlag = false;
+		boolean securityFlag = false;
+		String userSecurityCode = "";
+		String startDate = "";
+		String endDate = "";
+		List<ApprGDocListVO> list = null;
+		
+		if (pageNum == null || pageNum.equals("")) {
+			pageNum = "1";
+		}
+		int totalcnt = 0;
+		int maxItemPerPage = 20; 
+		int currentPage = Integer.parseInt(pageNum);
+		int startRow = (Integer.parseInt(pageNum) - 1) * maxItemPerPage;
+		if (pageNum.equals("-1")) {
+			startRow = -1;
+		}
+		logger.debug("companyID :: "+companyID);
+		if (ezApprovalGAdminService.getIsUse("A22", "001", companyID, userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
+			securityFlag = true;
+		}
+		
+		if (ezApprovalGAdminService.getIsUse("A22", "004", companyID, userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
+			publicFlag = true;
+		}
+		
+		if (securityFlag) {
+			userSecurityCode = ezOrganService.getPropertyValue("", "extensionAttribute6", userInfo.getTenantId());
+		}
+		
+		if (userSecurityCode == null || userSecurityCode.equals("")) {
+			userSecurityCode = "0";
+		}
+		
+		if (request.getParameter("docNO") != null && !request.getParameter("docNO").equals("")) {
+			subQuery.append(" TBL_ENDAPRDOCINFO.docNO LIKE '%" + request.getParameter("docNO") + "%' ");
+		}
+		
+		if (request.getParameter("docTitle") != null && !request.getParameter("docTitle").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" TBL_ENDAPRDOCINFO.docTitle LIKE '%" + request.getParameter("docTitle") + "%' ");
+		}
+		
+		if (request.getParameter("drafter") != null && !request.getParameter("drafter").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" (TBL_ENDAPRDOCINFO.writerName LIKE '%" + request.getParameter("drafter") + "%' OR TBL_ENDAPRDOCINFO.writerName2 LIKE '%" + request.getParameter("drafter") + "%')");
+		}
+		
+		if (request.getParameter("aprFrom") != null && !request.getParameter("aprFrom").equals("") && request.getParameter("aprTo") != null && !request.getParameter("aprTo").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}
+			if (pSelectTab.equals("completedoclist")) {
+				subQuery.append(" (TBL_ENDAPRDOCINFO.EndDate >= '" + commonUtil.getDateStringInUTC(request.getParameter("aprFrom"), userInfo.getOffset(), false) + " 00:00:00' AND TBL_ENDAPRDOCINFO.EndDate <= '" + commonUtil.getDateStringInUTC(request.getParameter("aprTo"), userInfo.getOffset(), false) + " 23:59:59')");
+			} else {
+				subQuery.append(" (TBL_DOCDELETEHISTORY.deletetime >= '" + commonUtil.getDateStringInUTC(request.getParameter("aprFrom"), userInfo.getOffset(), false) + " 00:00:00' AND TBL_DOCDELETEHISTORY.deletetime <= '" + commonUtil.getDateStringInUTC(request.getParameter("aprTo"), userInfo.getOffset(), false) + " 23:59:59')");
+			}
+		}
+		
+		if (request.getParameter("deptName") != null && !request.getParameter("deptName").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" (TBL_ENDAPRDOCINFO.writerDeptName LIKE '%" + request.getParameter("deptName") + "%' OR TBL_ENDAPRDOCINFO.writerDeptName2 LIKE '%" + request.getParameter("deptName") + "%')");
+		}
+		
+		if (request.getParameter("formID") != null && !request.getParameter("formID").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" TBL_ENDAPRDOCINFO.formId ='" + request.getParameter("formID") + "'");
+		}
+
+		if (pSelectTab.equals("completedoclist")) {
+			totalcnt = ezApprovalGAdminService.getContDocListCountjson(contID, "", userSecurityCode, publicFlag, subQuery.toString(), companyID, userInfo.getTenantId());
+		} else {
+			totalcnt = ezApprovalGAdminService.getDeleteDocListCountjson("", userSecurityCode, publicFlag, subQuery.toString(), companyID, userInfo.getTenantId());
+		}
+		
+		int totalPage = totalcnt / maxItemPerPage ;
+		
+		if (totalcnt < 1) {
+			totalPage = 1;
+		} 
+		
+		if ((totalPage * maxItemPerPage) != totalcnt && (totalcnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1 ;
+		}
+		
+		currentPage = Math.min(currentPage, totalPage);	
+		
+		if (pSelectTab.equals("completedoclist")) { 
+			
+			list = ezApprovalGAdminService.getContDocList_json(contID, "", userSecurityCode, publicFlag, subQuery.toString(), startRow, maxItemPerPage, pageNum, "", "", totalcnt, companyID, userInfo.getLang(), userInfo.getTenantId(), commonUtil.getMinuteUTC(userInfo.getOffset()), userInfo.getLocale());
+			
+		} else {
+			
+			list = ezApprovalGAdminService.getDeleteDocList_json("", subQuery.toString(), startRow, maxItemPerPage, pageNum, totalcnt, companyID, userInfo.getTenantId(),commonUtil.getMinuteUTC(userInfo.getOffset()), userInfo.getLang(), userInfo.getLocale());
+			
+		}
+		model.addAttribute("DocDeleteHistList", list);
+		model.addAttribute("totalcnt",totalcnt);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("currPage", currentPage);
+		model.addAttribute("pSelectTab", pSelectTab);
+		
+		
+		logger.debug("subQuery  :: "+subQuery);
+		logger.debug("getDocListjson ended");
+		
+		return "json";
+	}
+	
+	/**
 	 * 전자결재g 관리자 문서이동 로직
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/moveContainer.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String moveContainer(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
+	public String moveContainer(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("moveContainer started");
 		
+		String strMoveListIDInfo = request.getParameter("strMoveListIDInfo");
+		String SourceContID = request.getParameter("SourceContID");
+		String TargetContID = request.getParameter("TargetContID");
+		String chkAll = request.getParameter("chkAll");
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-		String result = ezApprovalGAdminService.moveDocList(xmlPara, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		String result = ezApprovalGAdminService.moveDocList(strMoveListIDInfo, SourceContID, TargetContID, chkAll, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("moveContainer ended");
 		
@@ -3305,6 +3446,29 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	/**
+	 * 전자결재g 관리자 문서삭제 삭제 로직
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/delDocListjson.do")
+	public String delDocListjson(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model  model) throws Exception {
+		logger.debug("delDocListjson started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String DocDelIDArr[] = request.getParameter("docIDList").split(";");
+		String DocDelNoArr[] = request.getParameter("docNoList").split(";");
+		String DocDelTitleArr[] = request.getParameter("docTitleList").split(";");
+		String DocDelWriterNameArr[] = request.getParameter("WriterNameList").split(";");
+		String DocDelDeptNameArr[] = request.getParameter("DeptNameList").split(";");
+		String deleteDay = request.getParameter("deleteDay");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalGAdminService.deleteDocListjson(DocDelIDArr, DocDelNoArr, DocDelTitleArr, DocDelWriterNameArr, DocDelDeptNameArr, deleteDay, userInfo.getId(), userInfo.getOffset(), companyID, userInfo.getTenantId());
+		
+		logger.debug("delDocListjson ended");
+		
+		return "json";
+	}
+	
 	
 	/**
 	 * 전자결재G 관리자 HWP양식작성기 연동정보 저장 실행함수

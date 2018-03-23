@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAutoRuleVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
@@ -399,6 +400,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdminDAO.deleteDocList", map);
 	}
 	
+	public void deleteDocListjson(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdminDAO.deleteDocListjson", map);
+	}
+	
 	public void deleteAllDocList(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdminDAO.deleteAllDocList", map);
 	}
@@ -487,5 +492,27 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	
 	public String getParentContName(Map<String, Object> map) {
 		return (String) select("EzApprovalGAdminDAO.getParentContName", map);
+	}
+	
+	public int getContDocListCountjson(Map<String, Object> map) throws Exception{
+		return (int)select("EzApprovalGAdminDAO.getContDocListCountjson", map);
+	}
+	
+	public int getDeleteDocListCountjson(Map<String, Object> map) throws Exception{
+		return (int)select("EzApprovalGAdminDAO.getDeletetDocListCountjson", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getContDocListjson(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalGAdminDAO.getContDocListjson", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getDeleteDocListjson(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalGAdminDAO.getDeleteDocListjson", map);
+	}
+	
+	public void insertDelDoc(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertDelDoc", map);
 	}
 }
