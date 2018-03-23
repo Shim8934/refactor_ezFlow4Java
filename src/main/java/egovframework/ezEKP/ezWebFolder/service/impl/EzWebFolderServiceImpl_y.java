@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
+import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -22,8 +24,14 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderService_y")
 public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
-	@Resource(name = "EzWebFolderDAO_y")
-	private EzWebFolderDAO_y ezWebFolderDAO;
+	@Autowired
+	private EzWebFolderDAO_y ezWebFolderDAO_y;
+	
+//	@Resource(name = "ezWebFolderAdminDAO")
+//	private EzWebFolderAdminDAO ezWebFolderAdminDAO;
+	
+//	@Resource(name = "ezWebFolderAdminServiceImpl")
+//	private EzWebFolderAdminServiceImpl ezWebFolderAdminServiceImpl;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderServiceImpl_y.class);
 	
@@ -37,7 +45,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("comId", comId);
 		map.put("userId", userId);
 		
-		LoginVO userInfo = ezWebFolderDAO.getUserInfo(map);
+		LoginVO userInfo = ezWebFolderDAO_y.getUserInfo(map);
 		return userInfo;
 	}
 	
@@ -52,7 +60,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId",folderId);
 		map.put("tenantId",tenantId);
-		parentId = ezWebFolderDAO.getparentId (map);
+		parentId = ezWebFolderDAO_y.getparentId (map);
 		
 		map.put("deptId", deptId);
 		map.put("userId", userId);
@@ -70,7 +78,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("pStart", pStart);
 		map.put("pEnd", pEnd);
 		
-		List<FileVO> filevo = (List<FileVO>) ezWebFolderDAO.getFileList(map);
+		List<FileVO> filevo = (List<FileVO>) ezWebFolderDAO_y.getFileList(map);
 		return filevo;
 	}
 	
@@ -85,7 +93,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId",folderId);
 		map.put("tenantId",tenantId);
-		parentId = ezWebFolderDAO.getparentId (map);
+		parentId = ezWebFolderDAO_y.getparentId (map);
 		
 		map.put("parentId", parentId);
 		map.put("folderType",folderType);
@@ -100,7 +108,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("searchListCount", searchListCount);
 		map.put("pStart", pStart);
 		map.put("pEnd", pEnd);
-		int totalCnt = ezWebFolderDAO.getFileTotalCount(map);
+		int totalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
 		System.out.println(totalCnt);
 		String test_totalCnt = totalCnt+"";
 		LOGGER.debug(test_totalCnt);
@@ -131,13 +139,13 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		if ( folderType.equals("C")) {
 			if (admin.equals("ad")) {
-				folderList = ezWebFolderDAO.getFolderListAd(map);
+				folderList = ezWebFolderDAO_y.getFolderListAd(map);
 			} else {
-				folderList = ezWebFolderDAO.getFolderList(map);
+				folderList = ezWebFolderDAO_y.getFolderList(map);
 			}
 		}else if ( folderType.equals("D")) {
 			// 겸직인지 아닌지 판단하는 메서드 
-/*			addJob = ezWebFolderDAO.getAddJobList(map);
+/*			addJob = ezWebFolderDAO_y.getAddJobList(map);
 
 			// size == 0이면 겸직 하지 않는다 
 			if (addJob.size() == 0) {
@@ -157,10 +165,10 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 					// 이건 부서장
 					if ( deptHead.equals(userId)) { 
 						// 본인 부서랑 상대 하위부서 추가 하는 메서드 
-						deptFolder = ezWebFolderDAO.getFolderListDept(map);
+						deptFolder = ezWebFolderDAO_y.getFolderListDept(map);
 						
 					} else { // 부서장이 아니다 
-						deptFolder = ezWebFolderDAO.getDeptFolder(map);
+						deptFolder = ezWebFolderDAO_y.getDeptFolder(map);
 					}
 					folderList.addAll(deptFolder);
 					// 부서장인지 판단하고 부서장이면 하위폴더id를 가져오고 부서장이 아니면 본인의 폴더 id를 가져온다 
@@ -170,11 +178,11 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			}
 			*/
 			
-			folderList = ezWebFolderDAO.deptTest(map);
+			folderList = ezWebFolderDAO_y.getDeptFolder(map);
 		}else if ( folderType.equals("U")) {
-			folderList = ezWebFolderDAO.getFolderListUser(map);
+			folderList = ezWebFolderDAO_y.getFolderListUser(map);
 		}else if ( folderType.equals("")) {
-			folderList = ezWebFolderDAO.getFolderListAll(map);
+			folderList = ezWebFolderDAO_y.getFolderListAll(map);
 		}
 		
 		System.out.println(folderList.size());
@@ -193,7 +201,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("tenantId", tenantId);
 		map.put("comId", comId);
 		map.put("userId", userId);
-		uppFolder = ezWebFolderDAO.getFolderDetail(map);
+		uppFolder = ezWebFolderDAO_y.getFolderDetail(map);
 		
 		return uppFolder;
 	}
@@ -210,7 +218,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("tenantId", 	 tenantId);
 		if (uppFolder != null){
 			map.put("folderUppId",	 uppFolder.getFolderId());
-			int folderStep = ezWebFolderDAO.getFolderStep(map);
+			int folderStep = ezWebFolderDAO_y.getFolderStep(map);
 			
 			map.put("folderType",	 uppFolder.getFolderType());
 			map.put("folderStep",	 folderStep );
@@ -255,35 +263,10 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		
 		System.out.println("dao가기 바로 직전");
-		String result = ezWebFolderDAO.insertFolder(map);
+		String result = ezWebFolderDAO_y.insertFolder(map);
 		System.out.println("여기는 insertFolder_serviceImpl_ result후 result");
 		System.out.println(result + ""+ "값이 돌아왔습니다.");
-		/*
-		// FOLDERUSER에 INSERT해야함 
-		if (uppFolder == null ) {
-//			if ( uppFolder.getFolderUpper().equals("root")){
-				// 두번째 depth의 폴더 
-				map.put("deptId", loginvo.getDeptID());
-				String folderUsr = ezWebFolderDAO.insertFolderUsr(map);
-				// 이 부서를 겸직하고 있는 사람의 list를 가져온다 
-				List<Map<String, Object>> deptAddJob = ezWebFolderDAO.getDeptAddJobList(map);
-				if(deptAddJob.size()!=0) {
-					for (int i= 0; i<deptAddJob.size(); i++) {
-						String cn = (String) deptAddJob.get(i).get("cn");							// 이부서를 겸직하고 있는 사람들  
-						map.put("userId", cn);
-						map.put("userType", "addJob");
-						ezWebFolderDAO.insertFolderUsr(map);
-					}
-					
-				}else {
-					map.put("userId", loginvo.getDeptID());
-					map.put("userType", "dept");
-					ezWebFolderDAO.insertFolderUsr(map);
-				}
-//			}
-		}
-		*/
-		
+
 		if ( result.equals(null)) {
 			result = "fail";
 		} else {
@@ -304,7 +287,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("deptId", deptId);		
 		map.put("comId", comId);		
 		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
-		result = ezWebFolderDAO.getDeptFolder(map);
+		result = ezWebFolderDAO_y.getDeptFolder(map);
 		return result;
 	}
 
@@ -319,7 +302,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("deptId", deptId);		
 		map.put("comId", comId);		
 		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
-		result = ezWebFolderDAO.getAddJobList(map);
+		result = ezWebFolderDAO_y.getAddJobList(map);
 		return result;
 	}
 	// 부서장인지 확인하고 dept가져오는 메서드
@@ -344,7 +327,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("folderType", folderType);		
 		
 		//해당 폴더가 있으면 flag=1, 없으면 flag=0을 반환
-		int  result = ezWebFolderDAO.existFolderChk(map);
+		int  result = ezWebFolderDAO_y.existFolderChk(map);
 //		boolean result2 = true;
 //		
 //		if (result == 1) {
@@ -375,7 +358,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("comId", comId);
 		map.put("folderType", folderType);
 		map.put("tenantId", tenantId);
-		addJob = ezWebFolderDAO.getAddJobList(map);
+		addJob = ezWebFolderDAO_y.getAddJobList(map);
 		
 		Map<String, Object> insertMap = new HashMap<String, Object>();
 		String searchAddJob = "";
@@ -386,8 +369,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			for (int i = 0; i<addJob.size(); i++) {
 				String cn = (String) addJob.get(i).get("cn");							// 겸직 부서명
 				map.put("deptId", cn);
-				allDeptheader = ezWebFolderDAO.getDeptSub(map);
-				String deptHeader = (String) allDeptheader.get(i).get("EXTENSIONATTRIBUTE9");
+				allDeptheader = ezWebFolderDAO_y.getDeptSub(map);
+				String deptHeader = (String) allDeptheader.get(0).get("EXTENSIONATTRIBUTE9");
 				// 겸직부서의 이놈이 부서장인지를 판단하는 것 
 				// |이놈| 이놈 아님 | 빈놈
 				map.put("deptId", cn);
@@ -399,25 +382,25 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 				// 현재 addJobList의 부서의 부서장이 EXTENSIONATTRIBUTE9에 본인 아이디가 들어있으면 본인은 부서장 
 				if ( deptHeader == userId ) {
 					// 겸직 하위 부서 부서명 
-					subDept = ezWebFolderDAO.getDeptSub(map);
+					subDept = ezWebFolderDAO_y.getDeptSub(map);
 					
 					for ( int j = 0; j < subDept.size(); j++ ) {
 						String subDeptCn = (String) subDept.get(j).get("cn");
 						map.put("deptId", subDeptCn);
-						int existFolder = ezWebFolderDAO.existFolderChk(map);
+						int existFolder = ezWebFolderDAO_y.existFolderChk(map);
 						if (existFolder != 0) {// 만들어져 있다.
 							// 만들어져 있으면 통과~~~~~
 							
 						}else {// 만들어야한다.
 							// 폴더명 1,2를 만들어야 한다.
-							Map<String, Object> deptInfo = ezWebFolderDAO.getdeptInfo(map);
+							Map<String, Object> deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
 							insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE1").toString(),deptInfo.get("cn").toString(), userId, folderType, 
 									deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
 						}
 					}
 					
 					// exitstFolder가 null이면 만들어져 있다는 의미 
-//					int exitFolder = ezWebFolderDAO.existFolderChk(map); 
+//					int exitFolder = ezWebFolderDAO_y.existFolderChk(map); 
 					// 폴더가 존재하지 않음 
 //					searchAddJob += ","+addJob.get(i).get("cn");
 //					if( i == addJob.size()-1 ) {
@@ -428,13 +411,13 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 				} else {
 					// 부서장이 아님  
 					// 그 부서만 출력 하면 됨
-					int existFolder = ezWebFolderDAO.existFolderChk(map);
+					int existFolder = ezWebFolderDAO_y.existFolderChk(map);
 					if (existFolder != 0) {// 만들어져 있다.
 						// 만들어져 있으면 통과~~~~~
 						
 					}else {// 만들어야한다.
 						// 폴더명 1,2를 만들어야 한다.
-						Map<String, Object> deptInfo = ezWebFolderDAO.getdeptInfo(map);
+						Map<String, Object> deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
 						insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE1").toString(),deptInfo.get("cn").toString(), userId, folderType, 
 								deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
 					}
@@ -444,7 +427,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			}
 			
 		} else {// 겸직 부서가 없다 . 그럼 내가 부서장인지 아닌지 확인해서 부서장이면 하위도 다 만들고 아니면 내꺼만 만들고 
-			Map<String, Object> deptInfo = ezWebFolderDAO.getdeptInfo(map);
+			Map<String, Object> deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
 			// 부서장인지 판단  부서장
 			String header = "";
 			if( (String) deptInfo.get("EXTENSIONATTRIBUTE9") == null ) {
@@ -454,18 +437,18 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			}
 			if (header.equals(userId)) {
 				
-				subDept = ezWebFolderDAO.getDeptSub(map);
+				subDept = ezWebFolderDAO_y.getDeptSub(map);
 				
 				for ( int j = 0; j < subDept.size(); j++ ) {
 					String subDeptCn = (String) subDept.get(j).get("cn");
 					map.put("deptId", subDeptCn);
-					int existFolder = ezWebFolderDAO.existFolderChk(map);
+					int existFolder = ezWebFolderDAO_y.existFolderChk(map);
 					if (existFolder != 0) {// 만들어져 있다.
 						// 만들어져 있으면 통과~~~~~
 						
 					}else {// 만들어야한다.
 						// 폴더명 1,2를 만들어야 한다.
-						deptInfo = ezWebFolderDAO.getdeptInfo(map);
+						deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
 						insertFolder(tenantId, deptInfo.get("EXTENSIONATTRIBUTE2").toString(), deptInfo.get("cn").toString(),
 								userId, folderType, deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
 					}
@@ -474,13 +457,13 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			// 부서장이 아님	
 			} else {
 				// 부서장 아니고 존재하는지 확인
-				int existFolder = ezWebFolderDAO.existFolderChk(map);
+				int existFolder = ezWebFolderDAO_y.existFolderChk(map);
 				if (existFolder != 0) {// 만들어져 있다.
 					// 만들어져 있으면 통과~~~~~
 					
 				}else {// 만들어야한다.
 					// 폴더명 1,2를 만들어야 한다.
-					deptInfo = ezWebFolderDAO.getdeptInfo(map);
+					deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
 					insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE2").toString(), deptInfo.get("cn").toString(), 
 							userId, folderType, deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
 				}
@@ -489,14 +472,76 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		return "ok";
 	}
-
+	
 	// 폴더 명 업데이트
+
 	@Override
-	public String updateFolder(String folderId, String folderName,
-			String userId, String companyId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		map.put("comId", comId);
+		map.put("newFolderName1", newFolderName1);
+		map.put("newFolderName2", newFolderName2);
+		ezWebFolderDAO_y.updateFolder(map);
 	}
+	// 폴더 delete
+	
+	@Override
+	public void deleteSubFldAFile(String folderId, int tenantId, String comId , String userId) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+ 		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		map.put("comId", comId);
+		map.put("userId", userId);
+		int result = 0;
+		LOGGER.debug("folderId : "+folderId+"comId : "+comId+ "userId"+userId+"deleteSubFldAFile  Method");
+		result = checkCreater(folderId, tenantId, comId, userId);
+		// result 가 1이 아니면 creater가 자신이 아닌 폴더가 있다는 말 
+		if (result == 1) {
+			// result 1이면 creater가 모두 자신이라는 의미 
+			ezWebFolderDAO_y.deleteFolder(map);
+			ezWebFolderDAO_y.deleteFile(map);
+			LOGGER.debug("result : " + result);
+			System.out.println("성공");
+		}else{
+			System.out.println("실패");
+		}
+	}
+
+	@Override
+	public int checkCreater(String folderId, int tenantId,String comId, String userId) {
+		
+		// 자기 하위에 있는 폴더, 파일들이 모두 본인이 creater인지 확인  
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		int result = 0;
+		int resultFld = 0;
+		int resultFile = 0;
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		map.put("comId", comId);
+		map.put("userId", userId);
+		LOGGER.debug("folderId : "+folderId+"comId : "+comId+ "userId"+userId+"deleteSubFldAFile  Method");
+		resultFld = ezWebFolderDAO_y.checkSubCreater(map);
+		LOGGER.debug("resultFld : "+resultFld);
+		resultFile = ezWebFolderDAO_y.checkFileCreater(map);
+		LOGGER.debug("resultFile : "+resultFile);
+		// 1이 리턴되면 모두 다 내가 만든 파일 
+		if (resultFile == 1 && resultFld == 1) {
+			result = 1;
+		}else if (resultFile == 0 && resultFld == 1) {
+			result = 1;
+		} else {
+			result =0;
+		}
+		return result;
+	}
+	
+
+	
 	
 	
 	

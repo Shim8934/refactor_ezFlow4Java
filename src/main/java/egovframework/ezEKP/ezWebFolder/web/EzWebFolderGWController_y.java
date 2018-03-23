@@ -1,12 +1,11 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
@@ -19,13 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -34,7 +34,10 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 public class EzWebFolderGWController_y {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderGWController_y.class);
-	@Resource(name = "EzWebFolderService")
+	@Autowired
+	private EzWebFolderAdminService ezWebFolderAdminService;
+	
+	@Autowired
 	private EzWebFolderService ezWebFolderService;
 	
 	@Autowired
@@ -46,6 +49,8 @@ public class EzWebFolderGWController_y {
 	@Autowired
 	private CommonUtil commonutil;
 	
+	@Autowired
+	private EgovMessageSource egovMessageSource;
 	
 	// 전체 폴더 조회
 	@SuppressWarnings("unchecked")
@@ -96,9 +101,14 @@ public class EzWebFolderGWController_y {
 					System.out.println("폴더가 존재합니다.");
 				}else {
 					//폴더가 존재하지 않아 만들어야합니다.
-					
-					createName1 = common.getUserName();
-					createName2 = common.getUserId();
+					if (folderType.equals("C")) {
+						createName1 = common.getCompanyName();
+						createName2 = common.getCompanyName2();
+					}else if (folderType.equals("U")) {
+						createName1 = common.getUserName();
+						createName2 = common.getUserId();
+						
+					}
 					System.out.println("여기는 U");
 					System.out.println("createNaem1: "+ createName1);
 					System.out.println("createNaem2: "+ createName2);
@@ -140,7 +150,7 @@ public class EzWebFolderGWController_y {
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.debug("common is not comming");
-			data.put("status", "ok");
+			data.put("status", "fail");
 			data.put("code", 1);
 			data.put("data", "");
 		}
@@ -193,7 +203,7 @@ public class EzWebFolderGWController_y {
 		if (result.equals("ok")) {
 			data.put("status", "ok");
 			data.put("code", 0);
-			data.put("data", "");
+			data.put("data", result);
 		}else {
 			data.put("status", "fail");
 			data.put("code", 1);
@@ -206,34 +216,156 @@ public class EzWebFolderGWController_y {
 	
 	// 폴더 수정 
 	@RequestMapping (value = "/rest/ezwebfolder/folders/{folderId}", method = RequestMethod.PUT , produces = "application/json;charset=utf-8")
-	public JSONObject folderUpdate (@PathVariable String folderId, HttpServletRequest request) {
-		JSONObject jsonObj = new JSONObject();
+	public JSONObject folderUpdate (@PathVariable String folderId, HttpServletRequest request,@RequestBody JSONObject jsonObject) throws Exception {
+		JSONObject data = new JSONObject();
+		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name") : "";
+//		
+		// folderId로 이 폴더create가 나인지 확인해야함
 		
-		return jsonObj;
+		String userId = (String) jsonObject.get("id");
+		MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+		
+		String newFolderName1 = (String) jsonObject.get("newFolderName1");
+		String newFolderName2 = (String) jsonObject.get("newFolderName2");
+		int tenantId = common.getTenantId();
+		String comId = common.getCompanyId();
+		
+		service.updateFolder(folderId, tenantId, userId, comId, newFolderName1, newFolderName2);
+		return data;
 	}
-	
-	// 폴더 이동 
-	@RequestMapping (value="/rest/ezwebfolderfolders/{folderId}/folder-move", method = RequestMethod.PUT, produces = "application/json;charset=utf-8" )
-	public JSONObject folderMove (@PathVariable String folderId, HttpServletRequest request ) {
-		JSONObject jsonObj = new JSONObject();
-		
-		return jsonObj;
-		
-	}
-	
 	// 폴더 복사 
 	@RequestMapping ( value = "/rest/ezwebfolder/folders/{folderId}/folder-copy" , method = RequestMethod.PUT , produces ="application/json;charset=utf-8")
-	public JSONObject folderCopy (@PathVariable String folderId, HttpServletRequest request ) {
+	public JSONObject folderCopy (@PathVariable String folderId, HttpServletRequest request ,Locale locale ,@RequestBody JSONObject jsonObject ) throws Exception  {
 		JSONObject jsonObj = new JSONObject();
+		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name") : "";
+		// folderMove를 하기 위해서 받아와야 하는거 
+		// 1. before folderId,
+		// 2. after folderId
+		// 폴더 아이디, uppFolder 
+		String userId = (String) jsonObject.get("id");
+		String uppId = (String) jsonObject.get("uppid");
+		MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+		int tenantId = common.getTenantId();
+		String comId = common.getCompanyId();
+		
+		// 옮기려고 하는 folder에 대한 정보 
+		FolderVO uppFolder = service.getFolderDetail(uppId, userId ,tenantId,comId);
+		
+//		service.moveFolder(folderId, tenantId, userId, comId, uppFolder);
 		
 		
 		return jsonObj;
+		
+	}
+	// 폴더 이동 			
+	@RequestMapping (value="/rest/ezwebfolder/folders2/{folderId}/folder-move", method = RequestMethod.PUT , produces = "application/json;charset=utf-8" )
+	public JSONObject folderMove (@PathVariable String folderId, HttpServletRequest request,@RequestBody JSONObject jsonObject ,Locale locale  )  {
+		JSONObject jsonObj = new JSONObject();
+		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name") : "";
+		// folderCopy를 하기 위해서 받아와야 하는거 
+		// 1. before folderId,
+		// 2. after folderId
+		// 폴더 아이디, uppFolder 
+		String primary  = (String) jsonObject.get("primary")   != null ? 		(String) jsonObject.get("primary") 		 : "";
+		String userId	= (String) jsonObject.get("id") 		!= null ? 		(String) jsonObject.get("id")			 : "";
+		String uppId	= (String) jsonObject.get("uppFolderId") != null ?  (String) jsonObject.get("uppFolderId") 	 : "";
+		JSONObject result   = new JSONObject();
+		MCommonVO common;
+		try {
+			common = mOptionService.commonInfoWeb(serverName, userId);
+			System.out.println("folderId : "+folderId);
+			System.out.println("serverName : "+serverName);
+			System.out.println("primary : "+primary);
+			System.out.println("userId : "+userId);
+			System.out.println("tenantId : "+ common.getTenantId());
+			System.out.println("comId : "+common.getCompanyId());
+			System.out.println("offset"+common.getOffSet());
+			int tenantId = common.getTenantId();
+			String comId = common.getCompanyId();
+			String offset = common.getOffSet();
+			String mode ="move";
+			LoginVO userInfo = commonutil.getUserForGw(userId, serverName, primary, offset);
+			
+			if (folderId.equals("") || serverName.equals("") || uppId.equals("") || offset.equals("") || mode.equals("") || uppId.equals("")) {
+				LOGGER.debug("Parameter error!");
+				result.put("status", "error");
+				result.put("code", "1");
+				return result;
+			}
+			int checkSbCreater = 0;
+			checkSbCreater = service.checkCreater(folderId, tenantId, comId, userId);
+			
+			if (checkSbCreater == 1) {
+				// result 1이면 creater가 모두 자신이라는 의미 
+//				FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+				
+				FolderVO folder     = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+				FolderVO destFolder = ezWebFolderService.getFolderByFolderId(uppId, offset, tenantId);
+				//Check copy/move conditions
+				if (folder.getFolderUpper().equals(uppId)) {
+					result.put("status", "error");
+					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t224", locale));
+					result.put("code", 1);
+					return result;
+				}
+				
+				int pos = destFolder.getFolderPath().indexOf(folder.getFolderPath());
+			
+				if (pos != -1) {
+					result.put("status", "error");
+					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t245", locale));
+					result.put("code", 1);
+					return result;
+				}
+				
+				ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, userInfo);
+				
+			result.put("status", "ok");
+			result.put("code", 0);
+		
+			}else{
+				System.out.println("실패");
+				LOGGER.debug("subFolder or SubFile is not mine!");
+				result.put("status", "error");
+				result.put("code", "1");
+				return result;
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+			
+		
+		return result;
 	}
 	
 	// 폴더 삭제 
-	@RequestMapping(value ="/rest/ezwebfolder/folders/{folderId}", method = RequestMethod.DELETE , produces = "application/json;charset=utf-8")
-	public JSONObject folderDelete (@PathVariable String folderId , HttpServletRequest request) {
+	@RequestMapping(value ="/rest/ezwebfolder/folders2/{folderId}", method = RequestMethod.DELETE , produces = "application/json;charset=utf-8")
+	public JSONObject folderDelete (@PathVariable String folderId , HttpServletRequest request,@RequestBody JSONObject jsonObject) throws Exception {
 		JSONObject jsonObj = new JSONObject();
+		JSONObject data = new JSONObject();
+		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name") : "";
+//		
+		String userId = (String) jsonObject.get("id");
+		MCommonVO common;
+//		try {
+			common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = common.getTenantId();
+			String comId = common.getCompanyId();
+			service.deleteSubFldAFile(folderId, tenantId, comId, userId);
+//			data.put("result", "delete성공");
+			jsonObj.put("data", "ok");
+//		} catch (Exception e) {
+			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			data.put("result", "실패");
+//			jsonObj.put("data", "fail");
+//		}
+		
+		
+		
 		
 		return jsonObj;
 	}
@@ -288,9 +420,6 @@ public class EzWebFolderGWController_y {
 			String []rootPath     = folderPath.split("\\|");
 			Map<String, String> filePathMap = new LinkedHashMap<String, String>();
 			if (folder.getFolderUpper().equals("root")) {
-//				folderPath     = folder.getFolderPath();
-//				if (file.getFilePosition().equals("")) {
-//				if ( !file.getFileTypeName().equals("folder")) { 
 				for (FileVO file : fileList) {
 						String file_path    = originalPath;
 						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
@@ -308,10 +437,6 @@ public class EzWebFolderGWController_y {
 						}
 						
 						file.setFilePosition(file_path + file.getFileName());
-//				} else {
-					
-//				}
-	//				}
 				}
 			} else {
 //				folderPath            = folderPath.substring(1, folderPath.length() - 1);

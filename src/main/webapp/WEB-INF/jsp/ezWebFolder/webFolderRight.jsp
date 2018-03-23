@@ -7,7 +7,6 @@
 	<title>Insert title here</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -27,6 +26,7 @@
 	<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
+	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<style type="text/css">
 		#layer_Viewpopup { 
 			z-index:1000; 
@@ -124,74 +124,27 @@
 		var folderId = "${folderId}";
 		var folderType = "${folderType}";
 		
+		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
 			var divList          = document.getElementById("dragDropArea");
 			var reheight         = document.documentElement.clientHeight - 220;
 			divList.style.height = reheight + "px";
 		};
+		// fileList 화면 
 		window.onload = function () {
 			pEnd= pStart + blockSize;
 			getfileList();
-// 			insertTest();
 			var divList          = document.getElementById("dragDropArea");
 			var reheight         = document.documentElement.clientHeight - 220;
 			divList.style.height = reheight + "px";
 	    };
+	    
+	    // 폴더관리
 	    function folder_Manage() {
         	var OpenWin = window.open("/ezWebFolder/folderManage.do", "", GetOpenWindowfeature(500, 500));
             try { OpenWin.focus(); } catch (e) { }
         }
-	    function add_onclick() {
-		    inputNameDlg_cross_dialogArguments[0] = onclick_Complete;
-		    inputNameDlg_cross_dialogArguments[1] = DivPopUpHidden;
-		    inputNameDlg_cross_dialogArguments[2] = "";
-		    inputNameDlg_cross_dialogArguments[3] = "";
-		    
-		    DivPopUpShow(330, 200, "/ezCircular/circularInputName.do");
-		}
-// 	    function modify_onclick() {
-// 	        if (PostTreeView.selectedIndex() == -1) {
-// 	            alert("<spring:message code='ezCircular.t103' />");
-// 	            return;
-// 	        }
-	        
-// 	        inputNameDlg_cross_dialogArguments[0] = onclick_Complete;
-// 	        inputNameDlg_cross_dialogArguments[1] = DivPopUpHidden;
-// 	        inputNameDlg_cross_dialogArguments[2] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
-// 	        inputNameDlg_cross_dialogArguments[3] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-
-// 	        DivPopUpShow(330, 200, "/ezCircular/circularInputName.do");
-// 	    }
-	    function insertTest(){
-			$.ajax ({
-				type: "POST",
-				url : "/ezWebFolder/insertFolder.do",
-				data : { 
-					"folderUp"    : folderId,
-					"folderType"  : folderType
-				},
-				dataType : "JSON",
-				success : function (data){
-					alert(data.status);
-				},
-				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134' />" + error);
-				}
-			})
-				
-	    	
-	    };
-	    function Tab1_MouseClick(obj) {
-            obj.className = "tabon";
-            if (obj.id != Tab1_SelectID) {
-                if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
-                    document.getElementById(Tab1_SelectID).className = "";
-
-                obj.className = "tabon";
-                Tab1_SelectID = obj.id;
-                ChangeTab(obj);
-            }
-        }
+	    
 	    
 	    function getfileList(){
 			$.ajax ({
@@ -213,14 +166,6 @@
 				dataType: "JSON",
 				success : function (data) {
 					result = data.data;
-					
-// 					var result  = data.fileList;
-// 					totalRows   = data.totalRows;
-// 					totalPages  = data.totalPages;
-// 					currentPage = pPage;
-					
-					
-					
 					
 					currentPage = result.currPage;
 					totalRows = result.totalCount;
@@ -314,15 +259,6 @@
 					trElmt.appendChild(tdElmt9);
 					tableList.appendChild(trElmt);
 					
-// 					objTr.appendChild(objTd1);
-// 					objTr.appendChild(objTd2);
-// 					objTr.appendChild(objTd3);
-// 					objTr.appendChild(objTd4);
-// 					objTr.appendChild(objTd5);
-// 					objTr.appendChild(objTd6);
-// 					objTr.appendChild(objTd7);
-// 					objTr.appendChild(objTd8);
-// 					tblElmt.appendChild(objTr);
 				}
 			} 
 		}
@@ -349,7 +285,6 @@
 	
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker('setDate', "");
-// 	        alert(fileList.fileName);
 	     });
 	   	// 날짜 초기화 버튼
 	   	function btn_PostDate_Clear() {
@@ -698,7 +633,7 @@
         </div>
 
  	</div>
- 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
+ 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id=""></div>
     <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
     <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 	

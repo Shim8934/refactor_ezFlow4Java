@@ -78,7 +78,7 @@
 						});
 						folderId = data.data[0].id;
 						$($element).jstree('refresh');
-// 				   		$($element).jstree("selected", folderId);
+				   		$($element).jstree("selected", folderId);
 						getFileList(folderId);
 				   		
 					},
@@ -89,6 +89,7 @@
 				$($element).on('changed.jstree', function (e, data) {
 					var folderId = "";
 					folderId = data.selected[0]; 
+// 					alert(folderId);
 					if (folderId == undefined) {
 // 						console.log("The selected nodes are:" + folderId);
 					}else {
@@ -99,7 +100,7 @@
 		    
 		 // 폴더관리
 		    function folder_Manage() {
-	        	var OpenWin = window.open("/ezWebFolder/folderManage.do", "", GetOpenWindowfeature(500, 500));
+	        	var OpenWin = window.open("/ezWebFolder/folderManage.do", "", GetOpenWindowfeature(600, 550));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }	
 		    

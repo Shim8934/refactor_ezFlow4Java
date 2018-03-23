@@ -9,7 +9,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+<%-- 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script> --%>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script src="/js/ezEmail/js_cross/string_component.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -17,6 +17,7 @@
 	        var ReturnFunction;
 	        var CancelFunction;
 	        var folderUppId = "";
+	        var functionType = "";
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -28,6 +29,7 @@
 	            	folderUppId = parent.inputNameDlg_cross_dialogArguments[0];
 	                ReturnFunction = parent.inputNameDlg_cross_dialogArguments[1];
 	                CancelFunction = parent.inputNameDlg_cross_dialogArguments[2];
+	                functionType = parent.inputNameDlg_cross_dialogArguments[3];
 	            } catch (e) { }
 // 	            if (InputValue != "") {
 // 	                txt_FolderName.value = InputValue;
@@ -64,24 +66,40 @@
 // 	                alert("<spring:message code='ezEmail.t351' />");
 // 	                return;
 // 	            }
-	            $.ajax ({
-					type :"POST",
-					async: true,
-					url  : "/ezWebFolder/insertFolder.do",
-					data : { 
-							 "folderId"   	 : folderUppId
-							,"newFolderName1" : szCheckPermit1
-							,"newFolderName2" : szCheckPermit2
-						},
-					dataType: "JSON",
-					success : function (data) {
-						alert("newFolderName1" + szInput1);
-//		        			window.close();
-// 						opener.parent.location.reload();
-// 						window.close();
-			            ReturnFunction(szInput1);
-					}
-	        	})
+				if (functionType == "insert") {
+		            $.ajax ({
+						type :"POST",
+						async: false,
+						url  : "/ezWebFolder/insertFolder.do",
+						data : { 
+								 "folderId"   	 : folderUppId
+								,"newFolderName1" : szCheckPermit1
+								,"newFolderName2" : szCheckPermit2
+							},
+						dataType: "JSON",
+						success : function (data) {
+							alert("newFolderName1 : " + szInput1+ "를 insert를 완료하였습니다.");
+				            ReturnFunction(szInput1);
+						}
+		        	})
+					
+				}else if (functionType == "update") {
+					 $.ajax ({
+							type :"POST",
+							async: false,
+							url  : "/ezWebFolder/updateFolder.do",
+							data : { 
+									 "folderId"   	 : folderUppId
+									,"newFolderName1" : szCheckPermit1
+									,"newFolderName2" : szCheckPermit2
+								},
+							dataType: "JSON",
+							success : function (data) {
+								alert("newFolderName1 :" + szInput1+ "를 업데이트 완료하였습니다.");
+					            ReturnFunction(szInput1);
+							}
+			        })
+				}
 	            
 	        }
 	        function btn_cancel_onclick() {

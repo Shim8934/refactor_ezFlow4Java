@@ -87,6 +87,23 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public Map<String, Object> getdeptInfo(Map<String, Object> map) {
 		return (Map<String, Object>) select("EzWebFolderDAO_y.getdeptInfo",map );
 	}
+	public void updateFolder(Map<String, Object> map) {
+		update("EzWebFolderDAO_y.updateFolder",map );
+	}
+	public void deleteFolder(Map<String, Object> map) {
+		update("EzWebFolderDAO_y.deleteFolder",map );
+	}
+	public void deleteFile(Map<String, Object> map) {
+		update("EzWebFolderDAO_y.deleteFile",map );
+	}
+	// result는 만약 다른 사람이 만든 폴더나 파일이 있으면 1-return 
+	public int checkSubCreater(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.checkSubCreater",map );
+	}
+	// result는 만약 다른 사람이 만든 폴더나 파일이 있으면 1-return 
+	public int checkFileCreater(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.checkFileCreater",map );
+	}
 	
 
 	

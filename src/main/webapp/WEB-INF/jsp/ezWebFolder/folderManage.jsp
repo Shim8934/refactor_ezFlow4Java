@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
     <link rel="stylesheet" href="/js/jsTree/dist/themes/default/style.css" />
     <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script type="text/javascript" src="/js/jsTree/dist/jstree.min.js"></script>
+	<script type="text/javascript" src="/js/jsTree/dist/jstree.js"></script>
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     
     <script>
@@ -32,8 +32,11 @@
         var CancelFunction;
         var isDivPopUp = false;
         var isFolderManager = false;
+        var test = [];
         
-        
+        var createId = "";
+        var id = "";
+        var parent = "";
         var companyFolderId = "";
 	    var deptFolderId    = "";
 	    var persFolderId    = "";
@@ -52,7 +55,7 @@
                 return true;
         };
         function window_onload() {
-        	folderList('');
+        	folderList('C');
             try {
                 ReturnFunction = parent.mail_movecopy_cross_dialogArguments[1];
                 CancelFunction = parent.mail_movecopy_cross_dialogArguments[2];
@@ -79,7 +82,7 @@
 			folderType = obj;
 			$.ajax ({
 				type :"POST",
-				async: true,
+				async: false,
 				url  : "/ezWebFolder/folderList.do",
 				data : { 
 						 "folderId"   : folderId
@@ -87,13 +90,12 @@
 					},
 				dataType: "JSON",
 				success : function (data) {
-// 					$("#PostTreeView2").jstree(true).settings.core.data.url ='/getstuff/@mapobj.id.toString/';
-// 					$('#jst_propl').jstree(true).refresh();
-// 		        	$('#PostTreeView2').jstree('destroy');
-					$('#PostTreeView2').jstree({
-						
+					test = data.data;
+		        	$.jstree.destroy();
+					$('#folderTree').jstree({
 						
 						'core' : {
+							"animation" : 0,
 							'data' : data.data,
 							"multiple" : false,
 							'themes' : {
@@ -122,8 +124,11 @@
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
 				}
 			});
-			$("#PostTreeView2").on("changed.jstree", function (e, data) {
+			$("#folderTree").on("changed.jstree", function (e, data) {
 			   folderId =data.selected[0]; 
+			   folderId =data.node.original.id; 
+			   createId =data.node.original.createId; 
+			   parent =data.node.original.parent; 
 			   console.log("The selected nodes are:" + folderId);
 			});
 	    }
@@ -133,11 +138,68 @@
                 alert("하위폴더를 만들 폴더를 선택해주세요");
                 return;
             }
-            
+            var functionType = "insert"; 
             inputNameDlg_cross_dialogArguments[0] = folderId;
             inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
             inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
+            inputNameDlg_cross_dialogArguments[3] = functionType;
             DivPopUpShow(330, 170, "/ezWebFolder/inputNameDlg.do");
+        }
+        function update_onclick() {
+            if (folderId == "") {
+                alert("수정할 폴더를 선택해주세요");
+                return;
+            }
+            if (userId !=createId ) {
+            	alert("폴더 생성자가 아니면 폴더명을 수정할 수 없습니다.,createId : " + createId+ "userId"+ userId);
+            	return;
+            }else {
+            }
+            var functionType = "update"; 
+            inputNameDlg_cross_dialogArguments[0] = folderId;
+            inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
+            inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
+            inputNameDlg_cross_dialogArguments[3] = functionType;
+            DivPopUpShow(330, 170, "/ezWebFolder/inputNameDlg.do");
+        }
+        var deleteFolderDlg_cross_dialogArguments = [];
+        function delete_onclick() {
+            if (folderId == "") {
+                alert("삭제할 폴더를 선택해주세요");
+                return;
+            }
+            deleteFolderDlg_cross_dialogArguments[0] = folderId;
+            console.log("folderId delete_onclick function" + folderId);
+            console.log("deleteFolderDlg_cross_dialogArguments delete_onclick function" + deleteFolderDlg_cross_dialogArguments[0]);
+            DivPopUpShow(330, 170, "/ezWebFolder/folderDelete.do");
+        }
+        var moveCopyFolderDlg_cross_dialogArguments = [];
+        function moveCopy_onclick() {
+            if (folderId == "") {
+                alert("이동할 폴더를 선택해주세요");
+                return;
+            }
+           	// parent 가 root인거는 가온아이, 박예연 이렇게 하고 
+           	// parent 가 root인거의 폴더 id가져와서  또 거기의 parent 가 id인거를 가져오면 됨 
+           	
+           	
+            if ( parent =='#' ) {
+	            alert("이 폴더는 이동할 수 없습니다.");
+	            return;
+            }else if (folderType == "C") {
+            	for ( var i = 0 ; i <test.length; i++) {
+            		if (test[i].id == parent) {
+            			if(test[i].parent == '#') {
+				            alert("이 폴더는 이동할 수 없습니다.");
+				            return;
+            			} 
+            		}
+            	}
+            }
+            moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+            console.log("folderId moveCopy_onclick function" + folderId);
+            console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
+            DivPopUpShow(330, 500, "/ezWebFolder/folderMove.do");
         }
         function requestdata(event) {
             if (!event) event = window.event;
@@ -145,129 +207,52 @@
             if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
                 nodeIdx = arguments[0].nodeIdx;
             }
-            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false, true)
-            PostTreeView.putchildxml(nodeIdx, childxml);
+//             var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false, true)
+//             PostTreeView.putchildxml(nodeIdx, childxml);
         }
         
 
         
 	    function add_onclick_Complete(szName) {
 	    	DivPopUpHidden();
-//         	folderList('');
-        	$($element).jstree(true).refresh();
-	        if (typeof (szName) == "undefined" || szName.trim() == "" || szName == PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption")) {
-	            return;
-	        }
-	        if (checkBadFolderName(szName)) {
-	        	 
-	            return;
-	        }
-
-	        var result = mail_make_folder("MODIFY", PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), "", szName);
-	        
-	        if (result != "OK") {
-	        	if (result == "ALREADY_EXISTS") {
-	        		alert("<spring:message code='ezEmail.lhm05' />");
-	        	} else {
-	        		alert("<spring:message code='ezEmail.t459' />");
-	        	}
-	        	return;
-	        }
-	        
-	        LoadAddressTree(PostTreeView.selectedIndex());
-	        EventCheck = true;
+        	folderList('');
 	    }
         
-        
-//         function btn_Copy_onclick() {
-//             if (PostTreeView.selectedIndex == -1) {
-//                 alert("<spring:message code='ezEmail.t536' />");
-//                 return;
-//             }
-//             var retVal = new Array();
-//             retVal["cmd"] = "COPY";
-//             retVal["url"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-//             if (getparentnode(PostTreeView.selectedNode()) != null) {
-//                 retVal["idx"] = gettopvalue(PostTreeView.selectedNode());
-//             }
-//             else {
-//                 retVal["idx"] = PostTreeView.selectedIndex();
-//             }
-//             if (ReturnFunction!=null)
-//             {
-//                 ReturnFunction(retVal);
-//                 if (!isDivPopUp)
-//                     window.close();
-//             }
-//             else {
-//                 window.returnValue = retVal;
-//                 window.close();
-//             }
-//         }
-//         function btn_Move_onclick() {
-//             if (PostTreeView.selectedIndex == -1) {
-//                 alert("<spring:message code='ezEmail.t537' />");
-//                 return;
-//             }
-
-//             var retVal = new Array();
-//             retVal["cmd"] = "MOVE";
-//             retVal["url"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-//             if (getparentnode(PostTreeView.selectedNode()) != null) {
-//                 retVal["idx"] = gettopvalue(PostTreeView.selectedNode());
-//             }
-//             else {
-//                 retVal["idx"] = PostTreeView.selectedIndex();
-//             }
-//             if (ReturnFunction!=null) {
-//                 ReturnFunction(retVal);
-//                 if (!isDivPopUp)
-//                     window.close();
-//             }
-//             else {
-//                 window.returnValue = retVal;
-//                 window.close();
-//             }
-//         }
     </script>
 </head>
+
 <body scroll="no" class="popup" onload="javascript:window_onload()">
-    <h1>폴더관리</h1>
-    <div id="close">
-        <ul>
-            <li><span onclick="Window_Close();"><spring:message code='ezEmail.t63' /></span></li>
-        </ul>
-    </div>
-    <table class="content">
-        <tr>
-            <td class="pos1">
-                <div style="border: 0px solid #B6B6B6; height: 275px; width: 240px; overflow-x: auto; overflow-y: auto; 
-                background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView2">
-                </div>
-            </td>
-            <td class="pos3">
-            	<a class="imgbtn"><span onclick="add_onclick()">공 유</span></a>
-            	<a class="imgbtn"><span onclick="add_onclick()">새폴더</span></a>
-            	<a class="imgbtn"><span onclick="return btn_Copy_onclick()">수 정</span></a>
-            	<a class="imgbtn"><span onclick="return btn_Copy_onclick()">이동/복사</span></a>
-            	<a class="imgbtn"><span onclick="return btn_Copy_onclick()">삭 제</span></a>
-            </td>
-        </tr>
-    </table>
-   		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
-		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
-		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
-		</div>
-		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-		    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
-		</div>
+	<h1>폴더관리</h1>
 	
-    <script type="text/javascript">
-        selToggleList(document.getElementById("close"), "ul", "li", "0");
-    </script>
-    
+	<div id="close">
+		<ul>
+			<li><span onclick="Window_Close();"><spring:message code='ezWebFolder.t110'/></span></li>
+		</ul>
+	</div>
+	
+	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
+		<div style="position: absolute; top: 0px; right: 0px;">
+			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('C');"> <span><spring:message code="ezWebFolder.t233"/></span>
+			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('D');"> <span><spring:message code="ezWebFolder.t234"/></span>
+			<input name="treeType" id="radio3" type="radio" value="user"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('U');"> <span><spring:message code="ezWebFolder.t234"/></span>
+		</div>
+	</div>
+	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto;" id="folderTree"></div>
+	
+	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
+		<a class="imgbtn"><span onclick="">공 유</span></a>
+      	<a class="imgbtn" onclick="add_onclick()"><span>새폴더</span></a>
+      	<a class="imgbtn" onclick="update_onclick()"><span>수 정</span></a>
+      	<a class="imgbtn" onclick="moveCopy_onclick()"><span>이동/복사</span></a>
+      	<a class="imgbtn" onclick="delete_onclick()"><span>삭 제</span></a>
+	</div>
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+	<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+	    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
+	</div>
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	</div>
 </body>
 </html>
-
-
 

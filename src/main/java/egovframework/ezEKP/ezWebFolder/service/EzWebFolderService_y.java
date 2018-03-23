@@ -12,19 +12,6 @@ public interface EzWebFolderService_y {
 	List<FileVO> getFileList(String folderId,String folderType,String userId,String deptId,int tenantId, String companyId, String searchExt,
 			String searchFileName, String searchStartDate, String searchEndDate,String searchCreateName,
 			String searchFileType, String searchPageCount,String searchListCount, int pStart , int pEnd ) throws Exception;
-	/*
-	
-	// 폴더 세부 정보 
-	List<FolderVO> getFolderListDetail (String folderId, String folderType, String userId, String tenantId, String companyId ) throws Exception;
-	// 폴더 이동
-	String moveFolder (String folderId, String parentId, String tenantId, String companyId) throws Exception;
-	// 폴더 복사 
-	String copyFolder (String folderId, String parentId, String tenantId, String companyId) throws Exception;
-	// 폴더 삭제 
-	String deleteFolder (String folderId, String tenantId, String companyId ) throws Exception;
-	
-	// part yeyeun end
-	*/
 
 	int getFileToTalCount(String folderId,String folderType,String userId,String deptId, int tenantId, String parameter,
 			String searchExt, String searchFileName, String searchStartDate,
@@ -61,9 +48,18 @@ public interface EzWebFolderService_y {
 	String existFolderChk_D(String userId, String deptId, String comId,	String folderType, int tenantId) throws Exception;
 	
 	// 폴더 수정
-	String updateFolder (String folderId, String folderName, String userId, String companyId) throws Exception;
+	void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2);
 	
+	// 폴더 삭제
+	void deleteSubFldAFile(String folderId, int tenantId, String comId , String userId);
 	
+	// 하위폴더가 모두 자신이 만든 폴더인지 확인하는 메서드
+	// 모두 자신이 만든 폴더이면 true , 아니라서 삭제가 불가능하면  false 
+	int checkCreater(String folderId , int tenantId, String comId, String userId );
 	
+	// 폴더 복사
+//	void copyFolder(String folderId, int tenantId, String userId, String comId, FolderVO uppFolder)throws Exception;
 	
+	// 폴더 이동
+//	void moveFolder(String folderId, int tenantId, String userId, String comId, FolderVO uppFolder)throws Exception;
 }

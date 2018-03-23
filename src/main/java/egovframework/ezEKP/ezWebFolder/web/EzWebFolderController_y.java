@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -268,8 +269,8 @@ public class EzWebFolderController_y {
 	@RequestMapping( value ="/ezWebFolder/folderManage.do")
 	public String folderControll (@CookieValue("loginCookie") String loginCookie, HttpServletRequest requtest,
 			HttpServletResponse resp , Model model ) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		model.addAttribute("userId", userInfo.getId());
 		return "ezWebFolder/folderManage";
 		
 	}
@@ -355,6 +356,176 @@ public class EzWebFolderController_y {
 		return "json";
 	}
 	
+	@RequestMapping( value ="/ezWebFolder/updateFolder.do") 
+	public String updateFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse resp, Model model )throws Exception {
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String folderId = "";
+		String newFolderName1 = "";
+		String newFolderName2 = "";
+		
+		if (request.getParameter("folderId").equals(null) || request.getParameter("folderId").equals("") ) {
+			LOGGER.debug("fail_folderUpperId is not comming");
+		}else {
+			folderId = request.getParameter("folderId");
+		}
+		if (request.getParameter("newFolderName1").equals(null) || request.getParameter("newFolderName1").equals("")) {
+			LOGGER.debug("fail_newFolderName is not comming");
+		}else {
+			newFolderName1 = request.getParameter("newFolderName1");
+		}
+		if (request.getParameter("newFolderName2").equals(null) || request.getParameter("newFolderName2").equals("")) {
+			LOGGER.debug("fail_newFolderName is not comming");
+			newFolderName2 = request.getParameter("newFolderName2");
+		}else {
+			newFolderName2 = request.getParameter("newFolderName2");
+		}
+		
+		String serverName = request.getServerName();
+		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String url = gwServerUrl + "/rest/ezwebfolder/folders/"+folderId;
+		
+		RestTemplate rest = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", serverName);
+		
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(userInfo);
+		JSONObject jsonObject = gson.fromJson(jsonString, JSONObject.class);
+		HttpEntity<Object> entity = new HttpEntity<Object>( jsonObject,headers );
+		
+		jsonObject.put("userId", userInfo.getId());
+		jsonObject.put("newFolderName1", newFolderName1);
+		jsonObject.put("newFolderName2", newFolderName2);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+				
+		ResponseEntity<JSONObject> 	result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
+
+		
+		JSONObject resultBody = result.getBody();
+		LOGGER.debug("result: " + resultBody.get("status"));
+		
+		return "json";
+	}
+	
+	
+	@RequestMapping( value ="/ezWebFolder/folderDelete.do") 
+	public String folderDelete (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse resp, Model model )throws Exception {
+		
+		return "ezWebFolder/folderDelete";
+		
+	}
+		
+	@RequestMapping( value ="/ezWebFolder/deleteFolder.do", method=RequestMethod.POST) 
+	public String deleteFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse resp, Model model )throws Exception {
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String folderId = "";
+		
+		if (request.getParameter("folderId").equals(null) || request.getParameter("folderId").equals("") ) {
+			LOGGER.debug("fail_folderUpperId is not comming");
+		}else {
+			folderId = request.getParameter("folderId");
+		}
+		
+		String serverName = request.getServerName();
+		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String url = gwServerUrl + "/rest/ezwebfolder/folders2/"+folderId;
+		
+		RestTemplate rest = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", serverName);
+		
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(userInfo);
+		
+		JSONObject jsonObject = gson.fromJson(jsonString, JSONObject.class);
+		HttpEntity<Object> entity = new HttpEntity<Object>( jsonObject,headers );
+		
+		jsonObject.put("id", userInfo.getId());
+		jsonObject.put("uppFolderId", request.getParameter("uppFolderId"));
+		jsonObject.put("primary", userInfo.getLang());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		ResponseEntity<JSONObject> 	result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, JSONObject.class);
+		
+		
+		JSONObject resultBody = result.getBody();
+		LOGGER.debug("result: " + resultBody.get("data"));
+		String res = (String) resultBody.get("data");
+		if (res.equals("ok")) {
+			System.out.println("ok");
+			model.addAttribute("status","ok");
+			model.addAttribute("code",0);
+		}else {
+			System.out.println(res+" 여기는 controller");
+			model.addAttribute("status","error");
+			model.addAttribute("code",1);
+		}
+		return "json";
+	}
+	
+	
+	@RequestMapping( value ="/ezWebFolder/folderMove.do") 
+	public String folderMove (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse resp, Model model )throws Exception {
+		
+		return "ezWebFolder/folderMoveJsTree";
+		
+	}
+	
+	@RequestMapping( value ="/ezWebFolder/moveFolder.do", method=RequestMethod.POST) 
+	public String moveFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse resp, Model model )throws Exception {
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String folderId = "";
+		
+		if (request.getParameter("folderId").equals(null) || request.getParameter("folderId").equals("") ) {
+			LOGGER.debug("fail_folderUpperId is not comming");
+		}else {
+			folderId = request.getParameter("folderId");
+		}
+		String serverName = request.getServerName();
+		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String url = gwServerUrl + "/rest/ezwebfolder/folders2/"+folderId + "/folder-move";
+		RestTemplate rest = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", serverName);
+		
+		
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(userInfo);
+		JSONObject jsonObject = gson.fromJson(jsonString, JSONObject.class);
+		HttpEntity<Object> entity = new HttpEntity<Object>( jsonObject,headers );
+		System.out.println("id : "+ userInfo.getId());
+		System.out.println("folderId : "+ request.getParameter("folderId"));
+		System.out.println("uppFolderId : "+ request.getParameter("uppFolderId"));
+		System.out.println("primary : "+ userInfo.getLang());
+		jsonObject.put("id", userInfo.getId());
+		jsonObject.put("folderId", request.getParameter("folderId"));
+		jsonObject.put("uppFolderId", request.getParameter("uppFolderId"));
+		jsonObject.put("primary", userInfo.getLang());
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		ResponseEntity<JSONObject> 	result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
+		
+		
+		JSONObject resultBody = result.getBody();
+		String status                 = (String) resultBody.get("status");
+		if (!status.equals("ok")) {
+			String reason      = resultBody.get("reason").toString();
+			model.addAttribute("reason", reason);
+		}
+		
+		LOGGER.debug("Move Folder finishes!");
+		
+		return "json";
+		
+	}
 	
 	
 	/*
