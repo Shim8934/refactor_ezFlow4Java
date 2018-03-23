@@ -65,41 +65,41 @@
 	        if (ClassText != "")
 	            TypeText = TypeText + " ( " + ClassText + " ) ";
 	
-	        document.getElementById("publicity").innerText = " " + TypeText;
-	    }
+	        document.getElementById("publicity").innerHTML = "&nbsp;" + TypeText;
+	  	 }
 	    function setdocdisplay(vdocdisplay) {
-	        var specialText = " ";
+	        var specialText = "";
 	        if (vdocdisplay.substring(0, 1) == "Y")
-	            if (specialText == " ")
+	            if (specialText == "")
 	                specialText = specialText + "<spring:message code='ezApprovalG.t1211'/>";
 	            else
 	                specialText = specialText + ",  " + "<spring:message code='ezApprovalG.t1211'/>";
 	
 	        if (vdocdisplay.substring(1, 2) == "Y")
-	            if (specialText == " ")
+	            if (specialText == "")
 	                specialText = specialText + "<spring:message code='ezApprovalG.t984'/>";
 	            else
 	                specialText = specialText + ",  " + "<spring:message code='ezApprovalG.t984'/>";
 	
 	        if (vdocdisplay.substring(2, 3) == "Y")
-	            if (specialText == " ")
+	            if (specialText == "")
 	                specialText = specialText + "<spring:message code='ezApprovalG.t1212'/>";
 	            else
 	                specialText = specialText + ",  " + "<spring:message code='ezApprovalG.t1212'/>";
 	
 	        if (vdocdisplay.substring(3, 4) == "Y")
-	            if (specialText == " ")
+	            if (specialText == "")
 	                specialText = specialText + "<spring:message code='ezApprovalG.t986'/>";
 	            else
 	                specialText = specialText + ",  " + "<spring:message code='ezApprovalG.t986'/>";
 	
 	        if (vdocdisplay.substring(3, 4) == "Y")
-	            if (specialText == " ")
+	            if (specialText == "")
 	                specialText = specialText + "<spring:message code='ezApprovalG.t1207'/>";
 	            else
 	                specialText = specialText + ",  " + "<spring:message code='ezApprovalG.t1207'/>";
 	
-	        document.getElementById("special").innerText = specialText;
+	        document.getElementById("special").innerHTML = "&nbsp;" +  specialText;
 	    }
 	    function window_close() {
 	        if (ReturnFunction != null) {
@@ -127,8 +127,8 @@
 		    <td id="special"></td>
 		  </tr>
 		  <tr>
-		    <th  ><spring:message code='ezApprovalG.t118'/></th>
-		    <td  >&nbsp;<span id="SecLevel"></span>
+		    <th><spring:message code='ezApprovalG.t118'/></th>
+		    <td>&nbsp;<span id="SecLevel"></span>
 		      <select id="selSecLevel" name="select" style="WIDTH:85px;display:none">
 		        <option value="" selected></option>
 		        ${securityNode}
@@ -136,23 +136,23 @@
 		    </td>
 		  </tr>
 		  <tr>
-		    <th ><spring:message code='ezApprovalG.t1213'/><br><spring:message code='ezApprovalG.t989'/></th>
+		    <th><spring:message code='ezApprovalG.t1213'/><br><spring:message code='ezApprovalG.t989'/></th>
 		    <td id="publicity"></td>
 		  </tr>
 		  <tr>
 		    <th> <spring:message code='ezApprovalG.t876'/></th>
-		    <td>${limitRange} </td>
+		    <td>&nbsp;${limitRange} </td>
 		  <tr>
 		    <th> <spring:message code='ezApprovalG.t979'/></th>
-		    <td>${pageNum} </td>
+		    <td>&nbsp;${pageNum} </td>
 		  </tr>
 		  <tr>
 		    <th> <spring:message code='ezApprovalG.t1199'/></th>
-		    <td>${urgentApproval} </td>
+		    <td>&nbsp;${urgentApproval} </td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code='ezApprovalG.t1210'/></th>
-		    <td>${securityDate }</td>
+		    <td>&nbsp;${securityDate }</td>
 		  </tr>
 		</table>
 		<script type="text/javascript" >

@@ -502,6 +502,10 @@ function ListView() {
 
                 if (strColName == "HASATTACHYN")
                     objTd.style.textAlign = "center";
+                
+                if (strColName == "ISPUBLIC") {
+                	objTd.style.textAlign = "center";
+                }
 
                 if (strClass != "") {
                     if (i == 0) {       //// 현재는 header에 class가 없으므로 고정함.
@@ -549,12 +553,13 @@ function ListView() {
                 //objTd.appendChild(oText);
                 
                 // 2018-01-08 강민수92 첨부파일이면 첨부파일 이미지로 출력
-                if (strColName == "HASATTACHYN") {
-                	objTd.innerHTML = '<img src="/images/newAttach.gif">';
-                } else {
-                	objTd.innerHTML = strName;
-                }
-//                objTd.innerHTML = strName;
+//                if (strColName == "HASATTACHYN") {
+//                	objTd.innerHTML = '<img src="/images/newAttach.gif">';
+//                } else {
+//                	objTd.innerHTML = strName;
+//                }
+                
+                objTd.innerHTML = strName;
                 objTr.appendChild(objTd);
 
                 objTd = null;

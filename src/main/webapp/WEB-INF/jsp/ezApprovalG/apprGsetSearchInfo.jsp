@@ -367,7 +367,7 @@
 		        var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
 		        feature = feature + GetShowModalPosition(713, 570);
 		
-		        getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
+		        getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(715, 570));
 		        try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
 		        //window.resizeTo(800, 650);
 		        //var Positon = getPositionOpenWin(800, 650);

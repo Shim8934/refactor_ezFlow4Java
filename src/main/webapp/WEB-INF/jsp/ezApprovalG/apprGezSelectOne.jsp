@@ -318,7 +318,7 @@
 				<td style="vertical-align:top;padding-left:5px" >
 					<h2><spring:message code='ezApprovalG.t233'/></h2>
 					<div class="listview">
-						<DIV id="OrganListView" class="text" style="overflow:auto; border:0;Width:320px; Height:358px;margin:1px 1px 1px 1px;"></DIV>
+						<DIV id="OrganListView" class="text" style="overflow:auto; border:0;Width:320px; Height:358px;margin:0px;"></DIV>
 					</div>
 					<table style="width:100%">
 						<tr>

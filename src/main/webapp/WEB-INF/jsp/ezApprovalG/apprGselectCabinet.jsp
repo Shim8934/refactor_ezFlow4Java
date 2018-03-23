@@ -626,7 +626,7 @@
 	    </table>
 	    <div class="btnposition btnpositionNew" style="text-align: right; padding-bottom:1.5%;">
 	        <h2 style="padding-right:10px;"><spring:message code='ezApprovalG.t1090'/> :&nbsp;
-	            <input type="text" id="Cabinetkeyword" value="" onkeypress="CabinetSearch_Press(event)" style="cursor: text; padding: 0 0 0 0; border-top: 1px solid #bebebe; border-left: 1px solid #bebebe; vertical-align: middle; background-color: White; width: 150px; height:21px; color:black;font-weight:normal">
+	            <input type="text" id="Cabinetkeyword" value="" onkeypress="CabinetSearch_Press(event)" style="cursor: text; padding: 0 0 0 0; margin-bottom: 2.5px; vertical-align: middle; background-color: White; width: 150px; height:21px; color:black;font-weight:normal">
 	            <a class="imgbtn" style="vertical-align: middle;" onclick="return CabinetSearch_onclick()"><span><spring:message code='ezApprovalG.t111'/></span></a>
 	            <a class="imgbtn" style="vertical-align: middle;" onclick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
 	            <a class="imgbtn" style="vertical-align: middle;" onclick="return cmdCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>

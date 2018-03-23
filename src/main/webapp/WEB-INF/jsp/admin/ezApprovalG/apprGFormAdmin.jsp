@@ -381,14 +381,13 @@
 		            }
 		            else {
 		            	if (approvalFlag =='S') {
-							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 								url = "/admin/ezApprovalG/formMainOther.do";
 							} else {
 								url = "/admin/ezApprovalG/formMain.do";
 							}
 						} else {
-// 							if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
-							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 
 								url = "/admin/ezApprovalG/formMainOther.do";
 							} else {
