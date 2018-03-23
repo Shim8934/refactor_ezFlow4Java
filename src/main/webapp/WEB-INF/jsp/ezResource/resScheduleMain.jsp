@@ -219,8 +219,9 @@
 	            srcEl = window.event.srcElement;
 	        }
 	        var selsd = "", seled = "";
-
-	        if (GetAttribute(srcEl,"dispDate") == null) {
+	        
+			/* 2018.03.23 서주연 - #12114 */
+	        if (GetAttribute(srcEl,"dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 	            if (GetAttribute(srcEl,"dispTime") != null) {
 
 	                selsd = GetAttribute(srcEl,"dispTime");
