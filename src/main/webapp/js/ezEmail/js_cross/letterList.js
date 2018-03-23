@@ -9,7 +9,7 @@ function letterSearch() {
 	}
 	
 	var search = $("#lmSearchInput").val();
-	if(search.trim() == "") {
+	if(search.trim() === "") {
 		alert("검색어를 입력해주세요.");
 		return;
 	}
@@ -20,7 +20,7 @@ function letterSearch() {
 		datatype : 'json',
 		error : function(data) {
 			alert("error");
-			console.log(data);
+			//console.log(data);
 		},
 		complete : function(data) {
 			addLetterList(data.responseJSON);
@@ -35,35 +35,6 @@ function inputReset(){
 	$(".searchInput").val("");
 }
 
-//편지지 삭제
-$(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
-	var deleteChk = confirm("정말로 삭제하시겠습니까?");
-	
-	if(deleteChk) {
-		var letterId = $(this).parent("li").attr("data-letterId");
-		var letterBoxNo = $(this).parents(".boxNo").attr("data-boxNo");
-		var letterNo = $(this).parent("li").attr("data-letterNo");
-		
-		$.ajax({
-			type:"POST",
-			data:{
-				letterNo:letterNo,
-				letterBoxNo:letterBoxNo,
-				letterId:letterId
-			},
-			url:"/admin/ezEmail/deleteLetter",
-			success:function(){
-				getLetterList(letterBoxNo);
-				
-				$(".lmPreViewTxt").css("display","block");
-				$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
-				$(".lmPreViewIframe").attr("src","");
-				$(".lmPreViewIframe").css("display","none");
-				alert("삭제하였습니다.");
-			}
-		});
-	}
-});
 
 // 편지지 선택 (개별 조회 미리보기)
 $(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect)", function(){
@@ -153,7 +124,7 @@ function getLetterList(letterBoxNo, nowSelect) {
 	    	
 		},
 		error:function(d){
-			console.log(d);
+			//console.log(d);
 		}
 	});
 }
@@ -163,7 +134,7 @@ function addLetterList(jsonArr, nowSelect) {
 	var letterListHtml = "";
 	var listCount = jsonArr.length;
 
-	if (listCount != 0) {
+	if (listCount !== 0) {
 		for (i = 0; i < listCount; i++) {
 			
 			letterListHtml += "<li id='lt" + jsonArr[i].letterNo + "' data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + "'>"; 
@@ -171,7 +142,7 @@ function addLetterList(jsonArr, nowSelect) {
 			
 			if (pageType == 'letter_user') {
 				if (searchMode) {
-					var boxName;
+					var boxName = "";
 					$.ajax({
 						type:"POST",
 						url:"/ezEmail/selectLetterBoxName.do?letterBoxNo=" + jsonArr[i].letterBoxNo,
@@ -182,7 +153,7 @@ function addLetterList(jsonArr, nowSelect) {
 						},
 						error:function(data){
 							alert("error");
-							console.log(data);
+							//console.log(data);
 						}
 					});
 					
@@ -212,7 +183,7 @@ function addLetterList(jsonArr, nowSelect) {
 }
 
 function letterListCss(pageType, searchMode) {
-	if (pageType == 'letter_user' && searchMode == true) {
+	if (pageType === 'letter_user' && searchMode === true) {
 		$(".lmLetterListUl li > span").css({
 			"width":"70%",
 			"margin":"0"
@@ -227,39 +198,3 @@ function letterListCss(pageType, searchMode) {
 		});
 	}
 }
-
-
-// 예외처리  strChk(문자, 특수문자 허용여부, 길이)
-function strChk(str, speChar, strLen) {
-	// 공백, 특수문자, 길이
-	var strTrim = str.trim();
-	var msg = "";
-	var reJson = {};
-	
-	if (strTrim != "") {
-		// true : 특수문자허용
-		if (!speChar) { 
-			var speCha = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
-			
-			if (speCha.test(strTrim)) {
-				msg = "특수문자는 입력이 불가능합니다.";
-			}	
-		}
-		
-		// 길이
-		if (typeof strLen != "undefined") {
-			if (strTrim.length >= strLen) {
-				msg = strLen + "자 이하로 입력 가능합니다."
-			} 
-		}
-		
-	}else {
-		msg = "입력해주세요.";
-	}
-	
-	reJson.str = strTrim;
-	reJson.msg = msg;
-	
-	return reJson;
-}
-

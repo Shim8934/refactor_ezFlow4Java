@@ -1,5 +1,14 @@
 var noResult = false;
 
+
+/*
+ * result : 모든 편지지함 정보(letteBoxNo, parentLetterBoxNo, displayname, displayname2, compnayId)
+ * treeCollection : jstree에서 사용할 수 있도록 변형(id, parent, text)
+ * 
+ * 
+ * */
+
+
 // 편지지함 트리 가져오기
 function resultRead() {
 	$.ajax({
@@ -13,7 +22,7 @@ function resultRead() {
 		complete : function(data) {
 	        result = data.responseJSON;
 	        
-	        if (result.length == 0) {
+	        if (result.length === 0) {
         		noResult = true;
         	}
 	        treeSet();
@@ -35,49 +44,38 @@ function treeInit() {
 
 // 노드 클릭 시
 function treeOnclick() {
-	var parent;
-	
 	$('#divTree').on('changed.jstree', function (e, data) {
 		selectNode = data;
 		if (pageType === "letterBox") { // 편지지함 
+    		var nodeId = selectNode.node.id;
+    		var parentId = selectNode.node.parent;
     		
-    		parent = selectNode.node.parent;
-    		
-    		if (parent == '#') {
-    			parent = '0';
+    		if (parentId == '#') {
+    			parentId = '0';
     		}
     		
-    		document.getElementById("parent_letterbox_no").value = parent;
-    		document.getElementById("letterbox_no").value = selectNode.node.id; 
+    		document.getElementById("parent_letterbox_no").value = parentId;
+    		document.getElementById("letterbox_no").value = nodeId;
     		
-    		if (!(selectNode.node.id.indexOf('temp'))) {
-    			// 편지지함이 임시 추가라면
+    		if (!(nodeId.indexOf('temp'))) { // 편지지함이 임시 추가라면
     			setDisplay("편지지함", "letterbox_temp");
     		} else { 
-    			selectBox(selectNode.node.id);
+    			selectBox(nodeId);
     		}
     		
     		if (addCheck == -1) { 
     			$('#divTree').jstree().delete_node($('#temp'));
     			addCheck = 0;
     			$("#letterbox_no").removeAttr("disabled");
-    			//추가하면 다른 node 못누르게됨
-    			//$("#divTree").jstree('select_node', "#temp");
-    			//setDisplay("편지지함", "letterbox_temp");
     			return;
     		}
     		
-		} else if (pageType == 'letter_move') { 
-			
-			
-		} else { // 편지지
-			// letterBoxNo
+		} else { // 편지지 관리, 사용자 편지지 팝업
 			var letterBoxNo = data.node.id === "undefined" ? "1" : data.node.id;
 			
 			getLetterList(letterBoxNo); // 편지지 리스트
 		}
     });
-	
 }
 
 // 현재 노드 저장
@@ -100,7 +98,7 @@ function selectBox(letterBoxNo) {
 	
 }
 
-// 트리에서 필요한 아이들만 빼서 treeCollection 재구성
+// 트리에서 필요한 아이들만 빼서 treeCollection 재구성 (구성할 때 jsTree 규칙에 맞게 변경)
 function treeSet() {
 	for(var i = 0; i < result.length; i++) {
 		var treeId = result[i].letterBoxNo;
@@ -114,8 +112,6 @@ function treeSet() {
 		
 		treeCollection.push({id:treeId, parent:treeParent, text:treeText, companyId:companyId});
 	}
-	
-	
 }
 
 // jstree 보여주는 애
@@ -160,21 +156,21 @@ function addLetterBox() {
 
 	var node = { id: 'temp', text:"편지지함"};
 	$('#divTree').jstree('create_node', parent, node, 'last');
-	$("#divTree").jstree("open_node", $('#'+parentId));
+	$("#divTree").jstree("open_node", $('#' + parentId));
 	$("#divTree").jstree("select_node", $('#temp'));
 	$("#letterbox_no").attr("disabled","disabled");
 	document.getElementById("parent_letterbox_no").value = putParent;
 	
 	addCheck = -1;
-	
 }
 
 // 폴더명 중복 체크
 function boxNameCheck() {
 	var returnVal = false;
+	var selectNd = selectNode.node;
 	
 	for(var i = 0; i < result.length; i++) {
-		if(selectNode.node.parent == result[i].parentLetterboxNo && selectNode.node.id != result[i].letterBoxNo) { 
+		if(selectNd.parent == result[i].parentLetterboxNo && selectNd.id != result[i].letterBoxNo) { 
 			if (document.getElementById("display").value == result[i].displayname) {
 				returnVal = true;
 			}
@@ -185,26 +181,27 @@ function boxNameCheck() {
 
 // 편지지함 삭제 버튼 클릭 시
 function deleteLetterBox() {
-	var letterBoxNo = selectNode.node.id;
+	var letter = selectNode.node;
+	var letterBoxNo = letter.id;
 	var realCheck = false;
 	
-	if (letterBoxNo == treeCollection[0].id) {
+	if (letterBoxNo == result[0].letterBoxNo) { //treeCollection[0].id == 
 		alert("기본편지지함은 삭제가 불가능합니다.");
 		return;
 	}
 	
-	if (selectNode.node.children.length != 0) {
+	if (letter.children.length !== 0) {
 		alert("하위 편지지함이 존재합니다. 하위편지지함을 삭제해주세요");
 		return;
 	} else {
 		var con = confirm("편지지함을 삭제하시겠습니까? \n(주의! 편지지가 존재하면 편지지 포함 삭제됩니다.)");
-		if (con == true) {
+		if (con === true) {
 			realCheck = true;
 		}
 	}
 	
-	if (realCheck == true) {
-		$('#divTree').jstree().delete_node($('#'+letterBoxNo));
+	if (realCheck === true) {
+		$('#divTree').jstree().delete_node($('#' + letterBoxNo));
 		$.ajax({
 			type : "POST",
 			url : "/admin/ezEmail/deleteLetterBox.do?letterBoxNo=" + letterBoxNo,
@@ -218,7 +215,7 @@ function deleteLetterBox() {
 					success : function(data) {},
 					error : function(data) {
 						alert("error");
-						console.log(data);
+						//console.log(data);
 					}
 				});
 				
@@ -227,7 +224,7 @@ function deleteLetterBox() {
 			},
 			error : function(data) {
 				alert("error");
-				console.log(data);
+				//console.log(data);
 			}
 		});
 		
@@ -242,7 +239,7 @@ function strChk(str, speChar, strLen) {
 	var msg = "";
 	var reJson = {};
 	
-	if (strTrim != "") {
+	if (strTrim !== "") {
 		// true : 특수문자허용
 		if (!speChar) { 
 			var speCha = /[`~!<>@#$%^&*|\\\"\';:\/?]/gi;
@@ -255,7 +252,7 @@ function strChk(str, speChar, strLen) {
 		// 길이
 		if (typeof strLen != "undefined") {
 			if (strTrim.length >= strLen) {
-				msg = strLen + "자 이하로 입력 가능합니다."
+				msg = strLen + "자 이하로 입력 가능합니다.";
 			} 
 		}
 		
@@ -280,15 +277,15 @@ function submitClick() {
 	
 	var disName = strChk($("#myForm #display").val(), false, 40);
 	var disName2 = strChk($("#myForm #display2").val(), false, 40);
-	var disMsg = disName.msg != "" ? disName.msg : disName2.msg != "" ? disName2.msg : "";
-	if (disMsg != "") {
+	var disMsg = disName.msg !== "" ? disName.msg : disName2.msg !== "" ? disName2.msg : "";
+	if (disMsg !== "") {
 		alert(disMsg);
 		return;
 	}
 	
 	var checkVal = boxNameCheck();
 	
-	if (checkVal == true) {
+	if (checkVal === true) {
 		alert("편지지함명 이 중복되었습니다.");
 		document.getElementById("display").focus();
 		return;

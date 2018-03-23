@@ -43,8 +43,8 @@
 						<button onClick="letterEditPopUp(this, 'add')">편지지 추가</button>
 						<button onClick="letterBoxMove(this)">편지지 이동</button>
 						<img src="/images/i_bar.gif" alt="line">
-						<button class="lmBtnPrev" onclick="orderPrev()"><img src="/images/ImgIcon/prev.gif" alt="prev"></button>
-						<button class="lmBtnNext" onclick="orderNext()"><img src="/images/ImgIcon/next.gif" alt="next"></button>
+						<button class="lmBtnPrev" onclick="orderSelect('prev')"><img src="/images/ImgIcon/prev.gif" alt="prev"></button>
+						<button class="lmBtnNext" onclick="orderSelect('next')"><img src="/images/ImgIcon/next.gif" alt="next"></button>
 						<button onclick="orderChange()">순서 저장</button>
 					</div>
 				</div>
@@ -73,28 +73,21 @@
 				resultRead(); // 편지지함 목록  (/js/ezEmail/js_cross/letterBoxTree.js)
 			});
 			
-			// 순서 번경(위로 올리기)
-			function orderPrev() {
+			// 위, 아래 버튼 클릭 시 실행
+			// type: prev(위), next(아래)
+			function orderSelect(type) {
 				var select= $('body').find('.lmLetterSelect');
 				
-				if (select.length == 0) {
+				if (select.length === 0) {
 					alert("편지지를 선택하세요!");
 					return;
 				}
 				
-				select.prev().before(select);
-			}
-			
-			// 순서 변경(아래로 내리기)
-			function orderNext() {
-				var select = $('body').find('.lmLetterSelect');
-				
-				if (select.length == 0) {
-					alert("편지지를 선택하세요!");
-					return;
+				if (type == 'prev') {
+					select.prev().before(select);
+				} else {
+					select.next().after(select);
 				}
-					
-				select.next().after(select);
 			}
 			
 			// 순서 저장 버튼 눌렀을때
@@ -110,7 +103,7 @@
 						dataType:"text",
 						error:function(data) {
 							alert("error");
-							console.log(data);
+							//console.log(data);
 							return;
 						}
 					});
@@ -126,14 +119,16 @@
 				var letterNo = $(".lmLetterSelect").attr("data-letterno");
 				var letterId = $(".lmLetterSelect").attr("data-letterid");
 				
-				if (typeof letterNo !== "undefined") {
+				//편지지 목록이 선택 되었을때
+				if (typeof letterNo !== undefined) {
 					
 					url = "/admin/ezEmail/letterBoxMovePopUp.do?letterBox=" + letterBox + "&letterNo=" + letterNo + "&letterId=" + letterId;  
 					var win = window.open(url,"_blank","width=550, height=450");
 					
+					// 팝업이 끝나면 실행되는 부분
 					var interval = window.setInterval(function() {
 				        try {
-				            if (win == null || win.closed) {
+				            if (win === null || win.closed) {
 								getLetterList(selectNode.node.id);
 				            	window.clearInterval(interval);
 				                closeCallback(win);
@@ -158,7 +153,37 @@
 				var letterPopUp = window.open(url, "letterPopUp", "width=890, height=660");
 			}
 			
-			
+			//편지지 삭제
+			$(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
+				var deleteChk = confirm("정말로 삭제하시겠습니까?");
+				
+				if(deleteChk) {
+					var letterId = $(this).parent("li").attr("data-letterId");
+					var letterBoxNo = $(this).parents(".boxNo").attr("data-boxNo");
+					var letterNo = $(this).parent("li").attr("data-letterNo");
+					
+					$.ajax({
+						type:"POST",
+						data:{
+							letterNo:letterNo,
+							letterBoxNo:letterBoxNo,
+							letterId:letterId
+						},
+						url:"/admin/ezEmail/deleteLetter",
+						success:function(){
+							getLetterList(letterBoxNo);
+							
+							$(".lmPreViewTxt").css("display","block");
+							$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
+							$(".lmPreViewIframe").attr("src","");
+							$(".lmPreViewIframe").css("display","none");
+							alert("삭제하였습니다.");
+						}
+					});
+				}
+			});
+		
+			// 미리보기창에 마우스 올렸을떄 편지지 이름 보여주기
 			$(document).on("mouseover", ".lmPreview > .lmPreViewIframe", function(){
 				var letterName = $(this).attr("data-letterName");
 				var letterNameSpan = "<span class='preViewLetterName'>" + letterName + "</span>";
@@ -174,37 +199,12 @@
 					"font-size" : "14px"
 				});
 				
-			})
+			});
 			
-			
-			
-			/* $(".lmPreview > .lmPreViewIframe").on("mousemove",function(event){
-				
-				var letterName = $(this).attr("data-letterName");
-				var letterNameSpan = "<span class='preViewLetterName'>" + letterName + "</span>";
-				
-				$(".lmPreview").prepend(letterNameSpan);
-				$(".preViewLetterName").css({
-					"padding" : "3px 10px",
-					"color" : "white",
-					"background" : "rgba(0,0,0,0.5)",
-					"position" : "absolute"
-				});
-				
-				var mouseX = event.pageX;
-				var mouseY = event.pageY;
-
-				$(".preViewLetterName").css({
-					"left" : mouseX + 10 + "px",
-					"top" : mouseY + 10 + "px"
-				});
-				
-				
-			}) */
-			
+			// 미리보기창에 마우스 올렸을떄 편지지 이름 없애기
 			$(document).on("mouseleave", ".lmPreview > .lmPreViewIframe:not(.preViewLetterName)", function(){
 				$(".lmPreview .preViewLetterName").remove();
-			})
+			});
 				
 		</script>
 	</body>

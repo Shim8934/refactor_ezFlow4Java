@@ -48,23 +48,16 @@
 			<div class="leLetter">
 				 <div class="leLetterBtns">
 				 	<button id="leSave" data-letterNo="${letterNo}" onclick="letterBoxSave()">저장</button>
-				 	<button id="leClose">취소</button>
+				 	<button id="leClose" onclick="window.close()">취소</button>
 				 </div>
 			</div>
 		
 		</div>
 		<script>
-			
-			// 취소
-			$("#leClose").on("click",function(){
-				window.close();
-			});
-			
 		    var pageType = "${pageType}";
 		    var returnCompany = '${companyId}';
 		    var isDivPopUp = false;
 		    
-		 // 편지지 목록 ===========================================================================================
 			var result = [];
 		    var treeCollection = [];
 		    var selectNode;
@@ -72,7 +65,6 @@
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록
 				isDivPopUp = true;
-				
 			});
 			
 			//편지지함 이동(저장)
@@ -89,12 +81,11 @@
 					datatype : 'text',
 					error : function(data) {
 						alert("error");
-						console.log(data);
+						//console.log(data);
 					},
 					success : function(data) {
 						alert("편지지 이동하였습니다");
 						window.close();
-						
 					}
 				}); 
 				

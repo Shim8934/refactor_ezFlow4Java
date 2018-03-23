@@ -17,79 +17,7 @@
 	    <script src="/js/dist/jstree.min.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterBoxTree.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
-	   
-		<script type="text/javascript">
-	    var pageType = "${pageType}";
-	    var returnCompany = '${companyId}';
-	    var isDivPopUp = false;
-	    
-	 // 편지지 목록 ===========================================================================================
-		var result = [];
-	    var treeCollection = [];
-	    var xmlhttp;
-	    var responseResult;
-	    var selectNode;
-	    var pageType = '${pageType}';
-	    
-			$(document).ready(function(){
-				resultRead(); // 편지지함 목록
-				isDivPopUp = true;
-				
-			});
-			
-			// 편지지 미리보기
-		    function letterPreview(btn){
-				var letterNo = $(".lmLetterSelect").attr("data-letterno");
-				
-				if (letterNo !== "undefined") {
-		    		url = "/ezEmail/mailLetterPreview.do?" + "letterNo=" + letterNo;  
-		    		window.open(url,"_blank","width=890, height=660");
-		    	}
-		    }
-			
-			// 편지지 선택(mailWirte.jsp에 들어가도록)
-			function letterSelect() {
-				var letterNo = $(".lmLetterSelect").attr("data-letterno");
-				if (typeof letterNo !== "undefined") {
-					$.ajax({
-						type:"POST",
-						data:{letterNo:letterNo,popUpType:"modify"},
-						url:"/admin/ezEmail/readLetter",
-						dataType:"json",
-						success:function(data){
-							
-							console.log(data);
-							
-							if (data.filePath == 'ERROR') {
-								alert("존재하지 않는 편지지입니다.");
-								return;
-							}
-							
-							var editorMailContent = parent.message.GetEditorContent();
-							var letterHtml = data.letterHtml;
-							
-							parent.DivPopUpHidden();
-							parent.message.SetEditorContent(letterHtml + editorMailContent);
-						}
-					});
-					
-		    	} else {
-		    		alert("편지지를 선택하세요.");
-		    		return;
-		    	}
-		    }
-		    
-			// 닫기버튼
-		    function cancel() {
-	             if (!isDivPopUp){
-	                window.close();
-	            } else {
-	            	parent.DivPopUpHidden();
-	            }
-		    }
-		    
-		</script>
-		<style>
+	    <style>
 			.imgbtn {
 			    vertical-align: middle;
 			}
@@ -140,19 +68,6 @@
 				text-align: center;
 			}
 			
-			/* span {
-				clear: none;
-			} */
-			
-			/* .lmLetterListUl li {
-			    height: 30px;
-			    line-height: 30px;
-			    box-sizing: border-box;
-			    border-bottom: 1px solid #ebebed;
-			    padding: 0 4px;
-			    cursor: pointer;
-			} */
-			
 		</style>
 	
 	</head>
@@ -189,6 +104,73 @@
 			<a class="imgbtn" onclick="cancel()"><span>닫기</span></a>
 		</div>
 		
+		<script type="text/javascript">
+	    var pageType = "${pageType}";
+	    var returnCompany = '${companyId}';
+	    var isDivPopUp = false;
+	    
+		var result = [];
+	    var treeCollection = [];
+	    var xmlhttp;
+	    var responseResult;
+	    var selectNode;
+	    var pageType = '${pageType}';
+	    
+			$(document).ready(function(){
+				resultRead(); // 편지지함 목록
+				isDivPopUp = true;
+				
+			});
+			
+			// 편지지 미리보기
+		    function letterPreview(btn){
+				var letterNo = $(".lmLetterSelect").attr("data-letterno");
+				
+				if (typeof letterNo !== undefined) {
+		    		url = "/ezEmail/mailLetterPreview.do?" + "letterNo=" + letterNo;  
+		    		window.open(url,"_blank","width=890, height=660");
+		    	}
+		    }
+			
+			// 편지지 선택(mailWirte.jsp에 들어가도록)
+			function letterSelect() {
+				var letterNo = $(".lmLetterSelect").attr("data-letterno");
+				if (typeof letterNo !== undefined) {
+					$.ajax({
+						type:"POST",
+						data:{letterNo:letterNo,popUpType:"modify"},
+						url:"/admin/ezEmail/readLetter",
+						dataType:"json",
+						success:function(data){
+							if (data.filePath === 'ERROR') {
+								alert("존재하지 않는 편지지입니다.");
+								return;
+							}
+							
+							var editorMailContent = parent.message.GetEditorContent();
+							var letterHtml = data.letterHtml;
+							
+							parent.DivPopUpHidden();
+							parent.message.SetEditorContent(letterHtml + editorMailContent);
+						}
+					});
+					
+		    	} else {
+		    		alert("편지지를 선택하세요.");
+		    		return;
+		    	}
+		    }
+		    
+			// 닫기버튼
+		    function cancel() {
+	             if (!isDivPopUp){
+	                window.close();
+	            } else {
+	            	parent.DivPopUpHidden();
+	            }
+		    }
+		    
+		</script>
 				
 	</body>
 </html>
