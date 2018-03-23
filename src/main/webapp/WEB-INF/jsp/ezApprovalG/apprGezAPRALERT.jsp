@@ -25,7 +25,6 @@
 		    function btn_OpinionOK_onclick() {
 		        if (ReturnFunction != null) {
 		            ReturnFunction();
-		            window.close();
 	            } else {
 		        	window.returnValue = true;
 		            window.close();
