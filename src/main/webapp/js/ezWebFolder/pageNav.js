@@ -125,7 +125,10 @@ function selafterBlock_one(){
 function getFileSize(fileSize) {
 	var fileSize_ = "";
 	
-	if (fileSize / 1024 / 1024 > 1) {
+	if (fileSize / 1024 / 1024 / 1024 > 1) {
+		fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 / 1024 * 10)) / 10).toFixed(1) + "GB";
+	}
+	else if (fileSize / 1024 / 1024 > 1) {
 		fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
 	}
 	else if (fileSize / 1024 > 1) {
