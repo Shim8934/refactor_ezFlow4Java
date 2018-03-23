@@ -57,6 +57,8 @@ function CalendarView(pTagetID) {
             oTable.setAttribute("border", "0");
             oTable.setAttribute("width", "100%");
             oTh.setAttribute("id", "calTitle");
+            oTh.style.padding = "1px 0px 1px 0px";
+            oTh.style.fontSize = "15px";
             oTh.colSpan = "2";
             if (typeCal == 2) {
                 var tempyear = sDate.getFullYear();
