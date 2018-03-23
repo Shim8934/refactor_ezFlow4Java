@@ -8112,6 +8112,7 @@ CREATE TABLE `tbl_vote_answer` (
   `TENANT_ID` mediumint(9) NOT NULL,
   `CONTENT` varchar(250) NOT NULL,
   `VOTES_NUM` int(11) NOT NULL DEFAULT '0',
+  `FILE_PATH` longtext,
   PRIMARY KEY (`ID`,`QST_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
