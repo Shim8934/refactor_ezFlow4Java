@@ -1675,7 +1675,7 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         else
             field = "";
 
-        createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", field);
+        createNodeAndInsertText(xmlpara, objNode, "DOCNO", field);
         createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
         createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
         createNodeAndInsertText(xmlpara, objNode, "STARTDATE", "DRAFTSAVE");

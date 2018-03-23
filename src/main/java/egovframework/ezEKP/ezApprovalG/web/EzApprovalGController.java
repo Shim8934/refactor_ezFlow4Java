@@ -2955,12 +2955,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 임시보관 저장 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/saveTmpFile.do", produces = "text/xml;charset=utf8")
+	@RequestMapping(value = {"/ezApprovalG/saveTmpFile.do", "/ezApprovalG/saveTmpFileHWP.do"}, produces = "text/xml;charset=utf8")
 	@ResponseBody
 	public String saveTmpFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("saveTmpFile started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		String extension = ".mht";
+		
+		if (requestURL.indexOf("HWP") > -1) {
+			extension = ".hwp";
+		}
 		
 		String docID = request.getParameter("docID");
 		String formText = request.getParameter("html");
@@ -2990,7 +2997,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				file2.mkdirs();
 			}
 			
-			String saveFileName = tmpPath + commonUtil.separator + "TMP" + commonUtil.separator + docID + ".mht";
+			String saveFileName = tmpPath + commonUtil.separator + "TMP" + commonUtil.separator + docID + extension;
 		
 			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			
