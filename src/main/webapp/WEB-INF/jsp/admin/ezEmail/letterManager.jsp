@@ -68,6 +68,7 @@
 		    var noResult = false; 
 			var pageType = "${pageType}"; // letter
 			var returnCompany = '${companyId}'; // companyId
+			var searchTxt = ""; // 검색어
 			
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록  (/js/ezEmail/js_cross/letterBoxTree.js)
@@ -171,7 +172,11 @@
 						},
 						url:"/admin/ezEmail/deleteLetter",
 						success:function(){
-							getLetterList(letterBoxNo);
+							if (searchTxt != "") {
+								letterSearch();
+							} else {
+								getLetterList(letterBoxNo);
+							}
 							
 							$(".lmPreViewTxt").css("display","block");
 							$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");

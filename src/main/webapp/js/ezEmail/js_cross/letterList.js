@@ -14,6 +14,11 @@ function letterSearch() {
 		return;
 	}
 	
+	// searchTxt 존재여부 확인하기
+	if (searchTxt !== "") {
+		searchTxt = search;
+	}
+	
 	$.ajax({
 		type : "POST",
 		url : "/ezEmail/searchLetter.do?search=" + encodeURI(encodeURIComponent(search)),
@@ -24,7 +29,6 @@ function letterSearch() {
 		},
 		complete : function(data) {
 			addLetterList(data.responseJSON);
-			
 	    }
 	});
 	
