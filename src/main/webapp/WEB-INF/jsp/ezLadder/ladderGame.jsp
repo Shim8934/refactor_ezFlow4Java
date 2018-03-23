@@ -57,7 +57,8 @@
 			$(document).on("click", "#modify", function() {
 				var cmtId = $(this).attr("cmtid");
 				if($(this).attr("data") === "OK") {
-					if($("#modifyCmtBox").text() !== "") {
+					if($("#modifyCmtBox").val() !== "") {
+						console.log("모디파이확인");
 						setComment("modify", cmtId);
 					} else {
 						$("#modifyCmtBox").focus();
@@ -131,10 +132,6 @@
 			html += "<div id='mod_cancle' class='icondiv' style='right: 0;'>취소</div>";
 			html += "</div>";
 			
-			/* html += "<td colspan='2' class='modiTd'><input type='text' id='modifyCmtBox' value='" + origCmt + "' style='width: 100%;' /></td>";
-			html += "<td class='modiTd'><div id='mod_" + cmtId + "' data='OK' class='cmtmodify'>확인</div></td>";
-			html += "<td class='modiTd'><div id='mod_cancle' class='cmtmodify'>취소</div></td>"; */
-			
 			$("#cmt_" + cmtId).append(html);
 			$("#modifyCmtBox").select();
 		}
@@ -146,7 +143,7 @@
 				$("#inputCmtBox").val("");
 			} else if(flag === "modify") {
 				console.log(cmtId);
-				comment = $("#cmt_" + cmtId + " #modifyCmtBox").text();
+				comment = $("#cmt_" + cmtId + " #modifyCmtBox").val();
 				$("#cmt_" + cmtId + " #modifyCmtBox").text("");
 			} 
 			
