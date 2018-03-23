@@ -3639,7 +3639,7 @@
 		    AND
 		    		B.COMPANYID = #companyID#
 		    ORDER BY 
-		    		B.CNAME ASC
+		    		NAME ASC
 		</isNotEmpty>
 	</select>
 	
@@ -3698,7 +3698,7 @@
             AND
 		    		B.COMPANYID = #companyID#
         	ORDER BY 
-        			MCNAME ASC
+        			NAME ASC
 		</isNotEmpty>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getTaskSubCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
@@ -3769,7 +3769,7 @@
             AND	
             	COMPANYID = #companyID#   	
             ORDER BY 
-           		SCNAME ASC
+           		NAME ASC
 		</isNotEmpty>		
 	</select>
 	
@@ -4944,8 +4944,9 @@
 				TBL_CABINETCLASS.COMPANYID = #companyID#
 		AND
 				TBL_MYTASKCODE.DEPTID = #v_DEPTID#
-		ORDER BY 
-				TBL_CABINETCLASS.Title  
+<!-- 오라클에서 varchar 정렬이 안되기때문에 임시로 주석처리 -->
+<!-- 		ORDER BY 
+				TBL_CABINETCLASS.Title   -->
 		</isEmpty>
 		<isNotEmpty property="approvalFlag">
 			SELECT 
@@ -21454,7 +21455,23 @@
 		AND
          	COMPANYID = #companyID#	
    	</update>
-  
+  	
+  	<update id="EzApprovalG.updateBanSongChamJoAprLineInfo" parameterClass="Map"> 
+   		UPDATE 
+   			TBL_APRLINEINFO 
+   		SET 
+   			AprState = #v_AprState#, 
+   			ProcessDate = #v_SYSDATE#
+		WHERE 
+			DocID = #v_DOCID# 
+		AND 
+			(AprState = '000') 
+		AND 
+			TENANT_ID= #v_TENANTID#
+		AND
+         	COMPANYID = #companyID#
+   	</update>
+  	
    	<update id="EzApprovalG.updateBanSongAprDocInfo" parameterClass="Map"> 
    	    UPDATE 
    	    	TBL_APRDOCINFO 
