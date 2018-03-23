@@ -851,7 +851,8 @@
     		<a class="imgbtn" style="vertical-align:middle"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
     		<input id="writername" type="text" style="width: 80px" />
     		<a class="imgbtn" style="vertical-align:middle"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
-    		<input id="writerdept" type="text" style="width: 80px" />
+    		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->
+    		<input id="writerdept" type="text" style="width: 120px" />
     		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center"> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center">
        		<a class="imgbtn" style="vertical-align:middle"><span id="btn_OK" onclick="getCalendarList('search')"><spring:message code='ezResource.t14'/></span></a>
 		</div>
