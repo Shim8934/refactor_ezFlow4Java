@@ -9781,14 +9781,36 @@
 		<![CDATA[
 			SELECT 
 					COUNT(DOCID) 
-			FROM 
-					VAPRDOINGDOCLIST  
-			WHERE 
+			FROM (
+				SELECT 
+					*
+				FROM
+						VAPRDOINGDOCLIST  
+				WHERE 
+						APRMEMBERID IN ($v_USERIDS$) 
+				AND 
+						APRTYPE <> '015'
+				AND
+						TENANT_ID =#v_TENANTID#
+				AND
+						COMPANYID = #companyID#
+					
+				UNION ALL
+				
+				SELECT 
+				    *
+				FROM 
+					VENDCHAMJODOCINFO 
+				WHERE 
 					APRMEMBERID IN ($v_USERIDS$) 
-			AND 
+				AND 
 					APRTYPE <> '015'
-			AND
-					TENANT_ID =#v_TENANTID#
+				AND
+					TENANT_ID = #v_TENANTID#
+				AND
+					COMPANYID = #companyID#)
+				WHERE 
+					1 = 1
 		]]>
 		</isEqual>
 		<!-- 기안한 문서 -->
@@ -9808,6 +9830,8 @@
          			DocState <> '017' 
          	AND
 					TENANT_ID =#v_TENANTID#
+			AND
+					COMPANYID = #companyID#
 		]]>
 		</isEqual>
 		
@@ -9822,9 +9846,17 @@
            			APRMEMBERID = #v_USERID# 
            	AND 
            			AprType <> '015'
+           	AND		
+           			DocState <> '017'
+          ]]>
+          <isEqual property="MineViewYN" compareValue="YES">
+			AND	    
+				AprState != '001'
+		  </isEqual>
            	AND
-					TENANT_ID =#v_TENANTID#
-		]]>
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
 		</isEqual>
 		<!-- 공람할 문서 -->
 		<isEqual property="v_LISTTYPE" compareValue="99">
@@ -9839,6 +9871,8 @@
 			 		APRTYPE = '015'
 			 AND
 					TENANT_ID =#v_TENANTID# 
+		     AND
+					COMPANYID = #companyID# 
 		]]>
 		</isEqual>
 		<!-- 공람한 문서 -->
@@ -9853,13 +9887,17 @@
              ON 
              		TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID
              AND
-             		TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID 
+             		TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID
+             AND
+             		TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID  
              INNER JOIN 
              		TBL_EXPAPRDOCINFO 
              ON 
              		TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID
              AND
              		TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID 
+             AND
+             		TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID 
              WHERE 
              		TBL_APRLINEINFO.APRMEMBERID IN ($v_USERIDS$) 
              AND 
@@ -9868,6 +9906,8 @@
              		TBL_APRLINEINFO.AprState = '010'
              AND
 					TBL_APRDOCINFO.TENANT_ID =#v_TENANTID#
+			 AND	
+			 		TBL_APRDOCINFO.COMPANYID = #companyID#
 		]]>
 		</isEqual>
 		<!-- 한양대 추가 사항 (서버저장문서) -->
@@ -9881,6 +9921,8 @@
              		OWNERID = #v_USERID#
              AND
 					TENANT_ID =#v_TENANTID#
+			 AND
+				COMPANYID = #companyID#
 		]]>
 		</isEqual>
 		<isNotEqual property="v_LISTTYPE" compareValue="1">
@@ -9890,13 +9932,33 @@
 		<isNotEqual property="v_LISTTYPE" compareValue="10">	
 		<isNotEqual property="v_LISTTYPE" compareValue="21">
 			SELECT 
-					COUNT(DOCID) 
-			FROM 
-					VAPRDOINGDOCLIST  
-			WHERE 
-					APRMEMBERID IN ($v_USERIDS$)
-			AND
-					TENANT_ID = #v_TENANTID#
+				COUNT(DOCID) 
+			FROM (
+					SELECT
+						*
+					FROM 
+						VAPRDOINGDOCLIST  
+					WHERE 
+						APRMEMBERID IN ($v_USERIDS$)
+					AND
+						TENANT_ID = #v_TENANTID#
+					AND
+						COMPANYID = #companyID# 
+						
+					UNION ALL
+					
+					SELECT 
+					    *
+					FROM 
+						VENDCHAMJODOCINFO 
+					WHERE 
+						APRMEMBERID IN ($v_USERIDS$) 
+					AND
+						TENANT_ID = #v_TENANTID#
+					AND
+						COMPANYID = #companyID#)
+					WHERE 
+						1 = 1
 		</isNotEqual>
 		</isNotEqual>
 		</isNotEqual>
