@@ -135,7 +135,6 @@
 				var letterContent = window.message.GetEditorContent(); // 에디터에 작성한 내용
 				var displayname = $("#displayname").val();
 				var displayname2 = $("#displayname2").val();
-				var searchTxt = opener.$("#lmSearchInput").val()
 				var letterJson = {};
 				
 				var disName = strChk(displayname, true, 40);

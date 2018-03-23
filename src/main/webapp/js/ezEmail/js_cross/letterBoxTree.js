@@ -75,6 +75,8 @@ function treeOnclick() {
 			
 			getLetterList(letterBoxNo); // 편지지 리스트
 		}
+		
+		$(".searchDis").removeAttr("disabled");
     });
 }
 

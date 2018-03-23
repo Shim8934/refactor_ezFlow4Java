@@ -15,9 +15,10 @@ function letterSearch() {
 	}
 	
 	// searchTxt 존재여부 확인하기
-	if (searchTxt !== "") {
+	if (searchTxt !== undefined) {
 		searchTxt = search;
 	}
+	disableChk();
 	
 	$.ajax({
 		type : "POST",
@@ -37,6 +38,14 @@ function letterSearch() {
 //검색어 초기화
 function inputReset(){
 	$(".searchInput").val("");
+}
+
+function disableChk() {
+	var search = $("#lmSearchInput").val();
+	
+	if(search.trim() !== "") {
+		$(".searchDis").attr("disabled",true);
+	}
 }
 
 

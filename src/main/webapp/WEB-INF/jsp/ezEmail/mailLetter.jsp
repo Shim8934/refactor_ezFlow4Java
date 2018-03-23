@@ -115,6 +115,7 @@
 	    var responseResult;
 	    var selectNode;
 	    var pageType = '${pageType}';
+	    var searchTxt = "";
 	    
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록

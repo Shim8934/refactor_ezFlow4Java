@@ -46,12 +46,12 @@
 				<!-- 버튼 -->
 				<div class="lmBtns">
 					<div class="boxNo" data-boxNo=""> <!-- boxNo -->
-						<button onClick="letterEditPopUp(this, 'add')">편지지 추가</button>
+						<button onClick="letterEditPopUp(this, 'add')" class="searchDis">편지지 추가</button>
 						<button onClick="letterBoxMove(this)">편지지 이동</button>
 						<img src="/images/i_bar.gif" alt="line">
-						<button class="lmBtnPrev" onclick="orderSelect('prev')"><img src="/images/ImgIcon/prev.gif" alt="prev"></button>
-						<button class="lmBtnNext" onclick="orderSelect('next')"><img src="/images/ImgIcon/next.gif" alt="next"></button>
-						<button onclick="orderChange()">순서 저장</button>
+						<button class="lmBtnPrev searchDis" onclick="orderSelect('prev')"><img src="/images/ImgIcon/prev.gif" alt="prev"></button>
+						<button class="lmBtnNext searchDis" onclick="orderSelect('next')"><img src="/images/ImgIcon/next.gif" alt="next"></button>
+						<button onclick="orderChange()"class="searchDis">순서 저장</button>
 					</div>
 				</div>
 			</div>
@@ -136,7 +136,11 @@
 					var interval = window.setInterval(function() {
 				        try {
 				            if (win === null || win.closed) {
-								getLetterList(selectNode.node.id);
+				            	if (searchTxt !== "") {
+				            		letterSearch();
+				            	} else {
+									getLetterList(selectNode.node.id);
+				            	}
 				            	window.clearInterval(interval);
 				                closeCallback(win);
 				            }
@@ -153,6 +157,7 @@
 			// 편지지 추가, 수정 btn 클릭 시     btn -> this, type -> 추가=add, modify일때 type 안받음
 			function letterEditPopUp(btn, type) {
 				var popUpType = type == "add" ? type : "modify"; // 클릭된 버튼 구분(추가 or 수정)
+				//var letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
 				var letterBoxNo = $(btn).parents("li").attr("data-letterboxno"); // 편지지함 no
 				var letterNo = type == "add" ? -1 : $(btn).parents("li").attr("data-letterno");
 				
@@ -166,7 +171,8 @@
 				
 				if(deleteChk) {
 					var letterId = $(this).parent("li").attr("data-letterId");
-					var letterBoxNo = $(this).parents(".boxNo").attr("data-boxNo");
+					//var letterBoxNo = $(this).parents(".boxNo").attr("data-boxNo");
+					var letterBoxNo = $(btn).parents("li").attr("data-letterboxno"); // 편지지함 no
 					var letterNo = $(this).parent("li").attr("data-letterNo");
 					
 					$.ajax({
