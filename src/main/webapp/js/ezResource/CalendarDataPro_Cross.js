@@ -820,7 +820,8 @@ function CalWeekDataBind(oAppointment, order, oAppointment2) {
 
         oDiv.style.top = "0";
         oDiv.style.overflow = "hidden";
-        oDiv.style.width = "95%";
+        oDiv.style.width = "100%";
+        oDiv.style.paddingRight = "10%";
         oDiv.style.height = hSize - 3 + "px";
         oDiv.style.position = "absolute";
         oDiv.style.zIndex = "1";
@@ -1003,7 +1004,7 @@ function CalDayDataBind(oAppointment, order, oAppointment2) {
 
         oDiv.style.top = "0";
         oDiv.style.overflow = "hidden";
-        oDiv.style.width = "95%";
+        oDiv.style.width = "100%";
 
         if (objDivE) {
             var DivSRect = objDivS.getBoundingClientRect();

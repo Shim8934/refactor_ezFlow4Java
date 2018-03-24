@@ -593,11 +593,13 @@
 	        	var MaxNum;
 	        	var i;
 	        	var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+	        	
 	        	if (totalPage >= (startNum + parseInt(BlockSize))) {
 		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
 	    	    } else {
 	            	MaxNum = totalPage;
 	        	}
+	        	
 	        	for (i = startNum; i <= MaxNum; i++) {
 		            if (i == pageNum) {
 		                strtext = "<span class='on'>" + i + "</span>";
@@ -607,6 +609,13 @@
 	                	PagingHTML += strtext;
 	            	}
 	        	}
+	        	
+	        	/* 2018.03.23 서주연 - #12123 데이터없는경우 페이지네이션 1이 없는 문제해결 */
+	        	if (i == 1) {
+		           	strtext = "<span class='off'>" + i + "</span>";
+	                PagingHTML += strtext;
+	            }
+	        	
 	        	if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang1001 + "</span>";
@@ -842,7 +851,8 @@
     		<a class="imgbtn" style="vertical-align:middle"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
     		<input id="writername" type="text" style="width: 80px" />
     		<a class="imgbtn" style="vertical-align:middle"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
-    		<input id="writerdept" type="text" style="width: 80px" />
+    		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->
+    		<input id="writerdept" type="text" style="width: 120px" />
     		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center"> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center">
        		<a class="imgbtn" style="vertical-align:middle"><span id="btn_OK" onclick="getCalendarList('search')"><spring:message code='ezResource.t14'/></span></a>
 		</div>
