@@ -77,8 +77,8 @@
 	                    return pList[i];
 	            }
 	        }
-	        
-	        function CellCheckField() {
+	        /* mouseup, keyup 에 등록해야하는 function */
+	        function CellCheckField(a, b) {
 	            if (parent.Attribute_Write != undefined) {
 	                var selectE = kukudocsEditor.GetCurrentElement("TD");
 	
@@ -93,7 +93,7 @@
 	                }
 	            }
 	        }
-			/* mouseup, keyup 에 등록해야하는 function */
+			
 	        function View_CellProperty(g_toggleFlag) {
 	            var TotalTag = GetElementsByTagName(kukudocsEditor.getContentViewElement()[0], "TD");
 	            
@@ -201,18 +201,18 @@
 	            }, 500);
 	        }
 	
-	        /* function FormInfoCheck(type) {
+	        function FormInfoCheck(type) {
 	            try {
 	                switch (type) {
 	                    case "null":
-	                        if (xfe.getBodyValue() == "")
+	                        if (GetEditorContent() == "")
 	                            return true;
 	                        else
 	                            return false;
 	                        break;
 	                    case "body":
 	                        var CheckCount = 0;
-	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        var HtmlTag = GetElementsByTagName(kukudocsEditor.getContentViewElement()[0], "*");
 	                        for (var i = 0 ; i < HtmlTag.length; i++) {
 	                            if (GetAttribute(HtmlTag[i], "id") == "body")
 	                                CheckCount++;
@@ -221,7 +221,7 @@
 	                        break;
 	                    case "doctitle":
 	                        var CheckCount = 0;
-	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        var HtmlTag = GetElementsByTagName(kukudocsEditor.getContentViewElement()[0], "*");
 	                        for (var i = 0 ; i < HtmlTag.length; i++) {
 	                            if (GetAttribute(HtmlTag[i], "id") == "doctitle")
 	                                CheckCount++;
@@ -230,7 +230,7 @@
 	                        break;
 	                    case "doctitlefield":
 	                        var CheckCount = 0;
-	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        var HtmlTag = GetElementsByTagName(kukudocsEditor.getContentViewElement()[0], "*");
 	                        for (var i = 0 ; i < HtmlTag.length; i++) {
 	                            if (GetAttribute(HtmlTag[i], "id") == "body")
 	                                return GetAttribute(HtmlTag[i], "doctitlefield");
@@ -240,7 +240,7 @@
 	                }
 	            } catch (e) {
 	            }
-	        } */
+	        }
 		</script> 
 	</head>
 	<body>
