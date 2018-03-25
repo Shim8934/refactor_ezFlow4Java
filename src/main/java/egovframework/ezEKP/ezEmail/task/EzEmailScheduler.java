@@ -748,11 +748,10 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			JSONArray emailJsonArray = (JSONArray) jsonObject.get("data");
 			
 			// JSONArray to ArrayList<String>
-			for(Object emailObject : emailJsonArray) {
+			for (Object emailObject : emailJsonArray) {
 				String emailAddress = emailObject.toString();
 				emailArray.add(emailAddress);
-			}
-			
+			}			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
