@@ -100,6 +100,13 @@
 					enddate = "${endDate}";
 				}
 
+				//IE계열 브라우저에서 메모가 100자 넘어가면 마우스 커서 default->text
+				var agent = navigator.userAgent.toLowerCase(); 
+				if (!CrossYN() || agent.search( "trident" ) > -1 ) {
+					var cursorIe = document.getElementById("TextMemo");
+					cursorIe.style.cursor = "text";			
+				}
+						
 				// IE에서  new Date 값이 Invalid Date 나와서 수정
 				var startYear = "";
 				var startTime = "";
@@ -1081,6 +1088,9 @@
 				
 			</table>
 		</div>
+		<c:if test="${ mode == '1'}">
+			<div class="btnpositionNew">&nbsp;</div>
+		</c:if>	
 		<div id="printScreen" style="display: none">
 			<table class="content">
 				<tr>

@@ -49,7 +49,7 @@
 			   }
 			   
 			   .content2 {
-				    border: 1px solid #b6b6b6;
+				    border: 1px solid #ddd;
 				    margin: 0;
 				    width: 100%;
 			   }
@@ -57,7 +57,7 @@
 			   .content2 td {
 				    padding: 0px 2px 0px 2px;
 				    background: #FFF;
-				    border: 1px solid #b6b6b6;
+				    border: 1px solid #ddd;
 				    height: 29px;
 				    word-break: break-all;
 			   }	  
@@ -525,13 +525,13 @@
 				if (useTodoMemo == 'YES') {
 					var feature = GetOpenPosition(760, 700);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 335, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=1", "",
-			                "height = 220px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=1", "",
+			                "height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        } else {
 					var feature = GetOpenPosition(760, 645);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 335, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=1", "",
-			                "height = 220px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=1", "",
+			                "height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        }
 			}
 			
@@ -1974,7 +1974,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td><div class='margin' id="printDocument" style="padding:10px;BORDER: #b6b6b6 1px solid;height:100%;background-color: white"></div></td>
+					<td><div class='margin' id="printDocument" style="padding:10px;BORDER: #ddd 1px solid;height:100%;background-color: white"></div></td>
 				</tr>
 				<tr id="printattachView" style="display:none;">
 					<td style="height:20px; padding-top:10px;">
@@ -1994,7 +1994,7 @@
 					</td>
 				</tr>
 				<tr id="printTaskWorkContent" style="display:none;">
-					<td><div class='margin' id="printDocument2" style="padding:10px;BORDER: #b6b6b6 1px solid;height:100%;background-color: white"></div></td>
+					<td><div class='margin' id="printDocument2" style="padding:10px;BORDER: #ddd 1px solid;height:100%;background-color: white"></div></td>
 				</tr>
 				<tr id="printattachViewProgress" style="display:none;">
 					<td style="height:20px; padding-top:10px;">

@@ -191,13 +191,19 @@
 		        }
 		        return str_temp;
 		    }
+		    
+		    function password_OnKeyPress(e) {
+		        if (e.keyCode == "13") {
+		            btn_OpinionOK_onclick();
+		        }
+		    }
 		</script>
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t1745'/></h1>
 		<div class="txt"><p style="margin:6px">▒&nbsp;<spring:message code='ezApprovalG.t9999'/></p><p style="margin:6px">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></p></div>
 		<div class="nobox">
-			<INPUT type="password" class="textarea" id="inpPassword" name="inpPassword" style="width:100%;height:25px;border:1px solid #ccc;margin-top:6px">
+			<INPUT type="password" class="textarea" id="inpPassword" name="inpPassword" style="width:100%;height:25px;border:1px solid #ccc;margin-top:6px" onkeypress="password_OnKeyPress(event)">
 		</div>
 		<div class="btnposition btnpositionNew">
 			<input type="submit" value="<spring:message code='ezApprovalG.t20'/>" name="btn_OpinionOK" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick()" >

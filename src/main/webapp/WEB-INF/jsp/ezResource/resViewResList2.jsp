@@ -30,13 +30,13 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<style type="text/css">
-			.warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
-			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
-			.warnintxt01 { position:relative ;padding-bottom:10px;margin-top:15px}
+			.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
+			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}
+			.warnintxt01 { position:relative; margin-bottom:10px;margin-top:20px}
 			.warningimg { position:absolute; top:0px; left:0px;}
-			.warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}
-			.warningdl dt { height:40px; margin-top:10px;text-align:left;}
-			.warningdl dd { padding:0px 0px 0px 5px; margin:0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left;}
+			.warningdl { width:75%; padding:10px 10px 5px 114px; margin:0px; display:inline-block; text-align:left;}
+			.warningdl dt { height:40px; padding-left:6px; margin-top:10px; margin-left:10px; text-align:left;}
+			.warningdl dd { padding:0px 10px 0px 20px; margin:0px 0px 10px 0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left; word-break:break-all;}
 			.warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}
 
 			/* tooltip 추가*/
@@ -50,12 +50,6 @@
 			.calendar_layer .btn ul{list-style:none; margin:0 25px; padding:0px 3px; overflow:hidden; text-align:center;clear:both;list-style-type:none}
 			.calendar_layer .btn ul li{float:left; height:27px; line-height:27px; background:url(images/calendar/btn_calendar_l.gif) no-repeat left top; padding:0px 3px 0px 8px;}
 			.calendar_layer .btn ul li span{display:inline-block; background:url(images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
-			.table_layout th {
-				color:#777;
-			}
-			#divViewHeader {
-				color:#777
-			}
 		</style>
 		<script type="text/javascript">
 			var pBrdid = "${brdID}";
@@ -155,6 +149,7 @@
 	                	document.getElementById("Weekbtn").style.display = "none";
 	                	document.getElementById("TR_Line2").style.display = "none";
 	                	document.getElementById("tdDateCalendarViewer").innerHTML = document.getElementById("EmptyMsg").innerHTML;
+	                	document.getElementById("mainmenu").style.display = "none";
 	                	document.getElementById("weeklyline").style.display = "none";
 	            	}
 	        	}
@@ -281,11 +276,11 @@
 						if (result.primary == "1") {						
 							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
 							$("#ownerDept").html(result.resBrd.ownDeptNm);
-							$("#brdNm").html(result.resBrd.brdNm);
+							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm);
 						} else {
 							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
 							$("#ownerDept").html(result.resBrd.ownDeptNm2);
-							$("#brdNm").html(result.resBrd.brdNm2);
+							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm2);
 						}
 						
 						$("#ownerCall").html(result.resBrd.ownerCall);
@@ -350,21 +345,21 @@
         	</tr>
         	<tr>
             	<td style="vertical-align:top;">
-                	<div id="mainlistlayout" style="width:100%;height:780px;overflow-y: auto;overflow-x:hidden;" >
-                		<table style="width:100%;margin-top:10px;">
+                	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;overflow-y: auto;overflow-x:hidden;" >
+                		<table style="width:100%;">
                     		<tr id="weeklyline">
-                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f8f8f8;">
-                					<div style="border:1px solid #ddd;border-bottom:0px;padding-top:9px;padding-bottom:7px;height:19px">
+                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #edf4fd;">
+                					<div style="border:1px solid #d1ddec;height:35px;line-height: 33px">
 					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
-					                	&nbsp;<span id="divViewHeader" style="color: #777; text-align:center;vertical-align: middle;"></span>&nbsp;
+					                	&nbsp;<span id="divViewHeader" class="calResTitleSpan"></span>&nbsp;
 					                	<img src="/images/calendar/btn_calendar_mini_next.gif" style="cursor:pointer;vertical-align:middle;" id=Img3 onClick="pagenavi('NEXT');">
 				                	</div>
 				            	</td>
 				            </tr>
                     		<tr>
                       			<td colspan="2" id='weekviewer' class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  -->
-                        			<div id="tooltip" style="position:absolute; visibility:hidden; z-index:1000; background-color:lightyellow;"></div> 
-                        			<div id="tdDateCalendarViewer" style="padding-bottom:5px;height:100%; text-align:center" > </div>
+                        			<div id="tooltip" style="position:absolute; visibility:hidden; z-index:1000;"></div> 
+                        			<div id="tdDateCalendarViewer" style="padding-bottom:5px; height:100%; text-align:center;" ></div>
                         		</td>
                     		</tr>
                     		<tr id="noapproval" style="display:none;">
@@ -384,10 +379,10 @@
           	</tr>
 		</table>		
     	<div id="EmptyMsg" style="display:none;">
-        	<div class="warningbox01" style="margin-top:100px;">
+        	<div class="warningbox01" style="margin-top:155px;">
           		<div class="warningbox02">
   	        		<div class="warnintxt01" >
-	        			<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style='margin:18px'></span>
+	        			<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style="margin: 18px 0px 18px 34px;"></span>
 	        			<dl class="warningdl">
 	        				<dt><img src="/images/notify/warning01.gif" width="183" height="27"></dt>
 	        				<dd>
@@ -402,7 +397,7 @@
         <div id="ResourceInfo" style="display: none">
         	<table id="resourceDataTable" style="width:440px; border-collapse:collapse; border-spacing:0px; margin-top:10px; border-color:#ccc; margin-bottom:10px">
 				<tr>
-					<th colspan="2" style="background-color: rgb(0, 72, 149);border-color:rgb(0, 72, 149);color:white;font-weight: bold;height:30px" id="brdNm"></th>
+					<th colspan="2" class="layerHeader" id="brdNm"></th>
 				</tr>
 				<tr>
 					<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>

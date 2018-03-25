@@ -536,7 +536,7 @@
 					</c:choose>
                 	
                 	<div class="listview">
-                    	<div id="lvtDept" style="border: 0px solid #B6B6B6; OVERFLOW-Y: auto; OVERFLOW-X: hidden; Width: 360px; Height: 110px;" onselchanged="return lvtDept_SelChange()"></div>
+                    	<div id="lvtDept" style="border: 0px solid #ddd; OVERFLOW-Y: auto; OVERFLOW-X: hidden; Width: 360px; Height: 110px;" onselchanged="return lvtDept_SelChange()"></div>
                 	</div>
                 	<br/>
             	</td>
@@ -563,7 +563,7 @@
 					</c:choose>
                 	
                 	<div class="listview">
-                    	<div id="lvtDeptSelect" style="border: 0px solid #B6B6B6; OVERFLOW-Y: auto; OVERFLOW-X: hidden; BACKGROUND-COLOR: #ffffff; Width: 360px; Height: 320px; font-size: 9pt" onselchanged="return lvtDeptSelect_SelChange()" onrowdblclick="return lvtDeptSelect_rowdblclick()"></div>
+                    	<div id="lvtDeptSelect" style="border: 0px solid #ddd; OVERFLOW-Y: auto; OVERFLOW-X: hidden; BACKGROUND-COLOR: #ffffff; Width: 360px; Height: 320px; font-size: 9pt" onselchanged="return lvtDeptSelect_SelChange()" onrowdblclick="return lvtDeptSelect_rowdblclick()"></div>
                 	</div>
             	</td>
         	</tr>

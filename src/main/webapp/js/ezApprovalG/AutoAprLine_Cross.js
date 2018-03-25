@@ -21,7 +21,8 @@
 				userID 	 : pUserID,
 				formID   : pFormID,
 				isUsed   : type,
-				beforeDocID : beforeDocID
+				beforeDocID : beforeDocID,
+				mode     : ""
 				},
 		success: function(xml){
 			result = xml;

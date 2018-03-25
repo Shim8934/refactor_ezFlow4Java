@@ -110,6 +110,50 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     private EgovFileScrty egovFileScrty;
 	
 	/**
+	 * 관리자 - 자동삭제 
+	 */
+	@Scheduled(cron = "${config.cron.deleteAllUserOldMail}")
+	public void deleteAllUserMail() throws Exception {
+		logger.debug("deleteAllUserOldMail scheduler started.");
+		
+		if (!preScheduler("deleteAllUserOldMail")) {
+			logger.debug("deleteAllUserOldMail scheduler ended.");
+			return;
+		}
+		
+		try {
+			int tenantId = 0;
+					
+			String useAllUserOldMailDelete = ezCommonService.getTenantConfig("useAllUserOldMailDelete", tenantId);
+			String useAllUserOldMailDeletePeriod = ezCommonService.getTenantConfig("useAllUserOldMailDeletePeriod", tenantId);
+			
+			if (useAllUserOldMailDelete.equals("YES") && !useAllUserOldMailDeletePeriod.equals("0")) {
+				
+				String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteAllUserOldMail";
+				String param = "period=" + useAllUserOldMailDeletePeriod;
+				
+				String inputParams = param;
+				logger.debug("inputParams=" + inputParams);
+				
+				String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+				logger.debug("response=" + response);
+				
+				JSONParser parser = new JSONParser();
+				JSONObject object = (JSONObject) parser.parse(response);
+				
+				if (!object.get("resultCode").equals("OK")) {
+					logger.debug("Cannot delete AllUserOldMail.");
+				}
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("deleteAllUserMail scheduler ended.");
+	}
+	
+	/**
 	 * 환경설정 - 자동삭제 스케줄러
 	 */
 	@Scheduled(cron = "${config.cron.autoDelete}")

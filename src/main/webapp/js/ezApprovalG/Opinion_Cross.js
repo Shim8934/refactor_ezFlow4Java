@@ -55,7 +55,8 @@ function getAprOpinionXML(pOpContent) {
     			docID : pDocID,
     			userID : pUserID,
     			formID : "",
-    			isUsed   : ""
+    			isUsed   : "",
+    			mode     : ""
     		},
     		success: function(text){
     			result = text;
@@ -355,7 +356,8 @@ function AddOpinionContent(Opstate, OpContent) {
                     			docID : pDocID,
                     			userID : pUserID,
                     			formID  : "",
-                    			isUsed  : ""
+                    			isUsed  : "",
+                    			mode     : ""
                     		},
                     		success: function(text){
                     			result = text;

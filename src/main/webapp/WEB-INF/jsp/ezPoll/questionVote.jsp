@@ -100,7 +100,7 @@
 						var id = "myCanvas" + _optId;																	   					
 	   					var canv = document.getElementById(id);	   					
 	   					var max_width = document.getElementById(graphId).offsetWidth;
-	   					var maxWidth_for_canvas = max_width - 40;	   					   					
+	   					var maxWidth_for_canvas = max_width - 75;	   					   					
 						var best_width = Math.round(maxWidth_for_canvas * percent);	
 						
 						//Resize and fill canvas
@@ -217,7 +217,7 @@
 		   					}
 		   					
 		   					var max_width = document.getElementById(graphId).offsetWidth;		   					
-		   					var maxWidth_for_canvas = max_width - 40;	   					   					
+		   					var maxWidth_for_canvas = max_width - 75;	   					   					
 							var best_width = Math.round(maxWidth_for_canvas * percent);	
 							
 							//Fill canvas with color
@@ -630,6 +630,15 @@
 				
 				document.location.href = "/ezPoll/pollCreate.do?qstId=" + qstId + "&mode=modify" + "&params=" + params + "&search=" + searchStr + "&searchN=" + searchN;				
 		    }		
+			
+			//재사용 버튼 누르면 동작하는 함수
+			function voteReuse() {
+				var tenantId = "<c:out value='${question.tenantId}'/>";
+				var params = "<c:out value='${params}'/>";
+				var searchStr = "<c:out value='${searchStr}'/>";
+				var searchN = "<c:out value='${searchN}'/>";
+				document.location.href = "/ezPoll/pollCreate.do?qstId=" + qstId + "&mode=reuse" + "&params=" + params + "&search=" + searchStr + "&searchN=" + searchN;				
+			}
 		    
 		    function menuDetailSeenUserInfo(pQstID) {		    	 
 		    	 var feature = GetOpenPosition(420, 438);
@@ -775,10 +784,16 @@
 				//end
 		    	
 		    	var voteId = obj.name;
- 	    		var optId = votesArr[voteId][0]; 	    		
+ 	    		var optId = votesArr[voteId][0];
+ 	    		var isUnchecked = obj.src.indexOf("/images/poll/unchecked_vote.png");
  	    		
-	 	    	if (obj.src.indexOf("/images/poll/unchecked_vote.png") !== -1) { 	    		   		
-	 	    		modifySelectedList(optId, 'add');
+	 	    	if (isUnchecked !== -1) { 	    		   		
+	 	    		if(selectOnlyOnce(isUnchecked)){
+	 	    			var msg = '한번 선택하면 변경할 수 없습니다. 이 항목을 선택하시겠습니까?';
+	 	    			if(!window.confirm(msg)){
+	 	    				return;
+	 	    			}
+	 	    		}
 	 	    		
 	 	    		if (votePrivilege == 0) {
 	 	    			alert("<spring:message code = 'ezPoll.t172'/>");
@@ -789,6 +804,8 @@
 	 					alert("<spring:message code = 'ezPoll.t171'/>" + " " + numberOfMultiSelect + "<spring:message code = 'ezPoll.t173'/>");
 	 					return;
 	 	    		}
+	 	    		  		  		
+	 	    		modifySelectedList(optId, 'add');
 	 	    		
 	 	    		obj.onclick = null;
 	 	    		
@@ -819,6 +836,9 @@
 					});   		
 		    	}
 	 	    	else {
+	 	    		if(selectOnlyOnce(isUnchecked)){
+	 	    			return;
+	 	    		}
 	 	    		modifySelectedList(optId, 'remove');
 	 	    		
 	 	    		obj.onclick = null;
@@ -967,7 +987,7 @@
 		    	
 		    	//Copy text comment
 		    	var innInnerDiv1 = document.createElement("div");
-		    	innInnerDiv1.setAttribute("style", "display: block; float:left; border:1px solid #b6b6b6;padding-left: 0px;margin-left: 20px; width: 1310px; border-radius: 3px;");
+		    	innInnerDiv1.setAttribute("style", "display: block; float:left; border:1px solid #ddd;padding-left: 0px;margin-left: 20px; width: 1310px; border-radius: 3px;");
 		    	var editTxtArea = document.createElement("textarea");
 		    	editTxtArea.setAttribute("id", "editCmtArea" + id.slice(8));
 		    	editTxtArea.setAttribute("cols", "20");
@@ -1537,7 +1557,7 @@
 		    	
 		    	//create the tr element
 		    	objTr = document.createElement("tr");
-		    	objTr.setAttribute("style", "border-bottom: 1px dotted #b6b6b6");
+		    	objTr.setAttribute("style", "border-bottom: 1px dotted #ddd");
 		    	
 		    	//Process td1 (user image) element
 		    	var objTd = document.createElement("td");
@@ -1688,14 +1708,14 @@
                 objTd3.appendChild(imagForTd3);
                 
                 var div1ForTd3 = document.createElement("div");
-                div1ForTd3.setAttribute("style", "float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white; top: 30px; right: 28px; width: 120px;");
+                div1ForTd3.setAttribute("style", "float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; top: 30px; right: 28px; width: 120px;");
                 div1ForTd3.setAttribute("id", "editComt" + commentIndex);
                 div1ForTd3.setAttribute("tabindex", "0");        
                 var innerDiv1ForTd3 = document.createElement("div");
                 innerDiv1ForTd3.setAttribute("id", "_eCmt" + commentIndex);
                 innerDiv1ForTd3.innerHTML = "<spring:message code = 'ezPoll.t125'/>";
                 innerDiv1ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);               
-                innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #b6b6b6; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;");
+                innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;");
                 innerDiv1ForTd3.onclick = function (event) { editComment(this); };
                 var innerDiv2ForTd3 = document.createElement("div");                
                 innerDiv2ForTd3.innerHTML = "<spring:message code = 'ezPoll.t126'/>";
@@ -2115,7 +2135,7 @@
 		    	
 		    	//Create the tr element
 		    	objTr = document.createElement("tr");
-		    	objTr.setAttribute("style", "border-bottom: 1px dotted #b6b6b6");
+		    	objTr.setAttribute("style", "border-bottom: 1px dotted #ddd");
 		    	
 		    	//Process td1 (user image) element
 		    	var objTd = document.createElement("td");
@@ -2225,14 +2245,14 @@
                     objTd3.appendChild(imagForTd3);
                     
                     var div1ForTd3 = document.createElement("div");
-                    div1ForTd3.setAttribute("style", "float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white; top: 30px; right: 28px; width: 120px;");
+                    div1ForTd3.setAttribute("style", "float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; top: 30px; right: 28px; width: 120px;");
                     div1ForTd3.setAttribute("id", "editComt" + commentIndex);
                     div1ForTd3.setAttribute("tabindex", "0");        
                     var innerDiv1ForTd3 = document.createElement("div");
                     innerDiv1ForTd3.setAttribute("id", "_eCmt" + commentIndex);
                     innerDiv1ForTd3.innerHTML = "<spring:message code = 'ezPoll.t125'/>";
                     innerDiv1ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);               
-                    innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #b6b6b6; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;");
+                    innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;");
                     innerDiv1ForTd3.onclick = function (event) { editComment(this); };
                     var innerDiv2ForTd3 = document.createElement("div");                
                     innerDiv2ForTd3.innerHTML = "<spring:message code = 'ezPoll.t126'/>";
@@ -2523,6 +2543,20 @@
 		    		selectedList.splice(optIdIdxInArr,1);
 		    	}
 		    }
+		    
+		    //낙장불입 처리
+		    function selectOnlyOnce(idx) {
+		    	var isSelOnlyOnce = ${question.isSelOnlyOnce};
+		    	
+		    	if(isSelOnlyOnce === 1){ //낙장불입 Y
+		    		if(idx === -1){ //remove 일경우 		
+		    			alert('선택을 변경할 수 없습니다.');
+		    		}
+	    			return true;
+		    	}else{ //낙장불입 N
+		    		return false;
+		    	}
+		    }
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -2530,7 +2564,7 @@
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="ballotSystemBody">
-				<div id="mainmenu3" style="overflow: hidden; margin:29px 0px 12px 0px">
+				<div id="mainmenu3" style="overflow: hidden; margin:29px 0px 5px 0px">
 					  <div style="float: left; display: block;" class="voteInfo">
 					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
 							<div id="textTest" style="display:inline-block;" class="voteTextTest">
@@ -2546,20 +2580,20 @@
 								<span class="questionFontS"><c:out value='${question.createDate}'/></span>
 							</div>
 					  </div>
-					  <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2)}">
+					  <%-- <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2)}">
 						  <div id="_editVote" onclick="voteEdit()"><span><spring:message code = 'ezEmail.t149'/></span></div>
-					  </c:if>
+					  </c:if> --%>
 					  <div class='voteIconDiv'>
 						  	<ul class='voteIcon_ul'>
 								<c:choose>
 									<c:when test="${question.resultFirst == 1}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" >
+											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t258'/>" >
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg" >
+											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t256'/>" >
 										</li>
 									</c:otherwise>
 								</c:choose>
@@ -2571,12 +2605,12 @@
 								<c:choose>
 									<c:when test="${question.multiSelect >= 0}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" >
+											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t257'/>" >
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" >
+											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t257'/>" >
 										</li>
 									</c:otherwise>
 								</c:choose>
@@ -2598,7 +2632,7 @@
 								<c:choose>
 									<c:when test="${question.secretVote == 1}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg" >
+											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t253'/>" >
 										</li>
 										<li class="img_description">
 											<div><span><spring:message code = 'ezPoll.t111'/></span></div>
@@ -2606,7 +2640,7 @@
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg" >
+											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
 										</li>
 										<li class="img_description">
 											<div><span><spring:message code = 'ezPoll.t240'/></span></div>
@@ -2621,7 +2655,7 @@
 								<c:choose>
 									<c:when test="${question.secretVote == 0}">
 										<li class="voteIconImg_li icon nosecret" onclick="menuDetailSeenUserInfo('${question.qstId}')">
-											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" >
+											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t112'/>" >
 										</li>
 										<li class="img_description">
 											<div><span id="seenPeople">${seenUsers}</span></div>
@@ -2629,7 +2663,7 @@
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" >
+											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t112'/>" >
 										</li>
 										<li class="img_description">
 											<div><span id="seenPeople">${seenUsers}</span></div>
@@ -2644,7 +2678,7 @@
 								<c:choose>
 									<c:when test="${question.secretVote == 0}">
 										<li class="voteIconImg_li icon nosecret" onclick="javascript:displayDetail('${question.qstId}')">
-											<img src="/images/poll/unvoted_user.png" class="voteIconImg" >
+											<img src="/images/poll/unvoted_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t123'/>" >
 										</li>
 										<li class="img_description">
 											<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
@@ -2652,7 +2686,7 @@
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/unvoted_user.png" class="voteIconImg" >
+											<img src="/images/poll/unvoted_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t123'/>" >
 										</li>
 										<li class="img_description">
 											<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
@@ -2662,6 +2696,18 @@
 								<%-- <li class='icon_title'>
 									<span><spring:message code = 'ezPoll.t123'/></span>
 								</li> --%>
+							</ul>
+							<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2)}">
+								<ul class='voteIcon_ul'>
+									<li class="voteIconImg_li icon nosecret">
+										<img src="/images/poll/editVote.png" class="voteIconImg" onclick="voteEdit()" title="<spring:message code = 'ezEmail.t149'/>"/>
+									</li>
+								</ul>
+							</c:if>
+							<ul class='voteIcon_ul'>
+								<li class="voteIconImg_li icon nosecret">
+									<img src="/images/poll/reuseVote.png" class="voteIconImg" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>"/>
+								</li>
 							</ul>
 					  </div>
 					  
@@ -2784,7 +2830,7 @@
 			               					}			               					
 			               				</script>      					               			
 			               		</div>
-			               		<div id="voterNumber_<c:out value ="${_option.ansId}" />" style="float:left;display:none;width:100%">0</div>
+			               		<div id="voterNumber_<c:out value ="${_option.ansId}" />" class="voterNumber_" >0</div>
 			               		<div id="voteInfo<c:out value ="${_option.ansId}" />" style="clear:both; display:none; height:20px;">              
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
@@ -2817,7 +2863,7 @@
 					</tr>
 				</table>		
 				<!--<c:if test="${curentUser == question.creator || adminPrivilege == 1}">
-					<div id="_finish" style="border:1px solid #b6b6b6; margin-right: auto; margin-left: auto; width:120px; height:40px; margin-top: 15px; cursor: pointer;" onclick="finishVote();">
+					<div id="_finish" style="border:1px solid #ddd; margin-right: auto; margin-left: auto; width:120px; height:40px; margin-top: 15px; cursor: pointer;" onclick="finishVote();">
 						<img src="/images/verified.png" style="height:15px; width:15px; float:left; display:block; padding-top: 14px;padding-left: 5px; cursor: pointer;">				
 						<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
 					</div> 
@@ -2825,7 +2871,7 @@
 				<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
 					<table style="width: 100%;" id="commentListView">
 						<c:forEach var="_comt" items="${listComments}">
-							<tr style="border-bottom: 1px dotted #b6b6b6;">
+							<tr style="border-bottom: 1px dotted #ddd;">
 								<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
 									<img src="${_comt.userImage}" style="padding-top: 10px; height: 38px; width:38px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
 								</td>
@@ -2868,8 +2914,8 @@
 									<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;"><c:out value ="${_comt.cmtTime}" /></div>
 									<c:if test="${_comt.userId == curentUser}">								
 										<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
-										<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #b6b6b6; background-color: #576652; color: white; width: 120px;" tabindex=0>							
-											<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #b6b6b6; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
+										<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; width: 120px;" tabindex=0>							
+											<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
 											<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>
 										</div>
 									</c:if>
@@ -2884,8 +2930,8 @@
 						<img id="_addFile" src="/images/poll/add_vote.png" style="height:24px; width:22px; cursor: pointer;" onclick="addFileComment();">
 					</div>
 					<div id ="_stickerArea">					
-						<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-left: -39px; background-color: #fff; border:1px solid #b6b6b6; position: absolute;">
-							<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #b6b6b6;">
+						<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-left: -39px; background-color: #fff; border:1px solid #ddd; position: absolute;">
+							<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #ddd;">
 								<div style="float:left; display:block;">
 									<img id="previousEmoticon" src="/images/previous1.png" height=40 width=30 style="padding-top: 3px; ">
 								</div>
@@ -2936,7 +2982,7 @@
 						<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
 					</div>
 					<div class="commentBtn">
-						<div id="uploadedFile" style="display:none; border:1px solid #b6b6b6; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
+						<div id="uploadedFile" style="display:none; border:1px solid #ddd; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
 							<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer; z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
 							<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>
 						</div>	
@@ -2944,7 +2990,7 @@
 					</div>
 					</div>
 				</div>
-				<input id="fileInput" type="file" onchange="uploadFileCmt();" style="width: 0px; height: 0px" />
+				<input id="fileInput" type="file" onchange="uploadFileCmt();" class="voteFileInput" />
 			</div>	
 		</form>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe> 

@@ -24,7 +24,7 @@
 			var compid = "<c:out value = '${companyID}' />";
 			var itemseq = "<c:out value = '${personalPopupVO.itemSeq}' />";
 			var startdate = "<c:out value = '${personalPopupVO.startDate}' />";
-			var enddate = "<c:out value = '${endDate}' />";
+			var enddate = "<c:out value = '${personalPopupVO.endDate}' />";
 			var flag = false;
 			var MHTLoadComplete="";
 	        var initdate = "<c:out value = '${initDate}' />";
@@ -32,7 +32,7 @@
 	        window.onload = window_onload;
 	        function window_onload() {
 	            //compid = window.dialogArguments;
-	           
+
 	            if (startdate == "" && enddate == "") {
 	                var nowDate = new Date();
 	                document.getElementById("Sdatepicker").value = DateFormat(nowDate);
@@ -91,6 +91,7 @@
 		        $("#Sdatepicker").datepicker('setDate', SDate);
 
 		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+
 		        $("#Edatepicker").datepicker('setDate', EDate);
 		    });
 			

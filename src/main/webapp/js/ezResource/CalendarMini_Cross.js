@@ -41,7 +41,7 @@ function CalendarMiniView(pTagetID) {
         mSpan.style.marginLeft = "6px";
         mSpan.style.marginTop = "4px";
         var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/calendar/btn_calendar_prev.gif");
+        mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
         mImg.setAttribute("border", "0");
         mImg.setAttribute("onclick", "preMonth()");
         mSpan.appendChild(mImg);
@@ -100,7 +100,7 @@ function CalendarMiniView(pTagetID) {
         mSpan.style.marginRight = "6px";
         mSpan.style.marginTop = "4px";
         var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/calendar/btn_calendar_next.gif");
+        mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
         mImg.setAttribute("border", "0");
         mImg.setAttribute("onclick", "nextMonth()");
         mSpan.appendChild(mImg);
@@ -273,7 +273,7 @@ function DateView_onMouseClick(event) {
     if (typeCal == 0) { //월보기
     }
     else if (typeCal == 1) {
-        document.getElementById(GetAttribute(event.parentNode.parentNode,"id")).style.backgroundColor = "rgb(233, 241, 255)";
+        document.getElementById(GetAttribute(event.parentNode.parentNode,"id")).style.backgroundColor = "#edf4fd";
         g_selTRID = GetAttribute(event.parentNode.parentNode,"id");
         g_selTDID = GetAttribute(event,"id");
 
@@ -282,7 +282,7 @@ function DateView_onMouseClick(event) {
     }
     else if (typeCal == 2) { //일보기
 
-        document.getElementById(GetAttribute(event,"id")).style.backgroundColor = "rgb(233, 241, 255)";
+        document.getElementById(GetAttribute(event,"id")).style.backgroundColor = "#edf4fd";
         g_selTRID = GetAttribute(event.parentNode.parentNode,"id");
         g_selTDID = GetAttribute(event,"id");
         sDate = new Date(GetAttribute(event,"id").substring(7, 11), parseInt(GetAttribute(event,"id").substring(12, 14), 10) - 1, parseInt(GetAttribute(event,"id").substring(15, 17), 10));

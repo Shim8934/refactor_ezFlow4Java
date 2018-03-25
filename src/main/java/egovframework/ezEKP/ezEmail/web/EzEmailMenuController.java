@@ -129,7 +129,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", loginInfo.getTenantId());
 		String useBottomFrameOnly = ezCommonService.getTenantConfig("useBottomFrameOnly", loginInfo.getTenantId());
-		logger.debug("userEmail=" + userEmail + ",usePreviewSubTree=" + usePreviewSubTree + "useBottomFrameOnly=" + useBottomFrameOnly);
+		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", loginInfo.getTenantId());
+		logger.debug("userEmail=" + userEmail + ",usePreviewSubTree=" + usePreviewSubTree + ",useBottomFrameOnly=" + useBottomFrameOnly + ",useMailBoxBackUp=" + useMailBoxBackUp);
 		
 		if (usePreviewSubTree.equals("YES")) {
 			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
@@ -272,6 +273,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		model.addAttribute("subCode", subCode);
 		model.addAttribute("usePreviewSubTree", usePreviewSubTree);
 		model.addAttribute("useBottomFrameOnly", useBottomFrameOnly);
+		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
 		
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", loginInfo.getTenantId());
 		
@@ -292,8 +294,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				isDotNetAdmin = true;
 			}			
 		}
+		String pDeleteBoxID = egovMessageSource.getMessage("ezEmail.t99000028", locale);
 		
 		model.addAttribute("isDotNetAdmin", isDotNetAdmin);
+		model.addAttribute("pDeleteBoxID", pDeleteBoxID);
 		
 		logger.debug("showMailLeft ended.");
 		

@@ -89,7 +89,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "rgb(233, 241, 255)";
+		        elem.style.backgroundColor = "#edf4fd";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 		    }
 		    
@@ -98,7 +98,7 @@
 
 				if ($("#checkboxAll").is(":checked")) {
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body td").css("background", "rgb(233, 241, 255)");
+					$(".row_body td").css("background", "#edf4fd");
 				} else {
 					$(":checkbox[name=myCheckbox]").prop("checked", false);
 					$(".row_body td").css("background", "");
@@ -530,7 +530,7 @@
 					<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezTask.t185' /></label>
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
 					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-	          		<div style="margin-top:9px">&nbsp;(<spring:message code='ezTask.t188'/></div> 
+	          		<div style="margin-top:9px">&nbsp;<spring:message code='ezTask.t188'/></div> 
 				</td>
 			</tr>
 		</table>

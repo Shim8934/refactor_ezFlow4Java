@@ -17,6 +17,8 @@
 	var strLang1 = "<spring:message code='ezStatistics.t1063'/>";
 	var strLang2 = "<spring:message code='ezStatistics.t1064'/>";
 	var strLang3 = "KB";
+	var strLang7 = "<spring:message code='main.t252'/>";
+	var strLang8 = "<spring:message code='ezSystem.kyj2'/>";
 	var currPage = "";
 	var totalPage = "";
 	var totalCount = "";
@@ -137,6 +139,9 @@
         var strtext;
         var PagingHTML = "";
         document.getElementById("tblPageRayer").innerHTML = "";
+        document.getElementById("listInfo").innerHTML = " &nbsp;["
+			+ strLang7 + "<span style='color:#017BEC;'> "
+			+ totalCount + " </span>" + strLang8 + "]";
         strtext = "<div class='pagenavi'>";
         PagingHTML += strtext;
         var pageNum = currPage;
@@ -399,8 +404,8 @@
 </script>
 </head>
 <body class="mainbody">
-<h1><spring:message code="ezStatistics.kyj2"/></h1>
-	<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
+<h1><spring:message code="ezStatistics.kyj2"/><span id="listInfo"></span></h1>
+	<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2;">
 		<tr>
 			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1061'/> : &nbsp;

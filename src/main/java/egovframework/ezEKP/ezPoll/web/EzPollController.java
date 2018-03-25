@@ -537,6 +537,8 @@ public class EzPollController extends EgovFileMngUtil {
 		int resultFirst = Integer.parseInt(req.getParameter("hidResultFirst"));
 		String qstModifyInfo = req.getParameter("hidModifyInfo");
 		int setDate = Integer.parseInt(req.getParameter("hidSetDate"));
+		int isSorting = Integer.parseInt(req.getParameter("hidIsSorting"));
+		int isSelOnlyOnce = Integer.parseInt(req.getParameter("hidIsSelOnlyOnce"));
 		
 		//Get list of options for this question
 		List<String> listOptions = new ArrayList<String>();
@@ -580,6 +582,9 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO.setResultFirst(resultFirst);
 		pollQuestionVO.setMultiSelect(numberOfMultiSelect);
 		pollQuestionVO.setSetDate(setDate);
+		pollQuestionVO.setIsSorting(isSorting);
+		pollQuestionVO.setIsSelOnlyOnce(isSelOnlyOnce);
+		
 		
 		if (!qstModifyInfo.equals("")) {
 			pollQuestionVO.setQstId(Integer.parseInt(qstModifyInfo));
@@ -811,9 +816,11 @@ public class EzPollController extends EgovFileMngUtil {
 		List<PollAnswerVO> listOptions = ezPollService.getListOptionsOfQst(qstId, tenantId);	
 		
 		//Sort list of options/answers by number of votes
-		Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) -> {
-	        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
-		});
+		if(pollQuestionVO.getIsSorting()==1){
+			Collections.sort(listOptions, (PollAnswerVO answer1, PollAnswerVO answer2) -> {
+		        return Integer.valueOf(answer2.getVotesNumber()).compareTo(answer1.getVotesNumber());
+			});
+		}
 		
 		//Get list of comments for this question
 		List<PollCommentVO> listComments = ezPollService.getListCmtOfQst(qstId, tenantId);
@@ -2441,7 +2448,7 @@ public class EzPollController extends EgovFileMngUtil {
 
 	private int setStatusForQuestions(Set<PollQuestionVO> setOfQuestions, List<Integer> listHiddenQuestionIds, LoginVO loginVO, int checkingArray, int seeAll) throws ParseException {
 		String userID = loginVO.getId();		
-		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date endDate;
 		Date startDate; //20180109
 		Date sysDate = new Date();

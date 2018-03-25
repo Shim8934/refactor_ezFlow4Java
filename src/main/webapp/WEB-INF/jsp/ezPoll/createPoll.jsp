@@ -75,10 +75,17 @@
 		    	containment: "#columnsbnk",
 		    	tolerance: 'pointer',
 		    	update: function() {
-					for(var i = 0; i < $('#columnsbnk li').length; i++){
+					/* for(var i = 0; i < $('#columnsbnk li').length; i++){
 						$('#columnsbnk li').eq(i).children("span").text(i + 1);
 						//$('#columnsbnk li').eq(i).removeClass("myBorder");
-					}
+					} */
+					
+					//항목 드래그 버튼으로 순서 정해주기 위해 수정.
+		    		for(var i = 0; i < $('#columnsbnk li').length; i++){
+		    		    $('#columnsbnk li').eq(i).children("span").text(i + 1);
+		    		    $('#columnsbnk li').eq(i).children("input").get(0).id = 'option'+(i+1);
+		    		    $('#columnsbnk li').eq(i).children("input").get(0).name = 'option'+(i+1);
+		    		}
 					//setBorder();
 		    	}
 				
@@ -95,7 +102,7 @@
         	var sConfigTime = null;
         	var eConfigTime = null;
 			
-			if (mode == "modify") {
+			if (mode == "modify" || mode == "reuse") {
 				//Modify the vote
 				//var questionTitle = "<c:out value='${question.title}'/>";
 				//document.getElementById("qst_title").value = questionTitle;
@@ -162,7 +169,19 @@
 				
 				//Set end date	
 				var _setDate = "<c:out value='${question.setDate}'/>";	
+				
+				//Allow sorting option.
+				var _isSorting = "<c:out value='${question.isSorting}'/>";
+				if (_isSorting == 1) {
+					$('#isSorting ').attr('checked', true);
+				}
 								
+				//Allow selecting option only once.
+				var _isSelOnlyOnce = "<c:out value='${question.isSelOnlyOnce}'/>";
+				if (_isSelOnlyOnce == 1) {
+					$('#isSelOnlyOnce ').attr('checked', true);
+				}
+				
 		    	$("#Sdatepicker").datepicker({
 		        	changeMonth: true,
 		        	changeYear: true,
@@ -284,6 +303,7 @@
 				$('#anonymousVote').removeAttr('checked');	
 				$('#endDate').removeAttr('checked');			
 				$('#_dateTimePicker').hide();			
+				//$('#isSorting').removeAttr('checked');
 				//$('#receiverBttn').hide();										
 			}
 			
@@ -490,7 +510,8 @@
 		function addOption() {		
 			var currentOptionNumber = $('#columnsbnk li').length + 1;	
 			
-			if ($('#qst_title').val().replace(/ /g,'') == '') {
+			/* 항목 추가시 타이틀 체크기능 주석처리 */
+			/* if ($('#qst_title').val().replace(/ /g,'') == '') {
 				alert('<spring:message code="ezPoll.t147"/>');
 	            document.getElementById("qst_title").value = "";	           
 	            document.getElementById("qst_title").focus();
@@ -498,7 +519,9 @@
 			else {
 				$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
 				$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
-			}					
+			} */					
+			$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
+			$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
 		}
 		
 		function menuQst_List() {
@@ -661,6 +684,22 @@
 	        else {
 	        	$('#multiSelectNumber').val('1');
 	        }
+	        
+	        if ($('#isSorting').is(':checked')) {
+	        	$('#hidIsSorting').val("1");	
+	        }
+	        else{
+	        	$('#hidIsSorting').val("0");	
+	        }
+	       
+	        if ($('#isSelOnlyOnce').is(':checked')) {
+	        	$('#hidIsSelOnlyOnce').val("1");	
+	        }
+	        else{
+	        	$('#hidIsSelOnlyOnce').val("0");	
+	        }
+	        
+	        
     		if (form_check() == false) {
         		return;
         	} 
@@ -796,7 +835,7 @@
 	    }
 	    
 	    function Editor_Complete() {
-	    	if (mode == "modify") {
+	    	if (mode == "modify" || mode == "reuse") {
 	    		message.SetEditorContent(sigBody.innerHTML);
 	    	}
 	    }
@@ -819,12 +858,12 @@
 <body class="mainbody">
 	<form id="frmCreate" method="post" action="/ezPoll/pollComplete.do" name="frmCreate"> 	
 		<h1><spring:message code="ezPoll.t206" /></h1>
-		<div>
+		<div id="ballotSystemBody">
 			<table class="content content_poll" style="width: 100%;"> 
 				<tr>    <!------------Question title----------------> 
 					<%-- <th>Question</th>			--%>
 					<td style="width: 100%;" class="pollTd01">							
-						<input id="qst_title" name="qst_title" type="text"  placeholder="<spring:message code='ezPoll.t234'/>" style="width: 100%;" class="createPoll_title" maxlength="150" value="<c:out value="${mode == 'modify' ? question.title : ''}"/>">
+						<input id="qst_title" name="qst_title" type="text"  placeholder="<spring:message code='ezPoll.t234'/>" style="width: 100%;" class="createPoll_title" maxlength="150" value="<c:out value="${mode == 'modify' || mode == 'reuse' ? question.title : ''}"/>">
 					</td>
 	
 				</tr>
@@ -845,7 +884,7 @@
 							</div>
 							<div style="clear: both"></div>
 						</div>
-						<div id="lstAttachLink" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 92px;border: 1px solid #b6b6b6;overflow: auto; margin:8px 0px 0px 0px;">
+						<div id="lstAttachLink" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 92px;border: 1px solid #ddd;overflow: auto; margin:8px 0px 0px 0px;">
 							<div id="addFile" class="pollAddFile">
 								<img src="/images/poll/pollAddFile_Addicon.png" style="height:23px;width:20px;vertical-align:middle; margin:-4px 5px 0px 0px; padding:0px; cursor: pointer;" onclick="uploadbtn()">
 								<spring:message code="ezPoll.t151"/>
@@ -911,6 +950,12 @@
 						<input id="anonymousVote" type="checkbox">
 						<span><spring:message code="ezPoll.t253"/></span>
 						
+						<input id="isSorting" type="checkbox">
+						<span>득표순 정렬</span>
+						
+						<input id="isSelOnlyOnce" type="checkbox">
+						<span>낙장불입</span>
+						
 						<input id="endDate" type="checkbox">
 						<span><spring:message code="ezPoll.t159"/></span>
 						
@@ -921,6 +966,7 @@
 							<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
 							<select id="eTimePicker"></select>						
 						</div>
+						
 					</div>
 <%-- 					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
 						<input id="anonymousVote" type="checkbox">
@@ -966,6 +1012,8 @@
 						<input type="text" name="hidFilePath" id="hidFilePath" value="" style="display:none">	
 						<input type="text" name="hidSetDate" id="hidSetDate" value="" style="display:none">
 						<input type="text" name="hidCreateDate" id="hidCreateDate" value="" style="display:none">		
+						<input type="text" name="hidIsSorting" id="hidIsSorting" value="" style="display:none">		
+						<input type="text" name="hidIsSelOnlyOnce" id="hidIsSelOnlyOnce" value="" style="display:none">		
 					</div>
 					</td>
 				</tr>						

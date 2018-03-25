@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezStatistics.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -69,18 +70,18 @@ public class EzStatisticsMailMainController {
 				
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		
-		StringBuilder listCompany = new StringBuilder();
-		for (OrganDeptVO vo : list) {
-			// 전체 관리자이면 모든 회사를 추가하고, 그렇지 않은 경우엔 관리자가 속한 회사만을 추가한다.
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
 			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
-				listCompany.append("<option value='" + vo.getCn() + "'>");
-				listCompany.append(vo.getDisplayName());
-				listCompany.append("</option>");
+				resultList.add(vo);
 			}
 		}
 		
-		model.addAttribute("listCompany", listCompany.toString());
-		
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", user.getCompanyID());
 		return "ezStatistics/statisticsMailMain";
 	}
 

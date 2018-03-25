@@ -139,7 +139,7 @@
 				        	show_info(userID);
 				        });
 			            
-			            $("#lvBoardList tbody tr:odd td").css("background-color", "#f8f8f8");
+			            $("#lvBoardList tbody tr:odd td").css("background-color", "#f8f8fa");
 		            } else {
 		            	var msg = "<spring:message code='ezBoard.kbm01'/>";
 		            	var htmlContent = "<tr><td style='text-align:center'>" + msg +"</td></tr>";
