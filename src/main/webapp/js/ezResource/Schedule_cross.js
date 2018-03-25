@@ -1300,7 +1300,8 @@ function printpr() {
 
 function onbeforeprint() {
     g_documentTitle = document.title;
-    document.title = title.value;
+    /* 2018.03.23 서주연 - #12104 인쇄미리보기시 창제목 변경되는 문제 해결 */
+//  document.title = title.value;
 
     setNodeText(document.getElementById("printOwner"), getNodeText(document.getElementById("displayNM")));
 
