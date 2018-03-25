@@ -50,103 +50,96 @@ public class EzEmailAsync {
 		logger.debug("num=" + num);
 		
 		try {
-				final String messageId = ezEmailService.getMailReceiveMessageId(num);
-				
-				if (messageId == null) {
-						logger.error("cannot get messageId from DB.");
-						return;
-				}
-				
-				String password = jspw;
-				List<String> addresses = ezEmailService.getMailReceiveAddress(num);
-				List receiveDetailList = new ArrayList();
-				Locale locale = Locale.getDefault();
-				
-				ArrayList<String> folderNameList = new ArrayList();
-				folderNameList.add(egovMessageSource.getMessage("ezEmail.lhm01",locale));
-				folderNameList.add(egovMessageSource.getMessage("ezEmail.t647",locale));
-				folderNameList.add(egovMessageSource.getMessage("ezEmail.t648",locale));
-				folderNameList.add(egovMessageSource.getMessage("ezEmail.t99000029",locale));
-				
-				String isReadDeleteStr = ezCommonService.getTenantConfig("IS_READ_DELETE", tenantID);
-				boolean isReadDelete = false;
-
-				if (isReadDeleteStr.equals("YES")) {
-					isReadDelete = true;
-				}
-				
-				SearchTerm searchTerm = new SearchTerm() {
-					@Override
-					public boolean match(Message message) {
-						try {
-							String thisMessageId = ((MimeMessage) message).getMessageID();
-
-							if (thisMessageId != null && thisMessageId.contains(messageId)) {
-								return true;
-							}
-							
-						} catch (MessagingException e) {
-							e.printStackTrace();
-						}
+			final String messageId = ezEmailService.getMailReceiveMessageId(num);
+			
+			if (messageId == null) {
+				logger.error("cannot get messageId from DB.");
+				return;
+			}
+			
+			String password = jspw;
+			List<String> addresses = ezEmailService.getMailReceiveAddress(num);
+			List<String[]> receiveDetailList = new ArrayList<>();
+			Locale locale = Locale.getDefault();
 						
-						return false;
-					}
-				};
-				
-				for (String address : addresses) {
-					// jobCode - 1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함
-					// config.IS_READ_DELETE가 YES이면 읽은 메일도 삭제 (jobCode=1)
-					int jobCode = 3;
-					IMAPAccess ia = null;
-					
+			String isReadDeleteStr = ezCommonService.getTenantConfig("IS_READ_DELETE", tenantID);
+			boolean isReadDelete = false;
+
+			if (isReadDeleteStr.equals("YES")) {
+				isReadDelete = true;
+			}
+			
+			SearchTerm searchTerm = new SearchTerm() {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public boolean match(Message message) {
 					try {
-							ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"),
-									config.getProperty("config.IMAPPort"), address, password, egovMessageSource, locale);
-							
-							for (String folderName : folderNameList) {
-									 Folder folder = ia.getFolder(folderName);
-									 jobCode = recursiveCancelMailSearch(ia, folder,searchTerm, isReadDelete);
-									 
-									 if (jobCode != 3) {
-										 	break; 
-									 }
-									 
-							}
-							
-							ia.close();
-							ia = null;
-							
+						String thisMessageId = ((MimeMessage) message).getMessageID();
+
+						if (thisMessageId != null && thisMessageId.contains(messageId)) {
+							return true;
+						}
 					} catch (MessagingException e) {
 						e.printStackTrace();
-						jobCode = 3;
-					} finally {
-						
-						if (ia != null) {
-							ia.close();
-						}
-						
 					}
 					
-					logger.debug("address=" + address + ",jobCode=" + jobCode);
-					receiveDetailList.add(new String[] { address,String.valueOf(jobCode)});
+					return false;
 				}
-				ezEmailService.updateMailReceiveDetailInfo(num, receiveDetailList);
-
-
-			} catch (Exception e) {
-				e.printStackTrace();
+			};
+			
+			for (String address : addresses) {
+				// jobCode - 1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함
+				// config.IS_READ_DELETE가 YES이면 읽은 메일도 삭제 (jobCode=1)
+				int jobCode = 3;
+				IMAPAccess ia = null;
+				
+				try {
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"),
+							config.getProperty("config.IMAPPort"), address, password, egovMessageSource, locale);
+					
+					List<String> folderNameList = ia.getAllTopLevelFolderNames();
+										
+					for (String folderName : folderNameList) {
+						Folder folder = ia.getFolder(folderName);
+						jobCode = recursiveCancelMailSearch(ia, folder,searchTerm, isReadDelete);
+						 
+						if (jobCode != 3) {
+							break; 
+						}							 
+					}
+					
+					ia.close();
+					ia = null;
+				} catch (MessagingException e) {
+					e.printStackTrace();
+					jobCode = 3;
+				} finally {					
+					if (ia != null) {
+						ia.close();
+					}
+				}
+				
+				logger.debug("address=" + address + ",jobCode=" + jobCode);
+				
+				receiveDetailList.add(new String[] {address, String.valueOf(jobCode)});
 			}
+			
+			ezEmailService.updateMailReceiveDetailInfo(num, receiveDetailList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-			logger.debug("cancelMailDelete async methoed ended.");
+		logger.debug("cancelMailDelete async methoed ended.");
 	}
 	
 	/**
 	 * 메일 회수시 받은 편지함, 지운편지함, 개인편지함, 정크메일함과 각 편지함의 하위폴더에서도 회수가 가능하도록 개선.
 	 */
-	private int recursiveCancelMailSearch (IMAPAccess ia, Folder folder,
-										   SearchTerm searchTerm, boolean isReadDelete) throws Exception {
-		
+	private int recursiveCancelMailSearch(IMAPAccess ia, Folder folder, 
+					SearchTerm searchTerm, boolean isReadDelete) throws Exception {
 		logger.debug("folderName=" + folder.getFullName());
+		
 		int jobCode = 3;
 		
 		if (folder.exists()) {
@@ -162,22 +155,20 @@ public class EzEmailAsync {
 			messages = folder.search(searchTerm);
 			
 			if (messages.length > 0) { // 메일 발견
-				
 				if (messages[0].isSet(Flags.Flag.SEEN)) { // 메일 읽음
-					
 					if (isReadDelete) { // 읽어도 지움
 						messages[0].setFlag(Flags.Flag.DELETED, true);
 						jobCode = 1;
 					} else { // 읽으면 안지움
 						jobCode = 2;
 					}
-					
 				} else { // 메일 안읽음
 					messages[0].setFlag(Flags.Flag.DELETED, true);
 					jobCode = 1;
 				}
 
 				logger.debug("folderPath=" + folder.getFullName());
+				
 				folder.close(true);
 			} else {
 				folder.close(true);
@@ -190,13 +181,11 @@ public class EzEmailAsync {
 						jobCode = subJobCode;
 						break;
 					}
-					
 				}
-				
 			}
-			
 		}
-			return jobCode;
+		
+		return jobCode;
 	}
 	
 }
