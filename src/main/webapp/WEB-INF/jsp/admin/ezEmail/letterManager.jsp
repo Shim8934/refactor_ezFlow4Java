@@ -15,11 +15,6 @@
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
 	</head>
 	
-	<style>
-	
-	
-	</style>
-	
 	<body>
 		<div id="lmTop">
 			
