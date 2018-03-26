@@ -101,8 +101,8 @@
 #menu1 h1{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 
 /* vote icon img */
-.voteIconDiv{margin:0 20px 0 20px; float:right;}
-.voteIcon_ul{position:relative; float: left; width: 70px; height: 68px; /* overflow: hidden; */ margin: 0; padding: 0px 0 0 0; list-style: none;}
+.voteIconDiv{float:right;}
+.voteIcon_ul{position:relative; float: left; width: 62px; height: 68px; /* overflow: hidden; */ margin: 0; padding: 0px 0 0 8px; list-style: none;}
 .voteIcon_ul .icon_title{clear: both; display:block; text-align: center;height: 20px;line-height: 19px;overflow: hidden;vertical-align: top;font-size: 12px;color: #000;}
 .voteIcon_ul .img_description{position: absolute;right: -5px;top: -2px;z-index: 5;}
 .voteIcon_ul .img_description div{display:inline-block; line-height:190%; color:#fff; padding:0px 0 0 8px; font-size:11px; background: url(../../images/kr/main/count_l.png) no-repeat left;}
