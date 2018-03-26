@@ -8507,7 +8507,7 @@
 		<isEqual property="v_FLAG" compareValue="001">
 			<![CDATA[
 				SELECT 
-					PUBLICITYCODE 
+					TRIM(PUBLICITYCODE) 
 		        FROM 
 		        	TBL_EXPENDAPRDOCINFO 
 		        WHERE  
