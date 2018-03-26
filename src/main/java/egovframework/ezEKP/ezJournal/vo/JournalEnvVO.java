@@ -16,7 +16,14 @@ public class JournalEnvVO {
 	private String replyAlert;
 	/* 메일주소*/
 	private String mail;
+	private String name;
 	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public String getMail() {
 		return mail;
 	}

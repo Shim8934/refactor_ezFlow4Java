@@ -10,10 +10,13 @@
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
+		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
+		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
+		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 	   	<script type="text/javascript">
 	   		//트리조직도 JSON
 	   		var treeContent;

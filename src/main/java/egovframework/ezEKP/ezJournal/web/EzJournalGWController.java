@@ -1640,8 +1640,12 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			LOGGER.debug("userId : " + userId);
+			String companyId = request.getParameter("companyId");
 			
-			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, request.getParameter("companyId"), info.getTenantId() + "");
+			if (companyId ==null||companyId.equals("")) {
+				companyId = info.getCompanyId();
+			}
+			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, companyId, info.getTenantId() + "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -394,17 +394,24 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezJournal/journalGetForm.do", produces="application/json; charset=utf-8")
 	@ResponseBody
-	public JSONObject journalGetForm(@RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	public JSONObject journalGetForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("journalGetForm started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String mode = (String) jsonParam.get("mode");
-		String formId = (String) (jsonParam.get("formId")+"");
-		String typeId = (String) jsonParam.get("typeId");
+		String mode = (String) request.getParameter("mode");
+		String formId = (String) (request.getParameter("formId")+"");
+		String typeId = (String) request.getParameter("typeId");
+		String journalIdList = (String) request.getParameter("journalIdList");
 		String userId = userInfo.getId();
 		
 		Map<String, Object> param = new HashMap<String, Object>();
+		
+		JSONObject jsonParam = new JSONObject();
+		jsonParam.put("mode", mode);
+		jsonParam.put("formId", formId);
+		jsonParam.put("typeId", typeId);
+		jsonParam.put("journalIdList", journalIdList);
 		
 		String restUrl="";
 		JSONObject result=null;
@@ -415,7 +422,6 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 			break;
 		case "sum":
-			jsonParam.put("formId", formId);
 			jsonParam.put("userId", userId);
 			restUrl = "/rest/ezjournal/journals-sum" ;
 			logger.debug(jsonParam.toString());
