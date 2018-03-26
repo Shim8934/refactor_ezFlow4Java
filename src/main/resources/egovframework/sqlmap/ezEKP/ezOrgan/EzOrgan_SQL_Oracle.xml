@@ -78,10 +78,6 @@
 		<result property="displayName" 							column="displayName" 					columnIndex="2"/>		
 	</resultMap>
 	
-	<!-- <procedure id="EzOrganDAO.getPropertyValue" parameterClass="Map" resultClass="String" remapResults="true">
-		{CALL EZSP_GETPROPERTYVALUE(#v_CN#, #v_FIELD#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
 	<select id="EzOrganDAO.getPropertyValue_S1" parameterClass="Map" resultClass="String">
 		<![CDATA[	
 			SELECT
@@ -174,15 +170,7 @@
 				TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.getSIPUriList" parameterClass="Map" resultClass="String">
-		{CALL EZSP_GETSIPURILIST(#iv_CNLIST#, #iv_EMAILLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
-	 <!-- <procedure id="EzOrganDAO.getDeptTreeInfo" parameterClass="Map" resultMap="deptTreeInfo">
-		{CALL EZSP_GETDEPTTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> --> 
-	
+
 	 <select id="EzOrganDAO.getDeptTreeInfo" parameterClass="Map" resultMap="deptTreeInfo">
 		<![CDATA[
 			SELECT
@@ -231,11 +219,7 @@
         	ORDER BY A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
 		]]>
 	</select> 
-	
-	 <!-- <procedure id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
-		{CALL EZSP_GETDEPTSUBTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> --> 
-	
+
  	<select id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
 		<![CDATA[
 			SELECT
@@ -718,11 +702,7 @@
               			B.TENANT_ID = #v_TENANT_ID#) AA
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.getTBL_DEPTMASTER" parameterClass="Map" resultClass="OrganDeptVO">
-		{CALL EZSP_GETTBL_DEPTMASTER(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+
 	<select id="EzOrganDAO.getTBLDeptMaster" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[
 			SELECT
@@ -787,11 +767,7 @@
 	       		TENANT_ID = #v_TENANT_ID#		
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.getTBL_USERMASTER" parameterClass="Map" resultMap="userInfo">
-		{CALL EZSP_GETTBL_USERMASTER(#v_CN#, #v_DEPTCD#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+
 	<select id="EzOrganDAO.getTBLUserMaster" parameterClass="Map" resultMap="userInfo">
 		<![CDATA[
 			SELECT
@@ -975,11 +951,7 @@
             	B.TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
-		{CALL EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+
 	<select id="EzOrganDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			SELECT
@@ -1085,11 +1057,7 @@
              	TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.getUserAddjobInfo" parameterClass="Map" resultMap="userAddJobInfo">
-		{CALL EZSP_GETUSERADDJOBINFO(#v_PCN#, #v_PDEPT#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+
 	<select id="EzOrganDAO.getUserAddjobInfo" parameterClass="Map" resultMap="userAddJobInfo">
 		<![CDATA[
 			SELECT
@@ -1125,11 +1093,7 @@
         		A.TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.updateProperty" parameterClass="Map">
-		{CALL EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
-	</procedure> -->
-	
+
 	<update id="EzOrganDAO.updateProperty" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -1155,12 +1119,7 @@
 				TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</update>
-		
-	<!-- <procedure id="EzOrganDAO.setProxyUserInfo" parameterClass="Map">
-	
-		{CALL EZSP_SETPROXYUSERINFO(#v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, #v_STARTDATE#, #v_ENDDATE#)}
-	</procedure> -->
-	
+
 	<select id="EzOrganDAO.setProxyUserInfo_S" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -1204,11 +1163,7 @@
             	( #v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANT_ID# )
 		]]>
 	</insert>
-	
-	<!-- <procedure id="EzOrganDAO.delProxyUserInfo" parameterClass="Map">
-		{CALL EZSP_DELPROXYUSERINFO(#v_USERID#)}
-	</procedure> -->
-	
+
 	<delete id="EzOrganDAO.delProxyUserInfo" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
@@ -1219,11 +1174,7 @@
         		TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</delete>
-	
-	<!-- <procedure id="EzOrganDAO.getBirthUserList" parameterClass="String" resultClass="OrganUserVO">
-		{CALL EZSP_GETBIRTHUSERLIST(#v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+
 	<select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			SELECT
