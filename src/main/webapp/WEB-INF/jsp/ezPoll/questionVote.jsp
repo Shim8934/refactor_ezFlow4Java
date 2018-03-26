@@ -2581,9 +2581,6 @@
 								<span class="questionFontS"><c:out value='${question.createDate}'/></span>
 							</div>
 					  </div>
-					  <%-- <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2)}">
-						  <div id="_editVote" onclick="voteEdit()"><span><spring:message code = 'ezEmail.t149'/></span></div>
-					  </c:if> --%>
 					  <div class='voteIconDiv'>
 						  	<ul class='voteIcon_ul'>
 								<c:choose>
@@ -2598,36 +2595,11 @@
 										</li>
 									</c:otherwise>
 								</c:choose>
-								<!-- <li class='icon_title'>
-									<span>미리보기</span>
-								</li> -->
 							</ul>
 							<ul class='voteIcon_ul'>
-								<c:choose>
-									<c:when test="${question.multiSelect >= 0}">
 										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t257'/>" >
+											<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t257'/>" >
 										</li>
-									</c:when>
-									<c:otherwise>
-										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t257'/>" >
-										</li>
-									</c:otherwise>
-								</c:choose>
-								<c:if test="${question.multiSelect > 0}">
-										<li class="img_description">
-											<div><span>${question.multiSelect}</span></div>
-										</li>
-								</c:if>
-								<c:if test="${question.multiSelect == 0}">
-										<li class="img_description">
-											<div><span><spring:message code = 'ezEmail.lhm67'/></span></div>
-										</li>
-								</c:if>
-								<!-- <li class='icon_title'>
-									<span>다중투표</span>
-								</li> -->
 							</ul>
 							<ul class='voteIcon_ul'>
 								<c:choose>
@@ -2635,28 +2607,19 @@
 										<li class="voteIconImg_li icon">
 											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t253'/>" >
 										</li>
-										<li class="img_description">
-											<div><span><spring:message code = 'ezPoll.t111'/></span></div>
-										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li icon">
 											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
 										</li>
-										<li class="img_description">
-											<div><span><spring:message code = 'ezPoll.t240'/></span></div>
-										</li>
 									</c:otherwise>
 								</c:choose>
-								<%-- <li class='icon_title'>
-									<span><spring:message code = 'ezPoll.t109'/></span>
-								</li> --%>
 							</ul>
 							<ul class='voteIcon_ul'>
 								<c:choose>
 									<c:when test="${question.secretVote == 0}">
 										<li class="voteIconImg_li icon nosecret" onclick="menuDetailSeenUserInfo('${question.qstId}')">
-											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t112'/>" >
+											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t112'/>" onmouseover="this.src = '/images/poll/seen_vote_user_hover.png'" onmouseout="this.src = '/images/poll/seen_vote_user.png'" >
 										</li>
 										<li class="img_description">
 											<div><span id="seenPeople">${seenUsers}</span></div>
@@ -2671,15 +2634,12 @@
 										</li>
 									</c:otherwise>
 								</c:choose>
-								<%-- <li class='icon_title'>
-									<span><spring:message code = 'ezPoll.t112'/></span>
-								</li> --%>
 							</ul>
 							<ul class='voteIcon_ul'>
 								<c:choose>
 									<c:when test="${question.secretVote == 0}">
 										<li class="voteIconImg_li icon nosecret" onclick="javascript:displayDetail('${question.qstId}')">
-											<img src="/images/poll/unvoted_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t123'/>" >
+											<img src="/images/poll/unvoted_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t123'/>" onmouseover="this.src = '/images/poll/unvoted_user_hover.png'" onmouseout="this.src = '/images/poll/unvoted_user.png'" >
 										</li>
 										<li class="img_description">
 											<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
@@ -2694,47 +2654,21 @@
 										</li>
 									</c:otherwise>
 								</c:choose>
-								<%-- <li class='icon_title'>
-									<span><spring:message code = 'ezPoll.t123'/></span>
-								</li> --%>
 							</ul>
 							<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2)}">
 								<ul class='voteIcon_ul'>
 									<li class="voteIconImg_li icon nosecret">
-										<img src="/images/poll/editVote.png" class="voteIconImg" onclick="voteEdit()" title="<spring:message code = 'ezEmail.t149'/>"/>
+										<img src="/images/poll/editVote.png" class="voteIconImg" onclick="voteEdit()" title="<spring:message code = 'ezEmail.t149'/>" onmouseover="this.src = '/images/poll/editVote_hover.png'" onmouseout="this.src = '/images/poll/editVote.png'" />
 									</li>
 								</ul>
 							</c:if>
 							<ul class='voteIcon_ul'>
 								<li class="voteIconImg_li icon nosecret">
-									<img src="/images/poll/reuseVote.png" class="voteIconImg" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>"/>
+									<img src="/images/poll/reuseVote.png" class="voteIconImg" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
 								</li>
 							</ul>
 					  </div>
 					  
-	                 <%--  <div class="voteBtn">
-	                  				<c:choose>
-	                  					<c:when test="${question.secretVote == 0}">
-	                  						<div onclick="javascript:displayDetail('${question.qstId}')" ><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
-	                  					</c:when>
-	                  					<c:when test="${question.secretVote == 1}">
-	                  						<div><spring:message code = 'ezPoll.t123'/><span id="_unVotedNumber">(<c:out value='${numberOfUnvotedUsers}'/>)</span></div>
-	                  					</c:when>
-	                                </c:choose>
-	                                <div id="_unVotedNumber" onclick="javascript:displayDetail('${question.qstId}') style="float:left; display:block; line-height:43px;"><c:out value='${numberOfUnvotedUsers}'/></div>
-	                                <!--<img src="/images/arrow_right.png" height="20px" width="20px" style="cursor: pointer; float:left; display:block; padding-left: 5px; padding-top: 5px;" onclick="javascript:displayDetail('${question.qstId}')">-->
-	                            </div>
-	                  <div class="voteBtn">
-	                  	<c:choose>
-          					<c:when test="${question.secretVote == 0}">
-          						<div onClick="menuDetailSeenUserInfo('${question.qstId}')"><spring:message code = 'ezPoll.t112'/><span id="seenPeople">(<c:out value='${seenUsers}'/>)</span></div>
-          					</c:when>
-          					<c:when test="${question.secretVote == 1}">
-          						<div><spring:message code = 'ezPoll.t112'/><span id="seenPeople">(<c:out value='${seenUsers}'/>)</span></div>
-          					</c:when>
-                        </c:choose>
-					  	
-					  </div> --%>
 				</div>
 				<div id="titleAndContent">				
 					<div id="title" class="questionTitle" style="width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
