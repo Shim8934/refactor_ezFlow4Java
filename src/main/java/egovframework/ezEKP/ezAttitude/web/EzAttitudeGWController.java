@@ -815,7 +815,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 사용자별 근태설정 조회
+	 * G/W 근태관리 [GET] 사용자별 근태설정 리스트 조회
 	 */
 	@RequestMapping(value = "/rest/ezattitude/user-attitude-confs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject userAttitudeConfList(HttpServletRequest request) {
@@ -833,12 +833,15 @@ public class EzAttitudeGWController {
 			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
 			String orderOption = request.getParameter("orderOption");
+			String offsetMin = request.getParameter("offsetMin");
 			String order = orderCell + " " + orderOption;
 			LOGGER.debug("order : " + order);
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(info.getTenantId(), companyId, searchUserName, searchDeptName, pageNum, listSize, order);
+			
+			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(info.getTenantId(), companyId, searchUserName, searchDeptName, pageNum, listSize, order, offsetMin);
+			
 			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(info.getTenantId(), companyId, searchUserName, searchDeptName);
 			
 			JSONObject data = new JSONObject();
@@ -857,10 +860,62 @@ public class EzAttitudeGWController {
 		return result;
 	}
 	
+	
+	
+	/**
+	 * G/W 근태관리 [GET] 사용자별 근태설정 조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/users-attitude-confs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject userAttitudeConfInfo(HttpServletRequest request, @PathVariable String userId) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/users-attitude-confs] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			String companyId = request.getParameter("companyId");
+			
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			AttitudeUserConfigVO vo = ezAttitudeService.getAttitudeUserConfigInfo(info.getTenantId(), companyId, userId);
+			
+			if (vo == null) {
+				vo = new AttitudeUserConfigVO();
+				
+				AttitudeConfigVO attiConfInfo = ezAttitudeService.getAttitudeConfig(info.getTenantId(), companyId);
+				vo.setUserId(userId);
+				vo.setWorkStartTime(attiConfInfo.getWorkStartTime());
+				vo.setWorkEndTime(attiConfInfo.getWorkEndTime());
+				vo.setUserName(info.getUserName());
+				vo.setUserName2(info.getUserName2());
+			}
+			
+			String today =  commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			
+			String startDate = commonUtil.getDateStringInUTC(today + " " + vo.getWorkStartTime(), info.getOffSet(), false);
+			String endDate = commonUtil.getDateStringInUTC(today + " " + vo.getWorkEndTime(), info.getOffSet(), false);
+			
+			int startIdx = startDate.indexOf(" ");
+			int endIdx = endDate.indexOf(" ");
+			
+			vo.setWorkStartTime(startDate.substring(startIdx + 1));
+			vo.setWorkEndTime(endDate.substring(endIdx + 1));
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", vo);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/users-attitude-confs] ended.");
+		return result;
+	}
 	/**
 	 * G/W 근태관리 [POST] 사용자별 근태설정 등록
 	 */
-	@RequestMapping(value = "/rest/ezattitude/user-attitude-confs", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/users/{userId}/ezattitude/user-attitude-confs", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertUserAttitudeConf(HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users-attitude-confs] started.");
 		

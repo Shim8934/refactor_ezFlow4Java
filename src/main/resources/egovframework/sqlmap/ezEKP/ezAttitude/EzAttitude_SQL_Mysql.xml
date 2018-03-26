@@ -287,4 +287,5 @@
 		]]>
 		<include refid="ezAttitudeDAO.searchQuery"/>
 	</select>
+	
 </sqlMap>
