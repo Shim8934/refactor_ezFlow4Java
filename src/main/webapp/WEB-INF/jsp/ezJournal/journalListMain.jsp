@@ -113,6 +113,7 @@
 		    var sumFormId;
 		    var sumTypeId;
 		    var journalIdList = [];
+		    var replyJournalTitle;
 			
 			window.onresize = function ()
 		    {
@@ -1092,7 +1093,8 @@
 		}
 	}
 	 
-	 function quickReply(journalId){
+	 function quickReply(journalId,journalTitle){
+		 replyJournalTitle = journalTitle;
 // 		var heigth = window.screen.availHeight;
 //         var width = window.screen.availWidth;
 //         var left = (width - 500) / 2;

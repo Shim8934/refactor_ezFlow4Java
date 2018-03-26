@@ -209,6 +209,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String dotNetUrl = "";
 		
+		//업무일지 아이디
+		String journalId = "";
+		
 		// check if parameter is valid
 		String tempStr = "";
 		if (request.getParameter("cmd") != null) {
@@ -963,6 +966,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 			
         }
+        //업무일지면 작동
+        else if(_cmd.equals("journal")){
+        	journalId = request.getParameter("journalId");
+        }
         
         String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", loginInfo.getTenantId());
 		String fromAddressHtml = "";
@@ -1085,6 +1092,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
+		//업무일지 아이디
+		model.addAttribute("journalId", journalId);
 		
 		response.setHeader("X-XSS-Protection", "0");
 		
@@ -4484,5 +4493,4 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    	size += b.length;
 	    }
 	}
-	
 }

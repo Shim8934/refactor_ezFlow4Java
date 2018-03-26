@@ -419,8 +419,8 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * 댓글 등록
 	 * @param map
 	 */
-	public void insertJournalReply(Map<String, Object>map) {
-		insert("insertJournalReply",map);
+	public String insertJournalReply(Map<String, Object>map) {
+		return (String) insert("insertJournalReply",map);
 	}
 	
 	/**

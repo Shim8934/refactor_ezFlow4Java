@@ -121,6 +121,8 @@
 	    var securePassword = "";
 	    var secureReadCount = "0";
 	    var secureReadDate = "";
+	    //업무일지 아이디
+	    var journalId = "${journalId}";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -786,7 +788,12 @@
 	            }
 	            else if (Org_cmd == "CommunityDotNet") {
 	                GetBoardItemInfo_New3_DotNet("${boardID}", "${itemID}");
-	            }	            
+	            }	
+	            //업무일지면...
+	            else if (Org_cmd == "journal"){
+	            	getJournalToMail();
+	            	return;
+	            }
 	            
 	            initFlag = true;
 	            pOrgAttachListXml = pAttachListXml;
@@ -799,6 +806,21 @@
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
 	    }
 	
+	    function getJournalToMail(){
+	    	$.ajax ({
+				type : "POST",
+				async : false,
+				url : "/ezJournal/journalDetailJSON.do",
+				data : {
+					"journalId" : journalId
+				},
+				success : function(result) {
+					$("#eSubject").val(result.journalTitle);
+					message.SetEditorContent(result.journalContent);
+				}
+			});
+	    }
+	    
 	    function btn_AttachSelect_onclick() {
 	        document.getElementById('mode').value = "ATT";
 	        document.form.file1.click();

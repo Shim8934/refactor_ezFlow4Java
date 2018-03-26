@@ -7,7 +7,10 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
@@ -27,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalPagination;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -49,6 +54,9 @@ public class EzJournalSBController {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name="EzEmailService")
+	private EzEmailService ezEmailService;
 	
 	@RequestMapping(value="/ezJournal/journalMain.do")
 	public String journalMain(HttpServletRequest req, Model model) {
@@ -190,7 +198,6 @@ public class EzJournalSBController {
 	 * @param loginCookie
 	 * @return
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value="/ezJournal/journalList.do")
 	public String journalList(@RequestBody JSONObject jsonParam, HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("journalList started");
@@ -476,13 +483,13 @@ public class EzJournalSBController {
 		param.put("userId", userInfo.getId());
 		param.put("replyContent", replyContent);
 		param.put("replyDate", replyDate);
+		param.put("loginCookie", loginCookie);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId+"/replies", param, request,"post",null);
-		String status = resultBody.get("status").toString();
-		
+		String journalWriter = (String) resultBody.get("data");
 		logger.debug("saveJournalReply ended");
 		
-		return status;
+		return journalWriter;
 	}
 	
 	/**
@@ -711,5 +718,96 @@ public class EzJournalSBController {
 		logger.debug("getOtherJournal ended");
 		
 		return result;
+	}
+	
+	/**
+	 * 업무일지 상세내용 JSON 가져오기
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value="/ezJournal/journalDetailJSON.do")
+	public JSONObject getJournalJSON(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("getJournalJSON started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String viewDate ="";
+		try {
+			viewDate = commonUtil.getTodayUTCTime("");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("viewDate", viewDate);
+		
+		String journalId = request.getParameter("journalId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId, param, request,"get",null);
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject journal = null;
+		if (status.equals("ok")) {			
+			journal = (JSONObject) resultBody.get("data");
+			String journalDate = (String) journal.get("journalDate");
+			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+			journal.put("journalDate", journalDate);
+		}
+		
+		logger.debug("getJournalJSON ended");
+		
+		return journal;
+	}
+	
+	@RequestMapping(value="/ezJournal/sendJournalReplyMail.do")
+	public String sendJournalReplyMail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("sendJournalReplyMail started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String replyContent = request.getParameter("replyContent");
+		String journalTitle = request.getParameter("journalTitle");
+		String journalWriter = request.getParameter("journalWriter");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/"+journalWriter+"/options", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			JSONObject journalEnv = (JSONObject) resultBody.get("data");
+			
+			String replyAlert = (String) journalEnv.get("replyAlert");
+			
+			if (replyAlert.equals("Y")) {
+				try {
+				InternetAddress[] toArr = new InternetAddress[1];
+				toArr[0] = new InternetAddress((String) journalEnv.get("mail"));
+				
+				String subject = egovMessageSource.getMessage("ezJournal.t151")+journalTitle;
+				
+				String content = "<p>"+egovMessageSource.getMessage("ezJournal.t152")+"</p>";
+				content += "<p></p>";
+				content += "<p>"+egovMessageSource.getMessage("ezJournal.t153")+userInfo.getDisplayName()+"</p>";
+				content += "<p>"+egovMessageSource.getMessage("ezJournal.t154")+journalTitle+"</p>";
+				content += "<p>"+replyContent+"</p>";
+				
+				InternetAddress from;
+					from = new InternetAddress(userInfo.getEmail());
+				ezEmailService.sendMail(loginCookie , from, toArr, null, null, subject, content, false);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		logger.debug("sendJournalReplyMail ended");
+		
+		return status;
 	}
 }

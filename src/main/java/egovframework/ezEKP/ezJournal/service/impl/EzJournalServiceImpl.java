@@ -947,7 +947,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void saveJorunalReply(String journalId, String userId, String replyContent, String replyDate, int tenantId)throws Exception {
+	public String saveJorunalReply(String journalId, String userId, String replyContent, String replyDate, int tenantId)throws Exception {
 		logger.debug("saveJorunalReply started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -956,9 +956,10 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("tenantId", tenantId);
 		map.put("journalId", journalId);
 		
-		ezJournalDAO.insertJournalReply(map);
+		String journalWriter = ezJournalDAO.insertJournalReply(map);
 		
 		logger.debug("saveJorunalReply ended.");
+		return journalWriter;
 	}
 
 	@Override

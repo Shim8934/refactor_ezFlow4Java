@@ -19,6 +19,7 @@
 		
 			var formId = "${journal.formId}";
 			var journalId = "${journal.journalId}";
+			var journalTitle = "${journal.journalTitle}";
 			var typeId = "${journal.typeId}";
 			var viewType = "detail";
 			

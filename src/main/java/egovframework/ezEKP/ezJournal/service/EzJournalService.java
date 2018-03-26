@@ -344,9 +344,10 @@ public interface EzJournalService {
 	 * @param replyContent
 	 * @param replyDate
 	 * @param tenantId
+	 * @return 
 	 * @throws Exception
 	 */
-	public void saveJorunalReply(String journalId, String userId, String replyContent,String replyDate,int tenantId) throws Exception;
+	public String saveJorunalReply(String journalId, String userId, String replyContent,String replyDate,int tenantId) throws Exception;
 	
 	/**
 	 * 업무일지 댓글 삭제

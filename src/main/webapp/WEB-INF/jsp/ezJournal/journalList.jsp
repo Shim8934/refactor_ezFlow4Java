@@ -115,7 +115,7 @@
 				<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 				${journal.journalTitle}
 				<c:if test="${journal.replyCount gt 0}">
-					<a onclick=""><span onclick="quickReply(${journal.journalId });" style="color: #2222ff">[${journal.replyCount }]</span></a>
+					<a onclick=""><span onclick="quickReply('${journal.journalId }','${journal.journalTitle }');" style="color: #2222ff">[${journal.replyCount }]</span></a>
 				</c:if>
 				</td>
 				<c:if test="${listType eq 'recv' }">

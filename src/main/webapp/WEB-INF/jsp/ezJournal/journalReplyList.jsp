@@ -80,14 +80,29 @@
 					type:"post",
 					data:{"replyContent":replyContent,"journalId":journalId},
 					url:"/ezJournal/saveJournalReply.do",
-					success: function(){
+					success: function(result){
+						var journalTitle;
 						if(parent.viewType=='detail'){
+							journalTitle = parent.journalTitle;
 // 							parent.openJournalReply();
 							parent.opener.setJournalList();
 						} else {
+							journalTitle = parent.replyJournalTitle;
 							parent.setJournalList();
 						}
-							location.reload();
+						sendJournalReplyMail(replyContent,journalId,result,journalTitle);
+						location.reload();
+					}
+				});
+			}
+			
+			// 메일보내기
+			function sendJournalReplyMail(replyContent,journalId,journalWriter,journalTitle){
+				$.ajax({
+					type:"post",
+					data:{"replyContent":replyContent,"journalId":journalId,"journalTitle":journalTitle,"journalWriter":journalWriter},
+					url:"/ezJournal/sendJournalReplyMail.do",
+					success: function(){
 					}
 				});
 			}

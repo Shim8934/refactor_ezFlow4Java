@@ -16,7 +16,14 @@ public class JournalEnvVO {
 	private String replyAlert;
 	private String previewHcontent;
 	private String previewWcontent;
+	private String mail;
 	
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
 	public String getPreviewHcontent() {
 		return previewHcontent;
 	}
