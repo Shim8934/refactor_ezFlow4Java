@@ -79,7 +79,7 @@
     					orderOption : orderOption},
     			success : function(result){
     				totalCount = result.totalCount;
-    				totalPage = parseInt(totalCount / blockSize);
+    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
     				getUserConfList_after(result.list);
     			}
     		});
