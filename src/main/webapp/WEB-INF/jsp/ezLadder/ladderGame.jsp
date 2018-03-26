@@ -35,9 +35,31 @@
 		        stompClient.disconnect();
 		    }
 		});
-
+	
+		
+		
+		
 		/** 180320 추가 : 사다리 재사용 */
 		$(function() {
+		
+			/** 사이즈/ 위치 */
+			$(".waitUser").css("width", size*150+"px");
+			$(".waitItem").css("width", size*150+"px");
+			$(".completeUser").css("width", size*150+"px");
+			$(".completeItem").css("width", size*150+"px");
+			$(".blackBox").css("width", size*150 + "px");
+			$(".startButton").css("left", size*130/2 + "px");
+			
+			$(window).resize(function() {
+				ladder_window_resize();
+			});
+			
+			function ladder_window_resize() {
+				var win_width = $(window).width() - 20;
+				
+				$(".setTable").css("width", win_width + "px");
+				$("#ladderLineBox").css("width", (win_width - 40) + "px");
+			}
 			showComments();
 			getCmtSockConnect();
 			
@@ -241,13 +263,13 @@
 			} 
 		}
 		
-		/* 
+		
 		function start(idx) {
 			allData = [idx, searchSelect, searchInput, mode, currPage, size, lineCnt ];	
 			if (confirm('시작하시겠습니까?')) {
 				window.location.href= '/ezladder/setLadderStart.do?allData=' + allData;
 			}
-		} */
+		} 
 	</script>
 	<style type="text/css">
 		ul {
@@ -262,12 +284,14 @@
 		    border : 0;
 		    float: left;
 		    text-align: center;
+		    
 		}
-		
 		.blackBox {
-			width:100%;height:500px;
+			
+			height:500px;
 			border:30px solid transparent; 
 			color:black;
+			margin-right:50px;
 			background: #010;
 			border-color:#010;
 		}
@@ -278,6 +302,37 @@
 		.cmtdelete:HOVER, .cmtmodify:HOVER {
 			background: beige;
 		}
+		
+		.waitUser {
+           height:100px; 
+           float:left; 
+           margin-right:10px;
+           overflow: auto;
+          }
+   
+   		.waitItem {
+           height:100px; 
+           float:left; 
+           margin-right:10px;
+           overflow: auto;
+          }
+  
+  		.completeUser {
+           height:100px; 
+           float:left; 
+           margin-right:10px;
+           overflow: auto;
+          }
+         .completeItem {
+           height:100px; 
+           float:left; 
+           margin-right:10px;
+           overflow: auto;
+          }
+         .startButton {
+          	position: relative; top: 200px;
+         }
+        
 	</style>
 </head>
 	<body class="mainbody">
@@ -299,12 +354,13 @@
 				</span> 
 			</h2>
 		</div>
-		<div class="fullwidth">
-			<table class="setTable">
-				<tr>
-					<td style="width: 5000px;"></td><td></td>
-				</tr>
-				
+		<c:if test="${vo.status eq 1 }">
+			위치 수정~~~
+			<div id="startAuto">자동으로 진행하기</div>
+			<div id="seeAllResult">바로 결과보기</div>
+		</c:if>
+		<div class="fullwidth" style="margin-top: 100px;" >
+			<table class="setTable" style="width: 98%;">
 				
 				<tr>
 					<td colspan="4" style="height: 700px; padding: 10px 0px;">
@@ -319,24 +375,25 @@
 									</c:otherwise>
 								</c:choose>
 								<br><br><br><br>
+
 							</div>
 						</div>
+						
 					</td>
-				</tr>
+				</tr>	
 			</table>
-			
-			
 		</div>
 		
-<div style="padding: 0px 50px;">
-	<div class="cmtInput_wrap">
-		<div class="cmtInputDiv"><input type="text" id="inputCmtBox" style="width: 100%; height: 100%; padding: 0px 30px;"></div>
-		<div id="saveCmtBtn">댓글 등록</div>
-	</div>
-	<div id="commentDiv" style="width: 100%"></div>
-
-	<button onclick="sendTest()">socket test!!</button>
-</div>
+		
+		<div style="padding: 0px 50px;">
+			<div class="cmtInput_wrap">
+				<div class="cmtInputDiv"><input type="text" id="inputCmtBox" style="width: 100%; height: 100%; padding: 0px 30px;"></div>
+				<div id="saveCmtBtn">댓글 등록</div>
+			</div>
+			<div id="commentDiv" style="width: 100%"></div>
+		
+			<button onclick="sendTest()">socket test!!</button>
+		</div>
 		<!-- <div id="ladderGame" align="center" >
 			<br><br><br><br>
 			상태가 대기이면 ladderWait.jsp 호출<br>
@@ -349,10 +406,11 @@
 		<div id="chat" align="center">
 			<%@ include file="include/ladderChat.jsp"%> 
 		</div>
-	<h3>
-		* 프론트 꾸며야 됨.<br>
-		* 웹소켓 - 참여자 바꾸기, 채팅
+		<h3>
+		* 프론트 꾸며야 됨 - 프로필 이미지 넣기.<br>
+		* 웹소켓 - 참여자 바꾸기
+		* 드래그 앤 드랍
+		* 사다리 연동
 		</h3>
-	
 	</body>
 </html>
