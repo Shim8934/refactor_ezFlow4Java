@@ -274,4 +274,66 @@ public class EzAttitudeBHSController {
 		LOGGER.debug("/ezAttitude/attitudeTypeList ended");
 		return list;
 	}
+	
+	/**
+	 * 작성화면
+	 */
+	@RequestMapping(value = "/ezAttitude/attitudeWrite.do")
+	public String attitudeWrite(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeWrite started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		//attitudeTypeList
+		String userId = userInfo.getId();
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies/"+ userInfo.getCompanyID() +"/attitudetypes";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId)
+				.queryParam("isuse", 1);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONArray attitudeTypeList = new JSONArray();
+		if (status.equals("ok")) {
+			attitudeTypeList = (JSONArray) resultBody.get("data");
+			
+//			url = gwServerUrl + "/rest/ezattitude/";
+//			
+//			builder = UriComponentsBuilder.fromHttpUrl(url)
+//					.queryParam("", "");
+//			
+//			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//			
+//			resultBody = (JSONObject) jp.parse(result.getBody());
+//			
+//			status = resultBody.get("status").toString();
+//			LOGGER.debug("status : " + status);
+//			
+//			JSONArray list = new JSONArray();
+//			if (status.equals("ok")) {
+//				
+//			}
+		}
+		
+		model.addAttribute("attitudeTypeList", attitudeTypeList);
+		
+		LOGGER.debug("/ezAttitude/attitudeWrite ended");
+		return "ezAttitude/writeAttitude";
+	}
 }

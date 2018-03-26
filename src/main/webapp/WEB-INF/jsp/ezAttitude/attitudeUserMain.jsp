@@ -19,9 +19,21 @@
 				text-align : center;
 				border : 1px solid #dedede;
 			}
+			
+			.span_list table td:hover, .td_day:hover {
+				background-color:#edf4fd;
+			}
 		</style>
 		<script>
-		
+			var pMode = "";
+			
+			$(function(){
+				$(".td_day").on('dblclick', 'td', function(){
+					pMode = "new";
+					attitudeInfo(this);
+				})	
+			})
+			
 			window.onload = function() {
 				getAttiTypeList();
 				getAttitudeMainList();
@@ -132,9 +144,8 @@
 							var tdAttrDay = startDate.getFullYear() + "-" + leadingZeros(startDate.getMonth() + 1, 2) + "-" + leadingZeros(startDate.getDate(),2);
 							
 							$("td[day=" + tdAttrDay + "]").find("table#TD_" + tdAttrDay + "_Value")
-														  .append("<tr><td><img width='20px' height='20px' style='vertical-align:top; margin-right:3px;' src='"+ result[i].imgPath +"'/>" + result[i].typeName + " : " + result[i].region + "</td></tr>");
+														  .append("<tr><td ondblclick='attitudeInfo(this)'><img width='20px' height='20px' style='vertical-align:top; margin-right:3px;' src='"+ result[i].imgPath +"'/>" + result[i].typeName + " : " + result[i].region + "</td></tr>");
 						}
-						
 					} else if (result[i].dateType == '3') {
 						
 					} else {
@@ -167,11 +178,13 @@
 		        return (to_dt.getTime() - from_dt.getTime()) / 1000 / 60 / 60 / 24;
 		    }
 			
+			
 			/**
 			* 근태 더블클릭 이벤트
 			*/
 			function attitudeInfo(obj) {
-				alert(obj);	
+				var win = window.open("/ezAttitude/attitudeWrite.do?mode=" + pMode , "", GetOpenWindowfeature(650, 580));
+				pMode = "";
 			}
 			
 		</script>

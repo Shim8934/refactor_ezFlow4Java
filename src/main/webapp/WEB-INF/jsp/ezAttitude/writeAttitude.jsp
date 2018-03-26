@@ -117,10 +117,6 @@
 		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
 		    });
 			
-			
-			
-			
-			
 			//저장
 			function save_attitude() {
 				$.ajax({
@@ -156,8 +152,8 @@
     			<th>구분</th> 
     			<td>
 					<select id="select" style="width:80px;" onchange="form_change()">
-						<c:forEach var="item" items="${list}">
-							<option value="<c:out value='${item.id}'/>"><c:out value='${item.name}'/></option>
+						<c:forEach var="item" items="${attitudeTypeList}">
+							<option value="<c:out value='${item.typeId}'/>"><c:out value='${item.typeName}'/></option>
 						</c:forEach>
 					</select> 
 				</td> 
@@ -184,16 +180,15 @@
 <!-- 	  					</tr> -->
 <!--   					</table> -->
 <!--   				</td> -->
-	                        <td colspan="2">
-	                            <span id="periodblock">
-	                            <input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1" checked>
-	                                                        하루종일
-	                            <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
-	                            ~
-	                            <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
-	                            </span>
-	                        	
-	                    	</td>
+                    <td colspan="2">
+                        <span id="periodblock">
+                        <input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1" checked>
+                                                               하루종일
+                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
+                        ~
+                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
+                        </span>
+                	</td>
   			</tr>
   			<tr> 
     			<th>근무지</th> 
@@ -215,8 +210,9 @@
   			</tr>
 		</table>
 		<table id="contentTb" class="content" style="width:100%; margin-top: 10px;">
-		  	<tr>   
-  				<td style="height: 300px;"></td>  
+		  	<tr>
+  				<td style="height: 300px;">
+  				</td>  
   			</tr>
 		</table>
 	</body>

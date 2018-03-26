@@ -145,8 +145,6 @@ function getMonthBodyObj() {
 		oThisDate = oBeforeDate;
 	}
 	
-	//왜 넣어주는 지 안다음에 주석 달기
-	//month에 +1 해주는 거 보면 어디에 보여줄려고 그러는 거 같은 느낌도 있다.
 	sStartDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
 	
 	var TDIndex = 0;
