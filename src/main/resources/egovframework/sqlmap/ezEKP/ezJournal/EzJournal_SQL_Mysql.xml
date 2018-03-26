@@ -74,6 +74,7 @@
 		<result property="replyAlert" column="reply_alert" />
 		<result property="previewWcontent" column="preview_wcontent" />
 		<result property="previewHcontent" column="preview_hcontent" />
+		<result property="mail" column="mail" />
 	</resultMap>
 
 	<resultMap class="deptViewVO" id="deptViewMap">
@@ -816,17 +817,18 @@
 
 	<!-- 환경설정을 가져오기 -->
 	<select id="selectUserEnv" parameterClass="Map" resultMap="journalEnvMap">
-		select count(user_id)
-		,ifnull(list_cnt,20) as list_cnt
-		,ifnull(viewenv,'NONE') as viewenv
-		,ifnull(recv_alert,'Y') as recv_alert
-		,ifnull(reply_alert,'Y') as reply_alert
-		,ifnull(preview_wcontent,'50') as preview_wcontent
-		,ifnull(preview_hcontent,'50') as preview_hcontent
-		from jmocha.tbl_journal_env
-		where user_id=#userId#
-		and
-		tenant_id=#tenantId#
+		select count(e.user_id)
+		,ifnull(e.list_cnt,20) as list_cnt
+		,ifnull(e.viewenv,'NONE') as viewenv
+		,ifnull(e.recv_alert,'Y') as recv_alert
+		,ifnull(e.reply_alert,'Y') as reply_alert
+		,ifnull(e.preview_wcontent,'50') as preview_wcontent
+		,ifnull(e.preview_hcontent,'50') as preview_hcontent
+		,u.mail as mail
+		from jmocha.tbl_journal_env e
+		inner join jmocha.tbl_usermaster u on(u.CN = e.user_id and u.tenant_id = e.tenant_id)
+		where e.user_id=#userId#
+		and e.tenant_id=#tenantId#
 	</select>
 
 	<!-- 환경설정 저장하기 -->
@@ -959,9 +961,9 @@
 			u.DISPLAYNAME as writer_name, 
 			f.form_name as form_name, 
 			f.type_id as type_id,
-		    count(jr.reply_id) as reply_count, 
-		    count(r.user_id) as total_recv, 
-		    count(r.recieve_date) as check_recv,
+		    (select count(jr.reply_id) from jmocha.tbl_journal_reply jr where jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id) as reply_count,    
+		    (select count(r.user_id) from jmocha.tbl_journal_recv r where r.journal_id=j.journal_id and r.tenant_id=j.tenant_id) as total_recv,   
+		    (select count(r.recieve_date) from jmocha.tbl_journal_recv r where r.journal_id=j.journal_id and r.tenant_id=j.tenant_id) as check_recv,
 		    f.form_id as form_id,
 		    j.dept_share as dept_share,
 			jf.file_path as file_path,
@@ -973,22 +975,11 @@
 			end as mine
 			,u.CN as writer_id
 		from jmocha.tbl_journal j
-		inner join
-		jmocha.tbl_journal_form f on (j.form_id=f.form_id and j.tenant_id =
-		f.tenant_id)
-		inner join jmocha.tbl_usermaster u on
-		(j.journal_writer=u.CN and u.TENANT_ID=j.tenant_id)
-		left join
-		jmocha.tbl_journal_file jf on (jf.journal_id=j.journal_id and
-		jf.tenant_id=j.tenant_id)
-		left join jmocha.tbl_journal_recv r on
-		(r.journal_id=j.journal_id and r.tenant_id=j.tenant_id)
-		left join
-		jmocha.tbl_journal_reply jr on (jr.journal_id=j.journal_id and
-		jr.tenant_id=j.tenant_id)
+		inner join	jmocha.tbl_journal_form f on (j.form_id=f.form_id and j.tenant_id =f.tenant_id)
+		inner join jmocha.tbl_usermaster u on(j.journal_writer=u.CN and u.TENANT_ID=j.tenant_id)
+		left join jmocha.tbl_journal_file jf on (jf.journal_id=j.journal_id and jf.tenant_id=j.tenant_id)
 		where j.tenant_id=#tenantId#
 		and j.journal_id=#journalId#
-        group by 1,2,3,4,5,6,7,11,12,13,14,15,16
 	</select>
 
 	<!-- 업무일지 등록 하기 -->
@@ -1125,6 +1116,11 @@
 	<insert id="insertJournalReply" parameterClass="map">
 		insert into jmocha.tbl_journal_reply(tenant_id,reply_content,journal_id,reply_date,reply_writer)
 		values(#tenantId#,#replyContent#,#journalId#,#replyDate#,#userId#)
+		<selectKey resultClass="String">
+			select journal_writer from jmocha.tbl_journal 
+			where journal_id = #journalId#
+			and tenant_id = #tenantId# 
+		</selectKey>
 	</insert>
 	
 	<!-- 댓글삭제 -->

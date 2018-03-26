@@ -19,7 +19,9 @@
 		
 			var formId = "${journal.formId}";
 			var journalId = "${journal.journalId}";
+			var journalTitle = "${journal.journalTitle}";
 			var typeId = "${journal.typeId}";
+			var viewType = "detail";
 			
 			// 수정
 			function journalModify() {
@@ -106,7 +108,7 @@
 	        		<li><span onclick='journalDelete()'> <spring:message code='ezJournal.t108' /></span></li>
 		        	</c:if>
 <!-- 		        	메일로발송 -->
-	        		<li><span onclick=''> <spring:message code='ezJournal.t103' /></span></li>
+	        		<li><span onclick='fromJournalToMail()'> <spring:message code='ezJournal.t103' /></span></li>
 <!-- 		        	조회자정보 -->
 	        		<li><span onclick='journalViewerList();'> <spring:message code='ezBoard.t1006' /></span></li>
 		        	<c:if test="${journal.mine eq 'yes' }">
@@ -166,7 +168,7 @@
 				        <tr>
 				          <th><spring:message code='ezBoard.t323' /></th>
 				             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
-				             	<div style="overflow-y:auto;WIDTH: 100%; vertical-align: middle"><c:out value=" ${journal.journalTitle}"/></div>
+				             	<div id="journalTitle" style="overflow-y:auto;WIDTH: 100%; vertical-align: middle"><c:out value=" ${journal.journalTitle}"/></div>
 				             </td>
 				        </tr>
 			      </table>
@@ -317,13 +319,13 @@
 		    }
 			
 		    //메일로?
-		    function Retrans_mailContent() {
+		    function fromJournalToMail() {
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
-		        var szUrl = "/ezEmail/mailWrite.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&cmd=board";
+		        var szUrl = "/ezEmail/mailWrite.do?journalId=" + journalId+ "&cmd=journal";
 		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		    }
 		    
@@ -350,8 +352,9 @@
                     // URI return 여부
                     returnUri: true
                 });
+		    	var title = $("#journalTitle").text().trim();
                 // 파일이름, URI 설정
-                $(elem).attr('download', 'ezJournalExcel.xls').attr('href', uri);
+                $(elem).attr('download', title).attr('href', uri);
 		    }
 		    
 		    //수신자정보
@@ -364,10 +367,10 @@
 		        var left = (width - 500) / 2;
 		        var top = (heigth - 300) / 2;
 		        var szHref = "/ezJournal/JournalReceiverList.do?typeId="+typeId+"&journalId=" + journalId+"&currentPage="+currentPage;
-		        var strFeature = "status:no;dialogHeight: 500px;dialogWidth: 520px;help: no;resizable:yes";
 	            DivPopUpShow(520, 420, szHref);
 		    }
 		    
+		    //인쇄
 		    function printJournal(){
 		    	var data = $("#journalContent").html();
 		    	var mywindow = window.open('', 'journalContent', 'height=400,width=600');
@@ -380,6 +383,11 @@
 		    	mywindow.print();
 		    	mywindow.close();
 		    	return true;
+		    }
+		    
+		  //업무일지 댓글
+		    function openJournalReply() {
+		    	DivPopUpShow($('body').prop('scrollWidth') * 0.95, $('body').prop('scrollHeight') * 0.92, "/ezJournal/journalReply.do?journalId="+journalId);
 		    }
 		</script>
 	    

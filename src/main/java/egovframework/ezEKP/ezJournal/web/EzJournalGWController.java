@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +37,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
@@ -68,6 +71,12 @@ public class EzJournalGWController {
 
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
+
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+
+	@Resource(name="EzEmailService")
+	private EzEmailService ezEmailService;
 	
 	/**
 	 * 업무일지 G/W [GET] 일지함 조회 / 사용하는 일지함 조회
@@ -1432,12 +1441,13 @@ public class EzJournalGWController {
 			String userId = request.getParameter("userId");
 			String replyContent = request.getParameter("replyContent");
 			String replyDate = request.getParameter("replyDate");
+			String journalTitle = request.getParameter("journalTitle");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			ezJournalService.saveJorunalReply(journalId, userId,replyContent,replyDate ,tenantId);
+			String journalWriter = ezJournalService.saveJorunalReply(journalId, userId,replyContent,replyDate ,tenantId);
 			
-			result.put("data", "");
+			result.put("data", journalWriter);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
@@ -1631,7 +1641,7 @@ public class EzJournalGWController {
 			
 			LOGGER.debug("userId : " + userId);
 			
-			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, info.getCompanyId(), info.getTenantId() + "");
+			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, request.getParameter("companyId"), info.getTenantId() + "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);

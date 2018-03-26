@@ -60,6 +60,7 @@
 		</style>
 		
 		<script type="text/javascript">
+			var journalId = <c:out value="${journalId}"/>;
 			$(document).ready(function(){
 				
 			});
@@ -77,11 +78,31 @@
 				var replyContent = $("#replyContent").val();
 				$.ajax({
 					type:"post",
-					data:{"replyContent":replyContent,"journalId":parent.journalId},
+					data:{"replyContent":replyContent,"journalId":journalId},
 					url:"/ezJournal/saveJournalReply.do",
+					success: function(result){
+						var journalTitle;
+						if(parent.viewType=='detail'){
+							journalTitle = parent.journalTitle;
+// 							parent.openJournalReply();
+							parent.opener.setJournalList();
+						} else {
+							journalTitle = parent.replyJournalTitle;
+							parent.setJournalList();
+						}
+						sendJournalReplyMail(replyContent,journalId,result,journalTitle);
+						location.reload();
+					}
+				});
+			}
+			
+			// 메일보내기
+			function sendJournalReplyMail(replyContent,journalId,journalWriter,journalTitle){
+				$.ajax({
+					type:"post",
+					data:{"replyContent":replyContent,"journalId":journalId,"journalTitle":journalTitle,"journalWriter":journalWriter},
+					url:"/ezJournal/sendJournalReplyMail.do",
 					success: function(){
-						parent.openJournalReply();
-						parent.opener.setJournalList();
 					}
 				});
 			}
@@ -91,11 +112,16 @@
 				var replyContent = $("#replyContent").val();
 				$.ajax({
 					type:"post",
-					data:{"replyId":replyId,"journalId":parent.journalId},
+					data:{"replyId":replyId,"journalId":journalId},
 					url:"/ezJournal/removeJournalReply.do",
 					success: function(){
-						parent.openJournalReply();
-						parent.opener.setJournalList();
+						if(parent.viewType=='detail'){
+// 							parent.openJournalReply();
+							parent.opener.setJournalList();
+						} else {
+							parent.setJournalList();
+						}
+						location.reload();
 					}
 				});
 			}
@@ -106,12 +132,15 @@
 		    }
 			
 			function closeJournalPopup(){
-				parent.location.reload();
-				closePopup();
+				if(parent.viewType=='detail'){
+					parent.location.reload();
+					closePopup();
+				} else {
+					parent.setJournalList();
+					parent.DivPopUpHidden_sub();
+				}
 			}
-			
 		</script>
-		
 	</head>
 	<body class="popup">
 		<div class="layerpopup"  style="z-index: 1000; position: absolute;display: none;" id="iFramePanel">
@@ -128,7 +157,7 @@
    			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
-		<div style='height:570px;overflow-y:auto;'>
+		<div style='height:100%;overflow-y:auto;'>
 			<table class="mainlist" style="width:99.5%" >
 				<tr>
 					<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
