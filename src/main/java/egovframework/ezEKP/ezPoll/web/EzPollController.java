@@ -538,6 +538,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String qstModifyInfo = req.getParameter("hidModifyInfo");
 		int setDate = Integer.parseInt(req.getParameter("hidSetDate"));
 		int isSorting = Integer.parseInt(req.getParameter("hidIsSorting"));
+		int isSelOnlyOnce = Integer.parseInt(req.getParameter("hidIsSelOnlyOnce"));
 		
 		//Get list of options for this question
 		List<String> listOptions = new ArrayList<String>();
@@ -582,6 +583,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO.setMultiSelect(numberOfMultiSelect);
 		pollQuestionVO.setSetDate(setDate);
 		pollQuestionVO.setIsSorting(isSorting);
+		pollQuestionVO.setIsSelOnlyOnce(isSelOnlyOnce);
 		
 		
 		if (!qstModifyInfo.equals("")) {
@@ -2446,7 +2448,7 @@ public class EzPollController extends EgovFileMngUtil {
 
 	private int setStatusForQuestions(Set<PollQuestionVO> setOfQuestions, List<Integer> listHiddenQuestionIds, LoginVO loginVO, int checkingArray, int seeAll) throws ParseException {
 		String userID = loginVO.getId();		
-		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date endDate;
 		Date startDate; //20180109
 		Date sysDate = new Date();

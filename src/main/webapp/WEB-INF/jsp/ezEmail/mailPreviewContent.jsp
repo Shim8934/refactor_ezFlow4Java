@@ -210,7 +210,7 @@
 		<span style="float:right;">
 		<img src="/images/ImgIcon/PrereplyAll.gif" title="<spring:message code='ezEmail.t512' />" style='cursor:pointer;' onclick="Mail_Acton('ALLRE');" /><img src="/images/ImgIcon/Prereply.gif" title="<spring:message code='ezEmail.t511' />"  style='cursor:pointer;' onclick="Mail_Acton('RE');"/><img src="/images/ImgIcon/Preforward.gif" title="<spring:message code='ezEmail.t513' />"  style='cursor:pointer;' onclick="Mail_Acton('FW');"/>
 		</span>
-			<div class="previewmail_addfile" id="ifrmPreViewRayer" style="display:none;margin-bottom:10px;font-family:<spring:message code='main.t246' />">
+			<div class="previewmail_addfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:<spring:message code='main.t246' />">
 				<p class="title"><spring:message code='ezEmail.t99000003' /><span>${pAttachListHtmlSub}</span><span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
 		    	<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span></p>
 				<ul class="list" id="PreviewAttachList">
@@ -221,16 +221,8 @@
 		</div>
 		<div id="normalScreen" style="margin-top:5px; word-wrap:break-word;">
 		${htmlBody}
+		<!---->
 		</div>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>  
 	</body>
-	<script language="javascript" type="text/javascript">
-	    try {
-	        var pisAttach = "${isAttach}";
-	        if (pisAttach == "OK")
-	            document.getElementById("ifrmPreViewRayer").style.display = "";
-	        else
-	            document.getElementById("ifrmPreViewRayer").style.display = "none";
-	    } catch (e) { }
-	</script>
 </html>

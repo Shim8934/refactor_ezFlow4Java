@@ -86,7 +86,9 @@
 			
 			// 숨김 메뉴 설정
 			var hiddenMenu = ["new", "file_open", "save", "auto_save_load", "layout", "template", "copy", "paste", "cut", "all_select", "page_break", 
-							  "dir_ltr", "dir_rtl", "video", "video_modify", "file", "emoticon", "layer", "fullscreen", "setting", "help"];
+							  "dir_ltr", "dir_rtl", "video", "video_modify", "file", "emoticon", "layer", "fullscreen", "setting", "help",
+							  "super", "sub", "remove", "textFormatCopy", "textFormatPaste", "paragraph_remove_format", "bookmark", "date_format", 
+							  "background_image", "upper_lower", "blockquote"];
 			
 			if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
 	        	//메일 부제중설정 시 이미지 업로드 아이콘 제거
