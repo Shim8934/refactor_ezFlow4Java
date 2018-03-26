@@ -712,7 +712,7 @@
 		]]>
 	</update>
 	
-	<select id="EzLadderDAO.ladderContent" resultClass="LadderVO" parameterClass="map">
+	<select id="EzLadderDAO.ladderContent"  remapResults="true" resultClass="LadderVO" parameterClass="map">
 		<![CDATA[
 			SELECT
 				LADDERID, 

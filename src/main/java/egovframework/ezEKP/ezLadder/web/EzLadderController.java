@@ -248,7 +248,8 @@ public class EzLadderController {
 				.queryParam("userNames", userName)
 				.queryParam("userName2s", userName2)
 				.queryParam("items", item)
-				.queryParam("ladderOrders", ladderOrder);
+				.queryParam("ladderOrders", ladderOrder)
+				.queryParam("loginCookie", loginCookie);
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 

@@ -19,7 +19,7 @@ public interface EzLadderService {
 	public List<LadderVO> searchLadderList(LadderVO vo, List<String> allData, int startPoint, int endPoint) throws Exception;
 	
 	/** boh */
-	public void insertLadder(LadderVO lad, LadderLineVO ladLines) throws Exception; // 사다리 게임 만들기
+	public void insertLadder(LadderVO lad, LadderLineVO ladLines, String logCookie) throws Exception; // 사다리 게임 만들기
 	public int selectRecentLadderId(LadderVO lad) throws Exception; // 최근 등록한 사다리게임 아이디 조회
 	
 	public List<LadderBmVO> selectBMGroup(LadderBmVO bmGroup) throws Exception; // 즐겨찾기 그룹 조회
@@ -45,7 +45,4 @@ public interface EzLadderService {
 	public void deleteLadderList(String userId, String tenant_Id, String ladderId) throws Exception; // 사다리 삭제
 	public void setUserOrder(int LadderId, String userName1, String userName2) throws Exception; // 사용자 위치 바꾸기
 	public void setLadderStart(int ladderId, String tenantId, int size, int lineCnt, String lang) throws Exception;	// 사다리 게임 시작
-	public int[] getLineArray(int size, int lineCnt);	// 사다리 그려줄 선 고르기
-	public int[] getLine(int size, int[] lineArray);	// 사다리 방향성 넣어주기
-	public int visitLadder(int[][] ladder, int start);  // 방문한 사다리 넣기
 }

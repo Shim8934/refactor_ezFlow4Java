@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezLadder.service.impl;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DaoSupport;
 import org.springframework.stereotype.Service;
 
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezLadder.dao.EzLadderDAO;
 import egovframework.ezEKP.ezLadder.service.EzLadderService;
 import egovframework.ezEKP.ezLadder.vo.LadderBmUserVO;
@@ -22,6 +26,9 @@ import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
 import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzLadderService")
@@ -33,6 +40,15 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Override
 	public int ladderCount(LadderVO vo, String mode) throws Exception {
@@ -68,7 +84,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		String searchInput = allData.get(1).trim();
 		String mode = allData.get(2);
 		
-		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
+		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");    
 		
 		map.put("userId", vo.getUserId());
 		map.put("searchSelect", searchSelect);
@@ -176,10 +192,10 @@ public class EzLadderServiceImpl implements EzLadderService {
 
 	/** boh */
 	@Override
-	public void insertLadder(LadderVO lad, LadderLineVO ladLines) throws Exception {
+	public void insertLadder(LadderVO lad, LadderLineVO ladLines, String logCookie) throws Exception {
 		lad.setWriteDate(commonUtil.getTodayUTCTime(""));
 		
-		ezLadderDAO.insertLadderSet(lad);
+		 ezLadderDAO.insertLadderSet(lad);
 		
 		int len = ladLines.getUserIds().length;
 		for(int i = 0; i < len; i++) {
@@ -191,8 +207,15 @@ public class EzLadderServiceImpl implements EzLadderService {
 			
 			ezLadderDAO.insertLadderLine(ladLines);
 		}
+		
+		
+		int ladderId = ezLadderDAO.selectRecentLadderId(lad);
+		lad.setLadderId(ladderId);
+		sendLadderMail(lad, ladLines, logCookie, len);
 	}
-
+	
+	
+	
 	@Override
 	public int selectRecentLadderId(LadderVO lad) throws Exception {
 		return ezLadderDAO.selectRecentLadderId(lad);
@@ -489,8 +512,10 @@ public class EzLadderServiceImpl implements EzLadderService {
 		
 		logger.debug("setLadderStart ended.");
 	}
-
-	@Override
+	
+	/**
+	 * 사다리 그려줄 선 고르기
+	 */
 	public int[] getLineArray(int size, int lineCnt) {
 		// height를 일단 10으로 통일함. 추후 height를 사용자 수(size)에 따라 유동적으로 줄지는 논의 필요
 		int height=10;
@@ -538,7 +563,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 		return choice;
 	}
 
-	@Override
+	/**
+	 * 사다리 방향성 넣어주기
+	 */
 	public int[] getLine(int size, int[] lineArray) {
 		logger.debug("getLine started.");
 		// height를 일단 10으로 통일함. 추후 height를 사용자 수(size)에 따라 유동적으로 줄지는 논의 필요
@@ -555,7 +582,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 		return line;
 	}
 	
-	@Override
+	/**
+	 * 방문한 사다리 넣기
+	 */
 	public int visitLadder(int[][] ladder, int start) {
 		int dest = -1;
 		int cursorX = start;
@@ -572,5 +601,55 @@ public class EzLadderServiceImpl implements EzLadderService {
 			dest = cursorX;
 		}
 		return dest;
+	}
+	
+	/**
+	 * 사다리 참여 메일 보내기
+	 */
+	public void sendLadderMail(LadderVO lad, LadderLineVO ladLines, String logCookie, int len) throws Exception {
+
+		LoginVO userInfo = commonUtil.userInfo(logCookie);	
+		String lang = commonUtil.getMultiData(userInfo.getLang(), lad.getTenant_id());
+		lad.setLang(lang);
+		lad.setOffset(userInfo.getOffset());
+		LadderVO ladVO =  getLadderGame(lad);
+			
+		int cnt = 0;
+		String[] receiverID = new String[len];
+		String[] receiverName = new String[len];
+		for(int i=0; i<len; i++) {
+			if(ladLines.getUserIds()[i].length()>=15) {
+				if(!ladLines.getUserIds()[i].substring(0,15).equals("anonyAttendant_")){
+					receiverID[cnt] = ladLines.getUserIds()[i];
+					receiverName[cnt] = ladLines.getUserNames()[i];
+					cnt++;
+				}
+			} else {
+				receiverID[cnt] = ladLines.getUserIds()[i];
+				receiverName[cnt] = ladLines.getUserNames()[i];
+				cnt++;
+			}
+		}
+
+		String subject = egovMessageSource.getMessage("ezLadder.t111", userInfo.getLocale());	// 메일제목
+		StringBuilder bodyContent = new StringBuilder("");	// 메일 링크
+		bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t003", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezLadder/getLadderGame.do?ladderId=" + lad.getLadderId() + "&searchSelect=none&searchInput=none&mode=none&currPage=1', '', 'width=820, height=900')\" >" + commonUtil.cleanValue(ladVO.getTitle()) + "</span></br>");
+		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t112", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
+		bodyContent.append("</div>");
+				
+		// 참여자에게 메일 발송
+		for (int i=0; i<cnt; i++) {
+			OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
+			InternetAddress from = new InternetAddress();
+			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+			from.setAddress(userInfo.getEmail());
+									
+			InternetAddress to = new InternetAddress();
+			to.setPersonal(receiverName[i].trim(), "UTF-8");
+			to.setAddress(AccessUserInfo.getMail());
+									
+			ezEmailService.sendMail(logCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+		}
 	}
 }
