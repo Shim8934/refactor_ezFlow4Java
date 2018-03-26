@@ -800,7 +800,7 @@
 	 	    		}
 	 	    		
 	 	    		if(selectOnlyOnce(isUnchecked)){
-	 	    			var msg = '한번 선택하면 변경할 수 없습니다. 이 항목을 선택하시겠습니까?';
+	 	    			var msg = "<spring:message code = 'ezPoll.t262'/> <spring:message code = 'ezPoll.t263'/>";
 	 	    			if(!window.confirm(msg)){
 	 	    				return;
 	 	    			}
@@ -2551,7 +2551,7 @@
 		    	
 		    	if(isSelOnlyOnce === 1){ //낙장불입 Y
 		    		if(idx === -1){ //remove 일경우 		
-		    			alert('선택을 변경할 수 없습니다.');
+		    			alert('<spring:message code = 'ezPoll.t261'/>');
 		    		}
 	    			return true;
 		    	}else{ //낙장불입 N
