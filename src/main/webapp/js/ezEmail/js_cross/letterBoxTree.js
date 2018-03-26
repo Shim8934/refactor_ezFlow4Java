@@ -45,6 +45,9 @@ function treeInit() {
 // 노드 클릭 시
 function treeOnclick() {
 	$('#divTree').on('changed.jstree', function (e, data) {
+		
+		searchTxt = "";
+		
 		selectNode = data;
 		if (pageType === "letterBox") { // 편지지함 
     		var nodeId = selectNode.node.id;

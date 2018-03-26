@@ -156,6 +156,7 @@
 
 			// 편지지 추가, 수정 btn 클릭 시     btn -> this, type -> 추가=add, modify일때 type 안받음
 			function letterEditPopUp(btn, type) {
+				
 				var popUpType = type == "add" ? type : "modify"; // 클릭된 버튼 구분(추가 or 수정)
 				var addBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
 				var modifyBoxNo = $(btn).parents("li").attr("data-letterboxno"); // 편지지함 no
