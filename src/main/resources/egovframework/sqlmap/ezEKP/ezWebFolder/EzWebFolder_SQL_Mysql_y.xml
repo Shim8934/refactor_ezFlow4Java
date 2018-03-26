@@ -562,7 +562,7 @@
 			            and folder.owner_id in (select dept.cn 
 								from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
 								where addj.cn = #userId# or folder.owner_id = #deptId#)
-						and folder.use_status = "Y"
+						and folder.use_status = 'Y'
 	        UNION
 			SELECT
 				folder_id as id ,if( folder_upper = 'root', '##', folder_upper )  as parent, folder_name1 as text,

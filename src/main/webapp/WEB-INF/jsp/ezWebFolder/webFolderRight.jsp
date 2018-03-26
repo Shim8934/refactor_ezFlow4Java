@@ -149,6 +149,7 @@
 	    function getfileList(){
 			$.ajax ({
 				type:"POST",
+				async: false,
 				url : "/ezWebFolder/fileList.do",
 				data : { 
 					 "folderId"   : folderId,

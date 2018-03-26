@@ -483,14 +483,23 @@ public class EzWebFolderController_y {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderId = "";
 		
+		
 		if (request.getParameter("folderId").equals(null) || request.getParameter("folderId").equals("") ) {
 			LOGGER.debug("fail_folderUpperId is not comming");
 		}else {
 			folderId = request.getParameter("folderId");
 		}
-		String serverName = request.getServerName();
+		String serverName  = request.getServerName();
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
-		String url = gwServerUrl + "/rest/ezwebfolder/folders2/"+folderId + "/folder-move";
+		String mode        = request.getParameter("mode");
+		String url  = "";
+		if (mode.equals("folder-copy")) {
+			url 		 = gwServerUrl + "/rest/ezwebfolder/folders/"+ folderId + "/"+mode;
+		}else if (mode.equals("folder-move")){
+			url          = gwServerUrl + "/rest/ezwebfolder/folders/"+folderId + "/"+mode;
+		}else {
+			LOGGER.debug("mode is not comming");
+		}
 		RestTemplate rest = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -509,19 +518,23 @@ public class EzWebFolderController_y {
 		jsonObject.put("folderId", request.getParameter("folderId"));
 		jsonObject.put("uppFolderId", request.getParameter("uppFolderId"));
 		jsonObject.put("primary", userInfo.getLang());
+//		jsonObject.put("mode", mode);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 		
 		ResponseEntity<JSONObject> 	result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
 		
-		
 		JSONObject resultBody = result.getBody();
 		String status                 = (String) resultBody.get("status");
+		System.out.println("status " + status);
 		if (!status.equals("ok")) {
 			String reason      = resultBody.get("reason").toString();
 			model.addAttribute("reason", reason);
+			LOGGER.debug("Move Folder finishes!");
+		}else {
+			LOGGER.debug("move Folder Fail");
 		}
 		
-		LOGGER.debug("Move Folder finishes!");
+		
 		
 		return "json";
 		

@@ -44,7 +44,7 @@
 		});	
 		function afterSuccess(reason) {
 			if (!reason) {
-				parent.refreshView2();
+				parent.folderList(folderType);
 				parent.DivPopUpHidden();
 				window.close();
 			}
@@ -121,7 +121,8 @@
 // 				alert(uppFolderId);
 			});
 	    }
-		function folderCopy() {
+	    var obj = "";
+		function folderCopyMove(obj) {
 			if (uppFolderId == "") {
 				alert(uppFolderId);
 				alert("<spring:message code='ezWebFolder.t181'/>");
@@ -136,25 +137,25 @@
 			
 			$.ajax({
 				type: "POST",
-				url: "/ezWebFolder/copyFolder.do",
+				url: "/ezWebFolder/moveFolder.do",
 				data: {
 					"folderId"     : folderId
 					,"uppFolderId"  : uppFolderId
+					,"mode"			: obj
 				},
 				dataType: "JSON",
 				async: false,
 				success : function(data) {
 					var reason = data.reason;
 					afterSuccess(reason);
-					Window_Close();
-					folderList(obj);
+					
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			});
 		}
-		
+		/*
 		function folderMove() {
 			if (uppFolderId == "") {
 				alert(uppFolderId);
@@ -173,6 +174,7 @@
 				data: {
 					 "folderId"     : folderId
 					,"uppFolderId"  : uppFolderId
+					,"mode"			: "move"
 				},
 				dataType: "JSON",
 				async: false,
@@ -185,6 +187,7 @@
 				}
 			});
 		}
+		*/
 		
 	</script>
 </head>
@@ -208,8 +211,8 @@
 	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto;" id="folderTree"></div>
 	
 	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
-		<a id="btnSave"  class="webfolderBttn" onClick="folderMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
-		<a id="btnCancel"class="webfolderBttn" onClick="folderCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
+		<a id="btnSave"  class="webfolderBttn" onClick="folderCopyMove('folder-move');"><span><spring:message code='ezWebFolder.t121'/></span></a>
+		<a id="btnCancel"class="webfolderBttn" onClick="folderCopyMove('folder-copy');"><span><spring:message code='ezWebFolder.t122'/></span></a>
 	</div>
 	
 </body>

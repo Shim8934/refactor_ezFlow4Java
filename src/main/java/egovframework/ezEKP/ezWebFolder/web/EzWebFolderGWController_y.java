@@ -90,6 +90,10 @@ public class EzWebFolderGWController_y {
 					System.out.println("성공적으로 insert");
 				}else {
 					System.out.println("부서폴더 insert하다가 문제가 생겼다구 ");
+					LOGGER.debug("common is not comming");
+					data.put("status", "fail");
+					data.put("code", 1);
+					data.put("data", "");
 				}
 			} else if(folderType.equals("")){
 				
@@ -234,27 +238,86 @@ public class EzWebFolderGWController_y {
 		return data;
 	}
 	// 폴더 복사 
-	@RequestMapping ( value = "/rest/ezwebfolder/folders/{folderId}/folder-copy" , method = RequestMethod.PUT , produces ="application/json;charset=utf-8")
-	public JSONObject folderCopy (@PathVariable String folderId, HttpServletRequest request ,Locale locale ,@RequestBody JSONObject jsonObject ) throws Exception  {
+	@RequestMapping ( value = "/rest/ezwebfolder/folders/{folderId}/{mode}" , method = RequestMethod.PUT , produces ="application/json;charset=utf-8")
+	public JSONObject folderCopy (@PathVariable String folderId,@PathVariable String mode, HttpServletRequest request ,Locale locale ,@RequestBody JSONObject jsonObject ) throws Exception  {
 		JSONObject jsonObj = new JSONObject();
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name") : "";
-		// folderMove를 하기 위해서 받아와야 하는거 
+		// folderCopy를 하기 위해서 받아와야 하는거 
 		// 1. before folderId,
 		// 2. after folderId
 		// 폴더 아이디, uppFolder 
-		String userId = (String) jsonObject.get("id");
-		String uppId = (String) jsonObject.get("uppid");
-		MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
-		int tenantId = common.getTenantId();
-		String comId = common.getCompanyId();
+		String primary  = (String) jsonObject.get("primary")   != null ? 		(String) jsonObject.get("primary") 		 : "";
+		String userId	= (String) jsonObject.get("id") 		!= null ? 		(String) jsonObject.get("id")			 : "";
+		String uppId	= (String) jsonObject.get("uppFolderId") != null ?  (String) jsonObject.get("uppFolderId") 	 : "";
+		String resmode  = "";
+		JSONObject result   = new JSONObject();
+		MCommonVO common;
+		try {
+			common = mOptionService.commonInfoWeb(serverName, userId);
+			System.out.println("folderId : "+folderId);
+			System.out.println("serverName : "+serverName);
+			System.out.println("primary : "+primary);
+			System.out.println("userId : "+userId);
+			System.out.println("tenantId : "+ common.getTenantId());
+			System.out.println("comId : "+common.getCompanyId());
+			System.out.println("offset"+common.getOffSet());
+			int tenantId = common.getTenantId();
+			String comId = common.getCompanyId();
+			String offset = common.getOffSet();
+			LoginVO userInfo = commonutil.getUserForGw(userId, serverName, primary, offset);
+			
+			if (folderId.equals("") || serverName.equals("") || uppId.equals("") || offset.equals("") || mode.equals("") || uppId.equals("")) {
+				LOGGER.debug("Parameter error!");
+				result.put("status", "error");
+				result.put("code", "1");
+				return result;
+			}
+			int checkSbCreater = 0;
+			if (mode.equals("folder-move")) {
+				checkSbCreater = service.checkCreater(folderId, tenantId, comId, userId);
+				if (checkSbCreater != 1) {
+					System.out.println("실패");
+					LOGGER.debug("subFolder or SubFile is not mine!");
+					result.put("status", "error");
+					result.put("code", "1");
+					return result;
+			
+				}
+			}
+			FolderVO folder     = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			FolderVO destFolder = ezWebFolderService.getFolderByFolderId(uppId, offset, tenantId);
+			//Check copy/move conditions
+			if (folder.getFolderUpper().equals(uppId)) {
+				result.put("status", "error");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t224", locale));
+				result.put("code", 1);
+				return result;
+			}
+			
+			int pos = destFolder.getFolderPath().indexOf(folder.getFolderPath());
 		
-		// 옮기려고 하는 folder에 대한 정보 
-		FolderVO uppFolder = service.getFolderDetail(uppId, userId ,tenantId,comId);
+			if (pos != -1) {
+				result.put("status", "error");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t245", locale));
+				result.put("code", 1);
+				return result;
+			}
+			if (mode.equals("folder-move")){
+				resmode = "move";
+			}else {
+				resmode = "copy";
+			}
+			ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, resmode, userInfo);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+		}
 		
-//		service.moveFolder(folderId, tenantId, userId, comId, uppFolder);
-		
-		
-		return jsonObj;
+		return result;
 		
 	}
 	// 폴더 이동 			

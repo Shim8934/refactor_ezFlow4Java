@@ -174,7 +174,7 @@
             DivPopUpShow(330, 170, "/ezWebFolder/folderDelete.do");
         }
         var moveCopyFolderDlg_cross_dialogArguments = [];
-        function moveCopy_onclick() {
+        function move_onclick() {
             if (folderId == "") {
                 alert("이동할 폴더를 선택해주세요");
                 return;
@@ -198,6 +198,19 @@
             }
             moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
             console.log("folderId moveCopy_onclick function" + folderId);
+            console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
+            DivPopUpShow(330, 500, "/ezWebFolder/folderMove.do");
+        }
+        function copy_onclick() {
+            if (folderId == "") {
+                alert("이동할 폴더를 선택해주세요");
+                return;
+            }
+           	// parent 가 root인거는 가온아이, 박예연 이렇게 하고 
+           	// parent 가 root인거의 폴더 id가져와서  또 거기의 parent 가 id인거를 가져오면 됨 
+           	
+            moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+            console.log("folderId copy_onclick function" + folderId);
             console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
             DivPopUpShow(330, 500, "/ezWebFolder/folderMove.do");
         }
@@ -243,7 +256,8 @@
 		<a class="imgbtn"><span onclick="">공 유</span></a>
       	<a class="imgbtn" onclick="add_onclick()"><span>새폴더</span></a>
       	<a class="imgbtn" onclick="update_onclick()"><span>수 정</span></a>
-      	<a class="imgbtn" onclick="moveCopy_onclick()"><span>이동/복사</span></a>
+      	<a class="imgbtn" onclick="move_onclick()"><span>이동</span></a>
+      	<a class="imgbtn" onclick="copy_onclick()"><span>복사</span></a>
       	<a class="imgbtn" onclick="delete_onclick()"><span>삭 제</span></a>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

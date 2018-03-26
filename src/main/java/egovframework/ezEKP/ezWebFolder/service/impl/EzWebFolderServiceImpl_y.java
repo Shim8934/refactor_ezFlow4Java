@@ -394,8 +394,14 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 						}else {// 만들어야한다.
 							// 폴더명 1,2를 만들어야 한다.
 							Map<String, Object> deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
-							insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE1").toString(),deptInfo.get("cn").toString(), userId, folderType, 
+							String result = "";
+							result = insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE1").toString(),deptInfo.get("cn").toString(), userId, folderType, 
 									deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
+							if (result.equals("0") || result.equals("")){
+								LOGGER.debug("insert 잘못됨");
+							}
+							
+							
 						}
 					}
 					
@@ -418,8 +424,13 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 					}else {// 만들어야한다.
 						// 폴더명 1,2를 만들어야 한다.
 						Map<String, Object> deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
-						insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE1").toString(),deptInfo.get("cn").toString(), userId, folderType, 
+						String result = "";
+						result = insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE1").toString(),deptInfo.get("cn").toString(), userId, folderType, 
 								deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
+						if (result.equals("0") || result.equals("")){
+							LOGGER.debug("insert 잘못됨");
+							return "false";
+						}
 					}
 					
 				}
@@ -449,8 +460,13 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 					}else {// 만들어야한다.
 						// 폴더명 1,2를 만들어야 한다.
 						deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
-						insertFolder(tenantId, deptInfo.get("EXTENSIONATTRIBUTE2").toString(), deptInfo.get("cn").toString(),
+						String result = "";
+						result = insertFolder(tenantId, deptInfo.get("EXTENSIONATTRIBUTE2").toString(), deptInfo.get("cn").toString(),
 								userId, folderType, deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
+						if (result.equals("0") || result.equals("")){
+							LOGGER.debug("insert 잘못됨");
+							return "false";
+						}
 					}
 				}
 				
@@ -464,8 +480,13 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 				}else {// 만들어야한다.
 					// 폴더명 1,2를 만들어야 한다.
 					deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
-					insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE2").toString(), deptInfo.get("cn").toString(), 
+					String result = "";
+					result = insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE2").toString(), deptInfo.get("cn").toString(), 
 							userId, folderType, deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
+					if (result.equals("0") || result.equals("")){
+						LOGGER.debug("insert 잘못됨");
+						return "false";
+					}
 				}
 			}
 		}
