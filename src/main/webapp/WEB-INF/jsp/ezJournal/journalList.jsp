@@ -38,7 +38,7 @@
 					class="h5_center" width="100px"><spring:message code='ezJournal.t12'/></th>
 				</c:if>
 				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2"
-					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50%;"
+					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
 					class="h5_center" width="400px"><spring:message code='ezJournal.t56'/></th>
 				<c:if test="${listType eq 'recv' }">
 				<th id="BoardList_TH_4" onclick="setListOrder(this)" order="6"
@@ -48,7 +48,7 @@
 				<c:if test="${listType eq 'department' or listType eq 'recv' }">
 				<th id="BoardList_TH_5" onclick="setListOrder(this)" order="5"
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
-					class="h5_center" width="100px" writerindex="5"><spring:message code='ezJournal.t34'/></th>
+					class="h5_center" width="100px"><spring:message code='ezJournal.t34'/></th>
 				</c:if>
 				<th id="BoardList_TH_6" onclick="setListOrder(this)" order="3"
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
@@ -56,12 +56,12 @@
 				<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine' }">
 				<th id="BoardList_TH_8" onclick="setListOrder(this)" order="7" 
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
-					class="h5_center" width="100px" writerindex="5"><spring:message code='ezJournal.t22'/></th>
+					class="h5_center" width="100px"><spring:message code='ezJournal.t22'/></th>
 				</c:if>
 				<c:if test="${listType eq 'mine' }">
 				<th id="BoardList_TH_9" onclick="setListOrder(this)" order="12"
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
-					class="h5_center" width="50px" writerindex="5"><spring:message code='ezJournal.t110'/></th>
+					class="h5_center" width="50px"><spring:message code='ezJournal.t110'/></th>
 				</c:if>
 				<c:if test="${listType eq 'department' or listType eq 'mine' }">
 				<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11"

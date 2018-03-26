@@ -143,12 +143,12 @@
 						<tr>
 							<th style="width:10%;"><spring:message code='ezJournal.t25' /></th>
 							<td style="width:40%; white-space:nowrap">
-				             	<div style="overflow-y:auto;WIDTH: 100%; vertical-align: middle"> <c:out value="${journal.journalDate}"/></div>
+				             	<div style="overflow-y:auto; vertical-align: middle"> <c:out value="${journal.journalDate}"/></div>
 							</td>
 						<!-- 작성자 -->
 							<th style="width:10%;"><spring:message code='ezJournal.t34' /></th>
 							<td style="width:40%; white-space:nowrap">
-								<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${journal.writerId}")'>
+								<div style="vertical-align:middle; height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${journal.writerId}")'>
 				             	 <c:out value="${journal.writerName}"/></div>
 							</td>
 						</tr>
@@ -156,19 +156,19 @@
 						<tr>
 							<th style="width:10%;"><spring:message code='ezJournal.t12' /></th>
 							<td style="width:40%; white-space:nowrap">
-				             	<div style="overflow-y:auto;WIDTH: 100%; vertical-align: middle"> <spring:message code='${journal.typeId}' /></div>
+				             	<div style="overflow-y:auto; vertical-align: middle"> <spring:message code='${journal.typeId}' /></div>
 							</td>
 						<!-- 양식명 -->
 							<th style="width:10%;"><spring:message code='ezJournal.t22' /></th>
 							<td style="width:40%; white-space:nowrap">
-				             	<div style="overflow-y:auto;WIDTH: 100%; vertical-align: middle"> <c:out value="${journal.formName}"/></div>
+				             	<div style="overflow-y:auto; vertical-align: middle"> <c:out value="${journal.formName}"/></div>
 							</td>
 						</tr>
 						<!-- 제목 -->	
 				        <tr>
 				          <th><spring:message code='ezBoard.t323' /></th>
-				             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
-				             	<div id="journalTitle" style="overflow-y:auto;WIDTH: 100%; vertical-align: middle"><c:out value=" ${journal.journalTitle}"/></div>
+				             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=3>
+				             	<div id="journalTitle" style="overflow-y:auto; vertical-align: middle"><c:out value=" ${journal.journalTitle}"/></div>
 				             </td>
 				        </tr>
 			      </table>
@@ -181,13 +181,9 @@
 					<img onclick="Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png">
 			        <img onclick="Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png">
 				</div>
-				<table id="journalContent" >
-					<tr>
-						<td>
-			        	${journal.journalContent }
-			        	</td>
-		        	</tr>
-				</table>
+				<div id="journalContent" >
+		        	${journal.journalContent }
+				</div>
 	        </div>
 		    </td>
 		  </tr>

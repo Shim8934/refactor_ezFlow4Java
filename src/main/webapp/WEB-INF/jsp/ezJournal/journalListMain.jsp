@@ -315,7 +315,8 @@
 			function writeSumJournal(){
 				if(sumFormId!=null && sumFormId!=undefined){
 					 $('input:checkbox[name="journalCheckbox"]:checked').each(function() {
-						 journalIdList.push($(this).parent().parent().attr("id"));
+						 var sumJournalId = $(this).parent().parent().attr("id");
+						 journalIdList.push(sumJournalId);
 					 });
 				 	var feature = GetOpenPosition(820, 850);
 					var Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + sumTypeId + "&mode=sum", "",
@@ -683,7 +684,7 @@
 			
 			// 일지삭제
 			function deleteJournal() {
-				var journalIdList = [];
+				journalIdList = [];
 				 $('input:checkbox[name="journalCheckbox"]:checked').each(function() {
 					 journalIdList.push($(this).parent().parent().attr("id"));
 				 });
@@ -938,7 +939,7 @@
 				<table style="width: 100%">
 					<tr>
 						<td style="text-align: center;">
-							<a class="imgbtn"><span onClick="writeSumJournal();"><spring:message code='ezBoard.t188' /></span></a> 
+							<a class="imgbtn"><span onClick="writeSumJournal();"><spring:message code='ezJournal.t60' /></span></a> 
 							<a class="imgbtn"><span onClick="sumSearchOptionHidden();"><spring:message code='ezBoard.t15' /></span></a>
 						</td>
 					</tr>

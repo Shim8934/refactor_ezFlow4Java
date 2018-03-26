@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezJournal.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,7 +11,6 @@ import javax.annotation.Resource;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
@@ -31,9 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
-import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
 import egovframework.ezEKP.ezJournal.vo.JournalPagination;
-import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -763,6 +761,13 @@ public class EzJournalSBController {
 		return journal;
 	}
 	
+	/**
+	 * 일지작성자에게 댓글알림
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
 	@RequestMapping(value="/ezJournal/sendJournalReplyMail.do")
 	public String sendJournalReplyMail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("sendJournalReplyMail started");
@@ -787,6 +792,7 @@ public class EzJournalSBController {
 				try {
 				InternetAddress[] toArr = new InternetAddress[1];
 				toArr[0] = new InternetAddress((String) journalEnv.get("mail"));
+				toArr[0].setPersonal((String) journalEnv.get("name"));
 				
 				String subject = egovMessageSource.getMessage("ezJournal.t151")+journalTitle;
 				
@@ -796,11 +802,10 @@ public class EzJournalSBController {
 				content += "<p>"+egovMessageSource.getMessage("ezJournal.t154")+journalTitle+"</p>";
 				content += "<p>"+replyContent+"</p>";
 				
-				InternetAddress from;
-					from = new InternetAddress(userInfo.getEmail());
+				InternetAddress from = new InternetAddress(userInfo.getEmail());
+				from.setPersonal(userInfo.getDisplayName());
 				ezEmailService.sendMail(loginCookie , from, toArr, null, null, subject, content, false);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -809,5 +814,76 @@ public class EzJournalSBController {
 		logger.debug("sendJournalReplyMail ended");
 		
 		return status;
+	}
+	
+	/**
+	 * 수신자에게 알림메일
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 */
+	@RequestMapping(value="/ezJournal/sendJournalRecvMail.do")
+	public void sendJournalRecvMail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		logger.debug("sendJournalRecvMail started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String journalTitle = request.getParameter("journalTitle");
+		String recvIds = request.getParameter("recvIds");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		String userId = userInfo.getId();
+		param.put("userId", userId);
+		
+		ArrayList<InternetAddress> toArrList = new ArrayList<InternetAddress>(); 
+		if (recvIds != null && !recvIds.equals("")) {
+			String[] receiverID = recvIds.split(",");
+			
+			for (int i = 0; i < receiverID.length; i++) {
+				String recvId = receiverID[i];
+				
+				JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/"+recvId+"/options", param, request,"get",null);
+				String status = resultBody.get("status").toString();
+				
+				if (status.equals("ok")) {			
+					JSONObject journalEnv = (JSONObject) resultBody.get("data");
+					
+					String recvAlert = (String) journalEnv.get("recvAlert");
+					
+					if (recvAlert.equals("Y")) {
+						try {
+							InternetAddress recvMail = new InternetAddress();
+							recvMail.setAddress((String) journalEnv.get("mail"));
+							recvMail.setPersonal((String) journalEnv.get("name"));
+							toArrList.add(recvMail);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			try {
+				InternetAddress[] toArr = new InternetAddress[toArrList.size()];
+				for (int i = 0; i < toArrList.size(); i++) {
+					toArr[i] = toArrList.get(i);
+				}
+				
+				String subject = egovMessageSource.getMessage("ezJournal.t155")+journalTitle;
+				
+				String content = "<p>"+egovMessageSource.getMessage("ezJournal.t156")+"</p>";
+				content += "<p></p>";
+				content += "<p>"+egovMessageSource.getMessage("ezJournal.t157")+userInfo.getDisplayName()+"</p>";
+				content += "<p>"+egovMessageSource.getMessage("ezJournal.t154")+journalTitle+"</p>";
+				
+				InternetAddress from;
+				from = new InternetAddress(userInfo.getEmail());
+				from.setPersonal(userInfo.getDisplayName());
+				ezEmailService.sendMail(loginCookie , from, toArr, null, null, subject, content, false);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		logger.debug("sendJournalRecvMail ended");
 	}
 }

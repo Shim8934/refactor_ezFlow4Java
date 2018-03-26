@@ -38,12 +38,12 @@
 	   		function setDeptList(){
 				$('#treeview').on('changed.jstree', function (e, data) {
 			     	var id = data.instance.get_node(data.selected).id;
-					setUserList("DEPARTMENT",id);
+					setUserList("DEPARTMENT", id);
 				  })
 				.jstree({ 
-					'core' : {'data' : treeContent},
+					'core'   : {'data' : treeContent},
 					'plugins': ["wholerow"],
-					 'themes' : {'responsive' : true}
+					'themes' : {'responsive' : true}
 				});
 	   		}
 	   		

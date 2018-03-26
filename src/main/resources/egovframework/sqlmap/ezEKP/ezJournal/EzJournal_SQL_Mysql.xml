@@ -75,6 +75,7 @@
 		<result property="previewWcontent" column="preview_wcontent" />
 		<result property="previewHcontent" column="preview_hcontent" />
 		<result property="mail" column="mail" />
+		<result property="name" column="name" />
 	</resultMap>
 
 	<resultMap class="deptViewVO" id="deptViewMap">
@@ -817,18 +818,18 @@
 
 	<!-- 환경설정을 가져오기 -->
 	<select id="selectUserEnv" parameterClass="Map" resultMap="journalEnvMap">
-		select count(e.user_id)
-		,ifnull(e.list_cnt,20) as list_cnt
+		select  ifnull(e.list_cnt,20) as list_cnt
 		,ifnull(e.viewenv,'NONE') as viewenv
 		,ifnull(e.recv_alert,'Y') as recv_alert
 		,ifnull(e.reply_alert,'Y') as reply_alert
 		,ifnull(e.preview_wcontent,'50') as preview_wcontent
 		,ifnull(e.preview_hcontent,'50') as preview_hcontent
 		,u.mail as mail
-		from jmocha.tbl_journal_env e
-		inner join jmocha.tbl_usermaster u on(u.CN = e.user_id and u.tenant_id = e.tenant_id)
-		where e.user_id=#userId#
-		and e.tenant_id=#tenantId#
+		,u.displayname as name
+		from jmocha.tbl_usermaster u
+		left join jmocha.tbl_journal_env e on(u.CN = e.user_id and u.tenant_id = e.tenant_id)
+		where u.CN=#userId#
+		and u.tenant_id=#tenantId#
 	</select>
 
 	<!-- 환경설정 저장하기 -->

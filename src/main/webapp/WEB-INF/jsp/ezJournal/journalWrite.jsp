@@ -45,6 +45,8 @@
 	    	// 수정, 임시저장, 재사용시 가져오는 수신자리스트
 	    	var receiverId = "";
 	    	var receiverName = "";
+	    	//취합할 양식 아읻디들
+	    	var journalIdList = [];
 	    	
 			// 선택된 일지함의 양식 리스트 가져오기
 	    	function getFormList(elem) {
@@ -93,7 +95,9 @@
 			
 			// 선택된 양식의 폼 호출
 			function getJournalForm(formId) {
-				var jsonString = JSON.stringify({"mode" : mode,"formId" : formId,"typeId" : typeId,"journalIdList" : opener.journalIdList});
+				console.log(journalIdList);
+// 				var jsonString = JSON.stringify({"mode" : mode,"formId" : formId,"typeId" : typeId,"journalIdList" : journalIdList});
+				
 				console.log("formId확인 :" + formId);
 				selFormId = formId;
 				if (mode == "temp" || mode == "reuse") {
@@ -107,9 +111,11 @@
 				$.ajax({
 	    			type : "POST",
 	   				dataType : "json",
-	   				contentType:"application/json;",
 	   				url : "/ezJournal/journalGetForm.do",
-	   				data : jsonString,
+	   				data : {
+	   					mode : mode, formId : formId, typeId : typeId,
+						journalIdList : JSON.stringify(journalIdList)
+					},
    					success : function(result){
    						console.log(result);
    						
@@ -223,6 +229,7 @@
 					break;
 				case 'sum':
 					selFormId = opener.sumFormId;
+					journalIdList = opener.journalIdList;
 					var selectedType = $("#optType");
 					getFormList(selectedType);
 		    		getJournalForm(selFormId);
@@ -339,14 +346,29 @@
 	                cache: false,
 	                success: function() {	   
 	                  	alert("<spring:message code='ezJournal.t137'/>");
+          			 	sendJournalRecvMail($("#title").val(),receiverID);
 	                  
 	             	  	opener.setJournalList();
           			  	window.close();
+          			  	
 	                },
 	                error : function() {
 	                	alert("<spring:message code='ezJournal.t149'/>");
+          			  	window.close();
+          			  	
 	                }
 	 			});
+	    	}
+	    	
+	    	//수신자에게 메일 보내기
+	    	function sendJournalRecvMail(journalTitle,recvIds){
+	    		$.ajax({
+					type:"post",
+					data:{"journalTitle":journalTitle,"recvIds":recvIds},
+					url:"/ezJournal/sendJournalRecvMail.do",
+					success: function(){
+					}
+				});
 	    	}
 	    	
 	    	// 임시 저장
