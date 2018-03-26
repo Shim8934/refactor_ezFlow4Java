@@ -727,6 +727,11 @@
 		            }
 		        }
 		        
+		        if (i == 1) {
+	            	strtext = "<span class='off'>" + i + "</span>";
+                    PagingHTML += strtext;
+	            }
+		        
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";

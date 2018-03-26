@@ -137,20 +137,20 @@
 		        	repeatcount = 1;
 		        }
 		        
-	        	feature = GetOpenPosition(750, 810);
+	        	feature = GetOpenPosition(790, 810);
 	        	
-                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 	
 		    function WriteTask() {
 		    	var feature = "";
 		    	
 		    	if (useTodoMemo == 'YES') {
-		    		feature = GetOpenPosition(750, 810);
-	                window.open("/ezTask/taskWrite.do", "", "height=810px, width=750px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+		    		feature = GetOpenPosition(790, 810);
+	                window.open("/ezTask/taskWrite.do", "", "height=810px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	} else {
-		    		feature = GetOpenPosition(750, 755);
-	                window.open("/ezTask/taskWrite.do", "", "height=755px, width=750px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+		    		feature = GetOpenPosition(790, 755);
+	                window.open("/ezTask/taskWrite.do", "", "height=755px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	}
 		    }
 	

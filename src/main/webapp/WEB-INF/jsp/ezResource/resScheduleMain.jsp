@@ -9,8 +9,7 @@
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="/css/Tab.css" />
 		<link type="text/css" rel="stylesheet" href="/css/olstyle_nonIE.css" />
-		<!-- <link type="text/css" rel="stylesheet" href="/css/Calendar_cross.css" /> -->
-		 <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />  
+		<link type="text/css" rel="stylesheet" href="/css/Calendar_cross.css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -220,10 +219,10 @@
 	            srcEl = window.event.srcElement;
 	        }
 	        var selsd = "", seled = "";
-
-	        if (srcEl.getAttribute("dispdate") == null) {
-	            if (srcEl.getAttribute("disptime") != null) {
-
+	        
+			/* 2018.03.23 서주연 - #12114 */
+	        if (GetAttribute(srcEl,"dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
+	            if (GetAttribute(srcEl,"dispTime") != null) {
 	                selsd = srcEl.getAttribute("disptime");
 	                seled = selsd.replace(":00:", ":30:");
 	            }

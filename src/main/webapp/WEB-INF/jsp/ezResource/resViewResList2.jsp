@@ -31,12 +31,12 @@
 		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<style type="text/css">
 			.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
-			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
-			.warnintxt01 { position:relative ;padding-bottom:10px;margin-top:15px}
+			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}
+			.warnintxt01 { position:relative; margin-bottom:10px;margin-top:20px}
 			.warningimg { position:absolute; top:0px; left:0px;}
-			.warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}
-			.warningdl dt { height:40px; margin-top:10px;text-align:left;}
-			.warningdl dd { padding:0px 0px 0px 5px; margin:0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left;}
+			.warningdl { width:75%; padding:10px 10px 5px 114px; margin:0px; display:inline-block; text-align:left;}
+			.warningdl dt { height:40px; padding-left:6px; margin-top:10px; margin-left:10px; text-align:left;}
+			.warningdl dd { padding:0px 10px 0px 20px; margin:0px 0px 10px 0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left; word-break:break-all;}
 			.warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}
 
 			/* tooltip 추가*/
@@ -149,6 +149,7 @@
 	                	document.getElementById("Weekbtn").style.display = "none";
 	                	document.getElementById("TR_Line2").style.display = "none";
 	                	document.getElementById("tdDateCalendarViewer").innerHTML = document.getElementById("EmptyMsg").innerHTML;
+	                	document.getElementById("mainmenu").style.display = "none";
 	                	document.getElementById("weeklyline").style.display = "none";
 	            	}
 	        	}
@@ -357,14 +358,14 @@
 				            </tr>
                     		<tr>
                       			<td colspan="2" id='weekviewer' class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  -->
-                        			<div id="tooltip" style="position:absolute; visibility:hidden; z-index:1000; background-color:lightyellow;"></div> 
-                        			<div id="tdDateCalendarViewer" style="padding-bottom:5px;height:100%; text-align:center" > </div>
+                        			<div id="tooltip" style="position:absolute; visibility:hidden; z-index:1000;"></div> 
+                        			<div id="tdDateCalendarViewer" style="padding-bottom:5px; height:100%; text-align:center;" ></div>
                         		</td>
                     		</tr>
                     		<tr id="noapproval" style="display:none;">
                         		<td colspan="2" style="font-weight:bold;padding-top:15px;padding-left:5px;vertical-align:bottom;" ><h2>▒&nbsp;<spring:message code="ezResource.t402" /></h2></td>
                     		</tr>
-                    		<tr style="border-top : 1px solid #dedede;">
+                    		<tr>
                       			<td colspan="2" id='tdCalViewCell2'  class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->
                         			<div id="idCalendarViewer2" style='height:100%; text-align:center'> </div>
                         		</td>
@@ -378,10 +379,10 @@
           	</tr>
 		</table>		
     	<div id="EmptyMsg" style="display:none;">
-        	<div class="warningbox01" style="margin-top:100px;">
+        	<div class="warningbox01" style="margin-top:155px;">
           		<div class="warningbox02">
   	        		<div class="warnintxt01" >
-	        			<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style="margin: 18px 18px 18px 58px;"></span>
+	        			<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style="margin: 18px 0px 18px 34px;"></span>
 	        			<dl class="warningdl">
 	        				<dt><img src="/images/notify/warning01.gif" width="183" height="27"></dt>
 	        				<dd>
