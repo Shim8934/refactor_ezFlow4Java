@@ -1730,7 +1730,13 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         xmlhttp.open("POST", "/ezApprovalG/doDraftHWP.do", false);
         xmlhttp.send(xmlpara);
 
-        return getNodeText(loadXMLString(xmlhttp.responseText));
+        if (xmlhttp.statusText == "OK") {
+    		var dataNodes = GetChildNodes(xmlhttp.responseXML);
+    		
+            return getNodeText(dataNodes[0]);
+    	} else {
+    		return "FALSE";
+    	}
     } catch (e) {
         OpenAlertUI("SaveTMPDocInfo()" + e.description);
     }

@@ -91,7 +91,6 @@
 		        rtnVal[0] = "FALSE";
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
-		            window.close();
 		        }
 		        else {
 		            window.returnValue = rtnVal;
@@ -103,7 +102,6 @@
 		        rtnVal[1] = g_NewVolNo;
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
-		            window.close();
 		        }
 		        else {
 		            window.returnValue = rtnVal;
