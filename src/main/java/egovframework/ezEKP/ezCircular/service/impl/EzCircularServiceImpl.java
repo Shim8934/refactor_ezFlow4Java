@@ -750,8 +750,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 			map.put("circularBMId", circularBMId);
 			
 			ezCircularDAO.circularDeptDel(map);
+			ezCircularDAO.deleteCircularMemberList(map); // 2018-03-26 황윤호 추가
 		}
-		
 		logger.debug("circularDeptDel ended.");
 	}
 

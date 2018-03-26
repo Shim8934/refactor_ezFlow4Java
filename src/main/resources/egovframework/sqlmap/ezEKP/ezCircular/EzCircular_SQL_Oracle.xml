@@ -11,6 +11,7 @@
     <typeAlias alias="CircularCommentVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularCommentVO"/>
     <typeAlias alias="CircularListHeaderVO" 		type="egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO"/>
 	
+	
     <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 	   <![CDATA[
 		    SELECT
@@ -394,35 +395,40 @@
     
     <select id="EzCircularDAO.getcircularDeptList" parameterClass="Map" resultClass="CircularDeptVO">
         <![CDATA[
-            SELECT
+          select 
+            d.circularbmid, 
+            d.title,
+            d.regDate, 
+            e.membername,
+            d.memberNameCount 
+        from
+            (SELECT
                 A.circularbmid,
                 A.title,
-                TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate, 
-                
-                (SELECT membername FROM
-                (SELECT
-                	membername, row_number() over(ORDER BY circularbmuserid) as rNum 
-                FROM
-                 	TBL_CIRCULAR_BMUSER B 
-                JOIN 
-                 	TBL_CIRCULAR_BM C	
-                ON
-                 	B.circularbmid = C.circularbmid 
-                 
-                ) WHERE rNum = 1) as membername,
-	                
-             	(SELECT
-             		COUNT(*) - 1 
-             	 FROM
-             	 	TBL_CIRCULAR_BMUSER
-             	 WHERE
-             	 	circularbmid = A.circularbmid) membernamecount
-			FROM
+				TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate, 
+            (SELECT
+                COUNT(*) - 1 
+             FROM
+                TBL_CIRCULAR_BMUSER B
+             WHERE
+                B.circularbmid = A.circularBMID) membernamecount
+             FROM
                 TBL_CIRCULAR_BM A
+            
             WHERE
                 A.memberid = #memberID#
             AND
-                A.tenantid = #tenantID#
+                A.tenantid = #tenantID#) d
+        join (        
+        select c.circularBMID, c.membername 
+        from
+        (SELECT circularBMID, membername FROM
+                (SELECT
+                    row_number() over(Partition by circularbmid ORDER BY membername) as rNum, circularbmid, membername
+                FROM
+                    TBL_CIRCULAR_BMUSER B
+            ) WHERE rNum = 1)  c) e
+         on e.circularbmid = d.circularbmid 
         ]]>
     </select>
 
