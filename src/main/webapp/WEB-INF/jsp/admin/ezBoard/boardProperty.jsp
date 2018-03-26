@@ -548,7 +548,7 @@
 		                <table style="width: 100%">
 		                    <tr class="primary">
 		                        <th><c:out value='${lang_primary}' /></th>
-		                        <td style="border-bottom:1px solid #b6b6b6;"><c:out value='${model.boardName}' /></td>
+		                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName}' /></td>
 		                    </tr>
 		                    <tr class="secondary">
 		                        <th><c:out value='${lang_secondary}' /></th>
@@ -569,7 +569,7 @@
 		                <table style="width: 100%">
 		                    <tr class="primary">
 		                        <th><c:out value='${lang_primary}' /></th>
-		                        <td style="border-bottom:1px solid #b6b6b6;">
+		                        <td style="border-bottom:1px solid #ddd;">
 		                            <input type="text" id="txtBoardName" style="width: 99%" value="<c:out value='${model.boardName}' />" maxlength="25" />
 		                        </td>
 		                    </tr>

@@ -19,7 +19,7 @@
 				margin-top: 3px;
 				vertical-align:top;
 				font-size: 9pt;				
-				background-color : rgb(233, 241, 255);
+				background-color : #edf4fd;
 				cursor : hand;
 			}
 			.node_hover{

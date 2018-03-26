@@ -12,7 +12,7 @@ A:hover{COLOR: #0B790E;TEXT-DECORATION: none}
 .dotted{BACKGROUND: url(../images/main/line_dot01.gif) #ffffff left ;    HEIGHT: 1px}
 .line{HEIGHT: 1px;    BACKGROUND-COLOR: #bcbcbc}
 .calendar {font-size: 8pt; color: #212121; text-decoration: none}
-.msg{FONT-SIZE: 9pt;COLOR: #393939;padding-left:55px;height:100;BACKGROUND-image: url(../images/i_msg.gif);BACKGROUND-REPEAT: no-repeat;background-position:left 50%;width:300;margin:10;border:1px solid #b6b6b6;padding-top:4px;margin:10px; BACKGROUND-COLOR: #ffffff;word-break:break-all;} /*표준모듈 (2007.02.21) 수정 */
+.msg{FONT-SIZE: 9pt;COLOR: #393939;padding-left:55px;height:100;BACKGROUND-image: url(../images/i_msg.gif);BACKGROUND-REPEAT: no-repeat;background-position:left 50%;width:300;margin:10;border:1px solid #ddd;padding-top:4px;margin:10px; BACKGROUND-COLOR: #ffffff;word-break:break-all;} /*표준모듈 (2007.02.21) 수정 */
 
 A.l:link{TEXT-DECORATION: none}
 A.l:visited{TEXT-DECORATION: none}
@@ -87,4 +87,4 @@ A.l:hover{COLOR: #D58713;TEXT-DECORATION: none}
 .twidth{    MARGIN-LEFT: 25px;    WIDTH: 740px}
 .mtxt{    FONT-WEIGHT: bold;   COLOR: #2778a7;    HEIGHT: 30px;padding-left:8px}
 .white{    HEIGHT: 22px;    BACKGROUND-COLOR: #ffffff;padding-left:1;padding-right:1}
-.ptable{MARGIN: 10px;BACKGROUND-COLOR: #b6b6b6}
+.ptable{MARGIN: 10px;BACKGROUND-COLOR: #ddd}

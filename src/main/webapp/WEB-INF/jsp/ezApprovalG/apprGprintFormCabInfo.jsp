@@ -17,7 +17,7 @@
     <td><b>${STRGet_t825}</b></td>
   </tr>
 </table>
-<TABLE border=1 borderColorDark=ffffff borderColorLight=#B6B6B6 cellPadding=0 cellSpacing=0 width=640 style=" font-size:9pt; padding-left:5;padding-top:4; ">
+<TABLE border=1 borderColorDark=ffffff borderColorLight=#ddd cellPadding=0 cellSpacing=0 width=640 style=" font-size:9pt; padding-left:5;padding-top:4; ">
   <tr> 
     <td bgcolor="f7f7f7" width="85" height="23"><spring:message code='ezApprovalG.t106'/></td>
     <td id="tdTitle" colspan=3 bgcolor="ffffff">&nbsp;${title}</td>
@@ -58,7 +58,7 @@
     <td ><b>${STRGet_t832}</b></td>
   </tr>
 </table>
-<TABLE border=1 borderColorDark=ffffff borderColorLight=#B6B6B6 cellPadding=0 cellSpacing=0 width=640 style=" font-size:9pt; padding-left:5;padding-top:4; ">
+<TABLE border=1 borderColorDark=ffffff borderColorLight=#ddd cellPadding=0 cellSpacing=0 width=640 style=" font-size:9pt; padding-left:5;padding-top:4; ">
   <tr  > 
     <td bgcolor="f7f7f7" width="100" height="23" ><spring:message code='ezApprovalG.t833'/></td>
     <td  id="tdNumOfRec"  colspan=3 bgcolor="ffffff">&nbsp;${numOfRec}</td>
@@ -109,7 +109,7 @@
     <td ><b><spring:message code='ezApprovalG.t840'/></b></td>
   </tr>
 </table>
-<TABLE border=1 borderColorDark=ffffff borderColorLight=#B6B6B6 cellPadding=0 cellSpacing=0 width=640 style=" font-size:9pt; padding-left:5;padding-top:4; ">
+<TABLE border=1 borderColorDark=ffffff borderColorLight=#ddd cellPadding=0 cellSpacing=0 width=640 style=" font-size:9pt; padding-left:5;padding-top:4; ">
   <tr  > 
     <td bgcolor="f7f7f7" width="100" height="23" ><spring:message code='ezApprovalG.t841'/></td>
     <td  id="tdEndY"  colspan=3 bgcolor="ffffff">&nbsp;${endY}</td>
@@ -183,7 +183,7 @@
     <td ><b><spring:message code='ezApprovalG.t850'/></b></td>
   </tr>
 </table>
-<TABLE border=1 borderColorDark=ffffff borderColorLight=#B6B6B6 cellPadding=0 cellSpacing=0 width=640 style=" font-size:9pt; padding-left:5;padding-top:4; ">
+<TABLE border=1 borderColorDark=ffffff borderColorLight=#ddd cellPadding=0 cellSpacing=0 width=640 style=" font-size:9pt; padding-left:5;padding-top:4; ">
   <tr  > 
     <td bgcolor="f7f7f7" width="100" height="23" ><spring:message code='ezApprovalG.t851'/></td>
     <td  id="tdTransfer"  colspan="3" bgcolor="ffffff">&nbsp;

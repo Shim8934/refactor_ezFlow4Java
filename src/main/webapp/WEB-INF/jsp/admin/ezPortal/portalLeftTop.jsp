@@ -98,7 +98,7 @@
 	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 		<div id="left">
 			
-			<div class="left_admin" title="<spring:message code='ezPortal.t228'/>"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='ezPortal.t228'/></div>
+			<div class="left_admin" title="<spring:message code='ezPortal.t228'/>"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code='ezPortal.t228'/></div>
 			
 			<c:choose>
 				<c:when test="${firstScreen_Mail == 'YES'}">

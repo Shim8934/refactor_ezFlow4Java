@@ -19,7 +19,7 @@ public interface MApprovalGService {
 
 	public List<MApprovalGAprLineInfoVO> getAprLineInfo(String pDocID, String type, MCommonVO userInfo) throws Exception;
 
-	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale, String type, String scheme) throws Exception;
+	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale, String type, String scheme, String mode) throws Exception;
 
 	public String getOpinionCount(String pDocID, String type, MCommonVO userInfo) throws Exception;
 
@@ -35,7 +35,7 @@ public interface MApprovalGService {
 
 	public int checkPass(MCommonVO userInfo, String shaEncPassword) throws Exception;
 
-	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String companyId, int tenantId, String aprMemberSN) throws Exception;
+	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String companyId, int tenantId, String aprMemberSN, String mode) throws Exception;
 
 	public MApprovalGDocInfoVO getAprMemberSn(String docId, String type, String companyId, int tenantId) throws Exception;
 

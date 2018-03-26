@@ -1141,7 +1141,8 @@
 		        		data : {
 		        				docID    : pDocID, 
 		        				userID 	 : pUserID,
-		        				formID   : pFormID
+		        				formID   : pFormID,
+		        				mode     : ""
 		        				},
 		        		success: function(xml){
 		        			result = loadXMLString(xml);
@@ -1189,7 +1190,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(600, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
+		        DivPopUpShow(580, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();

@@ -676,44 +676,48 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var oArrRows = DocList.GetSelectedRows();
+		        
 		        if (oArrRows.length > 0) {
 		            var pCurSelRow = oArrRows[0];
+		            
 		            if (pListTypeValue == "7") {
 		                var pDocID = pCurSelRow.getAttribute("DATA1");
 		                var pURL = pCurSelRow.getAttribute("DATA3");
 		                var openLocation = "";
+		                
 		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
-		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
-		                }
-		                else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
+		                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
 		                    if (CrossYN()) {
 		                        alert(strLang1103);
 		                        return;
+		                    } else {
+// 		                        openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezConvOut_HWP.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
+		                        openLocation = "/ezApprovalG/ezConvOutHWP.do?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
 		                    }
-		                    else {
-		                        openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezConvOut_HWP.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
-		                    }
+		                } else {
+		                    /* if (CrossYN()) {
+		                        openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_Cross.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
+		                    } else {
+	                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
+		                    } */
+		                    
+		                	openLocation = "/ezApprovalG/ezConvOut.do?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
 		                }
-		                else {
-		                    if (CrossYN()) {
-		                        openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_Cross.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
-		                    }
-		                    else {
-	                            openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
-		                    }
-		                }
+		                
 		                openwindow(openLocation, "enforce", 880, 550);
-		            }
-		            else {
+		            } else {
 		                if (pSusinManagerFlag == "admin" || pCurSelRow.getAttribute("DATA8") == pUserID) {
 		                    var pDraftFlag;
-		                    if (pCurSelRow.getAttribute("DATA9") == strDocState11)
+		                    
+		                    if (pCurSelRow.getAttribute("DATA9") == strDocState11) {
 		                        pDraftFlag = "SUSIN";
-		                    else if (pCurSelRow.getAttribute("DATA9") == strDocState12 || pCurSelRow.getAttribute("DATA9") == strDocState2)
+		                    } else if (pCurSelRow.getAttribute("DATA9") == strDocState12 || pCurSelRow.getAttribute("DATA9") == strDocState2) {
 		                        pDraftFlag = "HAPYUI";
+		                    }
+		                    
 		                    OpenReceiveDraftUI(pCurSelRow, pDraftFlag);
-		                }
-		                else {
+		                } else {
 		                    var pAlertContent = "<spring:message code='ezApprovalG.t1730'/>";
 		                    //OpenAlertUI(pAlertContent);
 		                    alert(pAlertContent);
@@ -721,6 +725,7 @@
 		            }
 		        }
 		    }
+		    
 		    function btnDistribute_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -1192,7 +1197,7 @@
 		            var width = window.screen.availWidth;
 		            var left = (parseInt(width) - 600) / 2;
 		            var top = (parseInt(heigth) - 270) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=793px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    function GetBujaeFlag() {
@@ -1301,8 +1306,8 @@
 		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";
 		        }
 		        
-		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=600px,height=450px";
-		        feature = feature + GetOpenPosition(600, 450);
+		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=450px";
+		        feature = feature + GetOpenPosition(580, 450);
 		        window.open(url, "", feature);
 		    }
 		
@@ -1326,6 +1331,7 @@
 		        	for (var i = 0; i < condition.length; i++) {
 		                if (condition[i] == null)
 		                    condition[i] = "";
+		                condition[i] = replaceCond(condition[i]);
 		                SearchCond[i] = condition[i];
 		            }
 		            pageNum = 1;
@@ -1523,20 +1529,20 @@
 			            }
 			
 			            if (radiosearch.item(0).checked) {
-			                SearchCond[1] = document.getElementById("txt_keyword").value;
+			                SearchCond[1] = replaceCond(document.getElementById("txt_keyword").value);
 			            }
 			            else if (radiosearch.item(1).checked) {
-			                SearchCond[2] = document.getElementById("txt_keyword").value;
+			                SearchCond[2] = replaceCond(document.getElementById("txt_keyword").value);
 			            }
 					} else {
 						for (i = 0; i < 11; i++)
 							condition[i] = "";
 
 		                if (radiosearch.item(0).checked) {
-		                	condition[1] = document.getElementById("txt_keyword").value;
+		                	condition[1] = replaceCond(document.getElementById("txt_keyword").value);
 		                }
 		                else if (radiosearch.item(1).checked) {
-		                	condition[2] = document.getElementById("txt_keyword").value;
+		                	condition[2] = replaceCond(document.getElementById("txt_keyword").value);
 		                }
 					}
 		        }
@@ -1684,17 +1690,22 @@
 		            }
 		        }
 		    }
+		    
+		    function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
+		    	return condStr.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+		    }
+		    
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
 		<h1>
 			<span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
-		        <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezApprovalG.t106'/></label>
-			    <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code='ezApprovalG.t445'/></label>
+		        <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1"><spring:message code='ezApprovalG.t106'/></label>
+			    <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2"><spring:message code='ezApprovalG.t445'/></label>
 			    &nbsp;
 			    <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		        <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search()"></a>
+		        <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle; padding-bottom:2px;" onClick="search()"></a>
 		    </span>
 		</h1>
 		<div id="mainmenu">
