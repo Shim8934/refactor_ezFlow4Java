@@ -2024,8 +2024,7 @@
 	<select id="EzPortalDAO.searchMenuItem" parameterClass="Map" resultClass="PortalSearchMenuItemVO">
 		<![CDATA[
 			SELECT
-				UID_,
-				DISPLAYNAME
+				*
 			FROM (
    					SELECT
    						ROW_NUMBER() OVER(ORDER BY DISPLAYNAME ASC) AS RNUM, UID_, DISPLAYNAME
