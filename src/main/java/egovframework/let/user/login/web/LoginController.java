@@ -519,7 +519,16 @@ public class LoginController {
 		
     	Cookie cookieID = new Cookie("loginCookie", loginCookie);
     	cookieID.setPath("/");
-    	response.addCookie(cookieID);    	
+    	response.addCookie(cookieID);
+    	
+    	String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
+    	
+    	if (!("NO".equalsIgnoreCase(useSSOCookie) || "".equals(useSSOCookie))) {
+    		Cookie ssoLoginCookie = new Cookie("loginCookieSSO", loginCookie);
+    		ssoLoginCookie.setPath("/");
+    		ssoLoginCookie.setDomain(useSSOCookie);
+    		response.addCookie(ssoLoginCookie);
+    	}
     }
     
     /**
@@ -529,10 +538,18 @@ public class LoginController {
 	 */
     @RequestMapping(value="/user/login/actionLogout.do")
 	public String actionLogout(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+        String serverName = request.getServerName();
+        int tenantId = loginService.getTenantId(serverName);
+        
     	Cookie[] cookies = request.getCookies();
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
+    			if (cookie.getName().equals("loginCookieSSO")) {
+    				String ssoDomain = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
+    				cookie.setDomain(ssoDomain);
+    			}
+    			
     			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
@@ -540,9 +557,6 @@ public class LoginController {
     			}
     	    }
     	}
-    	
-        String serverName = request.getServerName();
-        int tenantId = loginService.getTenantId(serverName);
     	
         String ezOffice365Auth = ezCommonService.getTenantConfig("ezOffice365Auth", tenantId);
         
