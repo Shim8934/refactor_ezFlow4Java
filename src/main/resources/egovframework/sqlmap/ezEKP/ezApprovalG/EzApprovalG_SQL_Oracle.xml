@@ -1531,7 +1531,7 @@
 	                TBL_ENDAPRLINEINFO.AprMemberJobTitle2,
 	                TBL_ENDAPRLINEINFO.AprMemberDeptID ,
 	                TBL_ENDAPRLINEINFO.AprMemberDeptName ,
-	                IFNULL(TBL_ENDAPRLINEINFO.AprMemberDeptName2, TBL_ENDAPRLINEINFO.AprMemberDeptName) APRMEMBERDEPTNAME2  ,
+	                NVL(TBL_ENDAPRLINEINFO.AprMemberDeptName2, TBL_ENDAPRLINEINFO.AprMemberDeptName) APRMEMBERDEPTNAME2  ,
 	                TBL_ENDAPRLINEINFO.AprMemberLDAPPath ,
 	                TBL_ENDAPRLINEINFO.ReceivedDate ,
 	                TBL_ENDAPRLINEINFO.ProcessDate ,
