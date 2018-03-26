@@ -17,7 +17,6 @@
 	
 	<body>
 		<div id="lmTop">
-			
 			<div class="lmleft">
 				<!-- 편지지함 목록 -->
 				<div class="lmLetterBox">

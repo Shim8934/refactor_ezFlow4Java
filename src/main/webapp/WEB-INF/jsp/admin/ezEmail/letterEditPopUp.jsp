@@ -130,7 +130,6 @@
 			// 저장
 			function letterUpload(letterJson, type) {
 				var uploadUrl = type == "add" ? "/admin/ezEmail/createLetter.do" : "/admin/ezEmail/updateDisplayNameLetter.do";
-				var nowSelect = $(opener.document).find(".lmLetterSelect").attr("id");
 				
 				$.ajax({
 					type:"POST",
@@ -143,7 +142,7 @@
 						if (opener.searchTxt != "") {
 							opener.letterSearch();
 						} else {
-							opener.getLetterList(letterJson.letterBoxNo, nowSelect); // 편지지 리스트
+							opener.getLetterList(letterJson.letterBoxNo); // 편지지 리스트
 						}
 						alert("저장했습니다.");
 						letterPopUpClose(); // 편지지 팝업 닫기
