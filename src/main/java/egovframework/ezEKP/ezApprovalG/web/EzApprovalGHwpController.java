@@ -71,6 +71,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String aprState = request.getParameter("aprState");
 		String isTmpDoc = request.getParameter("isTmpDoc");
 		String connkey = request.getParameter("connkey");
+		String docSN = "";
+		
+		if (listType.equals("21")) {
+			if (request.getParameter("docSN") != null) {
+				docSN = request.getParameter("docSN");
+			}
+		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -109,6 +116,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("sihangURL", sihangURL);
 		model.addAttribute("connkey", connkey);
+		model.addAttribute("docSN", docSN);
 		model.addAttribute("isHWP", "Y");
 		
 		LOGGER.debug("draftuiHWP ended");

@@ -624,8 +624,7 @@
 		
 		            if (Html1 == "hwp") {
 		                if (FunctionType == "000")                   //한글양식 미결 문서
-		                    //openServerDraftUI_HWP("REDRAFT", pCurSelRow);
-		                    alert(strLang1103);
+		                    openServerDraftUI("REDRAFT", pCurSelRow);
 		                else
 		                    openDraftUI("REDRAFT", pCurSelRow);
 		            }

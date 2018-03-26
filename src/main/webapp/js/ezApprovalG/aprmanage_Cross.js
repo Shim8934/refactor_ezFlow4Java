@@ -2719,6 +2719,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     	openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
     } else {
     	if (!isIE()) {
+    		//노티문구가 잘못되었음. 아무래도 한글양식은 IE에서만 지원가능합니다 라고 바꿔야할듯
             alert(strLang1103);
             return;
         } else {

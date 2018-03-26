@@ -2999,7 +2999,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			String saveFileName = tmpPath + commonUtil.separator + "TMP" + commonUtil.separator + docID + extension;
 		
-			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
+			if (extension.equals(".hwp")) {
+				stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
+			} else {
+				stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
+			}
 			
 			bos = new FileOutputStream(saveFileName);
 			

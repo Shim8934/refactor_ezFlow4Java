@@ -126,7 +126,7 @@
 	        var CheckGubun = "1";
 	        var HapyuiArea = 0;
 	        var AprLineArea = 0;
-	        var DocSN = "${DocSN}";
+	        var DocSN = "${docSN}";
 	        var AutoSave = "save";
 	        var Saveflag = false;
 	        var pUse_Editor = "${useEditor}";
