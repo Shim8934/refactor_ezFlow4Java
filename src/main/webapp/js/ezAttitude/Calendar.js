@@ -1,6 +1,5 @@
 ﻿var defaultView = 0; // 달력 시작 일 (일 = 0, 월 = 1)
 var sDate = new Date();
-var startDate; // 아직까지 왜 두는지 모르겟음
 var dayOfWeeks;
 
 var monthHeight = ((parseInt(document.documentElement.clientHeight, 10) - 260) / 6) - 11;
@@ -40,7 +39,7 @@ function CalendarView(pTargetID) {
 		var mImg = document.createElement("IMG");
 		mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
 		mImg.setAttribute("border", "0");
-		mImg.setAttribute("onclick", "");
+		mImg.setAttribute("onclick", "preMonth()");
 		
 		mSpan.appendChild(mImg);
 		oTh.appendChild(mSpan);
@@ -55,7 +54,7 @@ function CalendarView(pTargetID) {
 		var mImg = document.createElement("IMG");
 		mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
 		mImg.setAttribute("border", "0");
-		mImg.setAttribute("onclick", "");
+		mImg.setAttribute("onclick", "nextMonth()");
 		
 		mSpan.appendChild(mImg);
 		oTh.appendChild(mSpan);
@@ -83,6 +82,8 @@ function CalendarView(pTargetID) {
 		objElm = null;
 	}
 	
+	getAttiStatisList();
+	getAttitudeMainList();
 	//CalViewSource(); //달력에 근태 데이터 뿌리면 되고
 	
 }
@@ -140,7 +141,7 @@ function getMonthBodyObj() {
 	oTbody.appendChild(objTr);
 	
 	// 달력에 일자 데이터를 넣어주기 위해 oBeforeDate를 oThisDate를 넣는다.
-	//oBeforeMaxDay가 0이면 안넣어 주는 이유는 이전 달의 데이터가 필요가 없으므로 안넣어 줘도 된다.
+	// oBeforeMaxDay가 0이면 안넣어 주는 이유는 이전 달의 데이터가 필요가 없으므로 안넣어 줘도 된다.
 	if (oBeforeMaxDay != 0) {
 		oThisDate = oBeforeDate;
 	}
@@ -167,7 +168,19 @@ function getMonthBodyObj() {
 	return oTbody;
 }
 
+//달력에 하루의 TD를 셋팅
 function monthDate(oThisDate, TDIndex) {
+	var tempyear = oThisDate.getFullYear();
+	var lunarDate; // 음력 날짜를 저장하기 위한 변수
+	var lunarDate2; // 음력월.음력일 => 달력에 음력일을 표시해주기 위한 변수
+	if (tempyear > 1800 && tempyear <= 2101) { // 음력에 대한 날짜 제공은 1800 ~ 2101
+		lunarDate = lunarCalc(tempyear, oThisDate.getMonth() + 1, oThisDate.getDate(), 1);
+		
+		lunarDate2 = lunarDate.month + "." + lunarDate.day;
+		if (lunarDate.leapMonth) {
+			lunarDate2 = "윤" + lunarDate2;
+		}
+	}
 	var objTd = document.createElement("TD");
 	
 	//매달 1일에는 x월 1일 을 표시해주기 위해
@@ -177,11 +190,64 @@ function monthDate(oThisDate, TDIndex) {
 		var pDateData = oThisDate.getDate();
 	}
 	
+	var tempmemorial = memorialDayCheck(oThisDate, lunarDate); // 날짜에 해당하는 휴일을 가져온다.
+	var tempyearmemorial = yearmemorialDayCheck(oThisDate, lunarDate);
+	
+	var isholiday = false;
+	var holidayname = "";
+	var holidayname2 = "";
+	
+	for (var i = 0; i < tempmemorial.length; i++) {
+        memorial = tempmemorial[i];
+        if (uselang == "1") {
+            if (i == tempmemorial.length - 1) {
+            	holidayname += memorial.name;
+            } else {
+            	holidayname += memorial.name + ", ";
+            }
+        } else {
+            if (i == tempmemorial.length - 1) {
+            	holidayname += memorial.name2;
+            } else {
+            	holidayname += memorial.name2 + ", ";
+            }
+        }
+        if (memorial.holiday) {
+        	isholiday = true;
+        }
+    }
+
+    for (var i = 0; i < tempyearmemorial.length; i++) {
+        yearmemorial = tempyearmemorial[i];
+        if (uselang == "1") {
+            if (i == tempyearmemorial.length - 1) {
+            	holidayname2 += yearmemorial.name;
+            } else {
+            	holidayname2 += yearmemorial.name + ", ";
+            }
+        } else {
+            if (i == tempyearmemorial.length - 1) {
+            	holidayname2 += yearmemorial.name2;
+            } else {
+            	holidayname2 += yearmemorial.name2 + ", ";
+            }
+        }
+        if (yearmemorial.holiday) {
+        	isholiday = true;
+        }
+    }
+
+    if (holidayname != "" && holidayname2 != "") {
+    	holidayname = holidayname + ", " + holidayname2;
+    } else if (holidayname == "" && holidayname2 != "") {
+    	holidayname = holidayname2;
+    }
+    
 	//이전 달의 요일을 구분하기 위해 다른 클래스를 적용
 	var className = "";
 	if (oThisMonth != oThisDate.getMonth()) {
 		className = " gray";
-	} else if (oThisDate.getDay() == 0) {
+	} else if (oThisDate.getDay() == 0 || isholiday) {
 		className = " sun";
 	} else if (oThisDate.getDay() == 6) {
 		className = " sat";
@@ -224,7 +290,7 @@ function monthDate(oThisDate, TDIndex) {
     //subTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
     subTd.setAttribute("dispDate", cell_ID);
     
-    subTd.innerHTML = pDateData;
+    subTd.innerHTML = pDateData + " (" + lunarDate2 + ") " + holidayname;
     
     subTr.appendChild(subTd);
     subTable.appendChild(subTr);
@@ -267,4 +333,685 @@ function leadingZeros(n, digits) {
             zero = '0' + zero;
     }
     return zero + n;
+}
+
+/**
+ * 다음달 이동 함수
+ */
+function nextMonth() {
+	var cYear = $("#calTitle").text().trim().split("-")[0];
+	var cMonth = parseInt($("#calTitle").text().trim().split("-")[1], 10) + 1; // 다음달로 이동 +1
+	
+	if (cMonth > 12) {
+		cYear++;
+		cMonth = 1;
+	}
+	
+	sDate.setFullYear(cYear, cMonth - 1, 14);
+	$("#calTitle").text(" " + cYear + "-" + leadingZeros(cMonth, 2) + " ");
+	CalendarView("attiCalendar");
+}
+
+/**
+* 이전달 이동 함수
+*/
+function preMonth() {
+	var cYear = $("#calTitle").text().trim().split("-")[0];
+	var cMonth = parseInt($("#calTitle").text().trim().split("-")[1], 10) - 1; // 이전달로 이동 -1
+	
+	if (cMonth < 1) {
+		cYear--;
+		cMonth = 12;
+	}
+	
+	sDate.setFullYear(cYear, cMonth - 1, 1);
+	$("#calTitle").text(" " + cYear + "-" + leadingZeros(cMonth, 2) + " ");
+	CalendarView("attiCalendar");
+}
+
+function memorialDayCheck(solarDate, lunarDate) {
+    var i;
+    var memorial;
+
+    var tempmemorialDays = new Array();
+    for (i = 0; i < memorialDays.length; i++) {
+        if (solarDate.getFullYear() > 1800 && solarDate.getFullYear() <= 2101) {
+            if (memorialDays[i].month == solarDate.getMonth() + 1 &&
+             memorialDays[i].day == solarDate.getDate() &&
+             memorialDays[i].solarLunar == 1) {
+                tempmemorialDays.push(memorialDays[i]);
+            }
+            if (memorialDays[i].month == lunarDate.month &&
+             memorialDays[i].day == lunarDate.day &&
+             memorialDays[i].solarLunar == 2 &&
+             !memorialDays[i].leapMonth) {
+                tempmemorialDays.push(memorialDays[i]);
+            }
+        }
+    }
+    return tempmemorialDays;
+}
+
+function yearmemorialDayCheck(solarDate, lunarDate) {
+    var i;
+    var yearmemorial;
+
+    var tempyearmemorialDays = new Array();
+    for (i = 0; i < yearmemorialDays.length; i++) {
+        if (solarDate.getFullYear() > 1800 && solarDate.getFullYear() <= 2101) {
+            if (yearmemorialDays[i].year == solarDate.getFullYear() &&
+            yearmemorialDays[i].month == solarDate.getMonth() + 1 &&
+             yearmemorialDays[i].day == solarDate.getDate() &&
+             yearmemorialDays[i].solarLunar == 1) {
+                tempyearmemorialDays.push(yearmemorialDays[i]);
+            }
+            if (yearmemorialDays[i].year == lunarDate.year &&
+            yearmemorialDays[i].month == lunarDate.month &&
+             yearmemorialDays[i].day == lunarDate.day &&
+             yearmemorialDays[i].solarLunar == 2 &&
+             !yearmemorialDays[i].leapMonth) {
+                tempyearmemorialDays.push(yearmemorialDays[i]);
+            }
+        }
+    }
+    return tempyearmemorialDays;
+}
+
+/**
+ * type이 1인 경우에는 양력 날짜를 받아 음력 날짜를 반환
+ * type이 2인 경우에는 음력 날짜를 받아 양력 날짜를 반환
+ * */
+function lunarCalc(year, month, day, type, leapmonth) {
+    var solYear, solMonth, solDay;
+    var lunYear, lunMonth, lunDay;
+    var lunLeapMonth, lunMonthDay;
+    var i, lunIndex;
+    var solMonthDay = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    
+    if (year < 1800 || year > 2101) {
+        alert('1800년부터 2101년까지만 지원합니다');
+        return;
+    }
+    
+    if (year >= 2080) {
+        
+        solYear = 2080;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 2079;
+        lunMonth = 12;
+        lunDay = 10;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
+    }
+    else if (year >= 2060) {
+        
+        solYear = 2060;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 2059;
+        lunMonth = 11;
+        lunDay = 28;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
+    }
+    else if (year >= 2040) {
+        
+        solYear = 2040;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 2039;
+        lunMonth = 11;
+        lunDay = 17;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 29; 
+    }
+    else if (year >= 2020) {
+        
+        solYear = 2020;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 2019;
+        lunMonth = 12;
+        lunDay = 7;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
+    }
+    else if (year >= 2000) {
+        
+        solYear = 2000;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 1999;
+        lunMonth = 11;
+        lunDay = 25;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
+    }
+    else if (year >= 1980) {
+        
+        solYear = 1980;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 1979;
+        lunMonth = 11;
+        lunDay = 14;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
+    }
+    else if (year >= 1960) {
+        
+        solYear = 1960;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 1959;
+        lunMonth = 12;
+        lunDay = 3;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 29; 
+    }
+    else if (year >= 1940) {
+        
+        solYear = 1940;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 1939;
+        lunMonth = 11;
+        lunDay = 22;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 29; 
+    }
+    else if (year >= 1920) {
+        
+        solYear = 1920;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 1919;
+        lunMonth = 11;
+        lunDay = 11;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
+    }
+    else if (year >= 1900) {
+        
+        solYear = 1900;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 1899;
+        lunMonth = 12;
+        lunDay = 1;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 28; 
+        lunMonthDay = 30; 
+    }
+    else if (year >= 1880) {
+        
+        solYear = 1880;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 1879;
+        lunMonth = 11;
+        lunDay = 20;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
+    }
+    else if (year >= 1860) {
+        
+        solYear = 1860;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 1859;
+        lunMonth = 12;
+        lunDay = 9;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
+    }
+    else if (year >= 1840) {
+        
+        solYear = 1840;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 1839;
+        lunMonth = 11;
+        lunDay = 27;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
+    }
+    else if (year >= 1820) {
+        
+        solYear = 1820;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 1819;
+        lunMonth = 11;
+        lunDay = 16;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
+    }
+    else if (year >= 1800) {
+        
+        solYear = 1800;
+        solMonth = 1;
+        solDay = 1;
+        lunYear = 1799;
+        lunMonth = 12;
+        lunDay = 7;
+        lunLeapMonth = 0;
+        solMonthDay[1] = 28; 
+        lunMonthDay = 30; 
+    }
+    lunIndex = lunYear - 1799;
+    while (true) {
+        if (type == 1 &&
+         year == solYear &&
+         month == solMonth &&
+         day == solDay) {
+            return new myDate(lunYear, lunMonth, lunDay, lunLeapMonth);
+        }
+        else if (type == 2 &&
+          year == lunYear &&
+          month == lunMonth &&
+          day == lunDay &&
+          leapmonth == lunLeapMonth) {
+            return new myDate(solYear, solMonth, solDay, 0);
+        }
+        
+        if (solMonth == 12 && solDay == 31) {
+            solYear++;
+            solMonth = 1;
+            solDay = 1;
+            
+            if (solYear % 400 == 0)
+                solMonthDay[1] = 29;
+            else if (solYear % 100 == 0)
+                solMonthDay[1] = 28;
+            else if (solYear % 4 == 0)
+                solMonthDay[1] = 29;
+            else
+                solMonthDay[1] = 28;
+        }
+        else if (solMonthDay[solMonth - 1] == solDay) {
+            solMonth++;
+            solDay = 1;
+        }
+        else
+            solDay++;
+        
+        if (lunMonth == 12 &&
+         ((lunarMonthTable[lunIndex][lunMonth - 1] == 1 && lunDay == 29) ||
+         (lunarMonthTable[lunIndex][lunMonth - 1] == 2 && lunDay == 30))) {
+            lunYear++;
+            lunMonth = 1;
+            lunDay = 1;
+            if (lunYear > 2101) {
+                alert("입력하신 날 또는 달은 없습니다. 다시 입력하시기 바랍니다.");
+                break;
+            }
+            lunIndex = lunYear - 1799;
+            if (lunarMonthTable[lunIndex][lunMonth - 1] == 1)
+                lunMonthDay = 29;
+            else if (lunarMonthTable[lunIndex][lunMonth - 1] == 2)
+                lunMonthDay = 30;
+        }
+        else if (lunDay == lunMonthDay) {
+            if (lunarMonthTable[lunIndex][lunMonth - 1] >= 3
+             && lunLeapMonth == 0) {
+                lunDay = 1;
+                lunLeapMonth = 1;
+            }
+            else {
+                lunMonth++;
+                lunDay = 1;
+                lunLeapMonth = 0;
+            }
+            if (lunarMonthTable[lunIndex][lunMonth - 1] == 1)
+                lunMonthDay = 29;
+            else if (lunarMonthTable[lunIndex][lunMonth - 1] == 2)
+                lunMonthDay = 30;
+            else if (lunarMonthTable[lunIndex][lunMonth - 1] == 3)
+                lunMonthDay = 29;
+            else if (lunarMonthTable[lunIndex][lunMonth - 1] == 4 &&
+              lunLeapMonth == 0)
+                lunMonthDay = 29;
+            else if (lunarMonthTable[lunIndex][lunMonth - 1] == 4 &&
+              lunLeapMonth == 1)
+                lunMonthDay = 29;
+            else if (lunarMonthTable[lunIndex][lunMonth - 1] == 5 &&
+              lunLeapMonth == 0)
+                lunMonthDay = 30;
+            else if (lunarMonthTable[lunIndex][lunMonth - 1] == 5 &&
+              lunLeapMonth == 1)
+                lunMonthDay = 29;
+            else if (lunarMonthTable[lunIndex][lunMonth - 1] == 6)
+                lunMonthDay = 30;
+        }
+        else
+            lunDay++;
+    }
+}
+
+// 1800 ~ 2101까지의 음력을 저장한 테이블 => 불규칙적인 음력 날짜를 표시하기 위함
+var lunarMonthTable = [
+[1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2],
+[2, 1, 2, 5, 2, 1, 2, 1, 2, 1, 2, 1],
+[1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2], 
+[1, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1],
+[2, 3, 2, 1, 2, 1, 2, 2, 1, 2, 2, 1],
+[2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2],
+[1, 2, 1, 2, 1, 3, 2, 1, 2, 2, 2, 1],
+[2, 2, 1, 2, 1, 1, 1, 2, 1, 2, 2, 1],
+[2, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],
+[1, 2, 2, 1, 5, 2, 1, 2, 1, 1, 2, 1],
+[2, 2, 1, 2, 2, 1, 2, 1, 2, 1, 1, 2],
+[1, 2, 1, 2, 2, 1, 2, 2, 1, 2, 1, 2],
+[1, 1, 5, 2, 1, 2, 2, 1, 2, 2, 1, 2], 
+[1, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 1],
+[2, 1, 2, 1, 1, 1, 2, 1, 2, 2, 2, 1],
+[2, 5, 2, 1, 1, 1, 2, 1, 2, 2, 1, 2],
+[2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2],
+[2, 2, 1, 2, 1, 5, 1, 2, 1, 2, 1, 2],
+[2, 1, 2, 2, 1, 2, 1, 2, 1, 1, 2, 1],
+[2, 1, 2, 2, 1, 2, 2, 1, 2, 1, 1, 2],
+[1, 2, 1, 5, 2, 2, 1, 2, 2, 1, 2, 1],
+[1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2],
+[1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2], 
+[2, 1, 5, 1, 1, 2, 1, 2, 2, 1, 2, 2],
+[2, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 2],
+[2, 1, 2, 1, 2, 1, 4, 1, 2, 1, 2, 2],
+[2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
+[2, 1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1],
+[2, 1, 2, 2, 4, 1, 2, 1, 2, 1, 2, 1],
+[2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],
+[1, 1, 2, 3, 2, 1, 2, 2, 1, 2, 2, 2],
+[1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2], 
+[1, 2, 1, 2, 1, 1, 2, 1, 5, 2, 2, 2],
+[1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
+[1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
+[1, 2, 2, 1, 2, 5, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1],
+[2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2],
+[1, 2, 1, 5, 1, 2, 2, 1, 2, 2, 1, 2],
+[1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],
+[2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2],
+[1, 2, 4, 1, 1, 2, 1, 2, 1, 2, 2, 1],   
+[2, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 1],
+[2, 2, 2, 1, 2, 1, 4, 1, 2, 1, 2, 1],
+[2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1],
+[2, 1, 2, 1, 5, 2, 1, 2, 2, 1, 2, 1],
+[2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2],
+[1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],
+[2, 1, 2, 3, 2, 1, 2, 1, 2, 1, 2, 2],
+[2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2],
+[2, 2, 1, 2, 1, 1, 2, 3, 2, 1, 2, 2],   
+[2, 1, 2, 2, 1, 1, 2, 1, 2, 1, 1, 2],
+[2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 1, 2, 5, 2, 1, 2, 1, 2],
+[1, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2, 1],
+[2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2],
+[1, 2, 1, 1, 5, 2, 1, 2, 1, 2, 2, 2],
+[1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2],
+[2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],
+[2, 1, 6, 1, 1, 2, 1, 1, 2, 1, 2, 2],
+[1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2],   
+[2, 1, 2, 1, 2, 2, 1, 5, 2, 1, 1, 2],
+[1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2],
+[1, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 1],
+[2, 1, 1, 2, 4, 1, 2, 2, 1, 2, 2, 1],
+[2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2],
+[1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2],
+[1, 2, 2, 3, 2, 1, 1, 2, 1, 2, 2, 1],
+[2, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1],
+[2, 2, 2, 1, 2, 1, 2, 1, 1, 5, 2, 1],
+[2, 2, 1, 2, 2, 1, 2, 1, 2, 1, 1, 2],   
+[1, 2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2],
+[1, 1, 2, 1, 2, 4, 2, 1, 2, 2, 1, 2],
+[1, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 1],
+[2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1],
+[2, 2, 1, 1, 5, 1, 2, 1, 2, 2, 1, 2],
+[2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2],
+[2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1],
+[2, 2, 4, 2, 1, 2, 1, 1, 2, 1, 2, 1],
+[2, 1, 2, 2, 1, 2, 2, 1, 2, 1, 1, 2],
+[1, 2, 1, 2, 1, 2, 5, 2, 2, 1, 2, 1],   
+[1, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],
+[1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2],
+[2, 1, 1, 2, 3, 2, 1, 2, 2, 1, 2, 2],
+[2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
+[2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
+[2, 2, 1, 5, 2, 1, 1, 2, 1, 2, 1, 2],
+[2, 1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1],
+[2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+[1, 5, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],   
+[1, 1, 2, 1, 1, 5, 2, 2, 1, 2, 2, 2],
+[1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2],
+[1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
+[2, 1, 2, 1, 5, 1, 2, 1, 2, 1, 2, 1],
+[2, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
+[1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+[2, 1, 5, 2, 2, 1, 2, 1, 2, 1, 2, 1],
+[2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2],
+[1, 2, 1, 1, 2, 1, 2, 5, 2, 2, 1, 2],
+[1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],   
+[2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2],
+[1, 2, 1, 2, 3, 2, 1, 1, 2, 2, 1, 2],
+[2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1],
+[2, 2, 1, 2, 2, 1, 1, 2, 1, 2, 1, 2],
+[1, 2, 2, 4, 1, 2, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1],
+[2, 1, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2],
+[1, 5, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2],
+[1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],
+[2, 1, 2, 1, 1, 5, 1, 2, 2, 1, 2, 2],   
+[2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2],
+[2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2],
+[2, 2, 1, 2, 5, 1, 2, 1, 2, 1, 1, 2],
+[2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1],
+[2, 3, 2, 1, 2, 2, 1, 2, 2, 1, 2, 1],
+[2, 1, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],
+[1, 2, 1, 1, 2, 1, 5, 2, 1, 2, 2, 2],
+[1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2],
+[2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],   
+[2, 1, 2, 2, 3, 2, 1, 1, 2, 1, 2, 2],
+[1, 2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2],
+[2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 1],
+[2, 1, 2, 5, 2, 1, 2, 2, 1, 2, 1, 2],
+[1, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 1],
+[2, 1, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],
+[1, 5, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2],
+[1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2],
+[1, 2, 2, 1, 1, 5, 1, 2, 1, 2, 2, 1],
+[2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1],   
+[2, 2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2],
+[1, 2, 2, 1, 6, 1, 2, 1, 2, 1, 1, 2],
+[1, 2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2],
+[1, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 1],
+[2, 1, 4, 1, 1, 2, 2, 1, 2, 2, 2, 1],
+[2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1],
+[2, 2, 1, 1, 2, 1, 4, 1, 2, 2, 1, 2],
+[2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2],
+[2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1],
+[2, 2, 1, 2, 2, 4, 1, 1, 2, 1, 2, 1],   
+[2, 1, 2, 2, 1, 2, 2, 1, 1, 2, 1, 2],
+[1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1],
+[2, 1, 2, 4, 1, 2, 1, 2, 2, 1, 2, 2],
+[1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2],
+[2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2],
+[2, 5, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
+[2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
+[2, 1, 2, 2, 1, 2, 3, 2, 1, 2, 1, 2],
+[1, 2, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1],
+[2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],   
+[1, 2, 1, 2, 4, 1, 2, 2, 1, 2, 1, 2],
+[1, 2, 1, 1, 2, 2, 1, 2, 2, 1, 2, 2],
+[1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2],
+[2, 1, 4, 1, 1, 2, 1, 2, 1, 2, 2, 2],
+[1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
+[2, 1, 2, 1, 2, 1, 1, 5, 2, 1, 2, 2],
+[1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
+[1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+[2, 1, 2, 1, 2, 5, 2, 1, 2, 1, 2, 1],
+[2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2],   
+[1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1],
+[2, 1, 2, 3, 2, 1, 2, 1, 2, 2, 2, 1],
+[2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2],
+[1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 2],
+[1, 2, 5, 2, 1, 1, 2, 1, 1, 2, 2, 1],
+[2, 2, 1, 2, 2, 1, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 2, 1, 5, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1],
+[2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2],
+[1, 2, 1, 1, 5, 2, 1, 2, 2, 2, 1, 2],   
+[1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],
+[2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2],
+[2, 2, 1, 5, 1, 2, 1, 1, 2, 2, 1, 2],
+[2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2],
+[2, 2, 1, 2, 1, 2, 1, 5, 1, 2, 1, 2],
+[2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1],
+[2, 1, 2, 2, 1, 2, 2, 1, 2, 1, 2, 1],
+[2, 1, 1, 2, 1, 6, 1, 2, 2, 1, 2, 1],
+[2, 1, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],
+[1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2],   
+[2, 1, 2, 3, 2, 1, 1, 2, 1, 2, 2, 2],
+[2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],
+[2, 1, 2, 2, 1, 1, 2, 1, 1, 5, 2, 2],
+[1, 2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2],
+[1, 2, 2, 1, 2, 2, 1, 2, 1, 2, 1, 1],
+[2, 1, 2, 1, 2, 5, 2, 2, 1, 2, 1, 2],
+[1, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 1],
+[2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2],
+[1, 2, 1, 1, 5, 1, 2, 2, 1, 2, 2, 2],
+[1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2],   
+[1, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],
+[1, 2, 5, 2, 1, 2, 1, 1, 2, 1, 2, 1],
+[2, 2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2],
+[1, 2, 2, 1, 2, 1, 2, 5, 2, 1, 1, 2],
+[1, 2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 1],
+[2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 1],
+[2, 1, 1, 2, 3, 2, 2, 1, 2, 2, 2, 1],
+[2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1],
+[2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1],
+[2, 2, 1, 5, 2, 1, 1, 2, 1, 2, 1, 2],   
+[2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1],
+[2, 2, 1, 2, 2, 1, 2, 1, 1, 2, 1, 2],
+[1, 5, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1],
+[2, 1, 2, 1, 2, 1, 5, 2, 2, 1, 2, 2],
+[1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2],
+[2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2],
+[2, 2, 1, 1, 5, 1, 2, 1, 2, 1, 2, 2],
+[2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
+[2, 1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1],   
+[2, 1, 2, 5, 2, 2, 1, 1, 2, 1, 2, 1],
+[2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 1, 2, 1, 2, 5, 2, 1, 2],
+[1, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2, 1],
+[2, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2],
+[1, 2, 1, 2, 4, 2, 1, 2, 1, 2, 2, 2],
+[1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
+[2, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2],
+[2, 1, 2, 5, 2, 1, 1, 2, 1, 2, 1, 2],
+[1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],   
+[2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2],
+[1, 5, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2],
+[1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1],
+[2, 1, 2, 1, 1, 5, 2, 1, 2, 2, 2, 1],
+[2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2],
+[1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1],
+[2, 2, 2, 1, 5, 1, 2, 1, 1, 2, 2, 1],
+[2, 2, 1, 2, 2, 1, 1, 2, 1, 1, 2, 2],
+[1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1],
+[2, 1, 5, 2, 1, 2, 2, 1, 2, 1, 2, 1],   
+[2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2],
+[1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 5, 2],
+[1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 1, 2],
+[2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2],
+[2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 2],
+[2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2],
+[2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1],
+[2, 2, 1, 2, 5, 2, 1, 2, 1, 2, 1, 1],
+[2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1],
+[2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2],   
+[1, 5, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],
+[1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2],
+[2, 1, 2, 1, 1, 2, 3, 2, 1, 2, 2, 2],
+[2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],
+[2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2],
+[2, 1, 2, 2, 4, 1, 2, 1, 1, 2, 1, 2],
+[1, 2, 2, 1, 2, 2, 1, 2, 1, 1, 2, 1],
+[2, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2, 1],
+[1, 2, 4, 1, 2, 1, 2, 2, 1, 2, 2, 1],
+[2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2],   
+[1, 2, 1, 1, 2, 1, 1, 5, 2, 2, 2, 2],
+[1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2],
+[1, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],
+[1, 2, 2, 1, 2, 4, 1, 1, 2, 1, 2, 1],
+[2, 2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2],
+[1, 2, 2, 1, 2, 1, 2, 2, 1, 1, 2, 1],
+[2, 1, 2, 4, 2, 1, 2, 1, 2, 2, 1, 1],
+[2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 1],
+[2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 1],
+[2, 2, 3, 2, 1, 1, 2, 1, 2, 2, 2, 1],   
+[2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1],
+[2, 2, 1, 2, 1, 2, 3, 2, 1, 2, 1, 2],
+[2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1],
+[2, 2, 1, 2, 2, 1, 2, 1, 1, 2, 1, 2],
+[1, 2, 1, 2, 5, 2, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1],
+[2, 1, 2, 1, 1, 2, 2, 1, 2, 2, 1, 2],
+[1, 2, 1, 5, 1, 2, 1, 2, 2, 2, 1, 2],
+[2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2],
+[2, 1, 2, 1, 2, 1, 1, 5, 2, 1, 2, 2],   
+[2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
+[2, 1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1],
+[2, 1, 2, 2, 1, 5, 2, 1, 2, 1, 2, 1],
+[2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 1],
+[2, 1, 2, 3, 2, 1, 2, 2, 2, 1, 2, 1],
+[2, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2],
+[1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
+[2, 1, 5, 2, 1, 1, 2, 1, 2, 1, 2, 2],
+[1, 2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2],   
+[1, 2, 2, 2, 1, 2, 3, 2, 1, 1, 2, 2],
+[1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+[2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2],
+[1, 2, 1, 1, 6, 1, 2, 2, 1, 2, 1, 2],
+[1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1],
+[2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2],
+[1, 2, 1, 5, 1, 2, 1, 1, 2, 2, 2, 1],
+[2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1],
+[2, 2, 2, 1, 2, 1, 1, 5, 1, 2, 2, 1],
+[2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1],   
+[2, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1],
+[1, 2, 2, 1, 2, 4, 2, 1, 2, 1, 2, 1],
+[2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2],
+[1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],
+[2, 1, 2, 3, 2, 1, 1, 2, 2, 2, 1, 2],
+[2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2],
+[2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2],
+[2, 5, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2],
+[2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1],
+[2, 2, 1, 2, 2, 1, 5, 2, 1, 1, 2, 1]];
+
+function myDate(year, month, day, leapMonth) {
+    this.year = year;
+    this.month = month;
+    this.day = day;
+    this.leapMonth = leapMonth;
 }

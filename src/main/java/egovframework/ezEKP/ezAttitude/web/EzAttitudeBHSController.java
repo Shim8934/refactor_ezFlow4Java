@@ -176,9 +176,8 @@ public class EzAttitudeBHSController {
 	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeUserMain started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userOffset = userInfo.getOffset().split("\\|")[1];
 		
-		model.addAttribute("userOffset", userOffset);
+		model.addAttribute("userInfo", userInfo);
 		
 		LOGGER.debug("/ezAttitude/attitudeUserMain ended");
 		return "/ezAttitude/attitudeUserMain";

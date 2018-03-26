@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
 		<link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+		<script type="text/javascript" src="/js/Holiday.js"></script>  
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -26,6 +27,7 @@
 		</style>
 		<script>
 			var pMode = "";
+			var uselang = "<c:out value='${userInfo.lang}'/>";
 			
 			$(function(){
 				$(".td_day").on('dblclick', 'td', function(){
@@ -35,8 +37,10 @@
 			})
 			
 			window.onload = function() {
+				select_memorialDays(uselang); // 공식 휴일 설정 => 언어에 따라 memorialDays에 변수가 담김
+				
 				getAttiTypeList();
-				getAttitudeMainList();
+				CalendarView("attiCalendar");
 			}
 			
 			/**
@@ -83,7 +87,6 @@
 						tdHeight = tdHeight + (calendarHeight.substr(0, calendarHeight.length - 2) - statisHeight.substr(0, statisHeight.length - 2));
 						$("#attiStatis tr:eq(0) th").css("height", tdHeight + "px");
 					}
-					getAttiStatisList();
 			}
 			
 			/**
@@ -100,6 +103,7 @@
 						date : pDate
 					},
 					success : function(result) {
+						$("#attiStatis td").text("0일");
 						for (var i = 0; i < result.length; i++) {
 							$("#" + result[i].typeId).text(result[i].sumDate + "일");
 						}
@@ -209,14 +213,9 @@
 			</tr>
 		</table>
 		
-		<!-- 
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		 -->
 	</body>
-	<script>
-		CalendarView("attiCalendar");
-	</script>
 </html>
