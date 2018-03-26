@@ -241,6 +241,13 @@
 	            } catch (e) {
 	            }
 	        }
+	        
+			function checkEvent(event) {
+				/* 2018-03-26 쿠쿠닥스 keyEvent 에서 keyup 안나와서 keydown으로 */
+				if (event.type== "mouseup" || event.type == "keydown") {
+					CellCheckField();
+				}
+			}
 		</script> 
 	</head>
 	<body>
@@ -292,7 +299,9 @@
 	            loadingImageURL : '/js/ezEditor/kukudocsEditor/images/load.gif',
 	            errorImageURL : '/js/ezEditor/kukudocsEditor/images/error.png',
 	            imageUploadURL : imageUploadURL,
-	            Editor_Complete : Editor_Complete
+	            Editor_Complete : Editor_Complete,
+	            Mouse_event : checkEvent,
+	            Key_event : checkEvent
 	        });
 			
 		</script>
