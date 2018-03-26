@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.vo;
 
 import java.util.List;
-import java.util.Map;
 
 public class FolderSimpleVO {
 	private String folderId;
@@ -9,6 +8,7 @@ public class FolderSimpleVO {
 	private String folderName2;
 	private int hasSubFolder;
 	private int folderLevel;
+	private String ownerId;
 	private List<FolderSimpleVO> listSubFolders;
 
 	public String getFolderId() {
@@ -58,5 +58,13 @@ public class FolderSimpleVO {
 	public void setFolderName2(String folderName2) {
 		this.folderName2 = folderName2;
 	}
-	
+
+	public String getOwnerId() {
+		return ownerId;
+	}
+
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
+	}
+
 }

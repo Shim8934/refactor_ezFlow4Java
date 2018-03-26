@@ -487,6 +487,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("companyId", companyId)
 										.queryParam("folderId", folderId)
 										.queryParam("type", type)
+										.queryParam("primary", user.getLang())
 										.queryParam("offset", user.getOffset());
 		
 		RestTemplate rest             = new RestTemplate();
@@ -672,6 +673,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("fileId", fileId)
 										.queryParam("type", type)
 										.queryParam("mode", mode)
+										.queryParam("primary", user.getLang())
 										.queryParam("offset", user.getOffset());
 		
 		RestTemplate rest             = new RestTemplate();
@@ -811,6 +813,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("deptList", String.join(",", deptsList))
 										.queryParam("offset", user.getOffset())
+										.queryParam("primary", user.getLang())
 										.queryParam("userId", user.getId());
 		
 		RestTemplate rest             = new RestTemplate();

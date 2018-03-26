@@ -10,7 +10,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.io.IOUtils;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
@@ -57,6 +60,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	
 	@Autowired
 	private EzCommonService ezCommonService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderServiceImpl.class);
 	
@@ -430,12 +436,54 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public List<FolderSimpleVO> getAllSimpleDeptFolder(String companyId, int tenantId) throws Exception {
+	public List<FolderSimpleVO> getAllSimpleDeptFolder(String companyId, LoginVO userInfo) throws Exception {
+		int tenantId           = userInfo.getTenantId();
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyId",  companyId);
 		map.put("tenantId",   tenantId);
 		
-		return ezWebFolderDAO.getAllSimpleDeptFolder(map);
+		List<FolderSimpleVO> listFolders = ezWebFolderDAO.getAllSimpleDeptFolder(map);
+		List<OrganDeptVO> listDepts      = getAllDepartments(companyId, userInfo.getPrimary(), tenantId);
+		
+		if (listFolders.size() < listDepts.size()) {
+			Set<String> deptIds                   = listFolders.stream().map(FolderSimpleVO::getOwnerId).collect(Collectors.toSet());
+			List<OrganDeptVO> listNotPresentDepts = listDepts.stream().filter(e -> !deptIds.contains(e.getCn())).collect(Collectors.toList());
+			String userId                         = userInfo.getId();
+			SimpleDateFormat formatter            = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date                             = new Date();
+			String timeUTC                        = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+			
+			for (OrganDeptVO dept : listNotPresentDepts) {
+				FolderVO folder = new FolderVO();
+				String folderId = ezWebFolderAdminService.getMaxFolderID(tenantId);
+				
+				folder.setFolderId(folderId);
+				folder.setFolderLevel(0);
+				folder.setFolderName1(dept.getDisplayName1());
+				folder.setFolderName2(dept.getDisplayName2());
+				folder.setFolderPath("|" + folderId + "|");
+				folder.setFolderStep(0);
+				folder.setFolderType("D");
+				folder.setFolderUpper("root");
+				folder.setOwnerId(dept.getCn());
+				folder.setUseStatus("Y");
+				folder.setUpdateId(userId);
+				folder.setCreateName1(userInfo.getDisplayName1());
+				folder.setCreateName2(userInfo.getDisplayName2());
+				folder.setTenantId(tenantId);
+				folder.setCompanyId(companyId);
+				folder.setCreateId(userId);
+				folder.setCreateDate(timeUTC);
+				folder.setUpdateDate(timeUTC);
+				
+				ezWebFolderAdminService.insertFolder2(folder);
+				ezWebFolderAdminService.insertFolderUser(ezWebFolderAdminService.getMaxFolderUserSeq(tenantId), dept.getCn(), "dept", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
+			}
+			
+			listFolders = ezWebFolderDAO.getAllSimpleDeptFolder(map);
+		}
+		
+		return listFolders;
 	}
 
 	@Override
@@ -470,12 +518,46 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public FolderSimpleVO getCompanySimpleFolder(String companyID, int tenantId) throws Exception {
+	public FolderSimpleVO getCompanySimpleFolder(String companyID, LoginVO userInfo) throws Exception {
+		int tenantId           = userInfo.getTenantId();
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyId",  companyID);
 		map.put("tenantId",   tenantId);
 		
-		return ezWebFolderDAO.getCompanySimpleFolder(map);
+		FolderSimpleVO companyFolder = ezWebFolderDAO.getCompanySimpleFolder(map);
+		
+		if (companyFolder == null) {
+			OrganDeptVO company        = ezOrganService.getDeptInfo(companyID, userInfo.getPrimary(), tenantId);
+			FolderVO folder            = new FolderVO();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date                  = new Date();
+			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+			String folderId            = ezWebFolderAdminService.getMaxFolderID(tenantId);
+			
+			folder.setFolderId(folderId);
+			folder.setFolderLevel(0);
+			folder.setFolderName1(company.getDisplayName1());
+			folder.setFolderName2(company.getDisplayName2());
+			folder.setFolderPath("|" + folderId + "|");
+			folder.setFolderStep(0);
+			folder.setFolderType("C");
+			folder.setFolderUpper("root");
+			folder.setOwnerId(company.getCn());
+			folder.setUseStatus("Y");
+			folder.setUpdateId(userInfo.getId());
+			folder.setCreateName1(userInfo.getDisplayName1());
+			folder.setCreateName2(userInfo.getDisplayName2());
+			folder.setTenantId(tenantId);
+			folder.setCompanyId(company.getCn());
+			folder.setCreateId(userInfo.getId());
+			folder.setCreateDate(timeUTC);
+			folder.setUpdateDate(timeUTC);
+			
+			ezWebFolderAdminService.insertFolder2(folder);
+			companyFolder = ezWebFolderDAO.getCompanySimpleFolder(map);
+		}
+		
+		return companyFolder;
 	}
 
 	@Override

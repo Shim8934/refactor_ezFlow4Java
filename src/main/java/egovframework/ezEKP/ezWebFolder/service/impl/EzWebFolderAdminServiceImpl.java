@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
@@ -36,6 +38,9 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	
 	@Autowired
 	private EzWebFolderService ezWebFolderService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderAdminServiceImpl.class);
 	
@@ -390,10 +395,12 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		insertFolderUser(getMaxFolderUserSeq(tenantId), userId, "user", folderId, userId, timeUTC, folder.getCompanyId(), tenantId);
 	}
 	
-	public void updateSelectedDeptsForChief(List<String> deptsList, String userId, String offset, int tenantId) throws Exception {
+	public void updateSelectedDeptsForChief(List<String> deptsList, LoginVO userInfo) throws Exception {
+		int tenantId               = userInfo.getTenantId();
+		String userId              = userInfo.getId();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
-		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
 		
 		//Delete all folder users
 		deleteFolderUsersOfChief(userId, tenantId);
@@ -401,7 +408,37 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		if (deptsList != null && deptsList.size() > 0) {
 			//Add new dept list
 			for (String deptId : deptsList) {
-				FolderVO folderVO = ezWebFolderService.getRootFolderId(deptId, "D", offset, tenantId);
+				FolderVO folderVO = ezWebFolderService.getRootFolderId(deptId, "D", userInfo.getOffset(), tenantId);
+						
+				if (folderVO == null) {
+					OrganDeptVO dept = ezOrganService.getDeptInfo(deptId, userInfo.getPrimary(), tenantId);
+					folderVO         = new FolderVO();
+					String folderId  = getMaxFolderID(tenantId);
+					
+					folderVO.setFolderId(folderId);
+					folderVO.setFolderLevel(0);
+					folderVO.setFolderName1(dept.getDisplayName1());
+					folderVO.setFolderName2(dept.getDisplayName2());
+					folderVO.setFolderPath("|" + folderId + "|");
+					folderVO.setFolderStep(0);
+					folderVO.setFolderType("D");
+					folderVO.setFolderUpper("root");
+					folderVO.setOwnerId(deptId);
+					folderVO.setUseStatus("Y");
+					folderVO.setUpdateId(userId);
+					folderVO.setCreateName1(userInfo.getDisplayName1());
+					folderVO.setCreateName2(userInfo.getDisplayName2());
+					folderVO.setTenantId(tenantId);
+					folderVO.setCompanyId(dept.getExtensionAttribute2());
+					folderVO.setCreateId(userId);
+					folderVO.setCreateDate(timeUTC);
+					folderVO.setUpdateDate(timeUTC);
+					
+					//Insert folder
+					insertFolder(folderVO);
+					insertFolderUser(getMaxFolderUserSeq(tenantId), dept.getCn(), "dept", folderId, userId, timeUTC, folderVO.getCompanyId(), tenantId);
+				}
+				
 				insertFolderUser(getMaxFolderUserSeq(tenantId), userId, "chief", folderVO.getFolderId(), userId, timeUTC, folderVO.getCompanyId(), tenantId);
 			}
 		}
