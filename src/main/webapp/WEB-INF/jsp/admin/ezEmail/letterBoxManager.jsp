@@ -12,6 +12,7 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script src="/js/dist/jstree.min.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterBoxTree.js"></script>
+	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
 	    
 	</head>
 	<body style="height: 95%; overflow:hidden;">

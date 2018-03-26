@@ -157,8 +157,10 @@
 			// 편지지 추가, 수정 btn 클릭 시     btn -> this, type -> 추가=add, modify일때 type 안받음
 			function letterEditPopUp(btn, type) {
 				var popUpType = type == "add" ? type : "modify"; // 클릭된 버튼 구분(추가 or 수정)
-				//var letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
-				var letterBoxNo = $(btn).parents("li").attr("data-letterboxno"); // 편지지함 no
+				var addBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
+				var modifyBoxNo = $(btn).parents("li").attr("data-letterboxno"); // 편지지함 no
+				
+				var letterBoxNo = type == "add" ? addBoxNo : modifyBoxNo;
 				var letterNo = type == "add" ? -1 : $(btn).parents("li").attr("data-letterno");
 				
 				var url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&popUpType=" + popUpType + "&letterNo=" + letterNo;
@@ -171,8 +173,7 @@
 				
 				if(deleteChk) {
 					var letterId = $(this).parent("li").attr("data-letterId");
-					//var letterBoxNo = $(this).parents(".boxNo").attr("data-boxNo");
-					var letterBoxNo = $(btn).parents("li").attr("data-letterboxno"); // 편지지함 no
+					var letterBoxNo = $(this).parents("li").attr("data-letterboxno"); // 편지지함 no
 					var letterNo = $(this).parent("li").attr("data-letterNo");
 					
 					$.ajax({

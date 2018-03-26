@@ -234,40 +234,6 @@ function deleteLetterBox() {
 	
 }
 
-//예외처리  strChk(문자, 특수문자 허용여부, 길이)
-function strChk(str, speChar, strLen) {
-	// 공백, 특수문자, 길이
-	var strTrim = str.trim();
-	var msg = "";
-	var reJson = {};
-	
-	if (strTrim !== "") {
-		// true : 특수문자허용
-		if (!speChar) { 
-			var speCha = /[`~!<>@#$%^&*|\\\"\';:\/?]/gi;
-			
-			if (speCha.test(strTrim)) {
-				msg = "특수문자는 입력이 불가능합니다.";
-			}	
-		}
-		
-		// 길이
-		if (typeof strLen != "undefined") {
-			if (strTrim.length >= strLen) {
-				msg = strLen + "자 이하로 입력 가능합니다.";
-			} 
-		}
-		
-	}else {
-		msg = "내용을 입력해주세요.";
-	}
-	
-	reJson.str = strTrim;
-	reJson.msg = msg;
-	
-	return reJson;
-}
-
 // '확인' 버튼 클릭 시, update로 할것인지 insert로 할것인지
 function submitClick() {
 	var formData = $("#myForm").serialize();
