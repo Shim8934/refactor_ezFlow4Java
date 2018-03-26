@@ -1,4 +1,4 @@
-﻿var wTable;
+﻿﻿var wTable;
 var xmlhttp;
 var delFlag = false;
 
@@ -1409,6 +1409,8 @@ function MonthlyViewHeader_onMouseOut(pThis) {
 //자원데이터에 마우스 클릭시
 // 보기형태 파라미터 주가
 // 승인된 자원이면 모두 같은 예약현황을 표시하도록 추가
+var calendarOk = document.getElementsByClassName("calendar_data_ok");
+var calendarNo = document.getElementsByClassName("calendar_data_no");
 function Schedule_onMouseClick(event, type) {
 
     if (event.style.backgroundColor == "") {
@@ -1447,12 +1449,19 @@ function Schedule_onMouseClick(event, type) {
                 }
             }
         } else {
-            //주보기 시 - 같은 num면 배경색을 보두 바꾼다. 
-            //주보기 시 하루종일 일정은 D로 생성함.
-            var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("calendar_data_ok") : document.querySelectorAll('.calendar_data_ok'); //주에 표시된 승인된 자원들
+            //일보기 시 - 같은 num면 배경색을 보두 바꾼다. 
+            //일보기 시 하루종일 일정은 D로 생성함.
+            var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("calendar_data_ok") : document.querySelectorAll('.calendar_data_ok'); //일에 표시된 승인된 자원들
             var eventOwnerID = GetAttribute(event,"num");
+
             for (var i = 0; i < resDate.length; i++) {
                 var bgColor = "#F2FFEB";
+                
+                if (calendarOk != null){//일보기 일정에 마우스오버 시 색변경 수정
+                	calendarOk[i].style.backgroundColor = "#F2FFEB";
+                }else if (calendarNo != null){
+                	calendarNo[i].style.backgroundColor = "#FFEAEA";
+                }
 
                 //시간영역
                 var checkOwnerID = GetAttribute(resDate[i],"num");
@@ -1517,13 +1526,19 @@ function Schedule_onMouseClick(event, type) {
                 }
             }
         } else {
-            //주보기 시 - 같은 num면 배경색을 보두 바꾼다. 
-            //주보기 시 하루종일 일정은 D로 생성함.
-            var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("calendar_data_ok") : document.querySelectorAll('.calendar_data_ok'); //주에 표시된 모든 자원들
+            //일보기 시 - 같은 num면 배경색을 보두 바꾼다. 
+            //일보기 시 하루종일 일정은 D로 생성함.
+            var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("calendar_data_ok") : document.querySelectorAll('.calendar_data_ok'); //일에 표시된 모든 자원들
             var eventOwnerID = GetAttribute(event,"num");
+
             for (var i = 0; i < resDate.length; i++) {
                 var bgColor = "#F2FFEB";
-
+                
+                if (calendarOk != null){//일보기 일정에 마우스오버 시 색변경 수정
+                	calendarOk[i].style.backgroundColor = "#F2FFEB";
+                }else if (calendarNo != null){
+                	calendarNo[i].style.backgroundColor = "#FFEAEA";
+                }
                 //시간영역
                 var checkOwnerID = GetAttribute(resDate[i],"num");
                 if (eventOwnerID == checkOwnerID) {

@@ -191,6 +191,25 @@ public class IMAPAccess {
 		logger.debug("makeTopLevelFolders ended.");
 	}
 	
+	public List<String> getAllTopLevelFolderNames() {
+		List<String> topLevelFolderNames = new ArrayList<>();
+				
+		try {
+			Folder rootFolder = getStore().getDefaultFolder();
+			Folder[] folderList = rootFolder.list();
+			
+			for (Folder folder : folderList) {
+				String folderName = folder.getName();
+				
+				topLevelFolderNames.add(folderName);
+			}			
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		
+		return topLevelFolderNames;
+	}
+	
 	public List<Folder> getTopLevelFolders(boolean isSubscribe, boolean isUseDefaultFoldersForLangOnly) {
 		ArrayList<Folder> topLevelFolders = new ArrayList<Folder>();
 		

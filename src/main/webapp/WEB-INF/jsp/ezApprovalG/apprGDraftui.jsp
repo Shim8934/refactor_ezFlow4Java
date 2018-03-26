@@ -1446,6 +1446,12 @@
 		
 		            if ((btnSendDraftEnable == "false" && ListType != "21") && DraftFlag != "REDRAFT") {
 		                setFirstDrafterAuto();//저장된 결재선 없을때 기안자를 결재선에 등록
+		            } else {
+			             if (typeof (LastSignSN) == "undefined") { // 임시보관함에서의 기안>임시저장은 결재선을 수동으로 지정해준다 2018-03-23 천성준
+			            	var pAlertContent = "<spring:message code='ezApprovalG.t1485'/>";
+			                OpenAlertUI(pAlertContent, check_btnSendDraft);
+			                return;
+			            }
 		            }
 		        }        
 		        if (DraftFlag == "REDRAFT" && ListType == "21") {
