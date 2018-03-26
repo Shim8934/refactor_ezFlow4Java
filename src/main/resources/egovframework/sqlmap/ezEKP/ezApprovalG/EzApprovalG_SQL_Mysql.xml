@@ -7430,7 +7430,7 @@
 				</isEmpty>
 	</select>
 	
-<!-- 	<procedure id="EzApprovalG.getContDocList" parameterClass="Map" resultClass="ApprGDocListVO"> -->
+	<!-- 	<procedure id="EzApprovalG.getContDocList" parameterClass="Map" resultClass="ApprGDocListVO"> -->
 <!-- 		{CALL EZSP_GETCONTDOCLIST(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getContDocList" parameterClass="Map" resultClass="ApprGDocListVO">
@@ -11582,6 +11582,7 @@
 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 			
 	</select>
+
 <!-- 	<procedure id="EzApprovalG.getUncompleteDocCount" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZSP_GETUNCOMPLETEDOCCOUNT(#v_CABINETID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->

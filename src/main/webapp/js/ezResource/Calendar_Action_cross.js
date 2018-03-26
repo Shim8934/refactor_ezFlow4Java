@@ -1337,7 +1337,6 @@ function onmouse_over_today(td, event) {
 //일보기 마우스임팩트
 function onmouse_out_today(td) {
     td.style.backgroundColor = "rgba(237, 244, 253, 1)";
-
     hideTooltip();
 }
 //일보기 마우스임팩트
@@ -1402,12 +1401,15 @@ function showTooltip_MouseOver(obj, e) {
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
     tTh.setAttribute("scope", "col");
+    tTh.style.background = "#edf4fd";
+    tTh.style.border = "1px solid #d1ddec";
     setNodeText(tTh,GetAttribute(obj,"subject").split("&apos;").join("'"));
     tTr.appendChild(tTh);
     tTable.appendChild(tTr);
 
     var tTr = document.createElement("TR");
     var tTd = document.createElement("TD");
+    tTd.style.borderTop = "0px";
     tTd.style.backgroundColor = "white";
     tTd.className = "text";
     

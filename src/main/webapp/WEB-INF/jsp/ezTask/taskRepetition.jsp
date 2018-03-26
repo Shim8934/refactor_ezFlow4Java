@@ -457,11 +457,11 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="height:58px;">
+				<td style="height:60px;">
 					<div id='divRecurPatterns0' style="display:none;padding-left:5px;">
 						<input id="id0D1" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked>
 						<label for="txt_De" accesskey="V" style="vertical-align:middle;"><spring:message code='ezTask.t38' /><u>V</u>)&nbsp;
-						<input name="text" type="text" id="txt_De" style="Width:40px;" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3'>
+						<input name="text" type="text" id="txt_De" style="Width:40px;height:18px" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3'>
 						&nbsp;<spring:message code='ezTask.t39' /></label>
 						<br>
 						<input id="id0D2" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;">
