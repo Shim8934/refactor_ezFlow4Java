@@ -30,9 +30,9 @@
 			var uselang = "<c:out value='${userInfo.lang}'/>";
 			
 			$(function(){
-				$(".td_day").on('dblclick', 'td', function(){
+				$(document).on('dblclick', '.td_day td', function(){
 					pMode = "new";
-					attitudeInfo(this);
+					attitudeWrite(this);
 				})	
 			})
 			
@@ -40,7 +40,7 @@
 				select_memorialDays(uselang); // 공식 휴일 설정 => 언어에 따라 memorialDays에 변수가 담김
 				
 				getAttiTypeList();
-				CalendarView("attiCalendar");
+				getHolidayList();
 			}
 			
 			/**
@@ -112,6 +112,36 @@
 			}
 			
 			/**
+			* holiday 메소드
+			*/
+			function getHolidayList() {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getHolidayList.do",
+					data : {
+						
+					},
+					success : function(result) {
+						for (var i = 0; i < result.length; i++) {
+							if (result[i].isRepeat == 1) { //매년 반복되는 경우
+								memorialDays.push(new memorialDay(result[i].holidayName, result[i].holidayName2, 
+																  result[i].holidayDate.substring(5,7), result[i].holidayDate.substring(8,10),
+																  result[i].isSolar, result[i].isRest == 1 ? true : false));
+							} else if (result[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+								yearmemorialDays.push(new yearmemorialDay(result[i].holidayName, result[i].holidayName2,
+																		  result[i].holidayDate.substring(0,4), result[i].holidayDate.substring(5,7),
+																		  result[i].holidayDate.substring(8,10), result[i].isSolar,
+																		  result[i].isRest == 1 ? true : false));
+							}
+						}
+						CalendarView("attiCalendar");
+					}
+				})
+			}
+			
+			/**
 			* 근태 메소드
 			*/
 			function getAttitudeMainList() {
@@ -141,21 +171,20 @@
 						startDate = result[i].startDate.split(" ")[0];
 						endDate = result[i].endDate.split(" ")[0];
 						betweenDate = calDateRange(startDate, endDate);
-						
 						startDate = new Date(startDate);
+						
 						for (var j = 0; j <= betweenDate; j++) {
 							startDate.setDate(startDate.getDate() + ( j == 0 ? 0 : 1));
 							var tdAttrDay = startDate.getFullYear() + "-" + leadingZeros(startDate.getMonth() + 1, 2) + "-" + leadingZeros(startDate.getDate(),2);
-							
 							$("td[day=" + tdAttrDay + "]").find("table#TD_" + tdAttrDay + "_Value")
-														  .append("<tr><td ondblclick='attitudeInfo(this)'><img width='20px' height='20px' style='vertical-align:top; margin-right:3px;' src='"+ result[i].imgPath +"'/>" + result[i].typeName + " : " + result[i].region + "</td></tr>");
+														  .append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'><img width='20px' height='20px' style='vertical-align:top; margin-right:3px;' src='"+ result[i].imgPath +"'/>" + result[i].typeName + " : " + result[i].region + "</td></tr>");
 						}
 					} else if (result[i].dateType == '3') {
 						
 					} else {
 						startDate = result[i].startDate.split(" ")[0];
 						var startTime = result[i].startDate.split(" ")[1];
-						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td>" + result[i].typeName + " : " + startTime + "</td></tr>");
+						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + startTime + "</td></tr>");
 					}
 				}
 			}
@@ -184,11 +213,22 @@
 			
 			
 			/**
-			* 근태 더블클릭 이벤트
+			* 근태작성
 			*/
-			function attitudeInfo(obj) {
-				var win = window.open("/ezAttitude/attitudeWrite.do?mode=" + pMode , "", GetOpenWindowfeature(650, 580));
-				pMode = "";
+			function attitudeWrite(obj) {
+				var date = $(obj).attr("dispdate");
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attitudeWrite.do?date=" + date, "writeAttitude", GetOpenWindowfeature(650, 580));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/addAttitudeType.do", $("#ListCompany").val(),
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+	                
+	                if (typeof (rtnValue) != "undefined") {
+	                    company_change();
+	                }
+	            }
 			}
 			
 		</script>

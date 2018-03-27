@@ -26,8 +26,9 @@
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		
 		<script type="text/javascript">
+			var writerName = "${userInfo.displayName}";
 			var companyId = "${companyId}";
-			
+			var date = "${date}"
 			
 			window.onload = function () {
 				if (datetype == "1") {
@@ -55,14 +56,14 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
-				var uploadSDate = "2018-03-22 17:30:00";
+				var uploadSDate = date + " 17:30:00";
 				var sYear = uploadSDate.substring(0, 4);
 				var sMonth = uploadSDate.substring(5, 7);
 				var sDay = uploadSDate.substring(8, 10);
 				var sHour = uploadSDate.substring(11, 13);
 				var sMin = uploadSDate.substring(14, 16);
 							
-				var uploadEDate = "2018-03-22 18:00:00";
+				var uploadEDate = date + " 18:00:00";
 				var eYear = uploadEDate.substring(0, 4);
 				var eMonth = uploadEDate.substring(5, 7);
 				var eDay = uploadEDate.substring(8, 10);
@@ -160,9 +161,7 @@
   			</tr>
   			<tr> 
     			<th>성명</th> 
-    			<td style="">
-					<p>배현상</p>
-    			</td> 
+    			<td style=""> 배현상 </td> 
   			</tr>
   			<tr>
   				<th>일시 </th>

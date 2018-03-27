@@ -44,6 +44,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1278,4 +1279,33 @@ public class EzAttitudeGWController {
 		LOGGER.debug("attitudeWriteUploadedFile ended");
     } 
 	
+    /**
+	 * G/W 근태관리 [GET] 근태유형관리 아이콘 업로드
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/holidays", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getHolidayList(@PathVariable String companyId, HttpServletRequest request) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/holidays] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		
+		try{
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList(companyId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", holidayList);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/holidays] ended.");
+		return result;
+	}
 }
