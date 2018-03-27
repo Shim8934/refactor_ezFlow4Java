@@ -107,6 +107,17 @@ $(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect') span",fu
 	$(this).parent("li").not(".lmLetterSelect").css("background","none");
 });
 
+
+//편지지함명 자세히 보기
+$(document).on("mouseover", "b" ,function(){
+	var boxName = $(this).context.innerText;
+	$(this).attr("title", boxName);
+	
+});
+
+
+
+
 // 편지지 개별조회
 function readLetter(letterNo) {
 	$.ajax({
