@@ -432,7 +432,7 @@
 	                </tr>
 	                <tr>
 	                    <td>
-	                        <select name="input_Value" id="input_Value" size="4"  style="WIDTH:100%;HEIGHT:100px; background:none;"></select>
+	                        <select name="input_Value" id="input_Value" size="4"  style="WIDTH:100%;HEIGHT:100px"></select>
 	                    </td>
 	                </tr>
 	            </table>
