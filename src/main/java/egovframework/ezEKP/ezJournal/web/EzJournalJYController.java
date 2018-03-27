@@ -61,7 +61,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	public String journalWrite(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("journalWrite started");
 		
-		// 여기만 우선 userInfo 사용! userName 받아오는 문제때문..
+		// 여기만 우선 userInfo 사용!  journalWrite화면에서 deptId 필요함
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String offset = userInfo.getOffset();

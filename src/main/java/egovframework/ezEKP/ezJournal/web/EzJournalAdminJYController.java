@@ -69,7 +69,6 @@ public class EzJournalAdminJYController {
 //		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useEditor = commonUtil.getTenantConfigRest("EDITOR", userInfo.getId(), request);
 		
-		
 		if (status.equals("ok")) {
 			JSONArray companyList = (JSONArray) result.get("data");
 			
@@ -186,14 +185,21 @@ public class EzJournalAdminJYController {
 			
 			if (status.equals("ok")) {
 				JSONObject jsonResult = (JSONObject) result.get("data");
+				JSONArray useDepts = null;
+				if (jsonResult.get("depts") != null) {
+					useDepts = (JSONArray) jsonResult.get("depts");
+				}
+				
+				String formContent = jsonResult.get("formContent").toString();
+
 				Gson gson = new Gson();
-				JournalFormInfoVO journalFormInfo = gson.fromJson(jsonResult.toString(), JournalFormInfoVO.class);
-				model.addAttribute("formId", formId);
-				model.addAttribute("formName", journalFormInfo.getFormName());
-				model.addAttribute("formInfo", journalFormInfo.getFormInfo());
-				model.addAttribute("formContent", JsonUtil.OneStringToJson(journalFormInfo.getFormContent()));
-				model.addAttribute("useDepts", JsonUtil.ListToJson(journalFormInfo.getDepts()));
-				logger.debug("useDepts 뭐임 : " + JsonUtil.ListToJson(journalFormInfo.getDepts()));
+//				JournalFormInfoVO journalFormInfo = gson.fromJson(jsonResult.toString(), JournalFormInfoVO.class);
+				model.addAttribute("formId", jsonResult.get("formId"));
+				model.addAttribute("formName", jsonResult.get("formName"));
+				model.addAttribute("formInfo", jsonResult.get("formInfo"));
+				model.addAttribute("formContent", gson.toJson(formContent));
+				model.addAttribute("useDepts", useDepts);
+				logger.debug("formContent : " + JsonUtil.OneStringToJson(formContent));
 			}
 		}
 		
@@ -234,7 +240,7 @@ public class EzJournalAdminJYController {
 	 * 업무일지 양식등록 양식등록,양식수정 양식작성기 저장 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezJournal/formSave.do", produces="application/json;charset=UTF-8")
+	@RequestMapping(value = "/admin/ezJournal/formSave.do")
 	@ResponseBody
 	public void formSave (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("formSave started.");
