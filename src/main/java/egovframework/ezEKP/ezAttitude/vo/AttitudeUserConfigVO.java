@@ -14,6 +14,8 @@ public class AttitudeUserConfigVO {
 	private String companyId;
 	/** 사원명 */
 	private String userName;
+	/** 사원명(영문) */
+	private String userName2;
 	/** 사원 직위 */
 	private String userTitle;
 	/** 부서명 */
@@ -54,6 +56,12 @@ public class AttitudeUserConfigVO {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public String getUserName2() {
+		return userName2;
+	}
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
 	}
 	public String getUserTitle() {
 		return userTitle;

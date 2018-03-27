@@ -1121,12 +1121,12 @@
                                                         	<option value="streetAddress"><spring:message code="ezResource.t140" /></option>
                                                     	</select>
                                                     	<input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
-                                                    		<a class="imgbtn"><span onclick="search_click()"><spring:message code="ezResource.t141" /></span></a>
+                                                    		<a class="imgbtn"><span onclick="search_click()"><spring:message code="ezResource.t14" /></span></a>
                                                 	</div>
                                             	</td>
                                             	<td>
                                                 	<div style="float: right; margin-right: 5px;">
-                                                    	<a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code="ezResource.t344" /></span></a>
+                                                    	<a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code="ezSchedule.t1052" /></span></a>
                                                 	</div>
                                             	</td>
                                         	</tr>

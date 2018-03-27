@@ -48,6 +48,13 @@
 		<result property="formHtml"					column="FORM_HTML"				columnIndex="5"/>
 	</resultMap>
 	
+	<resultMap id="attitudeUserConfigInfo" class="AttitudeUserConfigVO">
+		<result property="userId" 					column="USER_ID" 				columnIndex="1"/>
+		<result property="workStartTime"			column="WORK_STARTTIME"			columnIndex="2"/>
+		<result property="workEndTime" 				column="WORK_ENDTIME" 			columnIndex="3"/>
+		<result property="userName" 				column="DISPLAYNAME" 			columnIndex="4"/>
+	</resultMap>
+	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
 		<![CDATA[
 			SELECT
@@ -119,8 +126,8 @@
 		<![CDATA[
 			SELECT
 				A.USER_ID,
-				A.WORK_STARTTIME,
-				A.WORK_ENDTIME,
+				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_STARTTIME), INTERVAL #offsetMin# hour), 12, 5) as WORK_STARTTIME,
+				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_ENDTIME), INTERVAL #offsetMin# hour), 12, 5) as WORK_ENDTIME,
 				B.TITLE,
 				B.DISPLAYNAME,
 				B.DESCRIPTION
@@ -300,5 +307,29 @@
 				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #imgPath#, 'A05', #formId#)
 		]]>
 	</insert>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigInfo" parameterClass="Map" resultMap="attitudeUserConfigInfo">
+		<![CDATA[
+			SELECT
+				A.USER_ID,
+				A.WORK_STARTTIME,
+				A.WORK_ENDTIME,
+				B.DISPLAYNAME
+			FROM
+				TBL_ATTITUDE_USER_CONF A
+			INNER JOIN 
+				TBL_USERMASTER B 
+			ON 
+				A.USER_ID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE 
+				A.COMPANY_ID = #companyId#
+			AND 
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.USER_ID = #userId#
+		]]>
+	</select>
 	
 </sqlMap>

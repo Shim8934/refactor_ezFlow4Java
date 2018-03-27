@@ -13,15 +13,16 @@
 	    		border-right:0px;
 	    	}
 	    </style>
-<!-- 	    <script type="text/javascript" src="/js/mouseeffect.js"></script> -->
-<!-- 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script> -->
-<!-- 	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script> -->
-<!-- 	    <script type="text/javascript" src="/js/ezEmail/Controls/ListView_list.js"></script>	     -->
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/jstree/jstree.js"></script>
 		<script type="text/javascript" language="javascript">
 		    var ReturnFunction;
 		    var treeContent = ${deptList};
+		    var companyId = '${companyId}';
+		    var selectedUserId;
+		    //회사 근무 시작/종료시간 - 기본설정적용시 필요
+		    var comStartTime = '${workStartTime}';
+		    var comEndTime = '${workEndTime}';
 			
 		    $(document).ready(function(){
 		    	setDeptList();
@@ -56,31 +57,78 @@
 	   		}
 	   		//사원 리스트 뿌리기
 	   		function setUserList(key,value){
+// 	   			selectedUserId = "";
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
-	   				url:"/admin/ezJournal/userList.do",
+	   				url:"/admin/ezAttitude/deptUserList.do",
 	   				data:{"key":key, "value":value},
 	   				success: function(result){
 	   					$("#orglistView").html(result);
 	   				}
 	   			});
 	   		}
-	   		//선택된 사원의 권한 부서 보여주기
+	   		//사원선택
+	   		function setAuthorViewUser(){
+	   			var userId = selectedUser;
+				var url = "/admin/ezJournal/authorView.do";
+				var companyId = opener.companyId;
+				url+="?companyId="+companyId;
+				if (userId) {
+					url+="&userId="+userId+"&userName="+selectedUserName;
+				} else {
+					alert("<spring:message code='ezPortal.t85' />");
+				}
+				window.open(url, "authorView", "width=500, height=180");
+				window.close();
+	   		}
+// 	   		//선택된 사원
 	   		function setUserAuthorDept(elem){
-	   			selectedUser = $(elem).attr("id");
-	   			selectedUserName = $(elem).attr("name");
+	   			selectedUserId = $(elem).attr("id");
 	   			$("*").removeClass("selectTR");
 	   			$(elem).addClass("selectTR");
-	   			$.ajax({
-	   				type:"post",
-	   				dataType:"html",
-	   				url:"/admin/ezJournal/authorDeptList.do",
-	   				data:{"userId":$(elem).attr("id")},
-	   				success: function(result){
-	   					$("#authorDeptList").html(result);
+	   		}
+	   		// [->] 클릭시
+	   		function InsertReceiver() {
+	   			var trIdx = $('#txtlist_table2').find('tr').length;
+	   			for (var i = 0; i < trIdx; i++) {
+	   				if ($('#txtlist_table2 tr').eq(i).attr('id') == selectedUserId) {
+	   					alert('이미 선택되었습니다');
+	   					return;
 	   				}
-	   			});
+	   			}
+	   			
+	   			if(selectedUserId != ""){
+		   			$.ajax({
+		   				type:"post",
+		   				dataType:"json",
+		   				url:"/admin/ezAttitude/selectUserInfo.do",
+		   				data:{
+		   					"userId" : selectedUserId,
+		   					"companyId" : companyId
+		   				},
+		   				success: function(result){
+		   					var html = "<tr id='" + result.userId + "' class='hover'>";
+		   					html += "<td style='cursor: pointer; padding-left:60px;'>" + result.userName + "</td>";
+		   					if(result.workStartTime != null || result.workEndTime != null) {
+			   					html += "<td>" + result.workStartTime + " ~ " + result.workEndTime + "</td>";
+		   					} else {
+		   						html += "<td></td>";
+		   					}
+		   					html += "</tr>";
+		   					$(html).appendTo('#txtlist_table2');
+		   				}
+		   			});
+	   			}
+	   		}
+
+	   		$(document).on('click', '#txtlist_table2 tr' ,function() {
+	   			$("*").removeClass("selectTR");
+	   			$(this).addClass("selectTR");
+	   		})
+	   		
+	   		function DeleteReceiver() {
+		   		$('#txtlist_table2 tr[class*=selectTR]').remove();
 	   		}
 		    
 	        function close_Click() {
@@ -90,6 +138,13 @@
 	            window.close();
 	        }
 	    </script>
+	    <style>
+			tr.hover:hover{background:#eee; color:#fff;}
+			
+			.selectTR{
+				background-color: rgb(233, 241, 255);
+			}
+		</style>
 	</head>
 	<body class="popup">
 	    <div id="menu">
@@ -106,11 +161,11 @@
 	        <tr>
 	        	<td style="width: 650px;">
 	                <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-	                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+	                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2; padding: 2px;">
 	                        <table style="margin-top: 3px; width: 100%;">
 	                            <tr>
 	                                <td>
-	                                	<div style="padding-left:60px">
+	                                	<div style="padding-left:50px">
 	                                    	<input type="text" name="Input" id="deptkeyword" style="WIDTH: 110px; margin: 0px;" onkeypress="deptsearch_press()" />
 	                                        <a class="imgbtn"><span onclick="deptsearch_click()">부서검색</span></a>
 	                                	</div>
@@ -141,41 +196,34 @@
 	                <table style="margin-top: 3px;">
 	                    <tr>
 	                        <td class="box">
-	                            <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="treeView"></div>
+	                            <div style="width: 240px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeView"></div>
 	                        </td>
-	                        <td></td>
 	                        <td class="listview" style="width: 426px" id="orglistView">
-	                            <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
-	                                <tr>
-	                                    <th style="white-space:normal">
-	                                        <span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
-	                                        <span style="float:right;">
-	                                            <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
-	                                            <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
-	                                        </span>
-	                                    </th>
-	                                </tr>
-	                            </table>
-	                            <div style="vertical-align: top; height: 440px; overflow: auto; width: 100%;" id="txtlist_Layer">
-	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
-	                                    <tr>
-	                                    <!-- 이름 직위 전화번호 -->
-	                                        <td style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-	                                        <td style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-	                                        <td class="td_gray" style="width: 60%;font-weight: bold;"><spring:message code='ezOrgan.t97'/></td>
-	                                    </tr>
-	                                </table>
-	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
-	                                    <tr>
-	                                    <!-- 이름 부서 직위 전화번호 -->
-<%-- 	                                        <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t68'/></td> --%>
-<%-- 	                                        <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td> --%>
-<%-- 	                                        <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td> --%>
-<%-- 	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td> --%>
-	                                    </tr>
-	                                </table>
-	                            </div>
-	                            <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+<!-- 	                            <table style="width: 100%; margin-top: -1px;" class="popup_mainlist"> -->
+<!-- 	                                <tr> -->
+<!-- 	                                    <th style="white-space:normal"> -->
+<!-- 	                                        <span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span> -->
+<!-- 	                                        <span style="float:right;"> -->
+<!-- 	                                            <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span> -->
+<!-- 	                                            <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span> -->
+<!-- 	                                        </span> -->
+<!-- 	                                    </th> -->
+<!-- 	                                </tr> -->
+<!-- 	                            </table> -->
+<!-- 	                            <div style="vertical-align: top; height: 440px; overflow: auto; width: 100%;" id="txtlist_Layer"> -->
+<!-- 	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist"> -->
+<!-- 	                                    <tr> -->
+<%-- 	                                        <th style="width: 100px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></th> --%>
+<%-- 	                                        <th style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></th> --%>
+<%-- 	                                        <th class="td_gray" style="width: 220px;font-weight: bold;"><spring:message code='ezOrgan.t97'/></th> --%>
+<!-- 	                                    </tr> -->
+<!-- 	                                </table> -->
+<!-- 	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist"> -->
+<!-- 	                                    <tr> -->
+<!-- 	                                    </tr> -->
+<!-- 	                                </table> -->
+<!-- 	                            </div> -->
+<!-- 	                            <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div> -->
 	                        </td>    
 	                    </tr>
 	                </table>
@@ -187,14 +235,14 @@
 	            </td>
 	            <!-- 위에까지 화살표 -->     
 	            <td style="width:450px; height:480px; vertical-align: top;">
-	                <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-	                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2; text-align:center;">
+	            	<div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
+	                    <div class="portlet_tabpart03_top" id="tab2" style="border: 1px solid #d3d2d2; text-align:center;">
 	                        <table style="margin-top: 3px; width: 100%;">
 	                        	<tr>
 	                        		<h2>사용자별 설정시간</h2>
 	                        	</tr>
 	                        	<tr>
-	                        		근무시간
+	                        		근무시간 : 
 	                        		<input type="text" style="width:50px;"/>시
 	                        		<input type="text" style="width:50px;"/>분
 	                        		~
@@ -202,13 +250,13 @@
 	                        		<input type="text" style="width:50px;"/>분
 	                        	</tr>
 	                        </table>
-	                    </div>
+	                	</div>
 	                </div>
 	                <div>
 		                <table style="margin-top: 3px;">
 		                    <tr>
 		                        <td></td>
-		                        <td class="listview" style="width: 100%" id="orglistView">
+		                        <td class="listview" style="width: 100%; height: 446px;" id="orglistView2">
 		                            <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 		                                <tr>
 		                                    <th style="white-space:normal; padding-left:60px;">
@@ -219,27 +267,25 @@
 		                                    </th>
 		                                </tr>
 		                            </table>
-		                            <div style="vertical-align: top; overflow: auto; width: 340px;  height: 440px;" id="txtlist_Layer">
-		                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
-		                                    <tr>
-		                                     <!-- 이름 직위 전화번호 -->
-		                                    
-	<%-- 	                                        <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td> --%>
-	<%-- 	                                        <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td> --%>
-	<%-- 	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td> --%>
-		                                    </tr>
+		                            <div style="vertical-align: top; overflow: auto; width: 100%;  height: 422px;" id="txtlist_Layer2">
+		                                <table style="width:100%; border: 1px solid #ddd;" id="txtlist_table2" class="mainlist">
 		                                </table>
 		                            </div>
 		                        </td>    
 		                    </tr>
 		                </table>
 	                </div>
-		            <div style="vertical-align: middle;">
-		                <table>
-			                	<a class="imgbtn"><span>기본설정적용</span></a><a class="imgbtn"><span>변경시간적용</span></a>
-		                </table>
-		            </div>
 	            </td>
+	        </tr>
+	        <tr>
+		        <td></td>
+		        <td></td>
+		        <td>
+					<div class="btnposition" style="margin: 0px;">
+					    <a class="imgbtn"><span onclick="">기본설정적용</span></a>
+					    <a class="imgbtn"><span onclick="">변경시간적용</span></a>
+					</div>
+		        </td>
 	        </tr>
 	    </table>
 	</body>	

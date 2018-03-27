@@ -77,8 +77,8 @@
 	                    return pList[i];
 	            }
 	        }
-	        
-	        function CellCheckField() {
+	        /* mouseup, keyup 에 등록해야하는 function */
+	        function CellCheckField(a, b) {
 	            if (parent.Attribute_Write != undefined) {
 	                var selectE = kukudocsEditor.GetCurrentElement("TD");
 	
@@ -93,7 +93,7 @@
 	                }
 	            }
 	        }
-			/* mouseup, keyup 에 등록해야하는 function */
+			
 	        function View_CellProperty(g_toggleFlag) {
 	            var TotalTag = GetElementsByTagName(kukudocsEditor.getContentViewElement()[0], "TD");
 	            
@@ -201,18 +201,18 @@
 	            }, 500);
 	        }
 	
-	        /* function FormInfoCheck(type) {
+	        function FormInfoCheck(type) {
 	            try {
 	                switch (type) {
 	                    case "null":
-	                        if (xfe.getBodyValue() == "")
+	                        if (GetEditorContent() == "")
 	                            return true;
 	                        else
 	                            return false;
 	                        break;
 	                    case "body":
 	                        var CheckCount = 0;
-	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        var HtmlTag = GetElementsByTagName(kukudocsEditor.getContentViewElement()[0], "*");
 	                        for (var i = 0 ; i < HtmlTag.length; i++) {
 	                            if (GetAttribute(HtmlTag[i], "id") == "body")
 	                                CheckCount++;
@@ -221,7 +221,7 @@
 	                        break;
 	                    case "doctitle":
 	                        var CheckCount = 0;
-	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        var HtmlTag = GetElementsByTagName(kukudocsEditor.getContentViewElement()[0], "*");
 	                        for (var i = 0 ; i < HtmlTag.length; i++) {
 	                            if (GetAttribute(HtmlTag[i], "id") == "doctitle")
 	                                CheckCount++;
@@ -230,7 +230,7 @@
 	                        break;
 	                    case "doctitlefield":
 	                        var CheckCount = 0;
-	                        var HtmlTag = xfe.getBodyValue().getElementsByTagName("*");
+	                        var HtmlTag = GetElementsByTagName(kukudocsEditor.getContentViewElement()[0], "*");
 	                        for (var i = 0 ; i < HtmlTag.length; i++) {
 	                            if (GetAttribute(HtmlTag[i], "id") == "body")
 	                                return GetAttribute(HtmlTag[i], "doctitlefield");
@@ -240,7 +240,14 @@
 	                }
 	            } catch (e) {
 	            }
-	        } */
+	        }
+	        
+			function checkEvent(event) {
+				/* 2018-03-26 쿠쿠닥스 keyEvent 에서 keyup 안나와서 keydown으로 */
+				if (event.type== "mouseup" || event.type == "keydown") {
+					CellCheckField();
+				}
+			}
 		</script> 
 	</head>
 	<body>
@@ -263,7 +270,9 @@
 			
 			// 숨김 메뉴 설정
 			var hiddenMenu = ["new", "file_open", "save", "auto_save_load", "layout", "template", "copy", "paste", "cut", "all_select", "page_break", 
-							  "dir_ltr", "dir_rtl", "video", "video_modify", "file", "emoticon", "layer", "fullscreen", "setting", "help"];
+							  "dir_ltr", "dir_rtl", "video", "video_modify", "file", "emoticon", "layer", "fullscreen", "setting", "help",
+							  "super", "sub", "remove", "textFormatCopy", "textFormatPaste", "paragraph_remove_format", "bookmark", "date_format", 
+							  "background_image", "upper_lower", "blockquote"];
 			
 			if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
 	        	//메일 부제중설정 시 이미지 업로드 아이콘 제거
@@ -290,7 +299,9 @@
 	            loadingImageURL : '/js/ezEditor/kukudocsEditor/images/load.gif',
 	            errorImageURL : '/js/ezEditor/kukudocsEditor/images/error.png',
 	            imageUploadURL : imageUploadURL,
-	            Editor_Complete : Editor_Complete
+	            Editor_Complete : Editor_Complete,
+	            Mouse_event : checkEvent,
+	            Key_event : checkEvent
 	        });
 			
 		</script>

@@ -397,10 +397,45 @@
 	                	check = false;
 	            	}
 	        	}
+	        	
+	        	/* 2018.03.23 서주연 - #12125 버그 해결위해 경고창 띄우는 부분 여기로 이동 */
+	        	if (ApproveFlag == "1" && SavedApproveFlag == "1" && pAdminFg != "Y" && cmd == "mod") {
+	        		alert("" + strLang132 + "");
+	        		return;
+	        	}
+	        	
+	        	SessionCheck();
+	        	
+	        	if(trim_Cross(document.getElementById("title").value) == "" ) {
+	        		alert("" + strLang138 + "");
+	        		return;
+	        	}
+	        	
+	        	// 일반/하루종일
+	        	if(!document.getElementById("AllDay").checked) {
+	        		if( !CheckStartEndDateTime() ) {
+	        			alert("" + strLang139 + "");			
+	        			return;
+	        		}
+	        	} else {
+	        		if (!AllDayCheckStartEndDateTime()) {
+	        			alert("" + strLang139 + "");			
+	        			return;
+	        		}
+	        	}
+	        	
+	        	// 자신의 일정인지 체크
+	        	if ( cmd == "mod" ) {
+	        		// 관리자가 아닌 경우
+	        		if (CheckAdmin() == false && OwnerCheck() == false) {
+	        			alert("" + strLang140 + "");
+	        			return;
+	        		}
+	        	}
 
 	        	if (check == true) {
 	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
-		                SaveSchedule_onClick("${cmdStr}", ItemArray[0][i]);
+		                SaveSchedule_onClick(cmd, ItemArray[0][i]);
 		            }
 	    	    }
 	        	return check;

@@ -106,4 +106,9 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void insertAttitudeType(Map<String, Object> map) {
 		insert("ezAttitudeAdminDAO.insertAttitudeType", map);
 	}
+
+	public AttitudeUserConfigVO getAttitudeUserConfigInfo(
+			Map<String, Object> map) {
+		return (AttitudeUserConfigVO) select("ezAttitudeAdminDAO.getAttitudeUserConfigInfo", map);
+	}
 }
