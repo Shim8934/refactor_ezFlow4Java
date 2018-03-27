@@ -126,9 +126,77 @@
 	   			$("*").removeClass("selectTR");
 	   			$(this).addClass("selectTR");
 	   		})
-	   		
+	   		// [<-] 클릭시
 	   		function DeleteReceiver() {
 		   		$('#txtlist_table2 tr[class*=selectTR]').remove();
+	   		}
+	   		
+	   		function userTimeApply(type) {
+	   			if(type == 'modify') {
+	   				if($('#startHrs').val() == "" || $('#startHrs').val() == null){
+	   					alert('시간을 입력해주세요');
+	   					return;
+	   				}
+	   				if($('#startMin').val() == "" || $('#startMin').val() == null){
+	   					alert('시간을 입력해주세요');
+	   					return;
+	   				}
+	   				if($('#endHrs').val() == "" || $('#endHrs').val() == null){
+	   					alert('시간을 입력해주세요');
+	   					return;
+	   				}
+	   				if($('#endMin').val() == "" || $('#endMin').val() == null){
+	   					alert('시간을 입력해주세요');
+	   					return;
+	   				}
+	   			}
+	   			
+	   			var trIdx = $('#txtlist_table2').find('tr').length;
+	   			var timeStr = "";
+	   			for (var i = 0; i < trIdx; i++) {
+	   				if(type == 'default') {
+	   					timeStr = comStartTime + " ~ " + comEndTime;
+	   				} else {
+	   					timeStr += addZero($('#startHrs').val()) + ":";
+	   					timeStr += addZero($('#startMin').val()) + " ~ "; 
+	   					timeStr += addZero($('#endHrs').val()) + ":";
+	   					timeStr += addZero($('#endMin').val());
+	   				}
+	   				$('#txtlist_table2 tr').eq(i).children("td").eq(1).text(timeStr);
+	   			}
+	   		}
+	   		
+	   		function addZero(time) {
+	   			var resStr = "";
+	   			if(time.length == 1) {
+	   				resStr = "0" + time;
+	   			} else {
+	   				resStr = time;
+	   			}
+	   			return resStr;
+	   		}
+	   		
+	   		function OK_Click() {
+	   			var trIdx = $('#txtlist_table2').find('tr').length;
+	   			var userConfInfo = "";
+	   			for (var i = 0; i < trIdx; i++) {
+	   				var userConfTime = $('#txtlist_table2 tr').eq(i).children("td").eq(1).text().split('~');
+	   				userConfInfo += $('#txtlist_table2 tr').eq(i).attr('id') + ",";
+	   				userConfInfo += userConfTime[0].trim() + ",";
+	   				userConfInfo += userConfTime[1].trim() + ";";
+	   			}
+	   			userConfInfo.slice(0, -1);
+	   			
+	            $.ajax({
+	            	type : "POST",
+	            	url : "/admin/ezAttitude/attitudeUserConfSave.do",
+	            	data : { "userConfInfoList" : userConfInfo },
+	            	success : function() {
+	            		alert('성공');
+	            	},
+	            	error : function() {
+	            	}
+	            });
 	   		}
 		    
 	        function close_Click() {
@@ -243,11 +311,11 @@
 	                        	</tr>
 	                        	<tr>
 	                        		근무시간 : 
-	                        		<input type="text" style="width:50px;"/>시
-	                        		<input type="text" style="width:50px;"/>분
+	                        		<input type="text" id="startHrs" style="width:50px;"/>시
+	                        		<input type="text" id="startMin" style="width:50px;"/>분
 	                        		~
-	                        		<input type="text" style="width:50px;"/>시
-	                        		<input type="text" style="width:50px;"/>분
+	                        		<input type="text" id="endHrs" style="width:50px;"/>시
+	                        		<input type="text" id="endMin" style="width:50px;"/>분
 	                        	</tr>
 	                        </table>
 	                	</div>
@@ -282,8 +350,8 @@
 		        <td></td>
 		        <td>
 					<div class="btnposition" style="margin: 0px;">
-					    <a class="imgbtn"><span onclick="">기본설정적용</span></a>
-					    <a class="imgbtn"><span onclick="">변경시간적용</span></a>
+					    <a class="imgbtn"><span onclick="userTimeApply('default')">기본설정적용</span></a>
+					    <a class="imgbtn"><span onclick="userTimeApply('modify')">변경시간적용</span></a>
 					</div>
 		        </td>
 	        </tr>
