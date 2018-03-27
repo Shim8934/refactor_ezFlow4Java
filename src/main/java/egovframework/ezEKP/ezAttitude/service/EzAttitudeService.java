@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 
 public interface EzAttitudeService {
 	public Object getAttitudeInfo(String userId, String date, String typeId, int tenantId) throws Exception;
@@ -93,5 +94,7 @@ public interface EzAttitudeService {
 	public List<AttitudeFormVO> getAttitudeFormList(int tenantId) throws Exception;
 
 	public int getUsersModiyAttCount(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String sysLang, String offSet, String type) throws Exception;
+	
+	public List<HolidayVO> getHolidayList(String companyId, int tenantId) throws Exception;
 
 }

@@ -26,8 +26,9 @@
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		
 		<script type="text/javascript">
+			var writerName = "${userInfo.displayName}";
 			var companyId = "${companyId}";
-			
+			var date = "${date}"
 			
 			window.onload = function () {
 				if (datetype == "1") {
@@ -55,14 +56,14 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
-				var uploadSDate = "2018-03-22 17:30:00";
+				var uploadSDate = date + " 17:30:00";
 				var sYear = uploadSDate.substring(0, 4);
 				var sMonth = uploadSDate.substring(5, 7);
 				var sDay = uploadSDate.substring(8, 10);
 				var sHour = uploadSDate.substring(11, 13);
 				var sMin = uploadSDate.substring(14, 16);
 							
-				var uploadEDate = "2018-03-22 18:00:00";
+				var uploadEDate = date + " 18:00:00";
 				var eYear = uploadEDate.substring(0, 4);
 				var eMonth = uploadEDate.substring(5, 7);
 				var eDay = uploadEDate.substring(8, 10);
@@ -117,10 +118,6 @@
 		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
 		    });
 			
-			
-			
-			
-			
 			//저장
 			function save_attitude() {
 				$.ajax({
@@ -156,17 +153,15 @@
     			<th>구분</th> 
     			<td>
 					<select id="select" style="width:80px;" onchange="form_change()">
-						<c:forEach var="item" items="${list}">
-							<option value="<c:out value='${item.id}'/>"><c:out value='${item.name}'/></option>
+						<c:forEach var="item" items="${attitudeTypeList}">
+							<option value="<c:out value='${item.typeId}'/>"><c:out value='${item.typeName}'/></option>
 						</c:forEach>
 					</select> 
 				</td> 
   			</tr>
   			<tr> 
     			<th>성명</th> 
-    			<td style="">
-					<p>배현상</p>
-    			</td> 
+    			<td style=""> 배현상 </td> 
   			</tr>
   			<tr>
   				<th>일시 </th>
@@ -184,16 +179,15 @@
 <!-- 	  					</tr> -->
 <!--   					</table> -->
 <!--   				</td> -->
-	                        <td colspan="2">
-	                            <span id="periodblock">
-	                            <input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1" checked>
-	                                                        하루종일
-	                            <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
-	                            ~
-	                            <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
-	                            </span>
-	                        	
-	                    	</td>
+                    <td colspan="2">
+                        <span id="periodblock">
+                        <input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1" checked>
+                                                               하루종일
+                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
+                        ~
+                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
+                        </span>
+                	</td>
   			</tr>
   			<tr> 
     			<th>근무지</th> 
@@ -215,8 +209,9 @@
   			</tr>
 		</table>
 		<table id="contentTb" class="content" style="width:100%; margin-top: 10px;">
-		  	<tr>   
-  				<td style="height: 300px;"></td>  
+		  	<tr>
+  				<td style="height: 300px;">
+  				</td>  
   			</tr>
 		</table>
 	</body>

@@ -24,6 +24,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzAttitudeService")
@@ -561,5 +562,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		int attAppListCount = ezAttitudeDAO.getUsersModiyAttCount(map);
 		
 		return attAppListCount;
+	}
+
+	@Override
+	public List<HolidayVO> getHolidayList(String companyId, int tenantId)
+			throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		List<HolidayVO> holidayList = ezAttitudeDAO.getHolidayList(map); 
+		return holidayList;
 	}
 }

@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAttitudeDAO")
@@ -110,5 +111,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public AttitudeUserConfigVO getAttitudeUserConfigInfo(
 			Map<String, Object> map) {
 		return (AttitudeUserConfigVO) select("ezAttitudeAdminDAO.getAttitudeUserConfigInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HolidayVO> getHolidayList(Map<String, Object> map) throws Exception {
+		return (List<HolidayVO>) list("ezAttitudeDAO.getHolidayList", map);
 	}
 }
