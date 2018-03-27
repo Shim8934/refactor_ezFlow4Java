@@ -865,6 +865,7 @@ function DataSetRemove(fs_Date, fe_Date) {
     }
 }
 
+var agent = navigator.userAgent.toLowerCase(); 
 function tableListControl_today() {
     if (c_xmlhttp.readyState == 4 && c_xmlhttp.status == 200) {
         var xmldom = createXmlDom();
@@ -984,7 +985,6 @@ function tableListControl_today() {
                 var pObjectId = "Day_" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]);
                 var pObjectSP = Math.floor((parseInt(getNodeText(xmldom.getElementsByTagName("dstartTime")[j])) / 30)) + 1;
                 var pObjectEP = Math.ceil((parseInt(getNodeText(xmldom.getElementsByTagName("dendTime")[j])) / 30));
-
                 var pObjectSPDay = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0];
                 var pObjectEPDay = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0];
                 
@@ -1037,6 +1037,13 @@ function tableListControl_today() {
                             document.getElementById(pObjectId + "_" + TCnt).onmouseout = new Function("onmouse_out_today(this);");
                             document.getElementById(pObjectId + "_" + pObjectSP).onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_" + pObjectSP).parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                             document.getElementById(pObjectId + "_" + TCnt).colSpan = (pObjectEP - pObjectSP) + 1;
+                            
+                          //늘어난 colspan만큼 오른쪽으로 밀려난 td들을 display:none 처리한다.(ie11문제 수정)
+                            if (!CrossYN() || agent.search( "trident" ) > -1 ) {
+                                for(var tdR = 1; tdR < (pObjectEP - pObjectSP) + 1; tdR++){
+                               	 	document.getElementById(pObjectId + "_" + (TCnt+tdR)).style.display = "none";    	
+                                }
+                			}	
                         }
                     }
                 } else {
@@ -1071,8 +1078,7 @@ function tableListControl_today() {
                     document.getElementById(pObjectId + "_1").onmouseout = new Function("onmouse_out_today(this);");
                     document.getElementById(pObjectId + "_1").onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_1").parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                     document.getElementById(pObjectId + "_1").colSpan = 48;
-                }
-                
+                }     
             }
         }
         var dateresult = "";
@@ -1201,7 +1207,7 @@ function tableListControl_today() {
                                     _TD.onmouseout = new Function("onmouse_out_today(this);");
                                     _TD.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + title_name[k].split("/")[1] + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                                     _TD.colSpan = width_td;
-                                    
+
                                     _Tr2.appendChild(_TD);
                                     
                                 } else {
