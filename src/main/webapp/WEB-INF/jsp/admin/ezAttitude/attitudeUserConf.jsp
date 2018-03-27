@@ -123,13 +123,25 @@
     		}
     	}
     	
-    	function userConfAddModify(){
+    	function userConfAdd(){
     		if (CrossYN()) {
     			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
-    			OpenWin = GetOpenWindow("/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), "", "1140", "630");
+    			OpenWin = GetOpenWindow("/admin/ezAttitude/addAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), "", "1140", "630");
     			try { OpenWin.focus();} catch (e) { }
     		} else {
-    			showModalDialog("/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
+    			showModalDialog("/admin/ezAttitude/addAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
+    		}
+    	}
+    	
+    	function userConfModify(){
+    		
+    		
+    		if (CrossYN()) {
+    			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
+    			OpenWin = GetOpenWindow("/admin/ezAttitude/ModifyAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), "", "500", "630");
+    			try { OpenWin.focus();} catch (e) { }
+    		} else {
+    			showModalDialog("/admin/ezAttitude/ModifyAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
     		}
     	}
     	
@@ -145,6 +157,13 @@
     	}
     	
     </script>
+	<style>
+		tr.hover:hover{background:#eee; color:#fff;}
+			
+		.selectTR{
+			background-color: rgb(233, 241, 255);
+		}
+	</style>
 	</head>
 <body>
 	<body class="mainbody">
@@ -165,7 +184,8 @@
 	  	</div>
 	  	<div id="mainmenu">
 	  		<ul class="on">
-	  			<li class="off"><span onclick="userConfAddModify()">추가/변경</span></li>
+	  			<li class="off"><span onclick="userConfAdd()">추가</span></li>
+	  			<li class="off"><span onclick="userConfModify()">변경</span></li>
 	  			<li class="off"><span onclick="searchUserConf(false)">검색</span></li>
 	  		</ul>
 	  	</div>

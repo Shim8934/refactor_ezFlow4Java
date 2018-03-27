@@ -176,28 +176,28 @@
 	   			return resStr;
 	   		}
 	   		
-	   		function OK_Click() {
-	   			var trIdx = $('#txtlist_table2').find('tr').length;
-	   			var userConfInfo = "";
-	   			for (var i = 0; i < trIdx; i++) {
-	   				var userConfTime = $('#txtlist_table2 tr').eq(i).children("td").eq(1).text().split('~');
-	   				userConfInfo += $('#txtlist_table2 tr').eq(i).attr('id') + ",";
-	   				userConfInfo += userConfTime[0].trim() + ",";
-	   				userConfInfo += userConfTime[1].trim() + ";";
-	   			}
-	   			userConfInfo.slice(0, -1);
+// 	   		function OK_Click() {
+// 	   			var trIdx = $('#txtlist_table2').find('tr').length;
+// 	   			var userConfInfo = "";
+// 	   			for (var i = 0; i < trIdx; i++) {
+// 	   				var userConfTime = $('#txtlist_table2 tr').eq(i).children("td").eq(1).text().split('~');
+// 	   				userConfInfo += $('#txtlist_table2 tr').eq(i).attr('id') + ",";
+// 	   				userConfInfo += userConfTime[0].trim() + ",";
+// 	   				userConfInfo += userConfTime[1].trim() + ";";
+// 	   			}
+// 	   			userConfInfo.slice(0, -1);
 	   			
-	            $.ajax({
-	            	type : "POST",
-	            	url : "/admin/ezAttitude/attitudeUserConfSave.do",
-	            	data : { "userConfInfoList" : userConfInfo },
-	            	success : function() {
-	            		alert('성공');
-	            	},
-	            	error : function() {
-	            	}
-	            });
-	   		}
+// 	            $.ajax({
+// 	            	type : "POST",
+// 	            	url : "/admin/ezAttitude/attitudeUserConfSave.do",
+// 	            	data : { "userConfInfoList" : userConfInfo },
+// 	            	success : function() {
+// 	            		alert('성공');
+// 	            	},
+// 	            	error : function() {
+// 	            	}
+// 	            });
+// 	   		}
 		    
 	        function close_Click() {
 	            if (ReturnFunction!=null) {

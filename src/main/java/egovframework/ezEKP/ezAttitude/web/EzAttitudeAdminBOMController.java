@@ -661,10 +661,10 @@ public class EzAttitudeAdminBOMController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeUserConf.do")
-	public String saveAttitudeUserConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	@RequestMapping(value = "/admin/ezAttitude/addAttitudeUserConf.do")
+	public String addAttitudeUserConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		
-		LOGGER.debug("/admin/ezAttitude/saveAttitudeUserConf started");
+		LOGGER.debug("/admin/ezAttitude/addAttitudeUserConf started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -715,7 +715,7 @@ public class EzAttitudeAdminBOMController {
 			model.addAttribute("deptList", deptList);
 			model.addAttribute("companyId", companyId);
 		}
-		//TODO
+		
 		//회사 근무시간 정보
 		url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudereg";
 		
@@ -739,9 +739,9 @@ public class EzAttitudeAdminBOMController {
 			model.addAttribute("workEndTime", workEndTime);
 		}
 		
-		LOGGER.debug("/admin/ezAttitude/saveAttitudeUserConf ended");
+		LOGGER.debug("/admin/ezAttitude/addAttitudeUserConf ended");
 		
-		return "admin/ezAttitude/saveAttitudeUserConf";
+		return "admin/ezAttitude/addAttitudeUserConf";
 	}
 	
 	/**
@@ -834,6 +834,74 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("selectUserInfo ended");
 		return jObject;
+	}
+	
+	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConfSave.do")
+	public void attitudeUserConfSave(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("attitudeUserConfSave started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String userConfInfoList = request.getParameter("userConfInfoList");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		
+		LOGGER.debug("attitudeUserConfSave ended");
+	}
+	
+	@RequestMapping(value = "/admin/ezAttitude/ModifyAttitudeUserConf.do")
+	public String ModifyAttitudeUserConf(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudereg";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject jObject = new JSONObject();
+		if(status.equals("ok")){
+			jObject = (JSONObject) resultBody.get("data");
+			
+			String workStartTime = (String) jObject.get("workStartTime");
+			String workEndTime = (String) jObject.get("workEndTime");
+			
+			model.addAttribute("workStartTime", workStartTime);
+			model.addAttribute("workEndTime", workEndTime);
+			model.addAttribute("companyId", companyId);
+		}
+		
+		return "admin/ezAttitude/modifyAttitudeUserConf";
 	}
 	
 }
