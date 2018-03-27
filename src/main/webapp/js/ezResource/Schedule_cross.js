@@ -722,6 +722,8 @@ function SessionCheck(){
 //******************************************************************
 // 2011-04 : 자원관리 중복 등록 관련 작업 진행
 function SaveSchedule_onClick( cmd , resItem) {
+	/* 2018.03.23 서주연 - #12125 저장시 자원수에 따라 경고창이 두번뜨는 문제 해결위해 관련부분은 저장함수로 이동 */
+	/* 여기부터
 	if (ApproveFlag == "1" && SavedApproveFlag == "1" && pAdminFg != "Y" && cmd == "mod") {
 		alert("" + strLang132 + "");
 		return;
@@ -770,6 +772,8 @@ function SaveSchedule_onClick( cmd , resItem) {
 			return;
 		}
 	}
+//	여기까지 경고창관련 주석처리 
+	*/
 	
 	//Entry_onKeydown();
 	attachSave = true;
@@ -1296,8 +1300,10 @@ function printpr() {
 
 function onbeforeprint() {
     g_documentTitle = document.title;
-    document.title = title.value;
-    
+
+    /* 2018.03.23 서주연 - #12104 인쇄미리보기시 창제목 변경되는 문제 해결 */
+//  document.title = title.value;
+
     setNodeText(document.getElementById("printOwner"), getNodeText(document.getElementById("displayNM")));
 
     //중요도 낮음	importance1.value의 값음 schedule_add.asp 화면에서 직접가지고 온다.

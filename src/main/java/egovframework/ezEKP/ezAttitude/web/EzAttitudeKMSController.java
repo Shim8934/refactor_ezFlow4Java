@@ -392,7 +392,7 @@ public class EzAttitudeKMSController {
 	}
 	
 	@RequestMapping(value = "/ezAttitude/saticGetXlsAtt.do")
-	   public void qstResultAnalysisSaveApproval(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	   public void qstResultsaticGetXlsAtt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	      LOGGER.debug("saticGetXlsAtt started");
 	      
 	      String headerFLAG = "";

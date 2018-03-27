@@ -835,7 +835,7 @@
 	    }
 	    
 	    function Editor_Complete() {
-	    	if (mode == "modify") {
+	    	if (mode == "modify" || mode == "reuse") {
 	    		message.SetEditorContent(sigBody.innerHTML);
 	    	}
 	    }
@@ -863,7 +863,7 @@
 				<tr>    <!------------Question title----------------> 
 					<%-- <th>Question</th>			--%>
 					<td style="width: 100%;" class="pollTd01">							
-						<input id="qst_title" name="qst_title" type="text"  placeholder="<spring:message code='ezPoll.t234'/>" style="width: 100%;" class="createPoll_title" maxlength="150" value="<c:out value="${mode == 'modify' ? question.title : ''}"/>">
+						<input id="qst_title" name="qst_title" type="text"  placeholder="<spring:message code='ezPoll.t234'/>" style="width: 100%;" class="createPoll_title" maxlength="150" value="<c:out value="${mode == 'modify' || mode == 'reuse' ? question.title : ''}"/>">
 					</td>
 	
 				</tr>

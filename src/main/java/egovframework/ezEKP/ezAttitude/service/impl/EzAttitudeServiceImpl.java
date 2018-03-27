@@ -418,7 +418,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId,
 			String companyId, String searchUserName, String searchDeptName, String pageNum, 
-			String listSize, String order)
+			String listSize, String order, String offsetMin)
 			throws Exception {
 		LOGGER.debug("getAttitudeUserConfigList started");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -431,6 +431,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("limit", limit);
 		map.put("listSize", listSize);
 		map.put("order", order.trim());
+		map.put("offsetMin", offsetMin);
 		
 		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfigList(map);
 		LOGGER.debug("getAttitudeUserConfigList ended");
@@ -440,8 +441,16 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public AttitudeUserConfigVO getAttitudeUserConfigInfo(int tenantId,
 			String companyId, String userId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.debug("getAttitudeUserConfigInfo started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("userId", userId);
+		
+		LOGGER.debug("getAttitudeUserConfigInfo ended");
+		return ezAttitudeDAO.getAttitudeUserConfigInfo(map);
 	}
 
 	@Override
@@ -495,6 +504,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offset", offset);
 		map.put("startPoint", startPoint);
 		map.put("endPoint", endPoint);
+		map.put("type", type);
 		
 		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getUsersModiyAtt(map); 
 		
@@ -546,6 +556,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("apprUserName", apprUserName);
 		map.put("sysLang", sysLang);
 		map.put("offset", offset);
+		map.put("type", type);
 		
 		int attAppListCount = ezAttitudeDAO.getUsersModiyAttCount(map);
 		
