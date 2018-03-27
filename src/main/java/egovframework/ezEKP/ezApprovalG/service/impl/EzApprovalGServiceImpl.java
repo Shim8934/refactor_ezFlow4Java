@@ -8381,8 +8381,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             rtnXML.append("<ITEMNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("ITEMNAME2").item(0).getTextContent())) + "</ITEMNAME2>");
             rtnXML.append("<WRITERNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent())) + "</WRITERNAME2>");
             rtnXML.append("<WRITERJOBTITLE2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent())) + "</WRITERJOBTITLE2>");
-            rtnXML.append("<"
-            		+ "2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent())) + "</WRITERDEPTNAME2>");
+            rtnXML.append("<WRITERDEPTNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent())) + "</WRITERDEPTNAME2>");
 		} else {
 			for (int k = 0; k < selecteds.length; k++) {
 				if (!selecteds[k].trim().equals("")) {
