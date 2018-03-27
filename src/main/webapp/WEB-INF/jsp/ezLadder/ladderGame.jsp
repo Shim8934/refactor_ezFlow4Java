@@ -442,8 +442,7 @@
 				
 			</table>
 		</div>
-					
-		
+
 		<div style="padding: 0px 50px;">
 			<div class="cmtInput_wrap">
 				<div class="cmtInputDiv"><input type="text" id="inputCmtBox" style="width: 100%; height: 100%; padding: 0px 30px;"></div>
@@ -453,8 +452,6 @@
 		
 			<button onclick="sendTest()">socket test!!</button>
 		</div>
-		
-		
 		
 		<div id="chat" align="center">
 			<%@ include file="include/ladderChat.jsp"%> 

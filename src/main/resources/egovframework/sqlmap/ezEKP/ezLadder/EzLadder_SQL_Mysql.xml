@@ -773,6 +773,52 @@
 		]]>
 	</select>
 	
+	<select id="EzLadderDAO.selectPreList" parameterClass="map" resultClass="LadderVO">
+		SELECT 
+			IFNULL(O.LADDERID, L.LADDERID) ORIG_ID, O.CHANGELADDERID, L.LADDERID, L.TYPE, L.TITLE, L.WRITERID
+		FROM 
+			TBL_LADDER_ORDER O
+		RIGHT JOIN 
+			TBL_LADDER L
+		ON 
+			L.LADDERID = O.CHANGELADDERID
+		WHERE 
+			L.TENANT_ID = #tenantId#
+		AND 
+			L.WRITERID = #userId#
+		ORDER BY 
+			ORIG_ID DESC
+		LIMIT 
+			#startPoint#, #endPoint#
+	</select>
+	
+	<select id="EzLadderDAO.selectChangePreList" parameterClass="LadderOrderVO" resultClass="LadderOrderVO">
+		SELECT 
+			LADDERID, CHANGELADDERID
+		FROM 
+			TBL_LADDER_ORDER
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			USERID = #userId#
+	</select>
+	
+	<delete id="EzLadderDAO.deleteChangePreList" parameterClass="LadderOrderVO">
+		DELETE FROM 
+			TBL_LADDER_ORDER
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			USERID = #userId#
+	</delete>
+	
+	<insert id="EzLadderDAO.insertChangePreList" parameterClass="LadderOrderVO">
+		INSERT INTO 
+			TBL_LADDER_ORDER(TENANT_ID, LADDERID, CHANGELADDERID, USERID)
+		VALUES
+			(#tenant_id#, #ladderId#, #changeLadderId#, #userId#)
+	</insert>
+	
 	<select id="EzLadderDAO.selectLadderCommentList" parameterClass="LadderCommentVO" resultClass="LadderCommentVO">
 		SELECT 
 			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE
@@ -795,7 +841,7 @@
 	</insert>
 	
 	<!-- 밑에 잘 실행되면 삭제하기... -->
-	<select id="EzLadderDAO.selectRecentCommentId" parameterClass="LadderCommentVO" resultClass="Integer">
+	<!-- <select id="EzLadderDAO.selectRecentCommentId" parameterClass="LadderCommentVO" resultClass="Integer">
 		SELECT 
 			MAX(ID)
 		FROM 
@@ -804,31 +850,31 @@
 			TENANT_ID = #tenant_id#
 		AND 
 			USERID = #userId#
-	</select>
+	</select> -->
 	
 	<select id="EzLadderDAO.selectLadderComment" parameterClass="LadderCommentVO" resultClass="LadderCommentVO">
-	SELECT 
-		ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE
-	FROM 
-		TBL_LADDER_COMMENT
-	WHERE 
-		TENANT_ID = #tenant_id#
-	AND 
-		<isEqual property="id" compareValue="0">
-			<![CDATA[
-			ID = (SELECT 
-				MAX(ID) 
-			FROM 
-				TBL_LADDER_COMMENT 
-			WHERE 
-				TENANT_ID = #tenant_id# 
-			AND 
-				USERID = #userId#)
-			]]>
-		</isEqual>
-		<isNotEqual property="id" compareValue="0">
-			ID = #id#
-		</isNotEqual>
+		SELECT 
+			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE
+		FROM 
+			TBL_LADDER_COMMENT
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			<isEqual property="id" compareValue="0">
+				<![CDATA[
+				ID = (SELECT 
+					MAX(ID) 
+				FROM 
+					TBL_LADDER_COMMENT 
+				WHERE 
+					TENANT_ID = #tenant_id# 
+				AND 
+					USERID = #userId#)
+				]]>
+			</isEqual>
+			<isNotEqual property="id" compareValue="0">
+				ID = #id#
+			</isNotEqual>
 	</select>
 	
 	<update id="EzLadderDAO.updateLadderComment" parameterClass="LadderCommentVO">
