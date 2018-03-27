@@ -13,9 +13,7 @@
 	</head>
 	<body style="background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top">
 		<div id="leTop">
-			<div class="leTitle">
-				편지지 추가
-			</div>
+			<div class="leTitle"></div>
 			<div class="leLetter">
 				<!-- 편지지명, 편지지명(영문) input -->
 				<div class="leLetterInfo">
@@ -62,7 +60,11 @@
 			window.onload = function() {
 				console.log(popUpType);
 				if (popUpType == "modify") {
+					$(".leTitle").text("편지지 수정");
+					
 					modifyLoad(popLetterNo);
+				} else {
+					$(".leTitle").text("편지지 추가");
 				}
 				
 				$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=MAILLETTER"); // 에디터
@@ -128,7 +130,6 @@
 			// 저장
 			function letterUpload(letterJson, type) {
 				var uploadUrl = type == "add" ? "/admin/ezEmail/createLetter.do" : "/admin/ezEmail/updateDisplayNameLetter.do";
-				var nowSelect = $(opener.document).find(".lmLetterSelect").attr("id");
 				
 				$.ajax({
 					type:"POST",
@@ -141,7 +142,7 @@
 						if (opener.searchTxt != "") {
 							opener.letterSearch();
 						} else {
-							opener.getLetterList(letterJson.letterBoxNo, nowSelect); // 편지지 리스트
+							opener.getLetterList(letterJson.letterBoxNo); // 편지지 리스트
 						}
 						alert("저장했습니다.");
 						letterPopUpClose(); // 편지지 팝업 닫기

@@ -15,14 +15,8 @@
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
 	</head>
 	
-	<style>
-	
-	
-	</style>
-	
 	<body>
 		<div id="lmTop">
-			
 			<div class="lmleft">
 				<!-- 편지지함 목록 -->
 				<div class="lmLetterBox">
@@ -59,7 +53,7 @@
 			<div class="lmright">
 				<div class="lmPreview">
 					<div class="lmPreViewTxt"style='text-align:center; position:relative; top:50%; tansform:translateY(-50%);'>미리보기</div>
-					<iframe src="" class="lmPreViewIframe" id="lmPreViewIframe" name="lmPreViewIframe" style="display:none; border:none; width:100%; height:100%;"></iframe>
+					<iframe src="" class="lmPreViewIframe lmPre" id="lmPreViewIframe" name="lmPreViewIframe" style="display:none; border:none; width:100%; height:100%;"></iframe>
 				</div>
 			</div>			
 		</div>
@@ -205,7 +199,7 @@
 			// 미리보기창에 마우스 올렸을떄 편지지 이름 보여주기
 			$(document).on("mouseover", ".lmPreview > .lmPreViewIframe", function(){
 				var letterName = $(this).attr("data-letterName");
-				var letterNameSpan = "<span class='preViewLetterName'>" + letterName + "</span>";
+				var letterNameSpan = "<span class='preViewLetterName lmPre'>" + letterName + "</span>";
 				
 				$(".lmPreview").prepend(letterNameSpan);
 				$(".preViewLetterName").css({
@@ -221,7 +215,10 @@
 			});
 			
 			// 미리보기창에 마우스 올렸을떄 편지지 이름 없애기
-			$(document).on("mouseleave", ".lmPreview > .lmPreViewIframe:not(.preViewLetterName)", function(){
+			/* $(document).on("mouseleave", ".lmPreview > .lmPreViewIframe:not(.preViewLetterName)", function(){
+				$(".lmPreview .preViewLetterName").remove();
+			}); */
+			$(document).on("mouseleave", ".lmPreview", function(){
 				$(".lmPreview .preViewLetterName").remove();
 			});
 				
