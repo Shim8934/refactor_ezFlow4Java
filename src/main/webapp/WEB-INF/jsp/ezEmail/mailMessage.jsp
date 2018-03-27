@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title><spring:message code="ezEmail.t601" /></title>
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script>
 			function window_onload() {
