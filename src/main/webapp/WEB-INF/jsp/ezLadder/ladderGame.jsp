@@ -37,29 +37,32 @@
 		});
 	
 		
-		
+		function ladder_window_resize() {
+			var win_width = $(window).width() - 20;
+			
+			$(".setTable").css("width", win_width + "px");
+			$("#ladderLineBox").css("width", (win_width - 40) + "px");
+		}
 		
 		/** 180320 추가 : 사다리 재사용 */
 		$(function() {
 		
+			
+			setAllUser();
+			setAttendantsView(); 
 			/** 사이즈/ 위치 */
-			$(".waitUser").css("width", size*150+"px");
-			$(".waitItem").css("width", size*150+"px");
-			$(".completeUser").css("width", size*150+"px");
-			$(".completeItem").css("width", size*150+"px");
-			$(".blackBox").css("width", size*150 + "px");
-			$(".startButton").css("left", size*130/2 + "px");
+			
+			$("#blackBox").css("width", size*150 + "px");
+			$("#ladderLine").css("width", size*150 + "px");
+			$("#startButton").css("left", size*130/2 + "px");
+			$(".setTable").css("width",  $(window).width() - 20 + "px");
+			$("#ladderLineBox").css("width", $(window).width() - 60 + "px");
 			
 			$(window).resize(function() {
 				ladder_window_resize();
 			});
 			
-			function ladder_window_resize() {
-				var win_width = $(window).width() - 20;
-				
-				$(".setTable").css("width", win_width + "px");
-				$("#ladderLineBox").css("width", (win_width - 40) + "px");
-			}
+			
 			showComments();
 			getCmtSockConnect();
 			
@@ -270,12 +273,68 @@
 				window.location.href= '/ezladder/setLadderStart.do?allData=' + allData;
 			}
 		} 
+		
+
+		/** 참여자 셋팅 */
+		function setAllUser() {
+	
+			attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
+			items = []; 
+			var cnt =0;
+			<c:forEach items="${list }" var="ladderLineList">	
+				attendants["id"][cnt] =  "${ladderLineList.userId}";
+				attendants["name"][cnt] = "${ladderLineList.userName}";
+				attendants["name2"][cnt] = "${ladderLineList.userName2}";
+				attendants["order"][cnt] = "${ladderLineList.ladderOrder}";
+				items[cnt] = "${ladderLineList.item}";
+				cnt = cnt +1;
+				//pic 값 넣어줘야함
+			</c:forEach>
+		}
+		
+		
+		function setAttendantsView() {
+			var len = attendants["id"].length;
+			var picsrc = "";
+			var html = "";
+			
+			if(attendants !== null) {
+				$("#attendantList").html("");
+				$("#itemList").html("");
+				
+				for(var i = 0; i < len; i++) {
+					html = "";
+					picsrc = "/images/OrganTree/porson_noimg.gif";
+					html += "<li class='attendant'>";
+					if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
+						html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";				
+					} else {
+						picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
+						html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";
+					}
+					html +=  attendants["name"][i] ;
+					html += "<span class='remove'>★</span></div></li>";		
+					$("#attendantList").append(html);
+					$("#itemList").append("<li class='item'>" + items[i] + "</li>");
+					
+				}
+				add_user_change_ulsize(attendants["id"].length);
+				
+			}
+		} 
+		
+		function add_user_change_ulsize(usernum) {
+			$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
+			$("#ladderCanvas").attr("width", (usernum * 150) + "px");
+		}
 	</script>
 	<style type="text/css">
+		
 		ul {
 		    list-style:none;
 		    margin:0;
 		    padding:0;
+		    float: left;
 		}
 		
 		li {
@@ -286,14 +345,27 @@
 		    text-align: center;
 		    
 		}
-		.blackBox {
-			
-			height:500px;
+		
+		#blackBox {
+			height:600px;
 			border:30px solid transparent; 
 			color:black;
 			margin-right:50px;
 			background: #010;
 			border-color:#010;
+			position: relative; top: 100px; bottom:100px;
+			float: left;
+			
+		}
+		#ladderLine {
+			height:600px;
+			border:30px solid transparent; 
+			color:black;
+			margin-right:50px;
+			background: #fff;
+			border-color:#fff;
+			position: relative; top: 100px; bottom:100px;
+			float: left;
 		}
 		
 		.cmtdelete, .cmtmodify {
@@ -303,36 +375,13 @@
 			background: beige;
 		}
 		
-		.waitUser {
-           height:100px; 
-           float:left; 
-           margin-right:10px;
-           overflow: auto;
-          }
-   
-   		.waitItem {
-           height:100px; 
-           float:left; 
-           margin-right:10px;
-           overflow: auto;
-          }
-  
-  		.completeUser {
-           height:100px; 
-           float:left; 
-           margin-right:10px;
-           overflow: auto;
-          }
-         .completeItem {
-           height:100px; 
-           float:left; 
-           margin-right:10px;
-           overflow: auto;
-          }
-         .startButton {
-          	position: relative; top: 200px;
+         #startButton {
+          	position: relative; top: 220px;
          }
-        
+         
+         #itemList {
+			margin-top: 100px;
+		}
 	</style>
 </head>
 	<body class="mainbody">
@@ -354,36 +403,46 @@
 				</span> 
 			</h2>
 		</div>
+		
 		<c:if test="${vo.status eq 1 }">
 			위치 수정~~~
 			<div id="startAuto">자동으로 진행하기</div>
 			<div id="seeAllResult">바로 결과보기</div>
 		</c:if>
+		
 		<div class="fullwidth" style="margin-top: 100px;" >
 			<table class="setTable" style="width: 98%;">
-				
 				<tr>
-					<td colspan="4" style="height: 700px; padding: 10px 0px;">
+					<td colspan="4" style=" padding: 10px 0px;">
 						<div class="wrap center" style="height: 100%; width: 100%;">
 							<div id="ladderLineBox" style="height: 100%; width: 100%; border: 1px solid gray">
-								<c:choose>
-									<c:when test="${vo.status eq 0 }">
-										<%@ include file="include/ladderWait.jsp"%> 
-									</c:when>
-									<c:otherwise>
-										<%@ include file="include/ladderComplete.jsp"%> 
-									</c:otherwise>
-								</c:choose>
-								<br><br><br><br>
-
+								<ul id="attendantList"></ul><br><br>
+									<c:if test="${vo.status eq 0 }">
+										<div id="blackBox" >
+											<div id="startButton">
+												<c:choose>
+													<c:when test="${id eq vo.writerId }">
+														<a href="#" onclick="start(${vo.ladderId})"><img src ='/images/ezLadder/start.png' width='50' height ='50'/></a><br>
+													</c:when>
+													<c:otherwise>
+														<img src ='/images/ezLadder/start.png' width='50' height ='50'/><br>
+													</c:otherwise>
+												</c:choose>
+											</div>
+										</div>
+									</c:if>
+									<c:if test="${vo.status eq 1}">
+									<div id="ladderLine"></div>
+									</c:if><br><br><br>						
+								<ul id="itemList"></ul>	
 							</div>
 						</div>
-						
 					</td>
 				</tr>	
+				
 			</table>
 		</div>
-		
+					
 		
 		<div style="padding: 0px 50px;">
 			<div class="cmtInput_wrap">
@@ -394,13 +453,7 @@
 		
 			<button onclick="sendTest()">socket test!!</button>
 		</div>
-		<!-- <div id="ladderGame" align="center" >
-			<br><br><br><br>
-			상태가 대기이면 ladderWait.jsp 호출<br>
-			상태가 완료이면 ladderComplete.jsp 호출<br><br><br>
-			
-			<br><br><br><br><br><br><br><br><br><br><br><br><br>
-		</div> -->
+		
 		
 		
 		<div id="chat" align="center">
