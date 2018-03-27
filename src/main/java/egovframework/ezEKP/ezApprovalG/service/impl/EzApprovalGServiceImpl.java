@@ -8378,7 +8378,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             rtnXML.append("<ITEMNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("ITEMNAME2").item(0).getTextContent())) + "</ITEMNAME2>");
             rtnXML.append("<WRITERNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent())) + "</WRITERNAME2>");
             rtnXML.append("<WRITERJOBTITLE2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent())) + "</WRITERJOBTITLE2>");
-            rtnXML.append("<WRITERDEPTNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent())) + "</WRITERDEPTNAME2>");
+            rtnXML.append("<"
+            		+ "2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent())) + "</WRITERDEPTNAME2>");
 		} else {
 			for (int k = 0; k < selecteds.length; k++) {
 				if (!selecteds[k].trim().equals("")) {
@@ -18110,22 +18111,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (fieldName.equals("ISPUBLIC")) {
 					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
-				}
-				
-				if (fieldName.equals("DOCTITLE")) {
-					resultXML.append("<DOCTITLE>" + docXML.getElementsByTagName("DOCTITLE").item(k).getTextContent() + "</DOCTITLE>");
-				}
-				
-				if (fieldName.equals("WRITERDEPTNAME")) {
-					resultXML.append("<WRITERDEPTNAME>" + docXML.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent() + "</WRITERDEPTNAME>");
-				}
-				
-				if (fieldName.equals("WRITERNAME")) {
-					resultXML.append("<WRITERNAME>" + docXML.getElementsByTagName("WRITERNAME").item(k).getTextContent() + "</WRITERNAME>");
-				}
-				
-				if (fieldName.equals("STARTDATE")) {
-					resultXML.append("<STARTDATE>" + docXML.getElementsByTagName("STARTDATE").item(k).getTextContent() + "</STARTDATE>");
 				}
 				
 				resultXML.append("</CELL>");

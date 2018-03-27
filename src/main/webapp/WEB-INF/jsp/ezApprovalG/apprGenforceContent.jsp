@@ -44,7 +44,7 @@
 	            } catch (e) { }
 	            return ret;
 	        };
-	        var XmlBodyATT = createXmlDom();
+// 	        var XmlBodyATT = createXmlDom();
 	        var BODYTag;
 	        var BODYHTML;
 	        var DocTitleObj;
@@ -232,7 +232,7 @@
 	                }
 	                else {
 	                    tempXML = loadXMLString(tempStr);
-	                    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	                    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	                    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	                    var _DocContentHtml = getNodeText(XmlBodyDATA);
 	                    var ConXmlDiv = document.createElement("DIV");
@@ -254,9 +254,9 @@
 	                            }
 	                        }
 	                    }
-	                    for (var i = 0; i < GetElementsByTagName(XmlBodyATT, "NODE").length; i++) {
+	                    /* for (var i = 0; i < GetElementsByTagName(XmlBodyATT, "NODE").length; i++) {
 	                        SetAttribute(document.getElementsByTagName("body")[0], getNodeText(GetElementsByTagName(XmlBodyATT, "NODENAME")[i]), getNodeText(GetElementsByTagName(XmlBodyATT, "NODEVALUE")[i]));
-	                    }
+	                    } */
 	                    BodyTagsDisabled(document.getElementById('div_Content'));
 	                    parent.FieldsAvailable();
 	                }
