@@ -470,8 +470,8 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 						+ egovMessageSource.getMessage("ezCommunity.t52", locale) 
 						+ pDivi 
 						+ egovMessageSource.getMessage("ezCommunity.t54", locale);*/
-				
-				String content = subject.toString();
+								
+				String content = "<DIV id='msgBody' style='FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana' name='urn:schemas:httpmail:textdescription'>" + subject.toString() + "</DIV>";
 				
 				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject.toString(), content, false);
 			}

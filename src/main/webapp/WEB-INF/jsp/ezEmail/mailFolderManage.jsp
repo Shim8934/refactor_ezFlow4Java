@@ -443,6 +443,7 @@
 				            if (subscribe != null && subscribe == "1") {
 				        		var IMG_TAG2 = document.createElement("IMG");
 				            	IMG_TAG2.setAttribute("src", subscribeImg);
+				            	IMG_TAG2.style.marginLeft = "10px";
 				            	$("#PostTreeView_node_"+sIdx).parent().append(IMG_TAG2);
 				            }
 				            if (subscribe != null && subscribe == "0") {
