@@ -762,6 +762,43 @@ public class EzJournalSBController {
 	}
 	
 	/**
+	 * 일지 조회정보 입력
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezJournal/journalViewCheck.do")
+	@ResponseBody
+	public String journalViewCheck(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
+		logger.debug("journalViewCheck started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String viewDate ="";
+		try {
+			viewDate = commonUtil.getTodayUTCTime("");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		String journalIdList = request.getParameter("journalIdList");
+		String userId = userInfo.getId();
+				
+		param.put("userId", userId);
+		param.put("viewDate", viewDate);
+		param.put("journalIdList", journalIdList);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/viewers/"+userId, param, request,"put",null);
+		
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("journalViewCheck ended");
+		
+		return status;
+	}
+	
+	/**
 	 * 일지작성자에게 댓글알림
 	 * @param request
 	 * @param model

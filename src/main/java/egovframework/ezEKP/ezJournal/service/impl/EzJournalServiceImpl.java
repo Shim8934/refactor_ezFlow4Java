@@ -1034,4 +1034,24 @@ public class EzJournalServiceImpl implements EzJournalService{
 		logger.debug("getReceiverCount ended.");
 		return viewerCount;
 	}
+
+	@Override
+	public void saveJournalViewInfo(List<String> journalIdList, String viewDate, String userId, int tenantId) {
+		logger.debug("saveJournalViewInfo started");
+		
+		logger.debug("tenantId : "+tenantId);
+		logger.debug("userId : "+userId);
+		logger.debug("viewDate : "+viewDate);
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("userId", userId);
+		param.put("viewDate", viewDate);
+		
+		for (int i = 0; i < journalIdList.size(); i++) {
+			param.put("journalId", journalIdList.get(i));
+			ezJournalDAO.insertViewInfo(param);
+		}
+			
+		logger.debug("saveJournalViewInfo ended");
+	}
 }

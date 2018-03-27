@@ -380,4 +380,13 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public String getJournalViewerCount(String journalId, int tenantId) throws Exception;
+
+	/**
+	 * 일지 조회정보 입력
+	 * @param journalIdList
+	 * @param viewDate
+	 * @param userId
+	 * @param tenantId
+	 */
+	public void saveJournalViewInfo(List<String> journalIdList,String viewDate, String userId, int tenantId);
 }
