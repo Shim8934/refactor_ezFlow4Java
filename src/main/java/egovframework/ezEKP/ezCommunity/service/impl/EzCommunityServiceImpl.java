@@ -5116,7 +5116,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 
 		for (CommunityCClubUserVO user : userList) {
 			sb.append("<tr>");
-            sb.append("<td height=\"23\" align=\"left\" class=\"white\">" + iCount + "</td>");
+            sb.append("<td height=\"23\" align=\"center\" class=\"white\">" + iCount + "</td>");
             sb.append("<td class=\"white\">");
             
             logger.debug("lang = " + userInfoLang + " || userID = " + user.getC_ID() + " || companyID = " + user.getCompanyID() + " || userName = " + user.getUserName() + " || userName2 = " + user.getUserName2());

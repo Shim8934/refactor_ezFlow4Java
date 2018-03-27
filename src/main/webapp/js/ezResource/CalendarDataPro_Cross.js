@@ -1,4 +1,4 @@
-﻿﻿var wTable;
+﻿var wTable;
 var xmlhttp;
 var delFlag = false;
 
@@ -821,7 +821,6 @@ function CalWeekDataBind(oAppointment, order, oAppointment2) {
         oDiv.style.top = "0";
         oDiv.style.overflow = "hidden";
         oDiv.style.width = "100%";
-        oDiv.style.paddingRight = "10%";
         oDiv.style.height = hSize - 3 + "px";
         oDiv.style.position = "absolute";
         oDiv.style.zIndex = "1";
@@ -1417,7 +1416,7 @@ function Schedule_onMouseClick(event, type) {
         if (g_szCurrentApptDivID != null && document.getElementById(g_szCurrentApptDivID))
             document.getElementById(g_szCurrentApptDivID).style.backgroundColor = "";
 
-        event.style.backgroundColor = "#FFEAEA";
+        event.style.backgroundColor = "rgba(255, 250, 250, 1)";
 
         //M:월, W:주, D:일
         if (type == "M") {
@@ -1425,7 +1424,7 @@ function Schedule_onMouseClick(event, type) {
             var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("resource_ok") : document.querySelectorAll('.resource_ok'); //월에 표시된 승인된 자원들
             var eventOwnerID = GetAttribute(event,"num");
             for (var i = 0; i < resDate.length; i++) {
-                var bgColor = "#F2FFEB";
+                var bgColor = "rgb(250, 255, 243)";
                 var checkOwnerID = GetAttribute(resDate[i].parentNode,"num");
                 if (eventOwnerID == checkOwnerID) {
                     resDate[i].parentNode.style.backgroundColor = bgColor;
@@ -1438,7 +1437,7 @@ function Schedule_onMouseClick(event, type) {
             var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("calendar_data_ok") : document.querySelectorAll('.calendar_data_ok'); //주에 표시된 승인된 자원들
             var eventOwnerID = GetAttribute(event,"num");
             for (var i = 0; i < resDate.length; i++) {
-                var bgColor = "#F2FFEB";
+                var bgColor = "rgb(250, 255, 243)";
 
                 //시간영역
                 var checkOwnerID = GetAttribute(resDate[i],"num");
@@ -1455,12 +1454,12 @@ function Schedule_onMouseClick(event, type) {
             var eventOwnerID = GetAttribute(event,"num");
 
             for (var i = 0; i < resDate.length; i++) {
-                var bgColor = "#F2FFEB";
+                var bgColor = "rgb(250, 255, 243)";
                 
                 if (calendarOk != null){//일보기 일정에 마우스오버 시 색변경 수정
-                	calendarOk[i].style.backgroundColor = "#F2FFEB";
+                	calendarOk[i].style.backgroundColor = "rgb(250, 255, 243)";
                 }else if (calendarNo != null){
-                	calendarNo[i].style.backgroundColor = "#FFEAEA";
+                	calendarNo[i].style.backgroundColor = "rgba(255, 250, 250, 1)";
                 }
 
                 //시간영역
@@ -1502,7 +1501,7 @@ function Schedule_onMouseClick(event, type) {
             var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("resource_ok") : document.querySelectorAll('.resource_ok'); //월에 표시된 모든 자원들
             var eventOwnerID = GetAttribute(event,"num");
             for (var i = 0; i < resDate.length; i++) {
-                var bgColor = "#F2FFEB";
+                var bgColor = "rgb(250, 255, 243)";
                 var checkOwnerID = GetAttribute(resDate[i].parentNode,"num");
                 if (eventOwnerID == checkOwnerID) {
                     resDate[i].parentNode.style.backgroundColor = bgColor;
@@ -1515,7 +1514,7 @@ function Schedule_onMouseClick(event, type) {
             var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("calendar_data_ok") : document.querySelectorAll('.calendar_data_ok'); //주에 표시된 모든 자원들
             var eventOwnerID = GetAttribute(event,"num");
             for (var i = 0; i < resDate.length; i++) {
-                var bgColor = "#F2FFEB";
+                var bgColor = "rgb(250, 255, 243)";
 
                 //시간영역
                 var checkOwnerID = GetAttribute(resDate[i],"num");
@@ -1532,12 +1531,12 @@ function Schedule_onMouseClick(event, type) {
             var eventOwnerID = GetAttribute(event,"num");
 
             for (var i = 0; i < resDate.length; i++) {
-                var bgColor = "#F2FFEB";
+                var bgColor = "rgb(250, 255, 243)";
                 
                 if (calendarOk != null){//일보기 일정에 마우스오버 시 색변경 수정
-                	calendarOk[i].style.backgroundColor = "#F2FFEB";
+                	calendarOk[i].style.backgroundColor = "rgb(250, 255, 243)";
                 }else if (calendarNo != null){
-                	calendarNo[i].style.backgroundColor = "#FFEAEA";
+                	calendarNo[i].style.backgroundColor = "rgba(255, 250, 250, 1)";
                 }
                 //시간영역
                 var checkOwnerID = GetAttribute(resDate[i],"num");
