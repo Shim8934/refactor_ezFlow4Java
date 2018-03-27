@@ -51,7 +51,7 @@ function DocMove() {
                     var GetXml = "<LISTVIEWDATA>";
                     GetXml += "<HEADERS><HEADER><NAME>" + strLang940 + "</NAME><WIDTH>50</WIDTH></HEADER></HEADERS>"
                     GetXml += "<ROWS><ROW><CELL>"
-                    GetXml += "<VALUE><![CDATA[" + GetChildNodes(selRow)[4].textContent + "]]></VALUE>";
+                    GetXml += "<VALUE><![CDATA[" + GetChildNodes(selRow)[5].textContent + "]]></VALUE>";
                     GetXml += "<DATA1>" + MakeXMLString(GetAttribute(selRow, "DATA2")) + "</DATA1>";
                     GetXml += "<DATA2 ></DATA2>";
                     GetXml += "<DATA3>" + MakeXMLString(pDocID) + "</DATA3>";
