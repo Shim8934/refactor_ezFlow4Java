@@ -2,11 +2,14 @@ package egovframework.ezEKP.ezLadder.service.impl;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -25,6 +28,7 @@ import egovframework.ezEKP.ezLadder.vo.LadderBmUserVO;
 import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
 import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
+import egovframework.ezEKP.ezLadder.vo.LadderOrderVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -119,6 +123,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("offset", commonUtil.getMinuteUTC(vo.getOffset()));
 		map.put("lang", lang);
 	
+		if(mode.equals("pre")) {
+			List<LadderVO> ladList = ezLadderDAO.selectPreList(map);
+			return ladList;
+		}
+		
 		List<LadderVO> list = ezLadderDAO.getLadderList(map);
 		
 		if(lang.equals("2")) {
@@ -370,23 +379,48 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public List<LadderVO> selectPreLadderList(String userId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public LadderLineVO selectPreLadder(String userId, int ladderId)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void changePreLadderList(String userId, String ladderId_1,
-			String ladderId_2) throws Exception {
-		// TODO Auto-generated method stub
+	public void changePreLadderList(LadderOrderVO ladOrders) throws Exception {
+		int len = 0;
+		Map<String, String> orders = new HashMap<String, String>();
 		
+		List<String> ladId1 = new ArrayList<String>(Arrays.asList(ladOrders.getLadderIds()));
+		List<String> ladId2 = new ArrayList<String>(Arrays.asList(ladOrders.getChangeLadderIds()));
+		
+		List<LadderOrderVO> oldLadOrder = ezLadderDAO.selectChangePreList(ladOrders);
+		len = oldLadOrder.size();
+		for(LadderOrderVO oldVO : oldLadOrder) {
+			orders.put(String.valueOf(oldVO.getChangeLadderId()), String.valueOf(oldVO.getLadderId()));
+		}
+		
+		len = ladId1.size();
+		String [] chids = new String [2]; // changeid 
+		String [] tmpids = new String [2]; // ladderid (originid)
+		for(int i = 0; i < len; i++) {
+			chids[0] = ladId1.get(i); 
+			chids[1] = ladId2.get(i);
+			
+			for(int j = 0; j < chids.length; j++) { 
+				if(!orders.containsKey(chids[j])) { // key: changeladderid, value: ladderid
+					orders.put(chids[j], "");
+					tmpids[j] = chids[j];
+				} else {
+					tmpids[j] = orders.get(chids[j]); 
+				}
+			}
+			
+			orders.replace(chids[0], tmpids[1]);
+			orders.replace(chids[1], tmpids[0]);
+		}
+		
+		ezLadderDAO.deleteChangePreList(ladOrders);
+		
+		for(String key : orders.keySet()) {
+			if(!key.equals(orders.get(key))) {
+				ladOrders.setLadderId(Integer.parseInt(orders.get(key)));
+				ladOrders.setChangeLadderId(Integer.parseInt(key));
+				ezLadderDAO.insertChangePreList(ladOrders);
+			}
+		}
 	}
 
 	/** hyh */

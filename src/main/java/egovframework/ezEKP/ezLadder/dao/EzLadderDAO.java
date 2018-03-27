@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezLadder.vo.LadderBmUserVO;
 import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
 import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
+import egovframework.ezEKP.ezLadder.vo.LadderOrderVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -76,6 +77,26 @@ public class EzLadderDAO extends EgovAbstractDAO {
 	public int selectRecentLadderId(LadderVO lad) throws Exception {
 		return (int) select("EzLadderDAO.selectRecentLadderId", lad);
 	}
+	
+	/** 이전 사다리 관련 */
+	@SuppressWarnings("unchecked")
+	public List<LadderVO> selectPreList(Map<String, Object> ladMap) throws Exception {
+		return (List<LadderVO>) list("EzLadderDAO.selectPreList", ladMap);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LadderOrderVO> selectChangePreList(LadderOrderVO ladOrder) throws Exception {
+		return (List<LadderOrderVO>) list("EzLadderDAO.selectChangePreList", ladOrder);
+	}
+	
+	public void deleteChangePreList(LadderOrderVO ladOrder) throws Exception {
+		delete("EzLadderDAO.deleteChangePreList", ladOrder);
+	}
+	
+	public void insertChangePreList(LadderOrderVO ladOrder) throws Exception {
+		insert("EzLadderDAO.insertChangePreList", ladOrder);
+	}
+	
 	
 	/** 댓글 관련 */
 	@SuppressWarnings("unchecked")

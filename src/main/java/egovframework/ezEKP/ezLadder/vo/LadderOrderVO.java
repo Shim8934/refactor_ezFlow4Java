@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezLadder.vo;
 
+import java.util.Arrays;
+
 public class LadderOrderVO {
 	
 	/** 테넌트 id */
@@ -12,6 +14,11 @@ public class LadderOrderVO {
 	private int changeLadderId;
 	/** 사용자 아이디 */
 	private String userId;
+	
+	/** 사다리 번호 */
+	private String [] ladderIds;
+	/** 변경할 사다리 번호 */
+	private String [] changeLadderIds;
 	
 	public int getTenant_id() {
 		return tenant_id;
@@ -43,6 +50,25 @@ public class LadderOrderVO {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
+	public String [] getLadderIds() {
+		return ladderIds;
+	}
+	public void setLadderIds(String [] ladderIds) {
+		this.ladderIds = ladderIds;
+	}
+	public String [] getChangeLadderIds() {
+		return changeLadderIds;
+	}
+	public void setChangeLadderIds(String [] changeLadderIds) {
+		this.changeLadderIds = changeLadderIds;
+	}
+	@Override
+	public String toString() {
+		return "LadderOrderVO [tenant_id=" + tenant_id + ", id=" + id
+				+ ", ladderId=" + ladderId + ", changeLadderId="
+				+ changeLadderId + ", userId=" + userId + ", ladderIds="
+				+ Arrays.toString(ladderIds) + ", changeLadderIds="
+				+ Arrays.toString(changeLadderIds) + "]";
+	}
 	
 }

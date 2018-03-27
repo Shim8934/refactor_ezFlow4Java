@@ -384,16 +384,15 @@
 			</table>
 		</div>
 		
-		
-		<div style="padding: 0px 50px;">
-			<div class="cmtInput_wrap">
-				<div class="cmtInputDiv"><input type="text" id="inputCmtBox" style="width: 100%; height: 100%; padding: 0px 30px;"></div>
-				<div id="saveCmtBtn">댓글 등록</div>
-			</div>
-			<div id="commentDiv" style="width: 100%"></div>
-		
-			<button onclick="sendTest()">socket test!!</button>
-		</div>
+<div style="padding: 0px 50px;">
+	<div class="cmtInput_wrap">
+		<div class="cmtInputDiv"><input type="text" id="inputCmtBox" class="input" style="width: 100%; height: 100%; padding: 0px 30px;"></div>
+		<div id="saveCmtBtn">댓글 등록</div>
+	</div>
+	<div id="commentDiv" style="width: 100%"></div>
+
+	<button onclick="sendTest()">socket test!!</button>
+</div>
 		<!-- <div id="ladderGame" align="center" >
 			<br><br><br><br>
 			상태가 대기이면 ladderWait.jsp 호출<br>

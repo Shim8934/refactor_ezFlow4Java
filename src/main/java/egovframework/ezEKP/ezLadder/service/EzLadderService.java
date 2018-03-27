@@ -34,9 +34,7 @@ public interface EzLadderService {
 	public LadderCommentVO updateComment(LadderCommentVO cmtVO) throws Exception; // 댓글 수정
 	public void deleteComment(LadderCommentVO cmtVO) throws Exception; // 댓글 삭제
 	
-	public List<LadderVO> selectPreLadderList(String userId) throws Exception; // 이전 사다리 목록 조회
-	public LadderLineVO selectPreLadder(String userId, int ladderId) throws Exception; // 이전 사다리 조회
-	public void changePreLadderList(String userId, String ladderId_1, String ladderId_2) throws Exception; // 이전 사다리 목록 바꾸기
+	public void changePreLadderList(LadderOrderVO ladOrders) throws Exception; // 이전 사다리 목록 바꾸기
 	
 	/** hyh	*/
 

@@ -50,6 +50,7 @@ import egovframework.ezEKP.ezLadder.vo.LadderBmUserVO;
 import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
 import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
+import egovframework.ezEKP.ezLadder.vo.LadderOrderVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -550,7 +551,7 @@ public class EzLadderController {
 	 * @throws Exception 
 	 * */
 	@RequestMapping(value = "/ezLadder/setListOrder.do")
-	public String setListOrder(@CookieValue("loginCookie") String loginCookie, String [] ladderId, HttpServletRequest request, Model model) throws Exception {
+	public String setListOrder(@CookieValue("loginCookie") String loginCookie, LadderOrderVO ladOrderVO, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setListOrder.do started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -566,7 +567,10 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("tenant_id", userInfo.getTenantId())
+				.queryParam("ladderIds", ladOrderVO.getLadderIds())
+				.queryParam("changeLadderIds", ladOrderVO.getChangeLadderIds());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 

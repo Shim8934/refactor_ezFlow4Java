@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezLadder.vo.LadderBmUserVO;
 import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
 import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
+import egovframework.ezEKP.ezLadder.vo.LadderOrderVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -412,12 +413,15 @@ public class EzLadderGWController {
 	 * 이전 사다리 목록 순서 바꾸기
 	 * */
 	@RequestMapping(value = "/ladder/ladder-list/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject gwChangePreLadderList(@PathVariable String userId, @PathVariable String ladderId) {
+	public JSONObject gwChangePreLadderList(@PathVariable String userId, LadderOrderVO ladOrderVO) {
 		logger.debug("web G/W LADDER [PUT /ladder/ladder-list/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			
+			ezLadderService.changePreLadderList(ladOrderVO);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", null);
