@@ -366,7 +366,7 @@
 		        ezaprhistory_cross_dialogArguments[0] = "";
 		        ezaprhistory_cross_dialogArguments[1] = btnhistory_onclick_Complete;
 		
-		        DivPopUpShow(740, 450, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID);
+		        DivPopUpShow(740, 450, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID "&ext=" + "mht" );
 		    }
 		   
 		    function btnhistory_onclick_Complete() {

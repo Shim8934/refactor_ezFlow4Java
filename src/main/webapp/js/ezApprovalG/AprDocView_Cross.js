@@ -128,7 +128,7 @@ function getHistory() {
 	if (pDocState == strDocState15) {
 		pDocID = pOrgDocID;
 	}
-    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
+    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID "&ext=" + "mht";
 
     ezaprhistory_cross_dialogArguments[0] = "";
     ezaprhistory_cross_dialogArguments[1] = getHistory_Complete;

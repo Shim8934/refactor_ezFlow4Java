@@ -3155,7 +3155,7 @@ function getSignDate() {
 }
 var ezaprhistory_cross_dialogArguments = new Array();
 function getHistory() {
-    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
+    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID "&ext=" + ext;
 
     ezaprhistory_cross_dialogArguments[0] = "";
     ezaprhistory_cross_dialogArguments[1] = getHistory_Complete;
