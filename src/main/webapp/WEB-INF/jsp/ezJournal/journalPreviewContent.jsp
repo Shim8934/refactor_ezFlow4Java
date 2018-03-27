@@ -59,12 +59,12 @@
 	        </div>
          </span>
 <!-- 		<div style="overflow: auto; height: 300px;"> -->
-			<div style="text-align: left;">
-				<img onclick="Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png">
-		        <img onclick="Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png">
-			</div>
-			<div class="txtContent" style="height:100%; margin-left:5px; margin-right:5px; overflow: auto;">
-				<div style="height:10px;display:inline-block;">
+			<div style="height:100%; margin-left:5px; margin-right:5px; overflow: auto;">
+				<div style="text-align: left;">
+					<img onclick="Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png">
+			        <img onclick="Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png">
+				</div>
+				<div class="txtContent" style="height:10px;display:inline-block;">
 					${journal.journalContent }
 				</div>    
 			</div>

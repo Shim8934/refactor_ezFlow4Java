@@ -118,7 +118,12 @@
 			window.onresize = function ()
 		    {
 		        MailOptionHidden();
-		        journalPreviewRayerChange(pPreviewShow_HOW)
+		        journalPreviewRayerChange(pPreviewShow_HOW);
+		        var textContentSize;
+				textContentSize = $("#PreviewRayerH").height()-105;
+				$("#Preview_ContentH").css("height",textContentSize);
+				textContentSize = $("#PreviewRayerW").height()-120;
+				$("#Preview_ContentW").css("height",textContentSize);
 // 		        Window_resize();
 		    };
 			
@@ -267,6 +272,33 @@
 		        journalIdList=[];
 		        $.modal.close();
 		    }
+			
+			//확인완료
+			function doViewJournal(){
+				$('input:checkbox[name="journalCheckbox"]:checked').each(function() {
+					 var sumJournalId = $(this).parent().parent().attr("id");
+					 journalIdList.push(sumJournalId);
+				 });
+				 
+				if (journalIdList.length == 0) {
+					alert("<spring:message code='ezJournal.t148'/>");
+					return;
+				}
+				
+				$.ajax ({
+					type : "POST",
+	   				dataType : "text",
+					url : "/ezJournal/journalViewCheck.do",
+					data : {
+						journalIdList : JSON.stringify(journalIdList)
+					},
+					success : function() {
+						setJournalList();
+					},
+					error : function() {
+					}
+				});
+			}
 			
 			//취합양식 선택 레이어팝업
 			function doSelectSumJournal() {
@@ -544,7 +576,7 @@
 						} else {
 							CurrenWidth = document.documentElement.clientWidth - 20;
 						}
-						CurrentHeight = document.documentElement.clientHeight - 105;
+						CurrentHeight = document.documentElement.clientHeight - 120;
 						pMailListWidthH = parseInt(CurrenWidth
 								* (pMailListDiv_H / 100));
 						pMailPreWidthH = parseInt(CurrenWidth
@@ -761,20 +793,26 @@
 		</h1>
 		<div id="mainmenu">
 		  <ul>
+<!-- 		  	일지쓰기 -->
 		  	<c:if test="${listType eq 'department' or listType eq 'mine' }">
 	       	 <li><span onClick="writejournal()"><spring:message code='ezJournal.t57' /></span></li>
 		  	</c:if>
+<!-- 		  	확인완료 -->
 		  	<c:if test="${listType eq 'department' or listType eq 'recv' }">
-	       	 <li><span onClick=""><spring:message code='ezJournal.t58' /></span></li>
+	       	 <li><span onClick="doViewJournal();"><spring:message code='ezJournal.t58' /></span></li>
 		  	</c:if>
+<!-- 		  	수정 -->
 		  	<c:if test="${listType eq 'temp' }">
 	       	 <li><span onClick=""><spring:message code='ezJournal.t107' /></span></li>
 		  	</c:if>
+<!-- 		  	삭제 -->
 		  	<c:if test="${listType eq 'temp' or listType eq 'recv' or listType eq 'mine'}">
 	       	 <li><span onClick="deleteJournal()"><spring:message code='ezJournal.t108' /></span></li>
 		  	</c:if>
 		  	<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine'}">
+<!-- 		  	상세검색 -->
 	       	 <li><span id="SearchOption" onClick="doLayerPopup(this);" mode="off"><spring:message code='ezJournal.t59' /></span></li>
+<!-- 		  	취합 -->
 	       	 <li><span onClick="doSelectSumJournal();"><spring:message code='ezJournal.t60' /></span></li>
 		  	</c:if>
 	        <c:if test="${listType eq 'department'}">

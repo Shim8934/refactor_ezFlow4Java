@@ -21,7 +21,7 @@
 				<c:if test="${listType eq 'recv' }">
 				<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14"
 				style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;"
-				class="h5_center" width="20px">수신여부 아이콘</th>
+				class="h5_center" width="20px"><img style="cursor:pointer" src="/images/ImgIcon/view-document.gif "></th>
 				</c:if>
 				<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10"
 				style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;"
@@ -30,7 +30,7 @@
 				<c:if test="${listType eq 'mine' }">
 				<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4"
 					style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; padding: 0px; text-align: left;"
-					class="h5_center" width="50px"><spring:message code='ezJournal.t109'/></th>
+					class="h5_center" width="20px"><spring:message code='ezJournal.t109'/></th>
 				</c:if>
 				<c:if test="${listType eq 'recv' or listType eq 'temp' }">
 				<th id="BoardList_TH_1" onclick="setListOrder(this)" order="8"
@@ -52,7 +52,7 @@
 				</c:if>
 				<th id="BoardList_TH_6" onclick="setListOrder(this)" order="3"
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
-					class="h5_center" width="180px"><spring:message code='ezJournal.t35'/></th>
+					class="h5_center" width="150px"><spring:message code='ezJournal.t35'/></th>
 				<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine' }">
 				<th id="BoardList_TH_8" onclick="setListOrder(this)" order="7" 
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
@@ -82,12 +82,15 @@
 				<c:choose>
 				<c:when test="${journal.isView == 'noView'}">
 				<td onclick="selectedTR(this);"
-					style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;"><img
-					src="/images/i_notice.gif"></td>
+					style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;">
+					<img style="cursor:pointer" src="/images/ImgIcon/view-document.gif ">\
+				</td>
 				</c:when>
 				<c:otherwise>
 				<td onclick="selectedTR(this);"
-					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;"></td>
+					style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;">
+					<img style="cursor:pointer" draggable="false" src="/images/ImgIcon/icon-msg-read.gif">
+				</td>
 				</c:otherwise>
 				</c:choose>
 				</c:if>

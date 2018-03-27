@@ -747,12 +747,36 @@ public class EzJournalGWController {
 	/**
 	 * 업무일지 G/W [PUT] 수신 확인 처리
 	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/receivers/{userId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
-	public JSONObject receiveOKJournal(@PathVariable String typeId, @PathVariable String journalId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezjournal/viewers/{userId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	public JSONObject receiveOKJournal(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W receiveOKJournal started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId + ",userId=" + userId);
+		LOGGER.debug("userId=" + userId);
 		
+		Gson gson = new Gson();
+
 		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String journalIdArray = request.getParameter("journalIdList").toString();
+			String viewDate = request.getParameter("viewDate");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			List<String> journalIdList = gson.fromJson(journalIdArray, new TypeToken<List<String>>(){}.getType());
+			
+			LOGGER.debug("journalIdList : " + journalIdList);
+			
+			ezJournalService.saveJournalViewInfo(journalIdList, viewDate,info.getUserId(), info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
 		
 		LOGGER.debug("ezJournal G/W receiveOKJournal ended.");
 		return result;
