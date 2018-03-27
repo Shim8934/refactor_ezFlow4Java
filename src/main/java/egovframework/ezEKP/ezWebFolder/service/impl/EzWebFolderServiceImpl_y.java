@@ -358,6 +358,60 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("comId", comId);
 		map.put("folderType", folderType);
 		map.put("tenantId", tenantId);
+		
+		Map<String, Object> deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
+		// 부서장인지 판단  부서장
+		String header = "";
+		if( (String) deptInfo.get("EXTENSIONATTRIBUTE9") == null ) {
+			header = "";
+		}else {
+			header = (String) deptInfo.get("EXTENSIONATTRIBUTE9");
+		}
+		if (header.equals(userId)) {
+			
+			subDept = ezWebFolderDAO_y.getDeptSub(map);
+			
+			for ( int j = 0; j < subDept.size(); j++ ) {
+				String subDeptCn = (String) subDept.get(j).get("cn");
+				map.put("deptId", subDeptCn);
+				int existFolder = ezWebFolderDAO_y.existFolderChk(map);
+				if (existFolder != 0) {// 만들어져 있다.
+					// 만들어져 있으면 통과~~~~~
+					
+				}else {// 만들어야한다.
+					// 폴더명 1,2를 만들어야 한다.
+					deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
+					String result = "";
+					result = insertFolder(tenantId, deptInfo.get("EXTENSIONATTRIBUTE2").toString(), deptInfo.get("cn").toString(),
+							userId, folderType, deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
+					if (result.equals("0") || result.equals("")){
+						LOGGER.debug("insert 잘못됨");
+						return "false";
+					}
+				}
+			}
+			
+		// 부서장이 아님	
+		} else {
+			// 부서장 아니고 존재하는지 확인
+			int existFolder = ezWebFolderDAO_y.existFolderChk(map);
+			if (existFolder != 0) {// 만들어져 있다.
+				// 만들어져 있으면 통과~~~~~
+				
+			}else {// 만들어야한다.
+				// 폴더명 1,2를 만들어야 한다.
+				deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
+				String result = "";
+				result = insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE2").toString(), deptInfo.get("cn").toString(), 
+						userId, folderType, deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
+				if (result.equals("0") || result.equals("")){
+					LOGGER.debug("insert 잘못됨");
+					return "false";
+				}
+			}
+		}
+		
+		
 		addJob = ezWebFolderDAO_y.getAddJobList(map);
 		
 		Map<String, Object> insertMap = new HashMap<String, Object>();
@@ -370,7 +424,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 				String cn = (String) addJob.get(i).get("cn");							// 겸직 부서명
 				map.put("deptId", cn);
 				allDeptheader = ezWebFolderDAO_y.getDeptSub(map);
-				String deptHeader = (String) allDeptheader.get(0).get("EXTENSIONATTRIBUTE9");
+				String deptHeader = (String) allDeptheader.get(i).get("EXTENSIONATTRIBUTE9");
 				// 겸직부서의 이놈이 부서장인지를 판단하는 것 
 				// |이놈| 이놈 아님 | 빈놈
 				map.put("deptId", cn);
@@ -393,7 +447,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 							
 						}else {// 만들어야한다.
 							// 폴더명 1,2를 만들어야 한다.
-							Map<String, Object> deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
+							deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
 							String result = "";
 							result = insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE1").toString(),deptInfo.get("cn").toString(), userId, folderType, 
 									deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
@@ -423,7 +477,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 						
 					}else {// 만들어야한다.
 						// 폴더명 1,2를 만들어야 한다.
-						Map<String, Object> deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
+						deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
 						String result = "";
 						result = insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE1").toString(),deptInfo.get("cn").toString(), userId, folderType, 
 								deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
@@ -436,60 +490,11 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 				}
 				
 			}
-			
-		} else {// 겸직 부서가 없다 . 그럼 내가 부서장인지 아닌지 확인해서 부서장이면 하위도 다 만들고 아니면 내꺼만 만들고 
-			Map<String, Object> deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
-			// 부서장인지 판단  부서장
-			String header = "";
-			if( (String) deptInfo.get("EXTENSIONATTRIBUTE9") == null ) {
-				header = "";
-			}else {
-				header = (String) deptInfo.get("EXTENSIONATTRIBUTE9");
-			}
-			if (header.equals(userId)) {
-				
-				subDept = ezWebFolderDAO_y.getDeptSub(map);
-				
-				for ( int j = 0; j < subDept.size(); j++ ) {
-					String subDeptCn = (String) subDept.get(j).get("cn");
-					map.put("deptId", subDeptCn);
-					int existFolder = ezWebFolderDAO_y.existFolderChk(map);
-					if (existFolder != 0) {// 만들어져 있다.
-						// 만들어져 있으면 통과~~~~~
-						
-					}else {// 만들어야한다.
-						// 폴더명 1,2를 만들어야 한다.
-						deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
-						String result = "";
-						result = insertFolder(tenantId, deptInfo.get("EXTENSIONATTRIBUTE2").toString(), deptInfo.get("cn").toString(),
-								userId, folderType, deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
-						if (result.equals("0") || result.equals("")){
-							LOGGER.debug("insert 잘못됨");
-							return "false";
-						}
-					}
-				}
-				
-			// 부서장이 아님	
-			} else {
-				// 부서장 아니고 존재하는지 확인
-				int existFolder = ezWebFolderDAO_y.existFolderChk(map);
-				if (existFolder != 0) {// 만들어져 있다.
-					// 만들어져 있으면 통과~~~~~
-					
-				}else {// 만들어야한다.
-					// 폴더명 1,2를 만들어야 한다.
-					deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
-					String result = "";
-					result = insertFolder(tenantId,  deptInfo.get("EXTENSIONATTRIBUTE2").toString(), deptInfo.get("cn").toString(), 
-							userId, folderType, deptInfo.get("displayname").toString(), deptInfo.get("displayname2").toString(), vo);
-					if (result.equals("0") || result.equals("")){
-						LOGGER.debug("insert 잘못됨");
-						return "false";
-					}
-				}
-			}
 		}
+			
+//		} else {// 겸직 부서가 없다 . 그럼 내가 부서장인지 아닌지 확인해서 부서장이면 하위도 다 만들고 아니면 내꺼만 만들고 
+			
+//		}
 		
 		return "ok";
 	}
