@@ -406,8 +406,7 @@
 		                    openApprovUI();
 		                else
 		                    btnRedraft_onclick();
-		            }
-		            else if (pListTypeValue == "4") {
+		            } else if (pListTypeValue == "4") {
 		                if (pSusinManagerFlag == "admin" || pCurSelRow.getAttribute("DATA8") == pUserID) {
 		                    var pDraftFlag;
 		                    var tmpDocState = pCurSelRow.getAttribute("DATA9");
@@ -421,32 +420,35 @@
 		                    else {
 		                        OpenReceiveDraftUI(pCurSelRow, pDraftFlag);
 		                    }
-		                }
-		                else {
+		                } else {
 		                    openViewDocInfo();
 		                }
-		            }
-		            else if (pListTypeValue == "21") //한양대 임시저장
-		            {
+		            } else if (pListTypeValue == "21") { //한양대 임시저장 
 		                pDocID = pCurSelRow.getAttribute("DATA1");
 // 		                var newDocID = MakeTmp2Ing(pDocID);
 		                pURL = pCurSelRow.getAttribute("DATA3");
 		                btnRedraft_onclick();
-		            }
-		            else if (pListTypeValue != "5") {
+		            } else if (pListTypeValue != "5") {
 		                openViewDocInfo();
-		            }
-		            else {
+		            } else {
 		                var para = new Array();
 		                para[0] = pDocID;
 		                para[1] = pURL;
-		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp")
-// 		                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
-		                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-		                else {
+		                
+		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		                	if (isIE()) {
+			                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+		                	} else {
+		                		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+			                    alert(pAlertContent);
+			                    
+			                    return;
+		                	}
+		                } else {
 	                        openLocation = "/ezApprovalG/contDocView.do";
 		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
 		                }
+		                
 		                openwindow(openLocation, "", 880, 570);
 		            }
 		        }

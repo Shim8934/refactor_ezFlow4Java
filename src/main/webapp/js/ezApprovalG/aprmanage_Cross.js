@@ -747,7 +747,7 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
     } else {
     	if (!isIE()) {
-            alert(strLang1103);
+            alert("한글양식은 IE에서만 기안 할 수 있습니다.");
             return;
         } else {
         	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
@@ -793,9 +793,16 @@ function openApprovUI(allFlag) {
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
         } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-            var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURI(pArgument[0]);
-            openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode)
+        	if (isIE()) {
+        		var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURI(pArgument[0]);
+        		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
+        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode)
+        	} else {
+        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+        		alert(pAlertContent);
+                
+                return;
+        	}
         } else {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
@@ -806,7 +813,7 @@ function openApprovUI(allFlag) {
     }
     else {
         var pAlertContent = strLang870;
-        OpenAlertUI(pAlertContent);
+        alert(pAlertContent);
     }
 }
 
@@ -955,13 +962,13 @@ function openViewDocInfo(type) {
 
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-        	//hwp 사용안함
-            if (CrossYN()) {
-//                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
+            if (CrossYN() && isIE()) {
             	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-            }
-            else {
-                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP.aspx";
+            } else {
+            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+            	alert(pAlertContent);
+                
+                return;
             }
         }
         else {
@@ -971,13 +978,13 @@ function openViewDocInfo(type) {
     }
     else {
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-        	//hwp 사용안함
-            if (CrossYN()) {
-//                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP_Cross.aspx";
+            if (CrossYN() && isIE()) {
             	openLocation = "/ezApprovalG/ezviewAprHWP.do";
-            }
-            else {
-                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP.aspx";
+            } else {
+            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+            	alert(pAlertContent);
+                
+                return;
             }
         }
         else {
