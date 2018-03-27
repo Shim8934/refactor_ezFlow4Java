@@ -32,12 +32,12 @@
 			
 			function SetEditorContentURL(pURL) {
 				var tempXML = createXmlDom();
-                var XmlBodyATT = createXmlDom();
+//                 var XmlBodyATT = createXmlDom();
                 var XmlBodyDATA = createXmlDom();
                 var tempStr = "";
                 tempStr = ConvertMHTtoHTML(pURL);
                 tempXML = loadXMLString(tempStr)
-                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//                 XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
                 XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
                 var htmlData = getNodeText(XmlBodyDATA);
                 kukudocsEditor.SetEditorContent(htmlData);
@@ -45,12 +45,12 @@
 			
 			function GetEditorContentURL(url) {
 				var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            return getNodeText(XmlBodyDATA);
 			}
