@@ -39,7 +39,7 @@
 		        var html = "";
 
 		        for(var i = 0; i < SelectNodes(xmlDoc, "DATA/ROW").length; i++) {
-		        	html += "<table class=\"content\" style=\"margin-top:10px;margin-bottom:20px;border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
+		        	html += "<table class=\"content\" style=\"margin-top:10px;margin-bottom:12px;border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
 		        	html += "<tr style=\"border-left:1px solid #dddddd;border-right:1px solid #dddddd;\" >";
 		        	html += "<th style=\"height:25px; border-left:1px solid #dddddd;border-right:0px; width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
 		        	/* html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:50px;\" nowrap>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "</th>"; */
@@ -417,6 +417,6 @@
 			<input type=hidden name=memo value="<c:out value='${memo}' />">
 			<input type=hidden name=mode value=delete>
 		</form>
-		<div id="tblPageRayer" style="margin-top:10px"></div>
+		<div id="tblPageRayer"></div>
 	</body>
 </html>
