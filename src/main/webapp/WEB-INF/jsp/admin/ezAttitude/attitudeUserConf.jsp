@@ -134,7 +134,7 @@
     	}
     	
     	function userConfModify(){
-    		
+    		///////////////////////////
     		
     		if (CrossYN()) {
     			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
