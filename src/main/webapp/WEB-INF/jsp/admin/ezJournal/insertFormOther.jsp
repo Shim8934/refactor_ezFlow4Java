@@ -64,10 +64,9 @@
 		    function Editor_Complete() {
 		   
 	            if (formId != "" && formId != null) {
-	            	console.log(selFormContent);
 	            	selFormContent = selFormContent.replace(/&#034;/g, "\"");
 			    	selFormContent = selFormContent.slice(1, -1);
-			     	
+	            	console.log(selFormContent);
 		        	message.SetEditorContent(selFormContent);
                 }
 		    }
@@ -235,7 +234,7 @@
 		    	console.log("isDeptChanged : " + isDeptChanged)
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "json",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/admin/ezJournal/formSave.do",
 		    		data : {"companyId"		: companyId,

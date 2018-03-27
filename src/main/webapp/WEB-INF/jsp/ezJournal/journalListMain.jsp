@@ -409,7 +409,7 @@
 			//양식명 세럭트박스 만들기
 			function setFormName(){
 				var url = "/ezJournal/getFormList.do?typeId="+typeId;
-				if(listType == "department"){
+				if(listType == "department" || listType == "mine"){
 					url += "&deptId="+$("#dept").val();
 				}
 				$.ajax({
