@@ -137,7 +137,6 @@
 			    			$.ajax({
 			    				type : "POST",
 			    				url : "/admin/ezJournal/deleteForm.do",
-			    				asnyc : false,
 			    				data : {"formId"	 : selFormId,
 			    						"companyId"  : companyId,
 			    						"typeId" 	 : typeId},

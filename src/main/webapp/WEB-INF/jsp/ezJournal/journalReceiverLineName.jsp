@@ -19,9 +19,9 @@
 		    var receiverFavoriteName;
 		    
 		    function saveReceiverLineName() {
-		        receiverFavoriteName = $("#receiverFavoriteName").val();
+		        receiverFavoriteName = $("#receiverFavoriteName").val().trim();
 		        
-		        if (receiverFavoriteName == "") {
+		        if (receiverFavoriteName == "" || receiverFavoriteName == null) {
 	        		alert("<spring:message code='ezJournal.t91'/>");
 		
 		        } else {
@@ -43,14 +43,12 @@
 		    	console.log(parent.type);
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "json",
-		    		async : false,
 		    		url : "/ezJournal/saveReceiverFavorite.do",
 		    		data : {"favoriteName"	: receiverFavoriteName, 
 		    				"receiverLine"	: JSON.stringify(receiverLine),
 		    				"type"			: parent.type,
 		    				"favoriteId"	: parent.favoriteId},
-    				success : function(result) {
+    				success : function() {
     					alert("<spring:message code='ezJournal.t137'/>");
     					parent.type = "new";
     					parent.DivPopUpHidden();
@@ -69,6 +67,12 @@
 		    //	parent.location.reload();
 		    }
 		
+		    function checkEnterKey() {
+		    	if (window.event.keyCode == 13) {
+		    		saveReceiverLineName();
+		    	}
+		    }
+		    
 		    window.onload = function () {		
 		        try {
 		        	receiverLine = parent.receiverList;
@@ -94,7 +98,7 @@
 		<h1><spring:message code='ezJournal.t93'/></h1>
 		<span>▒ <spring:message code='ezJournal.t94'/></span>
 		<div class="nobox" style="margin-top:10px">
-		<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="receiverFavoriteName" name="receiverFavoriteName" maxlength="7">
+		<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="receiverFavoriteName" name="receiverFavoriteName" onkeyup="checkEnterKey()" maxlength="7">
 		</div>		
 			
 		<div class="btnposition btnpositionNew">

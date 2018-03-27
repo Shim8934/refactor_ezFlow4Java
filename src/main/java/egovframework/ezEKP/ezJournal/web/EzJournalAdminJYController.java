@@ -23,11 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.JsonUtil;
 
 @Controller
 public class EzJournalAdminJYController {
@@ -199,7 +196,6 @@ public class EzJournalAdminJYController {
 				model.addAttribute("formInfo", jsonResult.get("formInfo"));
 				model.addAttribute("formContent", gson.toJson(formContent));
 				model.addAttribute("useDepts", useDepts);
-				logger.debug("formContent : " + JsonUtil.OneStringToJson(formContent));
 			}
 		}
 		

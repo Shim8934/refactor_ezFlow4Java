@@ -234,8 +234,6 @@
 		    	console.log("isDeptChanged : " + isDeptChanged)
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
 		    		url : "/admin/ezJournal/formSave.do",
 		    		data : {"companyId"		: companyId,
     						"typeId"		: typeId,
@@ -382,9 +380,9 @@
 								            	<li name="info"><span id="info_1" value="journalWriteId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></li>
 								            	<li name="info"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></li>
 								            </ul> --%>
-							            	<a class="imgbtn" style="margin-left: 5px; margin-right: 10px;"><span id="info_0" value="journalDeptId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33' /></span></a>
-							            	<a class="imgbtn" style="margin-right: 10px;"><span id="info_1" value="journalWriteId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></a>
-							            	<a class="imgbtn" style="margin-right: 10px;"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></a>
+							            	<a class="imgbtn"><span id="info_0" value="journalDeptId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33' /></span></a>
+							            	<a class="imgbtn"><span id="info_1" value="journalWriteId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></a>
+							            	<a class="imgbtn"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></a>
 	                        			</td>
 	                        			<td style="width: 8%; text-align: center;" >
 							            	<a class="imgbtn" style="margin-right: 4px;"><span onclick="btnCancel()"><spring:message code='ezJournal.t16' /></span></a>

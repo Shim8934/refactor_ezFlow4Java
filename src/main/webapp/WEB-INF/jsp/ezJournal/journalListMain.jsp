@@ -682,6 +682,26 @@
 				}
 			}
 			
+			// 임시보관함에서 일지수정버튼
+			function modifyJournal() {
+				var journalId = $("input:checkbox[name='journalCheckbox']:checked");
+				
+				if (journalId.length > 1) {
+					alert("<spring:message code='ezJournal.t158'/>");
+				} else if (journalId.length == 0) {
+					alert("<spring:message code='ezJournal.t148'/>");
+				} else {
+					typeId = journalId.parent().parent().attr("typeId");
+					journalId = journalId.parent().parent().attr("id");
+					console.log("journalId : " + journalId);
+					var feature = GetOpenPosition(820, 850);
+					var Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=temp", "",
+									"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
+										+ feature);
+					Openwin.focus();
+				}
+			}
+			
 			// 일지삭제
 			function deleteJournal() {
 				journalIdList = [];
@@ -768,7 +788,7 @@
 	       	 <li><span onClick=""><spring:message code='ezJournal.t58' /></span></li>
 		  	</c:if>
 		  	<c:if test="${listType eq 'temp' }">
-	       	 <li><span onClick=""><spring:message code='ezJournal.t107' /></span></li>
+	       	 <li><span onClick="modifyJournal()"><spring:message code='ezJournal.t107' /></span></li>
 		  	</c:if>
 		  	<c:if test="${listType eq 'temp' or listType eq 'recv' or listType eq 'mine'}">
 	       	 <li><span onClick="deleteJournal()"><spring:message code='ezJournal.t108' /></span></li>

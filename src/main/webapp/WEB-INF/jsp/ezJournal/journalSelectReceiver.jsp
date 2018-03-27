@@ -89,31 +89,37 @@
 	   		
 	   		// 선택한 사람을 수신자에 추가
 	   		function setAuthorViewUser() {
-	   			var receiverId = selUserId;
-	   			userName = selUserName;
-	   			console.log(userName);
-	   			var chkFlag = true;
-	   			
-	   			if (userId == receiverId) {
-	   				chkFlag = false;
-	   			}
-	   			for(var i = 0; i < receiverList.length; i++) {
-	   				if (receiverList[i].userId == receiverId) {
-	   					chkFlag = false;
-	   				}
-	   			}
-	   			
-	   			if (chkFlag) {
-					receiverList.push({"userName" : userName, "userId" : receiverId});
-					console.log(receiverList);
+	   			console.log("selUserId확인 : " + selUserId);
+	   			if (selUserId != "" && selUserId != undefined) {
+		   			var receiverId = selUserId;
+		   			userName = selUserName;
+		   			console.log(userName);
+		   			var chkFlag = true;
+	   				
+		   			if (userId == receiverId) {
+		   				chkFlag = false;
+		   			}
+		   			for(var i = 0; i < receiverList.length; i++) {
+		   				if (receiverList[i].userId == receiverId) {
+		   					chkFlag = false;
+		   				}
+		   			}
+		   			
+		   			if (chkFlag) {
+						receiverList.push({"userName" : userName, "userId" : receiverId});
+						console.log(receiverList);
+		   			} else {
+		   				if (userId == receiverId) {
+			   				alert("<spring:message code='ezJournal.t140'/>");
+		   				} else {
+			   				alert("<spring:message code='ezJournal.t127'/>");
+		   				}
+		   			}
+		   			drawReceiverList()
 	   			} else {
-	   				if (userId == receiverId) {
-		   				alert("<spring:message code='ezJournal.t140'/>");
-	   				} else {
-		   				alert("<spring:message code='ezJournal.t127'/>");
-	   				}
+	   				alert("<spring:message code='ezJournal.t136'/>");
 	   			}
-	   			drawReceiverList()
+	   			
 	   		}
 	   		
 	   		// 선택된 수신자배열에서 특정 사원 삭제
@@ -122,6 +128,7 @@
 		    		if (receiverList[j].userId === selUserId) {
 		    			console.log(selUserId);
 		    			receiverList.splice(j, 1);
+		    			selUserId = "";
 		    		}
 		    	} 
 		     	drawReceiverList();

@@ -97,7 +97,7 @@
 			    </c:forEach>
 			    
 			</table>
-			<div class="btnposition" style="width: 400px">
+			<div class="btnposition" style="width: 400px; margin-left: 15px; text-align: center">
 			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezJournal.t15' /></span></a>
 			    <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code='ezJournal.t16' /></span></a>
 			</div>

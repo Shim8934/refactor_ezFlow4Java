@@ -223,7 +223,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	 * 수신자 즐겨찾기 저장  
 	 */
 	@RequestMapping(value = "/ezJournal/saveReceiverFavorite.do")
-	public String saveReceiverFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
+	public void saveReceiverFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("saveReceiverFavorite started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -260,7 +260,6 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("saveReceiverFavorite ended");
-		return "json";
 	}
 	
 	/**
