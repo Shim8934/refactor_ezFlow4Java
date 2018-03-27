@@ -6618,7 +6618,7 @@
    			FUNCTIONTYPE IN ('002')
    		 AND 
    			APRMEMBERID IN ($v_USERIDS$)
-		  ) AS B
+		  )
 		  WHERE
 		   	1=1
    		<isEqual property="v_FLAG" compareValue="1">
@@ -6642,27 +6642,21 @@
 			   			 AND 
 			   				DOCID = #v_DOCID#
 			   				
-			   			UNION ALL
+			   			UNION 
  						SELECT     
  						       STARTDATE         
   						FROM            
   							vendchamjodocinfo  
   						WHERE            
-  								DOCSTATE <> '015' 
-			   			 AND
-			   				TENANT_ID = #v_TENANTID#
-			   			 AND
-			   				COMPANYID = #companyID#
-			   			 AND 
-			   				FUNCTIONTYPE IN ('002')
-			   			 AND 
-			   				APRMEMBERID IN ($v_USERIDS$)
-			   			 AND 
-			   				DOCID = #v_DOCID#
-			   			 AND
-  							ROWNUM <= 1
-			   				)
+  								DOCSTATE <> '015' 	   			
 			   	]]>
+			   	AND
+                            TENANT_ID = #v_TENANTID#
+                        AND
+                            COMPANYID = #companyID#
+                        AND 
+                            DOCID = #v_DOCID#  
+                        )  
    		</isEqual>
    		<isEqual property="v_FLAG" compareValue="2">
 		<![CDATA[
