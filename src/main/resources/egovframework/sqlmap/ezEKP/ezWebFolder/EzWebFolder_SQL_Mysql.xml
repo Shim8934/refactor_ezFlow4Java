@@ -1056,7 +1056,21 @@
 						f2.*
 					FROM
 						tbl_webfolder_folder f2 JOIN tbl_webfolder_folderuser u 
-							ON f2.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f2.TENANT_ID = u.TENANT_ID
+													ON f2.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f2.TENANT_ID = u.TENANT_ID
+												JOIN
+													(
+														SELECT
+															d1.*
+															FROM tbl_deptmaster d1 JOIN
+																					(
+																						SELECT
+																							*
+																						FROM
+																							tbl_deptmaster
+																						WHERE
+																							EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
+																					) AS d2 ON d1.DEPT_CD_PATH LIKE CONCAT(d2.DEPT_CD_PATH, '%')
+													) AS s1 ON s1.CN = f2.OWNER_ID AND s1.TENANT_ID = f2.TENANT_ID
 					WHERE
 						f2.TENANT_ID = #tenantId#
 				) AS f
@@ -1134,7 +1148,7 @@
 										d1.*
 									FROM
 										TBL_DEPTMASTER d1 LEFT JOIN tbl_addjobmaster a
-												 ON d1.CN = a.DEPTID AND d1.TENANT_ID = a.TENANT_ID
+																	ON d1.CN = a.DEPTID AND d1.TENANT_ID = a.TENANT_ID
 									WHERE
 										(a.CN = #userId# OR d1.CN = #deptId#)
 									AND
@@ -1150,7 +1164,21 @@
 											FROM
 												(
 													tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
-													ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
+																				ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
+																			JOIN
+																				(
+																					SELECT
+																						d3.*
+																						FROM tbl_deptmaster d3 JOIN
+																												(
+																													SELECT
+																														*
+																													FROM
+																														tbl_deptmaster
+																													WHERE
+																														EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
+																												) AS d4 ON d3.DEPT_CD_PATH LIKE CONCAT(d4.DEPT_CD_PATH, '%')
+																				) AS s1 ON s1.CN = f.OWNER_ID AND s1.TENANT_ID = f.TENANT_ID
 												)
 											) AS a ON d2.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND d2.TENANT_ID = a.TENANT_ID
 									WHERE
@@ -1302,15 +1330,30 @@
 			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE s.CN = b.EXTENSIONATTRIBUTE1 AND s.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
 		FROM
 			TBL_DEPTMASTER s JOIN
-				(
-				SELECT 
-					f.* 
-				FROM
-					(
-						tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
-						ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
-					)
-				) AS a ON s.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND s.TENANT_ID = a.TENANT_ID
+							(
+								SELECT 
+									* 
+								FROM
+									TBL_DEPTMASTER
+								WHERE
+									EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
+							) AS d1 ON s.DEPT_CD_PATH LIKE CONCAT(d1.DEPT_CD_PATH, '%')
+							 JOIN
+							(
+								SELECT
+									d2.*
+								FROM
+									TBL_DEPTMASTER d2 JOIN
+										(
+										SELECT 
+											f.* 
+										FROM
+											(
+												tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
+												ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
+											)
+										) AS a ON d2.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND d2.TENANT_ID = a.TENANT_ID
+							) AS s2 ON s.CN = s2.CN and s.TENANT_ID = s2.TENANT_ID
 		WHERE
 			s.TENANT_ID = #tenantId#
 		ORDER BY
