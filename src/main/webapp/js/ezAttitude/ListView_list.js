@@ -1,6 +1,10 @@
 ﻿var blockSize = 10; // 화면에 보여질 블록갯수
 var listSize = 20; // 게시판에 보여질 게시물갯수
 
+var m_strColorSelect = "#edf4fd"; //리스트 선택시 색상
+var m_strColorDefault =  "#FFFFFF"; //리스트 기본값
+var m_strColorOver = "#f4f5f5"; //리스트 마우스오버 시 색상
+
 /** jQuery 옵션*/
 //체크박스(전체선택/해제)
 $(document).on('click', '#HeaderAllCheckBox', function(){
@@ -14,10 +18,10 @@ $(document).on('click', 'tr:not(#attiBoardList tr:eq(0))', function(){
 	var checkValue = "";
 	if ($(this).find("input[type='checkbox']").is(":checked") == true) {
 		checkValue = false;
-		$(this).css("background-color", "rgb(255,255,255)");
+		$(this).css("background-color", m_strColorDefault);
 	} else {
 		checkValue = true;
-		$(this).css("background-color", "pink");
+		$(this).css("background-color", m_strColorSelect);
 	}
 	$(this).find("input[type='checkbox']").prop("checked", checkValue);
 })
@@ -26,9 +30,9 @@ $(document).on('click', 'tr:not(#attiBoardList tr:eq(0))', function(){
 $(document).on('mouseover mouseleave', 'tr', function(e){
 	if ($(this).find("input[type='checkbox']").is(":checked") == false) {
 		if (e.type == "mouseover") {
-			$(this).css("background-color", "rgb(244,245,245)");
+			$(this).css("background-color", m_strColorOver);
 		} else {
-			$(this).css("background-color", "rgb(255,255,255)");
+			$(this).css("background-color", m_strColorDefault);
 		}
 	}
 })
