@@ -970,6 +970,12 @@ public class EzAttitudeGWController {
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
 		
+		if (type != null) {
+			if (type.equals("all")) {
+				type = null;
+			}
+		}
+		
 		try{
 			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint, type);
 			for (int i = 0 ; i < attList.size(); i++ ) {
@@ -1008,6 +1014,12 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
+
+		if (type != null) {
+			if (type.equals("all")) {
+				type = null;
+			}
+		}
 		
 		try{
 			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, type);

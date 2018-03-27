@@ -8,7 +8,6 @@
 	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
 	<typeAlias alias="AttitudeApplicationVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO"/>
 	<typeAlias alias="AttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
-	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
 	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
 
 	<resultMap id="attitudeApplicationVO" class="AttitudeApplicationVO">
@@ -193,6 +192,11 @@
 		<isNotEmpty property="endDate" prepend="and">
 			<![CDATA[
 			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and">
+			<![CDATA[
+			a.APPR_STATUS = #type#
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="startPoint" prepend="limit">

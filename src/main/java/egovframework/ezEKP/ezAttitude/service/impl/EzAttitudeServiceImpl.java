@@ -495,6 +495,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offset", offset);
 		map.put("startPoint", startPoint);
 		map.put("endPoint", endPoint);
+		map.put("type", type);
 		
 		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getUsersModiyAtt(map); 
 		
@@ -546,6 +547,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("apprUserName", apprUserName);
 		map.put("sysLang", sysLang);
 		map.put("offset", offset);
+		map.put("type", type);
 		
 		int attAppListCount = ezAttitudeDAO.getUsersModiyAttCount(map);
 		
