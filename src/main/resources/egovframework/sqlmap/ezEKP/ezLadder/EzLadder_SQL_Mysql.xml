@@ -1039,4 +1039,17 @@
 		AND
 			LADDERID = #ladderId#
 	</update>
+	
+	<update id="EzLadderDAO.setUserOrder">
+		UPDATE
+			TBL_LADDER_LINE
+		SET
+			LADDERORDER = #secondUserOrder#, ITEM = #secondItem#
+		WHERE
+			USERID = #firstUser#
+		AND
+			TENANT_ID = #tenant_id#
+		AND
+			LADDERID = #LadderId#
+	</update>
 </sqlMap>

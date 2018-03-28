@@ -718,12 +718,19 @@ public class EzLadderController {
 	 * 
 	 */
 	@RequestMapping(value = "/ezLadder/serUserOrder.do")
-	public String setUserOrder(@CookieValue("loginCookie") String loginCookie, String ladderId, String firstUser, String secondUser, HttpServletRequest request, Model model) throws Exception{
-		logger.debug("ezLadder/serUserOrder.do started.");
+	public String setUserOrder(@CookieValue("loginCookie") String loginCookie, String ladderId, String firstUser, String firstUserOrder, String secondUser, String secondUserOrder, String firstItem, String secondItem, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("ezLadder/serUserOrder started.");
+		logger.debug("ladderId : " + ladderId);
+		logger.debug("firstUser : " + firstUser);
+		logger.debug("secondUser " + secondUser);
+		logger.debug("firstUserOrder : " + firstUserOrder);
+		logger.debug("secondUserOrder : " + secondUserOrder);
+		logger.debug("firstItem : " + firstItem);
+		logger.debug("secondItem : " + secondItem);
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladders/" + ladderId + "users/" + userInfo.getId();
+		String url = gwServerUrl + "/ladder/ladders/" + ladderId + "/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -733,7 +740,14 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("firstUser", firstUser)
+				.queryParam("secondUser", secondUser)
+				.queryParam("firstUserOrder", firstUserOrder)
+				.queryParam("secondUserOrder", secondUserOrder)
+				.queryParam("firstItem", firstItem)
+				.queryParam("secondItem", secondItem)
+				.queryParam("tenant_id", userInfo.getTenantId());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 
@@ -751,7 +765,7 @@ public class EzLadderController {
 			return "error";
 		}
 		
-		logger.debug("ezLadder/serUserOrder.do ended.");
+		logger.debug("ezLadder/serUserOrder ended.");
 		return "json";
 	}
 	
@@ -782,8 +796,7 @@ public class EzLadderController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		RestTemplate rest = new RestTemplate();
-		System.out.println(userInfo.getTenantId());
-		System.out.println(userInfo.getOffset());
+		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 							.queryParam("tenantId", userInfo.getTenantId())
 							.queryParam("size", allData[5])
