@@ -158,11 +158,11 @@
 		            var nowday = nowDate.substring(8,10);       
 	                
 					if(approvalFlag == "G") {
-		                if (nowmonth < 10)
+		                /* if (nowmonth < 10)
 		                    nowmonth = "0" + nowmonth;
 		
 		                if (nowday < 10)
-		                    nowday = "0" + nowday;
+		                    nowday = "0" + nowday; */
 		
 		                for (var i = 0; i < 25; i++) {
 		                    condition[i] = "";
@@ -176,11 +176,11 @@
 		                condition[14] = nowday;
 		                condition[24] = "";
 					} else {
-						  if (nowmonth < 10)
+/* 						  if (nowmonth < 10)
 				                nowmonth = "0" + nowmonth;
 
 				            if (nowday < 10)
-				                nowday = "0" + nowday;
+				                nowday = "0" + nowday; */
 
 				            for (var i = 0; i < 25; i++) {
 				                condition[i] = "";
@@ -391,15 +391,9 @@
 		            condition[i] = "";
 		        }
 		
-		        var nowyear = new Date().getFullYear();
-		        var nowmonth = new Date().getMonth() + 1;
-		        var nowday = new Date().getDate();
-		
-		        if (nowmonth < 10)
-		            nowmonth = "0" + nowmonth;
-		
-		        if (nowday < 10)
-		            nowday = "0" + nowday;
+		        var nowyear = nowDate.substring(0,4);
+	            var nowmonth = nowDate.substring(5,7);
+	            var nowday = nowDate.substring(8,10);   
 		
 		        condition[9] = nowyear - 1;
 		        condition[10] = nowmonth;
@@ -944,15 +938,9 @@
 		        document.getElementById("tblPageRayer").innerHTML = "";
 	
 		        if (document.getElementById("sel_year").value.toLowerCase() == "all") {
-		            var nowyear = new Date().getFullYear();
-		            var nowmonth = new Date().getMonth() + 1;
-		            var nowday = new Date().getDate();
-		            
-		            if (nowmonth < 10)
-		                nowmonth = "0" + nowmonth;
-
-		            if (nowday < 10)
-		                nowday = "0" + nowday;
+		        	var nowyear = nowDate.substring(0,4);
+		            var nowmonth = nowDate.substring(5,7);
+		            var nowday = nowDate.substring(8,10); 
 		            
 	            	if (condition[5] != null && condition[5] != "") {
 			            period = condition[5].substring(0, 4) + strLang1028 + " " + condition[5].substring(5, 7) + strLang1029 + " " + condition[5].substring(8,10) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + condition[6].substring(5, 7) + strLang1029 + " " + condition[6].substring(8, 10) + strLang1030;
