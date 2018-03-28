@@ -277,6 +277,7 @@ public class EzJournalSBController {
 			}
 			model.addAttribute("journalList", journalList);
 			model.addAttribute("listType",listType);
+			model.addAttribute("totalCount",totalCount);
 		}
 		logger.debug("journalList ended");
 		
@@ -340,6 +341,8 @@ public class EzJournalSBController {
 			String journalDate = (String) journal.get("journalDate");
 			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
 			journal.put("journalDate", journalDate);
+			String journalContent = ((String) journal.get("journalContent")).replaceAll("'","\"");
+			journal.put("journalContent", journalContent);
 			model.addAttribute("journal",journal);
 		}
 		
@@ -700,14 +703,14 @@ public class EzJournalSBController {
 			String journalContent = (String) journal.get("journalContent");
 			
 			Document journalDoc = Jsoup.parseBodyFragment(journalContent);
-			Element journalBody = journalDoc.body();
-			
-			Element thisElem = journalBody.getElementById("thisJournal");
-			Element nextElem = journalBody.getElementById("nextJournal");
-			String nextContent = nextElem.html();
-			
-			thisElem.html(nextContent);
-			nextElem.html("");
+//			Element journalBody = journalDoc.body();
+//			
+//			Element thisElem = journalBody.getElementById("thisJournal");
+//			Element nextElem = journalBody.getElementById("nextJournal");
+//			String nextContent = nextElem.html();
+//			
+//			thisElem.html(nextContent);
+//			nextElem.html("");
 			
 			result = journalDoc.toString();
 			logger.debug(result);

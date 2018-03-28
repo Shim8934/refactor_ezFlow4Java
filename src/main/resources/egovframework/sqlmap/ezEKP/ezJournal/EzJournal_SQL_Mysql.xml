@@ -458,8 +458,14 @@
 			tbl_usermaster
 		where
 			TENANT_ID = #tenantId#
-		and 
-			$key$ like concat('%',#value#,'%')
+		<isNotEqual property="key" compareValue="DEPARTMENT">
+			and 
+				$key$ like concat('%',#value#,'%')
+		</isNotEqual>
+		<isEqual property="key" compareValue="DEPARTMENT">
+			and 
+				$key$ = #value#
+		</isEqual>
 		order by 
 			lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME
 	</select>

@@ -3,7 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <style>
+	#tblPageRayer .pagenavi span{
+		margin-left : -2px;
+	}
 </style>
+<script>
+	setTotalCount("${totalCount}");
+</script>
 <div style="width: 100%; overflow: AUTO;" id="divList">
 	<div id="lvBoardList">
 		<table id="journalList" cellspacing="0" cellpadding="0"
@@ -15,58 +21,58 @@
 			<tr id="BoardList_TH">
 				<th id="BoardList_TH_0"
 					style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
-					class="h4_center" bgcolor="#CCCCCC" width="20px"><input
+					class="h4_center" bgcolor="#CCCCCC" width="3%"><input
 					type="checkbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);"
 					style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
 				<c:if test="${listType eq 'recv' }">
 				<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14"
 				style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;"
-				class="h5_center" width="20px"><img style="cursor:pointer" src="/images/ImgIcon/view-document.gif "></th>
+				class="h5_center" width="5%"><img style="cursor:pointer" src="/images/ImgIcon/view-document.gif "></th>
 				</c:if>
 				<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10"
 				style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;"
-				class="h5_center" width="20px"><img
+				class="h5_center" width="5%"><img
 				src="/images/newAttach.gif"></th>
 				<c:if test="${listType eq 'mine' }">
 				<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4"
 					style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; padding: 0px; text-align: left;"
-					class="h5_center" width="20px"><spring:message code='ezJournal.t109'/></th>
+					class="h5_center" width="5%"><spring:message code='ezJournal.t109'/></th>
 				</c:if>
 				<c:if test="${listType eq 'recv' or listType eq 'temp' }">
 				<th id="BoardList_TH_1" onclick="setListOrder(this)" order="8"
 					style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; padding: 0px; text-align: left;"
-					class="h5_center" width="100px"><spring:message code='ezJournal.t12'/></th>
+					class="h5_center" width="15%"><spring:message code='ezJournal.t12'/></th>
 				</c:if>
 				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2"
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
-					class="h5_center" width="400px"><spring:message code='ezJournal.t56'/></th>
+					class="h5_center" width="40%"><spring:message code='ezJournal.t56'/></th>
 				<c:if test="${listType eq 'recv' }">
 				<th id="BoardList_TH_4" onclick="setListOrder(this)" order="6"
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
-					class="h5_center" width="100px"><spring:message code='ezJournal.t40'/></th>
+					class="h5_center" width="15%"><spring:message code='ezJournal.t40'/></th>
 				</c:if>
 				<c:if test="${listType eq 'department' or listType eq 'recv' }">
 				<th id="BoardList_TH_5" onclick="setListOrder(this)" order="5"
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
-					class="h5_center" width="100px"><spring:message code='ezJournal.t34'/></th>
+					class="h5_center" width="15%"><spring:message code='ezJournal.t34'/></th>
 				</c:if>
 				<th id="BoardList_TH_6" onclick="setListOrder(this)" order="3"
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
-					class="h5_center" width="150px"><spring:message code='ezJournal.t35'/></th>
+					class="h5_center" width="20%"><spring:message code='ezJournal.t35'/></th>
 				<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine' }">
 				<th id="BoardList_TH_8" onclick="setListOrder(this)" order="7" 
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
-					class="h5_center" width="100px"><spring:message code='ezJournal.t22'/></th>
+					class="h5_center" width="15%"><spring:message code='ezJournal.t22'/></th>
 				</c:if>
 				<c:if test="${listType eq 'mine' }">
 				<th id="BoardList_TH_9" onclick="setListOrder(this)" order="12"
 					style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;"
-					class="h5_center" width="50px"><spring:message code='ezJournal.t110'/></th>
+					class="h5_center" width="5%"><spring:message code='ezJournal.t110'/></th>
 				</c:if>
 				<c:if test="${listType eq 'department' or listType eq 'mine' }">
 				<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11"
 					style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;"
-					class="h5_center" width="50px"><spring:message code='ezJournal.t65'/></th>
+					class="h5_center" width="5%"><spring:message code='ezJournal.t65'/></th>
 				</c:if>
 			</tr>
 		</thead>
@@ -173,7 +179,7 @@
 </div>
 <div id='runtime' style="color: #666; padding-top: 5px"></div>
 <c:if test="${paging.endPage>0 }">
-<div id="tblPageRayer" style="text-align: center">
+<div id="tblPageRayer" style="width:470px; margin:6px auto;">
 	<div class="pagenavi">               
 		<c:choose>
 			<c:when test="${paging.startPage gt 1}">
