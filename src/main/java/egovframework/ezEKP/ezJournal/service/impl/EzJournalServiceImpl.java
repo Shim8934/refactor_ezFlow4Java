@@ -156,7 +156,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 		if (isDeptChanged.equals("Y")) {
 			logger.debug((String)jsonParam.get("useDept"));
 			
-			List<Map<String, Object>> depts = JsonUtil.JsonToList((String) jsonParam.get("useDept")); 
+//			List<Map<String, Object>> depts = JsonUtil.JsonToList((String) jsonParam.get("useDept")); 
+			Gson gson = new Gson();
+			List<Map<String, Object>> depts = gson.fromJson(jsonParam.get("useDept").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
 			
 			if (depts != null) {
 				for (int i = 0; i < depts.size(); i++) {
@@ -185,8 +187,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public List<JournalCompanyVO> getCompanyList(String userId,
-			String tenantId,String companyId) throws Exception {
+	public List<JournalCompanyVO> getCompanyList(String userId, String tenantId,String companyId) throws Exception {
 		logger.debug("getCompanyList started");
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put("userId", userId);
@@ -198,7 +199,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public List<JournalAuthorVO> getAuthorList(String companyId, String tenantId)throws Exception {
+	public List<JournalAuthorVO> getAuthorList(String companyId, String tenantId) throws Exception {
 		logger.debug("getAuthorList started");
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put("tenantId", tenantId);
@@ -289,7 +290,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 			logger.debug((String)jsonParam.get("useDept"));
 			
 			ezJournalDAO.deleteFormUseDept(map);
-			List<Map<String, Object>> depts = JsonUtil.JsonToList((String) jsonParam.get("useDept")); 
+//			List<Map<String, Object>> depts = JsonUtil.JsonToList((String) jsonParam.get("useDept")); 
+			Gson gson = new Gson();
+			List<Map<String, Object>> depts = gson.fromJson(jsonParam.get("useDept").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
 			
 			if (depts != null) {
 				for (int i = 0; i < depts.size(); i++) {
@@ -376,7 +379,10 @@ public class EzJournalServiceImpl implements EzJournalService{
 		
 		logger.debug((String)jsonParam.get("receiverList"));
 		
-		List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
+//		List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
+		Gson gson = new Gson();
+		List<Map<String, Object>> receivers = gson.fromJson(jsonParam.get("receiverList").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
+		
 		if (receivers != null) {
 			String favoriteId = ezJournalDAO.saveReceiverFavorite(map) + "";
 			for (int i = 0; i < receivers.size(); i++) {
@@ -452,7 +458,11 @@ public class EzJournalServiceImpl implements EzJournalService{
 		
 		logger.debug((String)jsonParam.get("receiverList"));
 		
-		List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
+	//	List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
+		Gson gson = new Gson();
+		List<Map<String, Object>> receivers = gson.fromJson(jsonParam.get("receiverList").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
+		
+		logger.debug("수신자수정확인 : " + receivers);
 		if (receivers != null) {
 			ezJournalDAO.deleteFavoriteUser(map);
 			ezJournalDAO.updateFavoriteName(map);
