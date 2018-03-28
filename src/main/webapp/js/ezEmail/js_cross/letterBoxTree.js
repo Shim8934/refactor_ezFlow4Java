@@ -61,6 +61,8 @@ function treeOnclick() {
     		document.getElementById("letterbox_no").value = nodeId;
     		
     		if (!(nodeId.indexOf('temp'))) { // 편지지함이 임시 추가라면
+    			if (addCheck == -1) {return;}
+    			
     			setDisplay("편지지함", "letterbox_temp");
     		} else { 
     			selectBox(nodeId);
@@ -193,9 +195,11 @@ function deleteLetterBox() {
 	if (letterBoxNo == result[0].letterBoxNo) { //treeCollection[0].id == 
 		alert("기본편지지함은 삭제가 불가능합니다.");
 		return;
-	}
-	
-	if (letter.children.length !== 0) {
+	} else if (addCheck == -1) { // 편지지함 추가중
+		if (confirm("현재 추가중인 편지지함을 삭제합니다.")){
+			$('#divTree').jstree().delete_node($('#temp'));
+		}
+	} else if (letter.children.length !== 0) {
 		alert("하위 편지지함이 존재합니다. 하위편지지함을 삭제해주세요");
 		return;
 	} else {
