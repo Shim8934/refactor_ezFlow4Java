@@ -1196,17 +1196,24 @@ function ViewDoc_onclick_Complete(Rtn) {
 
             var openLocation = "";
             
-            if (g_uFlag == "m03") {
-                openLocation = "/ezApprovalG/contDocView.do";
-                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
-            }
-            else {
-                openLocation = "/ezApprovalG/contDocView.do";
-                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
-            }
-            openwindow(openLocation, "", 880, 570);
-        }
-    }
+            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+                if (g_uFlag == "m03") {
+                        openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
+                } else {
+                        openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
+                }
+            } else {
+	            if (g_uFlag == "m03") {
+	                openLocation = "/ezApprovalG/contDocView.do";
+	                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
+	            } else {
+	                openLocation = "/ezApprovalG/contDocView.do";
+	                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
+	            }
+             }
+	            openwindow(openLocation, "", 880, 570);
+         }
+     }
 }
 //END
 function GetTodayDate() {

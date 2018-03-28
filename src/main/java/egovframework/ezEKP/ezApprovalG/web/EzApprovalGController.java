@@ -2619,7 +2619,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		int whoKyulCount = ezApprovalGService.getWhoKyulCount(docID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
 		String checkPwdFlag = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(),  userInfo.getCompanyID());
-
+		String ext = docHref.substring(docHref.toLowerCase().lastIndexOf(".") + 1);
 		model.addAttribute("editor", editor);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("signCheck", signCheck);
@@ -2640,6 +2640,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docState", docState);
 		model.addAttribute("whoKyulCount", whoKyulCount);
 		model.addAttribute("checkPwdFlag", checkPwdFlag);
+		model.addAttribute("ext", ext);
 
 		logger.debug("contDocView ended.");
 		
