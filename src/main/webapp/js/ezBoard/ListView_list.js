@@ -323,12 +323,24 @@ function ListView() {
             var oTable = document.createElement("TABLE");
             oTable.id = _thisID;
 
+            var oDiv = document.createElement("DIV");
+            oDiv.id = "newDiv";
+            oDiv.style.height = (document.getElementById("divList").clientHeight - 37) + "px";
+            oDiv.style.overflow = "auto";
+            
             oTable.cellSpacing = 0;
             oTable.cellPadding = 0;
 
             oTable.setAttribute("multiselectable", _isMultiSelectable);
             oTable.setAttribute("useocs", _useOcs);
             oTable.style.minWidth = GetTableMinWidth() + "px";
+            
+            oDiv.cellSpacing = 0;
+            oDiv.cellPadding = 0;
+
+            oDiv.setAttribute("multiselectable", _isMultiSelectable);
+            oDiv.setAttribute("useocs", _useOcs);
+            oDiv.style.minWidth = GetTableMinWidth() + "px";
 
             if (_rowonclick != null)
                 oTable.setAttribute("rowonclick", _rowonclick);
@@ -352,7 +364,8 @@ function ListView() {
             }
 
             oTable.appendChild(oTHeader);
-            oTable.appendChild(oTBody);
+            /*oTable.appendChild(oTBody);*/
+            oDiv.appendChild(oTBody);
 
             if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
 
@@ -401,11 +414,13 @@ function ListView() {
             }
 
             objElm.appendChild(oTable);
-
+            objElm.appendChild(oDiv);
+            
             if (_debugMode) yjTest("oTable", objElm.innerHTML);
 
             objElm = null;
         }
+        scroll();
     }
 
     //헤더없이 Row만 존재하는 DataSource를 위한 메소드
@@ -618,9 +633,15 @@ function ListView() {
 
     //리스트뷰 바디 생성
     function GetTableBodyObj() {
-        var oTbody = document.createElement("TBODY");
-        oTbody.style.backgroundColor = m_strColorDefault;
+        /*var oTbody = document.createElement("TBODY");
+        oTbody.style.backgroundColor = m_strColorDefault;*/
 
+        var oTbody = document.createElement("TABLE");
+        oTbody.style.backgroundColor = m_strColorDefault;
+        oTbody.id = _thisID + "Div";
+        oTbody.style.width = "100%";
+        oTbody.className="mainlist";
+        
         var oRows = _dataSource.getElementsByTagName("ROW");
         _rowCount = oRows.length;
         
@@ -709,7 +730,8 @@ function ListView() {
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
                     objTd.style.margin = "0";
-                    objTd.style.width = "80%";
+                    objTd.style.width = "50%";
+                    objTd.className = "h5_center";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
@@ -737,21 +759,29 @@ function ListView() {
                     
                 }
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "BOARDNAME") {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                	objTd.className = "h5_center";
                     objTd.style.textAlign = "left";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
                 } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                	objTd.className = "h5_center";
                     objTd.style.textAlign = "left";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
                 } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITEDATE') > -1) {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                	objTd.className = "h5_center";
                 	objTd.style.textAlign = "left";
                 	objTd.style.overflow = "hidden";
                 	objTd.style.whiteSpace = "nowrap";
                 	objTd.style.width = "120px";
                 } else {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                	objTd.className = "h5_center";
                 	objTd.style.textAlign = "left";
                 	objTd.style.overflow = "hidden";
                 	objTd.style.whiteSpace = "nowrap";
@@ -1463,7 +1493,7 @@ function tr_unselectedAll(pTableID) {
     if (document.getElementById("HeaderAllCheckBox")) {    
     	if (!document.getElementById("HeaderAllCheckBox").checked) {
 	        var SelList = new ListView();
-	        SelList.LoadFromID("BoardList");
+	        SelList.LoadFromID("BoardListDiv");
 	
 	        for (var i = 0; i < SelList.GetRowCount() ; i++) {
 	            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
@@ -1479,7 +1509,7 @@ function tr_unselectedAll(pTableID) {
 function event_HeaderCheckBoxClick(obj) {
 
     var SelList = new ListView();
-    SelList.LoadFromID("BoardList");
+    SelList.LoadFromID("BoardListDiv");
 
     if (obj.checked) {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
