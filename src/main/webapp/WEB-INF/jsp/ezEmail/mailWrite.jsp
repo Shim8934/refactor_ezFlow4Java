@@ -195,9 +195,11 @@
 	                location.href = location.href + "&attach=1";
 	            }
 	        }        
+	        
 	        if ((g_cmd == "FORWARD" || g_cmd == "EDIT" || g_ReSendFlag == "Y") && document.getElementById("AttachXmlList").innerHTML.trim() != "") {
 	            AddAttachFileInfoXmlParsing(document.getElementById("AttachXmlList").innerHTML);
 	        }
+	        
 	        SelMailSign.value = "${mailSignSel}";
 	        
 			Simple_Choice();		

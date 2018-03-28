@@ -2733,7 +2733,7 @@
 			        	<tr>
 			        	   <c:if test="${question.status == 1 || question.status == 2}">
 				               <td class="vote_listTd" style="width:54px; border:1px solid #DDD; background:#f9f9f9;" id="_checkbox<c:out value ="${_option.ansId}"/>">	    
-				               		<img id="_imageCheckBox<c:out value ="${_option.ansId}"/>" onclick="javascript:change(this)" src="/images/poll/unchecked_vote.png" style="height:20px; width:20px; display:inline-block;padding-left: 15px; padding-top: 14px;" name="${loop.index}" class="_imageTag"/>	               		             		         		
+				               		<img id="_imageCheckBox<c:out value ="${_option.ansId}"/>" onclick="javascript:change(this)" src="/images/poll/unchecked_vote.png"  name="${loop.index}" class="_imageTag"/>	               		             		         		
 				               </td>
 			               </c:if>
 			               <td class="vote_listTd" style="border:none; border-bottom:1px solid #DDD; height:94px; margin:0px; padding:0px 24px;" id="resultBox<c:out value ="${_option.ansId}" />">	   	               		
