@@ -198,20 +198,23 @@
 		
 			// 미리보기창에 마우스 올렸을떄 편지지 이름 보여주기
 			$(document).on("mouseover", ".lmPreview > .lmPreViewIframe", function(){
-				var letterName = $(this).attr("data-letterName");
-				var letterNameSpan = "<span class='preViewLetterName lmPre'>" + letterName + "</span>";
+				var letterNameChk = $(".lmPreview > .preViewLetterName").length; // 0:없음
 				
-				$(".lmPreview").prepend(letterNameSpan);
-				$(".preViewLetterName").css({
-					"padding" : "3px 10px",
-					"color" : "white",
-					"background" : "rgba(0,0,0,0.5)",
-					"position" : "absolute",
-					"right" : "5px",
-					"top" : "5px",
-					"font-size" : "14px"
-				});
-				
+				if (letterNameChk == 0) {
+					var letterName = $(this).attr("data-letterName");
+					var letterNameSpan = "<span class='preViewLetterName lmPre'>" + letterName + "</span>";
+					
+					$(".lmPreview").prepend(letterNameSpan);
+					$(".preViewLetterName").css({
+						"padding" : "3px 10px",
+						"color" : "white",
+						"background" : "rgba(0,0,0,0.5)",
+						"position" : "absolute",
+						"right" : "5px",
+						"top" : "5px",
+						"font-size" : "14px"
+					});
+				}
 			});
 			
 			// 미리보기창에 마우스 올렸을떄 편지지 이름 없애기
