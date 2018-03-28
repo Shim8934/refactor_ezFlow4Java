@@ -607,7 +607,7 @@
 			and j.journal_status=#status#
 		</isNotEmpty>
 		<isEmpty property="status">
-			and j.journal_status is null
+			and NULLIF(j.journal_status,'') is null
 		</isEmpty>
 		<isNotEmpty property="formId">
 			and f.form_id=#formId#
@@ -656,7 +656,7 @@
 		(select count(jf.file_id) from jmocha.tbl_journal_file jf where
 		jf.journal_id=j.journal_id and jf.tenant_id=j.tenant_id) as
 		file_count,
-		(select count(v.user_id) from jmocha.tbl_journal_view v where
+		(select count(v.user_id) from (select user_id,journal_id,TENANT_ID from jmocha.tbl_journal_view union select user_id,journal_id,TENANT_ID from jmocha.tbl_journal_recv where recieve_date is not null) v where
 		v.journal_id=j.journal_id and v.tenant_id=j.tenant_id) as view_count,
 		(select count(r.user_id) from jmocha.tbl_journal_recv r where
 		r.journal_id=j.journal_id and r.tenant_id=j.tenant_id) as total_recv,
@@ -1208,30 +1208,56 @@
 	
 	<!-- 조회자 리스트 갯수 가져오기 -->
 	<select id="getViewerCount" parameterClass="map" resultClass="String">
+		select count(us.user_id) as view_count from (
 		select
-			count(u.cn) as viewCount
+		u.cn as user_id
+		from jmocha.tbl_journal_view v
+		inner join jmocha.tbl_usermaster u on(v.tenant_id=u.TENANT_ID and u.CN=v.user_id)
+		where v.journal_id=#journalId#
+		and v.tenant_id =#tenantId#
+		union
+		select
+			b.user_id as user_id
 		from 
-			jmocha.tbl_journal_view v inner join jmocha.tbl_usermaster u on(v.tenant_id = u.TENANT_ID and u.CN = v.user_id)
+			jmocha.tbl_usermaster a inner join jmocha.tbl_journal_recv b 
+		on 
+			(a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
 		where 
-			v.journal_id=#journalId#
-		and 
-			v.tenant_id =#tenantId#
+			b.journal_id = #journalId#
+		and
+			a.tenant_id = #tenantId#
+		and b.recieve_date is not null) us
 	</select>
 	
 	<!-- 조회자 리스트 가져오기 -->
 	<select id="getViewerList" parameterClass="map" resultMap="receiverVO">
 		select
-			u.cn as user_id,
-			u.DISPLAYNAME as user_name,
-			u.DESCRIPTION as dept_name,
-			u.TITLE as jikwi,
-			substring(v.view_date,1,16) as date
+			b.user_id as user_id,
+			a.DISPLAYNAME as user_name,
+			a.DESCRIPTION as dept_name,
+			a.TITLE as jikwi,
+			substring(b.recieve_date,1,16) as date
 		from 
-			jmocha.tbl_journal_view v inner join jmocha.tbl_usermaster u on(v.tenant_id = u.TENANT_ID and u.CN = v.user_id)
+			jmocha.tbl_usermaster a join jmocha.tbl_journal_recv b 
+		on 
+			(a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
 		where 
-			v.journal_id=#journalId#
-		and 
-			v.tenant_id =#tenantId#
+			b.journal_id = #journalId#
+		and
+			a.tenant_id = #tenantId#
+        and
+			b.recieve_date is not null
+		union
+		select
+		u.cn as user_id,
+		u.DISPLAYNAME as user_name,
+		u.DESCRIPTION as dept_name,
+		u.TITLE as jikwi,
+		substring(v.view_date,1,16) as date
+		from jmocha.tbl_journal_view v
+		inner join jmocha.tbl_usermaster u on(v.tenant_id=u.TENANT_ID and u.CN=v.user_id)
+		where v.journal_id=#journalId#
+		and v.tenant_id =#tenantId#
 		limit
 			#startCount#, #listCnt#
 	</select>

@@ -442,7 +442,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	}
 	
 	/**
-	 * 일지 조회자 리스트
+	 * 일지 조회자 명수
 	 * @param map
 	 * @return 
 	 */

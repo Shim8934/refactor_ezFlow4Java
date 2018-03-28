@@ -76,24 +76,29 @@
 			//댓글 저장
 			function saveJournalReply(){
 				var replyContent = $("#replyContent").val();
-				$.ajax({
-					type:"post",
-					data:{"replyContent":replyContent,"journalId":journalId},
-					url:"/ezJournal/saveJournalReply.do",
-					success: function(result){
-						var journalTitle;
-						if(parent.viewType=='detail'){
-							journalTitle = parent.journalTitle;
-// 							parent.openJournalReply();
-							parent.opener.setJournalList();
-						} else {
-							journalTitle = parent.replyJournalTitle;
-							parent.setJournalList();
+				if(replyContent == null || replyContent==""){
+					alert('<spring:message code='ezBoard.t10049' />');
+				}else{
+					$.ajax({
+						type:"post",
+						data:{"replyContent":replyContent,"journalId":journalId},
+						url:"/ezJournal/saveJournalReply.do",
+						success: function(result){
+							var journalTitle;
+							if(parent.viewType=='detail'){
+								journalTitle = parent.journalTitle;
+	// 							parent.openJournalReply();
+								parent.opener.setJournalList();
+							} else {
+								journalTitle = parent.replyJournalTitle;
+								parent.setJournalList();
+							}
+							sendJournalReplyMail(replyContent,journalId,result,journalTitle);
+							location.reload();
+							parent.addReplyCount();
 						}
-						sendJournalReplyMail(replyContent,journalId,result,journalTitle);
-						location.reload();
-					}
-				});
+					});
+				}
 			}
 			
 			// 메일보내기
@@ -122,6 +127,7 @@
 							parent.setJournalList();
 						}
 						location.reload();
+						parent.minusReplyCount();
 					}
 				});
 			}
@@ -133,7 +139,6 @@
 			
 			function closeJournalPopup(){
 				if(parent.viewType=='detail'){
-					parent.location.reload();
 					closePopup();
 				} else {
 					parent.setJournalList();

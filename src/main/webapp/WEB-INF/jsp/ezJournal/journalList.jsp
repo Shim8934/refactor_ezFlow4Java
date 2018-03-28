@@ -83,7 +83,7 @@
 				<c:when test="${journal.isView == 'noView'}">
 				<td onclick="selectedTR(this);"
 					style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;">
-					<img style="cursor:pointer" src="/images/ImgIcon/view-document.gif ">\
+					<img style="cursor:pointer" src="/images/ImgIcon/view-document.gif ">
 				</td>
 				</c:when>
 				<c:otherwise>
@@ -118,7 +118,7 @@
 				<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 				${journal.journalTitle}
 				<c:if test="${journal.replyCount gt 0}">
-					<a onclick=""><span onclick="quickReply('${journal.journalId }','${journal.journalTitle }');" style="color: #2222ff">[${journal.replyCount }]</span></a>
+					<a onclick=""><span onclick="<!-- quickReply('${journal.journalId }','${journal.journalTitle }'); -->" style="color: #c64200">[${journal.replyCount }]</span></a>
 				</c:if>
 				</td>
 				<c:if test="${listType eq 'recv' }">
@@ -141,7 +141,14 @@
 				</c:if>
 				<c:if test="${listType eq 'mine' }">
 				<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+				<c:choose>
+				<c:when test="${journal.totalRecv ne 0}">
 				${journal.checkRecv} / ${journal.totalRecv}
+				</c:when>
+				<c:otherwise>
+				-
+				</c:otherwise>
+				</c:choose>
 				</td>
 				</c:if>
 				<c:if test="${listType eq 'department' or listType eq 'mine' }">
