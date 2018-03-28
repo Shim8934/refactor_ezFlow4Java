@@ -1978,13 +1978,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String result = ezApprovalGDAO.getUserRecRight(map);
 		if(result == null || result.equals("0")){
-			result = ezApprovalGDAO.getUserRecRightCount(map);
-			if(result == null || result.equals("0")) {
+//			result = ezApprovalGDAO.getUserRecRightCount(map);
+//			if(result == null || result.equals("0")) {
 				result = ezApprovalGDAO.getUserRecRightCount2(map);
+				if (Integer.parseInt(result)<=1) { result = "0"; } 
 				if(result == null) {
 					result = "0";
 				}
-			}
+//			}
 		}
 
 		logger.debug("getUserRecRight ended");
@@ -18894,7 +18895,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String saveRecUserRoleInfo(Document xmlDom, String lang, int tenantID, Locale locale) throws Exception {
 		logger.debug("saveRecUserRoleInfo started");
 
-		String Flag	= "0";
+		String Flag	= xmlDom.getElementsByTagName("FLAG").item(0).getTextContent().trim();
 		String SepAttachNo =xmlDom.getElementsByTagName("SEPATTNO").item(0).getTextContent().trim();
 		String RecID = xmlDom.getElementsByTagName("RECID").item(0).getTextContent().trim();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();

@@ -56,7 +56,7 @@
     								<dt><spring:message code='main.t00010' /></dt>
     							</c:when>
     							<c:otherwise>
-    								<dt style="font-size:8pt"><spring:message code='main.t00010' /></dt>
+    								<dt><spring:message code='main.t00010' /></dt>
     							</c:otherwise>
     						</c:choose>
     						
