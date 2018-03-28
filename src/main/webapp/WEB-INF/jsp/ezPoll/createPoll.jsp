@@ -951,10 +951,10 @@
 						<span><spring:message code="ezPoll.t253"/></span>
 						
 						<input id="isSorting" type="checkbox">
-						<span>득표순 정렬</span>
+						<span><spring:message code = 'ezPoll.t259'/></span>
 						
 						<input id="isSelOnlyOnce" type="checkbox">
-						<span>낙장불입</span>
+						<span><spring:message code = 'ezPoll.t260'/></span>
 						
 						<input id="endDate" type="checkbox">
 						<span><spring:message code="ezPoll.t159"/></span>

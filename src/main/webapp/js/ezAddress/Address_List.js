@@ -339,33 +339,39 @@ function MakeAddressList() {
             var SubDivLayer = document.createElement("DIV");
             SubDivLayer.className = "back";
 
-            var SubPTag = document.createElement("p");
+/*            var SubPTag = document.createElement("p");
             SubPTag.className = "topinfo";
 
             var pContentSub = document.createElement("span");
-            pContentSub.innerText = Sname;
+            pContentSub.innerText = Sname;*/
+            
+            var imgType = "";
             
             if (SType == "P"){
-            		SubPTag.innerHTML = "<img src=\"/images/i_individual.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> ";
+            	imgType = "<img src=\"/images/i_individual.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> ";
             } else {
-                SubPTag.innerHTML = "<img src=\"/images/i_group.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> " + "<c:out value=\"" + Sname + "\" />";
+            	imgType = "<img src=\"/images/i_group.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> ";
             }
-            SubPTag.appendChild(pContentSub);
+            /*SubPTag.appendChild(pContentSub);*/
 
             var ULTag = document.createElement("ul");
 
             var UITag1 = document.createElement("li");
-            UITag1.className = "name";
-            if (CrossYN())
-                UITag1.textContent = Sname;
-            else
-                UITag1.innerText = Sname;
+            UITag1.className = "name";            
+            UITag1.innerHTML = imgType + Sname;
+            
             var UITag2 = document.createElement("li");
             UITag2.className = "company";
             if (CrossYN())
                 UITag2.textContent = Scompany;
             else
                 UITag2.innerText = Scompany;
+            
+            var ULTag0 = document.createElement("ul");
+            ULTag0.style.margin = "0px";
+            ULTag0.style.padding = "11px 10px 4px 10px";
+            ULTag0.style.backgroundColor = "#fafafa";
+            ULTag0.style.borderRadius = "5px";
             
             var UITag3 = document.createElement("li");
             var span3 = document.createElement("span");
@@ -384,18 +390,19 @@ function MakeAddressList() {
             var UITag5 = document.createElement("li");
             UITag5.innerHTML = CardHeader3 + ":<span class=\"point_txt\">" + Semail + "</span>";
 
-            var EndDiv = document.createElement("DIV");
-            EndDiv.className = "shadow";
+            /*var EndDiv = document.createElement("DIV");
+            EndDiv.className = "shadow";*/
 
             DivLayer.appendChild(SubDivLayer);
-            DivLayer.appendChild(EndDiv);
-            SubDivLayer.appendChild(SubPTag);
+            /*DivLayer.appendChild(EndDiv);*/
+            /*SubDivLayer.appendChild(SubPTag);*/
             SubDivLayer.appendChild(ULTag);
+            SubDivLayer.appendChild(ULTag0);
             ULTag.appendChild(UITag1);
             ULTag.appendChild(UITag2);
-            ULTag.appendChild(UITag3);
-            ULTag.appendChild(UITag4);
-            ULTag.appendChild(UITag5);
+            ULTag0.appendChild(UITag3);
+            ULTag0.appendChild(UITag4);
+            ULTag0.appendChild(UITag5);
             document.getElementById("MailListCard").appendChild(DivLayer);
         }
     }

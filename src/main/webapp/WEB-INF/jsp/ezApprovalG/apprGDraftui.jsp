@@ -1518,7 +1518,7 @@
 	            tempStr = ConvertMHTtoHTML(URL);
 	            
 	            tempXML = loadXMLString(tempStr);
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            var _DocContentHtml = getNodeText(XmlBodyDATA);
 	            var ConXmlDiv = document.createElement("DIV");
