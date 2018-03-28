@@ -1258,7 +1258,7 @@ function setPublicFlag()
 
 function getHistory()
 {	
-    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID "&ext=" + "hwp";
+    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + "hwp";
 	centerOpenWindow(URL, 730, 430);
 }
 
