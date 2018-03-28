@@ -609,6 +609,10 @@ public class EzEmailAdminLetterController {
 			
 			File file = new File(realPath + filePath);
 			File fileHtml = new File(realPath + filePath + "/" + fileName);
+
+			if (!file.exists()) {
+				file.mkdirs();
+			}
 			
 			if (fileHtml.exists()) {
 				fileHtml.delete();
@@ -619,12 +623,8 @@ public class EzEmailAdminLetterController {
 			fw.flush();
 			fw.close();
 			
-			if (file.exists()) {
-				EzEmailAdminLetterService.updateDisplayNameLetter(displayname, displayname2, letterNo);
-			} else {
-				returnStr = "파일생성이 안되었습니다.";
-			}
 			
+			EzEmailAdminLetterService.updateDisplayNameLetter(displayname, displayname2, letterNo);
 		} catch (Exception e) {
 			returnStr = "ERROR";
 			//e.printStackTrace();
