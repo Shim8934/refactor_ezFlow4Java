@@ -526,8 +526,8 @@
 								+ "px";
 						g_bPrevShow = false;
 						onPreview=false;
-						$("#Preview_ContentH").html("<spring:message code='ezBoard.t10022' />");
-						$("#Preview_ContentW").html("<spring:message code='ezBoard.t10022' />");
+						$("#Preview_ContentH span").html("<spring:message code='ezBoard.t10022' />");
+						$("#Preview_ContentW span").html("<spring:message code='ezBoard.t10022' />");
 					} else if (pGubun == "W") {
 						document.getElementById("MailListRayer").style.display = "inline-block";
 						document.getElementById("PreviewRayerW").style.display = "block";
@@ -565,7 +565,7 @@
 // 						document.getElementById("Preview_HeaderH").style.display = "none";
 						g_bPrevShow = true;
 						if(onPreview==false){
-							$("#Preview_ContentW").html("<spring:message code='ezBoard.t10022' />");
+							$("#Preview_ContentW span").html("<spring:message code='ezBoard.t10022' />");
 // 							ifrmPreViewW.document
 // 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 						}
@@ -627,7 +627,7 @@
 
 						g_bPrevShow = true;
 						if(onPreview==false){
-							$("#Preview_ContentH").html("<spring:message code='ezBoard.t10022' />");
+							$("#Preview_ContentH span").html("<spring:message code='ezBoard.t10022' />");
 // 							ifrmPreViewH.documentr
 // 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 						}
@@ -795,8 +795,9 @@
 				</c:when>
 			</c:choose>
 			<c:if test="${typeId ne null && typeId ne 'undefined' }">
-				 - <spring:message code='${typeId }'/>
+				 - <spring:message code='${typeId }'/> 
 			</c:if>
+			<span id="mailBoxInfo">[<spring:message code='ezJournal.t54'/> <span id="totalCount" style="color:#017BEC;"></span><spring:message code='ezJournal.t55'/>]</span>
 			<span style="float:right;font-weight:normal;color:black;">
 			  <c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
 	          <input name="searchKey" id="Radio1" type="radio" value="journalTitle" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezBoard.t208' /></label>
@@ -818,8 +819,12 @@
 	       	 <li><span onClick="writejournal()"><spring:message code='ezJournal.t57' /></span></li>
 		  	</c:if>
 <!-- 		  	확인완료 -->
-		  	<c:if test="${listType eq 'department' or listType eq 'recv' }">
+		  	<c:if test="${listType eq 'recv' }">
 	       	 <li><span onClick="doViewJournal();"><spring:message code='ezJournal.t58' /></span></li>
+		  	</c:if>
+<!-- 		  	읽음표시 -->
+		  	<c:if test="${listType eq 'department' }">
+	       	 <li><span onClick="doViewJournal();"><spring:message code='ezBoard.t204' /></span></li>
 		  	</c:if>
 <!-- 		  	수정 -->
 		  	<c:if test="${listType eq 'temp' }">
@@ -950,29 +955,32 @@
 	<div class="jquery-modal blocker current" id="layer_popup" style="display:none;">
 		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<table class="content">
-					<c:if test="${listType ne 'mine' }">
-					<tr>
-						<th style="text-align: center"><spring:message code='ezJournal.t34' /></th>
-						<td><input type="text" id="searchWriter" style="width: 98%" value=""></td>
-					</tr>
-					</c:if>
-					<tr>
-						<th style="text-align: center"><spring:message code='ezBoard.t208' /></th>
-						<td><input type="text" id="searchTitle" style="width: 98%" value=""></td>
-					</tr>
-					<tr>
-						<th style="text-align: center"><spring:message code='ezJournal.t22' /></th>
-						<td><input type="text" id="searchFormName" style="width: 98%" value=""></td>
-					</tr>
-					<tr>
-						<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>
-						<td><input type="text" id="Sdatepicker"
-							style="width: 80px; text-align: center" readonly="readonly">
-							~ <input type="text" id="Edatepicker"
-							style="width: 80px; text-align: center" readonly="readonly">
-						</td>
-					</tr>
-				</table>
+				<tr>
+					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"><spring:message code='ezJournal.t1' /> <spring:message code='ezJournal.t43' /></th>
+				</tr>
+				<c:if test="${listType ne 'mine' }">
+				<tr>
+					<th style="text-align: center"><spring:message code='ezJournal.t34' /></th>
+					<td><input type="text" id="searchWriter" style="width: 98%" value=""></td>
+				</tr>
+				</c:if>
+				<tr>
+					<th style="text-align: center"><spring:message code='ezBoard.t208' /></th>
+					<td><input type="text" id="searchTitle" style="width: 98%" value=""></td>
+				</tr>
+				<tr>
+					<th style="text-align: center"><spring:message code='ezJournal.t22' /></th>
+					<td><input type="text" id="searchFormName" style="width: 98%" value=""></td>
+				</tr>
+				<tr>
+					<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>
+					<td><input type="text" id="Sdatepicker"
+						style="width: 80px; text-align: center" readonly="readonly">
+						~ <input type="text" id="Edatepicker"
+						style="width: 80px; text-align: center" readonly="readonly">
+					</td>
+				</tr>
+			</table>
 				<br />
 				<table style="width: 100%">
 					<tr>
@@ -989,9 +997,9 @@
         <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer_sub"></iframe>
     </div>
 	<div class="jquery-modal blocker current" id="selectSumJournal" style="display:none;">
-		<div id="sumpopup" class="popupwrap1 modal popup" style="width:175px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 500px; display: inline-block;">
+		<div id="sumpopup" class="popupwrap1 modal popup" style="text-align:center; width:300px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 500px; display: inline-block;">
 			<h1><spring:message code='ezJournal.t70' /></h1>
-			<table class="mainlist" id="basicFormList">
+			<table class="mainlist" id="basicFormList" style="width: 100%;">
 			</table>
 				<br />
 				<table style="width: 100%">
@@ -1161,6 +1169,13 @@
 //         var szHref = "/ezJournal/journalReply.do?journalId="+journalId;
 //         DivPopUpShow_sub(520, 420, szHref);
 		 DivPopUpShow_sub($('body').prop('scrollWidth') * 0.6, $('body').prop('scrollHeight') * 0.6, "/ezJournal/journalReply.do?journalId="+journalId);
+	 }
+	 
+	 function setTotalCount(totalCount){
+		 if (!totalCount) {
+			totalCount = 0;
+		}
+		 $("#totalCount").text(totalCount);
 	 }
 	</script>
 	</body>

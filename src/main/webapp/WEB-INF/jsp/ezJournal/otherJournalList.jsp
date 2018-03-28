@@ -40,21 +40,21 @@
 		            <c:when test="${fn:length(journalList) ne 0 }">
 			            <c:forEach items="${journalList }" var="journal" varStatus="status">
 							<tr style="background-color: rgb(255, 255, 255);">
-								<td style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+								<td style="width:13px; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 								<input type="radio" value="${journal.journalId }" name="otherJournalRadio" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>
 								<td align="left"
-									style="width: 300px; text-align: center; cursor: pointer;">${journal.journalTitle }</td>
+									style="width: 300px; text-align: left;">${journal.journalTitle }</td>
 <!-- 								<td align="left" -->
 <%-- 									style="width: 130px; text-align: center; cursor: pointer;">${journal.formName }</td> --%>
 								<td align="left"
-									style="width: 130px; text-align: center; cursor: pointer;">${journal.journalDate }</td>
+									style="width: 130px; text-align: left;">${journal.journalDate }</td>
 							</tr>
 			            </c:forEach>
 		            </c:when>
 		            <c:otherwise>
 		            	<tr style="background-color: rgb(255, 255, 255);">
 							<td align="left" colspan="3"
-								style="width: 130px; text-align: center; cursor: pointer;"><spring:message code='ezJournal.t147'/></td>
+								style="width: 130px; text-align: center;"><spring:message code='ezJournal.t147'/></td>
 						</tr>
 		            </c:otherwise>
 	            </c:choose>

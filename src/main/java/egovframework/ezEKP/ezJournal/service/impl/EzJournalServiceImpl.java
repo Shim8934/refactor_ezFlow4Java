@@ -734,33 +734,34 @@ public class EzJournalServiceImpl implements EzJournalService{
 		Element formBody = formDoc.body();
 		Element formThis = formBody.getElementById("thisJournal");
 		Element formNext = formBody.getElementById("nextJournal");
+		String formThisHtml = "";
+		String formNextHtml = "";
 		for (int i = 0; i < journalIdList.size(); i++) {
 			param.put("journalId", journalIdList.get(i));
 			
 			JournalVO journal = ezJournalDAO.selectJournal(param);
 			
 			String journalContent = journal.getJournalContent();
-			Document journalDoc = Jsoup.parseBodyFragment(journalContent);
-			Element journalBody = journalDoc.body();
+			String thisContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").html();
+			String nextContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("nextJournal").html();
+//			String thisContent = journalDoc.body().getElementById("thisJournal").html();
+//			String nextContent = journalDoc.body().getElementById("nextJournal").html();
 			
-			Element thisElem = journalBody.getElementById("thisJournal");
-			String thisContent = thisElem.html();
-			Element nextElem = journalBody.getElementById("nextJournal");
-			String nextContent = nextElem.html();
+//			Element thisElem = journalBody.getElementById("thisJournal");
+//			String thisContent = thisElem.html();
+//			Element nextElem = journalBody.getElementById("nextJournal");
+//			String nextContent = nextElem.html();
 			
-			String title = "<p>"+journal.getJournalTitle()+"</p>";
+			formThisHtml += "<p>----------"+journal.getJournalTitle()+"----------</p><p></p>";
+			formThisHtml += thisContent;
 			
-			formThis.append(title);
-			formNext.append(title);
-			
-			formThis.append(thisContent);
-			formNext.append(nextContent);
-			
-			formThis.append("</br>");
-			formNext.append("</br>");
+			formNextHtml += "<p>----------"+journal.getJournalTitle()+"----------</p><p></p>";   
+			formNextHtml += nextContent;
 		}
 		logger.debug("여기는 포문이 끝나는곳");
 		
+		formThis.append(formThisHtml);
+		formNext.append(formNextHtml);
 		form.setFormContent(formDoc.toString());
 		
 		logger.debug("getJournalDivideThisNext ended.");

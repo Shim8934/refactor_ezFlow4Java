@@ -111,6 +111,7 @@
 				$.ajax({
 	    			type : "POST",
 	   				dataType : "json",
+	   				async:false,
 	   				url : "/ezJournal/journalGetForm.do",
 	   				data : {
 	   					mode : mode, formId : formId, typeId : typeId,
