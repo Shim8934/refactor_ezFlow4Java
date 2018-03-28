@@ -145,9 +145,9 @@
 		    </script>
 		    <table class="popuplist" style="width:100%; table-layout: fixed; ">
 		          <tr>
-		            <th width="20%"><spring:message code='ezAddress.t124' /></th>
-		            <td style="width:30%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName" title="${addressInfo.sName}"> <c:out value='${addressInfo.sName}' /></span></td>
-		            <th width="20%"><spring:message code='ezAddress.t286' /></th>
+		            <th width="13%"><spring:message code='ezAddress.t124' /></th>
+		            <td style="width:32%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName" title="${addressInfo.sName}"> <c:out value='${addressInfo.sName}' /></span></td>
+		            <th width="13%"><spring:message code='ezAddress.t286' /></th>
 		            <td title="<spring:message code='ezAddress.t287' />" style="width:30%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span onClick="show_personinfo(0)" style="cursor:pointer"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></span></td>
 		          </tr>
 		          <tr>
@@ -170,7 +170,7 @@
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t291' /></th>
-		            <td colspan="3" title="<spring:message code='ezAddress.t285' />" style="color:blue; overflow: hidden;"><span onClick="send_email()"><span id="TextEmail" style="cursor:pointer"><c:out value='${addressInfo.sEmail}' /></span></span></td>
+		            <td colspan="3" title="<spring:message code='ezAddress.t285' />" style="color:steelblue; overflow: hidden;"><span onClick="send_email()"><span id="TextEmail" style="cursor:pointer"><c:out value='${addressInfo.sEmail}' /></span></span></td>
 		          </tr>
 		          <tr style="height:10px;">
 		              <td colspan="4" style="height:10px;border-left:1px solid #ffffff;border-right:1px solid #ffffff;">&nbsp;</td>
