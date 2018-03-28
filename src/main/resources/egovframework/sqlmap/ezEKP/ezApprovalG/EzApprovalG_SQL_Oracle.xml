@@ -11971,7 +11971,7 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getUserRight" parameterClass="Map" resultClass="int">
 		SELECT 
-			count(USERRIGHT) 
+			USERRIGHT
         FROM 
         	TBL_RECROLEINFO 
         WHERE  
@@ -11994,16 +11994,16 @@
 			UserRight 
 	    FROM 
 	    	TBL_RECROLEINFO 
-	    WHERE  
-	    	TENANT_ID = #v_TENANTID#
-	    AND
-			COMPANYID = #companyID#
-	    AND
+	    WHERE
 	    	RecordID = #v_RecID#
 	    AND 
 	    	SeperateAttachNo = #v_SepAttNo#
 	    AND 
 	    	UserID = 'All_User'
+	    AND  
+	    	TENANT_ID = #v_TENANTID#
+	    AND
+			COMPANYID = #companyID#
 	</select>
 	
 	<select id="EzApprovalG.getUserRecRightCount" parameterClass="Map" resultClass="String">
@@ -12032,15 +12032,16 @@
                 WHERE  
                 	CN = #v_UserID#
                 AND
-                TENANT_ID = #v_TENANTID#
-                AND
-	    			COMPANYID = #companyID# ) DEPTINFO  
+                	TENANT_ID = #v_TENANTID#
+<!--                 AND -->
+<!-- 	    			COMPANYID = #companyID#  -->
+	    			) DEPTINFO  
           ON 
           	DEPTINFO.DEPTID = TBL_RECORD.ProcessDeptCode
           AND
             DEPTINFO.TENANT_ID = TBL_RECORD.TENANT_ID
- 		  AND
-            DEPTINFO.COMPANYID = TBL_RECORD.COMPANYID 
+<!--  		  AND -->
+<!--             DEPTINFO.COMPANYID = TBL_RECORD.COMPANYID  -->
        	  WHERE  
        	  	RECORDID = #v_RecID#
        	  AND
@@ -12051,7 +12052,7 @@
 	
 	<select id="EzApprovalG.getUserRecRightCount2" parameterClass="Map" resultClass="String">
 		 SELECT 
-		 	UserRight 
+		 	COUNT(UserRight) 
          FROM 
          	TBL_RECROLEINFO 
          WHERE  
@@ -12063,7 +12064,7 @@
          AND 
          	SeperateAttachNo = #v_SepAttNo#
          AND 
-         	UserID = #v_UserID#
+         	UserID IN (#v_UserID#,'All_User')
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.spRollbackSN" parameterClass="Map" resultClass="int"> -->
