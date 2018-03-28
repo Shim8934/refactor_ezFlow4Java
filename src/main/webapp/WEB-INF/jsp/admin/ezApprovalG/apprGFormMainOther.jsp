@@ -101,7 +101,7 @@
 		            get_FormInfo();
 		            if (useEditor != "HWP") {
 		                var tempXML = createXmlDom();
-		                var XmlBodyATT = createXmlDom();
+// 		                var XmlBodyATT = createXmlDom();
 		                var XmlBodyDATA = createXmlDom();
 		                var tempStr = "";
 		                
@@ -110,7 +110,7 @@
 	                    tempXML.async = "false";
 	                    tempXML = loadXMLString(tempStr);
 		
-		                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 		                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 		                XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 		
 		                var Doc_ContentHtml = document.createElement("DIV");

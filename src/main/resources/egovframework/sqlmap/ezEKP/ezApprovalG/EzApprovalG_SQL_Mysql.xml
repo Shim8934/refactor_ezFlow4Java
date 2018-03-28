@@ -12142,7 +12142,7 @@
 <!-- 	<procedure id="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZSP_GETWEBPARTLISTCOUNT(#v_LISTTYPE#, #v_USERID#, #v_DEPTID#, #v_USERIDS#, #v_DEPTIDS#, #v_USERFLAG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id ="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int">
+	<select id ="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int" remapResults="true">
 		<isEqual property="v_LISTTYPE" compareValue="1">
 			<![CDATA[
 				SELECT 
