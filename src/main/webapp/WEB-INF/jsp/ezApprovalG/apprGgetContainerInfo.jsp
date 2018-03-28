@@ -158,12 +158,6 @@
 		            var nowday = nowDate.substring(8,10);       
 	                
 					if(approvalFlag == "G") {
-		                /* if (nowmonth < 10)
-		                    nowmonth = "0" + nowmonth;
-		
-		                if (nowday < 10)
-		                    nowday = "0" + nowday; */
-		
 		                for (var i = 0; i < 25; i++) {
 		                    condition[i] = "";
 		                }
@@ -176,27 +170,22 @@
 		                condition[14] = nowday;
 		                condition[24] = "";
 					} else {
-/* 						  if (nowmonth < 10)
-				                nowmonth = "0" + nowmonth;
-
-				            if (nowday < 10)
-				                nowday = "0" + nowday; */
-
-				            for (var i = 0; i < 25; i++) {
-				                condition[i] = "";
-				            }
+			            for (var i = 0; i < 25; i++) {
+			                condition[i] = "";
+			            }
 					}
-						DocListType == "GetDocSearch";
-	                	 var settingDate = new Date();
-	                	     settingDate.setYear(parseInt(nowDate.substring(0,4)) - 1);
+					
+					DocListType == "GetDocSearch";
+                	var settingDate = new Date();
+                	settingDate.setYear(parseInt(nowDate.substring(0,4)) - 1);
 
-	                     var settingmonth = nowDate.substring(5,7);
-	                     var settingday = nowDate.substring(8,10);
+                    var settingmonth = nowDate.substring(5,7);
+                    var settingday = nowDate.substring(8,10);
 
-	                     condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
-	                     condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
+                    condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
+                    condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
 
-	                     SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
+                    SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
 
 	                if (LoadSquery == "usercontlist") {
 	                    ContainerID = LoadContID;
