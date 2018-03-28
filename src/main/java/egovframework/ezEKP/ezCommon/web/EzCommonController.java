@@ -247,7 +247,7 @@ public class EzCommonController extends EgovFileMngUtil{
         			strHTML = strHTML.substring(strHTML.indexOf(">", strHTML.indexOf("<body")) + 1, strHTML.indexOf("</body>"));
         			strHTML = commonUtil.cleanValue(strHTML);
         		}
-        		String attribute = "orgdocnum";
+        		/*String attribute = "orgdocnum";
 		
 				StringBuffer sb = new StringBuffer();
 				
@@ -261,7 +261,9 @@ public class EzCommonController extends EgovFileMngUtil{
 				sb.append("<NODEVALUE>" + strHTML + "</NODEVALUE>");
 				sb.append("</NODE>");
 				
-				result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><ROOT><BODYATTS>" + commonUtil.cleanValue(sb.toString()) + "</BODYATTS>" + "<BODYDATA>" + strHTML + "</BODYDATA></ROOT>";
+				result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><ROOT><BODYATTS>" + commonUtil.cleanValue(sb.toString()) + "</BODYATTS>" + "<BODYDATA>" + strHTML + "</BODYDATA></ROOT>";*/
+				
+				result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><ROOT><BODYDATA>" + strHTML + "</BODYDATA></ROOT>";
 			}
 		}
 

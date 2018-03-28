@@ -1011,7 +1011,7 @@
             	<tr id="Objectivity_step3" style="DISPLAY:none">
                 	<th></th>
                 	<td>
-	                    <select AnsInfo name="input_Ans" id="input_Ans" size="4" onclick="javascript:fun_SelClick();" style="WIDTH:100%;HEIGHT:100px">${questionAddVO.pSelectOption}</select>
+	                    <select AnsInfo name="input_Ans" id="input_Ans" size="4" onclick="javascript:fun_SelClick();" style="WIDTH:100%;HEIGHT:100px; background:none;">${questionAddVO.pSelectOption}</select>
     	            </td>
         	    </tr>
         	</table>
