@@ -556,14 +556,13 @@
     		   return;
     	   }
     	   
-    	   if (checkedArr.length > 1) {
-    		   alert("<spring:message code = 'ezWebFolder.t115'/>");
-    		   return;
-    	   }
-    	   
-	       var fileId = checkedArr[0];
-    	   
-    	   DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId);
+			var checkedList = checkedArr[0];
+			
+			for (var i = 1; i < checkedArr.length; i++) {
+				checkedList = checkedList + "," + checkedArr[i];
+			}
+			
+			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList);
        }
        
        function getChecked(obj) {

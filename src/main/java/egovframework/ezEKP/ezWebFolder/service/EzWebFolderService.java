@@ -1,9 +1,12 @@
 package egovframework.ezEKP.ezWebFolder.service;
 
 import java.util.List;
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
@@ -67,4 +70,5 @@ public interface EzWebFolderService {
 	void deleteSelectedFiles(String[] fileIDList, LoginVO userInfo) throws Exception;
 	void saveLog(String string, String companyId, String offset, String userId, String userName1, String userName2, String fileName, String fileSize, String fileExt, String fileTypeName, int tenantId) throws Exception;
 	String getMaxFileID(int tenantId) throws Exception;
+	JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, Locale locale, LoginVO userInfo) throws Exception;
 }

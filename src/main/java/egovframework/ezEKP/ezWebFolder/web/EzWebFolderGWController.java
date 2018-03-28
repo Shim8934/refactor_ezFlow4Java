@@ -536,9 +536,10 @@ public class EzWebFolderGWController {
 		return result;
 	}
 
-	@RequestMapping(value="/rest/ezwebfolder/filemove/fileid/{fileid}/modes/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject putFileMove(@PathVariable(value="fileid") String fileId, @PathVariable(value="mode") String mode, Locale locale, HttpServletRequest request) {
+	@RequestMapping(value="/rest/ezwebfolder/filemove/modes/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putFileMove(@PathVariable(value="mode") String mode, Locale locale, HttpServletRequest request) throws Exception {
 		String offset       = request.getParameter("offset")     != null ? request.getParameter("offset")     : "";
+		String fileList     = request.getParameter("fileList")   != null ? request.getParameter("fileList")   : "";
 		String userId       = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
 		String serverName   = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
 		String lang         = request.getParameter("lang")       != null ? request.getParameter("lang")       : "";
@@ -546,7 +547,7 @@ public class EzWebFolderGWController {
 		String privileges   = request.getParameter("privileges") != null ? request.getParameter("privileges") : "";
 		JSONObject result   = new JSONObject();
 		
-		if (fileId.equals("") || fileId.equals("") || mode.equals("") || serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("")) {
+		if (fileList.equals("") || mode.equals("") || serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
@@ -554,59 +555,8 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
-			String userName1 = userInfo.getDisplayName1();
-			String userName2 = userInfo.getDisplayName2();
-			String companyId = userInfo.getCompanyID();
-			int tenantId     = userInfo.getTenantId();
-			
-			FileVO fileVO    = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
-			
-			if (mode.equals("move")) {
-				//Check privileges
-				if (!privileges.equals("normal")) {
-					//move file
-					ezWebFolderService.moveFile(fileId, folderId, tenantId);
-				}
-				else {
-					if (fileVO.getCreateId().equals(userId)) {
-						//move file
-						ezWebFolderService.moveFile(fileId, folderId, tenantId);
-					}
-					else {
-						logger.debug("Privileges!");
-						result.put("status", "error");
-						result.put("reason", egovMessageSource.getMessage("ezWebFolder.t243", locale));
-						result.put("code", "1");
-						return result;
-					}
-				}
-			}
-			else {
-				//copy file
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Date date                  = new Date();
-				String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-				
-				fileVO.setFolderId(folderId);
-				fileVO.setFileId(ezWebFolderService.getMaxFileID(tenantId));
-				fileVO.setCreateDate(timeUTC);
-				fileVO.setUpdateDate(timeUTC);
-				ezWebFolderService.insertFile(fileVO);
-			}
-			
-			ezWebFolderService.saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-		} 
-		catch (Exception e) {
-			e.printStackTrace();
-			result.put("status", "error");
-			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
-			result.put("code", 1);
-		}
+		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+		result           = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, locale, userInfo);
 		
 		return result;
 	}
@@ -1769,26 +1719,27 @@ public class EzWebFolderGWController {
 		String offset     = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
 		String primary    = request.getParameter("primary")   != null ? request.getParameter("primary")   : "";
 		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")    : "";
-		String fileId     = request.getParameter("fileId")    != null ? request.getParameter("fileId")    : "";
+		String fileList   = request.getParameter("fileList")  != null ? request.getParameter("fileList")  : "";
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String mode       = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
 		String type       = request.getParameter("type")      != null ? request.getParameter("type")      : "";
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
+		String[] fileArr  = fileList.split(",");
 		JSONObject result = new JSONObject();
 		
-		if (offset.equals("") || serverName.equals("") || mode.equals("") || type.equals("") || companyId.equals("") || fileId.equals("") || primary.equals("")) {
+		if (offset.equals("") || serverName.equals("") || mode.equals("") || type.equals("") || companyId.equals("") || fileArr.length == 0 || primary.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
 			return result;
 		}
 		
-		logger.debug("Mode: " + mode + " || fileId: " + fileId + " || type: " + type + " || companyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset);
+		logger.debug("Mode: " + mode + " || fileList: " + fileList + " || type: " + type + " || companyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset);
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, primary, offset);
 			int tenantId     = userInfo.getTenantId();
-			FileVO file      = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
+			FileVO file      = ezWebFolderService.getFileByFileId(fileArr[0], offset, tenantId);
 			
 			switch (type) {
 				case "comp":

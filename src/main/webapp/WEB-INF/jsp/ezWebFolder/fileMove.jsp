@@ -14,7 +14,7 @@
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript">
 		var primary        = "<c:out value='${primary}'/>";
-		var fileId         = "<c:out value='${fileId}'/>";
+		var fileList       = "<c:out value='${fileIdList}'/>";
 		var selectedFolder = null;
 		var currentFolder  = null;
 		var arrSubFolder   = [];
@@ -34,7 +34,7 @@
 				type: "POST",
 				url: "/ezWebFolder/getFileFolderTree.do",
 				data: {
-					"fileId"    : fileId,
+					"fileList"  : fileList,
 					"companyId" : document.getElementById("companyList").value,
 					"type"      : type,
 					"mode"      : mode
@@ -242,7 +242,7 @@
 				type: "POST",
 				url: "/ezWebFolder/moveFile.do",
 				data: {
-					"fileId"   : fileId,
+					"fileList" : fileList,
 					"folderId" : selectedFolder,
 					"mode"     : "copy"
 				},
@@ -273,7 +273,7 @@
 				type: "POST",
 				url: "/ezWebFolder/moveFile.do",
 				data: {
-					"fileId"     : fileId,
+					"fileList"   : fileList,
 					"folderId"   : selectedFolder,
 					"privileges" : mode,
 					"mode"       : "move"

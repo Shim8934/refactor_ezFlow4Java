@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
@@ -382,10 +381,10 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("File Move Confirm is running!");
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String fileId      = request.getParameter("fileId")     != null ? request.getParameter("fileId")     : "";
-		String mode        = request.getParameter("mode")       != null ? request.getParameter("mode")       : "normal";
+		String fileIdList  = request.getParameter("fileList")   != null ? request.getParameter("fileList") : "";
+		String mode        = request.getParameter("mode")       != null ? request.getParameter("mode")     : "normal";
 		
-		if (fileId.equals("")) {
+		if (fileIdList.equals("")) {
 			logger.debug("File Move Confirm illegal arguments!");
 			return "cmm/error/egovError";
 		}
@@ -416,7 +415,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("list", companyList);
 		}
 		
-		model.addAttribute("fileId", fileId);
+		model.addAttribute("fileIdList", fileIdList);
 		model.addAttribute("primary", user.getLang());
 		model.addAttribute("mode", mode);
 		logger.debug("File Move Confirm finishes!");
@@ -429,16 +428,17 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("Move File is running!");
 		
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
-		String fileId       = request.getParameter("fileId");
+		String fileList     = request.getParameter("fileList");
 		String folderId     = request.getParameter("folderId");
 		String mode         = request.getParameter("mode");
 		String privileges   = request.getParameter("privileges");
 		
 		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
-		String url          = gwServerUrl + "/rest/ezwebfolder/filemove/fileid/" + fileId + "/modes/" + mode;
+		String url          = gwServerUrl + "/rest/ezwebfolder/filemove/modes/" + mode;
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
+										.queryParam("fileList", fileList)
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())
 										.queryParam("lang", user.getLang())
@@ -654,7 +654,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/getFileFolderTree.do", method = RequestMethod.POST)
 	public String getFileFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String fileId      = request.getParameter("fileId");
+		String fileList    = request.getParameter("fileList");
 		String mode        = request.getParameter("mode");
 		String companyId   = request.getParameter("companyId");
 		String type        = request.getParameter("type");
@@ -670,7 +670,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
 										.queryParam("companyId", companyId)
-										.queryParam("fileId", fileId)
+										.queryParam("fileList", fileList)
 										.queryParam("type", type)
 										.queryParam("mode", mode)
 										.queryParam("primary", user.getLang())

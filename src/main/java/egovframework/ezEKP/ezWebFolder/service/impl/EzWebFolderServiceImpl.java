@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -28,6 +29,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.io.IOUtils;
+
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -63,6 +66,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	
 	@Autowired
 	private EzOrganService ezOrganService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderServiceImpl.class);
 	
@@ -930,5 +936,89 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		currentMaxLogId     = result.equals("")       ? 1 : Integer.parseInt(result);
 		currentMaxLogId     = (currentMaxLogId == -1) ? 1 : (currentMaxLogId + 1);
 		return Integer.toString(currentMaxLogId);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, Locale locale, LoginVO userInfo) throws Exception {
+		String[] fileArr  = fileList.split(",");
+		String userName1  = userInfo.getDisplayName1();
+		String userName2  = userInfo.getDisplayName2();
+		String companyId  = userInfo.getCompanyID();
+		String userId     = userInfo.getId();
+		String offset     = userInfo.getOffset();
+		int tenantId      = userInfo.getTenantId();
+		JSONObject result = new JSONObject();
+		
+		if (fileArr.length == 0) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			if (mode.equals("move")) {
+				//Check privileges
+				if (!privileges.equals("normal")) {
+					//move files
+					for (String fileId : fileArr) {
+						FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
+						moveFile(fileId, folderId, tenantId);
+						saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+					}
+				}
+				else {
+					int totalFiles = fileArr.length;
+					fileList       = "'" + fileList + "'";
+					fileList       = fileList.replace(",", "','");
+					int count      = checkFilesOwner(userId, fileList, tenantId);
+					
+					if (totalFiles == count) {
+						//move files
+						for (String fileId : fileArr) {
+							FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
+							moveFile(fileId, folderId, tenantId);
+							saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+						}
+					}
+					else {
+						logger.debug("Privileges!");
+						result.put("status", "error");
+						result.put("reason", egovMessageSource.getMessage("ezWebFolder.t243", locale));
+						result.put("code", "1");
+						return result;
+					}
+				}
+			}
+			else {
+				//copy files
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date date                  = new Date();
+				String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+				
+				for (String fileId : fileArr) {
+					FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
+					fileVO.setFolderId(folderId);
+					fileVO.setFileId(getMaxFileID(tenantId));
+					fileVO.setCreateDate(timeUTC);
+					fileVO.setUpdateDate(timeUTC);
+					insertFile(fileVO);
+					
+					saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				}
+			}
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
+			result.put("code", 1);
+		}
+		
+		return result;
 	}
 }
