@@ -19,7 +19,7 @@
 		    var persFolderId    = "";
 // 		    var userId = "<c:out value='${userId}'/>";
 // 			var userName = "<c:out value='${userName}'/>";
-			var folderId = "1";
+			var folderId = "";
 			var folderType = null;
 	    	var $element ;
 			
@@ -27,7 +27,6 @@
 		    $(function() { 
 				folderList('C');
 		    	folderType = 'C';
-		    	
 				});		
 		    
 		    function folderList(obj) {
@@ -78,7 +77,7 @@
 						});
 						folderId = data.data[0].id;
 						$($element).jstree('refresh');
-				   		$($element).jstree("selected", folderId);
+				   		$($element).jstree("selected_node", folderId);
 						getFileList(folderId);
 				   		
 					},
@@ -86,17 +85,21 @@
 						alert("<spring:message code='ezWebFolder.t134' />" + error);
 					}
 				});
+				
 				$($element).on('changed.jstree', function (e, data) {
+					
 					var folderId = "";
 					folderId = data.selected[0]; 
-// 					alert(folderId);
 					if (folderId == undefined) {
-// 						console.log("The selected nodes are:" + folderId);
+						console.log("The selected nodes are:" + folderId);
 					}else {
 						getFileList(folderId);
 					}
 				});
+				
+		    
 		    }
+		    
 		    
 		 // 폴더관리
 		    function folder_Manage() {
@@ -143,7 +146,7 @@
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
 		<div id="left" style="overflow: none">
-			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"><span>웹폴더</span></div>
+			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"><span>웹폴더</span><button style="width:5px;height:5px;" onClick="refreshView()"style="margin-top: 3px;"></button></div>
 			<h2>
   				<span style="display:inline-block;width:100%;" onclick="folderList('C');">회사폴더</span>
   			</h2>  

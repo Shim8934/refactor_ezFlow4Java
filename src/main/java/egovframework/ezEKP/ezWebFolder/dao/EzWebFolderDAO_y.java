@@ -53,6 +53,9 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public String insertFolder(Map<String, Object> map) {
 		return  (String) insert("EzWebFolderDAO_y.insertFolder",map);
 	}
+	public String deptInsertTest(Map<String, Object> map) {
+		return  (String) insert("EzWebFolderDAO_y.deptInsertTest",map);
+	}
 	public String insertFolderUsr(Map<String, Object> map) {
 		return  (String) insert("EzWebFolderDAO_y.insertFolderUsr",map);
 	}

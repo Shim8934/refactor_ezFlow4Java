@@ -473,6 +473,11 @@
     	   document.getElementById("file").click();
        }
        
+       function refreshView() {
+    	   console.log("Run here!");
+    	   getfileList();
+       }
+       
        function fileDelete() {
     	   if (checkedArr.length <= 0) {
     		   alert("<spring:message code = 'ezWebFolder.t108'/>");
@@ -596,9 +601,6 @@
     	   }
        }
        
-       function refreshView() {
-    	   
-       }
     </script>
 </head>
 <body class="mainbody">
@@ -625,6 +627,7 @@
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span>검색</span></a></li>
 			<li id=""><img src="/images/i_bar.gif"></li>
 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li>
+			<li id=""><a onClick="refreshView()"style="margin-top: 3px;"><span>새로고침</span></a></li>
 			<li id="right" style="float:right;">보기설정&nbsp;<img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
 			<li id="right" style="float:right;">
 				<select class ="select" id ="idSelect" onchange="IDChange()" style="background-image:url(/images/webfolder/pdf.png);
