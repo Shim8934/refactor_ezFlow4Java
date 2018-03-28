@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.List;
@@ -45,6 +46,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -864,53 +866,57 @@ public class EzAttitudeGWController {
 	
 	
 	/**
-	 * G/W 근태관리 [GET] 사용자별 근태설정 조회
+	 * G/W 근태관리 [GET] 사용자별 근태설정 정보 조회
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/users-attitude-confs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject userAttitudeConfInfo(HttpServletRequest request, @PathVariable String userId) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/users-attitude-confs] started.");
+	@RequestMapping(value = "/rest/ezattitude/users/users-attitude-confs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject userAttitudeConfInfo(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/users-attitude-confs] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
+			String userId = request.getParameter("userId");
+			String offsetMin = request.getParameter("offsetMin");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			AttitudeUserConfigVO vo = ezAttitudeService.getAttitudeUserConfigInfo(info.getTenantId(), companyId, userId);
+			List<AttitudeUserConfigVO> voList = ezAttitudeService.getAttitudeUserConfigInfo(info.getTenantId(), companyId, userId, offsetMin);
 			
-			if (vo == null) {
-				vo = new AttitudeUserConfigVO();
-				
-				AttitudeConfigVO attiConfInfo = ezAttitudeService.getAttitudeConfig(info.getTenantId(), companyId);
-				vo.setUserId(userId);
-				vo.setWorkStartTime(attiConfInfo.getWorkStartTime());
-				vo.setWorkEndTime(attiConfInfo.getWorkEndTime());
-				vo.setUserName(info.getUserName());
-				vo.setUserName2(info.getUserName2());
-			}
-			
-			String today =  commonUtil.getTodayUTCTime("yyyy-MM-dd");
-			
-			String startDate = commonUtil.getDateStringInUTC(today + " " + vo.getWorkStartTime(), info.getOffSet(), false);
-			String endDate = commonUtil.getDateStringInUTC(today + " " + vo.getWorkEndTime(), info.getOffSet(), false);
-			
-			int startIdx = startDate.indexOf(" ");
-			int endIdx = endDate.indexOf(" ");
-			
-			vo.setWorkStartTime(startDate.substring(startIdx + 1));
-			vo.setWorkEndTime(endDate.substring(endIdx + 1));
+//			if (userId.indexOf(",") == -1) {
+				if (voList.size() == 0) {
+					voList = new ArrayList<AttitudeUserConfigVO>();
+					AttitudeUserConfigVO vo = new AttitudeUserConfigVO();
+					
+//					AttitudeConfigVO attiConfInfo = ezAttitudeService.getAttitudeConfig(info.getTenantId(), companyId);
+					vo.setUserId(userId);
+					vo.setUserName(info.getUserName());
+					vo.setUserName2(info.getUserName2());
+					voList.add(vo);
+				}
+//			}
+//			
+//			String today =  commonUtil.getTodayUTCTime("yyyy-MM-dd");
+//			
+//			String startDate = commonUtil.getDateStringInUTC(today + " " + vo.getWorkStartTime(), info.getOffSet(), false);
+//			String endDate = commonUtil.getDateStringInUTC(today + " " + vo.getWorkEndTime(), info.getOffSet(), false);
+//			
+//			int startIdx = startDate.indexOf(" ");
+//			int endIdx = endDate.indexOf(" ");
+//			
+//			vo.setWorkStartTime(startDate.substring(startIdx + 1));
+//			vo.setWorkEndTime(endDate.substring(endIdx + 1));
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", vo);
+			result.put("data", voList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/users-attitude-confs] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/users-attitude-confs] ended.");
 		return result;
 	}
 	/**
@@ -1280,14 +1286,13 @@ public class EzAttitudeGWController {
     } 
 	
     /**
-	 * G/W 근태관리 [GET] 근태유형관리 아이콘 업로드
+	 * G/W 근태관리 [GET] 휴일리스트
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/holidays", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getHolidayList(@PathVariable String companyId, HttpServletRequest request) throws Exception{
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/holidays] started.");
 		
 		JSONObject result = new JSONObject();
-		
 		
 		try{
 			String userId = request.getParameter("userId");
@@ -1298,14 +1303,44 @@ public class EzAttitudeGWController {
 			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList(companyId, tenantId);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", holidayList);
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/holidays] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 조직도 부서선택시 사원 리스트
+	 * 사용자별근태설정 테이블에 없는 사원리스트만 가져오는(필요없어져서 없앨까도 생각중)
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getDeptUserList(HttpServletRequest request) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String key = request.getParameter("key");
+			String value = request.getParameter("value");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			List<JournalAuthorVO> userList = ezAttitudeService.getDeptUserList(info.getTenantId() + "", key, value);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", userList);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users] ended.");
 		return result;
 	}
 }

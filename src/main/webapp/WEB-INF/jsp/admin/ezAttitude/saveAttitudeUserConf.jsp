@@ -108,20 +108,22 @@
 		   					"companyId" : companyId
 		   				},
 		   				success: function(result){
-		   					var html = "<tr id='" + result.userId + "' class='hover'>";
-		   					html += "<td style='cursor: pointer; padding-left:60px;'>" + result.userName + "</td>";
-		   					if(result.workStartTime != null || result.workEndTime != null) {
-			   					html += "<td>" + result.workStartTime + " ~ " + result.workEndTime + "</td>";
-		   					} else {
-		   						html += "<td></td>";
+		   					for (var i = 0; i < result.length; i++) {
+			   					var html = "<tr id='" + result[i].userId + "' class='hover'>";
+			   					html += "<td style='cursor: pointer; padding-left:60px;'>" + result[i].userName + "</td>";
+			   					if(result[i].workStartTime == null || result[i].workStartTime == '' || result[i].workEndTime == null || result[i].workEndTime == '') {
+			   						html += "<td></td>";
+			   					} else {
+				   					html += "<td>" + result[i].workStartTime + " ~ " + result[i].workEndTime + "</td>";
+			   					}
+			   					html += "</tr>";
+			   					$(html).appendTo('#txtlist_table2');
 		   					}
-		   					html += "</tr>";
-		   					$(html).appendTo('#txtlist_table2');
 		   				}
 		   			});
 	   			}
 	   		}
-
+			// 시간바꾸는 리스트에서 사원 클릭시 tr배경색 변경
 	   		$(document).on('click', '#txtlist_table2 tr' ,function() {
 	   			$("*").removeClass("selectTR");
 	   			$(this).addClass("selectTR");
@@ -130,7 +132,7 @@
 	   		function DeleteReceiver() {
 		   		$('#txtlist_table2 tr[class*=selectTR]').remove();
 	   		}
-	   		
+	   		//설정시간적용
 	   		function userTimeApply(type) {
 	   			if(type == 'modify') {
 	   				if($('#startHrs').val() == "" || $('#startHrs').val() == null){
@@ -152,8 +154,8 @@
 	   			}
 	   			
 	   			var trIdx = $('#txtlist_table2').find('tr').length;
-	   			var timeStr = "";
 	   			for (var i = 0; i < trIdx; i++) {
+		   			var timeStr = "";
 	   				if(type == 'default') {
 	   					timeStr = comStartTime + " ~ " + comEndTime;
 	   				} else {
@@ -165,7 +167,7 @@
 	   				$('#txtlist_table2 tr').eq(i).children("td").eq(1).text(timeStr);
 	   			}
 	   		}
-	   		
+	   		//시간/분 입력시 3이면 03 이렇게 되도록. 
 	   		function addZero(time) {
 	   			var resStr = "";
 	   			if(time.length == 1) {
@@ -175,29 +177,30 @@
 	   			}
 	   			return resStr;
 	   		}
-	   		
-// 	   		function OK_Click() {
-// 	   			var trIdx = $('#txtlist_table2').find('tr').length;
-// 	   			var userConfInfo = "";
-// 	   			for (var i = 0; i < trIdx; i++) {
-// 	   				var userConfTime = $('#txtlist_table2 tr').eq(i).children("td").eq(1).text().split('~');
-// 	   				userConfInfo += $('#txtlist_table2 tr').eq(i).attr('id') + ",";
-// 	   				userConfInfo += userConfTime[0].trim() + ",";
-// 	   				userConfInfo += userConfTime[1].trim() + ";";
-// 	   			}
-// 	   			userConfInfo.slice(0, -1);
+	   		//저장
+	   		function OK_Click() {
+	   			var trIdx = $('#txtlist_table2').find('tr').length;
+	   			var userConfInfo = "";
+	   			for (var i = 0; i < trIdx; i++) {
+	   				var userConfTime = $('#txtlist_table2 tr').eq(i).children("td").eq(1).text().split('~');
+	   				userConfInfo += $('#txtlist_table2 tr').eq(i).attr('id') + ",";
+	   				userConfInfo += userConfTime[0].trim() + ",";
+	   				userConfInfo += userConfTime[1].trim() + ";";
+	   			}
+				//마지막 ';' 제거
+	   			userConfInfo = userConfInfo.slice(0, -1);
 	   			
-// 	            $.ajax({
-// 	            	type : "POST",
-// 	            	url : "/admin/ezAttitude/attitudeUserConfSave.do",
-// 	            	data : { "userConfInfoList" : userConfInfo },
-// 	            	success : function() {
-// 	            		alert('성공');
-// 	            	},
-// 	            	error : function() {
-// 	            	}
-// 	            });
-// 	   		}
+	            $.ajax({
+	            	type : "POST",
+	            	url : "/admin/ezAttitude/attitudeUserConfSave.do",
+	            	data : { "userConfInfoList" : userConfInfo },
+	            	success : function() {
+	            		alert('성공');
+	            	},
+	            	error : function() {
+	            	}
+	            });
+	   		}
 		    
 	        function close_Click() {
 	            if (ReturnFunction!=null) {

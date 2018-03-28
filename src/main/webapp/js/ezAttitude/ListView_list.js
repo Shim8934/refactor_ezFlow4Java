@@ -101,7 +101,7 @@ function makePageSelPageAtti(){
 	
 	//> 버튼 셋팅 ==> 다음 블록의 1페이지로 이동
 	if (totalPage > blockSize && totalPage > (parseInt((pageNum - 1) / blockSize) + 1) * blockSize) {
-		var afterBlock = ((parseInt((pageNum - 1) / blockSize) + 1) * 10) + 1;;
+		var afterBlock = ((parseInt((pageNum - 1) / blockSize) + 1) * 10) + 1;
 		pagingHtml += "<span class='ptxt' onclick='goToPageByNum(" + (pageNum + 1) + ")'>" + "다음" + "</span><span class='btnimg' onclick='goToPageByNum(" + afterBlock + ")'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 	} else {
 		pagingHtml += "<span class='ptxt' onclick='goToPageByNum(" + (pageNum + 1) + ")'>" + "다음" + "</span><span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";

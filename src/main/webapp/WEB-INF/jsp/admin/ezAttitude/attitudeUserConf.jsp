@@ -29,6 +29,7 @@
     	var totalPage = ""; // 게시판의 총 페이지갯수
     	var orderCell = ""; // 정렬 명
     	var orderOption = ""; // 정렬 형식(ASC, DESC)
+    	var selecUserList = "";//리스트에 선택된 userList(,로 구분)
     	
     	//"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"
     	
@@ -122,27 +123,52 @@
     			getUserConfList();
     		}
     	}
-    	
-    	function userConfAdd(){
-    		if (CrossYN()) {
-    			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
-    			OpenWin = GetOpenWindow("/admin/ezAttitude/addAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), "", "1140", "630");
-    			try { OpenWin.focus();} catch (e) { }
+    	//추가버튼 클릭시
+    	function userConfSave(){
+    		selectedCheck();
+    		var url = "";
+    		if(selecUserList == "" || selecUserList == null) {
+    			url = "/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val();
     		} else {
-    			showModalDialog("/admin/ezAttitude/addAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
+    			url = "/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val() + "&userList=" + selecUserList;
     		}
-    	}
-    	
-    	function userConfModify(){
-    		///////////////////////////
     		
     		if (CrossYN()) {
     			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
-    			OpenWin = GetOpenWindow("/admin/ezAttitude/ModifyAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), "", "500", "630");
+    			OpenWin = GetOpenWindow(url, "", "1140", "630");
     			try { OpenWin.focus();} catch (e) { }
     		} else {
-    			showModalDialog("/admin/ezAttitude/ModifyAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
+    			showModalDialog("/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
     		}
+    	}
+    	//변경버튼 클릭시인데 변경버튼 없앴음 ㅎㅎ
+//     	function userConfModify(){
+//     		selectedCheck();
+//     		if(selecUserList == "" || selecUserList == null) {
+//     			alert('사원을 선택해 주세요');
+//     			return;
+//     		}
+    		
+//     		if (CrossYN()) {
+//     			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
+//     			OpenWin = GetOpenWindow("/admin/ezAttitude/ModifyAttitudeUserConf.do?companyId=" + $('#ListCompany').val() + "&userList=" + selecUserList, "", "500", "630");
+//     			try { OpenWin.focus();} catch (e) { }
+//     		} else {
+//     			showModalDialog("/admin/ezAttitude/ModifyAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
+//     		}
+//     	}
+    	
+    	//리스트에 체크박스 selected 체크
+    	function selectedCheck(){
+    		selecUserList = "";
+    		var trIdx = $('#attiBoardList').find('tr').length;
+   			for (var i = 1; i < trIdx; i++) {
+   				if ($('#attiBoardList tr').eq(i).find("input[type='checkbox']").is(":checked")) {
+   					selecUserList += $('#attiBoardList tr').eq(i).attr('userid') + ",";
+   				}
+   			}
+   			//마지막 ',' 지우기
+   			selecUserList = selecUserList.slice(0, -1);
     	}
     	
     	//페이지 이동 함수
@@ -184,8 +210,7 @@
 	  	</div>
 	  	<div id="mainmenu">
 	  		<ul class="on">
-	  			<li class="off"><span onclick="userConfAdd()">추가</span></li>
-	  			<li class="off"><span onclick="userConfModify()">변경</span></li>
+	  			<li class="off"><span onclick="userConfSave()">추가/변경</span></li>
 	  			<li class="off"><span onclick="searchUserConf(false)">검색</span></li>
 	  		</ul>
 	  	</div>
