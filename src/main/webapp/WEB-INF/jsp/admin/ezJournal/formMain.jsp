@@ -91,14 +91,16 @@
 			// 양식추가버튼
 		    function btnInsForm() {
 		    //	console.log(typeId + " " + companyId + " " + pEditor);
-		    	var url = "";
+		    	var url = "/admin/ezJournal/insertForm.do";
 		    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId);
 		    	
+		    	/*
 		    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 		    		url = "/admin/ezJournal/insertFormOther.do"	
 		    	} else {
 			    	url = "/admin/ezJournal/insertForm.do";
 		    	}
+		    	*/
 		    	
 		    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "no");
 		    }
@@ -109,15 +111,17 @@
 				if (formStatus == "basic") {
 					alert("<spring:message code='ezJournal.t143'/>");
 				} else {
-			    	var url = "";
+			    	var url = "/admin/ezJournal/insertForm.do";
 			    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
 			    			+ "&formId=" + encodeURIComponent(selFormId);
 			    	
+			    	/*
 			    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 			    		url = "/admin/ezJournal/insertFormOther.do"	
 			    	} else {
 				    	url = "/admin/ezJournal/insertForm.do";
 			    	}
+			    	*/
 			    	
 			    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "no");
 				}
@@ -197,7 +201,7 @@
 	</head>
 	<body class="mainbody"> 
 		<h1><spring:message code='ezJournal.t3' /></h1>
-		<div id="mainmenu">
+		<div id="mainmenu" style="padding-left: 5px;">
 			<span><b><spring:message code = 'ezJournal.t11' /></b>
 	            <select id="SCompID" name="SCompID" onchange="selectCompanyList(this.value)">
 	            	<c:forEach var="company" items="${companyList}">
@@ -218,9 +222,9 @@
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<table style="margin-top:5px;width:1005px;height:500px">
+		<table style="margin-top:5px;width:1005px;height:500px;">
 			<tr>
-		    	<td style="width:200px; vertical-align:top">
+		    	<td style="width:200px; vertical-align:top; padding-left: 5px;">
 		    		<div class="listview">
 						<div style="vertical-align:top; height:500px; border: none; width:100%; overflow-x:auto;overflow-y:auto;/* BORDER:#b6b6b6 1px solid; */ BACKGROUND-COLOR:#ffffff" >
 							<table id="formType" class="mainlist" style="width: 100%; border-width: 0px 0px 1px 0px;">

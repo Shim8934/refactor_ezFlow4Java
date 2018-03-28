@@ -88,7 +88,6 @@
 		    // 양식내용에 정보 넣는 부분(부서명, 작성자, 작성일)
 		    function clickFormInfo(elem) {
 		    	var info = $(elem).attr("value");
-		    	alert(info);
 		    	
 				if (useEditor == "HWP") {
 		    		message.SetAttribute(info);
@@ -107,33 +106,11 @@
 		    	}
 	    	}
 		    
+		    // 예약어 정보 취소
 		    function btnCancel() {
 		        message.SetAttribute("DEL", "", "");
 		    }
 		    	
-		    /*
-		 // 업무일지용 문서정보 변경부분 (더 사용안함....)
-		    function setFormInfo(info) {
-		    	var totalTD = message.CKEDITOR.instances.editor1.document.$.getElementsByTagName("TD");
-		    	
-		    	for (var i = 0; i < totalTD.length; i++) {
-		    		if (totalTD[i].id != null) {
-		    			if (totalTD[i].getAttribute("id") == info) {
-		    				var $totalTD = $(totalTD[i]);
-		    				$totalTD.removeAttr("id");
-		    				
-		    				if ($totalTD.hasClass("FIELD")) {
-		    					$totalTD.removeClass("FIELD");
-		    				}
-		    				
-		    				if ($totalTD.is("[style]")) {
-		    					$totalTD.removeAttr("style");
-		    				}
-                        }
-                    }
-		    	}
-		    }*/
-		    
 		    // 부서리스트 그려주는 부분
 		    function setDeptList() {
 		    	var treeContent = ${deptList};
@@ -261,13 +238,13 @@
 		    
 		</script>
 		<style>
-			#infoTD th { height: 25px;}
-			#infoTD td {
+			#infoTbl th { height: 25px;}
+			#infoTbl td {
 				border: 1px solid #b6b6b6;
 				height: 26px;
 				padding-left: 5px;
-				cursor: pointer;
 			}
+			#infoTbl {padding: 0px;}
 			
 			.active {background: rgb(233, 241, 255);}
 			
@@ -338,7 +315,7 @@
             <br />
             <br />
             
-            <table style="width:60%; margin: auto;" >
+            <table style="width:100%; margin: auto;" >
 				<tr id="setUseDeptList">
 					<td style="width: 48%;">
 						<div class="box"> 
@@ -361,47 +338,28 @@
         </div>
         
         <div id="JournalForm_content2" style="width:100%;display:none; padding-top:10px;">
-			<div id="editor_content" style="padding-top:5px;">
-				<%-- <div id="mainmenu">
-					<ul>
-                    	<li id="property"><span onclick="return idSetField_onclick()"><spring:message code='ezApproval.t641'/></span></li>
-                    </ul>
-                </div> --%>
-				<table id="TForm" style="height:770px; width:100%;">
-					<tr>
-						<td id="infoTD" name="infoTD" style="width:100%; vertical-align:top;">
-                        	<table width="100%" cellpadding="0" cellspacing="0" class="infoTbl" id="mainmenu">
-                        		<tbody>
-                        			<tr>
-	                        			<th><spring:message code='ezJournal.t32'/></th>
-	                        			<td style="vertical-align: middle;">
-	                        				<%-- <ul>
-								            	<li name="info" style="padding-right: 10px;"><span id="info_0" value="journalDeptId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33' /></span></li>
-								            	<li name="info"><span id="info_1" value="journalWriteId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></li>
-								            	<li name="info"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></li>
-								            </ul> --%>
-							            	<a class="imgbtn"><span id="info_0" value="journalDeptId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33' /></span></a>
-							            	<a class="imgbtn"><span id="info_1" value="journalWriteId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></a>
-							            	<a class="imgbtn"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></a>
-	                        			</td>
-	                        			<td style="width: 8%; text-align: center;" >
-							            	<a class="imgbtn" style="margin-right: 4px;"><span onclick="btnCancel()"><spring:message code='ezJournal.t16' /></span></a>
-	                        			</td>
-                        			</tr>
-                        		</tbody>
-                        	</table>
-                        </td>
-                   	</tr>
+			<div id="editor_content">
+				<div id="mainmenu">
+                   	<table width="100%" cellpadding="0" cellspacing="0" id="infoTbl">
+                   		<tbody>
+                   			<tr>
+                    			<th style="width: 12%;"><spring:message code='ezJournal.t32'/></th>
+                    			<td style="vertical-align: middle; border-right: none;">
+					            	<a class="imgbtn"><span id="info_0" value="journalDeptId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33' /></span></a>
+					            	<a class="imgbtn"><span id="info_1" value="journalWriteId" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></a>
+					            	<a class="imgbtn"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></a>
+                    			</td>
+                    			<td style="width: 8%; text-align: right; border-left: none; padding-right: 3px;" >
+		            				<a class="imgbtn""><span onclick="btnCancel()"><spring:message code='ezJournal.t16' /></span></a>
+                    			</td>
+                   			</tr>
+                   		</tbody>
+                   	</table>
+				</div>
+				<table id="JournalForm" style="height:670px; width:100%;">
                    	<tr>
-                        <td style="height:770px; vertical-align:top">
-                        	<c:choose>
-                        		<c:when test="${useEditor == 'HWP'}">
-	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
-                        		</c:when>
-                        		<c:otherwise>
-	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectEditor.do?type=JOURNAL&height=770&formID=${formId}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
-                        		</c:otherwise>
-                        	</c:choose>
+                        <td style="height:670px; vertical-align:top">
+                        	<iframe id="message" class="viewbox" src="/admin/ezEditor/selectEditor.do?type=JOURNAL&height=670&formID=${formId}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 100%; overflow: auto;"></iframe>
                         </td>
                     </tr>
                 </table>  

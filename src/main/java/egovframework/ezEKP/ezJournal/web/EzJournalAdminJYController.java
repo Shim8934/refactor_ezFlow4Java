@@ -128,24 +128,11 @@ public class EzJournalAdminJYController {
 	}
 	
 	/**
-	 * 관리자 업무일지 양식등록 양식추가, 양식수정 화면호출함수 (폼프로세서)
-	 */
-	@RequestMapping(value = "/admin/ezJournal/insertForm.do")
-	public String addForm(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		logger.debug("addForm started");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
-		logger.debug("addForm ended");
-		return "/admin/ezJournal/insertForm";
-	}
-	
-	/**
 	 * 관리자 업무일지 양식등록 양식추가, 양식수정 화면호출함수 (CK, TAGFREE, DEXTER, NAMO)
 	 */
-	@RequestMapping(value = "/admin/ezJournal/insertFormOther.do")
-	public String addFormOther(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		logger.debug("addFormOther started");
+	@RequestMapping(value = "/admin/ezJournal/insertForm.do")
+	public String insertForm(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("insertForm started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -228,8 +215,8 @@ public class EzJournalAdminJYController {
 			model.addAttribute("deptList", deptList);
 		}
 		
-		logger.debug("addFormOther ended");
-		return "/admin/ezJournal/insertFormOther";
+		logger.debug("insertForm ended");
+		return "/admin/ezJournal/insertForm";
 	}
 	
 	/**
