@@ -197,7 +197,10 @@ function deleteLetterBox() {
 		return;
 	} else if (addCheck == -1) { // 편지지함 추가중
 		if (confirm("현재 추가중인 편지지함을 삭제합니다.")){
+			addCheck = 0;
 			$('#divTree').jstree().delete_node($('#temp'));
+			
+			$(".jstree-clicked").click();
 		}
 	} else if (letter.children.length !== 0) {
 		alert("하위 편지지함이 존재합니다. 하위편지지함을 삭제해주세요");
