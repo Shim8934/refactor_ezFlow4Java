@@ -491,6 +491,22 @@ public class EzEmailAdminController {
 								+ egovMessageSource.getMessage("ezOrgan.t68",
 										locale) + "</TITLE>");
 						sb.append("</ROW>");
+					} else {
+						if (ezCommonService.getTenantConfig("useRankMail", userInfo.getTenantId()).equals("YES")) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + "distribution" + "</CLASS>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>"
+								+ commonUtil.cleanValue(pCn)
+								+ "</DISPLAYNAME>");
+						sb.append("<MAIL>"
+								+ commonUtil.cleanValue(cn)
+								+ "</MAIL>");
+						sb.append("<DEPT>"
+								+ egovMessageSource.getMessage("ezEmail.t57",
+										locale) + "</DEPT>");
+						sb.append("</ROW>");
+				}
 					}
 
 				} else {
@@ -518,11 +534,9 @@ public class EzEmailAdminController {
 						sb.append("</ROW>");
 					}
 				}
-
 			}
 
 			sb.append("</DATA>");
-
 			returnData = sb.toString();
 
 		} catch (Exception e) {

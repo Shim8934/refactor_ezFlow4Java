@@ -130,10 +130,14 @@
 	                    {
 	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(GetChildNodes(nodes[i])[1]) + "</DATA1>";
 	                        // 
-	                        if(getNodeText(GetChildNodes(nodes[i])[0]) == "user")
+	                        if(getNodeText(GetChildNodes(nodes[i])[0]) == "user"){
 	                            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
-	                        else
+	                        	
+	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "group"){
 	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "distribution") {
+	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t57' /> : " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                        }
 	                    }
 	                              
 	                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
@@ -1142,7 +1146,7 @@
 			                    pparsingXML = "";
 			                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 			                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-			                    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+			                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t57' /> :" +MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 			                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 			                    Resultxml = loadXMLString(pparsingXML2);
 			
@@ -1748,19 +1752,11 @@
 		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezEmail.t659' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox">
-		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 477px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(ToTitle,this)" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 501px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(ToTitle,this)" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 		                            </div>
 		                        </td>
 		                    </tr>
 		                </table>
-		            </td>
-		        </tr>
-		    </table>
-		    <table style="width: 100%; text-align: center;">
-		        <tr>
-		            <td class="btnposition btnpositionNew" style="text-align: center;">
-		                <a class="imgbtn" onclick="confirm_onClick()" id="cmd_ok"><span><spring:message code='ezEmail.t599' /></span></a>
-		                <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezEmail.t600' /></span></a>
 		            </td>
 		        </tr>
 		    </table>
