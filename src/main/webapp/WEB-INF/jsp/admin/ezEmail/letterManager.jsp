@@ -140,7 +140,7 @@
 				            }
 				        } catch (e) {
 				        }
-				    }, 100);
+				    }, 1000);
 					
 				} else {
 					alert("이동할 편지지를 선택해주세요!");
@@ -150,14 +150,20 @@
 
 			// 편지지 추가, 수정 btn 클릭 시     btn -> this, type -> 추가=add, modify일때 type 안받음
 			function letterEditPopUp(btn, type) {
-				
-				var popUpType = type == "add" ? type : "modify"; // 클릭된 버튼 구분(추가 or 수정)
-				var addBoxNo = $(btn).parents(".boxNo").attr("data-boxNo"); // 편지지함 no
-				var modifyBoxNo = $(btn).parents("li").attr("data-letterboxno"); // 편지지함 no
-				
-				var letterBoxNo = type == "add" ? addBoxNo : modifyBoxNo;
-				var letterNo = type == "add" ? -1 : $(btn).parents("li").attr("data-letterno");
-				
+				 var popUpType = "";
+				 var letterBoxNo = "";
+				 var letterNo = "";
+				 
+				 if (type === "add") {
+					 popUpType = "add";
+					 letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo");
+					 letterNo = -1;
+				 } else {
+					 popUpType = "modify";
+					 letterBoxNo = $(btn).parents("li").attr("data-letterboxno");
+					 letterNo = $(btn).parents("li").attr("data-letterno");
+				 }
+				 
 				var url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo=" + letterBoxNo + "&popUpType=" + popUpType + "&letterNo=" + letterNo;
 				var letterPopUp = window.open(url, "letterPopUp", "width=890, height=660");
 			}
