@@ -25,7 +25,7 @@
 	</head>
 	<body class="popup">
 		<form method="post" >
-		  <h1><spring:message code='ezBoard.t320'/></h1>
+		  <h1><spring:message code='ezApprovalG.t1217'/></h1>
 		  <div id="close">
 		    <ul>
 		      <li onClick="close_onclick()"><span><spring:message code='ezBoard.t12'/></span></li>

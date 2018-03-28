@@ -37,16 +37,12 @@
 	    	//부서 이름 세팅
 	    	function setDeptName(){
 				var deptString;
-				if(deptNames.length<4){
-		    		for (var i = 0; i < deptNames.length; i++) {
-		    			if(i!=0){
-				    		deptString += " ,"+deptNames[i];
-		    			} else {
-		    				deptString=deptNames[i];
-		    			}
-					}
-				} else {
-					deptString = deptNames[0]+" <spring:message code='ezJournal.t124' /> "+ (deptNames.length-1);
+	    		for (var i = 0; i < deptNames.length; i++) {
+	    			if(i!=0){
+			    		deptString += " ,"+deptNames[i];
+	    			} else {
+	    				deptString=deptNames[i];
+	    			}
 				}
 	    		$("#txtdept").val(deptString);
 	    	}	  
@@ -95,14 +91,14 @@
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t141' /></th>
 	            <td>
 	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <a href="#" class="imgbtn" style="margin-left: 20px;"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t142' /></th>
 	            <td>
-	                <input id="txtdept" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <textarea rows="3" id="txtdept" style="margin-bottom:2px; width:77%" onfocus="this.blur();" readonly="readonly" ></textarea>
+	                <a href="#" class="imgbtn" style="margin-left: 20px;"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	    </table>

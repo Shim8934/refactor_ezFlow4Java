@@ -1,22 +1,36 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>  
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>    
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
-<html style="height:100%">
-	<head>
-		<title><spring:message code='ezJournal.t133' /></title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/common.js"></script>
-		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
-		<script type="text/javascript" src="/js/ezJournal/excel.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
-		<script type="text/javascript" src="/js/Common.js" ></script>
-		<script  type="text/javascript">
+<html style="height: 100%">
+<head>
+<title><spring:message code='ezJournal.t133' /></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />"
+	type="text/css">
+<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
+<script type="text/javascript" src="/js/ezBoard/common.js"></script>
+<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
+<script type="text/javascript" src="/js/ezJournal/excel.js"></script>
+<script type="text/javascript"
+	src="<spring:message code='ezBoard.e1' />"></script>
+<script type="text/javascript" src="/js/Common.js"></script>
+<style type="text/css">
+/* #journalContent * { */
+/* 	height: 0.3em; */
+/* } */
+/* #journalContent { */
+/*    width:initial; */
+/* } */
+/* #journalContent *{ */
+/* 	height: 0px; */
+/* } */
+</style>
+<script type="text/javascript">
 		
 			var formId = "${journal.formId}";
 			var journalId = "${journal.journalId}";
@@ -93,166 +107,204 @@
 		            suffix = 0;
 		    }
 		</script>
-	</head>
-	<body class="popup" style="overflow:hidden; height:100%;">
-		<table class="layout" style="height:100%">
-		  <tr>
-		    <td style="vertical-align: top; height: 10px;">
-		      <div id="menu">
-		        <ul>
-<!-- 		        	댓글 -->
-	        		<li><span onclick='openJournalReply();'> <spring:message code='ezJournal.t102' />(${journal.replyCount })</span></li>
-		        	<c:if test="${journal.mine eq 'yes' }">
-<!-- 		        	수정 -->
-	        		<li><span onclick='journalModify()'> <spring:message code='ezJournal.t107' /></span></li>
-<!-- 	        		삭제 -->
-	        		<li><span onclick='journalDelete()'> <spring:message code='ezJournal.t108' /></span></li>
-		        	</c:if>
-<!-- 		        	메일로발송 -->
-	        		<li><span onclick='fromJournalToMail()'> <spring:message code='ezJournal.t103' /></span></li>
-<!-- 		        	조회자정보 -->
-	        		<li><span onclick='journalViewerList();'> <spring:message code='ezBoard.t1006' /></span></li>
-		        	<c:if test="${journal.mine eq 'yes' }">
-<!-- 	        		수신확인 -->
-					<c:if test="${journal.totalRecv gt 0 }">
-	        		<li><span onclick='journalReceiverList();'> <spring:message code='ezJournal.t113' />(${journal.checkRecv }/${journal.totalRecv })</span></li>
-					</c:if>
-<!-- 		        	재사용 -->
-	        		<li><span onclick='journalReuse()'> <spring:message code='ezQuestion.t700' /></span></li>
-		        	</c:if>
-<!-- 		        	인쇄 -->
-	        		<li><span onclick='printJournal();'> <spring:message code='main.t73' /></span></li>
-	        		
-	        		<c:set var="userAgentInfo" value="${fn:toLowerCase(header['User-Agent'])}" />
-	        		<c:if test="${fn:indexOf(userAgentInfo,'trident') eq -1}">
-<!-- 	        		엑셀저장 -->
-	        		<li><a onclick='convertToExcel(this);' href="download" target="_blank"><span> <spring:message code='ezJournal.t104' /></span></a></li>
-	        		</c:if>
-		        </ul>
-		      </div>    
-		      <div id="close">
-		        <ul>
-		          <li><span onClick="window.close()"> <spring:message code='ezBoard.t12' /></span></li>
-		        </ul>
-		      </div>
-			<script type="text/javascript">
+</head>
+<body class="popup" style="overflow: hidden; height: 100%;">
+	<table class="layout" style="height: 100%">
+		<tr>
+			<td style="vertical-align: top; height: 10px;">
+				<div id="menu">
+					<ul>
+						<!-- 		        	댓글 -->
+						<li><span onclick='openJournalReply();'> <spring:message
+									code='ezJournal.t102' />(<a id="replyCount">${journal.replyCount }</a>)
+						</span></li>
+						<c:if test="${journal.mine eq 'yes' }">
+							<!-- 		        	수정 -->
+							<li><span onclick='journalModify()'> <spring:message
+										code='ezJournal.t107' /></span></li>
+							<!-- 	        		삭제 -->
+							<li><span onclick='journalDelete()'> <spring:message
+										code='ezJournal.t108' /></span></li>
+						</c:if>
+						<!-- 		        	메일로발송 -->
+						<li><span onclick='fromJournalToMail()'> <spring:message
+									code='ezJournal.t103' /></span></li>
+						<!-- 		        	조회자정보 -->
+						<li><span onclick='journalViewerList();'> <spring:message
+									code='ezBoard.t1006' /></span></li>
+						<!-- 	        		수신확인 -->
+						<c:if test="${journal.totalRecv gt 0 }">
+							<li><span onclick='journalReceiverList();'> <spring:message
+										code='ezJournal.t113' />(${journal.checkRecv }/${journal.totalRecv })
+							</span></li>
+						</c:if>
+						<!-- 		        	재사용 -->
+						<li><span onclick='journalReuse()'> <spring:message
+									code='ezQuestion.t700' /></span></li>
+						<!-- 		        	인쇄 -->
+						<li><span onclick='printJournal();'> <spring:message
+									code='main.t73' /></span></li>
+
+						<c:set var="userAgentInfo"
+							value="${fn:toLowerCase(header['User-Agent'])}" />
+						<c:if test="${fn:indexOf(userAgentInfo,'trident') eq -1}">
+							<!-- 	        		엑셀저장 -->
+							<li><a onclick='convertToExcel(this);' href="download"
+								target="_blank"><span> <spring:message
+											code='ezJournal.t104' /></span></a></li>
+						</c:if>
+					</ul>
+				</div>
+				<div id="close">
+					<ul>
+						<li><span onClick="window.close()"> <spring:message
+									code='ezBoard.t12' /></span></li>
+					</ul>
+				</div> <script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
 				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>
-		    </td>
-		    </tr>
-		    <tr>
-				<td style="vertical-align: top; height: 10px;">
-					<table class="content2" style="width:100%;">
-						<!-- 작성일  -->
-						<tr>
-							<th style="width:10%;"><spring:message code='ezJournal.t25' /></th>
-							<td style="width:40%; white-space:nowrap">
-				             	<div style="overflow-y:auto; vertical-align: middle"> <c:out value="${journal.journalDate}"/></div>
-							</td>
+			</td>
+		</tr>
+		<tr>
+			<td style="vertical-align: top; height: 10px;">
+				<table class="content2" style="width: 100%;">
+					<!-- 작성일  -->
+					<tr>
+						<th style="width: 10%;"><spring:message code='ezJournal.t25' /></th>
+						<td style="width: 40%; white-space: nowrap">
+							<div style="overflow-y: auto; vertical-align: middle">
+								<c:out value="${journal.journalDate}" />
+							</div>
+						</td>
 						<!-- 작성자 -->
-							<th style="width:10%;"><spring:message code='ezJournal.t34' /></th>
-							<td style="width:40%; white-space:nowrap">
-								<div style="vertical-align:middle; height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${journal.writerId}")'>
-				             	 <c:out value="${journal.writerName}"/></div>
-							</td>
-						</tr>
-						<!-- 일지함명  -->
-						<tr>
-							<th style="width:10%;"><spring:message code='ezJournal.t12' /></th>
-							<td style="width:40%; white-space:nowrap">
-				             	<div style="overflow-y:auto; vertical-align: middle"> <spring:message code='${journal.typeId}' /></div>
-							</td>
+						<th style="width: 10%;"><spring:message code='ezJournal.t34' /></th>
+						<td style="width: 40%; white-space: nowrap">
+							<div
+								style="vertical-align: middle; height: 16px; overflow-y: auto; cursor: pointer"
+								onclick='OpenUserInfo("${journal.writerId}")'>
+								<c:out value="${journal.writerName}" />
+							</div>
+						</td>
+					</tr>
+					<!-- 일지함명  -->
+					<tr>
+						<th style="width: 10%;"><spring:message code='ezJournal.t12' /></th>
+						<td style="width: 40%; white-space: nowrap">
+							<div style="overflow-y: auto; vertical-align: middle">
+								<spring:message code='${journal.typeId}' />
+							</div>
+						</td>
 						<!-- 양식명 -->
-							<th style="width:10%;"><spring:message code='ezJournal.t22' /></th>
-							<td style="width:40%; white-space:nowrap">
-				             	<div style="overflow-y:auto; vertical-align: middle"> <c:out value="${journal.formName}"/></div>
-							</td>
-						</tr>
-						<!-- 제목 -->	
-				        <tr>
-				          <th><spring:message code='ezBoard.t323' /></th>
-				             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=3>
-				             	<div id="journalTitle" style="overflow-y:auto; vertical-align: middle"><c:out value=" ${journal.journalTitle}"/></div>
-				             </td>
-				        </tr>
-			      </table>
-			    </td>
-		  </tr>
-		  <tr>
-		    <td class="pad1" id="pad1" style="vertical-align: top; height:100%;">
-<!-- 	        <div class="viewbox" style="text-align:center; padding:0; width:100%; height:100%; overflow:auto; border:1px solid #b6b6b6"> -->
-		        <div class="viewbox" style="margin-left:5px; margin-right:5px; overflow: auto; border:1px solid #b6b6b6">
-				    <div style="text-align: left;">
-						<img onclick="Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png">
-				        <img onclick="Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png">
-					</div>
-					<div id="journalContent" style="height:10px;display:inline-block;">
-			        	${journal.journalContent }
-					</div>
-		        </div>
-		    </td>
-		  </tr>
-		 	<tr>
-			    <td class="pad1" style="vertical-align: top; ">
-			        <table class="file">
-			        <tr class="pos1">
-			          <th><spring:message code='ezJournal.t105' /></th>
-                      <td>
-		            	<div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;background-color:white; text-align:left">
-		            		<c:forEach items="${journal.fileList }" var="file">
-		            			<div style="margin-top:3px;height:20px">
-                               		<c:set var="imagePath" value="/images/file.gif" />
-			            			<%-- <input type="checkbox" name="fileSelect" value="${file.fileName }"> --%>
-	<!-- 		            			<img src="/images/image.png">  -->
-										<input type="checkbox" filename="${file.fileEncodeName}" filepath="${file.filePath}">
-			            				<c:if test="${file.fileType == 'jpg' || file.fileType == 'jpeg' || file.fileType == 'bmp' || file.fileType == 'gif' || file.fileType == 'png' || file.fileType == 'tif' || file.fileType == 'tiff'}">
-                               				<c:set var="imagePath" value="/images/image.png" />
-                                   		</c:if>
-                                   		<c:if test="${file.fileType == 'doc' || file.fileType == 'docx'}">
-                                   			<c:set var="imagePath" value="/images/doc.png" />
-                                   		</c:if>
-                                   		<c:if test="${file.fileType == 'xls' || file.fileType == 'xlsx'}">
-                                   			<c:set var="imagePath" value="/images/xls.png" />
-                                   		</c:if>
-                                   		<c:if test="${file.fileType == 'ppt' || file.fileType == 'pptx' || file.fileType == 'pps' || file.fileType == 'ppsx'}">
-                                   			<c:set var="imagePath" value="/images/ppt.png" />
-                                   		</c:if>
-                                   		<c:if test="${file.fileType == 'txt'}">
-                                   			<c:set var="imagePath" value="/images/txt.png" />
-                                   		</c:if>
-                                   		<c:if test="${file.fileType == 'zip'}">
-                                   			<c:set var="imagePath" value="/images/zip.png" />
-                                   		</c:if>
-                                   		<c:if test="${file.fileType == 'pdf'}">
-                                   			<c:set var="imagePath" value="/images/pdf.png" />
-                                   		</c:if>
-                                   		<c:if test="${file.fileType == 'ecm'}">
-                                   			<c:set var="imagePath" value="/images/ecm.png" />
-                                   		</c:if>	                                    		
-                                   		<img src="${imagePath}" />&nbsp;
-			            				<a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&typeId=${journal.typeId}&journalId=${journal.journalId}">${file.fileName }&nbsp;(${file.fileTransSize })</a><br>
-		            			</div>
-		            		</c:forEach>
-		            	</div>
-			          </td>
-			          <td class="pos2">
-			             <a class="imgbtn"><span style="width: 57px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-			             <a class="imgbtn"><span style="width: 57px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
-			          </td>
-			          <td id="Td2" style="display:none"></td>
-			        </tr>
-			      </table>
-			    </td>
-			</tr>
-		</table>
-	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
-	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
-	    </div>
-	    
-	    
-	    <script  type="text/javascript">
+						<th style="width: 10%;"><spring:message code='ezJournal.t22' /></th>
+						<td style="width: 40%; white-space: nowrap">
+							<div style="overflow-y: auto; vertical-align: middle">
+								<c:out value="${journal.formName}" />
+							</div>
+						</td>
+					</tr>
+					<!-- 제목 -->
+					<tr>
+						<th><spring:message code='ezBoard.t323' /></th>
+						<td width="100%" id="cTitle"
+							style="WORD-WRAP: break-word; word-break: break-all; line-height: 16px;"
+							colspan=3>
+							<div id="journalTitle"
+								style="overflow-y: auto; vertical-align: middle">
+								<c:out value=" ${journal.journalTitle}" />
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="pad1" id="pad1" style="vertical-align: top; height: 100%;">
+<!-- 		        <div class="viewbox" style="text-align:center; padding:0; width:100%; height:100%; overflow:auto; border:1px solid #b6b6b6"> -->
+<!-- 				<iframe id="message" name="message" frameborder="0" style="width: 100%; height: 472px; border: 1px solid rgb(221, 221, 221); background: rgb(255, 255, 255);"></iframe> -->
+				<iframe id="message" name="message" class="viewbox" style="text-align:center; padding:0; width:100%; height:100%; overflow:auto; border:1px solid #b6b6b6">
+<!-- 				    <div style="text-align: left;"> -->
+<!-- 						<img onclick="Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> -->
+<!-- 				        <img onclick="Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"> -->
+<!-- 					</div> -->
+<!-- 					<div id="journalContent" style="height:10px;display:inline-block;"> -->
+<%-- 			        	${journal.journalContent } --%>
+<!-- 					</div> -->
+				</iframe>
+			</td>
+		</tr>
+		<tr>
+			<td class="pad1" style="vertical-align: top;">
+				<table class="file">
+					<tr class="pos1">
+						<th><spring:message code='ezJournal.t105' /></th>
+						<td>
+							<div id="lstAttachLink"
+								style="OVERFLOW: auto; HEIGHT: 50px; background-color: white; text-align: left">
+								<c:forEach items="${journal.fileList }" var="file">
+									<div style="margin-top: 3px; height: 20px">
+										<c:set var="imagePath" value="/images/file.gif" />
+										<%-- <input type="checkbox" name="fileSelect" value="${file.fileName }"> --%>
+										<!-- 		            			<img src="/images/image.png">  -->
+										<input type="checkbox" filename="${file.fileEncodeName}"
+											filepath="${file.filePath}">
+										<c:if
+											test="${file.fileType == 'jpg' || file.fileType == 'jpeg' || file.fileType == 'bmp' || file.fileType == 'gif' || file.fileType == 'png' || file.fileType == 'tif' || file.fileType == 'tiff'}">
+											<c:set var="imagePath" value="/images/image.png" />
+										</c:if>
+										<c:if
+											test="${file.fileType == 'doc' || file.fileType == 'docx'}">
+											<c:set var="imagePath" value="/images/doc.png" />
+										</c:if>
+										<c:if
+											test="${file.fileType == 'xls' || file.fileType == 'xlsx'}">
+											<c:set var="imagePath" value="/images/xls.png" />
+										</c:if>
+										<c:if
+											test="${file.fileType == 'ppt' || file.fileType == 'pptx' || file.fileType == 'pps' || file.fileType == 'ppsx'}">
+											<c:set var="imagePath" value="/images/ppt.png" />
+										</c:if>
+										<c:if test="${file.fileType == 'txt'}">
+											<c:set var="imagePath" value="/images/txt.png" />
+										</c:if>
+										<c:if test="${file.fileType == 'zip'}">
+											<c:set var="imagePath" value="/images/zip.png" />
+										</c:if>
+										<c:if test="${file.fileType == 'pdf'}">
+											<c:set var="imagePath" value="/images/pdf.png" />
+										</c:if>
+										<c:if test="${file.fileType == 'ecm'}">
+											<c:set var="imagePath" value="/images/ecm.png" />
+										</c:if>
+										<img src="${imagePath}" />&nbsp; <a
+											href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&typeId=${journal.typeId}&journalId=${journal.journalId}">${file.fileName }&nbsp;(${file.fileTransSize })</a><br>
+									</div>
+								</c:forEach>
+							</div>
+						</td>
+						<td class="pos2"><a class="imgbtn"><span
+								style="width: 57px;" onClick="attach_SelectAll()"><spring:message
+										code='ezBoard.t325' /></span></a><br /> <a class="imgbtn"><span
+								style="width: 57px;" onClick="attach_Download()"><spring:message
+										code='ezBoard.t98' /></span></a></td>
+						<td id="Td2" style="display: none"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<div
+		style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;"
+		id="mailPanel">&nbsp;</div>
+	<div class="layerpopup"
+		style="z-index: 2000; position: absolute; display: none;"
+		id="iFramePanel">
+		<iframe src="<spring:message code='main.kms4' />"
+			style="border: none;" id="iFrameLayer"></iframe>
+	</div>
+
+
+	<script type="text/javascript">
 		    window.offscreenBuffering = true;
 		    var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
 		    var curFontSize = 1;
@@ -265,11 +317,13 @@
 	        	sizeOn();
 		    };
 		    window.onload = function (){
+		    	$('#message').contents().find('body').html('<div style="text-align: left;"><img onclick="parent.Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> <img onclick="parent.Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"></div><div id="journalContent" style="height:10px;display:inline-block;">${journal.journalContent }</div>');
+// 		    	message.getElementById("journalContent").innerHTML=${journal.journalContent};
 		    	sizeOn();
 		    }
 		    
 		    function sizeOn(){
-		    	var contentHeight = document.documentElement.clientHeight - 300;
+		    	var contentHeight = document.documentElement.clientHeight - 250;
 	            document.getElementById("pad1").style.height = contentHeight + "PX";
 	            var contentWidth = document.documentElement.clientWidth - 20;
 	            document.getElementById("pad1").style.width = contentWidth + "PX";
@@ -283,7 +337,7 @@
                     return;
                 }
                 
-                $("#journalContent").css("zoom",nowZoom + "%");
+                $('#message').contents().find('#journalContent').css("zoom",nowZoom + "%");
                 sizeOn();
 	        }
 	        
@@ -294,7 +348,7 @@
                     return;
                 }
 
-                $("#journalContent").css("zoom",nowZoom + "%");
+                $('#message').contents().find('#journalContent').css("zoom",nowZoom + "%");
                 sizeOn();
 	        }
 		
@@ -462,8 +516,15 @@
 		    function openJournalReply() {
 		    	DivPopUpShow($('body').prop('scrollWidth') * 0.95, $('body').prop('scrollHeight') * 0.92, "/ezJournal/journalReply.do?journalId="+journalId);
 		    }
+		  
+		  function addReplyCount(){
+			  $("#replyCount").text(Number($("#replyCount").text())+1);
+		  }
+		  function minusReplyCount(){
+			  $("#replyCount").text(Number($("#replyCount").text())-1);
+		  }
 		</script>
-	    
-	    
-	</body>
+
+
+</body>
 </html>

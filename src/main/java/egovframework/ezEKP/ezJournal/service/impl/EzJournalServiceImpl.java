@@ -336,7 +336,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 			try {
 				logger.debug(deptList.get(i));
 				Map<String, Object> insertMap = new HashMap<String, Object>();
-				insertMap.put("tenantId", ((String) jsonParam.get("tenantId")).trim());
+				insertMap.put("tenantId", jsonParam.get("tenantId"));
 				insertMap.put("userId", ((String) jsonParam.get("userId")).trim());
 				insertMap.put("deptId", ((String) deptList.get(i)).trim());
 				ezJournalDAO.insertAuthDept(insertMap);

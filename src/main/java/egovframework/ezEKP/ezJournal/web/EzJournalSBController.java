@@ -630,7 +630,7 @@ public class EzJournalSBController {
 		
 		logger.debug("getJournalViewerList ended");
 		
-		return "/ezJournal/journalViewerList";
+		return "/ezJournal/journalReceiverList";
 	}
 	
 	/**

@@ -23,7 +23,7 @@
 				var url = "/admin/ezJournal/authorView.do";
 				var companyId = document.getElementById("companyId").value;
 				url+="?companyId="+companyId;
-				window.open(url, "authorView", "width=500, height=180");
+				window.open(url, "authorView", "width=500, height=200");
 			}
 			
 			function updateAuth(){			
@@ -33,7 +33,7 @@
 				url+="?companyId="+companyId;
 				if (userId) {
 					url+="&userId="+userId+"&userName="+selectedUserName;
-					window.open(url, "authorView", "width=500, height=180");
+					window.open(url, "authorView", "width=500, height=200");
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
 				}
@@ -71,9 +71,9 @@
 		</style>
 	</head>
 	<body class="mainbody"> 
-		<h1><spring:message code='ezJournal.t2' /></h1>
+		<h1><spring:message code='ezJournal.t4' /></h1>
 		<form class="journalForm">
-			<div id="mainmenu">
+			<div id="mainmenu" style="padding-left: 5px;">
 				<span><b><spring:message code = 'ezApprovalG.t1512' /></b>
 		            <select name="companyId" id="companyId" onchange="changeSelectCompany(this.value)">
 		            	<c:forEach items="${compList}" var="company">
@@ -96,19 +96,19 @@
 			</script>
 			<table class="mainlist" style="width:80%;">
 			    <tr>
-			        <th style="text-align: center; width:20%;"><spring:message code='ezJournal.t38' /></th>
-			        <th style="text-align: center; width:20%;"><spring:message code='ezJournal.t39' /></th>
-			        <th style="text-align: center; width:20%;"><spring:message code='ezJournal.t40' /></th>
-			        <th style="text-align: center; width:40%;"><spring:message code='ezJournal.t41' /></th>
+			        <th style="text-align: left; width:20%;"><spring:message code='ezJournal.t38' /></th>
+			        <th style="text-align: left; width:20%;"><spring:message code='ezJournal.t39' /></th>
+			        <th style="text-align: left; width:20%;"><spring:message code='ezJournal.t40' /></th>
+			        <th style="text-align: left; width:40%;"><spring:message code='ezJournal.t41' /></th>
 			    </tr>
 			    <c:choose>
 				    <c:when test="${fn:length(authList) ne 0}">
 					    <c:forEach items="${authList }" var="auth">
 					    	<tr ondblclick="updateAuth();" id="${auth.userId}" userName="${auth.userName }" onclick="selectedTR(this);" style="cursor: pointer;">
-					    		<td style="text-align: center;">${auth.userName } </td>
-					    		<td style="text-align: center;">${auth.jikwi } </td>
-					    		<td style="text-align: center;">${auth.deptName } </td>
-					    		<td style="text-align: center;">${auth.authDept } </td>
+					    		<td style="text-align: left;">${auth.userName } </td>
+					    		<td style="text-align: left;">${auth.jikwi } </td>
+					    		<td style="text-align: left;">${auth.deptName } </td>
+					    		<td style="text-align: left;">${auth.authDept } </td>
 					    	</tr>
 					    </c:forEach>
 				    </c:when>

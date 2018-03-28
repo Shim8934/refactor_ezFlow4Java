@@ -319,7 +319,7 @@
 		   				dataType:"json",
 		   				url:url,
 		   				success: function(forms){
-		   					var trs = "<tr><th style='text-align: center'><spring:message code='ezJournal.t72' /></th></tr>";
+		   					var trs = "<tr><th style='text-align: center;'><spring:message code='ezJournal.t72' /></th></tr>";
 		   					$(forms).each(function(){
 		   						trs += "<tr onclick='sumFormClick(this);' ondblclick='writeSumJournal();' style='cursor:pointer;' sumTypeId="+this.typeId+" sumFormId="+this.formId+"><td>"+this.formName+"</td></tr>";
 		   					})
@@ -329,7 +329,7 @@
 					
 					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].sumSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
 		        	
-		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 50;
 		        	
 		        	$("#sumpopup").css("left", popupX);
 		        	
