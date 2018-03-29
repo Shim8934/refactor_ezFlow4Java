@@ -759,7 +759,7 @@ function lvtDoclist_SelChange() {
     var SelList = new ListView();
     SelList.LoadFromID("DocList");
     var oArrRows = SelList.GetSelectedRows();
-
+    ext = oArrRows.substring(oArrRows.lastIndexOf(".")+1);
     if (oArrRows.length != 0) {
         var tr = oArrRows[0];
 

@@ -72,6 +72,7 @@
 	        var isPeriodYear = true;
 	        var OpenWin;
 	        var approvalFlag = "${approvalFlag}";
+	        var ext = "";
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
