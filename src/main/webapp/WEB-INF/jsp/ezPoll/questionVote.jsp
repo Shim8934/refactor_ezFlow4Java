@@ -2629,6 +2629,18 @@
 										</li>
 									</c:otherwise>
 								</c:choose>
+								<c:choose>
+									<c:when test="${question.isSelOnlyOnce == 1}">
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/selOnlyOnce_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t260'/> <spring:message code = 'ezPortal.t95'/>" >
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t260'/> <spring:message code = 'ezPortal.t96'/>" >
+										</li>
+									</c:otherwise>
+								</c:choose>
 					  		</ul>
 					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
 							<div id="textTest" style="display:inline-block;" class="voteTextTest">
