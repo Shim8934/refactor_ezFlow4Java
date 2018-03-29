@@ -1823,9 +1823,9 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 	            }
 	        } 
         } else {
-	            var ezUtil = new ActiveXObject("ezUtil.RegScript");
-	            var regData = ezUtil.ReadValueEx(2, "SYSTEM\\CurrentControlSet\\Control\\Nls\\CodePage", "OEMCP");
-	            ezUtil = null;
+//	            var ezUtil = new ActiveXObject("ezUtil.RegScript");
+//	            var regData = ezUtil.ReadValueEx(2, "SYSTEM\\CurrentControlSet\\Control\\Nls\\CodePage", "OEMCP");
+//	            ezUtil = null;
 		        var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");
 
 	            for (var i = 0; i < SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW").length; i++) {
