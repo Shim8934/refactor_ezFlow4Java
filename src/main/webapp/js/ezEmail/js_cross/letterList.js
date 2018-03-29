@@ -48,7 +48,7 @@ function disableChk() {
 	}
 }
 
-//예외처리  strChk(문자, 특수문자 허용여부, 길이)
+//예외처리                    (문자, 특수문자 허용여부, 길이)
 function strChk(str, speChar, strLen) {
 	// 공백, 특수문자, 길이
 	var strTrim = str.trim();
@@ -56,7 +56,6 @@ function strChk(str, speChar, strLen) {
 	var reJson = {};
 	
 	if (strTrim != "") {
-		// true : 특수문자허용
 		if (!speChar) { 
 			var speCha = /[`~!<>@#$%^&*|\\\"\';:\/?]/gi;
 			
@@ -65,13 +64,11 @@ function strChk(str, speChar, strLen) {
 			}	
 		}
 		
-		// 길이
 		if (typeof strLen != "undefined") {
 			if (strTrim.length > strLen) {
 				msg = strLen + "자 이하로 입력 가능합니다."
 			} 
 		}
-		
 	}else {
 		msg = "내용을 입력해주세요.";
 	}
@@ -83,7 +80,7 @@ function strChk(str, speChar, strLen) {
 }
 
 // 편지지 개별조회
-function readLetter(letterNo) {
+/*function readLetter(letterNo) {
 	$.ajax({
 		type:"POST",
 		data:{letterNo:letterNo},
@@ -93,7 +90,7 @@ function readLetter(letterNo) {
 			
 		}
 	});
-}
+}*/
 
 // 편지지 미리보기 
 function letterPreView(letterNo) {
@@ -221,7 +218,7 @@ function letterListCss(pageType, searchMode) {
 	}
 }
 
-//편지지 선택 (개별 조회 미리보기)
+// 편지지 선택 (개별 조회 미리보기)
 $(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect)", function(){
 	var letterNo = $(this).attr("data-letterno");
 	
@@ -234,18 +231,18 @@ $(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect)", function(){
 	}
 });
 
-//편지지 마우스 올릴때 
-$(document).on("mouseover", ".lmLetterListUl li:not('.lmLetterSelect') span", function(){
-	$(this).parent("li").not(".lmLetterSelect").css("background","#f8f8f8");
+// 편지지 마우스 올릴때 
+$(document).on("mouseover", ".lmLetterListUl li:not('.lmLetterSelect')", function(){
+	$(this).css("background","#f8f8f8");
 });
 
-//편지지 마우스 땔때
-$(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect') span",function(){
-	$(this).parent("li").not(".lmLetterSelect").css("background","none");
+// 편지지 마우스 땔때
+$(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect')",function(){
+	$(this).css("background","none");
 });
 
 
-//편지지함명 자세히 보기
+// 편지지함명 자세히 보기
 $(document).on("mouseover", "b" ,function(){
 	var boxName = $(this).context.innerText;
 	$(this).attr("title", boxName);
