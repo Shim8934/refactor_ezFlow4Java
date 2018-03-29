@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,8 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzAttitudeService")
@@ -439,18 +442,31 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public AttitudeUserConfigVO getAttitudeUserConfigInfo(int tenantId,
-			String companyId, String userId) throws Exception {
+	public List<AttitudeUserConfigVO> getAttitudeUserConfigInfo(int tenantId,
+			String companyId, String userId, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigInfo started");
+		
+		List<AttitudeUserConfigVO> userList = new ArrayList<AttitudeUserConfigVO>();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("userId", userId);
+		map.put("offsetMin", offsetMin);
 		
+		String[] userIdList = userId.split(","); 
+		
+		for (int i = 0; i < userIdList.length; i++) {
+			map.put("userId", userIdList[i]);
+			
+			AttitudeUserConfigVO vo = new AttitudeUserConfigVO();
+			vo = ezAttitudeDAO.getAttitudeUserConfigInfo(map);
+			if (vo != null) {
+				userList.add(vo);
+			}
+		}
 		LOGGER.debug("getAttitudeUserConfigInfo ended");
-		return ezAttitudeDAO.getAttitudeUserConfigInfo(map);
+		return userList;
 	}
 
 	@Override
@@ -563,6 +579,40 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		return attAppListCount;
 	}
 
+	@Override
+	public List<HolidayVO> getHolidayList(String companyId, int tenantId)
+			throws Exception {
+		LOGGER.debug("getHolidayList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		List<HolidayVO> holidayList = ezAttitudeDAO.getHolidayList(map);
+		
+		LOGGER.debug("getHolidayList ended");
+		return holidayList;
+	}
+
+	//사용자별근태설정 테이블에 없는 사원리스트만 가져오는(필요없어져서 없앨까도 생각중)
+	@Override
+	public List<JournalAuthorVO> getDeptUserList(String tenantId, String key,
+			String value) throws Exception {
+		LOGGER.debug("getDeptUserList started");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map.put("tenantId", tenantId);
+		map.put("key", key);
+		map.put("value", value);
+		
+		List<JournalAuthorVO> userList = ezAttitudeDAO.getDeptUserList(map);
+		
+		LOGGER.debug("getDeptUserList ended");
+		return userList;
+	}
+	
 	@Override
 	public void delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();

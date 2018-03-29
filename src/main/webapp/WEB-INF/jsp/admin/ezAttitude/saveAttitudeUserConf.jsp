@@ -108,27 +108,98 @@
 		   					"companyId" : companyId
 		   				},
 		   				success: function(result){
-		   					var html = "<tr id='" + result.userId + "' class='hover'>";
-		   					html += "<td style='cursor: pointer; padding-left:60px;'>" + result.userName + "</td>";
-		   					if(result.workStartTime != null || result.workEndTime != null) {
-			   					html += "<td>" + result.workStartTime + " ~ " + result.workEndTime + "</td>";
-		   					} else {
-		   						html += "<td></td>";
+		   					for (var i = 0; i < result.length; i++) {
+			   					var html = "<tr id='" + result[i].userId + "' class='hover'>";
+			   					html += "<td style='cursor: pointer; padding-left:60px;'>" + result[i].userName + "</td>";
+			   					if(result[i].workStartTime == null || result[i].workStartTime == '' || result[i].workEndTime == null || result[i].workEndTime == '') {
+			   						html += "<td></td>";
+			   					} else {
+				   					html += "<td>" + result[i].workStartTime + " ~ " + result[i].workEndTime + "</td>";
+			   					}
+			   					html += "</tr>";
+			   					$(html).appendTo('#txtlist_table2');
 		   					}
-		   					html += "</tr>";
-		   					$(html).appendTo('#txtlist_table2');
 		   				}
 		   			});
 	   			}
 	   		}
-
+			// 시간바꾸는 리스트에서 사원 클릭시 tr배경색 변경
 	   		$(document).on('click', '#txtlist_table2 tr' ,function() {
 	   			$("*").removeClass("selectTR");
 	   			$(this).addClass("selectTR");
 	   		})
-	   		
+	   		// [<-] 클릭시
 	   		function DeleteReceiver() {
 		   		$('#txtlist_table2 tr[class*=selectTR]').remove();
+	   		}
+	   		//설정시간적용
+	   		function userTimeApply(type) {
+	   			if(type == 'modify') {
+	   				if($('#startHrs').val() == "" || $('#startHrs').val() == null){
+	   					alert('시간을 입력해주세요');
+	   					return;
+	   				}
+	   				if($('#startMin').val() == "" || $('#startMin').val() == null){
+	   					alert('시간을 입력해주세요');
+	   					return;
+	   				}
+	   				if($('#endHrs').val() == "" || $('#endHrs').val() == null){
+	   					alert('시간을 입력해주세요');
+	   					return;
+	   				}
+	   				if($('#endMin').val() == "" || $('#endMin').val() == null){
+	   					alert('시간을 입력해주세요');
+	   					return;
+	   				}
+	   			}
+	   			
+	   			var trIdx = $('#txtlist_table2').find('tr').length;
+	   			for (var i = 0; i < trIdx; i++) {
+		   			var timeStr = "";
+	   				if(type == 'default') {
+	   					timeStr = comStartTime + " ~ " + comEndTime;
+	   				} else {
+	   					timeStr += addZero($('#startHrs').val()) + ":";
+	   					timeStr += addZero($('#startMin').val()) + " ~ "; 
+	   					timeStr += addZero($('#endHrs').val()) + ":";
+	   					timeStr += addZero($('#endMin').val());
+	   				}
+	   				$('#txtlist_table2 tr').eq(i).children("td").eq(1).text(timeStr);
+	   			}
+	   		}
+	   		//시간/분 입력시 3이면 03 이렇게 되도록. 
+	   		function addZero(time) {
+	   			var resStr = "";
+	   			if(time.length == 1) {
+	   				resStr = "0" + time;
+	   			} else {
+	   				resStr = time;
+	   			}
+	   			return resStr;
+	   		}
+	   		//저장
+	   		function OK_Click() {
+	   			var trIdx = $('#txtlist_table2').find('tr').length;
+	   			var userConfInfo = "";
+	   			for (var i = 0; i < trIdx; i++) {
+	   				var userConfTime = $('#txtlist_table2 tr').eq(i).children("td").eq(1).text().split('~');
+	   				userConfInfo += $('#txtlist_table2 tr').eq(i).attr('id') + ",";
+	   				userConfInfo += userConfTime[0].trim() + ",";
+	   				userConfInfo += userConfTime[1].trim() + ";";
+	   			}
+				//마지막 ';' 제거
+	   			userConfInfo = userConfInfo.slice(0, -1);
+	   			
+	            $.ajax({
+	            	type : "POST",
+	            	url : "/admin/ezAttitude/attitudeUserConfSave.do",
+	            	data : { "userConfInfoList" : userConfInfo },
+	            	success : function() {
+	            		alert('성공');
+	            	},
+	            	error : function() {
+	            	}
+	            });
 	   		}
 		    
 	        function close_Click() {
@@ -243,11 +314,11 @@
 	                        	</tr>
 	                        	<tr>
 	                        		근무시간 : 
-	                        		<input type="text" style="width:50px;"/>시
-	                        		<input type="text" style="width:50px;"/>분
+	                        		<input type="text" id="startHrs" style="width:50px;"/>시
+	                        		<input type="text" id="startMin" style="width:50px;"/>분
 	                        		~
-	                        		<input type="text" style="width:50px;"/>시
-	                        		<input type="text" style="width:50px;"/>분
+	                        		<input type="text" id="endHrs" style="width:50px;"/>시
+	                        		<input type="text" id="endMin" style="width:50px;"/>분
 	                        	</tr>
 	                        </table>
 	                	</div>
@@ -282,11 +353,12 @@
 		        <td></td>
 		        <td>
 					<div class="btnposition" style="margin: 0px;">
-					    <a class="imgbtn"><span onclick="">기본설정적용</span></a>
-					    <a class="imgbtn"><span onclick="">변경시간적용</span></a>
+					    <a class="imgbtn"><span onclick="userTimeApply('default')">기본설정적용</span></a>
+					    <a class="imgbtn"><span onclick="userTimeApply('modify')">변경시간적용</span></a>
 					</div>
 		        </td>
 	        </tr>
 	    </table>
 	</body>	
+>>>>>>> a28fe15c48cba3437608dac6d0b186b407207445
 </html>

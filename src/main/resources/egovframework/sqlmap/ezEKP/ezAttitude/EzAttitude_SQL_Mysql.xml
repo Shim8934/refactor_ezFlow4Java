@@ -9,6 +9,7 @@
 	<typeAlias alias="AttitudeApplicationVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO"/>
 	<typeAlias alias="AttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
 	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
+	<typeAlias alias="HolidayVO" type="egovframework.ezEKP.ezAttitude.vo.HolidayVO"/>
 
 	<resultMap id="attitudeApplicationVO" class="AttitudeApplicationVO">
 		<result property="attitudeId"		column="ATTITUDE_ID" 	columnIndex="1"/>
@@ -55,6 +56,18 @@
 	<resultMap id="attitudeStatis" class="AttitudeStatisVO">
 		<result property="sumDate"			column="SUM_DATE"			columnIndex="1"/>
 		<result property="typeId"			column="TYPE_ID"			columnIndex="2"/>
+	</resultMap>
+	
+	<resultMap id="holiday" class="HolidayVO">
+		<result property="holidayId"		column="HOLIDAYID"			columnIndex="1"/>
+		<result property="holidayName"		column="HOLIDAYNAME"		columnIndex="2"/>
+		<result property="holidayName2"		column="HOLIDAYNAME2"		columnIndex="3"/>
+		<result property="holidayDate"		column="HOLIDAYDATE"		columnIndex="4"/>
+		<result property="isSolar"			column="ISSOLAR"			columnIndex="5"/>
+		<result property="isRepeat"			column="ISREPEAT"			columnIndex="6"/>
+		<result property="isRest"			column="ISREST"				columnIndex="7"/>
+		<result property="isUse"			column="ISUSE"				columnIndex="8"/>
+		<result property="useCompany"		column="USECOMPANY"			columnIndex="9"/>
 	</resultMap>
 	
 	<select id="ezAttitude.getAttitudeList" parameterClass="Map" resultMap="attitude">
@@ -292,6 +305,26 @@
 		<include refid="ezAttitudeDAO.searchQuery"/>
 	</select>
 	
+	<select id="ezAttitudeDAO.getHolidayList" parameterClass="Map" resultMap="holiday">
+		<![CDATA[
+			SELECT
+				HOLIDAYID,
+				HOLIDAYNAME,
+			    HOLIDAYNAME2,
+			    HOLIDAYDATE,
+			    ISSOLAR,
+			    ISREPEAT,
+			    ISREST,
+			    ISUSE,
+			    USECOMPANY
+			FROM
+				tbl_holidayList
+			WHERE
+				USECOMPANY = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
 	
 	<delete id="ezAttitudeDAO.delUsersModifyAtt" parameterClass="Map">
 		<![CDATA[

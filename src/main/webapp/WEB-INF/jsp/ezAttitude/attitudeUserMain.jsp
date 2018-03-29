@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
 		<link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+		<script type="text/javascript" src="/js/Holiday.js"></script>  
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -19,12 +20,27 @@
 				text-align : center;
 				border : 1px solid #dedede;
 			}
+			
+			.span_list table td:hover, .td_day:hover {
+				background-color:#edf4fd;
+			}
 		</style>
 		<script>
-		
+			var pMode = "";
+			var uselang = "<c:out value='${userInfo.lang}'/>";
+			
+			$(function(){
+				$(document).on('dblclick', '.td_day td', function(){
+					pMode = "new";
+					attitudeWrite(this);
+				})	
+			})
+			
 			window.onload = function() {
+				select_memorialDays(uselang); // 공식 휴일 설정 => 언어에 따라 memorialDays에 변수가 담김
+				
 				getAttiTypeList();
-				getAttitudeMainList();
+				getHolidayList();
 			}
 			
 			/**
@@ -71,7 +87,6 @@
 						tdHeight = tdHeight + (calendarHeight.substr(0, calendarHeight.length - 2) - statisHeight.substr(0, statisHeight.length - 2));
 						$("#attiStatis tr:eq(0) th").css("height", tdHeight + "px");
 					}
-					getAttiStatisList();
 			}
 			
 			/**
@@ -88,9 +103,40 @@
 						date : pDate
 					},
 					success : function(result) {
+						$("#attiStatis td").text("0일");
 						for (var i = 0; i < result.length; i++) {
 							$("#" + result[i].typeId).text(result[i].sumDate + "일");
 						}
+					}
+				})
+			}
+			
+			/**
+			* holiday 메소드
+			*/
+			function getHolidayList() {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getHolidayList.do",
+					data : {
+						
+					},
+					success : function(result) {
+						for (var i = 0; i < result.length; i++) {
+							if (result[i].isRepeat == 1) { //매년 반복되는 경우
+								memorialDays.push(new memorialDay(result[i].holidayName, result[i].holidayName2, 
+																  result[i].holidayDate.substring(5,7), result[i].holidayDate.substring(8,10),
+																  result[i].isSolar, result[i].isRest == 1 ? true : false));
+							} else if (result[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+								yearmemorialDays.push(new yearmemorialDay(result[i].holidayName, result[i].holidayName2,
+																		  result[i].holidayDate.substring(0,4), result[i].holidayDate.substring(5,7),
+																		  result[i].holidayDate.substring(8,10), result[i].isSolar,
+																		  result[i].isRest == 1 ? true : false));
+							}
+						}
+						CalendarView("attiCalendar");
 					}
 				})
 			}
@@ -125,22 +171,20 @@
 						startDate = result[i].startDate.split(" ")[0];
 						endDate = result[i].endDate.split(" ")[0];
 						betweenDate = calDateRange(startDate, endDate);
-						
 						startDate = new Date(startDate);
+						
 						for (var j = 0; j <= betweenDate; j++) {
 							startDate.setDate(startDate.getDate() + ( j == 0 ? 0 : 1));
 							var tdAttrDay = startDate.getFullYear() + "-" + leadingZeros(startDate.getMonth() + 1, 2) + "-" + leadingZeros(startDate.getDate(),2);
-							
 							$("td[day=" + tdAttrDay + "]").find("table#TD_" + tdAttrDay + "_Value")
-														  .append("<tr><td><img width='20px' height='20px' style='vertical-align:top; margin-right:3px;' src='"+ result[i].imgPath +"'/>" + result[i].typeName + " : " + result[i].region + "</td></tr>");
+														  .append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'><img width='20px' height='20px' style='vertical-align:top; margin-right:3px;' src='"+ result[i].imgPath +"'/>" + result[i].typeName + " : " + result[i].region + "</td></tr>");
 						}
-						
 					} else if (result[i].dateType == '3') {
 						
 					} else {
 						startDate = result[i].startDate.split(" ")[0];
 						var startTime = result[i].startDate.split(" ")[1];
-						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td>" + result[i].typeName + " : " + startTime + "</td></tr>");
+						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + startTime + "</td></tr>");
 					}
 				}
 			}
@@ -167,11 +211,24 @@
 		        return (to_dt.getTime() - from_dt.getTime()) / 1000 / 60 / 60 / 24;
 		    }
 			
+			
 			/**
-			* 근태 더블클릭 이벤트
+			* 근태작성
 			*/
-			function attitudeInfo(obj) {
-				alert(obj);	
+			function attitudeWrite(obj) {
+				var date = $(obj).attr("dispdate");
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attitudeWrite.do?date=" + date, "writeAttitude", GetOpenWindowfeature(650, 580));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/addAttitudeType.do", $("#ListCompany").val(),
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+	                
+	                if (typeof (rtnValue) != "undefined") {
+	                    company_change();
+	                }
+	            }
 			}
 			
 		</script>
@@ -196,14 +253,9 @@
 			</tr>
 		</table>
 		
-		<!-- 
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		 -->
 	</body>
-	<script>
-		CalendarView("attiCalendar");
-	</script>
 </html>

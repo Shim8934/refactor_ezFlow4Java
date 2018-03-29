@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,8 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAttitudeDAO")
@@ -107,11 +110,24 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		insert("ezAttitudeAdminDAO.insertAttitudeType", map);
 	}
 
+	@SuppressWarnings("unchecked")
 	public AttitudeUserConfigVO getAttitudeUserConfigInfo(
 			Map<String, Object> map) {
 		return (AttitudeUserConfigVO) select("ezAttitudeAdminDAO.getAttitudeUserConfigInfo", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<HolidayVO> getHolidayList(Map<String, Object> map) throws Exception {
+		return (List<HolidayVO>) list("ezAttitudeDAO.getHolidayList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<JournalAuthorVO> getDeptUserList(HashMap<String, String> map) {
+		//없앨까 생각중
+		return (List<JournalAuthorVO>) list("ezAttitudeAdminDAO.getDeptUserList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public void delUsersModifyAtt(Map<String, Object> map) {
 		delete("ezAttitudeDAO.delUsersModifyAtt", map);
 	}

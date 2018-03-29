@@ -7,6 +7,7 @@
 	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
 	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
 	<typeAlias alias="AttitudeFormVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO"/>
+	<typeAlias alias="authorVO" type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
 	
 	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
 		<result property="userId" 					column="USER_ID" 				columnIndex="1"/>
@@ -53,6 +54,15 @@
 		<result property="workStartTime"			column="WORK_STARTTIME"			columnIndex="2"/>
 		<result property="workEndTime" 				column="WORK_ENDTIME" 			columnIndex="3"/>
 		<result property="userName" 				column="DISPLAYNAME" 			columnIndex="4"/>
+	</resultMap>
+	
+	<resultMap class="authorVO" id="userMap">
+		<result property="userName" column="USER_NAME" />
+		<result property="userId" column="USER_ID" />
+		<result property="jikwi" column="JIKWI" />
+		<result property="mail" column="MAIL" />
+		<result property="deptName" column="DEPT_NAME" />
+		<result property="userImg" column="USER_IMG" />
 	</resultMap>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
@@ -312,8 +322,8 @@
 		<![CDATA[
 			SELECT
 				A.USER_ID,
-				A.WORK_STARTTIME,
-				A.WORK_ENDTIME,
+				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_STARTTIME), INTERVAL #offsetMin# hour), 12, 5) as WORK_STARTTIME,
+				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_ENDTIME), INTERVAL #offsetMin# hour), 12, 5) as WORK_ENDTIME,
 				B.DISPLAYNAME
 			FROM
 				TBL_ATTITUDE_USER_CONF A
@@ -331,5 +341,30 @@
 				A.USER_ID = #userId#
 		]]>
 	</select>
-	
+	<!-- 없앨까 생각중인 쿼리.... -->
+	<select id="ezAttitudeAdminDAO.getDeptUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
+		<![CDATA[
+			SELECT
+				A.DISPLAYNAME AS USER_NAME,
+				A.CN AS USER_ID,
+				A.TITLE AS JIKWI,
+				A.MAIL AS MAIL,
+				A.DESCRIPTION AS DEPT_NAME,
+				A.EXTENSIONATTRIBUTE2 AS USER_IMG
+			FROM 
+				TBL_USERMASTER A
+			LEFT JOIN
+				TBL_ATTITUDE_USER_CONF B
+			ON
+				(A.CN = B.USER_ID and A.TENANT_ID = B.TENANT_ID)
+			WHERE
+				A.TENANT_ID=#tenantId#
+			AND 
+				$key$ like concat('%',#value#,'%')
+			AND
+				 B.USER_ID is null
+			ORDER BY
+				lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME
+		]]>
+	</select>
 </sqlMap>

@@ -80,10 +80,10 @@
 	            		"companyId" : encodeURI($("#ListCompany").val())
 	            	},
 	            	success : function() {
-	            		alert('성공');
+// 	            		alert('성공');
 	            	},
 	            	error : function() {
-	            		alert('실패');
+// 	            		alert('실패');
 	            	}
 	            });        	
 	        }
