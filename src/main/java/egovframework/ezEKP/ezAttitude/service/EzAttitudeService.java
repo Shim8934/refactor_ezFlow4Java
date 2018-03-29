@@ -94,4 +94,6 @@ public interface EzAttitudeService {
 
 	public int getUsersModiyAttCount(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String sysLang, String offSet, String type) throws Exception;
 
+	public void delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception;
+
 }

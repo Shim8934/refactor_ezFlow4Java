@@ -127,9 +127,9 @@ public class EzAttitudeKMSController {
 		JSONArray list = new JSONArray();
 		
 		if(status.equals("ok")){
-			LOGGER.debug(resultBody.toJSONString());
 			totalAtt = Integer.parseInt(resultBody.get("data").toString());
 		}
+		
 		totalPages = (totalAtt + pageSize - 1)/pageSize;
 		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
 		
@@ -460,4 +460,53 @@ public class EzAttitudeKMSController {
 	      
 	      LOGGER.debug("saticGetXlsAtt ended");
 	   }
+	@RequestMapping(value="/ezAttitude/delAttModApp.do" , method= RequestMethod.POST)
+	@ResponseBody
+	public String delAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=false)String idList) throws Exception {
+		LOGGER.debug("delAttModApp started");
+		LOGGER.debug("idList : " + idList);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("idList", idList);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = new JSONObject();
+		
+//		if(status.equals("ok")){
+//			data  = (JSONObject)resultBody.get("data");
+//		}
+		LOGGER.debug("delAttModApp ended");
+		return status;
+	}
 }

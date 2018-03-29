@@ -1278,4 +1278,46 @@ public class EzAttitudeGWController {
 		LOGGER.debug("attitudeWriteUploadedFile ended");
     } 
 	
+    /**
+	 * G/W 근태관리 [DELETE] 수정신청 삭제
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyattitudes", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject delUsersModiyAtt(@PathVariable String userId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="idList", required=false) String idList) {
+			
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		JSONObject attJson = new JSONObject();
+		
+		try{
+			String[] ids = idList.split(",");
+
+			idList = "(";
+
+			for (int i = 0; i < ids.length; i++) {
+				idList += ids[i] + ",";
+			}
+			idList = idList.substring(0, idList.length()-1);
+			idList += ")";
+
+			LOGGER.debug("companyId : " + companyId + ", tenantId : " + tenantId + ", idList : " + idList);
+			
+			ezAttitudeService.delUsersModifyAtt(companyId, tenantId, ids);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
+		return result;
+	}
 }

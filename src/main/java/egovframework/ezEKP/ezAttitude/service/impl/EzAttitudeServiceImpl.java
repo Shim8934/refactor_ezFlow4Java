@@ -562,4 +562,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return attAppListCount;
 	}
+
+	@Override
+	public void delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("ids", ids);
+		
+		ezAttitudeDAO.delUsersModifyAtt(map);
+	}
 }
