@@ -1206,7 +1206,7 @@ function isEmptyMailList(mailListElement) {
 var PressShiftKey = false;
 var PressCtrlKey = false;
 function event_listOnkeyUp(event) {
-	
+
 	if (event.target.className == "Mail_Input") {
 		return;
 	}

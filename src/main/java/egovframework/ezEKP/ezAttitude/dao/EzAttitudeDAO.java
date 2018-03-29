@@ -127,7 +127,13 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (List<JournalAuthorVO>) list("ezAttitudeAdminDAO.getDeptUserList", map);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void saveAttitudeUserConfig(Map<String, Object> map) {
 		insert("ezAttitudeAdminDAO.saveAttitudeUserConfig", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void delUsersModifyAtt(Map<String, Object> map) {
+		delete("ezAttitudeDAO.delUsersModifyAtt", map);
 	}
 }

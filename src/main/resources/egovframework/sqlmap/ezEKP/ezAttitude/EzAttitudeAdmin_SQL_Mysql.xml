@@ -367,7 +367,7 @@
 				lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME
 		]]>
 	</select>
-	
+		
 	<insert id="ezAttitudeAdminDAO.saveAttitudeUserConfig" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_ATTITUDE_USER_CONF

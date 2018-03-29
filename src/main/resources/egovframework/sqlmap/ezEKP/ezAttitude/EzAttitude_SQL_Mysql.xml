@@ -325,4 +325,19 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</select>
+	
+	<delete id="ezAttitudeDAO.delUsersModifyAtt" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_ATTITUDE_MODAPPL
+          	WHERE
+          		TENANT_ID = #tenantId#
+          	AND
+        		COMPANY_ID = #companyId#
+          	AND
+		]]>
+		<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
+		      #ids[]# 
+		</iterate>
+	</delete>
 </sqlMap>

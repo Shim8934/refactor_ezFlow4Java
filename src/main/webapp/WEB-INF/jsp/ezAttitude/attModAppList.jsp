@@ -30,6 +30,11 @@
 		var g_timezone 		  = "${userTimeSet}";
 		var offsetMin 		  = "${offsetMin}";
 		var type 			  = "all";
+		var m_strColorSelect = "#edf4fd";
+		var m_strColorOver = "#f4f5f5";
+		var m_strColorDefault = "#ffffff";
+		
+		document.onselectstart = function () { return false; };
 		
 		$(function () {
 	        $("#Sdatepicker").datepicker({
@@ -209,10 +214,8 @@
 	    }
 	    
 	    function att_search() {
-	    	console.log("search start");
 // 	    	popup_close();
 			get_att_list();
-	    	console.log("search end");
 	    }
 	    
 	    function get_att_list(pageNum) {
@@ -293,7 +296,8 @@
 	    function getAttList_after(data, excel) {
 	    	var attList = data.list;
 	    	var infoStr = "";
-			
+	    	listContentArry = new Array();
+	    	
 	    	if (excel == true) {
 	    		$('#ExcelAttList tbody').children( 'tr:not(:first)' ).remove();
 	    	} else {
@@ -324,13 +328,13 @@
 	    	}
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
-	    		htmlStr += '<tr id="' + attList[i].attitudeId + '" class="white">';
+	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="">';
 	    		if (excel == true) {
 	    		} else {
-	    			htmlStr += '<td style="padding:0"> <input type="checkbox" class="checkBnk"' 
-	    	    	htmlStr += 'id="qstCheck+' + attList[i].attitudeId + '"';
+	    			htmlStr += '<td style="padding:0"> <input type="checkbox" class="checkAtt"' 
+	    	    	htmlStr += 'id="attCheck_' + attList[i].attitudeId + '"';
 	    	    	htmlStr += 'value=' + attList[i].attitudeId ;
-	    	    	htmlStr += 'onchange="javascript:getChecked(this)"/></td>';	
+	    	    	htmlStr += ' onclick="event_listCheckboxclick(this)"/></td>';	
 	    		}
     			htmlStr += '<td>' + (parseInt(i) + 1) + '</td>';
     			htmlStr += '<td>' + attList[i].changeDate.substring(0,10) + '</td>';
@@ -459,14 +463,249 @@
 	    	type = $("input:radio[name=searchCheck]:checked").val();
 	    	get_att_list();
 	    }
+	    
+	    var PressShiftKey = false;
+	    var PressCtrlKey = false;
+	    function event_listOnkeyUp(event) {
+	        if (navigator.userAgent.indexOf('Firefox') != -1) {
+	            if (!event) event = window.event;
+	        }
+
+	        switch (event.keyCode) {
+	            case 16: PressShiftKey = false; break;
+	            case 17: PressCtrlKey = false; break;
+	            case 46:
+	                if (event.shiftKey) {
+	                    PressShiftKey = false;
+	                }
+	                else {
+	                }
+	                break;
+	        }
+
+	    }
+	    function event_listOnkeyDown(event) {
+	        if (navigator.userAgent.indexOf('Firefox') != -1) {
+	            if (!event) event = window.event;
+	        }
+	        switch (event.keyCode) {
+	            case 16: PressShiftKey = true; break;
+	            case 17: PressCtrlKey = true; break;
+	        }
+	    }
+	    
+	    var listContentArry = new Array();
+	    var listSubContentArry = new Array();
+	    var listEventCheckbox = false;
+	    var listSubEventCheckbox = false;
+
+	    function event_listclick(obj, event) {	
+	    	if (obj.tagName == "TD") {
+	            obj = obj.parentElement;
+	        }
+
+	        if (!listEventCheckbox) {
+	            if (document.getElementById("HeaderAllCheckBox").checked) {
+	                var TemplistArray = new Array();
+	                if (obj.childNodes.item(0).childNodes.item(0).checked) {
+	                    for (var i = 0; i < listContentArry.length; i++) {
+	                        if (obj.getAttribute("id") == listContentArry[i]) {
+	                            obj.childNodes.item(0).childNodes.item(0).checked = false;
+	                            obj.style.backgroundColor = m_strColorDefault;
+	                        }
+	                        else {
+	                            TemplistArray[TemplistArray.length] = listContentArry[i];
+	                        }
+	                    }
+	                    listContentArry = TemplistArray;
+	                }
+	                else {
+	                    obj.childNodes.item(0).childNodes.item(0).checked = true;
+	                    obj.style.backgroundColor = m_strColorSelect;
+	                    listContentArry[listContentArry.length] = obj.getAttribute("id");
+	                }
+	            }
+	            else {
+	                if (!event.shiftKey && !event.ctrlKey && listContentArry.length > 0) {
+	                	
+	                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
+	                        _RowObject = document.getElementById(listContentArry[Cnt]);
+							_RowObject.style.backgroundColor = m_strColorDefault;
+	                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+	                    }
+	                    listContentArry = new Array();
+	                }
+	                if (event.shiftKey) {
+	                	console.log(1);
+	                    var SelectedPreObj = null;
+	                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
+	                    	console.log(2 + "Cnt : " +Cnt)
+	                        _RowObject = document.getElementById(listContentArry[Cnt]);
+	                        if (Cnt == 0){
+	                        	console.log(2 + "Cnt : " +Cnt)
+	                            SelectedPreObj = _RowObject;	
+	                        }
+	                        console.log(_RowObject);
+	                        _RowObject.style.backgroundColor = m_strColorDefault;
+	                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+	                    }
+	                    listContentArry = new Array();
+	                    _RowObject = obj;
+	                    var PrelistContent;
+	                    if (SelectedPreObj == null)
+	                        PrelistContent = _RowObject.getAttribute("id");
+	                    else
+	                        PrelistContent = SelectedPreObj.getAttribute("id");
+	                    var CurlistContent = obj.getAttribute("id");
+	                    var PrePoint = parseInt(PrelistContent.replace("attList_", ""));
+	                    var CurPoint = parseInt(CurlistContent.replace("attList_", ""));
+	                    console.log(PrePoint + ", " + CurPoint);
+	                    if (PrePoint < CurPoint) {
+							console.log("here");
+	                        for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {
+	                        	console.log(Cnt);
+	                            _RowObject = document.getElementById("attList_" + Cnt);
+	                            _RowObject.style.backgroundColor = m_strColorSelect;
+	                            _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+	                            listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
+	                        }
+
+	                    }
+	                    else if (PrePoint > CurPoint) {
+	                        for (var Cnt = PrePoint; Cnt >= CurPoint; Cnt--) {
+	                            _RowObject = document.getElementById("attList_" + Cnt);
+	                            _RowObject.style.backgroundColor = m_strColorSelect;
+	                            _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+	                            listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
+	                        }
+	                    }
+	                    else if (PrePoint == CurPoint) {
+	                        if (_RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked) {
+	                            _RowObject.style.backgroundColor = m_strColorDefault;
+	                            _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+	                            listContentArry = ArrayDelete(listContentArry, _RowObject.id);
+	                        }
+	                        else {
+	                            _RowObject.style.backgroundColor = m_strColorSelect;
+	                            _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+	                            listContentArry[listContentArry.length] = GetAttribute(_RowObject, "id");
+	                        }
+	                    }
+	                    else
+	                        return;
+	                }
+	                else {
+	                	
+	                    _RowObject = obj;
+	                    
+	                    if (_RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked) {
+	                    	
+	                        _RowObject.style.backgroundColor = m_strColorDefault;
+	                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+	                        listContentArry = ArrayDelete(listContentArry, _RowObject.id);
+	                    }
+	                    else {
+	                    	
+	                        _RowObject.style.backgroundColor = m_strColorSelect;
+	                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+	                        listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
+	                    }
+	                }
+	            }
+	        }
+	        else
+	            listEventCheckbox = false;
+	    }
+	    
+	    function attList_del() {
+	    	ShowAttProgress();
+	    	
+	    	var attList = $(".checkAtt:checked");
+	    	var idList = "";
+	    	
+	    	for (var i = 0; i < attList.length; i++) {
+	    		idList += attList[i].getAttribute("id").split("_")[1] + ","
+	    	}
+	    	
+	    	var obj = new Object();
+	    	
+		    obj.idList = idList.slice(0,-1);
+			
+		    $.ajax({
+				type : 'post',
+			    url : '/ezAttitude/delAttModApp.do',
+			    data : obj,
+			    dataType : "text",
+			    error: function(xhr, status, error){
+			    	ajaxRunning = false;
+			    	alert("삭제 중 오류 발생")
+			    },
+			    success : function(json){
+			    	get_att_list(currentPage);
+					alert("삭제되었습니다.");
+			    },
+				complete : function() {
+					HiddenAttProgress();
+				}
+		    });
+	    }
+	    
+	    function ArrayDelete(TargetArray, DeleteNodeStr) {
+	        var TempArray = new Array();
+	        for (var i = 0; i < TargetArray.length; i++) {
+	            if (TargetArray[i] != DeleteNodeStr)
+	                TempArray[TempArray.length] = TargetArray[i];
+	        }
+	        TargetArray = TempArray;
+	        return TargetArray;
+	    }
+	    
+	    function getCheckAll(t){
+	    	var listInputs = $(".checkAtt");
+	    	
+	    	if ($(t).is(':checked')) {      		
+	    		for (var i = 0; i < listInputs.length; i++) {
+	    			listInputs[i].checked = true;
+	    		}		    		
+	    	}
+	    	else {
+	    		for (var i = 0; i < listInputs.length; i++) {
+	    			listInputs[i].checked = false;		    			    		
+	    		}	
+	    	}
+	    }
+	    
+	    function event_listCheckboxclick(obj) {
+	        if (obj.checked) {
+	            for (var RowCnt = 0; RowCnt < obj.parentElement.parentElement.getElementsByTagName("td").length; RowCnt++) {
+	                obj.parentElement.parentElement.getElementsByTagName("td").item(RowCnt).style.backgroundColor = m_strColorSelect;
+	            }
+	            listContentArry[listContentArry.length] = obj.parentElement.parentElement.getAttribute("id");
+	        }
+	        else {
+	            var TemplistArray = new Array();
+	            for (var i = 0; i < listContentArry.length; i++) {
+	                if (obj.parentElement.parentElement.getAttribute("id") == listContentArry[i]) {
+	                    for (var RowCnt = 0; RowCnt < obj.parentElement.parentElement.getElementsByTagName("td").length; RowCnt++) {
+	                        obj.parentElement.parentElement.getElementsByTagName("td").item(RowCnt).style.backgroundColor = m_strColorDefault;
+	                    }
+	                }
+	                else {
+	                    TemplistArray[TemplistArray.length] = listContentArry[i];
+	                }
+	            }
+	            listContentArry = TemplistArray;
+	        }
+	        listEventCheckbox = true;
+	    }
 		</script>
 </head>
-	<body style="overflow:hidden;" id="theBody" class="mainbody">
+	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
 		<h1>근태수정현황<span id="mailBoxInfo">-신청관리현황[총 xxx개-xxxx년 xx월 xx일~xxxx년 xx월 xx일]</span>
 	    </h1>	
         <div id="mainmenu">
         <ul id="tb_Parent">
-          <li><span onClick="new_mail_onclick()">삭제</span></li>
+          <li><span onClick="attList_del()">삭제</span></li>
           <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
           <li id="search"><span onClick="search_popup()">검색</span></li>
 		  <li id="right">
@@ -509,7 +748,7 @@
                 <table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
                 	<tr> 
 						<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
-							<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)"/>
+							<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)"/>
 						</th> 
 						<th width="60px">NO.</th> 
 						<th>변경일자</th> 					
@@ -521,8 +760,8 @@
 			    	</tr>
 			    	
 			    	<c:forEach var="list" items="${list}" varStatus="i"> 
-				        <tr id="${list.attitudeId}" class="white">
-				        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.attitudeId}" />+" value=<c:out value="${list.attitudeId}" />  onchange="javascript:getChecked(this)"/></td>
+				        <tr id = "attList_${i.count}" class="white" onclick="event_listclick(this, event)" ondblclick="">
+							<td style="padding:0"><input type="checkbox" class="checkAtt" id="attCheck_<c:out value ="${list.attitudeId}"/>" value=<c:out value="${list.attitudeId}" /> onclick="event_listCheckboxclick(this)"/></td>
 				          	<td>${i.count}</td>
 				          	<c:set var="changeDate" value="${list.changeDate}"/>
 							<td>${fn:substring(changeDate,0,10) }</td>
