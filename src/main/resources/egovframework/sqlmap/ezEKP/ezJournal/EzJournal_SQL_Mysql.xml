@@ -935,8 +935,7 @@
 	</insert>
 
 	<!-- 최근사용양식 아이디 가져오기 -->
-	<select id="getJournalLastFormId" parameterClass="map"
-		resultClass="String">
+	<select id="getJournalLastFormId" parameterClass="map" resultClass="String">
 		select
 			a.form_id
 		from

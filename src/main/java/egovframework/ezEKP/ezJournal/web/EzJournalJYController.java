@@ -255,7 +255,8 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
-			
+			String code = result.get("code").toString();
+			model.addAttribute("resultCode", code);			// 저장잘되었는지 확인용
 		}
 		
 		logger.debug("saveReceiverFavorite ended");
@@ -425,16 +426,6 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			logger.debug(jsonParam.toString());
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
 			break;
-//		case "reuse":
-//			
-//			break;
-//		case "modify":
-//			
-//			break;
-//		case "temp":
-//			
-//			break;
-
 		default:
 			param.put("userId", userId);
 			restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
@@ -453,14 +444,10 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			
 			String journalTitle = "[" +formName+ "] " + nowDate + " (" + userInfo.getDisplayName() + ")";
 			String journalContent = (String) journal.get("formContent");
-//			// 예약어 부분에 내용 추가
-//			var content = result.formContent;
-//			content.replace(/@journalDeptId/g, deptId);
-//			content.replace(/@journalWriterId/g, userId);
-//			content.replace(/@journalWriteDate/g, nowDate);
+			// 예약어 부분에 내용 치환
 			nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
-			journalContent = journalContent.replaceAll("@journalDeptId", userInfo.getDeptName());
-			journalContent = journalContent.replaceAll("@journalWriterId", userInfo.getDisplayName());
+			journalContent = journalContent.replaceAll("@journalWriterDept", userInfo.getDeptName());
+			journalContent = journalContent.replaceAll("@journalWriterName", userInfo.getDisplayName());
 			journalContent = journalContent.replaceAll("@journalWriteDate", nowDate);
 			
 			resultForm.put("journalTitle", journalTitle);

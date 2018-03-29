@@ -157,15 +157,18 @@ public class EzJournalServiceImpl implements EzJournalService{
 			logger.debug((String)jsonParam.get("useDept"));
 			
 //			List<Map<String, Object>> depts = JsonUtil.JsonToList((String) jsonParam.get("useDept")); 
-			Gson gson = new Gson();
-			List<Map<String, Object>> depts = gson.fromJson(jsonParam.get("useDept").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
 			
-			if (depts != null) {
-				for (int i = 0; i < depts.size(); i++) {
-					try {
-						insertUseDept(formId, depts.get(i).get("deptId").toString(), tenantId);
-					} catch (Exception e) {
-						e.printStackTrace();
+			if (jsonParam.get("useDept") != null) {
+				Gson gson = new Gson();
+				List<Map<String, Object>> depts = gson.fromJson(jsonParam.get("useDept").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
+				
+				if (depts != null) {
+					for (int i = 0; i < depts.size(); i++) {
+						try {
+							insertUseDept(formId, depts.get(i).get("deptId").toString(), tenantId);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -287,19 +290,22 @@ public class EzJournalServiceImpl implements EzJournalService{
 		ezJournalDAO.updateJournalForm(map);
 		
 		if (isDeptChanged.equals("Y")) {
-			logger.debug((String)jsonParam.get("useDept"));
+			logger.debug("depts확인 : " + jsonParam.get("useDept"));
 			
 			ezJournalDAO.deleteFormUseDept(map);
 //			List<Map<String, Object>> depts = JsonUtil.JsonToList((String) jsonParam.get("useDept")); 
-			Gson gson = new Gson();
-			List<Map<String, Object>> depts = gson.fromJson(jsonParam.get("useDept").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
 			
-			if (depts != null) {
-				for (int i = 0; i < depts.size(); i++) {
-					try {
-						insertUseDept(jsonParam.get("formId").toString(), depts.get(i).get("deptId").toString(), tenantId);
-					} catch (Exception e) {
-						e.printStackTrace();
+			if (jsonParam.get("useDept") != null) {
+				Gson gson = new Gson();
+				List<Map<String, Object>> depts = gson.fromJson(jsonParam.get("useDept").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
+				
+				if (depts != null) {
+					for (int i = 0; i < depts.size(); i++) {
+						try {
+							insertUseDept(jsonParam.get("formId").toString(), depts.get(i).get("deptId").toString(), tenantId);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
