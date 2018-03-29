@@ -229,19 +229,56 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		return null;
 	}
 
+//	@Override
+//	public void updateAttitudeUserConfig(int tenantID, String userID,
+//			String workStartTime, String workEndTime) throws Exception {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public void insertAttitudeUserConfig(int tenantID, String companyID,
+//			String userID, String workStartTime, String workEndTime)
+//			throws Exception {
+//		// TODO Auto-generated method stub
+//		
+//	}
+	
 	@Override
-	public void updateAttitudeUserConfig(int tenantID, String userID,
-			String workStartTime, String workEndTime) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void insertAttitudeUserConfig(int tenantID, String companyID,
-			String userID, String workStartTime, String workEndTime)
+	public void saveAttitudeUserConfig(int tenantId, String userConfInfoList, String offSet)
 			throws Exception {
-		// TODO Auto-generated method stub
+		LOGGER.debug("saveAttitudeUserConfig started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantId", tenantId);
+		
+		String[] userConfList = userConfInfoList.split(";");
+		
+		for (int i = 0; i < userConfList.length; i++) {
+			
+			String[] userInfo = userConfList[i].split(",");
+			
+			LOGGER.debug("userId = " + userInfo[0]);
+			
+			map.put("userId", userInfo[0]);
+			//시간셋팅
+			String today =  commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			
+			String startDate = commonUtil.getDateStringInUTC(today + " " + userInfo[1], offSet, true);
+			String endDate = commonUtil.getDateStringInUTC(today + " " + userInfo[2], offSet, true);
+			
+			int startIdx = startDate.indexOf(" ");
+			int endIdx = endDate.indexOf(" ");
+			
+			map.put("workStartTime", startDate.substring(startIdx + 1));
+			map.put("workEndTime", endDate.substring(endIdx + 1));
+			
+			//insert & update
+			ezAttitudeDAO.saveAttitudeUserConfig(map);
+		}
+				
+		LOGGER.debug("saveAttitudeUserConfig ended");
 	}
 
 	@Override

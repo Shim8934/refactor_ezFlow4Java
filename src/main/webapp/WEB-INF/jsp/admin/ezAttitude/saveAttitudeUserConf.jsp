@@ -134,6 +134,12 @@
 	   		}
 	   		//설정시간적용
 	   		function userTimeApply(type) {
+	   			var trIdx = $('#txtlist_table2').find('tr').length;
+	   			if(trIdx == 0) {
+	   				alert('사원을 선택해 주세요');
+	   				return;
+	   			}
+	   			
 	   			if(type == 'modify') {
 	   				if($('#startHrs').val() == "" || $('#startHrs').val() == null){
 	   					alert('시간을 입력해주세요');
@@ -151,6 +157,11 @@
 	   					alert('시간을 입력해주세요');
 	   					return;
 	   				}
+	   			} else {
+	   				$('#startHrs').val(comStartTime.split(':')[0]);
+	   				$('#startMin').val(comStartTime.split(':')[1]);
+	   				$('#endHrs').val(comEndTime.split(':')[0]);
+	   				$('#endMin').val(comEndTime.split(':')[1]);
 	   			}
 	   			
 	   			var trIdx = $('#txtlist_table2').find('tr').length;
@@ -183,6 +194,10 @@
 	   			var userConfInfo = "";
 	   			for (var i = 0; i < trIdx; i++) {
 	   				var userConfTime = $('#txtlist_table2 tr').eq(i).children("td").eq(1).text().split('~');
+	   				if (userConfTime == "") {
+	   					alert('시간을 설정해 주세요');
+	   					return;
+	   				}
 	   				userConfInfo += $('#txtlist_table2 tr').eq(i).attr('id') + ",";
 	   				userConfInfo += userConfTime[0].trim() + ",";
 	   				userConfInfo += userConfTime[1].trim() + ";";
@@ -195,7 +210,9 @@
 	            	url : "/admin/ezAttitude/attitudeUserConfSave.do",
 	            	data : { "userConfInfoList" : userConfInfo },
 	            	success : function() {
-	            		alert('성공');
+	            		alert('시간이 변경되었습니다');
+	            		window.opener.company_change();
+	            		window.close();
 	            	},
 	            	error : function() {
 	            	}

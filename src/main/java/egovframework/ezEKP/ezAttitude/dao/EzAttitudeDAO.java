@@ -126,4 +126,8 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		//없앨까 생각중
 		return (List<JournalAuthorVO>) list("ezAttitudeAdminDAO.getDeptUserList", map);
 	}
+
+	public void saveAttitudeUserConfig(Map<String, Object> map) {
+		insert("ezAttitudeAdminDAO.saveAttitudeUserConfig", map);
+	}
 }

@@ -52,8 +52,6 @@ public interface EzAttitudeService {
 	
 	public List<Map<String, String>> getDeptAttitudeList(String pidList, int tenantId) throws Exception;
 	
-	//조즥도
-	
 	public AttitudeApplicationVO getAttitudeApplicationInfo(int tenantId, String companyId, String attitudeId) throws Exception;
 	
 	public void deleteAttitudeApplication(String attitudeId, int tenantId) throws Exception;
@@ -80,9 +78,11 @@ public interface EzAttitudeService {
 	
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigInfo(int tenantId, String companyId, String userId, String offsetMin) throws Exception;
 	
-	public void updateAttitudeUserConfig(int tenantId, String userId, String workStartTime, String workEndTime) throws Exception;
+//	public void updateAttitudeUserConfig(int tenantId, String userId, String workStartTime, String workEndTime) throws Exception;
 	
-	public void insertAttitudeUserConfig(int tenantId, String companyId, String userId, String workStartTime, String workEndTime) throws Exception;
+//	public void insertAttitudeUserConfig(int tenantId, String companyId, String userId, String workStartTime, String workEndTime) throws Exception;
+	
+	public void saveAttitudeUserConfig(int tenantId, String userConfInfoList, String offSet) throws Exception;
 	
 	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId) throws Exception;
 	

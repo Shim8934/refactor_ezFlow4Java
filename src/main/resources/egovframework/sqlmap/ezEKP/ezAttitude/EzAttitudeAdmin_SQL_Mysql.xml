@@ -136,13 +136,13 @@
 		<![CDATA[
 			SELECT
 				A.USER_ID,
-				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_STARTTIME), INTERVAL #offsetMin# hour), 12, 5) as WORK_STARTTIME,
-				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_ENDTIME), INTERVAL #offsetMin# hour), 12, 5) as WORK_ENDTIME,
+				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_STARTTIME), INTERVAL #offsetMin# minute), 12, 5) as WORK_STARTTIME,
+				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_ENDTIME), INTERVAL #offsetMin# minute), 12, 5) as WORK_ENDTIME,
 				B.TITLE,
 				B.DISPLAYNAME,
 				B.DESCRIPTION
 			FROM
-				tbl_attitude_user_conf A 
+				tbl_attitude_user_conf A
 			INNER JOIN 
 				tbl_usermaster B 
 			ON 
@@ -322,8 +322,8 @@
 		<![CDATA[
 			SELECT
 				A.USER_ID,
-				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_STARTTIME), INTERVAL #offsetMin# hour), 12, 5) as WORK_STARTTIME,
-				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_ENDTIME), INTERVAL #offsetMin# hour), 12, 5) as WORK_ENDTIME,
+				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_STARTTIME), INTERVAL #offsetMin# minute), 12, 5) as WORK_STARTTIME,
+				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_ENDTIME), INTERVAL #offsetMin# minute), 12, 5) as WORK_ENDTIME,
 				B.DISPLAYNAME
 			FROM
 				TBL_ATTITUDE_USER_CONF A
@@ -367,5 +367,28 @@
 				lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME
 		]]>
 	</select>
+	
+	<insert id="ezAttitudeAdminDAO.saveAttitudeUserConfig" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_ATTITUDE_USER_CONF
+				(USER_ID, TENANT_ID, WORK_STARTTIME, WORK_ENDTIME, COMPANY_ID, DEPT_ID)
+			SELECT
+				#userId# as USER_ID,
+				#tenantId# as TENANT_ID,
+				#workStartTime# as WORK_STARTTIME,
+				#workEndTime# as WORK_ENDTIME,
+				PHYSICALDELIVERYOFFICENAME as COMPANY_ID,
+				DEPARTMENT as DEPT_ID
+			FROM
+				TBL_USERMASTER
+			WHERE
+				cn = #userId#
+			AND
+				tenant_id = #tenantId#
+			ON DUPLICATE KEY UPDATE
+				WORK_STARTTIME = #workStartTime#,
+				WORK_ENDTIME = #workEndTime#
+		]]>
+	</insert>
 	
 </sqlMap>
