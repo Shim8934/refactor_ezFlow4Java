@@ -32,7 +32,7 @@
 		    </ul>
 		  </div>
 		  <script type="text/javascript">
-		    selToggleList(document.getElementById("close"), "ul", "li", "0");
+		  	selToggleList(document.getElementById("close"), "ul", "li", "0");
 		  </script>
 	        <div style="width:100%; height:305px" id="divList">
 	            <table class="popuplist" style="width:100%">

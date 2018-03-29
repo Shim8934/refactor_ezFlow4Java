@@ -5,7 +5,7 @@
 	<c:choose>
 		<c:when test="${fn:length(userList) > 0}">
 			<c:forEach items="${userList}" var="user" varStatus="status">
-				<tr id="${user.receiverId}" name="${user.userName}" class="hover" onclick="setUserAuthorDept(this)" ondblclick="setAuthorViewUser()">
+				<tr id="${user.userId}" name="${user.userName}" class="hover" onclick="setUserAuthorDept(this)" ondblclick="setAuthorViewUser()">
 					<td>${status.count }</td>
 					<td>${user.userName }</td>
 					<td>${user.jikwi }</td>

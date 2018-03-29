@@ -6,7 +6,7 @@
 <html style="height: 99%;">
 	<head>
 		<c:choose>
-			<c:when test="${mode == 'new' || mode == 'reuse' || mode == 'temp'}">
+			<c:when test="${mode == 'new' || mode == 'reuse' || mode == 'temp' || mode == 'sum'}">
 			    <title><spring:message code='ezJournal.t131' /></title>
 			</c:when>
 			<c:otherwise>

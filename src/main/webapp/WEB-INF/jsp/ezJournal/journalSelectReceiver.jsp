@@ -174,6 +174,7 @@
 	   					$("#List_TBODY").html(result);
 	   					favoriteId = $(result).filter("tr").attr("favoriteid");
 			   			getFavoriteUser($("#List_TBODY tr:first"));
+			   			$("#journalFavorite").scrollTop();
 	   				},
 	   				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);
