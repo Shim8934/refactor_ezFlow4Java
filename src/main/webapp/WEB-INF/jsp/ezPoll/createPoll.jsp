@@ -1002,7 +1002,7 @@
 	    		}else{
 	    			fileinfo = fileinfo.filePath.split('/')[0];
 	    		}
-		    	objImg.src = "/fileroot/1/files/upload_schedule/uploadFile/" + fileinfo;
+		    	objImg.src = "/fileroot/0/files/upload_schedule/uploadFile/" + fileinfo;
 	    		$(selOptRow).append(objImg);
 	    		checkOptionsList();
 	    	}
