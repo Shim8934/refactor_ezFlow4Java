@@ -1241,8 +1241,8 @@
 		        createNodeAndInsertText(xmlpara, objNode, "ORDEROPTION", OrderOption);
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 
-		        var wWeigth = 600;
-		        var wHeigth = 400;
+		        var wWeigth = 630;
+		        var wHeigth = 450;
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
 		        var left = 0;

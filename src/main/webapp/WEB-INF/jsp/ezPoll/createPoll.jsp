@@ -922,7 +922,7 @@
 				</tr>
 			</table>
 	
-			<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01" style="width:129px; height:30px; line-height:28px; font-size:13px; background:#efefef; border:1px solid #dcdcdc; border-radius:5px;"><spring:message code="ezPoll.t153"/></button>
+			<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01" style="width:129px; height:30px; line-height:28px; font-size:13px; font-weight:bold; background:#efefef; border:1px solid #dcdcdc; border-radius:5px; cursor:pointer; "><spring:message code="ezPoll.t153"/></button>
 	
 			<table class="content" style="width: 100%; margin:10px 0px 0px 0px;"> 
 				<tr>    <!------------Question setting---------------->

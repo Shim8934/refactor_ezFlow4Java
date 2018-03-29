@@ -132,7 +132,7 @@ function processRowClick(tr) {
             }
         }
 
-        if (WriterID == arr_userinfo[1]) {
+        if (DeptID == arr_userinfo[4]) {
             try {
                 if (typeof (tr.cells[12].innerHTML) == "string") {
                     // START

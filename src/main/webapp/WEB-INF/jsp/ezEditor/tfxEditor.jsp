@@ -10,6 +10,7 @@
 		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
 		<script  type="text/javascript">
 			var type = "${type}";
+			var editorLoadFlag = false;
 			
 			function SetEditorContent(Data) {
 	            try {
@@ -196,7 +197,10 @@
 	        	xfe.showTab(1, false);
 	        }
 	        
-	        window.onload = parent.Editor_Complete;
+	        window.onload = function() {
+	        	editorLoadFlag = true;
+	        	parent.Editor_Complete();
+	        };
 	    </script>
 	</body>
 </html>

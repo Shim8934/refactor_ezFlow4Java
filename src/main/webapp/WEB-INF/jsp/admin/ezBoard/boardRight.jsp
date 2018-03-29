@@ -23,7 +23,7 @@
 	    			<div class="warningbox01" style="margin-top:100px;">
 	        			<div class="warningbox02">
 	  	        			<div class="warnintxt01" style="text-align:left; display:inline-block;">
-		        				<span class="warningimg"><img src="/images/notify/admin_img.png" width="78" height="78" style="margin:16px 0px 18px 20px;"></span>
+		        				<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style="margin:16px 0px 18px 20px;"></span>
 		        				<dl class="warningdl">
 		        				<dt><img src="/images/notify/admin.png" width="223" height="36"></dt>
 		        					<dd>
