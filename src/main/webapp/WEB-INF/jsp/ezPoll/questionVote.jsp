@@ -2614,9 +2614,18 @@
 										</li>
 									</c:otherwise>
 								</c:choose>
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/>" >
-								</li>
+								<c:choose>
+									<c:when test="${question.multiSelect == 0}">
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : <spring:message code = 'ezEmail.lhm67'/>" >
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : ${question.multiSelect}" >
+										</li>
+									</c:otherwise>
+								</c:choose>
 								<c:choose>
 									<c:when test="${question.secretVote == 1}">
 										<li class="voteIconImg_li_info icon">
