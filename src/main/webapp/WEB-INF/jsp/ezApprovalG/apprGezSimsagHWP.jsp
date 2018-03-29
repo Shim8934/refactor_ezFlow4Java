@@ -237,7 +237,7 @@
         }
 
         function btnSetReceivLine_onclick() {
-            var url = "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID;
+        	var url = "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID + "&ext=" + ext;
             var feature = "status:no;dialogWidth:540px;dialogHeight:230px;help:no;scroll:no;edge:sunken";
             var ret = window.showModalDialog(url, "", feature);
         }

@@ -271,7 +271,7 @@
 		        }
 		    }
 		    function btnSetReceivLine_onclick() {
-		        DivPopUpShow(540, 240, "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID);
+		        DivPopUpShow(540, 240, "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID + "&ext=" + ext);
 		    }
 		    function btnOpinion_onclick() {
 		        var parameter = new Array();
