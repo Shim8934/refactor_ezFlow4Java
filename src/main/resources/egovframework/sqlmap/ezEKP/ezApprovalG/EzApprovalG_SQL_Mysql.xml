@@ -6562,6 +6562,9 @@
    			FUNCTIONTYPE IN ('002', '005', '000')
    		AND 
    			APRMEMBERID IN ($v_USERIDS$)
+   		<isEqual property="isIEFlag" compareValue="N" prepend="AND">
+       		HREF NOT LIKE '%.hwp'
+        </isEqual>
    		
    		UNION 
   
@@ -6591,6 +6594,9 @@
    			FUNCTIONTYPE IN ('002')
    		 AND 
    			APRMEMBERID IN ($v_USERIDS$)
+		<isEqual property="isIEFlag" compareValue="N" prepend="AND">
+       		HREF NOT LIKE '%.hwp'
+        </isEqual>
 		  ) AS B
 		  WHERE
 		   	1=1
