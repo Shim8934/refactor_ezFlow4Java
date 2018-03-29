@@ -152,7 +152,7 @@
 				${journal.checkRecv} / ${journal.totalRecv}
 				</c:when>
 				<c:otherwise>
-				-
+				<span style="word-spacing: -0.6px;">&nbsp;&nbsp;-</span>
 				</c:otherwise>
 				</c:choose>
 				</td>

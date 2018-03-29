@@ -619,7 +619,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 			map.put("journalStatus", "temp");
 		}
 		
-		logger.debug("insertJournal map" + map);
+//		logger.debug("insertJournal map" + map);
 		
 		String journalId = ezJournalDAO.insertJournal(map) + "";
 		
@@ -762,11 +762,11 @@ public class EzJournalServiceImpl implements EzJournalService{
 //			Element nextElem = journalBody.getElementById("nextJournal");
 //			String nextContent = nextElem.html();
 			
-			formThisHtml += "<p>----------"+journal.getJournalTitle()+"----------</p><p></p>";
-			formThisHtml += thisContent;
+			formThisHtml += "<p>---------- "+journal.getJournalTitle().trim()+" ----------</p>";
+			formThisHtml += thisContent.trim();
 			
-			formNextHtml += "<p>----------"+journal.getJournalTitle()+"----------</p><p></p>";   
-			formNextHtml += nextContent;
+			formNextHtml += "<p>---------- "+journal.getJournalTitle().trim()+" ----------</p>";   
+			formNextHtml += nextContent.trim();
 		}
 		logger.debug("여기는 포문이 끝나는곳");
 		
