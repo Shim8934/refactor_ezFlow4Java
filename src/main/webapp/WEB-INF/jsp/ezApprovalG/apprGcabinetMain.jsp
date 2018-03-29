@@ -31,8 +31,8 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js?ver=0.1"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezCabinet_Cross.js?ver=0.2"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/ezCabinet_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/getContainerInfoCB_Cross.js"></script>
