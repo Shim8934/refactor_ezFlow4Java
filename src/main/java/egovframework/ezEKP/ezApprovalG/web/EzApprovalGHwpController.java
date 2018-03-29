@@ -285,7 +285,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/mail_interuploadX_Server.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String mail_interuploadX_Server(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception {
+	public String mail_interuploadX_Server(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception {
 		LOGGER.debug("mail_interuploadX_Server started");
 
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -303,56 +303,81 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String filename = sFileTitle;
 		String newguid = UUID.randomUUID().toString();
 		String newfilename = newguid + "." + sExt;
-		String newwindowid = xmlDom.getElementsByTagName("newwindowid").item(0).getTextContent();
+		String newwindowid = xmlDom.getElementsByTagName("newid").item(0).getTextContent();
 		
 		if (newwindowid == null) {
 			newwindowid = "";
 		}
-		
+		String useExtension = "";
 		String pDirTempPath = "";
-//		String _UseExtension = GetSystemConfigValue("USE_FileExtension").ToString();
-		String extResult = "";
+	    if (ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId()) != null) {
+            useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+        }		
+	    String extResult = "";
 		String pDate = "";
 		String sFileHref = xmlDom.getElementsByTagName("filehref").item(0).getTextContent(); 
-
+		String realPath = commonUtil.getRealPath(request);
+        String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+        String copyPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+        pDirPath = realPath + pDirPath;
 		
-		 if (pBigFileUpload == "Y") {
-//			 String pDirPath = Server.MapPath("/Upload_Mail");
-//             pDate = System.DateTime.Now.ToString("yyyy") + System.DateTime.Now.ToString("MM") + System.DateTime.Now.ToString("dd");
-//             pDirTempPath = pDirPath + Path.DirectorySeparatorChar.ToString() + pDate;
-         } else {
-//             pDirTempPath = Server.MapPath("/Upload_Mail/TempFileUpload");
-         }
+	       if (pBigFileUpload.equals("Y")) {
+               // 대용량 첨부파일인 경우에는 오늘 날짜를 이름으로 갖는 폴더를 사용한다.
+               pDate = EgovDateUtil.getToday("");
+               pDirTempPath = pDirPath + commonUtil.separator + pDate;
+               copyPath = copyPath + commonUtil.separator + pDate;
+           } else {
+               // 일반 첨부파일인 경우에는 tempFileUpload 폴더를 사용한다.
+               pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
+               copyPath = copyPath + commonUtil.separator + "tempFileUpload";
+           }
 
-//         if (!Directory.Exists(pDirTempPath)) {
-//             Directory.CreateDirectory(pDirTempPath);
-//         }
+	          File f = new File(pDirTempPath);
+	          
+	            // 파일을 업로드할 폴더가 존재하지 않으면 생성한다.            
+	            if (!f.exists()) {
+	                f.mkdirs();
+	            }
 
-//         String SaveLocalPath = Path.Combine(pDirTempPath, newfilename);
-//         if (_UseExtension.ToLower().IndexOf(sExt.ToLower()) == -1 && _UseExtension != "*") {
-//             extResult = "denied";
-//         } else {
-//             String base64orgfilename = Convert.ToBase64String(Encoding.UTF8.GetBytes(sFileTitle + "." + sExt));
-//             if (pBigFileUpload == "Y") {
-//                 File.WriteAllText(Path.Combine(pDirTempPath, newfilename + "__.txt"), base64orgfilename);
-//             }
-//
-//             byte[] buffer = new byte[64 * 1024];
-//             int count = buffer.Length;
-//
-//             FileInfo f1 = new FileInfo(Server.MapPath(sFileHref));
-//             if (f1.Exists) {
-//                 f1.CopyTo(pDirTempPath + System.IO.Path.DirectorySeparatorChar.ToString() + newfilename, true);
-//             }
-//
-//             extResult = "OK";
-//         }
+	       String saveLocalPath = pDirTempPath + commonUtil.separator + newfilename;
+           String orgFileName = sFileTitle + "." + sExt;            
+           long fileSize = 0;
+	       if (useExtension.toLowerCase().indexOf(sExt.toLowerCase()) == -1 && !useExtension.equals("*")) {
+               extResult = "denied";
+           } else {
+        	// 대용량 첨부파일의 경우에는 후에 다운로드 받을 때 파일명을 내려보내기 위해 원 파일명을 저장한다.                
+               if (pBigFileUpload.equals("Y")) {                    
+                   String base64OrgFileName = Base64.encodeBase64String(orgFileName.getBytes("UTF-8"));
+                   FileOutputStream fos = null;
+                   
+                   try {
+                       File nameFile = new File(saveLocalPath + "__.txt");
+                       fos = new FileOutputStream(nameFile);
+                       fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
+                   } catch (Exception e) {
+                       throw e;
+                   } finally {
+                       if (fos != null) {
+                           fos.close();
+                       }
+                   }
+               }
+               
+       		File file2 = new File(pDirTempPath + commonUtil.separator + newfilename);
+       		File file3 = new File(realPath +  commonUtil.separator + sFileHref );
+       		
+			if (!file2.exists()) {
+				FileUtils.copyFile(file3, file2);
+			}
+                                           
+               extResult = "OK";
+           }
 
          LOGGER.debug("mail_interuploadX_Server ended");
          if (pBigFileUpload == "Y") {
-        	 return pDate + "|!|" + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
+        	 return pDate + "|!|" + copyPath + commonUtil.separator + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
          } else {
-        	 return newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
+        	 return copyPath + commonUtil.separator + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
          }
 	}
 	

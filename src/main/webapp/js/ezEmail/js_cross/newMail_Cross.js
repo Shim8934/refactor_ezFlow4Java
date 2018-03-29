@@ -1826,13 +1826,13 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 	            var ezUtil = new ActiveXObject("ezUtil.RegScript");
 	            var regData = ezUtil.ReadValueEx(2, "SYSTEM\\CurrentControlSet\\Control\\Nls\\CodePage", "OEMCP");
 	            ezUtil = null;
+		        var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");
+
+	            for (var i = 0; i < SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW").length; i++) {
 	
-	            for (var i = 0; i < xmlpara.getElementsByTagName("ATTACHNAME").length; i++) {
-	
-	                var fileName = getNodeText(xmlpara.getElementsByTagName("ATTACHNAME").item(i));
-	                var fileHref = getNodeText(xmlpara.getElementsByTagName("ATTACHFILEHREF").item(i));
-	                var fileAttachSize = getNodeText(xmlpara.getElementsByTagName("ATTACHFILESIZE").item(i));
-	
+	                var fileName = SelectSingleNodeValue(AttachRows[i], "ATTACHNAME");
+	                var fileHref = SelectSingleNodeValue(AttachRows[i], "ATTACHFILEHREF");
+	                var fileAttachSize =  SelectSingleNodeValue(AttachRows[i], "ATTACHFILESIZE");
 	                fileName = fileName.replace("&amp;","&");
 	
 	                fileName = ReplaceText(fileName, "\\\\", "");
@@ -3816,31 +3816,53 @@ function attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize) {
 
     if (extFlag)
         alert(strLang323);
+    
+    var pstrXML = "";
+    if (g_fileList.length > 0) {
+        pstrXML += "<LISTVIEWDATA><HEADERS>";
+        pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+        pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+        pstrXML += "</HEADERS><ROWS>";
+    }
 
-    xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "/myoffice/ezEmail/remote/mail_interattach.aspx", false);
-    xmlhttp.send(xmlDoc);
+    for (var i = 0; i < g_fileList.length; i++) {
+        var filepath = ofileHref[i];
+        var filename = ofileName[i];
+        var filesize = ofileAttachSize[i];
+        if (filesize == "0" && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "hwp") {
+            filename = filename + ".hwp";
+            filesize = strLang116;
+        }
+        else if ((filesize == "0" || filesize == "") && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
+            filename = filename + ".mht";
+            filesize = strLang116;
+        }
 
-    if (xmlhttp.status == "200") {
-        xmlDoc = loadXMLString(xmlhttp.responseText);
-        g_url = getNodeText(xmlDoc.getElementsByTagName("URL")[0]);
+        pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+        pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+        pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+        pstrXML += "<DATA3></DATA3>";
+        pstrXML += "<DATA4>APPROVAL</DATA4>";
+        pstrXML += "<DATA5>N</DATA5>";
+        pstrXML += "<DATA6>" + filesize + "</DATA6>";
+        if (filesize > BigSizeAttachSize)
+            pstrXML += "<DATA7>Y</DATA7>";
+        else
+            pstrXML += "<DATA7>N</DATA7>";
 
-        for (var i = 0; i < xmlDoc.getElementsByTagName("FILE").length; i++) {
-            filename = getNodeText(xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("NAME"));
-            path = getNodeText(xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("PATH"));
-            big_yn = getNodeText(xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("BIG"));
-            size = getNodeText(xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("SIZE"));
-            attid = getNodeText(xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("ITEMID"));
-            var aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews2.aspx?mode=Attach&ID=" + escape(g_url) + "&ATTID=" + escape(attid);
-            if (big_yn == "Y") {
-                aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + escape(path) + "&filedate=" + escape(attid.split('\\')[0]);
-            }
-            AtthacDivUpdate("addattach", aitem, attid, filename, size, big_yn);
+        pstrXML += "</CELL><CELL>";
+        pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
+        pstrXML += "</CELL></ROW>";
+    }
+    if (pstrXML != "") {
+        pstrXML += "</ROWS></LISTVIEWDATA>";
+        objXML = loadXMLString(pstrXML);
+        if (pAttachListXml == "") {
+            pAttachListXml = objXML;
         }
     }
-    else {
-        alert(xmlhttp.status + " : " + strLang241);
-    }
+        
+        dadiframe.fileupload2(pAttachListXml);            	
     xmlhttp = null;
 }
 //end
