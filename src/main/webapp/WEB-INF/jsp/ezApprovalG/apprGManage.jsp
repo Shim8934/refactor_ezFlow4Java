@@ -1184,9 +1184,9 @@
 		            var tr = oArrRows[0];
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
-		            var left = (parseInt(width) - 600) / 2;
-		            var top = (parseInt(heigth) - 270) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=793px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            var left = (parseInt(width) - 1155) / 2;
+		            var top = (parseInt(heigth) - 460) / 2;
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    function GetBujaeFlag() {
@@ -1241,8 +1241,8 @@
 		        createNodeAndInsertText(xmlpara, objNode, "ORDEROPTION", OrderOption);
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 
-		        var wWeigth = 600;
-		        var wHeigth = 400;
+		        var wWeigth = 630;
+		        var wHeigth = 450;
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
 		        var left = 0;
@@ -1751,7 +1751,6 @@
 		</div>
 		
 		<div id="tblPageRayer"></div>
-		<br/>
 				
 		<div id="tabnav" class="portlet_tabpart01" style="width:100%">
 			<div class="portlet_tabpart01_top" id="tab1">

@@ -86,6 +86,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("tenant_id", pollAnswerVO.getTenantId());
 		map.put("content", pollAnswerVO.getContent());
 		map.put("vote_number", pollAnswerVO.getVotesNumber());
+		map.put("filePath", pollAnswerVO.getFilePath());
 		ezPollDAO.insertOption(map);
 	}
 
@@ -495,6 +496,14 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("user_id", id);
 		map.put("tenant_id", tenantId);
 		return ezPollDAO.getSpecificPollUserAndAnswer(map);
+	}
+
+	@Override
+	public int checkUsingFile(int tenantId, String FilePath) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("tenant_id", tenantId);
+		map.put("file_path", FilePath);
+		return ezPollDAO.checkUsingFile(map);
 	}
 
 }

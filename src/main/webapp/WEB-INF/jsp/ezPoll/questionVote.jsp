@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -178,6 +179,9 @@
 				}
 				
 				emoticonPanelClose();
+				optImgSearch();
+				addThumbnailEvent();
+				
 			}
 			
 			function updateGraph() {				
@@ -1802,7 +1806,7 @@
 			    	cancelPreview.setAttribute("_fileInfo", fileinfo);
 			    	cancelPreview.setAttribute("_type", "file");
 			    	imagePreview.setAttribute("_fileInfo", fileinfo);	
-			    	document.getElementById("sendBttn").style.backgroundColor = "#004896";
+			    	document.getElementById("sendBttn").style.backgroundColor = "#0470e4";
 			    	document.getElementById("sendBttn").disabled = false;
 			    	imagePreview.setAttribute("_type", "file");	
 		    	}
@@ -1872,7 +1876,7 @@
 		    		}
 		    		
 		    		imagePreview.parentElement.style.display = "block";	
-		    		document.getElementById("clA2cmt" + currentEditingCmt).style.backgroundColor = "#004896";
+		    		document.getElementById("clA2cmt" + currentEditingCmt).style.backgroundColor = "#0470e4";
 		    		document.getElementById("clA2cmt" + currentEditingCmt).disabled = false;
 		    	}
 		    	
@@ -1944,7 +1948,7 @@
 					document.getElementById("sendBttn").disabled = true;
 				}
 				else {
-					document.getElementById("sendBttn").style.backgroundColor = "#004896";
+					document.getElementById("sendBttn").style.backgroundColor = "#0470e4";
 			    	document.getElementById("sendBttn").disabled = false;
  			        element.style.height = "1px"; 			        
  			        var value = element.scrollHeight;
@@ -1960,7 +1964,7 @@
 					document.getElementById("clA2cmt" + currentEditingCmt).disabled = true;
 				}
 				else {
-					document.getElementById("clA2cmt" + currentEditingCmt).style.backgroundColor = "#004896";
+					document.getElementById("clA2cmt" + currentEditingCmt).style.backgroundColor = "#0470e4";
 					document.getElementById("clA2cmt" + currentEditingCmt).disabled = false;
 				}
 				
@@ -2051,7 +2055,7 @@
 			    	imagePreview.setAttribute("_fileInfo", actualUrl);
 			    	imagePreview.setAttribute("_type", "sticker");
 			    	imagePreview.src = actualUrl;
-			    	document.getElementById("sendBttn").style.backgroundColor = "#004896";
+			    	document.getElementById("sendBttn").style.backgroundColor = "#0470e4";
 			    	document.getElementById("sendBttn").disabled = false;
 		    	}
 		    	else {
@@ -2072,7 +2076,7 @@
 		    		}
 		    		
 		    		editPreviewTag.parentElement.style.display = "block";
-		    		document.getElementById("clA2cmt" + currentEditingCmt).style.backgroundColor = "#004896";
+		    		document.getElementById("clA2cmt" + currentEditingCmt).style.backgroundColor = "#0470e4";
 		    		document.getElementById("clA2cmt" + currentEditingCmt).disabled = false;
 		    	}
 
@@ -2159,7 +2163,7 @@
                 div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = userName;
-                div1ForTd2.setAttribute("style", "display: block; color:#004896; font-size:16px; padding:5px 0px 0px 20px;");       
+                div1ForTd2.setAttribute("style", "display: block; color:#0470e4; font-size:16px; padding:5px 0px 0px 20px;");       
                 
                 //Add text comment if exists
                 if (txtContent.length > 0) {
@@ -2558,6 +2562,36 @@
 		    		return false;
 		    	}
 		    }
+		    
+		    //이미지가 있어 td가 추가될 경우에도 투표종료 버튼 부분의 colspan을 조정해줌.
+		    function optImgSearch(){
+		    	var optImg = document.getElementById("_imgOptionBox1");
+		    	var colspanNum = $("#_content1 tbody tr:eq(0) td").length;
+		    	
+		    	if(optImg === null){
+		    		$("#voteBtnFooter").attr("colspan", colspanNum);
+		    	}else{
+		    		$("#voteBtnFooter").attr("colspan", colspanNum);
+		    	}
+		    }
+		    
+		  	//썸네일 이미지에 레이어 팝업 기능 관련
+		    function addThumbnailEvent(){
+		    	$("#ballotSystemBody").append("<div id='imgPopupBox' class='imgPopupBoxOff'><img id='imgPopup' class='imgPopupOff'/></div>");
+		  		$(document).on("mouseover",".thumbnail",function(e){
+					$("#imgPopupBox").removeClass("imgPopupBoxOff").addClass("imgPopupBox");
+		    		$("#imgPopup").removeClass("imgPopupOff").addClass("imgPopup");
+		    		$("#imgPopup").attr("src",e.target.src);
+		    		$("#imgPopupBox").css("left",(window.innerWidth-$("#imgPopupBox").width())/2);
+		    		$("#imgPopupBox").css("top",(window.innerHeight-$("#imgPopupBox").height())/2 + window.pageYOffset);
+		    		$("#imgPopup").css("left",($("#imgPopup").parent().width()-$("#imgPopup").width())/2);
+		    		$("#imgPopup").css("top",($("#imgPopup").parent().width()-$("#imgPopup").height())/2);
+				}).on('mouseout',function(e){
+					$("#imgPopupBox").removeClass("imgPopupBox").addClass("imgPopupBoxOff");
+		    		$("#imgPopup").removeClass("imgPopup").addClass("imgPopupOff");
+		    		$("#imgPopup").removeAttr("src");
+				});
+		    }
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -2567,6 +2601,56 @@
 			<div id="ballotSystemBody">
 				<div id="mainmenu3" style="overflow: hidden; margin:29px 0px 5px 0px">
 					  <div style="float: left; display: block;" class="voteInfo">
+					  		<ul style="width:60px; height:70px; float:left; padding:0px">
+								<c:choose>
+									<c:when test="${question.resultFirst == 1}">
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t258'/>" >
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t256'/>" >
+										</li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="${question.multiSelect == 0}">
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : <spring:message code = 'ezEmail.lhm67'/>" >
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : ${question.multiSelect}" >
+										</li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="${question.secretVote == 1}">
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t253'/>" >
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
+										</li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="${question.isSelOnlyOnce == 1}">
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/selOnlyOnce_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t260'/> <spring:message code = 'ezPortal.t95'/>" >
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t260'/> <spring:message code = 'ezPortal.t96'/>" >
+										</li>
+									</c:otherwise>
+								</c:choose>
+					  		</ul>
 					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
 							<div id="textTest" style="display:inline-block;" class="voteTextTest">
 								<c:choose>
@@ -2581,45 +2665,12 @@
 								<span class="questionFontS"><c:out value='${question.createDate}'/></span>
 							</div>
 					  </div>
-					  <div class='voteIconDiv'>
-						  	<ul class='voteIcon_ul'>
-								<c:choose>
-									<c:when test="${question.resultFirst == 1}">
-										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t258'/>" >
-										</li>
-									</c:when>
-									<c:otherwise>
-										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t256'/>" >
-										</li>
-									</c:otherwise>
-								</c:choose>
-							</ul>
-							<ul class='voteIcon_ul'>
-										<li class="voteIconImg_li icon">
-											<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t257'/>" >
-										</li>
-							</ul>
-							<ul class='voteIcon_ul'>
-								<c:choose>
-									<c:when test="${question.secretVote == 1}">
-										<li class="voteIconImg_li icon">
-											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t253'/>" >
-										</li>
-									</c:when>
-									<c:otherwise>
-										<li class="voteIconImg_li icon">
-											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
-										</li>
-									</c:otherwise>
-								</c:choose>
-							</ul>
-							<ul class='voteIcon_ul'>
+					  <div class="voteIconDiv">
+					  		<ul class="voteIcon_ul">
 								<c:choose>
 									<c:when test="${question.secretVote == 0}">
-										<li class="voteIconImg_li icon nosecret" onclick="menuDetailSeenUserInfo('${question.qstId}')">
-											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t112'/>" onmouseover="this.src = '/images/poll/seen_vote_user_hover.png'" onmouseout="this.src = '/images/poll/seen_vote_user.png'" >
+										<li class="voteIconImg_li icon">
+											<img src="/images/poll/seen_vote_user.png" class="voteIconImg nosecret" title="<spring:message code = 'ezPoll.t112'/>" onclick="menuDetailSeenUserInfo('${question.qstId}')" onmouseover="this.src = '/images/poll/seen_vote_user_hover.png'" onmouseout="this.src = '/images/poll/seen_vote_user.png'" >
 										</li>
 										<li class="img_description">
 											<div><span id="seenPeople">${seenUsers}</span></div>
@@ -2635,11 +2686,11 @@
 									</c:otherwise>
 								</c:choose>
 							</ul>
-							<ul class='voteIcon_ul'>
+							<ul class="voteIcon_ul">
 								<c:choose>
 									<c:when test="${question.secretVote == 0}">
-										<li class="voteIconImg_li icon nosecret" onclick="javascript:displayDetail('${question.qstId}')">
-											<img src="/images/poll/unvoted_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t123'/>" onmouseover="this.src = '/images/poll/unvoted_user_hover.png'" onmouseout="this.src = '/images/poll/unvoted_user.png'" >
+										<li class="voteIconImg_li icon" >
+											<img src="/images/poll/unvoted_user.png" class="voteIconImg nosecret" title="<spring:message code = 'ezPoll.t123'/>" onclick="javascript:displayDetail('${question.qstId}')" onmouseover="this.src = '/images/poll/unvoted_user_hover.png'" onmouseout="this.src = '/images/poll/unvoted_user.png'" >
 										</li>
 										<li class="img_description">
 											<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
@@ -2656,15 +2707,15 @@
 								</c:choose>
 							</ul>
 							<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2)}">
-								<ul class='voteIcon_ul'>
-									<li class="voteIconImg_li icon nosecret">
-										<img src="/images/poll/editVote.png" class="voteIconImg" onclick="voteEdit()" title="<spring:message code = 'ezEmail.t149'/>" onmouseover="this.src = '/images/poll/editVote_hover.png'" onmouseout="this.src = '/images/poll/editVote.png'" />
+								<ul class="voteIcon_ul">
+									<li class="voteIconImg_li icon">
+										<img src="/images/poll/editVote.png" class="voteIconImg nosecret" onclick="voteEdit()" title="<spring:message code = 'ezEmail.t149'/>" onmouseover="this.src = '/images/poll/editVote_hover.png'" onmouseout="this.src = '/images/poll/editVote.png'" />
 									</li>
 								</ul>
 							</c:if>
-							<ul class='voteIcon_ul'>
-								<li class="voteIconImg_li icon nosecret">
-									<img src="/images/poll/reuseVote.png" class="voteIconImg" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
+							<ul class="voteIcon_ul">
+								<li class="voteIconImg_li icon">
+									<img src="/images/poll/reuseVote.png" class="voteIconImg nosecret" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
 								</li>
 							</ul>
 					  </div>
@@ -2729,11 +2780,31 @@
 				</div>
 		        </c:if>	
 				<table class="content" style="width:100%; min-width:800px; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD;" id="_content1">
+	                <c:forEach var="optList" items="${listOptions}" varStatus="loop">
+	                	<c:if test="${optList.filePath ne null }">
+		               	 	<c:set var="fileFlag" value="true" />
+	                	</c:if>
+	                </c:forEach>
 					<c:forEach var="_option" items="${listOptions}" varStatus="loop">
 			        	<tr>
 			        	   <c:if test="${question.status == 1 || question.status == 2}">
 				               <td class="vote_listTd" style="width:54px; border:1px solid #DDD; background:#f9f9f9;" id="_checkbox<c:out value ="${_option.ansId}"/>">	    
 				               		<img id="_imageCheckBox<c:out value ="${_option.ansId}"/>" onclick="javascript:change(this)" src="/images/poll/unchecked_vote.png"  name="${loop.index}" class="_imageTag"/>	               		             		         		
+				               </td>
+			               </c:if>
+			        	   <c:if test="${fileFlag}">
+				               <td class="vote_listTd _imgOption" id="_imgOptionBox<c:out value ="${_option.ansId}"/>">	    
+				               		<%-- <c:if test="${_option.filePath ne null }">
+				               			<img id="_imgOption<c:out value ="${_option.ansId}"/>" class="thumbnail" onclick="" src="/fileroot/1/files/upload_schedule/uploadFile/${fn:split(_option.filePath,'/')[0] }" />	               		             		         		
+				               		</c:if> --%>
+				               		<c:choose>
+				               			<c:when test="${_option.filePath ne null }">
+				               				<img id="_imgOption<c:out value ="${_option.ansId}"/>" class="thumbnail" onclick="" src="/fileroot/1/files/upload_schedule/uploadFile/${fn:split(_option.filePath,'/')[0] }" />	               		             		         		
+				               			</c:when>
+				               			<c:otherwise>
+				               				<img class="imgNotAttached" src="/images/poll/no_attachment.png"/>
+				               			</c:otherwise>
+				               		</c:choose>
 				               </td>
 			               </c:if>
 			               <td class="vote_listTd" style="border:none; border-bottom:1px solid #DDD; height:94px; margin:0px; padding:0px 24px;" id="resultBox<c:out value ="${_option.ansId}" />">	   	               		
@@ -2785,7 +2856,7 @@
 			            </tr>
 					</c:forEach>
 					<tr>
-						<td class="voteTdBg" colspan="3" >
+						<td id="voteBtnFooter" class="voteTdBg" colspan="3" >
 							<div class="voteTdBg_layout">
 	                            <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
 	                                <div id="_finish" onclick="finishVote();">
