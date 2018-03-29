@@ -2601,7 +2601,8 @@
 			<div id="ballotSystemBody">
 				<div id="mainmenu3" style="overflow: hidden; margin:29px 0px 5px 0px">
 					  <div style="float: left; display: block;" class="voteInfo">
-					  		<ul style="width:60px; height:70px; float:left; padding:0px">
+					  		<!-- 상태표시 아이콘 안보이도록 주석 처리 -->
+					  		<%-- <ul style="width:60px; height:70px; float:left; padding:0px">
 								<c:choose>
 									<c:when test="${question.resultFirst == 1}">
 										<li class="voteIconImg_li_info icon">
@@ -2650,7 +2651,7 @@
 										</li>
 									</c:otherwise>
 								</c:choose>
-					  		</ul>
+					  		</ul> --%>
 					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
 							<div id="textTest" style="display:inline-block;" class="voteTextTest">
 								<c:choose>
