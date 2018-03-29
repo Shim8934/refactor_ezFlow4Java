@@ -719,7 +719,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		String typeId = request.getParameter("typeId");
 		String formId = request.getParameter("formId");
 		
-		logger.debug("journalId:"+originJournalId+",mode:"+mode+",title:"+title+",isPublic:"+isPublic+",content:"+content+",formId:"+formId+",typeId:"+typeId);
+		logger.debug("journalId:"+originJournalId+",mode:"+mode+",title:"+title+",isPublic:"+isPublic+",formId:"+formId+",typeId:"+typeId);
 		
 		fileList = request.getParameter("fileList");
 		logger.debug("fileList : " + fileList);
