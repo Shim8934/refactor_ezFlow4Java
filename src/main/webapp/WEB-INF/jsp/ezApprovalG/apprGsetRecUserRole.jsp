@@ -94,8 +94,8 @@
     function InitRecViewerInfo() {
         var rtnXml = GetRecViewerInfo(g_RecID, g_SepAttNo);
         var AllAllowed = SelectSingleNodeValue(rtnXml.documentElement, "ALLALLOWED");
-        if (AllAllowed == "0") {
-            alert("<spring:message code='ezApprovalG.t1156'/>");
+        if (getXmlString(rtnXml) == "FALSE") {
+        alert("<spring:message code='ezApprovalG.t1156'/>");
             return "";
         }
 

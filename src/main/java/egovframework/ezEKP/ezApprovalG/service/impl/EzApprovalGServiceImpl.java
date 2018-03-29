@@ -1978,13 +1978,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String result = ezApprovalGDAO.getUserRecRight(map);
 		if(result == null || result.equals("0")){
-			result = ezApprovalGDAO.getUserRecRightCount(map);
-			if(result == null || result.equals("0")) {
+//			result = ezApprovalGDAO.getUserRecRightCount(map);
+//			if(result == null || result.equals("0")) {
 				result = ezApprovalGDAO.getUserRecRightCount2(map);
+				if (Integer.parseInt(result)<=1) { result = "0"; } 
 				if(result == null) {
 					result = "0";
 				}
-			}
+//			}
 		}
 
 		logger.debug("getUserRecRight ended");
@@ -18112,22 +18113,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
 				}
 				
-				if (fieldName.equals("DOCTITLE")) {
-					resultXML.append("<DOCTITLE>" + docXML.getElementsByTagName("DOCTITLE").item(k).getTextContent() + "</DOCTITLE>");
-				}
-				
-				if (fieldName.equals("WRITERDEPTNAME")) {
-					resultXML.append("<WRITERDEPTNAME>" + docXML.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent() + "</WRITERDEPTNAME>");
-				}
-				
-				if (fieldName.equals("WRITERNAME")) {
-					resultXML.append("<WRITERNAME>" + docXML.getElementsByTagName("WRITERNAME").item(k).getTextContent() + "</WRITERNAME>");
-				}
-				
-				if (fieldName.equals("STARTDATE")) {
-					resultXML.append("<STARTDATE>" + docXML.getElementsByTagName("STARTDATE").item(k).getTextContent() + "</STARTDATE>");
-				}
-				
 				resultXML.append("</CELL>");
 			}
 			
@@ -18910,7 +18895,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String saveRecUserRoleInfo(Document xmlDom, String lang, int tenantID, Locale locale) throws Exception {
 		logger.debug("saveRecUserRoleInfo started");
 
-		String Flag	= "0";
+		String Flag	= xmlDom.getElementsByTagName("FLAG").item(0).getTextContent().trim();
 		String SepAttachNo =xmlDom.getElementsByTagName("SEPATTNO").item(0).getTextContent().trim();
 		String RecID = xmlDom.getElementsByTagName("RECID").item(0).getTextContent().trim();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();

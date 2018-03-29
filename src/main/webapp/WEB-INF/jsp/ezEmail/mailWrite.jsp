@@ -197,9 +197,11 @@
 	                location.href = location.href + "&attach=1";
 	            }
 	        }        
+	        
 	        if ((g_cmd == "FORWARD" || g_cmd == "EDIT" || g_ReSendFlag == "Y") && document.getElementById("AttachXmlList").innerHTML.trim() != "") {
 	            AddAttachFileInfoXmlParsing(document.getElementById("AttachXmlList").innerHTML);
 	        }
+	        
 	        SelMailSign.value = "${mailSignSel}";
 	        
 			Simple_Choice();		
@@ -955,12 +957,12 @@
 	                if (DocHref.toLowerCase().indexOf(".mht") > -1) {
 	                    var fullPath = encodeURIComponent(DocHref);
 	                    var tempXML = createXmlDom();
-	                    var XmlBodyATT = createXmlDom();
+// 	                    var XmlBodyATT = createXmlDom();
 	                    var XmlBodyDATA = createXmlDom();
 	                    var tempStr = "";
 	                    tempStr = ConvertMHTtoHTML(fullPath);
 	                    tempXML = loadXMLString(tempStr);
-	                    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	                    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	                    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	                    var htmlData = getNodeText(XmlBodyDATA);
 	                    document.getElementById('docContent').innerHTML = htmlData;
@@ -1106,13 +1108,13 @@
 	            var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
 	            var fullPath = Rurl;
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(fullPath);
 
 	            tempXML = loadXMLString(tempStr);
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            var htmlData = getNodeText(XmlBodyDATA);
 
@@ -1209,12 +1211,12 @@
 	            var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
 	            var fullPath = Rurl;
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(fullPath);
 	            tempXML = loadXMLString(tempStr);
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            var htmlData = getNodeText(XmlBodyDATA);
 	            

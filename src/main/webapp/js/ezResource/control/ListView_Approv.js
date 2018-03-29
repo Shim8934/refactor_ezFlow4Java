@@ -665,7 +665,8 @@ function ListView() {
                 else if (j == 8) {
                     oText = document.createElement("IMG");
                     if (strValue == 1) {
-                        oText.src = "/images/i_scheduler.gif";
+                        oText.src = "/images/checkblue.png";
+                        oText.style.width = "16px";
                         oText.style.paddingLeft = "17px";
                     }
                     else {

@@ -75,26 +75,26 @@
 	
 	        function SetEditorContentURL(url) {
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
 	
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            CKEDITOR.instances.editor1.setData(getNodeText(XmlBodyDATA));
 	        }
 	
 	        function GetEditorContentURL(url) {
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
 	
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            return getNodeText(XmlBodyDATA);
 	        }
@@ -114,18 +114,18 @@
 	        
 	        function SetEditorContentPathSign(url, strMailSign) {
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
 	
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            CKEDITOR.instances.editor1.editable().setHtml(getNodeText(XmlBodyDATA) + strMailSign);
-	            for (var i = 0; i < GetChildNodes(XmlBodyATT).length; i++) {
+	            /* for (var i = 0; i < GetChildNodes(XmlBodyATT).length; i++) {
 	                BodySetAttribute(getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODENAME")), getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODEVALUE")))
-	            }
+	            } */
 	        }
 	
 	        function BodySetAttribute(name, Value) {
