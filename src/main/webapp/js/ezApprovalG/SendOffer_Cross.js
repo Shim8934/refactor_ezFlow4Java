@@ -287,7 +287,10 @@ function SendOfferCheck(pDocID, pUserID)
 		else if (rtnVal == "NORECEIPT")
 		{
 			var pInformationContent = " " + strLang201 + "<br> " + strLang202;
-			OpenInformationUI(pInformationContent, SendOfferCheck_OpenUI);
+			var ret = OpenInformationUI(pInformationContent, SendOfferCheck_OpenUI);
+			if (ret && ext == 'hwp') {
+			    SendOfferCheck_OpenUI(ret);
+			}
 			return "NORECEIPT";
 		}
 		else if (rtnVal == "NODEPT")
@@ -455,7 +458,7 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
+    var RtnVal = "";
     if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined) {
@@ -472,7 +475,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
-        var RtnVal = window.showModalDialog(url, parameter, feature);
+        RtnVal = window.showModalDialog(url, parameter, feature);
     }
     return RtnVal;
 }

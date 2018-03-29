@@ -92,7 +92,7 @@
 		        var g_DeliveryXmlhttp = createXMLHttpRequest();
 			    var pOpenYaer = "${openYear}";
 		        var vWriterID;
-		        var ext="";
+		        var ext= "";
 		        document.onselectstart = function () { return false; };
 		
 		        $(function () {
