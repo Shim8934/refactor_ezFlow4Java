@@ -3476,6 +3476,11 @@ var NextDocExtended = "";
 function getNextDocInfo() {
     try {
     	var result = "";
+    	var isIEFlag = "Y";
+    	
+    	if (!isIE()) {
+    		isIEFlag = "N";
+    	}
     	
     	$.ajax({
     		type : "POST",
@@ -3485,7 +3490,8 @@ function getNextDocInfo() {
     		data : {
     			docID : pDocID,
     			userID  : pUserID,
-    			userDeptID  : arr_userinfo[4]
+    			userDeptID  : arr_userinfo[4],
+    			isIEFlag  : isIEFlag
     		},
     		success: function(xml){
     			result = xml;

@@ -10968,7 +10968,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getNextDocInfo(String docID, String userID, String userDeptID, String companyID, String lang, int tenantID, String offset) throws Exception {
+	public String getNextDocInfo(String docID, String userID, String userDeptID, String isIEFlag, String companyID, String lang, int tenantID, String offset) throws Exception {
 		logger.debug("getNextDocInfo started");
 
 		String strXML = "";
@@ -10986,6 +10986,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
+		map.put("isIEFlag", isIEFlag);
 		map.put("v_USERIDS", userIDs);
 		map.put("v_DOCID", docID);
 		map.put("v_BASICORDER", basicOrder);

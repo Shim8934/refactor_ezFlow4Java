@@ -234,7 +234,7 @@ public interface EzApprovalGService {
 	
 	public String updateSusinDocInfo(String orgDocID, String docID, String deptID, String id, String displayName1, String displayName2, String companyID, int tenantID) throws Exception;
 	
-	public String getNextDocInfo(String docID, String userID, String userDeptID, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getNextDocInfo(String docID, String userID, String userDeptID, String isIEFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
 	public String registerCabinet(Document xmlDom, String strLang, int tenantID) throws Exception;
 	
