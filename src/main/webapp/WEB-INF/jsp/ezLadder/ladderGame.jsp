@@ -54,7 +54,6 @@
 			
 			setAllUser();
 			setAttendantsView(); 
-			/** 사이즈/ 위치 */
 			
 			$("#blackBox").css("width", size*146 + "px");
 			$("#ladderLine").css("width", size*146 + "px");
@@ -114,11 +113,11 @@
 		
 		});
 		
+		/** 참여자 위치 바꾸끼*/
 		function changeListOrder() {
 			var ladId1 = dragloc["id"].substring(4);
 			var ladId2 = droploc["id"].substring(4);
-			console.log(attendants["id"][ladId1]);
-			console.log(attendants["id"][ladId2]);
+			
 			$.ajax({
 				type: "POST",
 				url: "/ezLadder/serUserOrder.do",
@@ -167,7 +166,7 @@
 			stompClient.connect({}, function() {
 				stompClient.subscribe("/lad/cmt/addCmt/" + ladderId, function(result) {
 					var cmtjson = JSON.parse(result.body);
-					
+					console.log("cmtjson : " + cmtjson);
 					addCommentView["type"] = "prepend";
 					addCommentView["contents"] = cmtjson;
 					
@@ -187,6 +186,39 @@
 					var cmtjson = JSON.parse(result.body);
 					
 					$("#cmt_" + cmtjson["id"]).parent(".cmt_wrap").remove();
+				});
+				
+				stompClient.subscribe("/lad/userOrder/change/" + ladderId, function(result) {	// 참여자 위치 바꾸기 subscribe
+					var lines = JSON.parse(result.body);
+					
+				 	$("#attendantList").html("");
+					$("#itemList").html("");
+					for(var i = 0; i < lines.length; i++) {
+						html = "";
+						picsrc = "/images/OrganTree/porson_noimg.gif";
+						html += "<li class='attendant'>";
+						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
+						} else {
+							picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
+						}
+						html += "<div class='ladderDrag' id='drag" + i + "'><img src='" 
+									+ picsrc + "' width='90px' height='90px' />";
+						html +=  lines[i]["userName"] ;
+						html += "<span class='remove'>★</span></div></li>";		
+						$("#attendantList").append(html);
+						$("#itemList").append("<li class='item'>" + lines[i]["item"] + "</li>");
+					} 
+					add_user_change_ulsize(attendants["id"].length); 
+				
+					if("${vo.status}" == 0) {
+						drag();
+					}
+					
+				});
+				
+				stompClient.subscribe("/lad/start/" + ladderId, function(result) {		// 시작시 이동 subscribe
+					window.location.href = "/ezLadder/getLadderGame.do?ladderId=" + ladderId + "&searchSelect=" + searchSelect +
+					"&searchInput=" +  searchInput + "&mode=" + mode + "&currPage=" +  currPage;
 				});
 			});
 		}
@@ -306,6 +338,7 @@
 			addCommentView = [];
 		}
 		
+		// 삭제
 		function deleteLadder(idx) {
 		
 			allData = [idx, searchSelect, searchInput, mode, currPage, back ];	
@@ -316,15 +349,27 @@
 		}
 		
 		
+		// 시작
 		function start(idx) {
 			allData = [idx, searchSelect, searchInput, mode, currPage, size, lineCnt ];	
 			if (confirm('시작하시겠습니까?')) {
-				window.location.href= '/ezladder/setLadderStart.do?allData=' + allData;
+				jQuery.ajaxSettings.traditional = true;
+				$.ajax({
+					type: "POST",
+					url: "/ezLadder/setLadderStart.do",
+					dataType: "json",
+					data: {
+						"allData": allData
+					},
+					success: function() {
+						console.log("헤헤헤헤헿2222");
+					}
+				});
 			}
 		} 
 		
 
-		/** 참여자 셋팅 */
+		/** 참여자 초기 셋팅 */
 		function setAllUser() {
 			attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
 			items = []; 
@@ -341,6 +386,7 @@
 		}
 		
 		
+		// 참여자 그려주기
 		function setAttendantsView() {
 			
 			var len = attendants["id"].length;
@@ -367,46 +413,52 @@
 					$("#attendantList").append(html);
 					$("#itemList").append("<li class='item'>" + items[i] + "</li>");
 				}
-				add_user_change_ulsize(attendants["id"].length);
+				
 			}
+			add_user_change_ulsize(attendants["id"].length);
 			
 			if("${vo.status}" == 0) {
-				$(".ladderDrag").draggable({ // 드래그 리스트
-					revert: "invalid",
-					revertDuration: 400,
-					zIndex: 100,
-					addClasses: false,
-					start: function(event, ui) {
-						var divEl = $(this);
-						dragloc = {};
-						droploc = {};
-						dragloc = {"id": $(this).attr("id"), "left": divEl.offset().left}; 
-					}
-					
-				});
-				
-				$(".ladderDrag").droppable({ // 드랍 리스트
-					accept: ".ladderDrag",
-					addClasses: false,
-					hoverClass: "nowOver",
-					drop: function(event, ui) {
-						
-						var divEl = $(this);
-						droploc = {"id": $(this).attr("id"), "left": divEl.offset().left};
-					
-					 	$("#" + dragloc["id"]).css("z-index", "10").animate({"left": droploc["left"]}, 100, function() {
-							$("#" + dragloc["id"]).css("left",0);
-							$("#" + dragloc["id"]).css("top", 0);
-						});
-						$("#" + droploc["id"]).css("z-index", "10").animate({"left": dragloc["left"]}, 100, function() {
-							$("#" + droploc["id"]).css("left",0);
-							$("#" + dragloc["id"]).css("top", 0);
-						});  
-						changeListOrder();
-					}
-				});
+				drag();
 			}
 		} 
+		
+		// 드래그 앤 드랍
+		function drag() {
+			$(".ladderDrag").draggable({ // 드래그 리스트
+				revert: "invalid",
+				revertDuration: 400,
+				zIndex: 100,
+				addClasses: false,
+				start: function(event, ui) {
+					var divEl = $(this);
+					dragloc = {};
+					droploc = {};
+					dragloc = {"id": $(this).attr("id"), "left": divEl.offset().left}; 
+				}
+				
+			});
+			
+			$(".ladderDrag").droppable({ // 드랍 리스트
+				accept: ".ladderDrag",
+				addClasses: false,
+				hoverClass: "nowOver",
+				drop: function(event, ui) {
+					
+					var divEl = $(this);
+					droploc = {"id": $(this).attr("id"), "left": divEl.offset().left};
+				
+				 	$("#" + dragloc["id"]).css("z-index", "10").animate({"left": droploc["left"]}, 2000, function() {
+						$("#" + dragloc["id"]).css("left",0);
+						$("#" + dragloc["id"]).css("top", 0);
+					});
+					$("#" + droploc["id"]).css("z-index", "10").animate({"left": dragloc["left"]}, 2000, function() {
+						$("#" + droploc["id"]).css("left",0);
+						$("#" + dragloc["id"]).css("top", 0);
+					});  
+					changeListOrder();
+				}
+			});
+		}
 		
 		function add_user_change_ulsize(usernum) {
 			$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
@@ -557,8 +609,6 @@
 		</div>
 		<h3>
 		* 프론트 꾸며야 됨 - 프로필 이미지 넣기.<br>
-		* 웹소켓 - 참여자 바꾸기
-		* 드래그 앤 드랍
 		* 사다리 연동
 		</h3>
 	</body>

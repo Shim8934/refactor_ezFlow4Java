@@ -508,25 +508,24 @@ public class EzLadderGWController {
 	 * 참여자 순서 바꾸기
 	 */
 	@RequestMapping(value = "ladder/ladders/{ladderId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
-	public JSONObject gwSetUserOrder(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request) {
+	public JSONObject gwSetUserOrder(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request, LadderVO ladVO) {
 		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
-		int LadderId = Integer.parseInt(ladderId);
-		int tenant_id = Integer.parseInt(request.getParameter("tenant_id"));
 		String firstUser = request.getParameter("firstUser");
 		String secondUser = request.getParameter("secondUser");
 		int firstUserOrder = Integer.parseInt(request.getParameter("firstUserOrder"));
 		int secondUserOrder = Integer.parseInt(request.getParameter("secondUserOrder"));
 		String firstItem = request.getParameter("firstItem");
 		String secondItem = request.getParameter("secondItem");
+		
 		try {
-	
-			ezLadderService.setUserOrder(LadderId, firstUser, secondUser, firstUserOrder, secondUserOrder, firstItem, secondItem, tenant_id);
+			ezLadderService.setUserOrder(ladVO, firstUser, secondUser, firstUserOrder, secondUserOrder, firstItem, secondItem);
+			List<LadderLineVO> lineVO = ezLadderService.getLadderLineParticipant(ladVO);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", null);
+			result.put("data", lineVO);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -560,7 +559,7 @@ public class EzLadderGWController {
 			ezLadderService.setLadderStart(ladId, tenantId, size, lineCnt, lang);
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", null);
+			result.put("data", "start");
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");

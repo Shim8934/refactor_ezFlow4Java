@@ -747,20 +747,25 @@ public class EzLadderController {
 				.queryParam("secondUserOrder", secondUserOrder)
 				.queryParam("firstItem", firstItem)
 				.queryParam("secondItem", secondItem)
-				.queryParam("tenant_id", userInfo.getTenantId());
+				.queryParam("tenant_id", userInfo.getTenantId())
+				.queryParam("lang", userInfo.getLang());
+		
+		String retDestination = "";
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		retDestination = "/lad/userOrder/change/";
 
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
-		
-		JSONArray list = new JSONArray();
 		String status = jsonResult.get("status").toString();
-	
+		JSONArray lines = new JSONArray();
 		if (status.equals("ok")) {
-			list = (JSONArray) jsonResult.get("data");
 			
-			model.addAttribute("list", list);
+			lines = (JSONArray) jsonResult.get("data");
+			model.addAttribute("status", status);
+			
+			retDestination += ladderId;
+			this.template.convertAndSend(retDestination, lines);
 		} else {
 			return "error";
 		}
@@ -773,8 +778,8 @@ public class EzLadderController {
 	 * 사다리 게임 시작
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezladder/setLadderStart.do")
-	public String setLadderStart(@CookieValue("loginCookie") String loginCookie,  String[] allData, String size, String lineCnt, HttpServletRequest request, Model model) throws Exception {
+	@RequestMapping(value = "/ezLadder/setLadderStart.do", method = RequestMethod.POST)
+	public String setLadderStart(@CookieValue("loginCookie") String loginCookie,  String[] allData, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("ezLadder/setLadderStart started.");
 		logger.debug("ladderId : " + allData[0]);
 		logger.debug("searchSelect : " + allData[1]);
@@ -803,8 +808,10 @@ public class EzLadderController {
 							.queryParam("lineCnt", allData[6])
 							.queryParam("lang", userInfo.getLang());
 		
+		String retDestination = "";
+	
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-
+		retDestination = "/lad/start/";
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		
@@ -813,13 +820,14 @@ public class EzLadderController {
 		logger.debug("ezLadder/setLadderStart ended.");
 		
 		if (status.equals("ok")) {
-			// redirect 수정
-			return "redirect:/ezLadder/getLadderGame.do?ladderId=" + allData[0] + "&searchSelect=" + allData[1] +
-					"&searchInput=" +  allData[2] + "&mode=" + allData[3] + "&currPage=" +  allData[4];
+			String msg = jsonResult.get("data").toString();
+			retDestination += allData[0];
+			this.template.convertAndSend(retDestination, msg);
+			
 		} else {
 			return "error";
 		}
 		
-		
+		return "json";
 	}
 }
