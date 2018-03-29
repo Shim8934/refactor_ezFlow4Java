@@ -1741,3 +1741,11 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         OpenAlertUI("SaveTMPDocInfo()" + e.description);
     }
 }
+
+function OpenInformationUI(pInformationContent) {
+	var parameter = pInformationContent;
+	var url = "/ezApprovalG/ezAprOpinion.do";
+	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+	var RtnVal = window.showModalDialog(url,parameter,feature);
+	return RtnVal;
+}
