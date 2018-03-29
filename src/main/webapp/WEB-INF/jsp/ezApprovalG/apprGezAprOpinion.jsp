@@ -51,7 +51,6 @@
 		    function btn_OpinionOK_onclick() {
 		        if (ReturnFunction != null) {
 		            ReturnFunction(true);
-		            window.close();
 		        } else {
 		            window.returnValue = true;
 		            window.close();
@@ -60,7 +59,6 @@
 		    function btn_OpinionCANCEL_onclick() {
 		        if (ReturnFunction != null) {
 		            ReturnFunction(false);
-		            window.close();
 		        } else {
 		            window.returnValue = false;
 		            window.close();

@@ -629,7 +629,14 @@
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
 		            var openLocation;
 		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		                openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+		            	if (isIE()) {
+			                openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+		                } else {
+		                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+		                	alert(pAlertContent);
+		                    
+		                    return;
+		                }
 		            } else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }

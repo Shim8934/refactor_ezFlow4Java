@@ -579,10 +579,15 @@
 		            para[1] = pURL;
 		            var openLocation;
 		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-// 		                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
-		            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-		            }
-		            else {
+		            	if (isIE()) {
+			            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+		                } else {
+		                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+		                	alert(pAlertContent);
+		                    
+		                    return;
+		                }
+		            } else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
 		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";

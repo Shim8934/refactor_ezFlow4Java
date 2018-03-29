@@ -1197,10 +1197,17 @@ function ViewDoc_onclick_Complete(Rtn) {
             var openLocation = "";
             
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-                if (g_uFlag == "m03") {
-                        openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
+            	if (isIE()) {
+                	if (g_uFlag == "m03") {
+                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
+                	} else {
+                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
+                	}
                 } else {
-                        openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
+                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+                	alert(pAlertContent);
+                    
+                    return;
                 }
             } else {
 	            if (g_uFlag == "m03") {
