@@ -307,6 +307,7 @@ var strLangKMS07 = "ユーザによってアップロードがキャンセルさ
 var strLangKMS08 = "フォルダはアップロードすることができません。";
 var strLangKYJ01 = "選択したメールがありません。";
 var strLangKYJ02 = "再利用するメールを選択してください。";
+var strLangKYJ03 = "スペースは入力できません。";
 	
 
 function GetLocalTime(Offset , pDateTime)

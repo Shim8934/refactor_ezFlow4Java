@@ -1321,7 +1321,6 @@ function OpenWin(wfileLocation, wName, wWidth, wHeigth) {
 }
 
 function HasRecReadRight(pRecID, pSepAttNo, pUserID) {
-	
     if (GetUserRecRight(pRecID, pSepAttNo, pUserID) != "0")
         return true;
     else
