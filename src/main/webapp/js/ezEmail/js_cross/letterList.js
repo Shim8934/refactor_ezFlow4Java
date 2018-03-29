@@ -82,42 +82,6 @@ function strChk(str, speChar, strLen) {
 	return reJson;
 }
 
-
-// 편지지 선택 (개별 조회 미리보기)
-$(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect)", function(){
-	var letterNo = $(this).attr("data-letterno");
-	
-	$(this).css("background","#e9f1ff");
-	$(this).parents("ul").find(".lmLetterSelect").css("background","none").removeClass("lmLetterSelect");
-	$(this).addClass("lmLetterSelect");
-	
-	if (pageType != 'letter_user') {
-		letterPreView(letterNo); // 편지지 미리보기
-	}
-	
-});
-
-// 편지지 마우스 올릴때 
-$(document).on("mouseover", ".lmLetterListUl li:not('.lmLetterSelect') span", function(){
-	$(this).parent("li").not(".lmLetterSelect").css("background","#f8f8f8");
-});
-
-// 편지지 마우스 땔때
-$(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect') span",function(){
-	$(this).parent("li").not(".lmLetterSelect").css("background","none");
-});
-
-
-//편지지함명 자세히 보기
-$(document).on("mouseover", "b" ,function(){
-	var boxName = $(this).context.innerText;
-	$(this).attr("title", boxName);
-	
-});
-
-
-
-
 // 편지지 개별조회
 function readLetter(letterNo) {
 	$.ajax({
@@ -179,7 +143,6 @@ function getLetterList(letterBoxNo) {
 			addLetterList(data); // 편지지 리스트 html
 			
 	    	$(".boxNo").attr("data-boxNo", letterBoxNo); // 편지지 리스트 div, 편지지 버튼 div => letterBoxNo
-	    	
 		},
 		error:function(d){
 			//console.log(d);
@@ -234,8 +197,7 @@ function addLetterList(jsonArr) {
 	
 	// 선택한 편지지 목록 유지
 	if (nowSelect !== undefined && nowSelect !== "") {
-		$(document).find("#" + nowSelect).addClass("lmLetterSelect");
-		$(".lmLetterSelect").css("background","#e9f1ff");
+		$(document).find(".lmLetterListUl #" + nowSelect).click();
 	}
 	
 	letterListCss(pageType, searchMode);
@@ -258,3 +220,34 @@ function letterListCss(pageType, searchMode) {
 		});
 	}
 }
+
+//편지지 선택 (개별 조회 미리보기)
+$(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect)", function(){
+	var letterNo = $(this).attr("data-letterno");
+	
+	$(this).css("background","#e9f1ff");
+	$(this).parents("ul").find(".lmLetterSelect").css("background","none").removeClass("lmLetterSelect");
+	$(this).addClass("lmLetterSelect");
+	
+	if (pageType != 'letter_user') {
+		letterPreView(letterNo); // 편지지 미리보기
+	}
+});
+
+//편지지 마우스 올릴때 
+$(document).on("mouseover", ".lmLetterListUl li:not('.lmLetterSelect') span", function(){
+	$(this).parent("li").not(".lmLetterSelect").css("background","#f8f8f8");
+});
+
+//편지지 마우스 땔때
+$(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect') span",function(){
+	$(this).parent("li").not(".lmLetterSelect").css("background","none");
+});
+
+
+//편지지함명 자세히 보기
+$(document).on("mouseover", "b" ,function(){
+	var boxName = $(this).context.innerText;
+	$(this).attr("title", boxName);
+	
+});

@@ -148,7 +148,7 @@
 				}
 			}
 
-			// 편지지 추가, 수정 btn 클릭 시     btn -> this, type -> 추가=add, modify일때 type 안받음
+			// 편지지 추가, 수정 btn 클릭     btn -> this, type -> 추가=add, modify일때 type 안받음
 			function letterEditPopUp(btn, type) {
 				 var popUpType = "";
 				 var letterBoxNo = "";
@@ -168,7 +168,33 @@
 				var letterPopUp = window.open(url, "letterPopUp", "width=890, height=660");
 			}
 			
-			//편지지 삭제
+			// 편지지 삭제
+			function letterDelete(letterId, letterBoxNo, letterNo) {
+				$.ajax({
+					type:"POST",
+					data:{
+						letterNo:letterNo,
+						letterBoxNo:letterBoxNo,
+						letterId:letterId
+					},
+					url:"/admin/ezEmail/deleteLetter",
+					success:function(){
+						if (searchTxt != "") {
+							letterSearch(); // 검색된 편지지 목록
+						} else {
+							getLetterList(letterBoxNo); 
+						}
+						
+						/* $(".lmPreViewTxt").css("display","block");
+						$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
+						$(".lmPreViewIframe").attr("src","");
+						$(".lmPreViewIframe").css("display","none"); */
+						alert("삭제하였습니다.");
+					}
+				});
+			}
+			
+			//편지지 삭제 버튼 클릭
 			$(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
 				var deleteChk = confirm("정말로 삭제하시겠습니까?");
 				
@@ -177,28 +203,7 @@
 					var letterBoxNo = $(this).parents("li").attr("data-letterboxno"); // 편지지함 no
 					var letterNo = $(this).parent("li").attr("data-letterNo");
 					
-					$.ajax({
-						type:"POST",
-						data:{
-							letterNo:letterNo,
-							letterBoxNo:letterBoxNo,
-							letterId:letterId
-						},
-						url:"/admin/ezEmail/deleteLetter",
-						success:function(){
-							if (searchTxt != "") {
-								letterSearch();
-							} else {
-								getLetterList(letterBoxNo);
-							}
-							
-							$(".lmPreViewTxt").css("display","block");
-							$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
-							$(".lmPreViewIframe").attr("src","");
-							$(".lmPreViewIframe").css("display","none");
-							alert("삭제하였습니다.");
-						}
-					});
+					letterDelete(letterId, letterBoxNo, letterNo);
 				}
 			});
 		
@@ -224,9 +229,6 @@
 			});
 			
 			// 미리보기창에 마우스 올렸을떄 편지지 이름 없애기
-			/* $(document).on("mouseleave", ".lmPreview > .lmPreViewIframe:not(.preViewLetterName)", function(){
-				$(".lmPreview .preViewLetterName").remove();
-			}); */
 			$(document).on("mouseleave", ".lmPreview", function(){
 				$(".lmPreview .preViewLetterName").remove();
 			});
