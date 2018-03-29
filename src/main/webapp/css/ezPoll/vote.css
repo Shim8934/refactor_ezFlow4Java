@@ -32,7 +32,7 @@
 .vote_listTd .title01{/*height:30px;*/ line-height:28px; font-size:16px; color:#e04343;}
 .vote_listTd .graph01{background:#efa1a1; border:none;}
 
-._imageTag{height: 20px; width: 20px; display: block; vertical-align: middle; margin: 0 auto;}
+._imageTag{height: 20px; width: 20px; display: block; vertical-align: middle; margin: 0 auto; cursor: pointer}
 
 
 
@@ -111,7 +111,8 @@
 .voteIconImg_li{width:45px; float:left;}
 .voteIconImg_li_info{width:35px; float:right; list-style:none; margin-top: 28px;}
 .voteIconDiv ul li.icon{display:inline-block; width:50px; height:50px; padding:11px 0px 0px 17px; overflow: hidden;}
-.voteIconDiv ul li.icon.nosecret{cursor:pointer;}
+/* .voteIconDiv ul li.icon.nosecret{cursor:pointer;} */
+.voteIconDiv ul li img.voteIconImg.nosecret{cursor:pointer;}
 .voteIconImg{vertical-align: top;}
 
 /* vote graph area */
