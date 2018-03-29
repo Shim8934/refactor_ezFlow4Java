@@ -44,7 +44,7 @@ function CalendarView(pTagetID) {
         tDiv.style.position = "absolute";
         tDiv.style.visibility = "hidden";
         tDiv.style.zIndex = "1000";
-        tDiv.style.backgroundColor = "lightyellow";
+        tDiv.style.backgroundColor = "white";
         tDiv.innerHTML = "";
         objElm.appendChild(tDiv);
 

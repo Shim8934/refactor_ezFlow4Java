@@ -5262,13 +5262,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 							
 						    sbStr.append("<tr>");
                             sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(20).getTextContent() + "|" + mhtOrHwp + "|" + strDocState + "\")'></td>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("DOCTITLE").item(k).getTextContent()) + "</TD>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent()) + "</TD>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERNAME").item(k).getTextContent()) + "</TD>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("STARTDATE").item(k).getTextContent()) + "</TD>");
-                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(3).getChildNodes().item(0).getTextContent()) + "</TD>");
-                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(4).getChildNodes().item(0).getTextContent()) + "</TD>");
-                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(5).getChildNodes().item(0).getTextContent()) + "</TD>");
+                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("DOCTITLE").item(k).getTextContent()) + "</TD>");
+                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent()) + "</TD>");
+                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERNAME").item(k).getTextContent()) + "</TD>");
+                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("STARTDATE").item(k).getTextContent()) + "</TD>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(0).getTextContent()) + "</TD>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(1).getChildNodes().item(0).getTextContent()) + "</TD>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(2).getChildNodes().item(0).getTextContent()) + "</TD>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(3).getChildNodes().item(0).getTextContent()) + "</TD>");
                             sbStr.append("</tr>");    
 						}
 					}
@@ -5421,7 +5422,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("openYear", openYear);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("tmpValue", tmpValue);
-
+		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+		
  		logger.debug("getContainerInfo ended");
 		
 		return "ezApprovalG/apprGgetContainerInfo";

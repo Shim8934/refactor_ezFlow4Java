@@ -1675,12 +1675,12 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
             if (DocHref.toLowerCase().indexOf(".mht") > -1) {
                 var fullPath = encodeURIComponent(DocHref);
                 var tempXML = createXmlDom();
-                var XmlBodyATT = createXmlDom();
+//                var XmlBodyATT = createXmlDom();
                 var XmlBodyDATA = createXmlDom();
                 var tempStr = "";
                 tempStr = ConvertMHTtoHTML(fullPath);
                 tempXML = loadXMLString(tempStr);
-                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
                 XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
                 var htmlData = getNodeText(XmlBodyDATA);
                 document.getElementById('docContent').innerHTML = htmlData;
@@ -1942,13 +1942,13 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
         var fullPath = Rurl;
         var tempXML = createXmlDom();
-        var XmlBodyATT = createXmlDom();
+//        var XmlBodyATT = createXmlDom();
         var XmlBodyDATA = createXmlDom();
         var tempStr = "";
         tempStr = ConvertMHTtoHTML(fullPath);
 
         tempXML = loadXMLString(tempStr);
-        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
         XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
         var htmlData = getNodeText(XmlBodyDATA);
 
@@ -2046,12 +2046,12 @@ function GetBoardItemInfo_New3(pBoardID, pItemID) {
         var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
         var fullPath = Rurl;
         var tempXML = createXmlDom();
-        var XmlBodyATT = createXmlDom();
+//        var XmlBodyATT = createXmlDom();
         var XmlBodyDATA = createXmlDom();
         var tempStr = "";
         tempStr = ConvertMHTtoHTML(fullPath);
         tempXML = loadXMLString(tempStr);
-        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
         XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
         var htmlData = getNodeText(XmlBodyDATA);
         
