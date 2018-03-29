@@ -13,8 +13,10 @@
 		<script type="text/javascript">
 			var type = "${type}";
 			var height = "${height}";
+			var editorLoadFlag = false;
 			
 			function Editor_Complete() {
+				editorLoadFlag = true;
 				parent.Editor_Complete();
 	        }
 			

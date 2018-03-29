@@ -10,10 +10,11 @@
 		<script  type="text/javascript">
 			var type = "${type}";
 			var height = "${height}";
+			var editorLoadFlag = false;
 			
 		    CKEDITOR.on( 'instanceReady', function( ev ) {
+		    	editorLoadFlag = true;
 			    ExecuteCommand("maximize");
-			    
 			    parent.Editor_Complete();
 			    
 			    if (type == "MAILOUTOFOFFICE") {
