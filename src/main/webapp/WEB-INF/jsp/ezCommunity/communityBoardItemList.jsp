@@ -444,16 +444,14 @@
                     MaxNum = totalPage;
                 }
                 
-                if (totalCount != 0) {
-	                for (i = startNum; i <= MaxNum; i++) {
-	                    if (i == pageNum) {
-	                        strtext = "<span class='on'>" + i + "</span>";
-	                        PagingHTML += strtext;
-	                    } else {
-	                        strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
-	                        PagingHTML += strtext;
-	                    }
-	                }
+                for (i = startNum; i <= MaxNum; i++) {
+                	if (i == pageNum) {
+                		strtext = "<span class='on'>" + i + "</span>";
+                		PagingHTML += strtext;
+                	} else {
+                		strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+                		PagingHTML += strtext;
+                	}
                 }
                 
                 if (totalPage > BlockSize) {

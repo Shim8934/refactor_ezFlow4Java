@@ -2448,7 +2448,7 @@ public class EzPollController extends EgovFileMngUtil {
 
 	private int setStatusForQuestions(Set<PollQuestionVO> setOfQuestions, List<Integer> listHiddenQuestionIds, LoginVO loginVO, int checkingArray, int seeAll) throws ParseException {
 		String userID = loginVO.getId();		
-		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date endDate;
 		Date startDate; //20180109
 		Date sysDate = new Date();

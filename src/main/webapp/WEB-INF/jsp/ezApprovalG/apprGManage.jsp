@@ -157,15 +157,9 @@
 		        else
 		            pSusinManagerFlag = "user";
 		
-		        var nowyear = new Date().getFullYear();
-		        var nowmonth = new Date().getMonth() + 1;
-		        var nowday = new Date().getDate();
-		
-		        if (nowmonth < 10)
-		            nowmonth = "0" + nowmonth;
-		
-		        if (nowday < 10)
-		            nowday = "0" + nowday;
+		        var nowyear = nowDate.substring(0,4);
+		        var nowmonth = nowDate.substring(5,7);
+		        var nowday = nowDate.substring(8,10);
 		        
 				if (SQLPARADATA == null || SQLPARADATA == "") {
 			        SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
@@ -273,8 +267,8 @@
 		        }
 		        try {
 		        var toDay = new Date();
-		        var toDayYear = parseInt(toDay.getFullYear());
-		        var minusYear = parseInt(toDay.getFullYear()) - parseInt(pOpenYaer);
+		        var toDayYear = parseInt(nowDate.substring(0,4));
+		        var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
 		        for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
 		            AddOption(sel_year, i, i);
 		            checkBujaeInfo();
@@ -289,17 +283,12 @@
 		        if (GetSelectVal("sel_year") != "ALL")
 		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + GetSelectVal("sel_year") + "-01-01</APRSTARTDATE><APRENDDATE>" + GetSelectVal("sel_year") + "-12-31</APRENDDATE></DATA></ROOT>";
 		        else {
-		            var nowyear = new Date().getFullYear();
-		            var nowmonth = new Date().getMonth() + 1;
-		            var nowday = new Date().getDate();
+		            var nowyear = nowDate.substring(0,4);
+		            var nowmonth = nowDate.substring(5,7);
+		            var nowday = nowDate.substring(8,10);        
 		
-		            if (nowmonth < 10)
-		                nowmonth = "0" + nowmonth;
-		
-		            if (nowday < 10)
-		                nowday = "0" + nowday;
-		
-		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
+		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";		            
+
 		        }
 		
 		        if (pListTypeValue == "1") {
@@ -1252,7 +1241,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "ORDEROPTION", OrderOption);
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 
-		        var wWeigth = 600;
+		        var wWeigth = 630;
 		        var wHeigth = 400;
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;

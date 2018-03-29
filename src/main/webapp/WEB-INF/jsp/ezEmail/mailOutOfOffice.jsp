@@ -160,16 +160,19 @@
 		        }
 		    }
 		    function Editor_Complete() {
-		        try {
-		            tbContentElement1.SetEditorContent(document.getElementById("BujaeBody1").innerHTML);
+		    	try {
+		        	if (tbContentElement1.editorLoadFlag) {
+			            tbContentElement1.SetEditorContent(document.getElementById("BujaeBody1").innerHTML);
+		        	}
 		        } catch (e) { }
 		        
 		        try {
-		            tbContentElement2.SetEditorContent(document.getElementById("BujaeBody2").innerHTML);
+		        	if (tbContentElement2.editorLoadFlag) {
+			            tbContentElement2.SetEditorContent(document.getElementById("BujaeBody2").innerHTML);
+		        	}
 		        } catch (e) { }
+		        
 		        try {document.body.scrollTop = 0;} catch (e) {}
-		        
-		        
 		    }
 		    function SetToggle(param) {
 		        document.getElementById("Stimepicker").disabled = true;

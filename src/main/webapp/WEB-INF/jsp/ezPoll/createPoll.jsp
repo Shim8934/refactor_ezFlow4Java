@@ -835,7 +835,7 @@
 	    }
 	    
 	    function Editor_Complete() {
-	    	if (mode == "modify") {
+	    	if (mode == "modify" || mode == "reuse") {
 	    		message.SetEditorContent(sigBody.innerHTML);
 	    	}
 	    }
@@ -863,7 +863,7 @@
 				<tr>    <!------------Question title----------------> 
 					<%-- <th>Question</th>			--%>
 					<td style="width: 100%;" class="pollTd01">							
-						<input id="qst_title" name="qst_title" type="text"  placeholder="<spring:message code='ezPoll.t234'/>" style="width: 100%;" class="createPoll_title" maxlength="150" value="<c:out value="${mode == 'modify' ? question.title : ''}"/>">
+						<input id="qst_title" name="qst_title" type="text"  placeholder="<spring:message code='ezPoll.t234'/>" style="width: 100%;" class="createPoll_title" maxlength="150" value="<c:out value="${mode == 'modify' || mode == 'reuse' ? question.title : ''}"/>">
 					</td>
 	
 				</tr>
@@ -922,7 +922,7 @@
 				</tr>
 			</table>
 	
-			<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01" style="width:129px; height:30px; line-height:28px; font-size:13px; background:#efefef; border:1px solid #dcdcdc; border-radius:5px;"><spring:message code="ezPoll.t153"/></button>
+			<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01" style="width:129px; height:30px; line-height:28px; font-size:13px; font-weight:bold; background:#efefef; border:1px solid #dcdcdc; border-radius:5px; cursor:pointer; "><spring:message code="ezPoll.t153"/></button>
 	
 			<table class="content" style="width: 100%; margin:10px 0px 0px 0px;"> 
 				<tr>    <!------------Question setting---------------->
@@ -951,10 +951,10 @@
 						<span><spring:message code="ezPoll.t253"/></span>
 						
 						<input id="isSorting" type="checkbox">
-						<span>득표순 정렬</span>
+						<span><spring:message code = 'ezPoll.t259'/></span>
 						
 						<input id="isSelOnlyOnce" type="checkbox">
-						<span>낙장불입</span>
+						<span><spring:message code = 'ezPoll.t260'/></span>
 						
 						<input id="endDate" type="checkbox">
 						<span><spring:message code="ezPoll.t159"/></span>
