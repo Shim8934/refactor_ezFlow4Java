@@ -6,6 +6,7 @@ public class PollAnswerVO {
 	private int tenantId;
 	private String content;	
 	private int votesNumber;
+	private String filePath;
 	
 	public int getAnsId() {
 		return ansId;
@@ -45,5 +46,13 @@ public class PollAnswerVO {
 	
 	public void setVotesNumber(int votesNumber) {
 		this.votesNumber = votesNumber;
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}	
 }
