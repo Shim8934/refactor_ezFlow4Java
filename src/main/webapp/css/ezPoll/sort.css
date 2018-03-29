@@ -192,3 +192,8 @@ input[type=text]::-ms-clear{ display:none;}
 .voteUnseenTbl th{height:40px; background:#efefef; color:#000; border:1px solid #ddd; position:relative;}
 
 #ballotSystemBody{min-width: 800px}
+
+.imgPopup{width: auto; height: auto; position: relative; float: left; max-width: 400px; max-height: 400px;}
+.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 50px;}
+.imgPopupBoxOff, .imgPopupOff{display: none;}
+.thumbnail{cursor: pointer};
