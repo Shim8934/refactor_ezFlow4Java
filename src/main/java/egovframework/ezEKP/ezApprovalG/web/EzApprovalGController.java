@@ -6508,8 +6508,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
+		String ext = request.getParameter("ext");
 		
 		model.addAttribute("docID", docID);
+		model.addAttribute("ext", ext);
 		
 		logger.debug("ezReceiptInfo ended");
 
