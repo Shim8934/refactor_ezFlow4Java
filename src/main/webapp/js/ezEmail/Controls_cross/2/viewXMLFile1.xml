@@ -63,7 +63,7 @@
     <bitmap>0</bitmap>
     <multivalued>0</multivalued>
     <visible>1</visible>
-    <width>20%</width>
+    <width>24%</width>
     <align>left</align>
   </column>
   <column>
@@ -75,7 +75,7 @@
     <bitmap>0</bitmap>
     <multivalued>0</multivalued>
     <visible>1</visible>
-    <width>80%</width>
+    <width>56%</width>
     <align>left</align>
   </column>
   <column>
@@ -87,7 +87,7 @@
     <bitmap>0</bitmap>
     <multivalued>0</multivalued>
     <visible>1</visible>
-    <width>150px</width>
+    <width>20%</width>
     <dateformat>yyyy-MM-dd (ddd)</dateformat>
     <timeformat>tt h:mm</timeformat>
     <align>center</align>

@@ -405,8 +405,8 @@
 				var item_readlist_cross_dialogArguments = new Array();
 				function ReaderList()
 				{
-		            var swidth = 520;
-		            var sheight = 410;
+		            var swidth = 600;
+		            var sheight = 415;
 		
 		            var pwidth = window.screen.availWidth;
 		            var pheight = window.screen.availHeight;
@@ -415,12 +415,12 @@
 		            var ptop = (pheight - sheight) / 2;
 		
 					var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;			
-					var strFeature = "status:no;dialogHeight: 410px;dialogWidth: 520px;help: no;resizable:yes";
+					var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
 		
 					if (CrossYN()) {
 					    item_readlist_cross_dialogArguments[0] = "";
 					    item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-					    DivPopUpShow(520, 410, szHref);
+					    DivPopUpShow(600, 415, szHref);
 					}
 					else
 					    window.open(szHref,"", "width=" + swidth + ",height=" + sheight + ",top=" + ptop + ",left=" + pleft + ", resizable=yes, scrollbars=yes");

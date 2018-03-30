@@ -149,8 +149,8 @@ function MakeAddressList() {
                 document.getElementById("FolderType").style.display = "";
                 _TR.setAttribute("_FolderType", FolderType);
                 _TR.setAttribute("_FolderID", FolderID);
-                document.getElementById("width1").style.width = "15%";
-                document.getElementById("width2").style.width = "15%";
+                document.getElementById("width1").style.width = "20%";
+                document.getElementById("width2").style.width = "20%";
             } else {
                 document.getElementById("FolderType").style.display = "none";
                 document.getElementById("width1").style.width = "20%";
@@ -165,7 +165,7 @@ function MakeAddressList() {
                 _TR.ondblclick = function () { event_listDBClick(this); };
 
             var _TD1 = document.createElement("TD");
-            _TD1.style.width = "17px";
+            _TD1.style.width = "20px";
             _TD1.style.margin = "0px";
             var _TDCheckBox_Sub = document.createElement("INPUT");
             _TDCheckBox_Sub.type = "checkbox";
@@ -185,10 +185,10 @@ function MakeAddressList() {
             _TR.appendChild(_TD1);
 
             var _TD2 = document.createElement("TD");
-            _TD2.style.width = "24px";
+            _TD2.style.width = "40px";
             _TD2.style.margin = "0px";
             _TD2.style.padding = "2px 0px 0px 0px";
-            _TD2.style.textAlign = "left";
+            _TD2.style.textAlign = "center";
             var _Img = document.createElement("IMG");
             if (SType == "P")
                 _Img.src = "/images/i_individual.gif";
@@ -225,7 +225,7 @@ function MakeAddressList() {
 
             var _TD5 = document.createElement("TD");
             if (searchFlag) {
-                _TD5.style.width = "15%";
+                _TD5.style.width = "20%";
             }
             else
                 _TD5.style.width = "20%";
@@ -243,7 +243,7 @@ function MakeAddressList() {
 
             var _TD6 = document.createElement("TD");
             if (searchFlag) {
-            	_TD6.style.width = "15%";
+            	_TD6.style.width = "20%";
             }
             else
             	_TD6.style.width = "20%";
@@ -540,7 +540,7 @@ function makePageSelPage() {
         document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " <span style='color:#017BEC;'>" + pTotalCnt + "</span> " + strLang42 + "]";
     else {
         document.getElementById("mailBoxInfo").className = "h2_dot"; 
-        document.getElementById("mailBoxInfo").innerHTML = strLang_1 + "<span class='point'>" + pTotalCnt + "</span> " + strLang_2;
+        document.getElementById("mailBoxInfo").innerHTML = strLang_1 + "&nbsp;<span class='point'>" + pTotalCnt + "</span> " + strLang_2;
     }
     if (totalPage > 1 && pageNum != 1) {
         PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\" width=\"16\" height=\"16\"></span>";
