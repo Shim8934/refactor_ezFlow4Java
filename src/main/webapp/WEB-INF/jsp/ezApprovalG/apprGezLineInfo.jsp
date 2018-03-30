@@ -56,8 +56,10 @@
 		                getAprLine("");
 		                return;
 		            }
-		            if (pDocState == "011") {
-		                document.getElementById("tdGongRam").style.display = "";
+		            if ('${approvalFlag}' == 'G') {
+		            	if (pDocState == "011") {
+		                	document.getElementById("tdGongRam").style.display = "";
+		            	}
 		            }
 		        }
 		        catch (e) {
@@ -300,7 +302,9 @@
 				</c:otherwise>
 			</c:choose>
 		    <li id="tagsub4"><span onclick="pDocInfoValue='4';MM_swapImagesub('4');Opinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
-		    <li id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()" ><spring:message code='ezApprovalG.t946'/></span></li>
+		    <c:if test="${approvalFlag == 'G'}">
+		    	<li id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()" ><spring:message code='ezApprovalG.t946'/></span></li>
+		    </c:if>
 		  </ul>
 		</div>
 		<div class="listview" style="overflow-x:auto;width:100%;"><div id="lvAprLine" style="HEIGHT:350px;WIDTH:100%;"></div></div>
