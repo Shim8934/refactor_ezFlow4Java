@@ -120,9 +120,9 @@
 		        MailOptionHidden();
 		        journalPreviewRayerChange(pPreviewShow_HOW);
 		        var textContentSize;
-				textContentSize = $("#PreviewRayerH").height()-105;
+				textContentSize = $("#PreviewRayerH").height()-55;
 				$("#Preview_ContentH").css("height",textContentSize);
-				textContentSize = $("#PreviewRayerW").height()-120;
+				textContentSize = $("#PreviewRayerW").height()-80;
 				$("#Preview_ContentW").css("height",textContentSize);
 // 		        Window_resize();
 		    };
@@ -413,9 +413,9 @@
 								parent.left.setRecvCount();
 							}
 							var textContentSize;
-							textContentSize = $("#PreviewRayerH").height()-105;
+							textContentSize = $("#PreviewRayerH").height()-55;
 							$("#Preview_ContentH").css("height",textContentSize);
-							textContentSize = $("#PreviewRayerW").height()-120;
+							textContentSize = $("#PreviewRayerW").height()-80;
 							$("#Preview_ContentW").css("height",textContentSize);
 // 		   					ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 // 		   					ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
@@ -1045,7 +1045,7 @@
 	            document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
 	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
-	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 105) + "px";
+	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 55) + "px";
 	            pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
 	            pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
 

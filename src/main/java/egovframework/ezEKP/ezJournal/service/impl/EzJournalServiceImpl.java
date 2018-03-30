@@ -593,7 +593,6 @@ public class EzJournalServiceImpl implements EzJournalService{
 		
 		if (!viewDate.equals("")) {
 			ezJournalDAO.insertViewInfo(param);
-			logger.debug("열람정보는 들어가나요?");
 		}
 		JournalVO result = ezJournalDAO.selectJournal(param);
 		logger.debug("getJournal ended");

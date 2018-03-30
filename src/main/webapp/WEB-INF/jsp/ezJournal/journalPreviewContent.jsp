@@ -21,8 +21,15 @@
 	        var maxZoom = 200;
 	        var minZoom = 80;
 	
-	        window.onload = function () {
-	        };
+	        $(document).ready(function() { 
+		    	$('.journalPreviewContentIframe').contents().find('body').html('<div style="text-align: left;"><img onclick="parent.Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> <img onclick="parent.Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"></div><div id="journalContent" style="height:10px;display:inline-block;"></div>');
+		    	$('.journalPreviewContentIframe').contents().find('#journalContent').html('${journal.journalContent }');
+	        });
+// 	        window.onload = function (){
+// // 		    	var journalContent = '<c:out value="${journal.journalContent }" />';
+// 		    	$('#message').contents().find('body').html('<div style="text-align: left;"><img onclick="parent.Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> <img onclick="parent.Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"></div><div id="journalContent" style="height:10px;display:inline-block;"></div>');
+// 		    	$('#message').contents().find('#journalContent').html('${journal.journalContent }');
+// 		    }
 	        
 	        function Bigger() {
                 if (nowZoom < maxZoom) {
@@ -59,15 +66,17 @@
 	        </div>
          </span>
 <!-- 		<div style="overflow: auto; height: 300px;"> -->
-			<div style="height:100%; margin-left:5px; margin-right:5px; overflow: auto;">
-				<div style="text-align: left;">
-					<img onclick="Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png">
-			        <img onclick="Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png">
-				</div>
-				<div class="txtContent" style="height:10px;display:inline-block;">
-					${journal.journalContent }
-				</div>    
-			</div>
+			<iframe class="journalPreviewContentIframe" style="text-align:center; padding:0; width:100%; height:100%; overflow:auto; border:none;">
+			</iframe>
+<!-- 			<div style="height:100%; margin-left:5px; margin-right:5px; overflow: auto;"> -->
+<!-- 				<div style="text-align: left;"> -->
+<!-- 					<img onclick="Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> -->
+<!-- 			        <img onclick="Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"> -->
+<!-- 				</div> -->
+<!-- 				<div class="txtContent" style="height:10px;display:inline-block;"> -->
+<%-- 					${journal.journalContent } --%>
+<!-- 				</div>     -->
+<!-- 			</div> -->
 <!-- 		</div> -->
 	</body>
 </html>
