@@ -105,22 +105,21 @@
 		</div>
 		
 		<script type="text/javascript">
-	    var pageType = "${pageType}";
-	    var returnCompany = '${companyId}';
-	    var isDivPopUp = false;
-	    
-		var result = [];
-	    var treeCollection = [];
-	    var xmlhttp;
-	    var responseResult;
-	    var selectNode;
-	    var pageType = '${pageType}';
-	    var searchTxt = "";
+		    var pageType = "${pageType}";
+		    var returnCompany = '${companyId}';
+		    var isDivPopUp = false;
+		    
+			var result = [];
+		    var treeCollection = [];
+		    var xmlhttp;
+		    var responseResult;
+		    var selectNode;
+		    var pageType = '${pageType}';
+		    var searchTxt = "";
 	    
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록
 				isDivPopUp = true;
-				
 			});
 			
 			// 편지지 미리보기
@@ -136,9 +135,10 @@
 		    	}
 		    }
 			
-			// 편지지 선택(mailWirte.jsp에 들어가도록)
+			// 편지지 선택 (mailWirte.jsp에 들어가도록)
 			function letterSelect() {
 				var letterNo = $(".lmLetterSelect").attr("data-letterno");
+				
 				if (letterNo !== undefined) {
 					$.ajax({
 						type:"POST",
@@ -158,7 +158,6 @@
 							parent.message.SetEditorContent(letterHtml + editorMailContent);
 						}
 					});
-					
 		    	} else {
 		    		alert("편지지를 선택하세요.");
 		    		return;
@@ -173,9 +172,7 @@
 	            	parent.DivPopUpHidden();
 	            }
 		    }
-		    
 		</script>
-				
 	</body>
 </html>
 

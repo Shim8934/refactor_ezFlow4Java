@@ -110,6 +110,7 @@
 				var disName = strChk(displayname, true, 40);
 				var disName2 = strChk(displayname2, true, 40);
 				var msg = disName.msg != "" ? disName.msg : disName2.msg != "" ? disName2.msg : "";
+				
 				if (msg != "") { // 편지지명 없을때 return
 					alert(msg);
 					return;
@@ -156,7 +157,6 @@
 			function letterPopUpClose() {
 				window.close();
 			}
-			
 		</script>	
 	</body>
 </html>

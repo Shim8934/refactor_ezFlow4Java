@@ -15,7 +15,6 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
 		<script type="text/javascript">
-		
 			var letterNo = '${letterNo}';
 			var isDivPopUp = false;
 			
@@ -23,7 +22,6 @@
 				isDivPopUp = true;
 				letterPreView(letterNo);
 			}
-			
 		</script>
 	
 	</head>

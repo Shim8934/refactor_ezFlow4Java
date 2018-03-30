@@ -120,7 +120,7 @@
 				var letterNo = $(".lmLetterSelect").attr("data-letterno");
 				var letterId = $(".lmLetterSelect").attr("data-letterid");
 				
-				//편지지 목록이 선택 되었을때
+				// 편지지 목록이 선택 되었을때
 				if (letterNo !== undefined) {
 					
 					url = "/admin/ezEmail/letterBoxMovePopUp.do?letterBox=" + letterBox + "&letterNo=" + letterNo + "&letterId=" + letterId;  
@@ -185,16 +185,17 @@
 							getLetterList(letterBoxNo); 
 						}
 						
-						/* $(".lmPreViewTxt").css("display","block");
+						$(".lmPreViewTxt").css("display","block");
 						$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
 						$(".lmPreViewIframe").attr("src","");
-						$(".lmPreViewIframe").css("display","none"); */
+						$(".lmPreViewIframe").css("display","none");
+						
 						alert("삭제하였습니다.");
 					}
 				});
 			}
 			
-			//편지지 삭제 버튼 클릭
+			// 편지지 삭제 버튼 클릭
 			$(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
 				var deleteChk = confirm("정말로 삭제하시겠습니까?");
 				
@@ -232,7 +233,6 @@
 			$(document).on("mouseleave", ".lmPreview", function(){
 				$(".lmPreview .preViewLetterName").remove();
 			});
-				
 		</script>
 	</body>
 </html>

@@ -74,7 +74,6 @@
 		    	document.getElementById("display").value = letter_displayname;
 		    	document.getElementById("display2").value = letter_displayname2;
 		    }
-	    
 	    </script>
 	</body>
 </html>

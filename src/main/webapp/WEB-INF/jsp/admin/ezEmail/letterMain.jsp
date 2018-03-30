@@ -20,8 +20,6 @@
 	        	companyID = document.getElementById("ListCompany").value;
 	        	Tab_init_select(document.getElementById("tagsub1"));
 	        	Tab1_NewTabIni("tab1");
-
-	        	
 	        };
 	        
 	        function selectCompanyID() {
@@ -50,9 +48,10 @@
 	                obj.className = "tabon";
 	                var tabSelect = document.getElementById(Tab1_SelectID);
 	                if (obj.id != Tab1_SelectID) {
-	                    if (Tab1_SelectID != "" && tabSelect != null)
+	                    if (Tab1_SelectID != "" && tabSelect != null) {
 	                        tabSelect.className = "";
-	
+	                    }
+	                    
 	                    obj.className = "tabon";
 	                    Tab1_SelectID = obj.id;
 	                    selValue = obj.textContent;
@@ -60,26 +59,28 @@
 	                }
 	                
 	                var tabpartUL = document.getElementById("tabpart01UL").style.display;
-	                if (!displayFlag)
+	                if (!displayFlag) {
 	                	tabpartUL = "";
-	                else {
-	                    if (tabpartUL == "")
+	                } else {
+	                    if (tabpartUL == "") {
 	                    	tabpartUL = "none";
-	                    else
+	                    } else {
 	                    	tabpartUL = "";
+	                    }
 	                }
-	            }
-	            else {
-	                if (tabpartUL == "")
+	            } else {
+	                if (tabpartUL == "") {
 	                	tabpartUL = "none";
-	                else
+	                } else {
 	                	tabpartUL = "";
+	                }
 	            }
 	        }
 	        
 	        function tabAllWidth() {
 	            var allWidth = 0;
 	            var tabP = document.getElementById("tab1").getElementsByTagName("P");
+	            
 	            for (var i = 0; i < tabP.length; i++) {
 	                allWidth += tabP[i].offsetWidth;
 	            }
@@ -96,7 +97,6 @@
 		            case "tagsub2":
 		            	document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterAdminPage.do?companyId=" + companyID;
 		            	break;
-		            	
 		        }
 	        }
 	        
@@ -105,16 +105,18 @@
 		    }
 	
 		    function Tab1_MouserOut(obj) {
-		        if(Tab1_SelectID != obj.id)
+		        if(Tab1_SelectID != obj.id) {
 		            obj.className = "";
+		        }
 		    }
 	
 		    function Tab1_MouseClick(obj) {		    	
 		        obj.className = "tabon";
 		        var tabSelect = document.getElementById(Tab1_SelectID);
 		        if (obj.id != Tab1_SelectID) {
-		            if (Tab1_SelectID != "" && tabSelect != null)
+		            if (Tab1_SelectID != "" && tabSelect != null) {
 		            	tabSelect.className = "";
+		            }
 	
 		            obj.className = "tabon";
 		            Tab1_SelectID = obj.id;
@@ -127,28 +129,31 @@
 	        }
 	
 	        function Tab1_NewTabIni(pTabNodeID) {
-	        	
 	        	var tabNode = document.getElementById(pTabNodeID).childNodes;
+	        	
 	            for (var i = 0; i < tabNode.length; i++) {
+	            	var tabNodeChildItem = tabNode.item(i).childNodes.item(0);
+	            	var tabNodeChild = tabNode[i].childNodes[0];
+	            		
 	                if (tabNode.item(i).nodeName == "P") {
-	                    if (tabNode.item(i).childNodes.item(0).nodeName == "SPAN") {
-	                    	tabNode.item(i).childNodes.item(0).onmouseover = function () { Tab1_MouserOver(this); };
-	                    	tabNode.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };
+	                    if (tabNodeChildItem.nodeName == "SPAN") {
+	                    	tabNodeChildItem.onmouseover = function () { Tab1_MouserOver(this); };
+	                    	tabNodeChildItem.onmouseout = function () { Tab1_MouserOut(this); };
 	                        
-	                        if (tabNode[i].childNodes[0].id != "overSpan")
-	                        	tabNode[i].childNodes[0].onclick = function () { Tab1_MouseClick(this); };
-	                        else
-	                        	tabNode[i].childNodes[0].onclick = function () { Tab1_MouseClick_more(this, true); };
-	
+	                        if (tabNodeChild.id != "overSpan") {
+	                        	tabNodeChild.onclick = function () { Tab1_MouseClick(this); };
+	                        } else {
+	                        	tabNodeChild.onclick = function () { Tab1_MouseClick_more(this, true); };
+	                        }
+	                        
 	                        if (i == 0) {
-	                        	tabNode.item(0).childNodes.item(0).className = "tabon";
-	                            Tab1_SelectID = tabNode.item(0).childNodes.item(0).id;
+	                        	tabNodeChildItem.className = "tabon";
+	                            Tab1_SelectID = tabNodeChildItem.id;
 	                        }
 	                    }
 	                }
 	            }
 	        }
-	        
 	    </script>
 	</head>
 	<body class="mainbody" style="height: 95%;">
