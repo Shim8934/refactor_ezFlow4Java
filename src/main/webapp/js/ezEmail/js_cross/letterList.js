@@ -1,14 +1,14 @@
 var searchMode = false; //검색중이면 오른쪽에 편지지함명
 
-//편지지 검색
+// 편지지 검색
 function letterSearch() {
+	var search = $("#lmSearchInput").val();
 	
 	// 편지지(사용자) 중에서 검색 모드일때만
 	if (pageType == 'letter_user') {
 		searchMode = true;
 	}
 	
-	var search = $("#lmSearchInput").val();
 	if(search.trim() === "") {
 		alert("검색어를 입력해주세요.");
 		return;
@@ -18,6 +18,7 @@ function letterSearch() {
 	if (searchTxt !== undefined) {
 		searchTxt = search;
 	}
+	
 	disableChk();
 	
 	$.ajax({
@@ -32,10 +33,9 @@ function letterSearch() {
 			addLetterList(data.responseJSON);
 	    }
 	});
-	
 }
 
-//검색어 초기화
+// 검색어 초기화
 function inputReset(){
 	$(".searchInput").val("");
 }
@@ -48,7 +48,7 @@ function disableChk() {
 	}
 }
 
-//예외처리                    (문자, 특수문자 허용여부, 길이)
+// 예외처리                  (문자, 특수문자 허용여부, 길이)
 function strChk(str, speChar, strLen) {
 	// 공백, 특수문자, 길이
 	var strTrim = str.trim();
@@ -64,7 +64,7 @@ function strChk(str, speChar, strLen) {
 			}	
 		}
 		
-		if (typeof strLen != "undefined") {
+		if (strLen !== undefined) {
 			if (strTrim.length > strLen) {
 				msg = strLen + "자 이하로 입력 가능합니다."
 			} 
@@ -78,19 +78,6 @@ function strChk(str, speChar, strLen) {
 	
 	return reJson;
 }
-
-// 편지지 개별조회
-/*function readLetter(letterNo) {
-	$.ajax({
-		type:"POST",
-		data:{letterNo:letterNo},
-		url:"/admin/ezEmail/readLetter",
-		dataType:"json",
-		success:function(data){
-			
-		}
-	});
-}*/
 
 // 편지지 미리보기 
 function letterPreView(letterNo) {
@@ -155,7 +142,6 @@ function addLetterList(jsonArr) {
 
 	if (listCount !== 0) {
 		for (i = 0; i < listCount; i++) {
-			
 			letterListHtml += "<li id='lt" + jsonArr[i].letterNo + "' data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + 
 			"' data-letterBoxNo='" + jsonArr[i].letterBoxNo + "'>"; 
 			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname.replace(/</gi, "&lt;") + "</span>";
@@ -240,4 +226,3 @@ $(document).on("mouseover", ".lmLetterListUl li:not('.lmLetterSelect')", functio
 $(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect')",function(){
 	$(this).css("background","none");
 });
-

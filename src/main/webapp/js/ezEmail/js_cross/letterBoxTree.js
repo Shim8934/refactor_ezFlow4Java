@@ -1,13 +1,7 @@
 var noResult = false;
-
-
-/*
- * result : 모든 편지지함 정보(letteBoxNo, parentLetterBoxNo, displayname, displayname2, compnayId)
+/* result : 모든 편지지함 정보(letteBoxNo, parentLetterBoxNo, displayname, displayname2, compnayId)
  * treeCollection : jstree에서 사용할 수 있도록 변형(id, parent, text)
- * 
- * 
  * */
-
 
 // 편지지함 트리 가져오기
 function resultRead() {
@@ -25,6 +19,7 @@ function resultRead() {
 	        if (result.length === 0) {
         		noResult = true;
         	}
+	        
 	        treeSet();
 	        treeView();
 	    	treeInit();
@@ -45,10 +40,9 @@ function treeInit() {
 // 노드 클릭 시
 function treeOnclick() {
 	$('#divTree').on('changed.jstree', function (e, data) {
-		
 		searchTxt = "";
-		
 		selectNode = data;
+		
 		if (pageType === "letterBox") { // 편지지함 
     		var nodeId = selectNode.node.id;
     		var parentId = selectNode.node.parent;
@@ -102,7 +96,6 @@ function selectBox(letterBoxNo) {
 			console.log(data);
 		}
 	});
-	
 }
 
 // 트리에서 필요한 아이들만 빼서 treeCollection 재구성 (구성할 때 jsTree 규칙에 맞게 변경)
@@ -154,7 +147,6 @@ function addLetterBox() {
 		parent = '#';
 		parentId = '';
 		putParent = '0';
-		
 	} else {
 		parent = selectNode.node.id;
 		parentId = parent;
@@ -183,6 +175,7 @@ function boxNameCheck() {
 			}
 		}
 	}
+	
 	return returnVal;
 }
 
@@ -207,6 +200,7 @@ function deleteLetterBox() {
 		return;
 	} else {
 		var con = confirm("편지지함을 삭제하시겠습니까? \n(주의! 편지지가 존재하면 편지지 포함 삭제됩니다.)");
+		
 		if (con === true) {
 			realCheck = true;
 		}
@@ -214,12 +208,12 @@ function deleteLetterBox() {
 	
 	if (realCheck === true) {
 		$('#divTree').jstree().delete_node($('#' + letterBoxNo));
+		
 		$.ajax({
 			type : "POST",
 			url : "/admin/ezEmail/deleteLetterBox.do?letterBoxNo=" + letterBoxNo,
 			datatype : 'json',
 			success : function(data) {
-				
 				$.ajax({
 					type : "POST",
 					url : "/admin/ezEmail/deleteLetterFile?letterBoxNo=" + letterBoxNo,
@@ -238,24 +232,22 @@ function deleteLetterBox() {
 				alert("error");
 				//console.log(data);
 			}
-		});
-		
-	}
-	
+		}); // ajax End
+	} // if End
 }
 
 // '확인' 버튼 클릭 시, update로 할것인지 insert로 할것인지
 function submitClick() {
 	var formData = $("#myForm").serialize();
 	var formUrl = "/admin/ezEmail/updateLetterBox.do";
+	var disName = strChk($("#myForm #display").val(), false, 40);
+	var disName2 = strChk($("#myForm #display2").val(), false, 40);
+	var disMsg = disName.msg !== "" ? disName.msg : disName2.msg !== "" ? disName2.msg : "";
 	
 	if (document.getElementById("letterbox_no").disabled) {
 		formUrl = "/admin/ezEmail/createLetterBox.do";
 	}
 	
-	var disName = strChk($("#myForm #display").val(), false, 40);
-	var disName2 = strChk($("#myForm #display2").val(), false, 40);
-	var disMsg = disName.msg !== "" ? disName.msg : disName2.msg !== "" ? disName2.msg : "";
 	if (disMsg !== "") {
 		alert(disMsg);
 		return;
