@@ -835,130 +835,142 @@ function Save_onClick(savemode) {
 }
 
 function Save_onClick_Complete(ReturnValue) {
+	if (!ReturnValue) {
+		return;
+	}
+	
     try {
-        if (ReturnValue) {
-            var Subject = eSubject.value;
-            if (TrimText(Subject) == "")
-                Subject = strLang97;
+        var Subject = eSubject.value;
+        
+        if (TrimText(Subject) == "") {
+            Subject = strLang97;
+        }
 
-            if (m_rgParams4PostOption["SecurityMail"] == "Security")
-                pSecurity = "3";
-            
-            var xmlDoc = createXmlDom();
-            var rootNode;
-            createNodeInsert(xmlDoc, rootNode, "DATA");
-            createNodeAndInsertText(xmlDoc, rootNode, "URL", encodeURIComponent(g_url));
-            createNodeAndInsertText(xmlDoc, rootNode, "ORGURL", gg_url);
-            createNodeAndInsertText(xmlDoc, rootNode, "CONNURL", "/exchange/" + g_szUserID);
-            createNodeAndInsertText(xmlDoc, rootNode, "CMD", (Save_onClick_Complete.savemode == "sendsave" ? "SEND" : "SAVE"));
-            createNodeAndInsertText(xmlDoc, rootNode, "MAILCMD", g_cmd);
-            createNodeAndInsertText(xmlDoc, rootNode, "ORGMAILCMD", gg_cmd);
-            createNodeAndInsertText(xmlDoc, rootNode, "AUTHOR", g_szAuthor);
-            createNodeAndInsertText(xmlDoc, rootNode, "SUBJECT", Subject);
-            createNodeAndInsertText(xmlDoc, rootNode, "TO", GetAddrFormatForSend(MsgToGot));
-            createNodeAndInsertText(xmlDoc, rootNode, "CC", GetAddrFormatForSend(MsgCCGot));
-            createNodeAndInsertText(xmlDoc, rootNode, "BCC", GetAddrFormatForSend(MsgBCCGot));
-            if (document.getElementById("bodyType") != null && document.getElementById("bodyType").value == "1")
-                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", document.getElementById("plainTextArea").value);
-            else
-                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n"));
-            createNodeAndInsertText(xmlDoc, rootNode, "FROM", "\"" + g_myname + "\" <" + g_from + ">");
-            createNodeAndInsertText(xmlDoc, rootNode, "SENSITIVITY", m_rgParams4PostOption["postType"]);
-            createNodeAndInsertText(xmlDoc, rootNode, "REPLYSENDTIME", m_rgParams4PostOption["replySendTime"]);
-            createNodeAndInsertText(xmlDoc, rootNode, "REPLYREADTIME", m_rgParams4PostOption["replyReadTime"]);
-            createNodeAndInsertText(xmlDoc, rootNode, "IMPORTANCE", importantSelect.selectedIndex.toString());
-            createNodeAndInsertText(xmlDoc, rootNode, "EXTRAHEADERNAME", "comment");
-            createNodeAndInsertText(xmlDoc, rootNode, "EXTRAHEADERVALUE", g_senderinfo);
-            createNodeAndInsertText(xmlDoc, rootNode, "SENDUSINGHANGE", "1");
-            g_simplemime = m_rgParams4PostOption["bodyType"];
+        if (m_rgParams4PostOption["SecurityMail"] == "Security") {
+            pSecurity = "3";
+        }
+        
+        var xmlDoc = createXmlDom();
+        var rootNode;
+        createNodeInsert(xmlDoc, rootNode, "DATA");
+        createNodeAndInsertText(xmlDoc, rootNode, "URL", encodeURIComponent(g_url));
+        createNodeAndInsertText(xmlDoc, rootNode, "ORGURL", gg_url);
+        createNodeAndInsertText(xmlDoc, rootNode, "CONNURL", "/exchange/" + g_szUserID);
+        createNodeAndInsertText(xmlDoc, rootNode, "CMD", (Save_onClick_Complete.savemode == "sendsave" ? "SEND" : "SAVE"));
+        createNodeAndInsertText(xmlDoc, rootNode, "MAILCMD", g_cmd);
+        createNodeAndInsertText(xmlDoc, rootNode, "ORGMAILCMD", gg_cmd);
+        createNodeAndInsertText(xmlDoc, rootNode, "AUTHOR", g_szAuthor);
+        createNodeAndInsertText(xmlDoc, rootNode, "SUBJECT", Subject);
+        createNodeAndInsertText(xmlDoc, rootNode, "TO", GetAddrFormatForSend(MsgToGot));
+        createNodeAndInsertText(xmlDoc, rootNode, "CC", GetAddrFormatForSend(MsgCCGot));
+        createNodeAndInsertText(xmlDoc, rootNode, "BCC", GetAddrFormatForSend(MsgBCCGot));
+        
+        if (document.getElementById("bodyType") != null && document.getElementById("bodyType").value == "1") {
+            createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", document.getElementById("plainTextArea").value);
+        } else {
+            createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n"));
+        }
+        
+        createNodeAndInsertText(xmlDoc, rootNode, "FROM", "\"" + g_myname + "\" <" + g_from + ">");
+        createNodeAndInsertText(xmlDoc, rootNode, "SENSITIVITY", m_rgParams4PostOption["postType"]);
+        createNodeAndInsertText(xmlDoc, rootNode, "REPLYSENDTIME", m_rgParams4PostOption["replySendTime"]);
+        createNodeAndInsertText(xmlDoc, rootNode, "REPLYREADTIME", m_rgParams4PostOption["replyReadTime"]);
+        createNodeAndInsertText(xmlDoc, rootNode, "IMPORTANCE", importantSelect.selectedIndex.toString());
+        createNodeAndInsertText(xmlDoc, rootNode, "EXTRAHEADERNAME", "comment");
+        createNodeAndInsertText(xmlDoc, rootNode, "EXTRAHEADERVALUE", g_senderinfo);
+        createNodeAndInsertText(xmlDoc, rootNode, "SENDUSINGHANGE", "1");
+        g_simplemime = m_rgParams4PostOption["bodyType"];
 
-            if (typeof (g_simplemime) == "undefined") g_simplemime = "0";
-            createNodeAndInsertText(xmlDoc, rootNode, "CHARSET", g_charset);
-            createNodeAndInsertText(xmlDoc, rootNode, "CONTENT-TRANSFER-ENCODING", g_encoding);
-            createNodeAndInsertText(xmlDoc, rootNode, "SIMPLE-MIME", g_simplemime);
-            createNodeAndInsertText(xmlDoc, rootNode, "SIMPLE-MIME-CONTENT-TRANSFER-ENCODING", g_simplemimeencoding);
-            createNodeAndInsertText(xmlDoc, rootNode, "SHOW-DISPLAYNAME", g_showdisplay);
-            createNodeAndInsertText(xmlDoc, rootNode, "ISEACHMAIL", iseachMail);
-            createNodeAndInsertText(xmlDoc, rootNode, "SECURITYMAIL", pSecurity);
-            createNodeAndInsertText(xmlDoc, rootNode, "ISRESERVE", isReserve);
-            createNodeAndInsertText(xmlDoc, rootNode, "RESERVEDID", pCDOMessageId);
-            createNodeAndInsertText(xmlDoc, rootNode, "STATENAME", filedate);
-            if (m_rgParams4PostOption["delaySendDate"] == "") {
-                createNodeAndInsertText(xmlDoc, rootNode, "DELAYSENDTIME", "");
-            }
-            else {
-                createNodeAndInsertText(xmlDoc, rootNode, "DELAYSENDTIME", m_rgParams4PostOption["delaySendDate"].substring(0, 10) + " " + m_rgParams4PostOption["delaySendDate"].substring(11, 19));
+        if (typeof(g_simplemime) == "undefined") {
+        	g_simplemime = "0";
+        }
+        
+        createNodeAndInsertText(xmlDoc, rootNode, "CHARSET", g_charset);
+        createNodeAndInsertText(xmlDoc, rootNode, "CONTENT-TRANSFER-ENCODING", g_encoding);
+        createNodeAndInsertText(xmlDoc, rootNode, "SIMPLE-MIME", g_simplemime);
+        createNodeAndInsertText(xmlDoc, rootNode, "SIMPLE-MIME-CONTENT-TRANSFER-ENCODING", g_simplemimeencoding);
+        createNodeAndInsertText(xmlDoc, rootNode, "SHOW-DISPLAYNAME", g_showdisplay);
+        createNodeAndInsertText(xmlDoc, rootNode, "ISEACHMAIL", iseachMail);
+        createNodeAndInsertText(xmlDoc, rootNode, "SECURITYMAIL", pSecurity);
+        createNodeAndInsertText(xmlDoc, rootNode, "ISRESERVE", isReserve);
+        createNodeAndInsertText(xmlDoc, rootNode, "RESERVEDID", pCDOMessageId);
+        createNodeAndInsertText(xmlDoc, rootNode, "STATENAME", filedate);
+        
+        if (m_rgParams4PostOption["delaySendDate"] == "") {
+            createNodeAndInsertText(xmlDoc, rootNode, "DELAYSENDTIME", "");
+        } else {
+            createNodeAndInsertText(xmlDoc, rootNode, "DELAYSENDTIME", m_rgParams4PostOption["delaySendDate"].substring(0, 10) + " " + m_rgParams4PostOption["delaySendDate"].substring(11, 19));
 
-                if (Save_onClick_Complete.savemode == "sendsave") {
-                    var utcdate = m_rgParams4PostOption["delaySendDate"];
-                    var senddate = new Date();
-                    senddate.setUTCFullYear(utcdate.substr(0, 4));
-                    senddate.setUTCMonth(utcdate.substr(5, 2) - 1);
-                    senddate.setUTCDate(utcdate.substr(8, 2));
-                    senddate.setUTCHours(utcdate.substr(11, 2));
-                    senddate.setUTCMinutes(utcdate.substr(14, 2));
-                    senddate.setUTCSeconds(utcdate.substr(17, 2));
+            if (Save_onClick_Complete.savemode == "sendsave") {
+                var utcdate = m_rgParams4PostOption["delaySendDate"];
+                var senddate = new Date();
+                senddate.setUTCFullYear(utcdate.substr(0, 4));
+                senddate.setUTCMonth(utcdate.substr(5, 2) - 1);
+                senddate.setUTCDate(utcdate.substr(8, 2));
+                senddate.setUTCHours(utcdate.substr(11, 2));
+                senddate.setUTCMinutes(utcdate.substr(14, 2));
+                senddate.setUTCSeconds(utcdate.substr(17, 2));
 
-
-                    alert(strLang98 + "'" + m_rgParams4PostOption["delaySendDate"] + "'" + strLang102 + "'" + strLang100 + "'" + strLang101);
-
-                }
-            }
-            
-            // 보안메일 체크되어있을 경우 request xml에 보안메일정보 추가
-            if (useSecureMail == "YES" && document.getElementById("chkSecureMail").checked) {
-            	createNodeAndInsertText(xmlDoc, rootNode, "SECUREMAIL", "TRUE");
-            	createNodeAndInsertText(xmlDoc, rootNode, "SECUREPASSWORD", secureMailParams["securePassword"]);
-            	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADCOUNT", secureMailParams["secureReadCount"]);
-            	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADDATE", secureMailParams["secureReadDate"]);
-            }
-            
-            ConvertEmbedPath(xmlDoc, xmlDoc);
-            ConvertEmbedImagToXml(xmlDoc, xmlDoc);
-
-            if (Org_cmd == "docsend" || Org_cmd == "docsenddoc" || Org_cmd == "board" || Org_cmd == "Community" || Org_cmd == "report")
-                DocFileIntoXML(xmlDoc, rootNode);
-
-            rootNode = null;
-
-            try {
-                var newid = '';
-                if (g_cmd == "NEW") {
-                    newid = '?' + '&newid=' + g_newid;
-                }
-
-                g_saveHttp = createXMLHttpRequest();
-
-                if (!isClosedSave) {
-                    g_saveHttp.open("POST", "/ezEmail/mailInterSend.do", true);
-                    event_SaveonClick.savemode = Save_onClick_Complete.savemode;
-
-                    if (Save_onClick_Complete.savemode == "sendsave" || (Save_onClick_Complete.savemode == "tempsave" && !isAutoSave)) {
-                        MailSend_Show_Progress();                        
-                    }
-
-                    g_saveHttp.onreadystatechange = event_SaveonClick;
-                    g_saveHttp.send(xmlDoc);
-                }
-                else {
-                    g_saveHttp.open("POST", "/ezEmail/mailInterSend.do", false);
-                    g_saveHttp.send(xmlDoc);
-                }
-                xmlDoc = null;
-            }
-            catch (e) {
-                xmlDoc = null;
-                if (event_SaveonClick.savemode == "sendsave")
-                    alert(strLang103);
-                else
-                    alert(strLang104);
-                g_saveHttp = null;
-            	MailStatus = "NO";
-            	isAutoSave = false;
+                alert(strLang98 + "'" + m_rgParams4PostOption["delaySendDate"] + "'" + strLang102 + "'" + strLang100 + "'" + strLang101);
             }
         }
-    } catch (e) {
-    }
+        
+        // 보안메일 체크되어있을 경우 request xml에 보안메일정보 추가
+        if (useSecureMail == "YES" && document.getElementById("chkSecureMail").checked) {
+        	createNodeAndInsertText(xmlDoc, rootNode, "SECUREMAIL", "TRUE");
+        	createNodeAndInsertText(xmlDoc, rootNode, "SECUREPASSWORD", secureMailParams["securePassword"]);
+        	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADCOUNT", secureMailParams["secureReadCount"]);
+        	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADDATE", secureMailParams["secureReadDate"]);
+        }
+        
+        ConvertEmbedPath(xmlDoc, xmlDoc);
+        ConvertEmbedImagToXml(xmlDoc, xmlDoc);
+
+        if (Org_cmd == "docsend" || Org_cmd == "docsenddoc" || Org_cmd == "board" || Org_cmd == "Community" || Org_cmd == "report") {
+            DocFileIntoXML(xmlDoc, rootNode);
+        }
+
+        rootNode = null;
+
+        try {
+            var newid = '';
+            
+            if (g_cmd == "NEW") {
+                newid = '?' + '&newid=' + g_newid;
+            }
+
+            g_saveHttp = createXMLHttpRequest();
+
+            if (!isClosedSave) {
+                g_saveHttp.open("POST", "/ezEmail/mailInterSend.do", true);
+                event_SaveonClick.savemode = Save_onClick_Complete.savemode;
+
+                if (Save_onClick_Complete.savemode == "sendsave" || (Save_onClick_Complete.savemode == "tempsave" && !isAutoSave)) {
+                    MailSend_Show_Progress();                        
+                }
+
+                g_saveHttp.onreadystatechange = event_SaveonClick;
+                g_saveHttp.send(xmlDoc);
+            } else {
+                g_saveHttp.open("POST", "/ezEmail/mailInterSend.do", false);
+                g_saveHttp.send(xmlDoc);
+            }
+            
+            xmlDoc = null;
+        } catch (e) {
+            xmlDoc = null;
+            
+            if (event_SaveonClick.savemode == "sendsave") {
+                alert(strLang103);
+            } else {
+                alert(strLang104);
+            }
+            
+            g_saveHttp = null;
+        	MailStatus = "NO";
+        	isAutoSave = false;
+        }
+    } catch (e) {}
 }
 
 function MailSend_Show_Progress() {
