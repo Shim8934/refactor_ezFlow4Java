@@ -1449,7 +1449,6 @@ function OpenAlertUI(pAlertContent, CompleteFunction, type) {
             try { OpenWin.focus(); } catch (e) { }
         }
         else if (type != undefined && CompleteFunction == "") {
-            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
             var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
