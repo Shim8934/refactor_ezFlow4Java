@@ -14,12 +14,20 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 	    <script type="text/javascript">	
 	    	var selectedUser = "<c:out value="${selectedUser }" />"
+	    	var selectedUserName = "<c:out value="${selectedUserName}" />";
 	    	var companyId = "<c:out value="${companyId}" />";
 	    	var deptIds = [];
 	    	var deptNames = [];
 	    	var userDeptId;
 	    	var userDeptName;
 	    
+	    	//사원 세팅
+	    	function setSelectedUser(userId,userName){
+	    		selectedUserName=userName;
+	    		selectedUser = userId;
+	    		$("#txtuser").val(userName);
+	    	} 
+	    	
 	    	//사원선택
 	    	function select_person(){
 	    		var url = "/admin/ezJournal/authorDetail.do";
@@ -90,7 +98,7 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t141' /></th>
 	            <td>
-	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
+	                <input id="txtuser" value="" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
 	                <a href="#" class="imgbtn" style="margin-left: 20px;"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
