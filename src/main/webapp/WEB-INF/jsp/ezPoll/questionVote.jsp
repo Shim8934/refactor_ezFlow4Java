@@ -2800,7 +2800,7 @@
 				               		</c:if> --%>
 				               		<c:choose>
 				               			<c:when test="${_option.filePath ne null }">
-				               				<img id="_imgOption<c:out value ="${_option.ansId}"/>" class="thumbnail" onclick="" src="/fileroot/${question.tenantId}/files/upload_schedule/uploadFile/${fn:split(_option.filePath,'/')[0] }" />	               		             		         		
+				               				<img id="_imgOption<c:out value ="${_option.ansId}"/>" class="thumbnail" onclick="" src="/fileroot/${question.tenantId}/files/upload_vote/uploadFile/${fn:split(_option.filePath,'/')[0] }" />	               		             		         		
 				               			</c:when>
 				               			<c:otherwise>
 				               				<img class="imgNotAttached" src="/images/poll/no_attachment.png"/>

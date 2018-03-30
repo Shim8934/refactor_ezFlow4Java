@@ -1003,7 +1003,7 @@
 	    		}else{
 	    			fileinfo = fileinfo.filePath.split('/')[0];
 	    		}
-		    	objImg.src = "/fileroot/" + tenantId + "/files/upload_schedule/uploadFile/" + fileinfo;
+		    	objImg.src = "/fileroot/" + tenantId + "/files/upload_vote/uploadFile/" + fileinfo;
 	    		$(selOptRow).append(objImg);
 	    		checkOptionsList();
 	    	}
