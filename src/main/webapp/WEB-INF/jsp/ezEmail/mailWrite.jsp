@@ -1301,7 +1301,6 @@
 	                    <ul>
 	                        <li><span onclick="Send_onClick()"><spring:message code='ezEmail.t674' /></span></li>
 	                        <li><span onclick="Save_onClick('tempsave')"><spring:message code='ezEmail.t48' /></span></li>
-	                        
 	                        <!-- 재은 수정(편지지) -->
 	                        <c:if test="${useLetter == 'YES'}">
 	                        <li><span onclick="Letter_onClick()"><spring:message code='ezEmail.t824' /></span></li>
