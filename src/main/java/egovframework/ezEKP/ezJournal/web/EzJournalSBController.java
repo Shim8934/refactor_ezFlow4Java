@@ -713,7 +713,6 @@ public class EzJournalSBController {
 //			nextElem.html("");
 			
 			result = journalDoc.toString();
-			logger.debug(result);
 		}
 		
 		logger.debug("getOtherJournal ended");
