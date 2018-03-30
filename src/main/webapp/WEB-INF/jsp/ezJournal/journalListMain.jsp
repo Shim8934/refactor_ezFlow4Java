@@ -1127,15 +1127,15 @@
 								+ feature);
 			Openwin.focus();
 		} else {
+			if(listType=='recv'){
+				parent.left.setRecvCount();
+				setJournalList();
+			}
 			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "journalDetail",
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			
 			Openwin.focus();
-			if(listType=='recv'){
-				parent.left.setRecvCount();
-				setJournalList();
-			}
 		}
 	}
 	 
