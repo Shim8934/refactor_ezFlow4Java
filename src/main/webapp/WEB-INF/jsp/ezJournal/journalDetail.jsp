@@ -131,8 +131,10 @@
 							<c:if test="${journal.totalRecv gt 0 }">
 								<li><span onclick='journalReceiverList();'> <spring:message code='ezJournal.t113' />(${journal.checkRecv }/${journal.totalRecv })</span></li>
 							</c:if>
+							<c:if test="${journal.mine eq 'yes' }">
 							<!-- 		        	재사용 -->
 							<li><span onclick='journalReuse()'> <spring:message code='ezQuestion.t700' /></span></li>
+							</c:if>
 							<!-- 		        	인쇄 -->
 							<li><span onclick='printJournal();'> <spring:message code='main.t73' /></span></li>
 	
