@@ -319,17 +319,18 @@
 		   				dataType:"json",
 		   				url:url,
 		   				success: function(forms){
-		   					var trs = "<tr><th style='text-align: center;'><spring:message code='ezJournal.t72' /></th></tr>";
+// 		   					var trs = "<tr><th style='text-align: center;'><spring:message code='ezJournal.t72' /></th></tr>";
+							var trs ="<tr><th style='margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;'><spring:message code='ezJournal.t70' /></th></tr>";
 		   					$(forms).each(function(){
 		   						trs += "<tr onclick='sumFormClick(this);' ondblclick='writeSumJournal();' style='cursor:pointer;' sumTypeId="+this.typeId+" sumFormId="+this.formId+"><td>"+this.formName+"</td></tr>";
 		   					})
-	   						$("#basicFormList").html(trs);
+	   						$("#basicFormList").append(trs);
 		   				}
 		   			});
 					
 					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].sumSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
 		        	
-		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 50;
+		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 150;
 		        	
 		        	$("#sumpopup").css("left", popupX);
 		        	
@@ -976,8 +977,11 @@
     </div>
 	<div class="jquery-modal blocker current" id="selectSumJournal" style="display:none;">
 		<div id="sumpopup" class="popupwrap1 modal popup" style="text-align:center; width:300px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 500px; display: inline-block;">
-			<h1><spring:message code='ezJournal.t70' /></h1>
-			<table class="mainlist" id="basicFormList" style="width: 100%;">
+<%-- 			<h1 style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic;"><spring:message code='ezJournal.t70' /></h1> --%>
+			<table class="mainlist" id="basicFormList" style="width: 100%; border:1px solid #ddd !important; border-top:none;">
+<!-- 				<tr> -->
+<%-- 					<th style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;"><spring:message code='ezJournal.t70' /></th> --%>
+<!-- 				</tr>			 -->
 			</table>
 				<br />
 				<table style="width: 100%">
@@ -1127,15 +1131,13 @@
 								+ feature);
 			Openwin.focus();
 		} else {
-			if(listType=='recv'){
-				parent.left.setRecvCount();
-				setJournalList();
-			}
 			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "journalDetail",
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
-			
 			Openwin.focus();
+			if(listType=='recv'){
+				parent.left.setRecvCount();
+			}
 		}
 	}
 	 
