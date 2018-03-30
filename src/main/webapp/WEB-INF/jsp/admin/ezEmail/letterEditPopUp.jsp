@@ -137,9 +137,9 @@
 					data:letterJson,
 					url:uploadUrl,
 					success:function(data){
-						if (type != "add") { // 수정일때 미리보기창 다시 보여주기
+						/* if (type != "add") { // 수정일때 미리보기창 다시 보여주기
 							opener.letterPreView(letterJson.letterNo);	
-						}
+						} */
 						if (opener.searchTxt != "") {
 							opener.letterSearch();
 						} else {

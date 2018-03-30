@@ -87,33 +87,48 @@ function letterPreView(letterNo) {
 		url:"/admin/ezEmail/readLetter",
 		dataType:"json",
 		success:function(data){
-			var filePath = data.filePath; 
-			var txtDisplay = "none";
-			var iframeDisplay = "block";
-			
-			if (filePath == "ERROR") {
-				txtDisplay = "block";
-				iframeDisplay = "none";
-				
-				$(".lmPreViewIframe").attr("src", "");
-				$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
-			} else {
-				preViewIframe(filePath);
-				
-				$(".lmPreViewTxt").text("");
-				$(".lmPreViewIframe").attr("data-letterName", data.displayname.replace(/</gi, "&lt;"));
-			}
-			
-			$(".lmPreViewTxt").css("display",txtDisplay);
-			$(".lmPreViewIframe").css("display",iframeDisplay);
+			lmPreviewChange(data);
 		}
 	});
 }
 
 function preViewIframe(filePath) {
-	var path = filePath + "?rand=" + Math.random() + "&d=" + new Date().getSeconds();
+	var path = filePath === "ERROR" ? "" : filePath + "?rand=" + Math.random() + "&d=" + new Date().getSeconds();
 	
 	$(".lmPreViewIframe").attr("src", path);
+}
+
+function lmPreviewChange(data) {
+	var preTxt = $(".lmPreViewTxt");
+	var preIframe = $(".lmPreViewIframe");
+	var txtDisplay = "block";
+	var iframeDisplay = "none";
+	var ifrLetterName = "";
+	var ifrLetterNo = "";
+	var txtText = "미리보기";
+	var filePath = "ERROR";
+	
+	if (data !== undefined) {
+		var filePathTmp = data.filePath;
+		ifrLetterName = data.displayname.replace(/</gi, "&lt;");
+		ifrLetterNo = data.letterNo;
+		
+		if (filePathTmp === "ERROR") {
+			txtText = "존재하지 않는 편지지입니다.";
+		} else {
+			txtText = "";
+			txtDisplay = "none";
+			iframeDisplay = "block";
+			filePath = filePathTmp;
+		}
+	}
+	
+	preViewIframe(filePath);
+	preTxt.css("display", txtDisplay);
+	preIframe.css("display", iframeDisplay);
+	preTxt.text(txtText);
+	preIframe.attr("data-lettername", ifrLetterName);
+	preIframe.attr("data-letterno", ifrLetterNo);
 }
 
 // 편지지 리스트 
@@ -181,7 +196,7 @@ function addLetterList(jsonArr) {
 	// 선택한 편지지 목록 유지
 	if (nowSelect !== undefined && nowSelect !== "") {
 		$(document).find(".lmLetterListUl #" + nowSelect).click();
-	}
+	} 
 	
 	letterListCss(pageType, searchMode);
 	searchMode = false;

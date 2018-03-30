@@ -179,16 +179,17 @@
 					},
 					url:"/admin/ezEmail/deleteLetter",
 					success:function(){
+						var lmPreIframe = $(".lmPreViewIframe");
+						
 						if (searchTxt != "") {
 							letterSearch(); // 검색된 편지지 목록
 						} else {
 							getLetterList(letterBoxNo); 
 						}
 						
-						$(".lmPreViewTxt").css("display","block");
-						$(".lmPreViewTxt").text("존재하지 않는 편지지입니다.");
-						$(".lmPreViewIframe").attr("src","");
-						$(".lmPreViewIframe").css("display","none");
+						if (lmPreIframe.attr("data-letterno") === letterNo) {
+							lmPreviewChange();
+						}
 						
 						alert("삭제하였습니다.");
 					}
@@ -196,7 +197,8 @@
 			}
 			
 			// 편지지 삭제 버튼 클릭
-			$(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(){
+			$(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(event){
+				event.stopPropagation();
 				var deleteChk = confirm("정말로 삭제하시겠습니까?");
 				
 				if(deleteChk) {
