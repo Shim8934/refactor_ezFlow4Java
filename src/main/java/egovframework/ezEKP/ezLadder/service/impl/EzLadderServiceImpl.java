@@ -484,10 +484,21 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public void setUserOrder(int LadderId, String userName1, String userName2)
-			throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void setUserOrder(LadderVO ladVO, String firstUser, String secondUser, int firstUserOrder, int secondUserOrder,
+			String firstItem, String secondItem) throws Exception {
+		logger.debug("setUserOrder started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("LadderId", ladVO.getLadderId());
+		map.put("firstUser", firstUser);
+		map.put("secondUserOrder", secondUserOrder);
+		map.put("secondItem", secondItem);
+		map.put("tenant_id", ladVO.getTenant_id());
+		ezLadderDAO.setUserOrder(map);
+		map.put("firstUser", secondUser);
+		map.put("secondUserOrder", firstUserOrder);
+		map.put("secondItem", firstItem);
+		ezLadderDAO.setUserOrder(map);
+		logger.debug("setUserOrder started.");
 	}
 
 	@Override

@@ -59,12 +59,10 @@ public class EzLadderDAO extends EgovAbstractDAO {
 		return (List<LadderVO>) list("EzLadderDAO.searchAllLadderList", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void deleteLadderList(Map<String, Object> map) throws Exception {
 		update("EzLadderDAO.deleteLadderList", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public LadderVO ladderContent(Map<String, Object> map) throws Exception {
 		return (LadderVO) select("EzLadderDAO.ladderContent", map);
 	}
@@ -165,5 +163,9 @@ public class EzLadderDAO extends EgovAbstractDAO {
 	
 	public void updateLadderResult(Map<String, Object> map) throws Exception {
 		update("EzLadderDAO.updateLadderResult", map);
+	}
+	
+	public void setUserOrder(Map<String, Object> map) throws Exception {
+		update ("EzLadderDAO.setUserOrder", map);
 	}
 }

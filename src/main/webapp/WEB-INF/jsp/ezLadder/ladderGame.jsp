@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 	<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 	<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
 	<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
 	
@@ -26,9 +27,12 @@
 		var size = "${ fn:length(list)}";
 		var lineCnt = "${vo.lineCnt}"
 		var ladderId = "${vo.ladderId}";
-		
+		var dragloc = {};
+		var droploc = {};
 		var stompClient = null;
 		var servername = null;
+		var attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
+		var items = []; 
 		
 		$(window).unload(function() {
 			if (stompClient !== null) {
@@ -50,10 +54,9 @@
 			
 			setAllUser();
 			setAttendantsView(); 
-			/** 사이즈/ 위치 */
 			
-			$("#blackBox").css("width", size*150 + "px");
-			$("#ladderLine").css("width", size*150 + "px");
+			$("#blackBox").css("width", size*146 + "px");
+			$("#ladderLine").css("width", size*146 + "px");
 			$("#startButton").css("left", size*130/2 + "px");
 			$(".setTable").css("width",  $(window).width() - 20 + "px");
 			$("#ladderLineBox").css("width", $(window).width() - 60 + "px");
@@ -107,7 +110,52 @@
 				var cmtId = $(this).attr("cmtid");
 				setComment("delete", cmtId);
 			})
+		
 		});
+		
+		/** 참여자 위치 바꾸끼*/
+		function changeListOrder() {
+			var ladId1 = dragloc["id"].substring(4);
+			var ladId2 = droploc["id"].substring(4);
+			
+			$.ajax({
+				type: "POST",
+				url: "/ezLadder/serUserOrder.do",
+				dataType: "json",
+				traditional: true,
+				data: {
+					"ladderId": ladderId,
+					"firstUser": attendants["id"][ladId1],
+					"firstUserOrder": ladId1,
+					"secondUser": attendants["id"][ladId2],
+					"secondUserOrder": ladId2,
+					"firstItem": items[ladId1],
+					"secondItem": items[ladId2]
+				},
+				success: function() {			
+					var temp = { "id": [], "name": [], "name2": [], "pic": [], "order": []};
+					temp["id"][0] = attendants["id"][ladId1];
+					temp["name"][0] = attendants["name"][ladId1];
+					temp["name2"][0] = attendants["name2"][ladId1];
+					temp["pic"][0] = attendants["pic"][ladId1];
+					temp["order"][0] = attendants["order"][ladId1];
+				
+					attendants["id"][ladId1] =  attendants["id"][ladId2];
+					attendants["name"][ladId1] = attendants["name"][ladId2];
+					attendants["name2"][ladId1] = attendants["name2"][ladId2];
+					attendants["pic"][ladId1] = attendants["pic"][ladId2];
+					attendants["order"][ladId1] = attendants["order"][ladId2];
+					
+					attendants["id"][ladId2] =  temp["id"][0];
+					attendants["name"][ladId2] = temp["name"][0];
+					attendants["name2"][ladId2] = temp["name2"][0];
+					attendants["pic"][ladId2] = temp["pic"][0];
+					attendants["order"][ladId2] = temp["order"][0];
+				
+					setAttendantsView(); 
+				}
+			});
+		}
 		
 		/** 웹소켓 */
 		var addCommentView = [];
@@ -118,7 +166,7 @@
 			stompClient.connect({}, function() {
 				stompClient.subscribe("/lad/cmt/addCmt/" + ladderId, function(result) {
 					var cmtjson = JSON.parse(result.body);
-					
+					console.log("cmtjson : " + cmtjson);
 					addCommentView["type"] = "prepend";
 					addCommentView["contents"] = cmtjson;
 					
@@ -138,6 +186,39 @@
 					var cmtjson = JSON.parse(result.body);
 					
 					$("#cmt_" + cmtjson["id"]).parent(".cmt_wrap").remove();
+				});
+				
+				stompClient.subscribe("/lad/userOrder/change/" + ladderId, function(result) {	// 참여자 위치 바꾸기 subscribe
+					var lines = JSON.parse(result.body);
+					
+				 	$("#attendantList").html("");
+					$("#itemList").html("");
+					for(var i = 0; i < lines.length; i++) {
+						html = "";
+						picsrc = "/images/OrganTree/porson_noimg.gif";
+						html += "<li class='attendant'>";
+						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
+						} else {
+							picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
+						}
+						html += "<div class='ladderDrag' id='drag" + i + "'><img src='" 
+									+ picsrc + "' width='90px' height='90px' />";
+						html +=  lines[i]["userName"] ;
+						html += "<span class='remove'>★</span></div></li>";		
+						$("#attendantList").append(html);
+						$("#itemList").append("<li class='item'>" + lines[i]["item"] + "</li>");
+					} 
+					add_user_change_ulsize(attendants["id"].length); 
+				
+					if("${vo.status}" == 0) {
+						drag();
+					}
+					
+				});
+				
+				stompClient.subscribe("/lad/start/" + ladderId, function(result) {		// 시작시 이동 subscribe
+					window.location.href = "/ezLadder/getLadderGame.do?ladderId=" + ladderId + "&searchSelect=" + searchSelect +
+					"&searchInput=" +  searchInput + "&mode=" + mode + "&currPage=" +  currPage;
 				});
 			});
 		}
@@ -257,6 +338,7 @@
 			addCommentView = [];
 		}
 		
+		// 삭제
 		function deleteLadder(idx) {
 		
 			allData = [idx, searchSelect, searchInput, mode, currPage, back ];	
@@ -267,17 +349,28 @@
 		}
 		
 		
+		// 시작
 		function start(idx) {
 			allData = [idx, searchSelect, searchInput, mode, currPage, size, lineCnt ];	
 			if (confirm('시작하시겠습니까?')) {
-				window.location.href= '/ezladder/setLadderStart.do?allData=' + allData;
+				jQuery.ajaxSettings.traditional = true;
+				$.ajax({
+					type: "POST",
+					url: "/ezLadder/setLadderStart.do",
+					dataType: "json",
+					data: {
+						"allData": allData
+					},
+					success: function() {
+						console.log("헤헤헤헤헿2222");
+					}
+				});
 			}
 		} 
 		
 
-		/** 참여자 셋팅 */
+		/** 참여자 초기 셋팅 */
 		function setAllUser() {
-	
 			attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
 			items = []; 
 			var cnt =0;
@@ -293,40 +386,85 @@
 		}
 		
 		
+		// 참여자 그려주기
 		function setAttendantsView() {
+			
 			var len = attendants["id"].length;
 			var picsrc = "";
 			var html = "";
+		
+			$("#attendantList").html("");
+			$("#itemList").html("");
 			
 			if(attendants !== null) {
-				$("#attendantList").html("");
-				$("#itemList").html("");
 				
 				for(var i = 0; i < len; i++) {
 					html = "";
 					picsrc = "/images/OrganTree/porson_noimg.gif";
 					html += "<li class='attendant'>";
 					if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
-						html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";				
 					} else {
 						picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
-						html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";
 					}
+					html += "<div class='ladderDrag' id='drag" + i + "'><img src='" 
+								+ picsrc + "' width='90px' height='90px' />";
 					html +=  attendants["name"][i] ;
 					html += "<span class='remove'>★</span></div></li>";		
 					$("#attendantList").append(html);
 					$("#itemList").append("<li class='item'>" + items[i] + "</li>");
-					
 				}
-				add_user_change_ulsize(attendants["id"].length);
 				
 			}
+			add_user_change_ulsize(attendants["id"].length);
+			
+			if("${vo.status}" == 0) {
+				drag();
+			}
 		} 
+		
+		// 드래그 앤 드랍
+		function drag() {
+			$(".ladderDrag").draggable({ // 드래그 리스트
+				revert: "invalid",
+				revertDuration: 400,
+				zIndex: 100,
+				addClasses: false,
+				start: function(event, ui) {
+					var divEl = $(this);
+					dragloc = {};
+					droploc = {};
+					dragloc = {"id": $(this).attr("id"), "left": divEl.offset().left}; 
+				}
+				
+			});
+			
+			$(".ladderDrag").droppable({ // 드랍 리스트
+				accept: ".ladderDrag",
+				addClasses: false,
+				hoverClass: "nowOver",
+				drop: function(event, ui) {
+					
+					var divEl = $(this);
+					droploc = {"id": $(this).attr("id"), "left": divEl.offset().left};
+				
+				 	$("#" + dragloc["id"]).css("z-index", "10").animate({"left": droploc["left"]}, 2000, function() {
+						$("#" + dragloc["id"]).css("left",0);
+						$("#" + dragloc["id"]).css("top", 0);
+					});
+					$("#" + droploc["id"]).css("z-index", "10").animate({"left": dragloc["left"]}, 2000, function() {
+						$("#" + droploc["id"]).css("left",0);
+						$("#" + dragloc["id"]).css("top", 0);
+					});  
+					changeListOrder();
+				}
+			});
+		}
 		
 		function add_user_change_ulsize(usernum) {
 			$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
 			$("#ladderCanvas").attr("width", (usernum * 150) + "px");
 		}
+		
 	</script>
 	<style type="text/css">
 		
@@ -347,7 +485,7 @@
 		}
 		
 		#blackBox {
-			height:600px;
+			height:550px;
 			border:30px solid transparent; 
 			color:black;
 			margin-right:50px;
@@ -358,7 +496,7 @@
 			
 		}
 		#ladderLine {
-			height:600px;
+			height:550px;
 			border:30px solid transparent; 
 			color:black;
 			margin-right:50px;
@@ -376,12 +514,25 @@
 		}
 		
          #startButton {
+         	width:50px;
           	position: relative; top: 220px;
          }
          
          #itemList {
 			margin-top: 100px;
 		}
+		
+		.nowOver {
+			background: beige;
+		}
+			
+		.nowMove {
+			background: beige;
+			z-index: 100;
+		}
+		
+		
+		
 	</style>
 </head>
 	<body class="mainbody">
@@ -458,8 +609,6 @@
 		</div>
 		<h3>
 		* 프론트 꾸며야 됨 - 프로필 이미지 넣기.<br>
-		* 웹소켓 - 참여자 바꾸기
-		* 드래그 앤 드랍
 		* 사다리 연동
 		</h3>
 	</body>
