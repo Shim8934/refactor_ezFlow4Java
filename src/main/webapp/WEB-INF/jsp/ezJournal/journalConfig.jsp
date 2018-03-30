@@ -114,7 +114,7 @@
  			var previewWContent = document.getElementById("WContent").value;
  			
  			$.ajax({
- 				url : "/ezJournal/saveJournalConfig.do",
+ 				url : "/ezJournal/saveJournalEnv.do",
  				method : "POST",
  				dataType : "text",
  				data : {
@@ -137,7 +137,7 @@
     		$.ajax({
     			type : "POST",
     			dataType : "text",
-    			url : "/ezJournal/saveJournalConfig.do",
+    			url : "/ezJournal/saveJournalEnv.do",
     			data : {
     				recvAlert : recvAlert,
     				replyAlert : replyAlert

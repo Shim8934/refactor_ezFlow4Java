@@ -103,7 +103,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<JournalCompanyVO> getCompanyList(Map<String, String> map){
+	public List<JournalCompanyVO> getCompanyList(Map<String, Object> map){
 		return (List<JournalCompanyVO>) list("selectCompanyList",map);
 	}
 	
@@ -113,7 +113,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<JournalAuthorVO> getAuthorList(Map<String, String> map){
+	public List<JournalAuthorVO> getAuthorList(Map<String, Object> map){
 		return (List<JournalAuthorVO>) list("selectAuthorList",map);
 	}
 	
@@ -123,7 +123,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<JournalAuthorVO> getAuthDeptList(Map<String, String> map){
+	public List<JournalAuthorVO> getAuthDeptList(Map<String, Object> map){
 		return (List<JournalAuthorVO>) list("selectAuthorDept",map);
 	}
 	
@@ -133,7 +133,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<DeptViewVO> getDeptViewVO(Map<String, String> map){
+	public List<DeptViewVO> getDeptViewVO(Map<String, Object> map){
 		return (List<DeptViewVO>) list("selectDeptList",map);
 	}
 	
@@ -143,7 +143,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<JournalAuthorVO> getDeptUserList(Map<String, String> map){
+	public List<JournalAuthorVO> getDeptUserList(Map<String, Object> map){
 		return (List<JournalAuthorVO>) list("selectUserList",map);
 	}
 
