@@ -12,36 +12,47 @@ public class MailLetterBoxVO {
 	public int getLetterBoxNo() {
 		return letterBoxNo;
 	}
+
 	public void setLetterBoxNo(int letterBoxNo) {
 		this.letterBoxNo = letterBoxNo;
 	}
+
 	public int getParentLetterBoxNo() {
 		return parentLetterBoxNo;
 	}
+
 	public void setParentLetterBoxNo(int parentLetterBoxNo) {
 		this.parentLetterBoxNo = parentLetterBoxNo;
 	}
+
 	public String getDisplayname() {
 		return displayname;
 	}
+
 	public void setDisplayname(String displayname) {
 		this.displayname = displayname;
 	}
+
 	public String getDisplayname2() {
 		return displayname2;
 	}
+
 	public void setDisplayname2(String displayname2) {
 		this.displayname2 = displayname2;
 	}
+
 	public String getCompanyID() {
 		return companyID;
 	}
+
 	public void setCompanyID(String companyID) {
 		this.companyID = companyID;
 	}
+
 	public int getTenantID() {
 		return tenantID;
 	}
+
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
 	}

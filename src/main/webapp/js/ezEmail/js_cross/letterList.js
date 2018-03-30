@@ -177,7 +177,7 @@ function addLetterList(jsonArr) {
 						}
 					});
 					
-					letterListHtml += "<b>" + boxName + "</b>";
+					letterListHtml += "<b title='" + boxName + "'>" + boxName + "</b>";
 				}
 			} else {
 				letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp(this)'>수정</button>";
@@ -241,10 +241,3 @@ $(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect')",functio
 	$(this).css("background","none");
 });
 
-
-// 편지지함명 자세히 보기
-$(document).on("mouseover", "b" ,function(){
-	var boxName = $(this).context.innerText;
-	$(this).attr("title", boxName);
-	
-});

@@ -28,10 +28,11 @@
 	        	if (companyID != document.getElementById("ListCompany").value ) {
 	        		companyID = document.getElementById("ListCompany").value;
 	        		
+	        		var letteIfr = document.getElementById("Letter_ifrm").src;
 	        		if (Tab1_SelectID == 'tagsub1') {
-	        			document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterBoxManager.do?companyId=" + companyID;
+	        			letteIfr = "/admin/ezEmail/letterBoxManager.do?companyId=" + companyID;
 	        		} else {
-	        			document.getElementById("Letter_ifrm").src = "/admin/ezEmail/letterAdminPage.do?companyId=" + companyID;
+	        			letteIfr = "/admin/ezEmail/letterAdminPage.do?companyId=" + companyID;
 	        		}
 	        		
 	        	}
@@ -47,36 +48,40 @@
 	            if (obj.className != "tabon") {
 	
 	                obj.className = "tabon";
+	                var tabSelect = document.getElementById(Tab1_SelectID);
 	                if (obj.id != Tab1_SelectID) {
-	                    if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
-	                        document.getElementById(Tab1_SelectID).className = "";
+	                    if (Tab1_SelectID != "" && tabSelect != null)
+	                        tabSelect.className = "";
 	
 	                    obj.className = "tabon";
 	                    Tab1_SelectID = obj.id;
 	                    selValue = obj.textContent;
 	                    CurPage = 1;
 	                }
+	                
+	                var tabpartUL = document.getElementById("tabpart01UL").style.display;
 	                if (!displayFlag)
-	                    document.getElementById("tabpart01UL").style.display = "";
+	                	tabpartUL = "";
 	                else {
-	                    if (document.getElementById("tabpart01UL").style.display == "")
-	                        document.getElementById("tabpart01UL").style.display = "none";
+	                    if (tabpartUL == "")
+	                    	tabpartUL = "none";
 	                    else
-	                        document.getElementById("tabpart01UL").style.display = "";
+	                    	tabpartUL = "";
 	                }
 	            }
 	            else {
-	                if (document.getElementById("tabpart01UL").style.display == "")
-	                    document.getElementById("tabpart01UL").style.display = "none";
+	                if (tabpartUL == "")
+	                	tabpartUL = "none";
 	                else
-	                    document.getElementById("tabpart01UL").style.display = "";
+	                	tabpartUL = "";
 	            }
 	        }
 	        
 	        function tabAllWidth() {
 	            var allWidth = 0;
-	            for (var i = 0; i < document.getElementById("tab1").getElementsByTagName("P").length; i++) {
-	                allWidth += document.getElementById("tab1").getElementsByTagName("P")[i].offsetWidth;
+	            var tabP = document.getElementById("tab1").getElementsByTagName("P");
+	            for (var i = 0; i < tabP.length; i++) {
+	                allWidth += tabP[i].offsetWidth;
 	            }
 	            return allWidth;
 	        }
@@ -106,9 +111,10 @@
 	
 		    function Tab1_MouseClick(obj) {		    	
 		        obj.className = "tabon";
+		        var tabSelect = document.getElementById(Tab1_SelectID);
 		        if (obj.id != Tab1_SelectID) {
-		            if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
-		                document.getElementById(Tab1_SelectID).className = "";
+		            if (Tab1_SelectID != "" && tabSelect != null)
+		            	tabSelect.className = "";
 	
 		            obj.className = "tabon";
 		            Tab1_SelectID = obj.id;
@@ -121,20 +127,22 @@
 	        }
 	
 	        function Tab1_NewTabIni(pTabNodeID) {
-	            for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
-	                if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
-	                    if (document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).nodeName == "SPAN") {
-	                        document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseover = function () { Tab1_MouserOver(this); };
-	                        document.getElementById(pTabNodeID).childNodes.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };
+	        	
+	        	var tabNode = document.getElementById(pTabNodeID).childNodes;
+	            for (var i = 0; i < tabNode.length; i++) {
+	                if (tabNode.item(i).nodeName == "P") {
+	                    if (tabNode.item(i).childNodes.item(0).nodeName == "SPAN") {
+	                    	tabNode.item(i).childNodes.item(0).onmouseover = function () { Tab1_MouserOver(this); };
+	                    	tabNode.item(i).childNodes.item(0).onmouseout = function () { Tab1_MouserOut(this); };
 	                        
-	                        if (document.getElementById(pTabNodeID).childNodes[i].childNodes[0].id != "overSpan")
-	                            document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onclick = function () { Tab1_MouseClick(this); };
+	                        if (tabNode[i].childNodes[0].id != "overSpan")
+	                        	tabNode[i].childNodes[0].onclick = function () { Tab1_MouseClick(this); };
 	                        else
-	                            document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onclick = function () { Tab1_MouseClick_more(this, true); };
+	                        	tabNode[i].childNodes[0].onclick = function () { Tab1_MouseClick_more(this, true); };
 	
 	                        if (i == 0) {
-	                            document.getElementById(pTabNodeID).childNodes.item(0).childNodes.item(0).className = "tabon";
-	                            Tab1_SelectID = document.getElementById(pTabNodeID).childNodes.item(0).childNodes.item(0).id;
+	                        	tabNode.item(0).childNodes.item(0).className = "tabon";
+	                            Tab1_SelectID = tabNode.item(0).childNodes.item(0).id;
 	                        }
 	                    }
 	                }
