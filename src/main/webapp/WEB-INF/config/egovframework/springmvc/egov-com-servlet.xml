@@ -91,7 +91,11 @@
     <mvc:resources location="/files/" mapping="/files/**"/>
     <mvc:resources location="/docs/" mapping="/docs/**"/>
     
-    <mvc:annotation-driven/>
+	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="favorPathExtension" value="false" />
+	</bean>
+    
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" />
 
 	<websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">		
 	    <websocket:stomp-endpoint path="/hello" >  	    	 	
