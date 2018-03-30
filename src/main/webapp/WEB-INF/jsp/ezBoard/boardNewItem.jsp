@@ -2093,7 +2093,7 @@
 			                    <tr id="tdReservationDate">
 	                		</c:when>
 	                		<c:otherwise>
-			                    <tr id="tdReservationDate" style="visibility:hidden;">
+			                    <tr id="tdReservationDate" style="display: none;">
 	                		</c:otherwise>
 	                	</c:choose>
 	                        <th><spring:message code='ezBoard.t432' /></th>
