@@ -434,9 +434,9 @@
 
 	        function ReaderList() {
 	            var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-	            var strFeature = "status:no;dialogHeight: 400px;dialogWidth: 520px;help: no;resizable:yes";
-	            var feature = "width=520, height=400, resizable=yes, scrollbars=0";
-	            feature = feature + GetOpenPosition(520, 400);
+	            var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
+	            var feature = "width=600, height=415, resizable=yes, scrollbars=0";
+	            feature = feature + GetOpenPosition(600, 415);
 	            window.open(szHref, "", feature);
 	        }
 

@@ -712,14 +712,14 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", "");
 
 		        if (pMode != "new" && pMode != "new1" && pMode != "reply" && pMode != "temp" && pMode != "boardContent" && pMode != "boardContent" && pReservedItem == false) {
-		            if (document.getElementById("readCount") != undefined && document.getElementById("readCount").checked)
+		            if ((document.getElementById("readCount") != undefined) && (document.getElementById("readCount").checked == true)){
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "Y");
-		            else
+		            } else{
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
-		        }
-		        else
+		        	}
+		         }else{
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
-
+		        }
 		        
 				var colType = new Array();
 				var tableCol = new Array();

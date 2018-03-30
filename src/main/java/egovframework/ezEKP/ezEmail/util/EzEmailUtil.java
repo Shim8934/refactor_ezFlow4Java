@@ -1862,32 +1862,47 @@ public class EzEmailUtil {
 	public Part getInlinePart(Part part, String contentId) throws MessagingException, IOException{
 		logger.debug("getInlinePart started.");
 		
-		if(part.isMimeType("multipart/related")){
+		if (part.isMimeType("multipart/related")){
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
+			
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
-				if(p instanceof MimePart){
-					if(((MimePart)p).getContentID()!=null && ((MimePart)p).getContentID().equals(contentId)){
+				
+				if (p instanceof MimePart) {
+					if (((MimePart)p).getContentID() != null && ((MimePart)p).getContentID().equals(contentId)) {
 						logger.debug("getInlinePart ended.");
+						
 						return p;
 					}
 				}
 			}
-		} else if(part.isMimeType("multipart/*")){
+		} else if (part.isMimeType("multipart/*")) {
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
 			Part p = null;
+			
 			for (int i = 0; i < count; i++) {
 				p = getInlinePart(mp.getBodyPart(i), contentId);
-				if(p != null){
+				
+				if (p != null) {
 					logger.debug("getInlinePart ended.");
+					
 					return p;
 				}
 			}
+		} else {
+			if (part instanceof MimePart) {
+				if (((MimePart)part).getContentID() != null && ((MimePart)part).getContentID().equals(contentId)) {
+					logger.debug("getInlinePart ended.");
+					
+					return part;
+				}
+			}			
 		}
 		
 		logger.debug("getInlinePart ended.");
+		
 		return null;
 	}
 	

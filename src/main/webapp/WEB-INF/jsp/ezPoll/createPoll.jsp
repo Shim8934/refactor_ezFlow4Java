@@ -985,6 +985,7 @@
 	    
 	    // 보기 항목에 이미지 첨부시 이미지 추가.
 	    function optImageTagAppend(fileinfo, selOptRow, optimgid){
+	    	var tenantId = ${tenantId};
 	    	if(fileinfo !== null){
 		    	if(mode !== ""){
 		    		var selOptRow = document.getElementById(optimgid === "" ? "option"+fileinfo.ansId : optimgid).parentNode;
@@ -1002,7 +1003,7 @@
 	    		}else{
 	    			fileinfo = fileinfo.filePath.split('/')[0];
 	    		}
-		    	objImg.src = "/fileroot/1/files/upload_schedule/uploadFile/" + fileinfo;
+		    	objImg.src = "/fileroot/" + tenantId + "/files/upload_vote/uploadFile/" + fileinfo;
 	    		$(selOptRow).append(objImg);
 	    		checkOptionsList();
 	    	}
@@ -1149,7 +1150,7 @@
 				</tr>
 			</table>
 	
-			<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01" style="width:129px; height:30px; line-height:28px; font-size:13px; font-weight:bold; background:#efefef; border:1px solid #dcdcdc; border-radius:5px; cursor:pointer; "><spring:message code="ezPoll.t153"/></button>
+			<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01" style="width:129px; height:30px; line-height:28px; font-size:13px; background:#FFF; border:1px solid #dcdcdc; border-radius:5px; cursor:pointer; color:#0470e4;"><spring:message code="ezPoll.t153"/></button>
 	
 			<table class="content" style="width: 100%; margin:10px 0px 0px 0px;"> 
 				<tr>    <!------------Question setting---------------->
