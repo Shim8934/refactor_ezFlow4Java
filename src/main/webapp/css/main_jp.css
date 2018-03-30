@@ -319,7 +319,7 @@ width:125px; margin:0px 10px 0px 0px; white-space:nowrap; overflow:hidden; text-
 .photocont {position:relative;padding:12px 5px 15px; height:100px; overflow:hidden;}
 .photocont ul {margin:0px 0px 0px 2px; padding:0px; white-space:nowrap; overflow:hidden; height:110px;}
 .photocont ul li {display:inline-block; float:left;width:82px;margin:0px 9px;padding:0px;text-align:center;list-style:none; color:#333; cursor: pointer;}
-.photocont ul .photo {display:block;margin-bottom:10px;border: 1px solid #999;}
+.photocont ul .photo {display:block;margin-bottom:10px;border: 1px solid #666;}
 .photocont ul li .ptxt {  height:20px;display:block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:12px; text-align:center; }
 .photocont ul .btn_area {width:10px; height:50px; padding:0px; margin:0px; vertical-align:middle;}
 .photocont ul .btn_area img { position:absolute; top:40px; left:5px; cursor: pointer; }
