@@ -15,7 +15,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
-import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
+import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAttitudeDAO")
@@ -123,7 +123,6 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 
 	@SuppressWarnings("unchecked")
 	public List<JournalAuthorVO> getDeptUserList(HashMap<String, String> map) {
-		//없앨까 생각중
 		return (List<JournalAuthorVO>) list("ezAttitudeAdminDAO.getDeptUserList", map);
 	}
 

@@ -14,7 +14,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
-import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
+import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
 
 public interface EzAttitudeService {
 	public Object getAttitudeInfo(String userId, String date, String typeId, int tenantId) throws Exception;
