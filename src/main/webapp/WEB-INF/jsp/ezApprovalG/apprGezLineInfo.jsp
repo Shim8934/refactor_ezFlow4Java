@@ -133,7 +133,7 @@
 		    }
 		    function getAprovSub_after(xml) {
 		        try {
-		            if (xml == "") return;
+		            if (xml == "" || xml == "NOTPERMISSION") return;
 		
 		            document.getElementById("lvAprLine").innerHTML = "";
 		
