@@ -269,6 +269,13 @@
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		        }
+		      
+		        var editorW = (document.documentElement.clientWidth - 20) + "PX";
+		        document.getElementById("tab02").style.width = editorW;
+	            document.getElementById("message").style.width = editorW;	            
+	            //iframe 내부 에디터의 body width 조절
+	            $("iframe").ready(function(){ $("iframe[name='message']").contents().find("body").css("width" , editorW); });
+		        
 		    };
 		
 		    $(function () {
@@ -1483,11 +1490,17 @@
 		                    if ("${docID}" != "")
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                }
-		                else
+		                else{
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		
+		                }
 		        }
 		        
+                var editorW = (document.documentElement.clientWidth - 20) + "PX";
+		       	document.getElementById("tab02").style.width = editorW;
+	            document.getElementById("message").style.width = editorW;
+	            //iframe 내부 에디터의 body width 조절
+	            $("iframe").ready(function(){ $("iframe[name='message']").contents().find("body").css("width" , editorW); });
+      
 		    }
 		    function bodydragover(evt) {
 		        evt.dataTransfer.dropEffect = "none";
