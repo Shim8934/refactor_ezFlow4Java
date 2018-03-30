@@ -11952,7 +11952,7 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getUserRight" parameterClass="Map" resultClass="int">
 		SELECT 
-			count(USERRIGHT) 
+			USERRIGHT
         FROM 
         	TBL_RECROLEINFO 
         WHERE  
@@ -12014,14 +12014,15 @@
                 	CN = #v_UserID#
                 AND
                 	TENANT_ID = #v_TENANTID#
-                AND
-	    			COMPANYID = #companyID# ) DEPTINFO   
+<!--                 AND -->
+<!-- 	    			COMPANYID = #companyID#  -->
+	    			) DEPTINFO   
           ON 
           	DEPTINFO.DEPTID = TBL_RECORD.ProcessDeptCode
           AND
             DEPTINFO.TENANT_ID = TBL_RECORD.TENANT_ID
-          AND
-            DEPTINFO.COMPANYID = TBL_RECORD.COMPANYID 
+<!--           AND -->
+<!--             DEPTINFO.COMPANYID = TBL_RECORD.COMPANYID  -->
        	  WHERE  
        	  	RECORDID = #v_RecID#
        	  AND
@@ -12032,7 +12033,7 @@
 	
 	<select id="EzApprovalG.getUserRecRightCount2" parameterClass="Map" resultClass="String">
 		 SELECT 
-		 	UserRight 
+		 	COUNT(UserRight) 
          FROM 
          	TBL_RECROLEINFO 
          WHERE  
@@ -12044,7 +12045,7 @@
          AND 
          	SeperateAttachNo = #v_SepAttNo#
          AND 
-         	UserID = #v_UserID#
+         	UserID IN (#v_UserID#,'All_User')
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.spRollbackSN" parameterClass="Map" resultClass="int"> -->
@@ -12141,7 +12142,7 @@
 <!-- 	<procedure id="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZSP_GETWEBPARTLISTCOUNT(#v_LISTTYPE#, #v_USERID#, #v_DEPTID#, #v_USERIDS#, #v_DEPTIDS#, #v_USERFLAG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id ="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int">
+	<select id ="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int" remapResults="true">
 		<isEqual property="v_LISTTYPE" compareValue="1">
 			<![CDATA[
 				SELECT 

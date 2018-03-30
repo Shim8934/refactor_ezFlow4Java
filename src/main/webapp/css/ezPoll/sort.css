@@ -173,8 +173,8 @@ input[type=text]::-ms-clear{ display:none;}
 /* 20171114 추가 */
 .content .createPoll_title{margin:0px 0px 10px 0px; padding:0px 12px 0px 12px; height:50px;}
 .content .pollButton01{width:129px; height:30px; line-height:28px; font-size:13px; background:#efefef; border:1px solid #dcdcdc; border-radius:5px;}
-.pollButton02 .pollButton03{background:#004896; color:#FFF; width:64px; height:30px; line-height:30px; border-radius:5px; text-align:center; margin:0px; padding:0px;}
-.pollButton02 .pollButton03 span{background:#004896; color:#FFF; display:block; height:30px; line-height:30px; margin:0px; padding:0px; border-radius:5px;}
+.pollButton02 .pollButton03{background:#0470e4; color:#FFF; width:64px; height:30px; line-height:30px; border-radius:5px; text-align:center; margin:0px; padding:0px;}
+.pollButton02 .pollButton03 span{background:#0470e4; color:#FFF; display:block; height:30px; line-height:30px; margin:0px; padding:0px; border-radius:5px;}
 .pollButton02 .pollButton04{background:#efefef; color:#000; border:1px solid #dcdcdc; width:64px; height:28px; line-height:28px; border-radius:5px; text-align:center; margin:0px; padding:0px;}
 .pollButton02 .pollButton04 span{background:#efefef; color:#000; display:block; height:28px; line-height:28px; margin:0px; padding:0px; border-radius:5px;}
 
@@ -192,3 +192,8 @@ input[type=text]::-ms-clear{ display:none;}
 .voteUnseenTbl th{height:40px; background:#efefef; color:#000; border:1px solid #ddd; position:relative;}
 
 #ballotSystemBody{min-width: 800px}
+
+.imgPopup{width: auto; height: auto; position: relative; float: left; max-width: 400px; max-height: 400px;}
+.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 50px;}
+.imgPopupBoxOff, .imgPopupOff{display: none;}
+.thumbnail{cursor: pointer};

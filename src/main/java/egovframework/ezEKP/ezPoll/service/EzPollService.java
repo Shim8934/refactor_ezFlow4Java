@@ -96,4 +96,6 @@ public interface EzPollService {
 	public void unhideQuestion(String qstID, String userID, int tenantId) throws Exception;
 
 	public PollUserAnswerVO getSpecificPollUserAndAnswer(int optId, int qstId, String id, int tenantId) throws Exception;	
+	
+	public int checkUsingFile(int tenantID, String FilePath) throws Exception;
 }

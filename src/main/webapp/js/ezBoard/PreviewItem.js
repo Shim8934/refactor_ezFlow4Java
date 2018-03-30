@@ -299,9 +299,9 @@ function ItemPreviewRead(obj) {
     var pboardid = obj.getAttribute("DATA1");
     var pitemid = obj.getAttribute("DATA2");
 
-    if (document.getElementById('spn_title' + obj.id.split('_')[2]) != null) {
+    if (document.getElementById('spn_title' + obj.id.split('_')[2]) != null) { // 다른 게시판에선 이 조건문을 타지않는걸로 보임
         document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
-        document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
+        //document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal"; // 게시판 > 썸네일게시판  > PreViewH사용시 스크립트오류 발생시킨부분 주석
     }
     if (previewType == "PHOTO" || (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4")) {
         clickPreviweType = "PHOTO";
