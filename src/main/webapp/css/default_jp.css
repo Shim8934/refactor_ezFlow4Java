@@ -716,7 +716,7 @@ form{display:inline;margin:0}
 #tabnav li, #tabnav li.off,#tabnav2 li, #tabnav2 li.off{
 	display:block;	
 	float:left;
-	background:url('/images/kr/cm/tab1_bg_off.gif') repeat-x;
+	/* background:url('/images/kr/cm/tab1_bg_off.gif') repeat-x; */
 	margin:0px 0px 0px -1px; 
 	margin-bottom:0px;
 	height:26px;
@@ -733,7 +733,7 @@ form{display:inline;margin:0}
 	line-height:26px;
 	margin-bottom:0px;
 	color:#666;
-	background:url('/images/kr/cm/tab1_bg_off.gif') repeat-x top;
+	/* background:url('/images/kr/cm/tab1_bg_off.gif') repeat-x top; */
 }
 #tabnav li.off,#tabnav li {position:relative;}
 #tabnav li.on, #tabnav2 li.on{
@@ -746,7 +746,7 @@ form{display:inline;margin:0}
 	z-index:5;
 	border:1px solid #41506e;
 	border-bottom:0px;
-	background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x;
+	/* background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x; */
 }
 #tabnav li.on span, #tabnav2 li.on span{
 	display:block;	
@@ -755,8 +755,8 @@ form{display:inline;margin:0}
 	margin-bottom:0px;
 	background:#fff;
 	color:#3f454c !important;
-	background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x;
-	}
+	/* background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x; */
+}
 
 
 #kmtabnav {border-bottom:3px solid #8daad7;color:#707070; height:18px; background:#f8f8fa;}
