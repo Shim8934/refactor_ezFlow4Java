@@ -797,6 +797,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("formId", jsonParam.get("formId"));
 		map.put("content", jsonParam.get("content"));
 		map.put("deptShare", jsonParam.get("deptShare"));
+		map.put("writeDate", commonUtil.getTodayUTCTime(""));
 		map.put("journalId", journalId);
 		map.put("tenantId", tenantId);
 		

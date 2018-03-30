@@ -191,7 +191,7 @@
 	    			var receiverID = "${receiverIds}";
 	    			var receiverName = "${receiverNames}";
 	    			
-	    			if ((receiverID != null && receiverID == "") && (receiverName != null && receiverName != "")) {
+	    			if ((receiverID != null && receiverID != "") && (receiverName != null && receiverName != "")) {
 	    				receiverID = receiverID.slice(0, -2).split(", ");
 	    				receiverName = receiverName.slice(0, -2).split(", ");
 		    			for (var i = 0; i < receiverID.length; i++) {

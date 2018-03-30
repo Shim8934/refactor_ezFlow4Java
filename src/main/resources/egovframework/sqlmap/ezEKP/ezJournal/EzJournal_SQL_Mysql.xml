@@ -1066,10 +1066,10 @@
 			journal_content = #content#
 			<isEqual property="isTemp" compareValue="N">
 			,journal_status = ""
-			,journal_date = utc_timestamp() 
+			,journal_date = #writeDate# 
 			</isEqual>
 			<isEqual property="isTemp" compareValue="Y">
-			,journal_date = utc_timestamp() 
+			,journal_date = #writeDate# 
 			</isEqual>
 		where
 			journal_id = #journalId#
