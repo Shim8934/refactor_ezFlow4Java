@@ -475,9 +475,9 @@
 		                if (tr.getAttribute("DATA5") == "Y") {
 		                    var heigth = window.screen.availHeight;
 		                    var width = window.screen.availWidth;
-		                    var left = (parseInt(width) - 525) / 2;
-		                    var top = (parseInt(heigth) - 220) / 2;
-		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA3") + "&deptID=" + encodeURI(tr.getAttribute("DATA4")) + "&docState=012", "", "height=270px,width=525px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                    var left = (parseInt(width) - 1155) / 2;
+		                    var top = (parseInt(heigth) - 460) / 2;
+		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA3") + "&deptID=" + encodeURI(tr.getAttribute("DATA4")) + "&docState=012", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                } else {
 		                	var heigth = window.screen.availHeight;
 				            var width = window.screen.availWidth;
@@ -499,7 +499,9 @@
 		                    feature = feature + GetShowModalPosition(555, 240);
 		                    var ret = window.showModalDialog(url, "", feature);
 		                } else {
-		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                	left = (parseInt(width) - 1155) / 2;
+					        top = (parseInt(heigth) - 460) / 2;
+		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                }
 		            } else if (jobState == "ATTACH") {
 		            	var AttachfilenameA1 = tr.cells[1].innerHTML;
@@ -1086,9 +1088,9 @@
 		            var tr = selRow[0];
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
-		            var left = (parseInt(width) - 525) / 2;
-		            var top = (parseInt(heigth) - 220) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=793px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            var left = (parseInt(width) - 1155) / 2;
+		            var top = (parseInt(heigth) - 460) / 2;
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		
@@ -1372,7 +1374,6 @@
 	    <div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingProgress">
 	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
 	    </div>
-	    <br>
 	    <div id="tblPageRayer"></div>
 	    <div id="trSubInfoTab">
 	        <%-- <div id="tabnav" style="width: 100%">
