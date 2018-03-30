@@ -228,13 +228,13 @@
 		        		<a href="#" class="imgbtn"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
 		        	</td> 
 		    	</tr> 
-		    	<tr height="55px"> 
+		    	<tr> 
 		      		<th><spring:message code='ezSchedule.t349'/></th>
 		      		<td>
 		      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" /><label for="usedate"><spring:message code='ezSchedule.t350'/></label>
 		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
 		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
-		          		<div style="margin-top:9px">&nbsp;(<spring:message code='ezSchedule.t351'/></div> 
+		          		<span>&nbsp;(<spring:message code='ezSchedule.t351'/></span> 
 		          		<!-- <tr style="DISPLAY:none"> 
 		            		<td colspan="2">
 		                    	<span id="T_st">
