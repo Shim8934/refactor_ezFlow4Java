@@ -212,7 +212,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 			ladLines.setUserName(ladLines.getUserNames()[i]);
 			ladLines.setUserName2(ladLines.getUserName2s()[i]);
 			ladLines.setItem(ladLines.getItems()[i]);
-			ladLines.setLadderOrder(ladLines.getLadderOrders()[i]);
+			ladLines.setLadderOrder(i);
 			
 			ezLadderDAO.insertLadderLine(ladLines);
 		}
@@ -235,10 +235,14 @@ public class EzLadderServiceImpl implements EzLadderService {
 		List<LadderBmVO> bmGroups = ezLadderDAO.selectBMGroup(bmGroup);
 		String offset = bmGroup.getOffset();
 		
+		String lang = commonUtil.getMultiData(bmGroup.getLang(), bmGroup.getTenant_id());
 		for(LadderBmVO groupVO : bmGroups) {
 			String dateStr = "";
 			dateStr = commonUtil.getDateStringInUTC(groupVO.getRegdate(), offset, false);
 			groupVO.setRegdate(dateStr);
+			if(lang.equals("2")) {
+				groupVO.setUserName(groupVO.getUserName2());
+			}
 		}
 		
 		return bmGroups;

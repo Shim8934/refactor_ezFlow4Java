@@ -42,13 +42,28 @@
 				$(".ladderType").on("click", function() {
 					$(".ladderType").removeClass("active");
 					$(this).addClass("active");
+					setInputValue(false);
+					setLadderTypeDiv($(this).attr("num"));
 				});
 				$("#ladderSecret").on("click", function() {
 					$("#ladderSecret").toggleClass("active");
 				});
-				$(document).on("click", "span.remove", function() {
-					attendant_remove($(this).closest("li").index());
-				});
+				$(document)
+					.on("click", "span.remove", function() {
+						attendant_remove($(this).closest("li").index());
+					})
+					.on("click", "#addBomb", function() {
+						setBomb(true);
+					})
+					.on("click", "#cutBomb", function() {
+						setBomb(false);
+					})
+					.on("blur", ".item input", function() {
+						if($(".ladderType.active").attr("num") == "1") {
+							setInputValue(false);
+							setLadderTypeDiv("1");
+						}
+					});
 				$("#slider-range-min").slider({ 
 					range: "min",
 					value: 0,
@@ -60,50 +75,84 @@
 				});
 				$("#amount").val($("#slider-range-min").slider("value"));
 				$("#bmtest").on("click", function() { /* 즐겨찾기 테스트 버튼 */
+					var arr1 = ["0", "1", "2", "3", "4", "5"];
+					var arr2 = [];
 					
-					var flag = "add";
-					var ladderbmid = flag === "add" ? "0" : "106";
-					var bmname = "이름이름";
-					var bmuserid = ["dd","dd","dd"];
-					var bmusername = ["nn","nn","nn"];
-					var bmusername2 = ["nn","nn","nn"];
+					arr2[2] = "re2";
+					arr2[5] = "re5";
 					
-					/* 즐겨찾기 조회 */
-					$.ajax({
-						type: "GET",
-						url: "/ezLadder/getLadderBM.do",
-						traditional: true,
-						dataType: "json",
-						async : false,
-						data: { 
-							ladderBmId: ""
-						},
-						success: function(result) {
-							console.log(result);
+					arr2.forEach(function(val, idx) {
+						if(!!val) {
+							console.log("enter");
+							console.log(val);
+							arr1[idx] = val;
 						}
 					});
-					/* 즐겨찾기 추가,수정,삭제 */
-					$.ajax({
-						type: "POST",
-						url: "/ezLadder/setLadderBM.do",
-						traditional: true,
-						dataType: "json",
-						data: { 
-							flag: flag,
-							ladderBmId: ladderbmid,
-							bmName: bmname,
-							userIds: bmuserid,
-							userNames: bmusername,
-							userName2s: bmusername2
-						},
-						success: function(result) {
-							console.log(result);
-						}
-					}); 
+					
+					console.log(arr1);
+					
 				});
 				
 				ladder_set_init();
 			});
+			
+			function setLadderTypeDiv(ladderType) {
+				var html = "";
+				var len = $("#itemList li").length;
+				if(ladderType == "0") {
+					html += "<div id='addBomb' class='floatL'>꽝 더하기</div>";	
+					html += "<div id='cutBomb' class='floatL'>꽝 빼기</div>";
+					html += "<div id='bombnum' class='floatL'>꽝 X <span>" + bombnum + "</span></div>";
+					$("#itemList").empty();
+					for(var i = 0; i < len; i++) {
+						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' readonly='readonly' style='background: rgb(244, 245, 245)' /></li>");
+						$("input[name='items']:eq(" + i + ")").val("?");
+					}
+				} else if(ladderType == "2") {
+					$("#itemList").empty();
+					for(var i = 0; i < len; i++) {
+						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' readonly='readonly' style='background: rgb(244, 245, 245)' /></li>");
+						$("input[name='items']:eq(" + i + ")").val("?");
+					}
+				} else {
+					if(ladderType == "1") {
+						getMoney();
+						html += "<div id='bombnum' class='floatL'>$ <span>" + totalmoney + "</span> 원</div>";
+					}
+					$("#itemList").empty();
+					for(var i = 0; i < len; i++) {
+						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' /></li>");
+						$("input[name='items']:eq(" + i + ")").val(items[i]);
+					}
+				}
+				$("#ladderTypeOption").html(html);
+			}
+			
+			var bombnum = 1;
+			function setBomb(bombadd) {
+				bombnum = $("#bombnum span").text() * 1;
+				if(bombadd && bombnum < $("#attendantList li").length) {
+					$("#bombnum span").html(++bombnum);
+				} else if(!bombadd && bombnum > 1) {
+					$("#bombnum span").html(--bombnum);
+				}
+			}
+			
+			var totalmoney = 0;
+			var regNumber = /^[0-9]*$/;
+			var regexp = /\B(?=(\d{3})+(?!\d))/g;
+			function getMoney() {
+				var len = $("#attendantList li").length;
+				var inputval = "";
+				totalmoney = 0;
+				for(var i = 0; i < len; i++) {
+					inputval = $(".item:eq(" + i + ") input").val().replace(",", "");
+					if(regNumber.test(inputval)) {
+						totalmoney += inputval * 1;
+					}
+				}
+				totalmoney = totalmoney.toString().replace(regexp, ',');
+			}
 			
 			function ladder_set_init() {
 				var retladinfo = [];
@@ -114,6 +163,7 @@
 					preLadderListComplete(retladinfo["lad"], retladinfo["ladline"]);
 				} else {
 					$(".ladderType:eq(<c:out value='${ladType}' />)").addClass("active");
+					setLadderTypeDiv("${ladType}");
 				}
 			}
 			
@@ -123,21 +173,22 @@
 				ladder_pre_set_dialogArguments[0] = "";
 				ladder_pre_set_dialogArguments[1] = preLadderListComplete;
 				
-				GetOpenWindow("/ezLadder/ladderMain.do?mode=pre&currPage=1&searchSelect=&searchInput=", "ladder_pre_set", 970, 680);
+				GetOpenWindow("/ezLadder/ladderMain.do?mode=pre&currPage=1&searchSelect=&searchInput=", "ladder_pre_set", 324, 510);
 			}			
 			function preLadderListComplete(ladderInfo, lineInfo) {
 				$("#title").val(ladderInfo["title"]);
 				$(".icondiv").removeClass("active");
 				$(".ladderType:eq(" + ladderInfo["type"] + ")").addClass("active");
+				setLadderTypeDiv(ladderInfo["type"]);
 				if(ladderInfo["secretFlag"] === 1) {
 					$("#ladderSecret").addClass("active");
 				} 
-				
 				checkAttendant(lineInfo);
+				changeSliderValue(ladderInfo["lineCnt"]);
 			}
 			
 			/** 참여자, 아이템 배열을 현재 input box 정보로 셋팅 */
-			function setInputValue() {
+			function setInputValue(allsetting) {
 				var userlen = 0;
 				var name = "";
 				var i = 0;
@@ -147,12 +198,30 @@
 				}
 				
 				for(; i < userlen; i++) {
-					if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
-						name = $(".attendant:eq(" + i + ") input").val();
-						attendants["name"][i] = name;
-						attendants["name2"][i] = name;						
+					if(allsetting) {
+						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
+							name = $(".attendant:eq(" + i + ") input").val();
+							attendants["name"][i] = name;
+							attendants["name2"][i] = name;						
+						}
 					}
-					items[i] = $("#itemList li:eq(" + i + ") input").val();
+					if($("#itemList li").length != 0 && $("#itemList li input").attr("readonly") != "readonly") {
+						items[i] = $("#itemList li:eq(" + i + ") input").val();
+					}
+					/* if($(".ladderType.active").attr("num") == "0") {
+						var bomb = $("#bombnum span").text(); //임시
+						items.forEach(function(item, index) {
+							if(index < bomb) { //임시
+								items[index] = "꽝";
+							} else {
+								items[index] = "통과"
+							}
+						});
+					} else {
+						if($("#itemList li").length != 0 && $("#itemList li:eq(0)").attr("disabled") != "disabled") {
+							items[i] = $("#itemList li:eq(" + i + ") input").val();
+						}
+					} */
 				}
 			}
 
@@ -163,7 +232,7 @@
 			/** 조직도 호출 */
 			var ladder_select_attendant_dialogArguments = [];
 			function manage_attendant_after() {
-				setInputValue();
+				setInputValue(true);
 				
 				ladder_select_attendant_dialogArguments[0] = attendants;
 			    ladder_select_attendant_dialogArguments[1] = checkAttendant;
@@ -173,12 +242,16 @@
 
 			/** 참여자 변경될때 슬라이더 바 조절 */
 			var maxLine = 5;
-			function changeSliderValue() { 
+			function changeSliderValue(value) { 
 				var len = attendants["id"].length;
 				if(len >= 2) {
 					$("#slider-range-min").slider("option", "min", len);
 					$("#slider-range-min").slider("option", "max", len * maxLine);
-					$("#slider-range-min").slider("option", "value", Math.round(len * maxLine / 2));
+					if(!value) {
+						$("#slider-range-min").slider("option", "value", Math.round(len * maxLine / 2));
+					} else {
+						$("#slider-range-min").slider("option", "value", value);
+					}
 				} else {
 					$("#slider-range-min").slider("option", "max", 0);
 					$("#slider-range-min").slider("option", "value", 0);
@@ -198,20 +271,20 @@
 				$(".item:eq(" + index + ")").remove();
 				add_user_change_ulsize(attendants["id"].length);
 				
-				changeSliderValue()
+				changeSliderValue();
 				changeUser(attendants["id"].length);
+				setLadderTypeDiv($(".ladderType.active").attr("num"));
 			}
 
 			/** 아이디+이름 검사 (익명인지 아닌지) */
 			var attendants = null;
 			var items = null;
+			var retAttendantPopInfo = [];
 			function checkAttendant(data) {
-				var overlapXML = [];
-				var noOverlapXML = [];
-				var anonyJson = {};
+				var alluser = [];
+				var overlapuser = [];
 				var len = 0;
 				var i = 0;
-				var returnXML;
 				
 				if(attendants === null) {
 					attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
@@ -221,6 +294,7 @@
 				var addIndex = 0;
 				if(typeof data === "string") {
 					console.log("string 이름으로검색시");
+					setInputValue(true);
 					
 					data = ReplaceText(data, ",", ";");
 					
@@ -238,34 +312,43 @@
 						getAttendantAJAX(names[i]);
 						
 						if(adCount === 0) { // 검색결과 없음 (완전 익명)
-							anonyJson = { "name": names[i], "name2": names[i] };
-							setAllUser(anonyJson, "anony-json");
+							alluser[i] = { "data": { "name": names[i], "name2": names[i] }, "datatype": "anony-json" };
 						
 						} else if(adCount === 1) { // 검색결과 하나
 							var checkOverlap1 = attendants["id"].findIndex(function(id) {
 								return id == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]);
 							});
+							var checkOverlap2 = function() {
+								var overlapretvalue = -1;
+								alluser.forEach(function(user, index) {
+									if(user["datatype"].substring(0, 5) !== "anony" && user["data"].getElementsByTagName("DATA6")[0].innerHTML === names[i]) {
+										overlapretvalue = 1;
+									}
+								});
+								return overlapretvalue;
+							}; 
 							
-							if(checkOverlap1 !== -1) { // 중복 유저
-								overlapXML.push(xmlDOM);
+							if(checkOverlap1 !== -1 || checkOverlap2() !== -1) { // 중복 유저
+								overlapuser[i] = xmlDOM;
 							
 							} else { // 중복 아닌 유저
-								setAllUser(xmlDOM, "real-xml");
+								alluser[i] = { "data": xmlDOM, "datatype": "real-xml" };
 							}
+							
 						} else { // 검색결과 여럿
-							console.log("-----**");
+							alluser[i] = { "data": { "name": names[i], "name2": names[i] }, "datatype": "anony-json" };
 						}
-						
 					}
 					
 					$("#inputAttendant").val("");
 					
-					if(overlapXML.length !== 0) {
-						popSelectUsertype(overlapXML, function(overlapXML, attendantType) {
-							for(i = 0; i < overlapXML.length; i++) {
-								setAllUser(overlapXML[i], attendantType);
-							}
-						});
+					if(!!overlapuser.length) { // 중복유저 팝업
+						retAttendantPopInfo[0] = true;
+						retAttendantPopInfo[1] = bindAllUser;
+						
+						DivPopUpShow(360, 185, "/ezLadder/ladderPopup.do?popupType=overlap");
+					} else {
+						bindAllUser(false);
 					}
 					
 				} else {
@@ -278,51 +361,76 @@
 					for(; i < len; i++) {
 						if(data[i]["id"].substring(0, 14) !== "anonyAttendant") {
 							getAttendantAJAX(data[i]["name"]);
-							setAllUser(xmlDOM, "real-xml", data[i]["item"]);
+							alluser[i] = { "data": xmlDOM, "datatype": "real-xml" };
 						} else {
-							setAllUser(data[i], "anony-json", data[i]["item"]);
+							overlapuser[i] = data[i];
+						}
+						if(!!data[i]["item"]) {
+							items[i] = data[i]["item"];
 						}
 					}
+					
+					if(!!overlapuser.length) {
+						bindAllUser(true, "anony-json");
+					} else {
+						bindAllUser(false);
+					}
+				}
+				
+				function bindAllUser(value, type) {
+					if(value) {
+						overlapuser.forEach(function(user, index) {
+							alluser[index] = { "data": user, "datatype": type };
+						});
+					}
+					setAllUser_(alluser);
 				}
 			}
 			
-			/** 참여자 셋팅 */
-			function setAllUser(userdata, flag, item) {
-				var totallen = attendants["id"].length;
-				var flagarr = flag.split("-");
+			function setAllUser_(userdata) {
+				DivPopUpHidden();
 				
-				if(flagarr[0] === "real") { // 일반 유저
-					if(flagarr[1] === "xml") { // xml
-						attendants["id"][totallen] = getNodeText(userdata.getElementsByTagName("DATA2")[0]);
-						attendants["name"][totallen] = getNodeText(userdata.getElementsByTagName("DATA6")[0]);
-						attendants["name2"][totallen] = getNodeText(userdata.getElementsByTagName("DATA7")[0]);
-						attendants["pic"][totallen] = getNodeText(userdata.getElementsByTagName("DATA5")[0]);
-					} else { // json
-						attendants["id"][totallen] = userdata["id"];
-						attendants["name"][totallen] = userdata["name"];
-						attendants["name2"][totallen] = userdata["name2"];
-						attendants["pic"][totallen] = userdata["pic"];
-					}
-				} else { // 익명 유저
-					attendants["id"][totallen] = "anonyAttendant_" + totallen;
-					attendants["pic"][totallen] = "";
-					if(flagarr[1] === "xml") { // xml
-						attendants["name"][totallen] = getNodeText(userdata.getElementsByTagName("DATA3")[0]);
-						attendants["name2"][totallen] = getNodeText(userdata.getElementsByTagName("DATA3")[0]);
-					} else { // json
-						attendants["name"][totallen] = userdata["name"];
-						attendants["name2"][totallen] = userdata["name2"];
-					}
-				}
+				var flag = [];
+				var attendantlen = attendants["id"].length;
+				var totallen = 0;
+				var user = {};
 				
-				if(typeof item !== "undefined") {
-					items[totallen] = item;
-				} else {
-					if(items.length < attendants["id"].length) {
+				userdata.forEach(function(_user, index) {
+					totallen = attendantlen + index;
+					flag = _user["datatype"].split("-");
+					
+					user = _user["data"];
+					if(flag[0] === "real") {
+						if(flag[1] === "xml"){
+							attendants["id"][totallen] = getNodeText(user.getElementsByTagName("DATA2")[0]);
+							attendants["name"][totallen] = getNodeText(user.getElementsByTagName("DATA6")[0]);
+							attendants["name2"][totallen] = getNodeText(user.getElementsByTagName("DATA7")[0]);
+							attendants["pic"][totallen] = getNodeText(user.getElementsByTagName("DATA5")[0]);	
+							attendants["order"][totallen] = totallen;
+						} else {
+							attendants["id"][totallen] = user["id"];
+							attendants["name"][totallen] = user["name"];
+							attendants["name2"][totallen] = user["name2"];
+							attendants["pic"][totallen] = user["pic"];
+							attendants["order"][totallen] = totallen;
+						}
+					} else {
+						attendants["id"][totallen] = "anonyAttendant_" + totallen;
+						attendants["pic"][totallen] = "";
+						attendants["order"][totallen] = totallen;
+						if(flag[1] === "xml") { // xml
+							attendants["name"][totallen] = getNodeText(user.getElementsByTagName("DATA3")[0]);
+							attendants["name2"][totallen] = getNodeText(user.getElementsByTagName("DATA3")[0]);
+						} else { // json
+							attendants["name"][totallen] = user["name"];
+							attendants["name2"][totallen] = user["name2"];
+						}
+					}
+					console.log(!items[totallen]);
+					if(items[totallen] == null) {
 						items[totallen] = "";
 					}
-				} 
-				attendants["order"][totallen] = totallen;
+				});
 				
 				setAttendantsView();
 			}
@@ -344,7 +452,9 @@
 						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
 							html += "<li class='attendant'>";
 							html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";
-							html += "<input type='text' class='input' value='" + attendants["name"][i] + "' />";
+							html += "<input type='text' class='input' name='userNames' />";
+							html += "<input type='text' name='userName2s' style='display: none;' />";
+							html += "<input type='text' name='userIds' style='display: none;' />";
 							html += "<span class='remove'>X</span></div></li>";							
 						} else {
 							if(attendants["pic"][i] !== "") {
@@ -352,12 +462,26 @@
 							}
 							html += "<li class='attendant'>";
 							html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";
-							html += "<input type='text' class='input' disabled='disabled' value='" + attendants["name"][i] + "' />";
-							html += "<span class='remove'>X</span></div></li>";	
+							html += "<input type='text' class='input' readonly='readonly' style='background: rgb(244, 245, 245)' name='userNames' />";
+							html += "<input type='text' name='userName2s' style='display: none;' />";
+							html += "<input type='text' name='userIds' style='display: none;' />";
+							html += "<span class='remove'>X</span></div></li>";
 						}
 						
 						$("#attendantList").append(html);
-						$("#itemList").append("<li class='item'><input type='text' class='input' value='" + items[i] + "' /></li>");
+						
+						var thisLi = "#attendantList li:eq(" + i + ")";
+						$(thisLi + " input[name='userNames']").val(attendants["name"][i]);
+						$(thisLi + " input[name='userName2s']").val(attendants["name2"][i]);
+						$(thisLi + " input[name='userIds']").val(attendants["id"][i]);
+						
+						if($(".ladderType.active").attr("num") == "0" || $(".ladderType.active").attr("num") == "2") {
+							$("#itemList").append("<li class='item'><input type='text' class='input' name='items' readonly='readonly' style='background: rgb(244, 245, 245)' /></li>");
+							$("#itemList li:eq(" + i + ") input").val("?");
+						} else {
+							$("#itemList").append("<li class='item'><input type='text' class='input' name='items' /></li>");
+							$("#itemList li:eq(" + i + ") input").val(items[i]);
+						}
 						
 					}
 					changeSliderValue();
@@ -400,21 +524,40 @@
 				var secretFlag = $("#ladderSecret.active").length;
 				var lineCnt = $("#slider-range-min").slider("option", "value");
 				
-				setInputValue()
+				$("input[name='type']").val(type);
+				$("input[name='secretFlag']").val(secretFlag);
+				$("input[name='lineCnt']").val(lineCnt);
+				$("form").append("<input name='bombnum' />");
 				
-				var userId = attendants["id"];
-				var userName = attendants["name"];
-				var userName2 = attendants["name2"];
-				var item = items;
-				var ladderOrder = attendants["order"];
+				if(type == "0") {
+					$("input[name='bombnum']").val(bombnum);
+				} else {
+					$("input[name='bombnum']").val(0);
+				}
 				
-				console.log(userId);
-				console.log(userName);
-				console.log(userName2);
-				console.log(item);
-				console.log(ladderOrder);
 				
-				$.ajax({ 
+				/* if(type == "0") {
+					var bombItem = 0;
+					var temp;
+					items.fill("꽝", 0, bombnum);
+					items.fill("통과", bombnum);
+					items.forEach(function(item_, index) {
+						bombItem = Math.floor(Math.random() * items.length);
+						temp = item_;
+						items[index] = items[bombItem];
+						items[bombItem] = temp;
+						$("input[name='items']:eq(" + index + ")").val(items[bombItem]);
+						$("input[name='items']:eq(" + bombItem + ")").val(items[bombItem]);
+					});
+				} */
+				
+				setInputValue(true);
+				
+				$("#ladMakeForm").submit();
+				
+				
+				
+				/* $.ajax({ 
 					type: "POST",
 					url: "/ezLadder/setLadder.do",
 					traditional: true,
@@ -432,9 +575,9 @@
 						'ladderOrder': ladderOrder
 					},
 					success: function(result) {
-						console.log('make ladder success');
+						window.location.href = "/ezLadder/ladderMain.do?mode=all&currPage=1&searchSelect=&searchInput=";
 					}
-				});
+				}); */
 			} 
 			
 			
@@ -443,76 +586,83 @@
 	</head>
 	<body class="mainbody">
 		<h1>사다리 게임</h1>
-		<div class="fullwidth">
-			<table class="setTable">
-				<tr>
-					<td></td><td style="width: 5000px;"></td><td></td>
-				</tr>
-				<tr>
-					<td colspan="2" style="width: 98%;">
-						<div class="wrap left">
-							<div class="title floatL">
-								<div class="icondiv" id="ladderPreList">이전사다리</div>
-								<input type="text" class="input" id="title" style="height: 100%; width: 100%;" placeholder="제목" />
+		<form id="ladMakeForm" method="post" action="/ezLadder/setLadder.do" name="ladMakeForm">
+			<div class="fullwidth">
+				<table class="setTable">
+					<tr>
+						<td></td><td style="width: 5000px;"></td><td></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="width: 98%;">
+							<div class="wrap left">
+								<div class="title floatL">
+									<div class="icondiv" id="ladderPreList">이전사다리</div>
+									<input type="text" class="input" name="title" id="title" style="height: 100%; width: 100%;" placeholder="제목" />
+								</div>
 							</div>
-						</div>
-					</td>
-					<td>
-						<div class="wrap right">
-							<div class="icondiv floatR fullwidth" id="ladderSecret">비밀글</div>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div class="wrap left">
-							<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px;" placeholder="참여자추가" />
-						</div>
-					</td>
-					<td colspan="2">
-						<div class="wrap right">
-							<div class="floatR" style="width: 212px;">
-								<div class="icondiv ladderType" num="0">꽝</div>
-								<div class="icondiv ladderType" num="1">돈</div>
-								<div class="icondiv ladderType" num="2">순서</div>
-								<div class="icondiv ladderType" num="3">직접</div>
+						</td>
+						<td>
+							<div class="wrap right">
+								<div class="icondiv floatR fullwidth" id="ladderSecret">비밀글</div>
+								<input name="secretFlag" style="display: none;" />
 							</div>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">
-						<div class="wrap left">
-							<div class="floatL icondiv" id="amount">0</div>
-							<div id="slider-range-min" style="width: 300px;"></div>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="4" style="height: 700px; padding: 10px 0px;">
-						<div class="wrap center" style="height: 100%; width: 100%;">
-							<div id="addAttendant" class="icondiv">add</div>
-							<div id="ladderLineBox" style="height: 100%; width: 100%; border: 1px solid gray">
-								<canvas id='ladderCanvas' width="0" height="650"></canvas>
-								<ul id="attendantList"></ul>
-								<ul id="itemList"></ul>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="wrap left">
+								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px;" placeholder="참여자추가" />
 							</div>
-						</div>
-					</td>
-				</tr>
-			</table>
-			<div class="wrap center">
-				<div class="ladderBtn" id="makeLad" style="float: right;">사다리 게임 만들기</div>
+						</td>
+						<td colspan="2">
+							<div class="wrap right">
+								<div id="ladderTypeOption" style='display:  inline-block; right: 230px; position:  absolute;'>
+								</div>
+								<div class="floatR" style="width: 212px;">
+									<div class="icondiv ladderType" num="0">꽝</div>
+									<div class="icondiv ladderType" num="1">돈</div>
+									<div class="icondiv ladderType" num="2">순서</div>
+									<div class="icondiv ladderType" num="3">직접</div>
+									<input name="type" style="display: none;" />
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<div class="wrap left">
+								<div class="floatL icondiv" id="amount">0</div>
+								<div id="slider-range-min" style="width: 300px;"></div>
+								<input name="lineCnt" style="display: none;" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4" style="height: 700px; padding: 10px 0px;">
+							<div class="wrap center" style="height: 100%; width: 100%;">
+								<div id="addAttendant" class="icondiv">add</div>
+								<div id="ladderLineBox" style="height: 100%; width: 100%; border: 1px solid gray">
+									<canvas id='ladderCanvas' width="0" height="650"></canvas>
+									<ul id="attendantList"></ul>
+									<ul id="itemList"></ul>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<div class="wrap center">
+					<div class="ladderBtn" id="makeLad" style="float: right;">사다리 게임 만들기</div>
+				</div>
+				<!-- <table>
+					
+					<tr>
+						<td>
+							<button id="bmtest">bmtest</button>
+						</td>
+					</tr>
+				</table> -->
 			</div>
-			<table>
-				
-				<tr>
-					<td>
-						<button id="bmtest">bmtest</button>
-					</td>
-				</tr>
-			</table>
-		</div>
+		</form>
 		<%-- <canvas id='ladderCanvas' width="500px" height="500px" style="border: 1px solid black"></canvas> --%>
 		
 		<span id="tetetest"><h3>만들기</h3></span>
@@ -522,7 +672,6 @@
 		<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
 	    </div>
-	    <div id="dialog" title="Dialog Title">I'm a dialog</div>
 	    <!-- end -->
 	</body>
 </html>

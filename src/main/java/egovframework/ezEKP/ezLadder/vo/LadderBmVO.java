@@ -14,6 +14,10 @@ public class LadderBmVO {
 	private String regdate;
 	/** UTC DATE */
 	private String offset;
+	private String lang;
+	private String userName;
+	private String userName2;
+	private int count;
 	
 	public int getTenant_id() {
 		return tenant_id;
@@ -51,6 +55,32 @@ public class LadderBmVO {
 	public void setOffset(String offset) {
 		this.offset = offset;
 	}
+	public String getLang() {
+		return lang;
+	}
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserName2() {
+		return userName2;
+	}
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
+	}
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "LadderBmVO [tenant_id=" + tenant_id + ", ladderBmId="

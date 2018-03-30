@@ -11,6 +11,7 @@
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 	    <link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
+	    <script type="text/javascript" src="<spring:message code='ezLadder.e1' />"></script>
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezLadder/TreeView.js"></script>
@@ -109,7 +110,7 @@
 	
 	            $("#1tab1").click();
 	            ChangeTab(document.getElementById("1tab1"));
-	            get_ladder_bmlist();
+	            getLadderBmList();
 	            ListTypeChangeIcon();
 	            recevieListview("MsgToList", "ListViewMsgTo");
 	            
@@ -207,9 +208,23 @@
 	            
 	            /** boh */
 	            $("#ladderBmBtn").on("click", function() {
-	            	setBmGroup("add");
-	            	/* add_bm_group(); */
+	            	setBmGroup("add", 0);
 	            });
+	            
+	            $(document)
+	            	.on("click", ".editBmIcon", function(e) {
+		            	var editId = "#" + $(this).attr("name");
+		            	$(editId).toggle();
+		            })
+		            .on("click", "div[name='modify']", function() {
+		            	setBmGroup("modify", $(this).parents("tr").attr("id"));
+		            })
+		            .on("click", "div[name='delete']", function() {
+		            	setBmGroup("delete", $(this).parents("tr").attr("id"));
+		            })
+		            .on("mouseleave", "div[id^='editBmGroup_']", function() {
+		            	$("div[id^='editBmGroup_']").hide();
+		            })
 	        }
 	
 	        var schedule_add_user_cross_dialogArguments = new Array();
@@ -334,6 +349,7 @@
 	        }
 	        var tempDeptID = "";
 	        function displayUserList(DeptID) {
+	        	// 부서 클릭하면 직원 보여지기
 		        if (DeptID != undefined) {
 	            	tempDeptID = DeptID;
 		        }
@@ -542,8 +558,10 @@
 	                listEventCheckbox = false;
 	        }
 	        
-		    function event_listDBclick(obj) {
-	            InsertReceiver("MsgToList");
+		    function event_listDBclick(obj, event) {
+		    	if(typeof event === "undefined" || event.clientX < 640) {
+					InsertReceiver("MsgToList");
+		    	}
 		    }
 	
 		    var strId = "";
@@ -564,146 +582,59 @@
 	            var overlapAttendantXML = [];
 	            var AttendantXML = [];
 	            
-	            if (_RowObjectID != null) { // 언제인지 모르겠씀...
-	            	console.log('11111111111111');
+	            var alluser = [];
+				var overlapuser = [];
+	            
+	            if (_RowObjectID != null) { 
 	            	if (_RowObjectName.trim() == "deptList") {
+		            	// 즐겨찾기에서 그룹으로 추가
 		            	for (var i = 0; i < $("#List_TBODY2 tr").length; i++) {
-		            		strId = $("#List_TBODY2 tr").eq(i).find("#data7").text();
+							strId = $("#List_TBODY2 tr").eq(i).find("#data7").text();
 		                    strName = $("#List_TBODY2 tr").eq(i).find("#data5").text();
 	
-		                    strDeptNM = "";
-		                    strEmail = "";
-		                    strName2 = "";
+		                    strDeptNM = $("#List_TBODY2 tr").eq(i).find("#data3").text();
+		                    strEmail = $("#List_TBODY2 tr").eq(i).find("#data6").text();
+		                    strName2 = $("#List_TBODY2 tr").eq(i).find("#data8").text();
 		                    strDeptNM2 = "";
 		                    jickwe = "";
 		                    phone = "";
 		
-		                    var listid = "MsgToList";
-		                    var getlistview = new ListView();
-		                    getlistview.LoadFromID(listid);
+		                    /* var getlistview = new ListView();
+		                    getlistview.LoadFromID(pListView); */
 		                    var IsInsert = CheckMailReceiver(strId, "3");
-		                    /* 작성자는 선택할수 없습니다 경고창
-		                    if (strId == "<c:out value='${userID}' />") {
-		                        alert("<spring:message code='ezCircular.t149' />");
-		                        continue;
-		                    } */
 		
-		                    if (!IsInsert) {
-		                        pparsingXML2 = "";
-		                        pparsingXML = "";
-		                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-		
-		                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-		                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
-		                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-		                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
-		                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
-		                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
-		                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
-		                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-		                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
-		                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-		                        Resultxml = loadXMLString(pparsingXML2);
-		
-		                        var listview = new ListView();
-		                        listview.LoadFromID(listid);
-		
-		                        var MaxID = 0;
-		                        var InitTr = listview.GetDataRows();
-		                        var MaxCntNum = 0;
-		                        for (var j = 0  ; j < InitTr.length  ; j++) {
-		                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-		                            if (MaxID < curnum) {
-		                                MaxID = curnum;
-		                                MaxCntNum = j;
-		                            }
-		                        }
-		
-		                        var objTr = listview.AddRow(InitTr.length);
-		                        if (MaxCntNum != 0)
-		                            MaxCntNum = MaxCntNum + 1;
-		                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-		                        listview.AddDataRow(objTr, Resultxml);
-		
-		                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-		                        for (var y = 0; y < _tdlength; y++) {
-		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-		                        }
+		                    if(strId.substring(0, 14) === "anonyAttendant" || !IsInsert){
+		                    	alluser[i] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real-xml" };
+		                    } else {
+		                    	overlapuser[i] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }; 
 		                    }
 		                }
 	            	} else {
-	            		console.log('22222222222');
+	            		// 즐겨찾기에서 유저로 추가
 	            		strId = $("[name='" + _RowObjectName + "'").find("#data7").text();
 	                    strName = $("[name='" + _RowObjectName + "'").find("#data5").text();
 	
-	                    strDeptNM = "";
-	                    strEmail = "";
-	                    strName2 = "";
+	                    strDeptNM = $("[name='" + _RowObjectName + "'").find("#data3").text();
+	                    strEmail = $("[name='" + _RowObjectName + "'").find("#data6").text();
+	                    strName2 = $("#List_TBODY2 tr").eq(i).find("#data8").text();
 	                    strDeptNM2 = "";
 	                    jickwe = "";
 	                    phone = "";
 	
-	                    var listid = "MsgToList";
-	                    var getlistview = new ListView();
-	                    getlistview.LoadFromID(listid);
+	                    /* var getlistview = new ListView();
+	                    getlistview.LoadFromID(pListView);  */
 	                    var IsInsert = CheckMailReceiver(strId, "3");
 	                    
-	                    /* 작성자는 선택할 수 없습니다 경고창
-	                    if (strId == "<c:out value='${userID}' />") {
-	                        alert("<spring:message code='ezCircular.t149' />");
-	                        return;
-	                    } */
-	
-	                    if (!IsInsert) {
-	                        pparsingXML2 = "";
-	                        pparsingXML = "";
-	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	
-	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
-	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-	                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
-	                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
-	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
-	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
-	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
-	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                        Resultxml = loadXMLString(pparsingXML2);
-	
-	                        var listview = new ListView();
-	                        listview.LoadFromID(listid);
-	
-	                        var MaxID = 0;
-	                        var InitTr = listview.GetDataRows();
-	                        var MaxCntNum = 0;
-	                        for (var j = 0  ; j < InitTr.length  ; j++) {
-	                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                            if (MaxID < curnum) {
-	                                MaxID = curnum;
-	                                MaxCntNum = j;
-	                            }
-	                        }
-	
-	                        var objTr = listview.AddRow(InitTr.length);
-	                        if (MaxCntNum != 0)
-	                            MaxCntNum = MaxCntNum + 1;
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-	                        listview.AddDataRow(objTr, Resultxml);
-	
-	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-	                        for (var y = 0; y < _tdlength; y++) {
-	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-	                        }
-	            		}
+	                    if(strId.substring(0, 14) === "anonyAttendant" || !IsInsert){
+	                    	alluser[i] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real-xml" };
+	                    } else {
+	                    	overlapuser[i] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone };
+	                    }
 	            	}
 	            } else {
-	            	/** parsing 부분 따로 뺌 - parsingXMLUserList() */
+	            	// 조직도에서 바로 추가
 		            if (listContentArry != "") {
 		                for (var i = 0; i < listContentArry.length; i++) {
-		                	console.log(document.getElementById(listContentArry[i]));
 		                	strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
 		                    strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
 		                    strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
@@ -712,23 +643,14 @@
 		                    strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 		                    jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 		                    phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
-		                    pic = document.getElementById(listContentArry[i]).getAttribute("_data9");
 		
-		                    var IsInsert = CheckMailReceiver(strId, "3"); //row, option (MsgToList로 넣어주고 유저가 그자리에 들어가면 IsInsert true(retvalue) 반환)
+		                    var IsInsert = CheckMailReceiver(strId, "3"); 
 		                    
 							if(!IsInsert){
-		                    	AttendantXML.push({ "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone, "pic": pic });
+								alluser[i] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real-xml" };
 		                    } else {
-		                    	overlapAttendantXML.push({ "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone, "pic": pic });
+		                    	overlapuser[i] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone };
 		                    }
-		                }
-		                if(AttendantXML.length !== 0) {
-			                parsingXMLUserList(AttendantXML, "real-xml");
-		                }
-		                if(overlapAttendantXML.length !== 0) {
-		                	popSelectUsertype(overlapAttendantXML, function(overlapAttendantXML, attendType) {
-			                	parsingXMLUserList(overlapAttendantXML, attendType);
-		                	});
 		                }
 		            } else {
 		            	console.log('4444444444444444');
@@ -801,11 +723,30 @@
 		            }
 	            }
 	            
-		        var listid ="MsgToList";
+	            if(!!overlapuser.length) {
+	            	retAttendantPopInfo[0] = true;
+					retAttendantPopInfo[1] = bindAllUser;
+					
+					DivPopUpShow(360, 185, "/ezLadder/ladderPopup.do?popupType=overlap");
+				} else {
+					bindAllUser(false);
+				}
+	            
 		        _RowObjectID = null;
+                
+                function bindAllUser(value, type) {
+					if(value) {
+						overlapuser.forEach(function(user, index) {
+							alluser[index] = { "data": user, "datatype": type };
+						});
+					}
+					parsingXMLUserList(alluser);
+				}
 		    }
 		    
-			function parsingXMLUserList(userlist, attendtype) {
+			function parsingXMLUserList(userlist) {
+				DivPopUpHidden();
+				
 				var listid = "MsgToList"; // 추가된 유저목록 테이블 아이디
 				var i = 0;
 				var len = userlist.length;
@@ -820,21 +761,21 @@
 				var strDeptNM2 = "";
 				var jickwe = "";
 				var phone = "";
-				var pic = "";
 				
 				for(; i < len; i++) {
-					strName = userlist[i]["name1"];
-					strName2 = userlist[i]["name2"];
-					strEmail = userlist[i]["name1"];
-					if(attendtype === "anony-xml") {
+					var user = userlist[i]["data"];
+					
+					strName = user["name1"];
+					strName2 = user["name2"];
+					strEmail = user["name1"];
+					if(userlist[i]["datatype"] === "anony-xml") {
 						strId = "anonyAttendant";
 					} else {
-						strId = userlist[i]["id"];
-						strDeptNM = userlist[i]["deptname1"];
-						strDeptNM2 = userlist[i]["deptname2"];
-						jickwe = userlist[i]["jickwe"];
-						phone = userlist[i]["phone"]; 
-						pic = userlist[i]["pic"];
+						strId = user["id"];
+						strDeptNM = user["deptname1"];
+						strDeptNM2 = user["deptname2"];
+						jickwe = user["jickwe"];
+						phone = user["phone"]; 
 					}
 					
 					pparsingXML = "<LISTVIEWDATA2><ROWS>";
@@ -846,7 +787,6 @@
 					pparsingXML += "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 					pparsingXML += "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 					pparsingXML += "<DATA8>" + phone + "</DATA8>";
-					pparsingXML += "<DATA9>" + pic + "</DATA9>";
 					pparsingXML += "<VALUE>"  + strName + "</VALUE></CELL></ROW>";
 					pparsingXML += "</ROWS></LISTVIEWDATA2>";
 				
@@ -908,6 +848,7 @@
 		    
 		    var pSeach = false;
 		    function DisplayUserImageList() {
+		    	console.log("DisplayUserImageList");
 		        var xmlRtn = pListXML_Info;
 		        document.getElementById("DeptUserImgList").innerHTML = "";
 		        document.getElementById("txtlist_Layer").scrollTop = "0";
@@ -935,7 +876,7 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang100 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -948,7 +889,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang100 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1155,6 +1096,7 @@
 		    }
 		    var issearch = false;
 		    function search_click(type) {
+		    	console.log("search");
 		        listContentArry = new Array();
 	
 		        if ($.trim($("#keyword").val()) == "") {
@@ -1241,33 +1183,43 @@
 		    	document.getElementById("keyword").value = "";
 			}
 		    
+		    var retAttendantPopInfo = [];
+		    /** 중복유저 팝업 관련 */
+		    function setOverlapAttendant(attendantList) {
+		    	retAttendantPopInfo[0] = attendantList;
+		    	retAttendantPopInfo[1] = parsingXMLUserList;
+		    	
+		    	DivPopUpShow(360, 185, "/ezLadder/ladderPopup.do?popupType=overlap");
+		    }
+		    
 		    /** 사다리 멤버 즐겨찾기 관련 */
-		    var retBmGroupInfo = [];
-		    function setBmGroup(type) {
+		    function setBmGroup(type, ladderBmId) {
 		    	save_userlist();
 		    	
-		    	retBmGroupInfo[0] = type;
-		    	retBmGroupInfo[1] = setBmGroupComp;
+		    	retAttendantPopInfo[0] = type;
+		    	retAttendantPopInfo[1] = setBmGroupComp;
+		    	retAttendantPopInfo[2] = ladderBmId
 		    	
-		    	DivPopUpShow(360, 185, "/ezLadder/ladderPopup.do?popupType=addBmGroup");
+		    	DivPopUpShow(360, 185, "/ezLadder/ladderPopup.do?popupType=" + type);
 		    }
 		    
 		    function setBmGroupComp(bmName, type) {
 		    	DivPopUpHidden();
-		    	console.log('즐겨찾기 추가..');
-		    	console.log(bmName+"   "+type);
-		    	console.log(rtn);
 		    	
-		    	var ladderbmid = 0;
-		    	var bmuserid = [];
-		    	var bmusername = [];
-		    	var bmusername2 = [];
+		    	var ladderbmid = retAttendantPopInfo[2];
 		    	
-		    	for(var i = 0; i < rtn.length; i++) {
-		    		bmuserid[i] = rtn[i]["id"];
-		    		bmusername[i] = rtn[i]["name"];
-		    		bmusername2[i] = rtn[i]["name2"];
-		    	}
+				if(type !== "delete") {
+			    	var bmuserid = [];
+			    	var bmusername = [];
+			    	var bmusername2 = [];
+			    	
+			    	var rtnlen = rtn.length;
+			    	for(var i = 0; i < rtnlen; i++) {
+			    		bmuserid[i] = rtn[i]["id"];
+			    		bmusername[i] = rtn[i]["name"];
+			    		bmusername2[i] = rtn[i]["name2"];
+			    	}
+				}
 		    	
 		    	$.ajax({
 					type: "POST",
@@ -1283,17 +1235,68 @@
 						userName2s: bmusername2
 					},
 					success: function(result) {
-						console.log("result:::"+result);
-						get_ladder_bmlist();
+						getLadderBmList();
 					}
 				});
 		    }
 		    
-		    var rtn;
+		    function getLadderBmList(ladderbmid) {
+	    		var html = "";
+			    var bm_list = [];
+			    
+			    $("div[id^='editBmGroup_']").hide();
+	    		
+		    	$.ajax({
+					url : '/ezLadder/getLadderBM.do',
+					type : 'GET',
+					dataType : "json",
+					data : {
+						"ladderBmId": ladderbmid
+					},
+   					success : function(result) {
+   						bm_list = result["bmList"];
+   						
+				    	if(typeof ladderbmid === "undefined") { // 즐겨찾기 그룹 부르기
+							bm_list.forEach(function(group, index) {
+								html += "<tr id='" + group.ladderBmId + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this, event)'>";
+								html += "<td style='width:5%'>" + (index + 1) + "</td>";
+								html += "<td style='width:37%'>" + group.bmName + "</td>";
+								html += "<td style='width:29%'>" + group.regdate + "</td>";
+								if(group.count === 0) {
+									html += "<td style='width:22%'>" + group.userName + "</td>";
+								} else {
+									html += "<td style='width:22%'>" + group.userName + " 외 " + group.count + " 명</td>";
+								}
+								html += "<td style='width:6%'><img class='editBmIcon' src='/images/option3.png' name='editBmGroup_" + index + "' height='25' width='25'>";
+								html += "<div id='editBmGroup_" + index + "' style='display: none; position: absolute; background: #f8f8f8; z-index: 10; border: 1px solid #cfcfcf; text-align: center;'><div name='modify' style='width: 150px; padding: 8px 10px; border-bottom: 1px solid #cfcfcf;'>즐겨찾기 그룹 수정</div>";
+								html += "<div name='delete' style='width: 150px; padding: 8px 10px;'>즐겨찾기 그룹 삭제</div></div>";
+					    		html += "</td></tr>";
+							});
+				    	
+							$("#List_TBODY").html(html);
+							$("#List_TBODY2").html("");
+				    	} else {
+				    		bm_list.forEach(function(user, index) {
+				    			html += "<tr id='nameList" + index + "' name='nameList" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)'  onclick='event_click(this)' ondblclick='event_listDBclick(this)'>";
+				    			html += "<td id='data1' style='width:5%'>" + (index + 1) + "</td>";
+				    			html += "<td id='data2' style='width:18%'>" + user.company + "</td>";
+				    			html += "<td id='data3' style='width:20%'>" + user.description + "</td>";
+				    			html += "<td id='data5' style='width:16%'>" + user.userName + "</td>";
+				    			html += "<td id='data6' style='width:41%'>" + user.mail + "</td>";
+				    			html += "<td id='data7' style='display:none'>" + user.userId + "</td>";
+				    			html += "<td id='data8' style='display:none'>" + user.userName2 + "</td>";
+				    			html += "</tr>";
+	   						});
+	   						
+	   						$("#List_TBODY2").html(html);
+				    	}
+   					}
+   				});
+		    }
+		    
+		    /** msgtolist 의 유저 rtn에 추가 */
+		    var rtn = [];
 		    function save_userlist() {
-				/* rtn = { "id": new Array(), "name": new Array(), "name2": new Array(), "pic": new Array(), "item": new Array() }; */
-		    	rtn = [];
-				
 		    	var listid = "MsgToList"; 
 		    	var selList = new ListView();
 		        selList.LoadFromID(listid);
@@ -1303,17 +1306,10 @@
 		        
 		        for(var i = 0; i < totalLen; i++) {
 		        	if(GetAttribute(totalRows[i], "DATA1").substring(0, 14) === "anonyAttendant") {
-		        		rtn[i] = { "id": "anonyAttendant_" + i, "name": $("#MsgToList_TR_" + (i + 1) + " input").val(), "name2": $("#MsgToList_TR_" + (i + 1) + " input").val(), "pic": "" };
-		        		/* rtn["id"][i] = "anonyAttendant_" + i;
-		        		rtn["name"][i] = $("#MsgToList_TR_" + (i + 1) + " input").val();
-		        		rtn["name2"][i] = $("#MsgToList_TR_" + (i + 1) + " input").val(); */
+		        		rtn[i] = { "id": "anonyAttendant_" + i, "name": $("#MsgToList tr:eq(" + (i + 1) + ") input").val(), "name2": $("#MsgToList tr:eq(" + (i + 1) + ") input").val(), "pic": "" };
 		        	} else {
 		        		rtn[i] = { "id": GetAttribute(totalRows[i], "DATA1"), "name": GetAttribute(totalRows[i], "DATA2"), "name2": GetAttribute(totalRows[i], "DATA3"), "pic": GetAttribute(totalRows[i], "DATA9") };
-			        	/* rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
-			            rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
-			            rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3"); */
 		        	}
-		            /* rtn["pic"][i] = GetAttribute(totalRows[i], "DATA9"); */
 		        }
 		    }
 		    
@@ -1365,16 +1361,16 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang24 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang14 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang24 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang14 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang24 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang14 + "</span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -1398,18 +1394,18 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
+		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang15 + "</span>";
 		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
+		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang15 + "</span>";
 		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
+		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang15 + "</span>";
 		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
@@ -1486,54 +1482,9 @@
 		        }
 		    }
 		    
-	    	function get_ladder_bmlist(ladderbmid) {
-	    		var html = "";
-			    var bm_list = [];
-	    		
-		    	$.ajax({
-					url : '/ezLadder/getLadderBM.do',
-					type : 'GET',
-					dataType : "json",
-					data : {
-						"ladderBmId": ladderbmid
-					},
-   					success : function(result) {
-   						bm_list = result["bmList"];
-   						
-				    	if(typeof ladderbmid === "undefined") { // 즐겨찾기 그룹 부르기
-				    		console.log("그룹");
-				    	
-							bm_list.forEach(function(group, index) {
-								html += ("<tr id='" + group.ladderBmId + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
-								html += ("<td>" + (index + 1) + "</td>");
-								html += ("<td>" + group.bmName + "</td>");
-								html += ("<td>" + group.regdate + "</td>");
-								html += ("</tr>");
-							});
-							
-							$("#List_TBODY").html("");
-							$("#List_TBODY").append(html);
-				    	} else {
-				    		console.log("멤버들");
-
-				    		bm_list.forEach(function(user, index) {
-				    			html += ("<tr id='nameList" + index + "' name='nameList" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)'  onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
-				    			html += ("<td id='data1' style='width:55%'>" + (index + 1) + "</td>");
-				    			html += ("<td id='data2' style='width:15%'></td>");
-				    			html += ("<td id='data3' style='width:17%'></td>");
-				    			html += ("<td id='data4' style='width:12%'></td>");
-				    			html += ("<td id='data5' style='width:13%'>" + user.userName + "</td>");
-				    			html += ("<td id='data6' style='width:38%'></td>");
-				    			html += ("<td id='data7' style='display:none'>" + user.userId + "</td>");
-				    			html += ("</tr>");
-	   						});
-	   						
-	   						$("#List_TBODY2").html("");
-	   						$("#List_TBODY2").append(html);
-				    	}
-   					}
-   				});
-		    }
+	    	
+	    	
+	    	
 		    
 		    function event_Mover(obj) {
 		        if (obj != _RowObject) {
@@ -1562,7 +1513,7 @@
 		        obj.style.backgroundColor = "rgb(233, 241, 255)";
 		        
 		        if(_RowObjectID.substring(0, 8) !== "nameList") {
-			        get_ladder_bmlist(_RowObjectID);
+		        	getLadderBmList(_RowObjectID);
 		        } 
 		    }
 		    
@@ -1587,6 +1538,7 @@
 		                    document.getElementById("circularOrgan_content").style.display = "";
 		                    document.getElementById("circularDept_content").style.display = "none";
 		                    $("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
+		                    $("div[id^='editBmGroup_']").hide();
 		                    _RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
 		                }
 		                break;
@@ -1600,6 +1552,12 @@
 		                break;
 		    	}
 		    }
+		    
+		    /* function bmTabInit() {
+		    	$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
+                $("div[id^='editBmGroup_']").hide();
+                _RowObjectID = null;
+		    } */
 		        
 	        function Tab1_MouseClick(obj) {
 	            obj.className = "tabon";
@@ -1704,15 +1662,17 @@
 	                        	<table style="width:100%">
 	                                <tr>
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
-	                                        <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezCircular.t87'/></h2>
+	                                        <h2 class="h2_dot" style="padding-top: 2px;">즐겨찾기 목록</h2>
 	                                        <div class="border_gray">
 	                                            <div id="circularDept" style="Width: 100%; Height: 182px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table class="mainlist" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
-									                        	<th><span> </span></th>
-									                            <th><span>즐겨찾기 이름</span></th>
-									                            <th><span>등록일</span></th>
+									                        	<th style="width: 5%;"><span>No</span></th>
+									                            <th style="width: 37%;"><span>제목</span></th>
+									                            <th style="width: 29%;"><span>작성일</span></th>
+									                            <th style="width: 22%;"><span>회람자</span></th>
+									                            <th style="width: 6%;"></th>
 									                        </tr>
 								                        </thead>
 								                        <tbody id="List_TBODY">					                        
@@ -1729,12 +1689,11 @@
 	                                            	<table id="List" class="mainlist" style="width:100%">
 														<thead id="List_THEAD2">
 															<tr>
-																<th id="TH_0" style="width:5%"><spring:message code='ezCircular.t31' /></th>
-																<th id="TH_1" style="width:15%"><spring:message code='ezCircular.t76' /></th>
-																<th id="TH_2" style="width:17%"><spring:message code='ezCircular.t78' /></th>
-																<th id="TH_3" style="width:12%"><spring:message code='ezCircular.t79' /></th>
-																<th id="TH_4" style="width:13%"><spring:message code='ezCircular.t80' /></th>
-																<th id="TH_5" style="width:38%"><spring:message code='ezCircular.t81' /></th>
+																<th id="TH_0" style="width:5%">No</th>
+																<th id="TH_1" style="width:18%">회사</th>
+																<th id="TH_2" style="width:20%">부서</th>
+																<th id="TH_3" style="width:16%">이름</th>
+																<th id="TH_4" style="width:41%">E-MAIL</th>
 															</tr>
 														</thead>
 														<tbody id="List_TBODY2">
@@ -1775,6 +1734,5 @@
 	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
 	    </div>
 	    <!-- end -->
-		<div id="dialog" title="Dialog Title">I'm a dialog</div>
 	</body>
 </html>
