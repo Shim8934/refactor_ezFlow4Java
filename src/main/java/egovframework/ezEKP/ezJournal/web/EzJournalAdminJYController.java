@@ -51,7 +51,7 @@ public class EzJournalAdminJYController {
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		String companyId = null;
+		String companyId = "";
 		if (request.getParameter("companyId") != null) {
 			companyId = request.getParameter("companyId");
 		} 
@@ -88,7 +88,6 @@ public class EzJournalAdminJYController {
 		if (status.equals("ok")) {
 			JSONArray typeList = (JSONArray) result.get("data");
 			model.addAttribute("typeList", typeList);
-			System.out.println(typeList);
 		}
 		
 		logger.debug("formMain ended");
@@ -99,7 +98,7 @@ public class EzJournalAdminJYController {
 	 * 관리자 업무일지 일지함의 양식리스트 가져오기
 	 */
 	@RequestMapping(value = "/admin/ezJournal/getFormList.do")
-	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
+	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("getFormList started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -130,6 +129,7 @@ public class EzJournalAdminJYController {
 	/**
 	 * 관리자 업무일지 양식등록 양식추가, 양식수정 화면호출함수 (CK, TAGFREE, DEXTER, NAMO)
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezJournal/insertForm.do")
 	public String insertForm(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("insertForm started");
@@ -175,7 +175,6 @@ public class EzJournalAdminJYController {
 				}
 				
 				String formContent = jsonResult.get("formContent").toString();
-
 				Gson gson = new Gson();
 //				JournalFormInfoVO journalFormInfo = gson.fromJson(jsonResult.toString(), JournalFormInfoVO.class);
 				model.addAttribute("formId", jsonResult.get("formId"));

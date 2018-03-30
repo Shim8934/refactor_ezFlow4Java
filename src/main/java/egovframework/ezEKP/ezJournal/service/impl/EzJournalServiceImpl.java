@@ -36,11 +36,10 @@ import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.JsonUtil;
 
 
 @Service("ezJournalService")
-public class EzJournalServiceImpl implements EzJournalService{
+public class EzJournalServiceImpl implements EzJournalService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzJournalServiceImpl.class);
 
@@ -51,7 +50,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	private CommonUtil commonUtil;
 	
 	@Override
-	public List<JournaltypeVO> getJournaltypeList(String companyId,String tenantId,String used) throws Exception {
+	public List<JournaltypeVO> getJournaltypeList(String companyId, int tenantId, String used) throws Exception {
 		logger.debug("getJournaltypeList started");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -67,7 +66,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void updateJournaltype(ArrayList<Map<String, String>> journaltypeList,String companyId, String tenantId) throws Exception {
+	public void updateJournaltype(ArrayList<Map<String, String>> journaltypeList, String companyId, int tenantId) throws Exception {
 		logger.debug("updateJournaltype started");
 		for (int i = 0; i < journaltypeList.size(); i++) {
 			Map<String, Object> param = new HashMap<String, Object>();
@@ -85,13 +84,13 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void insertJournaltype(String companyId, String tenantId,ArrayList<JournaltypeVO> journaltypeList) {
+	public void insertJournaltype(String companyId, int tenantId, ArrayList<JournaltypeVO> journaltypeList) {
 		
 	}
 	
 
 	@Override
-	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String companyName, String tenantId, String offset) throws Exception {
+	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String companyName, int tenantId, String offset) throws Exception {
 		logger.debug("getFormList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -190,9 +189,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public List<JournalCompanyVO> getCompanyList(String userId, String tenantId,String companyId) throws Exception {
+	public List<JournalCompanyVO> getCompanyList(String userId, int tenantId, String companyId) throws Exception {
 		logger.debug("getCompanyList started");
-		HashMap<String, String> param = new HashMap<String, String>();
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
 		param.put("companyId", companyId);
@@ -202,9 +201,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public List<JournalAuthorVO> getAuthorList(String companyId, String tenantId) throws Exception {
+	public List<JournalAuthorVO> getAuthorList(String companyId, int tenantId) throws Exception {
 		logger.debug("getAuthorList started");
-		HashMap<String, String> param = new HashMap<String, String>();
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("companyId", companyId);
 		List<JournalAuthorVO> authList = ezJournalDAO.getAuthorList(param);
@@ -213,9 +212,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public List<DeptViewVO> getDeptViewList(String userId,String companyId, String tenantId) throws Exception {
+	public List<DeptViewVO> getDeptViewList(String userId,String companyId, int tenantId) throws Exception {
 		logger.debug("getDeptViewList started");
-		HashMap<String, String> param = new HashMap<String, String>();
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
 		param.put("companyId", companyId);
@@ -225,9 +224,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public List<JournalAuthorVO> getAuthDeptList(String tenantId, String userId) throws Exception {
+	public List<JournalAuthorVO> getAuthDeptList(int tenantId, String userId) throws Exception {
 		logger.debug("getAuthDeptList started");
-		HashMap<String, String> param = new HashMap<String, String>();
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
 		List<JournalAuthorVO> deptList = ezJournalDAO.getAuthDeptList(param);
@@ -236,9 +235,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 	
 	@Override
-	public List<JournalAuthorVO> getDeptUserList (String tenantId, String key ,String value) throws Exception{
+	public List<JournalAuthorVO> getDeptUserList(int tenantId, String key ,String value) throws Exception{
 		logger.debug("getDeptUserList started");
-		HashMap<String, String> param = new HashMap<String, String>();
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("key", key);
 		param.put("value", value);
@@ -248,7 +247,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, String tenantId) throws Exception {
+	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, int tenantId) throws Exception {
 		logger.debug("getJournalFormInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -315,7 +314,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void deleteJournalForm(String formId, String companyId, String tenantId) throws Exception {
+	public void deleteJournalForm(String formId, String companyId, int tenantId) throws Exception {
 		logger.debug("deleteJournalForm started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -358,7 +357,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void deleteAuthor(String userId, String tenantId) throws Exception {
+	public void deleteAuthor(String userId, int tenantId) throws Exception {
 		logger.debug("deleteAuthor started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -416,7 +415,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public List<ReceiverFavoriteVO> getFavoriteList(String userId, String tenantId, String offset) throws Exception {
+	public List<ReceiverFavoriteVO> getFavoriteList(String userId, int tenantId, String offset) throws Exception {
 		logger.debug("getFavoriteList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -432,7 +431,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public List<JournalReceiverVO> getFavoriteUserList(String favoriteId, String tenantId) throws Exception { 
+	public List<JournalReceiverVO> getFavoriteUserList(String favoriteId, int tenantId) throws Exception { 
 		logger.debug("getFavoriteUserList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -484,7 +483,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void deleteFavorite(String favoriteId, String userId, String tenantId) throws Exception {
+	public void deleteFavorite(String favoriteId, String userId, int tenantId) throws Exception {
 		logger.debug("deleteFavorite started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -505,7 +504,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 	
 	@Override
-	public String getRecvJournalCount(String userId, String tenantId) throws Exception {
+	public String getRecvJournalCount(String userId, int tenantId) throws Exception {
 		logger.debug("getRecvJournalCount started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -518,7 +517,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public JournalEnvVO getUserJournalEnv(String userId, String tenantId) throws Exception {
+	public JournalEnvVO getUserJournalEnv(String userId, int tenantId) throws Exception {
 		logger.debug("getUserJournalEnv started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -555,7 +554,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 		
 	@Override
-	public String getJournalLastFormId(String typeId, String formId, String userId, String companyId, String tenantId) throws Exception {
+	public String getJournalLastFormId(String typeId, String formId, String userId, String companyId, int tenantId) throws Exception {
 		logger.debug("getJournalLastFormId started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -578,7 +577,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public JournalVO getJournal(String journalId,String userId, String viewDate, String tenantId) throws Exception {
+	public JournalVO getJournal(String journalId,String userId, String viewDate, int tenantId) throws Exception {
 		logger.debug("getJournal started");
 		
 		logger.debug("journalId : "+journalId);
@@ -735,7 +734,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public JournalFormInfoVO getJournalDivideThisNext(List<String> journalIdList,String formId, String companyId,String userId, int tenantId) throws Exception {
+	public JournalFormInfoVO getJournalDivideThisNext(List<String> journalIdList, String formId, String companyId, String userId, int tenantId) throws Exception {
 		logger.debug("getJournalDivideThisNext started.");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -910,7 +909,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 		logger.debug("deleteJournalList ended.");
 	}
 	
-	private void deleteDirectory (String journalId, String pDirpath, int tenantID) throws Exception {
+	private void deleteDirectory (String journalId, String pDirpath, int tenantId) throws Exception {
 		logger.debug("deleteDirectory started.");
 		
 		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
@@ -923,7 +922,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 					if (deleteFileList[i].isFile()) {
 						deleteFileList[i].delete();
 					} else {
-						deleteDirectory(journalId, pDirpath, tenantID);
+						deleteDirectory(journalId, pDirpath, tenantId);
 					}
 				}
 			}
@@ -1039,7 +1038,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public String getReceiverCount(String journalId, int tenantId) {
+	public String getReceiverCount(String journalId, int tenantId) throws Exception {
 		logger.debug("getReceiverCount started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1053,7 +1052,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void saveJournalViewInfo(List<String> journalIdList, String viewDate, String userId, int tenantId) {
+	public void saveJournalViewInfo(List<String> journalIdList, String viewDate, String userId, int tenantId) throws Exception {
 		logger.debug("saveJournalViewInfo started");
 		
 		logger.debug("tenantId : "+tenantId);

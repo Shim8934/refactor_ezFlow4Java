@@ -56,14 +56,14 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	/**
 	 * 업무일지 작성 화면 호출
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezJournal/journalWrite.do")
 	public String journalWrite(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("journalWrite started");
 		
-		// 여기만 우선 userInfo 사용!  journalWrite화면에서 deptId 필요함
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String offset = userInfo.getOffset();
+//		String offset = userInfo.getOffset();
 		String mode = request.getParameter("mode");
 		String typeId = request.getParameter("typeId");
 		String useEditor = commonUtil.getTenantConfigRest("EDITOR", userInfo.getId(), request);
@@ -978,9 +978,11 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		return "/ezJournal/journalConfig";
 	}
 	
+	
 	/**
-	 * 환경설정 저장
+	 * 환경설정 저장 (사용안함)
 	 */
+	/*
 	@RequestMapping(value = "/ezJournal/saveJournalConfig.do")
 	@ResponseBody
 	public void saveJournalConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
@@ -1017,7 +1019,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("saveJournalConfig ended");
-		
 	}
+	*/
 	
 }
