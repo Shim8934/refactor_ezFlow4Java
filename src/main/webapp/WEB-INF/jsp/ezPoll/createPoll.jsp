@@ -985,6 +985,7 @@
 	    
 	    // 보기 항목에 이미지 첨부시 이미지 추가.
 	    function optImageTagAppend(fileinfo, selOptRow, optimgid){
+	    	var tenantId = ${tenantId};
 	    	if(fileinfo !== null){
 		    	if(mode !== ""){
 		    		var selOptRow = document.getElementById(optimgid === "" ? "option"+fileinfo.ansId : optimgid).parentNode;
@@ -1002,7 +1003,7 @@
 	    		}else{
 	    			fileinfo = fileinfo.filePath.split('/')[0];
 	    		}
-		    	objImg.src = "/fileroot/0/files/upload_schedule/uploadFile/" + fileinfo;
+		    	objImg.src = "/fileroot/" + tenantId + "/files/upload_schedule/uploadFile/" + fileinfo;
 	    		$(selOptRow).append(objImg);
 	    		checkOptionsList();
 	    	}

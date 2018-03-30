@@ -1501,7 +1501,7 @@
 			    	if (ext == "jpg" || ext == "png" || ext == "bmp") {	   			    		
 			    		if (fileType == "file") {			    						    		
 				    		fd.append("fileType", "file");						    	
-				    		imgSrc= "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0];
+				    		imgSrc= "/fileroot/"+tenantId+"/files/upload_common/commentImages/" + fileinfo.split("/")[0];
 				    	}
 				    	else {			    						    		
 				    		fd.append("fileType", "sticker");					    	
@@ -1855,7 +1855,7 @@
 						else {
 							imagePreview.setAttribute("_type", "images"); 
 							imagePreview.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
-							imagePreview.setAttribute("_fileInfo", "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0]);
+							imagePreview.setAttribute("_fileInfo", "/fileroot/"+tenantId+"/files/upload_common/commentImages/" + fileinfo.split("/")[0]);
 						}
 		    		}
 		    		else {
@@ -1871,7 +1871,7 @@
 						else {
 							imagePreview.setAttribute("_type", "images");
 							imagePreview.setAttribute("style", "display: block; padding-left: 10px; padding-right: 5px; max-width: 500px; max-height: 500px; width: auto; height: auto;");
-							imagePreview.setAttribute("_fileInfo", "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0]);
+							imagePreview.setAttribute("_fileInfo", "/fileroot/"+tenantId+"/files/upload_common/commentImages/" + fileinfo.split("/")[0]);
 						}
 		    		}
 		    		
@@ -1883,7 +1883,7 @@
 		    	//imagePreview.setAttribute("_type", "file");	
 		    	
 		    	if (_ext == "jpg" || _ext == "png" || _ext == "bmp") {		    	    	             
-		    		imagePreview.src = "/fileroot/0/files/upload_common/commentImages/" + fileinfo.split("/")[0];
+		    		imagePreview.src = "/fileroot/"+tenantId+"/files/upload_common/commentImages/" + fileinfo.split("/")[0];
 		    	}
 		    	else if (_ext == "doc" || _ext == "docx") {
 		    		imagePreview.src = "/images/msWord.png";
@@ -2800,7 +2800,7 @@
 				               		</c:if> --%>
 				               		<c:choose>
 				               			<c:when test="${_option.filePath ne null }">
-				               				<img id="_imgOption<c:out value ="${_option.ansId}"/>" class="thumbnail" onclick="" src="/fileroot/0/files/upload_schedule/uploadFile/${fn:split(_option.filePath,'/')[0] }" />	               		             		         		
+				               				<img id="_imgOption<c:out value ="${_option.ansId}"/>" class="thumbnail" onclick="" src="/fileroot/${question.tenantId}/files/upload_schedule/uploadFile/${fn:split(_option.filePath,'/')[0] }" />	               		             		         		
 				               			</c:when>
 				               			<c:otherwise>
 				               				<img class="imgNotAttached" src="/images/poll/no_attachment.png"/>

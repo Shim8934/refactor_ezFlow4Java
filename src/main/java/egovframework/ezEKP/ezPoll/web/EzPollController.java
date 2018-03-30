@@ -300,6 +300,8 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("listOfTarget", listOfTarget);
 		model.addAttribute("configStartTime", startTime);
 		model.addAttribute("configEndTime", endTime);
+		model.addAttribute("tenantId", loginVO.getTenantId());
+		
 		
 		logger.debug("question create finishes!");
 		return "/ezPoll/createPoll";
