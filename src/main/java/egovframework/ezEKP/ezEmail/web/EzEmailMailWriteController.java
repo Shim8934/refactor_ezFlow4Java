@@ -292,12 +292,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String inMailColor = "#808080";
 		String outMailColor = "#0080ff";
 		MailColorVO vo = ezEmailService.getMailColor(loginInfo.getTenantId());
-		
 		if (vo != null) {
 			inMailColor = vo.getInmailColor();
 			outMailColor = vo.getOutmailColor();
 		}
-		
 		logger.debug("inMailColor=" + inMailColor + ",outMailColor=" + outMailColor);
 		
 		//파일첨부 제한 관련 변수 설정 
@@ -312,11 +310,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         String pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(pBigAttachDownloadDay), "yyyy/MM/dd");
         String pAttachWarning = egovMessageSource.getMessage("ezEmail.lhm18", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm19", locale) 
         	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm20", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.lhm21", locale);
-        
         if(totBigSizeMailAttachLimit.equals("0")){
         	pAttachWarning = egovMessageSource.getMessage("ezEmail.kms01", locale) + mailAttachLimit +egovMessageSource.getMessage("ezEmail.kms02", locale);
         }
-        
         logger.debug("bigSizeMailAttachDelDate=" + bigSizeMailAttachDelDate + ",pBigAttachDownloadPeriod=" + pBigAttachDownloadPeriod
         		+ ",pAttachWarning=" + pAttachWarning);
         
@@ -380,28 +376,22 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
         
         String _url = "";
-        
         if (request.getParameter("iptURL") != null) {
         	_url = request.getParameter("iptURL");
 		}
-        
         if (request.getParameter("URL") != null) {
         	_url = request.getParameter("URL");
         } else if (request.getParameter("url") != null) {
         	_url = request.getParameter("url");
         }
-        
         urlOwn = _url;
         logger.debug("_cmd=" + _cmd + ",_url=" + _url);
         
         String _attach = "";
-        
         if (request.getParameter("attach") != null) {
         	_attach = request.getParameter("attach");
 		}
-        
         String includeContent = "";
-        
         if (request.getParameter("include") != null) {
         	includeContent = request.getParameter("include");
 		}
@@ -423,9 +413,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
         
         // in case of new
-		if (_url.equals("") && _cmd.equals("NEW")) {
-			to = msgto;
-		}
+        if (_url.equals("") && _cmd.equals("NEW")) {
+        	to = msgto;
+        }
         // in case of board/Community
         else if (_url.equals("") && (_cmd.equals("board") || _cmd.equals("Community")
         		|| _cmd.equals("boardDotNet") || _cmd.equals("CommunityDotNet"))) {
@@ -438,15 +428,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	}
         }
         // in case of approvalG
-		else if (_url.equals("") && (_cmd.equals("docsend") || _cmd.equals("docsendDotNet"))) {
-			docID = request.getParameter("docID") == null ? "" : request.getParameter("docID").trim();
-			docHref = request.getParameter("docHref") == null ? "" : request.getParameter("docHref").trim();
-			docImagCnt = request.getParameter("imagCnt") == null ? "" : request.getParameter("imagCnt").trim();
-			docTarget = request.getParameter("target") == null ? "" : request.getParameter("target").trim();
-
-			if (_cmd.equals("docsendDotNet")) {
-				dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
-			}
+        else if (_url.equals("") && (_cmd.equals("docsend") || _cmd.equals("docsendDotNet"))) {
+    		docID = request.getParameter("docID") == null ? "" : request.getParameter("docID").trim();
+    		docHref = request.getParameter("docHref") == null ? "" : request.getParameter("docHref").trim();
+    		docImagCnt = request.getParameter("imagCnt") == null ? "" : request.getParameter("imagCnt").trim();
+    		docTarget = request.getParameter("target") == null ? "" : request.getParameter("target").trim();
+    		
+        	if (_cmd.equals("docsendDotNet")) {
+        		dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
+        	}
     		
     		/* 2017-01-26 이효민 : 필요하지 않아 주석처리
     		 * 현재 docHref가 IMAGE로만 오고있기 때문에 HolderDocSend는 항상 보이지 않는다(jsp페이지의 HolderDocSend도 주석처리해놓음)
@@ -482,7 +472,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				url = _url.substring(index + 1);
 				uid = Long.parseLong(url);
 			}
-			
 			logger.debug("folderPath=" + folderPath + ",url=" + url);
         	
 			try {
@@ -505,9 +494,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	// in case of editing a message in Drafts folder.
 		        	if (folderPath.equals(draftsFolderName) && _cmd.equals("EDIT")) {
 		        		
-						if (orgMessage.getFrom() != null && orgMessage.getFrom()[0] != null) {
-							from = ((InternetAddress) orgMessage.getFrom()[0]).getAddress();
-						}
+		        		if (orgMessage.getFrom() != null && orgMessage.getFrom()[0] != null) {
+		        			from = ((InternetAddress)orgMessage.getFrom()[0]).getAddress();
+		        		}
 		        		
 						// retrieve the TO addresses from the message.
 						Address[] addresses = orgMessage.getRecipients(Message.RecipientType.TO);
@@ -566,18 +555,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		if (orgMessage.isMimeType("multipart/related")) {
 			        		MimeMultipart relatedPart = new MimeMultipart("related");
 			        		
-							if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
-								resendMessage.setContent(relatedPart);
-							} else {
-								resendMessage.setText("placeholder");
-							}
-	        			} else if (orgMessage.isMimeType("multipart/*")) {
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        			resendMessage.setContent(relatedPart);
+			        		}	        			
+			        		else {
+			        			resendMessage.setText("placeholder");
+			        		}	        					        		
+	        			}
+	        			else if (orgMessage.isMimeType("multipart/*")) {
 			                MimeMultipart mixedPart = new MimeMultipart();
 			                
 			                ezEmailUtil.copyAllPartsInMultipart(orgMessage, mixedPart);
 			                
 			                resendMessage.setContent(mixedPart);	    
-	        			} else {
+	        			}
+	        			else {
 	        				resendMessage.setText("placeholder");
 	        			}
 		        		
@@ -585,11 +577,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		draftsFolder.open(Folder.READ_WRITE);       
 		        		long draftUID = 0;
 		        		AppendUID[] uids = ((IMAPFolder)draftsFolder).appendUIDMessages(new Message[]{resendMessage});
-		        		
 		        		if (uids != null && uids[0] != null) {
 		        			draftUID = uids[0].uid;
 		        		} 	        		
-		        		
 		        		url = String.valueOf(draftUID);
 		        		logger.debug("draftUID=" + draftUID);
 		        		draftsFolder.close(true);
@@ -681,7 +671,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		// reply call is needed to create 'References' & 'In-Reply-To' headers.
 		        		if (_cmd.equals("REPLY") || _cmd.equals("FORWARD")) {
 		        			replyMessage = orgMessage.reply(false);
-		        		} else {
+		        		}
+		        		else {
 		        			replyMessage = orgMessage.reply(true);
 		        		}
 		        		
@@ -696,16 +687,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        		
 				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
 				        			replyMessage.setContent(relatedPart);
-				        		} else {
+				        		}	        			
+				        		else {
 				        			replyMessage.setText("placeholder");
 				        		}	        					        		
-		        			} else if (orgMessage.isMimeType("multipart/*")) {
+		        			}
+		        			else if (orgMessage.isMimeType("multipart/*")) {
 				                MimeMultipart mixedPart = new MimeMultipart();
 				                
 				                ezEmailUtil.copyAllPartsInMultipart(orgMessage, mixedPart);
 				                
 				                replyMessage.setContent(mixedPart);	    
-		        			} else {
+		        			}
+		        			else {
 		        				replyMessage.setText("placeholder");
 		        			}
 		        		}
@@ -714,7 +708,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			        		
 			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
 			        			replyMessage.setContent(relatedPart);
-			        		} else {
+			        		}
+			        		else {
 			        			replyMessage.setText("placeholder");
 			        		}	        		
 		        		}
@@ -726,18 +721,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							String[] rawHeaders = orgMessage.getHeader("From");
 							String rawHeader = rawHeaders != null ? rawHeaders[0] : "";		
 							boolean isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
-							
 							if (isPureAscii) {
 								rawHeaders = orgMessage.getHeader("To");
 								rawHeader = rawHeaders != null ? rawHeaders[0] : "";
 								isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
 							}
-							
 							to = ezEmailUtil.getStringListOfAddresses(addresses, isPureAscii);
 	
 							// retrieve the CC addresses from the reply message.
 							addresses = replyMessage.getRecipients(Message.RecipientType.CC);
-							
 							if (addresses != null) {
 								rawHeaders = orgMessage.getHeader("Cc");
 								rawHeader = rawHeaders != null ? rawHeaders[0] : "";																					
@@ -766,11 +758,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						}
 						
 						subject = (subject != null) ? subject : "";
-						String reStr = "";
+						String reStr = ""; 
 								
-						if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {
+						if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {		
 							reStr = egovMessageSource.getMessage("ezEmail.t511", locale);
-						} else if (_cmd.equals("FORWARD")) {
+						}
+						else if (_cmd.equals("FORWARD")) {
 							reStr = egovMessageSource.getMessage("ezEmail.t513", locale);
 						}
 						
@@ -799,14 +792,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            //set received date
 			            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( z )");
 			            String offset = loginInfo.getOffset();
-			            
 			            if (offset == null || offset.indexOf("|") == -1) {
 			    			logger.error("Check the offset. Offset is null or offset format is wrong.");
 			    		} else {
 			    			String[] offsetArr = offset.split("\\|");
 			    			sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
 			    		}
-			            
 			            sb.append("<p " + defaultFontAndSize + ">");
 			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
 			            sb.append("</p>");
@@ -852,17 +843,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		                	bodyValue = bodyValue.replaceAll("kaoni_sign2", "kaoni_sign2___send");
 		                	bodyValue = bodyValue.replaceAll("kaoni_sign3", "kaoni_sign3___send");
 		                }
-		                
 		                bodyValue = bodyValue.replaceAll("ORGMAIL_CONTENT", "ORGMAIL_CONTENT___send");
 		                bodyValue = bodyValue.replaceAll("div id=\"MailSign\"", "div ");
 		                
 		                bodyValue = bodyValue.replaceAll("id=msgbody", "");
 	
-						if (cmdOwn.equals("REPLY") || cmdOwn.equals("REPLYALL") || cmdOwn.equals("FORWARD")) {
-							bodyValue = bodyValue.replaceAll("class=&quot;FIELD&quot;", "");
-							bodyValue = bodyValue.replaceAll("class=FIELD", "");
-							bodyValue = "<body free>" + bodyValue + "</body>";
-						}
+		                if (cmdOwn.equals("REPLY") || cmdOwn.equals("REPLYALL") || cmdOwn.equals("FORWARD")) {
+		                	bodyValue = bodyValue.replaceAll("class=&quot;FIELD&quot;", "");
+		                	bodyValue = bodyValue.replaceAll("class=FIELD", "");
+		                	bodyValue = "<body free>" + bodyValue + "</body>";
+		                }
 		                
 		                //임시보관함에 저장
 		        		Folder draftsFolder = ia.getFolder(draftsFolderName);
@@ -870,11 +860,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        		long draftUID = 0;
 		        		AppendUID[] uids = ((IMAPFolder)draftsFolder).appendUIDMessages(new Message[]{replyMessage});
-		        		
 		        		if (uids != null && uids[0] != null) {
 		        			draftUID = uids[0].uid;
 		        		} 	        		
-		        		
 		        		url = String.valueOf(draftUID);
 		        		
 		        		logger.debug("draftUID=" + draftUID);
@@ -911,69 +899,41 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		logger.debug("EDIT MODE : set mail option start");
 		        		
 		        		//set importance
-						if (orgMessage.getHeader("X-Priority") != null) {
-							String tempImportance = orgMessage.getHeader("X-Priority")[0];
-							
-							if (tempImportance.equals("1")) {
-								importance = "2";
-							} else if (tempImportance.equals("5")) {
-								importance = "0";
-							} else {
-								importance = "1";
-							}
-						}
-		        		
+		        		if (orgMessage.getHeader("X-Priority") != null) {
+		        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
+		        			if (tempImportance.equals("1")) {
+		        				importance = "2";
+		        			} else if (tempImportance.equals("5")) {
+		        				importance = "0";
+		        			} else {
+		        				importance = "1";
+		        			}
+		        		}
 		        		logger.debug("importance=" + importance);
 		        	
 		        		//set isEachMail
 		        		if (orgMessage.getHeader("X-JMocha-Each-Mail") != null) {
 		        			isEach = orgMessage.getHeader("X-JMocha-Each-Mail")[0];
 		        		}
-		        		
 		        		//set isSecureMail
 		        		if (orgMessage.getHeader("X-JMocha-Secure-Mail") != null) {
 		        			isSecureMail = orgMessage.getHeader("X-JMocha-Secure-Mail")[0];
 		        		}
-		        		
 		        		//set bodyType
-						if (orgMessage.getHeader("Content-Type") != null) {
-							String tempBodyType = orgMessage.getHeader("Content-Type")[0];
-							String contentType = tempBodyType.split(";")[0].trim();
-
-							if (contentType.equals("text/plain")) {
-								bodyType = "1";
-							} else if (contentType.equals("multipart/alternative")) {
-								bodyType = "0";
-							} else {
-								Object content = orgMessage.getContent();
-
-								if (content instanceof Multipart) {
-									Multipart multipart = (Multipart) content;
-									int partCount = multipart.getCount();
-									boolean isHtmlMode = false;
-
-									for (int i = 0; i < partCount; i++) {
-										BodyPart bodyPart = multipart.getBodyPart(i);
-
-										if (bodyPart.isMimeType("text/html") || bodyPart.isMimeType("message/*")) {
-											isHtmlMode = true;
-											break;
-										}
-									}
-
-									if (!isHtmlMode) {
-										bodyType = "1";
-									}
-								}
-							}
+		        		if (orgMessage.getHeader("Content-Type") != null) {
+		        			String tempBodyType = orgMessage.getHeader("Content-Type")[0];
+		        			
+		        			if(tempBodyType.split(";")[0].trim().equals("text/plain")) {
+		        				bodyType = "1";
+		        			}else if ( tempBodyType.split(";")[0].trim().equals("multipart/alternative")) {
+		        				bodyType = "0";
+		        			}
 		        		}
-						
 		        		if (orgMessage.getHeader("Return-Receipt-To") != null) {
 		        			replySendTime = "1";
 		        		} else {
 		        			replySendTime = "0";
 		        		}
-		        		
 		        		if (orgMessage.getHeader("Disposition-Notification-To") != null) {
 		        			replyReadTime = "1";
 		        		} else {
@@ -1260,19 +1220,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			useExtension = "";
 		}
 		
-		if (multiFile.get(0).getOriginalFilename() != null && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {
+		if (multiFile.get(0).getOriginalFilename() != null && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())){
 			boolean isEmpty = false;
 			String _pFileName = "";
-			
-			for (int i = 0; i < cnt; i++) {
+			for (int i=0; i<cnt; i++) {
 				_pFileName = multiFile.get(i).getOriginalFilename();
-				
 				if (_pFileName.indexOf(commonUtil.separator) > 0) {
 					_pFileName = _pFileName.split(commonUtil.separator)[_pFileName.split(commonUtil.separator).length - 1];
 				}
-				
 				pFileName[i] = _pFileName;
-				
 				if (pFileName[i].lastIndexOf(".") > -1) {
 					sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
 					sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
@@ -1280,7 +1236,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					sFileTitle[i] = pFileName[i];
 					sExt[i] = "";
 				}
-
+				
 				if (multiFile.get(i).getSize() == 0) {
 					isEmpty = true;
 				}
@@ -1314,9 +1270,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			uploadMailRootFolder.mkdirs();
 		}
 		
-		for (int i = 0; i < cnt; i++) {
+		for (int i=0; i<cnt; i++) {
 			fileSize[i] = multiFile.get(i).getSize();
-
 			if (fileSize[i] > changeSize || isBigYN.equals("Y")) {
                 String pDate = EgovDateUtil.getToday("");
                 folderDate = pDate;
@@ -1349,7 +1304,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             }
 			
 			File f = new File(pDirTempPath);
-			
 			if (!f.exists()) {
 				f.mkdirs();
             }
@@ -1369,13 +1323,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
                 strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
                 strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
-                
                 if (pBigFileUpload.equals("Y")) {
                 	strXML2 += "<FILELOCATION><![CDATA[" + folderDate+"|!|"+sGUID[i] + "]]></FILELOCATION>";
                 } else {
                 	strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
                 }
-                
                 strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
                 strXML2 += "</NODE>";
             }
@@ -1386,7 +1338,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
         String xmlPath = pDirPath + commonUtil.separator + "templist";
         File f = new File(xmlPath);
-        
         if (!f.exists()) {
 			f.mkdirs();
         }
@@ -1415,9 +1366,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	            NodeList nodeList = xmldom.getElementsByTagName("NODES");
 	            NodeList nodeList2 = xmldom2.getElementsByTagName("NODE");
 	            
-				for (int i = 0; i < nodeList2.getLength(); i++) {
-					nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
-				}
+	            for (int i=0; i<nodeList2.getLength(); i++) {
+	            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
+	            }
             	
 	            osw = new OutputStreamWriter(new FileOutputStream(f));
             	osw.write(commonUtil.convertDocumentToString(xmldom));
@@ -1569,7 +1520,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (f.exists()) {
 				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
 				fileName[i] = fileName[i].replaceAll("[\\\\/:*?\"<>|]", "_");
-
+				
 				if (fileName[i].lastIndexOf(".") > -1) {
 					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);
 					newFileName[i] = UUID.randomUUID().toString() + "." + fileExt[i];
@@ -1577,7 +1528,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fileExt[i] = "";
 					newFileName[i] = UUID.randomUUID().toString();
 				}
-
+				
 				fileSize[i] = f.length();
 				totalFileSize += fileSize[i];
 			} else {
@@ -1623,8 +1574,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             	file.mkdirs();
             }
             
-			for (int i = 0; i < fileCnt; i++) {
-				if (filePath[i].equals("NOFILE")) {
+            for (int i = 0; i < fileCnt; i++) {
+            	if (filePath[i].equals("NOFILE")) {
 					continue;
 				}
             	
@@ -1663,7 +1614,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 	//첨부파일 정보를 XML data로 만든다.
                     String resultUpload = "";
                     
-    				if (!useExtension.toLowerCase().contains(fileExt[i].toLowerCase()) && !useExtension.equals("*")) {
+    				if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
                         resultUpload = "denied";
                     } else {
                         resultUpload = "true";
@@ -1771,9 +1722,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				// 복호화 URL을 통해 다운로드한 임시 파일들을 삭제한다.
 				if (downloadedFlags[i]) {
 					logger.debug("deleting " + filePath[i]);
-
+					
 					File localFile = new File(filePath[i]);
-
+					
 					localFile.delete();
 				}
 			}
@@ -1874,69 +1825,67 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 extResult = "denied";
             } else {
                 // 대용량 첨부파일의 경우에는 후에 다운로드 받을 때 파일명을 내려보내기 위해 원 파일명을 저장한다.                
-				if (pBigFileUpload.equals("Y")) {
-					String base64OrgFileName = Base64.encodeBase64String(orgFileName.getBytes("UTF-8"));
-					FileOutputStream fos = null;
-
-					try {
-						File nameFile = new File(saveLocalPath + "__.txt");
-						fos = new FileOutputStream(nameFile);
-						fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
-					} catch (Exception e) {
-						throw e;
-					} finally {
-						if (fos != null) {
-							fos.close();
-						}
-					}
-				}
+                if (pBigFileUpload.equals("Y")) {                    
+                    String base64OrgFileName = Base64.encodeBase64String(orgFileName.getBytes("UTF-8"));
+                    FileOutputStream fos = null;
+                    
+                    try {
+                        File nameFile = new File(saveLocalPath + "__.txt");
+                        fos = new FileOutputStream(nameFile);
+                        fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
+                    } catch (Exception e) {
+                        throw e;
+                    } finally {
+                        if (fos != null) {
+                            fos.close();
+                        }
+                    }
+                }
                 
                 InputStream stream = null;
                 OutputStream bos = null;         
                 
-				try {
-					// HTTP Body로부터 데이터를 읽어 로컬 파일에 저장한다.
-					stream = request.getInputStream();
-					bos = new FileOutputStream(saveLocalPath);
-
-					int bytesRead = 0;
-					byte[] buffer = new byte[BUFF_SIZE];
-
-					while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-						bos.write(buffer, 0, bytesRead);
-						fileSize += bytesRead;
-					}
-				} catch (Exception e) {
-					throw e;
-				} finally {
-					if (bos != null) {
-						try {
-							bos.close();
-						} catch (Exception ignore) {
-						}
-					}
-					if (stream != null) {
-						try {
-							stream.close();
-						} catch (Exception ignore) {
-						}
-					}
-				}
-
-				extResult = "true";
-			}
+                try {
+                    // HTTP Body로부터 데이터를 읽어 로컬 파일에 저장한다.
+                    stream = request.getInputStream();
+                    bos = new FileOutputStream(saveLocalPath);
+                
+                    int bytesRead = 0;
+                    byte[] buffer = new byte[BUFF_SIZE];
+            
+                    while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+                        bos.write(buffer, 0, bytesRead);
+                        fileSize += bytesRead;
+                    }
+                } catch (Exception e) {
+                    throw e;                
+                } finally {
+                    if (bos != null) {
+                        try {
+                            bos.close();
+                        } catch (Exception ignore) {
+                        }
+                    }
+                    if (stream != null) {
+                        try {
+                            stream.close();
+                        } catch (Exception ignore) {
+                        }
+                    }
+                }
+                                            
+                extResult = "true";
+            }
             
             strXML2 += "<NODE><PUPLOADSN><![CDATA[" + newfilename + "]]></PUPLOADSN>";
             strXML2 += "<RESULTUPLOADA><![CDATA[" + extResult + "]]></RESULTUPLOADA>";
             strXML2 += "<PFILENAME><![CDATA[" + orgFileName + "]]></PFILENAME>";
             strXML2 += "<FILESIZE><![CDATA[" + fileSize + "]]></FILESIZE>";
-            
             if (pBigFileUpload.equals("Y")) {
                 strXML2 += "<FILELOCATION><![CDATA[" + pDate + "|!|" + newfilename + "]]></FILELOCATION>";
             } else {
                 strXML2 += "<FILELOCATION><![CDATA[" + newfilename + "]]></FILELOCATION>";
             }
-            
             strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
             strXML2 += "</NODE>";
             
@@ -1944,82 +1893,75 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             
             String xmlPath = pDirPath + commonUtil.separator + "templist";
             f = new File(xmlPath);
-            
             if (!f.exists()) {
                 f.mkdirs();
             }
 
             xmlPath += commonUtil.separator + tempFolderName + ".txt";
             f = new File(xmlPath);
+            if (f.exists()) {
+                String tempXmlList = "";
+                InputStreamReader isr = null;
+                BufferedReader br = null;
+                OutputStreamWriter osw = null;
+                try {
+                    isr = new InputStreamReader(new FileInputStream(f));
+                    br = new BufferedReader(isr);
+                    int read = 0;
+                    while ((read = br.read()) != -1) {
+                        tempXmlList += (char)read;
+                    }
+                    Document xmldom = commonUtil.convertStringToDocument(tempXmlList);
+                    Document xmldom2 = commonUtil.convertStringToDocument(strXML);
+                    
+                    NodeList nodeList = xmldom.getElementsByTagName("NODES");
+                    NodeList nodeList2 = xmldom2.getElementsByTagName("NODE");
+                    for (int i=0; i<nodeList2.getLength(); i++) {
+                        nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
+                    }
+                    osw = new OutputStreamWriter(new FileOutputStream(f));
+                    osw.write(commonUtil.convertDocumentToString(xmldom));
+                    String crlf = System.getProperty("line.separator");
+                    osw.append(crlf+crlf);
+                } catch(Exception e) {
+                    throw e;
+                } finally {
+                    if (br != null) {
+                        br.close();
+                    }
+                    if (isr != null) {
+                        isr.close();
+                    }
+                    if (osw != null) {
+                        osw.close();
+                    }
+                }
+            } else {
+                OutputStreamWriter osw = null;
+                try {
+                    osw = new OutputStreamWriter(new FileOutputStream(f));
+                    osw.write(strXML);
+                    String crlf = System.getProperty("line.separator");
+                    osw.append(crlf+crlf);
+                } catch(Exception e) {
+                    throw e;
+                } finally {
+                    if (osw != null) {
+                        osw.close();
+                    }
+                }
+            }
             
-			if (f.exists()) {
-				String tempXmlList = "";
-				InputStreamReader isr = null;
-				BufferedReader br = null;
-				OutputStreamWriter osw = null;
-				
-				try {
-					isr = new InputStreamReader(new FileInputStream(f));
-					br = new BufferedReader(isr);
-					int read = 0;
-					
-					while ((read = br.read()) != -1) {
-						tempXmlList += (char) read;
-					}
-					
-					Document xmldom = commonUtil.convertStringToDocument(tempXmlList);
-					Document xmldom2 = commonUtil.convertStringToDocument(strXML);
-
-					NodeList nodeList = xmldom.getElementsByTagName("NODES");
-					NodeList nodeList2 = xmldom2.getElementsByTagName("NODE");
-					
-					for (int i = 0; i < nodeList2.getLength(); i++) {
-						nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
-					}
-					
-					osw = new OutputStreamWriter(new FileOutputStream(f));
-					osw.write(commonUtil.convertDocumentToString(xmldom));
-					String crlf = System.getProperty("line.separator");
-					osw.append(crlf + crlf);
-				} catch (Exception e) {
-					throw e;
-				} finally {
-					if (br != null) {
-						br.close();
-					}
-					if (isr != null) {
-						isr.close();
-					}
-					if (osw != null) {
-						osw.close();
-					}
-				}
-			} else {
-				OutputStreamWriter osw = null;
-				try {
-					osw = new OutputStreamWriter(new FileOutputStream(f));
-					osw.write(strXML);
-					String crlf = System.getProperty("line.separator");
-					osw.append(crlf + crlf);
-				} catch (Exception e) {
-					throw e;
-				} finally {
-					if (osw != null) {
-						osw.close();
-					}
-				}
-			}
-
-			if (pBigFileUpload.equals("Y")) {
-				returnedData = pDate + "|!|" + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
-			} else {
-				returnedData = newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			returnedData = "ERROR";
-		}
+            if (pBigFileUpload.equals("Y")) {
+                returnedData = pDate + "|!|" + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
+            } else {
+                returnedData = newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+            returnedData = "ERROR";
+        }
         
         logger.debug("returnedData=" + returnedData);
         logger.debug("mailInterUploadX ended.");
@@ -2050,9 +1992,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		boolean hasAttachFile = false;
 		
 		if (bigs != null) {
-			for (int i = 0; i < bigs.getLength(); i++) {
+			for (int i=0; i < bigs.getLength(); i++) {
 				if (bigs.item(i).getTextContent().equals("N")) {
-					// 일반첨부파일이 있는 경우
+				    // 일반첨부파일이 있는 경우
 					hasAttachFile = true;
 					break;
 				}
@@ -2111,7 +2053,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					if (oldMessage != null) {
 					    // 기존 메시지가 Multipart인 경우 처리
 						if (oldMessage.getContent() instanceof Multipart) {
-							Multipart mp = (Multipart) oldMessage.getContent();
+							Multipart mp = (Multipart)oldMessage.getContent();
 							int count = mp.getCount();
 							BodyPart p = null;
 							
@@ -2153,7 +2095,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// 기존 메시지의 모든 헤더를 적용한다.
 						Enumeration<Header> e = oldMessage.getAllHeaders();
-						
 						while(e.hasMoreElements()){
 							Header header = e.nextElement();
 							newMessage.setHeader(header.getName(), header.getValue());
@@ -2165,7 +2106,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				}
 				
 				// 새로 업로드된 파일들을 새 메시지에 추가한다.
-				for (int i = 0; i < fileNodes.getLength(); i++) {
+				for (int i=0; i<fileNodes.getLength(); i++) {
 					Node subNode = fileNodes.item(i);
 					NodeList childNodes = subNode.getChildNodes();
 					String fileName = childNodes.item(0).getTextContent();
@@ -2194,13 +2135,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        String contentType = "application/octet-stream";
 				        
 				        // 첨부파일의 Content-Type을 구한다.
-						if (Files.probeContentType(f.toPath()) != null) {
-							contentType = Files.probeContentType(f.toPath());
-						} else {
-							if (path.lastIndexOf(".") > 0 && path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
-								contentType = "message/rfc822";
-							}
-						}
+				        if (Files.probeContentType(f.toPath()) != null) {
+				        	contentType = Files.probeContentType(f.toPath());
+				        } else {
+				        	if (path.lastIndexOf(".") > 0 && path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
+				        		contentType = "message/rfc822";
+				        	}
+				        }
 				        
 				        messageBodyPart.setHeader("Content-Type", contentType);
 				        
@@ -2234,7 +2175,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				}
 	    		
 				// 처리가 완료된 일반첨부파일 원본 파일들을 삭제한다.				
-				for (int i = 0; i < fileNodes.getLength(); i++) {
+				for (int i=0; i<fileNodes.getLength(); i++) {
 					Node subNode = fileNodes.item(i);
 					NodeList childNodes = subNode.getChildNodes();
 					
@@ -2338,168 +2279,144 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				url = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("ORGURL") != null) {
 			tempNode = root.getElementsByTagName("ORGURL").item(0);
 			if (tempNode != null) {
 				orgUrl = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("CONNURL") != null) {
 			tempNode = root.getElementsByTagName("CONNURL").item(0);
 			if (tempNode != null) {
 				connUrl = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("CMD") != null) {
 			tempNode = root.getElementsByTagName("CMD").item(0);
 			if (tempNode != null) {
 				cmd = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("MAILCMD") != null) {
 			tempNode = root.getElementsByTagName("MAILCMD").item(0);
 			if (tempNode != null) {
 				mailCmd = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("ORGMAILCMD") != null) {
 			tempNode = root.getElementsByTagName("ORGMAILCMD").item(0);
 			if (tempNode != null) {
 				orgMailCmd = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("AUTHOR") != null) {
 			tempNode = root.getElementsByTagName("AUTHOR").item(0);
 			if (tempNode != null) {
 				author = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("SUBJECT") != null) {
 			tempNode = root.getElementsByTagName("SUBJECT").item(0);
 			if (tempNode != null) {
 				subject = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("TO") != null) {
 			tempNode = root.getElementsByTagName("TO").item(0);
 			if (tempNode != null) {
 				to = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("CC") != null) {
 			tempNode = root.getElementsByTagName("CC").item(0);
 			if (tempNode != null) {
 				cc = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("BCC") != null) {
 			tempNode = root.getElementsByTagName("BCC").item(0);
 			if (tempNode != null) {
 				bcc = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("FROM") != null) {
 			tempNode = root.getElementsByTagName("FROM").item(0);
 			if (tempNode != null) {
 				from = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("IMPORTANCE") != null) {
 			tempNode = root.getElementsByTagName("IMPORTANCE").item(0);
 			if (tempNode != null) {
 				importance = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("SIMPLE-MIME") != null) {
 			tempNode = root.getElementsByTagName("SIMPLE-MIME").item(0);
 			if (tempNode != null) {
 				simpleMime = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("DELAYSENDTIME") != null) {
 			tempNode = root.getElementsByTagName("DELAYSENDTIME").item(0);
 			if (tempNode != null) {
 				delaySendTime = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("HTMLBODY") != null) {
 			tempNode = root.getElementsByTagName("HTMLBODY").item(0);
 			if (tempNode != null) {
 				htmlBody = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("SECURITYMAIL") != null) {
 			tempNode = root.getElementsByTagName("SECURITYMAIL").item(0);
 			if (tempNode != null) {
 				pSecurityMail = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("REPLYSENDTIME") != null) {
 			tempNode = root.getElementsByTagName("REPLYSENDTIME").item(0);
 			if (tempNode != null) {
 				replySendTime = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("REPLYREADTIME") != null) {
 			tempNode = root.getElementsByTagName("REPLYREADTIME").item(0);
 			if (tempNode != null) {
 				replyReadTime = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("ISEACHMAIL") != null) {
 			tempNode = root.getElementsByTagName("ISEACHMAIL").item(0);
 			if (tempNode != null) {
 				isEachMail = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("ISRESERVE") != null) {
 			tempNode = root.getElementsByTagName("ISRESERVE").item(0);
 			if (tempNode != null) {
 				isReserve = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("RESERVEDID") != null) {
 			tempNode = root.getElementsByTagName("RESERVEDID").item(0);
 			if (tempNode != null) {
 				reservedId = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("SHOW-DISPLAYNAME") != null) {
 			tempNode = root.getElementsByTagName("SHOW-DISPLAYNAME").item(0);
 			if (tempNode != null) {
 				eShowDisplayName = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("STATENAME") != null) {
 			tempNode = root.getElementsByTagName("STATENAME").item(0);
 			if (tempNode != null) {
 				stateName = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("SECUREMAIL") != null) {
 			tempNode = root.getElementsByTagName("SECUREMAIL").item(0);
 			if (tempNode != null && tempNode.getTextContent() != null && tempNode.getTextContent().equalsIgnoreCase("TRUE")) {
@@ -2512,14 +2429,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 					}
 				}
-				
 				if (root.getElementsByTagName("SECUREREADCOUNT") != null) {
 					tempNode = root.getElementsByTagName("SECUREREADCOUNT").item(0);
 					if (tempNode != null) {
 						secureReadCount = tempNode.getTextContent();
 					}
 				}
-				
 				if (root.getElementsByTagName("SECUREREADDATE") != null) {
 					tempNode = root.getElementsByTagName("SECUREREADDATE").item(0);
 					if (tempNode != null) {
@@ -2640,7 +2555,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				String pattern = "\"?([^\"]*)\"? <([^<>]+)>";
 				Pattern r = Pattern.compile(pattern);
 				Matcher m = r.matcher(from);
-				
 				if (m.find()) {
 					name = m.group(1);
 					address = m.group(2);
@@ -2652,7 +2566,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				// To
 				logger.debug("to=" + to);
 				m = r.matcher(to);
-				
 				while (m.find()) {
 					name = m.group(1);
 					address = m.group(2);
@@ -2664,7 +2577,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				// Cc
 				logger.debug("cc=" + cc);
 				m = r.matcher(cc);
-				
 				while (m.find()) {
 					name = m.group(1);
 					address = m.group(2);
@@ -2676,7 +2588,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				// Bcc
 				logger.debug("bcc=" + bcc);
 				m = r.matcher(bcc);
-				
 				while (m.find()) {
 					name = m.group(1);
 					address = m.group(2);
@@ -2805,7 +2716,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            // Related Part를 생성한다.
 			            relatedPart = new MimeMultipart("related");
 			            
-						for (int i = 0; true; i++) {
+			        	for (int i=0; true; i++) {
 			            	if (imageNameList.item(i) == null || imagePathList.item(i) == null) {
 			            		break;
 			            	}
@@ -2825,12 +2736,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				                	String cid = imageName + "@12345678.87654321";
 				                	String strContent = content.getContent().toString();
 				                	int index = strContent.indexOf("src=\"" + imageName);
-				                	
-									if (index != -1) {
-										strContent = strContent.replace("src=\"" + imageName, "src=\"cid:" + cid);
-									}
-									
-									content.setContent(strContent, "text/html; charset=utf-8");
+				                	if (index != -1) {
+				                		strContent = strContent.replace("src=\"" + imageName, "src=\"cid:" + cid);
+				                	}
+				                	content.setContent(strContent, "text/html; charset=utf-8");
 			                		        	        
 				                	// 이미지 파일을 추가할 Mime Body Part를 생성한다.
 				                	MimeBodyPart messageBodyPart = new MimeBodyPart();
@@ -2908,7 +2817,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							// 기존 메시지가 Multipart 메시지일 경우의 처리
 							if (oldMessage.getContent() instanceof Multipart) {
 							    // 기존 메시지의 Multipart를 불러온다.
-								Multipart mp = (Multipart) oldMessage.getContent();
+								Multipart mp = (Multipart)oldMessage.getContent();
 								int count = mp.getCount();
 								BodyPart p = null;
 								boolean hasAttach = false;
@@ -2926,14 +2835,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    									
 	    									logger.debug("relatedPart=" + relatedPart);
 	    									
-											if (relatedPart == null) {
-												relatedPart = new MimeMultipart("related");
-
-												MimeBodyPart wrap = new MimeBodyPart();
-												wrap.setContent(relatedPart);
-												alternativePart.removeBodyPart(1);
-												alternativePart.addBodyPart(wrap, 1);
-											}
+	    									if (relatedPart == null) {
+	    										relatedPart = new MimeMultipart("related");
+	    										    							
+	    					                    MimeBodyPart wrap = new MimeBodyPart();
+	    					                    wrap.setContent(relatedPart);
+	    					                    alternativePart.removeBodyPart(1);
+	    					                    alternativePart.addBodyPart(wrap, 1);
+	    									}
 	    									// new related part is already created by the above routine
 	    									// for adding new in-line images.
 	    									else {
@@ -2945,20 +2854,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    									int existingRelatedPartCount = existingRelatedPart.getCount();
 	    									BodyPart existingRelatedSubPart = null;
 	    									
-											for (int j = 0; j < existingRelatedPartCount; j++) {
-												existingRelatedSubPart = existingRelatedPart.getBodyPart(j);
-
-												if (existingRelatedSubPart instanceof MimePart) {
-													String contentId = ((MimePart) existingRelatedSubPart).getContentID();
-													logger.debug("Existing ContentId=" + contentId);
-
-													if (contentId != null && !contentIdSet.contains(contentId)) {
-														logger.debug("Adding ContentId=" + contentId);
-
-														relatedPart.addBodyPart(existingRelatedSubPart);
-													}
-												}
-											}
+	    									for (int j = 0; j < existingRelatedPartCount; j++) {
+	    									    existingRelatedSubPart = existingRelatedPart.getBodyPart(j);
+	    										
+	    										if (existingRelatedSubPart instanceof MimePart) {
+	    										    String contentId = ((MimePart)existingRelatedSubPart).getContentID();
+	    										    logger.debug("Existing ContentId=" + contentId);
+	    										    
+	    											if (contentId != null && !contentIdSet.contains(contentId)) {
+	    											    logger.debug("Adding ContentId=" + contentId);
+	    											    
+	    												relatedPart.addBodyPart(existingRelatedSubPart);						
+	    											}
+	    										}				
+	    									}
 	    									
 	    									String bodyContent = content.getContent().toString();
 	    									bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);							
@@ -3043,9 +2952,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 										mixedPart.addBodyPart(wrap, 0);
 									} else {
 										mixedPart.addBodyPart(content, 0);
-									}
-
-									message.setContent(mixedPart);
+									}							
+									
+									message.setContent(mixedPart);							
 								}
 								// 기존 메시지가 Related Part일 경우의 처리
 								else if (oldMessage.isMimeType("multipart/related")) {
@@ -3103,24 +3012,24 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	try { cos.close(); } catch (Exception e) {}
 		        }
 		        
-				logger.debug("mailboxUsage=" + mailboxUsage + ", messageSize=" + messageSize + ", mailboxQuota=" + mailboxQuota);
-
-				if (mailboxUsage + messageSize >= mailboxQuota) {
+		        logger.debug("mailboxUsage=" + mailboxUsage + ", messageSize=" + messageSize + ", mailboxQuota=" + mailboxQuota);
+		        
+		        if (mailboxUsage + messageSize >= mailboxQuota) {
 					throw new Exception("OVERQUOTA");
 				}
 		        
 		        //messageSize가 maxMessageSize 넘을 경우 OVERMESSAGESIZE Exception
 		        int maxMessageSize = ezEmailService.getMaxMessageSize(userInfo.getTenantId());
 		        
-				if (maxMessageSize > 0 && messageSize > maxMessageSize) {
-					double maxMessageSizeD = maxMessageSize / 1024.0;
-					maxMessageSizeD = Math.round(maxMessageSizeD * 10) / 10;
-
-					double messageSizeD = messageSize / 1024.0;
-					messageSizeD = Math.round(messageSizeD * 10) / 10;
-
-					throw new Exception("OVERMESSAGESIZE:" + maxMessageSizeD + "MB:" + messageSizeD + "MB");
-				}
+		        if (maxMessageSize > 0 && messageSize > maxMessageSize) {
+		        	double maxMessageSizeD = maxMessageSize / 1024.0;
+		        	maxMessageSizeD = Math.round(maxMessageSizeD * 10) / 10;
+		        	
+		        	double messageSizeD = messageSize / 1024.0;
+		        	messageSizeD = Math.round(messageSizeD * 10) / 10;
+		        	
+		        	throw new Exception("OVERMESSAGESIZE:" + maxMessageSizeD + "MB:" + messageSizeD + "MB");
+		        }
 		        
 		        String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", userInfo.getTenantId());
 		        logger.debug("useSecureMail=" + useSecureMail);
@@ -3130,30 +3039,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	
 		    		Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
 		    		
-					if (isEachMailB) {
-						message.setHeader("X-JMocha-Each-Mail", "true");
-					}
-					
-					if (delaySendTime != "") {
-						message.setHeader("Delivery-Date", delaySendTime);
-					}
-					
-					if (useSecureMail.equals("YES") && isSecureMail) {
-						message.setHeader("X-JMocha-Secure-Mail", "true");
-					}
+		    		if (isEachMailB) {
+	                	message.setHeader("X-JMocha-Each-Mail", "true");
+                    }
+		    		if (delaySendTime != ""){
+		    			message.setHeader("Delivery-Date", delaySendTime);
+		    		}
+		    		if (useSecureMail.equals("YES") && isSecureMail) {
+		    			message.setHeader("X-JMocha-Secure-Mail", "true");
+		    		}
 		    		
 		    		message.setFlag(Flags.Flag.SEEN, true);
-					AppendUID[] uids = ((IMAPFolder) draftFolder).appendUIDMessages(new Message[] { message });
-					
-					if (uids != null && uids[0] != null) {
-						draftUID = uids[0].uid;
-					}
+		    		AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
+		    		if (uids != null && uids[0] != null) {
+		    			draftUID = uids[0].uid;
+		    		} 
 		    	
 		            // this deletion code block has been moved here because
 		            // it needs to be kept in Drafts if an error occurs during the above process.
-					if (oldMessage != null) {
-						oldMessage.setFlag(Flags.Flag.DELETED, true);
-					}
+		            if (oldMessage != null) {
+		            	oldMessage.setFlag(Flags.Flag.DELETED, true);
+		            }
 		            
 		        } else if (cmd.equalsIgnoreCase("SEND")) {
 		        	logger.debug("Sending the message");
@@ -3168,11 +3074,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                     message.setFlag(Flags.Flag.SEEN, true);
 		            
                     // 예약 발송의 경우
-					if (!delaySendTime.equals("")) {
-						// 편지함 용량 초과 메세지 확인을 위해 임시저장
-						AppendUID[] uids = ((IMAPFolder) draftFolder).appendUIDMessages(new Message[] { message });
-						if (uids != null && uids[0] != null) {
-							draftUID = uids[0].uid;
+			        if (!delaySendTime.equals("")) {
+			            // 편지함 용량 초과 메세지 확인을 위해 임시저장
+	                    AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
+	                    if (uids != null && uids[0] != null) {
+	                        draftUID = uids[0].uid;
 	                    } 
 			            
 	                    // 개별발신
@@ -3370,7 +3276,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    	                    // 본래는 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 복사하였으나
 	    			            // 보낸메일함에 바로 저장하는 것으로 변경함.
 	    	                    AppendUID[] uids = ((IMAPFolder)sentFolder).appendUIDMessages(new Message[]{secureMessage});
-	    	                    
 	    	                    if (uids != null && uids[0] != null) {
 	    	                        sentFolderMessageUID = uids[0].uid;
 	    	                    }
@@ -3400,7 +3305,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    	                    // 본래는 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 복사하였으나
 	    			            // 보낸메일함에 바로 저장하는 것으로 변경함.
 	    	                    AppendUID[] uids = ((IMAPFolder)sentFolder).appendUIDMessages(new Message[]{message});
-	    	                    
 	    	                    if (uids != null && uids[0] != null) {
 	    	                        sentFolderMessageUID = uids[0].uid;
 	    	                    }
@@ -3488,7 +3392,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    		        	if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
-				    		        } else {
+				    		        }
+				    		        else {
 				    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
 				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 				    		        }
@@ -3510,7 +3415,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "templist";
 			        pDirPath += commonUtil.separator + stateName + ".txt";
 			        File f = new File(pDirPath);
-			        
 			        if (f.exists()) {
 			        	f.delete();
 			        }
@@ -3525,7 +3429,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    	        if (imagePathList != null && imagePathList.getLength() > 0) {
 	    	            String imagePath = "";
 	    	            
-						for (int i = 0; true; i++) {
+	    	        	for (int i=0; true; i++) {
 	    	            	if (imagePathList.item(i) == null) {
 	    	            		break;
 	    	            	}
@@ -3536,7 +3440,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    	                	imagePath = new URL(imagePath).getPath();
 	    	                	String pDirPath = realPath + imagePath;
 	    	            		File f = new File(pDirPath);
-	    	            		
 	    	            		if (f.exists()) {
 	    	            			f.delete();
 	    	            		}
@@ -3565,7 +3468,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					pResult = "Invalid Addresses:";
 					
 					int index = 1000;
-					
 					while (m.find()) {
 						// 1000번 이상 반복되면 break한다.
 						--index;
@@ -3665,7 +3567,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("uidStr=" + uidStr);
 		
 		long uid = 0;
-		
 		if (uidStr != null && !uidStr.equals("")) {
 			uid = Long.parseLong(uidStr);
 		}
@@ -3689,7 +3590,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     			if (message != null) {
     				message.setFlag(Flags.Flag.DELETED, true);
     			}
-    			
     	        folder.close(true);
     	        
     		} catch (MessagingException e) {
@@ -3782,7 +3682,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    		if (br != null) {
 	    			br.close();
 	    		}
-	    		
 	    		if (isr != null) {
 	    			isr.close();
 	    		}
@@ -3974,7 +3873,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			NodeList nodeList = xmlDom.getElementsByTagName("NODE");
 			
 			if (nodeList != null) {
-				for (int i = 0; i < nodeList.getLength(); i++) {
+				for (int i=0; i<nodeList.getLength(); i++) {
 					if (nodeList.item(i).getFirstChild().getTextContent().equals(realFileNM)) {
 						String fileLocation = nodeList.item(i).getChildNodes().item(4).getTextContent();
 						String[] fileLocationArray = fileLocation.split("\\|!\\|");
@@ -4039,21 +3938,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		Element root = xmlDoc.getDocumentElement();
 		
 		Node tempNode = null;
-		
 		if (root.getElementsByTagName("ORGSEARCH") != null) {
 			tempNode = root.getElementsByTagName("ORGSEARCH").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pOrganSearchList = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("DLGSEARCH") != null) {
 			tempNode = root.getElementsByTagName("DLGSEARCH").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pDLSearchList = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("CELL") != null) {
 			tempNode = root.getElementsByTagName("CELL").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
@@ -4061,35 +3957,30 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				pDLCellList = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("ORGPROP") != null) {
 			tempNode = root.getElementsByTagName("ORGPROP").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pOrganPropList = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("DLPROP") != null) {
 			tempNode = root.getElementsByTagName("DLPROP").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pDLPropList = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("ORGTYPE") != null) {
 			tempNode = root.getElementsByTagName("ORGTYPE").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pOrganListType = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("DLTYPE") != null) {
 			tempNode = root.getElementsByTagName("DLTYPE").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pDLListType = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("ADDFILTER") != null) {
 			tempNode = root.getElementsByTagName("ADDFILTER").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
@@ -4295,7 +4186,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				}
 			}
 			
-			for (int i = 0; i < resultArray.size(); i++) {
+			for (int i=0; i<resultArray.size(); i++) {
 				JSONObject address = (JSONObject)resultArray.get(i);
 				String pCn = (String)address.get("cn");
 				pCn = pCn.substring(0, pCn.indexOf("@"));
@@ -4396,14 +4287,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, LoginVO userInfo) {
 		String pResult = "";
-		
         try {
             pResult = ezOrganService.getSearchList(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getPrimary(), userInfo.getTenantId());
         } catch (Exception e) {
         	e.printStackTrace();
             pResult = "EXCEPTION";
         }
-        
         return pResult;
     }
 	
@@ -4444,6 +4333,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			sb.append("</ROWS></LISTVIEWDATA>");
 			
 			returnData = sb.toString();
+			
 		} catch (Exception e) {
 			returnData = "EXCEPTION";
 			e.printStackTrace();
@@ -4457,7 +4347,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	private String getAddressSearch(String pFilter, LoginVO userInfo) {
         String returnValue = "";
-        
         try {
             String[] ownerIds = new String[]{userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId()};
             pFilter = "S_NAME," + pFilter;
@@ -4484,7 +4373,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	e.printStackTrace();
         	returnValue = "EXCEPTION";
         }
-        
         return returnValue;
     }
 	
@@ -4493,7 +4381,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		Matcher mat = pat.matcher(htmlStr);
 				
 		StringBuffer result = new StringBuffer();
-		
 		while (mat.find()) {
 			String cid = mat.group(1);
 			try {
@@ -4503,7 +4390,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 			mat.appendReplacement(result, Matcher.quoteReplacement("src=\"cid:" + cid + "\""));
 		}
-		
 		mat.appendTail(result);
 		
 		return result.toString();	
@@ -4515,23 +4401,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			int count = relatedPart.getCount() - 1;
 			
 			for (int i = count; i >= 1; i--) {
-				MimeBodyPart bp = (MimeBodyPart) relatedPart.getBodyPart(i);
+				MimeBodyPart bp = (MimeBodyPart)relatedPart.getBodyPart(i);
 				
-				if (bp.getDisposition() == null) {
-					continue;
-				}
-				
-				String contentID = bp.getContentID();
-				
-				if (contentID == null || contentID.length() < 3) {
-					continue;
-				}
-
-				contentID = contentID.substring(1, contentID.length() - 1);
-				
-				if (htmlStr.indexOf("src=\"cid:" + contentID) < 0) {
-					logger.debug("this inline image isn't used. contentID=" + contentID);
-					relatedPart.removeBodyPart(i);
+				if (bp.getDisposition() != null) {
+					String contentID = bp.getContentID();
+					
+					if (contentID != null && contentID.length() > 2) {
+						contentID = contentID.substring(1, contentID.length() - 1);
+						if (htmlStr.indexOf("src=\"cid:" + contentID) < 0) {
+							logger.debug("this inline image isn't used. contentID=" + contentID);
+							relatedPart.removeBodyPart(i);
+						}
+					}
 				}
 			}
 		} catch (IOException e) {
