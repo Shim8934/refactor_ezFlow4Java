@@ -1061,6 +1061,7 @@
 			tbl_journal
 		set
 			journal_title = #title#,
+			form_id = #formId#,
 			dept_share = #deptShare#,
 			journal_content = #content#
 			<isEqual property="isTemp" compareValue="N">

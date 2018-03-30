@@ -794,6 +794,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", jsonParam.get("title"));
+		map.put("formId", jsonParam.get("formId"));
 		map.put("content", jsonParam.get("content"));
 		map.put("deptShare", jsonParam.get("deptShare"));
 		map.put("journalId", journalId);
