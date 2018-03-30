@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezJournal.web;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -224,7 +223,7 @@ public class EzJournalAdminJYController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezJournal/formSave.do")
 	@ResponseBody
-	public void formSave (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String formSave (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("formSave started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -269,19 +268,16 @@ public class EzJournalAdminJYController {
 			status = result.get("status").toString();
 		}
 		
-		if (status.equals("ok")) {
-			
-		}
-		
 		logger.debug("formSave ended.");         
+		return status;
 	}
 	
 	/**
 	 * 업무일지 양식관리 양식삭제 실행함수
 	 */
-	@RequestMapping(value = "/admin/ezJournal/deleteForm.do", produces="application/json;charset=UTF-8")
+	@RequestMapping(value = "/admin/ezJournal/deleteForm.do")
 	@ResponseBody
-	public void deleteForm (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String deleteForm (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("deleteForm started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -302,6 +298,7 @@ public class EzJournalAdminJYController {
 		String status = result.get("status").toString();
 		
 		logger.debug("deleteForm ended.");
+		return status;
 	}
 	
 }

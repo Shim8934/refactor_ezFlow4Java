@@ -221,9 +221,14 @@
     						"formId"		: formId,
     						"isDeptChanged"	: isDeptChanged},
     				success : function(result) {
-    					alert("<spring:message code='ezJournal.t128'/>");
-    					opener.location.reload();
-						window.close();    					
+						if (result === "ok") {
+	    					console.log("저장결과확인 : " + result);
+	    					alert("<spring:message code='ezJournal.t128'/>");
+	    					opener.location.reload();
+							window.close();    					
+						} else {
+							
+						}
     				},
     				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nmessage: " + request.responseText + "\nerror : " + error);

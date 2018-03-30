@@ -145,8 +145,10 @@
 			    						"companyId"  : companyId,
 			    						"typeId" 	 : typeId},
 			    				success : function (result) {
-			    					alert("<spring:message code='ezJournal.t129'/>");
-			    					parent.frames["right"].location.reload();
+			    					if (result === "ok") {
+				    					alert("<spring:message code='ezJournal.t129'/>");
+				    					parent.frames["right"].location.reload();
+			    					}
 			    				},
 			    				error : function(request, status, error) {
 			    					alert("code : " + request.status + "\nerror : " + error);
