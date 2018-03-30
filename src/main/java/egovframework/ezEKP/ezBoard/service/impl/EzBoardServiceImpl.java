@@ -2146,11 +2146,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		if (boardListVO.getReadFlag().equals("Y")) {
 			ezBoardDAO.setInitReadCount(boardListVO);
+			ezBoardDAO.deleteBoardItemRead(boardListVO);
 		}
 		
 		ezBoardDAO.setApprFlag(boardListVO);
-		ezBoardDAO.deleteBoardItemRead(boardListVO);
-		
+
 		if (mode.equals("PHOTO")) {
 			photoSaveDB(boardListVO);
 		}
