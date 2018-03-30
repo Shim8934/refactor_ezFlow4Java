@@ -113,15 +113,11 @@
 	   		//사원선택
 	   		function setAuthorViewUser(){
 	   			var userId = selectedUser;
-				var url = "/admin/ezJournal/authorView.do";
-				var companyId = opener.companyId;
-				url+="?companyId="+companyId;
 				if (userId) {
-					url+="&userId="+userId+"&userName="+selectedUserName;
+					opener.setSelectedUser(userId,selectedUserName);
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
 				}
-				window.open(url, "authorView", "width=500, height=180");
 				window.close();
 	   		}
 // 	   		function initSelectedUser(){
