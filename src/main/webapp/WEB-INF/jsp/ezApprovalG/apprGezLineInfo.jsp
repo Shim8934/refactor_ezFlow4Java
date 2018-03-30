@@ -202,8 +202,10 @@
 		
 		                var str2 = "tagsub4.src" + "=" + "\"/images/tab_appsub4a.gif\"";
 		                eval(str2);
-		                var str3 = "tagsub5.src" + "=" + "\"/images/tab_appsub5a.gif\"";
-		                eval(str3);
+		                if ('${approvalFlag}' == 'G') {
+			                var str3 = "tagsub5.src" + "=" + "\"/images/tab_appsub5a.gif\"";
+			                eval(str3);
+		                }
 		            }
 		            else if (g_tagSelectsub == "4") {
 		                if (pDocState == "015") {
@@ -217,8 +219,10 @@
 		
 		                var str2 = "tagsub4.src" + "=" + "\"/images/tab_appsub4.gif\"";
 		                eval(str2);
-		                var str3 = "tagsub5.src" + "=" + "\"/images/tab_appsub5a.gif\"";
-		                eval(str3);
+		                if ('${approvalFlag}' == 'G') {
+			                var str3 = "tagsub5.src" + "=" + "\"/images/tab_appsub5a.gif\"";
+			                eval(str3);
+		                }
 		            }
 		            else {
 		                if (pDocState == "015") {
