@@ -18,11 +18,13 @@ function SelectTask(pDeptCode, pDeptName, pInitFlag, pMultiSelect, opentype, Com
     }
     else if (opentype != undefined && CompleteFunction == undefined) {
         selecttask_cross_dialogArguments[1] = SelectTask_Complete;
+        selecttask_cross_dialogArguments[2] = true;
         var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(790, 430));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
         selecttask_cross_dialogArguments[1] = CompleteFunction;
+        selecttask_cross_dialogArguments[2] = true;
         var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(790, 430));
         try { OpenWin.focus(); } catch (e) { }
     }
@@ -106,6 +108,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
         else
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
 
+        ezapropinion_cross_dialogArguments[2] = true;
         var OpenWin = window.open(url, "_blank" , GetOpenWindowfeature(330, 205));
         
         try { OpenWin.focus(); } catch (e) { }

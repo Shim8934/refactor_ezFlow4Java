@@ -32,6 +32,7 @@
 		    var opnOption = "0";
 		    var RetValue;
 		    var ReturnFunction;
+		    var winFlag;
 		    
 		    window.onload = function () {
 		        var ua = navigator.userAgent;
@@ -44,10 +45,12 @@
 		        try {
 		            RetValue = parent.searchrec_cross_dialogArguments[0];
 		            ReturnFunction = parent.searchrec_cross_dialogArguments[1];
+		            winFlag = parent.searchrec_cross_dialogArguments[2];
 		        } catch (e) {
 		            try {
 		                RetValue = opener.searchrec_cross_dialogArguments[0];
 		                ReturnFunction = opener.searchrec_cross_dialogArguments[1];
+		                winFlag = opener.searchrec_cross_dialogArguments[2];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }
@@ -158,6 +161,10 @@
 		
 		            if (ReturnFunction != null) {
 		                ReturnFunction(rtnVal);
+		                
+		                if (winFlag) {
+		                	window.close();
+		                }
 		            } else {
 		                window.returnValue = rtnVal;
 		                window.close();
@@ -234,6 +241,10 @@
 		        rtnVal[0] = "FALSE";
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
+		            
+		            if (winFlag) {
+	                	window.close();
+	                }
 		        } else {
 		            window.returnValue = rtnVal;
 		            window.close();

@@ -463,11 +463,13 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined) {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+            ezapropinion_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
         else {
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+            ezapropinion_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }

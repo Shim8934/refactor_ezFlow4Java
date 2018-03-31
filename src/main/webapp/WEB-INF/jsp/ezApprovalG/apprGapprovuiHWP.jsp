@@ -258,7 +258,7 @@
 		            openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]) + "&uName2=" + escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
 		        } else if (NextDocExtended.substring(NextDocExtended.lastIndexOf(".") + 1).toLowerCase() == "hwp") {
-		            var openLocation = "/ezApprovalG/ezAproveUI_HWP.do?docID=" + escape(pArgument[0]);
+		            var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
 		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
 		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
 		        } else {

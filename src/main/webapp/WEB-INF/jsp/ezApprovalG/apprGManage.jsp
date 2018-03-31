@@ -778,10 +778,13 @@
 		            if (pListTypeValue == "3") {
 		                var pMsg = "<spring:message code='ezApprovalG.t67'/>";
 		                var Ans = OpenInformationUI(pMsg, btncallback_onclick_Complete, "open");
-		            }
-		            else {
+		            } else {
 		                var pMsg = "<spring:message code='ezApprovalG.t68'/>";
 		                var Ans = OpenInformationUI(pMsg, btncallback_onclick_Complete, "open");
+		            }
+		            
+		            if (Ans) {
+		            	btncallback_onclick_Complete(true);
 		            }
 		        }
 		    }

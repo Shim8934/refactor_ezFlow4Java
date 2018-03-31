@@ -1075,6 +1075,7 @@
 		            else
 		                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
 		            
+		            ezapropinion_cross_dialogArguments[2] = true;
 		            var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }

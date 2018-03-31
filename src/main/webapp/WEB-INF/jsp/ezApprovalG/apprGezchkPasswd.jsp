@@ -44,6 +44,10 @@
 					if (rtnVal != "FALSE") {
 				        if (ReturnFunction != null) {
 				            ReturnFunction(rtnVal);
+				            
+				            if (winFlag) {
+				            	window.close();
+				            }
 				        } else {
 				            window.returnValue = rtnVal;
 				            window.close();
@@ -78,7 +82,11 @@
 		    
 		    function btn_OpinionCANCEL_onclick() {
 		        if (ReturnFunction != null) {
-		            ReturnFunction("cancel");            
+		            ReturnFunction("cancel");
+		            
+		            if (winFlag) {
+		            	window.close();
+		            }
 		        }
 		        else {
 		            window.returnValue = "cancel";
@@ -87,6 +95,7 @@
 		    }
 		    var RetValue;
 		    var ReturnFunction;
+		    var winFlag;
 		    window.onload = function () {
 		    	document.getElementById('inpPassword').focus();
 		    	
@@ -99,10 +108,12 @@
 		        try {
 		            RetValue = parent.ezchkpasswd_cross_dialogArguments[0];
 		            ReturnFunction = parent.ezchkpasswd_cross_dialogArguments[1];
+		            winFlag = parent.ezchkpasswd_cross_dialogArguments[2];
 		        } catch (e) {
 		            try {
 		                RetValue = opener.ezchkpasswd_cross_dialogArguments[0];
 		                ReturnFunction = opener.ezchkpasswd_cross_dialogArguments[1];
+		                winFlag = opener.ezchkpasswd_cross_dialogArguments[2];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }

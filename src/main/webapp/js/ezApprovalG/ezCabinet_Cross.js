@@ -1238,11 +1238,15 @@ var ezchkpasswd_cross_dialogArguments = new Array();
 function chk_Passwd(pUserID, CompleteFunction) {
     var parameter = pUserID;
     ezchkpasswd_cross_dialogArguments[0] = parameter;
-    if (CompleteFunction != undefined)
-        ezchkpasswd_cross_dialogArguments[1] = CompleteFunction;
-    else
-        ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+    
+    if (CompleteFunction != undefined) {
+    	ezchkpasswd_cross_dialogArguments[1] = CompleteFunction;
+    } else {
+    	ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+    }
 
+    ezchkpasswd_cross_dialogArguments[2] = true;
+    
     var url = "/ezApprovalG/ezchkPasswd.do";
     var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(330, 200));
     try { OpenWin.focus(); } catch (e) { }
@@ -1389,6 +1393,7 @@ function btnSearchRec_onclick(opnOption,opentype) {
         searchrec_cross_dialogArguments[1] = btnSearchRec_onclick_Complete;
 
         if (opentype == "OPEN") {
+        	searchrec_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "SearchRec_Cross", GetOpenWindowfeature(623, 370));
             try { OpenWin.focus(); } catch (e) { }
         }
