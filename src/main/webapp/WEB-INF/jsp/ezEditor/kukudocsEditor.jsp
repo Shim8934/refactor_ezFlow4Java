@@ -9,7 +9,7 @@
 	    <script type="text/javascript" src="/js/ezEditor/kukudocsEditor/javascripts/build/Editor.bundle.js"></script>
 	    <link rel="stylesheet" href="/js/ezEditor/kukudocsEditor/stylesheets/style.css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<style> html, body {height: 100%; margin: 0; padding: 0;} </style>
+		<style> html, body {height: 100%; margin: 0; padding: 0; overflow: hidden;} </style>
 		<script type="text/javascript">
 			var type = "${type}";
 			var height = "${height}";
