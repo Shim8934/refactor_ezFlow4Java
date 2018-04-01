@@ -5317,11 +5317,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String deptID = request.getParameter("deptID");
 		String docState = request.getParameter("docState");
 		String childDocInfo = ezApprovalGService.getInnerLineInfo(docID, deptID, docState, userInfo.getCompanyID(), userInfo.getTenantId());
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		model.addAttribute("docID", docID);
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("docState", docState);
 		model.addAttribute("childDocInfo", childDocInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("ezLineInfo ended");
 		

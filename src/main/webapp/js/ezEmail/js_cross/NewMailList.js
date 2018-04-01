@@ -67,6 +67,12 @@ function MakeHeaderHTML(HeaderObject) {
             _HeaderRow.style.cursor = "pointer";
             _HeaderRow.setAttribute("prop", SelectSingleNodeValue(XmlRows[Cnt], "prop"));
 
+            if (SelectSingleNodeValue(XmlRows[Cnt], "propname") == "subject" || SelectSingleNodeValue(XmlRows[Cnt], "receivedt") == "sender") {
+            	_HeaderRow.style.overflow = "hidden";
+                _HeaderRow.style.textOverflow = "ellipsis";
+                _HeaderRow.style.whiteSpace = "nowrap";	
+            }
+            
             var HeaderType = SelectSingleNodeValue(XmlRows[Cnt], "heading");
             if (HeaderType == "IMG")
                 _HeaderRow.innerHTML = "<IMG style=\"cursor:pointer\" src=\"" + SelectSingleNodeValue(XmlRows[Cnt], "imgpath") + "\"/>";
@@ -313,6 +319,10 @@ function MakeListInfoHTML(ConentObject) {
                         case "receivedt":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
+                            _TDColum.style.overflow = "hidden";
+                            _TDColum.style.textOverflow = "ellipsis";
+                            _TDColum.style.whiteSpace = "nowrap";
+                            _TDColum.style.minWidth = "70px";
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_ReceiveDT;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
@@ -521,6 +531,9 @@ function MakeListInfoHTML_SUB(ConentObject) {
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             break;
                         case "receivedt":
+                        	_TDColum.style.overflow = "hidden";
+                            _TDColum.style.textOverflow = "ellipsis";
+                            _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
