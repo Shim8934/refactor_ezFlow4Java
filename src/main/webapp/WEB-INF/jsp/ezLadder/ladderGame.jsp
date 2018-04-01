@@ -33,7 +33,16 @@
 		var servername = null;
 		var attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
 		var items = []; 
+		var lad = "${vo.lineArray}";
+		var ladArr = lad.split('');
+		var height = 10;
 		
+		window.onload = function() {
+			canvas = document.getElementById("ladderCanvas");
+			if (canvas == null || canvas.getContext == null) return;
+			ctx = canvas.getContext("2d");
+			draw();
+		}
 		$(window).unload(function() {
 			if (stompClient !== null) {
 		        stompClient.disconnect();
@@ -46,6 +55,9 @@
 			
 			$(".setTable").css("width", win_width + "px");
 			$("#ladderLineBox").css("width", (win_width - 40) + "px");
+			$("#autoDirection").css("width", $(window).width()/12 + "px");
+			$("#immediatelyDirection").css("width", $(window).width()/12 + "px");
+			
 		}
 		
 		/** 180320 추가 : 사다리 재사용 */
@@ -55,12 +67,13 @@
 			setAllUser();
 			setAttendantsView(); 
 			
-			$("#blackBox").css("width", size*146 + "px");
+			$("#blackBox").css("width", size*147 + "px");
 			$("#ladderLine").css("width", size*146 + "px");
 			$("#startButton").css("left", size*130/2 + "px");
 			$(".setTable").css("width",  $(window).width() - 20 + "px");
 			$("#ladderLineBox").css("width", $(window).width() - 60 + "px");
-			
+			$("#autoDirection").css("width", $(window).width()/12 + "px");
+			$("#immediatelyDirection").css("width", $(window).width()/12 + "px");
 			$(window).resize(function() {
 				ladder_window_resize();
 			});
@@ -110,6 +123,15 @@
 				var cmtId = $(this).attr("cmtid");
 				setComment("delete", cmtId);
 			})
+			
+			$("#autoDirection").on("click", function() {
+				alert("자동진행");
+			});
+			
+			
+			$("#immediatelyDirection").on("click", function() {
+				alert("바로 보기");
+			});
 		
 		});
 		
@@ -360,9 +382,6 @@
 					dataType: "json",
 					data: {
 						"allData": allData
-					},
-					success: function() {
-						console.log("헤헤헤헤헿2222");
 					}
 				});
 			}
@@ -464,7 +483,33 @@
 			$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
 			$("#ladderCanvas").attr("width", (usernum * 150) + "px");
 		}
+	
 		
+	// =========================================
+		 function draw() {
+		
+		console.log("width : " + size);
+		console.log("height : " + height);
+		console.log("lad : " + lad);
+		console.log("ladArr : " + ladArr);
+		
+      var canvas = document.getElementById("ladderCanvas");
+      if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+        ctx.strokeStyle = 'DimGray';
+        for(var userCnt=0;userCnt<30; userCnt++) {
+
+        
+        ctx.fillRect (95 + 150 * (userCnt), 190, 5, 1000);
+        ctx.beginPath();
+        ctx.moveTo(75, 50);
+        ctx.lineTo(100, 75);
+        ctx.lineTo(100, 25);
+       
+        }
+      }
+    }
+		// =========================================
 	</script>
 	<style type="text/css">
 		
@@ -485,9 +530,8 @@
 		}
 		
 		#blackBox {
-			height:550px;
+			height:650px;
 			border:30px solid transparent; 
-			color:black;
 			margin-right:50px;
 			background: #010;
 			border-color:#010;
@@ -496,12 +540,11 @@
 			
 		}
 		#ladderLine {
-			height:550px;
+			height:650px;
 			border:30px solid transparent; 
-			color:black;
 			margin-right:50px;
-			background: #fff;
-			border-color:#fff;
+			/* background: #fff;
+			border-color:#fff; */
 			position: relative; top: 100px; bottom:100px;
 			float: left;
 		}
@@ -532,6 +575,31 @@
 		}
 		
 		
+		.directionBtn {
+			position: relative; top:70px; right:10px;
+			vertical-align: middle;
+			
+		}
+		
+		#autoDirection {
+			background: #fff;
+			border: 6px solid #ded;
+			width: 100px;
+    		height: 50px;
+    		float: right;
+    		margin-right: 5px;
+    		line-height:30px;
+		}
+		
+		#immediatelyDirection {
+			background: #fff;
+			border: 6px solid #def;
+    		width: 100px;
+    		height: 50px;
+    		float:right;
+    		margin-right: 20px;
+    		line-height:30px;
+		}
 		
 	</style>
 </head>
@@ -554,11 +622,12 @@
 				</span> 
 			</h2>
 		</div>
-		
+		<br>
 		<c:if test="${vo.status eq 1 }">
-			위치 수정~~~
-			<div id="startAuto">자동으로 진행하기</div>
-			<div id="seeAllResult">바로 결과보기</div>
+			<div class="directionBtn">
+				<div id="immediatelyDirection" align="center">바로 보기</div>
+				<div id="autoDirection" align="center">자동 진행</div>
+			</div>
 		</c:if>
 		
 		<div class="fullwidth" style="margin-top: 100px;" >
@@ -583,7 +652,8 @@
 										</div>
 									</c:if>
 									<c:if test="${vo.status eq 1}">
-									<div id="ladderLine"></div>
+										<canvas id='ladderCanvas' width="650" height="850"></canvas>
+										<div id="ladderLine"></div>
 									</c:if><br><br><br>						
 								<ul id="itemList"></ul>	
 							</div>
