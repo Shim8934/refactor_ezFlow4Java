@@ -9,7 +9,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezLadder.t009" /></title>
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
-		<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
+		<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css" type="text/css">
+		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">	
 		<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
@@ -66,49 +67,6 @@
 			}
 			
 			$(function() {
-				/** 이전 리스트 순서 바꾸기 */
-				$(".rowDiv").draggable({ // 드래그 리스트
-					revert: "invalid",
-					revertDuration: 400,
-					zIndex: 100,
-					axis: "y",
-					addClasses: false,
-					start: function(event, ui) {
-						dragloc = {"id": $(this).attr("id"), "top": $(this).css("top")};
-					}
-				});
-				$(".rowDiv").droppable({ // 드랍 리스트
-					accept: ".rowDiv",
-					addClasses: false,
-					hoverClass: "nowOver",
-					drop: function(event, ui) {
-						droploc = {"id": $(this).attr("id"), "top": $(this).css("top")};
-						$("#" + dragloc["id"]).css("z-index", "10").animate({"top": droploc["top"]}, 100, function() {
-							$("#" + dragloc["id"]).css("z-index", "0")
-						});
-						$("#" + droploc["id"]).css("z-index", "10").animate({"top": dragloc["top"]}, 100, function() {
-							$("#" + droploc["id"]).css("z-index", "0")
-						});
-						changeListOrder();
-					}
-				});
-				
-				$(document).on("click", "#myLadderList", function() {
-					ladderID = $(this).attr("ladid");
-					retladinfo = getPreLadder(ladderID);
-				});
-				
-				$("#searchInput").on("keyup", function(e) {
-					if(e.keyCode == "13") {
-						searchLadder();
-					}
-				});
-				$("#okBtn").on("click", function() {
-					/* opener.window.location.href = '/ezLadder/setLadder.do?ladderId=' + ladderID;
-					window.close(); */
-					loadPreLadderSetting();
-				});
-				
 				try {
 					retVal = parent.ladder_pre_set_dialogArguments[0];
 					retFunc = parent.ladder_pre_set_dialogArguments[1];                
@@ -121,10 +79,79 @@
 	                }
 	            }
 	            
-				//makePageSelPage();
+				makePageSelPage();
 				
-				$(document).on("click", "#myLadderList", function() {
-					var ladderID = $(this).attr("ladid");
+				/** mouse event */
+				var selecColor = "rgb(233, 241, 255)";
+				var overColor = "rgb(244, 245, 245)";
+				var origColor = "#FFF";
+				$(".myBorder")
+					.on("click", function() {
+						$(".myBorder").removeClass("clickactive");
+						$(this).addClass("clickactive");
+						$(".myBorder").css("background", origColor);
+						$(this).css("background", selecColor);
+					})
+					.hover(function() {
+						$(this).css("background", overColor);
+					}, function() {
+						if($(this).hasClass("clickactive")) {
+							$(this).css("background", selecColor);
+						} else {
+							$(this).css("background", origColor);
+						}
+					});
+				
+				/** sort list */
+				$("#columnsbnk").sortable({
+					activate: function(event, ui) {
+						console.log(ui.helper[0]);
+						var thisId = "#" + ui.helper[0].id; 
+						$(thisId).css("border", "1px solid #ddd");
+					}, 
+					stop: function(event, ui) {
+						console.log("sto");
+						var thisId = "#" + ui.item[0].id; 
+						$(thisId).css("border", "");
+					}
+				});
+				$("#columnsbnk").disableSelection();
+				
+				/** 이전 리스트 순서 바꾸기 */
+				$("tr[id^='DLList_TR_']").draggable({ // 드래그 리스트
+					revert: "invalid",
+					revertDuration: 400,
+					zIndex: 100,
+					axis: "y",
+					addClasses: false,
+					start: function(event, ui) {
+						console.log("start drag");
+						console.log($(this).attr("id"));
+						dragloc = {"id": $(this).attr("id"), "top": $(this).css("top")};
+					}
+				});
+				$("tr[id^='DLList_TR_']").droppable({ // 드랍 리스트
+					accept: ".rowDiv",
+					addClasses: false,
+					hoverClass: "nowOver",
+					over: function(event, ui) {
+						console.log(ui);
+					},
+					drop: function(event, ui) {
+						console.log("drop");
+						droploc = {"id": $(this).attr("id"), "top": $(this).css("top")};
+						$("#" + dragloc["id"]).css("z-index", "10").animate({"top": droploc["top"]}, 100, function() {
+							$("#" + dragloc["id"]).css("z-index", "0")
+						});
+						$("#" + droploc["id"]).css("z-index", "10").animate({"top": dragloc["top"]}, 100, function() {
+							$("#" + droploc["id"]).css("z-index", "0")
+						});
+						changeListOrder();
+					}
+				});
+				
+				$(document).on("click", "#columnsbnk li", function() {
+					ladderID = $(this).attr("id");
 					retladinfo = getPreLadder(ladderID);
 				});
 				
@@ -133,16 +160,24 @@
 						searchLadder();
 					}
 				});
+				
+				$("#btn_SaveAprLineTempletName").on("click", function() {
+					loadPreLadderSetting();
+				});
+				$("#btn_CancelAprLineTempletName").on("click", function() {
+					window.close();
+				});
 			});
 			
 			function loadPreLadderSetting() {
-				console.log(retladinfo);
-				if(typeof retFunc !== "undefined" && retFunc !== "") {
+				if(!!retFunc) {
 					retFunc(retladinfo["lad"], retladinfo["ladline"]);
 				}
 				
 				window.close();
 			}
+			
+			
 		</script>
 		<style type="text/css">
 			.allWrapDiv {
@@ -186,13 +221,84 @@
 				z-index: 100;
 			}
 			
+			#columnsbnk .prelist  {
+			    display: inline-block;
+			    border: none;
+			    height: 28px;
+			    line-height: 30px;
+			    margin: -2px 0px 0px 0px;
+			    padding: 0px 7px 0px 7px;
+			}
+			
+			.clickactive {
+				background-color: rgb(233, 241, 255);
+			}
 		</style>
 		
 </head>
 	<body class="popup">
-		<h1 id="h1Title" style="height: 20px;">이전 사다리 불러오기</h1>
+		<h1 id="h1Title">이전 사다리 불러오기</h1>
 		
-			<div class="popupWrap">
+		<table>
+			<tbody>
+				<tr>
+					<td style="overflow: auto; width: 300px;">
+						<table style="width: 99%; margin:10px 0px 10px 2px;"> 
+							<tr>
+								<td style="padding: 0px; border-bottom: none;" class="pollTd01">
+									<div style="min-width: 300px;">
+									<input id="searchInput" class="input" type="text" placeholder="제목 검색" style="margin-bottom: 10px; width: 245px;">
+									<a class="imgbtn" style="height: 24px; float: right;"><span style="line-height: 24px;">검색</span></a>
+									</div>
+									<ul id="columnsbnk" class="content" style="border-bottom: none;">
+										<c:forEach items="${list}" var="prelist" varStatus="status">
+											<li class="myBorder" name="preladder_${status.index}" id="${prelist.ladderId}" style="cursor: pointer;">
+												<span>${status.index }</span>
+												<div class="prelist" style="width: 15%">${prelist.type}</div>
+												<div class="prelist" style="width: 60%">${prelist.title}</div>
+											</li>
+										</c:forEach>
+									</ul>
+									<div id="tblPageRayer" style="margin-top: 10px;"></div>
+								</td>
+							</tr>
+						</table>
+			
+			
+						<%-- <div class="listview" style="overflow: auto;">
+							<div id="ListViewid" style="overflow: auto; height: 500px; border: 0px;" >
+								<table id="DLList" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="change_onClick" width="100%" border="0" class="mainlist" lastselectedrowid="DLList_TR_2">
+									<thead id="DLList_THEAD">
+										<tr id="DLList_TH" selected="false" class="" style="background-color: rgb(255, 255, 255);">
+											<th id="DLList_TH_0" class="h4_center" bgcolor="#CCCCCC" width="30px">No</th>
+											<th id="DLList_TH_1" class="h5_center" width="100px">타입</th>
+											<th id="DLList_TH_2" class="h5_center" width="170px">제목</th>
+										</tr>
+									</thead>
+									<tbody style="background-color: rgb(255, 255, 255);">
+										<c:forEach items="${list}" var="prelist" varStatus="status">
+											<tr id="DLList_TR_${status.index }" selected="false" style="cursor: pointer; background-color: rgb(255, 255, 255);">
+												<td height="24" align="left" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${status.index }</td>
+												<td height="24" align="left" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${prelist.type}</td>
+												<td height="24" align="left" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${prelist.title}</td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+						</div> --%>
+					</td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+			
+			<div class="btnposition btnpositionNew">
+				<input type="submit" value="확인" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName">
+				<input type="submit" value="취소" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
+			</div>
+		
+			<%-- <div class="popupWrap">
 			<button onclick="changeListOrderComplete()">순서바꾸기 테스트</button>
 			    <table style="width:  100%;">
 			        <tbody>
@@ -215,72 +321,9 @@
 						</tr>
 					</tbody>
 				</table>
-			</div>
+			</div> --%>
 			    
-			    <div style="
-			    height:  45px;
-			    margin-bottom:  15px;
-			    position:  relative;
-			"><div style="
-			    height: 100%;
-			    display: inline-block;
-			    position: absolute;
-			    left: 0;
-			    right: 45px;
-			    margin-right: 10px;
-			"><input type="text" class="input" style="
-			    height:  100%;
-			    width:  100%;
-			    "></div><div style="
-			    height:  100%;
-			    display:  inline-block;
-			    float: right;
-			    width: 45px;
-			    background:  beige;
-			">검색</div></div>
 			                    
 		
-			<%-- <div class="popWrap">
-				<table style="height: 500px; width: 100%;">
-					<tr>
-						<td style="width: 300px;">
-							<div class="pullHW">
-								<table class="mainlist">
-									<tbody>
-										<tr>
-											<td colspan="2" style="padding: 0px;">
-												<div>
-													<input type="text" disabled="disabled" style="display: none;" id="searchOption" value="title" />
-													<input type="text" placeholder="search..." id="searchInput" />
-												</div>
-											</td>
-										</tr>
-										<tr>
-											<td class="td_gray">title</td>
-											<td class="td_gray">type</td>
-											<td class="td_gray">secret</td>
-											<td class="td_gray">writer</td>
-										</tr>
-										<c:forEach items="${list }" var="list">
-										<tr id="myLadderList" ladId="${list.ladderId }">
-											<td>${list.title }</td>
-											<td>${list.type }</td>
-											<td>${list.secretFlag }</td>
-											<td>${list.writerName }</td>
-										</tr>
-										</c:forEach>
-									</tbody>
-								</table>
-								<div id="tblPageRayer"></div>
-							</div>
-						</td>
-						<td>
-							<div class="pullHW" style="background: silver;"></div>
-						</td>
-					</tr>			
-				</table>
-				<button id="okBtn">ok</button>
-				<button onclick="window.close()">close</button>
-			</div> --%>
 	</body>
 </html>

@@ -903,7 +903,7 @@
 	</delete>
 	
 	<select id="EzLadderDAO.selectLadderBMGroupList" parameterClass="LadderBmVO" resultClass="LadderBmVO">
-		SELECT 
+		<!-- SELECT 
 			LADDERBMID, BMNAME, USERID, REGDATE
 		FROM 
 			TBL_LADDER_BM
@@ -912,11 +912,27 @@
 		AND 
 			USERID = #userId#
 		ORDER BY 
+			LADDERBMID -->
+		SELECT 
+			B.LADDERBMID, B.BMNAME, B.USERID, B.REGDATE, U.USERNAME, U.USERNAME2, COUNT(U.USERNAME)-1 COUNT
+		FROM 
+			TBL_LADDER_BM B
+		LEFT JOIN 
+			TBL_LADDER_BMUSER U
+		ON 
+			B.LADDERBMID = U.LADDERBMID
+		WHERE 
+			B.TENANT_ID = #tenant_id#
+		AND
+			B.USERID = #userId#
+		GROUP BY 
 			LADDERBMID
+		ORDER BY 
+			B.LADDERBMID DESC;
 	</select>
 	
 	<select id="EzLadderDAO.selectLadderBMUserList" parameterClass="LadderBmUserVO" resultClass="LadderBmUserVO">
-		SELECT 
+		<!-- SELECT 
 			ID, LADDERBMID, USERID, USERNAME, USERNAME2
 		FROM 
 			TBL_LADDER_BMUSER
@@ -925,7 +941,23 @@
 		AND 
 			LADDERBMID = #ladderBmId#
 		ORDER BY 
-			ID
+			ID -->
+		SELECT 
+			B.ID, B.LADDERBMID, B.USERID, B.USERNAME, B.USERNAME2, U.COMPANY, U.DESCRIPTION, U.MAIL
+		FROM 
+			TBL_LADDER_BMUSER B
+		LEFT JOIN 
+			TBL_USERMASTER U
+		ON 
+			B.TENANT_ID = U.TENANT_ID
+		AND 
+			B.USERID = U.CN
+		WHERE 
+			B.TENANT_ID = #tenant_id#
+		AND 
+			LADDERBMID = #ladderBmId#
+		ORDER BY 
+			B.ID
 	</select>
 	
 	<insert id="EzLadderDAO.insertLadderBMGroup" parameterClass="LadderBmVO">

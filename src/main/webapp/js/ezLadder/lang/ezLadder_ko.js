@@ -19,4 +19,7 @@ var strLang18 = "사다리 게임";
 var strLang19 = "꽝뽑기";
 var strLang20 = "돈내기";
 var strLang21 = "순서 정하기";
-var strLang22 = "직접 쓰기"
+var strLang22 = "직접 쓰기";
+	
+	/** boh */
+var strLang100 = "검색결과";

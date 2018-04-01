@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezLadder.web;
 
 import java.lang.annotation.Native;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -146,6 +147,7 @@ public class EzLadderController {
 		if(mode.equals("pre")) {
 			retJSP = "ezLadder/ladderPreList";
 		} else {
+			logger.debug("### ???");
 			retJSP = "ezLadder/ladderMain";
 		}
 		
@@ -172,10 +174,6 @@ public class EzLadderController {
 	public String setLadderView(@CookieValue("loginCookie") String loginCookie, String type, String ladderId, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("setLadder.do started.");
 		logger.debug("### type: "+type+" :: ladderid: "+ladderId);
-		
-		/*if(ladderId != null && !ladderId.equals("")) {
-			return "redirect:/ezLadder/getLadderGame.do?ladderId=" + ladderId + "&mode=pre";
-		}*/
 		
 		model.addAttribute("ladType", type);
 		model.addAttribute("ladderId", ladderId);
@@ -215,14 +213,29 @@ public class EzLadderController {
 	 * @throws Exception 
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.POST)
-	public String setLadder(@CookieValue("loginCookie") String loginCookie, 
-			String title, String type, String secretFlag, String lineCnt,
+	public String setLadder(@CookieValue("loginCookie") String loginCookie,
+			LadderVO ladVO, LadderLineVO ladLineVO, int bombnum,
+			/*String title, String type, String secretFlag, String lineCnt,
 			String [] userId, String [] userName, String [] userName2, 
-			String [] item, String [] ladderOrder,
+			String [] item, String [] ladderOrder,*/
 			HttpServletRequest request, Model model) throws Exception {
 		logger.debug("POST setLadder.do started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String [] shuffleItems = new String [ladLineVO.getUserIds().length];
+		List<String> shuffleList = Arrays.asList(shuffleItems); 
+		if(ladVO.getType() == 0) {
+			Arrays.fill(shuffleItems, 0, bombnum, "꽝");
+			Arrays.fill(shuffleItems, bombnum, shuffleItems.length, "패스");
+		} else if(ladVO.getType() == 2) {
+			for(int number = 1; number <= shuffleItems.length; number++) {
+				shuffleItems[number - 1] = String.valueOf(number);
+			}
+		}
+		Collections.shuffle(shuffleList);
+		shuffleList.toArray(shuffleItems);
+		ladLineVO.setItems(shuffleItems);
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/ladder/ladders/writers/" + userInfo.getId();
@@ -236,20 +249,20 @@ public class EzLadderController {
 		RestTemplate rest = new RestTemplate();
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("title", title)
-				.queryParam("type", type)
-				.queryParam("secretFlag", secretFlag)
-				.queryParam("lineCnt", lineCnt)
+				.queryParam("title", ladVO.getTitle())
+				.queryParam("type", ladVO.getType())
+				.queryParam("secretFlag", ladVO.getSecretFlag())
+				.queryParam("lineCnt", ladVO.getLineCnt())
 				.queryParam("writerName", userInfo.getDisplayName())
 				.queryParam("writerName2", userInfo.getDisplayName2())
 				.queryParam("deptName", userInfo.getDeptName())
 				.queryParam("deptName2", userInfo.getDeptName2())
 				.queryParam("tenant_id", userInfo.getTenantId())
-				.queryParam("userIds", userId)
-				.queryParam("userNames", userName)
-				.queryParam("userName2s", userName2)
-				.queryParam("items", item)
-				.queryParam("ladderOrders", ladderOrder)
+				.queryParam("userIds", ladLineVO.getUserIds())
+				.queryParam("userNames", ladLineVO.getUserNames())
+				.queryParam("userName2s", ladLineVO.getUserName2s())
+				.queryParam("items", ladLineVO.getItems())
+				.queryParam("ladderOrders", ladLineVO.getLadderOrders())
 				.queryParam("loginCookie", loginCookie);
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
@@ -266,8 +279,8 @@ public class EzLadderController {
 			return "error";
 		}
 		
-		logger.debug("POST setLadder.do ended.");
-		return "ezLadder/ladderMain"; // redirect:조회창(ladderId값 파라미터로)
+		logger.debug("### POST setLadder.do ended.");
+		return "forward:/ezLadder/ladderMain.do?mode=all&currPage=1&searchSelect=&searchInput=";
 	}
 	
 	/**

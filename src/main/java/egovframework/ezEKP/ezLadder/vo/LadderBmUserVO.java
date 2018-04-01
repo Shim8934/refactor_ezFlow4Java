@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LadderBmUserVO {
-	
 	/** 테넌트 id */
 	private int tenant_id;
 	/** 사다리 즐겨찾기 번호 */
@@ -20,6 +19,10 @@ public class LadderBmUserVO {
 	private String userName2;
 	/** 다국어 설정 */
 	private String lang;
+	private String company;
+	private String description;
+	private String mail;
+	private String pic;
 	
 	/** 즐겨찾기에 포함된 멤버 아이디 */
 	private String [] userIds;
@@ -90,6 +93,31 @@ public class LadderBmUserVO {
 	public void setUserName2s(String[] userName2s) {
 		this.userName2s = userName2s;
 	}
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company == null ? "" : company;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description == null ? "" : description;
+	}
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail == null ? "" : mail;
+	}
+	public String getPic() {
+		return pic;
+	}
+	public void setPic(String pic) {
+		this.pic = pic == null ? "" : pic;
+	}
+	
 	@Override
 	public String toString() {
 		return "LadderBmUserVO [tenant_id=" + tenant_id + ", ladderBmId="

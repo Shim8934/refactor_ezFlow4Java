@@ -147,14 +147,14 @@ public class EzLadderGWController {
 	 * 사다리 게임 추가
 	 * */
 	@RequestMapping(value = "/ladder/ladders/writers/{writerId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwInsertLadder(@PathVariable String writerId, LadderVO ladVO, LadderLineVO ladLineVO, String loginCookie, HttpServletRequest request) {
+	public JSONObject gwInsertLadder(@PathVariable String writerId, LadderVO ladVO, LadderLineVO ladLineVO, String bombnum, String loginCookie, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [POST /ladder/ladders/writers/" + writerId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		String logCookie = request.getParameter("loginCookie");
 		try {
 			
-			ezLadderService.insertLadder(ladVO, ladLineVO, logCookie);
+			ezLadderService.insertLadder(ladVO, ladLineVO,logCookie);
 			int ladderId = ezLadderService.selectRecentLadderId(ladVO);
 			
 			result.put("status", "ok");
