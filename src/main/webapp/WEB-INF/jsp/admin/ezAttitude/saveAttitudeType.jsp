@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>타이틀</title>
+		<title><spring:message code='ezAttitude.t39' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -19,6 +19,8 @@
 			
 	        window.onload = window_onload;
 	        function window_onload() {
+	        	form_change();
+	        	
 	            //수정모드일 때
 	            if(typeId != "") {
 	            	saveMode = "modify";
@@ -91,7 +93,6 @@
 			function form_change() {
 				var formValue = $('#formSelect').val();
 				var formHtml = "";
-// 				alert(typeof(formHtmlList));	
 				$.each(formHtmlList, function(idx, formInfo) {
 					if (formInfo.formId == formValue) {
 						formHtml = formInfo.formHtml;
@@ -123,10 +124,23 @@
 		        });
 			}
 			
+			function close_Click() {
+				window.close();
+			}
+			
 		</script>
 	</head>
-	<body class = "popup">
-		<h1><spring:message code='ezAttitude.t39' /></h1>
+	<body class
+	    <div id="menu">
+	        <ul>
+	            <li><span onclick="OK_Click()"><spring:message code='ezAttitude.t16' /></span></li>
+	        </ul>
+	    </div>
+	    <div id="close">
+	        <ul>
+	            <li><span onclick="close_Click()">닫기</span></li>
+	        </ul>
+	    </div>
 		<table class="content"> 
   			<tr> 
     			<th><spring:message code='ezAttitude.t40' /></th> 
@@ -178,10 +192,10 @@
     			<td id="preForm" style="padding:0px; height:320px"></td>
   			</tr>
 		</table> 
-		<div class="btnposition"> 
-		    <a class="imgbtn"><span onclick="OK_Click()"><spring:message code='ezAttitude.t38' /></span></a>
-		    <a class="imgbtn"><span onclick="window.close()"><spring:message code='ezAttitude.t34' /></span></a>
-		</div>
+<!-- 		<div class="btnposition">  -->
+<!-- 		    <a class="imgbtn"><span onclick="OK_Click()">저장</span></a> -->
+<!-- 		    <a class="imgbtn"><span onclick="window.close()">닫기</span></a> -->
+<!-- 		</div> -->
 		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezAttitude/iconUpload.do" target="ifrm" style="width: 1px; height: 1px;display:none">
         	<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="false" />

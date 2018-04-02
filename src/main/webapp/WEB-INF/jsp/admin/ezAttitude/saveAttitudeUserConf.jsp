@@ -237,7 +237,7 @@
 	<body class="popup">
 	    <div id="menu">
 	        <ul>
-	            <li><span onclick="OK_Click()">저장</span></li>
+	            <li><span onclick="OK_Click()"><spring:message code='ezAttitude.t38' /></span></li>
 	        </ul>
 	    </div>
 	    <div id="close">
@@ -377,5 +377,4 @@
 	        </tr>
 	    </table>
 	</body>	
->>>>>>> a28fe15c48cba3437608dac6d0b186b407207445
 </html>

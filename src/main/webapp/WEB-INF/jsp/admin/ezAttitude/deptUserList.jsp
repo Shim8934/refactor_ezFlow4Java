@@ -51,7 +51,7 @@
 					<th style="width: 220px; font-weight: bold;">메일</th>
 		        </tr>
 		        <c:forEach items="${userList}" var="user">
-			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
+			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="InsertReceiver();" style="cursor: pointer;" class="hover">
 						<td><c:out value="${user.userName }" /></td>
 						<td><c:out value="${user.jikwi }" /></td>
 						<td><c:out value="${user.mail }" /></td>

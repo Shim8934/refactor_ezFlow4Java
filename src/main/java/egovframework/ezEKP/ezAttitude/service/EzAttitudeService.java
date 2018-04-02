@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
+import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 
 public interface EzAttitudeService {
 	public Object getAttitudeInfo(String userId, String date, String typeId, int tenantId) throws Exception;
@@ -101,4 +102,8 @@ public interface EzAttitudeService {
 	public List<JournalAuthorVO> getDeptUserList(String tenantId, String key,	String value) throws Exception;
 
 	public void delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception;
+
+	public List<DeptViewVO> getDeptViewList(String userId, String companyId, String tenantId) throws Exception;
+
+	public void deleteAttitudeUserConfig(int tenantId, String selecUserList) throws Exception;
 }
