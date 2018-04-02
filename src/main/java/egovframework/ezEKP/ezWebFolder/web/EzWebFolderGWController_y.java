@@ -470,14 +470,22 @@ public class EzWebFolderGWController_y {
 			fileList = service.getFileList(folderId, folderType, userId, deptId, tenantId , common.getCompanyId(),
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, searchListCount, pStart, pEnd);
-			totalCount = service.getFileToTalCount(folderId,folderType,userId,deptId,tenantId , common.getCompanyId(),
+			Map<String, Integer> cnt = service.getFileToTalCount(folderId,folderType,userId,deptId,tenantId , common.getCompanyId(),
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, searchListCount, pStart, pEnd);
-			totalpages = (totalCount/listCount)+1;
+			int fileCnt = cnt.get("fileTotalCnt");
+			int fldCnt = cnt.get("fldTotalCnt");
+			totalCount = cnt.get("totalCount");
+			if (totalCount%listCount == 0) {
+				totalpages = (totalCount/listCount);
+			}else {
+				totalpages = (totalCount/listCount)+1;
+			}
 			
 			
 			FolderVO folder       = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			String folderPath     = folder.getFolderPath();
+			String folderPath2     = folder.getFolderPath();
 			folderPath            = folderPath.substring(1, folderPath.length() - 1);
 			String originalPath   = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
 			String []rootPath     = folderPath.split("\\|");
@@ -506,9 +514,12 @@ public class EzWebFolderGWController_y {
 //				originalPath   = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
 			}
 			//
-			
+			data.put("folderPath", folderPath2);
+			data.put("originalPath", originalPath);
 			data.put("fileList", fileList);
-			data.put("totalCount", totalCount);
+			data.put("fileCnt", fileCnt);
+			data.put("fldCnt", fldCnt);
+			data.put("totalRows", fileCnt+fldCnt);
 			data.put("totalPages", totalpages );
 			data.put("listCount", listCount );
 			data.put("currPage", currPage );

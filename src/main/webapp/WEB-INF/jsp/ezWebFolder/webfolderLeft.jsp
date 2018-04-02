@@ -28,7 +28,10 @@
 				folderList('C');
 		    	folderType = 'C';
 				});		
-		    
+		    function refreshView(){
+		    	$.jstree.destroy()
+		    	folderList(folderType);
+		    }
 		    function folderList(obj) {
 // 		    	folderId = "";
 				if ( obj == 'C') {
@@ -90,9 +93,7 @@
 					
 					var folderId = "";
 					folderId = data.selected[0]; 
-					if (folderId == undefined) {
-						console.log("The selected nodes are:" + folderId);
-					}else {
+					if (folderId != undefined) {
 						getFileList(folderId);
 					}
 				});
@@ -146,7 +147,9 @@
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
 		<div id="left" style="overflow: none">
-			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"><span>웹폴더</span><button style="width:5px;height:5px;" onClick="refreshView()"style="margin-top: 3px;"></button></div>
+			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"><span>웹폴더</span>
+					<img style="width:20px;height:20px;" onClick="refreshView()" class="ui-datepicker-trigger" src="/images/webfolder/reload.png" alt title>
+			</div>
 			<h2>
   				<span style="display:inline-block;width:100%;" onclick="folderList('C');">회사폴더</span>
   			</h2>  

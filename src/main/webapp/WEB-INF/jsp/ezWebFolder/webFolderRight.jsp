@@ -62,7 +62,12 @@
 			font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
 		}
 	
-	
+		.aName {
+			cursor: pointer;
+		}
+		.aName:hover {
+			color: #e04343;
+		}
 	
 	
 	
@@ -123,6 +128,13 @@
 		var pEnd =10;
 		var folderId = "${folderId}";
 		var folderType = "${folderType}";
+		var fileCnt ;
+		var fldCnt;
+		var originalPath = "";
+		var folderPath = "";
+		var pathArr = [];
+		var pathArr2 = [];
+		
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -133,7 +145,7 @@
 		// fileList 화면 
 		window.onload = function () {
 			pEnd= pStart + blockSize;
-			getfileList();
+			getfileList(folderId);
 			var divList          = document.getElementById("dragDropArea");
 			var reheight         = document.documentElement.clientHeight - 220;
 			divList.style.height = reheight + "px";
@@ -146,7 +158,10 @@
         }
 	    
 	    
-	    function getfileList(){
+	    function getfileList(folderId){
+	    	if(folderId == "") {
+	    		alert(folderId+"가없음");
+	    	}
 			$.ajax ({
 				type:"POST",
 				async: false,
@@ -169,13 +184,22 @@
 					result = data.data;
 					
 					currentPage = result.currPage;
-					totalRows = result.totalCount;
+					totalRows = result.totalRows;
+					fileCnt = result.fileCnt;
+					fldCnt = result.fldCnt;
+					
 					blockSize = result.listCount;
 					totalPages = result.totalPages;
 					filelist = result.fileList;
+					folderPath = result.folderPath;
+					originalPath = result.originalPath;
+// 					$("#originalPath").text(originalPath); 
 					$('#tblFileList tr td').parent().remove();
 					renderData(filelist);
 					makePageSelPage();
+					namePath(folderPath,originalPath);
+					document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " 파일 수 " + "<span style='color:#017BEC;'>" 
+						+ fileCnt +"</span>"+", " +strLang41 + " 폴더 수 " + "<span style='color:#017BEC;'>" + fldCnt +" </span>" + strLang42 + "]";
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
@@ -183,6 +207,37 @@
 			})
 			
 		};
+		
+		// originalPath 는 한글 path
+		// folderPath 는 숫자 
+		function namePath(folderPath,originalPath) {
+			var orginalPathElmt = document.getElementById("originalPath");
+			path = originalPath.split("/");
+			originPath = folderPath.split("|");
+			$('#originalPath').empty();
+			var nameTag = document.createElement("span");
+			orginalPathElmt.appendChild(nameTag);
+			for ( var i = 1; i< path.length - 1; i++) {
+				var detailName = [];
+				detailName = document.createElement("span");
+				
+				detailName.className = "aName";
+				detailName.id = originPath[i];
+				detailName.onclick = function() {getfileList(this.id)};
+				detailName.textContent = path[i];
+				detailName.setAttribute("style", "font-size:22px; ");
+				
+				nameTag.appendChild(detailName);
+				var imgElmt = document.createElement("img");
+				imgElmt.setAttribute("style", "height: 18px; width: 18px; display: inline-block;");
+				imgElmt.src = "/images/webfolder/arrow.png";
+				
+				if (i != path.length - 2) {
+					nameTag.appendChild(imgElmt);
+				}	
+			}
+			
+		}
 		function renderData(result) {
 			document.getElementById("_checkAll").checked = false;
 			var tableList = document.getElementById("tblFileList");
@@ -216,6 +271,8 @@
 					var tdElmt7 = document.createElement("td");	
 					var tdElmt8 = document.createElement("td");	
 					var tdElmt9 = document.createElement("td");
+					var tdElmt10 = document.createElement("td");
+					var tdElmt11 = document.createElement("td");
 					
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("_fileId", result[i]["fileId"]);
@@ -230,24 +287,45 @@
 					
 					var fileIconElmt = document.createElement("img");
 					fileIconElmt.setAttribute("class", "webFolderImg");
-					fileIconElmt.src = result[i]["fileIconUrl"];
-					tdElmt2.appendChild(fileIconElmt);
-					
-					tdElmt3.textContent = result[i]["fileName"];
-					tdElmt4.textContent = getFileSize(result[i]["fileSize"]);
-					
-					if (primary == "1") {
-						tdElmt5.textContent = result[i]["createName1"];
+					if (result[i]["favouriteStatus"] == "0") {
+						fileIconElmt.src = "/images/webfolder/favourite.png";
+						tdElmt2.appendChild(fileIconElmt);
 					}
 					else {
-						tdElmt5.textContent = result[i]["createName2"];
+						fileIconElmt.src = "/images/webfolder/favourite2.png";
+						tdElmt2.appendChild(fileIconElmt);
 					}
 					
-					tdElmt6.textContent = result[i]["createDate"].substring(0, 10);
-					tdElmt7.textContent = result[i]["updateDate"].substring(0, 10);
-					tdElmt8.textContent = result[i]["filePosition"];
-					tdElmt9.textContent = result[i]["downloadCnt"];
-					tdElmt9.setAttribute("style","text-align: center;");
+					
+					var fileIconElmt = document.createElement("img");
+					fileIconElmt.setAttribute("class", "webFolderImg");
+					fileIconElmt.src = result[i]["fileIconUrl"];
+					tdElmt3.appendChild(fileIconElmt);
+					
+					tdElmt4.textContent = result[i]["fileName"];
+					tdElmt5.textContent = getFileSize(result[i]["fileSize"]);
+					
+					if (primary == "1") {
+						tdElmt6.textContent = result[i]["createName1"];
+					}
+					else {
+						tdElmt6.textContent = result[i]["createName2"];
+					}
+					
+					tdElmt7.textContent = result[i]["createDate"].substring(0, 10);
+					tdElmt8.textContent = result[i]["updateDate"].substring(0, 10);
+					tdElmt9.textContent = result[i]["filePosition"];
+					tdElmt10.textContent = result[i]["downloadCnt"];
+					tdElmt10.setAttribute("style","text-align: center;");
+					
+					if (result[i]["fileShareStatus"] == "1") {
+						tdElmt11.textContent = "공유중";
+					}
+					else {
+						tdElmt11.textContent = "";
+					}
+					
+					
 					
 					trElmt.appendChild(tdElmt1);
 					trElmt.appendChild(tdElmt2);
@@ -258,6 +336,8 @@
 					trElmt.appendChild(tdElmt7);
 					trElmt.appendChild(tdElmt8);
 					trElmt.appendChild(tdElmt9);
+					trElmt.appendChild(tdElmt10);
+					trElmt.appendChild(tdElmt11);
 					tableList.appendChild(trElmt);
 					
 				}
@@ -299,8 +379,7 @@
 	    	currentPage = Value;
 	        pStart = (blockSize * (currentPage))- blockSize;
 	        pEnd = blockSize;
-	        getfileList();
-	        makePageSelPage();
+	        getfileList(folderId);
 	    }
 	    
 	   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
@@ -333,7 +412,7 @@
 	        }
 	        searchOptionHidden();
 // 	        MakeSubCondition();
-	        getfileList();
+	        getfileList(folderId);
 	    }
    		function clickRow(obj, e) {
 	        e.stopPropagation();
@@ -475,7 +554,7 @@
        
        function refreshView() {
     	   console.log("Run here!");
-    	   getfileList();
+    	   getfileList(folderId);
        }
        
        function fileDelete() {
@@ -608,10 +687,8 @@
 	   		웹폴더
 	   		<span id="mailBoxInfo"></span>
 	</h1>
-	<div style="margin-bottom: 15px;">
-		<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;">오픈솔루션</span>
-		<img style="height: 25px; width: 25px; display: inline-block; margin-left: 20px;" src="/images/webfolder/favourite.png">
-		<img style="height: 25px; width: 25px; display: inline-block;" src="/images/webfolder/arrow.png">
+	<div style="height:40px;">
+		<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;" id ="originalPath"></span>
 	</div>
 	<div id="mainmenu">
 		<ul>
@@ -689,7 +766,8 @@
 	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
-				<th width="10px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
+				<th width="20px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
+				<th width="40px" >즐겨찾기</th>
 				<th width="40px" ><spring:message code='ezWebFolder.t188'/></th>
 				<th width="160px"><spring:message code='ezWebFolder.t156'/></th>
 				<th width="60px" ><spring:message code='ezWebFolder.t157'/></th>
@@ -698,6 +776,7 @@
 				<th width="80px" ><spring:message code='ezWebFolder.t198'/></th>
 				<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
 				<th width="60px" ><spring:message code='ezWebFolder.t200'/></th>
+				<th width="40px" >공유상태</th>
 			</tr>
 			
 		</table>

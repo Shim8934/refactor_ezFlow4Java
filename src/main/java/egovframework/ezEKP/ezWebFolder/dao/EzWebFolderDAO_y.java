@@ -19,6 +19,9 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		
 	}
 	
+	public int getFldTotalCount (Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.getFldToTalCount",map);
+	}
 	public int getFileTotalCount (Map<String, Object> map) {
 		return (int) select("EzWebFolderDAO_y.getFileToTalCount",map);
 	}

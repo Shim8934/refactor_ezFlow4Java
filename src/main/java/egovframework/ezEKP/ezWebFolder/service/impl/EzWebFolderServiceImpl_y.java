@@ -83,7 +83,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	}
 	
 	// fileTotalCount
-	public int getFileToTalCount (String folderId,String folderType,String userId,String deptId, int tenantId,
+	public Map<String, Integer> getFileToTalCount (String folderId,String folderType,String userId,String deptId, int tenantId,
 			String companyId, String searchExt, String searchFileName,
 			String searchStartDate, String searchEndDate,
 			String searchCreateName, String searchFileType,
@@ -108,12 +108,19 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("searchListCount", searchListCount);
 		map.put("pStart", pStart);
 		map.put("pEnd", pEnd);
-		int totalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
-		System.out.println(totalCnt);
-		String test_totalCnt = totalCnt+"";
-		LOGGER.debug(test_totalCnt);
-		
-		return totalCnt;
+		int fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
+		int fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount(map);
+		Map<String, Integer> cnt = new HashMap<String, Integer>();
+		int totalCount = 0;
+		if ( parentId == "root" ) {
+			totalCount = fileTotalCnt;
+		}else {
+			totalCount = fileTotalCnt + fldTotalCnt;
+		}
+		cnt.put("fileTotalCnt", fileTotalCnt);
+		cnt.put("fldTotalCnt", fldTotalCnt);
+		cnt.put("totalCount", totalCount);
+		return cnt;
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ public interface EzWebFolderService_y {
 			String searchFileName, String searchStartDate, String searchEndDate,String searchCreateName,
 			String searchFileType, String searchPageCount,String searchListCount, int pStart , int pEnd ) throws Exception;
 
-	int getFileToTalCount(String folderId,String folderType,String userId,String deptId, int tenantId, String parameter,
+	Map<String, Integer> getFileToTalCount(String folderId,String folderType,String userId,String deptId, int tenantId, String parameter,
 			String searchExt, String searchFileName, String searchStartDate,
 			String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount,
