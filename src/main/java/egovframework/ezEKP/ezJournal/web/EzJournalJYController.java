@@ -696,7 +696,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/saveJournal.do")
 	@ResponseBody
-	public void saveJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String saveJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("saveJournal started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -749,8 +749,11 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			restUrl = "/rest/ezjournal/types/" + typeId + "/journals";
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
 		}
+		String journalId = (String) result.get("data");
 
 		logger.debug("saveJournal ended");
+		
+		return journalId;
 	}
 	
 	/**

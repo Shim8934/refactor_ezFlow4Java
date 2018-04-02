@@ -264,7 +264,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public void insertJournal(JSONObject jsonParam, String deptId, int tenantId, String realPath) throws Exception;
+	public String insertJournal(JSONObject jsonParam, String deptId, int tenantId, String realPath) throws Exception;
 
 	/**
 	 * 일지 수정하기
