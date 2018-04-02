@@ -1,9 +1,9 @@
 /* @CHARSET "UTF-8";
  */
-* {
+/* * {
     box-sizing: border-box;
 }
-
+ */
 .ladderdiv {
 	height: 100%;
 }

@@ -34,7 +34,12 @@ function participant(val) {
 		currPage = pageChange;
 		pageChange = 1;
 	}
-	view();
+	
+	if(mode === "pre") {
+		viewAjax();
+	} else {
+		view();
+	}
 }
 
 //검색 
@@ -59,7 +64,11 @@ function searchLadder() {
 	searchSelect = document.getElementById("searchOption").value;
 	searchInput = document.getElementById("searchInput").value;
 
-	view();
+	if(mode === "pre") {
+		viewAjax();
+	} else {
+		view();
+	}
 }
 
 //삭제
@@ -89,6 +98,28 @@ function deleteLadder(ladderId) {
 function view() {
 	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=" + searchInput;
 	document.location.href = szUrl;
+}
+
+function viewAjax() {
+	$.ajax({
+		type: "POST",
+		url: "/ezLadder/ladderMain.do",
+		dataType: "json",
+		traditional: true,
+		async : false,
+		data: {
+			"mode": mode,
+			"currPage": currPage,
+			"searchSelect": searchSelect,
+			"searchInput": searchInput
+		},
+		success: function(result) {
+			viewSearchList(result);
+		}, 
+		error: function(e) {
+			console.log(e);
+		}
+	});
 }
 
 // 페이징 처리
@@ -221,18 +252,18 @@ function selafterBlock_one() {
 }
 
 function goToPageByNum(page) {
-	
 	pageChange = page;
 	if (searchSelect !== '' && searchSelect !== 'none') {
 		searchLadder();
-	} else if (modeCheck === 'all') {
+	} else  {
+		participant(modeCheck);
+	}
+	/*if (modeCheck === 'all') {
 		var temp = 'all';
 		participant(temp);
-	} else if(modeCheck === 'pre') {
-		participant('pre');
 	} else {
 		var temp = 'part'
 		participant(temp);
-	}
+	} */
 	makePageSelPage();
 }

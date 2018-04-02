@@ -821,7 +821,7 @@
 	
 	<select id="EzLadderDAO.selectLadderCommentList" parameterClass="LadderCommentVO" resultClass="LadderCommentVO">
 		SELECT 
-			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE
+			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE, TENANT_ID
 		FROM
 			TBL_LADDER_COMMENT
 		WHERE
@@ -854,7 +854,7 @@
 	
 	<select id="EzLadderDAO.selectLadderComment" parameterClass="LadderCommentVO" resultClass="LadderCommentVO">
 		SELECT 
-			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE
+			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE, TENANT_ID
 		FROM 
 			TBL_LADDER_COMMENT
 		WHERE 

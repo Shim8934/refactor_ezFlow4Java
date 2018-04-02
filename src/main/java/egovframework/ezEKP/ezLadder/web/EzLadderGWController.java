@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezLadder.web;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +34,8 @@ import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderOrderVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -57,6 +60,9 @@ public class EzLadderGWController {
 	
 	@Resource(name="EzLadderService")
 	private EzLadderService ezLadderService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	public int[] paging(int currPage,int total) {
 		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
@@ -332,7 +338,7 @@ public class EzLadderGWController {
 	 * 댓글 추가
 	 * */
 	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwInsertComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO) {
+	public JSONObject gwInsertComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [POST /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -340,6 +346,23 @@ public class EzLadderGWController {
 		try {
 			
 			LadderCommentVO resultVO = ezLadderService.insertComment(cmtVO);
+			
+			String imagePath = ezOrganService.getPropertyValue(resultVO.getUserId(), "extensionAttribute2", resultVO.getTenant_id());
+			
+			if (imagePath != null && !imagePath.equals("")) {
+				String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", resultVO.getTenant_id())+ commonUtil.separator + imagePath;
+				String fullPath = request.getServletContext().getRealPath(realPath);
+				
+				if (checkExist(fullPath)) {
+					resultVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
+				}
+				else {
+					resultVO.setPic("/images/poll/default_pic_vote.gif");
+				}
+			} 
+			else {
+				resultVO.setPic("/images/poll/default_pic_vote.gif");
+			}
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -442,7 +465,7 @@ public class EzLadderGWController {
 	 * 사디리 게임 조회 
 	 */
 	@RequestMapping(value = "ladder/ladderGame/{ladderId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
-	public JSONObject gwGetLadderGame(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request, LadderVO ladVO) {
+	public JSONObject gwGetLadderGame(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request, LadderVO ladVO, LadderCommentVO cmtVO) {
 		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
 		
 		int ladId = Integer.parseInt(ladderId);
@@ -453,11 +476,32 @@ public class EzLadderGWController {
 		try {
 			LadderVO vo = ezLadderService.getLadderGame(ladVO);
 			List<LadderLineVO> list = ezLadderService.getLadderLineParticipant(ladVO);
+			List<LadderCommentVO> cmtlist = ezLadderService.selectComments(cmtVO);
+			
+			for (LadderCommentVO commentVO: cmtlist) {
+				String imagePath = ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id());
+				
+				if (imagePath != null && !imagePath.equals("")) {
+					String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", commentVO.getTenant_id())+ commonUtil.separator + imagePath;
+					String fullPath = request.getServletContext().getRealPath(realPath);
+					
+					if (checkExist(fullPath)) {
+						commentVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
+					}
+					else {
+						commentVO.setPic("/images/poll/default_pic_vote.gif");
+					}
+				} 
+				else {
+					commentVO.setPic("/images/poll/default_pic_vote.gif");
+				}
+			}
 			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", vo);
 			result.put("participant", list);
+			result.put("cmtlist", cmtlist);
 			
 			logger.debug("###data: "+vo);
 			logger.debug("###list: "+list);
@@ -568,6 +612,17 @@ public class EzLadderGWController {
 		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId + "users/" + userId + "] ended.");
 		
 		return result;
+	}
+	
+	private boolean checkExist(String filePath) {		
+		File f = new File(filePath);
+		
+		if (f.exists() && !f.isDirectory()) { 
+		    return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 }

@@ -559,7 +559,7 @@
 	        }
 	        
 		    function event_listDBclick(obj, event) {
-		    	if(typeof event === "undefined" || event.clientX < 640) {
+		    	if(!_RowObjectName || _RowObjectName.trim() !== "deptList" || event.clientX < 640) {
 					InsertReceiver("MsgToList");
 		    	}
 		    }
@@ -616,7 +616,7 @@
 	
 	                    strDeptNM = $("[name='" + _RowObjectName + "'").find("#data3").text();
 	                    strEmail = $("[name='" + _RowObjectName + "'").find("#data6").text();
-	                    strName2 = $("#List_TBODY2 tr").eq(i).find("#data8").text();
+	                    strName2 = $("[name='" + _RowObjectName + "'").find("#data8").text();
 	                    strDeptNM2 = "";
 	                    jickwe = "";
 	                    phone = "";
@@ -626,9 +626,9 @@
 	                    var IsInsert = CheckMailReceiver(strId, "3");
 	                    
 	                    if(strId.substring(0, 14) === "anonyAttendant" || !IsInsert){
-	                    	alluser[i] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real-xml" };
+	                    	alluser[0] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real-xml" };
 	                    } else {
-	                    	overlapuser[i] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone };
+	                    	overlapuser[0] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone };
 	                    }
 	            	}
 	            } else {
