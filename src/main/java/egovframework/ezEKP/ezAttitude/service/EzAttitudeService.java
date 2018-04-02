@@ -101,4 +101,6 @@ public interface EzAttitudeService {
 	public List<JournalAuthorVO> getDeptUserList(String tenantId, String key,	String value) throws Exception;
 
 	public void delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception;
+	
+	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId) throws Exception;
 }
