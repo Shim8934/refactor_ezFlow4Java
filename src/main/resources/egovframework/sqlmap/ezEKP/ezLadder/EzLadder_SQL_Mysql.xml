@@ -725,7 +725,8 @@
 				SECRETFLAG, 
 				DELETEFLAG,
 				DEPTNAME$lang$,
-				LINECNT
+				LINECNT,
+				LINEARRAY
 			FROM
 				TBL_LADDER 
 			WHERE
