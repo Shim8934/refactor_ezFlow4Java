@@ -72,8 +72,8 @@ function ChangeReceptTab(obj) {
         internalTab = false;
         //2015-06-23 표준모듈:추가 - KSK
         SelDivName = "Outer";
-        document.getElementById("imgInsertAll").style.display = "none";
-        document.getElementById("imgDeleteAll").style.display = "none";
+        document.getElementById("imgInsertAll").style.display = "";
+        document.getElementById("imgDeleteAll").style.display = "";
         document.getElementById("AddRemoveBTN").style.display = "";
     }
 }
@@ -2492,6 +2492,7 @@ function AddOrgan(_OrganId, _OrganName) {
     }
 }
 function insertOuterAll(outerdeptid, outerdeptnm, outerdeptoupath, ouReceiveDocumentYN) {
+	console.log("outerdeptid : " + outerdeptid + ", outerdeptnm : " + outerdeptnm + ", outerdeptoupath : " + outerdeptoupath + "ouReceiveDocumentYN : " + ouReceiveDocumentYN)
 	var result = "";
     var XmlDoc = null;
 
@@ -2506,7 +2507,7 @@ function insertOuterAll(outerdeptid, outerdeptnm, outerdeptoupath, ouReceiveDocu
     		type : "POST",
     		dataType : "text",
     		async : false,
-    		url : "/ezOrgan/getOrganSubTreeInfo.do",
+    		url : "/ezOrgan/insertAllOrganSubTreeInfo.do",
     		data : {
     			deptID 	: outerdeptoupath
     		},
@@ -2537,7 +2538,7 @@ function insertOuterAll(outerdeptid, outerdeptnm, outerdeptoupath, ouReceiveDocu
 function AddOuter(strOuterDeptId, strOuterDeptName) {
     try {
         var isCurretnCompany = "Y";
-        Resultxml.async = false;
+        //Resultxml.async = false;
 
         if(approvalFlag == "G") {
         	Resultxml = loadXMLFile(strLangEtcFile1);
