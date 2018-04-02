@@ -4,7 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <style>
 	#tblPageRayer .pagenavi span{
-		margin-left : -2px;
+		margin : 0px;
 	}
 </style>
 <script>

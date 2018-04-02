@@ -86,6 +86,7 @@
 			var searchWriter = "";
 			var searchTitle = "";
 			var searchFormName = "";
+			var searchContent = "";
 			var searchStartDate = "";
 			var searchEndDate = "";
 			var orderNum; 
@@ -140,6 +141,7 @@
 				jsonParam["writerName"]=searchWriter;
 				jsonParam["journalTitle"]=searchTitle;
 				jsonParam["formName"]=searchFormName;
+				jsonParam["journalText"]=searchContent;
 				jsonParam["startDate"]=searchStartDate;
 				jsonParam["endDate"]=searchEndDate;
 				jsonParam["orderNum"]=orderNum;
@@ -196,6 +198,7 @@
 				}
 				searchTitle = document.getElementById("searchTitle").value;    
 				searchFormName = document.getElementById("searchFormName").value;
+				searchContent = document.getElementById("searchContent").value;
 				searchStartDate = document.getElementById("Sdatepicker").value;
 				searchEndDate = document.getElementById("Edatepicker").value;
 				setJournalList();
@@ -258,6 +261,7 @@
 					document.getElementById("searchWriter").value = "";
 				}
 				document.getElementById("searchFormName").value = "";
+				document.getElementById("searchContent").value = "";
 		        document.getElementById("searchTitle").value = "";
 		        document.getElementById("layer_popup").style.display = "none";
 		        document.getElementById("SearchOption").setAttribute("mode", "off");
@@ -380,6 +384,7 @@
 				searchWriter = "";   
 				searchTitle = "";    
 				searchFormName = ""; 
+				searchContent = ""; 
 				searchStartDate = "";
 				searchEndDate = "";  
 				setFormName();
@@ -413,6 +418,7 @@
 							if(listType=='recv'){
 								parent.left.setRecvCount();
 								setJournalList();
+								setRecvCount();
 							}
 							var textContentSize;
 							textContentSize = $("#PreviewRayerH").height()-55;
@@ -557,6 +563,7 @@
 						
 						if(onPreview==false){
 							$("#Preview_ContentW span").html("<spring:message code='ezBoard.t10022' />");
+							$("#Preview_ContentH span").html("<spring:message code='ezBoard.t10022' />");
 // 							ifrmPreViewW.document
 // 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 						}
@@ -605,6 +612,7 @@
 						
 						if(onPreview==false){
 							$("#Preview_ContentH span").html("<spring:message code='ezBoard.t10022' />");
+							$("#Preview_ContentW span").html("<spring:message code='ezBoard.t10022' />");
 // 							ifrmPreViewH.documentr.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 						}
 						onPreview=true;
@@ -776,7 +784,14 @@
 			<c:if test="${typeId ne null && typeId ne 'undefined' }">
 				 - <spring:message code='${typeId }'/> 
 			</c:if>
-			<span id="mailBoxInfo">[<spring:message code='ezJournal.t54'/> <span id="totalCount" style="color:#017BEC;"></span><spring:message code='ezJournal.t55'/>]</span>
+			<c:choose>
+				<c:when test="${listType eq 'recv' }">
+					<span id="mailBoxInfo">[<spring:message code='ezJournal.t159'/> <span id="recvCount" style="color:#017BEC;"></span> <spring:message code='ezJournal.t55'/> / <spring:message code='ezJournal.t160'/> <span id="totalCount" style="color:#017BEC;"></span><spring:message code='ezJournal.t55'/>]</span>
+				</c:when>
+				<c:otherwise>
+					<span id="mailBoxInfo">[<spring:message code='ezJournal.t54'/> <span id="totalCount" style="color:#017BEC;"></span><spring:message code='ezJournal.t55'/>]</span>
+				</c:otherwise>
+			</c:choose>
 			<span style="float:right;font-weight:normal;color:black;">
 			  <c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
 	          <input name="searchKey" id="Radio1" type="radio" value="journalTitle" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezBoard.t208' /></label>
@@ -786,7 +801,7 @@
 			  </c:if>
 			  &nbsp;
 			  <c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-			  <input id="searchValue" style="width:150px;" onkeypress="quickSearch()"/> 
+			  <input id="searchValue" style="width:150px;" onfocus="journalKeywordClear(this);" onkeypress=""/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="quickSearch()"></a>
 			  </c:if>
 	        </span>
@@ -940,16 +955,20 @@
 				<c:if test="${listType ne 'mine' }">
 				<tr>
 					<th style="text-align: center"><spring:message code='ezJournal.t34' /></th>
-					<td><input type="text" id="searchWriter" style="width: 98%" value=""></td>
+					<td><input type="text" onfocus="journalKeywordClear(this);" id="searchWriter" style="width: 98%" value=""></td>
 				</tr>
 				</c:if>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezBoard.t208' /></th>
-					<td><input type="text" id="searchTitle" style="width: 98%" value=""></td>
+					<td><input type="text" onfocus="journalKeywordClear(this);" id="searchTitle" style="width: 98%" value=""></td>
+				</tr>
+				<tr>
+					<th style="text-align: center"><spring:message code='ezEmail.t649' /></th>
+					<td><input type="text" onfocus="journalKeywordClear(this);" id="searchContent" style="width: 98%" value=""></td>
 				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezJournal.t22' /></th>
-					<td><input type="text" id="searchFormName" style="width: 98%" value=""></td>
+					<td><input type="text" onfocus="journalKeywordClear(this);" id="searchFormName" style="width: 98%" value=""></td>
 				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>
@@ -994,11 +1013,6 @@
 				</table>
 		</div>
 	</div>
-	<c:if test="${listType eq 'department' or listType eq 'mine' }">
-		<script type="text/javascript">
-			setFormName();
-		</script>
-	</c:if>
 	
 	<script type="text/javascript">
 	function journalPreviewEnd(e) {
@@ -1137,6 +1151,7 @@
 			Openwin.focus();
 			if(listType=='recv'){
 				parent.left.setRecvCount();
+				setRecvCount();
 			}
 		}
 	}
@@ -1158,6 +1173,22 @@
 		}
 		$("#totalCount").text(totalCount);
 	}
+	
+	function setRecvCount() {
+		$.ajax({
+			type:"post",
+			url:"/ezJournal/leftRecvCount.do",
+			success: function(data){
+				$("#recvCount").text(data);
+			}
+		});
+    }
+	<c:if test="${listType eq 'department' or listType eq 'mine' }">
+		setFormName();
+	</c:if>
+	<c:if test="${listType eq 'recv' }">
+		setRecvCount();
+	</c:if>
 	</script>
 	</body>
 </html>

@@ -13,8 +13,8 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 	    <script type="text/javascript">	
-	    	var selectedUser = "<c:out value="${selectedUser }" />"
-	    	var selectedUserName = "<c:out value="${selectedUserName}" />";
+	    	var selectedUser;
+	    	var selectedUserName;
 	    	var companyId = "<c:out value="${companyId}" />";
 	    	var deptIds = [];
 	    	var deptNames = [];
@@ -86,6 +86,7 @@
 							</c:otherwise>
 						</c:choose>
 			    	</c:forEach>
+			    	setSelectedUser("${selectedUser }","${selectedUserName }");
 		    		setDeptName();
 	    		</c:if>
    			});

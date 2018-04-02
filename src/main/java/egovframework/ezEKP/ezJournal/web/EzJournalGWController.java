@@ -534,9 +534,9 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
 			String realPath = commonUtil.getRealPath(request);
 			
-			ezJournalService.insertJournal(jsonParam, info.getDeptId(), info.getTenantId(), realPath);
+			String journalId = ezJournalService.insertJournal(jsonParam, info.getDeptId(), info.getTenantId(), realPath);
 			
-			result.put("data", "");
+			result.put("data", journalId);
 			result.put("status", "ok");
 			result.put("code", 0);
 		
@@ -662,7 +662,7 @@ public class EzJournalGWController {
 			
 			ezJournalService.updateJournal(journalId, jsonParam, info.getTenantId(), realPath);
 			
-			result.put("data", "");
+			result.put("data", journalId);
 			result.put("status", "ok");
 			result.put("code", 0);
 		

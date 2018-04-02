@@ -600,25 +600,31 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public void insertJournal(JSONObject jsonParam, String deptId, int tenantId, String realPath) throws Exception {
+	public String insertJournal(JSONObject jsonParam, String deptId, int tenantId, String realPath) throws Exception {
 		logger.debug("insertJournal started");
 		
 		String mode = jsonParam.get("mode").toString();
+		String journalContent = jsonParam.get("content").toString();
 		String isTemp = "";
 		if (jsonParam.get("isTemp") != null) {
 			isTemp = jsonParam.get("isTemp").toString();
 		}
 		logger.debug("isTemp : " + isTemp + ",mode : " + mode);
 		
+		Document journalDoc = Jsoup.parseBodyFragment(journalContent);
+		Element journalBody = journalDoc.body();
+		String journalText = journalBody.text();
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("writerId", jsonParam.get("userId"));
 		map.put("tenantId", tenantId);
 		map.put("title", jsonParam.get("title"));
-		map.put("content", jsonParam.get("content"));
+		map.put("content", journalContent);
 		map.put("writeDate", commonUtil.getTodayUTCTime(""));
 		map.put("deptId", deptId);
 		map.put("formId", jsonParam.get("formId"));
 		map.put("deptShare", jsonParam.get("deptShare"));
+		map.put("journalText", journalText);
 		if (mode != null && mode.equals("temp") || !isTemp.equals("")) {
 			map.put("journalStatus", "temp");
 		}
@@ -706,6 +712,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		}
 		
 		logger.debug("insertJournal ended");
+		return journalId;
 	}
 	
 	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
@@ -787,7 +794,13 @@ public class EzJournalServiceImpl implements EzJournalService {
 		logger.debug("updateJournal started.");
 		
 		String mode = jsonParam.get("mode").toString();
+		String journalContent = jsonParam.get("content").toString();
 		String isTemp = "";
+		
+		Document journalDoc = Jsoup.parseBodyFragment(journalContent);
+		Element journalBody = journalDoc.body();
+		String journalText = journalBody.text();
+		
 		if (jsonParam.get("isTemp") != null) {
 			isTemp = jsonParam.get("isTemp").toString().trim();
 		}
@@ -795,11 +808,12 @@ public class EzJournalServiceImpl implements EzJournalService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", jsonParam.get("title"));
 		map.put("formId", jsonParam.get("formId"));
-		map.put("content", jsonParam.get("content"));
+		map.put("content", journalContent);
 		map.put("deptShare", jsonParam.get("deptShare"));
 		map.put("writeDate", commonUtil.getTodayUTCTime(""));
 		map.put("journalId", journalId);
 		map.put("tenantId", tenantId);
+		map.put("journalText", journalText);
 		
 		if (isTemp != null) {
 			map.put("isTemp", isTemp);

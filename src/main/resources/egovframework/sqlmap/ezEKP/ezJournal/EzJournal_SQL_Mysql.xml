@@ -722,6 +722,9 @@
 		<isNotEmpty property="journalTitle">
 			and j.journal_title like concat('%',#journalTitle#,'%')
 		</isNotEmpty>
+		<isNotEmpty property="journalText">
+			and j.journal_text like concat('%',#journalText#,'%')
+		</isNotEmpty>
 		<isNotEmpty property="formName">
 			and f.form_name like concat('%',#formName#,'%')
 		</isNotEmpty>
@@ -1020,13 +1023,13 @@
 	<insert id="insertJournal" parameterClass="map">
 		insert into tbl_journal (
 			tenant_id, 	journal_title, 	journal_content, 	journal_date, 	journal_writer,
-			form_id, 	dept_share, 	journal_dept
+			form_id, 	dept_share, 	journal_dept,		journal_text
 			<isNotEmpty property="journalStatus">
 				, journal_status
 			</isNotEmpty>
 		) values (
 			#tenantId#,	 #title#, 		#content#, 			#writeDate#, 	#writerId#, 
-			#formId#, 	 #deptShare#,	#deptId#
+			#formId#, 	 #deptShare#,	#deptId#,			#journalText#
 			<isEqual property="journalStatus" compareValue="temp">
 				, #journalStatus#
 			</isEqual>

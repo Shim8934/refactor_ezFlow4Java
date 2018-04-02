@@ -139,10 +139,10 @@
 							<li><span onclick='printJournal();'> <spring:message code='main.t73' /></span></li>
 	
 							<c:set var="userAgentInfo" value="${fn:toLowerCase(header['User-Agent'])}" />
-							<c:if test="${fn:indexOf(userAgentInfo,'trident') eq -1}">
-								<!-- 	        		엑셀저장 -->
-								<li><a onclick='convertToExcel(this);' href="download" target="_blank"><span> <spring:message code='ezJournal.t104' /></span></a></li>
-							</c:if>
+<%-- 							<c:if test="${fn:indexOf(userAgentInfo,'trident') eq -1}"> --%>
+<!-- 									        		엑셀저장 -->
+<%-- 								<li><a onclick='convertToExcel(this);' href="download" target="_blank"><span> <spring:message code='ezJournal.t104' /></span></a></li> --%>
+<%-- 							</c:if> --%>
 						</ul>
 					</div>
 					<div id="close">

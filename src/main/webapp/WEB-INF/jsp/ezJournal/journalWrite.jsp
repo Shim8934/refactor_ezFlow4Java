@@ -24,6 +24,27 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/jstree/jstree.js"></script>
 	    <script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
+	    <style type="text/css">
+	    	#loading {
+				 width: 100%;  
+				 height: 100%;  
+				 top: 0px;
+				 left: 0px;
+				 position: fixed;  
+				 display: block;  
+				 opacity: 0.7;  
+				 background-color: #fff;  
+				 z-index: 99;  
+				 text-align: center; 
+			 } 
+			  
+			#loading-image {  
+				 position: absolute;  
+				 top: 50%;  
+				 left: 50%; 
+				 z-index: 100; 
+			 }
+	    </style>
 	    <script type="text/javascript">
 		//	var companyId = "${info.companyID}"; 
 			var userId = "${userId}";
@@ -345,9 +366,9 @@
 	                			mode : mode
 	                },  
 	                cache: false,
-	                success: function() {	   
+	                success: function(result) {	   
 	                  	alert("<spring:message code='ezJournal.t137'/>");
-          			 	sendJournalRecvMail($("#title").val(),receiverID);
+          			 	sendJournalRecvMail($("#title").val(),receiverID,result);
 	                  
 	             	  	opener.setJournalList();
           			  	window.close();
@@ -362,10 +383,10 @@
 	    	}
 	    	
 	    	//수신자에게 메일 보내기
-	    	function sendJournalRecvMail(journalTitle,recvIds){
+	    	function sendJournalRecvMail(journalTitle,recvIds,journalId){
 	    		$.ajax({
 					type:"post",
-					data:{"journalTitle":journalTitle,"recvIds":recvIds},
+					data:{"journalTitle":journalTitle,"recvIds":recvIds,"journalId":journalId},
 					url:"/ezJournal/sendJournalRecvMail.do",
 					success: function(){
 					}
@@ -587,6 +608,8 @@
 	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 	    
+	    <div id="loading"><img id="loading-image" src="/images/ProgressBar.gif" alt="Loading..." /></div>
+
 		<script>
 		// 다른일지 가져오기 리스트
 	    function getOtherJournalList() {
@@ -610,6 +633,10 @@
     			}
     		});
 		}
+		
+		$(window).load(function() {    
+		     $('#loading').hide();  
+	    });
 		</script>
 	</body>
 </html>
