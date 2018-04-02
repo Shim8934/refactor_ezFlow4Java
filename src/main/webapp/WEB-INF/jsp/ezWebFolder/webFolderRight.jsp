@@ -27,87 +27,10 @@
 	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<style type="text/css">
-		#layer_Viewpopup { 
-			z-index:1000; 
-			margin:0px; 
-			padding:0px;
-		}
-		#layer_Viewpopup .popupwrap1 {
-			border:1px solid #555a64;
-			padding:0px;
-			margin:0px;
-			
-		}
-	
-		#layer_Viewpopup .shadow {
-			height:2px;
-			background:#d7d7d7;
-			
-		}
-		#layer_Viewpopup .popupwrap2 {
-			border:2px solid #e5e5e5;
-			padding:10px;
-			
-		}
-		#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
-		
-		/* 20130809 추가 */
-		#layer_Viewpopup .popupwrap3 {
-			position:relative;
-			padding:10px;
-			background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
-		}
-		#layer_Viewpopup .popupwrap3 h1 {
-			font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
-		}
-	
-		.aName {
-			cursor: pointer;
-		}
-		.aName:hover {
-			color: #e04343;
-		}
-	
-	
-	
-	
-		#x_close {position:absolute; top:10px; right:5px;height:12px; width:12px ; padding:0px 5px; cursor: pointer; background:url(../images/kr/cm/btn_colse.gif) no-repeat center; font-size:0px;}
-		#x_close  em {display:none;}
-		
-		/* list_element */
-		.list_element,.list_element th,.list_element td {
-			border:0;
-		}
-		.list_element {
-			width:100%;
-			font-size:12px;
-			table-layout:fixed;
-		}
-		.list_element caption{
-			display:none
-		}
-		.list_element th {
-			padding:5px 0 5px 8px; 
-			background:url(/images/kr/cm/dot_blue.gif) no-repeat 0px 12px; 
-			color:#666;
-			text-align:left;
-			vertical-align:top;
-			line-height:16px; 
-			font-weight:normal;
-		}
-		.list_element td{
-			padding:5px 0px 5px 5px;
-			line-height:16px;
-			vertical-align:top;
-			color:#666;
-			text-align:left;
-		}
-	</style>
     <script type="text/javascript">
     	var xhr  		= new XMLHttpRequest();
     	var file 		= new Array();
-		var currFolderId = "opensol"; //Just for test
+		var currFolderId = ""; //Just for test
 		var primary      = "<c:out value='${primary}'/>";
 		var strShared1	= "<spring:message code = 'ezWebFolder.t105'/>";
 		var strShared2	= "<spring:message code = 'ezWebFolder.t106'/>";
@@ -142,6 +65,10 @@
 			var reheight         = document.documentElement.clientHeight - 220;
 			divList.style.height = reheight + "px";
 		};
+		
+		document.onselectstart = function(){
+			return false;
+		} 
 		// fileList 화면 
 		window.onload = function () {
 			pEnd= pStart + blockSize;
@@ -158,10 +85,11 @@
         }
 	    
 	    
-	    function getfileList(folderId){
+	    function getfileList(a){
 	    	if(folderId == "") {
 	    		alert(folderId+"가없음");
 	    	}
+	    	folderId = a;
 			$.ajax ({
 				type:"POST",
 				async: false,
@@ -170,9 +98,9 @@
 					 "folderId"   : folderId,
 					 "folderType" : folderType,
 					 "currPage"   : currentPage,
-					 "totalPages" : totalPages,
+// 					 "totalPages" : totalPages,
 					 "listCount"  : blockSize,
-					 "totalCount" : totalRows,
+// 					 "totalCount" : totalRows,
 					 "pStart" : pStart,
 					 "pEnd" : pEnd,
 					 "searchExt" : $('#searchExt').val(),
@@ -325,7 +253,14 @@
 						tdElmt11.textContent = "";
 					}
 					
-					
+					if(result[i]["typeId"] == "folder") {
+						//trElmt.setAttribute("value", result[i]["fileId"]);
+						
+						trElmt.ondblclick = function() {
+							//var val = $(this).attr('value');
+							dbClickFunction(this);							
+						};
+					}
 					
 					trElmt.appendChild(tdElmt1);
 					trElmt.appendChild(tdElmt2);
@@ -343,6 +278,13 @@
 				}
 			} 
 		}
+		
+		function dbClickFunction(obj) {
+			var folderId2 = obj.getAttribute("_fileId");
+			getfileList(folderId2);
+			
+		}
+		
 	   	$(function () {
 	        $("#Sdatepicker").datepicker({
 	            changeMonth: true,

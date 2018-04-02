@@ -70,3 +70,6 @@
 .selectedUser {cursor:pointer;}
 .selectedUser:hover {background-color:#f7fae0;}
 .selectedUser2 {cursor:pointer; background-color:#e9f1f4;}
+
+.aName {cursor: pointer;}
+.aName:hover {color: #e04343;}

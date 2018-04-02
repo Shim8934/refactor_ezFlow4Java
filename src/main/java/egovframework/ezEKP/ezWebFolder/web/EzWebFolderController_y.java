@@ -136,12 +136,19 @@ public class EzWebFolderController_y {
 		String folderId = request.getParameter("folderId")!=null? request.getParameter("folderId") : "";
 		String folderType = request.getParameter("folderType")!=null? request.getParameter("folderType") : "";
 		System.out.println("folderType"+folderType);
-		int totalCount = Integer.parseInt(request.getParameter("totalCount"));
-		int currPage  = Integer.parseInt(request.getParameter("currPage"));
-		int listCount = Integer.parseInt(request.getParameter("listCount"));
-		int totalPages = Integer.parseInt(request.getParameter("totalPages"));
-		int pStart = Integer.parseInt(request.getParameter("pStart"));
-		int pEnd = Integer.parseInt(request.getParameter("pEnd"));
+//		int totalCount = Integer.parseInt(request.getParameter("totalCount"));
+//		int currPage  = Integer.parseInt(request.getParameter("currPage"));
+//		int listCount = Integer.parseInt(request.getParameter("listCount"));
+//		int totalPages = Integer.parseInt(request.getParameter("totalPages"));
+		
+		int totalCount = request.getParameter("totalCount") != null ? Integer.parseInt(request.getParameter("totalCount")) : 0;
+		int listCount = request.getParameter("listCount") != null ? Integer.parseInt(request.getParameter("listCount")) : 10;
+		int currPage = request.getParameter("currPage") != null ? Integer.parseInt(request.getParameter("currPage")) : 1;
+		int totalPages = request.getParameter("totalpages") != null ? Integer.parseInt(request.getParameter("totalpages")) : 1;
+		
+		int pEnd = request.getParameter("pEnd")!=null ?Integer.parseInt(request.getParameter("pEnd")) : listCount;
+		int pStart  =request.getParameter("pStart")!=null? Integer.parseInt(request.getParameter("pStart")):0;
+		
 		if ( currPage == 0 ) {
 			currPage = 1;
 		} 

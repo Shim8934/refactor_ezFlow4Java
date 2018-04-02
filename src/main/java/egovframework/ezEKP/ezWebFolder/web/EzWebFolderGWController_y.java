@@ -455,8 +455,8 @@ public class EzWebFolderGWController_y {
 		int currPage = request.getParameter("currPage") != null ? Integer.parseInt(request.getParameter("currPage")) : 1;
 		int totalpages = request.getParameter("totalpages") != null ? Integer.parseInt(request.getParameter("totalpages")) : 1;
 		
-		int pEnd = Integer.parseInt(request.getParameter("pEnd"));
-		int pStart  = Integer.parseInt(request.getParameter("pStart"));
+		int pEnd = request.getParameter("pEnd")!=null ?Integer.parseInt(request.getParameter("pEnd")) : listCount;
+		int pStart  =request.getParameter("pStart")!=null? Integer.parseInt(request.getParameter("pStart")):0;
 		
 		System.out.println("folderType " + folderType);
 		
@@ -490,7 +490,7 @@ public class EzWebFolderGWController_y {
 			String originalPath   = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
 			String []rootPath     = folderPath.split("\\|");
 			Map<String, String> filePathMap = new LinkedHashMap<String, String>();
-			if (folder.getFolderUpper().equals("root")) {
+//			if (folder.getFolderUpper().equals("root")) {
 				for (FileVO file : fileList) {
 						String file_path    = originalPath;
 						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
@@ -509,10 +509,10 @@ public class EzWebFolderGWController_y {
 						
 						file.setFilePosition(file_path + file.getFileName());
 				}
-			} else {
+//			} else {
 //				folderPath            = folderPath.substring(1, folderPath.length() - 1);
 //				originalPath   = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
-			}
+//			}
 			//
 			data.put("folderPath", folderPath2);
 			data.put("originalPath", originalPath);

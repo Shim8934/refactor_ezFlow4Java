@@ -280,21 +280,29 @@
 	</select>
 	
 	<select id="EzWebFolderDAO_y.getFldToTalCount" resultClass="Integer" parameterClass="Map">   
-		<![CDATA[
-           	SELECT distinct count(*)
-            from 
-	            tbl_webfolder_filetype AS type LEFT OUTER JOIN  tbl_webfolder_folder as folder ON type.TYPE_NAME = "folder"
-            where 
-					folder.tenant_id = #tenantId#	 
-				and folder.FOLDER_TYPE = #folderType#
-                and folder.USE_STATUS = 'Y'
-                and folder.folder_upper = #folderId#
-                and folder.company_id = #comId#
-                and type.tenant_id = #tenantId#
-                ORDER BY CREATE_DATE desc
-                
-		]]>
-		
+		<isNotEqual property="parentId" compareValue="root" >
+			<![CDATA[
+	           	SELECT distinct count(*)
+	            from 
+		            tbl_webfolder_filetype AS type LEFT OUTER JOIN  tbl_webfolder_folder as folder ON type.TYPE_NAME = "folder"
+	            where 
+						folder.tenant_id = #tenantId#	 
+					and folder.FOLDER_TYPE = #folderType#
+	                and folder.USE_STATUS = 'Y'
+	                and folder.folder_upper = #folderId#
+	                and folder.company_id = #comId#
+	                and type.tenant_id = #tenantId#
+	                ORDER BY CREATE_DATE desc
+	                
+			]]>
+		</isNotEqual>
+		<isEqual property="parentId" compareValue="root" >
+			select count(*)
+			from tbl_webfolder_folder
+			where 1=0
+			
+			
+		</isEqual>
 	</select>
 	<select id="EzWebFolderDAO_y.getFileToTalCount" resultClass="Integer" parameterClass="Map">   
    		<![CDATA[
@@ -346,8 +354,6 @@
 				file.FILE_NAME LIKE CONCAT('%', #searchFileName#, '%')
        		]]> 
 		</isNotEqual>	
-		<![CDATA[
-		]]>
 	</select>
 	<select id ="EzWebFolderDAO_y.getFolderList_all" resultClass="HashMap" parameterClass="Map">
 		<![CDATA[
