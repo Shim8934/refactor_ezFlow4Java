@@ -168,9 +168,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public String getWriteFormHtml(String formId, int tenantId)
+	public String getFormBody(String typeId, int tenantId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		
+		
 		return null;
 	}
 
