@@ -149,8 +149,8 @@
 			SELECT 
 				containerid,
 				usedepid,
-				(SELECT displayname FROM TBL_DEPTMASTER AS T1 WHERE T1.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName,
-				(SELECT displayname2 FROM TBL_DEPTMASTER AS T2 WHERE T2.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName2
+				(SELECT displayname FROM TBL_DEPTMASTER T1 WHERE T1.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName,
+				(SELECT displayname2 FROM TBL_DEPTMASTER T2 WHERE T2.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName2
 			FROM
 				TBL_CONTAINERUSEDEP A
 			WHERE
@@ -169,8 +169,7 @@
 		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 	<!-- ]]> -->
 	<!-- </procedure> -->
-	<select id="EzApprovalGAdmin.getTaskInSubCategoryForManage"
-		parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzApprovalGAdmin.getTaskInSubCategoryForManage" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="G">
 			<![CDATA[
 				SELECT
@@ -218,7 +217,8 @@
 					keepingplace,
 					taskname,
 					taskname2,
-					subcategorycode,
+					C.subcategorycode,
+					C.NAME$lang$,
 					itemSecurity,
 					isPublic,
 					(SELECT
@@ -226,19 +226,27 @@
 				     FROM
 				     	TBL_CABINETCLASS A
 				     WHERE
-				     	TENANT_ID = #tenantID#
+				     	A.TENANT_ID = #tenantID#
 				     AND
-				     	COMPANYID = #companyID#
+				     	A.COMPANYID = #companyID#
 				     AND
 				     	A.TASKCODE = B.TASKCODE ) CABINETID 
 				FROM
 					TBL_TASKCODE B
+				JOIN
+					TBL_TASKSUBCATEGORY C
+				ON
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					B.COMPANYID = C.COMPANYID
+				AND
+					B.SUBCATEGORYCODE = C.SUBCATEGORYCODE
 				WHERE
-					tenant_id = #tenantID#
+					B.tenant_id = #tenantID#
 				AND
-					companyid = #companyID#
+					B.companyid = #companyID#
 				AND
-					subcategorycode = #v_SUBCATECODE#
+					B.subcategorycode = #v_SUBCATECODE#
 				AND
 					delflag = '0'
 				ORDER BY
@@ -411,7 +419,7 @@
 		<isNotEqual property="v_DEPTCODE" compareValue="">
 			<![CDATA[
 				AND
-					(	TRIM(processdeptcode) = #v_DEPTCODE#
+					(TRIM(processdeptcode) = #v_DEPTCODE#
 					OR
 						taskcode LIKE 'ZZ%'
 					OR
@@ -444,7 +452,7 @@
 			WHERE
 				tenant_id = #tenantID#
 			AND
-				companyid = #companyID#	
+				companyid = #companyID#
 			AND
 				taskcode = #v_TASKCODE#
 			AND
@@ -587,7 +595,7 @@
 					regusername,
 					regusername2
 				FROM
-					TBL_SEALDEPTINFO 
+					TBL_SEALDEPTINFO
 				WHERE
 					tenant_id = #tenantID#
 				AND
@@ -613,7 +621,7 @@
 					regusername,
 					regusername2
 				FROM
-					TBL_SEALDEPTINFO 
+					TBL_SEALDEPTINFO
 				WHERE
 					tenant_id = #tenantID#
 				AND
@@ -739,6 +747,8 @@
 				TBL_APRDOCINFO.docid = TBL_EXPAPRDOCINFO.docid
 			WHERE
 				(functiontype IS NOT NULL)
+			AND
+				functiontype != '010'
 			AND
 				(startdate IS NOT NULL)
 		]]>
@@ -915,7 +925,7 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getFormContent" parameterClass="Map"
-		resultClass="ApprGFormVO">
+		resultClass="ApprGFormVO" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT
@@ -946,11 +956,11 @@
 	            AND
 	            	TBL_FORMINFO.formid = TBL_AUTODOCNUM_ITEM.formid
 				WHERE
-					tenant_id = #tenantID#
+					TBL_FORMINFO.tenant_id = #tenantID#
 				AND
-					companyid = #companyID#
+					TBL_FORMINFO.companyid = #companyID#
 				AND
-					formid = #v_PFORMID#
+					TBL_FORMINFO.formid = #v_PFORMID#
 			]]>
 		</isEqual>
 		<isEqual property="approvalFlag" compareValue="G">
@@ -983,10 +993,12 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getFormRecvAdmin" parameterClass="Map"
-		resultClass="ApprGFormVO">
+		resultClass="ApprGFormVO" remapResults="true">
+		<isEqual property="approvalFlag" compareValue="S">
 		<![CDATA[
 			SELECT
-				deptid
+				deptid,
+				userid
 			FROM
 				TBL_FORMRECV
 			WHERE
@@ -998,6 +1010,23 @@
 			ORDER BY
 				deptsn
 		]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					deptid
+				FROM
+					TBL_FORMRECV
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					formid = #v_FORMID#
+				ORDER BY
+					deptsn
+			]]>
+		</isEqual>		
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getTaskCategotyTree" -->
@@ -1093,7 +1122,7 @@
 					AND
 						mcategorycode = #v_PARENTID#
 					AND
-						subcategorycode = #v_PARENTID#
+						subcategorycode != #v_PARENTID#
 					AND
 						oldflag IS NULL
 				]]>
@@ -1129,8 +1158,7 @@
 		#v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 	<!-- ]]> -->
 	<!-- </procedure> -->
-	<select id="EzApprovalGAdmin.getReceiveGroupInfo" remapResults="true"
-		parameterClass="Map" resultClass="ApprGAdminReceiveVO">
+	<select id="EzApprovalGAdmin.getReceiveGroupInfo" remapResults="true" parameterClass="Map" resultClass="ApprGAdminReceiveVO">
 		<isEqual property="v_MODE" compareValue="ITEM">
 			<![CDATA[
 				SELECT
@@ -1671,8 +1699,8 @@
 				formdescription,
 				formfilelocation,
 				formconnflag,
-				companyid,
-				tenant_id)
+				tenant_id,
+				companyid)
 			VALUES
 				(#v_PFORMCONTAINERID#,
 				#v_PFORMID#,
@@ -1682,8 +1710,8 @@
 				#v_PFORMDESCRIPT#,
 				#v_PURL#,
 				#v_PFORMCONNFLAG#,
-				#companyID#,
-				#tenantID#)
+				#tenantID#,
+				#companyID#)
 		]]>
 	</insert>
 
@@ -1702,9 +1730,9 @@
 			WHERE
 				tenant_id = #tenantID#
 			AND
-				formid = #v_PFORMID#
+				companyid = #companyID#				
 			AND
-				companyid = #companyID#
+				formid = #v_PFORMID#
 		]]>
 	</update>
 
@@ -1941,7 +1969,7 @@
 					AND
 						companyid = #companyID#
 					AND
-						mcategorycode != #v_CATECODE#
+						mcategorycode = #v_CATECODE#
 					AND
 						oldflag IS NULL
 				]]>
@@ -1957,7 +1985,7 @@
 					AND
 						companyid = #companyID#
 					AND
-						subcategorycode != #v_CATECODE#
+						subcategorycode = #v_CATECODE#
 					AND
 						delflag = '0'
 				]]>
@@ -2168,6 +2196,8 @@
 			AND
 				(functiontype IS NOT NULL)
 			AND
+				 functiontype != '010'				
+			AND
 				(startdate IS NOT NULL)
 		]]>
 
@@ -2272,7 +2302,7 @@
              	condvaluedeptid,
              	doctype 
         	FROM 
-        		TBFORM_AUTORULE 
+        		TBL_FORM_AUTORULE 
        		WHERE  
        			TENANT_ID = #tenantID#
        		AND
@@ -2308,7 +2338,7 @@
              	ISPROPOSERYN,
              	ISBRIEFUSERYN
             FROM 
-            	TBFORM_AUTORULELINE 
+            	TBL_FORM_AUTORULELINE 
 	        WHERE  
 	        	TENANT_ID = #tenantID#
 	        AND
@@ -2511,6 +2541,30 @@
         		sn = '0'
 		]]>
 	</update>
+	
+	<insert id="EzApprovalGAdmin.insertEditApproDoc" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO 
+			tbl_editapprdoc (
+				DOCID, 
+				BEFOREHTML, 
+				AFTERHTML, 
+				USERID, 
+				MODIFYDATE, 
+				TENANT_ID, 
+				COMPANYID
+				)
+		VALUES (
+				#v_DOCID#, 
+				#v_BEFOREHTML#, 
+				#v_AFTERHTML#, 
+				#v_USERID#, 
+				#v_MODIFYDATE#, 
+				#v_TENANTID#, 
+				#v_COMPANYID#
+				)
+		]]>				
+	</insert>
 	
 	<!-- <procedure id="EzApprovalGAdmin.insertContainerType" -->
 	<!-- parameterClass="Map"> -->
@@ -3024,34 +3078,38 @@
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_SEALINFO
-			(sealnum,
-			sealname,
-			sealpath,
-			sealwidth,
-			sealheight,
-			regdate,
-			deldate,
-			reguserid,
-			regusername,
-			regusername2,
-			companyid,
-			tenant_id)
-        VALUES
-			((SELECT
-				NVL(MAX(sealnum), 0) + 1
-			FROM
-				TBL_SEALINFO),
-			#v_SEALNAME#,
-			#v_SEALPATH#,
-			#v_SEALWIDTH#,
-			#v_SEALHEIGHT#,
-			TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
-			NULL,
-			#v_REGUSERID#,
-			#v_REGUSERNAME#,
-			#v_REGUSERNAME2#,
-			#companyID#,
-			#tenantID#)
+				(sealnum,
+				sealname,
+				sealpath,
+				sealwidth,
+				sealheight,
+				regdate,
+				deldate,
+				reguserid,
+				regusername,
+				regusername2,
+				companyid,
+				tenant_id)
+       		 VALUES
+				((SELECT
+					NVL(MAX(sealnum), 0) + 1
+				FROM
+					TBL_SEALINFO
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#),
+				#v_SEALNAME#,
+				#v_SEALPATH#,
+				#v_SEALWIDTH#,
+				#v_SEALHEIGHT#,
+				TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
+				NULL,
+				#v_REGUSERID#,
+				#v_REGUSERNAME#,
+				#v_REGUSERNAME2#,
+				#companyID#,
+				#tenantID#)
 		]]>
 	</insert>
 
@@ -3904,7 +3962,124 @@
 		]]>
 	</select>
 	
-	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map">
+	<update id="EzApprovalGAdminDAO.moveAllDocListF" parameterClass="Map">
+		<![CDATA[
+			update tbl_expendaprdocinfo
+			set
+				orgcontid = #sourceContID#
+			where
+				tenant_id = #tenantID#
+			and
+				companyid = #companyID#
+			and	 
+				docid in (
+							select 
+								a.docid 
+							from 
+							  	tbl_endaprdocinfo a 
+							where
+							  	a.tenant_id = #tenantID#
+							and
+							  	a.companyid = #companyID#
+							and
+							  	a.containerid = #sourceContID# )
+		]]>	
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.moveAllDocListS" parameterClass="Map">
+		<![CDATA[
+			update tbl_endaprdocinfo 
+			set 
+				containerid = #targetContID#
+			where 
+				tenant_id = #tenantID#
+			and
+				companyid = #companyID#
+			and
+				containerid = #sourceContID# 
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.moveDocListF" parameterClass="Map">
+		<![CDATA[
+			update tbl_endaprdocinfo 
+			set 
+				containerid = #targetContID#
+			where
+				tenant_id = #tenantID#
+			and
+				companyid = #companyID#
+			and
+				containerid = #sourceContID#
+			and
+				docid in ( $subQuery$ ) 
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.moveDocListS" parameterClass="Map">
+		<![CDATA[
+			update tbl_expendaprdocinfo 
+			set 
+				orgcontid = #sourceContID#
+			where
+				tenant_id = #tenantID#
+			and
+				companyid = #companyID#
+			and
+				docid in ( $subQuery$ ) 
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.deleteAllDocList" parameterClass="Map">
+		update tbl_expendaprdocinfo 
+		set 
+			delflag = 'Y'
+		where
+			tenant_id = #tenantID#
+		and
+			companyid = #companyID#
+		and	 
+			docid in ( 
+						select	
+							docid
+						from
+						  	tbl_endaprdocinfo
+						where
+							tenant_id = #tenantID#
+						and
+						  	companyid = #companyID#
+						and
+						  	containerid = #contID#
+						<isNotEmpty property="startPeriod">
+							<![CDATA[
+								and 
+									enddate >= #startDate# 
+								and 
+									enddate <= #endDate# 
+							]]>
+						</isNotEmpty> )
+		and
+			delflag is null
+		<isNotEmpty property="storagePeriod" prepend="AND">
+			storageperiod = #storagePeriod#
+		</isNotEmpty> 
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.deleteDocList" parameterClass="Map">
+		<![CDATA[
+			update tbl_expendaprdocinfo
+			set
+				delflag = 'Y'
+			where
+				tenant_id = #tenantID#
+		  	and
+		  		companyid = #companyID#
+		  	and
+		  		docid in ( $subQuery$ )
+		]]>
+	</update>
+	
+	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
 				count(*)
@@ -3930,6 +4105,21 @@
 		]]>
 	</select>
 	
+	<select id="EzApprovalGAdminDAO.getParentContName" parameterClass="Map" resultClass="String">
+		SELECT
+			FORMCONTNAME,
+			CASE #v_LANG# WHEN '1' THEN FORMCONTNAME 
+				          WHEN '2' THEN FORMCONTNAME END AS FORMCONTNAME 
+		FROM
+			TBL_FORMCONTAINER
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			FORMCONTID = #v_PARENTID#
+	</select>
+
 	<update id="EzApprovalGAdminDAO.deleteDocListjson" parameterClass="Map">
 		<![CDATA[
 			update tbl_expendaprdocinfo
@@ -4331,3 +4521,4 @@
 		]]>				
 	</insert>
 </sqlMap>
+
