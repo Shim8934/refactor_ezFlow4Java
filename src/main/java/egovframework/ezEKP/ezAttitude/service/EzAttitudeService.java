@@ -29,7 +29,7 @@ public interface EzAttitudeService {
 	
 	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, int tenantId) throws Exception;
 	
-	public String getWriteFormHtml(String formId, int tenantId) throws Exception;
+	public String getFormBody(String typeId, int tenantId) throws Exception;
 	
 	public void updateAttitude(String attitudeId, String startdate, String enddate, String starttime, String endtime, String region,
 			String mobile, String bizsub, String content, String ip, String typeId, String companyId, int tenantId) throws Exception;

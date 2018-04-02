@@ -82,7 +82,7 @@ function CalendarView(pTargetID) {
 		objElm = null;
 	}
 	
-	getAttiStatisList();
+	
 	getAttitudeMainList();
 	//CalViewSource(); //달력에 근태 데이터 뿌리면 되고
 	

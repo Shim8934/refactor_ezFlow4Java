@@ -33,13 +33,12 @@
 				$(document).on('dblclick', '.td_day td', function(){
 					pMode = "new";
 					attitudeWrite(this);
-				})	
+				})
 			})
 			
 			window.onload = function() {
 				select_memorialDays(uselang); // 공식 휴일 설정 => 언어에 따라 memorialDays에 변수가 담김
 				
-				getAttiTypeList();
 				getHolidayList();
 			}
 			
@@ -137,6 +136,7 @@
 							}
 						}
 						CalendarView("attiCalendar");
+						getAttiTypeList();
 					}
 				})
 			}
@@ -158,6 +158,7 @@
 					},
 					success : function(result) {
 						getAttitudeMainList_after(result);
+						getAttiStatisList();
 					}
 				})
 			}
@@ -217,6 +218,8 @@
 			*/
 			function attitudeWrite(obj) {
 				var date = $(obj).attr("dispdate");
+				var pAttitudeId = $(obj).attr("attitudeId"); 
+				alert(pAttitudeId);
 				if (CrossYN()) {
                     var OpenWin = window.open("/ezAttitude/attitudeWrite.do?date=" + date, "writeAttitude", GetOpenWindowfeature(650, 580));
                     

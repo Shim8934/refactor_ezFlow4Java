@@ -924,6 +924,7 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/users-attitude-confs] ended.");
 		return result;
 	}
+	
 	/**
 	 * G/W 근태관리 [POST] 사용자별 근태설정 등록/수정
 	 */
@@ -1374,6 +1375,33 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 작성양식
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}/forms/formId", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getFormBody(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String data = "";
+			
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
+		
 		return result;
 	}
 	
