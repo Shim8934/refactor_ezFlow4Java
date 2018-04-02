@@ -93,8 +93,4 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 		return update("MApprovalG.delAbsenteeInfo", map);
 	}
 
-	public String getMailId(Map<String, Object> map) throws Exception {
-		return (String) select("MApprovalG.getMailId", map);
-	}
-
 }

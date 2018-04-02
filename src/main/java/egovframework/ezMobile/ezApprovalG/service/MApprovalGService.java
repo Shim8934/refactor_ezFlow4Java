@@ -45,6 +45,4 @@ public interface MApprovalGService {
 
 	public int delAbsenteeInfo(String userId, int tenantId) throws Exception;
 
-	public String getMailId(String docid, int aprmemberSN, int tenantId) throws Exception;
-
 }

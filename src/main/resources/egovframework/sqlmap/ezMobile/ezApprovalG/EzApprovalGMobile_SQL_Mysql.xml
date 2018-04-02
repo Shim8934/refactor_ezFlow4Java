@@ -1356,28 +1356,4 @@
 					1
 		
 		</select>
-		
-		<select id="MApprovalG.getMailId" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT 
-				CONCAT(CONCAT(A.APRMEMBERNAME , ","), B.MAIL)
-			FROM 
-				VAPRWILLDOCLIST A
-			INNER JOIN
-				TBL_USERMASTER B
-			ON
-				A.COMPANYID = B.PHYSICALDELIVERYOFFICENAME
-			AND
-				A.TENANT_ID = B.TENANT_ID
-			AND
-				A.APRMEMBERID = B.CN
-			WHERE
-				A.DOCID = #docid#
-			AND
-				A.APRMEMBERSN = #aprmemberSN#
-			AND 
-				A.TENANT_ID = #tenantId#
-			
-		]]>
-		</select>
 </sqlMap>

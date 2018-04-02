@@ -16,12 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
@@ -51,9 +49,6 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @RestController
 public class MApprovalGGWController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MApprovalGGWController.class);
-	
-	@Autowired
-	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -895,55 +890,5 @@ public class MApprovalGGWController {
 		
 		return result;
 	}
-	
-	@RequestMapping(value="/mobile/ezapproval/getMailAddress/{userID}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public String getMailAddress(@PathVariable String userID, HttpServletRequest request, Locale locale) {
-		LOGGER.debug("getMailAddress started");
-		
-		String docid = request.getParameter("docid");
-		int aprmemberSN = Integer.parseInt(request.getParameter("aprmemberSN"));
-		String serverName = request.getHeader("x-user-host");
-		String proplist = "displayName;mail;department";
-		String result = "";
-		MCommonVO userInfo;
-		try {
-			userInfo = mOptionService.commonInfo(serverName, userID);
-			
-			if (!docid.equals("")) {
-				result = mApprovalGService.getMailId(docid, aprmemberSN + 1, userInfo.getTenantId());
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		LOGGER.debug("getMailAddress ended");
-		return result;
-	}		
-	
-	@RequestMapping(value="/mobile/ezapproval/getDocInfoToMail/{userID}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public String getDocInfoToMail(@PathVariable String userID, HttpServletRequest request, Locale locale) {
-		LOGGER.debug("getDocInfoToMail started");
-		
-		String docid = request.getParameter("docid");
-		int aprmemberSN = Integer.parseInt(request.getParameter("aprmemberSN"));
-		String serverName = request.getHeader("x-user-host");
-		String proplist = "displayName;mail;department";
-		String result = "";
-		MCommonVO userInfo;
-		try {
-			userInfo = mOptionService.commonInfo(serverName, userID);
-			
-			if (!docid.equals("")) {
-				result = mApprovalGService.getMailId(docid, aprmemberSN + 1, userInfo.getTenantId());
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		LOGGER.debug("getDocInfoToMail ended");
-		return result;
-	}		
 
 }
