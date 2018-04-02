@@ -800,7 +800,7 @@
 			  </c:if>
 			  &nbsp;
 			  <c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-			  <input id="searchValue" style="width:150px;" onfocus="journalKeywordClear(this);" onkeypress=""/> 
+			  <input id="searchValue" style="width:150px;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}"/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="quickSearch()"></a>
 			  </c:if>
 	        </span>
@@ -954,20 +954,20 @@
 				<c:if test="${listType ne 'mine' }">
 				<tr>
 					<th style="text-align: center"><spring:message code='ezJournal.t34' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);" id="searchWriter" style="width: 98%" value=""></td>
+					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="(event.keyCode==13){goToPageBySearch(); return false;}" id="searchWriter" style="width: 98%" value=""></td>
 				</tr>
 				</c:if>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezBoard.t208' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);" id="searchTitle" style="width: 98%" value=""></td>
+					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 98%" value=""></td>
 				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezEmail.t649' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);" id="searchContent" style="width: 98%" value=""></td>
+					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="(event.keyCode==13){goToPageBySearch(); return false;}" id="searchContent" style="width: 98%" value=""></td>
 				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezJournal.t22' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);" id="searchFormName" style="width: 98%" value=""></td>
+					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="(event.keyCode==13){goToPageBySearch(); return false;}" id="searchFormName" style="width: 98%" value=""></td>
 				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>
