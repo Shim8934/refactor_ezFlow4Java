@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -394,16 +395,28 @@ public class EzAttitudeGWController {
 		
 		JSONObject result = new JSONObject();
 		
-		try{
-			
-			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", "");
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);			
-			result.put("data", "");
-		}
+		try {
+	         String userId = request.getParameter("userId");
+	         String serverName = request.getHeader("x-user-host");
+	         MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+	         
+	         LOGGER.debug("userId : " + userId);
+	         String companyId = request.getParameter("companyId");
+	         
+	         if (companyId ==null||companyId.equals("")) {
+	            companyId = info.getCompanyId();
+	         }
+	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId() + "");
+	         
+	         result.put("status", "ok");
+	         result.put("code", 0);
+	         result.put("data", deptList);
+	      } catch (Exception e) {
+	         result.put("code", 1);
+	         result.put("status", "error");
+	         result.put("data", "");
+	      }
+
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts] ended.");
 		return result;
 	}
@@ -411,23 +424,29 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 부서의 사원들 조회
 	 */
-	@RequestMapping(value = "/rest/ezattitude/organtree/depts/{deptId}/users", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject organtreeUsersOfDept(@PathVariable String deptId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts/" + deptId + "/users] started.");
-		
+	@RequestMapping(value = "/rest/ezattitude/organtree/users", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject organtreeUsersOfDept(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/users] started.");
 		JSONObject result = new JSONObject();
 		
-		try{
+		try {
+			String key = request.getParameter("key");
+			String value = request.getParameter("value");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			List<JournalAuthorVO> userList = ezAttitudeService.getDeptUserList(info.getTenantId() + "", key, value);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", "");
+			result.put("code", 0);
+			result.put("data", userList);
 		} catch (Exception e) {
+			result.put("code", 1);
 			result.put("status", "error");
-			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts/" + deptId + "/users] ended.");
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/users] ended.");
 		return result;
 	}
 	
@@ -907,7 +926,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [POST] 사용자별 근태설정 등록
+	 * G/W 근태관리 [POST] 사용자별 근태설정 등록/수정
 	 */
 	@RequestMapping(value = "/rest/users/ezattitude/user-attitude-confs", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertUserAttitudeConf(HttpServletRequest request) {
@@ -937,28 +956,35 @@ public class EzAttitudeGWController {
 		return result;
 	}
 	
-//	/**
-//	 * G/W 근태관리 [PUT] 사용자별 근태설정 수정
-//	 */
-//	@RequestMapping(value = "/rest/ezattitude/user-attitude-confs/{user-attitude-confId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-//	public JSONObject updateUserAttitudeConf(@PathVariable String userAttitudeConfId, HttpServletRequest request) {
-//		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users-attitude-confs/" + userAttitudeConfId + "] started.");
-//		
-//		JSONObject result = new JSONObject();
-//		
-//		try{
-//			
-//			result.put("status", "ok");
-//			result.put("code", 0);			
-//			result.put("data", "");
-//		} catch (Exception e) {
-//			result.put("status", "error");
-//			result.put("code", 1);			
-//			result.put("data", "");
-//		}
-//		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users-attitude-confs/" + userAttitudeConfId + "] ended.");
-//		return result;
-//	}
+	/**
+	 * G/W 근태관리 [DELETE] 사용자별 근태설정 삭제
+	 */
+	@RequestMapping(value = "/rest/users/ezattitude/user-attitude-confs", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deletetUserAttitudeConf(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users-attitude-confs] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String selecUserList = request.getParameter("selecUserList");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			ezAttitudeService.deleteAttitudeUserConfig(info.getTenantId(), selecUserList);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users-attitude-confs] ended.");
+		return result;
+	}
 	
 	/**
 	 * G/W 근태관리 [POST] 관리자 권한 추가
@@ -1308,36 +1334,6 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/holidays] ended.");
 		return result;
 	}
-	
-	/**
-	 * G/W 근태관리 [GET] 조직도 부서선택시 사원 리스트
-	 * 사용자별근태설정 테이블에 없는 사원리스트만 가져오는(필요없어져서 없앨까도 생각중)
-	 */
-	@RequestMapping(value = "/rest/ezattitude/users", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getDeptUserList(HttpServletRequest request) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users] started.");
-		JSONObject result = new JSONObject();
-		
-		try {
-			String key = request.getParameter("key");
-			String value = request.getParameter("value");
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			
-			List<JournalAuthorVO> userList = ezAttitudeService.getDeptUserList(info.getTenantId() + "", key, value);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", userList);
-		} catch (Exception e) {
-			result.put("code", 1);
-			result.put("status", "error");
-			result.put("data", "");
-		}
-		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users] ended.");
-		return result;
-	}
     
 	/**
 	 * G/W 근태관리 [DELETE] 수정신청 삭제
@@ -1387,7 +1383,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}/forms/formId", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getFormBody(@PathVariable String userId, HttpServletRequest request) {
-LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] started.");
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1405,6 +1401,30 @@ LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattit
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/rest/ezattitude/modifyattitude/{attModId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attModAppDetail(
+			@PathVariable String attModId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="userId", required=false) String userId) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
+		JSONObject result = new JSONObject();
+		AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(companyId, tenantId, userId, attModId);
+		try {
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] ended.");
 		return result;
 	}
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
+import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
@@ -633,7 +634,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		return holidayList;
 	}
 
-	//사용자별근태설정 테이블에 없는 사원리스트만 가져오는
+	
 	@Override
 	public List<JournalAuthorVO> getDeptUserList(String tenantId, String key,
 			String value) throws Exception {
@@ -660,5 +661,59 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("ids", ids);
 		
 		ezAttitudeDAO.delUsersModifyAtt(map);
+	}
+
+	@Override
+	public List<DeptViewVO> getDeptViewList(String userId, String companyId,
+			String tenantId) throws Exception {
+		LOGGER.debug("getDeptViewList started");
+		
+	    HashMap<String, String> map = new HashMap<String, String>();
+	    
+	    map.put("tenantId", tenantId);
+	    map.put("userId", userId);
+	    map.put("companyId", companyId);
+	    
+	    List<DeptViewVO> deptList = ezAttitudeDAO.getDeptViewList(map);
+	    
+	    LOGGER.debug("getDeptViewList ended");
+	    return deptList;
+	}
+
+	@Override
+	public void deleteAttitudeUserConfig(int tenantId, String selecUserList)
+			throws Exception {
+		LOGGER.debug("deleteAttitudeUserConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantId", tenantId);
+		
+		String[] userIdList = selecUserList.split(",");
+		
+		for (int i = 0; i < userIdList.length; i++) {
+			
+			LOGGER.debug("userId = " + userIdList[i]);
+			
+			map.put("userId", userIdList[i]);
+			
+			ezAttitudeDAO.deleteAttitudeUserConfig(map);
+		}
+		
+		LOGGER.debug("deleteAttitudeUserConfig ended");
+	}
+	
+	@Override
+	public AttitudeApplicationVO attModAppDetail(String companyId,
+			int tenantId, String userId, String attModId) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("attModId", attModId);
+		
+		return ezAttitudeDAO.attModAppDetail(map);
 	}
 }

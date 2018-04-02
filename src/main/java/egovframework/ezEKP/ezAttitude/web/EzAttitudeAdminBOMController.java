@@ -672,7 +672,7 @@ public class EzAttitudeAdminBOMController {
 		
 		//조직도 회사,부서 리스트
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezjournal/depts";
+		String url = gwServerUrl + "/rest/ezattitude/organtree/depts";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -786,7 +786,7 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug(request.getParameter("key"));
 		LOGGER.debug(request.getParameter("value"));
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezattitude/users", map, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezattitude/organtree/users", map, request,"get",null);
 //		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users", map, request,"get",null);
 		
 		String status = resultBody.get("status").toString();
@@ -897,6 +897,37 @@ public class EzAttitudeAdminBOMController {
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		
 		LOGGER.debug("attitudeUserConfSave ended");
+	}
+	/**
+	 * 사용자 근태설정 삭제
+	 * @param request
+	 * @param loginCookie
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/delAttitudeUserConf.do")
+	@ResponseBody
+	public void delAttitudeUserConf(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("delAttitudeUserConf started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String selecUserList = request.getParameter("selecUserList");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/users/ezattitude/user-attitude-confs";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("selecUserList", selecUserList);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		
+		LOGGER.debug("delAttitudeUserConf ended");
 	}
 
 }

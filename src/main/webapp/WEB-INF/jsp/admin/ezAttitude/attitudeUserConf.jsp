@@ -123,7 +123,7 @@
     			getUserConfList();
     		}
     	}
-    	//추가버튼 클릭시
+    	//추가/변경 버튼 클릭시
     	function userConfSave(){
     		selectedCheck();
     		var url = "";
@@ -141,22 +141,6 @@
     			showModalDialog("/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
     		}
     	}
-    	//변경버튼 클릭시인데 변경버튼 없앴음 ㅎㅎ
-//     	function userConfModify(){
-//     		selectedCheck();
-//     		if(selecUserList == "" || selecUserList == null) {
-//     			alert('사원을 선택해 주세요');
-//     			return;
-//     		}
-    		
-//     		if (CrossYN()) {
-//     			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
-//     			OpenWin = GetOpenWindow("/admin/ezAttitude/ModifyAttitudeUserConf.do?companyId=" + $('#ListCompany').val() + "&userList=" + selecUserList, "", "500", "630");
-//     			try { OpenWin.focus();} catch (e) { }
-//     		} else {
-//     			showModalDialog("/admin/ezAttitude/ModifyAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
-//     		}
-//     	}
     	
     	//리스트에 체크박스 selected 체크
     	function selectedCheck(){
@@ -180,6 +164,30 @@
     		}
     		
     		getUserConfList();
+    	}
+    	
+    	//삭제버튼
+    	function delUserConf() {
+    		selectedCheck();
+    		if(selecUserList == "" || selecUserList == null) {
+    			alert('사원을 선택해 주세요!');
+    		} else {
+				if (confirm("삭제하시면 선택한 사용자는 회사 설정시간에 따르게됩니다")) {
+		    		$.ajax({
+		    			data : "GET",
+		    			dataType : "json",
+		    			async : false,
+		    			url : "/admin/ezAttitude/delAttitudeUserConf.do",
+		    			data : {
+		    				companyId : pCompanyId,
+		    				selecUserList : selecUserList
+		    			},
+		    			success : function(result){
+		    				company_change();
+		    			}
+		    		});
+				}	
+    		}
     	}
     	
     </script>
@@ -212,6 +220,7 @@
 	  		<ul class="on">
 	  			<li class="off"><span onclick="userConfSave()">추가/변경</span></li>
 	  			<li class="off"><span onclick="searchUserConf(false)">검색</span></li>
+	  			<li class="off"><span onclick="delUserConf()">삭제</span></li>
 	  		</ul>
 	  	</div>
 	  	<div id="layer_popup" style="width: 500px; position: absolute; left: 10px; top: 130px; background-color: rgb(255, 255, 255); display:none;">

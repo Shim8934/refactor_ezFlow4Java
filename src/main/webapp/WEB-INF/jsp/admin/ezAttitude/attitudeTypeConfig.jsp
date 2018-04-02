@@ -41,7 +41,7 @@
 	        function listSet(result) {
                 var html = "";
                 for (var i = 0; i < result.length; i++) {
-                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='height:50px;'>";
+                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='height:50px; cursor: pointer;'>";
                     html += "<td style='width:50%;color:gray;'>" + result[i].typeName + "</td>";
                     html += "<td style='width:30%;color:gray;'><select name='useSelectBox'><option value='1'>사용</option><option value='0'>사용안함</option></select></td>";
                     html += "<td style='width:20%;color:gray;'><img id='icon' src='"+ result[i].imgPath +"' width='40px;' height='40px;' alt='' border='0'></td>";
