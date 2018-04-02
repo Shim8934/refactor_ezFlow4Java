@@ -27,7 +27,7 @@
 	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(735, 580));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                } else {
-	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(735, 555));
+	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(730, 560));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                }
 	            } else {
@@ -60,16 +60,16 @@
 	            if (CrossYN()) {
 	                schedule_select_sharedept_cross_dialogArguments[1] = select_sharedept_Complete;
 	
-	                var OpenWin = window.open("/ezSchedule/scheduleSelectShareDept.do", "scheduleSelectShareDept", GetOpenWindowfeature(280, 435));
+	                var OpenWin = window.open("/ezSchedule/scheduleSelectShareDept.do", "scheduleSelectShareDept", GetOpenWindowfeature(275, 440));
 	                try { OpenWin.focus(); } catch (e) { }
 	            } else {
 	                var rtnValue = "";
 	                var feature = GetShowModalPosition(280, 435);
 	                
 	                if (navigator.appName.indexOf("Microsoft") > -1) {
-	                    rtnValue = window.showModalDialog("/ezSchedule/scheduleSelectShareDept.do", "","dialogHeight:435px;dialogwidth:280px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
+	                    rtnValue = window.showModalDialog("/ezSchedule/scheduleSelectShareDept.do", "","dialogHeight:435px;dialogwidth:275px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
 	                } else {
-	                    rtnValue = window.showModalDialog("/ezSchedule/scheduleSelectShareDept.do", "","dialogHeight:435px;dialogwidth:280px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
+	                    rtnValue = window.showModalDialog("/ezSchedule/scheduleSelectShareDept.do", "","dialogHeight:435px;dialogwidth:275px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
 	                }
 	                if (typeof (rtnValue) != "undefined") {
 	                    if (rtnValue.split(":").length > 1) {
