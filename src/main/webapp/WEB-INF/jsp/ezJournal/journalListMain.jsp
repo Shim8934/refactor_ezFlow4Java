@@ -949,25 +949,25 @@
 		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<table class="content">
 				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"><spring:message code='ezJournal.t1' /> <spring:message code='ezJournal.t43' /></th>
+					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"> <spring:message code='ezJournal.t1' /> <spring:message code='ezJournal.t43' /></th>
 				</tr>
 				<c:if test="${listType ne 'mine' }">
 				<tr>
 					<th style="text-align: center"><spring:message code='ezJournal.t34' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="(event.keyCode==13){goToPageBySearch(); return false;}" id="searchWriter" style="width: 98%" value=""></td>
+					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchWriter" style="width: 98%" value=""></td>
 				</tr>
 				</c:if>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezBoard.t208' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 98%" value=""></td>
+					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 98%" value=""></td>
 				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezEmail.t649' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="(event.keyCode==13){goToPageBySearch(); return false;}" id="searchContent" style="width: 98%" value=""></td>
+					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchContent" style="width: 98%" value=""></td>
 				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezJournal.t22' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="(event.keyCode==13){goToPageBySearch(); return false;}" id="searchFormName" style="width: 98%" value=""></td>
+					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchFormName" style="width: 98%" value=""></td>
 				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>

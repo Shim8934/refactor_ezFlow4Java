@@ -122,14 +122,14 @@
 	   			var userId = selectedUser;
 				if (userId) {
 					opener.setSelectedUser(userId,selectedUserName);
+					//오프너의 부서 이름과 아이디 세팅
+		   			opener.deptIds = lpDepts;  
+		   			opener.deptNames = lpDeptNames;
+		   			opener.setDeptName();
+					window.close();
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
 				}
-				//오프너의 부서 이름과 아이디 세팅
-	   			opener.deptIds = lpDepts;  
-	   			opener.deptNames = lpDeptNames;
-	   			opener.setDeptName();
-				window.close();
 	   		}
 // 	   		function initSelectedUser(){
 // 	   			var selectedUser = "<c:out value='${selectedUser}'/>" ;
