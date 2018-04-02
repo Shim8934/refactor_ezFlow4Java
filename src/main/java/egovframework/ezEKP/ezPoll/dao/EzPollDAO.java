@@ -187,4 +187,8 @@ public class EzPollDAO extends EgovAbstractDAO {
 	public PollUserAnswerVO getSpecificPollUserAndAnswer(Map<String, Object> map) {		
 		return (PollUserAnswerVO) select("EzPollDAO.getSpecificPollUserAndAnswer", map);
 	}	
+	
+	public int checkUsingFile(Map<String, Object> map) {		
+		return (int) select("EzPollDAO.checkUsingFile", map);
+	}
 }

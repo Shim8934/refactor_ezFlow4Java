@@ -781,8 +781,8 @@
 			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio3">&nbsp;<spring:message code="ezEmail.t161" /></label>
 			  </c:if>
 			  &nbsp;
-			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;height:22px" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
-	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" align="absmiddle" onClick="start_search()"></a>
+			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
+	          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onClick="start_search()"></a>
 	      </span>
 	    </h1>	
         <div id="mainmenu">
@@ -962,10 +962,10 @@
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="reply_mail_onclick();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_mailreply.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.t511" /></span></td>
 		    </tr>
 		    <tr>
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="Read_StatusChange('R');HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/msg-rd.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t99000006" /></span></td>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="Read_StatusChange('R');HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/icon-msg-read.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t99000006" /></span></td>
 		    </tr>
 		    <tr>
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="Read_StatusChange('U');HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/msg-unrd.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t99000007" /></span></td>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="Read_StatusChange('U');HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/view-document.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t99000007" /></span></td>
 		    </tr>
 		    <tr>
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="move_mail_onclick();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/move.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t482" /></span></td>
@@ -993,5 +993,8 @@
 	    <div class="layerpopup"  style="z-index: 10000; position: absolute;display: none;" id="iFramePanel">
 	    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
+	    <div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
+		</div>
 	</body>
 </html>

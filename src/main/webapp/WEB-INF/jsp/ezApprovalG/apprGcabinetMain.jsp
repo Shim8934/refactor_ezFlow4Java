@@ -1224,9 +1224,9 @@
 		            var tr = selRow[0];
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
-		            var left = (parseInt(width) - 600) / 2;
-		            var top = (parseInt(heigth) - 270) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&pDeptID=&docState=015", "", "height=270px,width=793px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            var left = (parseInt(width) - 1155) / 2;
+		            var top = (parseInt(heigth) - 460) / 2;
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&pDeptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    var aprgongramline_cross_dialogArguments = new Array();
@@ -1583,8 +1583,8 @@
 	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px; width:13px;height:13px;vertical-align:middle;"><spring:message code='ezApprovalG.t106'/>
 		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px; width:13px;height:13px;vertical-align:middle;"><span id="searchwriter"><spring:message code='ezApprovalG.t445'/></span>
 		        &nbsp;
-		        <input id="txt_keyword" style="width:150px;height:22px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	            <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle;" onClick="search()"></a>
+		        <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align:top;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	            <a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onClick="search()"></a>
 	        </span>
 	    </h1>
 	
@@ -1661,8 +1661,7 @@
 	    </div>
 	    <div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">
 	        <div id="lvtDoclist"></div>
-	    </div>
-	    <br>
+	    </div>	    
 	    <div id="tblPageRayer"></div>
 	    <div id="trSubInfoTab">
 	        <%-- <div id="tabnav" style="width: 100%">

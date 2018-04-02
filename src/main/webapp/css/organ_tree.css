@@ -2,8 +2,9 @@
 {
     height: 21px;
     line-height:21px;
-    color: #666666;
-    /* padding-top: 1px; */
+    /* height: 18px; */
+    /* line-height:18px; */
+    color: #666666;    
     font-size: 12px;
     vertical-align: top;
     cursor: pointer;
@@ -18,8 +19,9 @@
 {
     height: 21px;
     line-height:21px;
-    color: #004a87;
-    /* padding-top: 1px; */
+    /* height: 18px; */
+    /* line-height:18px; */
+    color: #004a87;    
     font-size: 12px;
     font-weight: bold;
     vertical-align: top;
@@ -33,10 +35,11 @@
 }
 .node_hover
 {
-    height: 21px;
+    height: 21px;    
     line-height:21px;
-    color: #004a87;
-    /* padding-top: 1px; */
+    /* height: 18px; */
+    /* line-height:18px; */
+    color: #004a87;    
     font-size: 12px;
     font-weight: bold;
     vertical-align: top;

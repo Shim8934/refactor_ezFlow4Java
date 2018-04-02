@@ -81,9 +81,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@Autowired
 	private Properties config;
 	
-	@Autowired
-	private Properties globals;
-	
 	@Resource(name = "crypto") 
     private EgovFileScrty egovFileScrty;
 
@@ -755,6 +752,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		int tenantID = userInfo.getTenantId();        
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
+		String realPath = commonUtil.getRealPath(request);
 		String susinAdmin = "";
 		String formURL = request.getParameter("formURL");
 		String draftFlag = request.getParameter("draftFlag");
@@ -799,7 +797,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0,4) + commonUtil.separator;
+		String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0,4) + commonUtil.separator;
 		String mode = "APR";
 		String docID = isTmpDoc;
 		
@@ -5227,13 +5225,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 							
 						    sbStr.append("<tr>");
                             sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(20).getTextContent() + "|" + mhtOrHwp + "|" + strDocState + "\")'></td>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("DOCTITLE").item(k).getTextContent()) + "</TD>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent()) + "</TD>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERNAME").item(k).getTextContent()) + "</TD>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("STARTDATE").item(k).getTextContent()) + "</TD>");
-                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(3).getChildNodes().item(0).getTextContent()) + "</TD>");
-                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(4).getChildNodes().item(0).getTextContent()) + "</TD>");
-                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(5).getChildNodes().item(0).getTextContent()) + "</TD>");
+                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("DOCTITLE").item(k).getTextContent()) + "</TD>");
+                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent()) + "</TD>");
+                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERNAME").item(k).getTextContent()) + "</TD>");
+                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("STARTDATE").item(k).getTextContent()) + "</TD>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(0).getTextContent()) + "</TD>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(1).getChildNodes().item(0).getTextContent()) + "</TD>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(2).getChildNodes().item(0).getTextContent()) + "</TD>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(3).getChildNodes().item(0).getTextContent()) + "</TD>");
                             sbStr.append("</tr>");    
 						}
 					}
@@ -5318,11 +5317,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String deptID = request.getParameter("deptID");
 		String docState = request.getParameter("docState");
 		String childDocInfo = ezApprovalGService.getInnerLineInfo(docID, deptID, docState, userInfo.getCompanyID(), userInfo.getTenantId());
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		model.addAttribute("docID", docID);
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("docState", docState);
 		model.addAttribute("childDocInfo", childDocInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("ezLineInfo ended");
 		
@@ -5386,7 +5387,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("openYear", openYear);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("tmpValue", tmpValue);
-
+		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+		
  		logger.debug("getContainerInfo ended");
 		
 		return "ezApprovalG/apprGgetContainerInfo";
@@ -7264,14 +7266,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String path = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		String subFolder = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMdd"), userInfo.getOffset(), false);
 		
-		path = path + commonUtil.separator + subFolder + commonUtil.separator;
+		path += commonUtil.separator + subFolder + commonUtil.separator;
 		
-		File file = new File(path);
+		File file = new File(realPath + path);
 		
 		if (!file.exists()) {
 			file.mkdirs();
 		}
-		
+		 
 		String saveFilePath = path + docTitle + ".mht";
 		
 		FileUtils.copyFile(new File(realPath + docHref), new File(realPath + saveFilePath));

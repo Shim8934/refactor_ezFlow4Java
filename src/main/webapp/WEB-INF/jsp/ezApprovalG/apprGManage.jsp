@@ -157,15 +157,9 @@
 		        else
 		            pSusinManagerFlag = "user";
 		
-		        var nowyear = new Date().getFullYear();
-		        var nowmonth = new Date().getMonth() + 1;
-		        var nowday = new Date().getDate();
-		
-		        if (nowmonth < 10)
-		            nowmonth = "0" + nowmonth;
-		
-		        if (nowday < 10)
-		            nowday = "0" + nowday;
+		        var nowyear = nowDate.substring(0,4);
+		        var nowmonth = nowDate.substring(5,7);
+		        var nowday = nowDate.substring(8,10);
 		        
 				if (SQLPARADATA == null || SQLPARADATA == "") {
 			        SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
@@ -273,8 +267,8 @@
 		        }
 		        try {
 		        var toDay = new Date();
-		        var toDayYear = parseInt(toDay.getFullYear());
-		        var minusYear = parseInt(toDay.getFullYear()) - parseInt(pOpenYaer);
+		        var toDayYear = parseInt(nowDate.substring(0,4));
+		        var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
 		        for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
 		            AddOption(sel_year, i, i);
 		            checkBujaeInfo();
@@ -289,17 +283,12 @@
 		        if (GetSelectVal("sel_year") != "ALL")
 		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + GetSelectVal("sel_year") + "-01-01</APRSTARTDATE><APRENDDATE>" + GetSelectVal("sel_year") + "-12-31</APRENDDATE></DATA></ROOT>";
 		        else {
-		            var nowyear = new Date().getFullYear();
-		            var nowmonth = new Date().getMonth() + 1;
-		            var nowday = new Date().getDate();
+		            var nowyear = nowDate.substring(0,4);
+		            var nowmonth = nowDate.substring(5,7);
+		            var nowday = nowDate.substring(8,10);        
 		
-		            if (nowmonth < 10)
-		                nowmonth = "0" + nowmonth;
-		
-		            if (nowday < 10)
-		                nowday = "0" + nowday;
-		
-		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
+		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";		            
+
 		        }
 		
 		        if (pListTypeValue == "1") {
@@ -1195,9 +1184,9 @@
 		            var tr = oArrRows[0];
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
-		            var left = (parseInt(width) - 600) / 2;
-		            var top = (parseInt(heigth) - 270) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=793px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            var left = (parseInt(width) - 1155) / 2;
+		            var top = (parseInt(heigth) - 460) / 2;
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    function GetBujaeFlag() {
@@ -1252,8 +1241,8 @@
 		        createNodeAndInsertText(xmlpara, objNode, "ORDEROPTION", OrderOption);
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 
-		        var wWeigth = 600;
-		        var wHeigth = 400;
+		        var wWeigth = 630;
+		        var wHeigth = 450;
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
 		        var left = 0;
@@ -1704,8 +1693,8 @@
 		        <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1"><spring:message code='ezApprovalG.t106'/></label>
 			    <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2"><spring:message code='ezApprovalG.t445'/></label>
 			    &nbsp;
-			    <input id="txt_keyword" style="width:150px;height:22px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		        <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle;" onClick="search()"></a>
+			    <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		        <a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		<div id="mainmenu">
@@ -1762,7 +1751,6 @@
 		</div>
 		
 		<div id="tblPageRayer"></div>
-		<br/>
 				
 		<div id="tabnav" class="portlet_tabpart01" style="width:100%">
 			<div class="portlet_tabpart01_top" id="tab1">

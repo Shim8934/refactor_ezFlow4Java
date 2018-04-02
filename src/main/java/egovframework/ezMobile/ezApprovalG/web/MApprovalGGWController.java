@@ -756,7 +756,7 @@ public class MApprovalGGWController {
 					result.put("data", "FAIL");
 				}
 			} else if (type.equals("BAN")) {
-				rtnVal = ezApprovalGService.doBansong(docId, approvalGDocInfoVO.getAprMemberID(), "004", realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator, userInfo.getDeptId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "");
+				rtnVal = ezApprovalGService.doBansong(docId, "", approvalGDocInfoVO.getAprMemberID(), "004", realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator, userInfo.getDeptId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "");
 				
 				if (rtnVal != null && !rtnVal.equals("FALSE")) {
 					result.put("status", "ok");

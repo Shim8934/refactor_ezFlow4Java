@@ -23,7 +23,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -70,9 +69,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties config;
 	
 	@Resource(name = "EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
@@ -2150,11 +2146,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		if (boardListVO.getReadFlag().equals("Y")) {
 			ezBoardDAO.setInitReadCount(boardListVO);
+			ezBoardDAO.deleteBoardItemRead(boardListVO);
 		}
 		
 		ezBoardDAO.setApprFlag(boardListVO);
-		ezBoardDAO.deleteBoardItemRead(boardListVO);
-		
+
 		if (mode.equals("PHOTO")) {
 			photoSaveDB(boardListVO);
 		}
