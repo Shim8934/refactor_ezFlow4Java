@@ -130,7 +130,7 @@
 			
 		</script>
 	</head>
-	<body class
+	<body class="mainbody">
 	    <div id="menu">
 	        <ul>
 	            <li><span onclick="OK_Click()"><spring:message code='ezAttitude.t16' /></span></li>
