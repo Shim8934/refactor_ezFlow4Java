@@ -24,13 +24,13 @@
 	   		var lpDeptName;
 	   		//레이어팝업의 오른쪽의 부서정보
 	   		var lpDepts=[];
+	   		var lpDeptNames = [];
 	   		//오른쪽에서 없앨 부서
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
 	   	
 	   		function close_Click(){
-	   			opener.location.reload();
 	   			window.close();
 	   		}
 	   		//조직도 뿌리는 펑션
@@ -98,7 +98,15 @@
 	   				url:"/admin/ezJournal/authorDeptList.do",
 	   				data:{"userId":$(elem).attr("id")},
 	   				success: function(result){
+	   					lpDepts=[];
+	   					lpDeptNames = [];
 	   					$("#authorDeptList").html(result);
+	   					$("#authorDeptList tr").each(function(){
+	   						if($(this).attr("mine")!='Y'){
+		   						lpDepts.push($(this).attr("targetId"));
+		   						lpDeptNames.push($(this).find("td").text());
+	   						}
+	   					})
 	   				}
 	   			});
 	   		}
@@ -117,6 +125,10 @@
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
 				}
+				//오프너의 부서 이름과 아이디 세팅
+	   			opener.deptIds = lpDepts;  
+	   			opener.deptNames = lpDeptNames;
+	   			opener.setDeptName();
 				window.close();
 	   		}
 // 	   		function initSelectedUser(){

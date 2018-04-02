@@ -42,3 +42,7 @@ function journal_layer_popup(el) {
 	});
 
 }
+
+function journalKeywordClear(elem){
+	$(elem).val("");
+}
