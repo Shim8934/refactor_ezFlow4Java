@@ -527,7 +527,7 @@ public class EzEmailMailListController {
 		      
 			folder.close(false);
 			
-			returnData = sb.toString();
+			returnData = sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " ");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
