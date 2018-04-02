@@ -156,7 +156,7 @@
 		    function Editor_Complete() {
 	            if (formURL != "") {
 	                if (useEditor == "HWP") {
-	                    message.HWP_LoadFile(realPath + formURL);
+	                    message.HWP_LoadFile(formURL);
 	                    
 	                    if (message.HWP_GetDocumentElement() != "") {
 	                        var connXML= message.HWP_GetDocumentElement().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");

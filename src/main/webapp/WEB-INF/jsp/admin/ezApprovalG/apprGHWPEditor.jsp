@@ -35,7 +35,8 @@
 		    }
 	
 		    function HWP_LoadFile(formURL) {
-		        HwpCtrl.LoadFile(formURL, false);
+		    	var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(formURL);
+		        HwpCtrl.LoadFile(URL, false);
 		    }
 	
 		    function HWP_GetCloneData() {
