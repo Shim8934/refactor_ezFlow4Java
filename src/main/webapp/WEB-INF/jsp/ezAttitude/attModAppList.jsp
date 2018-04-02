@@ -34,8 +34,6 @@
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
 		
-		document.onselectstart = function () { return false; };
-		
 		$(function () {
 	        $("#Sdatepicker").datepicker({
 	            changeMonth: true,
@@ -328,7 +326,7 @@
 	    	}
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
-	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="">';
+	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="" draggable="true" style="cursor:pointer;">';
 	    		if (excel == true) {
 	    		} else {
 	    			htmlStr += '<td style="padding:0"> <input type="checkbox" class="checkAtt"' 
@@ -339,7 +337,7 @@
     			htmlStr += '<td>' + (parseInt(i) + 1) + '</td>';
     			htmlStr += '<td>' + attList[i].changeDate.substring(0,10) + '</td>';
     			htmlStr += '<td>' + attList[i].apprUserName + '</td>';
-    			htmlStr += '<td>' + attList[i].originDate + '</td>';
+    			htmlStr += '<td>' + attList[i].originDate.substring(0,19) + '</td>';
     			htmlStr += '<td>' + attList[i].changeDate.substring(11,19) + '</td>';
     			
     			if (attList[i].apprStatus == 0) {
@@ -499,7 +497,7 @@
 	    var listEventCheckbox = false;
 	    var listSubEventCheckbox = false;
 
-	    function event_listclick(obj, event) {	
+	    function event_listclick(obj, event) {
 	    	if (obj.tagName == "TD") {
 	            obj = obj.parentElement;
 	        }
@@ -507,7 +505,7 @@
 	        if (!listEventCheckbox) {
 	            if (document.getElementById("HeaderAllCheckBox").checked) {
 	                var TemplistArray = new Array();
-	                if (obj.childNodes.item(0).childNodes.item(0).checked) {
+	                if (obj.getElementsByTagName("td").item(0).childNodes.item(0).checked) {
 	                    for (var i = 0; i < listContentArry.length; i++) {
 	                        if (obj.getAttribute("id") == listContentArry[i]) {
 	                            obj.childNodes.item(0).childNodes.item(0).checked = false;
@@ -536,13 +534,10 @@
 	                    listContentArry = new Array();
 	                }
 	                if (event.shiftKey) {
-	                	console.log(1);
 	                    var SelectedPreObj = null;
 	                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
-	                    	console.log(2 + "Cnt : " +Cnt)
 	                        _RowObject = document.getElementById(listContentArry[Cnt]);
 	                        if (Cnt == 0){
-	                        	console.log(2 + "Cnt : " +Cnt)
 	                            SelectedPreObj = _RowObject;	
 	                        }
 	                        console.log(_RowObject);
@@ -559,11 +554,9 @@
 	                    var CurlistContent = obj.getAttribute("id");
 	                    var PrePoint = parseInt(PrelistContent.replace("attList_", ""));
 	                    var CurPoint = parseInt(CurlistContent.replace("attList_", ""));
-	                    console.log(PrePoint + ", " + CurPoint);
+
 	                    if (PrePoint < CurPoint) {
-							console.log("here");
 	                        for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {
-	                        	console.log(Cnt);
 	                            _RowObject = document.getElementById("attList_" + Cnt);
 	                            _RowObject.style.backgroundColor = m_strColorSelect;
 	                            _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
@@ -660,19 +653,37 @@
 	        return TargetArray;
 	    }
 	    
-	    function getCheckAll(t){
-	    	var listInputs = $(".checkAtt");
+	    function event_HeaderCheckBoxClick(obj) {
+	    	// tr 노드들 (메일 리스트의 전체 행)
+			var attNodes = $('#AttList tbody').children( 'tr:not(:first)' );
 	    	
-	    	if ($(t).is(':checked')) {      		
-	    		for (var i = 0; i < listInputs.length; i++) {
-	    			listInputs[i].checked = true;
-	    		}		    		
-	    	}
-	    	else {
-	    		for (var i = 0; i < listInputs.length; i++) {
-	    			listInputs[i].checked = false;		    			    		
-	    		}	
-	    	}
+	    	// tr 노드 (하나의 행)
+	    	var attNode;
+	    	// tr 노드 개수
+	    	var nodeCount = attNodes.length;
+	    	
+	        if (obj.checked) {
+	        	
+	            for (var i = 0; i < nodeCount; i++) {
+	            	attNode = attNodes.get(i);
+	            	attNode.getElementsByTagName("td").item(0).childNodes.item(0).checked = true;
+	            	attNode.style.backgroundColor = m_strColorSelect;
+	                //TODO: 테스트해보기 2016-06-02
+	                // dhlee: modified so that existing elements aren't merged with new ones.
+	                //listContentArry[listContentArry.length] = document.getElementById("MailList").childNodes.item(i).getAttribute("id");
+	                listContentArry[i] = attNode.getAttribute("id");
+	            }
+	        } else {
+	        	
+	            for (var i = 0; i < nodeCount; i++) {
+	            	attNode = attNodes.get(i);
+	            	
+	            	attNode.getElementsByTagName("td").item(0).childNodes.item(0).checked = false;
+	            	attNode.style.backgroundColor = m_strColorDefault;
+	            }
+	            
+	            listContentArry = new Array();
+	        }
 	    }
 	    
 	    function event_listCheckboxclick(obj) {
@@ -680,11 +691,13 @@
 	            for (var RowCnt = 0; RowCnt < obj.parentElement.parentElement.getElementsByTagName("td").length; RowCnt++) {
 	                obj.parentElement.parentElement.getElementsByTagName("td").item(RowCnt).style.backgroundColor = m_strColorSelect;
 	            }
+	            console.log(obj.parentElement.parentElement.getAttribute("id"));
 	            listContentArry[listContentArry.length] = obj.parentElement.parentElement.getAttribute("id");
 	        }
 	        else {
 	            var TemplistArray = new Array();
 	            for (var i = 0; i < listContentArry.length; i++) {
+	            	console.log(obj.parentElement.parentElement.getAttribute("id"));
 	                if (obj.parentElement.parentElement.getAttribute("id") == listContentArry[i]) {
 	                    for (var RowCnt = 0; RowCnt < obj.parentElement.parentElement.getElementsByTagName("td").length; RowCnt++) {
 	                        obj.parentElement.parentElement.getElementsByTagName("td").item(RowCnt).style.backgroundColor = m_strColorDefault;
@@ -697,6 +710,21 @@
 	            listContentArry = TemplistArray;
 	        }
 	        listEventCheckbox = true;
+	    }
+	    
+	    function mod_detail(t) {
+	    	var pheight = window.screen.availHeight;
+	        var pwidth = window.screen.availWidth;
+	        var pTop = (pheight - 760) / 2;
+	        var pLeft = (pwidth - 790) / 2;
+			var feature = GetOpenPosition(790, 760);
+			var tds =  t.getElementsByTagName("td");
+			var modAttId;
+			console.log(feature);
+			modAttId = tds[0].getElementsByTagName("input").item(0).getAttribute("value");
+			
+			window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId, "",
+		 			"height = 830px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    }
 		</script>
 </head>
@@ -748,7 +776,7 @@
                 <table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
                 	<tr> 
 						<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
-							<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)"/>
+							<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
 						</th> 
 						<th width="60px">NO.</th> 
 						<th>변경일자</th> 					
@@ -760,13 +788,14 @@
 			    	</tr>
 			    	
 			    	<c:forEach var="list" items="${list}" varStatus="i"> 
-				        <tr id = "attList_${i.count}" class="white" onclick="event_listclick(this, event)" ondblclick="">
+				        <tr id = "attList_${i.count}" class="white" draggable="true" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" style="cursor:pointer;">
 							<td style="padding:0"><input type="checkbox" class="checkAtt" id="attCheck_<c:out value ="${list.attitudeId}"/>" value=<c:out value="${list.attitudeId}" /> onclick="event_listCheckboxclick(this)"/></td>
 				          	<td>${i.count}</td>
 				          	<c:set var="changeDate" value="${list.changeDate}"/>
+				          	<c:set var="originDate" value="${list.originDate}"/>
 							<td>${fn:substring(changeDate,0,10) }</td>
 							<td>${list.apprUserName}</td>
-							<td>${list.originDate}</td>
+							<td>${fn:substring(originDate,0,19) }</td>
 							<td>${fn:substring(changeDate,11,19) }</td>
 							<c:if test="${list.apprStatus == 0}">
 				          		<td>진행</td>	

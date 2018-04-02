@@ -1376,4 +1376,27 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
 		return result;
 	}
+	
+	@RequestMapping(value = "/rest/ezattitude/modifyattitude/{attModId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attModAppDetail(
+			@PathVariable String attModId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="userId", required=false) String userId) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
+		JSONObject result = new JSONObject();
+		AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(companyId, tenantId, userId, attModId);
+		try {
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] ended.");
+		return result;
+	}
 }

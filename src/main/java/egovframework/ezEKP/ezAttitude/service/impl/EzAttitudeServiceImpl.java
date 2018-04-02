@@ -701,4 +701,18 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("deleteAttitudeUserConfig ended");
 	}
+	
+	@Override
+	public AttitudeApplicationVO attModAppDetail(String companyId,
+			int tenantId, String userId, String attModId) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("attModId", attModId);
+		
+		return ezAttitudeDAO.attModAppDetail(map);
+	}
 }

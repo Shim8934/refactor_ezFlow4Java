@@ -146,4 +146,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void deleteAttitudeUserConfig(Map<String, Object> map) {
 		delete("ezAttitudeAdminDAO.deleteAttitudeUserConfig", map);
 	}
+	
+	public AttitudeApplicationVO attModAppDetail(
+			Map<String, Object> map) {
+		return (AttitudeApplicationVO) select("ezAttitudeAdminDAO.attModAppDetail", map);
+	}
+	
 }
