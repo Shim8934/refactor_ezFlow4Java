@@ -61,10 +61,10 @@
 	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 		<div id="left">
 			<div class="left_admin" title="<spring:message code = 'main.t7' />"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code = 'main.t7' /></div>   
-		  	<h2>
-		  		<span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'main.t65' /></span>
-		    	<ul></ul>
-			</h2>
+		  	<%-- <h2>
+		  		 <span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'main.t65' /></span>
+		    	<ul></ul> <!-- 공지사항 사용안함 -->
+			</h2> --%>
 			
 			<h2><span onClick="goPage(8)" style="display:inline-block;width:100%">Quick Link</span>
 				<ul></ul>
