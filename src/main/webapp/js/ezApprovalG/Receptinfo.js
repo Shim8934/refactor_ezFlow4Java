@@ -2492,7 +2492,6 @@ function AddOrgan(_OrganId, _OrganName) {
     }
 }
 function insertOuterAll(outerdeptid, outerdeptnm, outerdeptoupath, ouReceiveDocumentYN) {
-	console.log("outerdeptid : " + outerdeptid + ", outerdeptnm : " + outerdeptnm + ", outerdeptoupath : " + outerdeptoupath + "ouReceiveDocumentYN : " + ouReceiveDocumentYN)
 	var result = "";
     var XmlDoc = null;
 
