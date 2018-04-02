@@ -1492,6 +1492,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				sb.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getDelDate().substring(0, 10), offset, false) + "</VALUE></CELL>");
 			}
 			
+			File file = new File(realPath + vo.getSealPath());
+			if ( !file.exists() ) {
+				sb.append(sb.insert(sb.indexOf("</DATA3>")+8, "<DATA4>false</DATA4>"));
+			}
+			
 			sb.append("<CELL><VALUE>" + vo.getRegUserName() + "</VALUE></CELL>");
 			sb.append("</ROW>");
 		}
@@ -1568,7 +1573,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getSealDeptList(String listFlag, String deptID, String companyID, String primary, String offset, int tenantID) throws Exception {
+	public String getSealDeptList(String realPath, String listFlag, String deptID, String companyID, String primary, String offset, int tenantID) throws Exception {
 		logger.debug("getSealDeptList started.");
 		StringBuilder sb = new StringBuilder();
 		
@@ -1603,7 +1608,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			} else {
 				sb.append("<CELL><VALUE>" + vo.getRegUserName2() + "</VALUE></CELL>");
 			}
-			
+			File file = new File(realPath + vo.getSealPath());
+			if ( !file.exists() ) {
+				sb.append(sb.insert(sb.indexOf("</DATA3>")+8, "<DATA4>false</DATA4>"));
+			}
 			sb.append("</ROW>");
 		}
 		
