@@ -8,7 +8,7 @@
 		<title><spring:message code='ezJournal.t17' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>

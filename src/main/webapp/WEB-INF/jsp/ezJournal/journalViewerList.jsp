@@ -7,7 +7,7 @@
 	<head>
 		<title><spring:message code='ezBoard.t320'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1'/>" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -40,21 +40,16 @@
 		            <c:when test="${fn:length(viewerList) ne 0 }">
 			            <c:forEach items="${viewerList }" var="viewer" varStatus="status">
 							<tr userid="${viewer.userId }" onclick="show_info(this);" style="background-color: rgb(255, 255, 255);">
-								<td align="left"
-									style="width: 130px; text-align: center; cursor: pointer;">${viewer.userName }</td>
-								<td align="left"
-									style="width: 130px; text-align: center; cursor: pointer;">${viewer.deptName }</td>
-								<td align="left"
-									style="width: 130px; text-align: center; cursor: pointer;">${viewer.jikwi }</td>
-								<td align="left"
-									style="width: 130px; text-align: center; cursor: pointer;">${viewer.date }</td>
+								<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.userName }</td>
+								<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.deptName }</td>
+								<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.jikwi }</td>
+								<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.date }</td>
 							</tr>
 			            </c:forEach>
 		            </c:when>
 		            <c:otherwise>
 		            	<tr style="background-color: rgb(255, 255, 255);">
-							<td align="left" colspan="3"
-								style="width: 130px; text-align: center; cursor: pointer;"><spring:message code='ezBoard.kbm01'/></td>
+							<td align="left" colspan="3" style="width: 130px; text-align: center; cursor: pointer;"><spring:message code='ezBoard.kbm01'/></td>
 						</tr>
 		            </c:otherwise>
 	            </c:choose>

@@ -14,7 +14,7 @@
 			</c:otherwise>
 		</c:choose>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css">
 	    <link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 	    <link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
 	    <link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
@@ -39,13 +39,13 @@
 	    	var deptId = "${info.deptID}";
 	    	// 첨부파일 최대용량
 	    	var AttachLimit = 5;
-	    	var mode = "${mode}";
-	    	var oldJournalId = "${journalId}";
+	    	var mode = "<c:out value='${mode}'/>";
+	    	var oldJournalId = "<c:out value='${journalId}'/>";
 	    	var selFormId = "";
 	    	// 수정, 임시저장, 재사용시 가져오는 수신자리스트
 	    	var receiverId = "";
 	    	var receiverName = "";
-	    	//취합할 양식 아읻디들
+	    	//취합할 양식 아이디들
 	    	var journalIdList = [];
 	    	
 			// 선택된 일지함의 양식 리스트 가져오기
@@ -95,13 +95,12 @@
 			
 			// 선택된 양식의 폼 호출
 			function getJournalForm(formId) {
-				console.log(journalIdList);
 // 				var jsonString = JSON.stringify({"mode" : mode,"formId" : formId,"typeId" : typeId,"journalIdList" : journalIdList});
 				
 				console.log("formId확인 :" + formId);
 				selFormId = formId;
 				if (mode == "temp" || mode == "reuse") {
-					if (!confirm("양식 변경시 저장된 내용은 사라집니다.")) {
+					if (!confirm("<spring:message code='ezJournal.t159'/>")) {
 						// 취소시 현재의 타입과 양식을 선택하게해야함..
 //						$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
 						return;
@@ -237,7 +236,7 @@
 		    		opener.sumFormId = "";
 					break;
 				case 'reuse': case 'modify': case 'temp':
-					selFormId = "${formId}";
+					selFormId = "${journal.formId}";
 			//		var selectedType = $("#optType");
 			//		getFormList(selectedType);
 					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
@@ -534,7 +533,7 @@
 	                        <th style="width: 10%;"><spring:message code='ezJournal.t77' /></th>
 	                        <td style="width: 40%; border-right: none;">
 	                        	<c:choose>
-	                        		<c:when test="${deptShare eq 'N' && deptShare ne null }">
+	                        		<c:when test="${journal.deptShare eq 'N' && journal.deptShare ne null }">
 			                        	<input type="radio" id="selPublic" name="isPublic" value="Y"/><label for="selPublic"><spring:message code='ezJournal.t78'/></label>
 			                        	<input type="radio" id="selPrivate" name="isPublic" value="N" checked/><label for="selPrivate"><spring:message code='ezJournal.t79'/></label>
 	                        		</c:when>
@@ -594,7 +593,7 @@
 	        var width = window.screen.availWidth;
 	        var left = (width - 500) / 2;
 	        var top = (heigth - 300) / 2;
-	        var szHref = "/ezJournal/otherJournalList.do?formId="+selFormId;
+	        var szHref = "/ezJournal/otherJournalList.do?formId=" + selFormId;
             DivPopUpShow(520, 390, szHref);
     	}
 		

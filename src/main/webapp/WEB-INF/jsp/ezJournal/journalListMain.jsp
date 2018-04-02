@@ -5,9 +5,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1'/>" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
@@ -776,7 +775,7 @@
 			<c:if test="${typeId ne null && typeId ne 'undefined' }">
 				 - <spring:message code='${typeId }'/> 
 			</c:if>
-			<span id="mailBoxInfo">[<spring:message code='ezJournal.t54'/> <span id="totalCount" style="color:#017BEC;"></span><spring:message code='ezJournal.t55'/>]</span>
+			<span id="mailBoxInfo">[<spring:message code='ezJournal.t54'/>&nbsp;<span id="totalCount" style="color:#017BEC;"></span>&nbsp;<spring:message code='ezJournal.t55'/>]</span>
 			<span style="float:right;font-weight:normal;color:black;">
 			  <c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
 	          <input name="searchKey" id="Radio1" type="radio" value="journalTitle" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezBoard.t208' /></label>

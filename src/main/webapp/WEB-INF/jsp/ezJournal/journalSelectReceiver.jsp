@@ -7,11 +7,10 @@
 	<head>
 		<title><spring:message code='ezJournal.t88'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -236,11 +235,10 @@
 	   			if (delCheck) {
 		   			$.ajax({
 		   				type : "POST",
-		   				dataType : "json",
 		   				url : "/ezJournal/deleteFavorite.do",
 		   				data : {"userId" : userId,
 	   							"favoriteId" : favoriteId},
-	   					success : function(result){
+	   					success : function(){
 	   						alert("<spring:message code='ezJournal.t138'/>");
 	   						getFavoriteList();
 		   				},
@@ -264,7 +262,7 @@
   				setAuthorViewUser();
 	   		}
 	   		
-	   		$(document).ready(function(){
+	   		$(document).ready(function() {
 	   			treeContent = ${deptList};
 	   			$("#1tab1").click();
 	            ChangeTab(document.getElementById("1tab1"));

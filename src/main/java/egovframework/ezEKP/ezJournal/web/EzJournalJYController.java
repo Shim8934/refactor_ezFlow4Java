@@ -94,8 +94,8 @@ public class EzJournalJYController extends EgovFileMngUtil {
 				logger.debug("journal확인 : " + journal.toString());
 				model.addAttribute("journal", journal);
 				model.addAttribute("content", journal.get("journalContent").toString());
-				model.addAttribute("formId", journal.get("formId").toString());
-				model.addAttribute("deptShare", journal.get("deptShare").toString());
+//				model.addAttribute("formId", journal.get("formId").toString());
+//				model.addAttribute("deptShare", journal.get("deptShare").toString());
 				JSONArray fileList = (JSONArray) journal.get("fileList");
 				if (fileList != null && fileList.size() > 0) {
 					for (int i = 0; i < fileList.size(); i++) {
@@ -164,6 +164,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	/**
 	 * 수신자 선택화면 호출
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/selectReceiver.do")
 	public String selectReceiver(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("selectReceiver started");
@@ -221,6 +222,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	/**
 	 * 수신자 즐겨찾기 저장  
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/saveReceiverFavorite.do")
 	public void saveReceiverFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) {
 		logger.debug("saveReceiverFavorite started");
@@ -391,6 +393,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	/**
 	 * 업무일지 양식 폼 호출
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/journalGetForm.do", produces="application/json; charset=utf-8")
 	@ResponseBody
 	public JSONObject journalGetForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
@@ -415,22 +418,22 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		String restUrl="";
 		JSONObject result=null;
 		switch (mode) {
-		case "new":
-			param.put("userId", userId);
-			restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
-			result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
-			break;
-		case "sum":
-			jsonParam.put("userId", userId);
-			restUrl = "/rest/ezjournal/journals-sum" ;
-			logger.debug(jsonParam.toString());
-			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
-			break;
-		default:
-			param.put("userId", userId);
-			restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
-			result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
-			break;
+			case "new":
+				param.put("userId", userId);
+				restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
+				result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+				break;
+			case "sum":
+				jsonParam.put("userId", userId);
+				restUrl = "/rest/ezjournal/journals-sum" ;
+				logger.debug(jsonParam.toString());
+				result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
+				break;
+			default:
+				param.put("userId", userId);
+				restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
+				result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+				break;
 		}
 		
 		JSONObject resultForm = new JSONObject();
@@ -530,6 +533,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	/**
 	 * 일지작성 > 첨부파일 업로드
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/uploadJournalAttach.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String uploadJournalAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
@@ -689,6 +693,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	/**
 	 * 업무일지 저장
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/saveJournal.do")
 	@ResponseBody
 	public void saveJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -751,6 +756,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	/**
 	 * 업무일지 임시저장
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/saveTempJournal.do")
 	@ResponseBody
 	public void saveTempJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -812,6 +818,8 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	/**
 	 * 다른일지 가져오기 호출
 	 */
+	/*
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/getOtherJournal.do")
 	@ResponseBody
 	public String getOtherJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -855,10 +863,12 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		logger.debug("getOtherJournal ended");
 		return "ezJournal/journalGetOther";
 	}
+	*/
 	
 	/**
 	 * 업무일지 삭제 (한건 또는 여러건)
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/journalDelete.do")
 	@ResponseBody
 	public void journalDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -868,11 +878,11 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		
 		String journalId = request.getParameter("journalId");
 		String listType = "";
-		logger.debug("journalId는? : " + journalId);
 		
 		if (request.getParameter("listType") != null) {
 			listType = request.getParameter("listType");
 		}
+		logger.debug("journalId : " + journalId + ", listType : " + listType);
 		
 		JSONObject param = new JSONObject();
 		param.put("userId", userInfo.getId());
