@@ -2239,7 +2239,39 @@
 		]]>
 	</delete>
 	
+	<select id="EzPortalAdminDAO.saveDelPortletInfo_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+      		FROM
+      			DUAL
+      		WHERE
+      			NOT EXISTS ( 	SELECT
+      									UID_ 
+                         			FROM
+                         				TBL_PORTALPAGE_ITEMS_CHANGE 
+                         			WHERE
+                         				UID_ = #v_pUID#
+                         			AND
+                         				PAGEUID = #v_pPAGEUID#
+                         			AND
+                         				OWNERPAGEUID = #v_pOWNERPAGEUID#
+                         			AND
+                         				CREATORID = #v_pCREATORID#
+                         			AND
+                         				TENANT_ID = #tenantID#	 )
+		]]>
+	</select>
 	
+	<insert id="EzPortalAdminDAO.saveDelPortletInfo_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PORTALPAGE_ITEMS_CHANGE
+      			( UID_, PAGEUID, OWNERPAGEUID, CREATORID, CREATORNAME, CHANGEFLAG, USERPAGEUID, TENANT_ID )
+      		VALUES 
+      			( #v_pUID#, #v_pPAGEUID#, #v_pOWNERPAGEUID#, #v_pCREATORID#, #v_pUSERNAME#, #v_pCHANGEFLAG#, #v_pUSERPAGEUID#, #tenantID# )
+		]]>
+	</insert>
 
 </sqlMap>
 

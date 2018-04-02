@@ -168,9 +168,8 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		params.put("lang", lang);
 		params.put("startDate", startDate);
 		params.put("endDate", endDate);
-		
+
 		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHist(params);
-		
 		logger.debug("getLoginHist ended.");
 		
 		return list;
