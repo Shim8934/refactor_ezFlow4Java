@@ -3294,17 +3294,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (!file.exists()) {
 				file.mkdirs();
 			}
-<<<<<<< HEAD
 			
 			if (extension.equals(".hwp")) {
 				stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
 			} else {
 				stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			}
-=======
->>>>>>> master
-			
-			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 
 			bos = new FileOutputStream(saveFileName);
 			
