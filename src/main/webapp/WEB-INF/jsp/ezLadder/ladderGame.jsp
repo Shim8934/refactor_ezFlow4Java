@@ -36,11 +36,10 @@
 		var lad = "${vo.lineArray}";
 		var ladArr = lad.split('');
 		var height = 10;
+		var resultUser = new Array;
+		var seeAllcnt = 0;
 		
 		window.onload = function() {
-			/* canvas = document.getElementById("ladderCanvas");
-			if (canvas == null || canvas.getContext == null) return;
-			ctx = canvas.getContext("2d"); */
 			draw();
 		}
 		$(window).unload(function() {
@@ -128,8 +127,24 @@
 			});
 			
 			
-			$("#immediatelyDirection").on("click", function() {
-				alert("바로 보기");
+			/** 바로 보기 */
+			$("#immediatelyDirection").on("click", function() { 	
+				if(seeAllcnt == 0) {
+					<c:forEach items="${list }" var="ladderLineList">	
+						resultUser.push("${ladderLineList.resultUserName}");
+					</c:forEach>
+					var len = resultUser.length;
+					var html = "";
+					
+					$("#seeAll").html("");
+					if(resultUser !== null) {
+						for(var i = 0; i < len; i++) {
+							html = "<li class='resultUsers'><div id='resultUser" + i + "'>"	+ resultUser[i] + "</div></li>";		
+							$("#seeAll").append(html);
+						}
+					}
+					seeAllcnt++;
+				}
 			});
 		
 		});
@@ -359,9 +374,8 @@
 			addCommentView = [];
 		}
 		
-		// 삭제
+		/** 삭제 */
 		function deleteLadder(idx) {
-		
 			allData = [idx, searchSelect, searchInput, mode, currPage, back ];	
 		
 			if (confirm('삭제 하시겠습니까?')) {
@@ -431,7 +445,6 @@
 					$("#attendantList").append(html);
 					$("#itemList").append("<li class='item'>" + items[i] + "</li>");
 				}
-				
 			}
 			add_user_change_ulsize(attendants["id"].length);
 			
@@ -697,6 +710,8 @@
 	        }
 	        ladder.append(html);
 	    }
+	    
+		// =========================================
 	</script>
 	<style type="text/css">
 		
@@ -723,33 +738,6 @@
 		    z-index: 0;
 		}
 		
-		
-		.user-wrap{
-		    width: 60px;
-		    position: absolute;
-		    top : -52px;
-		    text-align: center;
-		}
-		.user-wrap input{
-		    width:100%;
-		    height: 20px;
-		    text-align: center;
-		    border-radius:3px;
-		    border: 1px solid #ddd;    
-		}
-		.user-wrap button{
-		    margin: 5px 0 0 0;    
-		    border:0;
-		    width: 20px;
-		    height: 20px;
-		    border-radius: 10px;
-		    text-align: center;
-		    line-height: 20px;
-		    font-weight: bolder;
-		    color: #fff;
-		    cursor: pointer;
-		    outline: 0;
-		}
 		ul {
 		    list-style:none;
 		    margin:0;
@@ -775,7 +763,6 @@
 			float: left;
 			
 		}
-		
 		
 		.cmtdelete, .cmtmodify {
 			cursor: pointer;
@@ -830,6 +817,17 @@
     		line-height:30px;
 		}
 		
+		.resultUsers {
+			color: white;
+			font-style: italic;
+			background: #000;
+			font-size: 1rem;
+			position: relative;
+			top: -10px;
+			line-height:30px;
+			text-align: center;
+			float: left;
+		}
 	</style>
 </head>
 	<body class="mainbody">
@@ -881,14 +879,12 @@
 										</div>
 									</c:if>
 									<c:if test="${vo.status eq 1}">
-										
 										<div id="ladder" class="ladder">
 									         <canvas class="ladder_canvas" id="ladder_canvas" width="1550" height="600"></canvas>
 									    </div>
-										
-										
 									</c:if><br><br><br>						
-								<ul id="itemList"></ul>	
+								<ul id="itemList"></ul>
+								<c:if test="${vo.status eq 1}"><br><ul id="seeAll"></ul></c:if>	
 							</div>
 						</div>
 					</td>
