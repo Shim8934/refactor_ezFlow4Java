@@ -621,6 +621,10 @@
 	    		}
     	   }
        }
+       function changeCount(value) {
+    	   blockSize = value;
+    	   getfileList(folderId);
+       }
        
     </script>
 </head>
@@ -685,7 +689,7 @@
                     <tr>
                         <th><spring:message code='ezBoard.t10021' /></th>
                         <td>
-                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="ListCount(this.value);">
+                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="changeCount(this.value);">
                                 <option value="10">10</option>
                                 <option value="20">20</option>
                                 <option value="30">30</option>

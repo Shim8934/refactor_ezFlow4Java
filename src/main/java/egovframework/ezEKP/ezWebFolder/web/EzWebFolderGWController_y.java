@@ -467,6 +467,7 @@ public class EzWebFolderGWController_y {
 			String deptId = common.getDeptId();
 			int tenantId = common.getTenantId();
 			String offset = common.getOffSet();
+			pEnd = pStart + listCount;
 			fileList = service.getFileList(folderId, folderType, userId, deptId, tenantId , common.getCompanyId(),
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, searchListCount, pStart, pEnd);
