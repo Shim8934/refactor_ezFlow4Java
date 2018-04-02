@@ -45,15 +45,6 @@
 		<result property="memberID"				column="MEMBER_ID"				columnIndex="1"/>
 		<result property="accessLvl"					column="ACCESS_LVL"			columnIndex="1"/>
 	</resultMap>
-	
-	<!-- <procedure id="EzResourceAdminDAO.addClsData" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_ADDCLSDATA(#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#
-			, #v_P_Brd_Explain#, #v_P_AccessNoty#, #v_P_CompanyID#, #v_P_Brd_NM2#, #v_P_IS_COMPANY#)}
-		]]>
-	</procedure> -->
-	
-	
         
      <select id="EzResourceAdminDAO.addClsData_S1" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -130,13 +121,6 @@
 		]]>
 	</insert>
 	
-	<!-- <procedure id="EzResourceAdminDAO.modifyClsData" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_MODIFYCLSDATA(#v_P_Brd_ID#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#
-			, #v_P_Brd_Explain#, #v_P_AccessNoty#, #v_P_CompanyID#, #v_P_Brd_NM2#)}
-		]]>
-	</procedure> -->
-	
 	<update id="EzResourceAdminDAO.modifyClsData" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -161,11 +145,6 @@
 		]]>
 	</update>
 	
-	<!-- <procedure id="EzResourceAdminDAO.saveACL" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_SAVEACL(#v_P_ResID#, #v_P_Dept_YN#, #v_P_SDA_YN#, #v_P_Member_nam#, #v_P_Member_ID#, #v_P_Access_lvl#, #v_P_CompanyID#)}
-		]]>
-	</procedure> -->
 	<update id="EzResourceAdminDAO.saveACL_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -196,11 +175,6 @@
 		]]>
 	</insert>
 	
-	<!-- <procedure id="EzResourceAdminDAO.delTBL_RS_RESACLl" parameterClass="Map"  resultClass="Integer">
-		<![CDATA[
-			{CALL EZSP_DELTBL_RS_RESACLL(#v_P_RESID#, #v_P_COMPANYID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-		]]>
-	</procedure> -->
 	<delete id="EzResourceAdminDAO.delResAcll" parameterClass="Map">
 		<![CDATA[
 			DELETE
@@ -214,11 +188,6 @@
 		]]>
 	</delete>
 	
-	<!-- <procedure id="EzResourceAdminDAO.chgClsOrder" parameterClass="Map">
-		<![CDATA[
-			{CALL EZSP_CHGCLSORDER(#v_P_SourceID#, #v_P_TargetID#, #v_P_CompanyID#)}
-		]]>
-	</procedure> -->
 	<select id="EzResourceAdminDAO.chgClsOrder_S1" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
@@ -248,6 +217,22 @@
    				TENANT_ID = #tenantID#	
 		]]>
 	</select>
+    
+    <update id="EzResourceAdminDAO.updateBoardName" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_RS_BRD
+            SET 
+                BRD_NM = #v_DISPLAYNAME#,
+                BRD_NM2 = #v_DISPLAYNAME2#
+            WHERE
+                BRD_ID = #v_BOARD_ID#
+            AND
+                BRD_COMPANY = #v_CN#
+            AND
+                TENANT_ID = #v_TENANT_ID# 
+        ]]>
+    </update>
 	
 	<update id="EzResourceAdminDAO.chgClsOrder_U1" parameterClass="Map">
 		<![CDATA[
@@ -279,11 +264,6 @@
 		]]>
 	</update>
 	
-	<!-- <procedure id="EzResourceAdminDAO.moveCls" parameterClass="Map">
-		<![CDATA[
-			{CALL EZSP_MOVECLS(#v_P_SourceID#, #v_P_ParentID#, #v_P_CompanyID#)}
-		]]>
-	</procedure> -->
 	<select id="EzResourceAdminDAO.moveCls_S1" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
@@ -373,12 +353,6 @@
 		]]>
 	</update>
 	
-	<!-- <procedure id="EzResourceAdminDAO.delClsData" parameterClass="Map">
-		<![CDATA[
-			{CALL EZSP_DELCLSDATA(#v_P_Brd_ID#, #v_P_CompanyID#)}
-		]]>
-	</procedure> -->
-	
 	<delete id="EzResourceAdminDAO.delClsData_D1" parameterClass="Map">
 		<![CDATA[
 			DELETE
@@ -464,11 +438,6 @@
 		]]>
 	</delete>
 	
-	<!-- <procedure id="EzResourceAdminDAO.getSubClsList" parameterClass="Map"  resultMap="resGetSubClsListVO">
-		<![CDATA[
-			{CALL EZSP_GETSUBCLSLIST(#v_P_ParentID#, #v_P_CompanyID#, #v_P_UserID#, #v_P_DeptPath#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	<select id="EzResourceAdminDAO.getSubClsList" parameterClass="Map"  resultMap="resGetSubClsListVO">
 		<![CDATA[
 			SELECT
@@ -538,11 +507,6 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzResourceAdminDAO.getAdmSubClsList" parameterClass="Map"  resultMap="resGetSubClsListVO">
-		<![CDATA[
-			{CALL EZSP_GETADMSUBCLSLIST(#v_P_ParentID#, #v_P_CompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	<select id="EzResourceAdminDAO.getAdmSubClsList" parameterClass="Map"  resultMap="resGetSubClsListVO">
 		<![CDATA[
 			SELECT
@@ -561,11 +525,6 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzResourceAdminDAO.getClsAclList" parameterClass="Map"  resultMap="resGetClsAclListVO">
-		<![CDATA[
-			{CALL EZSP_GETCLSACLLIST(#v_P_Brd_ID#, #v_P_CompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	<select id="EzResourceAdminDAO.getClsAclList" parameterClass="Map"  resultMap="resGetClsAclListVO">
 		<![CDATA[
 			SELECT
@@ -584,12 +543,6 @@
        			TENANT_ID = #tenantID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzResourceAdminDAO.getBrdInfo" parameterClass="Map"  resultMap="resGetSubClsListVO">
-		<![CDATA[
-			{CALL EZSP_GETBRDINFO(#v_PBRDID#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzResourceAdminDAO.getBrdInfo" parameterClass="Map"  resultMap="resGetSubClsListVO">
 		<![CDATA[
