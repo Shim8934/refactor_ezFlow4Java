@@ -36,9 +36,13 @@
 	    	
 	    	//부서선택
 	    	function selectDept(){
-	    		var url = "/admin/ezJournal/selectAuthorDept.do";
-				url+="?companyId="+companyId+"&userId="+selectedUser;
-				window.open(url, "authorDept", "width=500, height=550");
+	    		if(!selectedUser){
+	    			alert("<spring:message code='ezPortal.t23'/>");
+	    		}else{
+		    		var url = "/admin/ezJournal/selectAuthorDept.do";
+					url+="?companyId="+companyId+"&userId="+selectedUser;
+					window.open(url, "authorDept", "width=500, height=550");
+	    		}
 	    	}
 	    	 
 	    	//부서 이름 세팅

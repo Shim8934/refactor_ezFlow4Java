@@ -377,7 +377,7 @@
 								                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 								                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 				                                        </select>
-				                                        <input type="text" id="keyword" value="" style="width: 130px; margin: 0px;" />
+				                                        <input type="text" id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" value="" style="width: 130px; margin: 0px;" />
 				                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 				                                    </div>
 				                                    <div style="float:right">
