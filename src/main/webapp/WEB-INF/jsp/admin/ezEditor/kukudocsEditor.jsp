@@ -279,7 +279,7 @@
 	            width : '100%',
 	            height : '100%',
 	            lang : lang,
-	            hiddenMenu : hiddenMenu,
+	            customAlignMenu : customAlignMenu,
 	            useMenuBar : false,
 	            useHTMLMode : useHTMLMode,
 	            useTextMode : false,
