@@ -26,7 +26,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
-import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
+import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzAttitudeService")
@@ -632,7 +632,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		return holidayList;
 	}
 
-	//사용자별근태설정 테이블에 없는 사원리스트만 가져오는(필요없어져서 없앨까도 생각중)
+	//사용자별근태설정 테이블에 없는 사원리스트만 가져오는
 	@Override
 	public List<JournalAuthorVO> getDeptUserList(String tenantId, String key,
 			String value) throws Exception {

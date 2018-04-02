@@ -786,8 +786,8 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug(request.getParameter("key"));
 		LOGGER.debug(request.getParameter("value"));
 		
-//		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezattitude/users", map, request,"get",null);
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users", map, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezattitude/users", map, request,"get",null);
+//		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users", map, request,"get",null);
 		
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {		
