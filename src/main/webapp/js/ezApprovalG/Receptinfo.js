@@ -1434,7 +1434,7 @@ function btnSearchDept_onClick_Complete(reParam) {
 
             var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"][i]);
             if (DuplicateFlag) {
-                Resultxml.async = false;
+              //  Resultxml.async = false;
                 if(approvalFlag == "G") {
                 	Resultxml = loadXMLFile(strLangEtcFile1);
                 } else {
