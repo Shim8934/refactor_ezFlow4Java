@@ -569,8 +569,28 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
 						
 						if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+//							Document docXML2 = null;
+//							boolean checkPer = false;
+//		                    String MDept = ezApprovalGService.getDocManageDeptInfo(userInfo.getDeptID(), tenantID);
+//		                    String [] deptArray = MDept.split(",");
+//		                    for (int i = 0; i < deptArray.length; i++) {
+//		                        if (!deptArray[i].trim().equals("")) {
+//		                            String mDpet = deptArray[i].trim().substring(deptArray[i].trim().indexOf("'") + 1, deptArray[i].trim().lastIndexOf("'")).toUpperCase().trim();
+//		                            if (!mDpet.equals(userInfo.getDeptID().toUpperCase().trim())) {
+//		                            	docXML2 = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), mDpet, mode, userInfo.getCompanyID(), tenantID, docState);
+//		                                if (docXML2.getElementsByTagName("DOCID").getLength() > 0) {
+//		                                    checkPer = true;
+//		                                    break;
+//		                                }
+//		                            }
+//		                        }
+//		                    }
+//
+//		                    if (!checkPer) {
+//		                        return "NOTPERMISSION";
+//		                    }
 							return "NOTPERMISSION";
-						}
+		                }
 					}
 				}
 			} else if (mode.toUpperCase().equals("END")) {
@@ -3274,13 +3294,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (!file.exists()) {
 				file.mkdirs();
 			}
+<<<<<<< HEAD
 			
 			if (extension.equals(".hwp")) {
 				stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
 			} else {
 				stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			}
+=======
+>>>>>>> master
 			
+			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
+
 			bos = new FileOutputStream(saveFileName);
 			
 			int bytesRead = 0;
@@ -5355,11 +5380,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String deptID = request.getParameter("deptID");
 		String docState = request.getParameter("docState");
 		String childDocInfo = ezApprovalGService.getInnerLineInfo(docID, deptID, docState, userInfo.getCompanyID(), userInfo.getTenantId());
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		model.addAttribute("docID", docID);
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("docState", docState);
 		model.addAttribute("childDocInfo", childDocInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("ezLineInfo ended");
 		

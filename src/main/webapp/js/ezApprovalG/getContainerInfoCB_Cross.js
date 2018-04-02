@@ -84,7 +84,7 @@ function selFirstRow(Resultxml) {
     else {
         DocID = "";
         pURL = "";
-        DeptID = "";
+        WriterID = "";
         getDataInfo();
     }
 }
@@ -116,7 +116,7 @@ function processRowClick(tr) {
     if (DocList_Flag != "CABINET") {
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
-        DeptID = tr.getAttribute("DATA11");
+        WriterID = tr.getAttribute("DATA19");
 
         if (typeof (SendOfferCheckBtn) != "undefined")
             SendOfferCheckBtn(DocID, UserID);
@@ -124,7 +124,7 @@ function processRowClick(tr) {
         if (DocList_Flag == "RECORD") {
             if (document.getElementById("tdGongRam")) {
                 /* 2015-07-06 표준모듈:수정 - KSK */
-                if (tr.getAttribute("DATA15") == "011" && (arr_userinfo[4].trim() == DeptID.trim() || DeptID.trim() == "")) {
+                if (tr.getAttribute("DATA15") == "011" && (arr_userinfo[1].trim() == WriterID.trim())) {
                 	document.getElementById("tdGongRam").style.display = "";
                 } else {
                 	document.getElementById("tdGongRam").style.display = "none";
@@ -132,7 +132,7 @@ function processRowClick(tr) {
             }
         }
 
-        if (DeptID == arr_userinfo[4]) {
+        if (WriterID == arr_userinfo[1]) {
             try {
                 if (typeof (tr.cells[12].innerHTML) == "string") {
                     // START
@@ -413,21 +413,21 @@ function processRowClick(tr) {
 
         DocID = GetAttribute(tr,"DATA1");
         pURL = GetAttribute(tr,"DATA2");
-        DeptID = GetAttribute(tr,"DATA11");
+        WriterID = GetAttribute(tr,"DATA19");
 
         if (typeof (SendOfferCheckBtn) != "undefined")
             SendOfferCheckBtn(DocID, UserID);
 
         if (DocList_Flag == "RECORD") {
             if (document.getElementById("tdGongRam")) {
-                if (GetAttribute(tr, "DATA15") == "011" && (arr_userinfo[4] == DeptID || DeptID == ""))
+                if (GetAttribute(tr, "DATA15") == "011" && (arr_userinfo[1] == WriterID))
                     document.getElementById("tdGongRam").style.display = "";
                 else
                     document.getElementById("tdGongRam").style.display = "none";
             }
         }
 
-        if (DeptID == arr_userinfo[4]) {
+        if (WriterID == arr_userinfo[1]) {
             try {
                 if (typeof (tr.cells[12].innerHTML) == "string") {
                     

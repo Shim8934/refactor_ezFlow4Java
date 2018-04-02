@@ -698,8 +698,10 @@
 		        var SealWidth = parseInt(getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[1], "VALUE")));
 		        var SealHeight = parseInt(getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[2], "VALUE")));
 		        var fields = message.GetFieldsList();
+		        var SealCheck = getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[0], "DATA4"));
 		        field = message.GetListItem(fields, "sealsign");
-		        if (field) {
+		        
+		        if (field && SealCheck != "false") {
 		            var signWidth = getPixel(SealWidth) + "px";
 		            var signHeight = getPixel(SealHeight) + "px";
 		            strimg = "<img src='" + encodeURI(SealHref) + "' border=0 embedding='1' ";
@@ -731,6 +733,8 @@
 		            field.height = getPixel(SealHeight);
 		            field.setAttribute("surl", SealHref);
 		            stampFlag = true;
+		        } else {
+		        	alert("<spring:message code='ezApprovalG.t194'/>")
 		        }
 		    }
 		    function GetByte(pStr) {

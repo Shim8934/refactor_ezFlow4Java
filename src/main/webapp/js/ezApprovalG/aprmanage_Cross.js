@@ -664,7 +664,7 @@ function openUserInfo() {
             var pDocID = GetAttribute(tr, "DATA3");
             var pDeptID = GetAttribute(tr, "DATA4");
             if (pCheckval == "Y") {
-                window.open("/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=012", "", "height=260px,width=655px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + GetOpenPosition(580, 200));
+                window.open("/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=012", "", "height=460px,width=1155px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + GetOpenPosition(1155, 460));
             } else {
                 var heigth = window.screen.availHeight;
                 var width = window.screen.availWidth;

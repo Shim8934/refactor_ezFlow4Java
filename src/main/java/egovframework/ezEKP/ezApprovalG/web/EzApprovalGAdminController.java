@@ -2331,7 +2331,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		//'pListFlag : "LIST" - 리스트 가져오기, "ADMIN" - 대장 가져오기(관리자)
-		String result = ezApprovalGAdminService.getSealDeptList(listFlag, deptID, companyID, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getSealDeptList(commonUtil.getRealPath(request),listFlag, deptID, companyID, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
 		
 		logger.debug("getDeptSealList ended.");
 

@@ -43,6 +43,9 @@
 		var g_windowReference = null;
 		var qst_ID 			  = "<c:out value='${question.qstId}'/>";
 		var flag			  = 0;
+		var tempObj			  = "";
+		var optImgPrevArr 	  = [];
+		var optImgOld		  = [];
 		
 		window.onunload = function() {
 			if (mode == "modify" && flag == 0) {
@@ -63,7 +66,9 @@
 		    			questionId : qst_ID
 		    		}
 		    	});   
-			}			
+			}	
+			
+			optImgPrevDelete();
     	}; 
 		window.onload = function() {	
 			preProcessing();		
@@ -85,6 +90,8 @@
 		    		    $('#columnsbnk li').eq(i).children("span").text(i + 1);
 		    		    $('#columnsbnk li').eq(i).children("input").get(0).id = 'option'+(i+1);
 		    		    $('#columnsbnk li').eq(i).children("input").get(0).name = 'option'+(i+1);
+		    		    var optImages = $('#columnsbnk li').eq(i).children("img");
+		    		    optImages.get(optImages.length - 1).setAttribute("_optimgid", "option"+(i+1));
 		    		}
 					//setBorder();
 		    	}
@@ -134,6 +141,10 @@
 				for (var j = 0; j < listOfOptions.length; j++) {
 					var _id = "option" + (j + 1);
 					document.getElementById(_id).value =  listOfOptions[j].content;
+					if(listOfOptions[j].filePath !== null){
+						optImageTagAppend(listOfOptions[j], "", "");
+						optImgOld.push(listOfOptions[j].filePath);
+					}
 				}
 				
 				/***************************Set other fields**********************************/
@@ -357,6 +368,9 @@
 			    	$('#receiverBttn').hide();
 			    }
 			}); 
+			
+			//썸네일 이미지에 레이어 팝업 기능 관련
+			addThumbnailEvent();
 		}
 		
 		function dateCompare(dateText, SDate) {
@@ -387,8 +401,11 @@
     		
     		for (var i = 1; i <= totalOptions; i++) {
     			var optionId = "#option" + i;
+    			var pLastChild = $(optionId).parent()[0].lastChild;
+    			var pLastChildNodeName = pLastChild.nodeName.toLowerCase();
+    			var imgFlag = pLastChildNodeName === "img" && pLastChild.hasAttribute("_fileinfo");
     			
-    			if ($(optionId).val() == "") {
+    			if ($(optionId).val() == "" && !imgFlag) {
     				check_flag = 1;
     				break;
     			}
@@ -521,7 +538,7 @@
 				$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
 			} */					
 			$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
-			$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
+			$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n <img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)" /> \n </li>');
 		}
 		
 		function menuQst_List() {
@@ -711,9 +728,23 @@
 		    	var listtable = document.getElementById("filelist");
 		    	var filelist = GetChildNodes(listtable);		    	
 				
+		    	var optListTable = document.getElementById("columnsbnk");
+		    	var optList = GetChildNodes(optListTable);		    	
+		    	
 		    	for (var i = 0; i < filelist.length; i++) {			    	    
 		    	    document.getElementById("hidFilePath").value += GetAttribute(filelist[i], "fileinfo") + "|";
 		    	}
+		    	
+		    	for (var i = 0; i < optList.length - 1; i++) {			    	    
+		    		if(optList[i].lastChild !== null && optList[i].lastChild.className === "thumbnail"){
+		    			var _fileinfo = GetAttribute(optList[i].lastChild, "_fileinfo");
+		    			var _optimgid = GetAttribute(optList[i].lastChild, "_optimgid");
+		    			document.getElementById("hidOptImgFilePath").value += _fileinfo+ "//" +_optimgid + "|";
+		    			makeDeleteImgList(_fileinfo);
+		    		}
+		    	}
+		    	optImgPrevArr = optImgPrevArr.concat(optImgOld);
+		    	
 		    	if (mode == "modify") {
 		    		var qstID = "<c:out value='${question.qstId}'/>";
 		    		document.getElementById("hidModifyInfo").value = qstID;
@@ -721,6 +752,7 @@
 		    	}
 				
 		    	document.getElementById("hidFilePath").value = document.getElementById("hidFilePath").value.substring(0, document.getElementById("hidFilePath").value.length - 1);               	  
+		    	document.getElementById("hidOptImgFilePath").value = document.getElementById("hidOptImgFilePath").value.substring(0, document.getElementById("hidOptImgFilePath").value.length - 1);               	  
             	document.frmCreate.qst_title = encodeURIComponent(document.frmCreate.qst_title); 
             	document.frmCreate.message = encodeURIComponent(document.frmCreate.message);             	
             	document.frmCreate.submit();
@@ -732,9 +764,15 @@
     		var count = 0;
     		for (var i = 1; i <= totalOptions; i++) {
     			var optionId = "#option" + i;
+    			var pLastChild = $(optionId).parent()[0].lastChild;
+    			var pLastChildNodeName = pLastChild.nodeName.toLowerCase();
     			
     			if ($(optionId).val().replace(/ /g,'') != "") {    				
     				count ++;
+    			}
+    			else if (pLastChildNodeName === "img" && pLastChild.hasAttribute("_fileinfo")) {
+    				count ++;
+    				$(optionId).val(pLastChild.getAttribute("_fileinfo"));
     			}
     			else {
     				$(optionId).val("");
@@ -844,12 +882,198 @@
 	        document.getElementById("file").click();
 	    }
 	    
+	    function optUploadBtn(obj){
+	    	tempObj = obj;
+	        document.getElementById("optionfile").click();
+	    }
+	    
+	    function optImgUpload(){
+	    	var fd = new FormData();		    	
+	    	var _file = document.getElementById("optionfile").files[0];    	
+	    	var ext = _file.name.split('.').pop().toLowerCase();
+	    	
+            if (_file.size / 1024 / 1024 > 5) {
+                alert("<spring:message code = 'ezPoll.t208' />");
+                return;
+            }	 
+            
+            fd.append("fileToUpload", _file);			
+	        xhr.addEventListener("load", uploadOptImgComplete, false);
+	        
+	        if ( ext == "jpg" || ext == "png" || ext == "bmp") {
+	    	    xhr.open("POST", "/ezPoll/uploadFile.do");
+	    	    xhr.send(fd); 
+	        }
+	        else {
+	        	alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp)");
+	        	return false;
+	        }
+	    }
+	    
+	    function uploadOptImgComplete(evt) {		    	
+	    	xhr.removeEventListener("load", uploadOptImgComplete);
+	    	//clearFileInput(document.getElementById("optionfile"));
+	    	var fileinfo = getNodeText(SelectNodes(loadXMLString(xhr.responseText), "ROOT/NODES/DATA")[0]);
+	    	optImgPrevArr.push(fileinfo);
+	        showAttachedOptFile(xhr.responseText);		       
+	    }
+	    
+	    function showAttachedOptFile(strXML) {
+	    	if (strXML == "ERROR") {    	
+	            alert("Upload Failed!");
+	            return;
+	        }		    	
+	    	
+	        var xml = loadXMLString(strXML); 	        	        
+	    	var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]);		
+	    	var orgFileName = fileinfo.split("/")[1];		 	    	
+	    	var _ext = orgFileName.split('.').pop().toLowerCase();		 
+	    	var imagePreview = null;
+	    	
+	    	var selOptRow = tempObj.parentNode;
+	    	var optimgid = selOptRow.getElementsByTagName('input')[0].id;
+	    	
+	    	//썸네일 이미지 처리.
+	    	if(selOptRow.getElementsByClassName("thumbnail").length !== 0){
+	    		cancelAttachOptImgFile(selOptRow);
+	    		optImageTagAppend(fileinfo, selOptRow, optimgid);
+	    	}else{
+	    		optImageTagAppend(fileinfo, selOptRow, optimgid);
+	    	}
+	    }
+	    
+	    function cancelAttachOptImgFile(obj) {
+	    	obj = obj.tagName.toLowerCase() === "img" ? obj : obj.lastChild;
+			/* 미리보기 첨부파일을 한번에 모아서 지우기 위해 주석처리 */
+	    	/* var type = obj.getAttribute("_type");
+			if (type == "file") {
+				//Send delete file request to server
+		    	var fileinfo = obj.getAttribute("_fileInfo");		    	
+		    	var orgFileName = fileinfo.split("/")[1];
+		    	var ext = orgFileName.split('.').pop().toLowerCase();
+		        var fd = new FormData();		        
+		        fd.append("fileToDelete", fileinfo);
+		        
+		        if (ext == "jpg" || ext == "png" || ext == "bmp") {
+			        xhr.open("POST", "/ezPoll/deleteFile.do");
+			        xhr.send(fd);
+		        }
+		        
+			} */	
+			$("#imgPopupBox").removeClass("imgPopupBox").addClass("imgPopupBoxOff");
+    		$("#imgPopup").removeClass("imgPopup").addClass("imgPopupOff");
+    		$(obj).remove();
+	    }
+	    
+	    function clearFileInput(ctrl) {
+	    	  try {
+	    	    ctrl.value = null;
+	    	  } 
+	    	  catch(ex) { }
+	    	  
+	    	  if (ctrl.value) {
+	    	    ctrl.parentNode.replaceChild(ctrl.cloneNode(true), ctrl);
+	    	  }
+	    }
+	    
 	    function getCurrTime() {		    	
 	    	var strTime = new Date().toTimeString().split(" ")[0];
 	    	var strDateTime = new Date().toISOString();
 	    	var strDate = strDateTime.substring(0, 10);
 	    	return strDate + " " + strTime;
 	    }
+	    
+	    // 보기 항목에 이미지 첨부시 이미지 추가.
+	    function optImageTagAppend(fileinfo, selOptRow, optimgid){
+	    	var tenantId = ${tenantId};
+	    	if(fileinfo !== null){
+		    	if(mode !== ""){
+		    		var selOptRow = document.getElementById(optimgid === "" ? "option"+fileinfo.ansId : optimgid).parentNode;
+		    		var optimgid = selOptRow.getElementsByTagName('input')[0].id;
+		    	}
+		    	var objImg = document.createElement("img");
+		    	var _fileinfo = typeof(fileinfo) === "object" ? fileinfo.filePath : fileinfo;
+		    	objImg.setAttribute("_fileInfo", _fileinfo);
+		    	objImg.setAttribute("_type", "file");
+		    	objImg.setAttribute("_optimgid", optimgid);
+		    	objImg.setAttribute("onclick", "cancelAttachOptImgFile(this)");
+		    	objImg.className = "thumbnail";
+	    		if(typeof(fileinfo) === "string"){
+	    			fileinfo = fileinfo.split('/')[0];
+	    		}else{
+	    			fileinfo = fileinfo.filePath.split('/')[0];
+	    		}
+		    	objImg.src = "/fileroot/" + tenantId + "/files/upload_vote/uploadFile/" + fileinfo;
+	    		$(selOptRow).append(objImg);
+	    		checkOptionsList();
+	    	}
+	    }
+	    
+	  	//썸네일 이미지에 레이어 팝업 기능 관련
+	    function addThumbnailEvent(){
+	    	$("#ballotSystemBody").append("<div id='imgPopupBox' class='imgPopupBoxOff'><img id='imgPopup' class='imgPopupOff'/></div>");
+	    	$(document).on("mouseover",".thumbnail",function(e){
+				$("#imgPopupBox").removeClass("imgPopupBoxOff").addClass("imgPopupBox");
+	    		$("#imgPopup").removeClass("imgPopupOff").addClass("imgPopup");
+	    		$("#imgPopup").attr("src",e.target.src);
+	    		$("#imgPopupBox").css("left",(window.innerWidth-$("#imgPopupBox").width())/2);
+	    		$("#imgPopupBox").css("top",(window.innerHeight-$("#imgPopupBox").height())/2 + window.pageYOffset);
+	    		$("#imgPopup").css("left",($("#imgPopup").parent().width()-$("#imgPopup").width())/2);
+	    		$("#imgPopup").css("top",($("#imgPopup").parent().width()-$("#imgPopup").height())/2);
+			}).on('mouseout',function(e){
+				$("#imgPopupBox").removeClass("imgPopupBox").addClass("imgPopupBoxOff");
+	    		$("#imgPopup").removeClass("imgPopup").addClass("imgPopupOff");
+	    		$("#imgPopup").removeAttr("src");
+			});
+	    }
+	  	
+	  	//이미지 미리보기 파일 삭제
+	    function optImgPrevDelete(){
+	  		var str = optImgPrevArr.join()
+	        $.ajax({
+	            type : "POST",
+	            async : false,
+	            url : "/ezPoll/deleteOptPrevFile.do",
+	            data : {
+	                optImgPrevArr : str
+	            }
+	        });
+	    }
+	  	
+	  	//삭제 이미지 목록 생성.
+	  	function makeDeleteImgList(_fileinfo){
+	  		/* if(optImgOld.length > 0 && optImgOld.includes(_fileinfo)){
+    			for(var i = 0; i < optImgOld.length; i++){
+    				if(optImgOld[i] === _fileinfo){
+    					optImgOld.splice(i,1);
+    				}
+    			}
+			}
+	  		
+			if(optImgPrevArr.length > 0 && optImgPrevArr.includes(_fileinfo)){
+    			for(var i = 0; i < optImgPrevArr.length; i++){
+    				if(optImgPrevArr[i] === _fileinfo){
+    					optImgPrevArr.splice(i,1);
+    				}
+    			}
+			} */
+	  		if(optImgOld.length > 0){
+    			for(var i = 0; i < optImgOld.length; i++){
+    				if(optImgOld[i] === _fileinfo){
+    					optImgOld.splice(i,1);
+    				}
+    			}
+			}
+	  		
+			if(optImgPrevArr.length > 0){
+    			for(var i = 0; i < optImgPrevArr.length; i++){
+    				if(optImgPrevArr[i] === _fileinfo){
+    					optImgPrevArr.splice(i,1);
+    				}
+    			}
+			}
+	  	}
+	  	
 	</script>
 </head>
 <xmp id="sigBody3" style="display: none;">${targetPath}</xmp>
@@ -867,7 +1091,7 @@
 					</td>
 	
 				</tr>
-				<tr>
+				<tr> 
 					<td style="width:100%;height:350px; margin:0px 0px 8px 0px; " id="EdtorSize" class="pollTd01">
 		               <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%;overflow:auto; border-top:0px" ></iframe>
 	           		</td>
@@ -906,23 +1130,27 @@
 								<span>1</span>
 								<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option1" name="option1" oninput="checkOptionsList();" maxlength="200">
 								<img src="/images/sortIcon.png" class="drag_drop">
+								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)">
 							</li>
 							<li class="myBorder">
 								<span>2</span>
 								<input type="text" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option2" name="option2" oninput="checkOptionsList();" maxlength="200">
 								<img src="/images/sortIcon.png" class="drag_drop">
+								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)">
 							</li>
 							<li class="myBorder">
 								<span>3</span>
 								<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option3" name="option3" oninput="checkOptionsList();" maxlength="200">
 								<img src="/images/sortIcon.png" class="drag_drop">
+								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)">
 							</li>
+								<input id="optionfile" type="file" onchange="optImgUpload()" style="display:none" />
 						</ul>
 					</td>
 				</tr>
 			</table>
 	
-			<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01" style="width:129px; height:30px; line-height:28px; font-size:13px; font-weight:bold; background:#efefef; border:1px solid #dcdcdc; border-radius:5px; cursor:pointer; "><spring:message code="ezPoll.t153"/></button>
+			<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01" style="width:129px; height:30px; line-height:28px; font-size:13px; background:#FFF; border:1px solid #dcdcdc; border-radius:5px; cursor:pointer; color:#0470e4;"><spring:message code="ezPoll.t153"/></button>
 	
 			<table class="content" style="width: 100%; margin:10px 0px 0px 0px;"> 
 				<tr>    <!------------Question setting---------------->
@@ -1014,6 +1242,8 @@
 						<input type="text" name="hidCreateDate" id="hidCreateDate" value="" style="display:none">		
 						<input type="text" name="hidIsSorting" id="hidIsSorting" value="" style="display:none">		
 						<input type="text" name="hidIsSelOnlyOnce" id="hidIsSelOnlyOnce" value="" style="display:none">		
+						<input type="text" name="hidOptImgFilePath" id="hidOptImgFilePath" value="" style="display:none">		
+						
 					</div>
 					</td>
 				</tr>						
