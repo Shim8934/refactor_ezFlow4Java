@@ -669,6 +669,7 @@ public class EzAttitudeAdminBOMController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String companyId = request.getParameter("companyId");
+		String userList = request.getParameter("userList");
 		
 		//조직도 회사,부서 리스트
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -740,28 +741,34 @@ public class EzAttitudeAdminBOMController {
 			model.addAttribute("workEndTime", workEndTime);
 		}
 		
-		//회사 근무시간 정보
-		url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudereg";
-		
-//		builder = UriComponentsBuilder.fromHttpUrl(url)
-//				.queryParam("companyId", companyId)
-//				.queryParam("userId", userInfo.getId());
-		
-//		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-//		resultBody = (JSONObject) jp.parse(result.getBody());
-		
-//		status = resultBody.get("status").toString();
-//		LOGGER.debug("status : " + status);
-//		if(status.equals("ok")){
-//			jObject = (JSONObject) resultBody.get("data");
-//			
-//			String workStartTime = (String) jObject.get("workStartTime");
-//			String workEndTime = (String) jObject.get("workEndTime");
-//			
-//			model.addAttribute("workStartTime", workStartTime);
-//			model.addAttribute("workEndTime", workEndTime);
-//		}
+		//선택된 유저 리스트 정보
+		if (userList != null) {
+			String offset = userInfo.getOffset();
+			String offsetMin = commonUtil.getMinuteUTC(offset);
+			
+			url = gwServerUrl + "/rest/ezattitude/users/users-attitude-confs";
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("userId", userInfo.getId())
+					.queryParam("userIdList", userList)
+					.queryParam("offsetMin", offsetMin);
+
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			LOGGER.debug("status : " + status);
+			
+			if(status.equals("ok")){
+				JSONArray jArray = (JSONArray) resultBody.get("data");
+				
+				model.addAttribute("userList", jArray);
+			}
+		} else {
+			model.addAttribute("userList", "null");
+		}
 		
 		LOGGER.debug("/admin/ezAttitude/saveAttitudeUserConf ended");
 		
@@ -831,7 +838,7 @@ public class EzAttitudeAdminBOMController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String companyId = request.getParameter("companyId");
-		String userId = request.getParameter("userId");
+		String userIdList = request.getParameter("userId");
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
@@ -845,7 +852,8 @@ public class EzAttitudeAdminBOMController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
-				.queryParam("userId", userId)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("userIdList", userIdList)
 				.queryParam("offsetMin", offsetMin);
 
 		RestTemplate rest = new RestTemplate();
@@ -874,7 +882,7 @@ public class EzAttitudeAdminBOMController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConfSave.do")
 	@ResponseBody
-	public void attitudeUserConfSave(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
+	public void attitudeUserConfSave(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LOGGER.debug("attitudeUserConfSave started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -902,10 +910,11 @@ public class EzAttitudeAdminBOMController {
 	 * 사용자 근태설정 삭제
 	 * @param request
 	 * @param loginCookie
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/delAttitudeUserConf.do")
 	@ResponseBody
-	public void delAttitudeUserConf(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
+	public void delAttitudeUserConf(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LOGGER.debug("delAttitudeUserConf started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -926,6 +935,12 @@ public class EzAttitudeAdminBOMController {
 		RestTemplate rest = new RestTemplate();
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
 		
 		LOGGER.debug("delAttitudeUserConf ended");
 	}

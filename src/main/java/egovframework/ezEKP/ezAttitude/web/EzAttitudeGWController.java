@@ -897,11 +897,12 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
 			String userId = request.getParameter("userId");
+			String userIdList = request.getParameter("userIdList");
 			String offsetMin = request.getParameter("offsetMin");
 
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 
-			List<AttitudeUserConfigVO> voList = ezAttitudeService.getAttitudeUserConfigInfo(info.getTenantId(), companyId, userId, offsetMin);
+			List<AttitudeUserConfigVO> voList = ezAttitudeService.getAttitudeUserConfigInfo(info.getTenantId(), companyId, userIdList, offsetMin);
 
 			if (voList.size() == 0) {
 				voList = new ArrayList<AttitudeUserConfigVO>();

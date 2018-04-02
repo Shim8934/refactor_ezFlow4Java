@@ -482,7 +482,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigInfo(int tenantId,
-			String companyId, String userId, String offsetMin) throws Exception {
+			String companyId, String userIdList, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigInfo started");
 		
 		List<AttitudeUserConfigVO> userList = new ArrayList<AttitudeUserConfigVO>();
@@ -493,10 +493,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("offsetMin", offsetMin);
 		
-		String[] userIdList = userId.split(","); 
+		String[] userIdArray = userIdList.split(","); 
 		
-		for (int i = 0; i < userIdList.length; i++) {
-			map.put("userId", userIdList[i]);
+		for (int i = 0; i < userIdArray.length; i++) {
+			map.put("userId", userIdArray[i]);
 			
 			AttitudeUserConfigVO vo = new AttitudeUserConfigVO();
 			vo = ezAttitudeDAO.getAttitudeUserConfigInfo(map);

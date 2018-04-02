@@ -19,6 +19,7 @@
 		    var ReturnFunction;
 		    var treeContent = ${deptList};
 		    var companyId = '${companyId}';
+		    var userList = ${userList};
 		    var selectedUserId;
 		    //회사 근무 시작/종료시간 - 기본설정적용시 필요
 		    var comStartTime = '${workStartTime}';
@@ -26,6 +27,21 @@
 			
 		    $(document).ready(function(){
 		    	setDeptList();
+		    	
+		    	if (userList != null && userList != "null") {
+		    		$.each(userList, function(idx, userInfo) {
+	   					var html = "<tr id='" + userInfo.userId + "' class='hover'>";
+	   					html += "<td style='cursor: pointer; padding-left:60px;'>" + userInfo.userName + "</td>";
+	   					if(userInfo.workStartTime == null || userInfo.workStartTime == '' || userInfo.workEndTime == null || userInfo.workEndTime == '') {
+	   						html += "<td></td>";
+	   					} else {
+		   					html += "<td>" + userInfo.workStartTime + " ~ " + userInfo.workEndTime + "</td>";
+	   					}
+	   					html += "</tr>";
+	   					
+	   					$(html).appendTo('#txtlist_table2');
+					})
+		    	}
 // 		    	try {
 // 	                ReturnFunction = opener.permissions_check_dialogArguments[1];
 // 	            } catch (e) {}	        
@@ -220,7 +236,7 @@
 	   		}
 		    
 	        function close_Click() {
-	            if (ReturnFunction!=null) {
+	            if (ReturnFunction != null) {
 	                ReturnFunction();
 	            }
 	            window.close();
