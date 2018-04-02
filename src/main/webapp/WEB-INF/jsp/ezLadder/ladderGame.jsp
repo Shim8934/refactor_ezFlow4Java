@@ -38,9 +38,9 @@
 		var height = 10;
 		
 		window.onload = function() {
-			canvas = document.getElementById("ladderCanvas");
+			/* canvas = document.getElementById("ladderCanvas");
 			if (canvas == null || canvas.getContext == null) return;
-			ctx = canvas.getContext("2d");
+			ctx = canvas.getContext("2d"); */
 			draw();
 		}
 		$(window).unload(function() {
@@ -68,7 +68,6 @@
 			setAttendantsView(); 
 			
 			$("#blackBox").css("width", size*147 + "px");
-			$("#ladderLine").css("width", size*146 + "px");
 			$("#startButton").css("left", size*130/2 + "px");
 			$(".setTable").css("width",  $(window).width() - 20 + "px");
 			$("#ladderLineBox").css("width", $(window).width() - 60 + "px");
@@ -482,37 +481,275 @@
 		function add_user_change_ulsize(usernum) {
 			$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
 			$("#ladderCanvas").attr("width", (usernum * 150) + "px");
+			$("#ladder_canvas").attr("width", (usernum * 150) + "px");
 		}
 	
 		
 	// =========================================
-		 function draw() {
+		var heightNode = 10;
+		var widthNode =  "${ fn:length(list)}";
+		var LADDER = {};
+		var row =0;
+		var ladder = $('#ladder');
+		var ladder_canvas = $('#ladder_canvas');
+		var GLOBAL_FOOT_PRINT= {};
+		var GLOBAL_CHECK_FOOT_PRINT= {};
+		var working = false;
 		
-		console.log("width : " + size);
-		console.log("height : " + height);
-		console.log("lad : " + lad);
-		console.log("ladArr : " + ladArr);
+		function draw() {
+			
+			if("${vo.status}" == 1) {
+				$("#itemList").css("margin-top", -30 + "px");
+			}
+			
+      		var canvas = document.getElementById("ladder_canvas");
+      		
+      		setDefaultFootPrint();
+      		reSetCheckFootPrint();
+      		setDefaultRowLine();
+      		setRandomNodeData();
+      		drawDefaultLine();
+      		drawNodeLine();
+      		userSetting();
+            resultSetting();
+    	}
+		 
+		function setDefaultFootPrint(){
+			console.log("======");
+			console.log("clear1");
+			console.log("======");
+			for(var r = 0; r < heightNode; r++){
+				for(var column =0; column < widthNode; column++){
+		            GLOBAL_FOOT_PRINT[column + "-" + r] = false;  // 0-0 부터 9-0 까지, 0-9부터 9-9까지
+		        }
+		    }
+		}
 		
-      var canvas = document.getElementById("ladderCanvas");
-      if (canvas.getContext) {
-        var ctx = canvas.getContext("2d");
-        ctx.strokeStyle = 'DimGray';
-        for(var userCnt=0;userCnt<30; userCnt++) {
+		function reSetCheckFootPrint(){
+			console.log("======");
+			console.log("clear2");
+			console.log("======");
+	        for(var r = 0; r < heightNode; r++){
+	            for(var column =0; column < widthNode; column++){
+	                GLOBAL_CHECK_FOOT_PRINT[column + "-" + r] = false; // 0-0 부터 9-0 까지, 0-9부터 9-9까지
+	            }
+	        }
+	    }
+		
+		function setDefaultRowLine(){
+			console.log("======");
+			console.log("clear3");
+			console.log("======");
+		    // row는 0부터 해서
+			for(var y =0; y < heightNode; y++){     //10
+				var rowArr = [];
+		        for(var x =0; x <widthNode ; x++){  //10
+					var node = x + "-"+ row;      // 0-0  부터 9-0까지
+					rowArr .push(node);           // 0-9 부터  9-9 까지
+		                // 노드그리기
+		            var left = x * 150;           // 노드위 위치
+		            var top = row * 50;
+		            var node = $('<div></div>')
+		            .attr('class' ,'node')
+		            .attr('id' , node)            // 아이디, 위치, css 정보를 넣어줌
+		            .attr('data-left' , left)
+		            .attr('data-top' , top)
+		            .css({
+						'position' : 'absolute',
+		                'left' : left,
+		                'top' : top
+					});
+					ladder.append(node);
+				}
+				LADDER[row] =  rowArr;
+		        console.log(LADDER[row]);
+		        row++;
+		    }
+		}
+		
+		function setRandomNodeData(){
+			console.log("======");
+			console.log("clear4");
+			console.log("======");
+			var cnt=0
+	        for(var y =0; y < heightNode; y++){
+				for(var x =0; x <widthNode ; x++){
+					var loopNode = x + "-" + y;       // loopNode는 0-0부터 ~ 9~0, 0-9부터 9-9 까지
+	                if(ladArr[cnt] == 0){                    // 0 직선 일시
+	                    GLOBAL_FOOT_PRINT[loopNode] = {"change" : false , "draw" : false}
+	                	cnt++;
+	                } else {
+						if(ladArr[cnt] == (widthNode - 1)){     // 맨 오른쪽일시 직선으로 처리
+	                        GLOBAL_FOOT_PRINT[loopNode] = {"change" : false , "draw" : false} ;
+	                    	cnt++;
+	                    } else {
+	                        GLOBAL_FOOT_PRINT[loopNode] =  {"change" : true , "draw" : true} ; // 좌회전
+	                        x = x + 1;                // x값 증가 2-0 3-0
+	                        loopNode = x + "-" + y;
+	                        GLOBAL_FOOT_PRINT[loopNode] =  {"change" : true , "draw" : false} ; // 우회전
+	                        cnt = cnt+2;
+	                    } 
+	                }
+	            }
+	        }
+	    }
+		
+		function drawDefaultLine(){
+			console.log("======");
+			console.log("clear5");
+			console.log("======");
+	        var html = '';
+	        html += '<table>'
+	        for(var y =0; y < heightNode-1; y++){
+	            html += '<tr>';
+	            for(var x =0; x <widthNode-1 ; x++){
+	                html += '<td style="width:148px; height:50px; border-left:2px solid #ddd; border-right:2px solid #ddd;"></td>';
+	            }
+	            html += '</tr>';
+	        }
+	        html += '</table>'
+	        ladder.append(html);
+	    }
+		
+	    function drawNodeLine(){
+	    	console.log("======");
+			console.log("clear6");
+			console.log("======");
+		
+			for(var y =0; y < heightNode; y++){
+	            for(var x =0; x <widthNode ; x++){
+	                var node = x + '-' + y;       // 0-0부터 9-0 0-9부터 9-9까지
+	                var nodeInfo  = GLOBAL_FOOT_PRINT[node];      //GLOBAL_FOOT_PRINT[loopNode] = {"change" : false , "draw" : false}
+	                
+	                stokeLine(x, y ,'h' , 'r' , '#ddd' , '5');
+	                if(nodeInfo["change"] && nodeInfo["draw"] ){
+	                     stokeLine(x, y ,'w' , 'r' , '#ddd' , '5');   
+	                }
+	            }
+	        }
+	    }
+		
+	    function stokeLine(x, y, flag , dir , color , width){
+	        var canvas = document.getElementById('ladder_canvas');
+	        var ctx = canvas.getContext('2d');
+	        var moveToStart =0, moveToEnd =0, lineToStart =0 ,lineToEnd =0;
+	        var eachWidth = 150;
+	        var eachHeight = 60;
+	        if(flag == "w"){ //가로줄
+       			 if(dir == "r"){
+	                ctx.beginPath();
+	                moveToStart = x * eachWidth ;
+	                moveToEnd = y * eachHeight ;
+	                lineToStart = (x+ 1) * eachWidth;
+	                lineToEnd = y * eachHeight;
 
-        
-        ctx.fillRect (95 + 150 * (userCnt), 190, 5, 1000);
-        ctx.beginPath();
-        ctx.moveTo(75, 50);
-        ctx.lineTo(100, 75);
-        ctx.lineTo(100, 25);
-       
-        }
-      }
-    }
-		// =========================================
+	            }else{
+	                // dir "l"
+	                ctx.beginPath();
+	                moveToStart = x * eachWidth;
+	                moveToEnd = y * eachHeight;
+	                lineToStart = (x- 1) * eachWidth;
+	                lineToEnd = y * eachHeight;
+	            }
+	        } else{
+	            ctx.beginPath();
+				moveToStart = x * eachWidth ;
+	            moveToEnd = y * eachHeight;
+	            lineToStart = x * eachWidth ;
+	            lineToEnd = (y+1) * eachHeight;
+	        }
+	        ctx.moveTo(moveToStart + 3 ,moveToEnd  + 2);
+	        ctx.lineTo(lineToStart  + 3 ,lineToEnd  + 2 );
+	        ctx.strokeStyle = color;
+	        ctx.lineWidth = width;
+	        ctx.stroke();
+	        ctx.closePath();
+	    }
+	    
+	    function userSetting(){
+	        var userList = LADDER[0];
+	        var html = '';
+	        for(var i=0; i <  userList.length; i++){
+	            var color = '#'+(function lol(m,s,c){return s[m.floor(m.random() * s.length)] + (c && lol(m,s,c-1));})(Math,'0123456789ABCDEF',4);
+
+	            var x = userList[i].split('-')[0]*1;
+	            var y = userList[i].split('-')[1]*1;
+	            var left = x * 100  -30
+	            html += '<div class="user-wrap" style="left:'+left+'"><input type="text" data-node="'+userList[i]+'"><button class="ladder-start" style="background-color:'+color+'" data-color="'+color+'" data-node="'+userList[i]+'"></button>';
+	            html +='</div>'
+	        }
+	        ladder.append(html);
+	    }
+	    function resultSetting(){
+	         var resultList = LADDER[heightNode-1];
+	         console.log(resultList )
+
+	        var html = '';
+	        for(var i=0; i <  resultList.length; i++){
+	            
+	            var x = resultList[i].split('-')[0]*1;
+	            var y = resultList[i].split('-')[1]*1 + 1;
+	            var node = x + "-" + y;
+	            var left = x * 100  -30
+	            html += '<div class="answer-wrap" style="left:'+left+'"><input type="text" data-node="'+node+'">';
+	            html +='<p id="'+node+'-user"></p>'
+	            html +='</div>'
+	        }
+	        ladder.append(html);
+	    }
 	</script>
 	<style type="text/css">
 		
+		.dim{
+    		width: 100%;
+    		height: 100%;
+    		position: absolute;
+    		top: 0;
+    		left: 0;
+		}
+		.node{
+		    width: 0px;
+		    height: 0px;
+		    background-color: #000;
+		}
+		.ladder_canvas{
+		    z-index: 999;
+		}
+		.ladder{
+		    position: absoulute;
+		    margin-top: 130px;
+		    margin-bottom: 20px;
+		    margin-left: 50px;
+		    z-index: 0;
+		}
+		
+		
+		.user-wrap{
+		    width: 60px;
+		    position: absolute;
+		    top : -52px;
+		    text-align: center;
+		}
+		.user-wrap input{
+		    width:100%;
+		    height: 20px;
+		    text-align: center;
+		    border-radius:3px;
+		    border: 1px solid #ddd;    
+		}
+		.user-wrap button{
+		    margin: 5px 0 0 0;    
+		    border:0;
+		    width: 20px;
+		    height: 20px;
+		    border-radius: 10px;
+		    text-align: center;
+		    line-height: 20px;
+		    font-weight: bolder;
+		    color: #fff;
+		    cursor: pointer;
+		    outline: 0;
+		}
 		ul {
 		    list-style:none;
 		    margin:0;
@@ -526,7 +763,6 @@
 		    border : 0;
 		    float: left;
 		    text-align: center;
-		    
 		}
 		
 		#blackBox {
@@ -539,15 +775,7 @@
 			float: left;
 			
 		}
-		#ladderLine {
-			height:650px;
-			border:30px solid transparent; 
-			margin-right:50px;
-			/* background: #fff;
-			border-color:#fff; */
-			position: relative; top: 100px; bottom:100px;
-			float: left;
-		}
+		
 		
 		.cmtdelete, .cmtmodify {
 			cursor: pointer;
@@ -563,6 +791,7 @@
          
          #itemList {
 			margin-top: 100px;
+			margin-bottom: 20px;
 		}
 		
 		.nowOver {
@@ -652,8 +881,12 @@
 										</div>
 									</c:if>
 									<c:if test="${vo.status eq 1}">
-										<canvas id='ladderCanvas' width="650" height="850"></canvas>
-										<div id="ladderLine"></div>
+										
+										<div id="ladder" class="ladder">
+									         <canvas class="ladder_canvas" id="ladder_canvas" width="1550" height="600"></canvas>
+									    </div>
+										
+										
 									</c:if><br><br><br>						
 								<ul id="itemList"></ul>	
 							</div>
