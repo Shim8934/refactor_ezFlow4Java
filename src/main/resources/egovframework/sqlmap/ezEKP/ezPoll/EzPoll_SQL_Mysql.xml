@@ -989,5 +989,77 @@
 				FiLE_PATH = #file_path#
 		]]>				
     </select>  
+   
+   <select id="EzPollDAO.checkQstUsingFile" resultClass="Integer">   
+		<![CDATA[
+			SELECT 
+				count(FILE_PATH)
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID = #tenant_id#		
+			AND
+				ID <> #qst_id#		
+			AND
+				FiLE_PATH like CONCAT('%', #file_path#, '%')
+		]]>				
+    </select>  
 
+   <select id="EzPollDAO.getQuestionFileById" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_PATH
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				ID			= #qst_id#
+		]]>				
+    </select>  
+   
+   <select id="EzPollDAO.getAnswerFilesByQstId" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_PATH
+			FROM 
+				TBL_VOTE_ANSWER
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				QST_ID		= #qst_id#
+			AND
+				FILE_PATH IS NOT NULL
+		]]>				
+    </select>  
+
+   <select id="EzPollDAO.getCommentFilesByQstId" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_PATH
+			FROM 
+				TBL_VOTE_COMMENT
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				QST_ID		= #qst_id#
+			AND
+				LENGTH(FILE_PATH) > 0
+		]]>				
+    </select>  
+    
+   <select id="EzPollDAO.getCommentImgFilesByQstId" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_TYPE
+			FROM 
+				TBL_VOTE_COMMENT
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				QST_ID		= #qst_id#
+			AND
+				LENGTH(FILE_TYPE) > 0
+		]]>				
+    </select>  
 </sqlMap>
