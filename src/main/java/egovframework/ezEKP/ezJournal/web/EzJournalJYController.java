@@ -93,7 +93,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 				JSONObject journal = (JSONObject) result.get("data");
 				logger.debug("journal확인 : " + journal.toString());
 				model.addAttribute("journal", journal);
-				model.addAttribute("content", journal.get("journalContent").toString());
+				model.addAttribute("content", journal.get("journalContent").toString().replaceAll("\'", "\""));
 //				model.addAttribute("formId", journal.get("formId").toString());
 //				model.addAttribute("deptShare", journal.get("deptShare").toString());
 				JSONArray fileList = (JSONArray) journal.get("fileList");
@@ -257,8 +257,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
-			String code = result.get("code").toString();
-			model.addAttribute("resultCode", code);			// 저장잘되었는지 확인용
+			
 		}
 		
 		logger.debug("saveReceiverFavorite ended");
@@ -749,7 +748,13 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			restUrl = "/rest/ezjournal/types/" + typeId + "/journals";
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
 		}
-		String journalId = (String) result.get("data");
+		
+		String status = (String) result.get("status");
+		String journalId = "";
+		
+		if (status.equals("ok")) {
+			journalId = (String) result.get("data");
+		}
 
 		logger.debug("saveJournal ended");
 		
@@ -762,7 +767,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/saveTempJournal.do")
 	@ResponseBody
-	public void saveTempJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String saveTempJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("saveTempJournal started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -815,7 +820,10 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "put", jsonParam);
 		}
 		
+		String status = (String) result.get("status");
+		
 		logger.debug("saveTempJournal ended");
+		return status;
 	}
 	
 	/**

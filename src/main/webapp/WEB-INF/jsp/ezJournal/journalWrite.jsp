@@ -366,11 +366,13 @@
 	                },  
 	                cache: false,
 	                success: function(result) {	   
-	                  	alert("<spring:message code='ezJournal.t137'/>");
-          			 	sendJournalRecvMail($("#title").val(),receiverID,result);
-	                  
-	             	  	opener.setJournalList();
-          			  	window.close();
+	                	if (result != null && result != "") {
+		                  	alert("<spring:message code='ezJournal.t137'/>");
+	          			 	sendJournalRecvMail($("#title").val(),receiverID,result);
+		                  
+		             	  	opener.setJournalList();
+	          			  	window.close();
+	                	}
           			  	
 	                },
 	                error : function() {
@@ -454,10 +456,12 @@
 	                			oldJournalId : journalId,
 	                },  
 	                cache: false,
-	                success: function(data) {	   
-		            	alert("<spring:message code='ezJournal.t137'/>");
-		             	opener.setJournalList();
-	          			window.close();
+	                success: function(result) {
+	                	if (result === "ok") {
+			            	alert("<spring:message code='ezJournal.t137'/>");
+			             	opener.setJournalList();
+		          			window.close();
+	                	}
 	                },
 	                error : function() {
 	                	alert("<spring:message code='ezJournal.t149'/>");

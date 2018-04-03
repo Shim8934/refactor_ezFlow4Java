@@ -72,6 +72,13 @@
 		    }
 		    
 		    window.onload = function () {		
+		    	
+		    	if (parent.type == "mod") {
+		    		$("h1").text("<spring:message code='ezJournal.t167'/>");
+		    	}
+		    	
+		    	$("#receiverFavoriteName").focus();
+		    	
 		        try {
 		        	receiverLine = parent.receiverList;
 		        	console.log("receiverLine : " + receiverLine);
@@ -96,7 +103,7 @@
 		<h1><spring:message code='ezJournal.t93'/></h1>
 		<span>▒ <spring:message code='ezJournal.t94'/></span>
 		<div class="nobox" style="margin-top:10px">
-		<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="receiverFavoriteName" name="receiverFavoriteName" onkeyup="checkEnterKey()" maxlength="7">
+		<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="receiverFavoriteName" name="receiverFavoriteName" onkeypress="checkEnterKey()" maxlength="7">
 		</div>		
 			
 		<div class="btnposition btnpositionNew">
