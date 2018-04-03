@@ -2098,4 +2098,62 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getSecureMailReaderInfo ended.");
 		return list;
 	}
+	
+	@Override
+	public String checkDistributionIsIncluded (String standardCn, String searchCn, int tenantId) throws Exception {
+		logger.debug("checkDistributionIsIncluded started.");
+		logger.debug("standardCn=" + standardCn + ", searchCn=" + searchCn);
+		
+		String isIncluded = "NO";
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String inputParams = "cn=" + searchCn + "&domain=" + domainName;
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistribution";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		logger.debug("response=" + response);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				JSONArray array = (JSONArray)responseObj.get("result");
+				
+				if (array != null) {
+					
+					JSONObject obj = null;
+					while (isIncluded.equals("NO")) {
+						
+						if (array.toString().indexOf("group") != -1) {
+							for (int i = 0; i < array.size(); i++) {
+								obj = (JSONObject)array.get(i);
+								if (((String)obj.get("class")).equals("group")) {
+									String resultAddress[] = ((String)obj.get("cn")).split("@");
+									String resultCn = resultAddress[0];
+									
+									if (resultCn.equals(standardCn)) {
+										isIncluded = "YES";
+										break;
+									} else if (!resultCn.equals(standardCn)) {
+										isIncluded = checkDistributionIsIncluded(standardCn, resultCn, tenantId);
+									}
+								} 
+							}
+						} else {
+							isIncluded = "NO";
+							break;
+						}
+					}
+				} else {
+					throw new Exception("JGwServer ERROR");
+				}
+			}
+		
+		}
+			
+		logger.debug("checkDistributionIsIncluded ended.");
+		return isIncluded;
+	}
+	
 }

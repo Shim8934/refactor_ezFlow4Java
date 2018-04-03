@@ -1243,9 +1243,19 @@
 		        AddrSearch.style.display = "none";
 		        m_selectedTree = ListViewDL;
 		        try {
+		        	var xmlDom = createXmlDom();
 		            var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "/ezEmail/mailGetDistribution.do", false);
-		            xmlHTTP.send("");
+		            
+		            var objRoot;
+		            createNodeInsert(xmlDom, objRoot, "DATA");
+		            createNodeAndInsertText(xmlDom, objRoot, "COMPID", companyid);
+		            
+		            if (cn != null) {
+		            	createNodeAndInsertText(xmlDom, objRoot, "CN", cn);
+		            }
+		            
+		            xmlHTTP.open("POST", "/admin/ezEmail/mailGetDistribution.do", false);
+		            xmlHTTP.send(xmlDom);
 		        } catch (e) {
 		            alert("<spring:message code='ezEmail.t574' />" + e.description);
 		            xmlHTTP = null;
