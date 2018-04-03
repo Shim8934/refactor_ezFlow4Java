@@ -2050,6 +2050,7 @@ function btnAddAddress() {
 }
 
 var TempAddressUserName;
+var TempstrAddress = "";
 var address_zip_select_dialogArguments = new Array();
 function btnAddAddress_Complete(AddressUserName) {
     if (AddressUserName == "cancel" || AddressUserName == "") {
@@ -2057,23 +2058,41 @@ function btnAddAddress_Complete(AddressUserName) {
         return;
     }
     
-    if (useAddressOpenAPI == "YES") {
-        address_zip_select_dialogArguments[0] = "";
-    	address_zip_select_dialogArguments[1] = jusoCallBack;
-    	
-    	var OpenWin = window.open("/ezAddress/addressZipCodePopUpOpen.do", "", GetOpenWindowfeature(570, 420));
-        try { OpenWin.focus(); } catch (e) { }
-        
-    } else {
-    	DivPopUpHidden();
-    	
-        address_zip_select_dialogArguments[0] = "";
-    	address_zip_select_dialogArguments[1] = btnAddAddress_Complete2;
-    	
-    	DivPopUpShow(655, 620, "/ezAddress/addressZipCodePopUp.do");
-    }
+    var useZipCodeSearchInApr = null;
     
-    TempAddressUserName = AddressUserName;
+    // 우편번호검색 사용여부 체크 후 분기
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getUseZipCodeSearchInApr.do",
+		success: function(text){
+			useZipCodeSearchInApr = text;
+		}        			
+	});
+    
+    if (useZipCodeSearchInApr == "YES") {
+    	if (useAddressOpenAPI == "YES") {
+    		address_zip_select_dialogArguments[0] = "";
+    		address_zip_select_dialogArguments[1] = jusoCallBack;
+    		
+    		var OpenWin = window.open("/ezAddress/addressZipCodePopUpOpen.do", "", GetOpenWindowfeature(570, 420));
+    		try { OpenWin.focus(); } catch (e) { }
+    		
+    	} else {
+    		DivPopUpHidden();
+    		
+    		address_zip_select_dialogArguments[0] = "";
+    		address_zip_select_dialogArguments[1] = btnAddAddress_Complete2;
+    		
+    		DivPopUpShow(655, 620, "/ezAddress/addressZipCodePopUp.do");
+    	}
+    	
+    	TempAddressUserName = AddressUserName;
+    } else {
+    	TempstrAddress = AddressUserName;
+    	btnAddAddress_Complete4(AddressUserName);
+    }
 }
 
 var aprdeptaddressname_cross_dialogArguments = new Array();
@@ -2103,8 +2122,6 @@ function btnAddAddress_Complete2(Para) {
         btnAddAddress_Complete3("");
     }
 }
-
-var TempstrAddress = "";
 
 //Local 주소검색 사용경우 상세주소 입력후 실행되는 함수
 function btnAddAddress_Complete3(AddressName) {
