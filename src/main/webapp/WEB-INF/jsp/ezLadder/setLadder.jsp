@@ -241,7 +241,7 @@
 			}
 
 			/** 참여자 변경될때 슬라이더 바 조절 */
-			var maxLine = 5;
+			var maxLine = 10;
 			function changeSliderValue(value) { 
 				var len = attendants["id"].length;
 				if(len >= 2) {

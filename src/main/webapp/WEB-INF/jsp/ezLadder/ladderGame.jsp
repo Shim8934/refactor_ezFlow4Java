@@ -39,7 +39,7 @@
 		var height = 10;
 		var resultUser = new Array;
 		var seeAllcnt = 0;
-		
+		var pathColor = new Array;
 		window.onload = function() {
 			draw();
 		}
@@ -142,6 +142,8 @@
 					seeAllcnt++;
 				}
 			});
+			setPathColor();
+			
 		});
 		
 		function init_comment() {
@@ -240,8 +242,8 @@
 						}
 						html += "<div class='ladderDrag' id='drag" + i + "'><img src='" 
 									+ picsrc + "' width='90px' height='90px' />";
-						html +=  lines[i]["userName"] ;
-						html += "<span class='remove'>★</span></div></li>";		
+						html += "<div>" + lines[i]["userName"] + "</div>";
+						 
 						$("#attendantList").append(html);
 						$("#itemList").append("<li class='item'>" + lines[i]["item"] + "</li>");
 					} 
@@ -441,10 +443,10 @@
 					} else {
 						picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
 					}
-					html += "<div class='ladderDrag' id='drag" + i + "'><img src='" 
-								+ picsrc + "' width='90px' height='90px' />";
-					html +=  attendants["name"][i] ;
-					html += "<span class='remove'>★</span></div></li>";		
+					html += "<div class='ladderDrag' id='drag" + i + "' onclick='individualDirection(" + i + ");event.stopPropagation();'><img src='" 
+								+ picsrc + "' width='90px' height='90px'/>";
+					html += "<div>" + attendants["name"][i] + "</div>";
+					
 					$("#attendantList").append(html);
 					$("#itemList").append("<li class='item'>" + items[i] + "</li>");
 				}
@@ -456,6 +458,20 @@
 			}
 		} 
 		
+		/** 개별 경로 랜덤 색 지정 */
+		function setPathColor() {
+			for(var cnt=0; cnt<size; cnt++) {
+				var color = '#'+(function lol(m,s,c){return s[m.floor(m.random() * s.length)] + (c && lol(m,s,c-1));})(Math,'0123456789ABCDEF',4);
+				pathColor.push(color);
+			}
+		}
+		/** 개별 경로 실행 */
+		function individualDirection(nth) {
+			if("${vo.status}" == 1) {
+				var node = nth + "-0"; 
+				startLineDrawing(node, pathColor[nth]);
+			}
+		}
 		// 드래그 앤 드랍
 		function drag() {
 			$(".ladderDrag").draggable({ // 드래그 리스트
@@ -502,7 +518,7 @@
 	
 		
 	// =========================================
-		var heightNode = 11;
+		var heightNode = 41;
 		var widthNode =  "${ fn:length(list)}";
 		var LADDER = {};
 		var row =0;
@@ -529,9 +545,7 @@
     	}
 		 
 		function setDefaultFootPrint(){
-			console.log("======");
-			console.log("clear1");
-			console.log("======");
+		
 			for(var r = 0; r < heightNode; r++){
 				for(var column =0; column < widthNode; column++){
 		            GLOBAL_FOOT_PRINT[column + "-" + r] = false;  // 0-0 부터 9-0 까지, 0-9부터 9-9까지
@@ -540,9 +554,7 @@
 		}
 		
 		function reSetCheckFootPrint(){
-			console.log("======");
-			console.log("clear2");
-			console.log("======");
+			
 	        for(var r = 0; r < heightNode; r++){
 	            for(var column =0; column < widthNode; column++){
 	                GLOBAL_CHECK_FOOT_PRINT[column + "-" + r] = false; // 0-0 부터 9-0 까지, 0-9부터 9-9까지
@@ -551,16 +563,14 @@
 	    }
 		
 		function setDefaultRowLine(){
-			console.log("======");
-			console.log("clear3");
-			console.log("======");
+		
 		    // row는 0부터 해서
-			for(var y =0; y < heightNode; y++){     //10
+			for(var y =0; y < heightNode; y++){     
 				var rowArr = [];
-		        for(var x =0; x <widthNode ; x++){  //10
+		        for(var x =0; x <widthNode ; x++){  
 					var node = x + "-"+ row;      // 0-0  부터 9-0까지
 					rowArr .push(node);           // 0-9 부터  9-9 까지
-		                // 노드그리기
+		                
 		            var left = x * 150;           // 노드위 위치
 		            var top = row * 50;
 		            var node = $('<div></div>')
@@ -627,9 +637,6 @@
 	    }
 		
 		function setRandomNodeData(){
-			console.log("======");
-			console.log("clear4");
-			console.log("======");
 			var cnt=0
 			for(var x =0; x <widthNode ; x++){
 				var loopNode = x + "-0";       // loopNode는 0-0부터 ~ 9~0, 0-9부터 9-9 까지
@@ -658,9 +665,6 @@
 	    }
 		
 		function drawDefaultLine(){
-			console.log("======");
-			console.log("clear5");
-			console.log("======");
 	        var html = '';
 	        html += '<table>'
 	        for(var y =0; y < heightNode-1; y++){
@@ -675,10 +679,6 @@
 	    }
 		
 	    function drawNodeLine(){
-	    	console.log("======");
-			console.log("clear6");
-			console.log("======");
-		
 			for(var y =0; y < heightNode; y++){
 	            for(var x =0; x <widthNode ; x++){
 	                var node = x + '-' + y;       // 0-0부터 9-0 0-9부터 9-9까지
@@ -697,7 +697,7 @@
 	        var ctx = canvas.getContext('2d');
 	        var moveToStart =0, moveToEnd =0, lineToStart =0 ,lineToEnd =0;
 	        var eachWidth = 150;
-	        var eachHeight = 60;
+	        var eachHeight = 15;
 	        if(flag == "w"){ //가로줄
        			 if(dir == "r"){
 	                ctx.beginPath();
@@ -738,16 +738,10 @@
 	        var nodeInfo = GLOBAL_FOOT_PRINT[node];
 
 	        GLOBAL_CHECK_FOOT_PRINT[node] = true;
-	        
+			
 	        var dir = 'r'
 	        if(y ==heightNode ){
 	            reSetCheckFootPrint();
-	            var target = $('input[data-node="'+node+'"]');
-	            target.css({
-	                'background-color' : color
-	            })
-	            $('#' + node + "-user").text(userName)
-	             working = false;
 	            return false;
 	        }
 	        if(nodeInfo["change"] ){
@@ -762,91 +756,77 @@
 	                var rightNodeInfo = GLOBAL_FOOT_PRINT[rightNode];
 	                if(  (leftNodeInfo["change"] &&  leftNodeInfo["draw"] && !!!GLOBAL_CHECK_FOOT_PRINT[leftNode] ) && (rightNodeInfo["change"])&&  leftNodeInfo["draw"]  && !!!GLOBAL_CHECK_FOOT_PRINT[rightNode] ){
 	                    //Left우선 
-	                    console.log("중복일때  LEFT 우선");
 	                    stokeLine(x, y, 'w' , 'l' , color ,3)
 	                     setTimeout(function(){ 
 	                         return startLineDrawing(leftNode, color)
-	                     }, 100);
+	                     }, 5);
 	                }
 	                else if(  (leftNodeInfo["change"] &&  !!!leftNodeInfo["draw"] && !!!GLOBAL_CHECK_FOOT_PRINT[leftNode] ) && (rightNodeInfo["change"]) && !!!GLOBAL_CHECK_FOOT_PRINT[rightNode] ){
-	                    console.log('RIGHT 우선')
 	                    stokeLine(x, y, 'w' , 'r' , color ,3)
-	                    console.log("right")
 	                    setTimeout(function(){ 
 	                        return startLineDrawing(rightNode, color)
-	                     }, 100);
+	                     }, 5);
 	                }
 	                else if(  (leftNodeInfo["change"] &&  leftNodeInfo["draw"] && !!!GLOBAL_CHECK_FOOT_PRINT[leftNode] ) && (!!!rightNodeInfo["change"]) ){
 	                    //Left우선 
-	                    console.log("LEFT 우선");
 	                    stokeLine(x, y, 'w' , 'l' , color ,3)
 	                     setTimeout(function(){ 
 	                         return startLineDrawing(leftNode, color)
-	                     }, 100);
+	                     }, 5);
 	                }
 	                 else if(  !!!leftNodeInfo["change"]  &&  (rightNodeInfo["change"]) && !!!GLOBAL_CHECK_FOOT_PRINT[rightNode] ){
 	                    //Right우선 
-	                    console.log("RIGHT 우선");
 	                    stokeLine(x, y, 'w' , 'r' , color ,3)
 	                     setTimeout(function(){ 
 	                         return startLineDrawing(rightNode, color)
-	                     }, 100);
+	                     }, 5);
 	                }
 	                else{
-	                    console.log('DOWN 우선')
 	                    stokeLine(x, y, 'h' , 'd' , color ,3)
 	                    setTimeout(function(){ 
 	                       return startLineDrawing(downNode, color)
-	                    }, 100);
+	                    }, 5);
 	                }
 	            }else{
-	                console.log('else')
 	               if(!!!GLOBAL_FOOT_PRINT.hasOwnProperty(leftNode) && GLOBAL_FOOT_PRINT.hasOwnProperty(rightNode)){      
 	                    /// 좌측라인
-	                    console.log('좌측라인')
 	                    if(  (rightNodeInfo["change"] && !!!rightNodeInfo["draw"] ) && !!!GLOBAL_CHECK_FOOT_PRINT[rightNode] ){
 	                        //Right우선 
-	                        console.log("RIGHT 우선");
 	                        stokeLine(x, y, 'w' , 'r' , color ,3)
 	                        setTimeout(function(){ 
 	                            return startLineDrawing(rightNode, color)
-	                        }, 100);
+	                        }, 5);
 	                    }else{
-	                        console.log('DOWN')
 	                        stokeLine(x, y, 'h' , 'd' , color ,3)
 	                        setTimeout(function(){ 
 	                           return startLineDrawing(downNode, color)
-	                        }, 100);
+	                        }, 5);
 	                    }
 	                    
 	               }else if(GLOBAL_FOOT_PRINT.hasOwnProperty(leftNode) && !!!GLOBAL_FOOT_PRINT.hasOwnProperty(rightNode)){      
 	                    /// 우측라인
-	                    console.log('우측라인')
 	                    if(  (leftNodeInfo["change"] && leftNodeInfo["draw"] ) && !!!GLOBAL_CHECK_FOOT_PRINT[leftNode] ){
 	                        //Right우선 
-	                        console.log("LEFT 우선");
 	                        stokeLine(x, y, 'w' , 'l' , color ,3)
 	                        setTimeout(function(){ 
 	                            return startLineDrawing(leftNode, color)
-	                        }, 100);
+	                        }, 5);
 	                    }else{
-	                        console.log('DOWN')
 	                        stokeLine(x, y, 'h' , 'd' , color ,3)
 	                        setTimeout(function(){ 
 	                           return startLineDrawing(downNode, color)
-	                        }, 100);
+	                        }, 5);
 	                    }
 	               }
 	            }
 
 
 	        }else{
-	            console.log("down")
 	            var downNode = x +"-"+ (y + 1);
 	            stokeLine(x, y, 'h' , 'd' , color ,3)
 	            setTimeout(function(){ 
 	                return startLineDrawing(downNode, color)
-	             }, 100);
+	             }, 5);
 	        }
 	    }
 		// =========================================

@@ -505,7 +505,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	public void setLadderStart(int ladderId, String tenantId, int size, int lineCnt, String lang) throws Exception {
 		logger.debug("setLadderStart started.");	// lang 추가 해줘야 됨
 		// lineCnt를 이용해 lineArray를 구함
-		int height = 10;
+		int height = 40;
 		int[] lineArray = new int[lineCnt];
 		int[] lineMap = new int[size*height];
 		lineArray = getLineArray(size, lineCnt);
@@ -567,7 +567,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	 */
 	public int[] getLineArray(int size, int lineCnt) {
 		// height를 일단 10으로 통일함. 추후 height를 사용자 수(size)에 따라 유동적으로 줄지는 논의 필요
-		int height=10;
+		int height=40;
 		logger.debug("getLineArray started.");
 		logger.debug("size : " + size);
 		logger.debug("lineCnt : " + lineCnt);
@@ -618,7 +618,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	public int[] getLine(int size, int[] lineArray) {
 		logger.debug("getLine started.");
 		// height를 일단 10으로 통일함. 추후 height를 사용자 수(size)에 따라 유동적으로 줄지는 논의 필요
-		int height = 10;
+		int height = 40;
 		String lineArr="";
 		int[] line = new int[size * height];
 		for (int i = 0; i < lineArray.length; i++) {
