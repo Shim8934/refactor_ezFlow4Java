@@ -127,7 +127,7 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useBottomFrameOnly','NO','하단프레임에 우리 모듈이 들어가게 되는 경우 (default : NO)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'attachFileNameMaxLength','100','첨부파일명 최대 길이 (default : 100)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'editorFontStyle','굴림|13px','에디터 폰트 스타일 (사용자의 언어가 한글일 경우에만 적용)');
-INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useReSend','NO','보낸편지함, 메일읽기창에서 재전송 사용여부 (default: NO)');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useReSend','YES','보낸편지함, 메일읽기창에서 재작성 사용여부 (default: YES)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useBallotSystem','YES','투표 사용 여부(YES:사용, NO:미사용)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useAllUserOldMailDelete','NO','관리자가 지정한 기간의 모든 유저의 모든 메일을 삭제하는 옵션 (default : NO)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useAllUserOldMailDeletePeriod','0','관리자가 지정한 기간의 모든 유저의 모든 메일을 삭제하는 옵션 (default : 0 사용안함, 단위 : 개월)');
