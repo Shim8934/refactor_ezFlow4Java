@@ -2376,6 +2376,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			tempNode = root.getElementsByTagName("HTMLBODY").item(0);
 			if (tempNode != null) {
 				htmlBody = tempNode.getTextContent();
+				
+				String hostUrl = request.getScheme()
+						+ "://"
+						+ request.getServerName()
+						+ ("http".equals(request.getScheme())
+								&& request.getServerPort() == 80
+								|| "https".equals(request.getScheme())
+								&& request.getServerPort() == 443 ? "" : ":"
+								+ request.getServerPort());
+				
+				logger.debug("hostUrl=" + hostUrl);
+				
+				// 쿠쿠닥스 에디터의 경우 인라인 이미지 태그의 src가 http://호스트명:포트 와 같이 시작하여 이를 제거하도록 함
+				htmlBody = htmlBody.replaceAll("src=\"" + hostUrl + "/ezEmail/downloadInline\\.do", "src=\"/ezEmail/downloadInline\\.do");
 			}
 		}
 		if (root.getElementsByTagName("SECURITYMAIL") != null) {
@@ -4386,7 +4400,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     }
 	
 	private String convertDownloadInlineImageURLtoCid(String htmlStr) {
-		Pattern pat = Pattern.compile("src=\".*?/ezEmail/downloadInline\\.do.*?contentId=%3C(.*?)%3E\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Pattern pat = Pattern.compile("src=\"/ezEmail/downloadInline\\.do.*?contentId=%3C(.*?)%3E\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher mat = pat.matcher(htmlStr);
 				
 		StringBuffer result = new StringBuffer();

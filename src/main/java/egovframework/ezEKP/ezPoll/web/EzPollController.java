@@ -300,6 +300,8 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("listOfTarget", listOfTarget);
 		model.addAttribute("configStartTime", startTime);
 		model.addAttribute("configEndTime", endTime);
+		model.addAttribute("tenantId", loginVO.getTenantId());
+		
 		
 		logger.debug("question create finishes!");
 		return "/ezPoll/createPoll";
@@ -984,7 +986,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
         //Get absolute path of the application       
         String realPath = request.getServletContext().getRealPath("");
-        String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginSimpleVO.getTenantId());
+        String pDirPath = commonUtil.getUploadPath("upload_vote.ROOT", loginSimpleVO.getTenantId());
         pDirPath = realPath + pDirPath;
         
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
@@ -1502,7 +1504,7 @@ public class EzPollController extends EgovFileMngUtil {
             pFileName[i] = pFileName[i].replace(";", "%3b");
         }    */       
         
-        String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginSimpleVO.getTenantId());
+        String pDirPath = commonUtil.getUploadPath("upload_vote.ROOT", loginSimpleVO.getTenantId());
         pDirPath = realPath + pDirPath;
         
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
@@ -1768,7 +1770,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}		
 		
 		String realPath = req.getServletContext().getRealPath("");
-		String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginSimpleVO.getTenantId());
+		String pDirPath = commonUtil.getUploadPath("upload_vote.ROOT", loginSimpleVO.getTenantId());
 		pDirPath = realPath + pDirPath;
 		
 		if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
@@ -1818,7 +1820,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}		
 		
 		String realPath = req.getServletContext().getRealPath("");
-		String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginSimpleVO.getTenantId());
+		String pDirPath = commonUtil.getUploadPath("upload_vote.ROOT", loginSimpleVO.getTenantId());
 		pDirPath = realPath + pDirPath;
 		
 		if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
