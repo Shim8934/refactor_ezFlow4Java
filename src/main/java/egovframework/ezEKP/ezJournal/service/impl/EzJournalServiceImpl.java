@@ -106,7 +106,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 	
 	@Override
-	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, int tenantId, String offset) throws Exception {
+	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, int tenantId) throws Exception {
 		logger.debug("getFormList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -114,38 +114,9 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("deptId", deptId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		List<JournalFormInfoVO> formList = ezJournalDAO.getFormList(map);
 		
-		/*
-		if ((deptId == null || deptId.equals("")) && !typeId.equals("basic")) {
-			List<JournalFormInfoVO> resultList = new ArrayList<JournalFormInfoVO>();
-			
-			for (int i = 0; i < formList.size(); i++) {
-				JournalFormInfoVO vo = formList.get(i);
-				map.put("formId", vo.getFormId());
-				
-				try {
-					List<DeptInfoVO> useDept = ezJournalDAO.getFormUseDeptList(map);
-	
-					if (useDept.size() < 1) {
-						useDept.clear();
-						DeptInfoVO deptVO = new DeptInfoVO();
-//						deptVO.setDeptName(companyName);	
-						useDept.add(deptVO);
-					}
-					vo.setDepts(useDept);
-					resultList.add(vo);
-					
-				} catch (Exception e) { 
-					e.printStackTrace();
-				}
-				
-			}
-			return resultList;
-		}
-		*/
 		logger.debug("getFormList ended");
 		return formList;
 	}
@@ -172,8 +143,6 @@ public class EzJournalServiceImpl implements EzJournalService {
 		
 		if (isDeptChanged.equals("Y")) {
 			logger.debug((String)jsonParam.get("useDept"));
-			
-//			List<Map<String, Object>> depts = JsonUtil.JsonToList((String) jsonParam.get("useDept")); 
 			
 			if (jsonParam.get("useDept") != null) {
 				Gson gson = new Gson();

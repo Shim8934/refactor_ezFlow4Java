@@ -177,8 +177,7 @@ public class EzJournalGWController {
 				formList = ezJournalService.getFormListAdmin(typeId, deptId, companyId, info.getTenantId(), info.getOffSet());
 			} else {
 				// 사용자단의 양식리스트 (부서사용양식, 기본양식)
-				companyId = info.getCompanyId();
-				formList = ezJournalService.getFormList(typeId, deptId, companyId, info.getTenantId(), info.getOffSet());
+				formList = ezJournalService.getFormList(typeId, deptId, info.getCompanyId(), info.getTenantId());
 			}
 			
 			result.put("data", formList);

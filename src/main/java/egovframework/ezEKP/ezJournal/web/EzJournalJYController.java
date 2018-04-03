@@ -104,7 +104,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 						String filePath = file.get("filePath").toString();
 						filePath = filePath.substring(filePath.indexOf("{"), filePath.indexOf("}") + 1);
 						file.put("pUploadSN", filePath);
-	//					file.put("fileSize", file.get("fileSize"));
+//						file.put("fileSize", file.get("fileSize"));
 						file.put("resultUpload", "true");
 						fileList.set(i, file);
 					}
@@ -120,12 +120,11 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			
 			if (status.equals("ok")) {
 				JSONArray receiver =  (JSONArray) result.get("data");
-				logger.debug("처음 receiver확인용 : " + receiver);
 				if (receiver.size() > 0 && receiver != null) {
 					
 					for (int i = 0; i < receiver.size(); i++) {
 						
-						logger.debug("receiver확인용 : " + receiver.get(i));
+						// logger.debug("receiver확인용 : " + receiver.get(i));
 						JSONObject obj = (JSONObject) receiver.get(i);
 						
 						receiverIds += obj.get("userId") + ", ";
@@ -136,7 +135,6 @@ public class EzJournalJYController extends EgovFileMngUtil {
 					model.addAttribute("receiverNames", receiverNames);
 				}
 			}
-			
 		}
 		
 		restUrl = "/rest/ezjournal/types";
