@@ -47,21 +47,24 @@
 			}
 			
 		    function deleteAuthor() {
-		    	var flag =confirm("<spring:message code='ezResource.t351' />");
-		    	if(flag){
-			    	$.ajax({
-		   				type:"post",
-		   				dataType:"html",
-		   				url:"/admin/ezJournal/deleteAuthor.do",
-		   				data:{"userId":selectedUser},
-		   				success: function(result){
-		   					alert(result);
-					        window.location.reload(true);
-		   				}
-		   			});
-		    	}
+		    	if (selectedUser) {
+			    	var flag =confirm("<spring:message code='ezResource.t351' />");
+			    	if(flag){
+				    	$.ajax({
+			   				type:"post",
+			   				dataType:"html",
+			   				url:"/admin/ezJournal/deleteAuthor.do",
+			   				data:{"userId":selectedUser},
+			   				success: function(result){
+			   					alert(result);
+						        window.location.reload(true);
+			   				}
+			   			});
+			    	}
+				} else {
+					alert("<spring:message code='ezBoard.t601' />");
+				}
 		    }
-		    
 		</script>
 		<style>	
 			tr:hover{background:#eee; color:#fff;}
