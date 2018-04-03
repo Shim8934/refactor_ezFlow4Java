@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPoll.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -98,4 +99,14 @@ public interface EzPollService {
 	public PollUserAnswerVO getSpecificPollUserAndAnswer(int optId, int qstId, String id, int tenantId) throws Exception;	
 	
 	public int checkUsingFile(int tenantID, String FilePath) throws Exception;
+	
+	public int checkQstUsingFile(int tenantID, int qstId, String FilePath) throws Exception;
+	
+	public void deleteAllFilesByQstId(int tenantID, int qstId, String pDirPath, String realPath) throws Exception;
+	
+	public void deleteQstFiles(Map<String, Object> map) throws Exception;
+	
+	public void deleteAnsFiles(Map<String, Object> map) throws Exception;
+	
+	public void deleteCmtFiles(Map<String, Object> map) throws Exception;
 }
