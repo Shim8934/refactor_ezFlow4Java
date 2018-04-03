@@ -47,9 +47,8 @@ public class EzWebFolderController_y {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String folderType = request.getParameter("folderType")!=null? request.getParameter("folderType"): "";
         //Add more function here
-		LOGGER.debug(request.getParameter("folderId"));
-		LOGGER.debug("folderType"+ folderType+"은 이거임");
-		System.out.println("main.do 에 들어오는 folderId = "+ request.getParameter("folderId"));
+		LOGGER.debug("main.do comming folderType is "+ folderType);
+		LOGGER.debug("main.do comming folderId is "+ request.getParameter("folderId"));
 		model.addAttribute("folderType", folderType);
         model.addAttribute("folderId", request.getParameter("folderId"));
 		model.addAttribute("userId", userInfo.getId());
@@ -57,7 +56,6 @@ public class EzWebFolderController_y {
         model.addAttribute("primary", userInfo.getPrimary());
 		return "ezWebFolder/webFolderRight";
 	}
-	
 	
 	// getFolderList /ezwebfolder/users/{userId}/folder-list에 가는 메소드 
 	@RequestMapping(value = "/ezWebFolder/folderList.do")
@@ -70,16 +68,7 @@ public class EzWebFolderController_y {
 		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/users/" +userInfo.getId() + "/folder-list";
-		String adminCheck = "";
-		
-		// admin인지 판단하는 if문 userInfoSimple에서는 찾을수 없음 LoginVO에서 찾을수 있음
-//		if ( userInfo..indexOf("c=1") != -1 ) {
-//			adminCheck = "ad";
-//		}else {
-//			adminCheck = "nad";
-//		}
-		
-		
+
 		RestTemplate rest = new RestTemplate();
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -102,13 +91,14 @@ public class EzWebFolderController_y {
 		try {
 			resultBody = (JSONObject)jp.parse(result.getBody());
 		} catch (ParseException e) {
-			System.out.println("에러라구");
+			LOGGER.debug("getFolderList status fail" );
 			e.printStackTrace();
+			model.addAttribute("status","error");
+			model.addAttribute("code",1);
+			model.addAttribute("data","");
 		}
 		
 		String status = resultBody.get("status").toString();
-		
-		JSONObject data = new JSONObject();
 		
 		if (status.equals("ok")) {
 			model.addAttribute("status","ok");
@@ -124,30 +114,33 @@ public class EzWebFolderController_y {
 		
 	}
 	
-	
 	// 파일 리스트 가져오기 
 	@RequestMapping(value = "/ezWebFolder/fileList.do")
 	public String getFileList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		
-//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		JSONObject jsonObject = new JSONObject();
-		String folderId = request.getParameter("folderId")!=null? request.getParameter("folderId") : "";
-		String folderType = request.getParameter("folderType")!=null? request.getParameter("folderType") : "";
-		System.out.println("folderType"+folderType);
-//		int totalCount = Integer.parseInt(request.getParameter("totalCount"));
-//		int currPage  = Integer.parseInt(request.getParameter("currPage"));
-//		int listCount = Integer.parseInt(request.getParameter("listCount"));
-//		int totalPages = Integer.parseInt(request.getParameter("totalPages"));
+		LoginSimpleVO userInfo 	= commonUtil.userInfoSimple(loginCookie);
+		JSONObject jsonObject 	= new JSONObject();
 		
-		int totalCount = request.getParameter("totalCount") != null ? Integer.parseInt(request.getParameter("totalCount")) : 0;
-		int listCount = request.getParameter("listCount") != null ? Integer.parseInt(request.getParameter("listCount")) : 10;
-		int currPage = request.getParameter("currPage") != null ? Integer.parseInt(request.getParameter("currPage")) : 1;
-		int totalPages = request.getParameter("totalpages") != null ? Integer.parseInt(request.getParameter("totalpages")) : 1;
+		String folderId 		= request.getParameter("folderId")	        != null ? request.getParameter("folderId") 						: "";
+		String folderType		= request.getParameter("folderType")        != null ? request.getParameter("folderType") 					: "";
 		
-		int pEnd = request.getParameter("pEnd")!=null ?Integer.parseInt(request.getParameter("pEnd")) : listCount;
-		int pStart  =request.getParameter("pStart")!=null? Integer.parseInt(request.getParameter("pStart")):0;
+		int totalCount 	        = request.getParameter("totalCount")        != null ? Integer.parseInt(request.getParameter("totalCount"))	: 0;
+		int listCount 	        = request.getParameter("listCount")         != null ? Integer.parseInt(request.getParameter("listCount")) 	: 10;
+		int currPage 	        = request.getParameter("currPage")	        != null ? Integer.parseInt(request.getParameter("currPage")) 	: 1;
+		int totalPages 	        = request.getParameter("totalpages")        != null ? Integer.parseInt(request.getParameter("totalpages")) 	: 1;
+		int pEnd 		        = request.getParameter("pEnd")		        != null ? Integer.parseInt(request.getParameter("pEnd")) 		: listCount;
+		int pStart 		        = request.getParameter("pStart")	        != null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
+		
+		String searchExt 		= request.getParameter("searchExt")			!= null ? request.getParameter("searchExt") 		            : "" ;
+		String searchFileName 	= request.getParameter("searchFileName") 	!= null ? request.getParameter("searchFileName")	            : "" ;
+		String searchStartDate 	= request.getParameter("searchStartDate")	!= null ? request.getParameter("searchStartDate") 	            : "" ;
+		String searchEndDate 	= request.getParameter("searchEndDate") 	!= null ? request.getParameter("searchEndDate") 	            : "" ;
+		String searchCreateName = request.getParameter("searchCreateName") 	!= null ? request.getParameter("searchCreateName") 	            : "" ;
+		String searchFileType 	= request.getParameter("searchFileType") 	!= null ? request.getParameter("searchFileType") 	            : "" ;
+		String searchPageCount 	= request.getParameter("searchPageCount") 	!= null ? request.getParameter("searchPageCount") 	            : "" ;
+		
+		LOGGER.debug("folderType : " + folderType + "foderControllder - getFolderList");
 		
 		if ( currPage == 0 ) {
 			currPage = 1;
@@ -159,45 +152,7 @@ public class EzWebFolderController_y {
 			totalPages = 1;
 		}
 		
-		
-		String searchExt = "" ;
-		String searchFileName = "" ;
-		String searchStartDate = "" ;
-		String searchEndDate = ""  ;
-		String searchCreateName = "" ;
-		String searchFileType = ""  ;
-		String searchPageCount = "" ;
-		String searchListCount = "" ;
 		// 여기에 userId,  companyId, tenantId 가지고 가기 
-		
-		
-		if (request.getParameter("searchExt") != null ) {
-			searchExt = request.getParameter("searchExt");
-		}
-		
-		if (request.getParameter("searchFileName") != null ) {
-			searchFileName = request.getParameter("searchFileName");
-		}
-		
-		if (request.getParameter("searchStartDate") != null ) {
-			searchStartDate = request.getParameter("searchStartDate");
-		}
-		
-		if (request.getParameter("searchEndDate") != null ) {
-			searchEndDate = request.getParameter("searchEndDate");
-		}
-		if (request.getParameter("searchCreateName") != null ) {
-			searchCreateName = request.getParameter("searchCreateName");
-		}
-		if (request.getParameter("searchFileType") != null ) {
-			searchFileType = request.getParameter("searchFileType");
-		}
-		if (request.getParameter("searchPageCount") != null ) {
-			searchPageCount = request.getParameter("searchPageCount");
-		}
-		if (request.getParameter("searchListCount") != null ) {
-			searchListCount = request.getParameter("searchListCount");
-		}
 		
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/folders/" + folderId + "/file-list";
@@ -212,7 +167,7 @@ public class EzWebFolderController_y {
 		
 		HttpEntity<?> entity = new HttpEntity<>( headers );
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId())				
+				.queryParam("userId", userInfo.getId())
 				.queryParam("folderType", folderType)               
 				.queryParam("searchExt", searchExt)                 
 				.queryParam("searchFileName", searchFileName)       
@@ -315,13 +270,6 @@ public class EzWebFolderController_y {
 		}else {
 			newFolderName2 = request.getParameter("newFolderName2");
 		}
-//		if (request.getParameter("folderType") == null || request.getParameter("folderType") =="" ) {
-//			LOGGER.debug("fail_folderType is not comming");
-//		}else {
-//			folderType = request.getParameter("folderType");
-//		}
-		
-		
 		
 		String serverName = request.getServerName();
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
@@ -350,13 +298,12 @@ public class EzWebFolderController_y {
 		LOGGER.debug("result: " + resultBody.get("status"));
 		
 		String status = resultBody.get("status").toString();
-		System.out.println(status+": status");
 		if (status.equals("ok")) {
-			System.out.println("ok");
+			LOGGER.debug("status : ok");
 			model.addAttribute("status","ok");
 			model.addAttribute("code",0);
 		}else {
-			System.out.println(status+" 여기는 controller");
+			LOGGER.debug("status : fail");
 			model.addAttribute("status","error");
 			model.addAttribute("code",1);
 		}
@@ -464,11 +411,11 @@ public class EzWebFolderController_y {
 		LOGGER.debug("result: " + resultBody.get("data"));
 		String res = (String) resultBody.get("data");
 		if (res.equals("ok")) {
-			System.out.println("ok");
+			LOGGER.debug("deleteFolder status : ok");
 			model.addAttribute("status","ok");
 			model.addAttribute("code",0);
 		}else {
-			System.out.println(res+" 여기는 controller");
+			LOGGER.debug("deleteFolder status : error");
 			model.addAttribute("status","error");
 			model.addAttribute("code",1);
 		}
@@ -517,14 +464,12 @@ public class EzWebFolderController_y {
 		String jsonString = gson.toJson(userInfo);
 		JSONObject jsonObject = gson.fromJson(jsonString, JSONObject.class);
 		HttpEntity<Object> entity = new HttpEntity<Object>( jsonObject,headers );
-		System.out.println("id : "+ userInfo.getId());
-		System.out.println("folderId : "+ request.getParameter("folderId"));
-		System.out.println("uppFolderId : "+ request.getParameter("uppFolderId"));
-		System.out.println("primary : "+ userInfo.getLang());
+		LOGGER.debug("id : "+ userInfo.getId() + "folderId : "+ request.getParameter("folderId") 
+				+ "uppFolderId : "+ request.getParameter("uppFolderId") + "primary : "+ userInfo.getLang());
 		jsonObject.put("id", userInfo.getId());
 		jsonObject.put("folderId", request.getParameter("folderId"));
 		jsonObject.put("uppFolderId", request.getParameter("uppFolderId"));
-		jsonObject.put("primary", userInfo.getLang());
+		jsonObject.put("lang", userInfo.getLang());
 //		jsonObject.put("mode", mode);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 		
@@ -532,7 +477,7 @@ public class EzWebFolderController_y {
 		
 		JSONObject resultBody = result.getBody();
 		String status                 = (String) resultBody.get("status");
-		System.out.println("status " + status);
+		LOGGER.debug("moveFolder status " + status);
 		if (!status.equals("ok")) {
 			String reason      = resultBody.get("reason").toString();
 			model.addAttribute("reason", reason);
@@ -547,27 +492,4 @@ public class EzWebFolderController_y {
 		
 	}
 	
-	
-	/*
-	
-	get   folderList
-	
-	get  folderListDetail
-	
-	post  folderInsert
-	
-	
-	put  folderUpdate
-	
-	put   folderMove
-	
-	
-	post    folderCopy
-	
-	delete folderDelete
-	
-	get   fileList
-	
-	
-	*/
 }

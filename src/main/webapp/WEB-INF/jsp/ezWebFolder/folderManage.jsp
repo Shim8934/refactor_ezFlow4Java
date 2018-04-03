@@ -228,7 +228,7 @@
         
 	    function add_onclick_Complete(szName) {
 	    	DivPopUpHidden();
-        	folderList('');
+        	folderList(folderType);
 	    }
         
     </script>

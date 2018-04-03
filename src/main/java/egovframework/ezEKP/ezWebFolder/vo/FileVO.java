@@ -26,6 +26,7 @@ public class FileVO {
 	private String folderPath;
 	private String deleterId;
 	private int    tenantId;
+	private int    folderSort;
 
 	public String getFavouriteStatus() {
 		return favouriteStatus;
@@ -227,4 +228,13 @@ public class FileVO {
 		this.deleterId = deleterId;
 	}
 
+	public int getFolderSort() {
+		return folderSort;
+	}
+
+	public void setFolderSort(int folderSort) {
+		this.folderSort = folderSort;
+	}
+
+	
 }

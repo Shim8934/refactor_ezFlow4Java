@@ -1,12 +1,15 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.text.SimpleDateFormat;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -67,13 +70,15 @@ public class EzWebFolderGWController_y {
 			String comId = common.getCompanyId();
 			String deptId = common.getDeptId();
 			int tenantId = common.getTenantId();
+			String offset = common.getOffSet();
 			List<Map<String, Object>> folderList = new ArrayList< Map<String,Object>>();
-			List<Map<String, Object>> deptFolder = new ArrayList< Map<String,Object>>();
-			List<Map<String, Object>> addJob = new ArrayList< Map<String,Object>>();
 			FolderVO vo = null;
 			String createName1 = "";
 			String createName2 = "";
-			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date                  = new Date();
+			String timeUTC             = commonutil.getDateStringInUTC(formatter.format(date), offset, true);
+			LOGGER.debug("timeUTC"+ timeUTC);
 			// 회사, 부서 , 개인 폴더 본인의 권한을 먼저 조사한 뒤 그것에 맞는 폴더들이 다 있는지 판단 
 			// 회사는 회사폴더가 존재해야함 
 			// 부서는 겸직부서, 부서장을 판단한뒤 하위 부서, 본인부서, 부서장을 판단한뒤 본인의 하위 부서 
@@ -84,69 +89,43 @@ public class EzWebFolderGWController_y {
 				createName2 = common.getDeptId();
 				// 부서폴더 폴더 존재하는지 판단
 				// 부서폴더 존재하는지 판단 위해서는 
-				String chk = service.existFolderChk_D(userId, deptId, comId, folderType, tenantId);
+				String chk = service.existFolderChk_D(userId, deptId, comId, folderType, tenantId, timeUTC);
 				
 				if (chk.equals("ok")) {
-					System.out.println("성공적으로 insert");
+					LOGGER.debug("department insert success");
 				}else {
-					System.out.println("부서폴더 insert하다가 문제가 생겼다구 ");
-					LOGGER.debug("common is not comming");
+					LOGGER.debug("department insert fail");
 					data.put("status", "fail");
 					data.put("code", 1);
 					data.put("data", "");
 				}
 			} else if(folderType.equals("")){
-				
+				LOGGER.debug("folderType is not comming");
 			}else {
 				// 회사폴더, 개인폴더 
 				int chk = service.existFolderChk(userId, deptId, comId, folderType, tenantId);
-				// 존재한다.
 				if (chk != 0 ) {
-					System.out.println("폴더가 존재합니다.");
+					LOGGER.debug("folder exist");
 				}else {
-					//폴더가 존재하지 않아 만들어야합니다.
 					if (folderType.equals("C")) {
 						createName1 = common.getCompanyName();
 						createName2 = common.getCompanyName2();
 					}else if (folderType.equals("U")) {
 						createName1 = common.getUserName();
 						createName2 = common.getUserId();
-						
 					}
-					System.out.println("여기는 U");
-					System.out.println("createNaem1: "+ createName1);
-					System.out.println("createNaem2: "+ createName2);
-					String rtFolder = service.insertFolder(tenantId, comId, deptId,userId, folderType,createName1,createName2, vo);
+					
+					LOGGER.debug("createName1: "+ createName1 + "createName2" + createName2);
+					
+					String rtFolder = service.insertFolder(tenantId, comId, deptId,userId, folderType,createName1,createName2, vo ,timeUTC);
+					if (rtFolder.equals("fail")) {
+						data.put("status", "fail");
+						data.put("code", 1);
+						data.put("data", "");
+					} 					
 				}
-				
 			}
 			folderList = service.getFolderList(admin,userId,deptId,comId, folderId, folderType, tenantId);
-			
-			
-			
-			// 부서폴더 따로 판단하기
-//			folderList = service.getFolderList(admin,userId,deptId,comId, folderId, folderType, tenantId);
-			
-			
-//			if ( folderList.size() == 0 ) {
-//				if ( folderType.equals("U") ) {
-//					createName1 = common.getUserName();
-//					createName2 = common.getUserId();
-//					System.out.println("여기는 U");
-//				}else if (folderType.equals("D") ) {
-//					
-//					createName1 = common.getDeptName();
-//					createName2 = common.getDeptId();
-//					System.out.println("여기는 D");
-//				}
-//				System.out.println("createNaem1: "+ createName1);
-//				System.out.println("createNaem2: "+ createName2);
-//				String rtFolder = service.insertFolder(tenantId, comId, userId, folderType,createName1,createName2, vo);
-//				folderList = service.getFolderList(admin,userId,deptId,comId, folderId, folderType, tenantId);
-//			}
-			
-			
-			
 			
 			data.put("status", "ok");
 			data.put("code", 0);
@@ -158,13 +137,6 @@ public class EzWebFolderGWController_y {
 			data.put("code", 1);
 			data.put("data", "");
 		}
-
-//			LOGGER.debug(folderList.get(0).get("id").toString());
-//			data.put ("listTest",folderList.size());
-//			data.put("id", userId);
-//			data.put("folderId", folderId);
-//			data.put("folderType", folderType);
-//			data.put("tenantId", tenantId);
 		return data;
 	}
 	
@@ -178,6 +150,7 @@ public class EzWebFolderGWController_y {
 	}
 	
 	// 폴더 생성 
+	@SuppressWarnings("unchecked")
 	@RequestMapping ( value="/rest/ezwebfolder/folders" , method= RequestMethod.POST , produces = "application/json;charset=utf-8")
 	public JSONObject folderInsert (HttpServletRequest request,@RequestBody JSONObject jsonObject) throws Exception {
 		JSONObject data = new JSONObject();
@@ -193,16 +166,16 @@ public class EzWebFolderGWController_y {
 		int tenantId = common.getTenantId();
 		String comId = common.getCompanyId();
 		String deptId = common.getDeptId();
-		
+		String offset = common.getOffSet();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonutil.getDateStringInUTC(formatter.format(date), offset, true);
+		LOGGER.debug("timeUTC"+ timeUTC);
 		// foldervo 가지고 와서 상위의 폴더의 vo를 추린다. 
 		FolderVO foldervo= service.getFolderDetail(folderUppId, userId ,tenantId,comId);
-		System.out.println(foldervo.getFolderId());
 		
 		// insert후 return 값 성공 : ok 실패 : fail
-		String result = service.insertFolder(tenantId, comId , deptId, userId, foldervo.getFolderType(),newFolderName1, newFolderName2, foldervo);
-		
-
-		System.out.println("여기는 GW입니다.");
+		String result = service.insertFolder(tenantId, comId , deptId, userId, foldervo.getFolderType(),newFolderName1, newFolderName2, foldervo, timeUTC);
 		
 		if (result.equals("ok")) {
 			data.put("status", "ok");
@@ -223,60 +196,53 @@ public class EzWebFolderGWController_y {
 	public JSONObject folderUpdate (@PathVariable String folderId, HttpServletRequest request,@RequestBody JSONObject jsonObject) throws Exception {
 		JSONObject data = new JSONObject();
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name") : "";
-//		
-		// folderId로 이 폴더create가 나인지 확인해야함
-		
 		String userId = (String) jsonObject.get("id");
 		MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 		
-		String newFolderName1 = (String) jsonObject.get("newFolderName1");
-		String newFolderName2 = (String) jsonObject.get("newFolderName2");
-		int tenantId = common.getTenantId();
-		String comId = common.getCompanyId();
+		String newFolderName1 		= (String) jsonObject.get("newFolderName1");
+		String newFolderName2 		= (String) jsonObject.get("newFolderName2");
+		int tenantId 				= common.getTenantId();
+		String comId 				= common.getCompanyId();
+		String offset 				= common.getOffSet();
+		SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  	= new Date();
+		String timeUTC             	= commonutil.getDateStringInUTC(formatter.format(date), offset, true);
 		
-		service.updateFolder(folderId, tenantId, userId, comId, newFolderName1, newFolderName2);
+		service.updateFolder(folderId, tenantId, userId, comId, newFolderName1, newFolderName2, timeUTC);
 		return data;
 	}
 	// 폴더 복사 
+	@SuppressWarnings("unchecked")
 	@RequestMapping ( value = "/rest/ezwebfolder/folders/{folderId}/{mode}" , method = RequestMethod.PUT , produces ="application/json;charset=utf-8")
 	public JSONObject folderCopy (@PathVariable String folderId,@PathVariable String mode, HttpServletRequest request ,Locale locale ,@RequestBody JSONObject jsonObject ) throws Exception  {
-		JSONObject jsonObj = new JSONObject();
-		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name") : "";
-		// folderCopy를 하기 위해서 받아와야 하는거 
-		// 1. before folderId,
-		// 2. after folderId
-		// 폴더 아이디, uppFolder 
-		String primary  = (String) jsonObject.get("primary")   != null ? 		(String) jsonObject.get("primary") 		 : "";
-		String userId	= (String) jsonObject.get("id") 		!= null ? 		(String) jsonObject.get("id")			 : "";
-		String uppId	= (String) jsonObject.get("uppFolderId") != null ?  (String) jsonObject.get("uppFolderId") 	 : "";
-		String resmode  = "";
+		String serverName	= request.getHeader("host-name")      	!= null ?	request.getHeader("host-name") 			: "";
+		String primary  	= (String) jsonObject.get("primary")   	!= null ?	(String) jsonObject.get("primary") 		: "";
+		String userId		= (String) jsonObject.get("id") 		!= null ?	(String) jsonObject.get("id")			: "";
+		String uppId		= (String) jsonObject.get("uppFolderId")!= null ?	(String) jsonObject.get("uppFolderId") 	: "";
+		String resmode  	= "";
 		JSONObject result   = new JSONObject();
 		MCommonVO common;
 		try {
 			common = mOptionService.commonInfoWeb(serverName, userId);
-			System.out.println("folderId : "+folderId);
-			System.out.println("serverName : "+serverName);
-			System.out.println("primary : "+primary);
-			System.out.println("userId : "+userId);
-			System.out.println("tenantId : "+ common.getTenantId());
-			System.out.println("comId : "+common.getCompanyId());
-			System.out.println("offset"+common.getOffSet());
 			int tenantId = common.getTenantId();
 			String comId = common.getCompanyId();
 			String offset = common.getOffSet();
+			LOGGER.debug("folderId :"+folderId + "serverName : "+serverName + "primary : " + primary + "userId : "+userId + "tenantId : "+ tenantId
+					+ "comId : " + comId + "offset" + offset);
+			
 			LoginVO userInfo = commonutil.getUserForGw(userId, serverName, primary, offset);
 			
-			if (folderId.equals("") || serverName.equals("") || uppId.equals("") || offset.equals("") || mode.equals("") || uppId.equals("")) {
+			if (folderId.equals("") || serverName.equals("") || uppId.equals("") || offset.equals("") || mode.equals("") ) {
 				LOGGER.debug("Parameter error!");
 				result.put("status", "error");
 				result.put("code", "1");
 				return result;
 			}
+			
 			int checkSbCreater = 0;
 			if (mode.equals("folder-move")) {
 				checkSbCreater = service.checkCreater(folderId, tenantId, comId, userId);
 				if (checkSbCreater != 1) {
-					System.out.println("실패");
 					LOGGER.debug("subFolder or SubFile is not mine!");
 					result.put("status", "error");
 					result.put("code", "1");
@@ -321,33 +287,25 @@ public class EzWebFolderGWController_y {
 		
 	}
 	// 폴더 이동 			
+	@SuppressWarnings("unchecked")
 	@RequestMapping (value="/rest/ezwebfolder/folders2/{folderId}/folder-move", method = RequestMethod.PUT , produces = "application/json;charset=utf-8" )
 	public JSONObject folderMove (@PathVariable String folderId, HttpServletRequest request,@RequestBody JSONObject jsonObject ,Locale locale  )  {
 		JSONObject jsonObj = new JSONObject();
-		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name") : "";
-		// folderCopy를 하기 위해서 받아와야 하는거 
-		// 1. before folderId,
-		// 2. after folderId
-		// 폴더 아이디, uppFolder 
-		String primary  = (String) jsonObject.get("primary")   != null ? 		(String) jsonObject.get("primary") 		 : "";
-		String userId	= (String) jsonObject.get("id") 		!= null ? 		(String) jsonObject.get("id")			 : "";
-		String uppId	= (String) jsonObject.get("uppFolderId") != null ?  (String) jsonObject.get("uppFolderId") 	 : "";
+		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name") 			: "";
+		String lang  = (String) jsonObject.get("lang")   		!= null ? (String) jsonObject.get("lang") 		 	: "";
+		String userId	= (String) jsonObject.get("id") 		!= null ? (String) jsonObject.get("id")				: "";
+		String uppId	= (String) jsonObject.get("uppFolderId")!= null ? (String) jsonObject.get("uppFolderId") 	: "";
 		JSONObject result   = new JSONObject();
 		MCommonVO common;
 		try {
 			common = mOptionService.commonInfoWeb(serverName, userId);
-			System.out.println("folderId : "+folderId);
-			System.out.println("serverName : "+serverName);
-			System.out.println("primary : "+primary);
-			System.out.println("userId : "+userId);
-			System.out.println("tenantId : "+ common.getTenantId());
-			System.out.println("comId : "+common.getCompanyId());
-			System.out.println("offset"+common.getOffSet());
-			int tenantId = common.getTenantId();
-			String comId = common.getCompanyId();
+			int tenantId  = common.getTenantId();
+			String comId  = common.getCompanyId();
 			String offset = common.getOffSet();
 			String mode ="move";
-			LoginVO userInfo = commonutil.getUserForGw(userId, serverName, primary, offset);
+			LOGGER.debug("folderId :"+folderId + "serverName : "+serverName + "lang : " + lang + "userId : "+userId + "tenantId : "+ tenantId
+					+ "comId : " + comId + "offset" + offset);
+			LoginVO userInfo = commonutil.getUserForGw(userId, serverName, lang, offset);
 			
 			if (folderId.equals("") || serverName.equals("") || uppId.equals("") || offset.equals("") || mode.equals("") || uppId.equals("")) {
 				LOGGER.debug("Parameter error!");
@@ -359,9 +317,6 @@ public class EzWebFolderGWController_y {
 			checkSbCreater = service.checkCreater(folderId, tenantId, comId, userId);
 			
 			if (checkSbCreater == 1) {
-				// result 1이면 creater가 모두 자신이라는 의미 
-//				FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
-				
 				FolderVO folder     = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 				FolderVO destFolder = ezWebFolderService.getFolderByFolderId(uppId, offset, tenantId);
 				//Check copy/move conditions
@@ -384,13 +339,14 @@ public class EzWebFolderGWController_y {
 				ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, userInfo);
 				
 			result.put("status", "ok");
+			result.put("data", "");
 			result.put("code", 0);
 		
 			}else{
-				System.out.println("실패");
 				LOGGER.debug("subFolder or SubFile is not mine!");
 				result.put("status", "error");
 				result.put("code", "1");
+				result.put("data", "");
 				return result;
 			}
 		}
@@ -398,71 +354,68 @@ public class EzWebFolderGWController_y {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
+			result.put("data", "");
 		}
-			
-		
 		return result;
 	}
 	
 	// 폴더 삭제 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value ="/rest/ezwebfolder/folders2/{folderId}", method = RequestMethod.DELETE , produces = "application/json;charset=utf-8")
-	public JSONObject folderDelete (@PathVariable String folderId , HttpServletRequest request,@RequestBody JSONObject jsonObject) throws Exception {
+	public JSONObject folderDelete (@PathVariable String folderId , HttpServletRequest request,@RequestBody JSONObject jsonObject) {
 		JSONObject jsonObj = new JSONObject();
 		JSONObject data = new JSONObject();
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name") : "";
 //		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
 		String userId = (String) jsonObject.get("id");
 		MCommonVO common;
-//		try {
+		try {
 			common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = common.getTenantId();
 			String comId = common.getCompanyId();
-			service.deleteSubFldAFile(folderId, tenantId, comId, userId);
-//			data.put("result", "delete성공");
+			String offset = common.getOffSet();
+			String timeUTC             = commonutil.getDateStringInUTC(formatter.format(date), offset, true);
+			service.deleteSubFldAFile(folderId, tenantId, comId, userId, timeUTC);
 			jsonObj.put("data", "ok");
-//		} catch (Exception e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			data.put("result", "실패");
-//			jsonObj.put("data", "fail");
-//		}
-		
-		
-		
-		
+			jsonObj.put("code", 0);
+			jsonObj.put("data", "");
+		} catch (Exception e) {
+			jsonObj.put("data", "fail");
+			jsonObj.put("code", 1);
+			jsonObj.put("data", "");
+		}
 		return jsonObj;
 	}
 	
 	// 파일리스트 조회 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/folders/{folderId}/file-list", method=RequestMethod.GET, produces ="application/json;charset=utf-8")
-	public JSONObject fileList (@PathVariable String folderId, HttpServletRequest request) throws Exception {
+	public JSONObject fileList (@PathVariable String folderId, HttpServletRequest request)  {
 		JSONObject jsonObj = new JSONObject();
-		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name") : "";
+		String serverName = request.getHeader("host-name")      			!= null ? request.getHeader("host-name") 			: "";
 		String userId = request.getParameter("userId");
-		String folderType = request.getParameter("folderType") != null ? request.getParameter("folderType") : "" ;
-		String searchExt = request.getParameter("searchExt") != null ? request.getParameter("searchExt") : "" ;
-		String searchFileName = request.getParameter("searchFileName") != null ? request.getParameter("searchFileName") : "" ;
-		String searchStartDate = request.getParameter("searchStartDate") != null ? request.getParameter("searchStartDate") : "" ;
-		String searchEndDate = request.getParameter("searchEndDate") != null ? request.getParameter("searchEndDate") : "" ;
-		String searchCreateName = request.getParameter("searchCreateName") != null ? request.getParameter("searchCreateName") : "" ;
-		String searchFileType = request.getParameter("searchFileType") != null ? request.getParameter("searchFileType") : "" ;
-		String searchPageCount = request.getParameter("searchPageCount") != null ? request.getParameter("searchPageCount") : "" ;
-		String searchListCount = request.getParameter("searchListCount") != null ? request.getParameter("searchListCount") : "" ;
+		String folderType = request.getParameter("folderType") 				!= null ? request.getParameter("folderType") 		: "" ;
+		String searchExt = request.getParameter("searchExt")			 	!= null ? request.getParameter("searchExt") 		: "" ;
+		String searchFileName = request.getParameter("searchFileName") 		!= null ? request.getParameter("searchFileName")	: "" ;
+		String searchStartDate = request.getParameter("searchStartDate")	!= null ? request.getParameter("searchStartDate") 	: "" ;
+		String searchEndDate = request.getParameter("searchEndDate") 		!= null ? request.getParameter("searchEndDate") 	: "" ;
+		String searchCreateName = request.getParameter("searchCreateName") 	!= null ? request.getParameter("searchCreateName") 	: "" ;
+		String searchFileType = request.getParameter("searchFileType") 		!= null ? request.getParameter("searchFileType") 	: "" ;
+		String searchPageCount = request.getParameter("searchPageCount") 	!= null ? request.getParameter("searchPageCount") 	: "" ;
 		
-		int totalCount = request.getParameter("totalCount") != null ? Integer.parseInt(request.getParameter("totalCount")) : 0;
-		int listCount = request.getParameter("listCount") != null ? Integer.parseInt(request.getParameter("listCount")) : 10;
-		int currPage = request.getParameter("currPage") != null ? Integer.parseInt(request.getParameter("currPage")) : 1;
-		int totalpages = request.getParameter("totalpages") != null ? Integer.parseInt(request.getParameter("totalpages")) : 1;
+		int totalCount = request.getParameter("totalCount") 				!= null ? Integer.parseInt(request.getParameter("totalCount"))	: 0;
+		int listCount = request.getParameter("listCount") 					!= null ? Integer.parseInt(request.getParameter("listCount")) 	: 10;
+		int currPage = request.getParameter("currPage") 					!= null ? Integer.parseInt(request.getParameter("currPage")) 	: 1;
+		int totalpages = request.getParameter("totalpages") 				!= null ? Integer.parseInt(request.getParameter("totalpages"))	: 1;
 		
-		int pEnd = request.getParameter("pEnd")!=null ?Integer.parseInt(request.getParameter("pEnd")) : listCount;
-		int pStart  =request.getParameter("pStart")!=null? Integer.parseInt(request.getParameter("pStart")):0;
-		
-		System.out.println("folderType " + folderType);
+		int pEnd = request.getParameter("pEnd")								!=null ?Integer.parseInt(request.getParameter("pEnd")) 			: listCount;
+		int pStart  =request.getParameter("pStart")							!=null? Integer.parseInt(request.getParameter("pStart"))		: 0;
 		
 		List<FileVO> fileList = new ArrayList<FileVO>();
 		JSONObject data = new JSONObject();
-//		try {
+		try {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			String deptId = common.getDeptId();
 			int tenantId = common.getTenantId();
@@ -470,19 +423,21 @@ public class EzWebFolderGWController_y {
 			pEnd = pStart + listCount;
 			fileList = service.getFileList(folderId, folderType, userId, deptId, tenantId , common.getCompanyId(),
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
-					searchPageCount, searchListCount, pStart, pEnd);
+					searchPageCount, pStart, pEnd, offset);
+			
+			// fileCnt : 파일 개수 , fldCnt : 폴더 개수 , totalCount : 파일, 폴더 둘다 합한 개수 ( 페이징 하기 위해 필요 ) 
 			Map<String, Integer> cnt = service.getFileToTalCount(folderId,folderType,userId,deptId,tenantId , common.getCompanyId(),
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
-					searchPageCount, searchListCount, pStart, pEnd);
+					searchPageCount, pStart, pEnd, offset);
 			int fileCnt = cnt.get("fileTotalCnt");
-			int fldCnt = cnt.get("fldTotalCnt");
-			totalCount = cnt.get("totalCount");
+			int fldCnt  = cnt.get("fldTotalCnt");
+			totalCount  = cnt.get("totalCount");
+			
 			if (totalCount%listCount == 0) {
 				totalpages = (totalCount/listCount);
-			}else {
+			} else {
 				totalpages = (totalCount/listCount)+1;
 			}
-			
 			
 			FolderVO folder       = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			String folderPath     = folder.getFolderPath();
@@ -491,30 +446,28 @@ public class EzWebFolderGWController_y {
 			String originalPath   = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
 			String []rootPath     = folderPath.split("\\|");
 			Map<String, String> filePathMap = new LinkedHashMap<String, String>();
-//			if (folder.getFolderUpper().equals("root")) {
-				for (FileVO file : fileList) {
-						String file_path    = originalPath;
-						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
-						String[] fldPathArr = fldPath.split("\\|");
-						System.out.println("rootPath.lengh = "+rootPath.length);
-						for (int i = rootPath.length; i < fldPathArr.length ; i++) {
-							if (filePathMap.containsKey(fldPathArr[i])) {
-								file_path += filePathMap.get(fldPathArr[i]) + "/";
-							}
-							else {
-								FolderVO _folder = ezWebFolderService.getFolderByFolderId(fldPathArr[i], offset, tenantId);
-								file_path       += _folder.getFolderName1() + "/";
-								filePathMap.put(fldPathArr[i], _folder.getFolderName1());
-							}
-						}
-						
-						file.setFilePosition(file_path + file.getFileName());
+			for (FileVO file : fileList) {
+				String file_path    = originalPath;
+				String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
+				String[] fldPathArr = fldPath.split("\\|");
+				for (int i = rootPath.length; i < fldPathArr.length ; i++) {
+					if (filePathMap.containsKey(fldPathArr[i])) {
+						file_path += filePathMap.get(fldPathArr[i]) + "/";
+					}
+					else {
+						FolderVO _folder = ezWebFolderService.getFolderByFolderId(fldPathArr[i], offset, tenantId);
+						file_path       += _folder.getFolderName1() + "/";
+						filePathMap.put(fldPathArr[i], _folder.getFolderName1());
+					}
 				}
-//			} else {
-//				folderPath            = folderPath.substring(1, folderPath.length() - 1);
-//				originalPath   = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
-//			}
-			//
+				if ( !file.getTypeId().equals("folder") ){
+					file.setFilePosition(file_path + file.getFileName());
+				}else {
+					file_path = file_path.substring(1, file_path.length() - 1);
+					file.setFilePosition(file_path );
+				}
+					
+			}
 			data.put("folderPath", folderPath2);
 			data.put("originalPath", originalPath);
 			data.put("fileList", fileList);
@@ -525,18 +478,14 @@ public class EzWebFolderGWController_y {
 			data.put("listCount", listCount );
 			data.put("currPage", currPage );
 			
-			
-			
-			
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
 			jsonObj.put("data", data);
-//		} catch (Exception e) {			
-//			System.out.println("GW에서 나는 에러라구");
-//			jsonObj.put("status", "error");
-//			jsonObj.put("code", 1);
-//			jsonObj.put("data", "");
-//		}
+		} catch (Exception e) {			
+			jsonObj.put("status", "error");
+			jsonObj.put("code", 1);
+			jsonObj.put("data", "");
+		}
 
 		
 		return jsonObj;

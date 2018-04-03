@@ -7094,7 +7094,7 @@
 						"display"		: "block",
 						"margin"		: "0",
 						"padding"		: "0",
-						"position"		: "absolute",
+//						"position"		: "absolute",
 						"top"			: "-2000px",
 						"lineHeight"	: "16px",
 						"zIndex"		: "10000"
@@ -7157,10 +7157,10 @@
 							if(o.top + t.height() - e.pageY < $.vakata.dnd.settings.scroll_proximity)	{ vakata_dnd.scroll_t = 1; }
 							if(e.pageY - o.top < $.vakata.dnd.settings.scroll_proximity)				{ vakata_dnd.scroll_t = -1; }
 						}
-						if(this.scrollWidth > this.offsetWidth) {
-							if(o.left + t.width() - e.pageX < $.vakata.dnd.settings.scroll_proximity)	{ vakata_dnd.scroll_l = 1; }
-							if(e.pageX - o.left < $.vakata.dnd.settings.scroll_proximity)				{ vakata_dnd.scroll_l = -1; }
-						}
+//						if(this.scrollWidth > this.offsetWidth) {
+//							if(o.left + t.width() - e.pageX < $.vakata.dnd.settings.scroll_proximity)	{ vakata_dnd.scroll_l = 1; }
+//							if(e.pageX - o.left < $.vakata.dnd.settings.scroll_proximity)				{ vakata_dnd.scroll_l = -1; }
+//						}
 						if(vakata_dnd.scroll_t || vakata_dnd.scroll_l) {
 							vakata_dnd.scroll_e = $(this);
 							return false;

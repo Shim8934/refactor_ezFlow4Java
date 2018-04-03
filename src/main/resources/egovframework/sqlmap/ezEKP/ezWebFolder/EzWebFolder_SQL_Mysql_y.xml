@@ -50,8 +50,9 @@
         <result property="fileIconUrl"          column="TYPE_ICON"        		columnIndex="17" />
         <result property="folderPath"           column="FOLDER_PATH"            columnIndex="18" />
         <result property="folderName"           column="FOLDER_NAME1"           columnIndex="19" />
-        <result property="favouriteStatus"       column="FAVORITE_STATUS"  		columnIndex="20"/>
+        <result property="favouriteStatus"      column="FAVORITE_STATUS"  		columnIndex="20"/>
         <result property="fileShareStatus"      column="FILESHARE_STATUS"		columnIndex="21"/>
+        <result property="folderSort"      		column="FOLDER_SORT"			columnIndex="22"/>
 <!--         <result property="fileTypeId"           column="filetype_id"            columnIndex="16" /> -->
 <!--         <result property="fileTypeName"         column="filetype_name"          columnIndex="17" /> -->
 <!--         <result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" /> -->
@@ -97,38 +98,36 @@
     </resultMap>
     <select id="EzWebFolderDAO_y.getFolderList" resultClass="HashMap" parameterClass="Map" >
 		<![CDATA[
-	        SELECT distinct
-				folder.folder_id as id ,if( folder.folder_upper = 'root', '##', folder.folder_upper )  as parent
-				, folder.folder_name1 as text,folder.create_id as createId
-			from TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
-			where  SUBSTRING_INDEX(SUBSTRING_INDEX(folder.FOLDER_PATH, '|' ,3), '|', -1) in(
-						select  distinct folder.folder_id
-						FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.folder_id  = user.folder_id
-						where   	 folder.TENANT_ID = #tenantId# 
-								 and user.TENANT_ID = #tenantId# 
-								 and folder.folder_type = #folderType# 
-								 and folder.company_id = #comId# 
-					   			 and (user.USER_ID IN (
-						    			select dept.cn 
-										from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-										where addj.cn = #userId# or dept.cn = #deptId#) 
-									  or user.USER_ID = #userId# 
-									  or user.USER_ID = #comId#)
-						) 
-			    and folder.use_status = 'Y'
-			    and folder.tenant_id = #tenantId#
-		    or (folder.FOLDER_UPPER = 'root' 
-		    	and folder.folder_type = #folderType# 
-		    	AND folder.TENANT_ID = #tenantId# 
-		    	and folder.company_id = #comId# 
-				and folder.use_status = 'Y' 
-				AND (	folder.OWNER_ID = #comId# 
-					 or folder.OWNER_ID IN (
-							select dept.cn 
+	        select 
+				distinct 
+				ff.FOLDER_ID as id ,if( ff.folder_upper = 'root', '##', ff.FOLDER_UPPER )as parent,
+				ff.FOLDER_NAME1 as text,ff.create_id as createId
+			from tbl_webfolder_folder as ff  inner join  (
+			
+				select 	
+					SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
+					fld.folder_id
+				from tbl_webfolder_folder fld inner join 
+			
+				(
+					select 
+						*
+					from 
+						tbl_webfolder_folderuser  
+					where 
+						USER_ID in (
+							select dept.cn 		
 							from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-							where addj.cn = #userId# or dept.cn = #deptId#) ))
-	        order by folder.create_date
-	        
+							where addj.cn = 'yy9320' 
+						)
+						or user_id = #userId# or user_id= #deptId#
+					
+				) as user on fld.folder_id = user.folder_id 
+				where fld.folder_type = #folderType#
+			)as tt on tt.folder_id = ff.folder_id 
+			or tt.a = ff.folder_id
+			where ff.tenant_id = #tenantId#
+			and ff.owner_id = #comId#
 	                      
 		]]>
 	</select>
@@ -147,7 +146,7 @@
    		<![CDATA[
    		SELECT DISTINCT
 				type.TYPE_ICON    ,
-				t.FOLDER_PATH	  as folder_path,
+				t.FOLDER_PATH	  as FOLDER_PATH,
 				t.FOLDER_NAME1    as FOLDER_NAME1,
 				file.FILE_ID 	  ,
 				file.FILE_NAME 	  ,
@@ -155,15 +154,15 @@
 				file.FILE_SIZE	  ,
 				file.TYPE_ID	  ,
 				file.DOWN_COUNT	  ,
-				file.FILE_EXT	  ,
+				file.FILE_EXT	  AS FILE_EXT,
 				file.FOLDER_ID	  ,
 				file.USE_STATUS   ,
 				file.CREATE_ID	  ,
 				file.CREATE_NAME1 ,
 				file.CREATE_NAME2 ,
-				file.CREATE_DATE  as CREATE_DATE,
+				DATE_ADD(file.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
 				file.UPDATE_ID	  ,
-				file.UPDATE_DATE  ,        	 
+				DATE_ADD(file.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,       	 
 				file.TENANT_ID    ,
 				if (EXISTS (
 					select *
@@ -174,7 +173,8 @@
 					select *
 					from tbl_webfolder_share sh
 					where sh.USER_ID = #userId# and sh.tenant_id = #tenantId# and file.file_id = sh.FOLDERFILE_ID 
-						and sh.folderfile_type = 'F'),'1','0')as FILESHARE_STATUS 
+						and sh.folderfile_type = 'F'),'1','0')as FILESHARE_STATUS ,
+				if (file.FILE_EXT = 'folder',0,1) as FOLDER_SORT		
 		]]>	
         <isNotEqual property="parentId" compareValue="root" >
 			<![CDATA[
@@ -188,17 +188,51 @@
 			]]>
 		</isNotEqual>
 		<isEqual property="parentId" compareValue="root" >
-			<![CDATA[
-				FROM tbl_webfolder_file as file inner join (
-				select * from tbl_webfolder_folder 
-					where folder_path like (
-						select concat(FOLDER_PATH,'%') 
-						from tbl_webfolder_folder 
-						where FOLDER_ID = #folderId# and tenant_id = #tenantId#  group by folder_path )
-					and tenant_id = #tenantId#) as t on file.folder_id = t.folder_id
-				inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
-				where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
-			]]>
+			<isEqual property="folderType" compareValue="C" >
+	   			<![CDATA[
+	   			from tbl_webfolder_file as file  inner join  (
+				
+					select 	
+						SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
+						fld.folder_id, fld.folder_name1,fld.folder_path
+					from tbl_webfolder_folder fld inner join 
+				
+					(
+						select 
+							*
+						from 
+							tbl_webfolder_folderuser  
+						where 
+							USER_ID in (
+								select dept.cn 		
+								from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
+								where addj.cn = #userId# 
+							)
+							or user_id = #userId# or user_id= #deptId#
+						
+					) as user on fld.folder_id = user.folder_id 
+					where fld.folder_type = #folderType#
+				)as t on t.folder_id = file.folder_id 
+				or t.a = file.folder_id
+				inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID
+				
+				where file.tenant_id = #tenantId#
+				and file.use_status ='Y'
+				]]>	
+	   		</isEqual>
+	   		<isNotEqual property="folderType" compareValue="C">
+				<![CDATA[
+					FROM tbl_webfolder_file as file inner join (
+					select * from tbl_webfolder_folder 
+						where folder_path like (
+							select concat(FOLDER_PATH,'%') 
+							from tbl_webfolder_folder 
+							where FOLDER_ID = #folderId# and tenant_id = #tenantId#  group by folder_path )
+						and tenant_id = #tenantId#) as t on file.folder_id = t.folder_id
+					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
+					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
+				]]>
+			</isNotEqual>
 		</isEqual>
 		
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
@@ -224,7 +258,6 @@
 		
 		<isNotEqual property="parentId" compareValue="root" >
 			<![CDATA[
-				group by file.file_id
 				union all
 	            	select DISTINCT
 						type.TYPE_ICON		AS TYPE_ICON    ,     
@@ -234,17 +267,17 @@
 						folder.FOLDER_NAME1 AS FILE_NAME	,     
 						folder.FOLDER_PATH  AS FILE_PATH	,     
 						0 					AS FILE_SIZE	,     
-						"folder"			AS TYPE_ID		, 	  
+						'folder'			AS TYPE_ID		, 	  
 						0 					AS DOWN_COUNT   ,     
 						"folder"            AS FILE_EXT     ,     
 						folder.FOLDER_ID	AS FOLDER_ID    ,     
 						folder.USE_STATUS   AS USE_STATUS   ,     
 						folder.CREATE_ID	AS CREATE_ID    ,     
 						folder.CREATE_NAME1 AS CREATE_NAME1 ,     
-						folder.CREATE_NAME2 AS CREATE_NAME2 ,     
-						folder.CREATE_DATE  AS CREATE_DATE  ,     
-						folder.UPDATE_ID	AS UPDATE_ID    ,     
-						folder.UPDATE_DATE  AS UPDTAE_DATE ,     	 
+						folder.CREATE_NAME2 AS CREATE_NAME2 , 
+						DATE_ADD(folder.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+						folder.UPDATE_ID	AS UPDATE_ID    , 
+						DATE_ADD(folder.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
 						folder.TENANT_ID	as TENANT_ID    ,
 						if (EXISTS (
 							select *
@@ -256,9 +289,10 @@
 							select *
 							from tbl_webfolder_share sh
 							where sh.USER_ID = #userId# and sh.tenant_id = #tenantId# and folder.folder_id = sh.FOLDERFILE_ID 
-								and sh.folderfile_type = 'D'),'1','0')as FILESHARE_STATUS	      
+								and sh.folderfile_type = 'D'),'1','0')as FILESHARE_STATUS,
+						if (FILE_EXT = 'folder',0,1) as FOLDER_SORT			      
 		            from 
-			            tbl_webfolder_filetype AS type LEFT OUTER JOIN  tbl_webfolder_folder as folder ON type.TYPE_NAME = "folder"
+			            tbl_webfolder_filetype AS type LEFT OUTER JOIN  tbl_webfolder_folder as folder ON type.TYPE_NAME = 'folder'
 		            where 
 							folder.tenant_id = #tenantId#	 
 						and 
@@ -269,12 +303,11 @@
 		                	folder.folder_upper = #folderId#
 		                and 
 		                	folder.company_id = #comId#
-		                ORDER BY CREATE_DATE desc
 						
 	   		]]>	
 		</isNotEqual>
 		<![CDATA[
-			
+			ORDER BY FOLDER_SORT,CREATE_DATE desc 
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -320,18 +353,48 @@
 			]]>
 		</isNotEqual>
 		<isEqual property="parentId" compareValue="root" >
-			<![CDATA[
-				FROM tbl_webfolder_file as file inner join (
-				select * 
-				from tbl_webfolder_folder 
-				where folder_path like (
-						select concat(FOLDER_PATH,'%') 
-						from tbl_webfolder_folder 
-						where FOLDER_ID = #folderId# and tenant_id = #tenantId#  group by folder_path )
-					and tenant_id = #tenantId#) as t on file.folder_id = t.folder_id
-				inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID and type.tenant_id = file.tenant_id 
-				where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
-			]]>
+			<isEqual property="folderType" compareValue="C" >
+	   			<![CDATA[
+		   			from tbl_webfolder_file as file inner join  (
+					
+						select 	
+							SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
+							fld.folder_id, fld.folder_name1,fld.folder_path
+						from tbl_webfolder_folder fld inner join 
+						(
+							select 
+								*
+							from 
+								tbl_webfolder_folderuser  
+							where 
+								USER_ID in (
+									select dept.cn 		
+									from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
+									where addj.cn = #userId# 
+								)
+								or user_id = #userId# or user_id= #deptId#
+						) as user on fld.folder_id = user.folder_id 
+						where fld.folder_type = #folderType#
+					)as t on t.folder_id = file.folder_id 
+					or t.a = file.folder_id
+					inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID
+					where file.tenant_id = #tenantId# and type.tenant_id = #tenantId#
+					and file.use_status ='Y'
+				]]>	
+	   		</isEqual>
+	   		<isNotEqual property="folderType" compareValue="C">
+				<![CDATA[
+					FROM tbl_webfolder_file as file inner join (
+					select * from tbl_webfolder_folder 
+						where folder_path like (
+							select concat(FOLDER_PATH,'%') 
+							from tbl_webfolder_folder 
+							where FOLDER_ID = #folderId# and tenant_id = #tenantId#  group by folder_path )
+						and tenant_id = #tenantId#) as t on file.folder_id = t.folder_id
+					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
+					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
+				]]>
+			</isNotEqual>
 		</isEqual>
 		
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
@@ -530,11 +593,11 @@
 		    	'Y',
 		    	#ownerId#,
 		    	#userId#,
-		    	SYSDATE(),
+		    	#timeUTC#,
 		    	#createName1#,
 		    	#createName2#,
 		    	#userId#,
-		    	SYSDATE(),
+		    	#timeUTC#,
 		    	#comId#,
 		    	#tenantId#
 		    	)
@@ -674,7 +737,7 @@
 			UPDATE
 				TBL_WEBFOLDER_FOLDER
 			SET
-				UPDATE_DATE  = SYSDATE(),
+				UPDATE_DATE  = #timeUTC#,
 				FOLDER_NAME1 = #newFolderName1#,
 				FOLDER_NAME2 = #newFolderName2#
 			WHERE
@@ -789,11 +852,11 @@
 			    	'Y',
 			    	#deptId#,
 			    	#userId#,
-			    	SYSDATE(),
+			    	#timeUTC#,
 			    	#createName1#,
 			    	#createName2#,
 			    	#userId#,
-			    	SYSDATE(),
+			    	#timeUTC#,
 			    	#comId#,
 			    	#tenantId#
 	        FROM tbl_webfolder_folder

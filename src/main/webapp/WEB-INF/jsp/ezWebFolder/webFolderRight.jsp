@@ -38,7 +38,7 @@
 		var checkedArr	= [];
 		var userId = "${userInfo.userId}";
 		var userName = "${userInfo.userName}";
-		var currentPage = 1;
+		var currentPage = "1";
 		var totalPages = 0 ;
 		var totalRows = 0 ;
 		var blockSize = 10;
@@ -72,7 +72,7 @@
 		// fileList 화면 
 		window.onload = function () {
 			pEnd= pStart + blockSize;
-			getfileList(folderId);
+			getFileList(folderId);
 			var divList          = document.getElementById("dragDropArea");
 			var reheight         = document.documentElement.clientHeight - 220;
 			divList.style.height = reheight + "px";
@@ -85,7 +85,7 @@
         }
 	    
 	    
-	    function getfileList(a){
+	    function getFileList(a){
 	    	if(folderId == "") {
 	    		alert(folderId+"가없음");
 	    	}
@@ -151,7 +151,7 @@
 				
 				detailName.className = "aName";
 				detailName.id = originPath[i];
-				detailName.onclick = function() {getfileList(this.id)};
+				detailName.onclick = function() {getFileList(this.id)};
 				detailName.textContent = path[i];
 				detailName.setAttribute("style", "font-size:22px; ");
 				
@@ -281,7 +281,7 @@
 		
 		function dbClickFunction(obj) {
 			var folderId2 = obj.getAttribute("_fileId");
-			getfileList(folderId2);
+			getFileList(folderId2);
 			
 		}
 		
@@ -321,7 +321,7 @@
 	    	currentPage = Value;
 	        pStart = (blockSize * (currentPage))- blockSize;
 	        pEnd = blockSize;
-	        getfileList(folderId);
+	        getFileList(folderId);
 	    }
 	    
 	   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
@@ -354,7 +354,7 @@
 	        }
 	        searchOptionHidden();
 // 	        MakeSubCondition();
-	        getfileList(folderId);
+	        getFileList(folderId);
 	    }
    		function clickRow(obj, e) {
 	        e.stopPropagation();
@@ -492,11 +492,12 @@
        
        function fileUpload() {
     	   document.getElementById("file").click();
+    	   refreshView();
        }
        
        function refreshView() {
     	   console.log("Run here!");
-    	   getfileList(folderId);
+    	   getFileList(folderId);
        }
        
        function fileDelete() {
@@ -528,6 +529,7 @@
 					else {
 						DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList);
 					}
+					refreshView();
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -623,7 +625,8 @@
        }
        function changeCount(value) {
     	   blockSize = value;
-    	   getfileList(folderId);
+    	   currentPage = 1;
+    	   getFileList(folderId);
        }
        
     </script>
@@ -709,7 +712,7 @@
     <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
     <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 	
-	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;">
+	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
 				<th width="20px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>

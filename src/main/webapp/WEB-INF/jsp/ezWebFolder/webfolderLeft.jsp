@@ -199,33 +199,34 @@
 			.jstree-leaf a{
 			    height: auto !important;
 			}
+			
 	    </style>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%" onload="drawVolume();">
 		<div id="left" style="overflow: none">
 			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"><span>웹폴더</span>
-					<img style="width:20px;height:20px;" onClick="refreshView()" class="ui-datepicker-trigger" src="/images/webfolder/reload.png" alt title>
+				<img style="width:20px;height:20px;" onClick="refreshView()" class="ui-datepicker-trigger" src="/images/webfolder/reload.png" alt title>
 			</div>
 			<h2>
   				<span style="display:inline-block;width:100%;" onclick="folderList('C');">회사폴더</span>
   			</h2>  
-    		<ul>
-    			<div id ="tree" style="width:100%;min-height:200px; font-size: 20px;"></div>
+    		<ul class ="tree">
+    			<div id ="tree" style="width:210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
 <!-- 	  			<li id ="company"></li> -->
 		    </ul>  	
 		    <h2>
-  				<span style="display:inline-block;width:100%;" onclick="folderList('D');">부서폴더</span>
+  				<span style="display:inline-block; width:100%;" onclick="folderList('D');">부서폴더</span>
   			</h2>  
-    		<ul>
-    			<div id ="treeDept" style="width:100%; min-height:200px; font-size: 20px;"></div>
+    		<ul class ="tree">
+    			<div id ="treeDept" style="width: 210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
 <!-- 	  			<li id ="dept"></li> -->
 		    </ul>  
 		    	
 		   	<h2>
   				<span style="display:inline-block;width:100%;" onclick="folderList('U');">개인폴더</span>
   			</h2>  
-    		<ul>
-    			<div id ="treePer" style="width:100%;min-height:200px; font-size: 20px;"></div>
+    		<ul class ="tree">
+    			<div id ="treePer" style="width: 210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
 <!-- 	  			<li id="person"></li> -->
 		    </ul>  
 		    
