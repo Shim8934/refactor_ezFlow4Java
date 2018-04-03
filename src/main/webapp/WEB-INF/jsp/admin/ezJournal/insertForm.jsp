@@ -30,6 +30,7 @@
 		    // 수정시 해당 양식을 사용하는 부서정보와 양식내용을 받음
 		    var useDepts = "<c:out value='${useDepts}'/>";		    	
         	var selFormContent = "<c:out value='${formContent}'/>";
+        	var selDelDeptId = "";
 		    
 		    $(document).ready(function() {
 		        
@@ -47,7 +48,6 @@
 		        	document.title = "<spring:message code='ezJournal.t18' />";
 		        	
 		        	useDepts = JSON.parse(useDepts.replace(/&#034;/g, "\""));
-		        	console.log("useDepts : " + useDepts);
 		        	
 		        	if (useDepts != null) {
 		        		useDeptList = useDepts.slice();
@@ -55,7 +55,6 @@
 		        		$("#setUseDeptList").show();
 		        		drawUseDeptList();
 		        	}
-		        	
 		        }
 			    
 		    });
@@ -66,7 +65,6 @@
 	            if (formId != "" && formId != null) {
 	            	selFormContent = selFormContent.replace(/&#034;/g, "\"");
 			    	selFormContent = selFormContent.slice(1, -1);
-	            	console.log(selFormContent);
 		        	message.SetEditorContent(selFormContent);
                 }
 		    }
@@ -133,40 +131,45 @@
 		    
 		    // 선택한 부서를 배열에 넣어주기
 		    function insertDept() {
-		    	var deptId = selDeptId;
-		    	var deptName = $("#deptTreeView").jstree().get_node(deptId).text;
-		    	//var deptName = nodeText.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-		    	console.log(deptName);
-		    	var chkFlag = true;
-		    	isDeptChanged = "Y";
-		    	for(var j = 0; j < useDeptList.length; j++) {
-		    		if (useDeptList[j].deptId == selDeptId) {
-			    		chkFlag = false;
-		    		}
-		    	} 
-		    	selDeptId = "";
-		    	
-		    	if (chkFlag) {
-			    	useDeptList.push({"deptName" : deptName, "deptId" : deptId});
+		    	if (selDeptId === "") {
+		    		alert("<spring:message code='ezJournal.t168'/>");
+		    		return;
 		    	} else {
-		    		alert("<spring:message code='ezJournal.t127'/>");
+			    	var deptId = selDeptId;
+			    	var deptName = $("#deptTreeView").jstree().get_node(deptId).text;
+//			    	var deptName = nodeText.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+			    	console.log(deptName);
+			    	var chkFlag = true;
+			    	isDeptChanged = "Y";
+			    	for(var j = 0; j < useDeptList.length; j++) {
+			    		if (useDeptList[j].deptId == deptId) {
+				    		chkFlag = false;
+			    		}
+			    	} 
+			    	
+			    	if (chkFlag) {
+				    	useDeptList.push({"deptName" : deptName, "deptId" : deptId});
+			    	} else {
+			    		alert("<spring:message code='ezJournal.t127'/>");
+			    	}
+			    	drawUseDeptList();
 		    	}
-		    	drawUseDeptList();
 		    } 
 		    
 		    // 선택된 부서배열에서 특정 부서 삭제
 		    function deleteDept() {
-		    	if (selDeptId === "") {
+		    	if (selDelDeptId === "") {
 		    		alert("<spring:message code='ezJournal.t168'/>");
+		    		return;
 		    	} else {
 			    	isDeptChanged = "Y";
 			     	for(var j = 0; j < useDeptList.length; j++) {
-			    		if (useDeptList[j].deptId === selDeptId) {
+			    		if (useDeptList[j].deptId === selDelDeptId) {
 			    			useDeptList.splice(j, 1);
 			    		}
 			    	}
-			     	selDeptId = "";
 			    	drawUseDeptList();
+			    	selDelDeptId = "";
 		    	}
 		    }
 		    
@@ -176,9 +179,9 @@
 		    	
 		    	var useListHtml = "";     
 		    	for (var i = 0; i < useDeptList.length; i++) {
-		    		useListHtml += "<tr deptId=" + useDeptList[i].deptId + " onclick='listClick(this)' ondblclick='deleteDept()'>";
+		    		useListHtml += "<tr deptId=" + useDeptList[i].deptId + " onclick='listClick(this)' ondblclick='deleteDept()' style='cursor:pointer;'>";
 		    		useListHtml += "<td>";
-		    		useListHtml += useDeptList[i].deptName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+		    		useListHtml += useDeptList[i].deptName;
 		    		useListHtml += "</td>";
 		    		useListHtml += "</tr>";
 		    	}
@@ -187,7 +190,7 @@
 		    
 		    // 선택된 부서리스트에서 부서 선택시 스타일주기
 		    function listClick(elem) {
-		    	selDeptId = $(elem).attr("deptId");
+		    	selDelDeptId = $(elem).attr("deptId");
 		    	
 		    	$(".mainlist tr").removeClass("active");
 				$(elem).addClass("active");
@@ -207,7 +210,6 @@
 		    		return false;
 		    	}
 		    	
-		    	//if ($("#selDeptUseP").is("checked")) {
 		    	if ($(":input:radio[name=setUseDept]:checked").val() == "P") {
 		    		var useDept = JSON.stringify(useDeptList);	
 		    	} else if (($(":input:radio[name=setUseDept]:checked").val() == "A") && formId != null) {
@@ -232,9 +234,7 @@
 	    					alert("<spring:message code='ezJournal.t128'/>");
 	    					opener.location.reload();
 							window.close();    					
-						} else {
-							
-						}
+						} 
     				},
     				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nmessage: " + request.responseText + "\nerror : " + error);
