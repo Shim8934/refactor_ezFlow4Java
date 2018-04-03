@@ -123,7 +123,11 @@
 			})
 			
 			$("#autoDirection").on("click", function() {
-				alert("자동진행");
+				alert("자동진행_임시");
+				var that = "#72A100";
+			
+				startLineDrawing("1-0", that);
+
 			});
 			
 			
@@ -499,7 +503,7 @@
 	
 		
 	// =========================================
-		var heightNode = 10;
+		var heightNode = 11;
 		var widthNode =  "${ fn:length(list)}";
 		var LADDER = {};
 		var row =0;
@@ -523,8 +527,6 @@
       		setRandomNodeData();
       		drawDefaultLine();
       		drawNodeLine();
-      		userSetting();
-            resultSetting();
     	}
 		 
 		function setDefaultFootPrint(){
@@ -585,7 +587,11 @@
 			console.log("clear4");
 			console.log("======");
 			var cnt=0
-	        for(var y =0; y < heightNode; y++){
+			for(var x =0; x <widthNode ; x++){
+				var loopNode = x + "-0";       // loopNode는 0-0부터 ~ 9~0, 0-9부터 9-9 까지
+               GLOBAL_FOOT_PRINT[loopNode] = {"change" : false , "draw" : false}
+            }
+	        for(var y =1; y < heightNode; y++){
 				for(var x =0; x <widthNode ; x++){
 					var loopNode = x + "-" + y;       // loopNode는 0-0부터 ~ 9~0, 0-9부터 9-9 까지
 	                if(ladArr[cnt] == 0){                    // 0 직선 일시
@@ -679,38 +685,126 @@
 	        ctx.closePath();
 	    }
 	    
-	    function userSetting(){
-	        var userList = LADDER[0];
-	        var html = '';
-	        for(var i=0; i <  userList.length; i++){
-	            var color = '#'+(function lol(m,s,c){return s[m.floor(m.random() * s.length)] + (c && lol(m,s,c-1));})(Math,'0123456789ABCDEF',4);
+	    function startLineDrawing(nodLoc , nodColor){
+			
+	        var node = nodLoc;
+	        var color = nodColor;
+	        var x = node.split('-')[0]*1;
+	        var y = node.split('-')[1]*1;
+	        var nodeInfo = GLOBAL_FOOT_PRINT[node];
 
-	            var x = userList[i].split('-')[0]*1;
-	            var y = userList[i].split('-')[1]*1;
-	            var left = x * 100  -30
-	            html += '<div class="user-wrap" style="left:'+left+'"><input type="text" data-node="'+userList[i]+'"><button class="ladder-start" style="background-color:'+color+'" data-color="'+color+'" data-node="'+userList[i]+'"></button>';
-	            html +='</div>'
+	        GLOBAL_CHECK_FOOT_PRINT[node] = true;
+	        
+	        var dir = 'r'
+	        if(y ==heightNode ){
+	            reSetCheckFootPrint();
+	            var target = $('input[data-node="'+node+'"]');
+	            target.css({
+	                'background-color' : color
+	            })
+	            $('#' + node + "-user").text(userName)
+	             working = false;
+	            return false;
 	        }
-	        ladder.append(html);
-	    }
-	    function resultSetting(){
-	         var resultList = LADDER[heightNode-1];
-	         console.log(resultList )
+	        if(nodeInfo["change"] ){
+	            var leftNode = (x-1) + "-" +y;
+	            var rightNode = (x+1) + "-" +y;
+	            var downNode = x +"-"+ (y + 1);
+	            var leftNodeInfo = GLOBAL_FOOT_PRINT[leftNode];
+	            var rightNodeInfo = GLOBAL_FOOT_PRINT[rightNode];
+	                
+	            if(GLOBAL_FOOT_PRINT.hasOwnProperty(leftNode) && GLOBAL_FOOT_PRINT.hasOwnProperty(rightNode)){      
+	                var leftNodeInfo = GLOBAL_FOOT_PRINT[leftNode];
+	                var rightNodeInfo = GLOBAL_FOOT_PRINT[rightNode];
+	                if(  (leftNodeInfo["change"] &&  leftNodeInfo["draw"] && !!!GLOBAL_CHECK_FOOT_PRINT[leftNode] ) && (rightNodeInfo["change"])&&  leftNodeInfo["draw"]  && !!!GLOBAL_CHECK_FOOT_PRINT[rightNode] ){
+	                    //Left우선 
+	                    console.log("중복일때  LEFT 우선");
+	                    stokeLine(x, y, 'w' , 'l' , color ,3)
+	                     setTimeout(function(){ 
+	                         return startLineDrawing(leftNode, color)
+	                     }, 100);
+	                }
+	                else if(  (leftNodeInfo["change"] &&  !!!leftNodeInfo["draw"] && !!!GLOBAL_CHECK_FOOT_PRINT[leftNode] ) && (rightNodeInfo["change"]) && !!!GLOBAL_CHECK_FOOT_PRINT[rightNode] ){
+	                    console.log('RIGHT 우선')
+	                    stokeLine(x, y, 'w' , 'r' , color ,3)
+	                    console.log("right")
+	                    setTimeout(function(){ 
+	                        return startLineDrawing(rightNode, color)
+	                     }, 100);
+	                }
+	                else if(  (leftNodeInfo["change"] &&  leftNodeInfo["draw"] && !!!GLOBAL_CHECK_FOOT_PRINT[leftNode] ) && (!!!rightNodeInfo["change"]) ){
+	                    //Left우선 
+	                    console.log("LEFT 우선");
+	                    stokeLine(x, y, 'w' , 'l' , color ,3)
+	                     setTimeout(function(){ 
+	                         return startLineDrawing(leftNode, color)
+	                     }, 100);
+	                }
+	                 else if(  !!!leftNodeInfo["change"]  &&  (rightNodeInfo["change"]) && !!!GLOBAL_CHECK_FOOT_PRINT[rightNode] ){
+	                    //Right우선 
+	                    console.log("RIGHT 우선");
+	                    stokeLine(x, y, 'w' , 'r' , color ,3)
+	                     setTimeout(function(){ 
+	                         return startLineDrawing(rightNode, color)
+	                     }, 100);
+	                }
+	                else{
+	                    console.log('DOWN 우선')
+	                    stokeLine(x, y, 'h' , 'd' , color ,3)
+	                    setTimeout(function(){ 
+	                       return startLineDrawing(downNode, color)
+	                    }, 100);
+	                }
+	            }else{
+	                console.log('else')
+	               if(!!!GLOBAL_FOOT_PRINT.hasOwnProperty(leftNode) && GLOBAL_FOOT_PRINT.hasOwnProperty(rightNode)){      
+	                    /// 좌측라인
+	                    console.log('좌측라인')
+	                    if(  (rightNodeInfo["change"] && !!!rightNodeInfo["draw"] ) && !!!GLOBAL_CHECK_FOOT_PRINT[rightNode] ){
+	                        //Right우선 
+	                        console.log("RIGHT 우선");
+	                        stokeLine(x, y, 'w' , 'r' , color ,3)
+	                        setTimeout(function(){ 
+	                            return startLineDrawing(rightNode, color)
+	                        }, 100);
+	                    }else{
+	                        console.log('DOWN')
+	                        stokeLine(x, y, 'h' , 'd' , color ,3)
+	                        setTimeout(function(){ 
+	                           return startLineDrawing(downNode, color)
+	                        }, 100);
+	                    }
+	                    
+	               }else if(GLOBAL_FOOT_PRINT.hasOwnProperty(leftNode) && !!!GLOBAL_FOOT_PRINT.hasOwnProperty(rightNode)){      
+	                    /// 우측라인
+	                    console.log('우측라인')
+	                    if(  (leftNodeInfo["change"] && leftNodeInfo["draw"] ) && !!!GLOBAL_CHECK_FOOT_PRINT[leftNode] ){
+	                        //Right우선 
+	                        console.log("LEFT 우선");
+	                        stokeLine(x, y, 'w' , 'l' , color ,3)
+	                        setTimeout(function(){ 
+	                            return startLineDrawing(leftNode, color)
+	                        }, 100);
+	                    }else{
+	                        console.log('DOWN')
+	                        stokeLine(x, y, 'h' , 'd' , color ,3)
+	                        setTimeout(function(){ 
+	                           return startLineDrawing(downNode, color)
+	                        }, 100);
+	                    }
+	               }
+	            }
 
-	        var html = '';
-	        for(var i=0; i <  resultList.length; i++){
-	            
-	            var x = resultList[i].split('-')[0]*1;
-	            var y = resultList[i].split('-')[1]*1 + 1;
-	            var node = x + "-" + y;
-	            var left = x * 100  -30
-	            html += '<div class="answer-wrap" style="left:'+left+'"><input type="text" data-node="'+node+'">';
-	            html +='<p id="'+node+'-user"></p>'
-	            html +='</div>'
+
+	        }else{
+	            console.log("down")
+	            var downNode = x +"-"+ (y + 1);
+	            stokeLine(x, y, 'h' , 'd' , color ,3)
+	            setTimeout(function(){ 
+	                return startLineDrawing(downNode, color)
+	             }, 100);
 	        }
-	        ladder.append(html);
 	    }
-	    
 		// =========================================
 	</script>
 	<style type="text/css">
@@ -880,7 +974,7 @@
 									</c:if>
 									<c:if test="${vo.status eq 1}">
 										<div id="ladder" class="ladder">
-									         <canvas class="ladder_canvas" id="ladder_canvas" width="1550" height="600"></canvas>
+									         <canvas class="ladder_canvas" id="ladder_canvas" width="1550" height="650"></canvas>
 									    </div>
 									</c:if><br><br><br>						
 								<ul id="itemList"></ul>
