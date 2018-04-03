@@ -117,18 +117,18 @@
 			            		listTd[i].style.cursor = "pointer";
 			            	}
 			            	if((i%4) == 1) {
-			            		listTd[i].style.width = "130px";
+			            		listTd[i].style.width = "120px";
 			            		listTd[i].style.textAlign = "center";
 			            		listTd[i].style.cursor = "pointer";
 			            		listTd[i].innerHTML = listTd[i].textContent.split("(")[0];
 			            	}
 			            	if((i%4) == 2) {
-			            		listTd[i].style.width = "130px";
+			            		listTd[i].style.width = "80px";
 			            		listTd[i].style.textAlign = "center";
 			            		listTd[i].style.cursor = "pointer";
 			            	}
 			            	if((i%4) == 3){
-			            		listTd[i].style.width = "130px";
+			            		listTd[i].style.width = "150px";
 			            		listTd[i].style.textAlign = "center";
 			            		listTd[i].style.cursor = "pointer";
 			            	}

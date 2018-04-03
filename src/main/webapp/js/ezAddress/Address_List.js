@@ -604,22 +604,22 @@ function makePageSelPage() {
 function Window_onresize() {
     if (searchFlag) {
         if (document.getElementById("ListViewType").value == "list") {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 253) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 283) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 283) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 313) + "px";
         }
         else {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 218) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 248) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 245) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 275) + "px";
         }
     }
     else {
         if (document.getElementById("ListViewType").value == "list") {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 213) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 243) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 243) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 273) + "px";
         }
         else {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 178) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 208) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 205) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 235) + "px";
         }
     }
 }

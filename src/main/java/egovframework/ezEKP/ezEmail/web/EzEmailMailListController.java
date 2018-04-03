@@ -527,7 +527,8 @@ public class EzEmailMailListController {
 		      
 			folder.close(false);
 			
-			returnData = sb.toString();
+			// skyblue0o0 20180402 : 특정 유니코드 문자 포함 시 xml파싱 에러나서 빈칸으로 치환
+			returnData = sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " ");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
