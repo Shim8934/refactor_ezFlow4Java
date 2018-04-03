@@ -101,8 +101,64 @@
 		    
 		    }
 		    
-		    
-		 // 폴더관리
+			function drawVolume() {
+				$.ajax({
+					url: "/ezWebFolder/getUserCapicity.do",
+					type: "POST",
+					dataType: "JSON",
+					success : function(data) {
+						var result      = data.userCapacity;
+						console.log(result);
+						var totalVolume = result["totalCapacity"] + "GB";
+						var useVolume   = getFileSize(result["totalUsed"]);
+						var percent     = result["usedRate"];
+						var colorClass  = "myBar_green";
+						var barElmt     = document.getElementById("myBar");
+						var volumeInf   = document.getElementsByClassName("volumes")[0];
+						
+						barElmt.style.width = percent + "%";
+						
+						volumeInf.textContent = useVolume + " / " + totalVolume + " (" + percent + "%)";
+						
+						if (percent > 90) {
+							barElmt.className = "myBar_red";
+						}
+						else if (percent > 70) {
+							barElmt.className = "myBar_orange";
+						}
+						else if (percent > 60) {
+							barElmt.className = "myBar_yellow";
+						}
+						else {
+							barElmt.className = "myBar_green";
+						}
+					},
+					error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134' />" + error);
+					}
+				});
+			}
+			
+			function getFileSize(fileSize) {
+				var fileSize_ = "";
+				
+				if (fileSize / 1024 / 1024 / 1024 > 1) {
+					fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 / 1024 * 10)) / 10).toFixed(1) + "GB";
+				}
+				else if (fileSize / 1024 / 1024 > 1) {
+					fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
+				}
+				else if (fileSize / 1024 > 1) {
+					fileSize_ = parseInt(fileSize / 1024) + "KB";
+				}
+				else {
+					fileSize_ = fileSize + "B";
+				}
+				
+				return fileSize_;
+			}
+			
+		 	// 폴더관리
 		    function folder_Manage() {
 	        	var OpenWin = window.open("/ezWebFolder/folderManage.do", "", GetOpenWindowfeature(600, 550));
 	            try { OpenWin.focus(); } catch (e) { }
@@ -145,7 +201,7 @@
 			}
 	    </style>
 	</head>
-	<body class="leftbody" style="overflow: auto; height:100%">
+	<body class="leftbody" style="overflow: auto; height:100%" onload="drawVolume();">
 		<div id="left" style="overflow: none">
 			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"><span>웹폴더</span>
 					<img style="width:20px;height:20px;" onClick="refreshView()" class="ui-datepicker-trigger" src="/images/webfolder/reload.png" alt title>
@@ -206,6 +262,10 @@
 			<h3>
 				<span onclick="wfConfig();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t236" /></span>
 			</h3>
+			<div id='myProgress' style='margin-left:20px;'>
+				<div id='myBar'></div>
+			</div>
+			<div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");	        

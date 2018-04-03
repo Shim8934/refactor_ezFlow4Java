@@ -270,6 +270,48 @@ public class EzWebFolderGWController {
 		return result;
 	}
 
+	@RequestMapping(value="/rest/ezwebfolder/capacity/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getUserCapacity(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")  != null ? request.getHeader("host-name")  : "";
+		String primary    = request.getParameter("primary") != null ? request.getParameter("primary") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			return result;
+		}
+		
+		try {
+			int tenantId                = loginService.getTenantId(serverName);
+			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, tenantId);
+			
+			if (userCapacity.getTotalUsed().equals("0") || userCapacity.getTotalCapacity().equals("0")) {
+				userCapacity.setUsedRate(0);
+			}
+			else {
+				double totalCapByBytes = Double.parseDouble(userCapacity.getTotalCapacity()) * 10737418.24;
+				userCapacity.setUsedRate((int)(Integer.parseInt(userCapacity.getTotalUsed())/totalCapByBytes));
+			}
+			
+			result.put("data", userCapacity);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		return result;
+	}
+
 	@RequestMapping(value="/rest/ezwebfolderadmin/filehistorylist", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFileHistory(HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
