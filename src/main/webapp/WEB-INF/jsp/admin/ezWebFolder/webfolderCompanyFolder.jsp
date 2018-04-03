@@ -515,7 +515,7 @@
 					</td>
 					<td>
 						<div style="width: 500px; height: 450px; border: 1px solid #cccccc; margin-left: 10px;">
-							<table>
+							<table style="width: 100%;">
 								<tr>
 									<td>
 										<div style="margin: 80px 20px 5px 20px;">
@@ -550,13 +550,13 @@
 								</tr>
 								<tr>
 									<td>
-										<div style="margin: 0px 96px;" id="listBttn1">
+										<div style="text-align:center;" id="listBttn1">
 											<a class="webfolderBttn"><span onclick="saveChanges();" ><spring:message code='ezWebFolder.t133'/></span></a>
 											<a class="webfolderBttn"><span onclick="newFolder();"   ><spring:message code='ezWebFolder.t206'/></span></a>
 											<a class="webfolderBttn"><span onclick="moveFolder();"  ><spring:message code='ezWebFolder.t251'/></span></a>
 											<a class="webfolderBttn"><span onclick="deleteFolder();"><spring:message code='ezWebFolder.t111'/></span></a>
 										</div>
-										<div style="margin: 0px 176px; display: none;" id="listBttn2">
+										<div style="text-align:center; display: none;" id="listBttn2">
 											<a class="webfolderBttn"><span onclick="saveNewFolder();"><spring:message code='ezWebFolder.t133'/></span></a>
 											<a class="webfolderBttn"><span onclick="cancelAdd();"    ><spring:message code='ezWebFolder.t112'/></span></a>
 										</div>

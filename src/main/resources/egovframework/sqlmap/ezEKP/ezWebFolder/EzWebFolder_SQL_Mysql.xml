@@ -418,7 +418,17 @@
 				f.DELETER_ID                                      AS DELETER_ID,
 				f.TENANT_ID                                       AS TENANT_ID
 			FROM
-				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON
+																	(
+																			f.FILE_EXT = t.FILE_EXT
+																		OR
+																			(
+																					(SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE f.FILE_EXT = FILE_EXT AND TENANT_ID = #tenantId#) IS NULL
+																				AND
+																					t.FILE_EXT = 'unknown'
+																			)
+																	)
+																	AND f.TENANT_ID = t.TENANT_ID
 			WHERE
 				f.FILE_ID   = #fileId#
 			AND
@@ -453,7 +463,17 @@
 				f.DELETER_ID                                      AS DELETER_ID,
 				f.TENANT_ID                                       AS TENANT_ID
 			FROM
-				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON
+																	(
+																			f.FILE_EXT = t.FILE_EXT
+																		OR
+																			(
+																					(SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE f.FILE_EXT = FILE_EXT AND TENANT_ID = #tenantId#) IS NULL
+																				AND
+																					t.FILE_EXT = 'unknown'
+																			)
+																	)
+																	AND f.TENANT_ID = t.TENANT_ID
 		]]>
 		<include refid="getAllFilesInFolderCont"/>
 		<![CDATA[
@@ -506,7 +526,17 @@
 				f.DELETER_ID                                      AS DELETER_ID,
 				f.TENANT_ID                                       AS TENANT_ID
 			FROM
-				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON 
+																	(
+																			f.FILE_EXT = t.FILE_EXT
+																		OR
+																			(
+																					(SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE f.FILE_EXT = FILE_EXT AND TENANT_ID = #tenantId#) IS NULL
+																				AND
+																					t.FILE_EXT = 'unknown'
+																			)
+																	)
+																	AND f.TENANT_ID = t.TENANT_ID
 									 LEFT JOIN TBL_WEBFOLDER_FOLDER u ON f.TENANT_ID = u.TENANT_ID AND f.FOLDER_ID = u.FOLDER_ID
 		]]>
 		<include refid="getAllFilesInFolderCont"/>

@@ -365,6 +365,7 @@ public class EzWebFolderGWController {
 		if (nameArray == null || serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("") || folderId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			result.put("code", 1);
 			result.put("data", "");
 			return result;
@@ -1271,6 +1272,7 @@ public class EzWebFolderGWController {
 		if (folderId.equals("") || serverName.equals("") || destFolderId.equals("") || offset.equals("") || mode.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			result.put("code", "1");
 			return result;
 		}

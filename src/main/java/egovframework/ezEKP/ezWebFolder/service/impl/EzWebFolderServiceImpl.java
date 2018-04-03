@@ -719,7 +719,10 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			
 			if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {
 				writeUploadedFile(multiFileLists.get(i), pFileName[i], pDirPath);
-				FileTypeVO fileType = getFileTypeByFileExt(extend, tenantId);
+				FileTypeVO fileType = getFileTypeByFileExt(extend.toLowerCase(), tenantId);
+				if (fileType == null) {
+					fileType = getFileTypeByFileExt("unknown", tenantId);
+				}
 				Date date           = new Date();
 				FileVO fileVO       = new FileVO();
 				String timeUTC      = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);

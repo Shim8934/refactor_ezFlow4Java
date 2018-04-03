@@ -168,25 +168,25 @@ function renderResult(result) {
 	try {
 		for (var i = 0; i < len; i++) {
 			var jsObj  = jsonArr[i];
-			var objTr  = document.createElement("TR");
-			var objTd1 = document.createElement("TD");
-			var objTd2 = document.createElement("TD");
-			var objTd3 = document.createElement("TD");
-			var objTd4 = document.createElement("TD");
-			var objTd5 = document.createElement("TD");
-			var objTd6 = document.createElement("TD");
-			var objTd7 = document.createElement("TD");
-			var objTd8 = document.createElement("TD");
+			var row    = tblElmt.insertRow(1);
+			var cell1  = row.insertCell(0);
+			var cell2  = row.insertCell(1);
+			var cell3  = row.insertCell(2);
+			var cell4  = row.insertCell(3);
+			var cell5  = row.insertCell(4);
+			var cell6  = row.insertCell(5);
+			var cell7  = row.insertCell(6);
+			var cell8  = row.insertCell(7);
 			
-			objTr.setAttribute("_fileId", jsObj["fileId"]);
-			objTr.setAttribute("_filePath", jsObj["filePath"]);
+			row.setAttribute("_fileId", jsObj["fileId"]);
+			row.setAttribute("_filePath", jsObj["filePath"]);
 			
 			var inputElmt = document.createElement("INPUT");
 			inputElmt.setAttribute("type", "checkbox");
 			inputElmt.setAttribute("value", jsObj["fileId"]);
 			inputElmt.setAttribute("class", "checkBnk");
 			inputElmt.onchange = function(e){getChecked(this);};
-			objTd1.appendChild(inputElmt);
+			cell1.appendChild(inputElmt);
 			
 			var faImgElmt = document.createElement("IMG");
 			faImgElmt.setAttribute("class", "webFolderImg");
@@ -202,37 +202,26 @@ function renderResult(result) {
 			fileIconElmt.setAttribute("class", "webFolderImg");
 			fileIconElmt.src = jsObj["fileIconUrl"];
 			
-			objTd2.appendChild(faImgElmt);
-			objTd3.appendChild(fileIconElmt);
-			objTd4.textContent = jsObj["fileName"];
-			objTd5.textContent = getFileSize(jsObj["fileSize"]);
+			cell2.appendChild(faImgElmt);
+			cell3.appendChild(fileIconElmt);
+			cell4.textContent = jsObj["fileName"];
+			cell5.textContent = getFileSize(jsObj["fileSize"]);
 			
 			if (primary == "1") {
-				objTd6.textContent = jsObj["createName1"];
+				cell6.textContent = jsObj["createName1"];
 			}
 			else {
-				objTd6.textContent = jsObj["createName2"];
+				cell6.textContent = jsObj["createName2"];
 			}
 			
-			objTd7.textContent = jsObj["createDate"].substring(0, 10);
+			cell7.textContent = jsObj["createDate"].substring(0, 10);
 			
 			if (jsObj["fileShareStatus"] == "0") {
-				objTd8.textContent = strShared2;
+				cell8.textContent = strShared2;
 			}
 			else {
-				objTd8.textContent = strShared1;
+				cell8.textContent = strShared1;
 			}
-			
-			objTr.appendChild(objTd1);
-			objTr.appendChild(objTd2);
-			objTr.appendChild(objTd3);
-			objTr.appendChild(objTd4);
-			objTr.appendChild(objTd5);
-			objTr.appendChild(objTd6);
-			objTr.appendChild(objTd7);
-			objTr.appendChild(objTd8);
-			tblElmt.appendChild(objTr);
-			rowsCnt = rowsCnt + 1;
 		}
 	}
 	catch (e) {
@@ -260,59 +249,47 @@ function renderResult2(result) {
 	try { 
 		for (var i = 0; i < len; i++) {
 			var jsObj  = jsonArr[i];
-			var objTr  = document.createElement("TR");
-			var objTd1 = document.createElement("TD");
-			var objTd2 = document.createElement("TD");
-			var objTd3 = document.createElement("TD");
-			var objTd4 = document.createElement("TD");
-			var objTd5 = document.createElement("TD");
-			var objTd6 = document.createElement("TD");
-			var objTd7 = document.createElement("TD");
-			var objTd8 = document.createElement("TD");
-			var objTd9 = document.createElement("TD");
+			var row    = tblElmt.insertRow(1);
+			var cell1  = row.insertCell(0);
+			var cell2  = row.insertCell(1);
+			var cell3  = row.insertCell(2);
+			var cell4  = row.insertCell(3);
+			var cell5  = row.insertCell(4);
+			var cell6  = row.insertCell(5);
+			var cell7  = row.insertCell(6);
+			var cell8  = row.insertCell(7);
+			var cell9  = row.insertCell(8);
 			
-			objTr.setAttribute("_fileId", jsObj["fileId"]);
-			objTr.setAttribute("_filePath", jsObj["filePath"]);
+			row.setAttribute("_fileId", jsObj["fileId"]);
+			row.setAttribute("_filePath", jsObj["filePath"]);
 			
 			var inputElmt = document.createElement("INPUT");
 			inputElmt.setAttribute("type", "checkbox");
 			inputElmt.setAttribute("value", jsObj["fileId"]);
 			inputElmt.setAttribute("class", "checkBnk");
 			inputElmt.onchange = function(e){getChecked(this);};
-			objTd1.appendChild(inputElmt);
+			cell1.appendChild(inputElmt);
 			
 			var fileIconElmt = document.createElement("IMG");
 			fileIconElmt.setAttribute("class", "webFolderImg");
 			fileIconElmt.src = jsObj["fileIconUrl"];
 			
-			objTd2.appendChild(fileIconElmt);
-			objTd3.textContent = jsObj["fileName"];
-			objTd4.textContent = getFileSize(jsObj["fileSize"]);
+			cell2.appendChild(fileIconElmt);
+			cell3.textContent = jsObj["fileName"];
+			cell4.textContent = getFileSize(jsObj["fileSize"]);
 			
 			if (primary == "1") {
-				objTd5.textContent = jsObj["createName1"];
+				cell5.textContent = jsObj["createName1"];
 			}
 			else {
-				objTd5.textContent = jsObj["createName2"];
+				cell5.textContent = jsObj["createName2"];
 			}
 			
-			objTd6.textContent = jsObj["createDate"].substring(0, 10);
-			objTd7.textContent = jsObj["updateDate"].substring(0, 10);
-			objTd8.textContent = jsObj["filePosition"];
-			objTd9.textContent = jsObj["downloadCnt"];
-			objTd9.setAttribute("style","text-align: center;");
-			
-			objTr.appendChild(objTd1);
-			objTr.appendChild(objTd2);
-			objTr.appendChild(objTd3);
-			objTr.appendChild(objTd4);
-			objTr.appendChild(objTd5);
-			objTr.appendChild(objTd6);
-			objTr.appendChild(objTd7);
-			objTr.appendChild(objTd8);
-			objTr.appendChild(objTd9);
-			tblElmt.appendChild(objTr);
-			rowsCnt = rowsCnt + 1;
+			cell6.textContent = jsObj["createDate"].substring(0, 10);
+			cell7.textContent = jsObj["updateDate"].substring(0, 10);
+			cell8.textContent = jsObj["filePosition"];
+			cell9.textContent = jsObj["downloadCnt"];
+			cell9.setAttribute("style","text-align: center;");
 		}
 	}
 	catch (e) {

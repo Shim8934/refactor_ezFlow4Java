@@ -195,7 +195,7 @@ function getDepartmentData(companyId, mode, rootDiv) {
 			"folderId"  : selectedFolder
 		},
 		dataType: "JSON",
-		async: true,
+		async: false,
 		success : function(data) {
 			var result = data.deptTree;
 			renderData2(result, mode, rootDiv);
