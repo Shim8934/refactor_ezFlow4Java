@@ -34,6 +34,9 @@
 	   		var favoriteId = "";
 	   		// 즐겨찾기 저장, 수정 flag
 	   		var type = "new";
+	   		//올른쪽 리스트에서 선택된 유저
+	   		var selMainListUserId="";
+	   		var selMainListUserName="";
 	   		
 	   		function close_Click(){
 	   			window.close();
@@ -71,19 +74,34 @@
 	   			setUserList(key, value);
 	   		}
 	   		
+	   		//오른쪽 리스트에서 클릭이벤트 적용
+	   		function setMainListUserAuthorDept(elem) {
+	   			if ($(elem).parent().attr("id") === "List_TBODY2") {
+	   				$("#List_TBODY2 tr").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "receiverList"){
+		   			$("#receiverList tr").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
+		   			$("#txtlist_Layer tr").removeClass("selectTR");
+	   			}
+	   			$(elem).addClass("selectTR");
+	   			selMainListUserId = $(elem).attr("id");
+	   			selMainListUserName = $(elem).attr("name");
+	   			console.log("selMainListUserId : " + selMainListUserId)
+	   		}
+	   		
 	   		// 리스트에서 클릭이벤트 적용
 	   		function setUserAuthorDept(elem) {
 	   			if ($(elem).parent().attr("id") === "List_TBODY2") {
 	   				$("#List_TBODY2 tr").removeClass("selectTR");
 	   			} else if ($(elem).parent().parent().parent().attr("id") === "receiverList"){
 		   			$("#receiverList tr").removeClass("selectTR");
-	   			} else {
-		   			$("*").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
+		   			$("#txtlist_Layer tr").removeClass("selectTR");
 	   			}
 	   			$(elem).addClass("selectTR");
 	   			selUserId = $(elem).attr("id");
 	   			selUserName = $(elem).attr("name");
-	   			console.log("selUserId : " + selUserId)
+	   			console.log("selUserId : " + selMainListUserId)
 	   		}
 	   		
 	   		// 선택한 사람을 수신자에 추가
@@ -114,7 +132,8 @@
 			   				alert("<spring:message code='ezJournal.t127'/>");
 		   				}
 		   			}
-		   			drawReceiverList()
+		   			drawReceiverList();
+		   			selMainListUserId = "";
 	   			} else {
 	   				alert("<spring:message code='ezJournal.t136'/>");
 	   			}
@@ -124,10 +143,10 @@
 	   		// 선택된 수신자배열에서 특정 사원 삭제
 		    function deleteReceiver() {
 		     	for(var j = 0; j < receiverList.length; j++) {
-		    		if (receiverList[j].userId === selUserId) {
-		    			console.log(selUserId);
+		    		if (receiverList[j].userId === selMainListUserId) {
+		    			console.log(selMainListUserId);
 		    			receiverList.splice(j, 1);
-		    			selUserId = "";
+		    			selMainListUserId = "";
 		    		}
 		    	} 
 		     	drawReceiverList();
@@ -141,7 +160,7 @@
 		    	var strHTML = "";     
 		    	for (var i = 0; i < receiverList.length; i++) {
 		    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-		    		strHTML += "<tr id=" + receiverList[i].userId + " class='hover' onclick='setUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
+		    		strHTML += "<tr style='cursor:pointer;' id=" + receiverList[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
 		    		strHTML += "<td>";
 		    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
 		    		strHTML += receiverList[i].userName;
@@ -329,10 +348,16 @@
 	   		}
 		</script>
 		<style>
-			tr.hover:hover{background:#eee; color:#fff;}
+			tr.hover:not(.selectTR):hover{background:#eee; color:#fff;}
 			
 			.selectTR{
 				background-color: rgb(233, 241, 255);
+			}
+			#List_TBODY2 tr{
+				cursor: pointer;
+			}
+			#List_TBODY tr{
+				cursor: pointer;
 			}
 		</style>
 	</head>
