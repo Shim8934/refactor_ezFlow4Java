@@ -5,7 +5,7 @@
 
 .webFolderDiv2 {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; background-color:#e9f1f4; cursor: pointer;}
 
-.bnkWebFolder:hover {background-color: #f4f5f5;}
+.bnkWebFolder:hover {background-color: #f4f5f5; cursor: pointer;}
 
 .webFolderImg {height: 20px; width: 20px;}
 

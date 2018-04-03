@@ -40,11 +40,9 @@
 			var folderType   = "company";
 			var rootFolder   = "<c:out value='${rootFolder}'/>";
 			
-			window.onresize = function () {
-				var divList          = document.getElementById("dragDropArea");
-				var reheight         = document.documentElement.clientHeight - 185;
-				divList.style.height = reheight + "px";
-			};
+			document.onselectstart = function(){
+				return false;
+			}
 			
 			window.onload = function () {
 				$("#Sdatepicker").datepicker({
@@ -73,7 +71,7 @@
 			
 			function preProcessing() {
 				var divList          = document.getElementById("dragDropArea");
-				var reheight         = document.documentElement.clientHeight - 185;
+				var reheight         = document.documentElement.clientHeight - 195;
 				divList.style.height = reheight + "px";
 			}
 			
@@ -156,12 +154,13 @@
 						trElmt.setAttribute("class", "bnkWebFolder");
 						trElmt.setAttribute("_fileId", result[i]["fileId"]);
 						trElmt.setAttribute("_filePath", result[i]["filePath"]);
+						trElmt.onclick = function(event) {clickRow(this, event);};
 						
 						var inputElmt = document.createElement("input");
 						inputElmt.setAttribute("type", "checkbox");
 						inputElmt.setAttribute("value", result[i]["fileId"]);
-						inputElmt.setAttribute("class", "checkBnk");			
-						inputElmt.onchange = function(e){getChecked(this);};
+						inputElmt.setAttribute("class", "checkBnk");
+						inputElmt.onclick = function(e){getChecked(this, e);};
 						tdElmt1.appendChild(inputElmt);
 						
 						var fileIconElmt = document.createElement("img");
@@ -197,6 +196,30 @@
 						tableList.appendChild(trElmt);
 					}
 				} 
+			}
+			
+			function clickRow(obj, e) {
+				e.stopPropagation();
+				e.preventDefault();
+				
+				var inputElmt = obj.firstElementChild.firstElementChild;
+				var id        = inputElmt.getAttribute("value");
+				
+				if (inputElmt.checked == true) {
+					inputElmt.checked = false;
+					
+					var pos = checkedArr.indexOf(id);
+					
+					if (pos != -1) {
+						checkedArr.splice(pos, 1);
+						obj.setAttribute("style", "");
+					}
+				}
+				else {
+					inputElmt.checked = true;
+					checkedArr.push(id);
+					obj.setAttribute("style", "background-color: #e9f1ff;");
+				}
 			}
 			
 			function startSearch() {
@@ -357,16 +380,28 @@
 				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList + "&mode=admin");
 			}
 			
-			function getChecked(obj) {
-				var id = obj.getAttribute("value");
+			function getChecked(obj, event) {
+				event.stopPropagation();
+				
+				var id     = obj.getAttribute("value");
+				var trElmt = obj.parentElement.parentElement;
+				
 				if (obj.checked == true) {
-					checkedArr.push(id);
+					//Double click problem in IE
+					var pos = checkedArr.indexOf(id);
+					
+					if (pos == -1) {
+						checkedArr.push(id);
+					}
+					
+					trElmt.setAttribute("style", "background-color: #e9f1ff;");
 				}
 				else {
 					var pos = checkedArr.indexOf(id);
 					
 					if (pos != -1) {
 						checkedArr.splice(pos, 1);
+						trElmt.setAttribute("style", "");
 					}
 				}
 			}
@@ -378,12 +413,16 @@
 				if (obj.checked == true) {
 					for (var i = 0; i < listInputs.length; i++) {
 						listInputs[i].checked = true;
+						var trElmt            = listInputs[i].parentElement.parentElement;
 						checkedArr.push(listInputs[i].value);
+						trElmt.setAttribute("style", "background-color: #e9f1ff;");
 					}
 				}
 				else {
 					for (var i = 0; i < listInputs.length; i++) {
+						var trElmt            = listInputs[i].parentElement.parentElement;
 						listInputs[i].checked = false;
+						trElmt.setAttribute("style", "");
 					}
 				}
 			}
@@ -402,7 +441,7 @@
 			}
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="mainbody" onresize="preProcessing();">
 		<h1>
 			<spring:message code='ezWebFolder.t127' />
 			<span id="mailBoxInfo"></span>

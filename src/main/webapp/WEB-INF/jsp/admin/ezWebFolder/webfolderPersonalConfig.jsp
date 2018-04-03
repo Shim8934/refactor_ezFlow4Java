@@ -344,6 +344,7 @@
 					dataType: "text",
 					async: true,
 					success : function(data) {
+						alert("<spring:message code='ezWebFolder.t252'/>");
 						document.getElementById("storageVal").value = "";
 						search_Set(currentPage);
 						checkedArr = [];
@@ -376,6 +377,7 @@
 					dataType: "text",
 					async: true,
 					success : function(data) {
+						alert("<spring:message code='ezWebFolder.t253'/>")
 						search_Set(currentPage);
 						checkedArr = [];
 					},
