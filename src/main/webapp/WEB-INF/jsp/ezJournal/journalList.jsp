@@ -174,14 +174,20 @@
 <div id='runtime' style="color: #666; padding-top: 5px"></div>
 <c:if test="${paging.endPage>0 }">
 <div id="tblPageRayer" style="width:470px; margin:6px auto;">
-	<div class="pagenavi">               
+	<div class="pagenavi">   
+		<c:choose>
+				<c:when test="${paging.currentPage gt 1}">   
+					<span onclick="goToPageByNum(1)" class="btnimg"><img src="/images/sub/btn_p_prev.gif" width="16" height="16"></span>            
+				</c:when>
+				<c:otherwise>
+					<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>            
+				</c:otherwise>         
+		</c:choose>
 		<c:choose>
 			<c:when test="${paging.startPage gt 1}">
-				<span onclick="goToPageByNum(1)" class="btnimg"><img src="/images/sub/btn_p_prev.gif" width="16" height="16"></span>            
 				<span onclick="goToPageByNum(${paging.startPage-1})" class="btnimg"><img src="/images/sub/btn_prev.gif" width="16" height="16"></span>              
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>            
 				<span class="btnimg"><img src="/images/sub/btn_prev01.gif" width="16" height="16"></span>              
 			</c:otherwise>                                                                    
 		</c:choose>
@@ -200,10 +206,16 @@
 		<c:choose>
 			<c:when test="${paging.totalPage gt paging.endPage }">
 				<span class="btnimg" onclick="goToPageByNum(${paging.endpage+1})"><img src="/images/sub/btn_next.gif" width="16" height="16"></span>
-				<span class="btnimg" onclick="goToPageByNum(${paging.totalPage})"><img src="/images/sub/btn_n_next.gif" width="16" height="16"></span>
 			</c:when>
 			<c:otherwise>
 				<span class="btnimg"><img src="/images/sub/btn_next01.gif" width="16" height="16"></span>
+			</c:otherwise>
+		</c:choose>
+		<c:choose>
+			<c:when test="${paging.totalPage gt paging.currentPage }">
+				<span class="btnimg" onclick="goToPageByNum(${paging.totalPage})"><img src="/images/sub/btn_n_next.gif" width="16" height="16"></span>
+			</c:when>
+			<c:otherwise>
 				<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" width="16" height="16"></span>
 			</c:otherwise>
 		</c:choose>

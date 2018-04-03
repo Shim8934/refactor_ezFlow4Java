@@ -97,7 +97,7 @@
 		</script>
 	</head>
 	<body class="popup">
-	    <h1><spring:message code='ezPortal.t87' /></h1>
+	    <h1><spring:message code='ezJournal.t42' /></h1>
 	    <table class="content">
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t141' /></th>

@@ -157,7 +157,7 @@
 		</style>
 	</head>
 	<body class="popup"> 
-        <h1><spring:message code='ezJournal.t42'/></h1>
+        <h1><spring:message code='ezJournal.t165'/></h1>
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="setAuthorViewDept()"><spring:message code='main.t4008'/></span></li>
