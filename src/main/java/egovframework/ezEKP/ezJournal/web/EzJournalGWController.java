@@ -169,7 +169,17 @@ public class EzJournalGWController {
 				deptId = "";
 			}
 			
-			List<JournalFormInfoVO> formList = ezJournalService.getFormList(typeId, deptId, info.getCompanyId(), info.getCompanyName(), info.getTenantId(), info.getOffSet());
+			String companyId = "";
+			List<JournalFormInfoVO> formList = new ArrayList<JournalFormInfoVO>();
+			if (request.getParameter("companyId") != null && !request.getParameter("companyId").equals("")) {
+				// 관리자단의 양식리스트
+				companyId = request.getParameter("companyId");
+				formList = ezJournalService.getFormListAdmin(typeId, deptId, companyId, info.getTenantId(), info.getOffSet());
+			} else {
+				// 사용자단의 양식리스트 (부서사용양식, 기본양식)
+				companyId = info.getCompanyId();
+				formList = ezJournalService.getFormList(typeId, deptId, companyId, info.getTenantId(), info.getOffSet());
+			}
 			
 			result.put("data", formList);
 			result.put("status", "ok");

@@ -42,7 +42,16 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	}
 	
 	/**
-	 * 양식 리스트 세럭트
+	 * 관리자단 양식 리스트
+	 * @param map
+	 * @return
+	 */
+	public List<JournalFormInfoVO> getFormListAdmin(Map<String, Object> map) {
+		return null;
+	}
+	
+	/**
+	 * 양식 리스트 세럭트 (부서사용가능양식, 기본양식)
 	 * @param map
 	 * @return
 	 */
@@ -59,26 +68,6 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<DeptInfoVO> getFormUseDeptList(Map<String, Object> map) {
 		return (List<DeptInfoVO>) list("getFormUseDeptList", map);
-	}
-
-	/**
-	 * 부서에서 쓸 수 있는 양식 리스트
-	 * @param map
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<JournalFormInfoVO> getDeptUseFormList(Map<String, Object> map) {
-		return (List<JournalFormInfoVO>) list("getDeptUseFormList", map);
-	}
-
-	/**
-	 * 기본양식 리스트
-	 * @param map
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<JournalFormInfoVO> getBasicFormList(Map<String, Object> map) {
-		return (List<JournalFormInfoVO>) list("getBasicFormList", map);
 	}
 
 	/**
@@ -449,4 +438,5 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public String getViewerCount(Map<String, Object>map) {
 		return (String) select("getViewerCount",map);
 	}
+
 }

@@ -144,6 +144,7 @@
 			    		chkFlag = false;
 		    		}
 		    	} 
+		    	selDeptId = "";
 		    	
 		    	if (chkFlag) {
 			    	useDeptList.push({"deptName" : deptName, "deptId" : deptId});
@@ -155,13 +156,18 @@
 		    
 		    // 선택된 부서배열에서 특정 부서 삭제
 		    function deleteDept() {
-		    	isDeptChanged = "Y";
-		     	for(var j = 0; j < useDeptList.length; j++) {
-		    		if (useDeptList[j].deptId === selDeptId) {
-		    			useDeptList.splice(j, 1);
-		    		}
-		    	} 
-		    	drawUseDeptList();
+		    	if (selDeptId === "") {
+		    		alert("<spring:message code='ezJournal.t168'/>");
+		    	} else {
+			    	isDeptChanged = "Y";
+			     	for(var j = 0; j < useDeptList.length; j++) {
+			    		if (useDeptList[j].deptId === selDeptId) {
+			    			useDeptList.splice(j, 1);
+			    		}
+			    	}
+			     	selDeptId = "";
+			    	drawUseDeptList();
+		    	}
 		    }
 		    
 		    // 선택된 부서 배열을 토대로 화면에 그리는 곳

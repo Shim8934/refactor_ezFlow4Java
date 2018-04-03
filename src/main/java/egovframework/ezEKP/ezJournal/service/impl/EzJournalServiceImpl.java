@@ -84,13 +84,29 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public void insertJournaltype(String companyId, int tenantId, ArrayList<JournaltypeVO> journaltypeList) {
+	public void insertJournaltype(String companyId, int tenantId, ArrayList<JournaltypeVO> journaltypeList) throws Exception {
 		
 	}
 	
-
 	@Override
-	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String companyName, int tenantId, String offset) throws Exception {
+	public List<JournalFormInfoVO> getFormListAdmin(String typeId, String deptId, String companyId, int tenantId, String offset) throws Exception {
+		logger.debug("getFormListAdmin started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("typeId", typeId);
+		map.put("deptId", deptId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		
+		List<JournalFormInfoVO> formList = ezJournalDAO.getFormListAdmin(map);
+
+		logger.debug("getFormListAdmin ended");
+		return formList;
+	}
+	
+	@Override
+	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, int tenantId, String offset) throws Exception {
 		logger.debug("getFormList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -102,6 +118,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		
 		List<JournalFormInfoVO> formList = ezJournalDAO.getFormList(map);
 		
+		/*
 		if ((deptId == null || deptId.equals("")) && !typeId.equals("basic")) {
 			List<JournalFormInfoVO> resultList = new ArrayList<JournalFormInfoVO>();
 			
@@ -115,7 +132,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 					if (useDept.size() < 1) {
 						useDept.clear();
 						DeptInfoVO deptVO = new DeptInfoVO();
-						deptVO.setDeptName(companyName);	
+//						deptVO.setDeptName(companyName);	
 						useDept.add(deptVO);
 					}
 					vo.setDepts(useDept);
@@ -128,6 +145,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 			}
 			return resultList;
 		}
+		*/
 		logger.debug("getFormList ended");
 		return formList;
 	}
@@ -1085,4 +1103,5 @@ public class EzJournalServiceImpl implements EzJournalService {
 			
 		logger.debug("saveJournalViewInfo ended");
 	}
+	
 }

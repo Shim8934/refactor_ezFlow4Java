@@ -115,7 +115,7 @@
 		<result property="journalUse" 		column="used" 		columnIndex="2" />
 	</resultMap>
 
-	<resultMap class="JournalFormInfoVO" id="JournalFormInfoVO">
+	<resultMap class="JournalFormInfoVO" id="JournalFormInfo">
 		<result property="formId" 			column="form_id" />
 		<result property="formName" 		column="form_name" />
 		<result property="formInfo" 		column="form_info" />
@@ -123,11 +123,14 @@
 		<result property="formWriter" 		column="form_writer" />
 		<result property="formStatus" 		column="form_status" />
 		<result property="typeId" 			column="type_id" />
+		<result property="deptList" 		resultMap="ezJournal.deptInfoVO"/>
 	</resultMap>
 
-	<resultMap class="JournalFormInfoVO" id="BasicFormInfoVO">
+	<resultMap class="JournalFormInfoVO" id="formInfoVO">
 		<result property="formId" 			column="form_id" />
 		<result property="formName" 		column="form_name" />
+		<result property="formStatus" 		column="form_status" />
+		<result property="typeId" 			column="type_id" />
 	</resultMap>
 
 	<resultMap class="JournalFormInfoVO" id="getJournalFormInfoVO">
@@ -206,17 +209,40 @@
 			tenant_id = #tenantId#
 	</update>
 
+	<!-- 관리자단 양식 리스트 -->
+	<select id="getFormListAdmin" parameterClass="map" resultMap="JournalFormInfoVO">
+		<isNotEqual property="typeId" compareValue="basic">
+				<![CDATA[
+					select
+						a.form_id,
+						a.form_name,
+						a.form_info,
+						DATE_ADD(DATE_FORMAT(a.form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
+						a.form_writer,
+						a.form_status,
+						a.type_id,
+						b.
+					from 
+						tbl_journal_form a left join tbl_journal_form_use_dept b on (a.form_id = b.form_id and a.tenant_id = b.tenant_id)
+					where
+						type_id = #typeId#
+					and
+						company_id = #companyId#
+					and
+						tenant_id = #tenantId#
+					order by form_id desc
+				]]>
+		</isNotEqual>
+	</select>
+
 	<!-- 양식 리스트 셀렉트 -->
-	<select id="getFormList" parameterClass="map" resultMap="JournalFormInfoVO">
+	<select id="getFormList" parameterClass="map" resultMap="formInfoVO">
 		<isEmpty property="deptId">
 			<isEqual property="typeId" compareValue="basic">
 				<![CDATA[
 					select distinct
 						a.form_id,
 						a.form_name,
-						a.form_info,
-						DATE_ADD(DATE_FORMAT(a.form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
-						a.form_writer,
 						a.form_status,
 						a.type_id
 					from 
@@ -233,36 +259,12 @@
 						a.company_id = #companyId#
 				]]>
 			</isEqual>
-			<isNotEqual property="typeId" compareValue="basic">
-				<![CDATA[
-					select
-						form_id,
-						form_name,
-						form_info,
-						DATE_ADD(DATE_FORMAT(form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
-						form_writer,
-						form_status,
-						type_id
-					from 
-						tbl_journal_form 
-					where
-						type_id = #typeId#
-					and
-						company_id = #companyId#
-					and
-						tenant_id = #tenantId#
-					order by form_id desc
-				]]>
-			</isNotEqual>
 		</isEmpty>
 		<isNotEmpty property="deptId">
 			<![CDATA[
 				select
 					a.form_id,
 					a.form_name,
-					a.form_info,
-					DATE_ADD(DATE_FORMAT(a.form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
-					a.form_writer,
 					a.form_status,
 					a.type_id
 				from 

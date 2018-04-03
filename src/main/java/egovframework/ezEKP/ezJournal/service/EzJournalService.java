@@ -47,17 +47,28 @@ public interface EzJournalService {
 	public void insertJournaltype(String companyId, int tenantId, ArrayList<JournaltypeVO> journaltypeList) throws Exception;
 
 	/**
-	 * 양식 리스트 가져오기
+	 * 양식 리스트 가져오기(관리자용)
 	 * @param typeId
 	 * @param deptId
 	 * @param companyId
-	 * @param companyName 
 	 * @param tenantId
 	 * @param offset
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String companyName, int tenantId, String offset) throws Exception;
+	public List<JournalFormInfoVO> getFormListAdmin(String typeId, String deptId, String companyId, int tenantId, String offSet) throws Exception;
+	
+	/**
+	 * 양식 리스트 가져오기
+	 * @param typeId
+	 * @param deptId
+	 * @param companyId
+	 * @param tenantId
+	 * @param offset
+	 * @return
+	 * @throws Exception
+	 */
+	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, int tenantId, String offset) throws Exception;
 
 	/**
 	 * 양식 등록
@@ -389,4 +400,5 @@ public interface EzJournalService {
 	 * @param tenantId
 	 */
 	public void saveJournalViewInfo(List<String> journalIdList,String viewDate, String userId, int tenantId) throws Exception;
+
 }
