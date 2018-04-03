@@ -145,9 +145,12 @@ public class EzLadderController {
 
 		String retJSP = "";
 		if(mode.equals("pre")) {
-			retJSP = "ezLadder/ladderPreList";
+			if(searchSelect.equals("")) {
+				retJSP = "ezLadder/ladderPreList";
+			} else {
+				retJSP = "json";
+			}
 		} else {
-			logger.debug("### ???");
 			retJSP = "ezLadder/ladderMain";
 		}
 		
@@ -645,12 +648,13 @@ public class EzLadderController {
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		JSONArray list = new JSONArray();
-		
+		JSONArray cmtlist = new JSONArray();
 		
 		String status = jsonResult.get("status").toString();
 		
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("participant");
+			cmtlist = (JSONArray) jsonResult.get("cmtlist");
 			model.addAttribute("id", userInfo.getId());
 			model.addAttribute("vo",jsonResult.get("data"));	// x번째 사다리 정보
 			model.addAttribute("searchSelect", searchSelect );
@@ -658,6 +662,7 @@ public class EzLadderController {
 			model.addAttribute("mode", mode );
 			model.addAttribute("currPage", currPage);
 			model.addAttribute("list", list); 			// ladderLineList
+			model.addAttribute("cmtlist", cmtlist);
 		} else {
 			return "error";
 		}

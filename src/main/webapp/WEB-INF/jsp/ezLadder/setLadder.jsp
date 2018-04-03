@@ -173,7 +173,7 @@
 				ladder_pre_set_dialogArguments[0] = "";
 				ladder_pre_set_dialogArguments[1] = preLadderListComplete;
 				
-				GetOpenWindow("/ezLadder/ladderMain.do?mode=pre&currPage=1&searchSelect=&searchInput=", "ladder_pre_set", 324, 510);
+				GetOpenWindow("/ezLadder/ladderMain.do?mode=pre&currPage=1&searchSelect=&searchInput=", "ladder_pre_set", 1342, 822);
 			}			
 			function preLadderListComplete(ladderInfo, lineInfo) {
 				$("#title").val(ladderInfo["title"]);

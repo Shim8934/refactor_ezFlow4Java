@@ -17,6 +17,8 @@ public class LadderCommentVO {
 	private String userName2;
 	/** 댓글 작성 날짜 */
 	private String writeDate;
+	/** 사진 */
+	private String pic;
 	/** UTC time */
 	private String offset;
 	/** 다국어 */
@@ -69,6 +71,12 @@ public class LadderCommentVO {
 	}
 	public void setWriteDate(String writeDate) {
 		this.writeDate = writeDate;
+	}
+	public String getPic() {
+		return pic;
+	}
+	public void setPic(String pic) {
+		this.pic = pic;
 	}
 	public String getOffset() {
 		return offset;

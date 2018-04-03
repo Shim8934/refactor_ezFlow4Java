@@ -66,6 +66,16 @@
 				});
 			}
 			
+			function showLadderPreview() {
+				var previewSrc = "/ezLadder/getLadderGame.do?ladderId=" + ladderID + "&mode=preview";
+				
+				$("#ladPreviewWrap").scrollTop(0);
+				$("#ladderPreview").attr("src", previewSrc);
+				if($("#ladderPreview").css("height") === "0px") {
+					$("#ladderPreview").css("height", "1100px");
+				}
+			}
+			
 			$(function() {
 				try {
 					retVal = parent.ladder_pre_set_dialogArguments[0];
@@ -80,21 +90,26 @@
 	            }
 	            
 				makePageSelPage();
+				$("#ladderPreview").css("height", "0px");
 				
 				/** mouse event */
 				var selecColor = "rgb(233, 241, 255)";
 				var overColor = "rgb(244, 245, 245)";
 				var origColor = "#FFF";
-				$(".myBorder")
-					.on("click", function() {
+				$(document)
+					.on("click", ".myBorder", function() {
 						$(".myBorder").removeClass("clickactive");
 						$(this).addClass("clickactive");
 						$(".myBorder").css("background", origColor);
 						$(this).css("background", selecColor);
+						
+						ladderID = $(this).attr("id");
+						showLadderPreview();
 					})
-					.hover(function() {
+					.on("mouseenter", ".myBorder", function() {
 						$(this).css("background", overColor);
-					}, function() {
+					})
+					.on("mouseleave", ".myBorder", function() {
 						if($(this).hasClass("clickactive")) {
 							$(this).css("background", selecColor);
 						} else {
@@ -103,7 +118,7 @@
 					});
 				
 				/** sort list */
-				$("#columnsbnk").sortable({
+				/* $("#columnsbnk").sortable({
 					activate: function(event, ui) {
 						console.log(ui.helper[0]);
 						var thisId = "#" + ui.helper[0].id; 
@@ -115,44 +130,44 @@
 						$(thisId).css("border", "");
 					}
 				});
-				$("#columnsbnk").disableSelection();
+				$("#columnsbnk").disableSelection(); */
 				
 				/** 이전 리스트 순서 바꾸기 */
-				$("tr[id^='DLList_TR_']").draggable({ // 드래그 리스트
+				$(".myBorder").draggable({ // 드래그 리스트
 					revert: "invalid",
 					revertDuration: 400,
-					zIndex: 100,
+					zIndex: 5,
 					axis: "y",
 					addClasses: false,
 					start: function(event, ui) {
-						console.log("start drag");
-						console.log($(this).attr("id"));
+						$("#columnsbnk").css("background", "#ddd");
+						$(this).css("border", "1px solid #ddd");
 						dragloc = {"id": $(this).attr("id"), "top": $(this).css("top")};
+					}, 
+					stop: function() {
+						$(this).css("border", "");
+						$(this).css("border-bottom", "1px solid #ddd");
 					}
 				});
-				$("tr[id^='DLList_TR_']").droppable({ // 드랍 리스트
-					accept: ".rowDiv",
+				$(".myBorder").droppable({ // 드랍 리스트
+					accept: ".myBorder",
 					addClasses: false,
 					hoverClass: "nowOver",
 					over: function(event, ui) {
-						console.log(ui);
+						console.log("-");
+						$(".myBorder").css("background", "white");
+						$(this).css("background", "beige");
 					},
 					drop: function(event, ui) {
-						console.log("drop");
 						droploc = {"id": $(this).attr("id"), "top": $(this).css("top")};
-						$("#" + dragloc["id"]).css("z-index", "10").animate({"top": droploc["top"]}, 100, function() {
+						$("#" + dragloc["id"]).css("z-index", "10").animate({"top": droploc["top"]}, 500, function() {
 							$("#" + dragloc["id"]).css("z-index", "0")
 						});
-						$("#" + droploc["id"]).css("z-index", "10").animate({"top": dragloc["top"]}, 100, function() {
+						$("#" + droploc["id"]).css("z-index", "10").animate({"top": dragloc["top"]}, 500, function() {
 							$("#" + droploc["id"]).css("z-index", "0")
 						});
 						changeListOrder();
 					}
-				});
-				
-				$(document).on("click", "#columnsbnk li", function() {
-					ladderID = $(this).attr("id");
-					retladinfo = getPreLadder(ladderID);
 				});
 				
 				$("#searchInput").on("keyup", function(e) {
@@ -169,7 +184,30 @@
 				});
 			});
 			
+			function viewSearchList(ladderList) {
+				var html = "";
+				
+				modeCheck = "pre";
+				pageChange = 1;
+				currPage = ladderList["currPage"];
+				totalPage = ladderList["totalPage"];
+				totalLadder = ladderList["totalLadder"];
+
+				ladderList["list"].forEach(function(ladder, index) {
+					html += '<li class="myBorder" name="preladder_' + index + '" id="' + ladder["ladderId"] + '" style="cursor: pointer;">';
+					html += '<span>' + index + '</span>';
+					html += '<div class="prelist" style="width: 15%">' + ladder["type"] + '</div>';
+					html += '<div class="prelist" style="width: 60%">' + ladder["title"] + '</div></li>';
+				});
+				
+				$("#columnsbnk").html(html);
+				
+				makePageSelPage();
+				
+			}
+			
 			function loadPreLadderSetting() {
+				retladinfo = getPreLadder(ladderID);
 				if(!!retFunc) {
 					retFunc(retladinfo["lad"], retladinfo["ladline"]);
 				}
@@ -248,6 +286,7 @@
 								<td style="padding: 0px; border-bottom: none;" class="pollTd01">
 									<div style="min-width: 300px;">
 									<input id="searchInput" class="input" type="text" placeholder="제목 검색" style="margin-bottom: 10px; width: 245px;">
+									<input id="searchOption" value="title" style="display: none;">
 									<a class="imgbtn" style="height: 24px; float: right;"><span style="line-height: 24px;">검색</span></a>
 									</div>
 									<ul id="columnsbnk" class="content" style="border-bottom: none;">
@@ -288,7 +327,11 @@
 							</div>
 						</div> --%>
 					</td>
-					<td></td>
+					<td>
+						<div id="ladPreviewWrap" style="margin-left: 20px; width: 1000px; height: 700px; border: 1px solid #ddd; overflow-x: hidden; overflow-y: auto;">
+							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 1000px; height: 1100px;"></iframe>
+						</div>
+					</td>
 				</tr>
 			</tbody>
 		</table>
