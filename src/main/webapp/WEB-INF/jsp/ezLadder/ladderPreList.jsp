@@ -118,7 +118,7 @@
 					});
 				
 				/** sort list */
-				/* $("#columnsbnk").sortable({
+				$("#columnsbnk").sortable({
 					activate: function(event, ui) {
 						console.log(ui.helper[0]);
 						var thisId = "#" + ui.helper[0].id; 
@@ -130,10 +130,10 @@
 						$(thisId).css("border", "");
 					}
 				});
-				$("#columnsbnk").disableSelection(); */
+				$("#columnsbnk").disableSelection();
 				
 				/** 이전 리스트 순서 바꾸기 */
-				$(".myBorder").draggable({ // 드래그 리스트
+				/* $(".myBorder").draggable({ // 드래그 리스트
 					revert: "invalid",
 					revertDuration: 400,
 					zIndex: 5,
@@ -168,7 +168,7 @@
 						});
 						changeListOrder();
 					}
-				});
+				}); */
 				
 				$("#searchInput").on("keyup", function(e) {
 					if(e.keyCode == "13") {

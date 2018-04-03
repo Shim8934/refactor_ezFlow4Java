@@ -82,6 +82,30 @@
 			$("#usePreladder").on("click", function() {
 				window.location.href = "/ezLadder/setLadder.do?ladderId=" + ${vo.ladderId};
 			});
+			
+			$(document)
+				.on("click", function() {
+					showEditPanel();
+				})
+				.on("click", "#sendBttn", function() {
+					addComt($("#comment_input").val());
+				})
+				.on("click", "img[name='editComtButton']", function(event) {
+					event.stopPropagation();
+					showEditPanel($(this).attr("_comtIndex"));
+				})
+				.on("click", "[id^='_eCmt']", function() {
+					modifyComt($(this).attr("_comtIndex").slice(8));
+				})
+				.on("click", "[id^='clA1cmt']", function() {
+					modifyComt($(this).attr("_comtIndex"));
+				})
+				.on("click", "[id^='clA2cmt']", function() {
+					modifyComt($(this).attr("_comtIndex"), true);
+				})
+				.on("click", "[id^='_dCmt']", function() {
+					deleteComt($(this).attr("_comtIndex"));
+				});
 			/* $("#saveCmtBtn").on("click", function() {
 				if($("#inputCmtBox").val() !== "") {
 					setComment("add");
@@ -214,19 +238,16 @@
 				stompClient.subscribe("/lad/cmt/modifyCmt/" + ladderId, function(result) { //수정..
 					var cmtjson = JSON.parse(result.body);
 					
-					$("#cmt_" + cmtjson["id"]).parent(".cmt_wrap").remove();
-					
-					addCommentView["type"] = "prepend";
-					addCommentView["contents"] = cmtjson;
-					
-					showCommentList(addCommentView)
+					if(cmtjson["userId"] === id) {
+						modifyComt(cmtjson["id"]);
+					}
+					$("#cmtArea" + cmtjson["id"]).text(cmtjson["comment"]);
 				});
 				stompClient.subscribe("/lad/cmt/deleteCmt/" + ladderId, function(result) {
 					var cmtjson = JSON.parse(result.body);
 					
-					$("#cmt_" + cmtjson["id"]).parent(".cmt_wrap").remove();
+					$("tr[_comtIndex='" + cmtjson["id"] + "']").remove();
 				});
-				
 				stompClient.subscribe("/lad/userOrder/change/" + ladderId, function(result) {	// 참여자 위치 바꾸기 subscribe
 					var lines = JSON.parse(result.body);
 					
@@ -254,7 +275,6 @@
 					}
 					
 				});
-				
 				stompClient.subscribe("/lad/start/" + ladderId, function(result) {		// 시작시 이동 subscribe
 					window.location.href = "/ezLadder/getLadderGame.do?ladderId=" + ladderId + "&searchSelect=" + searchSelect +
 					"&searchInput=" +  searchInput + "&mode=" + mode + "&currPage=" +  currPage;
@@ -262,36 +282,8 @@
 			});
 		}
 		
-		function createModifyInput(cmtId) {
-			var origCmt = $("#cmt_" + cmtId + " #comment").text();
-			var cmtH = $("#cmt_" + cmtId).css("height").substring(0, $("#cmt_" + cmtId).css("height").length-2) - 4;
-			
-			$(".modiDiv").remove();
-			$("#commentDiv div").css("display", "");
-			$("#cmt_" + cmtId + " div").not("#name").css("display", "none");
-			
-			var html = "";
-			html += "<div class='modiDiv'><textarea id='modifyCmtBox' style='height: " + cmtH + "px'>" + origCmt + "</textarea></div>"
-			html += "<div class='modiDiv icon_wrap'>";
-			html += "<div id='modify' cmtid='" + cmtId + "' data='OK' class='icondiv' style='left: 0;'>확인</div>";
-			html += "<div id='mod_cancle' class='icondiv' style='right: 0;'>취소</div>";
-			html += "</div>";
-			
-			$("#cmt_" + cmtId).append(html);
-			$("#modifyCmtBox").select();
-		}
 		
-		function setComment(flag, cmtId) { // 댓글 추가, 수정, 삭제 (flag: add, modify, delete)
-			var comment = "";
-			if(flag === "add") {
-				comment = $("#comment_input").val();	
-				$("#comment_input").val("");
-			} else if(flag === "modify") {
-				console.log(cmtId);
-				comment = $("#cmt_" + cmtId + " #modifyCmtBox").val();
-				$("#cmt_" + cmtId + " #modifyCmtBox").text("");
-			} 
-			
+		function setComment(flag, cmtId, comment) { // 댓글 추가, 수정, 삭제 (flag: add, modify, delete)
 			$.ajax({
 				type: "POST",
 				url: "/ezLadder/setLadderComment.do",
@@ -341,42 +333,14 @@
 			html += '<div id="editCmtDiv' + cmt["id"] + '" style="display: none;"></div></td>';
 			html += '<td style="width: 145px; position:relative;">';
 			html += '<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;">' + cmt["writeDate"] + '</div>';
-			html += '<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" id="editComtButton" _comtIndex="editComt' + cmt["id"] + '" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);">';
+			html += '<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" name="editComtButton" _comtIndex="editComt' + cmt["id"] + '" />';
 			html += '<div id="editComt' + cmt["id"] + '" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; width: 120px;" tabindex=0>';
-			html += '<div id="_eCmt' + cmt["id"] + '" _comtIndex="editComt' + cmt["id"] + '" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;" onclick="editComment(this);">댓글 수정</div>';
-			html += '<div _comtIndex="' + cmt["id"] + '" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;" onclick="deleteComment(this);">댓글 삭제</div></div></td></tr>';
+			html += '<div id="_eCmt' + cmt["id"] + '" _comtIndex="editComt' + cmt["id"] + '" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;">댓글 수정</div>';
+			html += '<div id="_dCmt' + cmt["id"] + '" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;">댓글 삭제</div></div></td></tr>';
 			
 			$("#commentArea table").prepend(html);
 			
 			addCommentView = [];
-			
-			/* var html = "";
-			var cmt = addCommentView["contents"];
-			var type = addCommentView["type"];
-			
-			html += "<div class='cmt_wrap'>";
-			html += "<div id='cmt_" + cmt["id"] + "' class='cmt'>";
-			html += "<div id='name'>" + cmt["userName"] + "</div>";
-			html += "<div id='comment'>" + cmt["comment"] + "</div>";
-			html += "<div id='date'>" + cmt["writeDate"] + "</div>";
-			html += "<div class='icon_wrap'>";
-			if(id === cmt["userId"]) {
-				html += "<div id='modify' cmtid='" + cmt["id"] + "' class='icondiv' style='left: 0;'>수정</div>";
-				html += "<div id='delete' cmtid='" + cmt["id"] + "' class='icondiv' style='right: 0;'>삭제</div>";
-			} else {
-				html += "<div class='icondiv' style='left: 0; background: beige; cursor: default;'>수정</div>";
-				html += "<div class='icondiv' style='right: 0; background: beige; cursor: default;'>삭제</div>";
-			}
-			html += "</div></div></div>";
-			
-			
-			if(type === "append") {
-				$("#commentDiv").append(html);
-			} else {
-				$("#commentDiv").prepend(html);
-			}
-			
-			addCommentView = []; */
 		}
 		
 		/** 삭제 */
@@ -591,31 +555,70 @@
 		    }
 		}
 		
-		/** 댓글 */
-		var flagEvent = -1;
-		function showEditPanel(obj) {					    	
-	    	if (flagEvent != -1) {					
-	    		document.getElementById("editComt" + flagEvent).style.display = "none";
-	    	}	
-	    	
-	    	var id = obj.getAttribute("_comtIndex");
-	    	
-	    	if (flagEvent == id.slice(8)) {
-	    		flagEvent = -1;
-				return;
-	    	}
-	    	
-	    	flagEvent = id.slice(8);	    	
-	    	document.getElementById(id).style.display = "block";	
-	    	
-	    	document.addEventListener("click", function handleClick(e) {		    									
-		    	if (document.getElementById(id) != null) {
-		    		document.getElementById(id).style.display = "none"; 
-		    	}		    			
-		    	document.removeEventListener("click", handleClick);
-		    	flagEvent = -1;
-	    	});	   	
+		/** 댓글 편집 패널 토글 */
+		var editComtFlag = -1;
+		function showEditPanel(editComtID) {
+			if(!!editComtID) {
+				var cmtID = editComtID.slice(8);
+				
+				if(editComtFlag == cmtID) {
+					editComtFlag = -1;
+				} else {
+					$("#editComt" + editComtFlag).hide();
+					editComtFlag = cmtID;
+				}
+				$("#" + editComtID).toggle();
+			} else {
+				$("div[id^='editComt']").hide();
+				editComtFlag = -1;
+			}
 	    }
+		/** 댓글 입력 */
+		function addComt(comment) {
+			if(!!comment) {
+				$("#comment_input").val("");
+				$("#sendBttn").css("background", "#d0d0d0").attr("disabled", true);
+				setComment("add", 0, comment);
+			}
+		}
+		/** 댓글 수정 */
+		function modifyComt(comtIndex, submitFlag) {
+			if(submitFlag) {
+				var comment = $("#editCmtArea" + comtIndex).val();
+				$("#editCmtArea" + comtIndex).text("");
+				
+				setComment("modify", comtIndex, comment);
+				return;
+			}
+			
+			var html = '';
+			if(editComtFlag == comtIndex) {
+				$("[id^=div2Cmt], [id^=_eCmt]").show();
+				$("[id^=editCmtDiv]").hide();
+				
+				html += '<div style="display: inline-block;">';
+				html += '<div style="display: block; float:left; border:1px solid #ddd;padding-left: 0px;margin-left: 20px; width: 1310px; border-radius: 3px;">';
+				html += '<textarea id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow: hidden; outline: none; border: none; resize: none; padding: 5px; width: 1300px; height: 14px;">';
+				html += $("#cmtArea" + editComtFlag).text() + '</textarea></div></div>';
+				html += '<div style="padding: 5px 0px 5px 20px; clear: both;">';
+				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '">취소</button>';
+				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '" style="background-color: rgb(0, 72, 150);">저장</button></div>';
+			} 
+			
+			$("#div2Cmt" + comtIndex).toggle();
+			$("#_eCmt" + comtIndex).toggle();
+			$("#editCmtDiv" + comtIndex).html(html).toggle();
+			
+		}
+		/** 댓글 삭제 */
+		function deleteComt(comtIndex) {
+			var result = confirm("이 댓글을 삭제하시겠습니까?");
+			
+			if(result) {
+				setComment("delete", comtIndex, "");
+			}
+
+		}
 		function auto_grow(element) {	    		    		    	
 			if (element.value == "" && document.getElementById("uploadedFile").style.display == "none") {
 				document.getElementById("sendBttn").style.backgroundColor = "#d0d0d0";
@@ -629,11 +632,6 @@
 		        element.style.height = (element.scrollHeight - 32) + "px";			        
 		        document.getElementById("sendComment").style.height = value + 18 + "px";
 			}
-	    }
-		function sendComment() {	    	
-	        $("#sendBttn").css("background", "#d0d0d0");
-	        $("#sendBttn").attr("disabled", true);
-	        setComment("add");
 	    }
 		
 		function setRandomNodeData(){
@@ -1018,13 +1016,13 @@
 							<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
 						</div>
 						<div class="commentBtn">
-							<button id="sendBttn" disabled="disabled" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;" onclick="sendComment(); return false;">등록</button>						
+							<button id="sendBttn" disabled="disabled" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;">등록</button>						
 						</div>
 	            	</div>
 	            </div>
 				<table style="width: 100%;" id="commentListView">
 					<c:forEach var="_comt" items="${cmtlist}">
-						<tr style="border-bottom: 1px dotted #ddd;">
+						<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="<c:out value ="${_comt.id}" />">
 							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
 								<img src="${_comt.pic}" style="padding-top: 10px; height: 38px; width:38px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
 							</td>
@@ -1038,10 +1036,10 @@
 							<td style="width: 145px; position:relative;">
 								<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;"><c:out value ="${_comt.writeDate}" /></div>
 								<c:if test="${_comt.userId == id}">								
-									<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" id="editComtButton" _comtIndex="editComt<c:out value ="${_comt.id}"/>" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);">
+									<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" name="editComtButton" _comtIndex="editComt<c:out value ="${_comt.id}"/>" />
 									<div id="editComt<c:out value ="${_comt.id}"/>" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; width: 120px;" tabindex=0>							
-										<div id="_eCmt<c:out value ="${_comt.id}" />" _comtIndex="editComt<c:out value ="${_comt.id}" />" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;" onclick="editComment(this);">댓글 수정</div>
-										<div id="_dCmt<c:out value ="${_comt.id}" />"_comtIndex="<c:out value ="${_comt.id}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;" onclick="deleteComment(this);">댓글 삭제</div>
+										<div id="_eCmt<c:out value ="${_comt.id}" />" _comtIndex="editComt<c:out value ="${_comt.id}" />" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;">댓글 수정</div>
+										<div id="_dCmt<c:out value ="${_comt.id}" />"_comtIndex="<c:out value ="${_comt.id}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;">댓글 삭제</div>
 									</div>
 								</c:if>
 							</td>
@@ -1049,23 +1047,6 @@
 					</c:forEach>
 				</table>
 			</div>
-			<!-- <div style="padding: 0px 50px;">
-				<div class="cmtInput_wrap">
-					<div class="cmtInputDiv"><input type="text" id="inputCmtBox" style="width: 100%; height: 100%; padding: 0px 30px;"></div>
-					<div id="saveCmtBtn">댓글 등록</div>
-				</div>
-				<div id="commentDiv" style="width: 100%"></div>
-			</div> -->
 		</c:if>
-<%-- 		
-			<button onclick="sendTest()">socket test!!</button>
-		
-		<div id="chat" align="center">
-			<%@ include file="include/ladderChat.jsp"%> 
-		</div>
-		<h3>
-		* 프론트 꾸며야 됨 - 프로필 이미지 넣기.<br>
-		* 사다리 연동
-		</h3> --%>
 	</body>
 </html>

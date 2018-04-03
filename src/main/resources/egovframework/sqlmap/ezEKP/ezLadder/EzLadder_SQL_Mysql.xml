@@ -882,7 +882,7 @@
 		UPDATE 
 			TBL_LADDER_COMMENT
 		SET
-			COMMENT = #comment#, WRITEDATE = #writeDate# 
+			COMMENT = #comment#
 		WHERE
 			TENANT_ID = #tenant_id#
 		AND 

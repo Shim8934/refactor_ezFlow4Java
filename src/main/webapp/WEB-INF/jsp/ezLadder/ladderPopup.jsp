@@ -93,6 +93,10 @@
 					<span>▒ 이미 추가된 유저입니다.</span>
 					<!-- <span id="usernames"></span> -->
 				</c:when>
+				<c:when test="${popupType == 'cmtdelete'}">
+					<h1 id="h1Title" style="margin-bottom: 30px;">댓글 삭제</h1>
+					<span>▒ 이 댓글을 삭제하시겠습니까?</span>
+				</c:when>
 			</c:choose>
 			
 		<div class="btnposition btnpositionNew">
