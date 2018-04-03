@@ -40,6 +40,7 @@
 				typeId = $(val).attr("value");
 				$(".bold").css("font-weight", "normal");
 				$(val).find("span").css("font-weight", "bold");
+				selFormId = "";
 				
 			    $.ajax({
 		    		type : "POST",
@@ -111,6 +112,12 @@
 				if (formStatus == "basic") {
 					alert("<spring:message code='ezJournal.t143'/>");
 				} else {
+					
+					if (selFormId == null || selFormId == "") {
+						alert("<spring:message code='ezJournal.t164'/>");
+						return;
+					}
+					
 			    	var url = "/admin/ezJournal/insertForm.do";
 			    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
 			    			+ "&formId=" + encodeURIComponent(selFormId);
@@ -134,6 +141,12 @@
 		    	if (formStatus == "basic") {
 					alert("<spring:message code='ezJournal.t144'/>");
 		    	} else {
+
+					if (selFormId == null || selFormId == "") {
+						alert("<spring:message code='ezJournal.t164'/>");
+						return;
+					}
+					
 		    		
 		    		if (selFormId != null) {
 			    		if (confirm("<spring:message code = 'ezApprovalG.t999933' />") == true) {
