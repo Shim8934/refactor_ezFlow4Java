@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +20,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.crypto.Cipher;
@@ -603,7 +607,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("Name", userInfo.getDisplayName());	
 		model.addAttribute("Id", userInfo.getId());
 		
-		
 		logger.debug("readMailContent ended.");
 		
 		return "ezEmail/mailReadContent";
@@ -677,6 +680,202 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("readMailOriginal ended.");
 		
 		return "ezEmail/mailReadOriginal";
+	}
+	
+	/**
+	 * 일반 첨부파일시 모두저장 클릭시 호출되는 메서드 (압축파일 내려받기) 
+	 */
+	@RequestMapping(value="/ezEmail/downloadAttachAll.do", produces="text/plain; charset=UTF-8")
+	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("downloadAttachAll started.");
+		
+		// get user credentials
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String password = userIdAndPassword.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
+		logger.debug("userEmail=" + userEmail);
+		
+		// retrieve the passed in parameters
+		String folderPath = URLDecoder.decode(request.getParameter("folderPath"), "utf-8");
+		String strUid = URLDecoder.decode(request.getParameter("uid"), "utf-8");
+		String params = request.getParameter("params");
+		
+		logger.debug("params=" + params);
+		
+		String param[] = params.split("&");
+		String filename[] = new String[param.length / 2];
+		String strIndex[] = new String[param.length / 2];
+		
+		int j = 0, k = 0;
+
+		for (int i = 0; i < param.length; i++) {
+			
+			String tmpStr[] = param[i].split("=");
+			
+			if (i % 2 == 0) {
+				filename[j] = tmpStr[1];
+				j++;
+			} else {
+				strIndex[k] = tmpStr[1];
+				k++;
+			}
+		}
+		
+		long uid = strUid != null ? Long.parseLong(strUid) : 0;
+		logger.debug("folderPath=" + folderPath + ",uid=" + uid);
+		
+		if (folderPath == null || strUid == null || filename == null || strIndex == null) {
+			logger.debug("downloadAttachAll illegal arguments.");
+			return;
+		}
+		
+		Integer idx[] = new Integer[strIndex.length];
+		
+		if (strIndex != null) {
+
+			for (int i = 0; i < strIndex.length; i++) {
+				idx[i] = Integer.parseInt(strIndex[i]);
+			}
+		}
+		
+		String realPath = commonUtil.getRealPath(request);
+		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		pDirPath = realPath + pDirPath;
+		String guid = UUID.randomUUID().toString();
+		String tempFileUploadPath = pDirPath + commonUtil.separator + "tempFileUpload";
+		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
+		String charSet = "utf-8";
+		String useEucKr = ezCommonService.getTenantConfig("UseMailZipEucKr", userInfo.getTenantId());
+		
+		if (useEucKr.equals("YES")) {
+			charSet = "euc-kr";
+		}
+		
+		logger.debug("use encoding charset=" + charSet); 
+		
+		IMAPAccess ia = null;
+		ZipOutputStream zos = null;
+		String downFileName = "";
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale);
+			
+			File tempFile = new File(pDirTempPath + ".zip");
+			
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+			
+			tempFile = new File(tempFileUploadPath);
+			
+			if (!tempFile.exists()) {
+				tempFile.mkdirs();
+			}
+			
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName(charSet));
+			Folder f = ia.getFolder(folderPath);
+			
+			if (f == null || !f.exists()) {
+				logger.debug("folder not found. folderPath=" + folderPath);
+			} else {
+				
+				f.open(Folder.READ_ONLY);
+				Message message = null;
+				
+				if (f.isOpen() && f instanceof IMAPFolder) {
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				
+				if (message == null) {
+					logger.debug("message not found. uid=" + uid);
+				} else {
+				
+					downFileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message) + ".zip";
+					Part part = null;
+					
+					if (idx.length == 0) {
+						part = message;
+					} else {
+						
+						for (int i = 0; i < idx.length; i++) {
+							
+							part = ezEmailUtil.getAttachPart(message, idx[i]);
+
+							if (part == null) {
+								logger.debug("attachpart not found. AttachPartIndex=" + idx[i]);
+							} else {
+							
+								InputStream input = null;
+								response.setContentType(part.getContentType());
+							
+								filename[i] = MimeUtility.decodeText(filename[i]);
+								filename[i] = filename[i].replaceAll("[\\\\/:*?\"<>|]", "_")
+											 .replaceAll("[\\t\\r\\n\\v\\f]", "")
+											 .replaceAll("[+]", " ");
+								logger.debug("fname=" + filename[i]);
+								
+								try {
+									input = part.getInputStream();
+									
+									ZipEntry zipEntry = new ZipEntry(filename[i]);
+									
+									zos.putNextEntry(zipEntry);
+									
+									byte[] buffer = new byte[4096];
+									int byteRead;
+
+									while ((byteRead = input.read(buffer)) > 0) {
+										zos.write(buffer, 0, byteRead);
+									}
+									
+									zos.closeEntry();
+									input.close();
+									
+								} catch (IOException e) {
+									e.printStackTrace();
+								} 
+							}
+						}
+					}
+				}
+			}
+			
+			zos.flush();
+			zos.close();
+			f.close(true);
+
+			File file = new File(pDirTempPath + ".zip");
+			
+			if (file.exists()) {
+				downFile(request, response, pDirTempPath + ".zip", downFileName);
+				file.delete();
+			}
+
+		} catch (Exception e) {
+			
+			File file = new File(pDirTempPath + ".zip");
+			
+			if (file.exists()) {
+				file.delete();
+			}
+			
+		} finally {
+			
+			if (ia != null) {
+				ia.close();
+			}
+			
+			if (zos != null) {
+				zos.close();
+			}
+		}
+		
+		logger.debug("downloadAttachAll ended.");
 	}
 	
 	/**

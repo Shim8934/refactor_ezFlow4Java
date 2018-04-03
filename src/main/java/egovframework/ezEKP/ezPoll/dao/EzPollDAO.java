@@ -191,4 +191,27 @@ public class EzPollDAO extends EgovAbstractDAO {
 	public int checkUsingFile(Map<String, Object> map) {		
 		return (int) select("EzPollDAO.checkUsingFile", map);
 	}
+	
+	public int checkQstUsingFile(Map<String, Object> map) {		
+		return (int) select("EzPollDAO.checkQstUsingFile", map);
+	}
+	
+	public String getQuestionFileById(Map<String, Object> map) {		
+		return (String) select("EzPollDAO.getQuestionFileById", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getAnswerFilesByQstId(Map<String, Object> map) {		
+		return (List<String>) list("EzPollDAO.getAnswerFilesByQstId", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getCommentFilesByQstId(Map<String, Object> map) {		
+		return (List<String>) list("EzPollDAO.getCommentFilesByQstId", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getCommentImgFilesByQstId(Map<String, Object> map) {		
+		return (List<String>) list("EzPollDAO.getCommentImgFilesByQstId", map);
+	}
 }

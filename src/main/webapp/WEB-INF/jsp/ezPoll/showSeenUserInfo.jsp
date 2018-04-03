@@ -73,14 +73,14 @@
 					<tr> 
 						<th colspan="3"> 
 							<a id="seenUser_"><spring:message code='ezPoll.t136'/> (<c:out value='${numberOfSeenUsers}'/>)</a>
-							<img style="position: absolute; right: 10px; top: 3px; cursor: pointer; height: 40px; width: 40px;" src="/images/poll/sendMail.png" onClick="sendMailAll1('${qstID}')">
+							<img style="cursor: pointer; height: 40px; width: 40px; float: right;" src="/images/poll/sendMail.png" onClick="sendMailAll1('${qstID}')">
 						</th> 
 					</tr>
 					<c:forEach var="list1" items="${listOfSeenUsers}"> 
 						<tr id="${list1.id}" class="white" style="border: 1px solid #DDD;">
 							<td style="border-right:none; max-width: 180px;  width: 160px;">
 								<img src="${list1.userFileUrl}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list1.id}')">
-								<a style="cursor:pointer; display:inline-block; float:left; width:80px; line-height:51px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" onClick="menuQst_DetailUserInfo('${list1.id}')">	
+								<a style="cursor:pointer; display:inline-block; float:left; width:80px; line-height:50px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" onClick="menuQst_DetailUserInfo('${list1.id}')">	
 									<c:choose>
 										<c:when test="${list1.primary == '1'}">
 											<c:out value ="${list1.displayName1}"/>
@@ -104,8 +104,8 @@
 				<table border=1px style="float: left;clear: none;width : 50%; margin:0px 0px 0px -1px;" class="voteUnseenTbl">
 					<tr> 
 						<th colspan="3"> 
-							<a id="unseenUser_" style="color:#000; position: absolute; top:16px; left:15px;"><spring:message code='ezPoll.t137'/> (<c:out value='${numberOfUnseenUsers}'/>)</a>
-							<img style="position: absolute; right: 10px; top: 3px; cursor: pointer; height: 40px; width: 40px;" src="/images/poll/sendMail.png" onClick="sendMailAll2('${qstID}')">
+							<a id="unseenUser_" style="color:#000; float:left; vertical-align:middle; margin-top:13px;"><spring:message code='ezPoll.t137'/> (<c:out value='${numberOfUnseenUsers}'/>)</a>
+							<img style="cursor: pointer; height: 40px; width: 40px; float:right;" src="/images/poll/sendMail.png" onClick="sendMailAll2('${qstID}')">
 						</th> 
 					</tr>
 					<c:forEach var="list2" items="${listOfUnSeenUsers}"> 
