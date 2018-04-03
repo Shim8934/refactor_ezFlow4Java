@@ -46,8 +46,9 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @param map
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<JournalFormInfoVO> getFormListAdmin(Map<String, Object> map) {
-		return null;
+		return (List<JournalFormInfoVO>) list("getFormListAdmin", map);
 	}
 	
 	/**

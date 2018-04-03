@@ -4,20 +4,20 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 	<c:choose>
 		<c:when test="${fn:length(formList) > 0}">
-			<c:forEach items="${formList}" var="fList" varStatus="status">
-				<tr formid="${fList.formId}" formstatus="${fList.formStatus}" onclick="listClick(this)">
+			<c:forEach items="${formList}" var="form" varStatus="status">
+				<tr formid="${form.formId}" formstatus="${form.formStatus}" onclick="listClick(this)">
 					<td style="text-align: center;">${status.count }</td>
-					<td>${fList.formName }</td>
+					<td>${form.formName }</td>
 					<c:choose>
-						<c:when test="${fn:length(fList.depts) > 1 }">
-							<td>${fList.depts[0].deptName }&nbsp;<spring:message code="ezJournal.t124"/>&nbsp;${fn:length(fList.depts) -1}</td>
+						<c:when test="${fn:length(form.depts) > 1 }">
+							<td>${form.depts[0].deptName }&nbsp;<spring:message code="ezJournal.t124"/>&nbsp;${fn:length(form.depts) -1}</td>
 						</c:when>
 						<c:otherwise>
-							<td>${fList.depts[0].deptName }</td>
+							<td>${form.depts[0].deptName }</td>
 						</c:otherwise>
 					</c:choose>
-					<td>${fList.formInfo }</td>
-					<td>${fn:substring(fList.formDate, 0, 10) }</td>
+					<td>${form.formInfo }</td>
+					<td>${fn:substring(form.formDate, 0, 10) }</td>
 				</tr>
 			</c:forEach>
 		</c:when>
