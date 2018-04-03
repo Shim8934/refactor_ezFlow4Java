@@ -1029,7 +1029,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<tr>");
 			/*sb.append("<td align=\"center\">" + item.getPollGroupNo() + "</td>");*/			
 			sb.append("<td style=\"text-overflow:ellipsis;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
-			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" +commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
+			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
 			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", userInfo.getLocale()) + "</td>");
 			sb.append("<td>" + pollState + "</td>");
@@ -1570,7 +1570,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
 			strHTML.append("<th align=\"right\" style=\"text-align:right;\">" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + name + "</th>");
 		} else {
-			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + managerVO.getPollSubject() + "</th>");
+			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
 			strHTML.append("<th align=\"right\" style=\"text-align:right;\">" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + name + "</th>");
 		}
 		
@@ -3703,19 +3703,28 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
     	}
     	
     	int startRowNum = ((pageNum - 1) * perCount);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("boardID", boardID);
-		map.put("itemID", itemID);
-		map.put("userID", userID);
-		map.put("lang", lang);
-		map.put("tenantID", tenantID);
-		map.put("start", startRowNum);
-		map.put("perCount", perCount);
-		List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
-		
-		StringBuffer resultXML = new StringBuffer();
+    	int endRowNum = (pageNum * perCount);
+
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	map.put("boardID", boardID);
+    	map.put("itemID", itemID);
+    	map.put("userID", userID);
+    	map.put("lang", lang);
+    	map.put("tenantID", tenantID);
+    	
+    	/* MySQL */
+    	map.put("perCount", perCount);
+    	map.put("start", startRowNum);
+    	
+    	/* Oracle */
+    	map.put("startRowNum", startRowNum);
+    	map.put("endRowNum", endRowNum);
+    	
+    	
+    	List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
+    	
+    	StringBuffer resultXML = new StringBuffer();
 		
 		resultXML.append("<DOCLIST>");
 		

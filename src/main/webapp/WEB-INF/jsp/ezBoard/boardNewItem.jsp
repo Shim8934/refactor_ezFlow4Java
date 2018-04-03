@@ -269,6 +269,13 @@
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		        }
+		      
+		        var editorW = (document.documentElement.clientWidth - 20) + "PX";
+		        document.getElementById("tab02").style.width = editorW;
+	            document.getElementById("message").style.width = editorW;	            
+	            //iframe 내부 에디터의 body width 조절
+	            $("iframe").ready(function(){ $("iframe[name='message']").contents().find("body").css("width" , editorW); });
+		        
 		    };
 		
 		    $(function () {
@@ -591,8 +598,9 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(nickname));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(nickname));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", "");
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", "");
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", "");
+		            /* 2018.02.09 김기하 새게시물에서 익명게시판 부서가 null로 나오는 것을 공백처리 */
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", MakeXMLString(" "));
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", MakeXMLString(" "));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYID", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", "");
@@ -712,14 +720,14 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", "");
 
 		        if (pMode != "new" && pMode != "new1" && pMode != "reply" && pMode != "temp" && pMode != "boardContent" && pMode != "boardContent" && pReservedItem == false) {
-		            if (document.getElementById("readCount") != undefined && document.getElementById("readCount").checked)
+		            if ((document.getElementById("readCount") != undefined) && (document.getElementById("readCount").checked == true)){
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "Y");
-		            else
+		            } else{
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
-		        }
-		        else
+		        	}
+		         }else{
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
-
+		        }
 		        
 				var colType = new Array();
 				var tableCol = new Array();
@@ -1483,11 +1491,17 @@
 		                    if ("${docID}" != "")
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                }
-		                else
+		                else{
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		
+		                }
 		        }
 		        
+                var editorW = (document.documentElement.clientWidth - 20) + "PX";
+		       	document.getElementById("tab02").style.width = editorW;
+	            document.getElementById("message").style.width = editorW;
+	            //iframe 내부 에디터의 body width 조절
+	            $("iframe").ready(function(){ $("iframe[name='message']").contents().find("body").css("width" , editorW); });
+      
 		    }
 		    function bodydragover(evt) {
 		        evt.dataTransfer.dropEffect = "none";
@@ -2046,7 +2060,8 @@
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'text'}">
 						                <td colspan="3">
-						                    <input type="text" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'  style="width:43%"/>
+						                    <!-- 2018.02.08 입력창 최대 길이 제한-->
+						                    <input type="text" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'  style="width:43%" maxlength="100"/>
 						                </td>
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'check'}">
@@ -2080,7 +2095,7 @@
 			                    <tr id="tdReservationDate">
 	                		</c:when>
 	                		<c:otherwise>
-			                    <tr id="tdReservationDate" style="visibility:hidden;">
+			                    <tr id="tdReservationDate" style="display: none;">
 	                		</c:otherwise>
 	                	</c:choose>
 	                        <th><spring:message code='ezBoard.t432' /></th>

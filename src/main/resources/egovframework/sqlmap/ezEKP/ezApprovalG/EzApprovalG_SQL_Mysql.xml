@@ -21637,7 +21637,7 @@
    	 	<isNotEqual property="v_LANGTYPE" compareValue="1">
    	 	<![CDATA[
    	 		SELECT 
-   				TASKNAME2 TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode
+   				TASKNAME2, TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode
 			FROM 
 				TBl_ENDAPRDOCINFO
 			JOIN 
@@ -23135,58 +23135,7 @@
            		A.DocID = #v_DOCID# 
            LIMIT 1
       </select>  
-      
-      <update id="EzApprovalG.updateResetDoc" parameterClass="map">
-      	UPDATE 
-      		TBL_EXPAPRDOCINFO 
-         SET 
-         	CABINETID = C.CABINETID, 
-            TASKCODE = C.TASKCODE, 
-            DOCNUMCODE = C.DOCNUMCODE, 
-            ORGDOCNUMCODE = C.ORGDOCNUMCODE 
-         FROM 
-         	TBL_ENDAPRDOCINFO  A 
-         INNER JOIN  
-           	TBL_APRDOCINFO  B 
-         ON 
-         	A.DOCID = B.ORGDOCID 
-         AND
-         	A.COMPANYID = B.COMPANYID
-         AND
-         	A.TENANT_ID = B.TENANT_ID
-         INNER JOIN 
-         	TBL_EXPENDAPRDOCINFO  C
-         ON 
-         	A.DOCID = C.DOCID 
-         AND
-         	A.COMPANYID = C.COMPANYID
-         AND
-         	A.TENANT_ID = C.TENANT_ID
-         INNER JOIN 
-         	TBL_EXPAPRDOCINFO  D 
-         ON 
-         	B.DOCID = D.DOCID 
-         AND
-         	B.COMPANYID = D.COMPANYID
-         AND
-         	B.TENANT_ID = D.TENANT_ID
-         WHERE 
-         	A.TENANT_ID = #v_TENANTID#
-         AND
-         	A.DOCID IN (SELECT 
-         					ORGDOCID 
-         				FROM 
-         					TBL_APRDOCINFO  
-         				WHERE 
-         					DOCID= #v_DOCID#
-         				AND
-         					COMPANYID = #companyID#
-         				AND
-         					TENANT_ID = #v_TENANTID#) E
-         AND
-         	A.COMPANYID = #companyID#
-      </update>
-      
+            
 	<delete id="EzApprovalG.deleteOpinionTypeInfo" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM 
