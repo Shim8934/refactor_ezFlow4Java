@@ -1492,7 +1492,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		sb.append("</DATA>");
 
 		response.setContentType("text/xml; charset=utf-8");
-		response.getWriter().print(sb.toString());
+		
+		// skyblue0o0 20180402 : 특정 유니코드 문자 포함 시 xml파싱 에러나서 빈칸으로 치환
+		response.getWriter().print(sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " "));
 		
 		logger.debug("mailPrevShow ended.");
 	}
