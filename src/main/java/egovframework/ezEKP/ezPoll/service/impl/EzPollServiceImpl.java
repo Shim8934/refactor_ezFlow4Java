@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPoll.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,6 +87,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("tenant_id", pollAnswerVO.getTenantId());
 		map.put("content", pollAnswerVO.getContent());
 		map.put("vote_number", pollAnswerVO.getVotesNumber());
+		map.put("filePath", pollAnswerVO.getFilePath());
 		ezPollDAO.insertOption(map);
 	}
 
@@ -496,5 +498,159 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("tenant_id", tenantId);
 		return ezPollDAO.getSpecificPollUserAndAnswer(map);
 	}
+
+	@Override
+	public int checkUsingFile(int tenantId, String FilePath) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("tenant_id", tenantId);
+		map.put("file_path", FilePath);
+		return ezPollDAO.checkUsingFile(map);
+	}
+
+	@Override
+	public int checkQstUsingFile(int tenantId, int qstId, String FilePath) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("tenant_id", tenantId);
+		map.put("qst_id", qstId);
+		map.put("file_path", FilePath);
+		return ezPollDAO.checkQstUsingFile(map);
+	}
+	
+	@Override
+	public void deleteAllFilesByQstId(int tenantId, int qstId, String pDirPath, String realPath) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("tenant_id", tenantId);
+		map.put("qst_id", qstId);
+		map.put("realPath", realPath);
+		
+		if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+			pDirPath = pDirPath + commonUtil.separator;
+		}
+		map.put("pDirPath", pDirPath);
+		
+		//투표에 첨부된 파일 체크 및 삭제
+		deleteQstFiles(map);
+		deleteAnsFiles(map);
+		deleteCmtFiles(map);
+		
+	}
+	
+	@Override
+	public void deleteQstFiles(Map<String, Object> map) throws Exception {
+		String qstFileName = "";
+		int fileUsingCheck = 0;
+		int tenantId = (int)map.get("tenant_id");
+		int qstId = (int)map.get("qst_id");
+		String pDirPath = (String)map.get("pDirPath");
+		String qstFile = ezPollDAO.getQuestionFileById(map);
+		
+		if(qstFile != null){
+			String[] qstFilesList = qstFile.split("\\|");
+			for(int i = 0; i < qstFilesList.length; i++){
+				qstFileName = qstFilesList[i];
+				
+				//다른 qstId에서 파일을 사용하고 있는지 체크
+				fileUsingCheck = checkQstUsingFile(tenantId, qstId, qstFileName);
+				if(fileUsingCheck < 1 && qstFileName != null){
+					if(qstFileName != null){
+						qstFileName= qstFileName.split("/")[0];
+					}
+					
+					String absoluteFilePath = pDirPath + "uploadFile/" + qstFileName;
+					
+					try {
+						File file = new File(absoluteFilePath);
+						file.delete();	
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void deleteAnsFiles(Map<String, Object> map) throws Exception {
+		String ansFileName = "";
+		int fileUsingCheck = 0;
+		int tenantId = (int)map.get("tenant_id");
+		String pDirPath = (String)map.get("pDirPath");
+		List<String> ansFilesList = ezPollDAO.getAnswerFilesByQstId(map);
+		
+		for(int i = 0; i < ansFilesList.size(); i++){
+			ansFileName = ansFilesList.get(i);
+			fileUsingCheck = checkUsingFile(tenantId, ansFileName);
+			if(fileUsingCheck <= 1 && ansFileName != null){
+				if(ansFileName != null){
+					ansFileName= ansFileName.split("/")[0];
+				}
+				
+				String absoluteFilePath = pDirPath + "uploadFile/" + ansFileName;
+				
+				try {
+					File file = new File(absoluteFilePath);
+					file.delete();	
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void deleteCmtFiles(Map<String, Object> map) throws Exception {
+		String cmtFileName = "";
+		List<String> cmtFilesList = ezPollDAO.getCommentFilesByQstId(map);
+		List<String> cmtImgFilesList = ezPollDAO.getCommentImgFilesByQstId(map);
+		
+		//일반 파일 삭제
+		if(cmtFilesList != null){
+			for(int i = 0; i < cmtFilesList.size(); i++){
+				cmtFileName = cmtFilesList.get(i);
+				
+				//댓글은 재사용하지 않기 때문에 파일 사용유무 체크하지 않음.
+				if(cmtFileName != null){
+					String pDirPath = (String)map.get("pDirPath");
+					String absoluteFilePath = pDirPath + "uploadFile/" + cmtFileName;
+					
+					try {
+						File file = new File(absoluteFilePath);
+						file.delete();	
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		//이미지 파일 삭제
+		if(cmtImgFilesList != null){
+			for(int i = 0; i < cmtImgFilesList.size(); i++){
+				cmtFileName = cmtImgFilesList.get(i);
+				
+				//댓글은 재사용하지 않기 때문에 파일 사용유무 체크하지 않음.
+				if(cmtFileName != null && cmtFileName.indexOf("commentImages") != -1){
+					/*if(cmtFileName != null && cmtFileName.indexOf("commentImages") != -1){
+						String[] tempArr = cmtFileName.split("/");
+						cmtFileName= tempArr[tempArr.length - 1];
+					}*/
+					
+					String realPath = (String)map.get("realPath");
+					String absoluteFilePath = realPath + cmtFileName;
+					
+					try {
+						File file = new File(absoluteFilePath);
+						file.delete();	
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+
 
 }

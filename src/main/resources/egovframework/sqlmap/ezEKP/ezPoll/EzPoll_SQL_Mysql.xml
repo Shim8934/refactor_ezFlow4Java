@@ -39,6 +39,7 @@
         <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
         <result property="content"         		column="content"               		columnIndex="4"/>
         <result property="votesNumber"         	column="votes_num"               	columnIndex="5"/>
+        <result	property="filePath"				column="file_path"					columnIndex="6"/>
     </resultMap>    
     
     <resultMap id="pollComment" class="PollCommentVO">
@@ -227,10 +228,12 @@
 		<isEqual property="v_temp" compareValue="1">     
         	<![CDATA[
 	            INSERT INTO TBL_VOTE_ANSWER(
-	               ID, 				QST_ID,        		TENANT_ID,          CONTENT, 		    VOTES_NUM
+	               ID, 				QST_ID,        		TENANT_ID,          CONTENT, 		    VOTES_NUM,
+	               FILE_PATH
 	            )
 	            VALUES(
-	               #id#,          	 #qst_id#, 			#tenant_id#,       #content#,			#vote_number# 
+	               #id#,          	 #qst_id#, 			#tenant_id#,       #content#,			#vote_number#,
+	               #filePath#
 	            )  
         	]]>
         </isEqual>
@@ -240,7 +243,8 @@
 	            	TBL_VOTE_ANSWER
 	            SET 
 	            	 CONTENT	 		= #content#,
-	            	 VOTES_NUM			= #vote_number# 
+	            	 VOTES_NUM			= #vote_number#, 
+	            	 FILE_PATH			= #filePath# 
 
 	            WHERE
 	            		QST_ID			= #qst_id#
@@ -972,5 +976,90 @@
 	            		TENANT_ID	= #tenant_id#
 		]]>
    </update>   
+   
+   <select id="EzPollDAO.checkUsingFile" resultClass="Integer">   
+		<![CDATA[
+			SELECT 
+				count(FILE_PATH)
+			FROM 
+				TBL_VOTE_ANSWER
+			WHERE  
+				TENANT_ID = #tenant_id#		
+			AND
+				FiLE_PATH = #file_path#
+		]]>				
+    </select>  
+   
+   <select id="EzPollDAO.checkQstUsingFile" resultClass="Integer">   
+		<![CDATA[
+			SELECT 
+				count(FILE_PATH)
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID = #tenant_id#		
+			AND
+				ID <> #qst_id#		
+			AND
+				FiLE_PATH like CONCAT('%', #file_path#, '%')
+		]]>				
+    </select>  
 
+   <select id="EzPollDAO.getQuestionFileById" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_PATH
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				ID			= #qst_id#
+		]]>				
+    </select>  
+   
+   <select id="EzPollDAO.getAnswerFilesByQstId" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_PATH
+			FROM 
+				TBL_VOTE_ANSWER
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				QST_ID		= #qst_id#
+			AND
+				FILE_PATH IS NOT NULL
+		]]>				
+    </select>  
+
+   <select id="EzPollDAO.getCommentFilesByQstId" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_PATH
+			FROM 
+				TBL_VOTE_COMMENT
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				QST_ID		= #qst_id#
+			AND
+				LENGTH(FILE_PATH) > 0
+		]]>				
+    </select>  
+    
+   <select id="EzPollDAO.getCommentImgFilesByQstId" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_TYPE
+			FROM 
+				TBL_VOTE_COMMENT
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				QST_ID		= #qst_id#
+			AND
+				LENGTH(FILE_TYPE) > 0
+		]]>				
+    </select>  
 </sqlMap>

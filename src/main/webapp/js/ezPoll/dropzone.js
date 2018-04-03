@@ -145,53 +145,57 @@ function setAttachFileInfo1(strXML) {
         var extCheck = false;
         
         for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
-            var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[i]);           
+            var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[i]);
             var attid = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[i]);
 
             if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA3")[i]) == "OK") {            	
-                objTr = document.createElement("TR");
-                objTr.setAttribute("fileinfo", fileinfo);
-                objTr.setAttribute("attid", attid);
-
-                var objTd = document.createElement("TD");                
-                objTd.style.paddingLeft  = "10px";
-                objTd.style.paddingRight = "0px";
-                objTd.style.paddingBottom = "0px";
-                objTd.style.paddingTop = "0px";
-                objTd.style.width = "24px";
-                objTd.style.height = "24px";
-                
-                var image_tag = document.createElement("img");
-                image_tag.setAttribute("_path", fileinfo);
-                image_tag.src = "/images/poll/pollAddFile_Delicon.png";
-                image_tag.setAttribute("height", "24");
-                image_tag.setAttribute("width", "20");
-                image_tag.setAttribute("style", "vertical-align: middle; cursor: pointer;");                
-                image_tag.onclick = function () { filedelete(this); };
-                objTd.appendChild(image_tag);
-                objTr.appendChild(objTd);
-
-                var objTd2 = document.createElement("TD");
-                objTd2.style.paddingBottom = "0px";
-                objTd2.style.paddingTop = "0px";
-                
-                var fileSize = parseInt(fileinfo.split("/")[2]);
-
-                if (fileSize / 1024 / 1024 > 1) {
-                    fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
-                }
-                else if (fileSize / 1024 > 1) {
-                    fileSize = parseInt(fileSize / 1024) + "KB";
-                }
-                else {
-                    fileSize = fileSize + "B";
-                }
-                
-                var strFileSize = fileinfo.split("/")[1] + "(" + fileSize + ")";
-                //objTd2.innerHTML = strFileSize;
-                objTd2.textContent = strFileSize;
-                objTr.appendChild(objTd2);
-                document.getElementById("filelist").appendChild(objTr);
+            	fileinfoArr = fileinfo.split("|");
+            	for(var j = 0; j < fileinfoArr.length; j++){
+            		fileinfo = fileinfoArr[j];
+            		objTr = document.createElement("TR");
+            		objTr.setAttribute("fileinfo", fileinfo);
+            		objTr.setAttribute("attid", attid);
+            		
+            		var objTd = document.createElement("TD");                
+            		objTd.style.paddingLeft  = "10px";
+            		objTd.style.paddingRight = "0px";
+            		objTd.style.paddingBottom = "0px";
+            		objTd.style.paddingTop = "0px";
+            		objTd.style.width = "24px";
+            		objTd.style.height = "24px";
+            		
+            		var image_tag = document.createElement("img");
+            		image_tag.setAttribute("_path", fileinfo);
+            		image_tag.src = "/images/poll/pollAddFile_Delicon.png";
+            		image_tag.setAttribute("height", "24");
+            		image_tag.setAttribute("width", "20");
+            		image_tag.setAttribute("style", "vertical-align: middle; cursor: pointer;");                
+            		image_tag.onclick = function () { filedelete(this); };
+            		objTd.appendChild(image_tag);
+            		objTr.appendChild(objTd);
+            		
+            		var objTd2 = document.createElement("TD");
+            		objTd2.style.paddingBottom = "0px";
+            		objTd2.style.paddingTop = "0px";
+            		
+            		var fileSize = parseInt(fileinfo.split("/")[2]);
+            		
+            		if (fileSize / 1024 / 1024 > 1) {
+            			fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
+            		}
+            		else if (fileSize / 1024 > 1) {
+            			fileSize = parseInt(fileSize / 1024) + "KB";
+            		}
+            		else {
+            			fileSize = fileSize + "B";
+            		}
+            		
+            		var strFileSize = fileinfo.split("/")[1] + "(" + fileSize + ")";
+            		//objTd2.innerHTML = strFileSize;
+            		objTd2.textContent = strFileSize;
+            		objTr.appendChild(objTd2);
+            		document.getElementById("filelist").appendChild(objTr);
+            	}
             }
             else
                 extCheck = true;          

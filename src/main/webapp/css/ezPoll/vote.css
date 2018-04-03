@@ -44,8 +44,8 @@
 .vote_attachedFile .all_save{position:absolute; top:13px; left:230px; float: left;}
 
 .voteComment #sendBttn:active{background:#00346d;}
-.voteCancelBttn{cursor: pointer; width:56px; height:24px; margin:0px 4px 0px 0px; padding:0px; color:#FFF; background:#004896; border:none; border-radius:3px;}
-.voteSaveBttn{cursor: pointer; width:46px; height:24px; color:#FFF; background:#004896; border:none; border-radius:3px;}
+.voteCancelBttn{cursor: pointer; width:56px; height:24px; margin:0px 4px 0px 0px; padding:0px; color:#FFF; background:#0470e4; border:none; border-radius:3px;}
+.voteSaveBttn{cursor: pointer; width:46px; height:24px; color:#FFF; background:#0470e4; border:none; border-radius:3px;}
 
 
 /* 20171214 */
@@ -72,7 +72,7 @@
 .voteTdBg .voteTdBg_layout{margin:0; text-align:center;}
 /* .voteBtn{height:43px; float:right; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 10px; margin:10px 5px 0px 0px; line-height:41px; font-size:14px; display:inline-block; cursor:pointer;}
 .voteBtn span{font-size:16px; color:#004896; margin-left:3px;} */
-#_finish{height:45px; margin:0px; background:#004896; border:none; color:#FFF; border-radius:5px; line-height:45px; padding:0px 26px; text-align:center; cursor: pointer; font-size:14px;display:inline-block;}
+#_finish{height:45px; margin:0px; background:#0470e4; border:none; color:#FFF; border-radius:5px; line-height:45px; padding:0px 26px; text-align:center; cursor: pointer; font-size:14px;display:inline-block;}
 
 .userName{display: block; color:#004896; font-size:14px; padding:7px 0px 0px 20px;}
 
@@ -109,11 +109,20 @@
 .voteIcon_ul .img_description div span{display: inline-block;color: #fff;padding: 2px 10px 0 0px;font-size: 11px;background: url(../../images/kr/main/count_r.gif) no-repeat right;font-weight: bold;}
 /* .voteIcon_ul .icon_title{display:none;} */
 .voteIconImg_li{width:45px; float:left;}
-.voteIconImg_li_info{width:35px; float:right; list-style:none; margin-top: 28px;}
+.voteIconImg_li_info{width:auto; float:left; list-style:none; margin:2px;}
 .voteIconDiv ul li.icon{display:inline-block; width:50px; height:50px; padding:11px 0px 0px 17px; overflow: hidden;}
 /* .voteIconDiv ul li.icon.nosecret{cursor:pointer;} */
 .voteIconDiv ul li img.voteIconImg.nosecret{cursor:pointer;}
 .voteIconImg{vertical-align: top;}
+.voteIconImg_info{vertical-align: top; width:25px;}
 
 /* vote graph area */
 .voterNumber_ {float:left;display:none;width:100% ;font-weight:bold;}
+
+/* vote thumbnail*/
+.imgPopup{width: auto; height: auto; position: relative; float: left; max-width: 400px; max-height: 400px;}
+.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 50px;}
+.imgPopupBoxOff, .imgPopupOff{display: none;}
+.thumbnail{width:40px; display:block; max-height: 69px; vertical-align: middle; margin: 0 auto;}
+.imgNotAttached{vertical-align: middle; margin: 0px auto; display: block;}
+.vote_listTd._imgOption{width:54px; border:1px solid #DDD; background:white;}

@@ -463,7 +463,7 @@ public interface EzApprovalGService {
 
 	public String setCabinetHesong(String docID, String deptID,	String deptName, String deptName2, String userName,	String userName2, String dirpath, String docSN, String companyID, String lang, int tenantId, String offset, Locale locale) throws Exception;
 
-	public String doBansong(String docID, String userID, String aprState, String dirPath, String deptID, String companyID, String lang, LoginVO userInfo, String curDocNum) throws Exception;
+	public String doBansong(String docID, String childDocID, String userID, String aprState, String dirPath, String deptID, String companyID, String lang, LoginVO userInfo, String curDocNum) throws Exception;
 
 	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
 
@@ -527,5 +527,7 @@ public interface EzApprovalGService {
 	public String getLineModeFlag(String docID, String companyID, int tenantId) throws Exception;
 
 	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception;
+
+	public String getDocManageDeptInfo(String deptID, int tenantID) throws Exception;
 
 }

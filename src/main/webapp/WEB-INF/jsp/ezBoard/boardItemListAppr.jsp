@@ -793,17 +793,18 @@
 	        function search(type) {
 	            if (type == "basic") {
 	
-	                if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("idDatepicker").value == "") {
+	                if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("idDatepicker").value == ""
+	                		&& document.getElementById("_D2").value == "") {
 	                    alert("<spring:message code='ezBoard.t192'/>");
 	                    return;
 	                }
 	
 	                if (document.getElementById("idDatepicker").value != "" && document.getElementById("_D2").value == "") {
-	                    alert("<spring:message code='ezBoard.t189'/>");
+	                    alert("<spring:message code='ezSystem.x0035'/>");
 	                    return;
 	                }
 	                if (document.getElementById("idDatepicker").value == "" && document.getElementById("_D2").value != "") {
-	                    alert("<spring:message code='ezBoard.t189'/>");
+	                    alert("<spring:message code='ezSystem.x0036'/>");
 	                    return;
 	                }
 	                if (Number(ReplaceText(document.getElementById("idDatepicker").value.substring(0, 10), "-", "")) > Number(ReplaceText(document.getElementById("_D2").value.substring(0, 10), "-", ""))) {

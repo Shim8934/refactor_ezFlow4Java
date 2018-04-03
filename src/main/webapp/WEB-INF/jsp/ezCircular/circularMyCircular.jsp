@@ -229,7 +229,7 @@
 		        		edate : ""
 							},
 					success: function(xml){
-						
+						console.log(xml);
 						getBoardList_after(loadXMLString(xml));	
 						
 						var imgTag = "";
@@ -456,7 +456,10 @@
 	        }
 	        function selbeforeBlock() {
 	            var pageNum = parseInt(CurPage);
-	            pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+	            if(pageNum%BlockSize==0) {
+	            	pageNum = pageNum -1;
+	            }
+	            pageNum = ((parseInt(pageNum / BlockSize)) * BlockSize) ;
 	            goToPageByNum(pageNum);
 	        }
 	        function selbeforeBlock_one() {
