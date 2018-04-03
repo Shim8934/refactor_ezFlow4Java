@@ -171,6 +171,11 @@
 		    	$receiverList.html(strHTML);
 		    }
 	   		
+	   		function addFavoriteLine() {
+   				type = "new";
+   				saveFavoriteLine();
+	   		}
+	   		
 	   		// 선택된 수신자리스트 즐겨찾기 저장
 	   		function saveFavoriteLine() {
 	   			if (receiverList.length > 0) {
@@ -406,7 +411,7 @@
 				                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 				                                    </div>
 				                                    <div style="float:right">
-				                                        <a class="imgbtn"><span onclick="saveFavoriteLine()"><spring:message code='ezJournal.t92'/></span></a>
+				                                        <a class="imgbtn"><span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span></a>
 				                                    </div>
 				                                </td> 
 				                                <td></td>   

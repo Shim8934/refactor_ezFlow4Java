@@ -239,25 +239,25 @@
 	<!-- 양식 리스트 셀렉트 -->
 	<select id="getFormList" parameterClass="map" resultMap="formInfoVO">
 		<isEmpty property="deptId">
-			<![CDATA[
-				select distinct
-					a.form_id,
-					a.form_name,
-					a.form_status,
-					a.type_id
-				from 
-					tbl_journal_form a join tbl_journal_form_type b 
-				on 
-					(a.company_id = b.company_id and a.tenant_id = b.tenant_id)
-				where 
-					b.used = 'use'
-				and
-					a.form_status = 'basic'			
-				and
-					a.tenant_id = #tenantId#	
-				and
-					a.company_id = #companyId#
-			]]>
+				<![CDATA[
+					select distinct
+						a.form_id,
+						a.form_name,
+						a.form_status,
+						a.type_id
+					from 
+						tbl_journal_form a join tbl_journal_form_type b 
+					on 
+						(a.company_id = b.company_id and a.tenant_id = b.tenant_id)
+					where 
+						b.used = 'use'
+					and
+						a.form_status = 'basic'			
+					and
+						a.tenant_id = #tenantId#	
+					and
+						a.company_id = #companyId#
+				]]>
 		</isEmpty>
 		<isNotEmpty property="deptId">
 			<![CDATA[
