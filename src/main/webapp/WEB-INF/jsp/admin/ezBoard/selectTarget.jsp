@@ -532,7 +532,7 @@
 
 			//검색한 여러명 중 한 명을 선택할 경우
 			function cnsearch_click_Complete(RetValue) {
-				if (RetValue["deptid"] != "") {
+				if ((RetValue["deptid"] != "") && (RetValue["userid"] != "")) {
 					displayUserOne(RetValue["userid"], RetValue["deptid"]);
 				}		
 			}
