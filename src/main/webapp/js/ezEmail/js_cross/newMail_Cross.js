@@ -3084,12 +3084,17 @@ function getEmailAddressList(ReceiverList) {
         receiverPart = receiver.split(" <");
         var pName = receiverPart[0];
         var pEmail = receiverPart[1].replace("<", "").replace(">", "");
-		
+        
         if (g_cmd != "EDIT") {
-            if (pEmail == g_myemail)
-                continue;
+            if (pEmail == g_myemail) 
+                // 수아 수정 (useMailWriteSenderClick == yes 면 내게쓰기 input checked)
+                if (useMailWriteSenderClick) {
+                	$("#toMe").attr("checked","checked");
+                } else {
+                	continue;
+                }
         }
-
+        
         retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");
         
         if (receiverPart[1].indexOf('@') > 0) {

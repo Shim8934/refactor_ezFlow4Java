@@ -85,7 +85,8 @@
 		    var protocol = window.location.protocol;
 		    var host = defineHost(protocol) + window.location.host + '/websocket/${userId}';
 		    var useEncryptZipForEmail = "${useEncryptZipForEmail}";
-			var uploading = "uploading";
+			var useMailBoxBackUp = "${useMailBoxBackUp}";
+			var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정 useMailWriteSenderClick추가
 		    var enc = "encrypt";
 		    var dec = "decrypt";
 		    var compareFolderName = "<spring:message code="ezEmail.t645" />";
@@ -158,7 +159,7 @@
 		            g_bPrevShow = true;
 		            
 		            /* 단암 일정사이즈 이하로 width가 줄어도 좌우 미리보기 유지
-		            if (parseInt(document.documentElement.clientWidth) < 1000) {
+		            if (parseInt(document.documentElement.clientWidth) < 1000) { 
 		                document.getElementById("PreViewleft").style.display = "none";
 		                pPreviewShow_HOW = "W";
 		            }
@@ -985,6 +986,10 @@
 		<form name="PrevViewFormW" action="mailPreviewContent.do" method="post" target="ifrmPreViewW">
 		<input  type="hidden"  name="iptURL" value="">
 		<input  type="hidden" name="iSecurity" value="">
+		</form>
+		<form name="mailWriteSenderClick" action="mailWrite.do" method="post"> <!-- 추가 -->
+		<input  type="hidden"  name="cmd" value="NEW">
+		<input  type="hidden" name="msgto" value="">
 		</form>
 		<iframe name="importMailboxIframe" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="importMailboxform" name="importMailboxform" enctype="multipart/form-data" target="importMailboxIframe">
