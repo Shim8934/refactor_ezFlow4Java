@@ -327,7 +327,7 @@
 		   					$(forms).each(function(){
 		   						trs += "<tr onclick='sumFormClick(this);' ondblclick='writeSumJournal();' style='cursor:pointer;' sumTypeId="+this.typeId+" sumFormId="+this.formId+"><td>"+this.formName+"</td></tr>";
 		   					})
-	   						$("#basicFormList").append(trs);
+	   						$("#basicFormList").html(trs);
 		   				}
 		   			});
 					

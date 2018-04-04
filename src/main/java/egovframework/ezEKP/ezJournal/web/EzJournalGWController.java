@@ -117,6 +117,84 @@ public class EzJournalGWController {
 	}
 	
 	/**
+	 * 업무일지 G/W [POST] 일지함 생성
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezjournal/types", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public Object makeJournalTypeList(HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W JOURNAL [POST /rest/ezjournal/types] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			String companyId = request.getParameter("companyId");
+			
+			LOGGER.debug("companyId : " + companyId);
+			ArrayList<String> typeList = new ArrayList<String>();
+			for (int i = 5; i < 11; i++) {
+				String num = "";
+				if (i<10) {
+					num="0"+i;
+				}else{
+					num=i+"";
+				}
+				typeList.add("ezJournal.t"+num);
+			}
+			
+			ezJournalService.insertJournaltype(companyId, info.getTenantId(), typeList);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W JOURNAL [POST /rest/ezjournal/types] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 업무일지 G/W [DELETE] 일지함 삭제
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezjournal/types", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public Object removeJournalTypeList(HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W JOURNAL [DELETE /rest/ezjournal/types] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			String companyId = request.getParameter("companyId");
+			
+			LOGGER.debug("companyId : " + companyId);
+			
+			ezJournalService.deleteJournaltype(companyId, info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W JOURNAL [DELETE /rest/ezjournal/types] ended.");
+		
+		return result;
+	}
+	
+	/**
 	 * 업무일지 G/W [POST] 일지함 사용여부 수정
 	 */
 	@SuppressWarnings("unchecked")

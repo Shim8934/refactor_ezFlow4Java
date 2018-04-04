@@ -187,13 +187,20 @@
 	</select>
 
 	<!-- 회사 생성시 초 기 양식함 생성 -->
-	<insert id="insertJournalTypeList" parameterClass="Map">
-		insert into tbl_journal_form_type (
-			type_id, 	used,  	company_id, 	tenant_id
+	<insert id="insertJournalType" parameterClass="map">
+		insert into jmocha.tbl_journal_form_type (
+			type_id, 	company_id, 	tenant_id
 		) values (
-			#typeId#,	'use',	#companyId#,	#tenantId#
+			#typeId#,	#companyId#,	#tenantId#
 		)
 	</insert>
+
+	<!-- 양식함 삭제 -->
+	<delete id="deleteJournalTypeList" parameterClass="Map">
+		delete from jmocha.tbl_journal_form_type 
+		where company_id=#companyId# 
+		and tenant_id=#tenantId#
+	</delete>
 
 	<!-- 양식함 사용여부 수정 -->
 	<update id="updateJournalTypeList" parameterClass="Map">
@@ -364,7 +371,7 @@
 	</select>
 
 	<!-- 회사 리스트를 가져오는 쿼리 -->
-	<select id="selectCompanyList" resultClass="companyVO" parameterClass="Map">
+	<select id="selectCompanyList" resultClass="companyVO" parameterClass="map">
 		select 
 			d.CN as companyId,
 			d.displayname as companyName,
