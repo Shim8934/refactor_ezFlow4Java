@@ -5,7 +5,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -13,8 +12,10 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -24,10 +25,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +34,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -58,7 +54,6 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
-import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -282,9 +277,22 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 					
+					//업무일지 - 일지함 생성
+					Map<String, Object> param = new HashMap<String, Object>();
+					param.put("tenantId", tenantID);
+					param.put("companyId", cn);
+					param.put("userId", userInfo.getId());
+					JSONObject journalResult = commonUtil.getJsonFromRestApi("/rest/ezjournal/types", param, request, "post", null);
+					
+					String journalStatus = (String) journalResult.get("status");
+					
+					if (journalStatus.equals("ok")) {
+						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+					}
+					
 					logger.debug("updateGroupAdd rc=" + rc);
 					
-					if (rc == 0) { // updateGroupAdd 성공
+					if (rc == 0 && journalStatus.equals("ok")) { // updateGroupAdd 성공
 						
 						// insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
 						try {
@@ -293,7 +301,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							result = "OK";
 						} catch (Exception e) {
 							e.printStackTrace();
-							
+							commonUtil.getJsonFromRestApi("/rest/ezjournal/types", param, request, "delete", null);
+
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeGroup(mailAddr);
 							result = "EMAIL_ERROR";

@@ -84,10 +84,31 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public void insertJournaltype(String companyId, int tenantId, ArrayList<JournaltypeVO> journaltypeList) throws Exception {
+	public void insertJournaltype(String companyId, int tenantId, ArrayList<String> journaltypeList) throws Exception {
+		logger.debug("insertJournaltype started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		for (int i = 0; i < journaltypeList.size(); i++) {
+			map.put("typeId", journaltypeList.get(i));
+			ezJournalDAO.insertJournaltype(map);
+		}
+
+		logger.debug("insertJournaltype ended");
 	}
 	
+	@Override
+	public void deleteJournaltype(String companyId, int tenantId) throws Exception {
+		logger.debug("deleteJournaltype started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		ezJournalDAO.deleteJournaltypeList(map);
+		logger.debug("deleteJournaltype ended");
+	}
+
 	@Override
 	public List<JournalFormInfoVO> getFormListAdmin(String typeId, String deptId, String companyId, int tenantId, String offset) throws Exception {
 		logger.debug("getFormListAdmin started");
@@ -760,10 +781,10 @@ public class EzJournalServiceImpl implements EzJournalService {
 //			Element nextElem = journalBody.getElementById("nextJournal");
 //			String nextContent = nextElem.html();
 			
-			formThisHtml += "<p>---------- "+journal.getJournalTitle().trim()+" ----------</p>";
+			formThisHtml += "<p>---------- "+journal.getJournalTitle().trim()+" ----------</p><p></p>";
 			formThisHtml += thisContent.trim();
 			
-			formNextHtml += "<p>---------- "+journal.getJournalTitle().trim()+" ----------</p>";   
+			formNextHtml += "<p>---------- "+journal.getJournalTitle().trim()+" ----------</p><p></p>";   
 			formNextHtml += nextContent.trim();
 		}
 		logger.debug("여기는 포문이 끝나는곳");
