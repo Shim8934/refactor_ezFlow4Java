@@ -2599,7 +2599,7 @@
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="ballotSystemBody">
-				<div id="mainmenu3" style="overflow: hidden; margin:29px 0px 5px 0px">
+				<div id="mainmenu3" style="overflow: hidden; margin:22px 0px 0px 0px">
 					  <div style="float: left; display: block;" class="voteInfo">
 					  		
 					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
@@ -2696,7 +2696,7 @@
 						</div>			
 					</div>
 					
-			  		<ul style="width:100%; height:40px; float:left; padding:0px 0px 0px 6px; background-color:aliceblue;">
+			  		<ul style="width:100%; height:39px; float:left; padding:0px 0px 0px 6px; background-color:rgb(243, 248, 254); border-bottom:1px solid rgb(216, 223, 232)">
 						<c:choose>
 							<c:when test="${question.resultFirst == 1}">
 								<li class="voteIconImg_li_info icon">
