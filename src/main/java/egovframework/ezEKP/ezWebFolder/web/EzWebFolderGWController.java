@@ -1126,12 +1126,14 @@ public class EzWebFolderGWController {
 	@RequestMapping(value="/rest/ezwebfolderadmin/foldersTree/comp", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyFolderTree(HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
+		String primary    = request.getParameter("primary")   != null ? request.getParameter("primary")   : "";
+		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")    : "";
 		String offset     = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String folderId   = request.getParameter("folderId")  != null ? request.getParameter("folderId")  : "";
 		JSONObject result = new JSONObject();
 		
-		if (companyId.equals("") || offset.equals("") || serverName.equals("")) {
+		if (companyId.equals("") || offset.equals("") || serverName.equals("") || primary.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
@@ -1141,14 +1143,39 @@ public class EzWebFolderGWController {
 		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset);
 		
 		try {
-			int tenantId           = loginService.getTenantId(serverName);
+			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName, primary, offset);
+			int tenantId           = userInfo.getTenantId();
 			FolderVO folderVO      = ezWebFolderService.getRootFolderId(companyId, "C", offset, tenantId);
 			
 			if (folderVO == null) {
-				result.put("status", "ok");
-				result.put("code", 0);
-				result.put("data", folderVO);
-				return result;
+				//Auto create 회사 folder
+				OrganDeptVO company        = ezOrganService.getDeptInfo(companyId, primary, tenantId);
+				folderVO                   = new FolderVO();
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date date                  = new Date();
+				String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+				String compFolderId        = ezWebFolderAdminService.getMaxFolderID(tenantId);
+				
+				folderVO.setFolderId(compFolderId);
+				folderVO.setFolderLevel(0);
+				folderVO.setFolderName1(company.getDisplayName1());
+				folderVO.setFolderName2(company.getDisplayName2());
+				folderVO.setFolderPath("|" + compFolderId + "|");
+				folderVO.setFolderStep(0);
+				folderVO.setFolderType("C");
+				folderVO.setFolderUpper("root");
+				folderVO.setOwnerId(company.getCn());
+				folderVO.setUseStatus("Y");
+				folderVO.setUpdateId(userId);
+				folderVO.setCreateName1(userInfo.getDisplayName1());
+				folderVO.setCreateName2(userInfo.getDisplayName2());
+				folderVO.setTenantId(tenantId);
+				folderVO.setCompanyId(company.getCn());
+				folderVO.setCreateId(userId);
+				folderVO.setCreateDate(timeUTC);
+				folderVO.setUpdateDate(timeUTC);
+				
+				ezWebFolderAdminService.insertFolder2(folderVO);
 			}
 			
 			FolderSimpleVO company = ezWebFolderService.getSimpleFolder(folderVO.getFolderId(), tenantId);

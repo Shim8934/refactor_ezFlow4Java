@@ -12,7 +12,7 @@ public class UserCapacityVO {
 	private String totalUsed;
 	private int    usedRate;
 	private int    tenantId;
-
+	
 	public String getUserId() {
 		return userId;
 	}
