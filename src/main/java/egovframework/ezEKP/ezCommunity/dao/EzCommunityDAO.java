@@ -1148,5 +1148,9 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public int getReaderListCount(Map<String, Object> map) {
 		return (int) select("EzCommunityDAO.getReaderListCount", map);
 	}
+	
+	public String getWriterID(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.getWriterID", map);
+	}
 
 }

@@ -1680,7 +1680,7 @@
 	                
 	                var input = document.createElement("INPUT");
 	                input.style.verticalAlign = "top";
-	                input.style.marginTop = "10px";
+	                input.style.marginTop = "6px";
 	                input.name = "backradio";
 	                input.type = "radio";
 	                input.onchange = function () { backgroundimagechange(); };
@@ -1710,7 +1710,7 @@
 	            var span = document.createElement("SPAN");
 	            var input = document.createElement("INPUT");
 	            input.style.verticalAlign = "top";
-	            input.style.marginTop = "10px";
+	            input.style.marginTop = "6px";
 	            input.name = "backradio";
 	            input.type = "radio";
 	            input.onchange = function () { backgroundimagechange(); };
@@ -2004,7 +2004,7 @@
 	                        		</c:otherwise>
 	                        	</c:choose>
 	                        </td>
-	                        <th><spring:message code='ezBoard.t434' /></th>
+	                        <th style="width:80px"><spring:message code='ezBoard.t434' /></th>
 	                        <c:choose>
 	                        	<c:when test="${boardListVO.importance == '1'}">
 			                        <td style="width: 300px; vertical-align: baseline;"><span style="line-height: 20px; height: 20px; display: inline-block;">
@@ -2153,7 +2153,7 @@
 	                            <input type="text" id="txtAbstract" style="WIDTH: 95%; word-break: break-all" value="" maxlength="100">
 							</td>
 	                    </tr>
-	                    <tr id="pUseBackGroundTR" style="display:none;" height="60px">
+	                    <tr id="pUseBackGroundTR" style="display:none;" height="50px">
 	                    	<th><spring:message code='ezBoard.t5011' /></th>
 	                    	<td colspan="3" id="backgroundtd"></td>
 	                    </tr>
