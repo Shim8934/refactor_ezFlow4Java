@@ -164,13 +164,16 @@ function addLetterBox() {
 }
 
 // 폴더명 중복 체크
-function boxNameCheck() {
+function boxNameCheck(displayNumber) {
 	var returnVal = false;
 	var selectNd = selectNode.node;
+	var checkId = displayNumber == 1 ? "display" : "display2";
 	
 	for(var i = 0; i < result.length; i++) {
-		if(selectNd.parent == result[i].parentLetterboxNo && selectNd.id != result[i].letterBoxNo) { 
-			if (document.getElementById("display").value == result[i].displayname) {
+		if(selectNd.parent == result[i].parentLetterboxNo && selectNd.id != result[i].letterBoxNo) {
+			var checkName = displayNumber == 1 ? result[i].displayname : result[i].displayname2;
+			
+			if (document.getElementById(checkId).value == checkName) {
 				returnVal = true;
 			}
 		}
@@ -253,11 +256,16 @@ function submitClick() {
 		return;
 	}
 	
-	var checkVal = boxNameCheck();
-	
-	if (checkVal === true) {
+	// 편지지함명 중복체크
+	if (boxNameCheck(1) === true) {
 		alert("편지지함명 이 중복되었습니다.");
 		document.getElementById("display").focus();
+		return;
+	}
+	
+	if (boxNameCheck(2) === true) {
+		alert("편지지함명(영문) 이 중복되었습니다.");
+		document.getElementById("display2").focus();
 		return;
 	}
 	
