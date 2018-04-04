@@ -502,6 +502,10 @@ function ListView() {
 
                 if (strColName == "HASATTACHYN")
                     objTd.style.textAlign = "center";
+                
+                if (strColName == "ISPUBLIC") {
+                	objTd.style.textAlign = "center";
+                }
 
                 if (strClass != "") {
                     if (i == 0) {       //// 현재는 header에 class가 없으므로 고정함.
@@ -554,6 +558,7 @@ function ListView() {
 //                } else {
 //                	objTd.innerHTML = strName;
 //                }
+                
                 objTd.innerHTML = strName;
                 objTr.appendChild(objTd);
 

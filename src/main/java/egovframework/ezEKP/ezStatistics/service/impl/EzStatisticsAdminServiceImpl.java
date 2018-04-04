@@ -330,6 +330,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		List<Map<String, Object>> mailLogList = new ArrayList<Map<String,Object>>();
 		int totalCount = 0;
+		String resultCode = "ERROR";
 		
 		String tenantIdParam = "tenantId=" + tenantId;
 		String pageNoParam = "pageNo=" + pageNo;
@@ -348,7 +349,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/getMailLogList";
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams); 
-		logger.debug("response=" + response);		
+		//logger.debug("response=" + response);		
 		
 		if (response != null) {
 			JSONParser jsonParser = new JSONParser();
@@ -380,8 +381,6 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 						dateStr = newFormat.format(dbDate);
 					}
 					
-					logger.debug("LogTime=" + dateStr);
-					
 					map.put("LogTime", dateStr);
 					map.put("senderName", obj.get("senderName"));
 					map.put("senderEmail", obj.get("senderEmail"));
@@ -394,14 +393,17 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 					map.put("mailSize", obj.get("mailSize"));
 					
 					mailLogList.add(map);
+					
 				}
+				
+				resultCode = "OK";
 			}
 		}
 
 		resultMap.put("totalCount", totalCount);
 		resultMap.put("mailLogList", mailLogList);
 		
-		logger.debug("getMailLogList ended.");
+		logger.debug("getMailLogList ended. resultCode=" + resultCode);
 		
 		return resultMap;
 	}

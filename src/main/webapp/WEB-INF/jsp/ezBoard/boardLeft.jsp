@@ -494,8 +494,8 @@
 		    	if( prevSelMenu != null )
 		    		prevSelMenu.className = "off";
 		    	
-		    	prevSelMenu = $(".qst").next().children().get(0);
-		    	prevSelMenu.className = "on";
+		    	/* prevSelMenu = $(".qst").next().children().get(0);
+		    	prevSelMenu.className = "on"; */
 		    }
 
 		    function WebPartToggle(obj) {
@@ -538,7 +538,7 @@
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
 		    }
 		    function ConfigMyBoard() {
-		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(450, 415));
+		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(457, 418));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function MyBoard() {
@@ -572,7 +572,7 @@
 		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
 		            <h2>
 	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
-		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group.gif" />
+		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group_new.gif" width="14px" />
 		            </h2>
 		        </div>
 		        <ul id="TreeCtrl_MyBoardTree_ul">
@@ -626,12 +626,13 @@
 		    	<div class="qst" onclick="Open_Func(1)">
 		        	<h2><span><spring:message code="ezBoard.t365" /></span></h2>		        
 		    	</div>
-		    	<ul>
+		    	<ul></ul>
+		    	<%-- <ul>
 	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li>
 	            	<c:if test="${questionAdmin == 'true' }">
 	            		<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
 	            	</c:if>
-	        	</ul>
+	        	</ul> --%>
 		    </c:if>
 		    <div class="pollDiv" onclick="Poll_Open(1)" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
 	        	<h2><span><spring:message code="ezBoard.t371" /></span></h2>

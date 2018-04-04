@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title><spring:message code='ezApprovalG.pjj03'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>

@@ -22,28 +22,28 @@
 	</head>
 	<body class="popup">
 		<h1>&nbsp;<spring:message code='ezApprovalG.t1776'/></h1>
-		    <div style="overflow:auto;height:200px;">
+		    <div style="overflow:auto;height:145px;">
 		<table  class="content">
 		    <tr>
-		        <th style='width:200px'><spring:message code='ezApprovalG.t1777'/></th>
-		        <th style='width:200px'><spring:message code='ezApprovalG.t1778'/></th>
-		        <th><spring:message code='ezApprovalG.t1780'/></th>    
+		        <th style='width:100px'><spring:message code='ezApprovalG.t1777'/></th>
+		        <th style='width:100px'><spring:message code='ezApprovalG.t1778'/></th>
+		        <th style='width:250px'><spring:message code='ezApprovalG.t1780'/></th>    
 		    </tr>
 		    <c:forEach var="result" items="${strResult}" varStatus="status">
 		    	<c:set var="temp" value="${fn:split(result.extensionAttribute5, ':')}"/>
 		    	<c:choose>
 		    		<c:when test="${userInfo.primary == '1'}">
 	                    <tr>
-	                        <td style='width:200px;padding-left:10px;' userid = '${result.userID}'><nobr>${result.userName}</nobr></td>
-	                        <td style='width:200px;padding-left:10px;' userid = "${temp[0]}"> <nobr>${result.pUserName}</nobr></td>
-	                        <td style='padding-left:10px;'><nobr>${temp[3]}:${temp[4]} ~ ${temp[5]}:${temp[6]}</nobr></td>
+	                        <td style='width:100px; padding-left:10px;padding-right:10px;' userid = '${result.userID}'><nobr>${result.userName}</nobr></td>
+	                        <td style='width:100px; padding-left:10px;padding-right:10px;' userid = "${temp[0]}"> <nobr>${result.pUserName}</nobr></td>
+	                        <td style='padding-left:10px;padding-right:10px;'><nobr>${temp[3]}:${temp[4]} ~ ${temp[5]}:${temp[6]}</nobr></td>
 	                    </tr>
 		    		</c:when>
 		    		<c:otherwise>
 	                    <tr>
-	                        <td style='width:200px;padding-left:10px;' userid = '${result.userID}'><nobr>${result.userName2}</nobr></td>
-	                        <td style='width:200px;padding-left:10px;' userid = "${temp[0]}"> <nobr>${result.pUserName2}</nobr></td>
-	                        <td style='padding-left:10px;'><nobr>${temp[3].replace('/', ':')} ~ ${temp[4].replace('/', ':')}</nobr></td>
+	                        <td style='width:100px; padding-left:10px;padding-right:10px;' userid = '${result.userID}'><nobr>${result.userName2}</nobr></td>
+	                        <td style='width:100px; padding-left:10px;padding-right:10px;' userid = "${temp[0]}"> <nobr>${result.pUserName2}</nobr></td>
+	                        <td style='padding-left:10px;padding-right:10px;'><nobr>${temp[3].replace('/', ':')} ~ ${temp[4].replace('/', ':')}</nobr></td>
 	                    </tr>
 		    		</c:otherwise>
 		    	</c:choose>

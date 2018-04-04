@@ -39,9 +39,6 @@
 	    p:viewClass="org.springframework.web.servlet.view.JstlView"
 	    p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
 	
-	<!-- DispatcherServlet이 찾지 못한 URL 들을 톰캣의 default-servlet 설정으로 넘겨준다 -->
-    <mvc:default-servlet-handler/>    
-
     <!-- DispatcherServlet이 찾지 못한 URL 들을 톰캣의 default-servlet 설정으로 넘겨준다 -->
     <mvc:default-servlet-handler/>
     
@@ -91,7 +88,11 @@
     <mvc:resources location="/files/" mapping="/files/**"/>
     <mvc:resources location="/docs/" mapping="/docs/**"/>
     
-    <mvc:annotation-driven/>
+	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="favorPathExtension" value="false" />
+	</bean>
+    
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" />
 
 	<websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">		
 	    <websocket:stomp-endpoint path="/hello" >  	    	 	

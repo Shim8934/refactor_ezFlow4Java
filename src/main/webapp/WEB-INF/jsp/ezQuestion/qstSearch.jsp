@@ -210,13 +210,13 @@
   			<table class="content">
     			<tr>
       				<th><spring:message code='ezQuestion.t422' /></th>
-      				<td style="width:100%">
-        				<input type="radio" name="setRange" value="2" onclick="setRangeValue(0)" style="vertical-align:-2px;" checked>
-        					<spring:message code='ezQuestion.t423' />
-        				<input type="radio" name="setRange" value="0" onclick="setRangeValue(1)" style="vertical-align:-2px;">
-        					<spring:message code='ezQuestion.t424' />
-        				<input type="radio" name="setRange" value="1" onclick="setRangeValue(2)" style="vertical-align:-2px;">
-        					<spring:message code='ezQuestion.t252' />
+      				<td style="width:100%; padding-top:2px;">
+        				<input type="radio" name="setRange" value="2" onclick="setRangeValue(0)" style="margin-top:0px;" checked>
+        					<span><spring:message code='ezQuestion.t423' /></span>
+        				<input type="radio" name="setRange" value="0" onclick="setRangeValue(1)" style="margin-top:0px;">
+        					<span><spring:message code='ezQuestion.t424' /></span>
+        				<input type="radio" name="setRange" value="1" onclick="setRangeValue(2)" style="margin-top:0px;">
+        					<span><spring:message code='ezQuestion.t252' /></span>
         				<input type="hidden" id="brd_id" name="brdID" value="${pBrdID}">
         				<input type="hidden" id="hidRange" name="hidRange" value="2">
         				<input type="hidden" id="hidTitle" name="hidTitle">

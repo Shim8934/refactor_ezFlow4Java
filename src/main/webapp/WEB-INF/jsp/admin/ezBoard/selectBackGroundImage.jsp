@@ -34,15 +34,17 @@
 			function SliderImage() {		     
 				document.getElementById("file1").click();
 			}
-			
+				
 			function btn_AttachAdd_onclick() {
-		        var extension = document.getElementById("file1").value.split('.');
-
+				var file1val = document.getElementById("file1").value;
+		        var exIndex = file1val.lastIndexOf('.');
+				var extension = file1val.substring(exIndex+1, file1val.lenght);
 		        var check = false;
-		        check = compareExtension(check, extension[1]);		         
+		        check = compareExtension(check, extension);		         
 		        
 		        if (!check) {
-		            document.getElementById("file1").value = "";
+		        	file1val = "";
+		        	alert("upload error");	
 		        }
 		        var guid = "{" + GetGUID() + "}";
 		        document.form.guid.value = guid;	       
@@ -85,10 +87,10 @@
 				if (document.getElementById("imagewidth").value < 1 || isNaN(document.getElementById("imagewidth").value) || document.getElementById("imageheight").value < 1 || isNaN(document.getElementById("imageheight").value)) {
 		            return;
 		        }
-				if (document.getElementById("saveFileName").value == "" || document.getElementById("saveFileName").value == null) {
+				if ((document.getElementById("saveFileName").value == "" || document.getElementById("saveFileName").value == null) && (document.getElementById("type").value != "UPT")) {
 		            return;
 		        }
-		        
+				
 				if($("#backgroundID").val() == ""){
 					var guid = "{" + GetGUID() + "}";
 					$("#backgroundID").val(guid);
@@ -141,7 +143,7 @@
 					<input type="hidden" name="backgroundID" id="backgroundID" value="<c:out value='${backgroundID}'/>"/>
 					<input type="hidden" name="saveFileName" id="saveFileName" />
 					<input type="hidden" name="guid" />
-					<input type="hidden" name="type" value="<c:out value='${type}'/>" /> 
+					<input type="hidden" name="type" id ="type"  value="<c:out value='${type}'/>" /> 
 				</td>
 			</tr>
 	        <tr>
