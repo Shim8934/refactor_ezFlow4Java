@@ -10,7 +10,7 @@ function letterSearch() {
 	}
 	
 	if(search.trim() === "") {
-		alert("검색어를 입력해주세요.");
+		alert("<spring:message code='ezOrgan.t56'/>");
 		return;
 	}
 	
@@ -60,17 +60,17 @@ function strChk(str, speChar, strLen) {
 			var speCha = /[`~!<>@#$%^&*|\\\"\';:\/?]/gi;
 			
 			if (speCha.test(strTrim)) {
-				msg = "특수문자는 입력이 불가능합니다.";
+				msg = "<spring:message code='ezEmail.kyj17'/>";
 			}	
 		}
 		
 		if (strLen !== undefined) {
 			if (strTrim.length > strLen) {
-				msg = strLen + "자 이하로 입력 가능합니다."
+				msg = strLen + "<spring:message code='ezEmail.letter14'/>";
 			} 
 		}
 	}else {
-		msg = "내용을 입력해주세요.";
+		msg = "<spring:message code='ezEmail.letter15'/>";
 	}
 	
 	reJson.str = strTrim;
@@ -107,14 +107,17 @@ function lmPreviewChange(data) {
 	var ifrLetterNo = "";
 	var txtText = "미리보기";
 	var filePath = "ERROR";
+	var useLang = typeof(strLang) == "undefined" ? "" : strLang;
 	
 	if (data !== undefined) {
 		var filePathTmp = data.filePath;
-		ifrLetterName = data.displayname.replace(/</gi, "&lt;");
+		var langDisplayName = useLang == "" ? data.displayname : data.displayname2;
+		
+		ifrLetterName = langDisplayName.replace(/</gi, "&lt;");
 		ifrLetterNo = data.letterNo;
 		
 		if (filePathTmp === "ERROR") {
-			txtText = "존재하지 않는 편지지입니다.";
+			txtText = "<spring:message code='ezEmail.letter16'/>";
 		} else {
 			txtText = "";
 			txtDisplay = "none";
@@ -154,12 +157,15 @@ function addLetterList(jsonArr) {
 	var letterListHtml = "";
 	var listCount = jsonArr.length;
 	var nowSelect = $(".lmLetterSelect").attr("id"); // 선택중인 편지지 id
+	var useLang = typeof(strLang) == "undefined" ? "" : strLang;
 
 	if (listCount !== 0) {
 		for (i = 0; i < listCount; i++) {
+			var langDisplayName = useLang == "" ? jsonArr[i].displayname : jsonArr[i].displayname2;
+			
 			letterListHtml += "<li id='lt" + jsonArr[i].letterNo + "' data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + 
 			"' data-letterBoxNo='" + jsonArr[i].letterBoxNo + "'>"; 
-			letterListHtml += "<span style='float:left'>" + jsonArr[i].displayname.replace(/</gi, "&lt;") + "</span>";
+			letterListHtml += "<span style='float:left'>" + langDisplayName.replace(/</gi, "&lt;") + "</span>";
 			
 			if (pageType == 'letter_user') {
 				if (searchMode) {

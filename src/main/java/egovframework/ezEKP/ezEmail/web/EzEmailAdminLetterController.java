@@ -30,6 +30,7 @@ import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezEmail.vo.MailLetterVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -865,10 +866,12 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping("/admin/ezEmail/readLetterList")
 	@ResponseBody
-	public JSONArray readLetterList(@RequestParam("letterBoxNo") String letterBoxNo, HttpServletResponse response) throws Exception {
+	public JSONArray readLetterList(@CookieValue("loginCookie") String loginCookie, @RequestParam("letterBoxNo") String letterBoxNo, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("readLetterList started.");
 		logger.debug("letterBoxNo=" + letterBoxNo);
-
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		
 		JSONArray returnJsonArr = new JSONArray();
 
 		try {
@@ -877,7 +880,9 @@ public class EzEmailAdminLetterController {
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
-
+		
+		model.addAttribute("strLang", commonUtil.getMultiData(loginInfo.getLang(), loginInfo.getTenantId()));
+		
 		logger.debug("readLetterList ended.");
 		return returnJsonArr;
 	}

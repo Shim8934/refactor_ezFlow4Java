@@ -23,12 +23,12 @@
 							<col width="">
 						</colgroup>
 						<tr>
-							<th>편지지명</th>
-							<td><input type="text" id="displayname" name="displayname" maxlength="40" placeholder="편지지명을 입력해주세요"></td>
+							<th><spring:message code='ezEmail.letter8'/></th>
+							<td><input type="text" id="displayname" name="displayname" maxlength="40" placeholder="<spring:message code='ezEmail.letter10'/>"></td>
 						</tr>
 						<tr>
-							<th>편지지명(영문)</th>
-							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" placeholder="편지지명(영문)을 입력해주세요"></td>
+							<th><spring:message code='ezEmail.letter9'/></th>
+							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" placeholder="<spring:message code='ezEmail.letter11'/>"></td>
 						</tr>
 					</table>
 				</div> <!-- leLetterInfo End -->
@@ -44,8 +44,8 @@
 				</div>
 				<!-- btns -->
 				<div class="leLetterBtns">
-					<button id="leSave" onClick="letterSave(this)">저장</button>
-					<button id="leClose" onClick="letterPopUpClose()">취소</button>
+					<button id="leSave" onClick="letterSave(this)"><spring:message code='main.sp09'/></button>
+					<button id="leClose" onClick="letterPopUpClose()"><spring:message code='main.t135'/></button>
 				</div>
 			</div> <!-- leLetter End -->
 		</div>
@@ -60,11 +60,11 @@
 			window.onload = function() {
 				console.log(popUpType);
 				if (popUpType == "modify") {
-					$(".leTitle").text("편지지 수정");
+					$(".leTitle").text("<spring:message code='ezEmail.letter12'/>");
 					
 					modifyLoad(popLetterNo);
 				} else {
-					$(".leTitle").text("편지지 추가");
+					$(".leTitle").text("<spring:message code='ezEmail.letter13'/>");
 				}
 				
 				$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=MAILLETTER"); // 에디터
@@ -145,7 +145,7 @@
 						} else {
 							opener.getLetterList(letterJson.letterBoxNo); // 편지지 리스트
 						}
-						alert("저장했습니다.");
+						alert("<spring:message code='ezEmail.t42'/>");
 						letterPopUpClose(); // 편지지 팝업 닫기
 					},
 					error:function(e){

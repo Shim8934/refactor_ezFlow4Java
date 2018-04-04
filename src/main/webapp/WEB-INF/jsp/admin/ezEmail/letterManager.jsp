@@ -21,17 +21,17 @@
 				<!-- 편지지함 목록 -->
 				<div class="lmLetterBox">
 					<div class="lmtitle lmLetterBoxTitle">
-						<div>편지지 검색</div>
+						<div><spring:message code='ezEmail.letter1'/></div>
 						<input type="text" name="" id="lmSearchInput" class="searchInput">
-						<button id="lmSearch" onclick="letterSearch()">검색</button>
-						<button id="lmSearchReset" onclick="inputReset()">초기화</button>
+						<button id="lmSearch" onclick="letterSearch()"><spring:message code='ezBoard.t188'/></button>
+						<button id="lmSearchReset" onclick="inputReset()"><spring:message code='ezBoard.t999035'/></button>
 					</div>	
 					<div id="divTree" class="lmLetterBoxList"></div>
 				</div>
 				<!-- 편지지 목록 -->
 				<div class="lmLetter">
 					<div class="lmtitle lmLetterTitle">
-						편지지 목록 
+						<spring:message code='ezEmail.letter2'/>
 					</div> 
 					<div class="lmLetterList boxNo" data-boxNo=""> <!-- boxNo -->
 						<ul class="lmLetterListUl lmLetterListWrap"></ul>
@@ -40,19 +40,19 @@
 				<!-- 버튼 -->
 				<div class="lmBtns">
 					<div class="boxNo" data-boxNo=""> <!-- boxNo -->
-						<button onClick="letterEditPopUp(this, 'add')" class="searchDis">편지지 추가</button>
-						<button onClick="letterBoxMove(this)">편지지 이동</button>
+						<button onClick="letterEditPopUp(this, 'add')" class="searchDis"><spring:message code='ezEmail.letter3'/></button>
+						<button onClick="letterBoxMove(this)"><spring:message code='ezEmail.letter4'/></button>
 						<img src="/images/i_bar.gif" alt="line">
 						<button class="lmBtnPrev searchDis" onclick="orderSelect('prev')"><img src="/images/ImgIcon/prev.gif" alt="prev"></button>
 						<button class="lmBtnNext searchDis" onclick="orderSelect('next')"><img src="/images/ImgIcon/next.gif" alt="next"></button>
-						<button onclick="orderChange()"class="searchDis">순서 저장</button>
+						<button onclick="orderChange()"class="searchDis"><spring:message code='ezOrgan.t104'/></button>
 					</div>
 				</div>
 			</div>
 			
 			<div class="lmright">
 				<div class="lmPreview">
-					<div class="lmPreViewTxt"style='text-align:center; position:relative; top:50%; tansform:translateY(-50%);'>미리보기</div>
+					<div class="lmPreViewTxt"style='text-align:center; position:relative; top:50%; tansform:translateY(-50%);'><spring:message code='ezBoard.t431'/></div>
 					<iframe src="" class="lmPreViewIframe lmPre" id="lmPreViewIframe" name="lmPreViewIframe" style="display:none; border:none; width:100%; height:100%;"></iframe>
 				</div>
 			</div>			
@@ -69,6 +69,7 @@
 			var pageType = "${pageType}"; // letter
 			var returnCompany = '${companyId}'; // companyId
 			var searchTxt = ""; // 검색어
+			var strLang = "${strLang}";
 			
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록  (/js/ezEmail/js_cross/letterBoxTree.js)
@@ -80,7 +81,7 @@
 				var select= $('body').find('.lmLetterSelect');
 				
 				if (select.length === 0) {
-					alert("편지지를 선택하세요!");
+					alert("<spring:message code='ezEmail.letter5'/>");
 					return;
 				}
 				
@@ -110,7 +111,7 @@
 					});
 				}
 				
-				alert("순서를 저장하였습니다");
+				alert("<spring:message code='ezEmail.letter6'/>");
 				getLetterList(selectNode.node.id);
 			}
 			
@@ -143,7 +144,7 @@
 				    }, 1000);
 					
 				} else {
-					alert("이동할 편지지를 선택해주세요!");
+					alert("<spring:message code='ezEmail.letter7'/>");
 					return;
 				}
 			}
@@ -191,7 +192,7 @@
 							lmPreviewChange();
 						}
 						
-						alert("삭제하였습니다.");
+						alert(""); 
 					}
 				});
 			}
@@ -199,7 +200,7 @@
 			// 편지지 삭제 버튼 클릭
 			$(document).on("click", ".lmLetterListUl .lmLetterDeleteBtn", function(event){
 				event.stopPropagation();
-				var deleteChk = confirm("정말로 삭제하시겠습니까?");
+				var deleteChk = confirm("<spring:message code='ezResource.t61'/>");
 				
 				if(deleteChk) {
 					var letterId = $(this).parent("li").attr("data-letterId");
