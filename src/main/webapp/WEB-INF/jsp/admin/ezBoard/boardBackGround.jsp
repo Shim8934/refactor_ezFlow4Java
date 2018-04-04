@@ -291,7 +291,7 @@
                         		<th style="width:32%;"><span><spring:message code="ezBoard.t5007"/></span></th>
                     		</tr>
                 		</table>
-              			<div id="contentlist" name="contentlist" style="height:353px;overflow-y:auto;">
+              			<div id="contentlist" name="contentlist" style="height:347px;overflow-y:auto;">
                 			<table class="mainlist" style="width:100%;">
                     			<tr>
                         			<td style="text-align:center;">
