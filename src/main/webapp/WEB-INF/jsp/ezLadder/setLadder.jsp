@@ -622,7 +622,7 @@
 						<td colspan="2" style="width: 98%;">
 							<div class="wrap left">
 								<div class="title floatL">
-									<div class="icondiv" id="ladderPreList">이전사다리</div>
+									<div class="icondiv" id="ladderPreList"><img src ='/images/ezLadder/icon_preLadder.png' /></div>
 									<input type="text" class="input" name="title" id="title" style="height: 100%; width: 100%;" placeholder="제목" />
 								</div>
 							</div>

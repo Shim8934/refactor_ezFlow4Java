@@ -103,7 +103,7 @@ form{display:inline;margin:0}
 	background-repeat:no-repeat;
 	height:20px;
 	padding-right:12px;	
-	font:12px gulim;
+	font:12px Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	letter-spacing:-1;
 	vertical-align:top;
 	line-height:20px;
@@ -414,7 +414,7 @@ form{display:inline;margin:0}
 	/* background:url('/images/kr/cm/btn_default_offright.gif') no-repeat top right;
 	height:28px; */
 	padding:5px 4px;	
-	font:12px gulim;
+	font:12px Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	letter-spacing:-1;
 	padding-top:7px;
 	border:1px solid #ddd;
@@ -527,7 +527,7 @@ form{display:inline;margin:0}
 #menu ul.on{padding-left:0px;}
 #close{position:absolute;right:10px; top:10px;height:35px; }
 #close ul {margin: 0; padding: 0;}
-#taskChangeMode {float: left; padding-top: 8px; color: #ffffff;	font-size: 16px; font-weight: bold;}
+#taskChangeMode {float: left; padding-top: 8px; color: black; font-size: 16px; font-weight: bold;}
 #menu ul li, #close ul li {
 	display: block;
 	float:left;
@@ -586,7 +586,7 @@ form{display:inline;margin:0}
 .popup h1{
 	font-size:11pt;
 	font-weight:bold;
-	color:rgb(125, 145, 171);
+	color:black;
 	height:44px;
 	margin-left:1px;
 	margin-bottom:8px;
@@ -716,7 +716,7 @@ form{display:inline;margin:0}
 #tabnav li, #tabnav li.off,#tabnav2 li, #tabnav2 li.off{
 	display:block;	
 	float:left;
-	background:url('/images/kr/cm/tab1_bg_off.gif') repeat-x;
+	/* background:url('/images/kr/cm/tab1_bg_off.gif') repeat-x; */
 	margin:0px 0px 0px -1px; 
 	margin-bottom:0px;
 	height:26px;
@@ -733,7 +733,7 @@ form{display:inline;margin:0}
 	line-height:26px;
 	margin-bottom:0px;
 	color:#666;
-	background:url('/images/kr/cm/tab1_bg_off.gif') repeat-x top;
+	/* background:url('/images/kr/cm/tab1_bg_off.gif') repeat-x top; */
 }
 #tabnav li.off,#tabnav li {position:relative;}
 #tabnav li.on, #tabnav2 li.on{
@@ -746,7 +746,7 @@ form{display:inline;margin:0}
 	z-index:5;
 	border:1px solid #41506e;
 	border-bottom:0px;
-	background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x;
+	/* background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x; */
 }
 #tabnav li.on span, #tabnav2 li.on span{
 	display:block;	
@@ -755,8 +755,8 @@ form{display:inline;margin:0}
 	margin-bottom:0px;
 	background:#fff;
 	color:#3f454c !important;
-	background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x;
-	}
+	/* background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x; */
+}
 
 
 #kmtabnav {border-bottom:3px solid #8daad7;color:#707070; height:18px; background:#f8f8fa;}
@@ -1567,7 +1567,7 @@ form{display:inline;margin:0}
 	background:url(/images//kr/cm/btn_default_offright.png) no-repeat top right;
 	height:28px;
 	padding-right:5px;
-	font:12px gulim;
+	font:12px Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	letter-spacing:-1;
 	padding-top:7px;
 }
@@ -1792,23 +1792,23 @@ form{display:inline;margin:0}
 .address_wordmenu li span { display:block; height:22px; padding:0px 4px 0px 0px;color:#333;}
 .address_boxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_boxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
-.address_boxlist .back { border: 1px solid #dedede; height:138px; background:url(../images/kr/cm/address_boxbg02.gif) right bottom; vertical-align:top;}
+.address_boxlist .back { border: 1px solid #dedede; height:138px; vertical-align:top; border-radius:5px; }
 .address_boxlist .topinfo {height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#333; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.address_boxlist ul { margin:0px 10px 0px 19px; padding:0px; list-style:none;}
+.address_boxlist ul { margin:12px 10px 0px 19px; padding:0px; list-style:none;}
 .address_boxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_boxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
-.address_boxlist ul .company { color:#393939;}
-.address_boxlist .point_txt { color:#0168c7; margin-left:3px }
+.address_boxlist ul .company { color:#393939; margin-bottom: 10px;}
+.address_boxlist .point_txt { color:steelblue; margin-left:3px;}
 
 .address_onboxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_onboxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
-.address_onboxlist .back { border: 1px solid rgb(0,72,149); height:140px; background:url(../images/kr/cm/address_boxbg02.gif) right bottom; vertical-align:top;}
+.address_onboxlist .back { border: 1px solid #888; height:138px; vertical-align:top; border-radius:5px;}
 .address_onboxlist .topinfo {background-color:rgb(0,72,149); height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.address_onboxlist ul { margin:0px 10px 0px 19px; padding:0px; list-style:none;}
+.address_onboxlist ul { margin:12px 10px 0px 19px; padding:0px; list-style:none;}
 .address_onboxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_onboxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
-.address_onboxlist ul .company { color:#393939;}
-.address_onboxlist .point_txt { color:#0168c7;}
+.address_onboxlist ul .company { color:#393939; margin-bottom: 10px;}
+.address_onboxlist .point_txt { color:steelblue; margin-left:3px;}
 .sublist{table-layout:fixed; border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .sublist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:3px 4px 4px; border-bottom:1px solid #ddd;}
 .sublist tr th.title{width:100%; text-align:left;}
@@ -1977,7 +1977,7 @@ form{display:inline;margin:0}
   margin:0px;
   height:20px;
   font-size:12px;
-  font:12px gulim;
+  font:12px Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
   color:#393939;
   background:url('/images/kr/cm/btn_middle_right.gif') no-repeat right;
   vertical-align:top;
@@ -2031,7 +2031,7 @@ form{display:inline;margin:0}
 	background:url('../images/kr/cm/btn_default_offright.gif') no-repeat top right;
 	height:28px;
 	padding-right:5px;
-	font:12px gulim;
+	font:12px Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	letter-spacing:-1;
 	padding-top:7px;
 }

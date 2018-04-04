@@ -55,6 +55,11 @@ public class EzLadderDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<LadderVO> searchPreLadderList(Map<String, Object> map) throws Exception {
+		return (List<LadderVO>) list("EzLadderDAO.searchPreLadderList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<LadderVO> searchAllLadderList(Map<String, Object> map) throws Exception {
 		return (List<LadderVO>) list("EzLadderDAO.searchAllLadderList", map);
 	}

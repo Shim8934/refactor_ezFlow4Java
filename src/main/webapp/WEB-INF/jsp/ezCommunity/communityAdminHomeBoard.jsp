@@ -98,12 +98,13 @@
 		        var length = listview.GetSelectedIndexes().split(",").length;
 		        var selRow = listview.GetSelectedRows();
 
-		        if (listview2.GetDataRows().length > 0 && listview2.GetDataRows()[0].id.indexOf("noItems") > -1)
-		            listview2.DeleteRow(listview2.GetDataRows()[0].id);
-
-		        if (select.length <= 0)
+		        if (select.length <= 0) {
 		            alert("<spring:message code = 'ezCommunity.t2017' />");
-		        else {
+		        } else {
+		        	if (listview2.GetDataRows().length > 0 && listview2.GetDataRows()[0].id.indexOf("noItems") > -1) {
+			            listview2.DeleteRow(listview2.GetDataRows()[0].id);
+			        }
+		        	
 		            for (var count1 = 0; count1 < length; count1++) {
 		                var length2 = listview2.GetRowCount();
 		                var boardid = selRow[count1].getAttribute("DATA1");

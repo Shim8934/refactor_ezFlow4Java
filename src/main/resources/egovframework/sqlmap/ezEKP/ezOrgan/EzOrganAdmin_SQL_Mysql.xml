@@ -2213,7 +2213,12 @@
 	<select id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
 		<![CDATA[
 			SELECT
-				* 
+				USERID,
+				PROXYUSERID,
+				PROXYUSERNAME,
+				PROXYUSERDEPTID,
+				STARTDATE,
+				ENDDATE  
       		FROM
       			TBL_PROXYINFO 
       		WHERE

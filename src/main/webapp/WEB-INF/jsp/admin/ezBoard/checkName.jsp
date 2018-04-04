@@ -166,8 +166,8 @@
 		
 		<h1><spring:message code="ezBoard.t5" /></h1>		
 		<h2><spring:message code="ezBoard.t13" /></h2>
-        <div class="listview" style="width:570px; height:195px;" >
-            <div id="lvtDoclist" style="width:570px; border:0; height:195px; overflow:AUTO; " ></div>
+        <div class="listview" style="width:100%; min-width:570px; height:195px;" >
+            <div id="lvtDoclist" style="width:100%;min-width:570px; border:0; height:195px; overflow:AUTO;" ></div>
         </div>		            
 		<div class="btnposition">
 		    <a class="imgbtn"><span onClick="change_onClick()"><spring:message code="ezBoard.t14" /></span></a>

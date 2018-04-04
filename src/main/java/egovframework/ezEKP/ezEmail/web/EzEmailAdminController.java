@@ -830,7 +830,8 @@ public class EzEmailAdminController {
 		int maxItemPerPage = 20;
 		int currentPage = Integer.parseInt(currPage);
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
-
+		int endRow = (Integer.parseInt(currPage)) * maxItemPerPage;
+		
 		if (currPage.equals("-1")) {
 			startRow = -1;
 		}
@@ -853,7 +854,7 @@ public class EzEmailAdminController {
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
-									   maxItemPerPage, searchKeycode, searchKeyword);
+									   endRow, maxItemPerPage, searchKeycode, searchKeyword);
 		
 		IMAPAccess ia = null;
 		Locale locale = Locale.getDefault();
@@ -927,14 +928,15 @@ public class EzEmailAdminController {
 
 		int maxItemPerPage = 20;
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
-
+		int endRow = (Integer.parseInt(currPage)) * maxItemPerPage;
+		
 		if (currPage.equals("-1")) {
 			startRow = -1;
 		}
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(Integer.valueOf(userInfo.getTenantId()), 
-									   startRow, maxItemPerPage, searchKeycode, searchKeyword);
+									   startRow, endRow, maxItemPerPage, searchKeycode, searchKeyword);
 		
 		int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword);
 		
@@ -948,57 +950,50 @@ public class EzEmailAdminController {
 		String iMAPPort = config.getProperty("config.IMAPPort");
 		
 		// 각 사용자별로 처리한다.
-		try {
-
-			for (OrganUserVO organUser : userCnList) {
-
-				List<String> quaList = new ArrayList<String>();
-				String userId = organUser.getCn();
-				String department = organUser.getDescription();
-				String displayname = organUser.getDisplayName();
-				displayname = displayname + "(" + userId + ")";	
+		for (OrganUserVO organUser : userCnList) {
+			List<String> quaList = new ArrayList<String>();
+			String userId = organUser.getCn();
+			String department = organUser.getDescription();
+			String displayname = organUser.getDisplayName();
+			displayname = displayname + "(" + userId + ")";	
 				
-				quaList.add(0, userId);
-				quaList.add(1, displayname);
-				quaList.add(2, department);
-
+			quaList.add(0, userId);
+			quaList.add(1, displayname);
+			quaList.add(2, department);
+				
+			try {
 				String email = userId + "@" + domain;
 				
-				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, 
-													   egovMessageSource, locale);
+				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale);
 
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-
+	
 				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
 				long mailboxUsage = storageUsageAndLimit[0]/1024; // KBs to MB
 				long mailboxQuota = storageUsageAndLimit[1]/1024; // KBs to MB
-				
+					
 				quaList.add(3, String.valueOf(mailboxUsage));
 				quaList.add(4, String.valueOf(mailboxQuota));
 				userList.add((ArrayList<String>) quaList);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		} finally {
-
-			if (ia != null) {
-				ia.close();
-			}
-			
 		}
 		
 		/* 엑셀 만들기 */
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("MailQuotaList");
-		
+			
 		Row row = null;
 		Cell cell = null;
-
+	
 		String fileName = "";
 		fileName = "MailQuotaList";
-
+	
 		HSSFCellStyle headerStyle = workbook.createCellStyle();
 		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
@@ -1007,13 +1002,13 @@ public class EzEmailAdminController {
 		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 		headerStyle.setVerticalAlignment((short) 1);
-		
+			
 		HSSFCellStyle bodyStyle = workbook.createCellStyle();
 		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-
+	
 		HSSFFont font = workbook.createFont();
 		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(font);
@@ -1022,7 +1017,7 @@ public class EzEmailAdminController {
 		cell = row.createCell(0);
 		cell.setCellValue(egovMessageSource.getMessage("main.t252") + " " + totalCount + 
 						  egovMessageSource.getMessage("ezSystem.kyj2"));
-
+	
 		row = sheet.createRow(1);
 		cell = row.createCell(0);
 		cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd04"));
@@ -1036,7 +1031,7 @@ public class EzEmailAdminController {
 		cell = row.createCell(3);
 		cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd03"));
 		cell.setCellStyle(headerStyle);
-
+	
 		for (int i = 2; i < userList.size() + 2; i++) {
 			row = sheet.createRow(i);
 			row.setHeight((short) 300);
@@ -1053,18 +1048,20 @@ public class EzEmailAdminController {
 			cell = row.createCell(3);
 			cell.setCellValue((String) userList.get(i - j).get(4));
 			cell.setCellStyle(bodyStyle);
-
-			sheet.autoSizeColumn(i - 1);
+	
 		}
-
+		
+		for (int i = 0; i < 4; i++) {
+			sheet.autoSizeColumn(i);
+		}
+		
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
 		response.setContentType("application/vnd.ms-excel");
-
+	
 		workbook.write(response.getOutputStream());
 		workbook.close();
-
+	
 		logger.debug("MailQuotaExcelExport controller ended.");
 	}
-
 }

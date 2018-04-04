@@ -38,18 +38,22 @@
 			
 			var dragloc = {};
 			var droploc = {};
-			var changeLadId1 = [];
-			var changeLadId2 = [];
+			var changeLadId1;
+			var changeLadId2;
 						
 			function changeListOrder() {
-				var ladId1 = dragloc["id"].substring(9);
-				var ladId2 = droploc["id"].substring(9);
-				
-				changeLadId1.push(ladId1);
-				changeLadId2.push(ladId2);
+				console.log(dragloc["id"]);
+				console.log(droploc["id"]);
+				var ladId1 = dragloc["id"];
+				var ladId2 = droploc["id"]
+				changeLadId1 = ladId1;
+				changeLadId2 = ladId2;
+				changeListOrderComplete();
 			}
 			
 			function changeListOrderComplete() {
+				console.log(changeLadId1);
+				console.log(changeLadId2);
 				$.ajax({
 					type: "POST",
 					url: "/ezLadder/setListOrder.do",
@@ -57,11 +61,29 @@
 					traditional: true,
 					data: {
 						"ladderIds": changeLadId1,
-						"changeLadderIds": changeLadId2
+						"changeLadderIds": changeLadId2,
+						"mode": modeCheck,
+						"currPage": currPage,
+						"searchSelect": searchSelect,
+						"searchInput": searchInput
 					},
 					success: function(result) {
-						changeLadId1 = [];
-						changeLadId2 = [];
+						var lines = "";
+						var cnt =0;
+						lines += "<ul id='columnsbnk' class='content' style='border-bottom: none;'>"
+				
+						$.each(result.list, function(key, value) {
+					
+							lines += "<li class='myBorder' name='preladder_" + cnt + "' id='" + value.ladderId + "' style='cursor: pointer;'>";
+							lines += "<span>" + cnt + "</span>";
+							lines += "<div class='prelist' style='width: 15%'>" + value.type + "</div>";
+							lines += "<div class='prelist' style='width: 60%'>" + value.title + "</div></li>";
+							cnt++;
+						});
+						lines +="</ul>"
+						$("#columnsbnk").html(lines);
+						drag(); 
+	
 					}
 				});
 			}
@@ -118,7 +140,7 @@
 					});
 				
 				/** sort list */
-				$("#columnsbnk").sortable({
+				/*$("#columnsbnk").sortable({
 					activate: function(event, ui) {
 						console.log(ui.helper[0]);
 						var thisId = "#" + ui.helper[0].id; 
@@ -131,45 +153,9 @@
 					}
 				});
 				$("#columnsbnk").disableSelection();
-				
+				*/
 				/** 이전 리스트 순서 바꾸기 */
-				/* $(".myBorder").draggable({ // 드래그 리스트
-					revert: "invalid",
-					revertDuration: 400,
-					zIndex: 5,
-					axis: "y",
-					addClasses: false,
-					start: function(event, ui) {
-						$("#columnsbnk").css("background", "#ddd");
-						$(this).css("border", "1px solid #ddd");
-						dragloc = {"id": $(this).attr("id"), "top": $(this).css("top")};
-					}, 
-					stop: function() {
-						$(this).css("border", "");
-						$(this).css("border-bottom", "1px solid #ddd");
-					}
-				});
-				$(".myBorder").droppable({ // 드랍 리스트
-					accept: ".myBorder",
-					addClasses: false,
-					hoverClass: "nowOver",
-					over: function(event, ui) {
-						console.log("-");
-						$(".myBorder").css("background", "white");
-						$(this).css("background", "beige");
-					},
-					drop: function(event, ui) {
-						droploc = {"id": $(this).attr("id"), "top": $(this).css("top")};
-						$("#" + dragloc["id"]).css("z-index", "10").animate({"top": droploc["top"]}, 500, function() {
-							$("#" + dragloc["id"]).css("z-index", "0")
-						});
-						$("#" + droploc["id"]).css("z-index", "10").animate({"top": dragloc["top"]}, 500, function() {
-							$("#" + droploc["id"]).css("z-index", "0")
-						});
-						changeListOrder();
-					}
-				}); */
-				
+			
 				$("#searchInput").on("keyup", function(e) {
 					if(e.keyCode == "13") {
 						searchLadder();
@@ -182,6 +168,7 @@
 				$("#btn_CancelAprLineTempletName").on("click", function() {
 					window.close();
 				});
+				drag();
 			});
 			
 			function viewSearchList(ladderList) {
@@ -201,7 +188,7 @@
 				});
 				
 				$("#columnsbnk").html(html);
-				
+				drag();
 				makePageSelPage();
 				
 			}
@@ -215,6 +202,52 @@
 				window.close();
 			}
 			
+			function drag() {
+				 $(".myBorder").draggable({ // 드래그 리스트
+					revert: "invalid",
+					revertDuration: 400,
+					zIndex: 5,
+					axis: "y",
+					addClasses: false,
+					start: function(event, ui) {
+						$("#columnsbnk").css("background", "#ddd");
+						var divEl = $(this);
+						$(this).css("border", "1px solid #ddd");
+						//dragloc = {"id": $(this).attr("id"), "top": $(this).css("top")};
+						dragloc = {"id": $(this).attr("id"), "top": divEl.offset().top}; 
+						
+					}, 
+					stop: function() {
+						$(this).css("border", "");
+						$(this).css("border-bottom", "1px solid #ddd");
+					}
+				});
+				$(".myBorder").droppable({ // 드랍 리스트
+					accept: ".myBorder",
+					addClasses: false,
+					hoverClass: "nowOver",
+					over: function(event, ui) {
+						console.log("-");
+						$(".myBorder").css("background", "white");
+						$(this).css("background", "beige");
+					},
+					drop: function(event, ui) {
+						//droploc = {"id": $(this).attr("id"), "top": $(this).css("top")};
+						var divEl = $(this);
+						droploc = {"id": $(this).attr("id"), "top": divEl.offset().top}; 
+						
+						$("#" + dragloc["id"]).css("z-index", "10").animate({"top": droploc["top"]}, 10, function() {
+							//$("#" + dragloc["id"]).css("z-index", "0")
+							$("#" + dragloc["id"]).css("top", (droploc["top"]-dragloc["top"]));
+						});
+						$("#" + droploc["id"]).css("z-index", "10").animate({"top": dragloc["top"]}, 10, function() {
+							//$("#" + droploc["id"]).css("z-index", "0")
+							$("#" + droploc["id"]).css("top", (dragloc["top"]-droploc["top"]));
+						});
+						changeListOrder();
+					}
+				}); 
+			}
 			
 		</script>
 		<style type="text/css">
@@ -287,7 +320,7 @@
 									<div style="min-width: 300px;">
 									<input id="searchInput" class="input" type="text" placeholder="제목 검색" style="margin-bottom: 10px; width: 245px;">
 									<input id="searchOption" value="title" style="display: none;">
-									<a class="imgbtn" style="height: 24px; float: right;"><span style="line-height: 24px;">검색</span></a>
+									<a class="imgbtn" style="height: 24px; float: right;" onclick="searchLadder()"><span style="line-height: 24px;">검색</span></a>
 									</div>
 									<ul id="columnsbnk" class="content" style="border-bottom: none;">
 										<c:forEach items="${list}" var="prelist" varStatus="status">

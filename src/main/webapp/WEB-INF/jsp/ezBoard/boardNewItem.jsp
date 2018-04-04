@@ -145,7 +145,7 @@
 			        PhotoBoard = "Y";
 			    }
 	
-			    if (pReservedItem != "true") document.getElementById("reservation_date").style.display = "none";
+			    if (pReservedItem != "true") document.getElementById("reservation_date").style.visibility = "hidden";
 			    if ((pMode == "modify" || pMode == "temp" || pMode == "boardContent" || pMode == "boardAttach") && strAttachments != "") {
 			        pAttachListXml = MakeAttachList();
 			        if (gubun != "3") {
@@ -208,7 +208,7 @@
 			    }
 			        
 			    if (ExpireDays == -1 || ExpireItem == "YES") {
-			    	document.getElementById('Makedate').style.display = "none";
+			    	document.getElementById('Makedate').style.visibility = "hidden";
 			    }
 			    if (pMode == "modify" || pMode == "temp") {
 			        document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value='${boardListVO.title}'/>");
@@ -269,6 +269,13 @@
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		        }
+		      
+		        var editorW = (document.documentElement.clientWidth - 20) + "PX";
+		        document.getElementById("tab02").style.width = editorW;
+	            document.getElementById("message").style.width = editorW;	            
+	            //iframe 내부 에디터의 body width 조절
+	            $("iframe").ready(function(){ $("iframe[name='message']").contents().find("body").css("width" , editorW); });
+		        
 		    };
 		
 		    $(function () {
@@ -591,8 +598,9 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(nickname));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(nickname));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", "");
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", "");
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", "");
+		            /* 2018.02.09 김기하 새게시물에서 익명게시판 부서가 null로 나오는 것을 공백처리 */
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", MakeXMLString(" "));
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", MakeXMLString(" "));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYID", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", "");
@@ -712,14 +720,14 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", "");
 
 		        if (pMode != "new" && pMode != "new1" && pMode != "reply" && pMode != "temp" && pMode != "boardContent" && pMode != "boardContent" && pReservedItem == false) {
-		            if (document.getElementById("readCount") != undefined && document.getElementById("readCount").checked)
+		            if ((document.getElementById("readCount") != undefined) && (document.getElementById("readCount").checked == true)){
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "Y");
-		            else
+		            } else{
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
-		        }
-		        else
+		        	}
+		         }else{
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
-
+		        }
 		        
 				var colType = new Array();
 				var tableCol = new Array();
@@ -897,9 +905,9 @@
 		                return;
 		            }
 		            if (document.getElementById("ChkPermanence").checked) {
-		                document.getElementById("Makedate").style.display = "none";
+		                document.getElementById("Makedate").style.visibility = "hidden";
 		            } else {
-		            	document.getElementById("Makedate").style.display = "";
+		            	document.getElementById("Makedate").style.visibility = "visible";
 		            	
 		                if (strEndDate != "") {
 		                    if (strEndDate.substring(0, 4) == "9999") {
@@ -927,10 +935,10 @@
 		        }
 		    }
 		    function Reservation_onclick() {
-		        if (document.getElementById("chk_reservation").checked == true) {
-		        	$("#reservation_date").css("display", "");
+		        if (document.getElementById("chk_reservation").checked) {
+		        	document.getElementById("reservation_date").style.visibility = "";
 		        } else {
-		        	$("#reservation_date").css("display", "none");
+		        	document.getElementById("reservation_date").style.visibility = "hidden";
 		        }
 		    }
 		    function PreviewItem() {
@@ -997,6 +1005,11 @@
 		            Content = ReplaceText(Content, "id=doctitle", "");
 		            Content = ReplaceText(Content, "id=\"doctitle\"", "");
 		            Content = ReplaceText(Content, "id=\'doctitle\'", "");
+		            if (Content.indexOf("id=\"_BigAttachListHtml\"") != -1) {
+		            	Content = ReplaceText(Content, "<td width=\"75%\"", "<td width=\"65%\"");
+		            	Content = ReplaceText(Content, "<td width=\"30%\"", "<td width=\"35%\"");
+		            }
+		            
 		            message.SetEditorContent(Content);
 		            
 		            if (mailXml.getElementsByTagName("OVERSIZE").length > 0) {
@@ -1135,12 +1148,12 @@
 		        if (pUrl.toLowerCase().indexOf(".mht") > -1) {
 		            var fullPath = encodeURI(pUrl);
 		            var tempXML = createXmlDom();
-		            var XmlBodyATT = createXmlDom();
+// 		            var XmlBodyATT = createXmlDom();
 		            var XmlBodyDATA = createXmlDom();
 		            var tempStr = "";
 		            tempStr = ConvertMHTtoHTML(fullPath);
 		            tempXML = loadXMLString(tempStr);
-		            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 		            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 		            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 		            var htmlData = getNodeText(XmlBodyDATA);
 		
@@ -1249,11 +1262,11 @@
 		        document.getElementById('BoardSpan').innerHTML = pBoardName;
 		        if (ExpireDays == "-1") {
 		            document.getElementById('ChkPermanence').checked = true;
-		            document.getElementById('Makedate').style.display = "none";
+		            document.getElementById('Makedate').style.visibility = "hidden";
 		        }
 		        else {
 		            document.getElementById('ChkPermanence').checked = false;
-		            document.getElementById('Makedate').style.display = "";
+		            document.getElementById('Makedate').style.display = "inherit";
 		            //idDatepicker.vtLocalEndDate(AddDate(idDatepicker.vtLocalDate(), parseInt(ExpireDays)));
 		        }
 		    }
@@ -1478,11 +1491,17 @@
 		                    if ("${docID}" != "")
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                }
-		                else
+		                else{
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		
+		                }
 		        }
 		        
+                var editorW = (document.documentElement.clientWidth - 20) + "PX";
+		       	document.getElementById("tab02").style.width = editorW;
+	            document.getElementById("message").style.width = editorW;
+	            //iframe 내부 에디터의 body width 조절
+	            $("iframe").ready(function(){ $("iframe[name='message']").contents().find("body").css("width" , editorW); });
+      
 		    }
 		    function bodydragover(evt) {
 		        evt.dataTransfer.dropEffect = "none";
@@ -1988,12 +2007,12 @@
 	                        <th><spring:message code='ezBoard.t434' /></th>
 	                        <c:choose>
 	                        	<c:when test="${boardListVO.importance == '1'}">
-			                        <td style="width: 300px"><span style="line-height: 20px; height: 20px; display: inline-block;">
-			                            <input type="checkbox" id="chkEmergent" checked></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t435' /></span>
+			                        <td style="width: 300px; vertical-align: baseline;"><span style="line-height: 20px; height: 20px; display: inline-block;">
+			                            <input type="checkbox" id="chkEmergent" checked></span><span style="line-height: 21px; height: 12px; display: inline-block; padding-top:5px;"><spring:message code='ezBoard.t435' /></span>
 	                        	</c:when>
 	                        	<c:otherwise>
-			                        <td style="width: 300px"><span style="line-height: 20px; height: 20px; display: inline-block;">
-			                            <input type="checkbox" id="chkEmergent"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t435' /></span>
+			                        <td style="width: 300px; vertical-align: baseline;"><span style="line-height: 20px; height: 20px; display: inline-block;">
+			                            <input type="checkbox" id="chkEmergent"></span><span style="line-height: 21px; height: 12px; display: inline-block; padding-top:5px;"><spring:message code='ezBoard.t435' /></span>
 	                        	</c:otherwise>
 	                        </c:choose>
 	                            <!-- // 20090913 : 게시판 공지게시 기능 -->
@@ -2041,7 +2060,8 @@
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'text'}">
 						                <td colspan="3">
-						                    <input type="text" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'  style="width:43%"/>
+						                    <!-- 2018.02.08 입력창 최대 길이 제한-->
+						                    <input type="text" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'  style="width:43%" maxlength="100"/>
 						                </td>
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'check'}">
@@ -2075,7 +2095,7 @@
 			                    <tr id="tdReservationDate">
 	                		</c:when>
 	                		<c:otherwise>
-			                    <tr id="tdReservationDate" style="DISPLAY: none">
+			                    <tr id="tdReservationDate" style="display: none;">
 	                		</c:otherwise>
 	                	</c:choose>
 	                        <th><spring:message code='ezBoard.t432' /></th>
@@ -2083,16 +2103,16 @@
 	                        	<c:choose>
 	                        		<c:when test="${reservedItem == 'true'}">
 			                            <span style="line-height: 20px; height: 20px; display: inline-block;">
-			                                <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t276' /></span>
+			                                <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t276' /></span>
 	                        		</c:when>
 	                        		<c:otherwise>
 			                            <span style="line-height: 20px; height: 20px; display: inline-block;">
-			                                <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t276' /></span>
+			                                <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t276' /></span>
 	                        		</c:otherwise>
 	                        	</c:choose>
 	                            <span id="reservation_date">
-		                            <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
-	                                   &nbsp;<a class="imgbtn"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
+		                            <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center; margin-bottom:1.2px;"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center; margin-bottom:1.2px;" />
+	                                   &nbsp;<a class="imgbtn" style= "margin-top:3px;"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
 	                            </span>
 	                    </tr>
 	                    <tr id="tdEndDate">
@@ -2102,19 +2122,19 @@
 	                        		<c:when test="${(mode != 'modify' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999') || (url != '') }">
 			                            <span id="Chkbox">
 			                                <span style="line-height: 20px; height: 20px; display: inline-block;">
-			                                    <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t433' /></span>
+			                                    <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t433' /></span>
 			                            </span>
 			                            <span id="Makedate">
-			                                <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center">
+			                                <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center; margin-bottom:1.2px;">
 			                            </span>
 	                        		</c:when>
 	                        		<c:otherwise>
 			                            <span id="Chkbox" style="display: inline-block;">
 			                                <span style="line-height: 20px; height: 20px; display: inline-block;">
-			                                    <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t433' /></span>
+			                                    <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t433' /></span>
 			                            </span>
 			                            <span id="Makedate">
-			                                <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center">
+			                                <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center; margin-bottom:1.2px;">
 			                            </span>
 	                        		</c:otherwise>
 	                        	</c:choose>
@@ -2158,7 +2178,7 @@
 	                            <input type="text" id="txtPhotoFile" style="WIDTH: 100%" readonly="true"></td>
 	                        <td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onclick="return btn_PhotoAttachAdd_onclick()"><spring:message code='ezBoard.t440' /></span></a></td>
 	                    </tr>
-	                    <tr id="tdReservationDate" style="DISPLAY: none">
+	                    <tr id="tdReservationDate" style="visibility:hidden;">
 	                        <th><spring:message code='ezBoard.t432' /></th>
 	                        <td style="width: 100%" colspan="2">
 	                            <table style="width: 100%;" border="0">
@@ -2167,11 +2187,11 @@
 	                                    	<c:choose>
 	                                    		<c:when test="${reservedItem == 'true'}">
 			                                        <span style="line-height: 20px; height: 20px; display: inline-block;">
-			                                            <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t276' /></span>
+			                                            <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t276' /></span>
 	                                    		</c:when>
 	                                    		<c:otherwise>
 			                                        <span style="line-height: 20px; height: 20px; display: inline-block;">
-			                                            <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()"></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t276' /></span>
+			                                            <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t276' /></span>
 	                                    		</c:otherwise>
 	                                    	</c:choose>
 	                                    </td>
@@ -2183,7 +2203,7 @@
 	                            </table>
 	                        </td>
 	                    </tr>
-	                    <tr id="tdEndDate" style="DISPLAY: none">
+	                    <tr id="tdEndDate" style="visibility:hidden;">
 	                        <th><spring:message code='ezBoard.t156' /></th>
 	                        <td style="padding-top: 0; padding-bottom: 0px" colspan="2">
 	                            <table border="0">
@@ -2191,7 +2211,7 @@
 	                                	<c:choose>
 	                                		<c:when test="${(mode != 'modify' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999') || (url != '') }">
 			                                    <td style="width: 90px; white-space: nowrap" id="Chkbox">
-			                                        <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked><spring:message code='ezBoard.t433' /></td>
+			                                        <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked style="margin-top:3px;"><spring:message code='ezBoard.t433' /></td>
 			                                    <td id="Makedate">
 			                                        <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center">&nbsp;&nbsp;
 			                                    </td>
@@ -2253,8 +2273,8 @@
 	        </tr>
 	        <tr id="docTR" style="display: none">
 	            <td>
-	                <div id="docContentBorder" style="border: #ddd 1px solid; BACKGROUND-COLOR: white; margin-top: 5px;">
-	                    <iframe id="docContent" name="docContent" style="width: 100%; height: 100%;"></iframe>
+	                <div id="docContentBorder" style="border: 0; BACKGROUND-COLOR: white; margin-top: 5px;">
+	                    <iframe id="docContent" name="docContent" style="width: 99.5%; height: 100%;"></iframe>
 	                </div>
 	            </td>
 	        </tr>

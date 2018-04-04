@@ -182,6 +182,12 @@
 
 	        	L_SearchStartDt = L_SearchStartDt.substring(0, 10);
 	        	L_SearchEndDt = L_SearchEndDt.substring(0, 10);
+	        	
+	        	if (L_SearchStartDt > L_SearchEndDt) {
+		        	alert('<spring:message code="ezQuestion.jjs2" />');
+		            return false;
+		        }
+	        	
 	        	if (trim_Cross(document.getElementById("txtExpiredate").value) != "") {
 		            var PollEndDate = L_SearchEndDt
 		            var tempE = PollEndDate.split("-");
@@ -210,7 +216,11 @@
 		            alert("<spring:message code='ezQuestion.t432' />");
 		            return;
 	    	    }
+	        	
 	        	L_SearchStartDt = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	        	L_SearchEndDt = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	        	
+	        	
 	        	if (form_check() == false) {
 	            	return;
 	        	} else {
@@ -300,7 +310,7 @@
 	    		if (ResultYN == "true") {
 	        		document.getElementById("set_anonymity").disabled = true;
 	        		document.getElementById("set_Target").disabled = true;
-	        		document.getElementById("aLinkbtn").style.display = "none";
+// 	        		document.getElementById("aLinkbtn").style.display = "none";
 	    		}
 	    		var tmpChk = '${saveFlg}'
 	    		if (tmpChk == "OK") {

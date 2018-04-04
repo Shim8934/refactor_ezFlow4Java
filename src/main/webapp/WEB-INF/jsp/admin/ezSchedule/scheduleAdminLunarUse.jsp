@@ -74,7 +74,11 @@
 			<div id="mainmenu">
 			    <ul>
 			        <li style="background:none;padding-top:4px;height:24px">
-			            <select id="ListCompany" onchange="schedule_get_lunaruse()">${companySel}</select>
+			            <select id="ListCompany" onchange="schedule_get_lunaruse()">
+			            	<c:forEach var="item" items="${list}">
+	            				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            				</c:forEach>
+			            </select>
 			        </li>
 			    </ul>
 			</div>

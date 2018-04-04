@@ -919,16 +919,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		if (orgMessage.getHeader("X-JMocha-Secure-Mail") != null) {
 		        			isSecureMail = orgMessage.getHeader("X-JMocha-Secure-Mail")[0];
 		        		}
+		        		
 		        		//set bodyType
-		        		if (orgMessage.getHeader("Content-Type") != null) {
-		        			String tempBodyType = orgMessage.getHeader("Content-Type")[0];
-		        			
-		        			if(tempBodyType.split(";")[0].trim().equals("text/plain")) {
-		        				bodyType = "1";
-		        			}else if ( tempBodyType.split(";")[0].trim().equals("multipart/alternative")) {
-		        				bodyType = "0";
-		        			}
-		        		}
+		        		bodyType = isHtmlMessage(orgMessage) ? "0" : "1";
+		        		
 		        		if (orgMessage.getHeader("Return-Receipt-To") != null) {
 		        			replySendTime = "1";
 		        		} else {
@@ -2367,6 +2361,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			tempNode = root.getElementsByTagName("HTMLBODY").item(0);
 			if (tempNode != null) {
 				htmlBody = tempNode.getTextContent();
+				
+				String hostUrl = request.getScheme()
+						+ "://"
+						+ request.getServerName()
+						+ ("http".equals(request.getScheme())
+								&& request.getServerPort() == 80
+								|| "https".equals(request.getScheme())
+								&& request.getServerPort() == 443 ? "" : ":"
+								+ request.getServerPort());
+				
+				logger.debug("hostUrl=" + hostUrl);
+				
+				// 쿠쿠닥스 에디터의 경우 인라인 이미지 태그의 src가 http://호스트명:포트 와 같이 시작하여 이를 제거하도록 함
+				htmlBody = htmlBody.replaceAll("src=\"" + hostUrl + "/ezEmail/downloadInline\\.do", "src=\"/ezEmail/downloadInline\\.do");
 			}
 		}
 		if (root.getElementsByTagName("SECURITYMAIL") != null) {
@@ -4420,6 +4428,55 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private boolean isHtmlMessage(Message message) throws MessagingException, IOException {
+		if (message.getHeader("Content-Type") == null) {
+			return true;
+		}
+		
+		String tempBodyType = message.getHeader("Content-Type")[0];
+		String contentType = tempBodyType.split(";")[0].trim();
+
+		if (contentType.equals("text/plain")) {
+			return false;
+		} else if (contentType.equals("multipart/alternative")) {
+			return true;
+		}
+		
+		Object content = message.getContent();
+		
+		if (content instanceof Multipart) {
+			return containsHtmlMultipart((Multipart) content);
+		}
+		
+		return true;
+	}
+	
+	private boolean containsHtmlMultipart(Multipart multipart) throws MessagingException, IOException {
+		int partCount = multipart.getCount();
+		
+		Object partContent;
+
+		for (int i = 0; i < partCount; i++) {
+			BodyPart bodyPart = multipart.getBodyPart(i);
+			
+			if (BodyPart.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
+				continue;
+			}
+			
+			partContent = bodyPart.getContent();
+			
+			if (partContent instanceof Multipart && containsHtmlMultipart((Multipart) partContent)) {
+				return true;
+			}
+
+			if (bodyPart.isMimeType("text/html") || bodyPart.isMimeType("message/*")) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 	
 	/**
