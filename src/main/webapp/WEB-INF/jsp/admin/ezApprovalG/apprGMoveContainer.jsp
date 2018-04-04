@@ -69,6 +69,7 @@
 		var pSelectTab = "completedoclist";
 		var check = "false";
 		var selectelem = null;
+		var popupselTContName = "";
 		
 	    function window_onload() {
 	   	
@@ -622,29 +623,77 @@
 	            }
 	        }
 	
+	        var approval_admin_popup_choicedept_dialogArguments = new Array();
+	        
 	        function bt_OK_onclick() {
 	        	
-				var length = $("input:checkbox[name=myCheckbox]:checked").length;
-			        if (length > 0 && check == 'false') {
-			            if ($("select[name=selTContName]").val() == null || $("select[name=selTContName]").val() == '')
-			                alert("<spring:message code='ezApprovalG.t1676'/>")
-						else {
-						    var Ans = confirm("<spring:message code='ezApprovalG.t1677'/>");
-						    if (Ans) {
-						        ContMove();
-						        getDocListjson(CurPage);
-						    }
-						}
-			        } else {
-			            alert("<spring:message code='ezApprovalG.t1570'/>");
-			        }
-			        $("#checkboxAll").prop("checked", false);
+	        	 if (CrossYN()) {
+	        		 	approval_admin_popup_choicedept_dialogArguments[0] = "one";
+		                approval_admin_popup_choicedept_dialogArguments[1] = bt_OK_onclick_Complete;
+		                var OpenWin = window.open("/admin/ezApprovalG/approvGAdminPopupChoiceDept.do", "approvalGAdminPopupChoiceDept", GetOpenWindowfeature(500, 180));
+		                try { OpenWin.focus(); } catch (e) { }
+		            } else {
+		                var feature = GetShowModalPosition(500, 180);
+		                var rtnValue = window.showModalDialog("/admin/ezApprovalG/approvalGAdminPopupChoiceDept.do", "","dialogHeight:180px;dialogwidth:360px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
+		                
+		                if (typeof (rtnValue) != "unlimited" && rtnValue == "OK") {
+		                    window.location.reload(false);
+		                }
+		            }
 			}
 	        
-	        function bt_All_onclick(){
-				check = "true";
+	        function bt_OK_onclick_Complete(retVal) { 
 	        	
-	        	if ($("select[name=selTContName]").val() == null || $("select[name=selTContName]").val() == '' 
+	        	popupselTContName = retVal[0];
+	        	
+	        	if(popupselTContName!=undefined && popupselTContName != "" ) {
+	        	var length = $("input:checkbox[name=myCheckbox]:checked").length;
+		        if (length > 0 && check == 'false') {
+		            if (popupselTContName == null || popupselTContName == '')
+		                alert("<spring:message code='ezApprovalG.t1676'/>")
+					else {
+					    var Ans = confirm("<spring:message code='ezApprovalG.t1677'/>");
+					    if (Ans) {
+					        ContMove();
+					        getDocListjson(CurPage);
+					    }
+					}
+		        } else {
+		            alert("<spring:message code='ezApprovalG.t1570'/>");
+		        }
+		        $("#checkboxAll").prop("checked", false);
+	        	} else {
+		            alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
+	        		strMoveListIDInfo = "";
+					selectelem = null;
+					$("#checkboxAll").prop("checked", false);
+					$(":checkbox[name=myCheckbox]").prop("checked", false);
+					$(".row_body").css("background", "");
+	        	}
+	        }
+	        
+	        function bt_All_onclick() {
+				
+	        	 if (CrossYN()) {
+	        		 	approval_admin_popup_choicedept_dialogArguments[0] = "all";
+		                approval_admin_popup_choicedept_dialogArguments[1] = bt_All_onclick_Complete;
+		                var OpenWin = window.open("/admin/ezApprovalG/approvGAdminPopupChoiceDept.do", "approvalGAdminPopupChoiceDept", GetOpenWindowfeature(500, 180));
+		                try { OpenWin.focus(); } catch (e) { }
+		            } else {
+		                var feature = GetShowModalPosition(500, 180);
+		                var rtnValue = window.showModalDialog("/admin/ezApprovalG/approvalGAdminPopupChoiceDept.do", "","dialogHeight:180px;dialogwidth:360px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
+		                
+		                if (typeof (rtnValue) != "unlimited" && rtnValue == "OK") {
+		                    window.location.reload(false);
+		                }
+		            }
+	        }
+	        
+	        function bt_All_onclick_Complete(retVal) {
+				check = "true";
+				popupselTContName = retVal[0];
+				if(popupselTContName!=undefined && popupselTContName != "" ) {
+				if (popupselTContName == null || popupselTContName == '' 
 	        			|| $("select[name=selSContName]").val() == null || $("select[name=selSContName]").val() == '') {
 	                alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
 	                
@@ -656,8 +705,16 @@
 				        getDocListjson(1);
 				    }
 				}
-				        check = "false";
+				        
+	        } else {
+	            alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
+        		strMoveListIDInfo = "";
+				selectelem = null;
+				$(":checkbox[name=myCheckbox]").prop("checked", false);
+				$(".row_body").css("background", "");
+	        }
 	        	$("#checkboxAll").prop("checked", false);
+				check = "false";
 	        }
 	        
 	        function select_row(elem) {		    	
@@ -786,40 +843,17 @@
 						<a class="imgbtn">
 							<span onClick="reload()"><spring:message code='ezApprovalG.t165' /></span>
 						</a>&nbsp;
+						<a class="imgbtn">
+							<span onClick="bt_OK_onclick()"><spring:message code='ezApproval.t25005' /></span>
+						</a>&nbsp;
+						<a class="imgbtn">
+								<span onClick="bt_All_onclick()"><spring:message code='ezApprovalG.t1679' /></span>
+						</a>
 					</td>
 					<td style=" width:*; margin-bottom: 10px;">
 					</td>
 				</tr>
 			</table>
-			</tr>
-			<tr>
-				<table id ="t3" style="width:100%;">
-					<tr>
-						<td style=" width:5%;">
-		             		<spring:message code='ezApprovalG.kes05'/>
-						</td>
-						<td style=" width:12%;">
-							<input type="text" id="TDeptName" name="TDeptName" style="WIDTH: 71%;" readonly="true" />
-			        	    <a class="imgbtn" name="TDeptSelect"><span id = "spanrecev" onclick="bt_TDeptSelect_onclick(this)"><spring:message code='ezApprovalG.t105'/></span></a>
-						</td>
-						<td style="width:5.5%;">
-							<spring:message code='ezApproval.t611'/>
-						</td>
-						<td style=" width:11%; margin-bottom: 10px;">
-							<select name="selTContName" style="WIDTH: 90%; height: 23px;" onchange="return bt_selTContName_onclick()"></select>
-						</td>
-						<td  style=" width:20%;">
-							<a class="imgbtn">
-							<span onClick="bt_OK_onclick()"><spring:message code='ezApproval.t25005' /></span>
-							</a>&nbsp;
-							<a class="imgbtn">
-								<span onClick="bt_All_onclick()"><spring:message code='ezApprovalG.t1679' /></span>
-							</a>
-						</td>
-						<td style=" width:*; margin-bottom: 10px;">
-						</td>
-					</tr>
-				</table>
 			</tr>
 		</table>
 		<table class="mainlist" style="width:100%; height:100%;">

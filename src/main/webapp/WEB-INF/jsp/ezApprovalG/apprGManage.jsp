@@ -257,7 +257,7 @@
 		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
 		        var reheight = document.documentElement.offsetHeight - parseInt(height);
 		
-		        document.getElementById('div_AprLine').style.height = reheight + "px";
+		        //document.getElementById('div_AprLine').style.height = reheight + "px";
 		
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
@@ -1779,7 +1779,7 @@
 		  	</div>	
 		</div>
 		
-		<div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		<div style="WIDTH:100%;HEIGHT:230px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 			<div id="lvAprLine" ></div>
 		</div>		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
