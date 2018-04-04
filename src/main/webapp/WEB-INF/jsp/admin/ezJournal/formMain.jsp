@@ -18,7 +18,12 @@
 		    var selFormId = "";
 		    var formStatus = "";
 		    var pEditor = "<c:out value = '${useEditor}'/>";
-	    
+		    // 팝업창 호출위한 변수
+		    var pheight = window.screen.availHeight;
+	        var pwidth = window.screen.availWidth;
+	        var pTop = (pheight - 720) / 2;
+	        var pLeft = (pwidth - 790) / 2;
+    
 			$(document).ready(function() {
 				companyId = $("#SCompID").val();
 			   	var firstType = $("#formType").find("td:first");
@@ -93,17 +98,10 @@
 		    function btnInsForm() {
 		    //	console.log(typeId + " " + companyId + " " + pEditor);
 		    	var url = "/admin/ezJournal/insertForm.do";
-		    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId);
+		    	url += "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId);
 		    	
-		    	/*
-		    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
-		    		url = "/admin/ezJournal/insertFormOther.do"	
-		    	} else {
-			    	url = "/admin/ezJournal/insertForm.do";
-		    	}
-		    	*/
-		    	
-		    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
+		    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
+		    //	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
 		    }
 		    
 			// 양식수정버튼
@@ -119,18 +117,11 @@
 					}
 					
 			    	var url = "/admin/ezJournal/insertForm.do";
-			    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
+			    	url += "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
 			    			+ "&formId=" + encodeURIComponent(selFormId);
 			    	
-			    	/*
-			    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
-			    		url = "/admin/ezJournal/insertFormOther.do"	
-			    	} else {
-				    	url = "/admin/ezJournal/insertForm.do";
-			    	}
-			    	*/
-			    	
-			    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
+			    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
+			    //	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
 				}
 				
 			}

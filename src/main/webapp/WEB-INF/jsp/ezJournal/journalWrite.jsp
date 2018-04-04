@@ -63,6 +63,7 @@
 	    	var mode = "<c:out value='${mode}'/>";
 	    	var oldJournalId = "<c:out value='${journalId}'/>";
 	    	var selFormId = "";
+	    	var selTypeId = "";
 	    	// 수정, 임시저장, 재사용시 가져오는 수신자리스트
 	    	var receiverId = "";
 	    	var receiverName = "";
@@ -96,9 +97,19 @@
 	    	}
 			
 	    	function changeType(elem) {
+	    		if (mode == "temp" || mode == "reuse" || mode == "sum") {
+					if (!confirm("<spring:message code='ezJournal.t159'/>")) {
+						// 취소시 현재의 양식을 선택하게해야함..
+					//	$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
+						$(elem).val(selTypeId);
+						return;
+					}
+				}
+	    		
  	    		getFormList(elem);
 // 	    		getJournalForm(lastFormId);
 	    		var changeTypeId = $(elem).val();
+	    		selTypeId = changeTypeId;
 				
 	    		console.log("lastFormId 확인 : " + lastFormId);
 	    		if (lastFormId != null && lastFormId != "" ) {
@@ -114,19 +125,25 @@
 	    		}
 	    	}
 			
+	    	// 양식변경시
+	    	function changeForm(elem) {
+	    		if (mode == "temp" || mode == "reuse" || mode == "sum") {
+					if (!confirm("<spring:message code='ezJournal.t159'/>")) {
+				//		$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
+						$(elem).val(selFormId);
+						return;
+					}
+				}
+	    		
+	    		getJournalForm($(elem).val());
+	    	}
+	    	
 			// 선택된 양식의 폼 호출
 			function getJournalForm(formId) {
 // 				var jsonString = JSON.stringify({"mode" : mode,"formId" : formId,"typeId" : typeId,"journalIdList" : journalIdList});
 				
 				console.log("formId확인 :" + formId);
 				selFormId = formId;
-				if (mode == "temp" || mode == "reuse") {
-					if (!confirm("<spring:message code='ezJournal.t159'/>")) {
-						// 취소시 현재의 타입과 양식을 선택하게해야함..
-//						$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
-						return;
-					}
-				}
 				
 				$.ajax({
 	    			type : "POST",
@@ -204,7 +221,15 @@
 	    	}
 	     	
 	    	window.onload = function () {
+	    		
+	    		if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+                    self.resizeTo(760, 800);
+                } else {
+                    self.resizeTo(785, 830);
+                }
 				
+	    		selTypeId = $("#optType").find("option:selected").val();
+	    		
 	    		// 수정, 임시, 재사용 모드에서는 수신자 정보와 파일정보를 가져와 화면에 적용
 	    		if (mode == "modify" || mode == "reuse" || mode == "temp") {
 	    			$("#title").val("${journal.journalTitle}");
@@ -253,6 +278,7 @@
 					journalIdList = opener.journalIdList;
 					var selectedType = $("#optType");
 					getFormList(selectedType);
+					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
 		    		getJournalForm(selFormId);
 		    		opener.sumFormId = "";
 					break;
@@ -504,7 +530,7 @@
 			}
 	    </script>
 	</head>
-	<body class="popup" style="height: 97%;" ondragover="bodydragover(event)">
+	<body class="popup" style="height: 99%;" ondragover="bodydragover(event)">
 	    <table class="layout" style="width: 100%;">
 	        <tr>
 	            <td style="height: 20px">
@@ -552,7 +578,7 @@
 	                        			><spring:message code='${type.journaltypeId }'/></option>
 	                        		</c:forEach>
 	                        	</select>
-	                        	<select id="optForm" style="width:60%;" onchange="getJournalForm(this.value)">
+	                        	<select id="optForm" style="width:60%;" onchange="changeForm(this)">
 	                        	</select>
 	                        </td>
 	                        <th style="width: 10%;"><spring:message code='ezJournal.t77' /></th>
@@ -596,12 +622,12 @@
 	        </tr>  
 	        <tr>
 	            <td style="vertical-align: top; height: 100%" id="EdtorSize">
-	                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 100%; overflow: auto; margin-top:-1px"></iframe>
+	                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 98%; width: 100%; overflow: auto; margin-top:-1px"></iframe>
 	            </td>
 	        </tr>
 	        <tr>
   				<td>
-   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezJournal/dragAndDrop.do?mode=${mode}&journalId=${journalId}"></iframe>
+   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px;" src="/ezJournal/dragAndDrop.do?mode=${mode}&journalId=${journalId}"></iframe>
   				</td>
   			</tr>
 	    </table>
