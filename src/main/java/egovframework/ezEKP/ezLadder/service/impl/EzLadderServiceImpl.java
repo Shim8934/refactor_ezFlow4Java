@@ -99,7 +99,6 @@ public class EzLadderServiceImpl implements EzLadderService {
 		int totalLadder = 0;
 		if(mode.equals("part")) {		// 참여버튼 검색
 			totalLadder = ezLadderDAO.getPartSLadderCount(map);
-			
 		} else {						// 전체버튼 검색
 			totalLadder = ezLadderDAO.getAllSLadderCount(map);
 		}
@@ -186,7 +185,10 @@ public class EzLadderServiceImpl implements EzLadderService {
 		List<LadderVO> list = null;
 		if(mode.equals("part")) {		// 참여버튼 검색
 			list = ezLadderDAO.searchPartLadderList(map);
-		} else {						// 전체버튼 검색
+		} else if(mode.equals("pre")) {	// 이전 사다리 검색
+			list = ezLadderDAO.searchPreLadderList(map);
+		}
+		else {						// 전체버튼 검색
 			list = ezLadderDAO.searchAllLadderList(map);
 		}
 		

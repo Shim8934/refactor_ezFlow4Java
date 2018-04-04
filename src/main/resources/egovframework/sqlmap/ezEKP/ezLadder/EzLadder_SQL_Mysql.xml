@@ -793,6 +793,27 @@
 			#startPoint#, #endPoint#
 	</select>
 	
+	<select id="EzLadderDAO.searchPreLadderList" parameterClass="map" resultClass="LadderVO">
+		SELECT 
+			IFNULL(O.LADDERID, L.LADDERID) ORIG_ID, O.CHANGELADDERID, L.LADDERID, L.TYPE, L.TITLE, L.WRITERID
+		FROM 
+			TBL_LADDER_ORDER O
+		RIGHT JOIN 
+			TBL_LADDER L
+		ON 
+			L.LADDERID = O.CHANGELADDERID
+		WHERE 
+			L.TENANT_ID = #tenantId#
+		AND 
+			L.WRITERID = #userId#
+		AND
+			L.TITLE LIKE CONCAT('%', #searchInput#, '%')
+		ORDER BY 
+			ORIG_ID DESC
+		LIMIT 
+			#startPoint#, #endPoint#
+	</select>
+	
 	<select id="EzLadderDAO.selectChangePreList" parameterClass="LadderOrderVO" resultClass="LadderOrderVO">
 		SELECT 
 			LADDERID, CHANGELADDERID

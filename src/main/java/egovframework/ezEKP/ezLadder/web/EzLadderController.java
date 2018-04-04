@@ -567,8 +567,12 @@ public class EzLadderController {
 	 * @throws Exception 
 	 * */
 	@RequestMapping(value = "/ezLadder/setListOrder.do")
-	public String setListOrder(@CookieValue("loginCookie") String loginCookie, LadderOrderVO ladOrderVO, HttpServletRequest request, Model model) throws Exception {
+	public String setListOrder(@CookieValue("loginCookie") String loginCookie, LadderOrderVO ladOrderVO, String mode, String currPage, String searchSelect, String searchInput, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setListOrder.do started.");
+		logger.debug("mode : " + mode);
+		logger.debug("currPage : " + currPage);
+		logger.debug("searchSelect : " + searchSelect);
+		logger.debug("searchInput : " + searchInput);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -586,7 +590,13 @@ public class EzLadderController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
 				.queryParam("ladderIds", ladOrderVO.getLadderIds())
-				.queryParam("changeLadderIds", ladOrderVO.getChangeLadderIds());
+				.queryParam("changeLadderIds", ladOrderVO.getChangeLadderIds())
+				.queryParam("mode", mode)
+				.queryParam("currPage", currPage)
+				.queryParam("searchSelect", searchSelect)
+				.queryParam("searchInput", searchInput)
+				.queryParam("offset", userInfo.getOffset())
+				.queryParam("lang", userInfo.getLang());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 

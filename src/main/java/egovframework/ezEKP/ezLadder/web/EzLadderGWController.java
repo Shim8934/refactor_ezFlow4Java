@@ -436,18 +436,46 @@ public class EzLadderGWController {
 	 * 이전 사다리 목록 순서 바꾸기
 	 * */
 	@RequestMapping(value = "/ladder/ladder-list/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject gwChangePreLadderList(@PathVariable String userId, LadderOrderVO ladOrderVO) {
+	public JSONObject gwChangePreLadderList(@PathVariable String userId, LadderOrderVO ladOrderVO, LadderVO vo, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [PUT /ladder/ladder-list/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
+		int page = Integer.parseInt(request.getParameter("currPage"));
+		String mode = request.getParameter("mode");
+		String searchSelect = request.getParameter("searchSelect");
+		String searchInput = request.getParameter("searchInput");
+
+		
+		logger.debug("mode : " + mode);
+		logger.debug("currPage : " + page);
+		logger.debug("searchSelect : " + searchSelect);
+		logger.debug("searchInput : " + searchInput);	
+		vo.setUserId(userId);
+		
+		int totalLadder = 0;
+		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
 		
 		try {
-			
+			List<LadderVO> list;
 			ezLadderService.changePreLadderList(ladOrderVO);
+			if(searchInput.equals("")) {	// 이전 사다리 비검색
+				totalLadder = ezLadderService.ladderCount(vo, mode);
+				pages = paging(page, totalLadder);
+				list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode);
+			} else {						// 이전 사다리 검색
+				List<String> allData = new ArrayList<String>();
+				allData.add(searchSelect);
+				allData.add(searchInput);
+				allData.add(mode);
+				totalLadder = ezLadderService.searchLadderCount(vo, allData);
+				pages = paging(page, totalLadder);
+				list = ezLadderService.searchLadderList(vo, allData, pages[1], pages[2]);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", null);
+			result.put("data", list);
+			/*result.put("data", null);*/
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");

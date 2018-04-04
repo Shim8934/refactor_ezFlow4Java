@@ -1,5 +1,6 @@
 // 새로운 사다리 만들기
 function newLad() {
+	console.log("========");
 	window.location.href = '/ezLadder/selectLadderType.do';
 }
 
@@ -36,7 +37,9 @@ function participant(val) {
 	}
 	
 	if(mode === "pre") {
-		viewAjax();
+		/*viewAjax();*/
+		searchSelect ="";
+		view();
 	} else {
 		view();
 	}
