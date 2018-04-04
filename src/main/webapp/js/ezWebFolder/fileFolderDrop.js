@@ -180,12 +180,14 @@ function renderResult(result) {
 			
 			row.setAttribute("_fileId", jsObj["fileId"]);
 			row.setAttribute("_filePath", jsObj["filePath"]);
+			row.setAttribute("class", "bnkWebFolder");
+			row.onclick = function(event) {clickRow(this, event);};
 			
 			var inputElmt = document.createElement("INPUT");
 			inputElmt.setAttribute("type", "checkbox");
 			inputElmt.setAttribute("value", jsObj["fileId"]);
 			inputElmt.setAttribute("class", "checkBnk");
-			inputElmt.onchange = function(e){getChecked(this);};
+			inputElmt.onclick = function(e){getChecked(this, e);};
 			cell1.appendChild(inputElmt);
 			
 			var faImgElmt = document.createElement("IMG");
@@ -262,12 +264,14 @@ function renderResult2(result) {
 			
 			row.setAttribute("_fileId", jsObj["fileId"]);
 			row.setAttribute("_filePath", jsObj["filePath"]);
+			row.setAttribute("class", "bnkWebFolder");
+			row.onclick = function(event) {clickRow(this, event);};
 			
 			var inputElmt = document.createElement("INPUT");
 			inputElmt.setAttribute("type", "checkbox");
 			inputElmt.setAttribute("value", jsObj["fileId"]);
 			inputElmt.setAttribute("class", "checkBnk");
-			inputElmt.onchange = function(e){getChecked(this);};
+			inputElmt.onclick = function(e){getChecked(this, e);};
 			cell1.appendChild(inputElmt);
 			
 			var fileIconElmt = document.createElement("IMG");
