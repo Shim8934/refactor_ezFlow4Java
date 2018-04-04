@@ -188,7 +188,7 @@
 	    		case 2:
 	    			window.open("/ezAttitude/attitudeDeptMain.do", "right");
 	    		case 3: // 신청현황
-	    			window.open("", "right");
+	    			window.open("/ezAttitude/attModAppList.do", "right");
 	    		case 4:	// 신청관리현황
 	    			window.open("", "right");
 	    	}

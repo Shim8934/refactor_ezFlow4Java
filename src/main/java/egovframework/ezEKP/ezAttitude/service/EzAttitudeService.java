@@ -107,5 +107,5 @@ public interface EzAttitudeService {
 
 	public void deleteAttitudeUserConfig(int tenantId, String selecUserList) throws Exception;
 	
-	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId) throws Exception;
+	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId, String offset) throws Exception;
 }

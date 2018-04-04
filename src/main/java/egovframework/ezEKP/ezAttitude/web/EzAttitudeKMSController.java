@@ -509,6 +509,59 @@ public class EzAttitudeKMSController {
 		LOGGER.debug("delAttModApp ended");
 		return status;
 	}
+	/**
+	 * 근태수정현황 수정
+	 */
+	@RequestMapping(value="/ezAttitude/modAttModApp.do" , method= RequestMethod.POST)
+	@ResponseBody
+	public String modAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=false)String attId,
+			@RequestParam(required=false)String changeDate,
+			@RequestParam(required=false)String content) throws Exception {
+		LOGGER.debug("modAttModApp started");
+		LOGGER.debug("id : " + attId + "changeDate : " + changeDate + "content : " + content);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/modify-applications/" + attId;
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("content", content)
+				.queryParam("changeDate", changeDate);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = new JSONObject();
+
+		LOGGER.debug("modAttModApp ended");
+		return status;
+	}
 	
 	/**
 	 * 근태 수정 신청 상세
@@ -559,8 +612,7 @@ public class EzAttitudeKMSController {
 
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
-			list = (JSONArray) data.get("list");
-			model.addAttribute("list", list);
+			model.addAttribute("data", data);
 		}
 		
 		model.addAttribute("userLang", userInfo.getLang());
