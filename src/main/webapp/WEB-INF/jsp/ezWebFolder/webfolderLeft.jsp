@@ -49,7 +49,6 @@
 					data : { 
 							 "folderId"   : folderId
 							,"folderType" : obj
-							
 						},
 					dataType: "JSON",
 					success : function (data) {
@@ -77,10 +76,14 @@
 								"width"       : "20",
 								"margin-left" : "10"
 							}
+							
 						});
 						folderId = data.data[0].id;
 						$($element).jstree('refresh');
-				   		$($element).jstree("selected_node", folderId);
+						$('#demo').jstree("check_node","#"+folderId);
+// 						var clicked = $("'#"+folderId+"_anchor'");
+// 						clicked.addClass('jstree-clicked');
+// 				   		$($element).jstree("select_node", clicked);
 						getFileList(folderId);
 				   		
 					},

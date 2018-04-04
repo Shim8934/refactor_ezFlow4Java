@@ -87,7 +87,8 @@
 	    
 	    function getFileList(a){
 	    	if(folderId == "") {
-	    		alert(folderId+"가없음");
+	    		alert(folderId+"가 없음");
+	    		return;
 	    	}
 	    	folderId = a;
 			$.ajax ({

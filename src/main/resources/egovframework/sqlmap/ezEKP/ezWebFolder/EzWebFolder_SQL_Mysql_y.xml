@@ -101,12 +101,12 @@
 	        select 
 				distinct 
 				ff.FOLDER_ID as id ,if( ff.folder_upper = 'root', '##', ff.FOLDER_UPPER )as parent,
-				ff.FOLDER_NAME1 as text,ff.create_id as createId
+				ff.FOLDER_NAME1 as text,ff.create_id as createId, if ( ff.FOLDER_UPPER = 'root', true, false) as selected
 			from tbl_webfolder_folder as ff  inner join  (
 			
 				select 	
 					SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
-					fld.folder_id
+					fld.folder_id, fld.folder_path
 				from tbl_webfolder_folder fld inner join 
 			
 				(
@@ -125,10 +125,10 @@
 				) as user on fld.folder_id = user.folder_id 
 				where fld.folder_type = #folderType#
 			)as tt on tt.folder_id = ff.folder_id 
-			or tt.a = ff.folder_id
+			or tt.a = ff.folder_id or ff.FOLDER_PATH like concat('%',tt.folder_path,'%')
 			where ff.tenant_id = #tenantId#
 			and ff.owner_id = #comId#
-	                      
+	        order by selected desc            
 		]]>
 	</select>
     
@@ -462,21 +462,22 @@
 		<![CDATA[
 			select distinct
 				folder.FOLDER_ID as id ,if( folder.folder_upper = 'root', '##', folder.FOLDER_UPPER )as parent,
-				folder.FOLDER_NAME1 as text,folder.create_id as createId
+				folder.FOLDER_NAME1 as text,folder.create_id as createId, if ( folder.FOLDER_UPPER = 'root', true, false) as selected
 			from TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_folderuser user on folder.FOLDER_ID  = user.FOLDER_ID
 			where 		folder.folder_type = #folderType# 
 					and folder.use_status = 'Y'
 					AND folder.TENANT_ID = #tenantId# 
 					and folder.COMPANY_ID = #comId# 
 					and folder.OWNER_ID = #userId#
-			order by folder.create_date
+			order by selected desc
 		]]>
 	</select>
 	<select id="EzWebFolderDAO_y.getFolderList_D" resultClass="HashMap" parameterClass="Map" >
 		<![CDATA[
 			SELECT distinct
 				folder.folder_id as id ,if( folder.folder_upper = 'root', '##', folder.folder_upper )  as parent, folder.folder_name1 as text,
-				folder.owner_id as owner, folder.FOLDER_PATH
+				folder.owner_id as owner, folder.FOLDER_PATH, 
+				if ( folder.owner_id = #deptId# && folder.folder_upper = 'root', true, false) as selected
 			from TBL_WEBFOLDER_FOLDER folder 
 			where  
 							folder.TENANT_ID = #tenantId# 
@@ -489,7 +490,8 @@
 	        UNION
 			SELECT
 				folder_id as id ,if( folder_upper = 'root', '##', folder_upper )  as parent, folder_name1 as text,
-				owner_id as owner, FOLDER_PATH
+				owner_id as owner, FOLDER_PATH,
+				if ( owner_id = #deptId# && folder_upper = 'root', true, false) as selected
 			FROM 
 				TBL_WEBFOLDER_FOLDER 
 			WHERE 
@@ -511,7 +513,7 @@
 						d2.TENANT_ID = #tenantId#
 				)
 			
-			
+			order by selected
 			
 		]]>
 	</select>
@@ -640,7 +642,8 @@
 			
 	        SELECT distinct
 				folder.folder_id as id ,if( folder.folder_upper = 'root', '##', folder.folder_upper )  as parent, folder.folder_name1 as text,
-				folder.owner_id as owner, folder.FOLDER_PATH
+				folder.owner_id as owner, folder.FOLDER_PATH,
+				if ( folder.owner_id = #deptId# && folder.folder_upper = 'root', true, false) as selected
 			from TBL_WEBFOLDER_FOLDER folder 
 			where  
 							folder.TENANT_ID = #tenantId# 
@@ -653,7 +656,8 @@
 	        union 
 	        select 
 	        	f.folder_id as id ,if( f.folder_upper = 'root', '##', f.folder_upper )  as parent, f.folder_name1 as text,
-				f.owner_id as owner, f.FOLDER_PATH
+				f.owner_id as owner, f.FOLDER_PATH,
+				if ( f.owner_id = #deptId# && f.folder_upper = 'root', true, false) as selected
 
 			from 
 			
@@ -661,7 +665,7 @@
 			inner join tbl_webfolder_folderuser user  on f.folder_id = user.FOLDER_ID and f.tenant_id = user.tenant_id  )
 			
 			where user.user_id = #userId# and f.tenant_id = #tenantId# and user.USER_TYPE = 'chief'
-			group by f.folder_id
+			order by selected desc
 			
 		]]>
 	</select>

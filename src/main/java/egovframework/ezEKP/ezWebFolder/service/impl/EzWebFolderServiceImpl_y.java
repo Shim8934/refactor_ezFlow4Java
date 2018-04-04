@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,8 +141,11 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		LOGGER.debug("folderList.Size : " + folderList.size());
 
-		folderList = new ArrayList<Map<String,Object>>(new HashSet<Map<String,Object>>(folderList));
+//		folderList = new ArrayList<Map<String,Object>>(new HashSet<Map<String,Object>>(folderList));
+		JSONObject state  = new JSONObject();
+		state.put("selected", "true");
 		
+		folderList.get(0).put("state",state);
 		return folderList;
 	}
 

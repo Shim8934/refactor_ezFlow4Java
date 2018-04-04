@@ -7784,7 +7784,7 @@
 	 */
 	$.jstree.defaults.sort = function (a, b) {
 		//return this.get_type(a) === this.get_type(b) ? (this.get_text(a) > this.get_text(b) ? 1 : -1) : this.get_type(a) >= this.get_type(b);
-		return this.get_text(a) > this.get_text(b) ? 1 : -1;
+		return this.get_node(a) > this.get_node(b) ? 1 : -1;
 	};
 	$.jstree.plugins.sort = function (options, parent) {
 		this.bind = function () {
