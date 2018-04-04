@@ -121,6 +121,8 @@
 	    var securePassword = "";
 	    var secureReadCount = "0";
 	    var secureReadDate = "";
+	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
+
 	    //업무일지 아이디
 	    var journalId = "${journalId}";
 	    
