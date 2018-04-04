@@ -31,7 +31,15 @@
 			// onLoad시 페이징 블록 생성
 			$(function() {
 				makePageSelPage();
+				$("#searchInput").on("keyup", function(e) {
+					if(e.keyCode == "13") {
+						searchLadder();
+					}
+				});
 			});
+			
+			
+			
 
 			</script>
 	</head>
