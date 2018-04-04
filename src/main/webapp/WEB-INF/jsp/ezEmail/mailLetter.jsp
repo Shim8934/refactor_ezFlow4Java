@@ -122,6 +122,11 @@
 				isDivPopUp = true;
 			});
 			
+			// 편지지 더블클릭 시 선택
+			$(document).on("dblclick", ".lmLetterListUl li", function(){
+				letterSelect();
+			});
+			
 			// 편지지 미리보기
 		    function letterPreview(btn){
 				var letterNo = $(".lmLetterSelect").attr("data-letterno");
