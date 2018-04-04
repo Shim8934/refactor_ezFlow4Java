@@ -85,10 +85,10 @@
 				if (document.getElementById("imagewidth").value < 1 || isNaN(document.getElementById("imagewidth").value) || document.getElementById("imageheight").value < 1 || isNaN(document.getElementById("imageheight").value)) {
 		            return;
 		        }
-				if (document.getElementById("saveFileName").value == "" || document.getElementById("saveFileName").value == null) {
+				if ((document.getElementById("saveFileName").value == "" || document.getElementById("saveFileName").value == null) && (document.getElementById("type").value != "UPT")) {
 		            return;
 		        }
-		        
+				
 				if($("#backgroundID").val() == ""){
 					var guid = "{" + GetGUID() + "}";
 					$("#backgroundID").val(guid);
@@ -141,7 +141,7 @@
 					<input type="hidden" name="backgroundID" id="backgroundID" value="<c:out value='${backgroundID}'/>"/>
 					<input type="hidden" name="saveFileName" id="saveFileName" />
 					<input type="hidden" name="guid" />
-					<input type="hidden" name="type" value="<c:out value='${type}'/>" /> 
+					<input type="hidden" name="type" id ="type"  value="<c:out value='${type}'/>" /> 
 				</td>
 			</tr>
 	        <tr>
