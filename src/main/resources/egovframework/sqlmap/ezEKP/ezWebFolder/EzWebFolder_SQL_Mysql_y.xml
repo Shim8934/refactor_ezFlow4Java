@@ -121,7 +121,23 @@
 							where addj.cn = #userId# 
 						)
 						or user_id = #userId# or user_id= #deptId#
-					
+						or user_id in(
+							SELECT
+								d2.cn
+							FROM
+								TBL_DEPTMASTER d2 JOIN
+									(
+									SELECT
+										f.*
+									FROM
+										(
+											tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
+											ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
+										)
+									) AS a ON d2.CN = a.OWNER_ID AND  d2.TENANT_ID = a.TENANT_ID
+							WHERE
+								d2.TENANT_ID = #tenantId#
+						)
 				) as user on fld.folder_id = user.folder_id 
 				where fld.folder_type = #folderType#
 			)as tt on tt.folder_id = ff.folder_id 

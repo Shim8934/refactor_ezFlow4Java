@@ -11,8 +11,8 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <link rel="stylesheet" href="/js/jsTree/dist/themes/default/style.css" />
-	    <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 		<script type="text/javascript" src="/js/jsTree/dist/jstree.js"></script>
+	    <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 		<script type="text/javascript" >
 		    var companyFolderId = "";
 		    var deptFolderId    = "";
@@ -27,13 +27,36 @@
 		    $(function() { 
 				folderList('C');
 		    	folderType = 'C';
+		    	
+
+// 				console.log("+++++++++++++++++++++++++");
+				
+// 				var id = folderId + "_anchor";
+// 				console.log("Folder Id: " + folderId);
+// 				console.log("Folder Id: " + id);
+				
+// 				var clicked = document.getElementById(id);
+// 				console.log(clicked);
+				
+// 				if (clicked) {
+// 					clicked.setAttribute("class", "jstree-anchor jstree-clicked");
+// 				}
+// 				console.log("+++++++++++++++++++++++++");
+				
+				/* 				var clicked = document.getElementById(folderId + "_anchor");
+								console.log(clicked);
+								console.log(clicked.className);
+								if (clicked) {
+									clicked.setAttribute("class", "jstree-anchor jstree-clicked");
+								} */
+		    	
 				});		
 		    function refreshView(){
 		    	$.jstree.destroy()
 		    	folderList(folderType);
 		    }
 		    function folderList(obj) {
-// 		    	folderId = "";
+		    	$($element).jstree('destroy');
 				if ( obj == 'C') {
 					$element = '#tree';
 				}else if (obj == 'D') {
@@ -52,8 +75,33 @@
 						},
 					dataType: "JSON",
 					success : function (data) {
-						$($element).jstree({
+						folderId = data.data[0]["id"];
+						var firstNode = "#" + folderId;
+						
+						$($element).on('changed.jstree', function (e, data) {
+							var folderId = "";
+							folderId = data.selected[0];
+							if (folderId != undefined) {
+								getFileList(folderId);
+							}
+						})
+						.on('loaded.jstree', function() {
+							var test = "#" + folderId;
+							//console.log("Test: " + test);
 							
+							//console.log("-----------------------------------");
+							var elmentTest = document.getElementById(folderId);
+							//console.log(elmentTest);
+							var childE = document.getElementById(folderId + "_anchor");
+							//console.log(childE);
+							//console.log("-----------------------------------");
+							
+							elmentTest.setAttribute("aria-selected", "true");
+							childE.setAttribute("class", "jstree-anchor jstree-clicked");
+							
+							//$($element).jstree("selected_node", '#8', true);
+						})
+						.jstree({
 							'plugins': ["core","types","json_data","themes","ui"],
 							'core' : {
 								"animation" : 0,
@@ -76,32 +124,14 @@
 								"width"       : "20",
 								"margin-left" : "10"
 							}
-							
 						});
-						folderId = data.data[0].id;
-						$($element).jstree('refresh');
-						$('#demo').jstree("check_node","#"+folderId);
-// 						var clicked = $("'#"+folderId+"_anchor'");
-// 						clicked.addClass('jstree-clicked');
-// 				   		$($element).jstree("select_node", clicked);
-						getFileList(folderId);
-				   		
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134' />" + error);
 					}
 				});
 				
-				$($element).on('changed.jstree', function (e, data) {
-					
-					var folderId = "";
-					folderId = data.selected[0]; 
-					if (folderId != undefined) {
-						getFileList(folderId);
-					}
-				});
-				
-		    
+
 		    }
 		    
 			function drawVolume() {
@@ -111,7 +141,6 @@
 					dataType: "JSON",
 					success : function(data) {
 						var result      = data.userCapacity;
-						console.log(result);
 						var totalVolume = result["totalCapacity"] + "GB";
 						var useVolume   = getFileSize(result["totalUsed"]);
 						var percent     = result["usedRate"];
@@ -186,24 +215,6 @@
 				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderConfig.do";
 			}
 		</script>
-		<style>
-			.jstree-default a { 
-				white-space:normal ; height: auto; 
-			}
-			.jstree-anchor {
-			    height: auto !important;
-			}
-			.jstree-default li > ins { 
-			    vertical-align:top; 
-			}
-			.jstree-leaf {
-			    height: auto;
-			}
-			.jstree-leaf a{
-			    height: auto !important;
-			}
-			
-	    </style>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%" onload="drawVolume();">
 		<div id="left" style="overflow: none">

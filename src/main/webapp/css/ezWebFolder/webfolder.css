@@ -79,3 +79,11 @@
 .myBar_orange {height: 10px; background-color: #ff7f00;}
 .myBar_yellow {height: 10px; background-color: #ffb600;}
 .myBar_green  {height: 10px; background-color: #4CAF50;}
+
+
+.jstree-default a { white-space:normal ; height: auto; }
+.jstree-anchor { height: auto !important; }
+.jstree-default li > ins { vertical-align:top; }
+.jstree-leaf { height: auto; }
+.jstree-leaf a{ height: auto !important; }
+			
