@@ -290,12 +290,19 @@
 // 		    	var journalContent = '<c:out value="${journal.journalContent }" />';
 		    	$('#message').contents().find('body').html('<div style="text-align: left;"><img onclick="parent.Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> <img onclick="parent.Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"></div><div id="journalContent" style="width:100%;height:10px;display:inline-block;"></div>');
 		    	$('#message').contents().find('#journalContent').html('${journal.journalContent }');
+		    	
+		    	if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+                    self.resizeTo(760, 800);
+                } else {
+                    self.resizeTo(785, 830);
+                }
+		    	
 		    	sizeOn();
 		    	opener.setJournalList();
 		    }
 		    
 		    function sizeOn(){
-		    	var contentHeight = document.documentElement.clientHeight - 250;
+		    	var contentHeight = document.documentElement.clientHeight - 240;
 	            document.getElementById("pad1").style.height = contentHeight + "PX";
 	            var contentWidth = document.documentElement.clientWidth - 20;
 	            document.getElementById("pad1").style.width = contentWidth + "PX";

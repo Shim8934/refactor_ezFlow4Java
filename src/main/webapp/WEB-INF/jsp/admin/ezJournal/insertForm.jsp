@@ -59,6 +59,14 @@
 			    
 		    });
 		    
+		    window.onload = function() {
+	    		if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+                    self.resizeTo(760, 800);
+                } else {
+                    self.resizeTo(785, 830);
+                }
+		    }
+		    
 		    // 수정시 양식내용을 에디터에 넣어주는 작업 
 		    function Editor_Complete() {
 		   
@@ -369,7 +377,7 @@
 				</div>
 				<table id="JournalForm" style="height:670px; width:100%;">
                    	<tr>
-                        <td style="height:670px; vertical-align:top">
+                        <td style="height:100%; vertical-align:top">
                         	<iframe id="message" class="viewbox" src="/admin/ezEditor/selectEditor.do?type=JOURNAL&height=670&formID=${formId}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 100%; overflow: auto;"></iframe>
                         </td>
                     </tr>
