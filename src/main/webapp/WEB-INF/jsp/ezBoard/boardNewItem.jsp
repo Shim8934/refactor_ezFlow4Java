@@ -2004,7 +2004,7 @@
 	                        		</c:otherwise>
 	                        	</c:choose>
 	                        </td>
-	                        <th><spring:message code='ezBoard.t434' /></th>
+	                        <th style="width:80px"><spring:message code='ezBoard.t434' /></th>
 	                        <c:choose>
 	                        	<c:when test="${boardListVO.importance == '1'}">
 			                        <td style="width: 300px; vertical-align: baseline;"><span style="line-height: 20px; height: 20px; display: inline-block;">
