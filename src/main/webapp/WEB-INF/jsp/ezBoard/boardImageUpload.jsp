@@ -51,12 +51,15 @@
 		    }
 		
 		    function btn_AttachAdd_onclick() {
-		        var extension = document.getElementById("file1").value.split('.');
+				var file1val = document.getElementById("file1").value;
+		        var exIndex = file1val.lastIndexOf('.');
+				var extension = file1val.substring(exIndex+1, file1val.lenght);
 		        var check = false;
-		        check = compareExtension(check, extension[1]);
-		
+		        check = compareExtension(check, extension);	
+		        
 		        if (!check) {
-		            document.getElementById("file1").value = "";
+		        	file1val = "";
+		        	alert("upload error");	
 		        }
 		
 		        var fd = new FormData();
