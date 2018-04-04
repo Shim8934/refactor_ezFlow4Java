@@ -6965,4 +6965,17 @@
 
 		]]>
  	</select>
+ 	
+ 	<select id="EzCommunityDAO.getWriterID" parameterClass="Map" resultClass="String">
+ 		<![CDATA[
+ 			SELECT
+ 				WRITERID
+ 			FROM
+ 				TBL_COMM_ITEM
+ 			WHERE
+ 				TENANT_ID = #tenantID#
+ 			AND
+ 				ITEMID = #v_pItemID#
+ 		]]>
+ 	</select>
 </sqlMap>

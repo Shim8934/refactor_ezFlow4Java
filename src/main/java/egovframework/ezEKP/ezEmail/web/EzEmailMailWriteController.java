@@ -262,6 +262,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
+		//수아 수정
+		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", userInfo.getTenantId());
+		
+		if (useMailWriteSenderClick.equals("")) {
+			useMailWriteSenderClick = "NO";
+		}
+		
 		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
 		String folderDate = EgovDateUtil.getToday("");
@@ -1079,6 +1086,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
+		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 추가
 		
 		response.setHeader("X-XSS-Protection", "0");
 		

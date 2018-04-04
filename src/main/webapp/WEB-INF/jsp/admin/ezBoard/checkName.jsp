@@ -84,6 +84,7 @@
 	    		
 	    		if (ReturnFunction != null){
 	    		    RetValue["deptid"] = selRow.getAttribute("DATA3");
+	    		    RetValue["userid"] = selRow[0].getAttribute("DATA2");
 	    		    ReturnFunction(RetValue);
 	    		}else{
 	    		    dialogArguments["deptid"] = selRow.getAttribute("DATA3");
@@ -112,6 +113,7 @@
 	    		
 	    	    if (ReturnFunction != null) {
 	    	        RetValue["deptid"] = selRow[0].getAttribute("DATA3");
+	    	        RetValue["userid"] = selRow[0].getAttribute("DATA2");
 	    	        ReturnFunction(RetValue);
 	    	    }else{
 	    	        dialogArguments["deptid"] = selRow[0].getAttribute("DATA3");

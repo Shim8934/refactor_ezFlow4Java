@@ -219,7 +219,7 @@
 	            receiverData["selectTargetListXML"] = selectTargetListXML;
 	            selecttarget_dialogArguments[0] = receiverData;
 	            selecttarget_dialogArguments[1] = SelectTarget_Complete;
-	            var SelectTarget = window.open("/admin/ezBoard/selectTarget.do", "SelectTarget", GetOpenWindowfeature(800, 520));
+	            var SelectTarget = window.open("/admin/ezBoard/selectTarget.do", "SelectTarget", GetOpenWindowfeature(930, 520));
 	            try { SelectTarget.focus(); } catch (e) {
 	            }
 	        }
