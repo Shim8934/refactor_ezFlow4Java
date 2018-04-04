@@ -78,7 +78,7 @@
 			<tr style="height:8%;">
 				<td colspan="2" align="center">
 					<div class="lmtitle lmLetterBoxTitle">
-						<input type="text" name="" id="lmSearchInput" class="searchInput" placeholder="검색어를 입력해주세요">
+						<input type="text" name="" id="lmSearchInput" class="searchInput" onkeydown="letterSearchEnter();" placeholder="검색어를 입력해주세요">
 						<a id="lmSearch" class="imgbtn" onclick="letterSearch()"><span>편지지 검색</span></a>
 						<a id="lmSearchReset" class="imgbtn" onclick="inputReset()"><span>초기화</span></a>
 					</div>	
@@ -126,6 +126,12 @@
 			$(document).on("dblclick", ".lmLetterListUl li", function(){
 				letterSelect();
 			});
+			
+			function letterSearchEnter() {
+				if (event.keyCode == 13) {
+					letterSearch();
+				}
+			}
 			
 			// 편지지 미리보기
 		    function letterPreview(btn){
