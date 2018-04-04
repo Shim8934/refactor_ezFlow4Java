@@ -180,7 +180,14 @@
 		    function SetAttribute(type, id, classname) {
 		        var selCell = DEXT5.getSelectedCell(formID);
 		        if (type == "DEL") {
-		            selCell[0].removeAttribute("id");
+		        	// 일지 양식작성에서 사용하는 부분
+	            	if ("${type}" == "JOURNAL") {
+	            		selCell[0].removeAttribute("id", id);
+	            		selCell[0].innerHTML = "";
+	            	} else {
+		                selCell[0].removeAttribute("id");
+	            	}
+		            // selCell[0].removeAttribute("id");
 		            if (selCell[0].classList.contains("FIELD"))
 		                selCell[0].classList.remove("FIELD");
 		        }
@@ -191,7 +198,15 @@
 		                selCell[0].setAttribute("free", "");
 		        }
 		        else {
-		            selCell[0].setAttribute("id", id);
+		        	// 일지양식작성에서 사용하는 부분
+	                if ("${type}" == "JOURNAL") {
+		                selCell[0].setAttribute("id", id);
+	                	selCell[0].innerHTML = "@" + id;
+	                	
+	                } else {
+		                selCell[0].setAttribute("id", id);
+	                }
+		            // selCell[0].setAttribute("id", id);
 		            if (!selCell[0].classList.contains("FIELD"))
 		                selCell[0].classList.add("FIELD");
 		        }
