@@ -522,7 +522,7 @@
 					rgParams["deptid"] = "";
 					checkname2_cross_dialogArguments[0] = rgParams;
 					checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
-					var checkName2 = window.open("/admin/ezBoard/checkName.do", "checkName2", GetOpenWindowfeature(630, 352));
+					var checkName2 = window.open("/admin/ezBoard/checkName.do", "checkName2", GetOpenWindowfeature(650, 352));
 					try {
 						checkName2.focus();
 					} catch (e) {
