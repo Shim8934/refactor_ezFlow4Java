@@ -24,6 +24,7 @@ public class LadderLineVO {
 	private String writerId;
 	/** 다국어 */
 	private String lang;
+	private String pic;
 	
 	/** 참여자 아이디 배열 */
 	private String [] userIds;
@@ -107,6 +108,12 @@ public class LadderLineVO {
 	}
 	public void setLang(String lang) {
 		this.lang = lang;
+	}
+	public String getPic() {
+		return pic;
+	}
+	public void setPic(String pic) {
+		this.pic = pic;
 	}
 	
 	/** 배열 */

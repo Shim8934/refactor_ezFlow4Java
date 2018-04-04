@@ -478,7 +478,7 @@ public class EzLadderGWController {
 			List<LadderLineVO> list = ezLadderService.getLadderLineParticipant(ladVO);
 			List<LadderCommentVO> cmtlist = ezLadderService.selectComments(cmtVO);
 			
-			for (LadderCommentVO commentVO: cmtlist) {
+			for (LadderCommentVO commentVO : cmtlist) {
 				String imagePath = ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id());
 				
 				if (imagePath != null && !imagePath.equals("")) {
@@ -494,6 +494,25 @@ public class EzLadderGWController {
 				} 
 				else {
 					commentVO.setPic("/images/poll/default_pic_vote.gif");
+				}
+			}
+			
+			for(LadderLineVO lineVO : list) {
+				String imagePath = ezOrganService.getPropertyValue(lineVO.getUserId(), "extensionAttribute2", lineVO.getTenant_id());
+				
+				if (imagePath != null && !imagePath.equals("")) {
+					String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", lineVO.getTenant_id())+ commonUtil.separator + imagePath;
+					String fullPath = request.getServletContext().getRealPath(realPath);
+					
+					if (checkExist(fullPath)) {
+						lineVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
+					}
+					else {
+						lineVO.setPic("/images/poll/default_pic_vote.gif");
+					}
+				} 
+				else {
+					lineVO.setPic("/images/poll/default_pic_vote.gif");
 				}
 			}
 			

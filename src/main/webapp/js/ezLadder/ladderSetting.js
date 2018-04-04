@@ -1,13 +1,18 @@
 function ladder_window_resize() {
-	var win_width = $(window).width() - 20;
+	/*var win_width = $(window).width() - 17;
 	
 	$(".setTable").css("width", win_width + "px");
-	$("#ladderLineBox").css("width", (win_width - 40) + "px");
+	$("#ladderLineBox").css("width", win_width + "px");*/
+	var win_width = $(window).width() - 70;
+	
+	$(".setTable").css("width", win_width + "px");
+	$("#ladderLineBox").css("width", win_width + "px");
 }
 
 function add_user_change_ulsize(usernum) {
 	$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
 	$("#ladderCanvas").attr("width", (usernum * 150) + "px");
+	
 }
 
 /** 중복 처리 팝업 */

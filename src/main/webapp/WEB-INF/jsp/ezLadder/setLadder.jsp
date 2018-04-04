@@ -19,7 +19,15 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 		
 		<script type="text/javascript">
+			function ladder_window_resize() {
+				var win_width = $(window).width() - 70;
+				
+				$(".setTable").css("width", win_width + "px");
+				$("#ladderLineBox").css("width", win_width + "px");
+			}
 			$(function() {
+				ladder_set_init();
+				
 				$(window).resize(function() {
 					ladder_window_resize();
 				});
@@ -93,7 +101,7 @@
 					
 				});
 				
-				ladder_set_init();
+				
 			});
 			
 			function setLadderTypeDiv(ladderType) {
@@ -450,22 +458,40 @@
 						picsrc = "/images/OrganTree/porson_noimg.gif";
 						
 						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
-							html += "<li class='attendant'>";
-							html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";
+							html += '<li class="attendant"><div>';
+							html += '<img src="' + picsrc + '" width="90px" height="90px" />';
+							html += '<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>';
+							html += '<input type="text" class="input" name="userNames" /></span></div>';
+							html += '<input type="text" name="userName2s" style="display: none;" />';
+							html += '<input type="text" name="userIds" style="display: none;" />';
+							html += '<span class="remove">X</span></div></li>';
+							
+							
+							/* html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";
 							html += "<input type='text' class='input' name='userNames' />";
 							html += "<input type='text' name='userName2s' style='display: none;' />";
 							html += "<input type='text' name='userIds' style='display: none;' />";
-							html += "<span class='remove'>X</span></div></li>";							
+							html += "<span class='remove'>X</span></div></li>";	 */						
 						} else {
 							if(attendants["pic"][i] !== "") {
 								picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
 							}
-							html += "<li class='attendant'>";
+							
+							html += '<li class="attendant"><div>';
+							html += '<img src="' + picsrc + '" width="90px" height="90px" />';
+							html += '<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>';
+							html += '<input type="text" class="input" readonly="readonly" style="background: rgb(244, 245, 245)" name="userNames" /></span></div>';
+							html += '<input type="text" name="userName2s" style="display: none;" />';
+							html += '<input type="text" name="userIds" style="display: none;" />';
+							html += '<span class="remove">X</span></div></li>';
+							
+							
+							/* html += "<li class='attendant'><div>";
 							html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";
 							html += "<input type='text' class='input' readonly='readonly' style='background: rgb(244, 245, 245)' name='userNames' />";
 							html += "<input type='text' name='userName2s' style='display: none;' />";
 							html += "<input type='text' name='userIds' style='display: none;' />";
-							html += "<span class='remove'>X</span></div></li>";
+							html += "<span class='remove'>X</span></div></li>"; */
 						}
 						
 						$("#attendantList").append(html);
@@ -637,7 +663,7 @@
 							</div>
 						</td>
 					</tr>
-					<tr>
+					<%-- <tr>
 						<td colspan="4" style="height: 700px; padding: 10px 0px;">
 							<div class="wrap center" style="height: 100%; width: 100%;">
 								<div id="addAttendant" class="icondiv">add</div>
@@ -646,6 +672,22 @@
 									<ul id="attendantList"></ul>
 									<ul id="itemList"></ul>
 								</div>
+							</div>
+						</td>
+					</tr> --%>
+				</table>
+				<table class="setTable" style="position: relative;">
+					<tr>
+						<td>
+							<div id="ladderLineBox" style="border: 1px solid #ddd;">
+								<div style="height: 140px;">
+									<ul id="attendantList"></ul>
+								</div>
+								<div id="lineDiv" style="position: relative; z-index: -1;">
+									<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
+									<canvas id='ladderCanvas' width='0' height='800'></canvas>
+								</div>
+								<ul id="itemList" style="margin-top: 10px;"></ul>
 							</div>
 						</td>
 					</tr>

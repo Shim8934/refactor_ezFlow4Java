@@ -651,7 +651,7 @@ public class EzLadderController {
 		JSONArray cmtlist = new JSONArray();
 		
 		String status = jsonResult.get("status").toString();
-		
+		String retDestination = "/lad/start/" + ladderId;
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("participant");
 			cmtlist = (JSONArray) jsonResult.get("cmtlist");
@@ -663,6 +663,11 @@ public class EzLadderController {
 			model.addAttribute("currPage", currPage);
 			model.addAttribute("list", list); 			// ladderLineList
 			model.addAttribute("cmtlist", cmtlist);
+			
+			JSONObject totalLadderInfo = new JSONObject();
+			totalLadderInfo.put("ladder", jsonResult.get("data"));
+			totalLadderInfo.put("ladderline", list);
+			this.template.convertAndSend(retDestination, totalLadderInfo);
 		} else {
 			return "error";
 		}
@@ -826,10 +831,10 @@ public class EzLadderController {
 							.queryParam("lineCnt", allData[6])
 							.queryParam("lang", userInfo.getLang());
 		
-		String retDestination = "";
+//		String retDestination = "";
 	
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-		retDestination = "/lad/start/";
+//		retDestination = "/lad/start/";
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		
@@ -839,8 +844,8 @@ public class EzLadderController {
 		
 		if (status.equals("ok")) {
 			String msg = jsonResult.get("data").toString();
-			retDestination += allData[0];
-			this.template.convertAndSend(retDestination, msg);
+//			retDestination += allData[0];
+//			this.template.convertAndSend(retDestination, msg);
 			
 		} else {
 			return "error";

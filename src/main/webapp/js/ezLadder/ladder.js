@@ -44,15 +44,16 @@
 });*/
 
 var userDiv = 100; 
-var startXPoint = 100; // 시작 위치 왼쪽부터 떨어진 거리
-var startYPoint = 200; // 시작 위치 위부터 떨어진 거리
-var hInfo = 40 + 1; // 높이 수
+var ladderlinecnt = 0;
+var startXPoint = userDiv/2; // 시작 위치 왼쪽부터 떨어진 거리
+var startYPoint = 1; // 시작 위치 위부터 떨어진 거리
+var hInfo = 39 + 1; // 높이 수
 var wInfo = 0; // 멤버 수
-var hSize = 10; // 세로 간격
+var hSize = 20; // 세로 간격
 var wSize = 150; // 가로 간격
 var moveSpeed = 10/*hSize / 10*/; // 애니메이션 속도
-var lad = "0001212120001200012012012120120120000120120012012012121212120012000120121212120001212012001212000120"; // 사다리 정보
-var ladArr = lad.split(''); // 사다리 정보를 배열로 저장
+var lad = ""; // 사다리 정보
+var ladArr = []; // 사다리 정보를 배열로 저장
 var printLadInfo = []; // 사다리 방향 정보
 var checkUserPath = []; // 유저별 사다리 이동 방향 정보
 var userStatus = []; // 유저의 사다리 실행 상태 (처음 실행 : 0, 다시 실행 : 1)
@@ -77,9 +78,9 @@ function changeUser(num) { // 유저 추가
 }
 
 function setDefaultLad() { // 세로선, 유저, 아이템 나타나기
-	if(wInfo * wSize + startXPoint * 2 > $("canvas").attr("width")) {
+	/*if(wInfo * wSize + startXPoint * 2 > $("canvas").attr("width")) {
 		$("canvas").attr("width", (wInfo - 1) * wSize + startXPoint * 2);
-	}
+	}*/
 	for(var i = 0; i < wInfo; i++) {
 		drawLadLine('H', startXPoint + (wSize * i), startYPoint);
 		
@@ -161,7 +162,7 @@ function aniAllUser() {
 			setTimeout(function() {
 				drawStatus = !drawStatus;
 				printUserPath(x, x, 0, startXPoint + x * wSize, startYPoint, 'aniall');
-			}, 2000 / moveSpeed * wInfo * x);
+			}, 250 / ladderlinecnt * moveSpeed * wInfo * x);
 		})(user);
 		userStatus[user] = 1;
 	}
@@ -181,6 +182,8 @@ function popAllUser() {
 }
 
 function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 그리기
+	locX = locX * 1;
+	locY = locY * 1;
 	var path = checkUserPath[user][locX + '-' + locY];
 	var typeStr1 = type.substring(0, 3);
 	var typeStr2 = type.substring(3, 6);
