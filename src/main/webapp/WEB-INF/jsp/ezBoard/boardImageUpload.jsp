@@ -58,7 +58,8 @@
 		        check = compareExtension(check, extension);	
 		        
 		        if (!check) {
-		        	file1val = "";
+		        	document.getElementById("file1").value = "";
+		        	savefilename = "";
 		        	alert("upload error");	
 		        }
 		
@@ -78,10 +79,14 @@
 		        fileinfo = filepath.split("|!|");
 		        UploadSliderImage.src = fileinfo[0];
 		        UploadSliderImage.style.display = "";
-		
+		        var widthOrigin = fileinfo[1];
+				var heightOrigin = fileinfo[2];				
+				var per = 720 / widthOrigin;
+				var height = Math.floor(heightOrigin * per);
+
 		        savefilename = fileinfo[0];
-		        document.getElementById("imagewidth").value = fileinfo[1];
-		        document.getElementById("imageheight").value = fileinfo[2];
+		        document.getElementById("imagewidth").value = "720";
+		        document.getElementById("imageheight").value = height;
 		    }
 		
 		    function compareExtension(check, extension) {
@@ -174,7 +179,7 @@
 			</tr>
 	        <tr>
 	            <th><spring:message code='ezBoard.t5002'/></th>
-	            <td>&nbsp;<input type="text" id="imagewidth" />&nbsp;px</td>
+	            <td>&nbsp;<input type="text" id="imagewidth" readonly style="cursor:default; background-color:#f8f8fa;" />&nbsp;px</td>
 	            <th><spring:message code='ezBoard.t5003'/></th>
 	            <td>&nbsp;<input type="text" id="imageheight" />&nbsp;px</td>
 	        </tr>
