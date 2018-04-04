@@ -230,7 +230,7 @@
 	            <td>
 	                <div class="page">
 	                    <img src="/images/page_previous.gif" width="15" height="15" id="td_Previous" onclick="goToPage_lv('front')" style="vertical-align: middle;">
-	                    <span style="color:black;"><spring:message code='ezApprovalG.t103'/></span><span id="td_pTotalCount" style="color:black;"></span>&nbsp;&nbsp;<span style="color:black;"><spring:message code='ezApprovalG.t363'/></span>
+	                    <span><spring:message code='ezApprovalG.t103'/></span><span id="td_pTotalCount" style="color:black;"></span>&nbsp;&nbsp;<span style="color:black;"><spring:message code='ezApprovalG.t363'/></span>
 	                    <input id="txt_PageInputNum" onkeydown="goToPage_lv('page', event)" onselectstart="event.cancelBubble=true;event.returnValue=true">
 	                    <img src="/images/page_next.gif" width="15" height="15" id="td_Next" onclick="goToPage_lv('next')" style="vertical-align: middle;">
 	                </div>
@@ -242,7 +242,7 @@
 	        <tr>
 	            <td style="vertical-align: top;">
 	                <div class="listview">
-	                    <div id="lvtDoclist" style="border: 0; width: 448px; height: 360px; overflow: auto;"></div>
+	                    <div id="lvtDoclist" style="border: 0; width: 448px; height: 360px; overflow-x: auto; overflow-y:hidden;"></div>
 	                </div>
 	            </td>
 	            <td style="width: 25px; text-align: center;">

@@ -415,12 +415,12 @@ public class EzStatisticsMailLogController {
 			cell.setCellValue((String) mailLog.get("mailSize"));
 			cell.setCellStyle(bodyStyle);
 			
-			sheet.autoSizeColumn(i-1);
+			//sheet.autoSizeColumn(i-1);
 		}
 		
 		for (int i=0; i< 9; i++) {
 			sheet.autoSizeColumn(i);
-			sheet.setColumnWidth(i, sheet.getColumnWidth(i) + 1000);
+			//sheet.setColumnWidth(i, sheet.getColumnWidth(i) + 1000);
 		}
 		
 		response.setCharacterEncoding("UTF-8");

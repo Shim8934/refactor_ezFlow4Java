@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -29,10 +28,6 @@ import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.search.AndTerm;
-import javax.mail.search.DateTerm;
-import javax.mail.search.ReceivedDateTerm;
-import javax.mail.search.SearchTerm;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -53,6 +48,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
+import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
@@ -66,7 +62,6 @@ import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -101,8 +96,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	private EgovFileScrty egovFileScrty;
 	
 	@Resource(name="egovMessageSource")
-    private EgovMessageSource egovMessageSource;    
-	
+    private EgovMessageSource egovMessageSource;
+
 	@Override
 	public List<MailGeneralVO> getMailGeneral(int tenantId, String userId) throws Exception {
 		logger.debug("getMailGeneral started. tenantId=" + tenantId + ",userId=" + userId);
@@ -1035,12 +1030,13 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 
 	@Override
-	public String checkIndividualAlias(String individualAlias) throws Exception {
+	public String checkIndividualAlias(String individualAlias,int  tenantId) throws Exception {
 		logger.debug("checkIndividualAlias started. individualAlias=" + individualAlias);
 		
 		String returnValue = "ERROR";
 		
 		String inputParams = "individualAlias=" + URLEncoder.encode(individualAlias, "UTF-8");
+		inputParams += "&tenantId=" + tenantId;
 		logger.debug("inputParams=" + inputParams);
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/checkIndividualAlias";
@@ -1131,20 +1127,40 @@ public class EzEmailServiceImpl implements EzEmailService {
 	 */
 	@Override
 	public void sendMail(String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception {
-		logger.debug("sendMail started.");
-		logger.debug("from=" + from + ",subject=" + subject + ",isSaved=" + isSaved);
-		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userAccount = userId + "@" + domainName;
 		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
 		
+        sendMail(userAccount, password, userInfo.getLocale(), from, toArr, ccArr, bccArr, subject, content, isSaved, EmailImportance.NORMAL);
+	}
+	
+	/**
+	 * 메일 보내기 서비스
+	 * @param userEmail 유저 메일 주소
+	 * @param password 유저 메일 패스워드(JMochaSuperPassword)
+	 * @param userLocale 유저 로케일(메세지 프로퍼티를 판별하기 위함)
+	 * @param from 보내는 사람
+	 * @param toArr 받는 사람
+	 * @param ccArr 참조(없으면 null)
+	 * @param bccArr 숨은 참조(없으면 null)
+	 * @param subject 메일 제목
+	 * @param content 메일 내용(html형식)
+	 * @param isSaved 보낸편지함에 저장 여부
+	 * @param importance 메일 중요성(low, normal, high)
+	 * @throws Exception
+	 */
+	@Override
+	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved, EmailImportance importance) throws Exception {
+		logger.debug("sendMail started.");
+		logger.debug("from=" + from + ",subject=" + subject + ",isSaved=" + isSaved);
+		
 		IMAPAccess ia = null;
 		
 		try {
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					userAccount, password);
+					userEmail, password);
 			
 			MimeMessage message = sa.createMimeMessage();
 			
@@ -1187,6 +1203,12 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        // set User-Agent header
 	        message.setHeader("User-Agent", "JMocha Mail 1.0");
 	        
+			// set importance header
+			if (importance != EmailImportance.NORMAL) {
+				message.setHeader("Importance", importance.getMappingValue());
+				message.setHeader("X-Priority", importance.getPriority());
+			}
+	        
 	        // set X-JMocha-Noti header
 	        message.setHeader("X-JMocha-Noti", "true");
 	        
@@ -1196,9 +1218,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        if (isSaved) {
 	        	//보낸편지함에 저장
 	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	        			userAccount, password, egovMessageSource, userInfo.getLocale());
+	        			userEmail, password, egovMessageSource, userLocale);
 	        	
-	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()));
+	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userLocale));
 	    		
 	    		if (!sentFolder.exists()) {
 	    			ia.createFolder(sentFolder.getFullName());

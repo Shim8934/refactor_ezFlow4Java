@@ -87,6 +87,8 @@
  	        var DocState = "";
  	        var period;
  	        var pDocInfoValue = "1";
+ 	       	var nowDate = "${nowDateUTC}";
+ 	        
 	        document.onselectstart = function () { return false; };
 	
 	        $(function () {
@@ -116,7 +118,7 @@
 	            var height = parseInt(divList.style.height.replace('px', '')) + 200;
 	            var reheight = document.documentElement.offsetHeight - parseInt(height);
 	
-	            document.getElementById('div_AprLine').style.height = reheight + "px";
+	            //document.getElementById('div_AprLine').style.height = reheight + "px";
 	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
@@ -125,10 +127,9 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-	
-	            var toDay = new Date();
-	            var toDayYear = parseInt(toDay.getFullYear());
-	            var minusYear = parseInt(toDay.getFullYear()) - parseInt(pOpenYaer);
+	            
+	            var toDayYear = parseInt(nowDate.substring(0,4));
+	            var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
 	            for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
 	                AddOption(sel_year, i, i);
 	
@@ -152,16 +153,11 @@
 	                document.getElementById("menuapr").style.display = "none";
 	                document.getElementById("menuend").style.display = "";
 	                
-	                var nowyear = new Date().getFullYear();
-	                var nowmonth = new Date().getMonth() + 1;
-	                var nowday = new Date().getDate();
+	                var nowyear = nowDate.substring(0,4);
+		            var nowmonth = nowDate.substring(5,7);
+		            var nowday = nowDate.substring(8,10);       
+	                
 					if(approvalFlag == "G") {
-		                if (nowmonth < 10)
-		                    nowmonth = "0" + nowmonth;
-		
-		                if (nowday < 10)
-		                    nowday = "0" + nowday;
-		
 		                for (var i = 0; i < 25; i++) {
 		                    condition[i] = "";
 		                }
@@ -174,31 +170,22 @@
 		                condition[14] = nowday;
 		                condition[24] = "";
 					} else {
-						  if (nowmonth < 10)
-				                nowmonth = "0" + nowmonth;
-
-				            if (nowday < 10)
-				                nowday = "0" + nowday;
-
-				            for (var i = 0; i < 25; i++) {
-				                condition[i] = "";
-				            }
+			            for (var i = 0; i < 25; i++) {
+			                condition[i] = "";
+			            }
 					}
-						DocListType == "GetDocSearch";
-	                	 var settingDate = new Date();
-	                	     settingDate.setYear(settingDate.getYear() - 1);
+					
+					DocListType == "GetDocSearch";
+                	var settingDate = new Date();
+                	settingDate.setYear(parseInt(nowDate.substring(0,4)) - 1);
 
-	                     var settingmonth = settingDate.getMonth() + 1;
-	                     var settingday = settingDate.getDate();
-	                     if (settingmonth < 10)
-	                         settingmonth = "0" + settingmonth;
-	                     if (settingday < 10)
-	                         settingday = "0" + settingday;
+                    var settingmonth = nowDate.substring(5,7);
+                    var settingday = nowDate.substring(8,10);
 
-	                     condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
-	                     condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
+                    condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
+                    condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
 
-	                     SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
+                    SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
 
 	                if (LoadSquery == "usercontlist") {
 	                    ContainerID = LoadContID;
@@ -287,15 +274,9 @@
 		                DocListType == "GetDocSearch";
 		                GetDocSearch();
 		            } else {
-		                var nowyear = new Date().getFullYear();
-		                var nowmonth = new Date().getMonth() + 1;
-		                var nowday = new Date().getDate();
-		
-		                if (nowmonth < 10)
-		                    nowmonth = "0" + nowmonth;
-		
-		                if (nowday < 10)
-		                    nowday = "0" + nowday;
+		            	var nowyear = nowDate.substring(0,4);
+			            var nowmonth = nowDate.substring(5,7);
+			            var nowday = nowDate.substring(8,10);       
 		
 		                condition[9] = nowyear - 1;
 		                condition[10] = nowmonth;
@@ -321,24 +302,12 @@
 	                    }
 	                }
 	                else {
-	                    var nowyear = new Date().getFullYear();
-	                    var nowmonth = new Date().getMonth() + 1;
-	                    var nowday = new Date().getDate();
-
-	                    if (nowmonth < 10)
-	                        nowmonth = "0" + nowmonth;
-
-	                    if (nowday < 10)
-	                        nowday = "0" + nowday;
-
-	                    var settingDate = new Date();
-	                    var settingmonth = settingDate.getMonth() + 1;
-	                    var settingday = settingDate.getDate();
-	                    if (settingmonth < 10)
-	                        settingmonth = "0" + settingmonth;
-	                    if (settingday < 10)
-	                        settingday = "0" + settingday;
-
+	                	var nowyear = nowDate.substring(0,4);
+			            var nowmonth = nowDate.substring(5,7);
+			            var nowday = nowDate.substring(8,10);       
+	                    
+	                    var settingmonth = nowDate.substring(5,7);
+	                    var settingday = nowDate.substring(8,10);
 
 	                    condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
 	                    condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
@@ -411,15 +380,9 @@
 		            condition[i] = "";
 		        }
 		
-		        var nowyear = new Date().getFullYear();
-		        var nowmonth = new Date().getMonth() + 1;
-		        var nowday = new Date().getDate();
-		
-		        if (nowmonth < 10)
-		            nowmonth = "0" + nowmonth;
-		
-		        if (nowday < 10)
-		            nowday = "0" + nowday;
+		        var nowyear = nowDate.substring(0,4);
+	            var nowmonth = nowDate.substring(5,7);
+	            var nowday = nowDate.substring(8,10);   
 		
 		        condition[9] = nowyear - 1;
 		        condition[10] = nowmonth;
@@ -512,9 +475,9 @@
 		                if (tr.getAttribute("DATA5") == "Y") {
 		                    var heigth = window.screen.availHeight;
 		                    var width = window.screen.availWidth;
-		                    var left = (parseInt(width) - 525) / 2;
-		                    var top = (parseInt(heigth) - 220) / 2;
-		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA3") + "&deptID=" + encodeURI(tr.getAttribute("DATA4")) + "&docState=012", "", "height=270px,width=525px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                    var left = (parseInt(width) - 1155) / 2;
+		                    var top = (parseInt(heigth) - 460) / 2;
+		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA3") + "&deptID=" + encodeURI(tr.getAttribute("DATA4")) + "&docState=012", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                } else {
 		                	var heigth = window.screen.availHeight;
 				            var width = window.screen.availWidth;
@@ -536,7 +499,9 @@
 		                    feature = feature + GetShowModalPosition(555, 240);
 		                    var ret = window.showModalDialog(url, "", feature);
 		                } else {
-		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                	left = (parseInt(width) - 1155) / 2;
+					        top = (parseInt(heigth) - 460) / 2;
+		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                }
 		            } else if (jobState == "ATTACH") {
 		            	var AttachfilenameA1 = tr.cells[1].innerHTML;
@@ -964,15 +929,9 @@
 		        document.getElementById("tblPageRayer").innerHTML = "";
 	
 		        if (document.getElementById("sel_year").value.toLowerCase() == "all") {
-		            var nowyear = new Date().getFullYear();
-		            var nowmonth = new Date().getMonth() + 1;
-		            var nowday = new Date().getDate();
-		            
-		            if (nowmonth < 10)
-		                nowmonth = "0" + nowmonth;
-
-		            if (nowday < 10)
-		                nowday = "0" + nowday;
+		        	var nowyear = nowDate.substring(0,4);
+		            var nowmonth = nowDate.substring(5,7);
+		            var nowday = nowDate.substring(8,10); 
 		            
 	            	if (condition[5] != null && condition[5] != "") {
 			            period = condition[5].substring(0, 4) + strLang1028 + " " + condition[5].substring(5, 7) + strLang1029 + " " + condition[5].substring(8,10) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + condition[6].substring(5, 7) + strLang1029 + " " + condition[6].substring(8, 10) + strLang1030;
@@ -1129,9 +1088,9 @@
 		            var tr = selRow[0];
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
-		            var left = (parseInt(width) - 525) / 2;
-		            var top = (parseInt(heigth) - 220) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=793px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            var left = (parseInt(width) - 1155) / 2;
+		            var top = (parseInt(heigth) - 460) / 2;
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		
@@ -1161,7 +1120,7 @@
 		        if (reheight < 0) {
 		            reheight = 0;
 		        }
-		        document.getElementById('div_AprLine').style.height = reheight + "px";
+		        //document.getElementById('div_AprLine').style.height = reheight + "px";
 		    };
 		
 		    function ShowMailProgress() {
@@ -1349,11 +1308,11 @@
 	    <div id="MOC_Div" style="display: none"></div>
 	    <h1><span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezApprovalG.t106'/></label>
-		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code='ezApprovalG.t445'/></label>
+	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1"><spring:message code='ezApprovalG.t106'/></label>
+		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2"><spring:message code='ezApprovalG.t445'/></label>
 		        &nbsp;
-		        <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	            <a href="#"><img src="/images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search()"></a>
+		        <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	            <a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onClick="search()"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
@@ -1415,7 +1374,6 @@
 	    <div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingProgress">
 	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
 	    </div>
-	    <br>
 	    <div id="tblPageRayer"></div>
 	    <div id="trSubInfoTab">
 	        <%-- <div id="tabnav" style="width: 100%">
@@ -1441,7 +1399,7 @@
 			  	</div>	
 			</div>
 	
-	        <div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+	        <div style="WIDTH:100%;HEIGHT:230px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 	            <div id="lvtDetail" style="border: 0;"></div>
 	        </div>
 	    </div>

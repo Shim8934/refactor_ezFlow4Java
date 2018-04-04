@@ -7,8 +7,19 @@
 		<title><spring:message code='ezResource.t9900013'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
+		<style type="text/css">
+		
+		.content tr{
+			height:25px;
+		}
+		.content td{
+			padding-left:10px;
+		}
+
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		  <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezResource/datepicker.htc_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
@@ -45,6 +56,7 @@
 	        var pNoneActiveX = "${pNoneActiveX}";
 	        var brdName = "${brdName}";
 	        var resID = "${resID}";
+	        var iframeH = "";
 	        
 	        window.onload = function () {
 	            document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
@@ -85,7 +97,7 @@
 	            iframeStyle += "UL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
 	            iframeStyle += "OL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
 	            iframeStyle += "LI { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-	            iframeStyle += "BODY { MARGIN-RIGHT: 10px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic }";
+	            iframeStyle += "BODY { MARGIN-RIGHT: 8px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic }";
 	            iframeStyle += "TABLE TD { text-indent: 0px }";
 	            iframeStyle += "BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
 	            iframeStyle += "</style>";	            
@@ -93,6 +105,13 @@
 	            var doc = document.getElementById('message').contentWindow.document;
 				doc.open();
 				doc.write(iframeStyle + sigBody.innerHTML);
+				
+				//인쇄 시 iframe의 내부 높이 조정(*img의 기본 width, height 지정 필요)
+				if(doc.body == null){
+					iframeH = 467 + "px";	
+				}else if(doc.body.scrollHeight != null){
+					iframeH = doc.body.scrollHeight + "px";
+				}
 				doc.close();
 	            
 	            var Bodytd = document.getElementById("message").getElementsByTagName("TD");
@@ -227,11 +246,12 @@
 	            
 	            onbeforeprint2();
 
-	            var feature = GetOpenPosition(700, 700);
-	            printWindow = window.open("", "mywindow", "width=700, height=700,location=0,status=0,scrollbars=1,resizable=1" + feature);
+	            var feature = GetOpenPosition(800, 700);
+	            printWindow = window.open("", "mywindow", "width=800, height=700,location=0,status=0,scrollbars=1,resizable=1" + feature);
 	            var strContent = "<html><head>";
 	            strContent = strContent + "<title>" + strLangLHM02 + "</title>";
 	            strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/" + strLangLHM01 + ".css\" type=\"text/css\" />";
+	            strContent = strContent + "<style> .content2 tr{height:30px;} .content2 td{padding-left:10px;} </style>";
 	            strContent = strContent + "</head><body style='padding:10px;'onload='window.print();' >";
 	            strContent = strContent + "<div style='width:100%'><table id='printScreen' class='layout'>";
 	            strContent = strContent + document.getElementById("printScreen").innerHTML;
@@ -246,7 +266,7 @@
 	            iframeStyle += "UL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
 	            iframeStyle += "OL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
 	            iframeStyle += "LI { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-	            iframeStyle += "BODY { MARGIN-RIGHT: 10px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic }";
+	            iframeStyle += "BODY { MARGIN-RIGHT: 8px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic }";
 	            iframeStyle += "TABLE TD { text-indent: 0px }";
 	            iframeStyle += "BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
 	            iframeStyle += "</style>";
@@ -254,7 +274,8 @@
 	            var iframe = printWindow.document.getElementById("printDocument");
 
 	            iframe.style.border = "0px";
-	            iframe.style.height = "565px";
+	            iframe.style.minHeight = "467px";
+	            iframe.style.height = iframeH;
 	            
 	            var doc = iframe.document;
 
@@ -461,7 +482,7 @@
         	</tr>
         	<tr>
                 <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 471px; background-color: white"></iframe>	                    
+                    <iframe id="message" style="border: #ddd 1px solid; overflow: auto; width: 100%; height: 100%;background-color: white"></iframe>	                    
                 </td>
             </tr>
 		</table>
@@ -477,29 +498,30 @@
 		<table id="printScreen" style="display: none;">
 			<tr style="text-align:center">
 				<td style="vertical-align:top">
-					<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
-						<tr style="height:25px"> 
- 							<th style="padding-left:10px" width="80"><spring:message code='ezResource.t193' /></th> 
- 							<td style="padding-left:10px"> <div id="printOwner"></div></td> 
+					<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">		
+						<tr> 
+		 					<th style="max-width:50px;"><spring:message code='ezResource.t193' /></th> 
+		 					<td style="width:100%;"><div id="printOwner"></div></td> 
 						</tr>
-						<tr style="height:25px"> 
- 							<th style="padding-left:10px"><spring:message code='ezResource.t197' /></th> 
- 							<td style="padding-left:10px"> <div id="printDate"></div></td> 
+						<tr> 
+ 							<th><spring:message code='ezResource.t197' /></th> 
+ 							<td> <div id="printDate"></div></td> 
 						</tr>
-						<tr style="height:25px"> 
- 							<th style="padding-left:10px"><spring:message code='ezResource.t213' /></th>
- 							<td style="padding-left:10px"> <div id="printImportance"></div></td>
+						<tr> 
+ 							<th><spring:message code='ezResource.t213' /></th>
+ 							<td> <div id="printImportance"></div></td>
 						</tr>
 						<tr>
-		            		<th style="padding-left:10px"><spring:message code='ezResource.t374' /></th>
-		            		<td style="padding-left:10px;"> <div id="printItem"></div></td>
+		            		<th><spring:message code='ezResource.t374' /></th>
+		            		<td> <div id="printItem"></div></td>
 		        		</tr> 
-						<tr style="height:25px"> 
- 							<th style="padding-left:10px"><spring:message code='ezResource.t224' /></th> 
- 							<td style="padding-left:10px"> <div id="printTitle"></div></td> 
-						</tr> 
 						<tr> 
- 							<td colspan="2"> <iframe align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px;"></iframe></td> 
+ 							<th><spring:message code='ezResource.t224' /></th> 
+ 							<td><div id="printTitle"></div></td> 
+						</tr> 
+						<tr style="height:10px;"></tr>
+						<tr> 
+		 					<td colspan="2" style="padding:0px;"> <iframe id="printDocument" style="WIDTH: 100%; height:100%; PADDING:0px; text-align:left;"></iframe></td> 
 						</tr> 
 					</table>
 				</td>

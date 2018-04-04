@@ -64,6 +64,7 @@
 .ui-datepicker .ui-datepicker-title select {
 	font-size: 1em;
 	margin: 1px 0;
+	height: 21px;
 }
 .ui-datepicker select.ui-datepicker-month-year {
 	width: 100%;

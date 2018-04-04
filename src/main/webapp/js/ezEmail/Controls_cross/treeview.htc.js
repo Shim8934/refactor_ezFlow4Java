@@ -777,6 +777,7 @@
             if (subscribe != null && subscribe == "1") {
         		var IMG_TAG2 = document.createElement("IMG");
             	IMG_TAG2.setAttribute("src", subscribeImg);
+            	IMG_TAG2.style.marginLeft = "10px";
             	SPAN3.appendChild(IMG_TAG2);
             }
             //2017-06-15 이효민 : 편지함관리 > 구독지정 관련 추가 end

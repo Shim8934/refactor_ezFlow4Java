@@ -1491,6 +1491,8 @@ function showTooltip_MouseOver(thisID, e, pTime, pSubject, pScheduleType, pSched
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
     tTh.setAttribute("scope", "col");
+    tTh.style.background = "#edf4fd";
+    tTh.style.border = "1px solid #d1ddec";
     var oText = document.createTextNode(pSubject);        
     //tTh.innerHTML = pSubject;
     tTh.appendChild(oText);
@@ -1500,6 +1502,7 @@ function showTooltip_MouseOver(thisID, e, pTime, pSubject, pScheduleType, pSched
     var tTr = document.createElement("TR");
     var tTd = document.createElement("TD");
     tTd.className = "text";
+    tTd.style.borderTop = "0px";
 
     var sTable = document.createElement("TABLE");
     var sTr = document.createElement("TR");

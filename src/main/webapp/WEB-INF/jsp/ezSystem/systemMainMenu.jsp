@@ -45,7 +45,7 @@
 						{ name : "Use_FromAddress", value : document.getElementById("Use_FromAddress").value.trim() },
 						{ name : "USE_HTMLMODE", value : document.getElementById("Use_HTMLMode").value.trim() },
 						{ name : "editorFontStyle", value : editorFontStyle },
-						{ name : "useAllUserOldMailDeletePeriod", value : document.getElementById("useAllUserOldMailDeletePeriod").value.trim() } 
+						{ name : "useAllUserOldMailDeletePeriod", value : useAllUserOldMailDeletePeriod } 
 					  ];
 				
 				if (!paramArray[0].value.match(/^\d+$/)) {
