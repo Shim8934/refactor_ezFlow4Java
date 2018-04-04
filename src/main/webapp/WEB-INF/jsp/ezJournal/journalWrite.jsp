@@ -588,7 +588,7 @@
 	                    <tr>
 	                        <th><spring:message code='ezJournal.t56' /></th>
 	                        <td colspan="4">
-	                            <input type="text" id="title" style="WIDTH: 100%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeydown="Title_onkeyDown(event)" >
+	                            <input type="text" id="title" style="WIDTH: 100%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" >
 	                        </td>
 	                    </tr>
 	                </table>

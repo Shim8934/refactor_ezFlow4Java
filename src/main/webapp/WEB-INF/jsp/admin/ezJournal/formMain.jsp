@@ -103,7 +103,7 @@
 		    	}
 		    	*/
 		    	
-		    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "no");
+		    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
 		    }
 		    
 			// 양식수정버튼
@@ -130,7 +130,7 @@
 			    	}
 			    	*/
 			    	
-			    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "no");
+			    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
 				}
 				
 			}

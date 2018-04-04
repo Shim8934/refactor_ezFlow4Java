@@ -273,7 +273,7 @@ public class EzJournalSBController {
 				JSONObject journal = (JSONObject) journalList.get(i);
 				String journalDate = (String) journal.get("journalDate");
 				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
-				journal.put("journalDate", journalDate);
+				journal.put("journalDate", journalDate.substring(0, 16));
 			}
 			model.addAttribute("journalList", journalList);
 			model.addAttribute("listType",listType);
