@@ -1,3 +1,9 @@
+// 윈도우 창 조절
+function ladder_main_resize() {
+	var win_height = $(window).height() - 300;
+	$(".mainlist").css("height", win_height + "px");
+	$(".mainlist tr").css("height", 40 + "px");
+}
 // 새로운 사다리 만들기
 function newLad() {
 	console.log("========");
@@ -45,6 +51,21 @@ function participant(val) {
 	}
 }
 
+// 참여자 버튼 색깔 바꾸기
+function changeBtnColor(){
+	if (modeCheck === 'part') {	// 일부
+		$("#part").css("color", "white");
+		$("#part").css("background-color", "#B5B3B3");
+		$("#all").css("color", "grey");
+		$("#all").css("background-color", "#FFFFFF");		
+	} else { // 전체
+		$("#all").css("color", "white");
+		$("#all").css("background-color", "#B5B3B3");
+		$("#part").css("color", "grey");
+		$("#part").css("background-color", "#FFFFFF");
+	}
+}
+
 //검색 
 function searchLadder() {
 	mode = modeCheck;
@@ -66,7 +87,7 @@ function searchLadder() {
 
 	searchSelect = document.getElementById("searchOption").value;
 	searchInput = document.getElementById("searchInput").value;
-
+	
 	if(mode === "pre") {
 		viewAjax();
 	} else {
@@ -192,14 +213,14 @@ function makePageSelPage() {
 			PagingHTML += strtext;
 		} else {
 			strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>"
-					+ strLang15 + "</span>"; // 활성화 off >
+					+ strLang15 + "</span>";
 			strtext = strtext
 					+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 			PagingHTML += strtext;
 		}
 	} else {
 		strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>"
-				+ strLang15 + "</span>"; // 활성화 >
+				+ strLang15 + "</span>"; 
 		strtext = strtext
 				+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		PagingHTML += strtext;
