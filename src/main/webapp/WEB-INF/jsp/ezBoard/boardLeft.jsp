@@ -494,8 +494,8 @@
 		    	if( prevSelMenu != null )
 		    		prevSelMenu.className = "off";
 		    	
-		    	prevSelMenu = $(".qst").next().children().get(0);
-		    	prevSelMenu.className = "on";
+		    	/* prevSelMenu = $(".qst").next().children().get(0);
+		    	prevSelMenu.className = "on"; */
 		    }
 
 		    function WebPartToggle(obj) {
@@ -626,12 +626,13 @@
 		    	<div class="qst" onclick="Open_Func(1)">
 		        	<h2><span><spring:message code="ezBoard.t365" /></span></h2>		        
 		    	</div>
-		    	<ul>
+		    	<ul></ul>
+		    	<%-- <ul>
 	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li>
 	            	<c:if test="${questionAdmin == 'true' }">
 	            		<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
 	            	</c:if>
-	        	</ul>
+	        	</ul> --%>
 		    </c:if>
 		    <div class="pollDiv" onclick="Poll_Open(1)" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
 	        	<h2><span><spring:message code="ezBoard.t371" /></span></h2>
