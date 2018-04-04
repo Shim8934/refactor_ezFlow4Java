@@ -1,9 +1,4 @@
-// 윈도우 창 조절
-function ladder_main_resize() {
-	var win_height = $(window).height() - 300;
-	$(".mainlist").css("height", win_height + "px");
-	$(".mainlist tr").css("height", 40 + "px");
-}
+
 // 새로운 사다리 만들기
 function newLad() {
 	console.log("========");

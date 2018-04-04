@@ -46,7 +46,8 @@
 			function ladder_main_resize() {
 				var win_height = $(window).height() - 300;
 				$(".mainlist").css("height", win_height + "px");
-				$(".mainlist tr").css("height", 40 + "px");
+				/* $(".mainlist tr").css("height", 30 + "px");
+				$(".mainlist th").css("height", 20 + "px");  */
 			}
 			
 		</script>
@@ -81,14 +82,14 @@
 			}
 			
 			.effect {
-				width:40px;
-				height:40px;
+				width:30px;
+				height:30px;
 				border:1px solid black;
 				border-radius:25px;
 			}
 			.effect img {
-				width:40px;
-				height:40px;
+				width:30px;
+				height:30px;
 			}
 			#mainmenu li span {
 				border-color: #B5B3B3;
@@ -128,7 +129,7 @@
 		
 		<div class="div_scroll" style="width:100%; overflow: auto" id="divList">
 			 <table class="mainlist" style="width:98%; margin-left: 10px; margin-right: 10px;"> 
-			    <tr> 
+			    <tr class="header" style="height=20px;"> 
 					<th width="20px"><spring:message code="ezLadder.t002"/></th> 					
 					<th width="80px"><spring:message code="ezLadder.t003"/></th> 
 					<th width="40px"><spring:message code="ezLadder.t004"/></th>
@@ -138,7 +139,7 @@
 					<th width="30px"><spring:message code="ezLadder.t008"/></th>		
 			    </tr>
 				 <c:forEach items="${list }" var="vo">
-					<tr class="black">
+					<tr class="black" style="height=30px;">
 						<c:choose>
 							<c:when test="${vo.type eq 0 }">
 								<td><div class="effect"><img src ='/images/ezLadder/icon_bomb.png' /></div></td>
