@@ -169,11 +169,18 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public String getFormBody(String typeId, int tenantId)
+	public AttitudeFormVO getFormBody(String typeId, String companyId, int tenantId)
 			throws Exception {
+		LOGGER.debug("getFormBody started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		
-		return null;
+		map.put("typeId", typeId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("getFormBody ended");
+		return ezAttitudeDAO.getFormBody(map);
 	}
 
 	@Override

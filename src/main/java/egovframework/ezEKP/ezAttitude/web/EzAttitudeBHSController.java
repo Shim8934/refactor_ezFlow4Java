@@ -324,7 +324,6 @@ public class EzAttitudeBHSController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		//attitudeTypeList
 		String userId = userInfo.getId();
 		String date = request.getParameter("date");
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -385,14 +384,14 @@ public class EzAttitudeBHSController {
 	@RequestMapping(value = "/ezAttitude/getFormBody.do")
 	@ResponseBody
 	public JSONObject getFormBody(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/ezAttitude/attitudeWrite started");
+		LOGGER.debug("/ezAttitude/getFormBody started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userId = userInfo.getId();
 		String typeId = request.getParameter("typeId"); 
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudetypes/" + typeId +"/forms/formId";
+		String url = gwServerUrl + "/rest/ezattitude/attitudetypes/" + typeId +"/forms/form";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -401,8 +400,7 @@ public class EzAttitudeBHSController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userId)
-				.queryParam("typeId", typeId);
+				.queryParam("userId", userId);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -414,12 +412,52 @@ public class EzAttitudeBHSController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 		
-		JSONObject formBody = new JSONObject();
+		JSONObject formVO = new JSONObject();
 		if (status.equals("ok")) {
-			formBody = (JSONObject) resultBody.get("data");
+			formVO = (JSONObject) resultBody.get("data");
 		}
 		
-		LOGGER.debug("/ezAttitude/attitudeWrite ended");
-		return formBody;
+		LOGGER.debug("/ezAttitude/getFormBody ended");
+		return formVO;
+	}
+	
+	/**
+	 * 근태 저장
+	 */
+	@RequestMapping(value = "/ezAttitude/saveAttitude.do")
+	@ResponseBody
+	public void saveAttitude(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/saveAttitude started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/attitudes";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		if (status.equals("ok")) {
+			
+		}
+		
+		LOGGER.debug("/ezAttitude/saveAttitude ended");
 	}
 }

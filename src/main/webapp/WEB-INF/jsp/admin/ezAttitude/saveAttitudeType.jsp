@@ -156,7 +156,7 @@
 			          		<th><spring:message code='ezAttitude.t42' /></th>
 			          		<td><input id="typeName2" type="text" style="width:98%" value="<c:out value = '${typeInfo.typeName2}' />"></td>
 			        	</tr>
-			    	</table>
+    				</table>
     			</td> 
   			</tr>
   			<tr>
