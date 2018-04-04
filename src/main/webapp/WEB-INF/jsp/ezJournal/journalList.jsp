@@ -16,19 +16,19 @@
 			width="100%" border="0" class="mainlist" style="min-width: 569px;">
 		<thead id="BoardList_THEAD">
 			<tr id="BoardList_TH">
-				<th id="BoardList_TH_0" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" class="h4_center" bgcolor="#CCCCCC" width="3%">
+				<th id="BoardList_TH_0" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" class="h4_center" bgcolor="#CCCCCC" width="20px">
 					<input type="checkbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);" style="margin: 0px; padding: 0px; width: 13px; height: 13px;">
 				</th>
 				<c:if test="${listType eq 'recv' }">
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;" class="h5_center" width="5%">
+					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;" class="h5_center" width="20px">
 						<img style="cursor:pointer" src="/images/ImgIcon/view-document.gif ">
 					</th>
 				</c:if>
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;" class="h5_center" width="5%">
+					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;" class="h5_center" width="20px">
 						<img src="/images/newAttach.gif">
 					</th>
 				<c:if test="${listType eq 'mine' }">
-					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; padding: 0px; text-align: center;" class="h5_center" width="5%">
+					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; padding: 0px; text-align: center;" class="h5_center" width="20px">
 						<img src="/images/icon_lock.png">
 <%-- 						<spring:message code='ezJournal.t109'/> --%>
 					</th>
@@ -102,7 +102,7 @@
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${listType eq 'mine' }">
-						<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+						<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 							<c:if test="${journal.deptShare eq 'N' }">
 								<img src="/images/icon_lock.png">
 	<%-- 							${journal.deptShare} --%>

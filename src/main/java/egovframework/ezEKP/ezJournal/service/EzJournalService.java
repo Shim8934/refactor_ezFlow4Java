@@ -44,7 +44,7 @@ public interface EzJournalService {
 	 * @param tenantId
 	 * @param journaltypeList
 	 */
-	public void insertJournaltype(String companyId, int tenantId, ArrayList<JournaltypeVO> journaltypeList) throws Exception;
+	public void insertJournaltype(String companyId, int tenantId, ArrayList<String> journaltypeList) throws Exception;
 
 	/**
 	 * 양식 리스트 가져오기(관리자용)
@@ -399,5 +399,13 @@ public interface EzJournalService {
 	 * @param tenantId
 	 */
 	public void saveJournalViewInfo(List<String> journalIdList,String viewDate, String userId, int tenantId) throws Exception;
+
+	/**
+	 * 일지함 삭제
+	 * @param companyId
+	 * @param tenantId
+	 * @throws Exception 
+	 */
+	public void deleteJournaltype(String companyId, int tenantId) throws Exception;
 
 }

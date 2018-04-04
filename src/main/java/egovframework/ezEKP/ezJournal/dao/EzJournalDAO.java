@@ -28,9 +28,33 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<JournaltypeVO> getJournaltypeList(Map<String, Object> param) throws Exception {
+	public List<JournaltypeVO> getJournaltypeList(Map<String, Object> param) {
 		List<JournaltypeVO> list = (List<JournaltypeVO>) list("selectJournalTypeList", param);
 		return list;
+	}
+	
+	/**
+	 * 일지함 생성
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public void insertJournaltype(Map<String, Object> param) {
+		try {
+			insert("insertJournalType", param);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 일지함 삭제
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public void deleteJournaltypeList(Map<String, Object> param) {
+		delete("deleteJournalTypeList", param);
 	}
 	
 	/**

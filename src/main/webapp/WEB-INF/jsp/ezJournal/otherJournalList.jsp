@@ -18,7 +18,11 @@
 		    
 		    function bindOtherJournal(){
 		    	var journalId = $("input[type='radio'][name='otherJournalRadio']:checked").val();
-		    	parent.getOtherJournal(journalId);
+		    	if(journalId){
+			    	parent.getOtherJournal(journalId);
+		    	} else {
+		    		alert("<spring:message code='ezJournal.t148'/>");
+		    	}
 		    }
 		</script>
 	</head>
