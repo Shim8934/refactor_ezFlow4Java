@@ -6,15 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
-import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -26,12 +22,6 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	@Autowired
 	private EzWebFolderDAO_y ezWebFolderDAO_y;
-	
-//	@Resource(name = "ezWebFolderAdminDAO")
-//	private EzWebFolderAdminDAO ezWebFolderAdminDAO;
-	
-//	@Resource(name = "ezWebFolderAdminServiceImpl")
-//	private EzWebFolderAdminServiceImpl ezWebFolderAdminServiceImpl;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderServiceImpl_y.class);
 	
@@ -523,10 +513,5 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		}
 		return result;
 	}
-	
-
-	
-	
-	
 	
 }

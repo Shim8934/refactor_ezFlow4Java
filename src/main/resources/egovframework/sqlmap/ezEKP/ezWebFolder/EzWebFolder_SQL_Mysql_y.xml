@@ -118,7 +118,7 @@
 						USER_ID in (
 							select dept.cn 		
 							from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-							where addj.cn = 'yy9320' 
+							where addj.cn = #userId# 
 						)
 						or user_id = #userId# or user_id= #deptId#
 					
