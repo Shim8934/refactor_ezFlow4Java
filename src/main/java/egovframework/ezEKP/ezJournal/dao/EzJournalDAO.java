@@ -464,4 +464,12 @@ public class EzJournalDAO extends EgovAbstractDAO{
 		return (String) select("getViewerCount",map);
 	}
 
+	/**
+	 * 기본일지삽입
+	 * @param map
+	 */
+	public void insertJournalBasicForm(Map<String, Object> map) {
+		insert("insertJournalBasicForm",map);
+	}
+
 }

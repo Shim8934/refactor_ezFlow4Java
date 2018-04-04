@@ -94,6 +94,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		for (int i = 0; i < journaltypeList.size(); i++) {
 			map.put("typeId", journaltypeList.get(i));
 			ezJournalDAO.insertJournaltype(map);
+			ezJournalDAO.insertJournalBasicForm(map);
 		}
 
 		logger.debug("insertJournaltype ended");

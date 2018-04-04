@@ -194,6 +194,49 @@
 			#typeId#,	#companyId#,	#tenantId#
 		)
 	</insert>
+	
+	<!-- 회사 생성시 기본양식 생성 -->
+	<insert id="insertJournalBasicForm" parameterClass="map">
+		insert into jmocha.tbl_journal_form (
+			type_id, 	company_id, 	tenant_id	,	
+			form_content	,	
+			form_name	,	
+			form_info	,	
+			form_status	,	
+			form_date
+		) values (
+			#typeId#,	#companyId#,	#tenantId#	,
+			(
+			select form_content from jmocha.tbl_journal_form
+			where company_id = 'Top'
+			and tenant_id = #tenantId#
+			and type_id = #typeId#	
+			and form_status = 'basic'
+			)	,
+			(
+			select form_name from jmocha.tbl_journal_form
+			where company_id = 'Top'
+			and tenant_id = #tenantId#
+			and type_id = #typeId#	
+			and form_status = 'basic'
+			)	,
+			(
+			select form_info from jmocha.tbl_journal_form
+			where company_id = 'Top'
+			and tenant_id = #tenantId#
+			and type_id = #typeId#	
+			and form_status = 'basic'
+			)	,
+			(
+			select form_status from jmocha.tbl_journal_form
+			where company_id = 'Top'
+			and tenant_id = #tenantId#
+			and type_id = #typeId#	
+			and form_status = 'basic'
+			)	,
+			UTC_TIMESTAMP()
+		)
+	</insert>
 
 	<!-- 양식함 삭제 -->
 	<delete id="deleteJournalTypeList" parameterClass="Map">

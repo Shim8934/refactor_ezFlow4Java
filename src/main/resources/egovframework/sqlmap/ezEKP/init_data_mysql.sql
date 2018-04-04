@@ -2043,14 +2043,14 @@ Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('T',8,'상태','STATUS','ステータス',NULL,'STATUS',75,0);
 
 -------------------------- 업무일지 ---------------------------------
-Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t05','TOP',0);
-Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t06','TOP',0);
-Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t07','TOP',0);
-Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t08','TOP',0);
-Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t09','TOP',0);
-Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t10','TOP',0);
+Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t05','Top',0);
+Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t06','Top',0);
+Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t07','Top',0);
+Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t08','Top',0);
+Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t09','Top',0);
+Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t10','Top',0);
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id) 
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
 values (0,'일일업무일지(기본)',
 '<div align="center">
 <table width="629" align="center" bordercolorlight="black" bordercolordark="white" style="width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; Design_Time_Lock: true;" border="0" cellspacing="0" cellpadding="0">
@@ -2142,9 +2142,9 @@ values (0,'일일업무일지(기본)',
 </table>
 </div>
 <br>'
-,'ezJournal.t05',UTC_TIMESTAMP(),'기본일일업무일지','TOP');
+,'ezJournal.t05',UTC_TIMESTAMP(),'기본일일업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id) 
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
 values (0,'주간업무일지(기본)',
 '<div align="center">
 <table width="629" align="center" bordercolorlight="black" bordercolordark="white" style="width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; Design_Time_Lock: true;" border="0" cellspacing="0" cellpadding="0">
@@ -2236,9 +2236,9 @@ values (0,'주간업무일지(기본)',
 </table>
 </div>
 <br>'
-,'ezJournal.t06',UTC_TIMESTAMP(),'기본주간업무일지','TOP');
+,'ezJournal.t06',UTC_TIMESTAMP(),'기본주간업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id) 
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
 values (0,'월간업무일지(기본)',
 '<div align="center">
 <table width="629" align="center" bordercolorlight="black" bordercolordark="white" style="width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; Design_Time_Lock: true;" border="0" cellspacing="0" cellpadding="0">
@@ -2330,9 +2330,9 @@ values (0,'월간업무일지(기본)',
 </table>
 </div>
 <br>'
-,'ezJournal.t07',UTC_TIMESTAMP(),'기본월간업무일지','TOP');
+,'ezJournal.t07',UTC_TIMESTAMP(),'기본월간업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id) 
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
 values (0,'분기업무일지(기본)',
 '<div align="center">
 <table width="629" align="center" bordercolorlight="black" bordercolordark="white" style="width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; Design_Time_Lock: true;" border="0" cellspacing="0" cellpadding="0">
@@ -2424,9 +2424,9 @@ values (0,'분기업무일지(기본)',
 </table>
 </div>
 <br>'
-,'ezJournal.t08',UTC_TIMESTAMP(),'기본분기업무일지','TOP');
+,'ezJournal.t08',UTC_TIMESTAMP(),'기본분기업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id) 
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
 values (0,'반기업무일지(기본)',
 '<div align="center">
 <table width="629" align="center" bordercolorlight="black" bordercolordark="white" style="width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; Design_Time_Lock: true;" border="0" cellspacing="0" cellpadding="0">
@@ -2518,9 +2518,9 @@ values (0,'반기업무일지(기본)',
 </table>
 </div>
 <br>'
-,'ezJournal.t09',UTC_TIMESTAMP(),'기본반기업무일지','TOP');
+,'ezJournal.t09',UTC_TIMESTAMP(),'기본반기업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id) 
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
 values (0,'연간업무일지(기본)',
 '<div align="center">
 <table width="629" align="center" bordercolorlight="black" bordercolordark="white" style="width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; Design_Time_Lock: true;" border="0" cellspacing="0" cellpadding="0">
@@ -2612,4 +2612,4 @@ values (0,'연간업무일지(기본)',
 </table>
 </div>
 <br>'
-,'ezJournal.t10',UTC_TIMESTAMP(),'기본연간업무일지','TOP');
+,'ezJournal.t10',UTC_TIMESTAMP(),'기본연간업무일지','Top','basic');
