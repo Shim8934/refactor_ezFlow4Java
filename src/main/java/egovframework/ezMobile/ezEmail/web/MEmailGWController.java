@@ -3810,9 +3810,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			if (!pDLSearchList.isEmpty()) {
 				dlXML = getOrganDLSearch(pDLSearchList, info);
 			}
+			int[] searchCount = {0, 0};
 			
 			if (!pAddressFilter.isEmpty()) {
-				addressXML = getAddressSearch("all", "S_NAME", pAddressFilter, info, 0, 100, null);
+				addressXML = getAddressSearch("all", "S_NAME", pAddressFilter, info, 0, 100, searchCount);
 			}
 	        
 	        data.put("organXML", organXML);
