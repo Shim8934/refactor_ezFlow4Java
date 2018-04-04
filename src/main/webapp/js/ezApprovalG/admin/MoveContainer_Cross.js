@@ -638,7 +638,7 @@ function makePageSelPage() {
 function ContMove() {
  
 	var selSContName = $("select[name=selSContName]").val();
-	var selTContName = $("select[name=selTContName]").val();
+	var selTContName = popupselTContName;
    
     $.ajax({
 		type : "POST",
@@ -660,6 +660,7 @@ function ContMove() {
 	});
 
     Check = false;
+    popupselTContName = "";
 }
 
 function changeCompID() {				

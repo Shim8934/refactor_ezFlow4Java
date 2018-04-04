@@ -288,7 +288,7 @@
 		    };
 		    window.onload = function (){
 // 		    	var journalContent = '<c:out value="${journal.journalContent }" />';
-		    	$('#message').contents().find('body').html('<div style="text-align: left;"><img onclick="parent.Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> <img onclick="parent.Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"></div><div id="journalContent" style="height:10px;display:inline-block;"></div>');
+		    	$('#message').contents().find('body').html('<div style="text-align: left;"><img onclick="parent.Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> <img onclick="parent.Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"></div><div id="journalContent" style="width:100%;height:10px;display:inline-block;"></div>');
 		    	$('#message').contents().find('#journalContent').html('${journal.journalContent }');
 		    	sizeOn();
 		    	opener.setJournalList();

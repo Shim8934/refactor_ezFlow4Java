@@ -63,7 +63,6 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-//		String offset = userInfo.getOffset();
 		String mode = request.getParameter("mode");
 		String typeId = request.getParameter("typeId");
 		String useEditor = commonUtil.getTenantConfigRest("EDITOR", userInfo.getId(), request);
@@ -123,8 +122,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 				if (receiver.size() > 0 && receiver != null) {
 					
 					for (int i = 0; i < receiver.size(); i++) {
-						
-						// logger.debug("receiver확인용 : " + receiver.get(i));
+					//  logger.debug("receiver확인용 : " + receiver.get(i));
 						JSONObject obj = (JSONObject) receiver.get(i);
 						
 						receiverIds += obj.get("userId") + ", ";
@@ -320,6 +318,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			model.addAttribute("userList", userList);
 			logger.debug("userList : " + userList);
 		}
+		
 		logger.debug("getFavoriteUser ended");
 		return "/ezJournal/journalFavoriteUser";
 	}
@@ -353,6 +352,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 			userList = (JSONArray) result.get("data");
 			logger.debug("userList : " + userList);
 		}
+		
 		logger.debug("applyFavoriteUser ended");
 		return userList;
 	}

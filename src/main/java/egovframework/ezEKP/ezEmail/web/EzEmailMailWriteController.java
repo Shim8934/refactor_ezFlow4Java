@@ -265,6 +265,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
+		//수아 수정
+		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", userInfo.getTenantId());
+		
+		if (useMailWriteSenderClick.equals("")) {
+			useMailWriteSenderClick = "NO";
+		}
+		
 		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
 		String folderDate = EgovDateUtil.getToday("");
@@ -922,16 +929,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		if (orgMessage.getHeader("X-JMocha-Secure-Mail") != null) {
 		        			isSecureMail = orgMessage.getHeader("X-JMocha-Secure-Mail")[0];
 		        		}
+		        		
 		        		//set bodyType
-		        		if (orgMessage.getHeader("Content-Type") != null) {
-		        			String tempBodyType = orgMessage.getHeader("Content-Type")[0];
-		        			
-		        			if(tempBodyType.split(";")[0].trim().equals("text/plain")) {
-		        				bodyType = "1";
-		        			}else if ( tempBodyType.split(";")[0].trim().equals("multipart/alternative")) {
-		        				bodyType = "0";
-		        			}
-		        		}
+		        		bodyType = isHtmlMessage(orgMessage) ? "0" : "1";
+		        		
 		        		if (orgMessage.getHeader("Return-Receipt-To") != null) {
 		        			replySendTime = "1";
 		        		} else {
@@ -1092,6 +1093,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
+		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 추가
+
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);
 		
@@ -4443,6 +4446,55 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private boolean isHtmlMessage(Message message) throws MessagingException, IOException {
+		if (message.getHeader("Content-Type") == null) {
+			return true;
+		}
+		
+		String tempBodyType = message.getHeader("Content-Type")[0];
+		String contentType = tempBodyType.split(";")[0].trim();
+
+		if (contentType.equals("text/plain")) {
+			return false;
+		} else if (contentType.equals("multipart/alternative")) {
+			return true;
+		}
+		
+		Object content = message.getContent();
+		
+		if (content instanceof Multipart) {
+			return containsHtmlMultipart((Multipart) content);
+		}
+		
+		return true;
+	}
+	
+	private boolean containsHtmlMultipart(Multipart multipart) throws MessagingException, IOException {
+		int partCount = multipart.getCount();
+		
+		Object partContent;
+
+		for (int i = 0; i < partCount; i++) {
+			BodyPart bodyPart = multipart.getBodyPart(i);
+			
+			if (BodyPart.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
+				continue;
+			}
+			
+			partContent = bodyPart.getContent();
+			
+			if (partContent instanceof Multipart && containsHtmlMultipart((Multipart) partContent)) {
+				return true;
+			}
+
+			if (bodyPart.isMimeType("text/html") || bodyPart.isMimeType("message/*")) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 	
 	/**
