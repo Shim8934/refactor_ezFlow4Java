@@ -623,10 +623,15 @@ public class EzEmailMailListController {
 		logger.debug("folderId=" + folderId);
 		
 		IMAPAccess ia = null;
+        boolean isNewUserQuotaNeeded = false;	
+        boolean isThereUserLevelQuota = false;
+        String userEmail = "";
+        Double userQuota = 0.0;
+        Double userWarn = 0.0;        
 		
 		try {
 	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-	        String userEmail = userInfo.getId() + "@" + domainName;
+	        userEmail = userInfo.getId() + "@" + domainName;
 			
 	        logger.debug("userEmail=" + userEmail);
 	        
@@ -645,19 +650,43 @@ public class EzEmailMailListController {
 			}
 			
 			if (cmd.equalsIgnoreCase("BMOVE")) {
+				// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+				Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(deleteMsgs, userEmail, domainName, ia);
+				
+				if (adjustQuotaData[0] != null) {
+					isNewUserQuotaNeeded = true;
+					
+					userQuota = adjustQuotaData[0];
+					userWarn = adjustQuotaData[1];
+				}
+
+				if (adjustQuotaData[2] != null) {
+					isThereUserLevelQuota = true;
+				}
+								
 				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
 				sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
 			}
+			
 			sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
 					
-			sourceFolder.close(true);
-		
+			sourceFolder.close(true);		
 		} catch (Exception e) {
 			returnData = "ERROR : " + e.getMessage();
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
 				ia.close();		
+			}
+			
+			// 사용자 Quota를 변경시켰다면 원래 값으로 복원시킨다.			
+			if (isNewUserQuotaNeeded) {
+				if (isThereUserLevelQuota) {
+					ezEmailUtil.setUserQuota(userEmail, String.valueOf(userQuota), String.valueOf(userWarn));
+				// 사용자 레벨 Quota 설정값이 없었던 경유에는 해당 설정값을 삭제한다.
+				} else {
+					ezEmailUtil.deleteUserQuota(userEmail);
+				}
 			}
 		}
 		
@@ -680,6 +709,11 @@ public class EzEmailMailListController {
 		String returnValue = "OK";
 		
 		IMAPAccess ia = null;
+        boolean isNewUserQuotaNeeded = false;	
+        boolean isThereUserLevelQuota = false;
+        String userEmail = "";
+        Double userQuota = 0.0;
+        Double userWarn = 0.0;        		
 		
 		try {
 			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
@@ -706,7 +740,7 @@ public class EzEmailMailListController {
 			
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-	        String userEmail = userInfo.getId() + "@" + domainName;
+	        userEmail = userInfo.getId() + "@" + domainName;
 			
 	        logger.debug("userEmail=" + userEmail);
 	        
@@ -718,6 +752,22 @@ public class EzEmailMailListController {
 			
 			Message[] messages = sourceFolder.getMessagesByUID(uids);
 			
+			if (cmd.equalsIgnoreCase("MOVE")) {
+				// 이동시킬 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+				Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userEmail, domainName, ia);
+				
+				if (adjustQuotaData[0] != null) {
+					isNewUserQuotaNeeded = true;
+					
+					userQuota = adjustQuotaData[0];
+					userWarn = adjustQuotaData[1];
+				}
+
+				if (adjustQuotaData[2] != null) {
+					isThereUserLevelQuota = true;
+				}				
+			}
+			
 			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);			
 			sourceFolder.copyUIDMessages(messages, movefolder);
 			
@@ -725,8 +775,7 @@ public class EzEmailMailListController {
 				sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
 			}
 			
-			sourceFolder.close(true);
-		
+			sourceFolder.close(true);		
 		} catch (Exception e) {
 			returnValue = "ERROR : " + e.getMessage();
 			e.printStackTrace();
@@ -734,6 +783,16 @@ public class EzEmailMailListController {
 			if (ia != null) {
 				ia.close();
 			}
+			
+			// 사용자 Quota를 변경시켰다면 원래 값으로 복원시킨다.			
+			if (isNewUserQuotaNeeded) {
+				if (isThereUserLevelQuota) {
+					ezEmailUtil.setUserQuota(userEmail, String.valueOf(userQuota), String.valueOf(userWarn));
+				// 사용자 레벨 Quota 설정값이 없었던 경유에는 해당 설정값을 삭제한다.
+				} else {
+					ezEmailUtil.deleteUserQuota(userEmail);
+				}
+			}			
 		}
 		
 		logger.debug("returnValue=" + returnValue);

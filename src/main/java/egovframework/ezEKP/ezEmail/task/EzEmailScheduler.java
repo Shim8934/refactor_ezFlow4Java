@@ -776,6 +776,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			try {
 				// user quota info
 				Double[] userQuotaData = ezEmailUtil.getUserQuota(userEmail);
+				
+				if (userQuotaData[0] == null) {
+					String domainName = userEmail.substring(userEmail.indexOf("@") + 1, userEmail.length());
+					userQuotaData = ezEmailUtil.getDefaultQuota(domainName);
+				}
+				
 				IMAPAccess imapAccess = IMAPAccess.getInstance(mailServerAddress, imapPort, userEmail, jspw, egovMessageSource, locale);
 				
 				// KB

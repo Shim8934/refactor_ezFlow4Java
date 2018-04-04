@@ -43,6 +43,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -3494,4 +3495,18 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return "json";
 	}*/
+	
+	@RequestMapping(value="/admin/ezApprovalG/approvGAdminPopupChoiceDept.do")
+	public String  scheduleAdminPopupShareDept(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		
+		logger.debug("============ approvGAdminPopupChoiceDept started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String lang = loginSimpleVO.getLang();
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		model.addAttribute("lang", lang);
+		model.addAttribute("CompanyID",userInfo.getCompanyID());
+		return "admin/ezApprovalG/approvGAdminPopupChoiceDept";
+	}
 }
