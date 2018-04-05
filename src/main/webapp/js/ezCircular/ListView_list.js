@@ -1391,6 +1391,10 @@ function event_HeaderCheckBoxClick(obj) {
     SelList.LoadFromID("BoardList");
 
     if (obj.checked) {
+    	if ($("#BoardList tbody tr:eq(0)").attr("id") == "BoardList_TR_noItems") {
+    		return;
+    	}
+    	
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;

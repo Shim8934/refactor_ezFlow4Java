@@ -6625,7 +6625,9 @@
                             COMPANYID = #companyID#
                         AND 
                             DOCID = #v_DOCID#  
-                        )    
+                        )
+           ORDER BY 
+                STARTDATE DESC, DOCID DESC                 
    		</isEqual>
    		<isEqual property="v_FLAG" compareValue="2">
 		<![CDATA[
@@ -6660,10 +6662,11 @@
                             COMPANYID = #companyID#
                         AND 
                             DOCID = #v_DOCID#  
-                        )    
+                        )
+           ORDER BY 
+                STARTDATE ASC, DOCID ASC                 
    		</isEqual>
-   		ORDER BY 
-   			STARTDATE $v_BASICORDER$, DOCID DESC
+   		
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFindSimpleCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO"> -->
