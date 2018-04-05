@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.io.IOUtils;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -684,7 +684,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		String useExtension        = ezCommonService.getTenantConfig("USE_FileExtension", tenantId);
 		String folderPath          = folder.getFolderPath();
 		folderPath                 = folderPath.substring(1, folderPath.length() - 1);
-		String originalPath        = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
+		String originalPath        = getFolderPath(folderPath.split("\\|"), userInfo.getPrimary(), tenantId);
 		
 		if (((JSONObject)nameArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)nameArray.get(0)).get("originalFilename"))) {
 			for (int i = 0; i < cnt; i++) {
@@ -898,13 +898,17 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	@Override
-	public String getFolderPath(String[] path, String offset, int tenantId) throws Exception {
-		String result = "/";
+	public String getFolderPath(String[] path, String primary, int tenantId) throws Exception {
+		String result = "";
 		
-		for (int i = 0; i < path.length - 1; i++) {
-			FolderVO parentFolder = getFolderByFolderId(path[i], offset, tenantId);
-			result               += parentFolder.getFolderName1() + "/";
-		}
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("path", Arrays.asList(path));
+		map.put("primary", primary);
+		map.put("tenantId", tenantId);
+		
+		List<String> folderNames = ezWebFolderDAO.getFolderNameList(map);
+		result                   = String.join("/", folderNames);
+		result                   = "/" + result + "/";
 		
 		return result;
 	}

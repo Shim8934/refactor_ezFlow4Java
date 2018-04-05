@@ -216,4 +216,9 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public int checkFilesOwner(Map<String, Object> map) {
 		return (int)select("EzWebFolderDAO.checkFilesOwner", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getFolderNameList(Map<String, Object> map) {
+		return (List<String>)list("EzWebFolderDAO.getFolderNameList", map);
+	}
 }

@@ -64,7 +64,7 @@ public interface EzWebFolderService {
 	List<SimpleDeptVO> getSelectedDeptsForChief(String userId, int level, String primary, int tenantId) throws Exception;
 	int checkFilesOwner(String userId, String fileList, int tenantId) throws Exception;
 	//Added
-	String getFolderPath(String[] split, String offset, int tenantId) throws Exception;
+	String getFolderPath(String[] split, String primary, int tenantId) throws Exception;
 	List<FileVO> saveUploadedFiles(List<MultipartFile> multiFileLists, JSONArray nameArray, FolderVO folder, String realPath, LoginVO userInfo) throws Exception;
 	void getDownloadedFiles(String[] fileIDList, String realPath, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	void deleteSelectedFiles(String[] fileIDList, LoginVO userInfo) throws Exception;

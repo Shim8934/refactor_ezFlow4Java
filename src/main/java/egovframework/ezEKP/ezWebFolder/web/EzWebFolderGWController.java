@@ -1445,7 +1445,7 @@ public class EzWebFolderGWController {
 			FolderVO folder       = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			String folderPath     = folder.getFolderPath();
 			folderPath            = folderPath.substring(1, folderPath.length() - 1);
-			String originalPath   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
+			String originalPath   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
 			
 			if (folder.getFolderUpper().equals("root")) {
 				Map<String, String> filePathMap = new LinkedHashMap<String, String>();
@@ -1464,9 +1464,10 @@ public class EzWebFolderGWController {
 								file_path += filePathMap.get(fldPathArr[i]) + "/";
 							}
 							else {
-								FolderVO _folder = ezWebFolderService.getFolderByFolderId(fldPathArr[i], offset, tenantId);
-								file_path       += _folder.getFolderName1() + "/";
-								filePathMap.put(fldPathArr[i], _folder.getFolderName1());
+								FolderVO _folder   = ezWebFolderService.getFolderByFolderId(fldPathArr[i], offset, tenantId);
+								String _folderName = primary.equals("1") ? _folder.getFolderName1() : _folder.getFolderName2();
+								file_path         += _folderName + "/";
+								filePathMap.put(fldPathArr[i], _folderName);
 							}
 						}
 						

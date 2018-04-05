@@ -497,7 +497,7 @@
 				(
 					CASE
 						WHEN u.FOLDER_LEVEL = 0 THEN CONCAT(#originalPath#, f.FILE_NAME)
-						WHEN u.FOLDER_LEVEL = 1 THEN CONCAT(CONCAT(CONCAT(#originalPath#, u.FOLDER_NAME1), "/"), f.FILE_NAME)
+						WHEN u.FOLDER_LEVEL = 1 THEN CONCAT(CONCAT(CONCAT(#originalPath#, IF(#primary# = '1', u.FOLDER_NAME1, u.FOLDER_NAME2)), "/"), f.FILE_NAME)
 						ELSE "" 
 					END
 				)                                                                                                                                                                AS FILE_POSITION,
@@ -1371,7 +1371,23 @@
 			CREATE_ID = #userId#
 		AND
 			TENANT_ID = #tenantId#
-		
 	</select>
+	
+	<select id="EzWebFolderDAO.getFolderNameList" resultClass="String">
+		SELECT
+			CASE WHEN #primary# = '1' THEN FOLDER_NAME1 ELSE FOLDER_NAME2 END AS FOLDER_NAME
+		FROM
+			TBL_WEBFOLDER_FOLDER
+		WHERE
+			FOLDER_ID IN
+			<iterate property="path" open="(" close=")" conjunction=",">
+				#path[]#
+			</iterate>
+		AND
+			TENANT_ID = #tenantId#
+		ORDER BY
+			FOLDER_LEVEL ASC
+	</select>
+	
 	
 </sqlMap>
