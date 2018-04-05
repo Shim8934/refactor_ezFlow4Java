@@ -221,4 +221,9 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public List<String> getFolderNameList(Map<String, Object> map) {
 		return (List<String>)list("EzWebFolderDAO.getFolderNameList", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getAllFolderNameMap(Map<String, Object> map) {
+		return (Map<String, String>)map("EzWebFolderDAO.getAllFolderNameMap", map, "bnkKey", "bnkValue");
+	}
 }

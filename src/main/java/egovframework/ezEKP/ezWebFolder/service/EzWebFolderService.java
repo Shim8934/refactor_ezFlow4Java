@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezWebFolder.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,4 +73,5 @@ public interface EzWebFolderService {
 	void saveLog(String string, String companyId, String offset, String userId, String userName1, String userName2, String fileName, String fileSize, String fileExt, String fileTypeName, int tenantId) throws Exception;
 	String getMaxFileID(int tenantId) throws Exception;
 	JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, Locale locale, LoginVO userInfo) throws Exception;
+	Map<String, String> getAllFolderNameMap(List<String> testbnk, int tenantId);
 }

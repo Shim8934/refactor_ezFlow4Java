@@ -129,6 +129,11 @@
 		<result property="tenantId"             column="tenant_id"              columnIndex="23" />
 	</resultMap>
 	
+	<resultMap id="hashMapResult" class="java.util.HashMap">
+		<result property="bnkKey"   column="FOLDER_ID"/>
+		<result property="bnkValue" column="FOLDER_NAME"/>
+	</resultMap>
+	
 	<!-- 로그인  resultMap -->
 	<resultMap id="folderUserVO" class="FolderUserVO">
 		<result property="userId"               column="USER_ID"                 columnIndex="1"/>
@@ -501,7 +506,7 @@
 						ELSE "" 
 					END
 				)                                                                                                                                                                AS FILE_POSITION,
-				u.FOLDER_NAME1                                                                                                                                                   AS FOLDER_NAME,
+				""                                                                                                                                                               AS FOLDER_NAME,
 				u.FOLDER_PATH                                                                                                                                                    AS FOLDER_PATH,
 				f.DELETER_ID                                                                                                                                                     AS DELETER_ID,
 				f.TENANT_ID                                                                                                                                                      AS TENANT_ID
@@ -1389,5 +1394,19 @@
 			FOLDER_LEVEL ASC
 	</select>
 	
+	<select id="EzWebFolderDAO.getAllFolderNameMap" resultMap="hashMapResult">
+		SELECT
+			FOLDER_ID AS FOLDER_ID,
+			CASE WHEN #primary# = '1' THEN FOLDER_NAME1 ELSE FOLDER_NAME2 END AS FOLDER_NAME
+		FROM
+			TBL_WEBFOLDER_FOLDER
+		WHERE
+			FOLDER_ID IN
+			<iterate property="testbnk" open="(" close=")" conjunction=",">
+				#testbnk[]#
+			</iterate>
+		AND
+			TENANT_ID = #tenantId#
+	</select>
 	
 </sqlMap>
