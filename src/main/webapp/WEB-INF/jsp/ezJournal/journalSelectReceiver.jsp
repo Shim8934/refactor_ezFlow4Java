@@ -46,6 +46,8 @@
 				$('#treeview').on('changed.jstree', function (e, data) {
 			     	var id = data.instance.get_node(data.selected).id;
 					setUserList("DEPARTMENT", id);
+					selMainListUserId = "";
+					selUserId = "";
 				  })
 				.jstree({ 
 					'core' 	 : {'data' : treeContent},
@@ -222,6 +224,8 @@
 		    			alert("code : " + request.status + "\nerror : " + error);
 	   				}
 	   			});
+	   		 	selMainListUserId = "";
+				selUserId = "";
 	   		}
 	   		
 	   		// 즐겨찾기 적용하기
@@ -305,7 +309,6 @@
 		                    document.getElementById("journalOrgan_content").style.display = "";
 		                    document.getElementById("journalFavorite_content").style.display = "none";
 		                   	$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
-		                   // _RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
 		                    $("#dblarrow").css("display", "none");
 		                }
 		                break;
@@ -319,6 +322,8 @@
 		                }
 		                break;
 		    	}
+		        selMainListUserId = "";
+				selUserId = "";
 		    }
 	   		
 	   		function Tab1_MouseClick(obj) {

@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -50,6 +52,9 @@ public class EzJournalAdminController {
 
 	@Autowired
 	private Properties config;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	/**
 	 * 관리자 업무일지  메인 화면 호출 함수
@@ -635,11 +640,11 @@ public class EzJournalAdminController {
 			if (key.equals("DEPARTMENT") && userList.size()!=0) {
 				keyword = (String) ((JSONObject)userList.get(0)).get("deptName");
 			} else{
-				keyword = "검색";
+				keyword = egovMessageSource.getMessage("ezJournal.t43");
 			}
 			int userCount = 0;
 			if (userList.size()==0) {
-				keyword = "결과없음";
+				keyword = egovMessageSource.getMessage("ezJournal.t171");
 			} else {
 				userCount = userList.size();
 			}

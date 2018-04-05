@@ -204,7 +204,7 @@
 		<span class="ptxt" onclick="<c:if test="${paging.totalPage gt paging.currentPage }">goToPageByNum(${paging.currentPage+1})</c:if>"><spring:message code='ezApproval.t932'/></span>
 		<c:choose>
 			<c:when test="${paging.totalPage gt paging.endPage }">
-				<span class="btnimg" onclick="goToPageByNum(${paging.endpage+1})"><img src="/images/sub/btn_next.gif" width="16" height="16"></span>
+				<span class="btnimg" onclick="goToPageByNum(${paging.endPage+1})"><img src="/images/sub/btn_next.gif" width="16" height="16"></span>
 			</c:when>
 			<c:otherwise>
 				<span class="btnimg"><img src="/images/sub/btn_next01.gif" width="16" height="16"></span>
