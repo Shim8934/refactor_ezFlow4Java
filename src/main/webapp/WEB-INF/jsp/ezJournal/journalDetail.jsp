@@ -478,7 +478,7 @@
 		    
 		    //인쇄
 		    function printJournal(){
-		    	var data = $("#journalContent").html();
+		    	var data = $('#message').contents().find('#journalContent').html();
 		    	var mywindow = window.open('', 'journalContent', 'height=400,width=600');
 		    	mywindow.document.write('<html><head><title><spring:message code="ezJournal.t1" /></title>');
 		    	mywindow.document.write('</head><body >');
