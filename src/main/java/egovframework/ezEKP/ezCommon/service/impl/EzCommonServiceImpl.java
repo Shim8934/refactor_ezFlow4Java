@@ -876,8 +876,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				}
 				
 //				배경이미지 url의 표현방법 수정//태그프리,CK는 정상으로 들어옴
-				if(m_strHTML.contains("url(//")){//NAMO
-					m_strHTML = m_strHTML.replace("url(//", "url(/");
+				if(m_strHTML.contains("///fileroot")){//NAMO//2018.04.05 재수정
+					m_strHTML = m_strHTML.replace("///fileroot", "/fileroot");
+				}else if(m_strHTML.contains("//fileroot")){
+					m_strHTML = m_strHTML.replace("//fileroot", "/fileroot");
+					m_strHTML = m_strHTML.replace("')", ")");
 				}else if(m_strHTML.contains("url('fileroot")){//KUKUDOCS
 					m_strHTML = m_strHTML.replace("url('fileroot", "url(/fileroot");
 					m_strHTML = m_strHTML.replace("')", ")");

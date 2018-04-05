@@ -522,7 +522,7 @@
 					rgParams["deptid"] = "";
 					checkname2_cross_dialogArguments[0] = rgParams;
 					checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
-					var checkName2 = window.open("/admin/ezBoard/checkName.do", "checkName2", GetOpenWindowfeature(650, 352));
+					var checkName2 = window.open("/admin/ezBoard/checkName.do", "checkName2", GetOpenWindowfeature(900, 430));
 					try {
 						checkName2.focus();
 					} catch (e) {
@@ -621,7 +621,7 @@
 		<table>
 			<tr align=left>
 		    	<td  colspan=3 id="cnblock" align=right height="30">
-		        	<input type="text" id="cnkeyword" style="WIDTH:100px" name="Input" onkeydown='Key_Down(event)'>
+		        	<input type="text" id="cnkeyword" style="WIDTH:124px" name="Input" onkeydown='Key_Down(event)'>
 		        	<a class="imgbtn"  name="button"><span onClick='cnsearch_click("displayName")'><spring:message code='ezBoard.t42' /></span></a>
 		    	</td>
 		  	</tr>  
@@ -633,12 +633,12 @@
 		                  		<table>
 		                      		<tr>
 		                            	<td>
-		                                	<div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:225px;HEIGHT:370px;BACKGROUND-COLOR:#ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
+		                                	<div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:280px;HEIGHT:440px;BACKGROUND-COLOR:#ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
 		                            	</td>
 		                            	<td width="5"></td>
 		                            	<td>
 		                                	<div class="listview">
-		                	                <div id=OrganListView style ="OVERFLOW:auto; WIDTH:447px; HEIGHT:370px; border:0"></div></div>
+		                	                <div id=OrganListView style ="OVERFLOW:auto; WIDTH:100%; min-width:658px; HEIGHT:440px; border:0"></div></div>
 		                    	        </td>
 		                      		</tr>
 		                 		</table>
@@ -658,7 +658,7 @@
 		            	<tr>
 		                	<td>
 		                		<div class="listview">
-		                    		<div id=ListViewMsgTo style ="BORDER:0;HEIGHT: 340px; WIDTH:200px;overflow:auto"></div>
+		                    		<div id=ListViewMsgTo style ="BORDER:0;HEIGHT: 410px; WIDTH:200px;overflow:auto"></div>
 		                		</div>
 		                	</td>
 		            	</tr>
@@ -677,7 +677,7 @@
 		    	</td>
 		  	</tr>
 		</table>
-		<div class="btnposition" style="float:right">
+		<div class="btnposition" style="float:right; margin-right:45px;">
 			<a class="imgbtn"><span onclick="confirm_onClick()" ><spring:message code='ezBoard.t48' /></span></a>
 			<a class="imgbtn"><span onclick="return window.close()" ><spring:message code='ezBoard.t49' /></span></a>
 		</div>
