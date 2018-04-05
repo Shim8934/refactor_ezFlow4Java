@@ -8673,7 +8673,7 @@ CREATE TABLE `tbl_journal_form_type` (
   `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
   `used` varchar(45) NOT NULL DEFAULT 'use' COMMENT '사용',
   PRIMARY KEY (`type_id`,`tenant_id`,`company_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='양식함'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='양식함';
 
 
 -- jmocha.tbl_journal_form Table Create SQL
@@ -8691,7 +8691,7 @@ CREATE TABLE `tbl_journal_form` (
   PRIMARY KEY (`form_id`,`tenant_id`),
   KEY `FK_tbl_journal_form_type_id_tbl_journal_form_type_type_id_idx` (`type_id`),
   KEY `FK_tbl_journal_form_company_id_tbl_journal_form_type_compan_idx` (`company_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8 COMMENT='양식'
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8 COMMENT='양식';
 
 
 -- jmocha.tbl_journal Table Create SQL
@@ -8710,7 +8710,7 @@ CREATE TABLE `tbl_journal` (
   PRIMARY KEY (`journal_id`,`tenant_id`),
   KEY `FK_tbl_journal_form_id_tbl_journal_form_form_id` (`form_id`),
   CONSTRAINT `FK_tbl_journal_form_id_tbl_journal_form_form_id` FOREIGN KEY (`form_id`) REFERENCES `tbl_journal_form` (`form_id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지';
 
 
 -- jmocha.tbl_journal_recv_favorite Table Create SQL
@@ -8721,7 +8721,7 @@ CREATE TABLE `tbl_journal_recv_favorite` (
   `favorite_name` varchar(200) DEFAULT NULL COMMENT '즐찾 명',
   `favorite_date` datetime DEFAULT NULL COMMENT '즐찾 일',
   PRIMARY KEY (`favorite_id`,`tenant_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='즐찾'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='즐찾';
 
 
 -- jmocha.tbl_journal_reply Table Create SQL
@@ -8735,7 +8735,7 @@ CREATE TABLE `tbl_journal_reply` (
   PRIMARY KEY (`reply_id`,`tenant_id`),
   KEY `FK_tbl_journal_reply_journal_id_tbl_journal_journal_id` (`journal_id`),
   CONSTRAINT `FK_tbl_journal_reply_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='댓글'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='댓글';
 
 -- jmocha.tbl_journal_form_user_dept Table Create SQL
 CREATE TABLE `tbl_journal_form_use_dept` (
@@ -8744,14 +8744,14 @@ CREATE TABLE `tbl_journal_form_use_dept` (
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   KEY `FK_tbl_journal_form_user_dept_form_id_tbl_journal_form_form_id` (`form_id`),
   CONSTRAINT `FK_tbl_journal_form_user_dept_form_id_tbl_journal_form_form_id` FOREIGN KEY (`form_id`) REFERENCES `tbl_journal_form` (`form_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='양식사용부서'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='양식사용부서';
 
 -- jmocha.tbl_journal_auth Table Create SQL
 CREATE TABLE `tbl_journal_auth` (
   `user_id` varchar(200) NOT NULL COMMENT '사원아이디',
   `dept_id` varchar(200) NOT NULL COMMENT '부서아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='열람권한'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='열람권한';
 
 
 -- jmocha.tbl_journal_recv Table Create SQL
@@ -8763,7 +8763,7 @@ CREATE TABLE `tbl_journal_recv` (
   `recv_status` varchar(45) DEFAULT 'Y',
   KEY `FK_tbl_journal_recv_journal_id_tbl_journal_journal_id` (`journal_id`),
   CONSTRAINT `FK_tbl_journal_recv_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='수신'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='수신';
 
 -- jmocha.tbl_journal_file Table Create SQL
 CREATE TABLE `tbl_journal_file` (
@@ -8776,7 +8776,7 @@ CREATE TABLE `tbl_journal_file` (
   PRIMARY KEY (`file_id`,`tenant_id`),
   KEY `FK_tbl_journal_file_journal_id_tbl_journal_journal_id` (`journal_id`),
   CONSTRAINT `FK_tbl_journal_file_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='첨부파일'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='첨부파일';
 
 -- jmocha.tbl_journal_env Table Create SQL
 CREATE TABLE `tbl_journal_env` (
@@ -8789,7 +8789,7 @@ CREATE TABLE `tbl_journal_env` (
   `reply_alert` varchar(45) DEFAULT 'Y' COMMENT '댓글 알림',
   `recv_alert` varchar(45) DEFAULT 'Y' COMMENT '수신 알림',
   PRIMARY KEY (`user_id`,`tenant_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='환경설정'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='환경설정';
 
 -- jmocha.tbl_journal_recv_favorite_list Table Create SQL
 CREATE TABLE `tbl_journal_recv_favorite_list` (
@@ -8798,7 +8798,7 @@ CREATE TABLE `tbl_journal_recv_favorite_list` (
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   KEY `FK_tbl_journal_recv_favorite_list_favorite_id` (`favorite_id`),
   CONSTRAINT `FK_tbl_journal_recv_favorite_list_favorite_id` FOREIGN KEY (`favorite_id`) REFERENCES `tbl_journal_recv_favorite` (`favorite_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='즐찾 리스트'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='즐찾 리스트';
 
 -- jmocha.tbl_journal_env Table Create SQL
 CREATE TABLE `tbl_journal_view` (
@@ -8809,4 +8809,4 @@ CREATE TABLE `tbl_journal_view` (
   PRIMARY KEY (`user_id`,`tenant_id`,`journal_id`),
   KEY `FK_tbl_journal_view_journal_id_tbl_journal_journal_id` (`journal_id`),
   CONSTRAINT `FK_tbl_journal_view_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지조회'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지조회';
