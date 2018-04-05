@@ -618,12 +618,11 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		
 		if (status.equals("ok")) {
 			data = resultBody.get("data");
-			logger.debug("xml데이터 확인 : " + data);
 			model.addAttribute("data", data.toString());
 			data = data.toString();
 		}
 
-		logger.debug("status:"+status);
+		logger.debug("status: " + status);
         logger.debug("uploadJournalAttach ended");
         
         return data.toString();
@@ -679,7 +678,7 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
-			logger.debug("첨부파일삭제 성공");
+			logger.debug("status : " + status);
 		}
 
         logger.debug("tempUploadFileDelete ended");
@@ -825,56 +824,6 @@ public class EzJournalJYController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 다른일지 가져오기 호출
-	 */
-	/*
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezJournal/getOtherJournal.do")
-	@ResponseBody
-	public String getOtherJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("getOtherJournal started");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
-		String userId = request.getParameter("userId");
-		String typeId = request.getParameter("typeId");
-		String formId = request.getParameter("formId");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("userId", userId);
-		map.put("typeId", typeId);
-		map.put("formId", formId);
-		map.put("startCount", 1);
-		map.put("listCnt", 10);
-		map.put("orderNum", 3);
-		map.put("orderHow", "desc");
-		
-		String restUrl = "/rest/ezjournal/journals";
-		JSONObject result = new JSONObject();
-		
-		result = commonUtil.getJsonFromRestApi(restUrl, map, request, "get", null);
-		
-		String status = result.get("status").toString();
-		
-		if (status.equals("ok")) {
-			JSONArray journalList = (JSONArray) result.get("data");
-			logger.debug("journalList 확인 : " + journalList);
-			for (int i = 0; i < journalList.size(); i++) {
-				JSONObject journal = (JSONObject) journalList.get(i);
-				String journalDate = (String) journal.get("journalDate");
-				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
-				journal.put("journalDate", journalDate);
-			}
-			model.addAttribute("journalList", journalList);
-		}
-		
-		logger.debug("getOtherJournal ended");
-		return "ezJournal/journalGetOther";
-	}
-	*/
-	
-	/**
 	 * 업무일지 삭제 (한건 또는 여러건)
 	 */
 	@SuppressWarnings("unchecked")
@@ -996,49 +945,5 @@ public class EzJournalJYController extends EgovFileMngUtil {
 		
 		return "/ezJournal/journalConfig";
 	}
-	
-	
-	/**
-	 * 환경설정 저장 (사용안함)
-	 */
-	/*
-	@RequestMapping(value = "/ezJournal/saveJournalConfig.do")
-	@ResponseBody
-	public void saveJournalConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
-		logger.debug("saveJournalConfig started");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String userId = userInfo.getId();
-		
-		String listCnt = request.getParameter("listCnt");
-		String viewEnv = request.getParameter("viewenv");
-		String previewHContent = request.getParameter("previewHContent");
-		String previewWContent = request.getParameter("previewWContent");
-		String recvAlert = request.getParameter("recvAlert");
-		String replyAlert = request.getParameter("replyAlert");
-		
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userInfo.getId());
-		param.put("listCnt", listCnt);
-		param.put("viewenv", viewEnv);
-		param.put("previewHcontent", previewHContent);
-		param.put("previewWcontent", previewWContent);
-		param.put("recvAlert", recvAlert);
-		param.put("replyAlert", replyAlert);
-		
-		String restUrl = "/rest/ezjournal/users/" + userId + "/options";
-		JSONObject result = new JSONObject();
-		
-		result = commonUtil.getJsonFromRestApi(restUrl, param, request, "post", null);
-		
-		String status = result.get("status").toString();
-		
-		if (status.equals("ok")) {
-			
-		}
-		
-		logger.debug("saveJournalConfig ended");
-	}
-	*/
 	
 }
