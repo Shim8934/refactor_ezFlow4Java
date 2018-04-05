@@ -107,14 +107,13 @@
 		<script type="text/javascript">
 		    var pageType = "${pageType}";
 		    var returnCompany = '${companyId}';
+		    var userLang = '${userLang}';
 		    var isDivPopUp = false;
-		    
 			var result = [];
 		    var treeCollection = [];
 		    var xmlhttp;
 		    var responseResult;
 		    var selectNode;
-		    var pageType = '${pageType}';
 		    var searchTxt = "";
 	    
 			$(document).ready(function(){
@@ -127,6 +126,7 @@
 				letterSelect();
 			});
 			
+			// 편지지 검색 시 엔터 사용
 			function letterSearchEnter() {
 				if (event.keyCode == 13) {
 					letterSearch();

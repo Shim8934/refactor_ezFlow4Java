@@ -102,6 +102,9 @@ public class EzEmailAdminLetterController {
 	public String letterBoxManagerView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String companyId) throws Exception {
 		logger.debug("letterBoxManagerView started.");
 		logger.debug("companyId=" + companyId);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userLang = userInfo.getLang();
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
@@ -111,7 +114,9 @@ public class EzEmailAdminLetterController {
 
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("pageType", "letterBox");
-
+		model.addAttribute("userLang", userLang);
+		
+		logger.debug("userLang=" + userLang);
 		logger.debug("letterBoxManagerView ended.");
 
 		return "admin/ezEmail/letterBoxManager";
@@ -126,11 +131,12 @@ public class EzEmailAdminLetterController {
 	 */
 	@RequestMapping(value = "/admin/ezEmail/getLetterBox.do")
 	@ResponseBody
-	public JSONArray getLetterBox(@CookieValue("loginCookie") String loginCookie, String companyId) throws Exception {
+	public JSONArray getLetterBox(@CookieValue("loginCookie") String loginCookie, String companyId, Model model) throws Exception {
 		logger.debug("getLetterBox started.");
 
 		JSONArray returnJsonArr = new JSONArray();
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		Integer tenant = userInfo.getTenantId();
 		String tenantId = Integer.toString(tenant);
 

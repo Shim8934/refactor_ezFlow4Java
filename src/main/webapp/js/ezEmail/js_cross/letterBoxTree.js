@@ -5,6 +5,7 @@ var noResult = false;
 
 // 편지지함 트리 가져오기
 function resultRead() {
+	
 	$.ajax({
 		type : "POST",
 		url : "/admin/ezEmail/getLetterBox.do?companyId=" + returnCompany,
@@ -100,18 +101,36 @@ function selectBox(letterBoxNo) {
 
 // 트리에서 필요한 아이들만 빼서 treeCollection 재구성 (구성할 때 jsTree 규칙에 맞게 변경)
 function treeSet() {
-	for(var i = 0; i < result.length; i++) {
-		var treeId = result[i].letterBoxNo;
-		var treeParent = result[i].parentLetterboxNo;
-		var treeText = result[i].displayname;
-		var companyId = result[i].companyId;
-		
-		if (treeParent == '0') {
-			treeParent = '#'; 
+	
+	if (userLang != 1) {
+		for(var i = 0; i < result.length; i++) {
+			var treeId = result[i].letterBoxNo;
+			var treeParent = result[i].parentLetterboxNo;
+			var treeText = result[i].displayname2;
+			var companyId = result[i].companyId;
+			
+			if (treeParent == '0') {
+				treeParent = '#'; 
+			}
+			
+			treeCollection.push({id:treeId, parent:treeParent, text:treeText, companyId:companyId});
 		}
-		
-		treeCollection.push({id:treeId, parent:treeParent, text:treeText, companyId:companyId});
+	} else {
+		for(var i = 0; i < result.length; i++) {
+			var treeId = result[i].letterBoxNo;
+			var treeParent = result[i].parentLetterboxNo;
+			var treeText = result[i].displayname;
+			var companyId = result[i].companyId;
+			
+			if (treeParent == '0') {
+				treeParent = '#'; 
+			}
+			
+			treeCollection.push({id:treeId, parent:treeParent, text:treeText, companyId:companyId});
+		}
 	}
+	
+	
 }
 
 // jstree 보여주는 애
@@ -153,7 +172,12 @@ function addLetterBox() {
 		putParent = parent;
 	}
 
-	var node = { id: 'temp', text:"편지지함"};
+	var text = "편지지함";
+	if (userLang != '1') {
+		text = "letterbox_temp";
+	}
+	
+	var node = { id: 'temp', text: text};
 	$('#divTree').jstree('create_node', parent, node, 'last');
 	$("#divTree").jstree("open_node", $('#' + parentId));
 	$("#divTree").jstree("select_node", $('#temp'));
@@ -264,7 +288,7 @@ function submitClick() {
 	}
 	
 	if (boxNameCheck(2) === true) {
-		alert("편지지함명(영문) 이 중복되었습니다.");
+		alert("편지지함명이 중복되었습니다.");
 		document.getElementById("display2").focus();
 		return;
 	}

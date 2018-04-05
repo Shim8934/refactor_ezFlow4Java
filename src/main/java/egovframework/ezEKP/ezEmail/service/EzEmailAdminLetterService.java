@@ -55,9 +55,9 @@ public interface EzEmailAdminLetterService {
 	
 	/**
 	 * 편지지 검색 (재은)
-	 * @param searchStr, companyId, tenantId
+	 * @param searchStr, companyId, tenantId, userLang
 	 */
-	public JSONArray searchLetter(String search, String companyId, String tenantId) throws Exception;
+	public JSONArray searchLetter(String search, String companyId, String tenantId, String userLang) throws Exception;
 	
 	/**
 	 * 편지지 추가 (수아)

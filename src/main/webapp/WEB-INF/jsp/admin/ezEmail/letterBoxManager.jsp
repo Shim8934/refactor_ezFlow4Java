@@ -28,14 +28,14 @@
 		<div id="divInput">
 			<form id="myForm" action="/admin/ezEmail/updateLetterBox.do" method="post">
 				<label for="display">
-					<b><spring:message code='main.t76'/></b>
+					<b><spring:message code='main.t76'/>(<spring:message code='ezPersonal.s81'/>)</b>
 				</label>
 				<input type="text" id="display" name="displayname" size="30" maxlength="40">
 				
 				<br><br>
 				
 				<label for="display2">
-					<b><spring:message code='main.t76'/>(<spring:message code='ezSchedule.t4014'/>)</b>
+					<b><spring:message code='main.t76'/>(<spring:message code='ezPersonal.s82'/>)</b>
 				</label>
 				<input type="text" id="display2" name="displayname2" size="30" maxlength="40">
 				
@@ -62,7 +62,7 @@
 		    var addCheck = 0;
 		    var pageType = "${pageType}";
 		    var returnCompany = '${companyId}';
-		    
+		    var userLang = '${userLang}';
 		    window.onload = window_onload;
 		    
 		    function window_onload() {
@@ -72,7 +72,7 @@
 		    // 이름, 이름(영문)뿌려주는애
 		    function setDisplay(letter_displayname, letter_displayname2) {
 		    	document.getElementById("display").value = letter_displayname;
-		    	document.getElementById("display2").value = letter_displayname2;
+			    document.getElementById("display2").value = letter_displayname2;
 		    }
 	    </script>
 	</body>
