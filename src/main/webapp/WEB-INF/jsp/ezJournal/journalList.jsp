@@ -38,7 +38,7 @@
 						<spring:message code='ezJournal.t12'/>
 					</th>
 				</c:if>
-				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:40%;" class="h5_center">
+				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:<c:choose><c:when test="${listType eq 'mine' or listType eq 'temp'}">60%</c:when><c:otherwise>40%</c:otherwise></c:choose>;" class="h5_center">
 					<spring:message code='ezJournal.t56'/>
 				</th>
 				<c:if test="${listType eq 'recv' }">
