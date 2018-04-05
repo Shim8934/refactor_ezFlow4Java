@@ -256,7 +256,7 @@ function PreviewRayerChange_photo(pGubun) {
                 document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
             	document.getElementById("newDiv").style.height = (CurrentHeight - 88) + "px";
 
-            document.getElementById("divList").style.overflow = "auto";
+            /*document.getElementById("divList").style.overflow = "auto";*/
             document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 60) + "px";
             pPreviewShow_HOW = "H";
             pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
@@ -276,6 +276,7 @@ function PreviewRayerChange_photo(pGubun) {
             Set_BoardConfig();*/
 
     } catch (e) { }
+    scroll();
 }
 
 function PreviewMode_ChangeBtn() {
