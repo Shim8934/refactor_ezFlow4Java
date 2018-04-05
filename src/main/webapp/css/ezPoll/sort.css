@@ -188,7 +188,7 @@ input[type=text]::-ms-clear{ display:none;}
 
 /* 20171129 showSeenUserInfo */
 .voteSeenTbl th{height:40px; background:#edf5ff; color:#304d7f; border:1px solid #c4d3e6;}
-#seenUser_{ color:#304d7f; float:left; margin-top:13px; display:block;}
+#seenUser_{ color:#304d7f; float:left; margin-top:8px; display:block;}
 .voteUnseenTbl th{height:40px; background:#efefef; color:#000; border:1px solid #ddd;}
 
 #ballotSystemBody{min-width: 800px}
@@ -198,4 +198,4 @@ input[type=text]::-ms-clear{ display:none;}
 .imgPopupBoxOff, .imgPopupOff{display: none;}
 .thumbnail{cursor: pointer}
 
-img.unvotedUserMailImg{float: right; margin-right: 10px; cursor: pointer;}
+img.voteUserMailImg{float: right; margin-right: 10px; cursor: pointer;}

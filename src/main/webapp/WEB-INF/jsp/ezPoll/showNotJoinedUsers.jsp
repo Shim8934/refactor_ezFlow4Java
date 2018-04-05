@@ -77,7 +77,7 @@
 								</a>
 							</td>
 							<td style="border:none; width: 60px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list.phone}"/></td>
-							<td style="border-left:none; position: relative; background-clip: padding-box;"><img class="unvotedUserMailImg" src="/images/poll/sendMail.png" onClick="sendMail('${list.id}')"></td>		
+							<td style="border-left:none; position: relative; background-clip: padding-box;"><img class="voteUserMailImg" src="/images/poll/sendMail.png" onClick="sendMail('${list.id}')"></td>		
 						</tr>
 					</c:forEach>
 					<c:if test="${empty listOfUnvotedUsers}">
