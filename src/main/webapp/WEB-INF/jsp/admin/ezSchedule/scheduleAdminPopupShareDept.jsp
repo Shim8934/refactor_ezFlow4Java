@@ -27,7 +27,7 @@
 	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(735, 580));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                } else {
-	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(730, 560));
+	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(860, 590));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                }
 	            } else {
@@ -60,7 +60,7 @@
 	            if (CrossYN()) {
 	                schedule_select_sharedept_cross_dialogArguments[1] = select_sharedept_Complete;
 	
-	                var OpenWin = window.open("/ezSchedule/scheduleSelectShareDept.do", "scheduleSelectShareDept", GetOpenWindowfeature(275, 440));
+	                var OpenWin = window.open("/ezSchedule/scheduleSelectShareDept.do", "scheduleSelectShareDept", GetOpenWindowfeature(300, 590));
 	                try { OpenWin.focus(); } catch (e) { }
 	            } else {
 	                var rtnValue = "";
