@@ -223,6 +223,9 @@
 			a.APPR_STATUS = #type#
 			]]>
 		</isNotEmpty>
+		<isNotEmpty prepend="" property="order">
+				ORDER BY $order$
+		</isNotEmpty>
 		<isNotEmpty property="startPoint" prepend="limit">
 			<isNotEmpty property="endPoint">
 				<![CDATA[
@@ -412,4 +415,21 @@
 		      #ids[]# 
 		</iterate>
 	</delete>
+	
+	<update id="ezAttitudeDAO.attModAppModify" parameterClass="map">
+		<![CDATA[
+			UPDATE TBL_ATTITUDE_MODAPPL
+			SET 
+				CONTENT = #content#,
+	            CHANGE_DATE = DATE_FORMAT(DATE_SUB(DATE_FORMAT(#changeDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S')
+	        WHERE
+	        	TENANT_ID = #tenantId#
+	        AND
+	        	ATTITUDE_ID = #attModId#
+	        AND
+	        	COMPANY_ID = #companyId#
+	        AND
+	        	WRITER_ID = #userId#	
+		]]>
+	</update>
 </sqlMap>

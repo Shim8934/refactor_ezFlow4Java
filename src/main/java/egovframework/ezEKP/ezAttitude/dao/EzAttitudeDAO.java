@@ -147,9 +147,15 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		delete("ezAttitudeAdminDAO.deleteAttitudeUserConfig", map);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public AttitudeApplicationVO attModAppDetail(
 			Map<String, Object> map) {
 		return (AttitudeApplicationVO) select("ezAttitudeDAO.attModAppDetail", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void attModAppModify(
+			Map<String, Object> map) {
+		update("ezAttitudeDAO.attModAppModify", map);
+	}
 }

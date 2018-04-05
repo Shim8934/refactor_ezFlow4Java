@@ -544,7 +544,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId,
-			String userId, String startDate, String endDate, String apprUserName, String sysLang, String offset,String startPoint, String endPoint, String type) throws Exception {
+			String userId, String startDate, String endDate, String apprUserName, String sysLang, String offset,String startPoint, String endPoint, String type, String order) throws Exception {
 		LOGGER.debug("getUsersModiyAtt started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -560,6 +560,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("startPoint", startPoint);
 		map.put("endPoint", endPoint);
 		map.put("type", type);
+		if (order !=null) {
+			map.put("order", order.trim());
+		}
 		
 		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getUsersModiyAtt(map); 
 		
@@ -716,5 +719,23 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offset", offset);
 		
 		return ezAttitudeDAO.attModAppDetail(map);
+	}
+
+	@Override
+	public void attModAppModify(String companyId,
+			int tenantId, String userId, String attModId, String offset,
+			String content, String changeDate) throws Exception {
+			
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("attModId", attModId);
+		map.put("offset", offset);
+		map.put("content", content);
+		map.put("changeDate", changeDate);
+		
+		ezAttitudeDAO.attModAppModify(map);
 	}
 }

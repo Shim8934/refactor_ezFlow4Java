@@ -187,10 +187,13 @@
 	    			break;
 	    		case 2:
 	    			window.open("/ezAttitude/attitudeDeptMain.do", "right");
+	    			break;
 	    		case 3: // 신청현황
 	    			window.open("/ezAttitude/attModAppList.do", "right");
+	    			break;
 	    		case 4:	// 신청관리현황
 	    			window.open("", "right");
+	    			break;
 	    	}
 	    }
 	</script>

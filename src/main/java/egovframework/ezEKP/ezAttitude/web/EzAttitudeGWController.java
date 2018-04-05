@@ -1046,21 +1046,31 @@ public class EzAttitudeGWController {
 			@RequestParam(value="offset", required=false) String offset,
 			@RequestParam(value="startPoint", required=false) String startPoint,
 			@RequestParam(value="endPoint", required=false) String endPoint,
-			@RequestParam(value="type", required=false) String type) {
+			@RequestParam(value="type", required=false) String type,
+			@RequestParam(value="orderCell", required=false) String orderCell,
+			@RequestParam(value="orderOption", required=false) String orderOption) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
 
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
 		
-		if (type != null) {
+		String order = orderCell + " " + orderOption;
+		
+		if (orderCell == null || orderOption == null) {
+			order = null;
+		}
+		
+		if (type != null) { 
 			if (type.equals("all")) {
 				type = null;
 			}
 		}
 		
+		LOGGER.debug("#################order : " + order);
+		
 		try{
-			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint, type);
+			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint, type, order);
 			for (int i = 0 ; i < attList.size(); i++ ) {
 				LOGGER.debug(attList.get(i).toString());
 			}
@@ -1414,13 +1424,41 @@ public class EzAttitudeGWController {
 			@RequestParam(value="offset", required=true) String offset) throws Exception{
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
 		JSONObject result = new JSONObject();
-		
-		AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(companyId, tenantId, userId, attModId, offset);
-		
 		try {
+			
+			AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(companyId, tenantId, userId, attModId, offset);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] ended.");
+		return result;
+	}
+	
+	@RequestMapping(value = "/rest/ezattitude/modifyattitude/{attModId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject attModAppModify(
+			@PathVariable String attModId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="userId", required=true) String userId,
+			@RequestParam(value="offset", required=true) String offset,
+			@RequestParam(value="content", required=true) String content,
+			@RequestParam(value="changeDate", required=true) String changeDate) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			ezAttitudeService.attModAppModify(companyId, tenantId, userId, attModId, offset, content, changeDate);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "success");
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");

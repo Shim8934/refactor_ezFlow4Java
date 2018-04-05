@@ -249,7 +249,9 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String endDate,
 			@RequestParam(required=false)String pageNum,
 			@RequestParam(required=false)String type,
-			@RequestParam(required=false)String excelReq) throws Exception {
+			@RequestParam(required=false)String excelReq,
+			@RequestParam(required=false)String orderCell,
+			@RequestParam(required=false)String orderOption) throws Exception {
 		
 		int currentPage = 1;
 		int pageSize = 15;
@@ -294,7 +296,9 @@ public class EzAttitudeKMSController {
 				.queryParam("sysLang", sysLang)
 				.queryParam("offset", offsetMin)
 				.queryParam("pageNum", pageNum)
-				.queryParam("type", type);
+				.queryParam("type", type)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -348,7 +352,9 @@ public class EzAttitudeKMSController {
 					.queryParam("endDate", endDate)
 					.queryParam("sysLang", sysLang)
 					.queryParam("offset", offsetMin)
-					.queryParam("type", type);
+					.queryParam("type", type)
+					.queryParam("orderCell", orderCell)
+					.queryParam("orderOption", orderOption);
 		} else {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", userInfo.getCompanyID())
@@ -360,7 +366,9 @@ public class EzAttitudeKMSController {
 					.queryParam("offset", offsetMin)
 					.queryParam("startPoint", startPoint)
 					.queryParam("endPoint", endPoint)
-					.queryParam("type", type);
+					.queryParam("type", type)
+					.queryParam("orderCell", orderCell)
+					.queryParam("orderOption", orderOption);
 		}
 
 		rest = new RestTemplate();
@@ -532,7 +540,7 @@ public class EzAttitudeKMSController {
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/modify-applications/" + attId;
+		String url = gwServerUrl + "/rest/ezattitude/modifyattitude/" + attId;
 									
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -545,11 +553,12 @@ public class EzAttitudeKMSController {
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("userId", userInfo.getId())
 				.queryParam("content", content)
-				.queryParam("changeDate", changeDate);
+				.queryParam("changeDate", changeDate)
+				.queryParam("offset", offsetMin);
 		
 		RestTemplate rest = new RestTemplate();
 
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		
 		JSONParser jp = new JSONParser();
 		
@@ -622,5 +631,66 @@ public class EzAttitudeKMSController {
 		LOGGER.debug("attModAppDetail ended");
 		
 		return "/ezAttitude/attModAppDetail";
+	}
+	
+	/**
+	 * 근태 수정 신청 상세
+	 */
+	@RequestMapping(value="/ezAttitude/attModAppMod.do")
+	public String attModAppMod(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=false)String attModId) throws Exception {
+		LOGGER.debug("attModAppDetail started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/modifyattitude/" + attModId;
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("sysLang", sysLang)
+				.queryParam("offset", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = new JSONObject();
+		JSONArray list = new JSONArray();
+
+		if(status.equals("ok")){
+			data = (JSONObject) resultBody.get("data");
+			model.addAttribute("data", data);
+		}
+		
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("userTimeSet", offset);
+		model.addAttribute("offsetMin", offsetMin);
+		
+		LOGGER.debug("attModAppDetail ended");
+		
+		return "/ezAttitude/attModAppMod";
 	}
 }

@@ -40,7 +40,6 @@
 	        var deptID = "<c:out value='${deptID}'/>";
 	        var offSetMin = "<c:out value='${offSetMin}'/>";
 		    var timeCheck = false;
-		    
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
@@ -49,19 +48,128 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		        
-		        var doc = document.getElementById('message').contentWindow.document;
-				doc.open();
-				doc.write('${data.content}');
-				doc.close();
 		    }
 		    
 		    window.onresize = function () {   	
                 document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 185 + "PX";
 		    }
+
+		    $(function () {
+		        $("#Cdatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImageOnly: true
+		        });
+		        
+		        $("#Odatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImageOnly: true
+		        });
+		        
+				var uploadSDate = "${data.changeDate}";
+				var sYear = uploadSDate.substring(0, 4);
+				var sMonth = uploadSDate.substring(5, 7);
+				var sDay = uploadSDate.substring(8, 10);
+				var sHour = uploadSDate.substring(11, 13);
+				var sMin = uploadSDate.substring(14, 16);
+
+		        var SDate = new Date();
+		        SDate.setFullYear(sYear, sMonth-1, sDay);
+		        SDate.setHours(sHour, sMin, 0, 0);
+		        
+		        $("#Cdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Cdatepicker").datepicker('setDate', SDate);
+		        $('#Ctimepicker').timepicker();
+		        $('#Ctimepicker').timepicker('setTime', SDate);
+		        $('#Ctimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        
+		        var uploadEDate = "${data.originDate}";
+				var eYear = uploadEDate.substring(0, 4);
+				var eMonth = uploadEDate.substring(5, 7);
+				var eDay = uploadEDate.substring(8, 10);
+				var eHour = uploadEDate.substring(11, 13);
+				var eMin = uploadEDate.substring(14, 16);
+
+		        var EDate = new Date();
+		        EDate.setFullYear(eYear, eMonth-1, eDay);
+		        EDate.setHours(eHour, eMin, 0, 0);
+		        
+		        $("#Odatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Odatepicker").datepicker('setDate', EDate);
+		        $('#Otimepicker').timepicker();
+		        $('#Otimepicker').timepicker('setTime', EDate);
+		        $('#Otimepicker').timepicker({ 'timeFormat': 'H:i' });
+		    });
 		    
+		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayStr = dayMsg.split(";");
+		    
+		    $(function () {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+		            monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		    });
+		    
+		    var g_originalHTML = null;
+		    function Editor_Complete() {
+				message.SetEditorContent('${data.content}');
+		    }
+
 		    function modify() {
-		    	window.location.href = "/ezAttitude/attModAppMod.do?attModId=" + attid;
+				var obj = new Object();
+		    	
+			    var cDate = $("#Cdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+
+			    var cYear = cDate.split("-")[0];
+			    var cMonth = cDate.split("-")[1];
+			    var cDay = cDate.split("-")[2];
+			    var chour, cminute;
+			    var ctime = $('#Ctimepicker').val()
+		    	obj.attId = attid;
+		    	obj.changeDate = cDate + " " + ctime + ":00";
+		    	obj.content = message.GetEditorContent();
+		    	
+			    $.ajax({
+					type : 'post',
+				    url : '/ezAttitude/modAttModApp.do',
+				    data : obj,
+				    dataType : "text",
+				    error: function(xhr, status, error){
+				    	alert("수정 중 오류 발생")
+				    },
+				    success : function(json){
+						alert("수정되었습니다.");
+						window.close();
+			            try {
+			                window.opener.att_refresh();
+			            } catch (e) { }
+				    }
+			    });
 		    }
 		    
 		    function del() {
@@ -124,13 +232,15 @@
 	                                    <tr>
 	                                        <th>기존시각</th>
 	                                        <td colspan="2">
-	                                        	<c:out value='${data.originDate}' />
+	                                        	<input type="text" id="Odatepicker" style="width:80px;text-align:center" disabled readonly="readonly"><input id="Otimepicker" disabled readonly="readonly" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
 	                                        <th>변경시각</th>
 	                                        <td colspan="2">
-                                           		<c:out value='${data.changeDate}' />
+	                                        	<span id="periodblock">
+	                                           		<input type="text" id="Cdatepicker" style="width:80px;text-align:center" disabled readonly="readonly"><input id="Ctimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	                                            </span>
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
@@ -151,10 +261,10 @@
 	                    </td>
 	                </tr>
 	                <tr>
-		                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-		                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 600px; background-color: white"></iframe>	                    
-		                </td>
-	            	</tr>
+	                    <td style="vertical-align:top;height:100%;" id="EdtorSize">
+		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe>
+	                    </td>
+	                </tr>
 	            </table>
 	        </div>
 	        <script type="text/javascript">
