@@ -10,7 +10,7 @@
 					<td>${form.formName }</td>
 					<c:choose>
 						<c:when test="${fn:length(form.depts) > 1 }">
-							<td>${form.depts[0].deptName }&nbsp;<spring:message code="ezJournal.t124"/>&nbsp;${fn:length(form.depts) -1}</td>
+							<td>${form.depts[0].deptName }<spring:message code="ezJournal.t124"/>${fn:length(form.depts) -1}</td>
 						</c:when>
 						<c:otherwise>
 							<td>${form.depts[0].deptName }</td>

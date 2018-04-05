@@ -186,7 +186,7 @@
 		</isNotEmpty>
 	</select>
 
-	<!-- 회사 생성시 초 기 양식함 생성 -->
+	<!-- 회사 생성시 초기 양식함 생성 -->
 	<insert id="insertJournalType" parameterClass="map">
 		insert into jmocha.tbl_journal_form_type (
 			type_id, 	company_id, 	tenant_id

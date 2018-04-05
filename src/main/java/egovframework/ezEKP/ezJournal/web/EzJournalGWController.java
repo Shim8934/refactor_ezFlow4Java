@@ -917,7 +917,7 @@ public class EzJournalGWController {
 				userId = (String) jsonParam.get("userId");
 			}
 			
-			LOGGER.debug("####cnt:" + cnt + ", maxSize:" + maxSize + "userId:" + userId);
+			LOGGER.debug("####cnt:" + cnt + ", maxSize:" + maxSize + ", userId:" + userId);
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
