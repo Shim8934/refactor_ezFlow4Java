@@ -908,7 +908,8 @@ public class EzAttitudeGWController {
 				voList = new ArrayList<AttitudeUserConfigVO>();
 				AttitudeUserConfigVO vo = new AttitudeUserConfigVO();
 
-				vo.setUserId(userId);
+				info = mOptionService.commonInfoWeb(serverName, userIdList);
+				vo.setUserId(userIdList);
 				vo.setUserName(info.getUserName());
 				vo.setUserName2(info.getUserName2());
 				voList.add(vo);
@@ -1426,6 +1427,53 @@ public class EzAttitudeGWController {
 		}
 		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 근태현황조회 --임시
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/bombom", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	 public JSONObject attitudeMainList2(HttpServletRequest request) {
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			String companyId = request.getParameter("companyId");
+			String pageNum = request.getParameter("pageNum");
+			String listSize = request.getParameter("listSize");
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			String offsetMin = request.getParameter("offsetMin");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			String offset = info.getOffSet();
+			
+			List<AttitudeVO> resultList = ezAttitudeService.getAttitudeList2(companyId, pageNum, listSize, startDate, endDate, offset, info.getTenantId());
+			
+			//imgPath 셋팅
+			
+			for (int i = 0; i < resultList.size(); i++) {
+				String imgPath = resultList.get(i).getImgPath();
+				if (imgPath != null && !imgPath.equals("")) {
+					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + info.getCompanyId() + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+					resultList.get(i).setImgPath(imgPath);
+				}
+			}
+	         
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", resultList);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] ended.");
 		return result;
 	}
 }

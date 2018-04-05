@@ -944,5 +944,180 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("delAttitudeUserConf ended");
 	}
+	
+	/**
+	 * 관리자 부서 근태관리 메인화면 호출
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeCheck.do")
+	public String attitudeCheck(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		//회사리스트
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONArray list = new JSONArray();
+		if (status.equals("ok")) {
+			list = (JSONArray) resultBody.get("data");
+			
+			LOGGER.debug("list : " + list);
+			
+			model.addAttribute("list", list);
+		}
+		
+		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf ended");
+		
+		return "/admin/ezAttitude/attitudeCheck";
+	}
+	
+	/**
+	 * 사용자별 근태설정 리스트 출력
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeCheckList.do", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public JSONObject getAttitudeCheckList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/admin/ezAttitude/attitudeCheckList started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
+//		String orderCell = request.getParameter("orderCell");
+//		String orderOption = request.getParameter("orderOption");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		String userId = userInfo.getId();
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		LOGGER.debug(companyId);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; // 부서근태조회는 따로 빼두는것이 좋지 않을까...아닌가 쿼리를 잘짜면 되려나
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
+//				.queryParam("orderCell", orderCell)
+//				.queryParam("orderOption", orderOption)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate)
+				.queryParam("offsetMin", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		
+		JSONObject jObject = new JSONObject();
+		if(status.equals("ok")){
+			jObject = (JSONObject) resultBody.get("data");
+		}
+		
+		LOGGER.debug("/admin/ezAttitude/attitudeCheckList ended");
+		return jObject;
+	}
+	/**
+	 * 부서근태관리 > 조회자 검색 화면 출력 메서드
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/getSearchList.do")
+	public String attitudeCheckUserSearch(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		String searchIdList = request.getParameter("searchIdList");
+		String searchNameList = request.getParameter("searchNameList");
+		if (searchIdList != null && searchNameList != null) {
+			model.addAttribute("searchIdList", searchIdList);
+			model.addAttribute("searchNameList", searchNameList);
+		}
+		
+		//조직도 회사,부서 리스트
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/organtree/depts";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		
+		JSONObject jObject = new JSONObject();
+		if (status.equals("ok")) {
+			JSONArray deptList = (JSONArray) resultBody.get("data");
+			
+			for (int i = 0; i < deptList.size(); i++) {
+				JSONObject dept =  (JSONObject) deptList.get(i);
+				if (dept.get("isComp").equals("comp")) {
+					dept.put("icon", "icon-company");
+				} else{
+					dept.put("icon", "icon-dept");
+				}
+				if (dept.get("myDept").equals("yes")) {
+					JSONObject state = new JSONObject();
+					state.put("opened", "true");
+					state.put("selected", "true");
+					dept.put("state", state);
+				}
+			}
+			
+			model.addAttribute("deptList", deptList);
+			model.addAttribute("companyId", companyId);
+		}
+		return "admin/ezAttitude/searchAttitudeCheck";
+	}
 
 }
