@@ -304,6 +304,12 @@
 			.clickactive {
 				background-color: rgb(233, 241, 255);
 			}
+			
+	
+			
+			#pollTd01 {
+				margin-top: -50px;
+			}
 		</style>
 		
 </head>
@@ -318,9 +324,9 @@
 							<tr>
 								<td style="padding: 0px; border-bottom: none;" class="pollTd01">
 									<div style="min-width: 300px;">
-									<input id="searchInput" class="input" type="text" placeholder="제목 검색" style="margin-bottom: 10px; width: 245px;">
+									<input id="searchInput" class="input" type="text" placeholder="제목 검색" style="margin-bottom: 10px; width: 273px; float:left; border:1px solid #ccc;">
 									<input id="searchOption" value="title" style="display: none;">
-									<a class="imgbtn" style="height: 24px; float: right;" onclick="searchLadder()"><span style="line-height: 24px;">검색</span></a>
+									<a style="width:27px; height: 24px; float: right;" onclick="searchLadder()"><img src="/images/ezLadder/btn_search.png" width='24px' height='24px'></a>
 									</div>
 									<ul id="columnsbnk" class="content" style="border-bottom: none;">
 										<c:forEach items="${list}" var="prelist" varStatus="status">

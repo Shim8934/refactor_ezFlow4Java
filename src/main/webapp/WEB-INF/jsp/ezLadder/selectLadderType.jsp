@@ -28,7 +28,7 @@
 				var win_width = $(window).width();
 				var win_height = $(window).height();
 				$("#ladderGame").css("margin-top", win_height/25 + "px");
-				$("#ladderGameCard").css("margin-top", win_height/10 + "px");
+				$("#ladderGameCard").css("margin-top", win_height/12 + "px");
 				$(".effect img").css("width", win_width/5 + "px");
 				$(".effect img").css("height", win_height/2 + "px");
 			}
