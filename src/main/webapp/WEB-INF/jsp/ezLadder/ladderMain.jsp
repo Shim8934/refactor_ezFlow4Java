@@ -128,8 +128,8 @@
 		</div>
 		
 		<div class="div_scroll" style="width:100%; overflow: auto" id="divList">
-			 <table class="mainlist" style="width:98%; margin-left: 10px; margin-right: 10px;"> 
-			    <tr class="header" style="height=20px;"> 
+			 <table class="mainlist" style="width:98%; margin-left: 10px; margin-right: 10px; overflow: auto"> 
+			    <tr class="header" style="height=20;"> 
 					<th width="20px"><spring:message code="ezLadder.t002"/></th> 					
 					<th width="80px"><spring:message code="ezLadder.t003"/></th> 
 					<th width="40px"><spring:message code="ezLadder.t004"/></th>
