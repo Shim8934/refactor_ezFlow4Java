@@ -6638,8 +6638,6 @@
 			   			 AND 
 			   				FUNCTIONTYPE IN ('002', '005', '000')
 			   			 AND 
-			   				APRMEMBERID IN ($v_USERIDS$)
-			   			 AND 
 			   				DOCID = #v_DOCID#
 			   				
 			   			UNION 
@@ -6674,8 +6672,6 @@
                             COMPANYID = #companyID#
                         AND 
                             FUNCTIONTYPE IN ('002', '005', '000')
-                        AND 
-                            APRMEMBERID IN ($v_USERIDS$)
                         AND 
                             DOCID = #v_DOCID#
                             

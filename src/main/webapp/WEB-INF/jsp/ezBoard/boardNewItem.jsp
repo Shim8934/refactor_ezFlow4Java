@@ -1762,6 +1762,8 @@
 		                Td.style.fontSize = "10pt";
 		                Td.style.lineHeight = "20px";
 		                Td.style.wordBreak = "break-all";
+		                Td.style.backgroundRepeat = "no-repeat";
+		                Td.style.backgroundSize = "auto";
 		                Td.setAttribute("free", "");
 		
 		                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
@@ -1831,9 +1833,10 @@
 		        Td.style.fontSize = "10pt";
 		        Td.style.lineHeight = "20px";
 		        Td.style.wordBreak = "break-all";
+		        Td.style.backgroundRepeat = "no-repeat";
 		        Td.style.width = imgWidth + "px";
 		        Td.style.height = imgHeight + "px";
-		        Td.style.backgroundSize = "cover";
+		        Td.style.backgroundSize = "auto";
 		        
 	        	//Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
 	        	Td.style.backgroundImage = "URL(" + imgSrc + ")";
