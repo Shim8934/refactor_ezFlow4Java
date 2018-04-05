@@ -64,7 +64,6 @@ function changeBtnColor(){
 //검색 
 function searchLadder() {
 	mode = modeCheck;
-	modeCheck = "search";
 
 	if (searchSelect === 'none') {
 		currPage = 1;
@@ -79,10 +78,24 @@ function searchLadder() {
 		currPage = pageChange;
 		pageChange = 1;
 	}
-
-	searchSelect = document.getElementById("searchOption").value;
-	searchInput = document.getElementById("searchInput").value;
 	
+	
+	searchSelect = document.getElementById("searchOption").value;
+	searchInput = document.getElementById("searchInput").value.trim();
+	
+	if(searchInput==="") {
+		alert(strLang39);
+		searchSelect = '';
+		return;
+	} else if(searchInput.includes("%")) {
+		alert(strLang40);
+		searchSelect = '';
+		return;
+	} else if(searchInput.includes("&")) {
+		alert(strLang41);
+		searchSelect = '';
+		return;
+	}
 	if(mode === "pre") {
 		viewAjax();
 	} else {
@@ -142,7 +155,14 @@ function viewAjax() {
 }
 
 // 페이징 처리
+function pageZeroCheck() {
+	if(totalPage==0) {
+		totalPage=1;
+		currPage=1;
+	}
+}
 function makePageSelPage() {
+	pageZeroCheck();
 	var strtext = "";
 	var PagingHTML = "<div class='pagenavi'>";
 	var pageNum = currPage;
@@ -272,6 +292,7 @@ function selafterBlock_one() {
 
 function goToPageByNum(page) {
 	pageChange = page;
+	
 	if (searchSelect !== '' && searchSelect !== 'none') {
 		searchLadder();
 	} else  {

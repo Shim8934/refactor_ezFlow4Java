@@ -93,7 +93,6 @@ public class EzLadderController {
 		logger.debug("searchSelect : " + searchSelect);
 		logger.debug("searchInput : " + searchInput);
 	
-
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/ladder/ladder-list/users/" + userInfo.getId();

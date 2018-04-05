@@ -20,6 +20,26 @@ var strLang19 = "꽝뽑기";
 var strLang20 = "돈내기";
 var strLang21 = "순서 정하기";
 var strLang22 = "직접 쓰기";
-	
+var strLang23 = "명";
+var strLang24 = "이전";
+var strLang25 = "다음";
+var strLang26 = "확인";
+var strLang27 = "취소";
+var strLang28 = "에 해당하는 사용자가 없습니다.";
+var strLang29 = "[신규사다리알림] 새로운 사다리가 등록되었습니다.";
+var strLang30 = "작성자";
+var strLang31 = "사다리 결과가 꽝 or";
+var strLang32 = "패스인 사다리입니다.";
+var strLang33 = "사다리 결과에 숫자를 적으면,";
+var strLang34 = "총 합이 보여집니다.";
+var strLang35 = "1번부터 순서를 정합니다.";
+var strLang36 = "결과는 자동으로 채워집니다.";
+var strLang37 = "일반적인 사다리입니다. ";
+var strLang38 = "결과를 직접 입력합니다.";
+var strLang39 = "공백으로 검색할 수 없습니다.";
+var strLang40  = "'%'는 검색할 수 없습니다.";
+var strLang41  = "'&'는 검색할 수 없습니다.";
+
+
 	/** boh */
 var strLang100 = "검색결과";

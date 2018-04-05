@@ -155,10 +155,8 @@
 					</tr>
 				</c:forEach>
 		        
-			    <c:if test="${vo.size() == 0}"> 
-			        <tr> 
-						<td colspan="9" align="center"  bgcolor="#FFFFFF"> <spring:message code="ezLadder.t010" /></td>
-		       		</tr> 
+			    <c:if test="${list.size() == 0}"> 
+					<td colspan="7" align="center"  bgcolor="#FFFFFF"> <spring:message code="ezLadder.t010" /></td> 
 		        </c:if> 
 			</table>  
 		</div>
