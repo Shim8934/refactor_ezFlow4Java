@@ -274,7 +274,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			codeList.append("<NODES>");
 			
 			for (ApprGTaskVO k : apprGTaskVOs) {
-				codeList.append(getCodeTreeNodeInfo(k, "", categoryCode, tempCodeList, level));
+				codeList.append(getCodeTreeNodeInfo(k, "", categoryCode, tempCodeList, "1"));
 			}
 			
 			codeList.append("</NODES>");
@@ -283,7 +283,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			break;
 		case "3":
-			map.put("categoryCode", categoryCode);
+			map.put("categoryCode", mCategoryCode);
 			apprGTaskVOs = ezApprovalGDAO.getTaskSubCategory(map);
 			
 			codeList.append("<NODES>");
@@ -297,13 +297,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			tempCodeList = codeList.toString();
 			codeList.setLength(0);
 			
-			map.put("categoryCode", mCategoryCode);
+			map.put("categoryCode", categoryCode);
 			apprGTaskVOs = ezApprovalGDAO.getTaskMiddleCategory(map);
 			
 			codeList.append("<NODES>");
 			
 			for (ApprGTaskVO k : apprGTaskVOs) {
-				codeList.append(getCodeTreeNodeInfo(k, "", mCategoryCode, tempCodeList, level));
+				codeList.append(getCodeTreeNodeInfo(k, "", mCategoryCode, tempCodeList, "2"));
 			}
 			
 			codeList.append("</NODES>");
@@ -316,7 +316,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			codeList.append("<NODES>");
 			
 			for (ApprGTaskVO k : apprGTaskVOs) {
-				codeList.append(getCodeTreeNodeInfo(k, "", categoryCode, tempCodeList, level));
+				codeList.append(getCodeTreeNodeInfo(k, "", categoryCode, tempCodeList, "1"));
 			}
 			
 			codeList.append("</NODES>");
