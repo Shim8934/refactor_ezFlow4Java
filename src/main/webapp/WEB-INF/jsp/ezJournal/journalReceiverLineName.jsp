@@ -23,22 +23,11 @@
 	        		alert("<spring:message code='ezJournal.t91'/>");
 		
 		        } else {
-		    		/* $.ajax({
-		    			type : "POST",
-		    			dataType : "json",
-		    			async : false,
-		    			url : "/ezJournal/journalFavoriteList.do",
-		    			data : { "userId" : userId },
-		    			success: function(result){
-		    				result = xml;
-		    			}        			
-		    		});	 */
 		        	saveReceiverLine();
 		        }
 		    }
 		    
 		    function saveReceiverLine() {
-		    	console.log(parent.type);
 		    	$.ajax({
 		    		type : "POST",
 		    		url : "/ezJournal/saveReceiverFavorite.do",
@@ -81,7 +70,6 @@
 		    	
 		        try {
 		        	receiverLine = parent.receiverList;
-		        	console.log("receiverLine : " + receiverLine);
 		        } catch (e) {
 		            try {
 		            	receiverLine = opener.receiverList;
@@ -89,7 +77,7 @@
 		        }
 		
 		        // 한글 입력시 maxlength + 1이 입력되는 현상 제어
-			    $("#receiverFavoriteName").keyup( function(e){
+			    $("#receiverFavoriteName").keyup(function(e){
 			    	var maxlength = $(this).prop("maxlength");
 			    	if ($(this).val().length >= maxlength) {
 			    		$(this).val($(this).val().substr(0, maxlength));

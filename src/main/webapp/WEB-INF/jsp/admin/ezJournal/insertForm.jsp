@@ -104,7 +104,7 @@
 		    			if (message.GetEditorContent().indexOf("@" + info) < 0) {
 			    			message.SetAttribute("INIS", info, "FIELD");
 		    			} else {
-			    			if (confirm("사용중인 예약어입니다. 또 추가하시겠습니까?") == true) {
+			    			if (confirm("<spring:message code='ezJournal.t169'/>") == true) {
 				    			message.SetAttribute("INIS", info, "FIELD");
 	                		}
 		    			}
@@ -223,8 +223,8 @@
 		    	} else if (($(":input:radio[name=setUseDept]:checked").val() == "A") && formId != null) {
 		    		isDeptChanged = "Y";
 		    	}
-		    	console.log("formId : " + formId);
-		    	console.log("isDeptChanged : " + isDeptChanged)
+		    	// console.log("formId : " + formId);
+		    	// console.log("isDeptChanged : " + isDeptChanged)
 		    	$.ajax({
 		    		type : "POST",
 		    		url : "/admin/ezJournal/formSave.do",
@@ -238,7 +238,7 @@
     						"isDeptChanged"	: isDeptChanged},
     				success : function(result) {
 						if (result === "ok") {
-	    					console.log("저장결과확인 : " + result);
+	    					// console.log("저장결과확인 : " + result);
 	    					alert("<spring:message code='ezJournal.t128'/>");
 	    					opener.location.reload();
 							window.close();    					
@@ -385,7 +385,6 @@
 			</div>
 		</div>
         <script type="text/javascript">
-        //	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
         	selToggleList(document.getElementById("menu"), "ul", "li", "0");
             selToggleList(document.getElementById("close"), "ul", "li", "0");
             Tab1_NewTabIni("tab1");

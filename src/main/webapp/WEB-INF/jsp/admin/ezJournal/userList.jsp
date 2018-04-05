@@ -11,13 +11,13 @@
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	   	<script type="text/javascript">
-	   		function ChangeListView_onClick(flag){
-	   			if(flag=='TXT'){
+	   		function ChangeListView_onClick(flag) {
+	   			if (flag == 'TXT') {
 	   				$("#txtlist_Layer").css("display","");
 	   				$("#DeptUserImgList").css("display","none");
 	   				$("#txtlist").attr("src","/images/kr/cm/btn_onlist.gif");
 	   				$("#imglist").attr("src","/images/kr/cm/btn_imglist.gif");
-	   			}else{
+	   			} else {
 	   				$("#DeptUserImgList").css("display","");
 	   				$("#txtlist_Layer").css("display","none");
 	   				$("#txtlist").attr("src","/images/kr/cm/btn_list.gif");
@@ -60,15 +60,15 @@
 		</div>
 		<div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 100%;" id="DeptUserImgList">
 			<c:forEach items="${userList}" var="user">
-				<table class="organwrap" cellspacing="0" cellpadding="0"
-					style="margin-top: 5px; margin-left: auto; margin-right: auto;">
+				<table class="organwrap" cellspacing="0" cellpadding="0" style="margin-top: 5px; margin-left: auto; margin-right: auto;">
 			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
 						<td class="pictd"><div class="pic">
 						<c:if test="${not empty user.userImg }">
 						<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${user.userImg }" width="90px" height="90px">
 						</c:if>
 						</div></td>
-						<td style="width: 75%;"><table class="organinfo">
+						<td style="width: 75%;">
+							<table class="organinfo">
 								<tr>
 									<td class="name" style="text-align: left;">${user.userName }</td>
 								</tr>
@@ -76,10 +76,10 @@
 									<td style="text-align: left;">${user.deptName }</td>
 								</tr>
 								<tr>
-									<td style="text-align: left;"><img class="icon"
-										src="/images/OrganTree/icon_mail.gif">${user.mail }</td>
+									<td style="text-align: left;"><img class="icon" src="/images/OrganTree/icon_mail.gif">${user.mail }</td>
 								</tr>
-							</table></td>
+							</table>
+						</td>
 					</tr>
 				</table>
 			</c:forEach>

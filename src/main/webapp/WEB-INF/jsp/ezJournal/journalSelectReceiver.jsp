@@ -86,7 +86,7 @@
 	   			$(elem).addClass("selectTR");
 	   			selMainListUserId = $(elem).attr("id");
 	   			selMainListUserName = $(elem).attr("name");
-	   			console.log("selMainListUserId : " + selMainListUserId)
+	   			// console.log("selMainListUserId : " + selMainListUserId)
 	   		}
 	   		
 	   		// 리스트에서 클릭이벤트 적용
@@ -101,16 +101,15 @@
 	   			$(elem).addClass("selectTR");
 	   			selUserId = $(elem).attr("id");
 	   			selUserName = $(elem).attr("name");
-	   			console.log("selUserId : " + selMainListUserId)
+	   			// console.log("selUserId : " + selMainListUserId)
 	   		}
 	   		
 	   		// 선택한 사람을 수신자에 추가
 	   		function setAuthorViewUser() {
-	   			console.log("selUserId확인 : " + selUserId);
+	   			// console.log("selUserId확인 : " + selUserId);
 	   			if (selUserId != "" && selUserId != undefined) {
 		   			var receiverId = selUserId;
 		   			userName = selUserName;
-		   			console.log(userName);
 		   			var chkFlag = true;
 	   				
 		   			if (userId == receiverId) {
@@ -124,7 +123,6 @@
 		   			
 		   			if (chkFlag) {
 						receiverList.push({"userName" : userName, "userId" : receiverId});
-						console.log(receiverList);
 		   			} else {
 		   				if (userId == receiverId) {
 			   				alert("<spring:message code='ezJournal.t140'/>");
@@ -144,7 +142,6 @@
 		    function deleteReceiver() {
 		     	for(var j = 0; j < receiverList.length; j++) {
 		    		if (receiverList[j].userId === selMainListUserId) {
-		    			console.log(selMainListUserId);
 		    			receiverList.splice(j, 1);
 		    			selMainListUserId = "";
 		    		}
@@ -154,7 +151,6 @@
 	   		
 	   		// 선택된 수신자 배열을 토대로 화면에 그리는 곳
 	   		function drawReceiverList() {
-		    	console.log(receiverList);
 		    	
 		    	var $receiverList = $("#receiverList");
 		    	var strHTML = "";     
@@ -212,7 +208,7 @@
 	   			if (elem != null && elem != "") {
 		   			favoriteId = $(elem).attr("favoriteId");
 	   			}
-	   			console.log("userId : " + userId + ", favoriteId : " + favoriteId);
+	   			// console.log("userId : " + userId + ", favoriteId : " + favoriteId);
 	   			$.ajax({
 	   				type : "post",
 	   				dataType : "html",
@@ -274,15 +270,6 @@
 	   		}
 	   		
 	   		function applyReceiver() {
-	   			/*
-	   			if (Tab1_SelectID == "1tab1") {
-	   				setAuthorViewUser();
-	   			} else {
-	   				if ($(elem).parent().attr("id") === "List_TBODY2") {
-	   					
-	   				}
-	   			}
-	   			*/
   				setAuthorViewUser();
 	   		}
 	   		
