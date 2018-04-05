@@ -73,5 +73,5 @@ public interface EzWebFolderService {
 	void saveLog(String string, String companyId, String offset, String userId, String userName1, String userName2, String fileName, String fileSize, String fileExt, String fileTypeName, int tenantId) throws Exception;
 	String getMaxFileID(int tenantId) throws Exception;
 	JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, Locale locale, LoginVO userInfo) throws Exception;
-	Map<String, String> getAllFolderNameMap(List<String> testbnk, int tenantId);
+	Map<String, String> getAllFolderNameMap(List<String> testbnk, String primary, int tenantId);
 }

@@ -1030,9 +1030,10 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public Map<String, String> getAllFolderNameMap(List<String> testbnk, int tenantId) {
+	public Map<String, String> getAllFolderNameMap(List<String> testbnk, String primary, int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("testbnk", testbnk);
+		map.put("testbnk",  testbnk);
+		map.put("primary",  primary);
 		map.put("tenantId", tenantId);
 		
 		return ezWebFolderDAO.getAllFolderNameMap(map);

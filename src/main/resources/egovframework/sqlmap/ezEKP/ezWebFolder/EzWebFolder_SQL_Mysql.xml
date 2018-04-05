@@ -1396,7 +1396,7 @@
 	
 	<select id="EzWebFolderDAO.getAllFolderNameMap" resultMap="hashMapResult">
 		SELECT
-			FOLDER_ID AS FOLDER_ID,
+			FOLDER_ID                                                         AS FOLDER_ID,
 			CASE WHEN #primary# = '1' THEN FOLDER_NAME1 ELSE FOLDER_NAME2 END AS FOLDER_NAME
 		FROM
 			TBL_WEBFOLDER_FOLDER

@@ -1454,8 +1454,6 @@ public class EzWebFolderGWController {
 				Map<String, String> filePathMap = new LinkedHashMap<String, String>();
 				fileList                        = ezWebFolderService.getAllFiles(folder.getFolderPath(), originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
 				totalRows                       = ezWebFolderService.getTotalFileCnt2(folder.getFolderPath(), searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, tenantId);
-				String []rootPath               = folderPath.split("\\|");
-				Set<String> testbnk             = new HashSet<String>();
 				
 				//Old way
 				/*for (FileVO file : fileList) {
@@ -1482,26 +1480,31 @@ public class EzWebFolderGWController {
 				}*/
 				
 				//New way 30-50% faster
-				for (FileVO file : fileList) {
-					String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
-					String[] fldPathArr = fldPath.split("\\|");
-					testbnk.addAll(Arrays.asList(fldPathArr));
-				}
-				
-				List<String> listName = new ArrayList<String>(testbnk);
-				filePathMap           = ezWebFolderService.getAllFolderNameMap(listName, tenantId);
-				
-				for (FileVO file : fileList) {
-					if (file.getFilePosition().equals("")) {
-						String file_path    = originalPath;
+				if (fileList.size() > 0) {
+					String []rootPath               = folderPath.split("\\|");
+					Set<String> testbnk             = new HashSet<String>();
+					
+					for (FileVO file : fileList) {
 						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
 						String[] fldPathArr = fldPath.split("\\|");
-						
-						for (int i = rootPath.length; i < fldPathArr.length; i++) {
-							file_path += filePathMap.get(fldPathArr[i]) + "/";
+						testbnk.addAll(Arrays.asList(fldPathArr));
+					}
+					
+					List<String> listName = new ArrayList<String>(testbnk);
+					filePathMap           = ezWebFolderService.getAllFolderNameMap(listName, primary, tenantId);
+					
+					for (FileVO file : fileList) {
+						if (file.getFilePosition().equals("")) {
+							String file_path    = originalPath;
+							String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
+							String[] fldPathArr = fldPath.split("\\|");
+							
+							for (int i = rootPath.length; i < fldPathArr.length; i++) {
+								file_path += filePathMap.get(fldPathArr[i]) + "/";
+							}
+							
+							file.setFilePosition(file_path + file.getFileName());
 						}
-						
-						file.setFilePosition(file_path + file.getFileName());
 					}
 				}
 			}
