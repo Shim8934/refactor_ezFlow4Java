@@ -276,9 +276,9 @@ public class EzJournalSBController {
 				journal.put("journalDate", journalDate.substring(0, 16));
 			}
 			model.addAttribute("journalList", journalList);
-			model.addAttribute("listType",listType);
 			model.addAttribute("totalCount",totalCount);
 		}
+		model.addAttribute("listType",listType);
 		logger.debug("journalList ended");
 		
 		return "/ezJournal/journalList";
