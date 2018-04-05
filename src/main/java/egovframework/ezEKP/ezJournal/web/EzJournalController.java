@@ -496,6 +496,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * 수신자 즐겨찾기 저장  
 	 */
 	@SuppressWarnings("unchecked")
+	@ResponseBody
 	@RequestMapping(value = "/ezJournal/saveReceiverFavorite.do")
 	public void saveReceiverFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("saveReceiverFavorite started");
@@ -909,6 +910,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * 일지작성 > 닫기 클릭시 임시첨부파일 삭제 또는 파일삭제
 	 */
 	@RequestMapping(value = "/ezJournal/tempUploadFileDelete.do")
+	@ResponseBody
 	public String tempUploadFileDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		
 		logger.debug("tempUploadFileDelete started");
@@ -1201,7 +1203,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezJournal/journalDetail.do")
-	public String getJournalDetail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+	public String getJournalDetail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getJournalDetail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
