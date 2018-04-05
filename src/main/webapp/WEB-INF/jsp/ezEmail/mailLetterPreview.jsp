@@ -17,6 +17,9 @@
 		<script type="text/javascript">
 			var letterNo = '${letterNo}';
 			var isDivPopUp = false;
+			var letterNoMsg = "<spring:message code='ezEmail.letter16'/>"; // 존재하지 않는 편지지 입니다.
+			var previewMsg = "<spring:message code='ezBoard.t431'/>"; // 미리보기 
+			var dataNoMsg= "<spring:message code='main.t00026'/>"; // 데이터가 없습니다.
 			
 			window.onload = function () {
 				isDivPopUp = true;

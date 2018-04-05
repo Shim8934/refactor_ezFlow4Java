@@ -70,6 +70,16 @@
 			var returnCompany = '${companyId}'; // companyId
 			var searchTxt = ""; // 검색어
 			var strLang = "${strLang}";
+			var searchMsg = "<spring:message code='ezOrgan.t56'/>"; // 검색어를 입력해주세요.
+			var specialMsg = "<spring:message code='ezEmail.kyj17'/>"; // 해당 특수문자는 입력할 수 없습니다.
+			var lengthMsg = "<spring:message code='ezEmail.letter14'/>"; // 자 이하로 입력 가능합니다.
+			var contentMsg = "<spring:message code='ezEmail.letter15'/>"; // 내용을 입력해주세요.
+			var letterNoMsg = "<spring:message code='ezEmail.letter16'/>"; // 존재하지 않는 편지지 입니다.
+			var previewMsg = "<spring:message code='ezBoard.t431'/>"; // 미리보기 
+			var modifyMsg = "<spring:message code='ezBoard.t316'/>"; // 수정
+			var deleteMsg = "<spring:message code='ezBoard.t89'/>"; // 삭제
+			var dataNoMsg= "<spring:message code='main.t00026'/>"; // 데이터가 없습니다.
+			
 			
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록  (/js/ezEmail/js_cross/letterBoxTree.js)

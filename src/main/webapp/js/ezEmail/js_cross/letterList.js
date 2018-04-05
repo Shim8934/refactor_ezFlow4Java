@@ -10,7 +10,7 @@ function letterSearch() {
 	}
 	
 	if(search.trim() === "") {
-		alert("<spring:message code='ezOrgan.t56'/>");
+		alert(searchMsg);
 		return;
 	}
 	
@@ -60,17 +60,17 @@ function strChk(str, speChar, strLen) {
 			var speCha = /[`~!<>@#$%^&*|\\\"\';:\/?]/gi;
 			
 			if (speCha.test(strTrim)) {
-				msg = "<spring:message code='ezEmail.kyj17'/>";
+				msg = specialMsg;
 			}	
 		}
 		
 		if (strLen !== undefined) {
 			if (strTrim.length > strLen) {
-				msg = strLen + "<spring:message code='ezEmail.letter14'/>";
+				msg = strLen + lengthMsg;
 			} 
 		}
 	}else {
-		msg = "<spring:message code='ezEmail.letter15'/>";
+		msg = contentMsg;
 	}
 	
 	reJson.str = strTrim;
@@ -105,7 +105,7 @@ function lmPreviewChange(data) {
 	var iframeDisplay = "none";
 	var ifrLetterName = "";
 	var ifrLetterNo = "";
-	var txtText = "미리보기";
+	var txtText = previewMsg;
 	var filePath = "ERROR";
 	var useLang = typeof(strLang) == "undefined" ? "" : strLang;
 	
@@ -117,7 +117,7 @@ function lmPreviewChange(data) {
 		ifrLetterNo = data.letterNo;
 		
 		if (filePathTmp === "ERROR") {
-			txtText = "<spring:message code='ezEmail.letter16'/>";
+			txtText = letterNoMsg;
 		} else {
 			txtText = "";
 			txtDisplay = "none";
@@ -187,14 +187,14 @@ function addLetterList(jsonArr) {
 					letterListHtml += "<b title='" + boxName + "'>" + boxName + "</b>";
 				}
 			} else {
-				letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp(this)'>수정</button>";
-				letterListHtml += "<button class='lmLetterDeleteBtn'>삭제</button>";
+				letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp(this)'>" + modifyMsg + "</button>";
+				letterListHtml += "<button class='lmLetterDeleteBtn'>" + deleteMsg + "</button>";
 			}
 			
 			letterListHtml += "</li>";
 		}
 	} else {
-    	letterListHtml = "<li class='lmNoData'>데이터가 없습니다.</li>";
+    	letterListHtml = "<li class='lmNoData'>" + dataNoMsg + "</li>";
 	}
 	
 	$(".lmLetterListUl").html(letterListHtml);
