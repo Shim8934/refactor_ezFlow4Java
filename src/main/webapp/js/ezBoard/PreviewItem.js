@@ -294,7 +294,14 @@ function ItemPreviewRead_click(obj) {
 var xmlhttp = createXMLHttpRequest();
 var xmlhttp2 = createXMLHttpRequest();
 function ItemPreviewRead(obj) {
-    obj.childNodes[2].style.fontWeight = "normal";
+	
+	for (var i = 0; i < obj.childNodes.length; i++) {
+		if (obj.childNodes[i].style.fontWeight == "bold") {
+			obj.childNodes[i].style.fontWeight = "normal";
+		} else {
+			obj.childNodes[i].style.fontWeight = "normal";
+		}
+	}
 
     var pboardid = obj.getAttribute("DATA1");
     var pitemid = obj.getAttribute("DATA2");
