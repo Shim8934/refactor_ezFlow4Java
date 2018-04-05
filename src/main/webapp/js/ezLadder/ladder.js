@@ -45,6 +45,8 @@
 
 var userDiv = 100; 
 var ladderlinecnt = 0;
+var clickUserOrder = -1;
+var resultOrder = -1;
 var startXPoint = userDiv/2; // 시작 위치 왼쪽부터 떨어진 거리
 var startYPoint = 1; // 시작 위치 위부터 떨어진 거리
 var hInfo = 39 + 1; // 높이 수
@@ -58,6 +60,7 @@ var printLadInfo = []; // 사다리 방향 정보
 var checkUserPath = []; // 유저별 사다리 이동 방향 정보
 var userStatus = []; // 유저의 사다리 실행 상태 (처음 실행 : 0, 다시 실행 : 1)
 var drawStatus = false;
+var beforeStatus = 0;
 
 function changeSpeed(speed, flag) { // 속도 변화
 	if(flag === "fast") {
@@ -149,35 +152,55 @@ function setUserPath() { // 각 유저의 이동경로 저장
 	}
 }
 
-function aniOneUser(user) { 
-	drawStatus = !drawStatus;
-	printUserPath(user, user, 0, startXPoint + user * wSize, startYPoint, 'anione');
-	userStatus[user] = 1;
+function aniOneUser() { 
+	if(beforeStatus == 0) {
+		drawStatus = !drawStatus;
+	}
+	printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'anione');
+	beforeStatus = 0;
+	userStatus[clickUserOrder] = 1;
 }
 
 function aniAllUser() {
 	// TODO printUserPath 함수가 끝난 다음에 실행될 수 있도록 해야함.... 속도조절시 문제... 한번 실행중일떄 버튼 클릭 막기 
-	for(var user = 0; user < wInfo; user++) {
+	drawStatus = !drawStatus;
+	printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'aniall' + clickUserOrder);
+	
+	userStatus[clickUserOrder] = 1;
+	
+	/*if(drawStatus >= 0) {
+		console.log("빡..."+resultOrder);
+	}*/
+	
+	/*if(user < wInfo) {
+		aniAllUser(user++);
+	} else {
+		return;
+	}*/
+	
+	
+	/*for(var user = 0; user < wInfo; user++) {
 		(function(x) {
 			setTimeout(function() {
 				drawStatus = !drawStatus;
 				printUserPath(x, x, 0, startXPoint + x * wSize, startYPoint, 'aniall');
-			}, 250 / ladderlinecnt * moveSpeed * wInfo * x);
+			}, 1000 / ladderlinecnt * moveSpeed * wInfo * x);
 		})(user);
 		userStatus[user] = 1;
-	}
+	}*/
 }
 
-function popOneUser(user) {
+function popOneUser() {
 	drawStatus = !drawStatus;	
-	printUserPath(user, user, 0, startXPoint + user * wSize, startYPoint, 'popone');
+	beforeStatus = 1;
+	printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'popone');
 }
 
 function popAllUser() {
 	drawStatus = !drawStatus;
-	for(var user = 0; user < wInfo; user++) {
-		printUserPath(user, user, 0, startXPoint + user * wSize, startYPoint, 'popall');
-		userStatus[user] = 1;
+	for(clickUserOrder = 0; clickUserOrder < wInfo; clickUserOrder++) {
+		printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'popall');
+		userStatus[clickUserOrder] = 1;
 	}
 }
 
@@ -207,12 +230,22 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 				locY++;
 			}
 		}
+		resultOrder = locX;
+		ladderAnimationComplete();
 	} else if(typeStr1 == 'ani') {
 		drawPathLine(user, moveX, moveY, typeStr2);
 		
 		if(locY >= hInfo) { 
 			drawStatus = false;
-			return;
+			resultOrder = locX;
+			ladderAnimationComplete(); // ladderGame.jsp
+			
+			if(typeStr2 == 'all' && user + 1 < wInfo) {
+				clickUserOrder++;
+				return aniAllUser();
+			} else {
+				return;
+			}
 		} 
 		if(path) {
 			if(path['direction'] == 'left') {
@@ -280,8 +313,7 @@ function drawPathLine(user, moveX, moveY, type) {
 		cv.lineWidth = 5;
 		
 		if(moveY == startYPoint) {
-			console.log('초기화');
-			if(type == 'one') {
+			if(type == 'one' || user == 0) {
 				cv.clearRect(0, 0, canvas.width, canvas.height);
 			}
 			cv.beginPath();
