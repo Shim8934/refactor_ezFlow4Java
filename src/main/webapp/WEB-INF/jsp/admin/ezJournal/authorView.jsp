@@ -31,7 +31,7 @@
 	    	function select_person(){
 	    		var url = "/admin/ezJournal/authorDetail.do";
 				url+="?companyId="+companyId;
-				window.open(url, "authorDetail", "width=950, height=600");
+				window.open(url, "authorDetail", GetOpenWindowfeature(950, 600));
 	    	}
 	    	
 	    	//부서선택
@@ -41,7 +41,7 @@
 	    		}else{
 		    		var url = "/admin/ezJournal/selectAuthorDept.do";
 					url+="?companyId="+companyId+"&userId="+selectedUser;
-					window.open(url, "authorDept", "width=500, height=550");
+					window.open(url, "authorDept", GetOpenWindowfeature(500, 550));
 	    		}
 	    	}
 	    	 
