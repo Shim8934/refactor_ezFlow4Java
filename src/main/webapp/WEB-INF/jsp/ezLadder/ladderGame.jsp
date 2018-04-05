@@ -72,6 +72,8 @@
 		function initValues() {
 			_ladder = ${vo};
 			_ladderLine = ${list};
+			
+			ladderlinecnt = _ladder.lineCnt;
 		}
 		
 		function afterDrag() {
@@ -196,10 +198,12 @@
 				})
 				.on("click", "#autoDirection", function() {
 					// 사다리 자동 진행
+					clickUserOrder = 0;
 					aniAllUser();
 				})
 				.on("click", "#immediatelyDirection", function() {
 					// 사다리 바로 보기
+					clickUserOrder = 0;
 					popAllUser();
 				});
 			
@@ -271,12 +275,16 @@
 				//});
 				stompClient.subscribe("/lad/start/" + ladderId, function(ladderInfo) {	
 					var cmtjson = JSON.parse(ladderInfo.body);
-					
-					console.log("dddddddddddd머ㅗ아ㅑ내앨");
-					
 					_ladder = cmtjson["ladder"];
 					_ladderLine = cmtjson["ladderline"];
 					canvasSetting();
+					var html = '';
+					_ladderLine.forEach(function(line, index) {
+						html += '<li><div id="drag' + index + '" style="height: 140px;padding-top:  20px;">';
+						html += '<img src="' + line.pic + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />';
+						html += '<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>' + line.userName + '</span></div></div></li>';
+					});
+					$("#attendantList").html(html);
 					$("#blackBox").remove();
 				});
 			});
@@ -309,16 +317,23 @@
 			printLadLine();
 			setUserPath();
 		}
+		
 		function clickUserLadderAnimation() {
 			$(document)
 			.on("click", "[id^=drag]", function() {
-				var usernum = $(this).attr("id").slice(4);
-				if(userStatus[usernum] == 0) {
-					aniOneUser(usernum);
+				clickUserOrder = Number($(this).attr("id").slice(4));
+				if(userStatus[clickUserOrder] == 0) {
+					aniOneUser();
 				} else {
-					popOneUser(usernum);
+					popOneUser();
 				}
 			});
+		}
+		function ladderAnimationComplete() {
+			if($("#itemList li:eq(" + resultOrder + ") div").length == 1) {
+				var html = "<div style='line-height: 30px; background: #ddd; margin-top: 10px; border-radius: 15px;'>" + _ladderLine[clickUserOrder].userName + "</div>";
+				$("#itemList li:eq(" + resultOrder + ")").append(html);
+			}
 		}
 		/** 삭제 */
 		function deleteLadder(idx) {
@@ -605,9 +620,9 @@
 								<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 									<c:forEach var="line" items="${list}" varStatus="status">
 										<li _attendantIndex="${status.index}">
-											<div class="ladderDrag" id="drag${status.index}">
+											<div class="ladderDrag" id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer;">
 												<div>
-													<img src="${line.pic}" width="90px" height="90px" />
+													<img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />
 													<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
 												</div>
 											</div>
@@ -631,7 +646,11 @@
 							</div>
 							<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px;">
 								<c:forEach var="line" items="${list}">
-									<li style="line-height: 30px; outline: 1px solid #ddd;"><span>${line.item}</span></li>
+									<li>
+										<div style="line-height: 30px; outline: 1px solid #ddd;">
+											<span>${line.item}</span>
+										</div>
+									</li>
 								</c:forEach>
 							</ul>
 							</c:if>
@@ -641,8 +660,8 @@
 								<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 									<c:forEach var="line" items="${list}" varStatus="status">
 										<li>
-											<div id="drag${status.index}">
-												<img src="${line.pic}" width="90px" height="90px" />
+											<div id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer;">
+												<img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />
 												<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
 											</div>
 										</li>
@@ -655,7 +674,11 @@
 							</div>
 							<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px;">
 								<c:forEach var="line" items="${list}">
-									<li style="line-height: 30px; outline: 1px solid #ddd;"><span>${line.item}</span></li>
+									<li>
+										<div style="line-height: 30px; outline: 1px solid #ddd;">
+											<span>${line.item}</span>
+										</div>
+									</li>
 								</c:forEach>
 							</ul>
 							</c:if>

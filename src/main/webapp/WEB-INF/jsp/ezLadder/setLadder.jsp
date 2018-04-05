@@ -680,6 +680,7 @@
 					<tr>
 						<td>
 							<div id="ladderLineBox" style="border: 1px solid #ddd;">
+								<div id="addAttendant" class="icondiv">add</div>
 								<div style="height: 140px;">
 									<ul id="attendantList"></ul>
 								</div>
