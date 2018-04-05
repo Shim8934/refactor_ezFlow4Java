@@ -234,15 +234,16 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 	 * @param searchStr, companyId, tenantId
 	 */
 	@Override
-	public JSONArray searchLetter(String search, String companyId, String tenantId) throws Exception {
+	public JSONArray searchLetter(String search, String companyId, String tenantId, String userLang) throws Exception {
 		logger.debug("searchLetter started.");
-		logger.debug("search=" + search +", companyId=" + companyId + ",tenantId=" + tenantId);
+		logger.debug("search=" + search +", companyId=" + companyId + ",tenantId=" + tenantId + ",userLang=" + userLang);
 		
 		String searchStr = "displayname=" + URLEncoder.encode(search, "UTF-8");
 		String companyIdStr = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
 		String tenantStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
+		String userLangStr = "userLang=" + URLEncoder.encode(userLang, "UTF-8");
 		
-		String inputParams = searchStr + "&" + companyIdStr + "&" + tenantStr;
+		String inputParams = searchStr + "&" + companyIdStr + "&" + tenantStr + "&" + userLangStr;
 		logger.debug("inputParams="+inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/getLetterSearch", inputParams);
