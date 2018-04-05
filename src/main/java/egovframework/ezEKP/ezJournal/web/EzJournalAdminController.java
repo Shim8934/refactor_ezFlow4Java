@@ -60,7 +60,7 @@ public class EzJournalAdminController {
 	 * 관리자 업무일지  메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezJournal/journalMain.do")
-	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+	public String portalMain(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("journalMain started");
 
 		userInfo = commonUtil.checkAdmin(loginCookie);
@@ -77,7 +77,7 @@ public class EzJournalAdminController {
 	 * 관리자 업무일지  좌측 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezJournal/leftTop.do")
-	public String leftTop(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+	public String leftTop(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("leftTop started");
 
 		userInfo = commonUtil.checkAdmin(loginCookie);
@@ -93,7 +93,7 @@ public class EzJournalAdminController {
 	 * 관리자 일지함 관리
 	 */
 	@RequestMapping(value = "/admin/ezJournal/formType.do")
-	public String formTypeManage(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {
+	public String formTypeManage(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("formType started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -108,7 +108,7 @@ public class EzJournalAdminController {
 		param.put("companyId",companyId);
 		param.put("userId", userInfo.getId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/companies", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/companies", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 			
 		if (status.equals("ok")) {			
@@ -118,7 +118,7 @@ public class EzJournalAdminController {
 		
 		param.put("userId",userInfo.getId() );
 		
-		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types", param, request,"get",null);
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types", param, request, "get", null);
 		status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {		
@@ -136,7 +136,7 @@ public class EzJournalAdminController {
 	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@RequestMapping(value = "/admin/ezJournal/updatreFormType.do")
-	public JSONObject formTypeUpdate(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+	public JSONObject formTypeUpdate(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("formTypeUpdate started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -157,7 +157,7 @@ public class EzJournalAdminController {
 		}
 		parameter.put("journaltypeList", journaltypeList);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types", null, request,"put",parameter);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types", null, request, "put", parameter);
 		
 		String status = resultBody.get("status").toString();
 		
@@ -173,7 +173,7 @@ public class EzJournalAdminController {
 	 * 관리자 업무일지 양식리스트 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezJournal/form.do")
-	public String formMain(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {
+	public String formMain(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("formMain started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -248,7 +248,7 @@ public class EzJournalAdminController {
 		if (status.equals("ok")) {
 			JSONArray formList = (JSONArray) result.get("data");
 			model.addAttribute("formList", formList);
-			logger.debug("formList : " + formList);
+		//  logger.debug("formList : " + formList);
 		}
 		
 		logger.debug("getFormList ended");
@@ -256,7 +256,7 @@ public class EzJournalAdminController {
 	}
 	
 	/**
-	 * 관리자 업무일지 양식등록 양식추가, 양식수정 화면호출함수 (CK, TAGFREE, DEXTER, NAMO)
+	 * 관리자 업무일지 양식등록 양식추가, 양식수정 화면호출함수
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezJournal/insertForm.do")
@@ -367,7 +367,7 @@ public class EzJournalAdminController {
 		String isDeptChanged = request.getParameter("isDeptChanged");
 		String userId = userInfo.getId();
 		
-		logger.debug("formName:" + formName + ",formDescript:" + formDescript + ",formContent:" + formContent + ",useDept:" + useDept + ",isDeptChanged:" + isDeptChanged);
+		logger.debug("formName:" + formName + ",formDescript:" + formDescript + ",useDept:" + useDept + ",isDeptChanged:" + isDeptChanged);
 		
 		JSONObject param = new JSONObject();
 		
@@ -436,7 +436,7 @@ public class EzJournalAdminController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezJournal/author.do")
-	public String authorMain(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+	public String authorMain(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("authorMain started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -461,7 +461,7 @@ public class EzJournalAdminController {
 		}
 		
 		System.out.println("companyId = "+companyId);
-		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", param, request,"get",null);
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", param, request, "get", null);
 		status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {		
@@ -469,8 +469,8 @@ public class EzJournalAdminController {
 			for (int i = 0; i < authList.size(); i++) {				
 				JSONObject jo = (JSONObject) authList.get(i);
 				String [] authDeptArr = jo.get("authDept").toString().split("%");
-				if (authDeptArr.length>1) {
-					jo.replace("authDept", authDeptArr[0]+" 외 "+(authDeptArr.length-1));
+				if (authDeptArr.length > 1) {
+					jo.replace("authDept", authDeptArr[0] + egovMessageSource.getMessage("ezJournal.t124") + (authDeptArr.length - 1));
 				}
 			}
 			model.addAttribute("authList", authList);
@@ -486,11 +486,10 @@ public class EzJournalAdminController {
 	 * @param request
 	 * @param model
 	 * @param loginCookie
-	 * @param response
 	 * @return
 	 */
 	@RequestMapping(value="/admin/ezJournal/authorView.do")
-	public String authorView(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+	public String authorView(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("authorView started");
 		if (request.getParameter("userId")!=null) {
 			logger.debug(request.getParameter("userId")+"dassfasdad"+request.getParameter("userName"));
@@ -505,7 +504,7 @@ public class EzJournalAdminController {
 				JSONArray deptList = (JSONArray) resultBody.get("data");
 				
 				model.addAttribute("deptList", deptList);
-				logger.debug("모델 어트리뷰트 확인"+model.containsAttribute("selectedUser"));
+			//	logger.debug("모델 어트리뷰트 확인" + model.containsAttribute("selectedUser"));
 			}
 		}
 		model.addAttribute("companyId",request.getParameter("companyId"));
@@ -520,7 +519,7 @@ public class EzJournalAdminController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezJournal/authorDetail.do")
-	public String authorDetail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+	public String authorDetail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("authorDetail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -537,7 +536,7 @@ public class EzJournalAdminController {
 		param.put("userId",userId);
 		param.put("companyId", request.getParameter("companyId"));
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {			
@@ -569,7 +568,7 @@ public class EzJournalAdminController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezJournal/selectAuthorDept.do")
-	public String selectAuthorDept(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+	public String selectAuthorDept(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("selectAuthorDept started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -618,7 +617,7 @@ public class EzJournalAdminController {
 	 * 사원리스트
 	 */
 	@RequestMapping(value = "/admin/ezJournal/userList.do")
-	public String userList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+	public String userList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("userList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -643,8 +642,8 @@ public class EzJournalAdminController {
 				keyword = egovMessageSource.getMessage("ezJournal.t43");
 			}
 			int userCount = 0;
-			if (userList.size()==0) {
-				keyword = egovMessageSource.getMessage("ezJournal.t171");
+			if (userList.size() == 0) {
+				keyword = egovMessageSource.getMessage("ezJournal.t170");
 			} else {
 				userCount = userList.size();
 			}
@@ -660,11 +659,11 @@ public class EzJournalAdminController {
 	 * 해당사원이 열람 할 수 있는 부서 리스트
 	 */
 	@RequestMapping(value = "/admin/ezJournal/authorDeptList.do")
-	public String authorDeptList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response){
+	public String authorDeptList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("authorDeptList started");
 		String userId = request.getParameter("userId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/"+userId+"/author-depts", null, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/"+userId+"/author-depts", null, request, "get", null);
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {		
 			JSONArray authorDeptList = (JSONArray) resultBody.get("data");
@@ -679,24 +678,23 @@ public class EzJournalAdminController {
 	/**
 	 * 열람 권한 저장
 	 * @param request
-	 * @param model
 	 * @param loginCookie
 	 * @param response
 	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/admin/ezJournal/saveAuthor.do")
-	public void saveAuthor(@RequestBody JSONObject jsonString,HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException{
+	public void saveAuthor(@RequestBody JSONObject jsonString, HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException{
 		logger.debug("saveAuthor started");
 		
 		String result = "";
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", null, request,"post",jsonString);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", null, request, "post", jsonString);
 		
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {	
-			result="save complete";
+			result = "save complete";
 		} else {
-			result="save failed";
+			result = "save failed";
 		}
 		
 		logger.debug("saveAuthor ended");
@@ -712,7 +710,7 @@ public class EzJournalAdminController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/admin/ezJournal/deleteAuthor.do")
-	public void deleteAuthor(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException{
+	public void deleteAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException{
 		logger.debug("deleteAuthor started");
 		
 		String result = "";
@@ -721,7 +719,7 @@ public class EzJournalAdminController {
 		
 		param.put("userId", request.getParameter("userId"));
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", param, request,"delete",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", param, request, "delete", null);
 		
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {	
