@@ -107,7 +107,7 @@ function lmPreviewChange(data) {
 	var ifrLetterNo = "";
 	var txtText = previewMsg;
 	var filePath = "ERROR";
-	var strLang = typeof(useLang) == "undefined" ? 1 : useLang;
+	var strLang = typeof(userLang) == "undefined" ? 1 : userLang;
 	
 	if (data !== undefined) {
 		var filePathTmp = data.filePath;
@@ -157,7 +157,7 @@ function addLetterList(jsonArr) {
 	var letterListHtml = "";
 	var listCount = jsonArr.length;
 	var nowSelect = $(".lmLetterSelect").attr("id"); // 선택중인 편지지 id
-	var strLang = typeof(useLang) == "undefined" ? 1 : useLang;
+	var strLang = typeof(userLang) == "undefined" ? 1 : userLang;
 
 	if (listCount !== 0) {
 		for (i = 0; i < listCount; i++) {
