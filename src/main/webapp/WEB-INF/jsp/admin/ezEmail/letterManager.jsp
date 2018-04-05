@@ -60,16 +60,16 @@
 		
 		<script type="text/javascript">
 			// resultRead() 사용 *
+			var pageType = "${pageType}"; // letter
+			var returnCompany = '${companyId}'; // companyId
+			var userLang = "${userLang}";
 			var result = [];
 		    var treeCollection = [];
 		    var xmlhttp;
 		    var responseResult;
 		    var selectNode;
-		    var noResult = false; 
-			var pageType = "${pageType}"; // letter
-			var returnCompany = '${companyId}'; // companyId
+		    var noResult = false;
 			var searchTxt = ""; // 검색어
-			var userLang = "${userLang}";
 			var searchMsg = "<spring:message code='ezOrgan.t56'/>"; // 검색어를 입력해주세요.
 			var specialMsg = "<spring:message code='ezEmail.kyj17'/>"; // 해당 특수문자는 입력할 수 없습니다.
 			var lengthMsg = "<spring:message code='ezEmail.letter14'/>"; // 자 이하로 입력 가능합니다.

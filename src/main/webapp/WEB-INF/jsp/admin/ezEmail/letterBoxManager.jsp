@@ -52,6 +52,9 @@
 		</div>
 		
 		<script type="text/javascript">
+			var pageType = "${pageType}";
+	    	var returnCompany = '${companyId}';
+	    	var userLang = '${userLang}';
 		    var result = [];
 		    var letter_displayname;
 		    var letter_displayname2;
@@ -60,9 +63,6 @@
 		    var responseResult;
 		    var selectNode;
 		    var addCheck = 0;
-		    var pageType = "${pageType}";
-		    var returnCompany = '${companyId}';
-		    var userLang = '${userLang}';
 		    
 		    var letterStr22 = "<spring:message code='ezEmail.letter22'/>"; 
 		    var letterStr23 = "<spring:message code='ezEmail.letter23'/>";
