@@ -769,9 +769,32 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		
-		List<AttitudeVO> resultList = ezAttitudeDAO.getAttitudeList(map);
+		List<AttitudeVO> resultList = ezAttitudeDAO.getAttitudeList2(map);
 		
 		LOGGER.debug("getAttitudeList2 ended");
 		return resultList;
+	}
+
+	@Override
+	public String getAttitudeCount2(int tenantId, String companyId,
+			String startDate, String endDate, String offset) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		if (startDate.equals("") && endDate.equals("")) {
+			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
+			startDate = localDate + " 00:00:00";
+			endDate = localDate + " 23:59:59";
+		} else { 
+			startDate = startDate + " 00:00:00";
+			endDate = endDate + " 23:59:59";
+		}
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("offsetMin", offsetMin);
+		return ezAttitudeDAO.getAttitudeCount2(map);
 	}
 }

@@ -1494,21 +1494,30 @@ public class EzAttitudeGWController {
 			
 			String offset = info.getOffSet();
 			
-			List<AttitudeVO> resultList = ezAttitudeService.getAttitudeList2(companyId, pageNum, listSize, startDate, endDate, offset, info.getTenantId());
+			List<AttitudeVO> list = ezAttitudeService.getAttitudeList2(companyId, pageNum, listSize, startDate, endDate, offset, info.getTenantId());
 			
 			//imgPath 셋팅
-			
-			for (int i = 0; i < resultList.size(); i++) {
-				String imgPath = resultList.get(i).getImgPath();
-				if (imgPath != null && !imgPath.equals("")) {
-					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + info.getCompanyId() + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
-					resultList.get(i).setImgPath(imgPath);
-				}
-			}
+//			for (int i = 0; i < list.size(); i++) {
+//				String imgPath = list.get(i).getImgPath();
+//				if (imgPath != null && !imgPath.equals("")) {
+//					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + info.getCompanyId() + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+//					list.get(i).setImgPath(imgPath);
+//				}
+//			}
 	         
+//			result.put("status", "ok");
+//			result.put("code", 0);			
+//			result.put("data", resultList);
+			
+			String totalCount = ezAttitudeService.getAttitudeCount2(info.getTenantId(), companyId, startDate, endDate, offset);
+			
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("totalCount", totalCount);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", resultList);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			

@@ -163,7 +163,10 @@
     				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
     				getUserConfList_after(result.list);
     				//더블클릭 이벤트
-    				addTrDblclickEvent(userDbClick);
+//     				addTrDblclickEvent(userDbClick);
+    			},
+    			error : function() {
+    				alert('리스트를 가져오는중 오류 발생');
     			}
     		});
     	}
@@ -172,12 +175,21 @@
     		var resultHtml = "";
     		$("#attiBoardList tbody").html("");
     		
-    		for (var resultLeng = 0; resultLeng < result.length; resultLeng ++) {
-    			resultHtml += "<tr userid='" + result[resultLeng].userId + "'><td></td>"
-    			   			+ "<td>" + result[resultLeng].userName+ "</td>"
-    			   			+ "<td>" + result[resultLeng].userTitle+ "</td>"
-    			   			+ "<td>" + result[resultLeng].deptName+ "</td>"
-    			   			+ "<td>" + result[resultLeng].workStartTime + " ~ " + result[resultLeng].workEndTime + "</td></tr>";
+    		for (var i = 0; i < result.length; i ++) {
+    			resultHtml += "<tr userid='" + result[i].writerId + "'><td></td>"
+    			   			+ "<td>" + result[i].userName + "</td>"
+    			   			+ "<td>" + result[i].deptName + "</td>"
+    			   			+ "<td>" + result[i].startTime + "</td>"
+    			   			+ "<td>" + result[i].endTime + "</td>"
+    			   			+ "<td>" + result[i].typeName + "</td>";
+    			   			if ( result[i].endDate == null || result[i].endDate == "") {
+    			   				resultHtml += "<td>" + result[i].startDate + "</td>";
+    			   			} else {
+    			   				resultHtml += "<td>" + result[i].startDate + " ~ " + result[i].endDate + "</td>";
+    			   			}
+    			 resultHtml += "<td>" + result[i].startTime + "</td>"
+    			   			+ "<td>" + result[i].endTime + "</td>"
+    			   			+"</tr>";
     		}
     		
     		if (resultHtml == "") {

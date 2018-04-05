@@ -1000,6 +1000,7 @@ public class EzAttitudeAdminBOMController {
 	@RequestMapping(value = "/admin/ezAttitude/attitudeCheckList.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject getAttitudeCheckList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+//	public JSONArray getAttitudeCheckList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/admin/ezAttitude/attitudeCheckList started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -1047,6 +1048,10 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("status : " + status);
 		
 		
+//		JSONArray jArray = new JSONArray();
+//		if(status.equals("ok")){
+//			jArray = (JSONArray) resultBody.get("data");
+//		}
 		JSONObject jObject = new JSONObject();
 		if(status.equals("ok")){
 			jObject = (JSONObject) resultBody.get("data");
@@ -1054,6 +1059,7 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("/admin/ezAttitude/attitudeCheckList ended");
 		return jObject;
+//		return jArray;
 	}
 	/**
 	 * 부서근태관리 > 조회자 검색 화면 출력 메서드
