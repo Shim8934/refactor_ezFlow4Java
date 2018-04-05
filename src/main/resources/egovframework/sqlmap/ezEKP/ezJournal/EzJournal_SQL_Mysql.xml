@@ -207,32 +207,36 @@
 		) values (
 			#typeId#,	#companyId#,	#tenantId#	,
 			(
-			select form_content from jmocha.tbl_journal_form
+			select f.form_content from
+            (select * from jmocha.tbl_journal_form
 			where company_id = 'Top'
 			and tenant_id = #tenantId#
 			and type_id = #typeId#	
-			and form_status = 'basic'
+			and form_status = 'basic') f
 			)	,
 			(
-			select form_name from jmocha.tbl_journal_form
+			select form_name from 
+            (select * from jmocha.tbl_journal_form
 			where company_id = 'Top'
 			and tenant_id = #tenantId#
 			and type_id = #typeId#	
-			and form_status = 'basic'
+			and form_status = 'basic') f
 			)	,
 			(
-			select form_info from jmocha.tbl_journal_form
+			select form_info from 
+            (select * from jmocha.tbl_journal_form
 			where company_id = 'Top'
 			and tenant_id = #tenantId#
 			and type_id = #typeId#	
-			and form_status = 'basic'
+			and form_status = 'basic') f
 			)	,
 			(
-			select form_status from jmocha.tbl_journal_form
+			select form_status from 
+            (select * from jmocha.tbl_journal_form
 			where company_id = 'Top'
 			and tenant_id = #tenantId#
 			and type_id = #typeId#	
-			and form_status = 'basic'
+			and form_status = 'basic') f
 			)	,
 			UTC_TIMESTAMP()
 		)

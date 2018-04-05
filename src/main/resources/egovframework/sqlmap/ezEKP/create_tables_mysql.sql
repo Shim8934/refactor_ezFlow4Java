@@ -8691,7 +8691,7 @@ CREATE TABLE `tbl_journal_form` (
   PRIMARY KEY (`form_id`,`tenant_id`),
   KEY `FK_tbl_journal_form_type_id_tbl_journal_form_type_type_id_idx` (`type_id`),
   KEY `FK_tbl_journal_form_company_id_tbl_journal_form_type_compan_idx` (`company_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8 COMMENT='양식';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='양식';
 
 
 -- jmocha.tbl_journal Table Create SQL

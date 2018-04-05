@@ -2186,7 +2186,7 @@ values (0,'주간업무일지(기본)',
                      <tr>
                         <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-size: 24pt; font-weight: bold;">일일업무일지</span>
+                              <span style="font-size: 24pt; font-weight: bold;">주간업무일지</span>
                            </p>
                         </td>
                      </tr>
@@ -2263,7 +2263,7 @@ values (0,'주간업무일지(기본)',
                      <tr>
                         <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-weight: bold;">금&nbsp;일</span>
+                              <span style="font-weight: bold;">금&nbsp;주</span>
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
@@ -2273,7 +2273,7 @@ values (0,'주간업무일지(기본)',
                      <tr>
                         <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-weight: bold;">익&nbsp;일</span>
+                              <span style="font-weight: bold;">차&nbsp;주</span>
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
@@ -2309,7 +2309,7 @@ values (0,'월간업무일지(기본)',
                      <tr>
                         <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-size: 24pt; font-weight: bold;">일일업무일지</span>
+                              <span style="font-size: 24pt; font-weight: bold;">월간업무일지</span>
                            </p>
                         </td>
                      </tr>
@@ -2386,7 +2386,7 @@ values (0,'월간업무일지(기본)',
                      <tr>
                         <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-weight: bold;">금&nbsp;일</span>
+                              <span style="font-weight: bold;">금&nbsp;월</span>
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
@@ -2396,7 +2396,7 @@ values (0,'월간업무일지(기본)',
                      <tr>
                         <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-weight: bold;">익&nbsp;일</span>
+                              <span style="font-weight: bold;">익&nbsp;월</span>
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
@@ -2432,7 +2432,7 @@ values (0,'분기업무일지(기본)',
                      <tr>
                         <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-size: 24pt; font-weight: bold;">일일업무일지</span>
+                              <span style="font-size: 24pt; font-weight: bold;">분기업무일지</span>
                            </p>
                         </td>
                      </tr>
@@ -2509,7 +2509,7 @@ values (0,'분기업무일지(기본)',
                      <tr>
                         <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-weight: bold;">금&nbsp;일</span>
+                              <span style="font-weight: bold;">금분기</span>
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
@@ -2519,7 +2519,7 @@ values (0,'분기업무일지(기본)',
                      <tr>
                         <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-weight: bold;">익&nbsp;일</span>
+                              <span style="font-weight: bold;">차분기</span>
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
@@ -2555,7 +2555,7 @@ values (0,'반기업무일지(기본)',
                      <tr>
                         <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-size: 24pt; font-weight: bold;">일일업무일지</span>
+                              <span style="font-size: 24pt; font-weight: bold;">반기업무일지</span>
                            </p>
                         </td>
                      </tr>
@@ -2632,7 +2632,7 @@ values (0,'반기업무일지(기본)',
                      <tr>
                         <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-weight: bold;">금&nbsp;일</span>
+                              <span style="font-weight: bold;">금반기</span>
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
@@ -2642,7 +2642,7 @@ values (0,'반기업무일지(기본)',
                      <tr>
                         <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-weight: bold;">익&nbsp;일</span>
+                              <span style="font-weight: bold;">차반기</span>
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
@@ -2678,7 +2678,7 @@ values (0,'연간업무일지(기본)',
                      <tr>
                         <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-size: 24pt; font-weight: bold;">일일업무일지</span>
+                              <span style="font-size: 24pt; font-weight: bold;">연간업무일지</span>
                            </p>
                         </td>
                      </tr>
@@ -2755,7 +2755,7 @@ values (0,'연간업무일지(기본)',
                      <tr>
                         <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-weight: bold;">금&nbsp;일</span>
+                              <span style="font-weight: bold;">금&nbsp;년</span>
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
@@ -2765,7 +2765,7 @@ values (0,'연간업무일지(기본)',
                      <tr>
                         <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
-                              <span style="font-weight: bold;">익&nbsp;일</span>
+                              <span style="font-weight: bold;">익&nbsp;년</span>
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">

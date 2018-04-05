@@ -469,7 +469,11 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @param map
 	 */
 	public void insertJournalBasicForm(Map<String, Object> map) {
-		insert("insertJournalBasicForm",map);
+		try {
+			insert("insertJournalBasicForm",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
