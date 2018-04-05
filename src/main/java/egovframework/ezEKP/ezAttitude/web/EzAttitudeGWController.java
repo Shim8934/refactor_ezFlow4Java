@@ -1412,10 +1412,13 @@ public class EzAttitudeGWController {
 			@PathVariable String attModId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
-			@RequestParam(value="userId", required=false) String userId) throws Exception{
+			@RequestParam(value="userId", required=true) String userId,
+			@RequestParam(value="offset", required=true) String offset) throws Exception{
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
 		JSONObject result = new JSONObject();
-		AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(companyId, tenantId, userId, attModId);
+		
+		AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(companyId, tenantId, userId, attModId, offset);
+		
 		try {
 			result.put("status", "ok");
 			result.put("code", 0);

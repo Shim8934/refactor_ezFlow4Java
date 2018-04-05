@@ -216,6 +216,10 @@
 			get_att_list();
 	    }
 	    
+	    function att_refresh() {
+	    	get_att_list(currentPage);
+	    }
+	    
 	    function get_att_list(pageNum) {
 	    	ShowAttProgress();
 	    	
@@ -326,7 +330,7 @@
 	    	}
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
-	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="" draggable="true" style="cursor:pointer;">';
+	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" draggable="true" style="cursor:pointer;">';
 	    		if (excel == true) {
 	    		} else {
 	    			htmlStr += '<td style="padding:0"> <input type="checkbox" class="checkAtt"' 
@@ -772,7 +776,7 @@
           </div>
         </div>
         <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
-            <div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;" onblur>
+            <div id="contentlist" name="contentlist" style="border:0px solid blue;height:550px;width:100%;overflow-y:auto;" onblur>
                 <table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
                 	<tr> 
 						<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>

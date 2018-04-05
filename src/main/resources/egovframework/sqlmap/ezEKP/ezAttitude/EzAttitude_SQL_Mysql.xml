@@ -70,12 +70,15 @@
 		<result property="useCompany"		column="USECOMPANY"			columnIndex="9"/>
 	</resultMap>
 	
-	<resultMap id="attitudeApplicationVO" class="AttitudeApplicationVO">
+	<resultMap id="attitudeApplicationDetailVO" class="AttitudeApplicationVO">
 		<result property="attitudeId"		column="ATTITUDE_ID" 	columnIndex="1"/>
 		<result property="changeDate"		column="CHANGE_DATE" 	columnIndex="2"/>
 		<result property="apprUserName"		column="APPR_USER_NAME" columnIndex="3"/>
 		<result property="originDate"		column="START_DATE" 	columnIndex="4"/> 		
 		<result property="apprStatus"		column="APPR_STATUS" 	columnIndex="5"/>
+		<result property="typeName"			column="TYPE_NAME" 		columnIndex="6"/> 		
+		<result property="typeName2"		column="TYPE_NAME2" 	columnIndex="7"/>
+		<result property="content"			column="CONTENT" 		columnIndex="8"/>
 	</resultMap>
 	
 	<select id="ezAttitude.getAttitudeList" parameterClass="Map" resultMap="attitude">
@@ -235,7 +238,7 @@
 					a.attitude_id as ATTITUDE_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
 					a.appr_user_name as APPR_USER_NAME,
-					b.start_date as START_DATE,
+					DATE_FORMAT(DATE_ADD(DATE_FORMAT(b.start_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
 					a.appr_status as APPR_STATUS
 			FROM 
 				jmocha.tbl_attitude_modappl a 
@@ -253,7 +256,7 @@
 		<include refid="ezAttitudeDAO.searchQuery"/>
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.attModAppDetail" parameterClass="Map" resultMap="attitudeApplicationVO">
+	<select id="ezAttitudeAdminDAO.attModAppDetail" parameterClass="Map" resultMap="attitudeApplicationDetailVO">
 		<![CDATA[
 			SELECT
 					a.attitude_id as ATTITUDE_ID,
@@ -267,6 +270,42 @@
 				join tbl_attitude b 
 			on 
 				a.ATTITUDE_ID = b.ATTITUDE_ID
+			where 
+				a.COMPANY_ID = #companyId#
+			and 
+				a.TENANT_ID = #tenantId#
+			and 
+				a.WRITER_ID = #userId#
+			and
+				a.ATTITUDE_ID = #attModId#
+		]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.attModAppDetail" parameterClass="Map" resultMap="attitudeApplicationDetailVO">
+		<![CDATA[
+			SELECT
+					a.attitude_id as ATTITUDE_ID,
+					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
+					a.appr_user_name as APPR_USER_NAME,
+					DATE_FORMAT(DATE_ADD(DATE_FORMAT(b.start_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
+					a.appr_status as APPR_STATUS,
+					c.type_name as TYPE_NAME,
+					c.type_name2 as TYPE_NAME2,
+					a.content as CONTENT
+			FROM 
+				jmocha.tbl_attitude_modappl a
+			inner 
+				join tbl_attitude b 
+			on 
+				a.ATTITUDE_ID = b.ATTITUDE_ID
+			inner 
+				join tbl_attitude_type c 
+			on 
+				b.TYPE_ID = c.TYPE_ID
+			and
+				a.COMPANY_ID = c.COMPANY_ID
+			and
+				a.TENANT_ID = c.TENANT_ID
 			where 
 				a.COMPANY_ID = #companyId#
 			and 

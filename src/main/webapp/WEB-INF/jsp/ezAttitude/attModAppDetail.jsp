@@ -25,23 +25,12 @@
 		<!-- time picker-->		
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
         <script type="text/javascript">
-	        var userid = "<c:out value='${userId}'/>";
-	        var username = "<c:out value='${userName}'/>";
-	        var username2 = "<c:out value='${userName2}'/>";
-	        var otherid = "<c:out value='${otherId}'/>";
-	        var scheduleid = "<c:out value='${scheduleId}'/>";
-	        var datetype = "<c:out value='${dateType}'/>";
-	        var startdate = "<c:out value='${startDate}'/>";
-	        var enddate = "<c:out value='${endDate}'/>";
-	        var content = "<c:out value='${content}'/>";
+	        var userid = "<c:out value='${data.writerId}'/>";
+	        var username = "<c:out value='${data.writerName}'/>";
+	        var username2 = "<c:out value='${data.writerName2}'/>";
+	        var attid = "<c:out value='${data.attitudeId}'/>";
+	        var content = "<c:out value='${data.content}'/>";
 	        var contentpath = "${contentPath}";
-	        var ispublic = "<c:out value='${isPublic}'/>";
-	        var importance = "<c:out value='${importance}'/>";
-	        var repetition = "<c:out value='${repetition}'/>";	        
-	        var scheduletype = "<c:out value='${scheduleType}'/>";
-	        var changekey = "<c:out value='${changeKey}'/>";
-	        var pattern = "<c:out value='${pattern}'/>";
-	        var recurringLabelText = "<c:out value='${recurringLabelText}'/>";
 	        var startDateStringOrgin = "<c:out value='${startDateStringOrgin}'/>";
 	        var endDateStringOrgin = "<c:out value='${endDateStringOrgin}'/>";
 	        var pageFrom = "<c:out value='${pageFrom}'/>";
@@ -49,11 +38,7 @@
 	        var companyID = "<c:out value='${companyID}'/>";
 	        var deptName = "<c:out value='${deptName}'/>";
 	        var deptID = "<c:out value='${deptID}'/>";
-	        var hasattach = "<c:out value='${hasAttach}'/>";	        	        
-	        var pCompanyAdmin = "<c:out value='${pCompanyAdmin}'/>";
-	        var pDeptAdmin = "<c:out value='${pDeptAdmin}'/>";
 	        var offSetMin = "<c:out value='${offSetMin}'/>";
-	        var useAnyoneEdit = "<c:out value='${useAnyoneEdit}'/>";
 		    var timeCheck = false;
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -70,7 +55,7 @@
 		    }
 
 		    $(function () {
-		        $("#Sdatepicker").datepicker({
+		        $("#Cdatepicker").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
 		            autoSize: true,
@@ -78,30 +63,49 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
-				var uploadSDate = "${UploadSDate}";
+		        
+		        $("#Odatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImageOnly: true
+		        });
+		        
+				var uploadSDate = "${data.changeDate}";
 				var sYear = uploadSDate.substring(0, 4);
 				var sMonth = uploadSDate.substring(5, 7);
 				var sDay = uploadSDate.substring(8, 10);
 				var sHour = uploadSDate.substring(11, 13);
 				var sMin = uploadSDate.substring(14, 16);
-							
-				var uploadEDate = "${UploadEDate}";
+
+		        var SDate = new Date();
+		        SDate.setFullYear(sYear, sMonth-1, sDay);
+		        SDate.setHours(sHour, sMin, 0, 0);
+		        
+		        $("#Cdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Cdatepicker").datepicker('setDate', SDate);
+		        $('#Ctimepicker').timepicker();
+		        $('#Ctimepicker').timepicker('setTime', SDate);
+		        $('#Ctimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        
+		        var uploadEDate = "${data.originDate}";
 				var eYear = uploadEDate.substring(0, 4);
 				var eMonth = uploadEDate.substring(5, 7);
 				var eDay = uploadEDate.substring(8, 10);
 				var eHour = uploadEDate.substring(11, 13);
 				var eMin = uploadEDate.substring(14, 16);
-				
-		        var SDate = new Date();
-		        SDate.setFullYear(sYear, sMonth-1, sDay);
-		        SDate.setHours(sHour, sMin, 0, 0);
-		        
-		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $("#Sdatepicker").datepicker('setDate', SDate);
-		        $('#Stimepicker').timepicker();
-		        $('#Stimepicker').timepicker('setTime', SDate);
-		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
 
+		        var EDate = new Date();
+		        EDate.setFullYear(eYear, eMonth-1, eDay);
+		        EDate.setHours(eHour, eMin, 0, 0);
+		        
+		        $("#Odatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Odatepicker").datepicker('setDate', EDate);
+		        $('#Otimepicker').timepicker();
+		        $('#Otimepicker').timepicker('setTime', EDate);
+		        $('#Otimepicker').timepicker({ 'timeFormat': 'H:i' });
 		    });
 		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
@@ -133,151 +137,69 @@
 		    
 		    var g_originalHTML = null;
 		    function Editor_Complete() {
-		        if ((scheduletype == "1" || scheduletype == "6") && $.trim("${content}") != "") {
+		        if ($.trim("${data.content}") != "") {
 		            if (g_originalHTML == null) {
-		                message.SetEditorContent("${content}")
+		                message.SetEditorContent("${data.content}")
 		                g_originalHTML = message.GetEditorContent();
 		            }
-		        } else {
-		            if ("${contentPath}" != "") {
-		                var fullPath = "${contentPath}";
-		                message.SetEditorContentURL(fullPath);		                
-		            }
-		        }
+		    	}
 		    }
 
-		    var bool = false;
-		    var bool2 = false;
-		    var bool3 = false;
+		    function modify() {
+				var obj = new Object();
+		    	
+			    var cDate = $("#Cdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+
+			    var cYear = cDate.split("-")[0];
+			    var cMonth = cDate.split("-")[1];
+			    var cDay = cDate.split("-")[2];
+			    var chour, cminute;
+			    var ctime = $('#Ctimepicker').val()
+		    	obj.attId = attid;
+		    	obj.chagneDate = cDate + " " + ctime;
+		    	obj.content = message.GetEditorContent();
+		    	
+			    $.ajax({
+					type : 'post',
+				    url : '/ezAttitude/modAttModApp.do',
+				    data : obj,
+				    dataType : "text",
+				    error: function(xhr, status, error){
+				    	alert("수정 중 오류 발생")
+				    },
+				    success : function(json){
+						alert("수정되었습니다.");
+						window.close();
+			            try {
+			                window.opener.att_refresh();
+			            } catch (e) { }
+				    }
+			    });
+		    }
 		    
-		    function checkupload() {
-		        var isfileup;
-		        isfileup = dadiframe.isfileup;
-		        if (isfileup) {
-		            alert(strLang258);
-		            return;
-		        }		        
-		        
-		        /* if (specialChk(document.getElementById("TextLocation").value) || specialChk(document.getElementById("TextTitle").value)) {
-		    		alert("<spring:message code='ezResource.special' />");
-		    		return;
-		    	} */
-		        
-		        save_schedule();
+		    function del() {
+		    	
+		    	var obj = new Object();
+		    	
+		    	obj.idList = attid; 
+				
+			    $.ajax({
+					type : 'post',
+				    url : '/ezAttitude/delAttModApp.do',
+				    data : obj,
+				    dataType : "text",
+				    error: function(xhr, status, error){
+				    	alert("삭제 중 오류 발생")
+				    },
+				    success : function(json){
+						alert("삭제되었습니다.");
+						window.close();
+			            try {
+			                window.opener.att_refresh();
+			            } catch (e) { }
+				    }
+			    });
 		    }
-		   
-		    function Print_onClick() {
-		        var printOwner = "";
-		        var printAttendant = "";
-		        var printIsPublic = "";
-		        var printImportance = "";
-		        var printRepetition = "";
-		        var printDate = "";
-		        var printLocation = "";
-		        var printTitle = "";
-		        var printAttach = "";
-		        var printDocument = "";
-
-		        if (scheduleid == "") {
-		            printOwner = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].textContent;
-		            printAttendant = document.getElementById("receiverlist").textContent;
-		        } else {
-		        	if (document.getElementById("LabelOwner")) {
-		            	printOwner = document.getElementById("LabelOwner").textContent;
-		        	}
-		        	if (document.getElementById("LabelAttendant")) {
-		            	printAttendant = document.getElementById("LabelAttendant").textContent;
-		        	}
-		        }
-
-		        printIsPublic = document.getElementById("publicSelect").options[document.getElementById("publicSelect").selectedIndex].textContent;
-		        printImportance = document.getElementById("importantSelect").options[document.getElementById("importantSelect").selectedIndex].textContent;
-		        printRepetition = document.getElementById("repeatinfo").textContent;
-
-		        if ($.trim(repetition) == "") {
-		            if (document.all("alldaycheck").checked == true)
-		                printDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-		            else
-		                printDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
-		        } else {
-		            printDate = "<spring:message code='ezSchedule.t343' />";
-		        }
-
-		        printLocation = document.getElementById("TextLocation").value;
-		        printTitle = document.getElementById("TextTitle").value;
-
-		        document.getElementById("tempattachdiv").innerHTML = dadiframe.document.getElementById("lstAttachLink").innerHTML;
-
-		        var tmeptr = document.getElementById("tempattachdiv").getElementsByTagName("TR");
-
-		        document.getElementById("printAttach").innerHTML = "";
-		        for (var i = 1; i < tmeptr.length; i++) {
-		            var span = document.createElement("SPAN");
-		            var input = document.createElement("INPUT");
-		            input.type = "checkbox";
-
-		            var img = document.createElement("IMG");
-		            img.src = "/images/email/mail_006.gif";
-
-		            var a = document.createElement("A");
-
-		            if (CrossYN()) {
-		                var filename = GetChildNodes(tmeptr[i])[1].textContent;
-		                var filesize = GetChildNodes(tmeptr[i])[2].textContent;
-		            } else {
-		                var filename = GetChildNodes(tmeptr[i])[1].innerText;
-		                var filesize = GetChildNodes(tmeptr[i])[2].innerText;
-		            }
-		            a.innerHTML = filename + " (" + filesize + ")";
-
-		            var br = document.createElement("BR");
-
-		            span.appendChild(input);
-		            span.appendChild(img);
-		            span.appendChild(a);
-		            span.appendChild(br);
-
-		            document.getElementById("printAttach").appendChild(span);
-		        }
-		        printAttach = document.getElementById("printAttach").innerHTML;
-
-		        printDocument = message.GetEditorContent();
-
-		        var params = { 'type': 'NEW', 'printOwner': printOwner, 'printAttendant': printAttendant, 'printIsPublic': printIsPublic, 'printImportance': printImportance, 'printRepetition': printRepetition, 'printDate': printDate, 'printLocation': printLocation, 'printTitle': printTitle, 'printAttach': printAttach, 'printDocument': printDocument };
-		        post_to_url("/ezSchedule/scheduleContentsPrint.do", params, "post");
-		    }
-
-	        function post_to_url(path, params, method) {
-	            method = method || "post";
-
-	            var pheight = window.screen.availHeight;
-	            var conHeight = pheight * 0.8;
-	            var pwidth = window.screen.availWidth;
-	            var conWidth = pwidth * 0.8;
-	            if (conWidth > 890)
-	                conWidth = 890;
-	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
-
-	            var title = "Print";
-	            var status = "toolbar=no,directories=no,scrollbars=no,resizable=no,status=no,menubar=no,width=" + conWidth + "px, height=" + conHeight + "px, top=" + pTop.toString() + ",left=" + pLeft.toString();
-	            window.open("", title, status);
-
-	            var form = document.createElement("form");
-	            form.setAttribute("method", method);
-	            form.setAttribute("target", title);
-	            form.setAttribute("action", path);
-	            
-	            for (var key in params) {
-	                var hiddenField = document.createElement("input");
-	                hiddenField.setAttribute("type", "hidden");
-	                hiddenField.setAttribute("name", key);
-	                hiddenField.setAttribute("value", params[key]);
-	                form.appendChild(hiddenField);
-	            }
-	            document.body.appendChild(form);
-	            form.submit();
-	        }
 	    </script>
 	</head>
 
@@ -289,8 +211,8 @@
 	                    <td style="height: 20px">
 	                        <div id="menu">
 	                            <ul id="menuTable">	
-	                                <li><span onclick="checkupload()">수정</span></li>
-	                                <li><span onclick="Print_onClick()">삭제</span></li>
+	                                <li><span onclick="modify()">수정</span></li>
+	                                <li><span onclick="del()">삭제</span></li>
 	                            </ul>
 	                        </div>
 	                        <div id="close">
@@ -308,28 +230,35 @@
                                         <tr id="HolderWrite">
                                             <th>구분</th>
                                             <td colspan="2" readonly>
+                                            	<c:out value='${data.typeName}' />
+<!--                                             	다국어 작업 -->
                                             </td>
                                         </tr>
 	                                    <tr>
-	                                        <th>출근시각</th>
+	                                        <th>기존시각</th>
 	                                        <td colspan="2">
-	                                        	<c:out value='${scheduleInfo.location}' />
+	                                        	<input type="text" id="Odatepicker" style="width:80px;text-align:center" disabled readonly="readonly"><input id="Otimepicker" disabled readonly="readonly" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
 	                                        <th>변경시각</th>
 	                                        <td colspan="2">
 	                                        	<span id="periodblock">
-	                                           		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" disabled readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	                                           		<input type="text" id="Cdatepicker" style="width:80px;text-align:center" disabled readonly="readonly"><input id="Ctimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                            </span>
-	                                            <span id="repeatblock" style="DISPLAY: none"><spring:message code='ezSchedule.t343'/></span>
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
 	                                        <th>승인상태</th>
-	                                        <td colspan="2">
-	                                        	<c:out value='${scheduleInfo.title}' />
-	                                        </td>
+                                        	<c:if test="${data.apprStatus == 0}">
+								          		<td colspan="2">진행</td>	
+								          	</c:if>
+								          	<c:if test="${data.apprStatus == 1}">
+								          		<td colspan="2">승인</td>	
+								          	</c:if>
+								          	<c:if test="${data.apprStatus == 2}">
+								          		<td colspan="2">반려</td>	
+								          	</c:if>
 	                                    </tr>
 	                                </table>
 	                            </div>
@@ -343,70 +272,7 @@
 	                </tr>
 	            </table>
 	        </div>
-	        <div id="printScreen" style="DISPLAY: none">
-	            <table cellspacing="0" cellpadding="0">
-	                <tr>
-	                    <td width="80"><spring:message code='ezSchedule.t363'/></td>
-	                    <td>
-	                        <div id="printOwner"></div>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td><spring:message code='ezSchedule.t163'/></td>
-	                    <td>
-	                        <div id="printAttendant"></div>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td><spring:message code='ezSchedule.t309'/></td>
-	                    <td>
-	                        <div id="printIsPublic"></div>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td><spring:message code='ezSchedule.t310'/></td>
-	                    <td>
-	                        <div id="printImportance"></div>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td><spring:message code='ezSchedule.t367'/></td>
-	                    <td>
-	                        <div id="printRepetition"></div>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td><spring:message code='ezSchedule.t318'/></td>
-	                    <td>
-	                        <div id="printDate"></div>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td><spring:message code='ezSchedule.t273'/></td>
-	                    <td>
-	                        <div id="printLocation"></div>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td><spring:message code='ezSchedule.t272'/></td>
-	                    <td>
-	                        <div id="printTitle"></div>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td width="60"><spring:message code='ezSchedule.t319'/></td>
-	                    <td width="420">
-	                        <div id="printAttach"></div>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td colspan="2">
-	                        <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px"></div>
-	                    </td>
-	                </tr>
-	            </table>                
-	        </div>
-		    <script type="text/javascript">
+	        <script type="text/javascript">
 		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210 + "PX";
 		    </script>
 	    </form>

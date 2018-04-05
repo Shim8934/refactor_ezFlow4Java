@@ -149,7 +149,7 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	
 	public AttitudeApplicationVO attModAppDetail(
 			Map<String, Object> map) {
-		return (AttitudeApplicationVO) select("ezAttitudeAdminDAO.attModAppDetail", map);
+		return (AttitudeApplicationVO) select("ezAttitudeDAO.attModAppDetail", map);
 	}
 	
 }
