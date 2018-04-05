@@ -51,6 +51,8 @@
 		    var useEditor = "${useEditor}";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var realPath = "<c:out value = '${realPath}' />";
+		    //박대리 ext 넘기는부분없어서 걍 내가만듬 
+		    var ext = "${ext}";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -774,7 +776,11 @@
 		    
 		    function btn_FormConnSave_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t1455'/>";
-		        OpenInformationUI(pInformationContent, FormConnSave_Complete);
+		        var Ans = OpenInformationUI(pInformationContent, FormConnSave_Complete);
+		        
+		        if (Ans) {
+		        	FormConnSave_Complete(Ans);
+		        }
 		    }
 		    
 		    function FormConnSave_Complete(Ans) {
