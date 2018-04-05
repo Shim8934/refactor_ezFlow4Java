@@ -376,7 +376,7 @@
 		                <a href="#" class="imgbtn"><span onclick="search_click()"><spring:message code='ezSchedule.t24' /></span></a>
 		            </div>
 	            	<div class="listview" style="border-top:0px">
-	                	<div id="OrganListView" style="border: 0px solid #ddd; Width: 100%; min-width:547px; Height: 446px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto;"></div>
+	                	<div id="OrganListView" style="border: 0px solid #ddd; Width: 100%; min-width:687px; Height: 446px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto;"></div>
 	            	</div>		            
 	        	</td>
 	      	</tr>
