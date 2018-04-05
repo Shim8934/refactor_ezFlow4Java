@@ -22,7 +22,7 @@
 				<div class="lmLetterBox">
 					<div class="lmtitle lmLetterBoxTitle">
 						<div><spring:message code='ezEmail.letter1'/></div>
-						<input type="text" name="" id="lmSearchInput" class="searchInput">
+						<input type="text" name="" id="lmSearchInput" class="searchInput" onkeydown="letterSearchEnter();">
 						<button id="lmSearch" onclick="letterSearch()"><spring:message code='ezBoard.t188'/></button>
 						<button id="lmSearchReset" onclick="inputReset()"><spring:message code='ezBoard.t999035'/></button>
 					</div>	

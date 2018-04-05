@@ -208,6 +208,13 @@ function addLetterList(jsonArr) {
 	searchMode = false;
 }
 
+//편지지 검색 시 엔터 사용
+function letterSearchEnter() {
+	if (event.keyCode == 13) {
+		letterSearch();
+	}
+}
+
 function letterListCss(pageType, searchMode) {
 	if (pageType === 'letter_user' && searchMode === true) {
 		$(".lmLetterListUl li > span").css({

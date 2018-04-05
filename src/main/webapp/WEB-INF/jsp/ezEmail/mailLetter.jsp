@@ -122,7 +122,7 @@
 			var dataNoMsg= "<spring:message code='main.t00026'/>"; // 데이터가 없습니다.
 			var selectLetterMsg ="<spring:message code='ezEmail.letter5'/>"; // 편지지를 선택하세요!
 	    
-			$(document).read  y(function(){
+			$(document).ready(function(){
 				resultRead(); // 편지지함 목록
 				isDivPopUp = true;
 			});
@@ -131,13 +131,6 @@
 			$(document).on("dblclick", ".lmLetterListUl li", function(){
 				letterSelect();
 			});
-			
-			// 편지지 검색 시 엔터 사용
-			function letterSearchEnter() {
-				if (event.keyCode == 13) {
-					letterSearch();
-				}
-			}
 			
 			// 편지지 미리보기
 		    function letterPreview(btn){
