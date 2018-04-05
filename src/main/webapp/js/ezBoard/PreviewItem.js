@@ -175,16 +175,17 @@ function PreviewRayerChange(pGubun) {
         }
         MailOptionHidden();
         PreviewMode_ChangeBtn();
-        if ( firstFlag) {
+        /*if ( firstFlag) {
             Set_BoardConfig();
         
-        }
+        }*/
         isPreviewChange = false;
     } catch (e) { }
     scroll();
 }
 var SetConfig = true;
 function PreviewRayerChange_photo(pGubun) {
+	console.log("PreviewRayerChange_photo 진입");
     try {
         pGubun = pGubun.trim();
         SetConfig = true;
@@ -207,10 +208,12 @@ function PreviewRayerChange_photo(pGubun) {
             CurrentHeight = document.documentElement.clientHeight - 110;
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = "100%";
-            if (navigator.userAgent.indexOf('Firefox') != -1)
+            if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-            else
+            	document.getElementById("newDiv").style.height = (CurrentHeight - 88) + "px";
+            } else
                 document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
+            	document.getElementById("newDiv").style.height = (CurrentHeight - 88) + "px";
             g_bPrevShow = false;
         }
         else if (pGubun == "H") {
@@ -246,10 +249,12 @@ function PreviewRayerChange_photo(pGubun) {
             document.getElementById("ResizeBarW").style.width = CurrenWidth + "px";
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
-            if (navigator.userAgent.indexOf('Firefox') != -1)
+            if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-            else
+            	document.getElementById("newDiv").style.height = (CurrentHeight - 88) + "px";
+            } else
                 document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
+            	document.getElementById("newDiv").style.height = (CurrentHeight - 88) + "px";
 
             document.getElementById("divList").style.overflow = "auto";
             document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 60) + "px";
@@ -267,8 +272,8 @@ function PreviewRayerChange_photo(pGubun) {
         isPreviewChange = false;
         MailOptionHidden();
         PreviewMode_ChangeBtn();
-        if (SetConfig)
-            Set_BoardConfig();
+        /*if (SetConfig)
+            Set_BoardConfig();*/
 
     } catch (e) { }
 }
@@ -885,6 +890,9 @@ function Window_resize_photo() {
 }
 var lCount;
 function ListCount(pCount) {
+	console.log("ListCount 진입");
+	console.log("pCount");
+	console.log(pCount);
     lCount = pCount;
     selobj = null;
 //    MailOptionHidden();
@@ -895,6 +903,7 @@ function ListCount(pCount) {
 }
 
 function Set_BoardConfig() {
+	console.log("Set_BoardConfig 진입");
      $.ajax({
 		type : "POST",
 		dataType : "text",

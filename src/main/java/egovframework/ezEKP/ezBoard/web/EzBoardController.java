@@ -995,7 +995,9 @@ public class EzBoardController extends EgovFileMngUtil{
     	logger.debug("getBoardList started");
     	logger.debug("boardID : " + boardVO.getBoardId());
     	logger.debug("boardType : " + boardVO.getBoardType());
-
+    	System.out.println();
+    	System.out.println("getBoardList 진입");
+    	System.out.println();
     	userInfo = commonUtil.userInfo(loginCookie);
     	
     	String boardID = boardVO.getBoardId();
@@ -1026,7 +1028,6 @@ public class EzBoardController extends EgovFileMngUtil{
     		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
     			boardVO.setBoardType("N");
     			resultXML = getNewItemList(boardVO, userInfo);
-    			System.out.println(resultXML);
     		} else {
     			resultXML = getBoardListItem(boardVO, userInfo, type);
     		}
@@ -2683,7 +2684,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	public String getBoardListItem(BoardVO boardVO, LoginVO userInfo, String type) throws Exception {
 		logger.debug("getBoardListItem started");
-
+		System.out.println();
+    	System.out.println("getBoardListItem 진입");
+    	System.out.println();
 		String orderOption1 = "";
 		String orderOption2 = "";
 		String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
@@ -2730,13 +2733,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardMyFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
 		
 		int boardCount = ezBoardService.getBrdTotalItemCount(boardMyFavoriteVO);
-		
 		int startRow = 1;
 		int endRow = 0;
 		
 		BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
 		
 		int personalCount = boardConfigVO.getListCount();
+		System.out.println();
+		System.out.println("personalCount: " + personalCount);
+		System.out.println();
 		String previewtype = boardConfigVO.getPreview();
 		String fieldName = "";
 		String fieldValue = "";
@@ -6088,7 +6093,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	@ResponseBody
 	public String setBoardConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("setBoardConfig started");
-
+		System.out.println();
+		System.out.println("setBoardConfig 진입");
+		System.out.println();
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userID = request.getParameter("pUserID");
@@ -6101,7 +6108,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		String result = ezBoardService.setBoardConfig(userID, tempCount, preView, userInfo.getTenantId());
-
+		System.out.println();
+		System.out.println("tempCount: " + tempCount);
+		System.out.println();
 		logger.debug("setBoardConfig ended");
 		return result;
 	}
