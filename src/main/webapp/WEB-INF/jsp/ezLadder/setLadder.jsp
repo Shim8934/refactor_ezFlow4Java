@@ -545,6 +545,10 @@
 			
 			/** 사다리 만들기 */
 			function makeLadder() {
+				if ($("#title").val().trim() === "") {
+					alert("제목을 입력하세요.");
+					return;
+				}
 				var title = $("#title").val();
 				var type = $(".ladderType.active").attr("num");
 				var secretFlag = $("#ladderSecret.active").length;
@@ -560,7 +564,6 @@
 				} else {
 					$("input[name='bombnum']").val(0);
 				}
-				
 				
 				/* if(type == "0") {
 					var bombItem = 0;

@@ -45,51 +45,18 @@
 			// 윈도우 창 조절
 			function ladder_main_resize() {
 				var win_height = $(window).height() - 300;
-				$(".mainlist").css("height", win_height + "px");
-				/* $(".mainlist tr").css("height", 30 + "px");
-				$(".mainlist th").css("height", 20 + "px");  */
+				if(win_height>200){
+					$(".div_scroll").css("height", win_height + "px");
+				}
 			}
 			
 		</script>
 		<style type="text/css">
-			.pagenavi .ptxt {
-			    border-color:white;
-			    color: #B5B3B3;
-			    background-color: grey;
-			    border-radius: 3px;
-			    color:white;
-			}	
-			.pagenavi .on {
-			    color: white;
-			    border-color: white;
-			    background-color: grey;
-			}
-			.pagenavi span {
-			    font-size: 12px;
-			    display: inline-block;
-			    cursor: pointer;
-			    border: 1px solid #eee;
-			    height: 19px;
-			    margin: 0px 3px;
-			    padding: 0px 6px 0px 5px;
-			    text-align: center;
-			    line-height: 19px;
-			    border-radius: 3px;
-			    font-weight: normal;
-			    color: #666;
-			    font-family: arial;
-			    vertical-align: top;
-			}
-			
-			.effect {
+			.effect img {
 				width:30px;
 				height:30px;
 				border:1px solid black;
 				border-radius:25px;
-			}
-			.effect img {
-				width:30px;
-				height:30px;
 			}
 			#mainmenu li span {
 				border-color: #B5B3B3;
@@ -128,7 +95,7 @@
 		</div>
 		
 		<div class="div_scroll" style="width:100%; overflow: auto" id="divList">
-			 <table class="mainlist" style="width:98%; margin-left: 10px; margin-right: 10px;"> 
+			 <table class="mainlist" style="width:98%; margin-left: 10px; margin-right: 10px; overflow: auto"> 
 			    <tr class="header" style="height=20px;"> 
 					<th width="20px"><spring:message code="ezLadder.t002"/></th> 					
 					<th width="80px"><spring:message code="ezLadder.t003"/></th> 
@@ -195,6 +162,6 @@
 		        </c:if> 
 			</table>  
 		</div>
-		<div id="tblPageRayer" style="margin-top: 30px;"></div>
+		<div id="tblPageRayer" style="margin-top: 40px;"></div>
 	</body>
 </html>
