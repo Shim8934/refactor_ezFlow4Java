@@ -1,4 +1,5 @@
 var noResult = false;
+
 /* result : 모든 편지지함 정보(letteBoxNo, parentLetterBoxNo, displayname, displayname2, compnayId)
  * treeCollection : jstree에서 사용할 수 있도록 변형(id, parent, text)
  * */
@@ -94,7 +95,6 @@ function selectBox(letterBoxNo) {
 		},
 		error : function(data) {
 			alert("error");
-			console.log(data);
 		}
 	});
 }
@@ -157,7 +157,7 @@ function addLetterBox() {
 	var putParent;
 	
 	if (addCheck == -1) {
-		alert("현재 추가중인 편지지함이 있습니다."); // 이거 strLang으로 바꾸기
+		alert(letterStr22);
 		return;
 	}
 	
@@ -213,20 +213,20 @@ function deleteLetterBox() {
 	var realCheck = false;
 	
 	if (letterBoxNo == result[0].letterBoxNo) { //treeCollection[0].id == 
-		alert("기본편지지함은 삭제가 불가능합니다.");
+		alert(letterStr23);
 		return;
 	} else if (addCheck == -1) { // 편지지함 추가중
-		if (confirm("현재 추가중인 편지지함을 삭제합니다.")){
+		if (confirm(letterStr24)){
 			addCheck = 0;
 			$('#divTree').jstree().delete_node($('#temp'));
 			
 			$(".jstree-clicked").click();
 		}
 	} else if (letter.children.length !== 0) {
-		alert("하위 편지지함이 존재합니다. 하위편지지함을 삭제해주세요");
+		alert(letterStr25);
 		return;
 	} else {
-		var con = confirm("편지지함을 삭제하시겠습니까? \n(주의! 편지지가 존재하면 편지지 포함 삭제됩니다.)");
+		var con = confirm(letterStr27 + "\n" + letterStr28);
 		
 		if (con === true) {
 			realCheck = true;
@@ -248,7 +248,6 @@ function deleteLetterBox() {
 					success : function(data) {},
 					error : function(data) {
 						alert("error");
-						//console.log(data);
 					}
 				});
 				
@@ -257,7 +256,6 @@ function deleteLetterBox() {
 			},
 			error : function(data) {
 				alert("error");
-				//console.log(data);
 			}
 		}); // ajax End
 	} // if End
@@ -282,13 +280,13 @@ function submitClick() {
 	
 	// 편지지함명 중복체크
 	if (boxNameCheck(1) === true) {
-		alert("편지지함명 이 중복되었습니다.");
+		alert(letterStr26);
 		document.getElementById("display").focus();
 		return;
 	}
 	
 	if (boxNameCheck(2) === true) {
-		alert("편지지함명이 중복되었습니다.");
+		alert(letterStr26);
 		document.getElementById("display2").focus();
 		return;
 	}

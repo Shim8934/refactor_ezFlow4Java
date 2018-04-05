@@ -137,9 +137,13 @@ public class EzEmailLetterController {
 		logger.debug("letterBoxNo=" + letterBoxNo);
 
 		JSONObject json = null;
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userLang = userInfo.getLang();
+		
+		logger.debug("userLang=" + userLang);
 
 		try {
-			json = ezEmailAdminLetterService.selectLetterBoxName(letterBoxNo);
+			json = ezEmailAdminLetterService.selectLetterBoxName(letterBoxNo, userLang);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

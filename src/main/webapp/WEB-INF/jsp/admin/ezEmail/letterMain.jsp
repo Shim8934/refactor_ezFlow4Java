@@ -23,8 +23,9 @@
 	        };
 	        
 	        function selectCompanyID() {
-	        	if (companyID != document.getElementById("ListCompany").value ) {
-	        		companyID = document.getElementById("ListCompany").value;
+	        	var company = document.getElementById("ListCompany").value;
+	        	if (companyID != company) {
+	        		companyID = company;
 	        		
 	        		var letteIfr = document.getElementById("Letter_ifrm").src;
 	        		if (Tab1_SelectID == 'tagsub1') {
@@ -167,7 +168,7 @@
 		    </span><br>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
-	        	<p><span id="tagsub1">편지지함<!-- spring message로 넣기 --></span></p>
+	        	<p><span id="tagsub1"><spring:message code='ezEmail.letter20'/></span></p>
 			    <p><span id="tagsub2"><spring:message code='ezEmail.t824'/></span></p>
 	        </div>
 	    </div>

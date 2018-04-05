@@ -21,7 +21,7 @@ public interface EzEmailAdminLetterService {
 	 * 편지지함명 조회
 	 * @param letterBoxNo
 	 */
-	public JSONObject selectLetterBoxName(String letterboxNo) throws Exception;
+	public JSONObject selectLetterBoxName(String letterboxNo, String userLang) throws Exception;
 	
 	/**
 	 * 편지지함 추가

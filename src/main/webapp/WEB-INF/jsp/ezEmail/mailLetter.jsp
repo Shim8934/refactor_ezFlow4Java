@@ -7,7 +7,7 @@
 	<head>
 	
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>편지지</title>
+		<title><spring:message code='ezEmail.t824'/></title>
 	    <link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
 	    <link rel="stylesheet" href="/css/ezEmail/style.css" />	
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
@@ -72,15 +72,15 @@
 	
 	</head>
 	<body style="overflow:hidden;" class="popup">
-		<h1>편지지</h1>
+		<h1><spring:message code='ezEmail.t824'/></h1>
 		
 		<table border="1" id="letterTable">
 			<tr style="height:8%;">
 				<td colspan="2" align="center">
 					<div class="lmtitle lmLetterBoxTitle">
-						<input type="text" name="" id="lmSearchInput" class="searchInput" onkeydown="letterSearchEnter();" placeholder="검색어를 입력해주세요">
-						<a id="lmSearch" class="imgbtn" onclick="letterSearch()"><span>편지지 검색</span></a>
-						<a id="lmSearchReset" class="imgbtn" onclick="inputReset()"><span>초기화</span></a>
+						<input type="text" name="" id="lmSearchInput" class="searchInput" onkeydown="letterSearchEnter();" placeholder="<spring:message code="ezEmail.t10"/>">
+						<a id="lmSearch" class="imgbtn" onclick="letterSearch()"><span><spring:message code='ezEmail.letter1'/></span></a>
+						<a id="lmSearchReset" class="imgbtn" onclick="inputReset()"><span><spring:message code='ezBoard.t999035'/></span></a>
 					</div>	
 				</td>
 			</tr>
@@ -90,7 +90,7 @@
 				</td>
 				<td style="width:50%; vertical-align:top; ">
 					<div class="lmtitle lmLetterTitle">
-						편지지 목록
+						<spring:message code='ezEmail.letter2'/>
 					</div> 
 					<div class="lmLetterList boxNo" data-boxNo="" style="height:320px; width:273px; overflow: auto;">
 						<ul class="lmLetterListUl"></ul>
@@ -99,9 +99,9 @@
 			</tr>
 		</table>
 		<div class="btnposition btnpositionNew">
-			<a class="imgbtn" onclick="letterPreview(this)"><span>미리보기</span></a>
-			<a class="imgbtn" onclick="letterSelect()"><span>선택</span></a>
-			<a class="imgbtn" onclick="cancel()"><span>닫기</span></a>
+			<a class="imgbtn" onclick="letterPreview(this)"><span><spring:message code='ezEmail.t487'/></span></a>
+			<a class="imgbtn" onclick="letterSelect()"><span><spring:message code='ezBoard.t47'/></span></a>
+			<a class="imgbtn" onclick="cancel()"><span><spring:message code='ezEmail.t63'/></span></a>
 		</div>
 		
 		<script type="text/javascript">
@@ -120,8 +120,9 @@
 			var letterNoMsg = "<spring:message code='ezEmail.letter16'/>"; // 존재하지 않는 편지지 입니다.
 			var previewMsg = "<spring:message code='ezBoard.t431'/>"; // 미리보기 
 			var dataNoMsg= "<spring:message code='main.t00026'/>"; // 데이터가 없습니다.
+			var selectLetterMsg ="<spring:message code='ezEmail.letter5'/>"; // 편지지를 선택하세요!
 	    
-			$(document).ready(function(){
+			$(document).read  y(function(){
 				resultRead(); // 편지지함 목록
 				isDivPopUp = true;
 			});
@@ -146,7 +147,7 @@
 		    		url = "/ezEmail/mailLetterPreview.do?" + "letterNo=" + letterNo;  
 		    		window.open(url,"_blank","width=890, height=660");
 		    	} else {
-		    		alert("편지지를 선택하세요.");
+		    		alert(selectLetterMsg);
 		    		return;
 		    	}
 		    }
@@ -163,7 +164,7 @@
 						dataType:"json",
 						success:function(data){
 							if (data.filePath === 'ERROR') {
-								alert("존재하지 않는 편지지입니다.");
+								alert(letterNoMsg);
 								return;
 							}
 							
@@ -175,7 +176,7 @@
 						}
 					});
 		    	} else {
-		    		alert("편지지를 선택하세요.");
+		    		alert(selectLetterMsg);
 		    		return;
 		    	}
 		    }

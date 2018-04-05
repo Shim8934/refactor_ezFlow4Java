@@ -103,11 +103,13 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 	 * @param letterBoxNo
 	 */
 	@Override
-	public JSONObject selectLetterBoxName(String letterBoxNo) throws Exception {
-		logger.debug("selectLetterBoxName started. letterBoxNo=" + letterBoxNo);
+	public JSONObject selectLetterBoxName(String letterBoxNo, String userLang) throws Exception {
+		logger.debug("selectLetterBoxName started. letterBoxNo=" + letterBoxNo + ",userLang=" + userLang);
 		
 		String letterBoxNoStr = "letterBoxNo=" + URLEncoder.encode(letterBoxNo, "UTF-8");
-		String inputParams = letterBoxNoStr;
+		String userLangStr = "userLang=" + URLEncoder.encode(userLang, "UTF-8");
+		String inputParams = letterBoxNoStr + "&" + userLangStr;
+		
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/getLetterBoxName", inputParams);
 		logger.debug("strJson=" + strJson);

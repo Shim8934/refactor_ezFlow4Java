@@ -16,11 +16,11 @@
 	    
 	</head>
 	<body style="height: 95%; overflow:hidden;">
-	    <h5 style="padding: 10px 1px;">편지지함 관리  · 수정 · 삭제</h5>
+	    <h5 style="padding: 10px 1px;"><spring:message code='ezEmail.letter21'/></h5>
 	    <div id="mainmenu">
 		    <ul class="on">
-		        <li><span onclick="addLetterBox()">&nbsp;&nbsp;+ 편지지함 <spring:message code='ezQuestion.t176'/>&nbsp;&nbsp;</span></li>
-		        <li><span onclick="deleteLetterBox()">&nbsp;&nbsp;- 편지지함 <spring:message code='ezQuestion.t177'/>&nbsp;&nbsp;</span></li>
+		        <li><span onclick="addLetterBox()">&nbsp;&nbsp;+ <spring:message code='ezEmail.letter17'/>&nbsp;&nbsp;</span></li>
+		        <li><span onclick="deleteLetterBox()">&nbsp;&nbsp;- <spring:message code='ezEmail.letter18'/>&nbsp;&nbsp;</span></li>
 		    </ul>
 		</div>
 		<div id="divTree" class="myScrollableBlock">
@@ -46,7 +46,7 @@
 				<input type="hidden" id="company_id" name="companyID" value="${companyId}">
 				
 				<div class="divInputBtn">
-					<input type="button" id="submitBtn" onclick="submitClick()" value=" 확인 ">
+					<input type="button" id="submitBtn" onclick="submitClick()" value="<spring:message code="ezEmail.t38"/>">
 				</div>
 			</form>
 		</div>
@@ -63,6 +63,15 @@
 		    var pageType = "${pageType}";
 		    var returnCompany = '${companyId}';
 		    var userLang = '${userLang}';
+		    
+		    var letterStr22 = "<spring:message code='ezEmail.letter22'/>"; 
+		    var letterStr23 = "<spring:message code='ezEmail.letter23'/>";
+		    var letterStr24 = "<spring:message code='ezEmail.letter24'/>";
+		    var letterStr25 = "<spring:message code='ezEmail.letter25'/>";
+		    var letterStr26 = "<spring:message code='ezEmail.letter26'/>";
+		    var letterStr27 = "<spring:message code='ezEmail.letter27'/>";
+		    var letterStr28 = "<spring:message code='ezEmail.letter28'/>";
+		    
 		    window.onload = window_onload;
 		    
 		    function window_onload() {
