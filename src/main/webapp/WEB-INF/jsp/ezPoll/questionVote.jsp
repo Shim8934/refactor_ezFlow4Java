@@ -2736,12 +2736,12 @@
 						<c:choose>
 							<c:when test="${question.isSelOnlyOnce == 1}">
 								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/selOnlyOnce_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t260'/> <spring:message code = 'ezPortal.t95'/>" >
+									<img src="/images/poll/selOnlyOnce_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t260'/> <spring:message code = 'ezPoll.hdp01'/>" >
 								</li>
 							</c:when>
 							<c:otherwise>
 								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t260'/> <spring:message code = 'ezPortal.t96'/>" >
+									<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t260'/> <spring:message code = 'ezPoll.hdp02'/>" >
 								</li>
 							</c:otherwise>
 						</c:choose>

@@ -39,9 +39,9 @@
 
 
 
-.vote_attachedFile .txt{height:45px; line-height:45px; padding:0px 10px 0px 46px; background:#f4f9ff; border-bottom:1px solid #e1ebf7;}
-.vote_attachedFile .attach_img{position:absolute; top:11px; left:15px; hegith:20px; width:20px;}
-.vote_attachedFile .all_save{position:absolute; top:11px; left:230px; float: left;}
+.vote_attachedFile .txt{height:40px; line-height:40px; padding:0px 10px 0px 46px; background:#f4f9ff; border-bottom:1px solid #e1ebf7;}
+.vote_attachedFile .attach_img{position:absolute; top:9px; left:15px; hegith:20px; width:20px;}
+.vote_attachedFile .all_save{position:absolute; top:9px; left:230px; float: left;}
 
 .voteComment #sendBttn:active{background:#00346d;}
 .voteCancelBttn{cursor: pointer; width:56px; height:24px; margin:0px 4px 0px 0px; padding:0px; color:#FFF; background:#0470e4; border:none; border-radius:3px;}
@@ -109,7 +109,7 @@
 .voteIcon_ul .img_description div span{display: inline-block;color: #fff;padding: 2px 10px 0 0px;font-size: 11px;background: url(../../images/kr/main/count_r.gif) no-repeat right;font-weight: bold;}
 /* .voteIcon_ul .icon_title{display:none;} */
 .voteIconImg_li{width:45px; float:left;}
-.voteIconImg_li_info{width:auto; float:left; list-style:none; margin:7px 4px;}
+.voteIconImg_li_info{width:auto; float:left; list-style:none; margin:7px 3px 7px 2px;}
 .voteIconDiv ul li.icon{display:inline-block; width:50px; height:50px; padding:11px 0px 0px 17px; overflow: hidden;}
 /* .voteIconDiv ul li.icon.nosecret{cursor:pointer;} */
 .voteIconDiv ul li img.voteIconImg.nosecret{cursor:pointer;}

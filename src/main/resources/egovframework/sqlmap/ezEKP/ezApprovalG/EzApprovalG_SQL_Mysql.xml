@@ -6603,7 +6603,6 @@
                             VAPRDOINGDOCLIST 
                          WHERE 
                             DOCSTATE <> '015' 
-       
                          AND
                             TENANT_ID = #v_TENANTID#
                          AND
@@ -6611,12 +6610,8 @@
                          AND 
                             FUNCTIONTYPE IN ('002', '005', '000')
                          AND 
-                            APRMEMBERID IN ($v_USERIDS$)
-                         AND 
                             DOCID = #v_DOCID#
-                            
                          UNION
-                         
                          SELECT 
                             STARTDATE
                          FROM 
@@ -6641,15 +6636,12 @@
                             VAPRDOINGDOCLIST 
                          WHERE 
                             DOCSTATE <> '015' 
-       
                         AND
                             TENANT_ID = #v_TENANTID#
                         AND
                             COMPANYID = #companyID#
                         AND 
                             FUNCTIONTYPE IN ('002', '005', '000')
-                        AND 
-                            APRMEMBERID IN ($v_USERIDS$)
                         AND 
                             DOCID = #v_DOCID#
                             
