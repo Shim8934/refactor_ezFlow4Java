@@ -382,9 +382,15 @@ public class EzEmailAdminLetterController {
 		if (auth == null) {
 			return "cmm/error/adminDenied";
 		}
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("lang : " + loginInfo.getLang());
 
 		model.addAttribute("pageType", "letter");
 		model.addAttribute("companyId", companyId);
+		
+		//model.addAttribute("strLang", commonUtil.getMultiData(loginInfo.getLang(), loginInfo.getTenantId()));
+		model.addAttribute("useLang", loginInfo.getLang());
 
 		logger.debug("letterAdminPage ended.");
 		return "admin/ezEmail/letterManager";
@@ -870,8 +876,6 @@ public class EzEmailAdminLetterController {
 		logger.debug("readLetterList started.");
 		logger.debug("letterBoxNo=" + letterBoxNo);
 		
-		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		
 		JSONArray returnJsonArr = new JSONArray();
 
 		try {
@@ -880,8 +884,6 @@ public class EzEmailAdminLetterController {
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
-		
-		model.addAttribute("strLang", commonUtil.getMultiData(loginInfo.getLang(), loginInfo.getTenantId()));
 		
 		logger.debug("readLetterList ended.");
 		return returnJsonArr;

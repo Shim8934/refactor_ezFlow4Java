@@ -107,11 +107,11 @@ function lmPreviewChange(data) {
 	var ifrLetterNo = "";
 	var txtText = previewMsg;
 	var filePath = "ERROR";
-	var useLang = typeof(strLang) == "undefined" ? "" : strLang;
+	var strLang = typeof(useLang) == "undefined" ? 1 : useLang;
 	
 	if (data !== undefined) {
 		var filePathTmp = data.filePath;
-		var langDisplayName = useLang == "" ? data.displayname : data.displayname2;
+		var langDisplayName = strLang == 1 ? data.displayname : data.displayname2;
 		
 		ifrLetterName = langDisplayName.replace(/</gi, "&lt;");
 		ifrLetterNo = data.letterNo;
@@ -157,11 +157,11 @@ function addLetterList(jsonArr) {
 	var letterListHtml = "";
 	var listCount = jsonArr.length;
 	var nowSelect = $(".lmLetterSelect").attr("id"); // 선택중인 편지지 id
-	var useLang = typeof(strLang) == "undefined" ? "" : strLang;
+	var strLang = typeof(useLang) == "undefined" ? 1 : useLang;
 
 	if (listCount !== 0) {
 		for (i = 0; i < listCount; i++) {
-			var langDisplayName = useLang == "" ? jsonArr[i].displayname : jsonArr[i].displayname2;
+			var langDisplayName = strLang == 1 ? jsonArr[i].displayname : jsonArr[i].displayname2;
 			
 			letterListHtml += "<li id='lt" + jsonArr[i].letterNo + "' data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + 
 			"' data-letterBoxNo='" + jsonArr[i].letterBoxNo + "'>"; 
