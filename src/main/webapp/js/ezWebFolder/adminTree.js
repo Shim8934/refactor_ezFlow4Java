@@ -1,13 +1,13 @@
 function getCompanyData(companyId, mode, rootDiv) {
 	$.ajax({
-		type: "POST",
+		type: "GET",
 		url: "/admin/ezWebFolder/getCompanyFolderTree.do",
 		data: {
 			"companyId" : companyId,
 			"folderId"  : selectedFolder
 		},
 		dataType: "JSON",
-		async: false,
+		async: true,
 		success : function(data) {
 			var result = data.companyTree;
 			renderData(result, mode, rootDiv);
@@ -28,6 +28,11 @@ function renderData(result, mode, rootDiv) {
 	var divComp   = document.createElement("div");
 	compFolderId  = result["folderId"];
 	
+	if (mode == "") {
+		selectedFolder          = compFolderId;
+		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId, "right");
+	}
+	
 	while (divTree.hasChildNodes()) {
 		divTree.removeChild(divTree.lastChild);
 	}
@@ -37,9 +42,8 @@ function renderData(result, mode, rootDiv) {
 	var spanCompany = document.getElementById(compFolderId).nextSibling.nextSibling;
 	
 	if (mode == "") {
-		selectedFolder          = compFolderId;
 		spanCompany.style.color = "#e04343";
-		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId, "right");
+		//window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId, "right");
 	}
 	else {
 		selectedFolder = "";
@@ -151,7 +155,7 @@ function getDetailTree(obj) {
 		obj.setAttribute("class", "webfolderMinus");
 		
 		$.ajax({
-			type: "POST",
+			type: "GET",
 			url: "/admin/ezWebFolder/getSubFolderTree.do",
 			data: {
 				"folderId" : uniqueId
@@ -188,14 +192,14 @@ function displaySubTree(result, divElmt) {
 
 function getDepartmentData(companyId, mode, rootDiv) {
 	$.ajax({
-		type: "POST",
+		type: "GET",
 		url: "/admin/ezWebFolder/getDepartFolderTree.do",
 		data: {
 			"companyId" : companyId,
 			"folderId"  : selectedFolder
 		},
 		dataType: "JSON",
-		async: false,
+		async: true,
 		success : function(data) {
 			var result = data.deptTree;
 			renderData2(result, mode, rootDiv);
@@ -214,6 +218,10 @@ function renderData2(result, mode, rootDiv) {
 	
 	var divTree    = document.getElementById(rootDiv);
 	selectedFolder = result[0]["folderId"];
+	
+	if (mode == "") {
+		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder, "right");
+	}
 		
 	while (divTree.hasChildNodes()) {
 		divTree.removeChild(divTree.lastChild);
@@ -228,7 +236,7 @@ function renderData2(result, mode, rootDiv) {
 	
 	if (mode == "") {
 		spanFirstDept.style.color = "#e04343";
-		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder, "right");
+		//window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder, "right");
 	}
 	else {
 		selectedFolder = "";

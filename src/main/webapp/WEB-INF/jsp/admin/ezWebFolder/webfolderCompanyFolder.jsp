@@ -27,7 +27,7 @@
 			
 			function getData() {
 				 $.ajax({
-					type: "POST",
+					type: "GET",
 					url: "/admin/ezWebFolder/getCompanyFolderTree.do",
 					data: {
 						"companyId" : document.getElementById("companyList").value,
@@ -245,7 +245,7 @@
 					obj.setAttribute("class", "webfolderMinus");
 					
 					$.ajax({
-						type: "POST",
+						type: "GET",
 						url: "/admin/ezWebFolder/getSubFolderTree.do",
 						data: {
 							"folderId" : uniqueId

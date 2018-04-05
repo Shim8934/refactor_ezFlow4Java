@@ -5,17 +5,12 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/organ_tree.css"                       type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>"   type="text/css">
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"            type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"         type="text/css"/>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"                ></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"                          ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"                             ></script>
-		<script type="text/javascript" src="/js/ezOrgan/TreeView.js"                        ></script>
-		<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"                   ></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"        ></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"      ></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"              ></script>
@@ -493,7 +488,7 @@
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		
 		<div id="tblPageRayer"></div>

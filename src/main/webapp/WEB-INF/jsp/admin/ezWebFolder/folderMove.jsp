@@ -168,7 +168,7 @@
 				obj.setAttribute("class", "webfolderMinus");
 				
 				$.ajax({
-					type: "POST",
+					type: "GET",
 					url: "/admin/ezWebFolder/getSubFolderTree.do",
 					data: {
 						"folderId" : uniqueId

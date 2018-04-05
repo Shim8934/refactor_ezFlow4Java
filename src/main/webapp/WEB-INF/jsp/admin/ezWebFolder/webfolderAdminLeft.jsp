@@ -66,7 +66,7 @@
 				arrSubFolder          = [];
 				selectedFolder        = "";
 				compFolderId          = null;
-				var divTree           = document.getElementById("folderTree");
+				/* var divTree           = document.getElementById("folderTree");
 				divTree.style.display = "none";
 				
 				while (divTree.hasChildNodes()) {
@@ -78,7 +78,9 @@
 				
 				while (divTree2.hasChildNodes()) {
 					divTree2.removeChild(divTree2.lastChild);
-				}
+				} */
+				document.getElementById("folderTree").style.display  = "none";
+				document.getElementById("folderTree2").style.display = "none";
 			}
 			
 			function companyFile(obj) {

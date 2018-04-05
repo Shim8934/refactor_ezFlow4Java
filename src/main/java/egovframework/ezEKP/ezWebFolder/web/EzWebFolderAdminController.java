@@ -540,7 +540,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "json";
 	}
 	
-	@RequestMapping(value="/admin/ezWebFolder/getDepartFolderTree.do", method = RequestMethod.POST)
+	@RequestMapping(value="/admin/ezWebFolder/getDepartFolderTree.do", method = RequestMethod.GET)
 	public String getDepartmentFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String companyId     = request.getParameter("companyId");
@@ -575,7 +575,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "json";
 	}
 	
-	@RequestMapping(value="/admin/ezWebFolder/getCompanyFolderTree.do", method = RequestMethod.POST)
+	@RequestMapping(value="/admin/ezWebFolder/getCompanyFolderTree.do", method = RequestMethod.GET)
 	public String getCompanyFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String companyId     = request.getParameter("companyId");
@@ -610,7 +610,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "json";
 	}
 
-	@RequestMapping(value="/admin/ezWebFolder/getSubFolderTree.do", method = RequestMethod.POST)
+	@RequestMapping(value="/admin/ezWebFolder/getSubFolderTree.do", method = RequestMethod.GET)
 	public String getSubFolderTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String folderId      = request.getParameter("folderId");
