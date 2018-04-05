@@ -6644,25 +6644,25 @@
 			   			 AND 
 			   				FUNCTIONTYPE IN ('002', '005', '000')
 			   			 AND 
-			   				APRMEMBERID IN ($v_USERIDS$)
-			   			 AND 
 			   				DOCID = #v_DOCID#
 			   				
 			   			UNION 
  						SELECT     
- 						       STARTDATE         
+ 						    STARTDATE         
   						FROM            
-  							vendchamjodocinfo  
+  							TBL_ENDAPRDOCINFO  
   						WHERE            
-  								DOCSTATE <> '015' 	   			
+  							DOCSTATE <> '015' 	   			
 			   	]]>
-			   	AND
+			   	        AND
                             TENANT_ID = #v_TENANTID#
                         AND
                             COMPANYID = #companyID#
                         AND 
                             DOCID = #v_DOCID#  
-                        )  
+                        )
+           ORDER BY 
+                STARTDATE DESC, DOCID DESC                
    		</isEqual>
    		<isEqual property="v_FLAG" compareValue="2">
 		<![CDATA[
@@ -6681,8 +6681,6 @@
                         AND 
                             FUNCTIONTYPE IN ('002', '005', '000')
                         AND 
-                            APRMEMBERID IN ($v_USERIDS$)
-                        AND 
                             DOCID = #v_DOCID#
                             
                         UNION
@@ -6700,10 +6698,10 @@
                             COMPANYID = #companyID#
                         AND 
                             DOCID = #v_DOCID#  
-                        )  
+                        )
+           ORDER BY 
+                STARTDATE ASC, DOCID ASC                
    		</isEqual>
-   		ORDER BY 
-   			STARTDATE $v_BASICORDER$, DOCID DESC
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFindSimpleCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO"> -->
