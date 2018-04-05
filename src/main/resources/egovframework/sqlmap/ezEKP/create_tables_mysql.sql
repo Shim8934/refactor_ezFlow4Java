@@ -8786,8 +8786,8 @@ CREATE TABLE `tbl_journal_env` (
   `viewenv` varchar(200) DEFAULT 'NONE' COMMENT '미리보기(NONE:기본,W:가로분할보기,H:세로분할보기)',
   `preview_wcontent` int(10) DEFAULT '50' COMMENT '가로분할보기시 본문영역길이',
   `preview_hcontent` int(10) DEFAULT '50' COMMENT '세로분할보기시 본문영역길이',
-  `reply_alert` varchar(45) DEFAULT 'yes' COMMENT '댓글 알림',
-  `recv_alert` varchar(45) DEFAULT 'yes' COMMENT '수신 알림',
+  `reply_alert` varchar(45) DEFAULT 'Y' COMMENT '댓글 알림',
+  `recv_alert` varchar(45) DEFAULT 'Y' COMMENT '수신 알림',
   PRIMARY KEY (`user_id`,`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='환경설정'
 
