@@ -115,6 +115,11 @@
 		    var responseResult;
 		    var selectNode;
 		    var searchTxt = "";
+
+			var searchMsg = "<spring:message code='ezOrgan.t56'/>"; // 검색어를 입력해주세요.
+			var letterNoMsg = "<spring:message code='ezEmail.letter16'/>"; // 존재하지 않는 편지지 입니다.
+			var previewMsg = "<spring:message code='ezBoard.t431'/>"; // 미리보기 
+			var dataNoMsg= "<spring:message code='main.t00026'/>"; // 데이터가 없습니다.
 	    
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록
