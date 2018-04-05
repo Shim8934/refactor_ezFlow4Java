@@ -478,14 +478,9 @@
 		            }
 	        	}	        	
 	        	
-	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
-	        	
 	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-	        	
 	        	$("#addpopup").css("left", popupX);
-	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
-	        	
 	        	$("#addpopup").modal();
 	        }	
 			
@@ -712,7 +707,6 @@
 				} else {
 					typeId = journalId.parent().parent().attr("typeId");
 					journalId = journalId.parent().parent().attr("id");
-					console.log("journalId : " + journalId);
 					var feature = GetOpenPosition(820, 850);
 					var Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=temp", "",
 									"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
@@ -726,7 +720,6 @@
 				 $('input:checkbox[name="journalCheckbox"]:checked').each(function() {
 					 journalIdList.push($(this).parent().parent().attr("id"));
 				 });
-				 console.log(journalIdList); 
 				  
 				if (journalIdList.length == 0) {
 					alert("<spring:message code='ezJournal.t148'/>");
@@ -1148,10 +1141,10 @@
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			Openwin.focus();
-			if(listType=='recv'){
-				parent.left.setRecvCount();
-				setRecvCount();
-			}
+// 			if(listType=='recv'){
+// 				parent.left.setRecvCount();
+// 				setRecvCount();
+// 			}
 		}
 	}
 	 

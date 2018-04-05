@@ -56,34 +56,10 @@
     						"typeId"	  : typeId},
 		    		success: function(result) {
 		    			$("#formList").html(result);
-		    			/*
-		    			var $formList = $("#formList");
-		    			var listhtml = "";
-		    			$formList.html("");
-		    			if (result.length > 0) {
-			    			$.each(result, function(index, item) {
-				    			listhtml += "<tr formId=" + item.formId + " onclick='listClick(this)'>";
-				    			listhtml += "<td>" + (index + 1) + "</td>";
-				    			listhtml += "<td>" + item.formName + "</td>";
-				    			if (item.depts.length > 1) {
-					    			listhtml += "<td>" + item.depts[0].deptName + " <spring:message code='ezJournal.t124'/> " + (item.depts.length - 1) + "</td>";
-				    			} else {
-					    			listhtml += "<td>" + item.depts[0].deptName + "</td>";
-				    			}
-				    			listhtml += "<td>" + item.formInfo + "</td>";
-				    			listhtml += "<td>" + item.formDate.slice(0, 10) + "</td>";
-				    			listhtml += "</tr>";
-			    			});
-		    			} else {
-		    				listhtml += "<tr><td colspan='5' style='text-align: center;'><spring:message code='ezJournal.t125'/></td></tr>";
-		    			}
-		    			$formList.html(listhtml);
-		    			*/
 		    		},
 		    		error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);
 		    		}
-		    		
 		        });
 			    
 			}			
@@ -136,10 +112,9 @@
 					if (selFormId == null || selFormId == "") {
 						alert("<spring:message code='ezJournal.t166'/>");
 						return;
-					}
-					
+					} else {
 		    		
-		    		if (selFormId != null) {
+		    		// if (selFormId != null) {
 			    		if (confirm("<spring:message code = 'ezApprovalG.t999933' />") == true) {
 			    			
 			    			$.ajax({

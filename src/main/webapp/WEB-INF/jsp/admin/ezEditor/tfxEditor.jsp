@@ -230,7 +230,7 @@
 	            if (type == "DEL") {
 	            	// 일지 양식작성에서 사용하는 부분
 	            	if ("${type}" == "JOURNAL") {
-	            		selCell.removeAttribute("id", id);
+	            		selCell.removeAttribute("id");
 	            		selCell.innerHTML = "";
 	            	} else {
 		                selCell.removeAttribute("id");

@@ -137,9 +137,9 @@ public class EzJournalGWController {
 			for (int i = 5; i < 11; i++) {
 				String num = "";
 				if (i<10) {
-					num="0"+i;
+					num= "0" + i;
 				}else{
-					num=i+"";
+					num = i + "";
 				}
 				typeList.add("ezJournal.t"+num);
 			}
@@ -562,7 +562,6 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
-			
 		}
 		
 		LOGGER.debug("ezJournal G/W journals ended.");
@@ -598,7 +597,6 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
-			
 		}
 		
 		LOGGER.debug("ezJournal G/W journals-count ended.");
@@ -1099,60 +1097,6 @@ public class EzJournalGWController {
 		LOGGER.debug("journalWriteUploadedFile ended.");
     }
 	
-	/**
-	 * 업무일지 G/W [GET] 첨부파일 리스트 (안씀)
-	 */
-    /*
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject attachList(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W attachList started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
-		
-		JSONObject result = new JSONObject();
-		
-		try {
-			String userId = request.getParameter("userId");
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
-			
-			List<JournalAttachVO> list = ezJournalService.getAttachList(journalId, info.getTenantId());
-			
-			// 파일사이즈수정
-			String fileSize = "";
-			for (int i=0; i<list.size(); i++) {
-				
-				fileSize = list.get(i).getFileSize();
-				double fs = Double.parseDouble(fileSize);
-				
-				if (fs / 1024 / 1024 > 1) {
-					fileSize = Math.floor(fs / 1024 / 1024 * 10) / 10 + "MB";
-				} else if ((fs / 1024) > 1) {
-					fileSize = (int)(fs/1024) + "KB"; 
-				} else {
-					fileSize = Integer.parseInt(fileSize) + "B";
-				}
-				
-				list.get(i).setFileSize(fileSize);
-								
-				//filePath 및 fileName 인코딩
-				list.get(i).setEncodeFilePath(URLEncoder.encode(list.get(i).getFilePath(), "UTF-8"));
-				list.get(i).setEncodeFileName(URLEncoder.encode(list.get(i).getFileName(), "UTF-8"));
-			}
-			
-			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", list);
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);			
-			result.put("data", "");
-		}
-		
-		LOGGER.debug("ezJournal G/W attachList ended.");
-	
-		return result;
-	}
-	*/
 	
 	/**
 	 * 업무일지 G/W [DELETE] 첨부파일 삭제
@@ -1170,10 +1114,10 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
 		
-			String mode = "";
-			if (request.getParameter("mode") != null || request.getParameter("mode").equals("")) {
-				mode = request.getParameter("mode");
-			}
+		//	String mode = "";
+		//	if (request.getParameter("mode") != null || request.getParameter("mode").equals("")) {
+		//		mode = request.getParameter("mode");
+		//	}
 			String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
 			String filePath = request.getParameter("filePath");
 			String fileList = request.getParameter("fileList");
@@ -1241,7 +1185,7 @@ public class EzJournalGWController {
 			String realPath = commonUtil.getRealPath(request);
 			String uploadFilePath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
 			String filePath = request.getParameter("filePath");
-			String fileName = request.getParameter("fileName");
+		//	String fileName = request.getParameter("fileName");
 			String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;
 
 			LOGGER.debug("fullFilePath : " + fullFilePath);
@@ -1341,8 +1285,8 @@ public class EzJournalGWController {
 		
 		try {
 			String userId = request.getParameter("userId");
-			String startCount = request.getParameter("startCount");
-			String listCnt = request.getParameter("listCnt");
+		//	String startCount = request.getParameter("startCount");
+		//	String listCnt = request.getParameter("listCnt");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
 			
@@ -1358,20 +1302,6 @@ public class EzJournalGWController {
 		}
 		
 		LOGGER.debug("ezJournal G/W getReceiverCount ended.");
-		return result;
-	}
-	
-	/**
-	 * 업무일지 G/W [DELETE] 일지 수신자 삭제
-	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/receivers", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
-	public JSONObject deleteReceiver(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W deleteReceiver started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
-		
-		JSONObject result = new JSONObject();
-		
-		LOGGER.debug("ezJournal G/W deleteReceiver ended.");
 		return result;
 	}
 	
@@ -1579,7 +1509,7 @@ public class EzJournalGWController {
 			String userId = request.getParameter("userId");
 			String replyContent = request.getParameter("replyContent");
 			String replyDate = request.getParameter("replyDate");
-			String journalTitle = request.getParameter("journalTitle");
+		//	String journalTitle = request.getParameter("journalTitle");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
 			
@@ -1779,7 +1709,7 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			List<JournalReceiverVO> viewerList= ezJournalService.getJournalViewerList(journalId,startCount,listCnt, info.getTenantId());
-			LOGGER.debug("viewerList.size***********"+viewerList.size());
+			LOGGER.debug("viewerList.size***********" + viewerList.size());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", viewerList);
@@ -1876,7 +1806,7 @@ public class EzJournalGWController {
 			LOGGER.debug("userId : " + userId);
 			String companyId = request.getParameter("companyId");
 			
-			if (companyId ==null||companyId.equals("")) {
+			if (companyId == null || companyId.equals("")) {
 				companyId = info.getCompanyId();
 			}
 			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, companyId, info.getTenantId());

@@ -416,6 +416,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * 수신자 리스트 가져오기
 	 * @param map
 	 */
+	@SuppressWarnings("unchecked")
 	public List<JournalReceiverVO> getReceiverList(Map<String, Object> map) {
 		return (List<JournalReceiverVO>) list("getReceiverList", map);
 	}

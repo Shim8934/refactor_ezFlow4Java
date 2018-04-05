@@ -81,7 +81,6 @@
 	    			data : {"typeId" : typeId,
 	    					"deptId" : deptId},
 	    			success : function(result) {
-	    				console.log(result.length);
 	    				var str = "";
 	    				if (result.length > 0) {
 		    				$(result).each(function() {
@@ -99,7 +98,6 @@
 	    	function changeType(elem) {
 	    		if (mode == "temp" || mode == "reuse" || mode == "sum") {
 					if (!confirm("<spring:message code='ezJournal.t159'/>")) {
-						// 취소시 현재의 양식을 선택하게해야함..
 					//	$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
 						$(elem).val(selTypeId);
 						return;
@@ -111,10 +109,8 @@
 	    		var changeTypeId = $(elem).val();
 	    		selTypeId = changeTypeId;
 				
-	    		console.log("lastFormId 확인 : " + lastFormId);
 	    		if (lastFormId != null && lastFormId != "" ) {
 	    			lastFormId = parseInt(lastFormId);
-	    			console.log("이전양식가져올때는 여기로 : " + lastFormId);
 	    			selFormId = lastFormId;
 	    			getJournalForm(lastFormId);
 	    			$("#optForm option[value=" + lastFormId + "]").attr("selected", "selected");
@@ -142,7 +138,6 @@
 			function getJournalForm(formId) {
 // 				var jsonString = JSON.stringify({"mode" : mode,"formId" : formId,"typeId" : typeId,"journalIdList" : journalIdList});
 				
-				console.log("formId확인 :" + formId);
 				selFormId = formId;
 				
 				$.ajax({
@@ -201,11 +196,9 @@
 	    	
 			// 선택된 수신자 화면에 뿌리기
 	    	function showReceiver() {
-	    		console.log("selReceiver : " + selReceiver);
     			var strReceiver = "";
     			var strReceiverID = "";
     			var total = $(selReceiver).length;
-    			console.log("total : " + total);
 	    		$.each(selReceiver, function(index, item) {
 					if (index == total - 1) {
 						strReceiver += item.userName;	
@@ -215,7 +208,6 @@
 						strReceiverID += item.userId + ", ";
 					}
 	    		});
-	    		console.log(strReceiverID);
 	    		$("#receiverlist").html(strReceiver);
 	    		$("#receiverID").html(strReceiverID);
 	    	}
@@ -246,7 +238,6 @@
 	    			}
 	    			
 	    			var fileList = '${fileList}';
-	    			console.log(fileList);
 	    			dadiframe.setAttachFileInfo(fileList);
 	    		}
 	    	
@@ -262,17 +253,16 @@
 		    		getLastForm(typeId);
 				
 		    		if (lastFormId != null && lastFormId != "" ) {
-		    			console.log("이전양식가져올때는 여기로 : " + lastFormId);
 		    			selFormId = lastFormId;
 		    			getJournalForm(lastFormId);
 		    			$("#optForm option[value=" + lastFormId + "]").attr("selected", "selected");
 		    			lastFormId = "";
 		    		} else {
 		    			selFormId = $("#optForm").find("option:selected").val();
-		    			console.log("selFormId : " + selFormId);
 			    		getJournalForm(selFormId);
 		    		}
 					break;
+					
 				case 'sum':
 					selFormId = opener.sumFormId;
 					journalIdList = opener.journalIdList;
@@ -282,6 +272,7 @@
 		    		getJournalForm(selFormId);
 		    		opener.sumFormId = "";
 					break;
+					
 				case 'reuse': case 'modify': case 'temp':
 					selFormId = "${journal.formId}";
 			//		var selectedType = $("#optType");
@@ -296,30 +287,11 @@
 	    			}
 	    			
 					break;
-				/*	
-				case 'modify': 
-					selFormId = "${formId}";
-			//		var selectedType = $("#optType");
-			//		getFormList(selectedType);
-					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
-					$("#optType").attr("disabled", "true");
-					$("#optForm").attr("disabled", "true");
-					var content = '${content}';
-	    			message.SetEditorContent(content);
-					break;
-				case 'temp': 
-					selFormId = "${formId}";
-				//	journalId = "${journalId}";
-				//	var selectedType = $("#optType");
-				//	getFormList(selectedType);
-					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
-					var content = '${content}';
-	    			message.SetEditorContent(content);
-					break;
-				*/
+
 				default:
 					break;
 				}
+	    		
 	    		$('#loading').hide(); 
 	    	}
 	    
@@ -395,7 +367,7 @@
 	                success: function(result) {	   
 	                	if (result != null && result != "") {
 		                  	alert("<spring:message code='ezJournal.t137'/>");
-	          			 	sendJournalRecvMail($("#title").val(),receiverID,result);
+	          			 	sendJournalRecvMail($("#title").val(), receiverID, result);
 		                  
 		             	  	opener.setJournalList();
 	          			  	window.close();

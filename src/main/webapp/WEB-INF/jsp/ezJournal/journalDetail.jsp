@@ -299,6 +299,8 @@
 		    	
 		    	sizeOn();
 		    	opener.setJournalList();
+		    	opener.parent.left.setRecvCount();
+				opener.setRecvCount();
 		    }
 		    
 		    function sizeOn(){
