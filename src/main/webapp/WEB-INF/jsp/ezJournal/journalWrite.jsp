@@ -320,6 +320,7 @@
 				default:
 					break;
 				}
+	    		$('#loading').hide(); 
 	    	}
 	    
 		 	// 버튼 중복클릭 방지
@@ -662,10 +663,6 @@
     			}
     		});
 		}
-		
-		$(window).load(function() {    
-		     $('#loading').hide();  
-	    });
 		</script>
 	</body>
 </html>
