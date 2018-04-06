@@ -46,6 +46,7 @@
 				$(".bold").css("font-weight", "normal");
 				$(val).find("span").css("font-weight", "bold");
 				selFormId = "";
+				formStatus = "";
 				
 			    $.ajax({
 		    		type : "POST",
