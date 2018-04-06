@@ -5,8 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Insert title here</title>
-		<!-- <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css"> -->
+		<title><spring:message code='ezEmail.letter4'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
 	    <link rel="stylesheet" href="/css/ezEmail/style.css" />
@@ -40,15 +39,15 @@
 		<div id="leTop">
 			
 			<div class="leTitle">
-				편지지 이동
+				<spring:message code='ezEmail.letter4'/>
 			</div>
 			
 			<div class="divFolder" id="divTree"></div>
 			
 			<div class="leLetter">
 				 <div class="leLetterBtns">
-				 	<button id="leSave" data-letterNo="${letterNo}" onclick="letterBoxSave()">저장</button>
-				 	<button id="leClose" onclick="window.close()">취소</button>
+				 	<button id="leSave" data-letterNo="${letterNo}" onclick="letterBoxSave()"><spring:message code='main.sp09'/></button>
+				 	<button id="leClose" onclick="window.close()"><spring:message code='main.t135'/></button>
 				 </div>
 			</div>
 		
@@ -62,6 +61,8 @@
 			var result = [];
 		    var treeCollection = [];
 		    var selectNode;
+		    
+		    var letterMoveMsg = "<spring:message code='ezEmail.letter29'/>";
 		    
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록
@@ -82,10 +83,9 @@
 					datatype : 'text',
 					error : function(data) {
 						alert("error");
-						//console.log(data);
 					},
 					success : function(data) {
-						alert("편지지 이동하였습니다");
+						alert(letterMoveMsg);
 						window.close();
 					}
 				}); 
