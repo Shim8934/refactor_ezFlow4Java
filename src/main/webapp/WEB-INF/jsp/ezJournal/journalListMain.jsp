@@ -793,8 +793,8 @@
 			  </c:if>
 			  &nbsp;
 			  <c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-			  <input id="searchValue" style="width:150px;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}"/> 
-	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="quickSearch()"></a>
+			  <input id="searchValue" style="width:150px;height:20px;border-right:0px;vertical-align: top" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}""> 
+	          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onclick="quickSearch()"></a>
 			  </c:if>
 	        </span>
 		</h1>
@@ -825,6 +825,9 @@
 	       	 <li><span id="SearchOption" onClick="doLayerPopup(this);" mode="off"><spring:message code='ezJournal.t59' /></span></li>
 <!-- 		  	취합 -->
 	       	 <li><span onClick="doSelectSumJournal();"><spring:message code='ezJournal.t60' /></span></li>
+		  	</c:if>
+		  	<c:if test="${listType eq 'department' or listType eq 'mine'}">
+		  	<li style="background:none; padding-right:2px; "><img src="/images/i_bar.gif" style="margin-bottom:10px;" alt=""></li>
 		  	</c:if>
 	        <c:if test="${listType eq 'department'}">
 		        <li style="background:none">

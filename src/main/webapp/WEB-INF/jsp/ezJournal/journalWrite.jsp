@@ -143,7 +143,7 @@
 				$.ajax({
 	    			type : "POST",
 	   				dataType : "json",
-	   				async:false,
+// 	   				async:false,
 	   				url : "/ezJournal/journalGetForm.do",
 	   				data : {
 	   					mode : mode, formId : formId, typeId : typeId,
@@ -271,6 +271,8 @@
 					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
 		    		getJournalForm(selFormId);
 		    		opener.sumFormId = "";
+
+		    		$('#loading').hide(); 
 					break;
 					
 				case 'reuse': case 'modify': case 'temp':
@@ -291,8 +293,6 @@
 				default:
 					break;
 				}
-	    		
-	    		$('#loading').hide(); 
 	    	}
 	    
 		 	// 버튼 중복클릭 방지
@@ -615,8 +615,9 @@
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
-	    
+	    <c:if test="${mode eq 'sum' }">
 	    <div id="loading"><img id="loading-image" src="/images/ProgressBar.gif" alt="Loading..." /></div>
+	    </c:if>
 
 		<script>
 		// 다른일지 가져오기 리스트

@@ -17,7 +17,7 @@
 	        var minZoom = 80;
 	
 	        $(document).ready(function() { 
-		    	$('.journalPreviewContentIframe').contents().find('body').html('<div style="text-align: left;"><img onclick="parent.Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> <img onclick="parent.Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"></div><div id="journalContent" style="height:10px;display:inline-block;"></div>');
+		    	$('.journalPreviewContentIframe').contents().find('body').html('<div style="text-align: left;"><img onclick="parent.Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> <img onclick="parent.Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"></div><div class="txtContent" id="journalContent" style="width:100%; text-align: center; height:10px;display:inline-block;"></div>');
 		    	$('.journalPreviewContentIframe').contents().find('#journalContent').html('${journal.journalContent }');
 	        });
 // 	        window.onload = function (){
@@ -32,7 +32,7 @@
                 } else {
                     return;
                 }
-                $(".txtContent").css("zoom", nowZoom + "%");
+                $('.journalPreviewContentIframe').contents().find('.txtContent').css("zoom",nowZoom + "%");
 	        }
 	
 	        function Smaller() {
@@ -41,7 +41,7 @@
                 } else {
                     return;
                 }
-                $(".txtContent").css("zoom", nowZoom + "%");
+                $('.journalPreviewContentIframe').contents().find('.txtContent').css("zoom",nowZoom + "%");
 	        }
 	    </script>
 	</head>

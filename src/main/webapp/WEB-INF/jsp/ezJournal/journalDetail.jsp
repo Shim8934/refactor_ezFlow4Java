@@ -119,6 +119,8 @@
 								<li><span onclick='journalModify()'> <spring:message code='ezJournal.t107' /></span></li>
 								<!-- 	        		삭제 -->
 								<li><span onclick='journalDelete()'> <spring:message code='ezJournal.t108' /></span></li>
+								<!-- 		        	재사용 -->
+								<li><span onclick='journalReuse()'> <spring:message code='ezQuestion.t700' /></span></li>
 							</c:if>
 							<!-- 		        	메일로발송 -->
 							<li><span onclick='fromJournalToMail()'> <spring:message code='ezJournal.t103' /></span></li>
@@ -127,10 +129,6 @@
 							<!-- 	        		수신확인 -->
 							<c:if test="${journal.totalRecv gt 0 }">
 								<li><span onclick='journalReceiverList();'> <spring:message code='ezJournal.t113' />(${journal.checkRecv }/${journal.totalRecv })</span></li>
-							</c:if>
-							<c:if test="${journal.mine eq 'yes' }">
-							<!-- 		        	재사용 -->
-							<li><span onclick='journalReuse()'> <spring:message code='ezQuestion.t700' /></span></li>
 							</c:if>
 							<!-- 		        	인쇄 -->
 							<li><span onclick='printJournal();'> <spring:message code='main.t73' /></span></li>

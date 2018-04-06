@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <style>
 	#tblPageRayer .pagenavi span{
 		margin : 0px;
@@ -56,7 +57,7 @@
 					<spring:message code='ezJournal.t35'/>
 				</th>
 				<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine' }">
-					<th id="BoardList_TH_8" onclick="setListOrder(this)" order="7" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:15%;" class="h5_center">
+					<th id="BoardList_TH_8" onclick="setListOrder(this)" order="7" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20%;" class="h5_center">
 						<spring:message code='ezJournal.t22'/>
 					</th>
 				</c:if>
@@ -115,6 +116,13 @@
 						</td>
 					</c:if>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+					<jsp:useBean id="toDay" class="java.util.Date" />
+					<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
+					<fmt:parseDate value="${journal.journalDate}" pattern="yyyy-MM-dd"  var="jDay"/>
+					<fmt:formatDate value="${jDay}" pattern="yyyy-MM-dd" var="jDay"/>
+					<c:if test="${nowDay <= jDay }">
+						<img src="/images/i_new.gif">
+					</c:if>
 						${journal.journalTitle}
 						<c:if test="${journal.replyCount gt 0}">
 							<!-- <a onclick=""><span onclick="quickReply('${journal.journalId }','${journal.journalTitle }');" style="color: #c64200">[${journal.replyCount }]</span></a> -->
