@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .node_normal
 {
     height:19px;
@@ -53,4 +54,64 @@
     background-color: transparent;
     line-height:19px;
     display : inline-block;
+=======
+.node_normal
+{
+    height:16px;
+    line-height:16px;
+    /* height: 19px; */    
+    /* line-height:19px; */
+    color:#555;    
+    padding-left: 3px;    
+    font-size:9pt;
+    vertical-align:top;
+    cursor:pointer;
+    background-image:none;
+    background-attachment:scroll;
+    background-repeat:repeat;
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-color: transparent;
+    display : inline-block;
+}
+.node_selected
+{    
+    height: 16px;
+    line-height:16px;    
+    /* height: 19px; */    
+    /* line-height:19px; */
+    color: #333;    
+    padding-left: 3px;
+    font-size: 9pt;
+    font-weight: bold;
+    vertical-align: top;
+    cursor: pointer;
+    background-image: none;
+    background-attachment: scroll;
+    background-repeat: repeat;
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-color: transparent;    
+    display : inline-block;
+}
+.node_hover
+{
+    height: 16px;
+    line-height:16px;
+    /* height: 19px; */    
+    /* line-height:19px; */
+    color: #333;    
+    padding-left: 3px;
+    font-size: 9pt;
+    font-weight: bold;
+    vertical-align: top;
+    cursor: pointer;
+    background-image: none;
+    background-attachment: scroll;
+    background-repeat: repeat;
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-color: transparent;
+    display : inline-block;
+>>>>>>> origin/master
 }

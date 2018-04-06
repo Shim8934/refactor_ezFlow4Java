@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .icon_graydown {margin:0px 0px 0px 3px; cursor:pointer; width:11px; height:11px; display:inline-block; background:url(/images/icon_graydown.gif) no-repeat center bottom; vertical-align:middle;}
 .icon_grayup {margin:0px 0px 0px 3px; cursor:pointer; width:11px; height:11px; display:inline-block; background:url(/images/icon_grayup.gif) no-repeat center bottom; vertical-align:middle;}
 /* background-image: url(/images/emoticon/girl/45.png); */
@@ -115,3 +116,133 @@
 
 /* vote graph area */
 .voterNumber_ {float:left;display:none;width:100% ;font-weight:bold;}
+=======
+.icon_graydown {margin:0px 0px 0px 3px; cursor:pointer; width:11px; height:11px; display:inline-block; background:url(/images/icon_graydown.gif) no-repeat center bottom; vertical-align:middle;}
+.icon_grayup {margin:0px 0px 0px 3px; cursor:pointer; width:11px; height:11px; display:inline-block; background:url(/images/icon_grayup.gif) no-repeat center bottom; vertical-align:middle;}
+/* background-image: url(/images/emoticon/girl/45.png); */
+.emoticon {    
+    background-size: 85px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-clip: border-box;
+    transition: background-size 0.2s;
+    -webkit-transition: background-size 0.2s;
+    transition-timing-function: cubic-bezier(.07,1.41,.82,1.41);
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.emoticon:hover {
+    background-size: 100px;
+}
+
+.poll_list1 {margin:0px; padding:0px; font-size:12px;}
+.poll_list1 .graphbar1{margin:3px 0px 10px 0px; padding:0px; border:1px solid #eee; height:7px; background-color:#f8f8fa;}
+.poll_list1 .graphbar1 .gx_bar11 {background:rgb(245, 117, 120); height:7px; margin:0px; padding:0px; border:1px solid rgb(225, 97, 100); margin-top:-1px}
+
+/* 20171115 */
+.voteInfo{height:68px;}
+.voteTextTest{line-height:20px; margin:1px 8px;}
+
+
+.vote_listTd .title01{/*height:30px;*/ line-height:28px; font-size:16px; color:#e04343;}
+.vote_listTd .graph01{background:#efa1a1; border:none;}
+
+._imageTag{height: 20px; width: 20px; display: block; vertical-align: middle; margin: 0 auto; cursor: pointer}
+
+
+
+
+
+
+.vote_attachedFile .txt{height:40px; line-height:40px; padding:0px 10px 0px 46px; background:#f4f9ff; border-bottom:1px solid #e1ebf7;}
+.vote_attachedFile .attach_img{position:absolute; top:9px; left:15px; hegith:20px; width:20px;}
+.vote_attachedFile .all_save{position:absolute; top:9px; left:230px; float: left;}
+
+.voteComment #sendBttn:active{background:#00346d;}
+.voteCancelBttn{cursor: pointer; width:56px; height:24px; margin:0px 4px 0px 0px; padding:0px; color:#FFF; background:#0470e4; border:none; border-radius:3px;}
+.voteSaveBttn{cursor: pointer; width:46px; height:24px; color:#FFF; background:#0470e4; border:none; border-radius:3px;}
+
+
+/* 20171214 */
+/* .questionFont02{float: right; display: block; padding:0px 10px; height:43px; line-height:41px; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; margin:10px 5px 0px 0px; text-align:center; color:#000; font-size:14px;}
+.questionFont02 a{height:45px;}
+.questionFont02 a:hover{ color:#000;}
+.questionFont02 a span{font-size:16px;} */
+
+.voteInfoP{ margin:5px 10px;border-radius:25px; -moz-border-radius:25px; -webkit-border-radius:25px; width:48px; height:48px; padding:0px; float:left;}
+.voteInfoP img{ border-radius:25px; -moz-border-radius:25px; -webkit-border-radius:25px; width:48px; height:48px;}
+
+.voteTextTest span{ display:block; font-size:12px; color:#000; line-height:normal;}
+.voteTextTest span.questionFont{font-size:14px; padding:3px 0px 0px 0px;}
+.voteTextTest span.questionFontS{color:#aaa9a9; padding:6px 0px 0px 0px;}
+
+#titleAndContent{ overflow:hidden; border:1px solid #dddddd; margin-bottom:20px;}
+#titleAndContent .baonkTest{ font-size:16px; color:#004896; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:bold;}
+.questionTitle{display:inline-block;float:left; width:100%; height:50px; line-height:50px; padding:0px 10px; background:#f9f9f9; border-bottom:1px solid #dddddd; color:#FFF; font-size:18px;}
+
+/* #_editVote{float:right; display:block; font-size:16px; color:#004896; border:1px solid #e1ebf7; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; height:43px; line-height:43px; background:#f4f9ff; padding:0px 20px; overflow:hidden; cursor:pointer; margin:10px 0px 0px 0px;}
+#_editVote span{background:url(/images/poll/poll_editIcon.png) no-repeat left center; padding:0px 0px 0px 25px; display:inline-block; overflow:hidden; font-size:14px;} */
+
+.voteTdBg{background:#f9f9f9 !important; margin:0px !important; padding:0px !important; height:68px !important; border:1px solid #dddddd !important;}
+.voteTdBg .voteTdBg_layout{margin:0; text-align:center;}
+/* .voteBtn{height:43px; float:right; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 10px; margin:10px 5px 0px 0px; line-height:41px; font-size:14px; display:inline-block; cursor:pointer;}
+.voteBtn span{font-size:16px; color:#004896; margin-left:3px;} */
+#_finish{height:45px; margin:0px; background:#0470e4; border:none; color:#FFF; border-radius:5px; line-height:45px; padding:0px 26px; text-align:center; cursor: pointer; font-size:14px;display:inline-block;}
+
+.userName{display: block; color:#004896; font-size:14px; padding:7px 0px 0px 20px;}
+
+.voteComment{width:100%; height:79px !important; background:#f9f9f9; border:1px solid #DDD; border-top:0px; margin:0px 0px 0px 0px; padding:0px; overflow:hidden;}
+.sendComment_layout{ height:58px; overflow:hidden; margin:10px; background:#fff; border:1px solid #ddd;}
+.send_attach{ float:left; overflow:hidden; margin:0px 0px 0px 0px; padding:15px 0px 0px 15px;}
+#_stickerArea{ float:left; overflow:hidden; margin:0px; padding:15px 15px 0px 0px;}
+
+.comment_input_layout{float:left; display:block; width:74%; border-left:1px solid #DDD; margin:16px 0px; padding:0px 0px; height:27px;}
+#comment_input{ height:27px !important; line-height:27px; padding:0px 0px 0px 10px; outline: none; border:none; resize:none; overflow:hidden; font-size:12px;}
+.commentBtn{ float:right; display:block; width: 96px; height:45px; border:none; margin:0px; padding:6px 6px 0px 0px;}
+
+#sendComment{min-width: 800px}
+.voteFileInput{width: 0px; height: 0px; display: none;}
+
+#ballotSystemBody{min-width: 800px}
+
+#commentArea table tbody tr [id *= toolCmt]{margin-left: 11px}
+
+.voterNumber{float:left; display:block; font-size:16px; margin:-2px 10px 0px 10px;}
+._resultPercentage{padding-bottom: 3px; padding-left: 20px; font-weight:bold;}
+
+/* vote popup css */
+
+#menu1{width: 100%}
+#menu1 h1{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+
+/* vote icon img */
+.voteIconDiv{float:right;}
+.voteIcon_ul{position:relative; float: left; width: 62px; height: 68px; /* overflow: hidden; */ margin: 0; padding: 0px 0 0 0px; list-style: none;}
+.voteIcon_ul .icon_title{clear: both; display:block; text-align: center;height: 20px;line-height: 19px;overflow: hidden;vertical-align: top;font-size: 12px;color: #000;}
+.voteIcon_ul .img_description{position: absolute;right: -10px;top: -2px;z-index: 5;}
+.voteIcon_ul .img_description div{display:inline-block; line-height:190%; color:#fff; padding:0px 0 0 8px; font-size:11px; background: url(../../images/kr/main/count_l.png) no-repeat left;}
+.voteIcon_ul .img_description div span{display: inline-block;color: #fff;padding: 2px 10px 0 0px;font-size: 11px;background: url(../../images/kr/main/count_r.gif) no-repeat right;font-weight: bold;}
+/* .voteIcon_ul .icon_title{display:none;} */
+.voteIconImg_li{width:45px; float:left;}
+.voteIconImg_li_info{width:auto; float:left; list-style:none; margin:8px 1px 11px 0px;}
+.voteIconDiv ul li.icon{display:inline-block; width:50px; height:50px; padding:11px 0px 0px 17px; overflow: hidden;}
+/* .voteIconDiv ul li.icon.nosecret{cursor:pointer;} */
+.voteIconDiv ul li img.voteIconImg.nosecret{cursor:pointer;}
+.voteIconImg{vertical-align: top;}
+.voteIconImg_info{vertical-align: top; width:30px;}
+
+/* vote graph area */
+.voterNumber_ {float:left;display:none;width:100% ;font-weight:bold;}
+
+/* vote thumbnail*/
+.imgPopup{width: auto; height: auto; position: relative; float: left; max-width: 400px; max-height: 400px;}
+.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 50px;}
+.imgPopupBoxOff, .imgPopupOff{display: none;}
+.thumbnail{width:40px; display:block; max-height: 69px; vertical-align: middle; margin: 0 auto;}
+.imgNotAttached{vertical-align: middle; margin: 0px auto; display: block;}
+.vote_listTd._imgOption{width:54px; border:1px solid #DDD; background:white;}
+>>>>>>> origin/master

@@ -259,7 +259,7 @@
 		            topPosition = (window.screen.height / 2) - ((height / 2) + 50);
 		
 		            if (tempUserID == tempUserDeptID) {
-		                window.open("/ezApprovalG/ezLineInfo.do?docID=" + tempDocID + "&deptID=" + tempUserDeptID + "&docState=012", "", "height=270px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(600, 270));
+		                window.open("/ezApprovalG/ezLineInfo.do?docID=" + tempDocID + "&deptID=" + tempUserDeptID + "&docState=012", "", "height=460px,width=1155px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(1155, 460));
 		            } else {
 		                window.open("/ezCommon/showPersonInfo.do?id=" + tempUserID, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		            }
