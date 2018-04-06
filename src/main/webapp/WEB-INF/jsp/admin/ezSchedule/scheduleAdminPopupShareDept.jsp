@@ -27,7 +27,7 @@
 	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(735, 580));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                } else {
-	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(860, 590));
+	                    var OpenWin = window.open("/ezSchedule/scheduleSelectSecretary.do", "scheduleSelectSecretary", GetOpenWindowfeature(1000, 590));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                }
 	            } else {

@@ -491,14 +491,12 @@ function event_xmlhttp_mailMoveDelete_Complete() {
             if(event_xmlhttp_mailMoveDelete_Complete.mode=="MOVE")
                 alert(MoveMsg);
             else if (event_xmlhttp_mailMoveDelete_Complete.mode == "ALL") {
-                parent.frames["left"].LoadEmailTree();
                 alert(strLang215)
             }
             else {
                 if (event_xmlhttp_mailMoveDelete_Complete.mode != "BMOVE")
                     alert(strLang215)
             }
-
         }
         else {
             if (event_xmlhttp_mailMoveDelete_Complete.mode == "MOVE")
