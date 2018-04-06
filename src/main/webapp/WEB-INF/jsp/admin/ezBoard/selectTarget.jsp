@@ -638,7 +638,7 @@
 		                            	<td width="5"></td>
 		                            	<td>
 		                                	<div class="listview">
-		                	                <div id=OrganListView style ="OVERFLOW:auto; WIDTH:100%; min-width:658px; HEIGHT:440px; border:0"></div></div>
+		                	                <div id=OrganListView style ="OVERFLOW:auto; WIDTH:100%; min-width:602px; HEIGHT:440px; border:0"></div></div>
 		                    	        </td>
 		                      		</tr>
 		                 		</table>
