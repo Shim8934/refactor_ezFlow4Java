@@ -36,6 +36,16 @@
 				    if (typeof(window.parent.g_rejectWord) == "string") {
 				        window.parent.g_rejectWord = g_rejectWord;
 				    }
+
+					sizeBtnAppend();
+				}
+				
+				function sizeBtnAppend() {
+					var minusBtn = "<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor: pointer; display:inline;'/>";
+					var plusBtn = "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; display:inline; margin-left: -4px;'/>";
+					
+					$("body").prepend(plusBtn);
+					$("body").prepend(minusBtn);
 				}
 				
 				function btnPrint_onClick() {
@@ -293,8 +303,6 @@
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
-		<img src='/images/minus.png' title="<spring:message code='ezEmail.t99000065' />" onclick='Smaller()' style='cursor: pointer;' />
-		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
 		<span id="ContentClassbtn" style="float:right;display:none;" >
 			<img src='/images/mtgrsp-accept.gif' width="20" height="20" title="<spring:message code='ezEmail.t901' />" onclick="Schedule_btn('ACCEPT');" style='cursor:pointer;' />
 			<img src='/images/mtgrsp-tent.gif' width="20" height="20" title="<spring:message code='ezEmail.t903' />" onclick="Schedule_btn('TENT');" style='cursor:pointer;' />
