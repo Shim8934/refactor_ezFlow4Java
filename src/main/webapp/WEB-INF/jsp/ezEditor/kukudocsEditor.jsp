@@ -9,7 +9,7 @@
 	    <script type="text/javascript" src="/js/ezEditor/kukudocsEditor/javascripts/build/Editor.bundle.js"></script>
 	    <link rel="stylesheet" href="/js/ezEditor/kukudocsEditor/stylesheets/style.css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<style> html, body {height: 100%; margin: 0; padding: 0;} </style>
+		<style> html, body {height: 100%; margin: 0; padding: 0; overflow: hidden;} </style>
 		<script type="text/javascript">
 			var type = "${type}";
 			var height = "${height}";
@@ -74,9 +74,27 @@
 			var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
 		
-			// TODO: 언어 설정
-			var lang = "kr"; // 언어
-			var userLang = "${userInfo.lang}"; // 사용자 언어
+			// 언어 설정 > 쿠쿠닥스에서 아직 kr만 지원
+			var lang = "";
+			var userLang = "${userInfo.lang}";
+			
+			switch (userLang) {
+		    	case "1": 
+		    		lang = "kr";
+		    		break;
+		    	case "2": 
+		    		lang = "us";
+		    		break;
+		    	case "3": 
+		    		lang = "jp";
+		    		break;
+		    	case "4": 
+		    		lang = "cn";
+		    		break;
+		    	default :
+		    		lang = "us";
+		    		break;
+	    	}
 			
 			// html 모드 사용 여부 설정
 			var useHTMLMode = true;
@@ -86,15 +104,17 @@
 				useHTMLMode = false;
 	        }
 			
-			// 숨김 메뉴 설정
-			var hiddenMenu = ["new", "file_open", "save", "auto_save_load", "layout", "template", "copy", "paste", "cut", "all_select", "page_break", 
-							  "dir_ltr", "dir_rtl", "video", "video_modify", "file", "emoticon", "layer", "fullscreen", "setting", "help",
-							  "super", "sub", "remove", "textFormatCopy", "textFormatPaste", "paragraph_remove_format", "bookmark", "date_format", 
-							  "background_image", "upper_lower", "blockquote"];
+			// TODO: 메뉴 줄 설정
+			// 메뉴 설정			
+			var customAlignMenu = ['print','menu_line','undo','redo','menu_line','text_paste','menu_line','textFormatCopy','textFormatPaste','menu_line','link','unlink','menu_line','image','menu_line','symbol','horizontal','menu_line',
+								   'numbered_list','bullet_list','menu_line','outdent','indent','menu_line',
+								   'table','menu_line','table_insert_left','table_insert_right','table_insert_top','table_insert_bottom','menu_line','table_remove_col','table_remove_row','table_remove_table','menu_line',
+								   'table_merge','table_split_col','table_split_row','menu_line','table_background_color','table_border_style','menu_line','align_left','align_center','align_right','align_justify','menu_line','paragraph_margin','menu_line',
+								   'heading','fontFamily','fontSize','line_height','menu_line','bold','italic','underline','strike_through','paragraph_remove_format','menu_line','color','background_color','menu_line','about'];
 			
+			// 메일 부재중설정, 커뮤니티 포토게시판일 경우 이미지 업로드 아이콘 제거
 			if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
-	        	//메일 부제중설정 시 이미지 업로드 아이콘 제거
-				hiddenMenu.push("image", "image_modify");
+				customAlignMenu.splice(customAlignMenu.indexOf('image'), 2);
 	        }
 			
 			// 이미지 업로드 URL 설정
@@ -116,7 +136,7 @@
 	            width : '100%',
 	            height : '100%',
 	            lang : lang,
-	            hiddenMenu : hiddenMenu,
+	            customAlignMenu : customAlignMenu,
 	            useMenuBar : false,
 	            useHTMLMode : useHTMLMode,
 	            useTextMode : false,
@@ -127,7 +147,6 @@
 	            imageUploadURL : imageUploadURL,
 	            Editor_Complete : Editor_Complete
 	        });
-			
 		</script>
 	</body>
 </html>

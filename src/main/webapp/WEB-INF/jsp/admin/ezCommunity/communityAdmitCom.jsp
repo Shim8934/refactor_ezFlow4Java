@@ -212,7 +212,7 @@
 				<th><spring:message code = 'ezCommunity.t28' /></th>
 			  	<td>
 			  		<select name="s_radio" style="WIDTH:115px; HEIGHT:19px;vertical-align:middle" class="text">
-						<option value="1"><spring:message code = 'ezCommunity.t29' /></option>
+						<option value="1"><spring:message code = 'ezCommunity.t33' /></option>
 						<option value="2" selected><spring:message code = 'ezCommunity.t9991' /></option>
 					</select>
 					<input name="keyword" onkeydown="return keyword_onkeydown()" style="vertical-align:middle">

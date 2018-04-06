@@ -121,6 +121,7 @@
 	    var securePassword = "";
 	    var secureReadCount = "0";
 	    var secureReadDate = "";
+	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {

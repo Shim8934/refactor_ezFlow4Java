@@ -117,6 +117,12 @@
             		_listview.LoadFromID("DListView");
             		var arrRows = _listview.GetDataRows();
             		
+            		//부서 선택시 회사를 선택할 수 없도록 처리
+            		if(nodeIdx.NodeLevel == 0){
+                   		alert("<spring:message code='ezOrgan.t249'/>");
+            			return;
+            		}
+            		
             		for (count2 = 0; count2 < arrRows.length; count2++) {
                 		if (nodeIdx.GetNodeData("CN") == arrRows[count2].getAttribute("CN")) {
                     		alert("<spring:message code='ezPoll.t213'/>");
@@ -242,7 +248,7 @@
         	}
     	}
     	function on_view() {
-	        var strQuery = "<DATA><DEPTID>${userInfoDeptCode}</DEPTID><TOPID>Top</TOPID><PROP>displayName</PROP></DATA>"; 
+	        var strQuery = "<DATA><DEPTID>${userInfoDeptCode}</DEPTID><TOPID>${pCompanyID}</TOPID><PROP>displayName</PROP></DATA>"; 
     	    xmlHttp_Depttree = null;
 	        xmlHttp_Depttree = createXMLHttpRequest();
     	    xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);

@@ -742,6 +742,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	                		strWriterFakeName = item.getWriterName();
 	                	}
                 	}
+                	
+                	
                 }
 
                 if (item.getAttachments() != null && item.getAttachments().length() > 0) {
@@ -2778,9 +2780,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				
 				if (temp == 0) {
 					ezCommunityDAO.setAsReadInsert(map);
+					
+					String writerID = ezCommunityDAO.getWriterID(map);
+					
+					if(writerID == null || !writerID.equals(userInfo.getId())) {
+						ezCommunityDAO.setAsReadUpdate(map);
+					}
 				}
 				
-				ezCommunityDAO.setAsReadUpdate(map);
 			}
 			
 			logger.debug("setAsRead ended.");
@@ -3021,7 +3028,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (pMode.equals("modify")) {
 			logger.debug("modifyItem");
 			ezCommunityDAO.brdUpdateItemUpdate(map);
-			ezCommunityDAO.brdUpdateItemDelete(map);
+			//ezCommunityDAO.brdUpdateItemDelete(map);
 		} else {
 			map.put("v_pDocNo", "");
 			ezCommunityDAO.brdNewItemInsert(map);
@@ -3703,19 +3710,28 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
     	}
     	
     	int startRowNum = ((pageNum - 1) * perCount);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("boardID", boardID);
-		map.put("itemID", itemID);
-		map.put("userID", userID);
-		map.put("lang", lang);
-		map.put("tenantID", tenantID);
-		map.put("start", startRowNum);
-		map.put("perCount", perCount);
-		List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
-		
-		StringBuffer resultXML = new StringBuffer();
+    	int endRowNum = (pageNum * perCount);
+
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	map.put("boardID", boardID);
+    	map.put("itemID", itemID);
+    	map.put("userID", userID);
+    	map.put("lang", lang);
+    	map.put("tenantID", tenantID);
+    	
+    	/* MySQL */
+    	map.put("perCount", perCount);
+    	map.put("start", startRowNum);
+    	
+    	/* Oracle */
+    	map.put("startRowNum", startRowNum);
+    	map.put("endRowNum", endRowNum);
+    	
+    	
+    	List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
+    	
+    	StringBuffer resultXML = new StringBuffer();
 		
 		resultXML.append("<DOCLIST>");
 		

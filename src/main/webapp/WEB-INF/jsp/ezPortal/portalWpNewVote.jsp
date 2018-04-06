@@ -160,7 +160,7 @@
     						</p>
       						<c:forEach var="_option" items="${listOptions}" varStatus="loop">     
       							<div class="poll_list1"> 								    
-		               				<div style="display: inline-block; width: 100%; font-family: Gulim,Dotum,Arial,Helvetica,sans-serif; font-size: 12px; ">
+		               				<div style="display: inline-block; width: 100%; font-size: 12px; ">
 		               					<div style="float:left; display: block;">${loop.index + 1}. </div>
 		               					<div style="float:left; display: block; width: 130px; overflow-x: hidden; white-space: nowrap; text-overflow: ellipsis;" title="<c:out value ="${_option.content}" />"><c:out value ="${_option.content}" /></div>
 		               					

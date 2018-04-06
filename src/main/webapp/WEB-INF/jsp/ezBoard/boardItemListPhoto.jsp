@@ -336,6 +336,7 @@
 	            }
 	            endtime = new Date().getTime();
 	            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
+	            scroll();
 		    }
 		
 		
@@ -502,8 +503,10 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 		
-		        if (obj.childNodes[2].style.fontWeight == "bold")
-		            obj.childNodes[2].style.fontWeight = "normal";
+		        for (var i = 0; i < obj.childNodes.length; i++) {
+			        if (obj.childNodes[i].style.fontWeight == "bold")
+			            obj.childNodes[i].style.fontWeight = "normal";
+		        }	
 		        // if (tr != null && oArrRows.length > 0) {
 		
 		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
@@ -1136,7 +1139,7 @@
     <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 
     <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
-        <div style="width:100%; overflow:AUTO;" id="divList">
+        <div style="width:100%;" id="divList">
             <div id="lvBoardList"></div>
         </div>
         <div id='runtime' style="color:#666;padding-top:5px"></div>

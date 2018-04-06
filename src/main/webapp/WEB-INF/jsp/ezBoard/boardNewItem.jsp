@@ -269,6 +269,13 @@
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		        }
+		      
+		        var editorW = (document.documentElement.clientWidth - 20) + "PX";
+		        document.getElementById("tab02").style.width = editorW;
+	            document.getElementById("message").style.width = editorW;	            
+	            //iframe 내부 에디터의 body width 조절
+	            $("iframe").ready(function(){ $("iframe[name='message']").contents().find("body").css("width" , editorW); });
+		        
 		    };
 		
 		    $(function () {
@@ -591,8 +598,9 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(nickname));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(nickname));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", "");
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", "");
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", "");
+		            /* 2018.02.09 김기하 새게시물에서 익명게시판 부서가 null로 나오는 것을 공백처리 */
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", MakeXMLString(" "));
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", MakeXMLString(" "));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYID", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", "");
@@ -1483,11 +1491,17 @@
 		                    if ("${docID}" != "")
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                }
-		                else
+		                else{
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		
+		                }
 		        }
 		        
+                var editorW = (document.documentElement.clientWidth - 20) + "PX";
+		       	document.getElementById("tab02").style.width = editorW;
+	            document.getElementById("message").style.width = editorW;
+	            //iframe 내부 에디터의 body width 조절
+	            $("iframe").ready(function(){ $("iframe[name='message']").contents().find("body").css("width" , editorW); });
+      
 		    }
 		    function bodydragover(evt) {
 		        evt.dataTransfer.dropEffect = "none";
@@ -1666,7 +1680,7 @@
 	                
 	                var input = document.createElement("INPUT");
 	                input.style.verticalAlign = "top";
-	                input.style.marginTop = "10px";
+	                input.style.marginTop = "6px";
 	                input.name = "backradio";
 	                input.type = "radio";
 	                input.onchange = function () { backgroundimagechange(); };
@@ -1680,8 +1694,8 @@
 	                }
 	                
 	                img.height = 30;
-	                img.src = document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")' />" + "/S_" + filepath;
-	                img.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
+	               	img.src = "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")' />" + "/S_" + filepath;
+	        	    img.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
 	                img.style.cursor = "pointer";
 	
 	                span.appendChild(input);
@@ -1696,7 +1710,7 @@
 	            var span = document.createElement("SPAN");
 	            var input = document.createElement("INPUT");
 	            input.style.verticalAlign = "top";
-	            input.style.marginTop = "10px";
+	            input.style.marginTop = "6px";
 	            input.name = "backradio";
 	            input.type = "radio";
 	            input.onchange = function () { backgroundimagechange(); };
@@ -1747,13 +1761,17 @@
 		                Td.style.verticalAlign = "top";
 		                Td.style.fontSize = "10pt";
 		                Td.style.lineHeight = "20px";
+		                Td.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
+	                    Td.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
 		                Td.style.wordBreak = "break-all";
+		                Td.style.backgroundRepeat = "no-repeat";
+		                Td.style.backgroundSize = Td.style.width + " " +Td.style.height;     
 		                Td.setAttribute("free", "");
 		
 		                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-	                		Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";	
-		                    
-		                    Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
+	                		Td.style.backgroundImage = "URL(<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" 
+	                				+ document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";	
+	                		Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
 		                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
 		                }
 		                else {
@@ -1817,11 +1835,10 @@
 		        Td.style.fontSize = "10pt";
 		        Td.style.lineHeight = "20px";
 		        Td.style.wordBreak = "break-all";
+		        Td.style.backgroundRepeat = "no-repeat";
 		        Td.style.width = imgWidth + "px";
 		        Td.style.height = imgHeight + "px";
-		        Td.style.backgroundSize = "cover";
-		        
-	        	//Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
+		        Td.style.backgroundSize = "" + imgWidth + "px" + imgHeight + "px";
 	        	Td.style.backgroundImage = "URL(" + imgSrc + ")";
 	        	
 		        Table.style.width = "auto";
@@ -1990,7 +2007,7 @@
 	                        		</c:otherwise>
 	                        	</c:choose>
 	                        </td>
-	                        <th><spring:message code='ezBoard.t434' /></th>
+	                        <th style="width:80px"><spring:message code='ezBoard.t434' /></th>
 	                        <c:choose>
 	                        	<c:when test="${boardListVO.importance == '1'}">
 			                        <td style="width: 300px; vertical-align: baseline;"><span style="line-height: 20px; height: 20px; display: inline-block;">
@@ -2046,7 +2063,8 @@
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'text'}">
 						                <td colspan="3">
-						                    <input type="text" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'  style="width:43%"/>
+						                    <!-- 2018.02.08 입력창 최대 길이 제한-->
+						                    <input type="text" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'  style="width:43%" maxlength="100"/>
 						                </td>
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'check'}">
@@ -2080,7 +2098,7 @@
 			                    <tr id="tdReservationDate">
 	                		</c:when>
 	                		<c:otherwise>
-			                    <tr id="tdReservationDate" style="visibility:hidden;">
+			                    <tr id="tdReservationDate" style="display: none;">
 	                		</c:otherwise>
 	                	</c:choose>
 	                        <th><spring:message code='ezBoard.t432' /></th>
@@ -2138,7 +2156,7 @@
 	                            <input type="text" id="txtAbstract" style="WIDTH: 95%; word-break: break-all" value="" maxlength="100">
 							</td>
 	                    </tr>
-	                    <tr id="pUseBackGroundTR" style="display:none;" height="60px">
+	                    <tr id="pUseBackGroundTR" style="display:none;" height="50px">
 	                    	<th><spring:message code='ezBoard.t5011' /></th>
 	                    	<td colspan="3" id="backgroundtd"></td>
 	                    </tr>
