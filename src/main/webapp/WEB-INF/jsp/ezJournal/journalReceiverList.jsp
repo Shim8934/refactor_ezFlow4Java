@@ -40,7 +40,7 @@
 		  	selToggleList(document.getElementById("close"), "ul", "li", "0");
 		  </script>
 	        <div style="width:100%; height:305px" id="divList">
-	            <table class="popuplist" style="width:100%">
+	            <table class="popuplist" style="width:100%; height: 100%;">
 	            <c:choose>
 		            <c:when test="${fn:length(viewerList) ne 0 }">
 			            <c:forEach items="${viewerList }" var="viewer" varStatus="status">
@@ -59,7 +59,7 @@
 		            <c:otherwise>
 		            	<tr style="background-color: rgb(255, 255, 255);">
 							<td align="left" colspan="3"
-								style="width: 130px; text-align: center; cursor: pointer;"><spring:message code='ezBoard.kbm01'/></td>
+								style="width: 130px; height:100%; text-align: center; cursor: pointer;"><spring:message code='ezBoard.kbm01'/></td>
 						</tr>
 		            </c:otherwise>
 	            </c:choose>
