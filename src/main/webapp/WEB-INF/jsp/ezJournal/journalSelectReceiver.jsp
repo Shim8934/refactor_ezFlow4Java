@@ -45,7 +45,8 @@
 	   		function setDeptList(){
 				$('#treeview').on('changed.jstree', function (e, data) {
 			     	var id = data.instance.get_node(data.selected).id;
-					setUserList("DEPARTMENT", id);
+			     	var deptName = $("#"+id).text();
+					setUserList("DEPARTMENT", id,deptName);
 					selMainListUserId = "";
 					selUserId = "";
 				  })
@@ -57,12 +58,12 @@
 	   		}
 	   		
 	   		//사원 리스트 뿌리기
-	   		function setUserList(key, value){
+	   		function setUserList(key, value,deptName){
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key" : key, "value" : value},
+	   				data:{"key" : key, "value" : value,"deptName":deptName},
 	   				success: function(result){
 	   					$("#orglistView").html(result);
 	   				}

@@ -636,13 +636,14 @@ public class EzJournalAdminController {
 			model.addAttribute("userList", userList);
 			
 			String keyword = "";
-			if (key.equals("DEPARTMENT") && userList.size()!=0) {
-				keyword = (String) ((JSONObject)userList.get(0)).get("deptName");
+			if (key.equals("DEPARTMENT")) {
+//				keyword = (String) ((JSONObject)userList.get(0)).get("deptName");
+				keyword = request.getParameter("deptName");
 			} else{
 				keyword = egovMessageSource.getMessage("ezJournal.t43");
 			}
 			int userCount = 0;
-			if (userList.size() == 0) {
+			if (userList.size() == 0 && !key.equals("DEPARTMENT")) {
 				keyword = egovMessageSource.getMessage("ezJournal.t170");
 			} else {
 				userCount = userList.size();
