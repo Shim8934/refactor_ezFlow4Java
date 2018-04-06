@@ -157,8 +157,8 @@ function aniOneUser() {
 		drawStatus = !drawStatus;
 	}
 	printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'anione');
-	beforeStatus = 0;
 	userStatus[clickUserOrder] = 1;
+	beforeStatus = 0;
 }
 
 function aniAllUser() {

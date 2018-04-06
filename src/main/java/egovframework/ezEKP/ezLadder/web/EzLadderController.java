@@ -44,6 +44,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.google.gson.JsonObject;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezLadder.service.EzLadderService;
@@ -218,9 +220,6 @@ public class EzLadderController {
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.POST)
 	public String setLadder(@CookieValue("loginCookie") String loginCookie,
 			LadderVO ladVO, LadderLineVO ladLineVO, int bombnum,
-			/*String title, String type, String secretFlag, String lineCnt,
-			String [] userId, String [] userName, String [] userName2, 
-			String [] item, String [] ladderOrder,*/
 			HttpServletRequest request, Model model) throws Exception {
 		logger.debug("POST setLadder.do started.");
 		
@@ -231,14 +230,17 @@ public class EzLadderController {
 		if(ladVO.getType() == 0) {
 			Arrays.fill(shuffleItems, 0, bombnum, "꽝");
 			Arrays.fill(shuffleItems, bombnum, shuffleItems.length, "패스");
+			Collections.shuffle(shuffleList);
+			shuffleList.toArray(shuffleItems);
+			ladLineVO.setItems(shuffleItems);
 		} else if(ladVO.getType() == 2) {
 			for(int number = 1; number <= shuffleItems.length; number++) {
 				shuffleItems[number - 1] = String.valueOf(number);
 			}
+			Collections.shuffle(shuffleList);
+			shuffleList.toArray(shuffleItems);
+			ladLineVO.setItems(shuffleItems);
 		}
-		Collections.shuffle(shuffleList);
-		shuffleList.toArray(shuffleItems);
-		ladLineVO.setItems(shuffleItems);
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/ladder/ladders/writers/" + userInfo.getId();
@@ -624,6 +626,7 @@ public class EzLadderController {
 	 * 사다리 게임을 조회
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezLadder/getLadderGame.do", method = RequestMethod.GET)
 	public String getLadderGame(@CookieValue("loginCookie") String loginCookie, String ladderId, String searchSelect, String searchInput, String mode, String currPage, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		
@@ -666,7 +669,7 @@ public class EzLadderController {
 			list = (JSONArray) jsonResult.get("participant");
 			cmtlist = (JSONArray) jsonResult.get("cmtlist");
 			model.addAttribute("id", userInfo.getId());
-			model.addAttribute("vo",jsonResult.get("data"));	// x번째 사다리 정보
+			model.addAttribute("vo", jsonResult.get("data"));	// x번째 사다리 정보
 			model.addAttribute("searchSelect", searchSelect );
 			model.addAttribute("searchInput", searchInput );
 			model.addAttribute("mode", mode );
@@ -751,7 +754,11 @@ public class EzLadderController {
 	 * 
 	 */
 	@RequestMapping(value = "/ezLadder/serUserOrder.do")
-	public String setUserOrder(@CookieValue("loginCookie") String loginCookie, String ladderId, String firstUser, String firstUserOrder, String secondUser, String secondUserOrder, String firstItem, String secondItem, HttpServletRequest request, Model model) throws Exception{
+	public String setUserOrder(@CookieValue("loginCookie") String loginCookie, 
+			@RequestParam(value="ladderId") String ladderId, @RequestParam(value="firstUser") String firstUser, 
+			@RequestParam(value="firstUserOrder") String firstUserOrder, @RequestParam(value="secondUser") String secondUser, 
+			@RequestParam(value="secondUserOrder") String secondUserOrder, @RequestParam(value="firstItem") String firstItem, 
+			@RequestParam(value="secondItem") String secondItem, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezLadder/serUserOrder started.");
 		logger.debug("ladderId : " + ladderId);
 		logger.debug("firstUser : " + firstUser);
@@ -798,7 +805,11 @@ public class EzLadderController {
 			model.addAttribute("status", status);
 			
 			retDestination += ladderId;
-			this.template.convertAndSend(retDestination, lines);
+			JSONObject retjson = new JSONObject();
+			retjson.put("dragOrder", firstUserOrder);
+			retjson.put("dropOrder", secondUserOrder);
+			retjson.put("ladderWriter", userInfo.getId());
+			this.template.convertAndSend(retDestination, retjson);
 		} else {
 			return "error";
 		}

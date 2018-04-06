@@ -67,6 +67,8 @@
 			} else {
 				$("#blackBox").css("width", (win_width + 50) + "px");
 			}
+			
+			$("#startButton").css("left", $(".setTable").width()/2 - 250).css("top", $(".setTable").height()/2 - 75);
 		}
 		
 		function initValues() {
@@ -83,10 +85,10 @@
 		
 		/** 참여자 위치 바꾸기 */
 		function changeListOrder() {
-			var ladId1 = dragloc["id"].substring(4);
-			var ladId2 = droploc["id"].substring(4);
-			var ladorder1 = _ladderLine[ladId1].ladderOrder;
-			var ladorder2 = _ladderLine[ladId2].ladderOrder;
+			var ladId1 = dragloc["id"].substring(4); //5
+			var ladId2 = droploc["id"].substring(4); //0
+			var ladorder1 = _ladderLine[ladId1].ladderOrder; //5
+			var ladorder2 = _ladderLine[ladId2].ladderOrder; //0
 			
 			$.ajax({
 				type: "POST",
@@ -103,8 +105,8 @@
 					"secondItem": _ladderLine[ladId2].item
 				},
 				success: function() {
-					_ladderLine[ladId1].ladderOrder = ladorder2;
-					_ladderLine[ladId2].ladderOrder = ladorder1;
+					_ladderLine[ladId1].ladderOrder = ladorder2; // 0
+					_ladderLine[ladId2].ladderOrder = ladorder1; // 5
 				}
 			});
 		}
@@ -238,7 +240,36 @@
 					
 					$("tr[_comtIndex='" + cmtjson["id"] + "']").remove();
 				});
-				//stompClient.subscribe("/lad/userOrder/change/" + ladderId, function(result) {	// 참여자 위치 바꾸기 subscribe
+				stompClient.subscribe("/lad/userOrder/change/" + ladderId, function(result) {	// 참여자 위치 바꾸기 subscribe
+					var cmtjson = JSON.parse(result.body);
+				
+					if(cmtjson.ladderWriter != id) {
+						var dragLiPos = $("[_attendantindex='" + cmtjson.dragOrder + "']").position();
+						var dropLiPos = $("[_attendantindex='" + cmtjson.dropOrder + "']").position();
+						var moveDragObj = "";
+						var moveDropObj = "";
+						var moveDragLeft = 0;
+						var moveDropLeft = 0;
+						
+						for(var i = 0; i < $("#attendantList li").length; i++) {
+							if($("#drag" + i).position().left == dragLiPos.left) {
+								moveDragObj = "#drag" + i;
+								moveDragLeft = cmtjson.dropOrder - i;
+							}
+							if($("#drag" + i).position().left == dropLiPos.left) {
+								moveDropObj = "#drag" + i;
+								moveDropLeft = cmtjson.dragOrder - i;
+							}
+						}
+						
+						$(moveDragObj).css("z-index", "10").animate({"left": moveDragLeft * 150}, 400);
+						$(moveDropObj).css("z-index", "10").animate({"left": moveDropLeft * 150}, 400);
+						
+						console.log(cmtjson.dragOrder);
+						console.log(cmtjson.dropOrder);
+					}
+					
+					
 					/* var lines = JSON.parse(result.body);
 				
 					var copyLadLi1 = $("#attendantList li:eq(" + changeLadId1 + ")").html();
@@ -272,34 +303,40 @@
 						drag();
 					} */
 					
-				//});
+				});
 				stompClient.subscribe("/lad/start/" + ladderId, function(ladderInfo) {	
 					var cmtjson = JSON.parse(ladderInfo.body);
 					_ladder = cmtjson["ladder"];
 					_ladderLine = cmtjson["ladderline"];
-					canvasSetting();
-					var html = '';
-					_ladderLine.forEach(function(line, index) {
-						html += '<li><div id="drag' + index + '" style="height: 140px;padding-top:  20px;">';
-						html += '<img src="' + line.pic + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />';
-						html += '<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>' + line.userName + '</span></div></div></li>';
-					});
-					$("#attendantList").html(html);
-					$("#blackBox").remove();
+					
+					status = _ladder.status;
+					
+					if(status == 1) {
+						canvasSetting();
+						var html = '';
+						_ladderLine.forEach(function(line, index) {
+							html += '<li><div id="drag' + index + '" style="height: 140px;padding-top:  20px;">';
+							html += '<img src="' + line.pic + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />';
+							html += '<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>' + line.userName + '</span></div></div></li>';
+						});
+						$("#attendantList").html(html);
+						$("#blackBox").remove();
+					}
 				});
 			});
 		}
 		function canvasSetting() {
 			wInfo = _ladderLine.length;
 			lad = _ladder["lineArray"];
-			ladArr = lad.split('');
 			ladderlinecnt = _ladder["lineCnt"];
 			
-			if(status == 0) {
-				clickUserLadderAnimation();
+			if(!!lad) {
 				if(id == lad.writerId) {
 					$(".ladderDrag").draggable("destroy");
 				}
+				
+				ladArr = lad.split('');
+				clickUserLadderAnimation();
 				$("#lineDiv").html(
 					"<canvas id='ladderCanvasLine' width='0' height='800'></canvas>" +
 					"<canvas id='ladderCanvas' width='0' height='800'></canvas>"
@@ -334,6 +371,9 @@
 				var html = "<div style='line-height: 30px; background: #ddd; margin-top: 10px; border-radius: 15px;'>" + _ladderLine[clickUserOrder].userName + "</div>";
 				$("#itemList li:eq(" + resultOrder + ")").append(html);
 			}
+			
+			var scrollval = $("#itemList li:eq(" + resultOrder + ")").offset().left - $("#ladderLineBox").width()/2;
+			$("#ladderLineBox").animate({"scrollLeft": scrollval}, 400);
 		}
 		/** 삭제 */
 		function deleteLadder(idx) {
@@ -614,75 +654,79 @@
 			<table class="setTable" style="position: relative;">
 				<tr>
 					<td>
-						<div id="ladderLineBox" style="border: 1px solid #ddd;">
-							<c:if test="${vo.status eq 0}">
-							<div style="height: 140px;">
-								<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
-									<c:forEach var="line" items="${list}" varStatus="status">
-										<li _attendantIndex="${status.index}">
-											<div class="ladderDrag" id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer;">
-												<div>
+						<c:if test="${vo.status eq 0}">
+						<div id="startButton" style="position: absolute; z-index: 100; top: 0; left: 0;">
+								<c:choose>
+									<c:when test="${id eq vo.writerId }">
+										<a href="#" onclick="start(${vo.ladderId})"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103'/></a>
+									</c:when>
+									<c:otherwise>
+										<div style="width: 500px; height: 150px; background: white; opacity: 0.7; text-align: center;">
+											<span style="font-size: large; color: maroon; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;">게임이 아직 시작되지 않았어요!</span>
+											<span style="display: inline-block;">리더가 게임을 시작하면 진행할 수 있습니다.</span>
+										</div>
+									</c:otherwise>
+								</c:choose>
+						</div>
+							<div id="ladderLineBox" style="border: 1px solid #ddd;">
+								<div style="height: 140px;">
+									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
+										<c:forEach var="line" items="${list}" varStatus="status">
+											<li _attendantIndex="${status.index}">
+												<div class="ladderDrag" id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer; left: 0px; border-radius: 5px;">
+													<div>
+														<img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #a9a9a9; border-radius: 40px;" />
+														<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
+													</div>
+												</div>
+											</li>
+										</c:forEach>
+									</ul>
+								</div>
+								<div id="lineDiv" style="position: relative; height: 800px;">
+									<div id="blackBox" style="height: 800px;background: darkgray;position: absolute;left: -50px;right: 0;"></div>
+								</div>
+								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
+									<c:forEach var="line" items="${list}">
+										<li>
+											<div style="line-height: 30px; outline: 1px solid #ddd;">
+												<span>${line.item}</span>
+											</div>
+										</li>
+									</c:forEach>
+								</ul>
+							</div>
+						</c:if>
+							
+						<c:if test="${vo.status eq 1}">
+							<div id="ladderLineBox" style="border: 1px solid #ddd;">
+								<div style="height: 140px;">
+									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
+										<c:forEach var="line" items="${list}" varStatus="status">
+											<li>
+												<div id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer;">
 													<img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />
 													<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
 												</div>
-											</div>
-										</li>
-									</c:forEach>
-								</ul>
-							</div>
-							<div id="lineDiv" style="position: relative; height: 800px;">
-								<div id="blackBox" style="height: 800px;background: gray;position: absolute;left: -50px;right: 0;">
-									<div id="startButton">
-										<c:choose>
-											<c:when test="${id eq vo.writerId }">
-												<a href="#" onclick="start(${vo.ladderId})"><img src ='/images/ezLadder/start.png' width='50' height ='50'/></a>
-											</c:when>
-											<c:otherwise>
-												<span>누를수없음...</span>
-											</c:otherwise>
-										</c:choose>
-									</div>
+											</li>
+										</c:forEach>
+									</ul>
 								</div>
-							</div>
-							<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px;">
-								<c:forEach var="line" items="${list}">
-									<li>
-										<div style="line-height: 30px; outline: 1px solid #ddd;">
-											<span>${line.item}</span>
-										</div>
-									</li>
-								</c:forEach>
-							</ul>
-							</c:if>
-							
-							<c:if test="${vo.status eq 1}">
-							<div style="height: 140px;">
-								<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
-									<c:forEach var="line" items="${list}" varStatus="status">
+								<div id="lineDiv" style="position: relative; z-index: -1;">
+									<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
+									<canvas id='ladderCanvas' width='0' height='800'></canvas>
+								</div>
+								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
+									<c:forEach var="line" items="${list}">
 										<li>
-											<div id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer;">
-												<img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />
-												<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
+											<div style="line-height: 30px; outline: 1px solid #ddd;">
+												<span>${line.item}</span>
 											</div>
 										</li>
 									</c:forEach>
 								</ul>
 							</div>
-							<div id="lineDiv" style="position: relative; z-index: -1;">
-								<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
-								<canvas id='ladderCanvas' width='0' height='800'></canvas>
-							</div>
-							<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px;">
-								<c:forEach var="line" items="${list}">
-									<li>
-										<div style="line-height: 30px; outline: 1px solid #ddd;">
-											<span>${line.item}</span>
-										</div>
-									</li>
-								</c:forEach>
-							</ul>
-							</c:if>
-						</div>
+						</c:if>
 					</td>
 				</tr>
 			</table>

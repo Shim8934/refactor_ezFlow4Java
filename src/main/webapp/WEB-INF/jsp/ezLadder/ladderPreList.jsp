@@ -368,7 +368,7 @@
 					</td>
 					<td>
 						<div id="ladPreviewWrap" style="margin-left: 20px; width: 1000px; height: 700px; border: 1px solid #ddd; overflow-x: hidden; overflow-y: auto;">
-							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 1000px; height: 1100px;"></iframe>
+							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 1000px; height: 1400px;"></iframe>
 						</div>
 					</td>
 				</tr>

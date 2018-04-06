@@ -357,11 +357,11 @@ public class EzLadderGWController {
 					resultVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
 				}
 				else {
-					resultVO.setPic("/images/poll/default_pic_vote.gif");
+					resultVO.setPic("/images/ezLadder/icon_defaultuser.png");
 				}
 			} 
 			else {
-				resultVO.setPic("/images/poll/default_pic_vote.gif");
+				resultVO.setPic("/images/ezLadder/icon_defaultuser.png");
 			}
 			
 			result.put("status", "ok");
@@ -517,11 +517,11 @@ public class EzLadderGWController {
 						commentVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
 					}
 					else {
-						commentVO.setPic("/images/poll/default_pic_vote.gif");
+						commentVO.setPic("/images/ezLadder/icon_defaultuser.png");
 					}
 				} 
 				else {
-					commentVO.setPic("/images/poll/default_pic_vote.gif");
+					commentVO.setPic("/images/ezLadder/icon_defaultuser.png");
 				}
 			}
 			
@@ -536,11 +536,11 @@ public class EzLadderGWController {
 						lineVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
 					}
 					else {
-						lineVO.setPic("/images/poll/default_pic_vote.gif");
+						lineVO.setPic("/images/ezLadder/icon_defaultuser.png");
 					}
 				} 
 				else {
-					lineVO.setPic("/images/poll/default_pic_vote.gif");
+					lineVO.setPic("/images/ezLadder/icon_defaultuser.png");
 				}
 			}
 			

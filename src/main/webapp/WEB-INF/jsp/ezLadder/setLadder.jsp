@@ -48,16 +48,20 @@
 					}
 				});
 				$(".ladderType").on("click", function() {
+					$("[_sel='n']").show();
+					$("[_sel='y']").hide();
 					$(".ladderType").removeClass("active");
 					$(this).addClass("active");
+					$(".ladderType.active img").toggle();
 					setInputValue(false);
 					setLadderTypeDiv($(this).attr("num"));
 				});
 				$("#ladderSecret").on("click", function() {
 					$("#ladderSecret").toggleClass("active");
+					$("#ladderSecret img").toggle();
 				});
 				$(document)
-					.on("click", "span.remove", function() {
+					.on("click", "#removeIcon", function() {
 						attendant_remove($(this).closest("li").index());
 					})
 					.on("click", "#addBomb", function() {
@@ -216,20 +220,6 @@
 					if($("#itemList li").length != 0 && $("#itemList li input").attr("readonly") != "readonly") {
 						items[i] = $("#itemList li:eq(" + i + ") input").val();
 					}
-					/* if($(".ladderType.active").attr("num") == "0") {
-						var bomb = $("#bombnum span").text(); //임시
-						items.forEach(function(item, index) {
-							if(index < bomb) { //임시
-								items[index] = "꽝";
-							} else {
-								items[index] = "통과"
-							}
-						});
-					} else {
-						if($("#itemList li").length != 0 && $("#itemList li:eq(0)").attr("disabled") != "disabled") {
-							items[i] = $("#itemList li:eq(" + i + ") input").val();
-						}
-					} */
 				}
 			}
 
@@ -455,43 +445,30 @@
 					
 					for(var i = 0; i < len; i++) {
 						html = "";
-						picsrc = "/images/OrganTree/porson_noimg.gif";
+						picsrc = "/images/ezLadder/icon_defaultuser.png";
+						
+						
 						
 						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
-							html += '<li class="attendant"><div>';
-							html += '<img src="' + picsrc + '" width="90px" height="90px" />';
-							html += '<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>';
-							html += '<input type="text" class="input" name="userNames" /></span></div>';
+							html += '<li class="attendant"><div style="height: 140px; padding-top:  20px;">';
+							html += '<img src="' + picsrc + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />';
+							html += '<div style="margin-top: 10px;"><span>'
+							html += '<input type="text" class="input" name="userNames" style="line-height: 30px;" /></span></div>';
 							html += '<input type="text" name="userName2s" style="display: none;" />';
 							html += '<input type="text" name="userIds" style="display: none;" />';
-							html += '<span class="remove">X</span></div></li>';
-							
-							
-							/* html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";
-							html += "<input type='text' class='input' name='userNames' />";
-							html += "<input type='text' name='userName2s' style='display: none;' />";
-							html += "<input type='text' name='userIds' style='display: none;' />";
-							html += "<span class='remove'>X</span></div></li>";	 */						
+							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 22px; right: 10px; cursor: pointer;"></span></div></li>';
 						} else {
 							if(attendants["pic"][i] !== "") {
 								picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
 							}
 							
-							html += '<li class="attendant"><div>';
-							html += '<img src="' + picsrc + '" width="90px" height="90px" />';
-							html += '<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>';
-							html += '<input type="text" class="input" readonly="readonly" style="background: rgb(244, 245, 245)" name="userNames" /></span></div>';
+							html += '<li class="attendant"><div style="height: 140px; padding-top:  20px;">';
+							html += '<img src="' + picsrc + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />';
+							html += '<div style="margin-top: 10px;"><span>'
+							html += '<input type="text" class="input" readonly="readonly" name="userNames" style="line-height: 30px; background: rgb(244, 245, 245)" /></span></div>';
 							html += '<input type="text" name="userName2s" style="display: none;" />';
 							html += '<input type="text" name="userIds" style="display: none;" />';
-							html += '<span class="remove">X</span></div></li>';
-							
-							
-							/* html += "<li class='attendant'><div>";
-							html += "<div><img src='" + picsrc + "' width='90px' height='90px' />";
-							html += "<input type='text' class='input' readonly='readonly' style='background: rgb(244, 245, 245)' name='userNames' />";
-							html += "<input type='text' name='userName2s' style='display: none;' />";
-							html += "<input type='text' name='userIds' style='display: none;' />";
-							html += "<span class='remove'>X</span></div></li>"; */
+							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 22px; right: 10px; cursor: pointer;"></span></div></li>';
 						}
 						
 						$("#attendantList").append(html);
@@ -515,7 +492,7 @@
 					changeUser(len);
 				}
 				
-				console.log(attendants);
+				$("#ladderLineBox").scrollLeft($("#attendantList li:last").offset());
 			}
 			
 			/** 유저 정보 xml로 가져오기 */
@@ -545,10 +522,6 @@
 			
 			/** 사다리 만들기 */
 			function makeLadder() {
-				if ($("#title").val().trim() === "") {
-					alert("제목을 입력하세요.");
-					return;
-				}
 				var title = $("#title").val();
 				var type = $(".ladderType.active").attr("num");
 				var secretFlag = $("#ladderSecret.active").length;
@@ -564,6 +537,7 @@
 				} else {
 					$("input[name='bombnum']").val(0);
 				}
+				
 				
 				/* if(type == "0") {
 					var bombItem = 0;
@@ -632,7 +606,10 @@
 						</td>
 						<td>
 							<div class="wrap right">
-								<div class="icondiv floatR fullwidth" id="ladderSecret">비밀글</div>
+									<div class="icondiv floatR fullwidth" id="ladderSecret">
+										<img src="/images/ezLadder/icon_private.png" style="display: block; border: 2px solid #a9a9a9; border-radius: 30px;"/>
+										<img src="/images/ezLadder/icon_public.png" style="display: none; border: 2px solid #a9a9a9; border-radius: 30px;"/>
+									</div>
 								<input name="secretFlag" style="display: none;" />
 							</div>
 						</td>
@@ -645,13 +622,25 @@
 						</td>
 						<td colspan="2">
 							<div class="wrap right">
-								<div id="ladderTypeOption" style='display:  inline-block; right: 230px; position:  absolute;'>
+								<div id="ladderTypeOption" style='display:  inline-block; right: 265px; position:  absolute;'>
 								</div>
-								<div class="floatR" style="width: 212px;">
-									<div class="icondiv ladderType" num="0">꽝</div>
-									<div class="icondiv ladderType" num="1">돈</div>
-									<div class="icondiv ladderType" num="2">순서</div>
-									<div class="icondiv ladderType" num="3">직접</div>
+								<div class="floatR" style="width: 232px;">
+									<div class="icondiv ladderType" num="0">
+										<img src="/images/ezLadder/icon_bomb.png" style="display: block; border: 2px solid #a9a9a9; border-radius: 30px;" _sel="n"/>
+										<img src="/images/ezLadder/icon_bombSelected.png" style="display: none; block; border: 2px solid #2568b3; border-radius: 30px;" _sel="y"/>
+									</div>
+									<div class="icondiv ladderType" num="1">
+										<img src="/images/ezLadder/icon_money.png" style="display: block; border: 2px solid #a9a9a9; border-radius: 30px;" _sel="n"/>
+										<img src="/images/ezLadder/icon_moneySelected.png" style="display: none; block; border: 2px solid #2568b3; border-radius: 30px;" _sel="y"/>
+									</div>
+									<div class="icondiv ladderType" num="2">
+										<img src="/images/ezLadder/icon_order.png" style="display: block; border: 2px solid #a9a9a9; border-radius: 30px;" _sel="n"/>
+										<img src="/images/ezLadder/icon_orderSelected.png" style="display: none; block; border: 2px solid #2568b3; border-radius: 30px;" _sel="y"/>
+									</div>
+									<div class="icondiv ladderType" num="3">
+										<img src="/images/ezLadder/icon_handwork.png" style="display: block; border: 2px solid #a9a9a9; border-radius: 30px;" _sel="n"/>
+										<img src="/images/ezLadder/icon_handworkSelected.png" style="display: none; block; border: 2px solid #2568b3; border-radius: 30px;" _sel="y"/>
+									</div>
 									<input name="type" style="display: none;" />
 								</div>
 							</div>
@@ -683,7 +672,7 @@
 					<tr>
 						<td>
 							<div id="ladderLineBox" style="border: 1px solid #ddd;">
-								<div id="addAttendant" class="icondiv">add</div>
+								<div id="addAttendant" class="icondiv"><img src="/images/ezLadder/icon_addAttendant.png" style=" border: 2px solid #a9a9a9; border-radius: 30px;"/></div>
 								<div style="height: 140px;">
 									<ul id="attendantList"></ul>
 								</div>
@@ -691,7 +680,7 @@
 									<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
 									<canvas id='ladderCanvas' width='0' height='800'></canvas>
 								</div>
-								<ul id="itemList" style="margin-top: 10px;"></ul>
+								<ul id="itemList" style="margin-top: 10px; height: 50px;"></ul>
 							</div>
 						</td>
 					</tr>
