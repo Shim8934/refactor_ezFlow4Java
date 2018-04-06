@@ -442,12 +442,14 @@ public class EzEmailAdminLetterController {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = userInfo.getCompanyID();
+		String userLang = userInfo.getLang();
 
 		model.addAttribute("letterBox", letterBox);
 		model.addAttribute("letterId", letterId);
 		model.addAttribute("letterNo", letterNo);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("pageType", "letter_move");
+		model.addAttribute("userLang", userLang);
 
 		return "admin/ezEmail/letterBoxMovePopUp";
 	}

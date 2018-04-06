@@ -56,6 +56,7 @@
 		<script>
 		    var pageType = "${pageType}";
 		    var returnCompany = '${companyId}';
+		    var userLang = '${userLang}';
 		    var isDivPopUp = false;
 		    
 			var result = [];
