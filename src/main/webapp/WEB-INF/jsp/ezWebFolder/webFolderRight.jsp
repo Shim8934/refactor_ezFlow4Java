@@ -21,6 +21,7 @@
 	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 	<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 	<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"                   ></script>
+	<script type="text/javascript" src="/js/ezWebFolder/bnk.js"                         ></script>
 	
 	<!-- time picker-->
 	<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
@@ -68,9 +69,17 @@
 		
 		document.onselectstart = function(){
 			return false;
-		} 
+		}
+		
 		// fileList 화면 
 		window.onload = function () {
+			$('#idSelect').ddslick({
+				onSelected: function(selectedElmt){
+					//callback function: do something with selectedData;
+					var test = document.getElementById("idSelect").value = selectedElmt.selectedData["value"];
+				}
+			});
+			
 			pEnd= pStart + blockSize;
 			getFileList(folderId);
 			var divList          = document.getElementById("dragDropArea");
@@ -640,7 +649,7 @@
 	<div style="height:40px;">
 		<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;" id ="originalPath"></span>
 	</div>
-	<div id="mainmenu">
+	<div id="mainmenu2">
 		<ul>
 			<li id=""><a onClick="fileDownload()" style="margin-top: 3px;"><span>파일다운로드</span></a></li>
 			<li id=""><a onClick="fileUpload()"   style="margin-top: 3px;"><span>파일업로드</span></a></li>
@@ -657,23 +666,21 @@
 			<li id=""><a onClick="refreshView()"style="margin-top: 3px;"><span>새로고침</span></a></li>
 			<li id="right" style="float:right;">보기설정&nbsp;<img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
 			<li id="right" style="float:right;">
-				<select class ="select" id ="idSelect" onchange="IDChange()" style="background-image:url(/images/webfolder/pdf.png);
-				 background-position: right;margin-right:30px; width:100px;background-repeat: no-repeat;">
-					<option selected>전체</option>
-					<option style="background-image:url(/images/webfolder/pdf.png);
-				 background-position: right;margin-right:30px; width:100px;background-repeat: no-repeat;">문서</option>
-					<option>음악</option>
-					<option>영상</option>
-					<option>그림</option>
-					<option>폴더</option>
-					<option>압축파일</option>
+				<select class="select" id="idSelect" onchange="IDChange()" style="width:100px; display:none;">
+					<option value="0" data-imagesrc="/images/webfolder/allTypes.png" data-description="<spring:message code='ezWebFolder.t11'/>" selected>전체</option>
+					<option value="1" data-imagesrc="/images/webfolder/msWord.png"   data-description="<spring:message code='ezWebFolder.t12'/>">문서</option>
+					<option value="2" data-imagesrc="/images/webfolder/mp3.png"      data-description="<spring:message code='ezWebFolder.t13'/>">음악</option>
+					<option value="3" data-imagesrc="/images/webfolder/mp4.png"      data-description="<spring:message code='ezWebFolder.t14'/>">영상</option>
+					<option value="4" data-imagesrc="/images/webfolder/jpg.png"      data-description="<spring:message code='ezWebFolder.t15'/>">그림</option>
+					<option value="5" data-imagesrc="/images/webfolder/fldr.png"     data-description="<spring:message code='ezWebFolder.t16'/>">폴더</option>
+					<option value="6" data-imagesrc="/images/webfolder/zip.png"      data-description="<spring:message code='ezWebFolder.t17'/>">압축파일</option>
 				</select>
 			
 			</li>
 		</ul>
 	</div>
 	<script type="text/javascript">
-		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
 	</script>
  
  	

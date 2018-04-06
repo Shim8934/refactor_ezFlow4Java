@@ -86,4 +86,80 @@
 .jstree-default li > ins { vertical-align:top; }
 .jstree-leaf { height: auto; }
 .jstree-leaf a{ height: auto !important; }
-			
+
+
+#mainmenu2{
+	clear: both;
+	margin:0; padding:0;
+	margin-bottom:10px !important;
+}
+#mainmenu2 > ul{
+	width:100%;
+	padding:0;
+	margin:0;	
+	margin-bottom:3px !important;
+	height: 30px;
+}
+
+#mainmenu2 >ul >li img {
+	vertical-align: middle;
+}
+	
+#mainmenu2 >ul >li, #mainmenu2 li.off{
+	display:block;
+	float:left;
+	margin:0 1px 0 1px;
+	/* margin:0 1px 0 1px;
+	height:28px;
+	background:url('/images/kr/cm/btn_default_offleft.gif') no-repeat top left;
+	padding-left:5px; */
+	cursor:pointer;
+	line-height:27px;
+	padding-right:3px;
+}
+
+#mainmenu2 >ul >li >a >span, #mainmenu2 >ul >li >a >span.off{
+	display:block;
+	float:left;
+	/* background:url('/images/kr/cm/btn_default_offright.gif') no-repeat top right;
+	height:28px; */
+	padding:5px 4px;	
+	font:12px gulim;
+	letter-spacing:-1;
+	padding-top:7px;
+	border:1px solid #ddd;
+	color:#666;
+	border-radius: 3px;
+}
+
+#mainmenu2 li span img, #mainmenu2 li span.off img{
+	vertical-align:middle;
+}
+
+#mainmenu2 li.on{
+	/* background:url('/images/kr/cm/btn_default_onleft.gif') no-repeat top left; */
+}
+#mainmenu2 li.on >a >span{
+	/* background:url('/images/kr/cm/btn_default_onright.gif') no-repeat top right; */ 
+	color:rgb(0, 72, 149);
+	border-color: rgb(0, 72, 149);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
