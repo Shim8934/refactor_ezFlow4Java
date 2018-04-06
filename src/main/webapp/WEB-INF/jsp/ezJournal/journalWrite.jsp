@@ -483,23 +483,29 @@
 						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
 	        		}
 				}
-				console.log("fileList : " + fileList);
-				$.ajax({
-					async : false,
-					url : '/ezJournal/tempUploadFileDelete.do',
-	                type : 'POST',
-	                dataType : 'json',
-	                data : {
-	                	fileList : fileList
-	                },
-	                success: function() {
-	                	opener.setJournalList();
-						window.close();
-	                },
-	                error: function() {
-	                	alert("<spring:message code='ezJournal.t149'/>");	
-	                }
-				});
+				
+				if (fileList != null && fileList != "") {
+ 
+					$.ajax({
+						async : false,
+						url : '/ezJournal/tempUploadFileDelete.do',
+		                type : 'POST',
+		                dataType : 'json',
+		                data : {
+		                	fileList : fileList
+		                },
+		                success: function() {
+		                	opener.setJournalList();
+							window.close();
+		                },
+		                error: function() {
+		                	alert("<spring:message code='ezJournal.t149'/>");	
+		                }
+					});
+				} else {
+					opener.setJournalList();
+					window.closd();
+				}
 			}
 	    </script>
 	</head>
