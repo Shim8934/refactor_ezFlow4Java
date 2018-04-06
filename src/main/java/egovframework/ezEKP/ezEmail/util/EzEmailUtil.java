@@ -398,6 +398,16 @@ public class EzEmailUtil {
                 
                 subject = decodeNonAsciiBytes(rawBytes);
             } else {
+            	
+            	// 일부 Mailer에서 표준을 지키지 않고 큰 따옴표 두개로 감싸서
+            	// Subject를 구성하여 디코딩이 안 되는 경우가 있어 추가함
+            	// ex: "=?euc-kr?B?".Z3ctc25zLW5vZGUyICgyMjAuNzMuMTc4LjE4KSBbMV0gZ3ctc25zLW5vZGUyIENQVSBVc2VkICglKQ==."?="
+            	if (rawHeader.startsWith("\"=?") && rawHeader.endsWith("?=\"")) {
+            		rawHeader = rawHeader.substring(1, rawHeader.length() - 1);
+            		
+            		subject = String.format("\"%s\"", MimeUtility.decodeText(rawHeader));
+            	}
+            	
                 if (rawHeader.startsWith("=?")) {
                     int secondQuestionPos = rawHeader.indexOf("?", 2);
                     int thirdQuestionPos = rawHeader.indexOf("?", secondQuestionPos + 1);
