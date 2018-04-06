@@ -191,7 +191,7 @@
 	    	function selectReceiver(){			
 				var url = "/ezJournal/selectReceiver.do";
 			//	url += "?companyId=" + companyId;
-				GetOpenWindow(url, "selectReceiver", 980, 600);
+				GetOpenWindow(url, "selectReceiver", 980, 610);
 			}
 	    	
 			// 선택된 수신자 화면에 뿌리기
@@ -573,12 +573,14 @@
 	                        		</c:otherwise>
 	                        	</c:choose>
 	                        </td>
-	                        <td style="border-left: none;"></td>
 	                    </tr>
 	                    <tr>
 	                        <th><spring:message code='ezJournal.t80' /></th>
-	                        <td colspan="3" style="border-right: none; vertical-align: middle;">
-	                       		<div style="overflow-y: auto; height: 28px;">
+	                        <td colspan="3" style="border-right: none; vertical-align: middle; height: 28px;">
+		                        <div style="display: inline;">
+	                        		<a class="imgbtn"><span style="text-align: right;" id="clickbtn" onclick="selectReceiver()"><spring:message code='ezJournal.t81'/></span></a>
+		                        </div>
+	                       		<div style="overflow-y: auto; height: 28px; display: inline;">
 	                       			<div style="display: table; height: 100%;">
 	                       				<div id="receiverlist" style="display: table-cell; vertical-align: middle;">
 	                       				</div>
@@ -586,13 +588,10 @@
 	                       		</div>	
 	                        	<div id="receiverID" style="overflow-y: auto; height: 17px; display:none;"></div>
 	                        </td>
-	                        <td style="border-left: none;">
-                        		<a class="imgbtn"><span style="text-align: right;" id="clickbtn" onclick="selectReceiver()"><spring:message code='ezJournal.t81'/></span></a>
-	                        </td>
 	                    </tr>
 	                    <tr>
 	                        <th><spring:message code='ezJournal.t56' /></th>
-	                        <td colspan="4">
+	                        <td colspan="3">
 	                            <input type="text" id="title" style="WIDTH: 100%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" >
 	                        </td>
 	                    </tr>

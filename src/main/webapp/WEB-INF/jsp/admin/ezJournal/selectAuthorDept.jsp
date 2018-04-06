@@ -99,6 +99,7 @@
 	   		//열람궎란정보 저장
 	   		function insertAuthDept(){
 	   			var jsonString = JSON.stringify({"userId":updateUserId,"depts":lpDepts});
+	   			console.log(jsonString);
 				$.ajax({
 	   				type:"post",
 	   				dataType:"html",

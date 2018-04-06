@@ -29,9 +29,8 @@
 					</th>
 				<c:if test="${listType eq 'mine' }">
 					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center; width:20px;" class="h5_center">
-						<!-- <img src="/images/icon_lock.png"> -->
-						<img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;">
-<%-- 						<spring:message code='ezJournal.t109'/> --%>
+						<img src="/images/lock_icon.png" style="width: 20px; height: 20px;">
+						<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> -->
 					</th>
 				</c:if>
 				<c:if test="${listType eq 'recv' or listType eq 'temp' }">
@@ -104,8 +103,8 @@
 					<c:if test="${listType eq 'mine' }">
 						<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 							<c:if test="${journal.deptShare eq 'N' }">
-								<!-- <img src="/images/icon_lock.png"> -->
-								<img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> 
+								<img src="/images/lock_icon.png" style="width: 20px; height: 20px;">
+								<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> --> 
 							</c:if>
 						</td>
 					</c:if>

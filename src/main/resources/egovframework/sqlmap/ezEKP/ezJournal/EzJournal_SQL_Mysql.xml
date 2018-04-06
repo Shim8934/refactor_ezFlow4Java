@@ -617,8 +617,7 @@
 	</delete>
 
 	<!-- 수신일지 수 -->
-	<select id="selectRecvJournalCount" parameterClass="Map"
-		resultClass="String">
+	<select id="selectRecvJournalCount" parameterClass="Map" resultClass="String">
 		select 
 			count(j.journal_id)
 		from 

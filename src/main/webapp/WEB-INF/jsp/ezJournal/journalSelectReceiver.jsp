@@ -382,12 +382,12 @@
 					        	</div>
 					        </div>
 				        	<td id="journalOrgan_content" style="display: none;">
-				        		<div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px; padding:0px;">
+				        		<div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px; padding:0px;">
 				                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
 				                        <table style="margin-top: 3px; width: 100%;">
 				                            <tr>
 				                                <td>
-				                                    <div style="float:left">
+				                                    <div style="float: left; margin-left: 5px;">
 				                                        <select id="search_type">
 				                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
 								                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
@@ -403,7 +403,9 @@
 				                                        <input type="text" id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" value="" style="width: 130px; margin: 0px;" />
 				                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 				                                    </div>
-				                                    <div style="float:right">
+				                                </td>
+				                                <td>
+				                                    <div style="float: right; margin-right: 5px; position: relative;">
 				                                        <a class="imgbtn"><span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span></a>
 				                                    </div>
 				                                </td> 
