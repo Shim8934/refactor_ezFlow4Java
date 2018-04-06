@@ -1492,15 +1492,20 @@ public class EzAttitudeGWController {
 			String companyId = request.getParameter("companyId");
 			String pageNum = request.getParameter("pageNum");
 			String listSize = request.getParameter("listSize");
+			String typeId = request.getParameter("typeId");
+			String userIdList = request.getParameter("userIdList");
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
 			String offsetMin = request.getParameter("offsetMin");
+			String isAdmin = request.getParameter("isAdmin");
+			String isuse = "1";
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			String offset = info.getOffSet();
 			
-			List<AttitudeVO> list = ezAttitudeService.getAttitudeList2(companyId, pageNum, listSize, startDate, endDate, offset, info.getTenantId());
+			//모든근태조회
+			List<AttitudeVO> list = ezAttitudeService.getAttitudeList2(companyId, pageNum, listSize, typeId, userIdList, startDate, endDate, offset, info.getTenantId());
 			
 			//imgPath 셋팅
 //			for (int i = 0; i < list.size(); i++) {
@@ -1515,11 +1520,16 @@ public class EzAttitudeGWController {
 //			result.put("code", 0);			
 //			result.put("data", resultList);
 			
-			String totalCount = ezAttitudeService.getAttitudeCount2(info.getTenantId(), companyId, startDate, endDate, offset);
+			//리스트 총 갯수
+			String totalCount = ezAttitudeService.getAttitudeCount2(info.getTenantId(), companyId, typeId, userIdList, startDate, endDate, offset);
+			
+			//구분 리스트
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, info.getTenantId());
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
 			data.put("totalCount", totalCount);
+			data.put("typeList", typeList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

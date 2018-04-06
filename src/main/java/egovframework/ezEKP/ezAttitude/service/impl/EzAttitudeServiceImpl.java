@@ -747,21 +747,23 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	public List<AttitudeVO> getAttitudeList2(String companyId, String pageNum,
-			String listSize, String startDate, String endDate, String offset,
-			int tenantId) throws Exception {
+			String listSize, String typeId, String userIdList, String startDate,
+			String endDate, String offset, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeList2 started");
-		Map<String, Object> map = new HashMap<String,Object>();
-		//if써서 하루꺼를 가져오려는 건지 한달꺼를 가져오려는 건지를 구분해야 될 꺼 같다.
-		//일단 하루치를 가져오는 것 부터
-		//true면 UTC false면 local
+		Map<String, Object> map = new HashMap<String, Object>();
+		// if써서 하루꺼를 가져오려는 건지 한달꺼를 가져오려는 건지를 구분해야 될 꺼 같다.
+		// 일단 하루치를 가져오는 것 부터
+		// true면 UTC false면 local
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		//startDate와 endDate가 없는 경우 당일의 근태를  출력
-		LOGGER.debug("startDate : " + (startDate == null) + "startDate : " + (startDate.equals("")));
+		// startDate와 endDate가 없는 경우 당일의 근태를 출력
+		LOGGER.debug("startDate : " + (startDate == null) + "startDate : "
+				+ (startDate.equals("")));
 		if (startDate.equals("") && endDate.equals("")) {
-			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
+			String localDate = commonUtil.getDateStringInUTC(
+					commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
 			startDate = localDate + " 00:00:00";
 			endDate = localDate + " 23:59:59";
-		} else { //startDate와 endDate가 있는 경우 한달의 근태를 출력 
+		} else { // startDate와 endDate가 있는 경우 한달의 근태를 출력
 			startDate = startDate + " 00:00:00";
 			endDate = endDate + " 23:59:59";
 		}
@@ -771,37 +773,62 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("limit", limit);
 		map.put("listSize", listSize);
-//		map.put("order", order.trim());
+		map.put("typeId", typeId);
+		// map.put("order", order.trim());
 		map.put("offsetMin", offsetMin);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		
-		List<AttitudeVO> resultList = ezAttitudeDAO.getAttitudeList2(map);
-		
+		List<AttitudeVO> resultList = new ArrayList<AttitudeVO>();
+		if (userIdList != null && userIdList != "") {
+			String[] userList = userIdList.split(",");
+			for (int i = 0; i < userList.length; i++) {
+				map.put("userId", userList[i]);
+				resultList.addAll(ezAttitudeDAO.getAttitudeList2(map));
+			}
+		} else {
+			resultList = ezAttitudeDAO.getAttitudeList2(map);
+		}
+
+
 		LOGGER.debug("getAttitudeList2 ended");
 		return resultList;
 	}
 
 	@Override
 	public String getAttitudeCount2(int tenantId, String companyId,
-			String startDate, String endDate, String offset) throws Exception {
+			String typeId, String userIdList, String startDate, String endDate, String offset)
+			throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		if (startDate.equals("") && endDate.equals("")) {
-			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
+			String localDate = commonUtil.getDateStringInUTC(
+					commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
 			startDate = localDate + " 00:00:00";
 			endDate = localDate + " 23:59:59";
-		} else { 
+		} else {
 			startDate = startDate + " 00:00:00";
 			endDate = endDate + " 23:59:59";
 		}
-		
-		map.put("companyId", companyId);
+
 		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("typeId", typeId);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("offsetMin", offsetMin);
-		return ezAttitudeDAO.getAttitudeCount2(map);
+		
+		String resultCount = "0";
+		if (userIdList != null && !userIdList.equals("")) {
+			String[] userList = userIdList.split(",");
+			for (int i = 0; i < userList.length; i++) {
+				map.put("userId", userList[i]);
+				resultCount = String.valueOf((Integer.valueOf(resultCount) + Integer.valueOf(ezAttitudeDAO.getAttitudeCount2(map))));
+			}
+		} else {
+			resultCount = ezAttitudeDAO.getAttitudeCount2(map);
+		}
+		return resultCount;
 	}
 }

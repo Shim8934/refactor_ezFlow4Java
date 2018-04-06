@@ -107,11 +107,11 @@ public interface EzAttitudeService {
 
 	public void deleteAttitudeUserConfig(int tenantId, String selecUserList) throws Exception;
 	
-	public List<AttitudeVO> getAttitudeList2(String companyId, String pageNum, String listSize, String startDate, String endDate, String offset, int tenantId) throws Exception;
+	public List<AttitudeVO> getAttitudeList2(String companyId, String pageNum, String listSize,String typeId, String userIdList, String startDate, String endDate, String offset, int tenantId) throws Exception;
 	
 	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId, String offset) throws Exception;
 	
 	public void attModAppModify(String companyId, int tenantId, String userId, String attModId, String offset, String content, String changeDate) throws Exception;
 
-	public String getAttitudeCount2(int tenantId, String companyId, String startDate, String endDate, String offset) throws Exception;
+	public String getAttitudeCount2(int tenantId, String companyId, String typeId, String userIdList, String startDate, String endDate, String offset) throws Exception;
 }

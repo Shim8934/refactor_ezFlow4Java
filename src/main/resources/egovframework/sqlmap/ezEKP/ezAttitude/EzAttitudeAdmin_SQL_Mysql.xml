@@ -532,8 +532,24 @@
 					or
 					(START_DATE < #startDate# and END_DATE >= #endDate#)
 				)
+			]]>
+		<isNotEmpty property="userId">
+		<![CDATA[
+			AND 
+				A.WRITER_ID = #userId#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="typeId">
+		<![CDATA[
+			AND 
+				A.TYPE_ID = #typeId#
+		]]>
+		</isNotEmpty>
+		<![CDATA[
 			ORDER BY
 				A.TYPE_ID
+			LIMIT 
+				#limit#, #listSize#
 		]]>
 	</select>
 	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
@@ -555,6 +571,18 @@
 					(START_DATE < #startDate# and END_DATE >= #endDate#)
 				)
 		]]>
+		<isNotEmpty property="userId">
+		<![CDATA[
+			AND 
+				WRITER_ID = #userId#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="typeId">
+		<![CDATA[
+			AND 
+				TYPE_ID = #typeId#
+		]]>
+		</isNotEmpty>
 	</select>
 	
 </sqlMap>

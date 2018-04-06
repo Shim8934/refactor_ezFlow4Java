@@ -251,7 +251,7 @@ public class EzAttitudeAdminBOMController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/companies/" + request.getParameter("companyId") + "/attitudetypes";
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + request.getParameter("companyId") + "/attitudetypes";//TODO
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1008,6 +1008,8 @@ public class EzAttitudeAdminBOMController {
 		String companyId = request.getParameter("companyId");
 		String pageNum = request.getParameter("pageNum");
 		String listSize = request.getParameter("listSize");
+		String typeId = request.getParameter("typeId");
+		String userIdList = request.getParameter("userIdList");
 //		String orderCell = request.getParameter("orderCell");
 //		String orderOption = request.getParameter("orderOption");
 		String startDate = request.getParameter("startDate");
@@ -1031,6 +1033,8 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("userId", userId)
 				.queryParam("pageNum", pageNum)
 				.queryParam("listSize", listSize)
+				.queryParam("typeId", typeId)
+				.queryParam("userIdList", userIdList)
 //				.queryParam("orderCell", orderCell)
 //				.queryParam("orderOption", orderOption)
 				.queryParam("startDate", startDate)
