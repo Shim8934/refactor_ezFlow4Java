@@ -620,19 +620,20 @@
 	<select id="selectRecvJournalCount" parameterClass="Map"
 		resultClass="String">
 		select 
-			count(*)
+			count(j.journal_id)
 		from 
-			jmocha.tbl_journal_recv
+			jmocha.tbl_journal_recv r
+		inner join jmocha.tbl_journal j on (r.journal_id = j.journal_id and r.tenant_id = j.tenant_id)
 		where 
-			user_id=#userId#
+			r.user_id=#userId#
 		and 
-			TENANT_ID=#tenantId#
+			r.TENANT_ID=#tenantId#
 		and 
-			recv_status='Y'
+			r.recv_status='Y'
 		and
-			isnull(recieve_date)
+			isnull(r.recieve_date)
 		and 
-			NULLIF(j.journal_status,'') is null
+			NULLIF(j.journal_status ,'') is null
 	</select>
 
 	<!-- 일지 리스트 글수! -->
