@@ -174,7 +174,8 @@
 					retladinfo = getPreLadder("${ladderId}");
 					preLadderListComplete(retladinfo["lad"], retladinfo["ladline"]);
 				} else {
-					$(".ladderType:eq(<c:out value='${ladType}' />)").addClass("active");
+					$(".ladderType:eq(<c:out value='${ladType}' />) img").toggle();
+					$(".ladderType:eq(<c:out value='${ladType}' />) img").addClass("active");
 					setLadderTypeDiv("${ladType}");
 				}
 			}
@@ -607,8 +608,8 @@
 						<td>
 							<div class="wrap right">
 									<div class="icondiv floatR fullwidth" id="ladderSecret">
-										<img src="/images/ezLadder/icon_private.png" style="display: block; border: 2px solid #a9a9a9; border-radius: 30px;"/>
-										<img src="/images/ezLadder/icon_public.png" style="display: none; border: 2px solid #a9a9a9; border-radius: 30px;"/>
+										<img src="/images/ezLadder/icon_public.png" style="display: block; border: 2px solid #a9a9a9; border-radius: 30px;" _secretFlag="0"/>
+										<img src="/images/ezLadder/icon_private.png" style="display: none; border: 2px solid #a9a9a9; border-radius: 30px;" _secretFlag="1"/>
 									</div>
 								<input name="secretFlag" style="display: none;" />
 							</div>
@@ -671,8 +672,10 @@
 				<table class="setTable" style="position: relative;">
 					<tr>
 						<td>
+							<div id="addAttendant" class="icondiv">
+								<img src="/images/ezLadder/icon_addAttendant.png" style=" border: 2px solid #a9a9a9; border-radius: 30px;"/>
+							</div>
 							<div id="ladderLineBox" style="border: 1px solid #ddd;">
-								<div id="addAttendant" class="icondiv"><img src="/images/ezLadder/icon_addAttendant.png" style=" border: 2px solid #a9a9a9; border-radius: 30px;"/></div>
 								<div style="height: 140px;">
 									<ul id="attendantList"></ul>
 								</div>

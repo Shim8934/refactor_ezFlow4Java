@@ -53,7 +53,7 @@ var hInfo = 39 + 1; // 높이 수
 var wInfo = 0; // 멤버 수
 var hSize = 20; // 세로 간격
 var wSize = 150; // 가로 간격
-var moveSpeed = 10/*hSize / 10*/; // 애니메이션 속도
+var moveSpeed = 4/*hSize / 10*/; // 애니메이션 속도
 var lad = ""; // 사다리 정보
 var ladArr = []; // 사다리 정보를 배열로 저장
 var printLadInfo = []; // 사다리 방향 정보
@@ -152,48 +152,68 @@ function setUserPath() { // 각 유저의 이동경로 저장
 	}
 }
 
+var moveImgHarfSize = 33;
+var defTop = 0;
+var moveLeft = 0;
+var moveTop = 0;
+function moveUserPicImg(type) {
+	var userImgHtml = $("#drag" + clickUserOrder + " span").html();
+	
+	moveLeft = $("#drag0 img").offset().left + wSize * clickUserOrder;
+	moveTop = 0 - moveImgHarfSize;
+	defTop = $("#drag0 img").offset().top;
+	
+	$("#lineDiv span").append(userImgHtml);
+	$("#lineDiv img:last").attr("id", "moveImgUser" + clickUserOrder).css("position", "absolute").offset({"top": defTop, "left": moveLeft});
+	
+	$("#moveImgUser" + clickUserOrder).animate({"top": moveTop}, moveSpeed * 10, function() {
+		moveTop = $("#moveImgUser" + clickUserOrder).offset().top;
+		printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, type);
+	});
+}
+
 function aniOneUser() { 
 	if(beforeStatus == 0) {
 		drawStatus = !drawStatus;
 	}
-	printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'anione');
+//	var userImgHtml = $("#drag" + clickUserOrder + " span").html();
+//	
+//	moveLeft = $("#drag0 img").offset().left + wSize * clickUserOrder;
+//	moveTop = 0 - moveImgHarfSize;
+//	defTop = $("#drag0 img").offset().top;
+//	
+//	$("#lineDiv span").html(userImgHtml);
+//	$("#lineDiv img").attr("id", "moveImgUser").css("position", "absolute").offset({"top": defTop, "left": moveLeft});
+//	
+//	$("#moveImgUser").animate({"top": moveTop}, moveSpeed * 10, function() {
+//		moveTop = $("#moveImgUser").offset().top;
+//		printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'anione');
+//	});
+	
+	moveUserPicImg("anione");
+	
 	userStatus[clickUserOrder] = 1;
 	beforeStatus = 0;
 }
 
 function aniAllUser() {
 	// TODO printUserPath 함수가 끝난 다음에 실행될 수 있도록 해야함.... 속도조절시 문제... 한번 실행중일떄 버튼 클릭 막기 
-	drawStatus = !drawStatus;
-	printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'aniall' + clickUserOrder);
+	if(beforeStatus == 0) {
+		drawStatus = !drawStatus;
+	}
 	
+	moveUserPicImg("aniall" + clickUserOrder);
+	
+//	printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'aniall' + clickUserOrder);
 	userStatus[clickUserOrder] = 1;
-	
-	/*if(drawStatus >= 0) {
-		console.log("빡..."+resultOrder);
-	}*/
-	
-	/*if(user < wInfo) {
-		aniAllUser(user++);
-	} else {
-		return;
-	}*/
-	
-	
-	/*for(var user = 0; user < wInfo; user++) {
-		(function(x) {
-			setTimeout(function() {
-				drawStatus = !drawStatus;
-				printUserPath(x, x, 0, startXPoint + x * wSize, startYPoint, 'aniall');
-			}, 1000 / ladderlinecnt * moveSpeed * wInfo * x);
-		})(user);
-		userStatus[user] = 1;
-	}*/
 }
 
 function popOneUser() {
 	drawStatus = !drawStatus;	
-	beforeStatus = 1;
 	printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'popone');
+	userStatus[clickUserOrder] = 1;
+	beforeStatus = 1;
+	ladderAnimationComplete();
 }
 
 function popAllUser() {
@@ -231,9 +251,9 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 			}
 		}
 		resultOrder = locX;
-		ladderAnimationComplete();
 	} else if(typeStr1 == 'ani') {
 		drawPathLine(user, moveX, moveY, typeStr2);
+		$("#moveImgUser" + clickUserOrder).offset({"top": moveTop, "left": moveLeft});
 		
 		if(locY >= hInfo) { 
 			drawStatus = false;
@@ -250,12 +270,14 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 		if(path) {
 			if(path['direction'] == 'left') {
 				moveX -= moveSpeed;
+				moveLeft -= moveSpeed;
 				if(moveX <= startXPoint + (locX - 1) * wSize) {
 					locX--;
 					moveX = startXPoint + locX * wSize;
 				}
 			} else if(path['direction'] == 'right') {
 				moveX += moveSpeed;
+				moveLeft += moveSpeed;
 				if(moveX >= startXPoint + (locX + 1) * wSize) {
 					locX++;
 					moveX = startXPoint + locX * wSize;
@@ -263,11 +285,14 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 			} 
 		} else {
 			moveY += moveSpeed;
+			moveTop += moveSpeed;
 			if(moveY >= startYPoint + (locY + 1) * hSize) {
 				locY++;
 				moveY = startYPoint + locY * hSize;
 			}
 		}
+		
+
 		
 		setTimeout(function(){ 
 			if(!drawStatus) {

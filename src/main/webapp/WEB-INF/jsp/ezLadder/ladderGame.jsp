@@ -162,7 +162,6 @@
 				});
 			} else if(status == 1) {
 				// 완료상태
-				clickUserLadderAnimation();
 				canvasSetting();
 			}
 			
@@ -262,11 +261,8 @@
 							}
 						}
 						
-						$(moveDragObj).css("z-index", "10").animate({"left": moveDragLeft * 150}, 400);
-						$(moveDropObj).css("z-index", "10").animate({"left": moveDropLeft * 150}, 400);
-						
-						console.log(cmtjson.dragOrder);
-						console.log(cmtjson.dropOrder);
+						$(moveDragObj).css("z-index", "10").css("position", "relative").animate({"left": moveDragLeft * 150}, 400);
+						$(moveDropObj).css("z-index", "10").css("position", "relative").animate({"left": moveDropLeft * 150}, 400);
 					}
 					
 					
@@ -338,9 +334,10 @@
 				ladArr = lad.split('');
 				clickUserLadderAnimation();
 				$("#lineDiv").html(
+					"<span></span>" +
 					"<canvas id='ladderCanvasLine' width='0' height='800'></canvas>" +
 					"<canvas id='ladderCanvas' width='0' height='800'></canvas>"
-				).css("z-index", "-1");
+				);
 				$("#directionBtn").html(
 					'<div id="immediatelyDirection" align="center">바로 보기</div>' + 
 					'<div id="autoDirection" align="center">자동 진행</div>'
@@ -658,7 +655,9 @@
 						<div id="startButton" style="position: absolute; z-index: 100; top: 0; left: 0;">
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
-										<a href="#" onclick="start(${vo.ladderId})"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103'/></a>
+										<div style="width: 500px; height: 150px;text-align: center;">
+											<a href="#" onclick="start(${vo.ladderId})"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top: 25px;"/></a>
+										</div>
 									</c:when>
 									<c:otherwise>
 										<div style="width: 500px; height: 150px; background: white; opacity: 0.7; text-align: center;">
@@ -675,7 +674,7 @@
 											<li _attendantIndex="${status.index}">
 												<div class="ladderDrag" id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer; left: 0px; border-radius: 5px;">
 													<div>
-														<img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #a9a9a9; border-radius: 40px;" />
+														<span><img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #a9a9a9; border-radius: 40px;" /></span>
 														<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
 													</div>
 												</div>
@@ -684,7 +683,9 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 800px;">
-									<div id="blackBox" style="height: 800px;background: darkgray;position: absolute;left: -50px;right: 0;"></div>
+									<div id="blackBox" style="height: 800px;background: darkgray;position: absolute;left: -50px;right: 0;">
+										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
+									</div>
 								</div>
 								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
@@ -705,14 +706,15 @@
 										<c:forEach var="line" items="${list}" varStatus="status">
 											<li>
 												<div id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer;">
-													<img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />
+													<span><img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;"/></span>
 													<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
 												</div>
 											</li>
 										</c:forEach>
 									</ul>
 								</div>
-								<div id="lineDiv" style="position: relative; z-index: -1;">
+								<div id="lineDiv" style="position: relative; /* z-index: -1; */">
+									<span id="moveUser"></span>
 									<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
 									<canvas id='ladderCanvas' width='0' height='800'></canvas>
 								</div>
