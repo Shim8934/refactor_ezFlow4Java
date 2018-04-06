@@ -631,6 +631,8 @@
 			recv_status='Y'
 		and
 			isnull(recieve_date)
+		and 
+			NULLIF(j.journal_status,'') is null
 	</select>
 
 	<!-- 일지 리스트 글수! -->

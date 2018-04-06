@@ -1171,7 +1171,11 @@
 			type:"post",
 			url:"/ezJournal/leftRecvCount.do",
 			success: function(data){
-				$("#recvCount").text(data);
+				if(!data){
+					$("#recvCount").text("0");
+				}else{
+					$("#recvCount").text(data);
+				}
 			}
 		});
     }

@@ -1516,7 +1516,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		param.put("userId", userInfo.getId());
 		param.put("formId", formId);
 		param.put("companyId", userInfo.getCompanyID());
-		param.put("startCount", 1);
+		param.put("startCount", 0);
 		param.put("listCnt", 10);
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals", param, request, "get", null);
 		String status = resultBody.get("status").toString();
