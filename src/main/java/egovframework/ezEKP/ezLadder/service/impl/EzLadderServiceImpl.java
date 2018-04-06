@@ -85,9 +85,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 		
 		Map<String,Object> map = new HashMap<String, Object>();	
 		String searchSelect = allData.get(0);
-		String searchInput = allData.get(1).trim();
+		String searchInput = allData.get(1);
 		String mode = allData.get(2);
-		
+	
 		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");    
 		
 		map.put("userId", vo.getUserId());
@@ -167,7 +167,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		String lang = commonUtil.getMultiData(vo.getLang(), vo.getTenant_id());
 		Map<String,Object> map = new HashMap<String, Object>();	
 		String searchSelect = allData.get(0);
-		String searchInput = allData.get(1).trim();
+		String searchInput = allData.get(1);
 		String mode = allData.get(2);
 		
 		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
