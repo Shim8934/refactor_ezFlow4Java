@@ -28,8 +28,11 @@
 			var allData = [];
 			var id = "${id}";
 			var back = "none";
+		
 			
 			$(function() {
+				
+				mouseCursor();
 				changeBtnColor();
 				makePageSelPage();
 				$("#searchInput").on("keyup", function(e) {
@@ -37,19 +40,37 @@
 						searchLadder();
 					}
 				});
+				
 				ladder_main_resize();
 				$(window).resize(function() {
 					ladder_main_resize();
 				});
+				
+				checkSearchOption();	// select Option 초기 설정
+				$("#searchOption").on('change', function() { // // select Option값 바뀔시
+					checkSearchOption();
+				});
+				
 			});
 			// 윈도우 창 조절
 			function ladder_main_resize() {
-				var win_height = $(window).height() - 300;
-				if(win_height>200){
+				var win_height = $(window).height() - 220;
+				if(win_height>220){
 					$(".div_scroll").css("height", win_height + "px");
 				}
 			}
-			
+			// 사다리 종류 드롭박스
+			function checkSearchOption() {
+				if($("#searchOption option:selected").val()==='kind') {
+					$("#searchInput").hide();
+					$("#searchInput").val("");
+					$("#ladderType").show();
+				} else {
+					$("#ladderType").hide();
+					$("#searchInput").val("");
+					$("#searchInput").show();
+				} 
+			}
 		</script>
 		<style type="text/css">
 			.effect img {
@@ -80,11 +101,18 @@
 				  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>>참여자</option>
 				</select>
 
+				<select id="ladderType">
+				  <option value="0" <c:if test = "${searchInput eq '0' }" >selected="selected"</c:if>>꽝뽑기</option>
+				  <option value="1" <c:if test = "${searchInput eq '1' }" >selected="selected"</c:if>>돈내기</option>
+				  <option value="2" <c:if test = "${searchInput eq '2' }" >selected="selected"</c:if>>순서정하기</option>
+				  <option value="3" <c:if test = "${searchInput eq '3' }" >selected="selected"</c:if>>직접쓰기</option>
+				</select>
+				
 				<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" onkeypress="check_key(event);" value="<c:out value='${searchInput}'/>">
 				<a href="#"><img src="/images/ezLadder/btn_search.png" width='24px' height='24px' style="vertical-align:middle; float:right;" onclick="searchLadder()" ></a>
 			</span>
 		</h1>
-		<div id="mainmenu" style="margin-top:70px;">
+		<div id="mainmenu">
 			<ul style="width:98%;">
 				<li id="btnInsert" onClick="newLad()" style="margin-left: 10px"><a><span><spring:message code="ezLadder.t013"/></span></a></li>
 				<li style="float:right; font-weight:normal; ">
@@ -109,49 +137,49 @@
 					<tr class="black" style="height=30px;">
 						<c:choose>
 							<c:when test="${vo.type eq 0 }">
-								<td><div class="effect"><img src ='/images/ezLadder/icon_bomb.png' /></div></td>
+								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_bomb.png' /></div></td>
 							</c:when>
 							<c:when test="${vo.type eq 1 }">
-								<td><div class="effect"><img src ='/images/ezLadder/icon_money.png' /></div></td>
+								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_money.png' /></div></td>
 							</c:when>
 							<c:when test="${vo.type eq 2 }">
-								<td><div class="effect"><img src ='/images/ezLadder/icon_order.png' /></div></td>
+								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_order.png' /></div></td>
 							</c:when>
 							<c:otherwise>
-								<td><div class="effect"><img src ='/images/ezLadder/icon_handwork.png' /></div></td>
+								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_handwork.png' /></div></td>
 							</c:otherwise>
 						</c:choose>
-						<td><a href="#" onClick="getLadderGame(${vo.ladderId})">${vo.title }</a></td>
-						<td>${vo.writerName }</td>
-						<td>${vo.writeDate.substring(0,16) }</td>
+						
+						<td><div class="effect" onClick="getLadderGame(${vo.ladderId})">${vo.title }</div></td>
+						<td><div class="effect" onClick="getLadderGame(${vo.ladderId})">${vo.writerName }</div></td>
+						<td><div class="effect" onClick="getLadderGame(${vo.ladderId})">${vo.writeDate.substring(0,16) }</div></td>
 						
 						<c:choose>
 							<c:when test="${vo.status eq 0 }">
-								<td><div class="effect"><img src ='/images/ezLadder/icon_wait.png' /></div></td>
+								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_wait.png' /></div></td>
 							</c:when>
 							<c:otherwise>
-								<td><div class="effect"><img src ='/images/ezLadder/icon_complete.png' /></div></td>
+								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_complete.png' /></div></td>
 							</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
 							<c:when test="${vo.secretFlag eq 0 }">
-								<td><div class="effect"><img src ='/images/ezLadder/icon_public.png' /></div></td>
+								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_public.png' /></div></td>
 							</c:when>
 							<c:otherwise>
-								<td><div class="effect"><img src ='/images/ezLadder/icon_private.png' /></div></td>
+								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_private.png' /></div></td>
 							</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
 							<c:when test="${id eq vo.writerId}">
-								<td><div class="effect"><a href="#" onclick="deleteLadder(${vo.ladderId})"><img src ='/images/ezLadder/icon_posDelete.png' /></a></div></td>
+								<td><div class="effect" onclick="deleteLadder(${vo.ladderId})"><img src ='/images/ezLadder/icon_posDelete.png' /></div></td>
 							</c:when>
 							<c:otherwise>
-								<td><div class="effect"><img src ='/images/ezLadder/icon_imposDelete.png' /></div></td>
+								<td><div class="effect" onclick="imposDelete()"><img src ='/images/ezLadder/icon_imposDelete.png' /></div></td>
 							</c:otherwise>
 						</c:choose>
-				
 					</tr>
 				</c:forEach>
 		        

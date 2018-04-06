@@ -1,3 +1,16 @@
+function mouseCursor() {
+	var overColor = "rgb(244, 245, 245)";
+	var origColor = "#FFF";
+	
+	$(document)
+	.on("mouseenter", ".black", function() {
+		$(this).css("background", overColor);
+		$(this).css("cursor", 'pointer');
+	})
+	.on("mouseleave", ".black", function() {
+		$(this).css("background", origColor);
+	});
+}
 
 // 새로운 사다리 만들기
 function newLad() {
@@ -19,7 +32,8 @@ function getLadderGame(ladderId) {
 
 // 참여자 버튼
 function participant(val) {
-	
+
+	searchInput='';
 	if (modeCheck !== val) {
 		currPage = 1;
 	}
@@ -64,7 +78,8 @@ function changeBtnColor(){
 //검색 
 function searchLadder() {
 	mode = modeCheck;
-
+	var tempInput=searchInput;
+	var tempSelect=searchSelect;
 	if (searchSelect === 'none') {
 		currPage = 1;
 	}
@@ -81,8 +96,16 @@ function searchLadder() {
 	
 	
 	searchSelect = document.getElementById("searchOption").value;
-	searchInput = document.getElementById("searchInput").value.trim();
-	
+	if(searchSelect === 'kind') {	// 종류 검색
+		searchInput = document.getElementById("ladderType").value;
+	} else {	// 이외
+		searchInput = document.getElementById("searchInput").value.trim();
+	}
+	if(searchOption==='on'){
+		searchInput = tempInput;
+		searchSelect = tempSelect;
+		searchOption ='off';
+	}
 	if(searchInput==="") {
 		alert(strLang39);
 		searchSelect = '';
@@ -103,9 +126,15 @@ function searchLadder() {
 	}
 }
 
-//삭제
-function deleteLadder(ladderId) {
+//삭제 불가
+function imposDelete(){
+	alert(strLang42);
+	return;
+}
 
+// 삭제 가능
+function deleteLadder(ladderId) {
+	
 	mode = modeCheck;
 	allData = [ ladderId, searchSelect, searchInput, mode, currPage, back ];
 
@@ -292,18 +321,11 @@ function selafterBlock_one() {
 
 function goToPageByNum(page) {
 	pageChange = page;
-	
+	searchOption ='on';
 	if (searchSelect !== '' && searchSelect !== 'none') {
 		searchLadder();
 	} else  {
 		participant(modeCheck);
 	}
-	/*if (modeCheck === 'all') {
-		var temp = 'all';
-		participant(temp);
-	} else {
-		var temp = 'part'
-		participant(temp);
-	} */
 	makePageSelPage();
 }

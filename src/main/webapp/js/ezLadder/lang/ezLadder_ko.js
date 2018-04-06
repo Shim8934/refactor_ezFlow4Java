@@ -37,8 +37,9 @@ var strLang36 = "결과는 자동으로 채워집니다.";
 var strLang37 = "일반적인 사다리입니다. ";
 var strLang38 = "결과를 직접 입력합니다.";
 var strLang39 = "공백으로 검색할 수 없습니다.";
-var strLang40  = "'%'는 검색할 수 없습니다.";
-var strLang41  = "'&'는 검색할 수 없습니다.";
+var strLang40 = "'%'는 검색할 수 없습니다.";
+var strLang41 = "'&'는 검색할 수 없습니다.";
+var strLang42 = "작성자만이 삭제할 수 있습니다.";
 
 
 	/** boh */
