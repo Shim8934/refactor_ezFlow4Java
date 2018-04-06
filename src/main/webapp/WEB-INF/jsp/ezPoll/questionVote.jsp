@@ -2599,7 +2599,7 @@
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="ballotSystemBody">
-				<div id="mainmenu3" style="overflow: hidden; margin:22px 0px 0px 0px">
+				<div id="mainmenu3" style="overflow: hidden; margin:27px 0px 5px 0px">
 					  <div style="float: left; display: block;" class="voteInfo">
 					  		
 					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
@@ -2696,7 +2696,19 @@
 						</div>			
 					</div>
 					
-			  		<ul style="width:100%; height:39px; float:left; padding:0px 0px 0px 6px; background-color:rgb(243, 248, 254); border-bottom:1px solid rgb(216, 223, 232)">
+			  		<ul style="width:100%; float:left; padding:0px 0px 0px 6px; border-bottom:1px solid #eee">
+			  			<c:choose>
+							<c:when test="${question.multiSelect == 0}">
+								<li class="voteIconImg_li_info icon">
+									<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : <spring:message code = 'ezEmail.lhm67'/>" >
+								</li>
+							</c:when>
+							<c:otherwise>
+								<li class="voteIconImg_li_info icon">
+									<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : ${question.multiSelect}" >
+								</li>
+							</c:otherwise>
+						</c:choose>
 						<c:choose>
 							<c:when test="${question.resultFirst == 1}">
 								<li class="voteIconImg_li_info icon">
@@ -2706,18 +2718,6 @@
 							<c:otherwise>
 								<li class="voteIconImg_li_info icon">
 									<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t256'/>" >
-								</li>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${question.multiSelect == 0}">
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : <spring:message code = 'ezEmail.lhm67'/>" >
-								</li>
-							</c:when>
-							<c:otherwise>
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : ${question.multiSelect}" >
 								</li>
 							</c:otherwise>
 						</c:choose>
@@ -2747,7 +2747,7 @@
 						</c:choose>
 			  		</ul>
 					
-					<div class="pad1" style="vertical-align: top; width: 100%; border: none; display:inline-block; min-height: 150px;" id="messagetd">
+					<div class="pad1" style="vertical-align: top; padding-top:10px; width: 100%; border: none; display:inline-block; min-height: 150px;" id="messagetd">
 		               <iframe onload="resizeFrame()" id="message_test" style="border: none; overflow: hidden; width: 100%; background-color: #FFF;"></iframe>   	                                 
 		       	 	</div>				
 				</div>			

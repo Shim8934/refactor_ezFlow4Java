@@ -1694,8 +1694,8 @@
 	                }
 	                
 	                img.height = 30;
-	                img.src = document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")' />" + "/S_" + filepath;
-	                img.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
+	               	img.src = "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")' />" + "/S_" + filepath;
+	        	    img.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
 	                img.style.cursor = "pointer";
 	
 	                span.appendChild(input);
@@ -1761,13 +1761,17 @@
 		                Td.style.verticalAlign = "top";
 		                Td.style.fontSize = "10pt";
 		                Td.style.lineHeight = "20px";
+		                Td.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
+	                    Td.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
 		                Td.style.wordBreak = "break-all";
+		                Td.style.backgroundRepeat = "no-repeat";
+		                Td.style.backgroundSize = Td.style.width + " " +Td.style.height;     
 		                Td.setAttribute("free", "");
 		
 		                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-	                		Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";	
-		                    
-		                    Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
+	                		Td.style.backgroundImage = "URL(<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" 
+	                				+ document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";	
+	                		Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
 		                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
 		                }
 		                else {
@@ -1831,11 +1835,10 @@
 		        Td.style.fontSize = "10pt";
 		        Td.style.lineHeight = "20px";
 		        Td.style.wordBreak = "break-all";
+		        Td.style.backgroundRepeat = "no-repeat";
 		        Td.style.width = imgWidth + "px";
 		        Td.style.height = imgHeight + "px";
-		        Td.style.backgroundSize = "cover";
-		        
-	        	//Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
+		        Td.style.backgroundSize = "" + imgWidth + "px" + imgHeight + "px";
 	        	Td.style.backgroundImage = "URL(" + imgSrc + ")";
 	        	
 		        Table.style.width = "auto";

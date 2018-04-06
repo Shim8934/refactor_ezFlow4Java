@@ -620,8 +620,11 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 790) / 2;
-		        if (obj.getAttribute("DATA9") != "1" && obj.childNodes[2].style.fontWeight == "bold")
-		            obj.childNodes[2].style.fontWeight = "normal";
+		        
+		        for (var i = 0; i < obj.childNodes.length; i++) {
+		        	if (obj.getAttribute("DATA9") != "1" && obj.childNodes[i].style.fontWeight == "bold")
+		        		obj.childNodes[i].style.fontWeight = "normal";
+		        }
 
 		        if (obj.getAttribute("DATA10") == "4" || obj.getAttribute("DATA10") == "3") {
 		            window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=790,top=" + pTop + ",left=" + pLeft, "");
