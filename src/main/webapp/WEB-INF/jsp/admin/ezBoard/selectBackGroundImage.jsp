@@ -33,14 +33,15 @@
 			function SliderImage() {		     
 				document.getElementById("file1").click();
 			}
-				
+
 			function btn_AttachAdd_onclick() {
 				var file1val = document.getElementById("file1").value;
-		        var exIndex = file1val.lastIndexOf('.');
+		        var exIndex = file1val.lastIndexOf(".");
 				var extension = file1val.substring(exIndex+1, file1val.lenght);
-		        var check = false;
+				var filetxt = file1val.substring(file1val.lastIndexOf("\\")+1, file1val.lenght);
+				var check = false;
 		        check = compareExtension(check, extension);		         
-		        
+
 		        if (!check) {
 		        	 document.getElementById("file1").value = "";
 		        	 document.getElementById("saveFileName").value = "";
@@ -65,12 +66,13 @@
 						document.getElementById("UploadSliderImage").src = filePath + "/S_" + fileName;
 						document.getElementById("imagewidth").value = "720";
 			            document.getElementById("imageheight").value = height;
-			            document.getElementById("saveFileName").value = fileName;			            		            
+			            document.getElementById("saveFileName").value = fileName;	
+			            document.getElementById("filetxt").value = filetxt;
 					},
 					error : function(){
-						alert("upload error");						
+						alert("upload error");		
 					}
-		        });						           
+		        });		
 		    }
 			
 			function compareExtension(check, extension) {
@@ -141,7 +143,10 @@
 			<tr>
 				<th><spring:message code="ezBoard.t5001"/></th>
 				<td colspan="3">					
-					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px" onchange="btn_AttachAdd_onclick()" />
+					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px; display:none;" onchange="btn_AttachAdd_onclick()"/>
+					<input type="text" name="filetxt" id="filetxt" style="width:77%; margin-left:5px; margin-top:2.5px; cursor:default;"
+					 readonly onclick="SliderImage()"/>
+					<a href="#" class="imgbtn" style="margin-top:2px;"><span onclick="SliderImage();"><spring:message code="ezBoard.t5010"/></span></a>
 					<input type="hidden" name="backgroundID" id="backgroundID" value="<c:out value='${backgroundID}'/>"/>
 					<input type="hidden" name="saveFileName" id="saveFileName" />
 					<input type="hidden" name="guid" />
