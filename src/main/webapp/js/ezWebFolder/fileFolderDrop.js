@@ -102,7 +102,7 @@ function fileupload() {
 					}
 					//update progressbar
 					$(progress_bar_id + " .progress-bar").css("width", + percent +"%");
-					$(progress_bar_id + " .status").text(percent +"%");
+					$(progress_bar_id + " .status").text(percent == 100 ? percent +"%  -  Processing..." : percent +"%");
 				}, true);
 			}
 			return xhr;

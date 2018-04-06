@@ -1,12 +1,12 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
@@ -14,7 +14,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -22,6 +23,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -37,11 +40,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
-import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -52,18 +51,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	
 	@Autowired
 	private Properties config;
-	
-	@Resource(name = "egovMessageSource")
-	private EgovMessageSource egovMessageSource;
-	
-	@Resource(name="EzCommonService")
-	private EzCommonService ezCommonService;
-	
-	@Resource(name = "EzWebFolderService")
-	private EzWebFolderService ezWebFolderService;
-
-	@Resource(name = "EzWebFolderAdminService")
-	private EzWebFolderAdminService ezWebFolderAdminService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController.class);
 
@@ -174,24 +161,27 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
 		requestFactory.setBufferRequestBody(false);
 		
-		RestTemplate restTemplate         = new RestTemplate(requestFactory);
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		RestTemplate restTemplate                       = new RestTemplate(requestFactory);
+		List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
 		
-		JSONObject jsonObject = new JSONObject();
-		JSONArray jsonArray   = new JSONArray();
+		for (int i = 0; i < messageConverters.size(); i++) {
+			HttpMessageConverter<?> messageConverter = messageConverters.get(i);
+			
+			if (messageConverter.getClass().equals(ResourceHttpMessageConverter.class)) {
+				messageConverters.set(i, new BnkResourceHttpMessageConverter());
+			}
+		}
+		
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		JSONObject jsonObject             = new JSONObject();
+		JSONArray jsonArray               = new JSONArray();
 		
 		for (MultipartFile file: multiFiles) {
-			JSONObject fileJson        = new JSONObject();
-			ByteArrayResource resource = new ByteArrayResource(file.getBytes()) {
-				@Override
-				public String getFilename() {
-					return file.getOriginalFilename();
-				}
-			};
+			JSONObject fileJson = new JSONObject();
 			
 			fileJson.put("originalFilename", file.getOriginalFilename());
 			jsonArray.add(fileJson);
-			map.add("files", resource);
+			map.add("files", new MultipartFileResource(file.getInputStream(), file.getOriginalFilename()));
 		}
 		
 		jsonObject.put("nameArray", jsonArray);
@@ -893,5 +883,33 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		return "json";
+	}
+	
+	private class MultipartFileResource extends InputStreamResource {
+		private String filename;
+		
+		public MultipartFileResource(InputStream inputStream, String filename) {
+			super(inputStream);
+			this.filename = filename;
+		}
+		
+		@Override
+		public String getFilename() {
+			return this.filename;
+		}
+		
+		@Override
+		public long contentLength() throws IOException {
+			return -1; // Prevent read the whole stream into memory
+		}
+	}
+	
+	private class BnkResourceHttpMessageConverter extends ResourceHttpMessageConverter {
+		@Override
+		protected Long getContentLength(Resource resource, MediaType contentType) throws IOException {
+			Long contentLength = super.getContentLength(resource, contentType);
+			
+			return contentLength == null || contentLength < 0 ? null : contentLength;
+		}
 	}
 }
