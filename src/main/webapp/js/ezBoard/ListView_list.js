@@ -324,8 +324,8 @@ function ListView() {
             oTable.id = _thisID;
 
             var oDiv = document.createElement("DIV");
-            oDiv.id = "newDiv";
-            oDiv.style.height = (document.getElementById("divList").clientHeight - 37) + "px";
+            oDiv.id = _thisID + "_BODY";
+            oDiv.style.height = (document.getElementById("divList").clientHeight - 38) + "px";
             oDiv.style.overflow = "auto";
             
             oTable.cellSpacing = 0;
@@ -335,9 +335,6 @@ function ListView() {
             oTable.setAttribute("useocs", _useOcs);
             oTable.style.minWidth = GetTableMinWidth() + "px";
             
-            oDiv.cellSpacing = 0;
-            oDiv.cellPadding = 0;
-
             oDiv.setAttribute("multiselectable", _isMultiSelectable);
             oDiv.setAttribute("useocs", _useOcs);
             oDiv.style.minWidth = GetTableMinWidth() + "px";
@@ -642,6 +639,22 @@ function ListView() {
         oTbody.style.width = "100%";
         oTbody.className="mainlist";
         
+        /*oTbody.cellSpacing = 0;
+        oTbody.cellPadding = 0;
+
+        oTbody.setAttribute("multiselectable", _isMultiSelectable);
+        oTbody.setAttribute("useocs", _useOcs);
+        oTbody.style.minWidth = GetTableMinWidth() + "px";
+        
+        if (_rowonclick != null)
+        	oTbody.setAttribute("rowonclick", _rowonclick);
+
+        if (_rowondblclick != null)
+        	oTbody.setAttribute("rowondblclick", _rowondblclick);
+
+        if (_contextHandler != null)
+        	oTbody.setAttribute("contextHandler", _contextHandler);*/
+
         var oRows = _dataSource.getElementsByTagName("ROW");
         _rowCount = oRows.length;
         
