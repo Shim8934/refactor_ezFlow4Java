@@ -43,6 +43,11 @@ public class AttitudeApplicationVO {
 	private String apprStatus;
 	/** 사유 */
 	private String content;
+	/** 타입명 */
+	private String typeName;
+	/** 타입명2 */
+	private String typeName2;
+	
 	
 	public String getAttitudeId() {
 		return attitudeId;
@@ -185,5 +190,17 @@ public class AttitudeApplicationVO {
 				+ apprUserName + ", apprUserName2=" + apprUserName2
 				+ ", apprDate=" + apprDate + ", apprStatus=" + apprStatus
 				+ ", content=" + content + "]";
+	}
+	public String getTypeName() {
+		return typeName;
+	}
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+	public String getTypeName2() {
+		return typeName2;
+	}
+	public void setTypeName2(String typeName2) {
+		this.typeName2 = typeName2;
 	}
 }

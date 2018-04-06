@@ -9,6 +9,8 @@
 	<typeAlias alias="AttitudeFormVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO"/>
 	<typeAlias alias="authorVO" type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
 	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO" />
+	<typeAlias alias="AttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
+	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>
 	
 	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
 		<result property="userId" 					column="USER_ID" 				columnIndex="1"/>
@@ -74,6 +76,29 @@
       <result property="isComp"          column="ISCOMP" />
       <result property="myDept"          column="MYDEPT" />
    </resultMap>
+   
+   	<resultMap id="adminAttitude" class="AdminAttitudeVO">
+		<result  property="attitudeId" 			column="ATTITUDE_ID"			columnIndex="1"/>
+		<result  property="companyId" 			column="COMPANY_ID"				columnIndex="2"/>
+		<result  property="tenantId" 			column="TENANT_ID"				columnIndex="3"/>
+		<result  property="writerId" 			column="WRITER_ID"				columnIndex="4"/>
+		<result  property="deptId" 				column="DEPT_ID"				columnIndex="5"/>
+		<result  property="startDate" 			column="START_DATE"				columnIndex="6"/>
+		<result  property="startTime" 			column="START_TIME"				columnIndex="7"/>
+		<result  property="endDate" 			column="END_DATE"				columnIndex="8"/>
+		<result  property="endTime" 			column="END_TIME"				columnIndex="9"/>
+		<result  property="modAppl" 			column="MODAPPL"				columnIndex="10"/>
+		<result  property="region" 				column="REGION"					columnIndex="11"/>
+		<result  property="mobile" 				column="MOBILE"					columnIndex="12"/>
+		<result  property="bizSub" 				column="BIZSUB"					columnIndex="13"/>
+		<result  property="content" 			column="CONTENT"				columnIndex="14"/>
+		<result  property="ip" 					column="IP"						columnIndex="15"/>
+		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="16"/>
+		<result  property="typeId" 				column="TYPE_ID"				columnIndex="17"/>
+		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="18"/>
+		<result  property="userName"			column="USER_NAME"				columnIndex="19"/>
+		<result  property="deptName"			column="DEPT_NAME"				columnIndex="20"/>
+	</resultMap>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
 		<![CDATA[
@@ -461,5 +486,75 @@
         		USER_ID = #userId#
 		]]>
    </delete>
+   
+   	<select id="ezAttitudeAdminDAO.getAttitudeList2" parameterClass="Map" resultMap="adminAttitude">
+		<![CDATA[
+			SELECT 
+				A.ATTITUDE_ID,
+				A.COMPANY_ID,
+				A.TENANT_ID,
+				A.WRITER_ID,
+				A.DEPT_ID,
+				substr(date_add(A.START_DATE, INTERVAL #offsetMin# minute), 1, 11) AS START_DATE,
+                substr(date_add(A.START_DATE, INTERVAL #offsetMin# minute), 12) AS START_TIME,
+                ifnull(substr(date_add(A.END_DATE, INTERVAL #offsetMin# minute), 1, 11),'') AS END_DATE,
+                ifnull(substr(date_add(A.END_DATE, INTERVAL #offsetMin# minute), 12),'') AS END_TIME,
+				A.MODAPPL,
+				A.REGION,
+				A.MOBILE,
+				A.BIZSUB,
+				A.CONTENT,
+				A.IP,
+				A.DATE_TYPE,
+				A.TYPE_ID,
+				B.TYPE_NAME,
+				C.DISPLAYNAME AS USER_NAME,
+                C.DESCRIPTION AS DEPT_NAME
+			FROM   
+				tbl_attitude A 
+			INNER JOIN 
+				tbl_attitude_type B 
+			ON 
+				(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
+			INNER JOIN
+				tbl_usermaster C
+			ON
+				(A.WRITER_ID = C.CN AND A.TENANT_ID = C.TENANT_ID)
+			WHERE  
+				A.TENANT_ID = #tenantId#
+			AND
+				A.COMPANY_ID = #companyId#
+			AND
+				(
+					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
+					or
+					(END_DATE >= #startDate# and END_DATE < #endDate#) 
+					or
+					(START_DATE < #startDate# and END_DATE >= #endDate#)
+				)
+			ORDER BY
+				A.TYPE_ID
+		]]>
+	</select>
+	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+			FROM   
+				tbl_attitude 
+			WHERE  
+				TENANT_ID = #tenantId#
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				(
+					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
+					or
+					(END_DATE >= #startDate# and END_DATE < #endDate#) 
+					or
+					(START_DATE < #startDate# and END_DATE >= #endDate#)
+				)
+		]]>
+	</select>
 	
 </sqlMap>

@@ -26,6 +26,8 @@
 		var currentPage		  = ${currentPage};  		
 		var totalPages 		  = ${totalPages}; 		
 	    var blockSize 		  = 10;
+	    var orderCell = ""; // 정렬 명
+    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 		var g_userLang 		  = "${userLang}";
 		var g_timezone 		  = "${userTimeSet}";
 		var offsetMin 		  = "${offsetMin}";
@@ -33,6 +35,30 @@
 		var m_strColorSelect = "#edf4fd";
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
+		
+		$(function(){
+			$(document).on('click', '#AttList th', function(){
+				if (!($(this).find("input[type=checkbox]").length) && ($(this).attr("colname") != "NO") ) { // checkbox는 sort에서 제외
+					if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+						src = "";
+						orderOption = "";
+						orderCell = $(this).attr("colname");
+					}
+				
+	    			if (orderOption == "" || orderOption == "DESC") {
+	    				src = '/images/etc/view-sortup.gif';
+	    				orderOption = "ASC";
+	    			} else {
+	    				src = '/images/etc/view-sortdown.gif';
+	    				orderOption = "DESC";
+	    			}
+	    			$("#AttList th").find("img").remove();
+	    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+	    			
+	    			get_att_list();
+				}
+			})	
+		})
 		
 		$(function () {
 	        $("#Sdatepicker").datepicker({
@@ -216,6 +242,10 @@
 			get_att_list();
 	    }
 	    
+	    function att_refresh() {
+	    	get_att_list(currentPage);
+	    }
+	    
 	    function get_att_list(pageNum) {
 	    	ShowAttProgress();
 	    	
@@ -237,6 +267,8 @@
 			obj.totalPages = totalPages;
 			obj.totalAtt = totalAtt;
 			obj.type = type;
+			obj.orderCell = orderCell;
+			obj.orderOption = orderOption;
 			
 		    $.ajax({
 				type : 'get',
@@ -326,7 +358,7 @@
 	    	}
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
-	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="" draggable="true" style="cursor:pointer;">';
+	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" draggable="true" style="cursor:pointer;">';
 	    		if (excel == true) {
 	    		} else {
 	    			htmlStr += '<td style="padding:0"> <input type="checkbox" class="checkAtt"' 
@@ -688,10 +720,11 @@
 	    
 	    function event_listCheckboxclick(obj) {
 	        if (obj.checked) {
-	            for (var RowCnt = 0; RowCnt < obj.parentElement.parentElement.getElementsByTagName("td").length; RowCnt++) {
-	                obj.parentElement.parentElement.getElementsByTagName("td").item(RowCnt).style.backgroundColor = m_strColorSelect;
-	            }
-	            console.log(obj.parentElement.parentElement.getAttribute("id"));
+	        	console.log(obj.parentElement.parentElement.getElementsByTagName("td").length);
+// 	            for (var RowCnt = 0; RowCnt < obj.parentElement.parentElement.getElementsByTagName("td").length; RowCnt++) {
+// 	                obj.parentElement.parentElement.getElementsByTagName("td").item(RowCnt).style.backgroundColor = m_strColorSelect;
+// 	            }
+				obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
 	            listContentArry[listContentArry.length] = obj.parentElement.parentElement.getAttribute("id");
 	        }
 	        else {
@@ -699,9 +732,10 @@
 	            for (var i = 0; i < listContentArry.length; i++) {
 	            	console.log(obj.parentElement.parentElement.getAttribute("id"));
 	                if (obj.parentElement.parentElement.getAttribute("id") == listContentArry[i]) {
-	                    for (var RowCnt = 0; RowCnt < obj.parentElement.parentElement.getElementsByTagName("td").length; RowCnt++) {
-	                        obj.parentElement.parentElement.getElementsByTagName("td").item(RowCnt).style.backgroundColor = m_strColorDefault;
-	                    }
+// 	                    for (var RowCnt = 0; RowCnt < obj.parentElement.parentElement.getElementsByTagName("td").length; RowCnt++) {
+// 	                        obj.parentElement.parentElement.getElementsByTagName("td").item(RowCnt).style.backgroundColor = m_strColorDefault;
+// 	                    }
+	                	obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
 	                }
 	                else {
 	                    TemplistArray[TemplistArray.length] = listContentArry[i];
@@ -772,18 +806,18 @@
           </div>
         </div>
         <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
-            <div id="contentlist" name="contentlist" style="border:0px solid blue;height:350px;width:100%;overflow-y:auto;" onblur>
+            <div id="contentlist" name="contentlist" style="border:0px solid blue;height:550px;width:100%;overflow-y:auto;" onblur>
                 <table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
                 	<tr> 
 						<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
 							<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
 						</th> 
-						<th width="60px">NO.</th> 
-						<th>변경일자</th> 					
-						<th width="150px">승인자</th> 
-						<th width="180px">출근시각</th>
-						<th width="180px">변경시각</th> 
-						<th width="80px">승인상태</th> 
+						<th width="60px" colname="NO">NO.</th> 
+						<th style="cursor:pointer" colname="CHANGE_DATE">변경일자</th> 					
+						<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th> 
+						<th width="180px" style="cursor:pointer" colname="START_DATE">출근시각</th>
+						<th width="180px" style="cursor:pointer" colname="CHANGE_DATE">변경시각</th> 
+						<th width="80px" style="cursor:pointer" colname="APPR_STATUS" >승인상태</th> 
 <%-- 						<th width="60px"><spring:message code="ezPoll.t109"/></th>			 --%>
 			    	</tr>
 			    	

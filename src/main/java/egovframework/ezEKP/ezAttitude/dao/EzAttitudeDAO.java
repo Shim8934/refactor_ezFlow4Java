@@ -75,20 +75,20 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	
 	@SuppressWarnings("unchecked")
 	public List<AttitudeVO> getAttitudeList(Map<String,Object> map) throws Exception{
-		return (List<AttitudeVO>) list("ezAttitude.getAttitudeList", map);
+		return (List<AttitudeVO>) list("ezAttitude.getAttitudeList", map);//TODO  ezAttitude -> ezAttitudeDAO
 	}
 	
 	public void insertAttitude(Map<String, Object> map) throws Exception {
-		insert("ezAttitude.insertAttitude", map);
+		insert("ezAttitude.insertAttitude", map);//TODO  ezAttitude -> ezAttitudeDAO
 	}
 	
 	public String getIsAttitudeUserConf(Map<String, Object> map) throws Exception {
-		return (String) select("ezAttitude.getIsAttitudeUserConf", map);
+		return (String) select("ezAttitude.getIsAttitudeUserConf", map);//TODO  ezAttitude -> ezAttitudeDAO
 	}
 	
 	@SuppressWarnings("unchecked")
 	public AttitudeUserConfigVO getAttitudeConfTime(Map<String,Object> map) throws Exception {
-		return (AttitudeUserConfigVO) select("ezAttitude.getAttitudeUserConfTime",map);
+		return (AttitudeUserConfigVO) select("ezAttitude.getAttitudeUserConfTime",map);//TODO  ezAttitude -> ezAttitudeDAO
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -147,8 +147,8 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		delete("ezAttitudeAdminDAO.deleteAttitudeUserConfig", map);
 	}
 	
-	public AttitudeApplicationVO attModAppDetail(
-			Map<String, Object> map) throws Exception {
+	@SuppressWarnings("unchecked")
+	public AttitudeApplicationVO attModAppDetail(Map<String, Object> map) throws Exception {
 		return (AttitudeApplicationVO) select("ezAttitudeAdminDAO.attModAppDetail", map);
 	}
 	
@@ -156,4 +156,18 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (AttitudeFormVO) select("ezAttitudeDAO.getFormBody", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void attModAppModify(
+			Map<String, Object> map) {
+		update("ezAttitudeDAO.attModAppModify", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<AttitudeVO> getAttitudeList2(Map<String, Object> map) {
+		return (List<AttitudeVO>) list("ezAttitudeAdminDAO.getAttitudeList2", map);
+	}
+
+	public String getAttitudeCount2(Map<String, Object> map) {
+		return (String) select("ezAttitudeAdminDAO.getAttitudeCount2", map);
+	}
 }

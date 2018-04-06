@@ -61,6 +61,10 @@
     	})
     	
     	function company_change(){
+    		if($("#HeaderAllCheckBox").is(":checked") == true) {
+    			$("#HeaderAllCheckBox").prop("checked", false);
+    		}
+    		
     		pCompanyId = $("select[name=ListCompany]").val();
     		getUserConfList();
     	}
@@ -82,6 +86,8 @@
     				totalCount = result.totalCount;
     				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
     				getUserConfList_after(result.list);
+    				//더블클릭 이벤트
+    				addTrDblclickEvent(userDbClick);
     			}
     		});
     	}
@@ -123,9 +129,23 @@
     			getUserConfList();
     		}
     	}
+    	
+    	//페이지 이동 함수
+    	function goToPageByNum(pCurPage){
+    		if (pCurPage == 0 || totalPage < pCurPage) {
+    			return;
+    		} else {
+	    		pageNum = pCurPage;    			
+    		}
+    		
+    		getUserConfList();
+    	}
+    	
     	//추가/변경 버튼 클릭시
-    	function userConfSave(){
-    		selectedCheck();
+    	function userConfSave(userid){
+    		if(userid == null) {
+	    		selectedCheck();
+    		}
     		var url = "";
     		if(selecUserList == "" || selecUserList == null) {
     			url = "/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val();
@@ -154,18 +174,6 @@
    			//마지막 ',' 지우기
    			selecUserList = selecUserList.slice(0, -1);
     	}
-    	
-    	//페이지 이동 함수
-    	function goToPageByNum(pCurPage){
-    		if (pCurPage == 0 || totalPage < pCurPage) {
-    			return;
-    		} else {
-	    		pageNum = pCurPage;    			
-    		}
-    		
-    		getUserConfList();
-    	}
-    	
     	//삭제버튼
     	function delUserConf() {
     		selectedCheck();
@@ -174,20 +182,27 @@
     		} else {
 				if (confirm("삭제하시면 선택한 사용자는 회사 설정시간에 따르게됩니다")) {
 		    		$.ajax({
-		    			data : "GET",
-		    			dataType : "json",
+		    			data : "POST",
 		    			async : false,
 		    			url : "/admin/ezAttitude/delAttitudeUserConf.do",
 		    			data : {
 		    				companyId : pCompanyId,
 		    				selecUserList : selecUserList
 		    			},
-		    			success : function(result){
+		    			success : function(){
 		    				company_change();
+		    			},
+		    			error : function() {
+		    				alert('삭제하는도중 에러 발생');
 		    			}
 		    		});
 				}	
     		}
+    	}
+    	
+    	function userDbClick() {
+    		selecUserList = $(this).attr('userid');
+    		userConfSave(selecUserList);
     	}
     	
     </script>

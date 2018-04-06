@@ -39,6 +39,7 @@ public class AttitudeVO {
 	private String typeName;
 	/** 근태타입 이미지*/
 	private String imgPath;
+	
 	public String getTypeName() {
 		return typeName;
 	}

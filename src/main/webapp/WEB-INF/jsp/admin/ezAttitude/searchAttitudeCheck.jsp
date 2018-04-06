@@ -19,45 +19,25 @@
 		    var ReturnFunction;
 		    var treeContent = ${deptList};
 		    var companyId = '${companyId}';
-		    var userList = ${userList};
-		    var selectedUserId;
-		    //회사 근무 시작/종료시간 - 기본설정적용시 필요
-		    var comStartTime = '${workStartTime}';
-		    var comEndTime = '${workEndTime}';
-			
+		    var searchIdList = '${searchIdList}'; //검색레이어의 조회자 id 리스트
+		    var searchNameList = '${searchNameList}'; //검색레이어의 조회자 name 리스트
+		    var selectedUserId; //선택한 사원의 id
+		    var selectedUserName; //선택한 사원의 이름
+
 		    $(document).ready(function(){
 		    	setDeptList();
 		    	
-		    	if (userList != null && userList != "null") {
-		    		$.each(userList, function(idx, userInfo) {
-	   					var html = "<tr id='" + userInfo.userId + "' class='hover'>";
-	   					html += "<td style='cursor: pointer; padding-left:60px;'>" + userInfo.userName + "</td>";
-	   					if(userInfo.workStartTime == null || userInfo.workStartTime == '' || userInfo.workEndTime == null || userInfo.workEndTime == '') {
-	   						html += "<td></td>";
-	   					} else {
-		   					html += "<td>" + userInfo.workStartTime + " ~ " + userInfo.workEndTime + "</td>";
-	   					}
-	   					html += "</tr>";
-	   					
-	   					$(html).appendTo('#txtlist_table2');
-					})
+		    	if (searchIdList != '' && searchIdList != '') {
+		    		var userIdList = searchIdList.split(',');
+		    		var userNameList = searchNameList.split(',');
+		    		var html = "";
+		    		for (var i = 0; i < userIdList.length; i++) {
+			   			html += "<tr id='" + userIdList[i] + "' class='hover'>";
+			   			html += "<td style='cursor: pointer; padding-left:10px;'>" + userNameList[i] + "</td>";
+			   			html += "</tr>";
+		    		}
+		   			$(html).appendTo('#txtlist_table2');
 		    	}
-// 		    	try {
-// 	                ReturnFunction = opener.permissions_check_dialogArguments[1];
-// 	            } catch (e) {}	        
-
-// 		        try {
-// 		            var ua = navigator.userAgent;
-// 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-// 		                var input = document.getElementsByTagName("input");
-		                
-// 		                for (var i = 0; i < input.length; i++) {
-// 		                    if (input[i].getAttribute("type") == "text") {
-// 		                        KeEventControl(input[i]);
-// 		                    }
-// 		                }
-// 		            }
-// 		        } catch (e) {}
 		    })
 		    //부서 리스트
 	   		function setDeptList(){
@@ -101,6 +81,7 @@
 // 	   		//선택된 사원
 	   		function setUserAuthorDept(elem){
 	   			selectedUserId = $(elem).attr("id");
+	   			selectedUserName = $(elem).children('td').eq(0).text();
 	   			$("*").removeClass("selectTR");
 	   			$(elem).addClass("selectTR");
 	   		}
@@ -115,28 +96,10 @@
 	   			}
 	   			
 	   			if(selectedUserId != ""){
-		   			$.ajax({
-		   				type:"post",
-		   				dataType:"json",
-		   				url:"/admin/ezAttitude/selectUserInfo.do",
-		   				data:{
-		   					"userId" : selectedUserId,
-		   					"companyId" : companyId
-		   				},
-		   				success: function(result){
-		   					for (var i = 0; i < result.length; i++) {
-			   					var html = "<tr id='" + result[i].userId + "' class='hover'>";
-			   					html += "<td style='cursor: pointer; padding-left:60px;'>" + result[i].userName + "</td>";
-			   					if(result[i].workStartTime == null || result[i].workStartTime == '' || result[i].workEndTime == null || result[i].workEndTime == '') {
-			   						html += "<td></td>";
-			   					} else {
-				   					html += "<td>" + result[i].workStartTime + " ~ " + result[i].workEndTime + "</td>";
-			   					}
-			   					html += "</tr>";
-			   					$(html).appendTo('#txtlist_table2');
-		   					}
-		   				}
-		   			});
+		   			var html = "<tr id='" + selectedUserId + "' class='hover'>";
+		   			html += "<td style='cursor: pointer; padding-left:10px;'>" + selectedUserName + "</td>";
+		   			html += "</tr>";
+		   			$(html).appendTo('#txtlist_table2');
 	   			}
 	   		}
 			// 시간바꾸는 리스트에서 사원 클릭시 tr배경색 변경
@@ -148,91 +111,20 @@
 	   		function DeleteReceiver() {
 		   		$('#txtlist_table2 tr[class*=selectTR]').remove();
 	   		}
-	   		//설정시간적용
-	   		function userTimeApply(type) {
-	   			var trIdx = $('#txtlist_table2').find('tr').length;
-	   			if(trIdx == 0) {
-	   				alert('사원을 선택해 주세요');
-	   				return;
-	   			}
-	   			
-	   			if(type == 'modify') {
-	   				if($('#startHrs').val() == "" || $('#startHrs').val() == null){
-	   					alert('시간을 입력해주세요');
-	   					return;
-	   				}
-	   				if($('#startMin').val() == "" || $('#startMin').val() == null){
-	   					alert('시간을 입력해주세요');
-	   					return;
-	   				}
-	   				if($('#endHrs').val() == "" || $('#endHrs').val() == null){
-	   					alert('시간을 입력해주세요');
-	   					return;
-	   				}
-	   				if($('#endMin').val() == "" || $('#endMin').val() == null){
-	   					alert('시간을 입력해주세요');
-	   					return;
-	   				}
-	   			} else {
-	   				$('#startHrs').val(comStartTime.split(':')[0]);
-	   				$('#startMin').val(comStartTime.split(':')[1]);
-	   				$('#endHrs').val(comEndTime.split(':')[0]);
-	   				$('#endMin').val(comEndTime.split(':')[1]);
-	   			}
-	   			
-	   			var trIdx = $('#txtlist_table2').find('tr').length;
-	   			for (var i = 0; i < trIdx; i++) {
-		   			var timeStr = "";
-	   				if(type == 'default') {
-	   					timeStr = comStartTime + " ~ " + comEndTime;
-	   				} else {
-	   					timeStr += addZero($('#startHrs').val()) + ":";
-	   					timeStr += addZero($('#startMin').val()) + " ~ "; 
-	   					timeStr += addZero($('#endHrs').val()) + ":";
-	   					timeStr += addZero($('#endMin').val());
-	   				}
-	   				$('#txtlist_table2 tr').eq(i).children("td").eq(1).text(timeStr);
-	   			}
-	   		}
-	   		//시간/분 입력시 3이면 03 이렇게 되도록. 
-	   		function addZero(time) {
-	   			var resStr = "";
-	   			if(time.length == 1) {
-	   				resStr = "0" + time;
-	   			} else {
-	   				resStr = time;
-	   			}
-	   			return resStr;
-	   		}
+
 	   		//저장
 	   		function OK_Click() {
 	   			var trIdx = $('#txtlist_table2').find('tr').length;
-	   			var userConfInfo = "";
+	   			var userList = "";
 	   			for (var i = 0; i < trIdx; i++) {
-	   				var userConfTime = $('#txtlist_table2 tr').eq(i).children("td").eq(1).text().split('~');
-	   				if (userConfTime == "") {
-	   					alert('시간을 설정해 주세요');
-	   					return;
-	   				}
-	   				userConfInfo += $('#txtlist_table2 tr').eq(i).attr('id') + ",";
-	   				userConfInfo += userConfTime[0].trim() + ",";
-	   				userConfInfo += userConfTime[1].trim() + ";";
+	   				userList += "<span id='" + $('#txtlist_table2 tr').eq(i).attr('id') + "'>" + $('#txtlist_table2 tr').eq(i).children('td').text() + "</span> ,";
 	   			}
-				//마지막 ';' 제거
-	   			userConfInfo = userConfInfo.slice(0, -1);
-	   			
-	            $.ajax({
-	            	type : "POST",
-	            	url : "/admin/ezAttitude/attitudeUserConfSave.do",
-	            	data : { "userConfInfoList" : userConfInfo },
-	            	success : function() {
-	            		alert('시간이 변경되었습니다');
-	            		window.opener.company_change();
-	            		window.close();
-	            	},
-	            	error : function() {
-	            	}
-	            });
+	   			//마지막 ',' 제거
+	   			userList = userList.slice(0, -1);
+	   			//부모창에 데이터 출력
+				$('div[id=receiverlist]', opener.document).html(userList);
+	            window.close();
+
 	   		}
 		    
 	        function close_Click() {
@@ -338,40 +230,21 @@
 	                            <img src="../../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()" />
 	            </td>
 	            <!-- 위에까지 화살표 -->     
-	            <td style="width:450px; height:480px; vertical-align: top;">
-	            	<div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-	                    <div class="portlet_tabpart03_top" id="tab2" style="border: 1px solid #d3d2d2; text-align:center;">
-	                        <table style="margin-top: 3px; width: 100%;">
-	                        	<tr>
-	                        		<h2>사용자별 설정시간</h2>
-	                        	</tr>
-	                        	<tr>
-	                        		근무시간 : 
-	                        		<input type="text" id="startHrs" style="width:50px;"/>시
-	                        		<input type="text" id="startMin" style="width:50px;"/>분
-	                        		~
-	                        		<input type="text" id="endHrs" style="width:50px;"/>시
-	                        		<input type="text" id="endMin" style="width:50px;"/>분
-	                        	</tr>
-	                        </table>
-	                	</div>
-	                </div>
-	                <div>
+<!-- 	            <td style="width:450px; height:480px; vertical-align: top;"> -->
+	            	
+<!-- 	            </td> -->
+				<td style="vertical-align: top;">
+					<h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
+	                	<span style="min-width: 45px;" id="ToTitleStr">조회자</span>
+	                </h2>
+<!-- 	                <div class="receiver_borderbox"> -->
+<!-- 	                	<div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 477px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div> -->
+<!-- 	                </div> -->
+					<div>
 		                <table style="margin-top: 3px;">
 		                    <tr>
-		                        <td></td>
-		                        <td class="listview" style="width: 100%; height: 446px;" id="orglistView2">
-		                            <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
-		                                <tr>
-		                                    <th style="white-space:normal; padding-left:60px;">
-		                                    	이름
-		                                    </th>
-		                                    <th style="white-space:normal">
-		                                    	근무시간
-		                                    </th>
-		                                </tr>
-		                            </table>
-		                            <div style="vertical-align: top; overflow: auto; width: 100%;  height: 422px;" id="txtlist_Layer2">
+		                        <td class="listview" style="width: 100%; height: 480px;" id="orglistView2">
+		                            <div style="vertical-align: top; overflow: auto; width: 100%;  height: 100%;" id="txtlist_Layer2">
 		                                <table style="width:100%; border: 1px solid #ddd;" id="txtlist_table2" class="mainlist">
 		                                </table>
 		                            </div>
@@ -380,16 +253,6 @@
 		                </table>
 	                </div>
 	            </td>
-	        </tr>
-	        <tr>
-		        <td></td>
-		        <td></td>
-		        <td>
-					<div class="btnposition" style="margin: 0px;">
-					    <a class="imgbtn"><span onclick="userTimeApply('default')">기본설정적용</span></a>
-					    <a class="imgbtn"><span onclick="userTimeApply('modify')">변경시간적용</span></a>
-					</div>
-		        </td>
 	        </tr>
 	    </table>
 	</body>	

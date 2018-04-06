@@ -489,7 +489,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigInfo(int tenantId,
-			String companyId, String userId, String offsetMin) throws Exception {
+			String companyId, String userIdList, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigInfo started");
 		
 		List<AttitudeUserConfigVO> userList = new ArrayList<AttitudeUserConfigVO>();
@@ -500,10 +500,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("offsetMin", offsetMin);
 		
-		String[] userIdList = userId.split(","); 
+		String[] userIdArray = userIdList.split(","); 
 		
-		for (int i = 0; i < userIdList.length; i++) {
-			map.put("userId", userIdList[i]);
+		for (int i = 0; i < userIdArray.length; i++) {
+			map.put("userId", userIdArray[i]);
 			
 			AttitudeUserConfigVO vo = new AttitudeUserConfigVO();
 			vo = ezAttitudeDAO.getAttitudeUserConfigInfo(map);
@@ -551,7 +551,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId,
-			String userId, String startDate, String endDate, String apprUserName, String sysLang, String offset,String startPoint, String endPoint, String type) throws Exception {
+			String userId, String startDate, String endDate, String apprUserName, String sysLang, String offset,String startPoint, String endPoint, String type, String order) throws Exception {
 		LOGGER.debug("getUsersModiyAtt started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -567,6 +567,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("startPoint", startPoint);
 		map.put("endPoint", endPoint);
 		map.put("type", type);
+		if (order !=null) {
+			map.put("order", order.trim());
+		}
 		
 		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getUsersModiyAtt(map); 
 		
@@ -712,7 +715,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Override
 	public AttitudeApplicationVO attModAppDetail(String companyId,
-			int tenantId, String userId, String attModId) throws Exception {
+			int tenantId, String userId, String attModId, String offset) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -720,7 +723,85 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
 		map.put("attModId", attModId);
+		map.put("offset", offset);
 		
 		return ezAttitudeDAO.attModAppDetail(map);
+	}
+
+	@Override
+	public void attModAppModify(String companyId,
+			int tenantId, String userId, String attModId, String offset,
+			String content, String changeDate) throws Exception {
+			
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("attModId", attModId);
+		map.put("offset", offset);
+		map.put("content", content);
+		map.put("changeDate", changeDate);
+		
+		ezAttitudeDAO.attModAppModify(map);
+	}
+
+	public List<AttitudeVO> getAttitudeList2(String companyId, String pageNum,
+			String listSize, String startDate, String endDate, String offset,
+			int tenantId) throws Exception {
+		LOGGER.debug("getAttitudeList2 started");
+		Map<String, Object> map = new HashMap<String,Object>();
+		//if써서 하루꺼를 가져오려는 건지 한달꺼를 가져오려는 건지를 구분해야 될 꺼 같다.
+		//일단 하루치를 가져오는 것 부터
+		//true면 UTC false면 local
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		//startDate와 endDate가 없는 경우 당일의 근태를  출력
+		LOGGER.debug("startDate : " + (startDate == null) + "startDate : " + (startDate.equals("")));
+		if (startDate.equals("") && endDate.equals("")) {
+			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
+			startDate = localDate + " 00:00:00";
+			endDate = localDate + " 23:59:59";
+		} else { //startDate와 endDate가 있는 경우 한달의 근태를 출력 
+			startDate = startDate + " 00:00:00";
+			endDate = endDate + " 23:59:59";
+		}
+
+		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("limit", limit);
+		map.put("listSize", listSize);
+//		map.put("order", order.trim());
+		map.put("offsetMin", offsetMin);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		
+		List<AttitudeVO> resultList = ezAttitudeDAO.getAttitudeList2(map);
+		
+		LOGGER.debug("getAttitudeList2 ended");
+		return resultList;
+	}
+
+	@Override
+	public String getAttitudeCount2(int tenantId, String companyId,
+			String startDate, String endDate, String offset) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		if (startDate.equals("") && endDate.equals("")) {
+			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
+			startDate = localDate + " 00:00:00";
+			endDate = localDate + " 23:59:59";
+		} else { 
+			startDate = startDate + " 00:00:00";
+			endDate = endDate + " 23:59:59";
+		}
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("offsetMin", offsetMin);
+		return ezAttitudeDAO.getAttitudeCount2(map);
 	}
 }

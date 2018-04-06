@@ -897,17 +897,19 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
 			String userId = request.getParameter("userId");
+			String userIdList = request.getParameter("userIdList");
 			String offsetMin = request.getParameter("offsetMin");
 
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 
-			List<AttitudeUserConfigVO> voList = ezAttitudeService.getAttitudeUserConfigInfo(info.getTenantId(), companyId, userId, offsetMin);
+			List<AttitudeUserConfigVO> voList = ezAttitudeService.getAttitudeUserConfigInfo(info.getTenantId(), companyId, userIdList, offsetMin);
 
 			if (voList.size() == 0) {
 				voList = new ArrayList<AttitudeUserConfigVO>();
 				AttitudeUserConfigVO vo = new AttitudeUserConfigVO();
 
-				vo.setUserId(userId);
+				info = mOptionService.commonInfoWeb(serverName, userIdList);
+				vo.setUserId(userIdList);
 				vo.setUserName(info.getUserName());
 				vo.setUserName2(info.getUserName2());
 				voList.add(vo);
@@ -1046,21 +1048,31 @@ public class EzAttitudeGWController {
 			@RequestParam(value="offset", required=false) String offset,
 			@RequestParam(value="startPoint", required=false) String startPoint,
 			@RequestParam(value="endPoint", required=false) String endPoint,
-			@RequestParam(value="type", required=false) String type) {
+			@RequestParam(value="type", required=false) String type,
+			@RequestParam(value="orderCell", required=false) String orderCell,
+			@RequestParam(value="orderOption", required=false) String orderOption) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
 
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
 		
-		if (type != null) {
+		String order = orderCell + " " + orderOption;
+		
+		if (orderCell == null || orderOption == null) {
+			order = null;
+		}
+		
+		if (type != null) { 
 			if (type.equals("all")) {
 				type = null;
 			}
 		}
 		
+		LOGGER.debug("#################order : " + order);
+		
 		try{
-			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint, type);
+			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint, type, order);
 			for (int i = 0 ; i < attList.size(); i++ ) {
 				LOGGER.debug(attList.get(i).toString());
 			}
@@ -1416,11 +1428,14 @@ public class EzAttitudeGWController {
 			@PathVariable String attModId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
-			@RequestParam(value="userId", required=false) String userId) throws Exception{
+			@RequestParam(value="userId", required=true) String userId,
+			@RequestParam(value="offset", required=true) String offset) throws Exception{
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
 		JSONObject result = new JSONObject();
-		AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(companyId, tenantId, userId, attModId);
 		try {
+			
+			AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(companyId, tenantId, userId, attModId, offset);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
@@ -1431,6 +1446,90 @@ public class EzAttitudeGWController {
 		}
 		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] ended.");
+		return result;
+	}
+	
+	@RequestMapping(value = "/rest/ezattitude/modifyattitude/{attModId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject attModAppModify(
+			@PathVariable String attModId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="userId", required=true) String userId,
+			@RequestParam(value="offset", required=true) String offset,
+			@RequestParam(value="content", required=true) String content,
+			@RequestParam(value="changeDate", required=true) String changeDate) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			ezAttitudeService.attModAppModify(companyId, tenantId, userId, attModId, offset, content, changeDate);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "success");
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 근태현황조회 --임시
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/bombom", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	 public JSONObject attitudeMainList2(HttpServletRequest request) {
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			String companyId = request.getParameter("companyId");
+			String pageNum = request.getParameter("pageNum");
+			String listSize = request.getParameter("listSize");
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			String offsetMin = request.getParameter("offsetMin");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			String offset = info.getOffSet();
+			
+			List<AttitudeVO> list = ezAttitudeService.getAttitudeList2(companyId, pageNum, listSize, startDate, endDate, offset, info.getTenantId());
+			
+			//imgPath 셋팅
+//			for (int i = 0; i < list.size(); i++) {
+//				String imgPath = list.get(i).getImgPath();
+//				if (imgPath != null && !imgPath.equals("")) {
+//					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + info.getCompanyId() + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+//					list.get(i).setImgPath(imgPath);
+//				}
+//			}
+	         
+//			result.put("status", "ok");
+//			result.put("code", 0);			
+//			result.put("data", resultList);
+			
+			String totalCount = ezAttitudeService.getAttitudeCount2(info.getTenantId(), companyId, startDate, endDate, offset);
+			
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("totalCount", totalCount);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] ended.");
 		return result;
 	}
 }

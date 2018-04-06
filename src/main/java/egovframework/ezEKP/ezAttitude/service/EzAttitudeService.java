@@ -77,7 +77,7 @@ public interface EzAttitudeService {
 	
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId, String searchUserName, String searchDeptName, String pageNum, String listSize, String order, String offsetMin) throws Exception;
 	
-	public List<AttitudeUserConfigVO> getAttitudeUserConfigInfo(int tenantId, String companyId, String userId, String offsetMin) throws Exception;
+	public List<AttitudeUserConfigVO> getAttitudeUserConfigInfo(int tenantId, String companyId, String userIdList, String offsetMin) throws Exception;
 	
 //	public void updateAttitudeUserConfig(int tenantId, String userId, String workStartTime, String workEndTime) throws Exception;
 	
@@ -89,7 +89,7 @@ public interface EzAttitudeService {
 	
 	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName) throws Exception;
 	
-	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String sysLang, String offSet, String startPoint, String endPoint, String type) throws Exception;
+	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String sysLang, String offSet, String startPoint, String endPoint, String type, String order) throws Exception;
 
 	public String getAttitudeTypeMaxTypeId(String companyId, int tenantId) throws Exception;
 
@@ -107,5 +107,11 @@ public interface EzAttitudeService {
 
 	public void deleteAttitudeUserConfig(int tenantId, String selecUserList) throws Exception;
 	
-	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId) throws Exception;
+	public List<AttitudeVO> getAttitudeList2(String companyId, String pageNum, String listSize, String startDate, String endDate, String offset, int tenantId) throws Exception;
+	
+	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId, String offset) throws Exception;
+	
+	public void attModAppModify(String companyId, int tenantId, String userId, String attModId, String offset, String content, String changeDate) throws Exception;
+
+	public String getAttitudeCount2(int tenantId, String companyId, String startDate, String endDate, String offset) throws Exception;
 }
