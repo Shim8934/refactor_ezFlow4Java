@@ -265,7 +265,7 @@
 					async : false,
 					url : url,
 	                type : 'POST',
-	                dataType : 'json',
+	                dataType : 'text',
 	                data : {
 	                	typeId	 : typeId,
 	                	fileList : fileList
