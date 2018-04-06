@@ -24,7 +24,6 @@
 	<typeAlias alias="CommunityCComCloseVO"				type="egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO"/>
 	<typeAlias alias="CommunityMyCommunityVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
 	<typeAlias alias="CommunityBoardDeleteItemVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardDeleteItemVO"/>
-	<typeAlias alias="OrganUserVO"						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
 		<result property="no"							column="NO"							columnIndex="1"/>
@@ -49,28 +48,32 @@
 	</resultMap>
 	
 	<resultMap class="CommunityBoardItemVO" id="CommunityBoardItem">
-		<result property="itemID"						column="ItemID"						/>
-		<result property="writerID"						column="WriterID"					/>
-		<result property="writerName"					column="WriterName"					/>
-		<result property="writerDeptName"				column="WriterDeptName"				/>
-		<result property="writerCompanyName"			column="WriterCompanyName"			/>
-		<result property="writeDate"					column="WriteDate"					/>
-		<result property="parentWriteDate"				column="ParentWriteDate"			/>
-		<result property="importance"					column="Importance"					/>
-		<result property="title"						column="Title"						/>
-		<result property="contentLocation"				column="ContentLocation"			/>
-		<result property="startDate"					column="StartDate"					/>
-		<result property="endDate"						column="EndDate"					/>
-		<result property="absTract"						column="Abstract"					/>
-		<result property="attachments"					column="Attachments"				/>
-		<result property="upperItemIDTree"				column="UpperItemIDTree"		javaType="String" jdbcType="CLOB"/>
-		<result property="itemLevel"					column="ItemLevel"					/>
-		<result property="copiedItem"					column="copiedItem"					/>
-		<result property="extensionAttribute1"			column="ExtensionAttribute1"		/>
-		<result property="extensionAttribute2"			column="ExtensionAttribute2"		/>
-		<result property="extensionAttribute3"			column="ExtensionAttribute3"		/>
-		<result property="extensionAttribute4"			column="ExtensionAttribute4"		/>
-		<result property="extensionAttribute5"			column="ExtensionAttribute5"		/>
+		<result property="itemID"						column="ItemID"						columnIndex="1"/>
+		<result property="writerID"						column="WriterID"					columnIndex="2"/>
+		<result property="writerName"					column="WriterName"					columnIndex="3"/>
+		<result property="writerName2"					column="WriterName2"				columnIndex="4"/>
+		<result property="writerDeptName"				column="WriterDeptName"				columnIndex="5"/>
+		<result property="writerDeptName2"				column="WriterDeptName2"			columnIndex="6"/>
+		<result property="writerCompanyName"			column="WriterCompanyName"			columnIndex="7"/>
+		<result property="writerCompanyName2"			column="WriterCompanyName2"			columnIndex="8"/>
+		<result property="writeDate"					column="WriteDate"					columnIndex="9"/>
+		<result property="parentWriteDate"				column="ParentWriteDate"			columnIndex="10"/>
+		<result property="importance"					column="Importance"					columnIndex="11"/>
+		<result property="title"						column="Title"						columnIndex="12"/>
+		<result property="contentLocation"				column="ContentLocation"			columnIndex="13"/>
+		<result property="startDate"					column="StartDate"					columnIndex="14"/>
+		<result property="endDate"						column="EndDate"					columnIndex="15"/>
+		<result property="absTract"						column="Abstract"					columnIndex="16"/>
+		<result property="attachments"					column="Attachments"				columnIndex="17"/>
+		<result property="upperItemIDTree"				column="UpperItemIDTree"			columnIndex="18"	javaType="String" jdbcType="CLOB"/>
+		<result property="itemLevel"					column="ItemLevel"					columnIndex="19"/>
+		<result property="copiedItem"					column="copiedItem"					columnIndex="20"/>
+		<result property="extensionAttribute1"			column="ExtensionAttribute1"		columnIndex="21"/>
+		<result property="extensionAttribute2"			column="ExtensionAttribute2"		columnIndex="22"/>
+		<result property="extensionAttribute3"			column="ExtensionAttribute3"		columnIndex="23"/>
+		<result property="extensionAttribute32"			column="ExtensionAttribute32"		columnIndex="24"/>
+		<result property="extensionAttribute4"			column="ExtensionAttribute4"		columnIndex="25"/>
+		<result property="extensionAttribute5"			column="ExtensionAttribute5"		columnIndex="26"/>
 	</resultMap>
 	
 	<resultMap class="CommunityCClubGuestVO" id="CommunityCClubGuest">
@@ -297,7 +300,7 @@
 						FROM
 							$v_BNAME$
 						WHERE
-							CASE WHEN #primary# = '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
+							CASE WHEN #primary# '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
 						AND
 	            			tenant_id = #tenantID#
 					]]>
@@ -352,7 +355,6 @@
 				re_level,
 				ref,
 				filename,
-				charfilename,
 				readnum,
 				TO_DATE(writeday, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writeday,
 				username,
@@ -749,22 +751,22 @@
 					enddate > #v_pNow#
 		]]>
 		
-		<isEqual property="v_PSORTBY" compareValue="">
+		<isEmpty property="v_PSORTBY">
 			<![CDATA[
 				ORDER BY
 					A.parentwritedate DESC,
-					TO_CHAR(A.upperitemidtree)
+					A.upperitemidtree
 				)
 			]]>
-		</isEqual>
+		</isEmpty>
 		
-		<isNotEqual property="v_PSORTBY" compareValue="">
+		<isNotEmpty property="v_PSORTBY">
 			<![CDATA[
 				ORDER BY
 					$v_PSORTBY$
 				)
 			]]>
-		</isNotEqual>
+		</isNotEmpty>
 		
 		<![CDATA[
 			WHERE
@@ -845,24 +847,24 @@
 		<isNotEqual property="v_pStartDate" compareValue="">
 			<![CDATA[
 				AND
-					startdate >= #v_pStartDate#
+					startdate => #v_pStartDate#
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			<![CDATA[
 				AND
-					startdate <= #v_pEndDate#
+					startdate =< #v_pEndDate#
 			]]>
 		</isNotEqual>
 		
 		<![CDATA[
-			ORDER BY
-				A.parentwritedate DESC,
-				TO_CHAR(A.upperitemidtree)
+				ORDER BY
+					A.parentwritedate DESC,
+					A.upperitemidtree
 				)
-				WHERE
-					ROWNUM <= #v_pEndRow#
+			WHERE
+				ROWNUM <= #v_pEndRow#
 		]]>
 	</select>
 	
@@ -951,21 +953,21 @@
 		<isNotEqual property="v_pStartDate" compareValue="">
 			<![CDATA[
 				AND
-					startdate >= #v_pStartDate#
+					startdate => #v_pStartDate#
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			<![CDATA[
 				AND
-					startdate <= #v_pEndDate#
+					startdate =< #v_pEndDate#
 			]]>
 		</isNotEqual>
 		
 		<![CDATA[
-			ORDER BY
-				A.parentwritedate DESC,
-				TO_CHAR(A.upperitemidtree)
+				ORDER BY
+					A.parentwritedate DESC,
+					A.upperitemidtree
 				)
 			WHERE
 				rownum <= #v_pEndRow#
@@ -1032,8 +1034,8 @@
 			AND
 				tenant_id = #tenantID#
 			ORDER BY
-				TO_CHAR(upperitemidtree),
-				startDate DESC
+				parentwritedate DESC,
+				upperitemidtree
 		]]>
 	</select>
 	
@@ -1062,7 +1064,7 @@
 					tenant_id = #tenantID#
 				ORDER BY
 					parentwritedate DESC,
-					TO_CHAR(upperitemidtree) ASC,
+					upperitemidtree ASC,
 					startdate DESC
 				)
 			WHERE
@@ -1102,7 +1104,7 @@
 						tenant_id = #tenantID#
 					ORDER BY 
 						parentwritedate DESC,
-						TO_CHAR(upperitemidtree),
+						upperitemidtree,
 						startdate DESC
 					)
 				WHERE
@@ -1136,7 +1138,7 @@
 						tenant_id = #tenantID#
 					ORDER BY 
 						parentwritedate DESC,
-						TO_CHAR(upperitemidtree),
+						upperitemidtree,
 						startdate DESC
 					)
 				WHERE
@@ -1161,14 +1163,14 @@
 					A.attachments,
 					A.importance,
 					B.boardid,
-					B.boardname,
+					CASE WHEN #primary# = '1' THEN B.boardname ELSE B.boardname2 END AS boardname,
 					A.abstract
 				FROM
 					TBL_COMM_ITEM A
 				INNER JOIN
 					(SELECT
 						boardid,
-						CASE WHEN #primary# = '1' THEN boardname ELSE boardname2 END AS boardname,
+						CASE WHEN #primary# = '1' THEN boardname ELSE boardname2 END,
 						tenant_id
 					FROM
 						TBL_COMM_BOARDINFO
@@ -1233,44 +1235,30 @@
 			SELECT
 				*
 			FROM
-				( SELECT 
-					* 
-				 FROM 
-					(SELECT
-						userid,
-						username,
-						username2,
-						userdeptname,
-						userdeptname2,
-						usercompanyname,
-						usercompanyname2,
-						usertitle,
-						usertitle2,
-						TO_CHAR(readdate, 'YYYY-MM-DD HH24:MI:SS') AS readdate
-					FROM
-						TBL_COMM_ITEM_READ 
-					WHERE
-						boardid = #boardID#
-					AND
-						itemid = #itemID#
-					AND
-						tenant_id = #tenantID#
-					AND
-		   				USERID <> ( SELECT 
-		   								WRITERID 
-		   							FROM 
-		   								TBL_COMM_ITEM 
-		   							WHERE 
-		   								TENANT_ID = #tenantID#
-		   							AND
-		   								ITEMID = #itemID# )
-					ORDER BY
-						readdate DESC
-					) T1 
-				WHERE 
-					ROWNUM <= #endRowNum# ) T2
+				(SELECT
+					userid,
+					username,
+					username2,
+					userdeptname,
+					userdeptname2,
+					usercompanyname,
+					usercompanyname2,
+					usertitle,
+					usertitle2,
+					readdate+(#offset# /(60*24)) AS readdate
+				FROM
+					TBL_COMM_ITEM_READ 
+				WHERE
+					boardid = #v_pBoardID#
+				AND
+					itemid = #v_pItemID#
+				AND
+					tenant_id = #tenantID#
+				ORDER BY
+					readdate DESC
+				)
 			WHERE
-				ROWNUM >= #startRowNum#
+				ROWNUM <= 50
 		]]>
 	</select>
 	
@@ -1461,7 +1449,7 @@
 	<select id="EzCommunityDAO.commOutGet"						parameterClass="Map"		resultClass="CommunityMemberInfoVO"		remapResults="true">
 		<![CDATA[
 			SELECT
-				CASE WHEN #primary# = '1' THEN username ELSE username2 END AS username
+				username$v_USERINFO_LANG$ AS username
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE
@@ -1566,7 +1554,7 @@
 				AND
 					(showposition = ' ' OR showposition IS NULL)
 				AND
-					(parentboardid != 'TOP' AND parentboardid != 'top')
+					parentboardid != 'TOP'
 				AND
 					tenant_id = #tenantID#
 			]]>
@@ -1813,7 +1801,7 @@
 				JOIN
 					TBL_C_CATEGORY
 				ON
-					RTRIM(TBL_C_CLUB.c_cate_a) = TBL_C_CATEGORY.c_code
+					TBL_C_CLUB.c_cate_a = TBL_C_CATEGORY.c_code
 				AND
 					TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
 				JOIN
@@ -1823,7 +1811,7 @@
 				AND
 					TBL_C_CLUB.tenant_id = TBL_USERMASTER.tenant_id
 				WHERE
-					RTRIM(c_cate_a) = #code#
+					c_cate_a = #code#
 				AND
 					TBL_C_CATEGORY.c_cat = #cat#
 				AND
@@ -1847,7 +1835,7 @@
 				JOIN
 					TBL_C_CATEGORY
 				ON
-					RTRIM(TBL_C_CLUB.c_cate_b) = TBL_C_CATEGORY.c_code
+					TBL_C_CLUB.c_cate_b = TBL_C_CATEGORY.c_code
 				AND
 					TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
 				JOIN
@@ -1857,7 +1845,7 @@
 				AND
 					TBL_C_CLUB.tenant_id = TBL_USERMASTER.tenant_id
 				WHERE
-					RTRIM(c_cate_b) = #code#
+					c_cate_b = #code#
 				AND
 					TBL_C_CATEGORY.c_cat = #cat#
 				AND
@@ -1876,62 +1864,50 @@
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.categoryListGet"					parameterClass="Map"		resultClass="CommunityClubVO">
 		<isEqual property="cat" compareValue="A">
-			<![CDATA[
 			SELECT
 				*
 			FROM
 				(SELECT
-					*
+					TBL_C_CLUB.c_clubno,
+					c_clubname,
+					c_clubname2,
+					c_logo_thumbnail,
+					c_clubdesc,
+					displayname,
+					displayname2,
+					c_clubconfirmtype,
+					c_membercnt,
+					description,
+					description2,
+					ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_regdate ) ROWNUM_
 				FROM
-					(SELECT
-						TBL_C_CLUB.c_clubno,
-						c_clubname,
-						c_clubname2,
-						c_logo_thumbnail,
-						c_clubdesc,
-						displayname,
-						displayname2,
-						c_clubconfirmtype,
-						c_membercnt,
-						description,
-						description2,
-						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_regdate ) ROWNUM_
-					FROM
-						TBL_C_CLUB
-					JOIN
-						TBL_C_CATEGORY
-					ON
-						RTRIM(TBL_C_CLUB.c_cate_a) = TBL_C_CATEGORY.c_code
-					AND
-						TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
-					JOIN
-						TBL_USERMASTER T2
-					ON
-						RTRIM(TBL_C_CLUB.c_sysopid) = RTRIM(T2.cn)
-					AND
-						TBL_C_CLUB.tenant_id = T2.tenant_id
-					WHERE
-						c_cate_a = #code#
-					AND
-						TBL_C_CATEGORY.c_cat = LOWER(#cat#)
-					AND
-						TBL_C_CLUB.C_ADMINCONFIRM = 'Y'
-					AND
-						TBL_C_CLUB.tenant_id = #tenantID#
-					) T1
+					TBL_C_CLUB
+				JOIN
+					TBL_C_CATEGORY
+				ON
+					TBL_C_CLUB.c_cate_a = TBL_C_CATEGORY.c_code
+				AND
+					TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
+				JOIN
+					TBL_USERMASTER T2
+				ON
+					RTRIM(TBL_C_CLUB.c_sysopid) = RTRIM(T2.cn)
+				AND
+					TBL_C_CLUB.tenant_id = T2.tenant_id
 				WHERE
-					ROWNUM_ <= #v_pEnd#) X
-			WHERE 
-				X.ROWNUM_ >= #v_pStart#
-			]]>
+					c_cate_a = #code#
+				AND
+					TBL_C_CATEGORY.c_cat = LOWER(#cat#)
+				AND
+					TBL_C_CLUB.tenant_id = #tenantID#
+				) T1
+			WHERE
+				ROWNUM_ BETWEEN #v_pStart# AND #v_pEnd#
 		</isEqual>
 		
 		<isNotEqual property="cat" compareValue="A">
 			<![CDATA[
-			SELECT
-				*
-			FROM
-				(SELECT
+				SELECT
 					*
 				FROM
 					(SELECT
@@ -1952,7 +1928,7 @@
 					JOIN
 						TBL_C_CATEGORY
 					ON
-						RTRIM(TBL_C_CLUB.c_cate_b) = TBL_C_CATEGORY.c_code
+						TBL_C_CLUB.c_cate_b = TBL_C_CATEGORY.c_code
 					AND
 						TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
 					JOIN
@@ -1966,14 +1942,10 @@
 					AND
 						TBL_C_CATEGORY.c_cat = LOWER(#cat#)
 					AND
-						TBL_C_CLUB.C_ADMINCONFIRM = 'Y'
-					AND
 						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
 				WHERE
-					ROWNUM_ <= #v_pEnd#) X
-			WHERE 
-				ROWNUM_ >= #v_pStart#
+					ROWNUM_ BETWEEN #v_pStart# AND #v_pEnd#
 			]]>
 		</isNotEqual>
 	</select>
@@ -1984,10 +1956,7 @@
 	<select id="EzCommunityDAO.searchCop"						parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
 		<isEqual property="v_mode" compareValue="SEA">
 			<![CDATA[
-			SELECT
-				*
-			FROM	
-				(SELECT
+				SELECT
 					*
 				FROM
 					(SELECT
@@ -2017,9 +1986,7 @@
 						T1.tenant_id = #tenantID#
 					)
 				WHERE
-					ROWNUM_ <= #v_pEnd#) X
-			WHERE 
-				ROWNUM_ >= #v_pStart#
+					ROWNUM_ BETWEEN #v_pStart# AND #v_pEnd#
 			]]>
 		</isEqual>
 		
@@ -2047,7 +2014,7 @@
 					ON
 						RTRIM(T1. c_sysopid) =  RTRIM(T2.cn)
 					AND
-						T1.tenant_id = T2.tenant_id
+						T1.tenant_id = #tenantID#
 					WHERE
 						$v_searchName$ LIKE '%' || #v_searchValue# || '%'
 					AND
@@ -2064,7 +2031,7 @@
 		<![CDATA[
 			SELECT
 				A.c_clubgubun,
-				A.c_clubconfirmtype,
+				A.c_clubconfirmtype ,
 				B.permit 
 			FROM
 				TBL_C_CLUB A
@@ -2151,8 +2118,9 @@
 		<isEqual property="v_PSORTBY" compareValue="">
 			ORDER BY
 				A.parentwritedate DESC,
+				A.startdate DESC,
 				A.docno DESC,
-				TO_CHAR(A.upperitemidtree)
+				TO_CHAR(A.upperitemidtree) DESC
 		</isEqual>
 		
 		<isNotEqual property="v_PSORTBY" compareValue="">
@@ -2192,6 +2160,7 @@
 					tenant_id = #tenantID#
 				ORDER BY
 					parentwritedate DESC,
+					startdate DESC,
 					docno DESC,
 					TO_CHAR(upperitemidtree)
 				)
@@ -2225,6 +2194,7 @@
 					tenant_id = #tenantID#
 				ORDER BY
 					parentwritedate DESC,
+					startdate DESC,
 					docno DESC,
 					TO_CHAR(upperitemidtree)
 				)
@@ -2639,7 +2609,7 @@
                     writername,
                     writername2,
                     writerdeptname,
-                    TO_DATE(writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
+                    writedate,
                     title,
                     itemcnt,
                     c_membercnt,
@@ -2710,7 +2680,7 @@
 				*
 			FROM
 				(SELECT
-					(SUBSTR(c_clubname$v_USERINFO_LANG$, 1, 18)) AS c_clubname,
+					(SUBSTR(c_clubname$v_USERINFO_LANG$, 1, 18)) AS c_clubname$v_USERINFO_LANG$,
 					c_clubno,
 					c_clubgubun,
 					c_clubdesc,
@@ -2746,7 +2716,7 @@
 				*
 			FROM
 				(SELECT
-					c_clubname$v_USERINFO_LANG$ AS c_clubname,
+					c_clubname$v_USERINFO_LANG$,
 					c_clubno,
 					c_sysopid,
 					c_clubgubun,
@@ -2819,7 +2789,7 @@
 			JOIN
 				TBL_USERMASTER B
 			ON
-				TRIM(A.c_id) = TRIM(B.cn)
+				A.c_id = B.cn
 			AND
 				A.tenant_id = B.tenant_id
 			WHERE
@@ -3043,7 +3013,7 @@
       		FROM
       			TBL_COMM_TREECACHE 
 			WHERE
-				query = LOWER(#v_pRootBoardID#) ||','|| #v_pUserID# ||','|| #v_pDeptID# ||','|| #v_pCompanyID# ||','|| #v_pMode# ||','|| #v_pSubFlag# ||','|| #v_pSelectBy# ||','|| #v_pExcludeBoardID# ||','|| #v_pClubNo# ||','|| #primary#
+				query = #v_pRootBoardID# ||','|| #v_pUserID# ||','|| #v_pDeptID# ||','|| #v_pCompanyID# ||','|| #v_pMode# ||','|| #v_pSubFlag# ||','|| #v_pSelectBy# ||','|| #v_pExcludeBoardID# ||','|| #v_pClubNo# ||','|| #primary#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -3409,14 +3379,14 @@
 		<isNotEqual property="v_pStartDate" compareValue="">
 			<![CDATA[
 				AND
-					startdate >= #v_pStartDate#
+					startdate => #v_pStartDate#
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			<![CDATA[
 				AND
-					startdate <= #v_pEndDate#
+					startdate =< #v_pEndDate#
 			]]>
 		</isNotEqual>
 	</select>
@@ -3456,14 +3426,14 @@
 		<isNotEqual property="v_pStartDate" compareValue="">
 			<![CDATA[
 				AND
-					startdate >= #v_pStartDate#
+					startdate => #v_pStartDate#
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			<![CDATA[
 				AND
-					startdate <= #v_pEndDate#
+					startdate =< #v_pEndDate#
 			]]>
 		</isNotEqual>
 	</select>
@@ -3743,22 +3713,17 @@
 	<select id="EzCommunityDAO.myCommunityGet"					parameterClass="Map"		resultClass="String">
 		<isEqual property="v_MODE" compareValue="LIST">
 			<![CDATA[
-			SELECT
-				c_clubno
-			FROM
-				(SELECT
-					* 
+				SELECT
+					c_clubno 
 				FROM
 					(SELECT
 						T1.c_clubno,
                         writedate,
-                        T1.tenant_id,
                         ROW_NUMBER() OVER (ORDER BY writedate DESC) ROWNUM_  
                   	FROM 
                   		(SELECT
 							DISTINCT TBL_C_CLUBUSER.c_clubno,
-							MAX(writedate) WRITEDATE,
-							TBL_C_CLUBUSER.tenant_id
+							MAX(writedate) WRITEDATE  
                        	FROM
                        		TBL_C_CLUBUSER 
                        	JOIN
@@ -3788,16 +3753,16 @@
                        	AND
                        		TBL_C_CLUBUSER.tenant_id = #tenantID#
                        	GROUP BY
-                       		TBL_C_CLUBUSER.c_clubno, TBL_C_CLUBUSER.tenant_id
+                       		TBL_C_CLUBUSER.c_clubno 
 						) T1 
 					) T2
 				WHERE
-					T2.tenant_id = #tenantID# 
+					ROWNUM_
+				BETWEEN
+					#v_PSTART#
 				AND
-					ROWNUM_ <= #v_PEND#) X
-			WHERE 
-				X.ROWNUM_ >= #v_PSTART#
-		]]>
+					#v_PEND#
+			]]>
 		</isEqual>
 		<isNotEqual property="v_MODE" compareValue="LIST">
 			<![CDATA[
@@ -3860,7 +3825,7 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzCommunityDAO.joinGet1"						parameterClass="Map"		resultClass="String"> -->
+	<!-- 	<procedure id="EzCommunityDAO.joinGet1"						parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZSP_JOIN_GET1(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.joinGet1"						parameterClass="Map"		resultClass="String"	remapResults="true">
@@ -3961,7 +3926,7 @@
 				WHERE
 					c_cat = 'a'
 				AND
-					c_code = RTRIM(#v_CATE#)
+					c_code = #v_CATE#
 				AND
 					tenant_id = #tenantID#
 			]]>
@@ -3975,7 +3940,7 @@
 				WHERE
 					c_cat = 'b'
 				AND
-					c_code = RTRIM(#v_CATE#)
+					c_code = #v_CATE#
 				AND
 					tenant_id = #tenantID#
 			]]>
@@ -4209,7 +4174,7 @@
 				TBL_C_CATEGORY
 			WHERE
 				c_code=(SELECT
-							RTRIM(c_cate_a) C_CATE_A
+							c_cate_a
 						FROM
 							TBL_C_CLUB
 						WHERE
@@ -4234,7 +4199,7 @@
 				TBL_C_CATEGORY
 			WHERE
 				c_code=(SELECT
-							RTRIM(c_cate_b) C_CATE_B
+							c_cate_b
 						FROM
 							TBL_C_CLUB
 						WHERE
@@ -4387,7 +4352,7 @@
 				<isEqual property="v_S_RADIO" compareValue="WRITER">
 					<![CDATA[
 						SELECT
-							NVL(COUNT(CASE WHEN #primary# = '1' THEN username ELSE username2 END), 0) 
+							NVL(COUNT(CASE WHEN #primary# = '1' THEN username ELSE username2 END AS username), 0) 
 						FROM
 							$v_BNAME$ 
 						WHERE
@@ -4548,7 +4513,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.deleteBoardTreeChache"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_COMM_TREECACHE
   			WHERE
   				QUERY = #v_pRootBoardID# || ',' || #v_pUserID# || ',' || #v_pDeptID# || ',' || #v_pCompanyID# || ',' || #v_pMode# || ',' || #v_pSubFlag# || ',' || #v_pSelectBy# || ',' || #v_pExcludeBoardID# || ',' || #v_pClubNo# || ',' || #primary#
@@ -4636,7 +4601,7 @@
 		<selectKey keyProperty="no" resultClass="Integer">
 			<![CDATA[
 				SELECT
-					NVL(MAX(no), 0) + 1 as NO
+					NVL(MAX(no), 0) + 1
 				FROM 
 					$v_BNAME$
 				WHERE
@@ -4926,7 +4891,6 @@
 				itemexpires,
 				attachsizelimit,
 				boardno,
-				replynotify,
 				tenant_id)
 			VALUES
 				(#v_CODE#,
@@ -4938,7 +4902,6 @@
 				-1,
 				#v_ATTACHSIZELIMIT#,
 				#v_BOARDNO#,
-				0,
 				#tenantID#)
 		]]>
 	</insert>
@@ -5096,7 +5059,7 @@
 		<selectKey keyProperty="v_pDocNo" resultClass="Integer">
 			<![CDATA[
 				SELECT
-					NVL(MAX(docno), 0)
+					IFNULL(MAX(docno), 0)
 				FROM
 					TBL_COMM_ITEM
 				WHERE
@@ -5215,7 +5178,7 @@
 	
 	<delete id="EzCommunityDAO.brdUpdateItemDelete"				parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_COMM_ITEM_READ
 			WHERE
 				itemid = #v_pItemID#
@@ -5272,7 +5235,7 @@
 		</selectKey>
 		INSERT INTO TBL_C_CLUBGUEST
        		(no,
-			c_no,
+       		c_no,
        		id,
        		username,
        		username2,
@@ -5394,7 +5357,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.pollDeleteDel1"				parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_C_POLLRESPONSE
 			WHERE
 				questionid = #v_QUESTIONID#
@@ -5686,7 +5649,6 @@
 				boardname2,
 				parentboardid,
 				boardno,
-				replynotify,
 				tenant_id)
 			VALUES
 				(#v_CODE#,
@@ -5695,7 +5657,6 @@
 				#v_BOARDGROUPNAME2#,
 				'top',
 				#v_BOARDNO#,
-				0,
 				#tenantID#)
 		]]>
 	</insert>
@@ -5738,7 +5699,7 @@
 				(#v_BOARDGROUPID#,
 				'everyone',
 				'everyone',
-				null,
+				'null',
 				1,
 				'top',
 				'true',
@@ -5748,8 +5709,7 @@
 	
 	<delete id="EzCommunityDAO.truncateCommTreeCache"				parameterClass="Integer">
 		<![CDATA[
-			DELETE FROM
-				TBL_COMM_TREECACHE
+			DELETE FROM TBL_COMM_TREECACHE
 			WHERE
 				tenant_id = #tenantID#
 			
@@ -5781,7 +5741,6 @@
 				itemexpires,
 				attachsizelimit,
 				boardno,
-				replynotify,
 				tenant_id)
 			VALUES
 				(#v_CODE#,
@@ -5793,7 +5752,6 @@
 				-1,
 				#v_COMATT#,
 				#v_BOARDNO#,
-				0,
 				#tenantID#)
 		]]>
 	</insert>
@@ -5868,7 +5826,8 @@
 	
 	<delete id="EzCommunityDAO.createBoardInsertDelete"			parameterClass="Integer">
 		<![CDATA[
-			DELETE FROM
+			DELETE
+			FROM
 				TBL_COMM_TREECACHE
 			WHERE
 				TENANT_ID = #tenantID#
@@ -5910,7 +5869,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.adminOuterOkNoSetDelete1"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
@@ -5923,7 +5882,7 @@
 	
 	<delete id="EzCommunityDAO.adminOuterOkNoSetDelete2"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_C_OUTAPPLICATION
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
@@ -6043,7 +6002,7 @@
 	
 	<delete id="EzCommunityDAO.adminMemberListGoSEDelete1"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
@@ -6069,7 +6028,7 @@
 	
 	<delete id="EzCommunityDAO.adminMemberListGoSEDelete2"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_C_OUTAPPLICATION
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
@@ -6245,7 +6204,7 @@
 	
 	<delete id="EzCommunityDAO.okNoSetDelete"				parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
@@ -6277,7 +6236,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.pollDeleteDel2"					parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_C_POLLANSWER
 			WHERE
 				pollquestionid = #v_QUESTIONID#
@@ -6291,7 +6250,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.pollDeleteDel3"					parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_C_POLLQUESTION
 			WHERE
 				pollmanagerid = #v_MANAGERID#
@@ -6302,7 +6261,7 @@
 	
 	<delete id="EzCommunityDAO.pollDeleteDel4"					parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_C_POLLMANAGER
 			WHERE
 				managerid = #v_MANAGERID#
@@ -6316,7 +6275,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.brdDeleteBoardDelete1"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_COMM_BOARDMANAGE
 			WHERE
 				boardid = #v_pBoardID#
@@ -6327,7 +6286,7 @@
 	
 	<delete id="EzCommunityDAO.brdDeleteBoardDelete2"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_COMM_BOARDINFO
 			WHERE
       			boardid = #v_pBoardID#
@@ -6338,7 +6297,7 @@
 	
 	<delete id="EzCommunityDAO.brdDeleteBoardDelete3"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_COMM_MYBOARDS
 			WHERE
 				boardid = #v_pBoardID#
@@ -6379,7 +6338,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.newItemDel"						parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_COMM_ITEM_ATTACHMENTS
 			WHERE
 				itemid = #v_pItemID#
@@ -6403,7 +6362,8 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.deleteBoard"						parameterClass="Integer">
 		<![CDATA[
-			DELETE FROM
+			DELETE
+			FROM
 				TBL_COMM_TREECACHE
 			WHERE
 				tenant_id = #tenantID#
@@ -6470,29 +6430,7 @@
 	<select id="EzCommunityDAO.brdGetBoardProperty"				parameterClass="MAP"		resultClass="CommunityBoardPropertyVO">
 		<![CDATA[
 			SELECT 
-				c_clubno,
-				boardid,
-				boardname,
-				boardname2,
-				treevieworder,
-				boardlevel,
-				parentboardid,
-				boarddescription,
-				itemexpires,
-				attachsizelimit,
-				NVL(replynotify, 0) AS replynotify,
-				boardgroupid,
-				alertpostitem,
-				gubun,
-				url,
-				deleteafter,
-				boardcolor,
-				boardno,
-				versionuse,
-				checkuse,
-				showposition,
-				sn,
-				tenant_id
+				*
 			FROM
 	        	TBL_COMM_BOARDINFO
 			WHERE
@@ -6711,7 +6649,8 @@
 	
 	<delete id="EzCommunityDAO.guestEditOkDelete"				parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
+        	FROM
         		TBL_C_CLUBGUEST
         	WHERE
         		RTRIM(c_no) = #c_no#
@@ -6724,7 +6663,8 @@
 	
 	<delete id="EzCommunityDAO.deleteItem1"						parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE 
+        	FROM 
         		TBL_COMM_ITEM 
        		WHERE 
        			itemid = #itemID#
@@ -6735,7 +6675,8 @@
 	
 	<delete id="EzCommunityDAO.deleteItem2"						parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE 
+        	FROM 
         		TBL_COMM_ONELINEREPLY 
        		WHERE 
        			itemid = #itemID#
@@ -6746,7 +6687,8 @@
 	
 	<delete id="EzCommunityDAO.deleteItem3"						parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE 
+        	FROM 
         		TBL_COMM_ITEM_READ 
        		WHERE 
        			itemid = #itemID#
@@ -6757,7 +6699,8 @@
 	
 	<delete id="EzCommunityDAO.deleteItem5"						parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			DELETE 
+        	FROM 
         		TBL_COMM_ITEM_ATTACHMENTS
        		WHERE 
        			itemid = #itemID#
@@ -6838,7 +6781,29 @@
   				TBL_COMM_DELETERESERVEDITEM
 		]]>
   	</select>
-  	
+  
+  	<delete id="EzCommunityDAO.deleteReservedBoardItem" parameterClass="CommunityBoardDeleteItemVO">
+  		<![CDATA[
+  			DELETE FROM TBL_COMM_DELETERESERVEDITEM
+  			WHERE
+  				TENANT_ID = #tenantID#
+  			AND
+  				BOARDID = #boardID#
+  			AND
+  				itemID = #itemID#
+		]]>
+  	</delete>
+  
+  	<delete id="EzCommunityDAO.deleteReservedBoard" parameterClass="CommunityBoardDeleteItemVO">
+  		<![CDATA[
+  			DELETE FROM TBL_COMM_DELETERESERVEDBOARD
+  			WHERE
+  				TENANT_ID = #tenantID#
+  			AND
+  				BOARDID = #boardID#
+		]]>
+  	</delete>
+  
   	<select id="EzCommunityDAO.getCopyItemAttach" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -6852,130 +6817,13 @@
 		]]>
 	</select>
 	
-	<select id="EzCommunityDAO.sendPostNoticeMailGet1" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT
-				c_clubno
-			FROM
-				TBL_COMM_BOARDINFO
-			WHERE
-				boardID = #boardID#
-		]]>
-	</select>
-	
-	<select id="EzCommunityDAO.sendReplyNoticeMail" parameterClass="Map" resultClass="OrganUserVO">
-		<![CDATA[
-			SELECT
-				writerID AS cn,
-				NVL((SELECT
-							mail
-						FROM
-							TBL_USERMASTER A
-						JOIN
-							TBL_COMM_ITEM B
-						ON
-							A.cn = B.writerID
-						WHERE
-							A.tenant_ID = #tenantID#
-						AND
-							B.itemID = #itemID#), '') AS mail,
-				writerName AS displayName
-			FROM
-				TBL_COMM_ITEM
-			WHERE
-				tenant_ID = #tenantID#
-			AND
-				boardID = #boardID#
-			AND
-				itemID = #itemID#
-		]]>
-	</select>
-
-	<delete id="EzCommunityDAO.deleteReservedBoardItem" parameterClass="CommunityBoardDeleteItemVO">
-  		<![CDATA[
-  			DELETE FROM 
-  				TBL_COMM_DELETERESERVEDITEM
-  			WHERE
-  				TENANT_ID = #tenantID#
-  			AND
-  				BOARDID = #boardID#
-  			AND
-  				itemID = #itemID#
-		]]>
-  	</delete>
-  
-  	<delete id="EzCommunityDAO.deleteReservedBoard" parameterClass="CommunityBoardDeleteItemVO">
-  		<![CDATA[
-  			DELETE FROM 
-  				TBL_COMM_DELETERESERVEDBOARD
-  			WHERE
-  				TENANT_ID = #tenantID#
-  			AND
-  				BOARDID = #boardID#
-		]]>
-  	</delete>
-	
 	<delete id="EzCommunityDAO.deleteBoardItemAttach" parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
-				TBL_COMM_Item_Attachments
+			DELETE FROM TBL_COMM_Item_Attachments
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
       			ITEMID = #itemID#
 		]]>
 	</delete>
-	
-	<select id="EzCommunityDAO.getOneLineReplyCount" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			SELECT 
-				COUNT(replyID)
-        	FROM 
-        		tbl_comm_onelinereply 
-       		WHERE  
-       			tenant_id = #tenantID#
-       		AND
-       			boardID = #boardID#
-            AND 
-            	ItemID = #itemID#
-		]]>
- 	</select>
- 	<!-- 2018-02-06 김보미 - 조회자 수 -->
- 	<select id="EzCommunityDAO.getReaderListCount" parameterClass="Map" resultClass="Integer">
- 		<![CDATA[
-			SELECT
-				COUNT(USERID)
-			FROM
-				TBL_COMM_ITEM_READ 
-			WHERE
-				BOARDID = #boardID#
-			AND
-				ITEMID = #itemID#
-			AND
-				TENANT_ID = #tenantID#
-			AND
-			   	USERID <> ( SELECT 
-			   						WRITERID 
-			   					FROM 
-			   						TBL_COMM_ITEM 
-			   					WHERE 
-			   						TENANT_ID = #tenantID#
-			   					AND
-			   						ITEMID = #itemID# )
-
-		]]>
- 	</select>
- 	
- 	<select id="EzCommunityDAO.getWriterID" parameterClass="Map" resultClass="String">
- 		<![CDATA[
- 			SELECT
- 				WRITERID
- 			FROM
- 				TBL_COMM_ITEM
- 			WHERE
- 				TENANT_ID = #tenantID#
- 			AND
- 				ITEMID = #v_pItemID#
- 		]]>
- 	</select>
 </sqlMap>

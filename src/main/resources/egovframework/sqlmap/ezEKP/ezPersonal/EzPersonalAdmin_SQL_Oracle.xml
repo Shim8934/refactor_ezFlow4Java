@@ -481,7 +481,7 @@
 				TBL_PS_QUICKLINK
         		( QUICKLINKID, QUICKLINKNAME, QUICKLINKNAME2, QUICKLINKNAME3, QUICKLINKNAME4, LINKTYPE, LINKTYPEURL, URL, REGDATE, REGUSERID, SIZE_, TENANT_ID )
         	VALUES
-        		( #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, ' ', #v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#, #tenantID# )
+        		( #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, '', #v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -646,9 +646,7 @@
                     AND
                     	DEPARTMENT = #v_pDeptID#
                     AND
-                    	TENANT_ID = #tenantID#
-                    AND
-                        PHYSICALDELIVERYOFFICENAME = #companyID#    	
+                    	TENANT_ID = #tenantID#	
           		UNION 
           			SELECT
           				B.CN ,
@@ -684,9 +682,7 @@
                     AND
                     	A.DEPTID = #v_pDeptID#
                     AND
-                    	A.TENANT_ID = #tenantID#
-                    AND
-                        B.PHYSICALDELIVERYOFFICENAME = #companyID# )
+                    	A.TENANT_ID = #tenantID#	 )
 		]]>
 	</insert>
 	
@@ -696,8 +692,6 @@
 				TBL_PS_EMPMONTH
 	  	    WHERE
 	  	    	TERM = #v_pTerm#
-            AND
-                PHYSICALDELIVERYOFFICENAME = #companyID#    
 	  	    AND
 	  	    	TENANT_ID = #tenantID#	
 		]]>
@@ -870,7 +864,7 @@
 			DELETE
 				 TBL_PS_QUICKLINK_ACL
 			WHERE
-				QUICKLINKID = #quickLinkID#
+				QUICKLINKID = #v_QUICKLINKID#
 			AND
 				TENANT_ID = #tenantID#	
 		]]>

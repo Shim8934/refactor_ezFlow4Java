@@ -53,7 +53,7 @@
 		                if (g_DispFlag == "1" && g_DispEndDate == "")
 		                {
 		                    OpenAlertUI("<spring:message code='ezApprovalG.t1014'/>" + "'" + "<spring:message code='ezApprovalG.t269'/>" + "'" + "<spring:message code='ezApprovalG.t1015'/>");
-// 		                    window.close();
+		                    window.close();
 		                }
 		                
 		                if("${userInfo.lang}" == "1")  { 

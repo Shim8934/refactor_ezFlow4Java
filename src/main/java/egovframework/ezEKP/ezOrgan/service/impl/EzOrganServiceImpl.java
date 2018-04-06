@@ -1421,11 +1421,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getProxyUserInfo(String userID, int tenantID, String offset) throws Exception {
+	public String getProxyUserInfo(String userID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_TENANT_ID", tenantID);
-		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
 		List<OrganProxyVO> organProxyVOList = ezOrganDAO.getProxyUserInfo(map);
 		

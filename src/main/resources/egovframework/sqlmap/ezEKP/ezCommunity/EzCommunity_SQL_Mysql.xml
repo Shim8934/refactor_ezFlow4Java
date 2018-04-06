@@ -63,7 +63,7 @@
 		<result property="endDate"						column="EndDate"					/>
 		<result property="absTract"						column="Abstract"					/>
 		<result property="attachments"					column="Attachments"				/>
-		<result property="upperItemIDTree"				column="UpperItemIDTree"		javaType="String" jdbcType="CLOB"/>
+		<result property="upperItemIDTree"				column="UpperItemIDTree"				javaType="String" jdbcType="CLOB"/>
 		<result property="itemLevel"					column="ItemLevel"					/>
 		<result property="copiedItem"					column="copiedItem"					/>
 		<result property="extensionAttribute1"			column="ExtensionAttribute1"		/>
@@ -375,7 +375,6 @@
 				step,
 				re_level,
 				ref,
-				filename,
 				charfilename,
 				readnum,
 				writeday,
@@ -1073,7 +1072,7 @@
 					itemid <> #v_previousItemID#
 				AND
 					tenant_id = #tenantID#
-				ORDER BY
+				ORDER BY 
 					parentwritedate DESC,
 					upperitemidtree,
 					startdate DESC
@@ -3775,7 +3774,7 @@
 	<select id="EzCommunityDAO.joinGet2"						parameterClass="Map"		resultClass="String"	remapResults="true">
 		<![CDATA[
 			SELECT
-				username$v_USERINFO_LANG$ AS username
+				username$v_USERINFO_LANG$ AS username 
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE
@@ -4593,8 +4592,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.bbsDelOkDel"						parameterClass="Map">
 		<![CDATA[
-			DELETE
-			FROM
+			DELETE FROM
 				$v_BNAME$ 
 			WHERE
 				no = CAST(#v_NO# AS INT)
@@ -5583,15 +5581,15 @@
 				parentboardid,
 				boardadmin_fg,
 				tenant_id)
-			VALUES
-				(#v_BOARDGROUPID#,
-				#v_USERINFO_USERID#,
-				#v_ACCESSNAME#,
-				1,
-				1,
-				'top',
-				'true',
-				#tenantID#)
+		VALUES
+			(#v_BOARDGROUPID#,
+			#v_USERINFO_USERID#,
+			#v_ACCESSNAME#,
+			1,
+			1,
+			'top',
+			'true',
+			#tenantID#)
 		]]>
 	</insert>
 	
@@ -6760,11 +6758,10 @@
 				itemID = #itemID#
 		]]>
 	</select>
-
-	<delete id="EzCommunityDAO.deleteReservedBoardItem" parameterClass="CommunityBoardDeleteItemVO">
+	  
+  	<delete id="EzCommunityDAO.deleteReservedBoardItem" parameterClass="CommunityBoardDeleteItemVO">
   		<![CDATA[
-  			DELETE FROM 
-  				TBL_COMM_DELETERESERVEDITEM
+  			DELETE FROM TBL_COMM_DELETERESERVEDITEM
   			WHERE
   				TENANT_ID = #tenantID#
   			AND
@@ -6776,19 +6773,18 @@
   
   	<delete id="EzCommunityDAO.deleteReservedBoard" parameterClass="CommunityBoardDeleteItemVO">
   		<![CDATA[
-  			DELETE FROM 
-  				TBL_COMM_DELETERESERVEDBOARD
+  			DELETE FROM TBL_COMM_DELETERESERVEDBOARD
   			WHERE
   				TENANT_ID = #tenantID#
   			AND
   				BOARDID = #boardID#
 		]]>
   	</delete>
+  
 	
 	<delete id="EzCommunityDAO.deleteBoardItemAttach" parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
-				TBL_COMM_Item_Attachments
+			DELETE FROM TBL_COMM_Item_Attachments
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -6834,18 +6830,5 @@
 			   						ITEMID = #itemID# )
 
 		]]>
- 	</select>
- 	
- 	<select id="EzCommunityDAO.getWriterID" parameterClass="Map" resultClass="String">
- 		<![CDATA[
- 			SELECT
- 				WRITERID
- 			FROM
- 				TBL_COMM_ITEM
- 			WHERE
- 				TENANT_ID = #tenantID#
- 			AND
- 				ITEMID = #v_pItemID#
- 		]]>
  	</select>
 </sqlMap>

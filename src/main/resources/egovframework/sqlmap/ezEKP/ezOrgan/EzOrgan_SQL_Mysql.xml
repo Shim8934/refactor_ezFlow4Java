@@ -13,7 +13,7 @@
 		<result property="extensionAttribute15" 			    column="extensionAttribute15"	        columnIndex="3"/>
 		<result property="type" 								column="type" 						    columnIndex="4"/>		
 	</resultMap>
-	
+
 	<resultMap id="deptMemberInfo" class="OrganDeptVO">
 		<result property="cn" 									column="cn" 							columnIndex="1"/>
 		<result property="mail" 								column="mail" 							columnIndex="2"/>		
@@ -74,7 +74,7 @@
 	</resultMap>
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
-		<result property="title"								column="title" 							columnIndex="1"/>
+		<result property="title" 							    column="title" 							columnIndex="1"/>
 		<result property="displayName" 							column="displayName" 					columnIndex="2"/>		
 	</resultMap>
 	
@@ -335,7 +335,7 @@
                             AND
                                 CN <> 'masteradmin'
                             AND 
-                                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+                                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                
                        		AND
                        			TENANT_ID = #v_TENANT_ID#	
                        	UNION ALL 
@@ -486,7 +486,7 @@
                                	DISPLAYNAME ,
                                	EXTENSIONATTRIBUTE15 ,
                                	TYPE 
-                        	FROM (			SELECT
+                        	FROM ( 	    SELECT
                         					CN ,
                                       		CASE #v_LANGDATA#
                                             WHEN
@@ -504,9 +504,9 @@
                                 		WHERE
                                 			DEPARTMENT = #v_CN#
                                         AND
-                                            CN <> 'masteradmin'
+                                            CN <> 'masteradmin'     
                                         AND 
-                                            CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+                                            CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                          
                                 		AND
                                 			TENANT_ID = #v_TENANT_ID#	
 	                               UNION ALL 
@@ -661,9 +661,9 @@
                		WHERE
                			DEPARTMENT = #v_CN#
                     AND
-                        CN <> 'masteradmin'
+                        CN <> 'masteradmin'        
                     AND 
-                        CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+                        CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                            
                		AND
                			TENANT_ID = #v_TENANT_ID#	
 	              UNION ALL 
@@ -676,13 +676,14 @@
               		WHERE
               			B.DEPTID = #v_CN#
               		AND
-              			B.TENANT_ID = #v_TENANT_ID#) AA
+              			B.TENANT_ID = #v_TENANT_ID#	 
+                ) AA
 		]]>
 	</select>
 		
 	<select id="EzOrganDAO.getTBLDeptMaster" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[
-			SELECT
+		   SELECT
 				CN ,
              	CN DEPARTMENT  ,
              	CASE 
@@ -736,7 +737,7 @@
 	            UPDATEDT ,
 	            'dept' TYPE ,
 	            TENANT_ID as tenantId
-			FROM
+	       FROM
 	        	TBL_DEPTMASTER 
 	       WHERE
 	       		CN = #v_CN#
@@ -1170,7 +1171,7 @@
       		WHERE
       			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
             AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                     
       		AND
       			TENANT_ID = #v_TENANT_ID#	
       		AND
@@ -1194,7 +1195,7 @@
 	    		TBL_USERMASTER A 
             $strSQLForMySQL$
             AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                         
             AND 
                 A.TENANT_ID = #v_TENANT_ID#
             $strSizeForMySQL$
@@ -1225,7 +1226,7 @@
 					'group' as type
 				FROM
 					TBL_DEPTMASTER 
-                $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID#
+                $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID#	
                 $strSizeForMySQL$
 			</isEqual>	      				
 	    </isEqual>
@@ -1257,68 +1258,66 @@
 			                '' as extensionAttribute15,
 			                'user' as type 
 			             FROM  
-			             	TBL_USERMASTER A
+			             	TBL_USERMASTER A 
                          $strSQL$
                          AND 
                              CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                      
                          AND 
                              A.TENANT_ID = #v_TENANT_ID#
 			       
-					UNION ALL
+			             UNION ALL
 			            
-					SELECT
-						a.cn  ,
-						deptid as displayName ,
-						'' as extensionAttribute15,
-						'user' as type
-					FROM
-						TBL_USERMASTER b
-					INNER JOIN
-						TBL_ADDJOBMASTER A
-					ON
-						a.cn = b.cn AND a.tenant_id = b.tenant_id
-						$strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
-						)  AA
-					LIMIT #startRowForMySQL#, #count#
+       			         SELECT
+       			        	a.cn  , 
+       			            deptid as displayName , 
+       			            '' as extensionAttribute15,
+       			            'user' as type  
+       			         FROM 
+       			         	TBL_USERMASTER b   
+       			         INNER JOIN 
+       			         	TBL_ADDJOBMASTER A  
+       			         ON  
+       			         	a.cn = b.cn AND a.tenant_id = b.tenant_id
+                         $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+                        )  AA
+                      LIMIT #startRowForMySQL#, #count#
                ]]>
           </isEqual>
           <isEqual property="class" compareValue="all">
           	<![CDATA[
-			SELECT
-				*
-			FROM
-				(
-				SELECT 
+            SELECT
+            *
+            FROM
+                (
+			    SELECT 
 				cn,
 				department as displayName,
 				'' as extensionAttribute15,
 				'user' as type				
-			FROM 
-				TBL_USERMASTER A
-				$strSQL$
-			AND
-				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
-			AND
-				A.TENANT_ID = #v_TENANT_ID#
-
-			UNION ALL
-
-			SELECT
-				A.cn,
-				deptid as displayName,
-				'' as extensionAttribute15,
-				'user' as type
-			FROM
-				TBL_USERMASTER B
-			INNER JOIN
-				TBL_ADDJOBMASTER A
-			ON
-				A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
-				$strSQL$
-			AND 
-				A.TENANT_ID = #v_TENANT_ID#
-
-			UNION ALL
+     			FROM 
+     	    		TBL_USERMASTER A 
+                $strSQL$
+                AND 
+                    CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                             
+                AND 
+                    A.TENANT_ID = #v_TENANT_ID#
+     	    		 
+     	      	UNION ALL
+     	      		      	
+     	      	SELECT 
+     	      		A.cn,
+     	      		deptid as displayName,
+     	      		'' as extensionAttribute15,
+     	      		'user' as type
+     	      	FROM	
+     				TBL_USERMASTER B 
+     			INNER JOIN 
+     				TBL_ADDJOBMASTER A 
+     			ON 
+     				A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+     				
+     			UNION ALL
 				
 				SELECT
 					CN,
@@ -1346,39 +1345,37 @@
 			]]>
 	      </isEqual>
 	</select>
-	
+ 
 	<select id="EzOrganDAO.getSearchListCount" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
 				COUNT(*) AS TOTALCOUNT 
 			FROM (
-				SELECT
-					CN
-				FROM
-					TBL_USERMASTER  A
-					$strSQL$
-				AND 
-					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
-				AND 
-					A.TENANT_ID = #v_TENANT_ID#
-
-				UNION ALL
-
-				SELECT
-					A.CN
-				FROM
-					TBL_USERMASTER B
-				INNER JOIN  TBL_ADDJOBMASTER A
-				ON
-					a.cn = b.cn and a.tenant_id = b.tenant_id
-					$strSQL$ 
-				AND 
-					A.TENANT_ID = #v_TENANT_ID#
-				) A
+        			SELECT 
+        				CN 
+        			FROM  
+        				TBL_USERMASTER  A  
+                    $strSQL$
+                    AND 
+                        CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                 
+                    AND 
+                        A.TENANT_ID = #v_TENANT_ID#
+                    
+                    UNION ALL 
+                    
+                    SELECT 
+                    	A.CN  
+                    FROM 
+                    	TBL_USERMASTER B   
+                    INNER JOIN  TBL_ADDJOBMASTER A   
+                    ON 
+                    	a.cn = b.cn and a.tenant_id = b.tenant_id
+                    $strSQL$ AND A.TENANT_ID = #v_TENANT_ID# 
+                 ) A
 		]]>
 			
 	</select>
-
+ 
 	<select id="EzOrganDAO.deptSubDeptCnt" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
@@ -1492,7 +1489,6 @@
 	      		tenant_ID = #tenantID#	
 	     ]]> 
 	</select>
-	
 	<select id="EzOrganDAO.getDeptReceipterIDs" parameterClass="Map" resultClass="OrganUserVO">
 		SELECT 
 			CN , TENANT_ID tenantId
@@ -1501,7 +1497,7 @@
        	WHERE  
        		TENANT_ID = #TENANTID#
         AND 
-            CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+            CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                     
        	AND
        		DEPARTMENT = #v_DEPTID#
        	AND 
@@ -1554,7 +1550,7 @@
 		WHERE 
 			EXTENSIONATTRIBUTE4 = #extension4#
 	</select>
-	
+
 	<select id="EzOrganDAO.getChildrenDeptID" parameterClass="Map" resultClass="OrganDeptVO">
 		SELECT 
 			CN

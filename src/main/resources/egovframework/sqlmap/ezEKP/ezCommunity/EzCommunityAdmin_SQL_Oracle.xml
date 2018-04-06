@@ -13,7 +13,6 @@
 					DISTINCT c_clubno,
 					closestate,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
-					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
 					username$v_USERINFO_LANG$ username,
 					c_sysopid,
 					applicationdate
@@ -40,7 +39,6 @@
 					DISTINCT c_clubno,
 					closestate,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
-					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
 					username$v_USERINFO_LANG$ username,
 					c_sysopid,
 					applicationdate
@@ -69,7 +67,6 @@
 					DISTINCT c_clubno,
 					closestate,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
-					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
 					username$v_USERINFO_LANG$ username,
 					c_sysopid,
 					applicationdate
@@ -94,7 +91,6 @@
 					DISTINCT c_clubno,
 					closestate,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
-					(SELECT c_clubname$v_USERINFO_LANG$ FROM TBL_C_ClUB C WHERE A.c_clubno = C.c_clubno AND A.tenant_id = C.tenant_id ) b_clubname,
 					username$v_USERINFO_LANG$ username,
 					c_sysopid,
 					applicationdate
@@ -358,10 +354,10 @@
 		</isNotEqual>
 		
 		<![CDATA[
-					ORDER BY
-						c_regdate ASC) A
+						ORDER BY
+							c_regdate ASC) A
 					WHERE
-						ROWNUM <= #v_IQUERYCOUNT#)
+						ROWNUM <= #v_IQUERYCOUNT#)                                 
 				ORDER BY
 					c_regdate DESC)
 			WHERE
@@ -440,9 +436,9 @@
 				c_clubdesc,
 				c_clubconfirmtype,
 				c_clubname$v_USERINFO_LANG$ AS c_clubname,
-				RTRIM(c_cate_a) AS C_CATE_A,
-				RTRIM(c_cate_b) AS C_CATE_B,
-				RTRIM(c_cate_c) AS C_CATE_C
+				c_cate_a,
+				c_cate_b,
+				c_cate_c
 			FROM
 				TBL_C_CLUB
 			WHERE
@@ -559,7 +555,7 @@
 	</select>
 	<delete id="EzCommunityAdminDAO.aspCommAdmitOkSet1Delete"			parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
@@ -684,7 +680,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityAdminDAO.aspCommCloseAllDel"					parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
 				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#

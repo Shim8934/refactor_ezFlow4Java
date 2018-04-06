@@ -399,9 +399,9 @@
 		<table class="content">
 			<tr>
 				<th><spring:message code='ezQuestion.t133' /></th>
-		    	<td style="padding-top:3px;">
-		    		<input type="radio" name="rdoQst" value="ALL" onclick="javascript:return rdoQst_onclick(0)" checked="checked" style="margin-top:0px;" /><span><spring:message code='ezQuestion.t138' /></span>
-			      	<input type="radio" name="rdoQst" value="PART" onclick="javascript:return rdoQst_onclick(1)" style="margin-top:0px;"/><span><spring:message code='ezQuestion.t135' /></span>
+		    	<td>
+		    		<input type="radio" name="rdoQst" value="ALL" onclick="javascript:return rdoQst_onclick(0)" checked="checked" style="vertical-align:-2px;" /><spring:message code='ezQuestion.t138' />
+			      	<input type="radio" name="rdoQst" value="PART" onclick="javascript:return rdoQst_onclick(1)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t135' />
 					<select id="listQst" name="listQst" style=" WIDTH:300px;" onChange="return listQst_onchange()">
 						<option value="" selected><spring:message code='ezQuestion.t136' /></option>
 					</select>
@@ -409,17 +409,17 @@
 		 	</tr>
 		  	<tr>
 				<th><spring:message code='ezQuestion.t137' /></th>
-		    	<td style="padding-top:3px;">
-		    		<input type="radio" name="Catalog" value="0" onclick="javascript:return Catalog_onclick(0)" checked="checked"style="margin-top:0px;"/><span><spring:message code='ezQuestion.t138' /></span>
+		    	<td>
+		    		<input type="radio" name="Catalog" value="0" onclick="javascript:return Catalog_onclick(0)" checked="checked"style="vertical-align:-2px;"/><spring:message code='ezQuestion.t138' />
 			    	<c:choose>
 			    		<c:when test="${pPubFlag == 1 }">
-			    			<input type="radio" name="Catalog" value="1" disabled onclick="javascript:return Catalog_onclick(1)" style="margin-top:0px;"/><span><spring:message code='ezQuestion.t139' /></span>
-					        <input type="radio" name="Catalog" value="2" disabled onclick="javascript:return Catalog_onclick(2)" style="margin-top:0px;"/><span><spring:message code='ezQuestion.t140' /></span>
+			    			<input type="radio" name="Catalog" value="1" disabled onclick="javascript:return Catalog_onclick(1)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t139' />
+					        <input type="radio" name="Catalog" value="2" disabled onclick="javascript:return Catalog_onclick(2)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t140' />
 <%-- 					        <input type="radio" name="Catalog" value="3" disabled onclick="javascript:return Catalog_onclick(3)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t141' /> --%>
 			    		</c:when>
 			    		<c:otherwise>
-							<input type="radio" name="Catalog" value="1" onclick="javascript:return Catalog_onclick(1)" style="margin-top:0px;"/><span><spring:message code='ezQuestion.t139' /></span>
-					        <input type="radio" name="Catalog" value="2" onclick="javascript:return Catalog_onclick(2)" style="margin-top:0px;"/><span><spring:message code='ezQuestion.t140' /></span>
+							<input type="radio" name="Catalog" value="1" onclick="javascript:return Catalog_onclick(1)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t139' />
+					        <input type="radio" name="Catalog" value="2" onclick="javascript:return Catalog_onclick(2)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t140' />
 <%-- 					        <input type="radio" name="Catalog" value="3" onclick="javascript:return Catalog_onclick(3)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t141' /> --%>
 			    		</c:otherwise>
 			    	</c:choose>
@@ -427,10 +427,10 @@
 		  	</tr>
 		  	<tr>
 				<th><spring:message code='ezQuestion.t144' /></th>
-		    	<td style="padding-top:3px;">
-			        <input type="radio"  name="Result" value="T" onclick="javascript:return Result_onclick(0)" checked=checked style="margin-top:0px;"/>
-			        <span><spring:message code='ezQuestion.t145' /></span>
-			        <input type="radio" name="Result" value="G" onclick="javascript:return Result_onclick(1)" style="margin-top:0px; margin-left:1px;"/><span><spring:message code='ezQuestion.t146' /></span>
+		    	<td>
+			        <input type="radio"  name="Result" value="T" onclick="javascript:return Result_onclick(0)" checked=checked style="vertical-align:-2px;"/>
+			        <spring:message code='ezQuestion.t145' />
+			        <input type="radio" name="Result" value="G" onclick="javascript:return Result_onclick(1)" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t146' />
 			        <a class="imgbtn"><span onclick="menu_AnalyStart()"><spring:message code='ezQuestion.t147' /></span></a><span id="message"></span>
 			    </td>
 			</tr>

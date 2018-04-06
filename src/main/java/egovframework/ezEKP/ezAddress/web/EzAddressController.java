@@ -595,10 +595,7 @@ public class EzAddressController{
 		addressInfo.setModifyDate(dateInUserTimeZone);
 		
 		String replaceMemo = addressInfo.getsMemo();
-		
-		if (replaceMemo != null) {
-			replaceMemo = replaceMemo.replace("\\", "\\\\").replaceAll("\"", "\\\\\"").replace("\'", "\\\'").replaceAll("\n", "&lt;br&gt;").replaceAll("/", "\\\\/");
-		}
+		replaceMemo = addressInfo.getsMemo().replace("\\", "\\\\").replaceAll("\"", "\\\\\"").replace("\'", "\\\'").replaceAll("\n", "&lt;br&gt;").replaceAll("/", "\\\\/");
 		
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("noneActiveX", noneActiveX);

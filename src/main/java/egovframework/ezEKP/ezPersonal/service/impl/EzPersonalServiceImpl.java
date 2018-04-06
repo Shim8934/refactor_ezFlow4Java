@@ -519,9 +519,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		}*/
 		
 		if (day > daysInMonth(mon, year)) {
-			if (pYear % 4 != 0 && mon != 2) {
-				return "FALSE";
-			}
+			return "FALSE";
 		}
 		
 		//음력->양력으로 변환

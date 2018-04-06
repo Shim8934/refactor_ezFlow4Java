@@ -1321,10 +1321,7 @@
 		    }
 		    function selbeforeBlock() {
 		        var pageNum = parseInt(CurPage);
-		        if(pageNum%BlockSize==0) {
-	            	pageNum = pageNum -1;
-	            }
-	            pageNum = ((parseInt(pageNum / BlockSize)) * BlockSize) ;
+		        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
 		        goToPageByNum(pageNum);
 		    }
 		    function selbeforeBlock_one() {

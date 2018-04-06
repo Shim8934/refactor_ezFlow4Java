@@ -62,11 +62,6 @@
 
 		                if (result != "") {
 		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
-		                    /* 2018.02.12 김기하 */
-		                    var temp = xmlRtn.getElementsByTagName("VALUE");
-		                	for(i = 0; i < temp.length ; i++){
-		                		temp[i].innerHTML = "<![CDATA[" + ConvMakeXMLString(temp[i].innerHTML) + "]]>";
-		                	}
 		                    headerData.documentElement.appendChild(xmlRtn);
 		                }
 
@@ -97,11 +92,6 @@
 
 		                if (result != "") {
 		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
-		                    /* 2018.02.12 김기하 */
-		                    var temp = xmlRtn.getElementsByTagName("VALUE");
-		                	for(i = 0; i < temp.length ; i++){
-		                		temp[i].innerHTML = "<![CDATA[" + ConvMakeXMLString(temp[i].innerHTML) + "]]>";
-		                	}
 		                    headerData.documentElement.appendChild(xmlRtn);
 		                }
 
@@ -687,12 +677,8 @@
 		    }
 
 		    function ConvMakeXMLString(str) {
-		        /* 2018.02.12 김기하 */
-		    	var strTemp = str;
-		        while((str = ReplaceText(str, "&amp;", "&")) != strTemp){
-		        	strTemp = str;
-		        }
-		    	str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&amp;", "&");
+		        str = ReplaceText(str, "&lt;", "<");
 		        str = ReplaceText(str, "&gt;", ">");
 		        str = ReplaceText(str, "&quot;", "\"");
 		        str = ReplaceText(str, "&#39;", "'");

@@ -7,7 +7,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script language="javascript" type="text/javascript">
-// 		    var XmlBodyATT = createXmlDom();
+		    var XmlBodyATT = createXmlDom();
 		    document.onselectstart = function () { 
 				var useAllowTextSelection = "${useAllowTextSelection}";
 	        	
@@ -75,7 +75,7 @@
 		            }
 		            else {
 		                tempXML = loadXMLString(tempStr);
-// 		                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+		                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 		                XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 		
 		                var _DocContentHtml = getNodeText(XmlBodyDATA);

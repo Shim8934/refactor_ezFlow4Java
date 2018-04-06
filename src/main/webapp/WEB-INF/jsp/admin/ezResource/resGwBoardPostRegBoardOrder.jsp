@@ -171,7 +171,7 @@
 				<table class="popuplist" style="width:100%">
         			<tr>
             			<td>
-                			<select name="BRDLIST" size="10" id="BRDLIST" style="width: 100%; height: 150px; background:none;">  ${subBrdLst} </select>
+                			<select name="BRDLIST" size="10" id="BRDLIST" style="width: 100%; height: 150px">  ${subBrdLst} </select>
             			</td>
             			<td width="30" align="center">
                         	<img src="/images/arr_up.gif" vspace="2" style="cursor:pointer" onClick="javascript:SetOrder(-1)"><br>

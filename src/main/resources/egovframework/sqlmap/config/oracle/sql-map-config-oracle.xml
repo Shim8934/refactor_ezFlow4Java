@@ -13,6 +13,8 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrgan_SQL_Oracle.xml"/>
 	<!-- 설문조사 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezQuestion/EzQuestion_SQL_Oracle.xml"/>
+	<!-- 투표 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezPoll/EzPoll_SQL_Oracle.xml"/>
 	<!-- 이메일 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezEmail/EzEmail_SQL_Oracle.xml"/>
 	<!-- 공통 -->
@@ -31,11 +33,7 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezPortal/EzPortal_SQL_Oracle.xml"/>
 	<!-- 퍼스널 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezPersonal/EzPersonal_SQL_Oracle.xml"/>
-	<!-- 회람판 -->
-    <sqlMap resource="egovframework/sqlmap/ezEKP/ezCircular/EzCircular_SQL_Oracle.xml"/>
-    <!-- 업무관리 -->
-    <sqlMap resource="egovframework/sqlmap/ezEKP/ezTask/EzTask_SQL_Oracle.xml"/>
-
+	
 	<!-- 2.관리자 모듈관리 SQL쿼리 XML -->
 	
 	<!-- 게시판 관리자 -->

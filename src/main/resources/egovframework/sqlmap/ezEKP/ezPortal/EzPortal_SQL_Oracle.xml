@@ -6,308 +6,313 @@
 	<typeAlias  alias="PortalGetRenderedTopMenuInsertVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO"/>
 	<typeAlias  alias="PortalTBLPortalPageGeneralVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO"/>
 	<typeAlias  alias="PortalTBLTopMenuGeneralVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO"/>
-	<typeAlias  alias="PortalTBLUserInfoVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO"/>
+	<typeAlias  alias="PortalTBLUserInfoVO" 									type="egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO"/>
 	<typeAlias  alias="PortalTopSearchTopMenu2VO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO"/>
-	<typeAlias  alias="PortalTBLThemeGeneralVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLThemeGeneralVO"/>
-	<typeAlias  alias="PortalMenuItemItemsImageVO" 					    type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO"/>
+	<typeAlias  alias="PortalTBLThemeGeneralVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLThemeGeneralVO"/>
+	<typeAlias  alias="PortalMenuItemItemsImageVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO"/>
 	<typeAlias  alias="PortalTopLoadGetParametersVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO"/>
-	<typeAlias  alias="PortalMenuItemItemsMenuItemsVO" 				    type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO"/>
-	<typeAlias  alias="PortalMenuItemItemsMenuItemsSVO" 			    type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO"/>
+	<typeAlias  alias="PortalMenuItemItemsMenuItemsVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO"/>
+	<typeAlias  alias="PortalMenuItemItemsMenuItemsSVO" 			type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO"/>
 	<typeAlias  alias="PortalGetMainMenuHtmlVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO"/>
 	<typeAlias  alias="PortalTBLPortalPageItemsVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO"/>
-	<typeAlias  alias="PortalGetThemeListVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO"/>
+	<typeAlias  alias="PortalGetThemeListVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO"/>
 	<typeAlias  alias="PortalTBLPortalPageCategoryVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO"/>
-	<typeAlias  alias="PortalUrlPortletVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO"/>
-	<typeAlias  alias="PortalPortletGeneralVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO"/>
-	<typeAlias  alias="PortalTBLPortletURLVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletURLVO"/>
-	<typeAlias  alias="PortalTBLPortletBoardVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletBoardVO"/>
+	<typeAlias  alias="PortalUrlPortletVO" 										type="egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO"/>
+	<typeAlias  alias="PortalPortletGeneralVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO"/>
+	<typeAlias  alias="PortalTBLPortletURLVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletURLVO"/>
+	<typeAlias  alias="PortalTBLPortletBoardVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletBoardVO"/>
 	<typeAlias  alias="PortalTBLPortletHtmlPageVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletHtmlPageVO"/>
-	<typeAlias  alias="PortalTBLPortletImageVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletImageVO"/>
-	<typeAlias  alias="PortalGetPortletParametersVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO"/>
+	<typeAlias  alias="PortalTBLPortletImageVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletImageVO"/>
+	<typeAlias  alias="PortalGetPortletParametersVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO"/>
 	<typeAlias  alias="PortalSearchMyPortalPage3VO" 					type="egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO"/>
-	<typeAlias  alias="PortalFirstMainListVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO"/>
-	<typeAlias  alias="PortalSearchPortalPageVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPageVO"/>
-	<typeAlias  alias="PortalTBLPortalACLVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO"/>
+	<typeAlias  alias="PortalFirstMainListVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO"/>
+	<typeAlias  alias="PortalSearchPortalPageVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPageVO"/>
+	<typeAlias  alias="PortalTBLPortalACLVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO"/>
 	<typeAlias  alias="PortalSearchMenuItemVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalSearchMenuItemVO"/>
-	<typeAlias  alias="PortalImagePortletVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO"/>
-	<typeAlias  alias="PortalMyPortalListVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO"/>
+	<typeAlias  alias="PortalImagePortletVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO"/>
+	<typeAlias  alias="PortalMyPortalListVO" 									type="egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO"/>
 	<typeAlias  alias="PortalNewMyPortalPageListVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO"/>
 	<typeAlias  alias="PortalUseTopMenuID2VO" 							type="egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO"/>
 	
 	<resultMap class="PortalTBLTopMenuItemsVO" id="portalTBLTopMenuItemsVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
 		<result property="pageUID"					column="PAGEUID"					columnIndex="2"/>
-		<result property="parentPageUID"			column="PARENTPAGEUID"		        columnIndex="3"/>
-		<result property="ownerPageID"				column="OWNERPAGEID"			    columnIndex="4"/>
-		<result property="menuItemType"			    column="MENUITEMTYPE"		        columnIndex="5"/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="6"/>
-		<result property="width"					column="WIDTH"					    columnIndex="7"/>
-		<result property="height"					column="HEIGHT"					    columnIndex="8"/>
-		<result property="rowPos"					column="ROWPOS"					    columnIndex="9"/>
-		<result property="columnPos"				column="COLUMNPOS"			        columnIndex="10"/>
-		<result property="canRemove"				column="CANREMOVE"			        columnIndex="11"			nullValue="0"/>
-		<result property="canResize"				column="CANRESIZE"				    columnIndex="12"			nullValue="0"/>
-		<result property="canReplace"				column="CANREPLACE"			        columnIndex="13"			nullValue="0"/>
-		<result property="align"					column="ALIGN"						columnIndex="14"			nullValue="middle"/>
-		<result property="valign"					column="VALIGN"					    columnIndex="15"			nullValue="top"/>
-		<result property="topMargin"				column="TOPMARGIN"				    columnIndex="16"			nullValue="0"/>
-		<result property="bottomMargin"			    column="BOTTOMMARGIN"		        columnIndex="17"			nullValue="0"/>
-		<result property="leftMargin"				column="LEFTMARGIN"			        columnIndex="18"			nullValue="0"/>
-		<result property="rightMargin"				column="RIGHTMARGIN"			    columnIndex="19"			nullValue="0"/>
+		<result property="parentPageUID"			column="PARENTPAGEUID"		columnIndex="3"/>
+		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="4"/>
+		<result property="menuItemType"			column="MENUITEMTYPE"		columnIndex="5"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="6"/>
+		<result property="width"						column="WIDTH"					columnIndex="7"/>
+		<result property="height"						column="HEIGHT"					columnIndex="8"/>
+		<result property="rowPos"						column="ROWPOS"					columnIndex="9"/>
+		<result property="columnPos"				column="COLUMNPOS"			columnIndex="10"/>
+		<result property="canRemove"				column="CANREMOVE"			columnIndex="11"			nullValue="0"/>
+		<result property="canResize"					column="CANRESIZE"				columnIndex="12"			nullValue="0"/>
+		<result property="canReplace"				column="CANREPLACE"			columnIndex="13"			nullValue="0"/>
+		<result property="align"						column="ALIGN"						columnIndex="14"			nullValue="middle"/>
+		<result property="valign"						column="VALIGN"					columnIndex="15"			nullValue="top"/>
+		<result property="topMargin"				column="TOPMARGIN"				columnIndex="16"			nullValue="0"/>
+		<result property="bottomMargin"			column="BOTTOMMARGIN"		columnIndex="17"			nullValue="0"/>
+		<result property="leftMargin"					column="LEFTMARGIN"			columnIndex="18"			nullValue="0"/>
+		<result property="rightMargin"				column="RIGHTMARGIN"			columnIndex="19"			nullValue="0"/>
 	</resultMap>
 	
 	<resultMap class="PortalGetRenderedTopMenuInsertVO" id="portalGetRenderedTopMenuInsertVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
-		<result property="parentUID"				column="PARENTUID"				    columnIndex="2"/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="3"/>
-		<result property="width"					column="WIDTH"					    columnIndex="4"/>
-		<result property="height"					column="HEIGHT"					    columnIndex="5"/>
-		<result property="rowLength"				column="ROWLENGTH"			        columnIndex="6"/>
-		<result property="columnLength"			    column="COLUMNLENGTH"		        columnIndex="7"/>
-		<result property="rowSplit"					column="ROWSPLIT"				    columnIndex="8"/>
-		<result property="columnSplit"				column="COLUMNSPLIT"			    columnIndex="9"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="3"/>
+		<result property="width"						column="WIDTH"					columnIndex="4"/>
+		<result property="height"						column="HEIGHT"					columnIndex="5"/>
+		<result property="rowLength"				column="ROWLENGTH"			columnIndex="6"/>
+		<result property="columnLength"			column="COLUMNLENGTH"		columnIndex="7"/>
+		<result property="rowSplit"					column="ROWSPLIT"				columnIndex="8"/>
+		<result property="columnSplit"				column="COLUMNSPLIT"			columnIndex="9"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortalPageGeneralVO" id="portalTBLPortalPageGeneralVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
-		<result property="parentUID"				column="PARENTUID"				    columnIndex="2"/>
-		<result property="depth"					column="DEPTH"					    columnIndex="3"/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="4"/>
-		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="5"/>
-		<result property="creatorID"				column="CREATORID"				    columnIndex="6"/>
-		<result property="creatorName"				column="CREATORNAME"		        columnIndex="7"/>
-		<result property="createDate"				column="CREATEDATE"			        columnIndex="8"/>
-		<result property="modifyDate"				column="MODIFYDATE"			        columnIndex="9"/>
-		<result property="width"					column="WIDTH"					    columnIndex="10"/>
-		<result property="height"					column="HEIGHT"					    columnIndex="11"/>
-		<result property="rowLength"				column="ROWLENGTH"			        columnIndex="12"/>
-		<result property="columnLength"			    column="COLUMNLENGTH"		        columnIndex="13"/>
-		<result property="rowSplit"					column="ROWSPLIT"				    columnIndex="14"/>
-		<result property="columnSplit"				column="COLUMNSPLIT"			    columnIndex="15"/>
-		<result property="gubunFlag"				column="GUBUNFLAG"				    columnIndex="16"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
+		<result property="depth"						column="DEPTH"					columnIndex="3"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="4"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="5"/>
+		<result property="creatorID"					column="CREATORID"				columnIndex="6"/>
+		<result property="creatorName"				column="CREATORNAME"		columnIndex="7"/>
+		<result property="createDate"				column="CREATEDATE"			columnIndex="8"/>
+		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="9"/>
+		<result property="width"						column="WIDTH"					columnIndex="10"/>
+		<result property="height"						column="HEIGHT"					columnIndex="11"/>
+		<result property="rowLength"				column="ROWLENGTH"			columnIndex="12"/>
+		<result property="columnLength"			column="COLUMNLENGTH"		columnIndex="13"/>
+		<result property="rowSplit"					column="ROWSPLIT"				columnIndex="14"/>
+		<result property="columnSplit"				column="COLUMNSPLIT"			columnIndex="15"/>
+		<result property="gubunFlag"				column="GUBUNFLAG"				columnIndex="16"/>
 		<result property="useFlag"					column="USEFLAG"					columnIndex="17"/>
-		<result property="companyID"				column="COMPANYID"			        columnIndex="18"/>
-		<result property="baseType"					column="BASETYPE"				    columnIndex="19"/>
-		<result property="themeUID"					column="THEMEUID"				    columnIndex="20"/>
-		<result property="defaultPage"				column="DEFAULTPAGE"			    columnIndex="21"/>
-		<result property="tableViewOption"		    column="TABLEVIEWOPTION"	        columnIndex="22"/>
+		<result property="companyID"				column="COMPANYID"			columnIndex="18"/>
+		<result property="baseType"					column="BASETYPE"				columnIndex="19"/>
+		<result property="themeUID"					column="THEMEUID"				columnIndex="20"/>
+		<result property="defaultPage"				column="DEFAULTPAGE"			columnIndex="21"/>
+		<result property="tableViewOption"		column="TABLEVIEWOPTION"	columnIndex="22"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLTopMenuGeneralVO" id="portalTBLTopMenuGeneralVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
-		<result property="parentUID"				column="PARENTUID"				    columnIndex="2"/>
-		<result property="depth"					column="DEPTH"					    columnIndex="3"/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="4"/>
-		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="5"/>
-		<result property="creatorID"				column="CREATORID"				    columnIndex="6"/>
-		<result property="createDate"				column="CREATEDATE"			        columnIndex="8"/>
-		<result property="modifyDate"				column="MODIFYDATE"			        columnIndex="9"/>
-		<result property="width"					column="WIDTH"					    columnIndex="10"/>
-		<result property="height"					column="HEIGHT"					    columnIndex="11"/>
-		<result property="rowLength"				column="ROWLENGTH"			        columnIndex="12"/>
-		<result property="columnLength"			    column="COLUMNLENGTH"		        columnIndex="13"/>
-		<result property="rowSplit"					column="ROWSPLIT"				    columnIndex="14"/>
-		<result property="columnSplit"				column="COLUMNSPLIT"			    columnIndex="15"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
+		<result property="depth"						column="DEPTH"					columnIndex="3"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="4"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="5"/>
+		<result property="creatorID"					column="CREATORID"				columnIndex="6"/>
+		<result property="createDate"				column="CREATEDATE"			columnIndex="8"/>
+		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="9"/>
+		<result property="width"						column="WIDTH"					columnIndex="10"/>
+		<result property="height"						column="HEIGHT"					columnIndex="11"/>
+		<result property="rowLength"				column="ROWLENGTH"			columnIndex="12"/>
+		<result property="columnLength"			column="COLUMNLENGTH"		columnIndex="13"/>
+		<result property="rowSplit"					column="ROWSPLIT"				columnIndex="14"/>
+		<result property="columnSplit"				column="COLUMNSPLIT"			columnIndex="15"/>
 		<result property="useFlag"					column="USEFLAG"					columnIndex="17"/>
-		<result property="companyID"				column="COMPANYID"			        columnIndex="18"/>
-		<result property="lang"						column="LANG"						columnIndex="19"/>
-		<result property="topMnID"					column="TOPMNID"				    columnIndex="20"/>
-		<result property="baseType"					column="BASETYPE"				    columnIndex="21"/>
-		<result property="themeUID"					column="THEMEUID"				    columnIndex="22"/>
+		<result property="companyID"				column="COMPANYID"			columnIndex="18"/>
+		<result property="lang"							column="LANG"						columnIndex="19"/>
+		<result property="topMnID"					column="TOPMNID"				columnIndex="20"/>
+		<result property="baseType"					column="BASETYPE"				columnIndex="21"/>
+		<result property="themeUID"					column="THEMEUID"				columnIndex="22"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLUserInfoVO" id="portalTBLUserInfoVO">
-		<result property="userID"					column="USERID"					    columnIndex="1"/>
-		<result property="uID"						column="UID_"						columnIndex="2"/>
-		<result property="skinNum"					column="SKINNUM"				    columnIndex="3"/>
-		<result property="skinDefaultImage"		    column="SKINDEFAULTIMAGE"	        columnIndex="4"/>
-		<result property="skinDefaultColor"		    column="SKINDEFAULTCOLOR"	        columnIndex="5"/>
-		<result property="portalUID"				column="PORTAL_UID"				    columnIndex="6"/>
-		<result property="portalSkinNum"			column="PORTAL_SKINNUM"	            columnIndex="8"/>
-		<result property="lang"						column="LANG"						columnIndex="9"/>
+		<result property="userID"						column="USERID"					columnIndex="1"/>
+		<result property="uID"							column="UID_"						columnIndex="2"/>
+		<result property="skinNum"					column="SKINNUM"				columnIndex="3"/>
+		<result property="skinDefaultImage"		column="SKINDEFAULTIMAGE"	columnIndex="4"/>
+		<result property="skinDefaultColor"		column="SKINDEFAULTCOLOR"	columnIndex="5"/>
+		<result property="portalUID"					column="PORTAL_UID"				columnIndex="6"/>
+		<result property="portalSkinNum"			column="PORTAL_SKINNUM"	columnIndex="8"/>
+		<result property="lang"							column="LANG"						columnIndex="9"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLThemeGeneralVO" id="portalTBLThemeGeneralVO">
-		<result property="uID"						column="UID_"						columnIndex="1"			nullValue=""/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="2"			nullValue=""/>
-		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="3"			nullValue=""/>
-		<result property="displayName3"			    column="DISPLAYNAME3"		        columnIndex="4"			nullValue=""/>
-		<result property="displayName4"			    column="DISPLAYNAME4"		        columnIndex="5"			nullValue=""/>
-		<result property="imageURL"					column="IMAGEURL"				    columnIndex="6"			nullValue=""/>
-		<result property="topURL"					column="TOPURL"					    columnIndex="8"			nullValue=""/>
+		<result property="uID"							column="UID_"						columnIndex="1"			nullValue=""/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"			nullValue=""/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="3"			nullValue=""/>
+		<result property="displayName3"			column="DISPLAYNAME3"		columnIndex="4"			nullValue=""/>
+		<result property="displayName4"			column="DISPLAYNAME4"		columnIndex="5"			nullValue=""/>
+		<result property="imageURL"					column="IMAGEURL"				columnIndex="6"			nullValue=""/>
+		<result property="topURL"						column="TOPURL"					columnIndex="8"			nullValue=""/>
 		<result property="mainURL"					column="MAINURL"					columnIndex="9"			nullValue=""/>
-		<result property="companayID"				column="COMPANAYID"			        columnIndex="10"		nullValue=""/>
-		<result property="creatorID"				column="CREATORID"				    columnIndex="11"		nullValue=""/>
-		<result property="creatorNm"				column="CREATORNM"			        columnIndex="12"		nullValue=""/>
-		<result property="createDate"				column="CREATEDATE"			        columnIndex="13"		nullValue=""/>
-		<result property="modifyDate"				column="MODIFYDATE"			        columnIndex="14"		nullValue=""/>
-		<result property="topHeight"				column="TOPHEIGHT"				    columnIndex="15"		nullValue=""/>
+		<result property="companayID"				column="COMPANAYID"			columnIndex="10"		nullValue=""/>
+		<result property="creatorID"					column="CREATORID"				columnIndex="11"		nullValue=""/>
+		<result property="creatorNm"				column="CREATORNM"			columnIndex="12"		nullValue=""/>
+		<result property="createDate"				column="CREATEDATE"			columnIndex="13"		nullValue=""/>
+		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="14"		nullValue=""/>
+		<result property="topHeight"					column="TOPHEIGHT"				columnIndex="15"		nullValue=""/>
 	</resultMap>
 	
 	<resultMap class="PortalGetThemeListVO" id="portalGetThemeListVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="2"/>
-		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="3"/>
-		<result property="displayName3"			    column="DISPLAYNAME3"		        columnIndex="4"/>
-		<result property="displayName4"			    column="DISPLAYNAME4"		        columnIndex="5"/>
-		<result property="imageURL"					column="IMAGEURL"				    columnIndex="6"/>
-		<result property="topURL"					column="TOPURL"					    columnIndex="8"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="3"/>
+		<result property="displayName3"			column="DISPLAYNAME3"		columnIndex="4"/>
+		<result property="displayName4"			column="DISPLAYNAME4"		columnIndex="5"/>
+		<result property="imageURL"					column="IMAGEURL"				columnIndex="6"/>
+		<result property="topURL"						column="TOPURL"					columnIndex="8"/>
 		<result property="mainURL"					column="MAINURL"					columnIndex="9"/>
-		<result property="companayID"				column="COMPANAYID"			        columnIndex="10"/>
-		<result property="creatorID"				column="CREATORID"				    columnIndex="11"/>
-		<result property="creatorNm"				column="CREATORNM"			        columnIndex="12"/>
-		<result property="createDate"				column="CREATEDATE"			        columnIndex="13"/>
-		<result property="modifyDate"				column="MODIFYDATE"			        columnIndex="14"/>
+		<result property="companayID"				column="COMPANAYID"			columnIndex="10"/>
+		<result property="creatorID"					column="CREATORID"				columnIndex="11"/>
+		<result property="creatorNm"				column="CREATORNM"			columnIndex="12"/>
+		<result property="createDate"				column="CREATEDATE"			columnIndex="13"/>
+		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="14"/>
 	</resultMap>
 	
 	<resultMap class="PortalTopSearchTopMenu2VO" id="portalTopSearchTopMenu2VO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
-		<result property="parentUID"				column="PARENTUID"				    columnIndex="2"/>
-		<result property="depth"					column="DEPTH"					    columnIndex="3"/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="4"/>
-		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="5"/>
-		<result property="creatorID"				column="CREATORID"				    columnIndex="6"/>
-		<result property="creatorName"				column="CREATORNAME"		        columnIndex="7"/>
-		<result property="createDate"				column="CREATEDATE"			        columnIndex="8"/>
-		<result property="modifyDate"				column="MODIFYDATE"			        columnIndex="9"/>
-		<result property="width"					column="WIDTH"					    columnIndex="10"/>
-		<result property="height"					column="HEIGHT"					    columnIndex="11"/>
-		<result property="rowLength"				column="ROWLENGTH"			        columnIndex="12"/>
-		<result property="columnLength"			    column="COLUMNLENGTH"		        columnIndex="13" 	   nullValue="0"/>
-		<result property="rowSplit"					column="ROWSPLIT"				    columnIndex="14"/>
-		<result property="columnSplit"				column="COLUMNSPLIT"			    columnIndex="15"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
+		<result property="depth"						column="DEPTH"					columnIndex="3"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="4"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="5"/>
+		<result property="creatorID"					column="CREATORID"				columnIndex="6"/>
+		<result property="creatorName"				column="CREATORNAME"		columnIndex="7"/>
+		<result property="createDate"				column="CREATEDATE"			columnIndex="8"/>
+		<result property="modifyDate"				column="MODIFYDATE"			columnIndex="9"/>
+		<result property="width"						column="WIDTH"					columnIndex="10"/>
+		<result property="height"						column="HEIGHT"					columnIndex="11"/>
+		<result property="rowLength"				column="ROWLENGTH"			columnIndex="12"/>
+		<result property="columnLength"			column="COLUMNLENGTH"		columnIndex="13" 	nullValue="0"/>
+		<result property="rowSplit"					column="ROWSPLIT"				columnIndex="14"/>
+		<result property="columnSplit"				column="COLUMNSPLIT"			columnIndex="15"/>
 		<result property="useFlag"					column="USEFLAG"					columnIndex="16"/>
-		<result property="companyID"				column="COMPANYID"			        columnIndex="17"/>
-		<result property="lang"						column="LANG"						columnIndex="18"/>
-		<result property="topMnID"					column="TOPMNID"				    columnIndex="19"/>
-		<result property="baseType"					column="BASETYPE"				    columnIndex="20"/>
-		<result property="themeUID"					column="THEMEUID"				    columnIndex="21"/>
-		<result property="tenantID"					column="TENANT_ID"				    columnIndex="22"/>
-		<result property="themeNm"					column="THEMENM"				    columnIndex="23"/>
-		<result property="themeNm2"				    column="THEMENM2"				    columnIndex="24"/>
-		<result property="themeNm3"				    column="THEMENM3"				    columnIndex="25"/>
-		<result property="themeNm4"				    column="THEMENM4"				    columnIndex="26"/>
+		<result property="companyID"				column="COMPANYID"			columnIndex="17"/>
+		<result property="lang"							column="LANG"						columnIndex="18"/>
+		<result property="topMnID"					column="TOPMNID"				columnIndex="19"/>
+		<result property="baseType"					column="BASETYPE"				columnIndex="20"/>
+		<result property="themeUID"					column="THEMEUID"				columnIndex="21"/>
+		<result property="tenantID"					column="TENANT_ID"				columnIndex="22"/>
+		<result property="themeNm"					column="THEMENM"				columnIndex="23"/>
+		<result property="themeNm2"				column="THEMENM2"				columnIndex="24"/>
+		<result property="themeNm3"				column="THEMENM3"				columnIndex="25"/>
+		<result property="themeNm4"				column="THEMENM4"				columnIndex="26"/>
 	</resultMap>
 	
 	<resultMap class="PortalTopLoadGetParametersVO" id="portalTopLoadGetParametersVO">
-		<result property="paramName"				column="PARAMNAME"			        columnIndex="1"/>
-		<result property="paramValue"				column="PARAMVALUE"			        columnIndex="2"/>
-		<result property="paramType"				column="PARAMTYPE"				    columnIndex="3"/>
-		<result property="paramInfo"				column="PARAMINFO"				    columnIndex="4"/>
+		<result property="paramName"				column="PARAMNAME"			columnIndex="1"/>
+		<result property="paramValue"				column="PARAMVALUE"			columnIndex="2"/>
+		<result property="paramType"				column="PARAMTYPE"				columnIndex="3"/>
+		<result property="paramInfo"					column="PARAMINFO"				columnIndex="4"/>
 	</resultMap>
 	
 	<resultMap class="PortalMenuItemItemsMenuItemsVO" id="portalMenuItemItemsMenuItemsVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
-		<result property="parentUID"				column="PARENTUID"				    columnIndex="2"/>
-		<result property="parentMenuID"			    column="PARENTMENUID"		        columnIndex="3"/>
-		<result property="ownerPageID"				column="OWNERPAGEID"			    columnIndex="4"/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="5"/>
-		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="6"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
+		<result property="parentMenuID"			column="PARENTMENUID"		columnIndex="3"/>
+		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="4"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="5"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="6"/>
 		<result property="subFlag"					column="SUBFLAG"					columnIndex="8"			nullValue="0"/>
-		<result property="columnPos"				column="COLUMNPOS"			        columnIndex="9"			nullValue="0"/>
-		<result property="imageUId"					column="IMAGEUID"				    columnIndex="10"/>
+		<result property="columnPos"				column="COLUMNPOS"			columnIndex="9"			nullValue="0"/>
+		<result property="imageUId"					column="IMAGEUID"				columnIndex="10"/>
 		<result property="linkURL"					column="LINKURL"					columnIndex="11"/>
-		<result property="linkLocation"				column="LINKLOCATION"			    columnIndex="12"/>
-		<result property="leftMargin"				column="LEFTMARGIN"			        columnIndex="13"/>
-		<result property="windowOption"			    column="WINDOWOPTION"		        columnIndex="14"/>
-		<result property="tenantID"					column="TENANT_ID"		            columnIndex="15"/>
+		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="12"/>
+		<result property="leftMargin"					column="LEFTMARGIN"			columnIndex="13"/>
+		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="14"/>
+		<result property="tenantID"					column="TENANT_ID"		columnIndex="15"/>
 	</resultMap>
 	
 	<resultMap class="PortalGetMainMenuHtmlVO" id="portalGetMainMenuHtmlVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
-		<result property="parentUID"				column="PARENTUID"				    columnIndex="2"/>
-		<result property="parentMenuID"			    column="PARENTMENUID"		        columnIndex="3"/>
-		<result property="ownerPageID"				column="OWNERPAGEID"			    columnIndex="4"/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="5"/>
-		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="6"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
+		<result property="parentMenuID"			column="PARENTMENUID"		columnIndex="3"/>
+		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="4"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="5"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="6"/>
 		<result property="subFlag"					column="SUBFLAG"					columnIndex="8"			nullValue="0"/>
-		<result property="columnPos"				column="COLUMNPOS"			        columnIndex="9"			nullValue="0"/>
-		<result property="imageUId"					column="IMAGEUID"				    columnIndex="10"/>
+		<result property="columnPos"				column="COLUMNPOS"			columnIndex="9"			nullValue="0"/>
+		<result property="imageUId"					column="IMAGEUID"				columnIndex="10"/>
 		<result property="linkURL"					column="LINKURL"					columnIndex="11"/>
-		<result property="linkLocation"				column="LINKLOCATION"			    columnIndex="12"/>
-		<result property="leftMargin"				column="LEFTMARGIN"			        columnIndex="13"/>
-		<result property="windowOption"			    column="WINDOWOPTION"		        columnIndex="14"/>
-		<result property="normalImagePath"		    column="NORMALIMAGEPATH"	        columnIndex="15"/>
+		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="12"/>
+		<result property="leftMargin"					column="LEFTMARGIN"			columnIndex="13"/>
+		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="14"/>
+		<result property="normalImagePath"		column="NORMALIMAGEPATH"	columnIndex="15"/>
 	</resultMap>
 	
 	<resultMap class="PortalMenuItemItemsMenuItemsSVO" id="portalMenuItemItemsMenuItemsSVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
-		<result property="parentMenuID"			    column="PARENTMENUID"		        columnIndex="2"/>
-		<result property="ownerPageID"				column="OWNERPAGEID"			    columnIndex="3"/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="4"/>
-		<result property="displayName2"			    column="DISPLAYNAME2"		        columnIndex="5"/>
-		<result property="columnPos"				column="COLUMNPOS"			        columnIndex="6"			nullValue="0"/>
-		<result property="imageUId"					column="IMAGEUID"				    columnIndex="7"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="parentMenuID"			column="PARENTMENUID"		columnIndex="2"/>
+		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="3"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="4"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="5"/>
+		<result property="columnPos"				column="COLUMNPOS"			columnIndex="6"			nullValue="0"/>
+		<result property="imageUId"					column="IMAGEUID"				columnIndex="7"/>
 		<result property="linkURL"					column="LINKURL"					columnIndex="8"/>
-		<result property="linkLocation"				column="LINKLOCATION"			    columnIndex="9"/>
-		<result property="windowOption"			    column="WINDOWOPTION"		        columnIndex="10"/>
+		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="9"/>
+		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortalPageCategoryVO" id="portalTBLPortalPageCategoryVO">
-		<result property="category"					column="CATEGORY"				    columnIndex="1"/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="2"/>
+		<result property="category"					column="CATEGORY"				columnIndex="1"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortalPageItemsVO" id="portalTBLPortalPageItemsVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
 		<result property="pageUID"					column="PAGEUID"					columnIndex="2"/>
-		<result property="parentPageUID"			column="PARENTPAGEUID"		        columnIndex="3"/>
-		<result property="ownerPageUID"			    column="OWNERPAGEUID"		        columnIndex="4"/>
-		<result property="portletType"				column="PORTLETTYPE"			    columnIndex="5"/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="6"/>
-		<result property="width"					column="WIDTH"					    columnIndex="7"/>
-		<result property="height"					column="HEIGHT"					    columnIndex="8"			nullValue="0"/>
-		<result property="rowPos"					column="ROWPOS"					    columnIndex="9"/>
-		<result property="columnPos"				column="COLUMNPOS"			        columnIndex="10"/>
-		<result property="canRemove"				column="CANREMOVE"			        columnIndex="11"/>
-		<result property="canResize"				column="CANRESIZE"				    columnIndex="12"/>
-		<result property="canReplace"				column="CANREPLACE"			        columnIndex="13"/>
-		<result property="align"					column="ALIGN"						columnIndex="14"		nullValue="middle"/>
-		<result property="vAlign"					column="VALIGN"					    columnIndex="15"		nullValue="top"/>
-		<result property="topMargin"				column="TOPMARGIN"				    columnIndex="16"		nullValue="0"/>
-		<result property="bottomMargin"			    column="BOTTOMMARGIN"		        columnIndex="17"		nullValue="0"/>
-		<result property="leftMargin"				column="LEFTMARGIN"			        columnIndex="18"		nullValue="0"/>
-		<result property="rightMargin"				column="RIGHTMARGIN"			    columnIndex="19"		nullValue="0"/>
-		<result property="mandatory"				column="MANDATORY"			        columnIndex="20"/>
+		<result property="parentPageUID"			column="PARENTPAGEUID"		columnIndex="3"/>
+		<result property="ownerPageUID"			column="OWNERPAGEUID"		columnIndex="4"/>
+		<result property="portletType"				column="PORTLETTYPE"			columnIndex="5"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="6"/>
+		<result property="width"						column="WIDTH"					columnIndex="7"/>
+		<result property="height"						column="HEIGHT"					columnIndex="8"			nullValue="0"/>
+		<result property="rowPos"						column="ROWPOS"					columnIndex="9"/>
+		<result property="columnPos"				column="COLUMNPOS"			columnIndex="10"/>
+		<result property="canRemove"				column="CANREMOVE"			columnIndex="11"/>
+		<result property="canResize"					column="CANRESIZE"				columnIndex="12"/>
+		<result property="canReplace"				column="CANREPLACE"			columnIndex="13"/>
+		<result property="align"						column="ALIGN"						columnIndex="14"		nullValue="middle"/>
+		<result property="vAlign"						column="VALIGN"					columnIndex="15"		nullValue="top"/>
+		<result property="topMargin"				column="TOPMARGIN"				columnIndex="16"		nullValue="0"/>
+		<result property="bottomMargin"			column="BOTTOMMARGIN"		columnIndex="17"		nullValue="0"/>
+		<result property="leftMargin"					column="LEFTMARGIN"			columnIndex="18"		nullValue="0"/>
+		<result property="rightMargin"				column="RIGHTMARGIN"			columnIndex="19"		nullValue="0"/>
+		<result property="mandatory"				column="MANDATORY"			columnIndex="20"/>
 	</resultMap>
 	
 	<resultMap class="PortalUrlPortletVO" id="portalUrlPortletVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
-		<result property="creatorID"				column="CREATORID"				    columnIndex="2"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="creatorID"					column="CREATORID"				columnIndex="2"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortletURLVO" id="portalTBLPortletURLVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
-		<result property="creatorID"				column="CREATORID"				    columnIndex="2"/>
-		<result property="userType"					column="USERTYPE"				    columnIndex="3"/>
-		<result property="url"						column="URL"						columnIndex="4"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="creatorID"					column="CREATORID"				columnIndex="2"/>
+		<result property="userType"					column="USERTYPE"				columnIndex="3"/>
+		<result property="url"							column="URL"						columnIndex="4"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortletBoardVO" id="portalTBLPortletBoardVO">
-		<result property="uID"						column="UID_"						columnIndex="1"		nullValue=""/>
-		<result property="creatorID"				column="CREATORID"				    columnIndex="2"/>
-		<result property="userType"					column="USERTYPE"				    columnIndex="3"		nullValue=""/>
+		<result property="uID"							column="UID_"						columnIndex="1"		nullValue=""/>
+		<result property="creatorID"					column="CREATORID"				columnIndex="2"/>
+		<result property="userType"					column="USERTYPE"				columnIndex="3"		nullValue=""/>
 		<result property="boardID"					column="BOARDID"					columnIndex="4"/>
-		<result property="itemCount"				column="ITEMCOUNT"				    columnIndex="5"/>
-		<result property="itemFields"				column="ITEMFIELDS"				    columnIndex="6"/>
+		<result property="itemCount"				column="ITEMCOUNT"				columnIndex="5"/>
+		<result property="itemFields"					column="ITEMFIELDS"				columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortletImageVO" id="portalTBLPortletImageVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
-		<result property="imagePath"				column="IMAGEPATH"				    columnIndex="2"/>
-		<result property="imageWidth"				column="IMAGEWIDTH"			        columnIndex="3"/>
-		<result property="imageHeight"				column="IMAGEHEIGHT"			    columnIndex="4"/>
-		<result property="imageType"				column="IMAGETYPE"				    columnIndex="5"/>
-		<result property="openMode"				    column="OPENMODE"				    columnIndex="6"/>
-		<result property="windowOption"			    column="WINDOWOPTION"		        columnIndex="7"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="imagePath"				column="IMAGEPATH"				columnIndex="2"/>
+		<result property="imageWidth"				column="IMAGEWIDTH"			columnIndex="3"/>
+		<result property="imageHeight"				column="IMAGEHEIGHT"			columnIndex="4"/>
+		<result property="imageType"				column="IMAGETYPE"				columnIndex="5"/>
+		<result property="openMode"				column="OPENMODE"				columnIndex="6"/>
+		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="7"/>
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortletHtmlPageVO" id="portalTBLPortletHtmlPageVO">
-		<result property="uID"						column="UID_"						columnIndex="1"/>
-		<result property="displayName"				column="DISPLAYNAME"			    columnIndex="2"/>
-		<result property="htmlData"					column="HTMLDATA"				    columnIndex="3"/>
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
+		<result property="htmlData"					column="HTMLDATA"				columnIndex="3"/>
 	</resultMap>
 	
+	<!-- <procedure id="EzPortalDAO.getTopMenuConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
+		<![CDATA[
+			{CALL EZSP_GETTOPMENUCONFIGITEM(#v_pITEMNAME#, #v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getTopMenuConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
 		<![CDATA[
 			SELECT
@@ -323,6 +328,11 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getMenuItemConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
+		<![CDATA[
+			{CALL EZSP_GETMENUITEMCONFIGITEM(#v_pITEMNAME#, #v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getMenuItemConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
 		<![CDATA[
 			SELECT
@@ -337,6 +347,12 @@
 				TENANT_ID = #tenantID#	
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.deleteCacheValue" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_DELETECACHEVALUE(#v_pUID#, #v_pACCESSLISTID#)}
+		]]>
+	</procedure> -->
 	
 	<delete id="EzPortalDAO.deleteCacheValue" parameterClass="Map">
 		<![CDATA[
@@ -360,6 +376,11 @@
 		]]>
 	</delete>
 	
+	<!-- <procedure id="EzPortalDAO.checkCacheValue" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_CHECKCACHEVALUE(#v_PORTALPAGEID#, #v_ACCESSIDLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.checkCacheValue" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -375,6 +396,11 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.topGetTopParentPageID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_TOP_GETTOPPARENTPAGEID(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.topGetTopParentPageID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -384,11 +410,15 @@
 	       	WHERE
 	       		UID_ = #v_pUID#
 	       	AND
-	       		TENANT_ID = #tenantID#
-            AND
-                COMPANYID = #companyID#    	
+	       		TENANT_ID = #tenantID#	
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.getTopParentPageID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_GETTOPPARENTPAGEID(#v_pTEMP#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.getTopParentPageID" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -399,12 +429,15 @@
 	       	WHERE
 	       		UID_ = #v_pTEMP#
 	       	AND
-	       		TENANT_ID = #tenantID#
-            AND
-                COMPANYID = #companyID#    	
+	       		TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.ezAclCheck" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_EZACL_CHECK(#v_pCOMPANYID#, #v_pCN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.ezAclCheck" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -419,6 +452,12 @@
 				TENANT_ID = #tenantID#	
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.getRenderedTopMenuInsert" parameterClass="String" resultMap="portalGetRenderedTopMenuInsertVO">
+		<![CDATA[
+			{CALL EZSP_GETRENDEREDTOPMENUINSERT(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.getRenderedTopMenuInsert" parameterClass="Map" resultMap="portalGetRenderedTopMenuInsertVO">
 		<![CDATA[
@@ -437,12 +476,15 @@
        		WHERE
        			UID_ = #v_pUID#
        		AND
-       			TENANT_ID = #tenantID#
-            AND
-                COMPANYID = #companyID#    	
+       			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.topGetUserInfo" parameterClass="Map" resultMap="portalTBLUserInfoVO">
+		<![CDATA[
+			{CALL EZSP_TOP_GETUSERINFO(#v_pUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.topGetUserInfo" parameterClass="Map" resultMap="portalTBLUserInfoVO">
 		<![CDATA[
 			SELECT
@@ -471,6 +513,11 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.topGetUserInfo2" parameterClass="Map" resultMap="portalTBLUserInfoVO">
+		<![CDATA[
+			{CALL EZSP_TOP_GETUSERINFO2(#v_pUSERID#, #v_pLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.topGetUserInfo2" parameterClass="Map" resultMap="portalTBLUserInfoVO">
 		<![CDATA[
 			 SELECT
@@ -501,6 +548,11 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getUserInfo3" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_GETUSERINFO3(#v_pPARENTUID#, #v_pUSERFLAG#, #v_pUSERID#, #v_pGUBUNFLAG#, #v_pNEWPAGEID#, #v_pUSERNAME#, #v_pACCESSID#, #v_pACCESSNAME#, #v_pVIEW_RIGHT#, #v_pEDIT_RIGHT#, #v_pDEPTH#, #v_pCOMPANYID#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getUserInfo3_S" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -583,6 +635,11 @@
         	( #v_pNEWPAGEID#, #v_pACCESSID#, #v_pACCESSNAME#, #v_pVIEW_RIGHT#, #v_pEDIT_RIGHT#, #tenantID# )
 	</insert>
 	
+	<!-- <procedure id="EzPortalDAO.getUserInfo4" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_GETUSERINFO4(#v_pCOMPANYID#, #v_pCREATORID#, #v_pGUBUNFLAG#, #v_pUSEFLAG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getUserInfo4" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
@@ -614,6 +671,12 @@
             	B.TENANT_ID = $tenantID$		
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.getUserInfo5" parameterClass="Map" resultMap="portalTBLPortalPageGeneralVO">
+		<![CDATA[
+			{CALL EZSP_GETUSERINFO5(#v_pCOUNT#, #v_pUSEFLAG#, #v_pCOMPANYID#, #v_pPARENTUID#, #v_pUSERID#, #v_pGUBUNFLAG#, #tenantID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.getUserInfo5" parameterClass="Map" resultMap="portalTBLPortalPageGeneralVO">
 		<![CDATA[
@@ -668,6 +731,11 @@
 		</isLessEqual>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.checkEditRight" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_CHECKEDITRIGHT(#v_UID#, #v_ACCESSIDLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.checkEditRight" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -683,6 +751,11 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.checkViewRight" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_CHECKVIEWRIGHT(#v_UID#, #v_ACCESSIDLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.checkViewRight" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -698,6 +771,11 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getMenuItemHtml" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_GETMENUITEMHTML_JJH(#v_pUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getMenuItemHtml" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
@@ -710,7 +788,12 @@
        			TENANT_ID = #tenantID#	
 		]]>
 	</select>
-	 
+	
+	 <!-- <procedure id="EzPortalDAO.searchMyPortalPage2" parameterClass="Map" resultMap="portalTBLPortalPageGeneralVO">
+		<![CDATA[
+			{CALL EZSP_SEARCHMYPORTALPAGE2(#v_pACCESSIDLIST#, #v_pGUBUNFLAG#, #v_pSTRRIGHT#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> --> 
 	<select id="EzPortalDAO.searchMyPortalPage2" parameterClass="Map" resultMap="portalTBLPortalPageGeneralVO">
 		<![CDATA[
 			SELECT 
@@ -741,6 +824,12 @@
             	A.TENANT_ID = #tenantID#	
 		]]>
 	</select> 
+	
+	 <!-- <procedure id="EzPortalDAO.topSearchTopMenu3" parameterClass="Map" resultMap="portalTBLTopMenuGeneralVO">
+		<![CDATA[
+			{CALL EZSP_TOP_SEARCHTOPMENU3(#v_pENDROW#, #v_pDISPLAYNAME#, #v_pUSEFLAG#, #v_pCOMPANYID#, #v_pLANG#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.topSearchTopMenu3" parameterClass="Map" resultMap="portalTBLTopMenuGeneralVO">
 		<![CDATA[
@@ -796,6 +885,12 @@
 		
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.topSearchTopMenu2" parameterClass="Map" resultMap="portalTopSearchTopMenu2VO">
+		<![CDATA[
+			{CALL EZSP_TOP_SEARCHTOPMENU2(#v_pENDROW#, #v_pDISPLAYNAME#, #v_pUSEFLAG#, #v_pCOMPANYID#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> --> 
+	
 	<select id="EzPortalDAO.topSearchTopMenu2" parameterClass="Map" resultMap="portalTopSearchTopMenu2VO">
 		<![CDATA[
 			SELECT
@@ -811,9 +906,7 @@
 			ON
 				A.THEMEUID = B.UID_ 
 			AND
-				A.TENANT_ID = B.TENANT_ID
-            AND
-                A.COMPANYID = B.COMPANAYID    	
+				A.TENANT_ID = B.TENANT_ID	
    			WHERE
    				(NOT EXISTS(
    					SELECT
@@ -858,6 +951,12 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getThemeInfo" parameterClass="Map" resultMap="portalTBLThemeGeneralVO">
+		<![CDATA[
+			{CALL EZSP_GET_THEME_INFO(#v_PUID#, #v_PGUBUN#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
 	<select id="EzPortalDAO.getThemeInfo" parameterClass="Map" resultMap="portalTBLThemeGeneralVO">
 		<isEqual	property="v_PGUBUN" compareValue="1">
 			<![CDATA[
@@ -868,9 +967,7 @@
           		WHERE 
           			UID_ = #v_PUID#
 				AND
-					TENANT_ID = #tenantID#
-                AND
-                    COMPANAYID = #companyID#    			
+					TENANT_ID = #tenantID#			
 			]]>
 		</isEqual>
 		<isNotEqual property="v_PGUBUN" compareValue="1">
@@ -883,9 +980,7 @@
              		WHERE 
              			UID_ = #v_PUID#
              		AND
-             			TENANT_ID = #tenantID#
-                    AND
-                        COMPANAYID = #companyID#    	
+             			TENANT_ID = #tenantID#	
 				]]>	
 			</isEqual>
 			<isNotEqual property="v_PGUBUN" compareValue="2">
@@ -897,14 +992,18 @@
              		WHERE  
              			UID_ = #v_PUID#
              		AND
-             			TENANT_ID = #tenantID#
-                    AND
-                        COMPANAYID = #companyID#    	
+             			TENANT_ID = #tenantID#	
 				]]>	
 			</isNotEqual>
 		</isNotEqual>
 		
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.useStartPageChack" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_USESTARTPAGECHACK(#v_pUSERID#, #v_pCOMPANYID#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.useStartPageChack_S1" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -935,6 +1034,12 @@
       			TENANT_ID = #tenantID#	
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.useStartPageChack2" parameterClass="Map" resultClass="String" remapResults="true">
+		<![CDATA[
+			{CALL EZSP_USESTARTPAGECHACK2(#v_pUSERID#, #v_pCOMPANYID#, #v_pPARENTUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.useStartPageChack2_S" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -970,6 +1075,11 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getLogoHtml" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_GETLOGOHTML(#v_pOWNERPAGEID#, #v_pACCESSID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getLogoHtml" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -991,6 +1101,12 @@
 		]]>
 	</select>
 	
+<!-- 	<procedure id="EzPortalDAO.getImageHtml" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
+		<![CDATA[
+			{CALL EZSP_GETIMAGEHTML(#v_pUID#, #v_pPARENTUID#, #v_pSKINNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
 	<select id="EzPortalDAO.getImageHtml" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
 		<![CDATA[
 			SELECT
@@ -1008,6 +1124,11 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.topLoadGetParameters" parameterClass="Map" resultMap="portalTopLoadGetParametersVO">
+		<![CDATA[
+			{CALL EZSP_TOP_LOADGETPARAMETERS(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.topLoadGetParameters" parameterClass="Map" resultMap="portalTopLoadGetParametersVO">
 		<![CDATA[
 			SELECT
@@ -1027,6 +1148,12 @@
        			B.TENANT_ID = #tenantID#		
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.loadGetParameters" parameterClass="Map" resultMap="portalTopLoadGetParametersVO">
+		<![CDATA[
+			{CALL EZSP_LOADGETPARAMETERS(#v_pPortletID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.loadGetParameters" parameterClass="Map" resultMap="portalTopLoadGetParametersVO">
 		<![CDATA[
@@ -1048,6 +1175,11 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getUtilMenuHtml" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsVO">
+		<![CDATA[
+			{CALL EZSP_GETUTILMENUHTML(#v_pPARENTUID#, #v_pOWNERPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getUtilMenuHtml" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsVO">
 		<![CDATA[
 			SELECT
@@ -1065,6 +1197,11 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getMainMenuHtml" parameterClass="Map" resultMap="portalGetMainMenuHtmlVO">
+		<![CDATA[
+			{CALL EZSP_GETMAINMENUHTML(#v_pPARENTUID#, #v_pOWNERPAGEID#, #v_pSKINNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getMainMenuHtml" parameterClass="Map" resultMap="portalGetMainMenuHtmlVO">
 		<![CDATA[
 			SELECT
@@ -1087,7 +1224,12 @@
         		A.COLUMNPOS ASC
 		]]>
 	</select>
-    
+	
+	<!-- <procedure id="EzPortalDAO.getSubMenuHtml" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsVO">
+		<![CDATA[
+			{CALL EZSP_GETSUBMENUHTML(#v_pOWNERPAGEID#, #v_pPARENTUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getSubMenuHtml" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsVO">
 		<![CDATA[
 			SELECT
@@ -1100,11 +1242,15 @@
 				OWNERPAGEID = #v_pOWNERPAGEID#
 			AND
 				TENANT_ID = #tenantID#	
-        	ORDER BY 
-        		COLUMNPOS ASC
+        	ORDER BY COLUMNPOS ASC
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getSubMenuHtml2" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsSVO">
+		<![CDATA[
+			{CALL EZSP_GETSUBMENUHTML2(#v_pPARENTUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getSubMenuHtml2" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsSVO">
 		<![CDATA[
 			SELECT
@@ -1115,11 +1261,15 @@
        			PARENTMENUID = #v_pPARENTUID#
        		AND
        			TENANT_ID = #tenantID#	
-        	ORDER BY 
-                COLUMNPOS ASC
+        	ORDER BY COLUMNPOS ASC
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getPortalConfigItem" parameterClass="Map" resultClass="String"	 remapResults="true">
+		<![CDATA[
+			{CALL EZSP_GETPORTALCONFIGITEM(#v_pPITEMNAME#, #v_pPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getPortalConfigItem" parameterClass="Map" resultClass="String"	 remapResults="true">
 		<![CDATA[
 			SELECT 
@@ -1135,6 +1285,12 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getPortletConfigItem" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_GETPORTLETCONFIGITEM(#v_pPITEMNAME#, #v_pPORTLETID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
 	<select id="EzPortalDAO.getPortletConfigItem" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -1145,13 +1301,16 @@
 				UID_ = #v_pPORTLETID#
 			AND
 				TENANT_ID = #tenantID#
-			AND
-                COMPANYID = #companyID#
 			AND	
 				ROWNUM <= 1
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getItemLastPageID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_GETITEMLASTPAGEID(#v_pTEMP#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getItemLastPageID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -1164,6 +1323,12 @@
        			TENANT_ID = #tenantID#	
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.getRenderedPortalPageHtml" parameterClass="Map" resultMap="portalGetRenderedTopMenuInsertVO">
+		<![CDATA[
+			{CALL EZSP_GETRENDEREDPORTALPAGEHTML(#v_pPORTALPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.getRenderedPortalPageHtml" parameterClass="Map" resultMap="portalGetRenderedTopMenuInsertVO">
 		<![CDATA[
@@ -1182,12 +1347,15 @@
        		WHERE
        			UID_ = #v_pPORTALPAGEID#
        		AND
-       			TENANT_ID = #tenantID#
-            AND
-                COMPANYID = #companyID#    	
+       			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.updateCacheValue" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_UPDATECACHEVALUE(#v_PORTALPAGEID#, #v_ACCESSIDLIST#, #v_RENDEREDHTML#)}
+		]]>
+	</procedure> -->
 	<delete id="EzPortalDAO.updateCacheValue_D" parameterClass="Map">
 		<![CDATA[
 			DELETE
@@ -1211,6 +1379,12 @@
 		]]>
 	</insert>
 	
+	<!-- <procedure id="EzPortalDAO.portalPageBaseType" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_PORTALPAGEBASETYPE(#v_pUID#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
 	<select id="EzPortalDAO.portalPageBaseType" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -1225,6 +1399,12 @@
 				TENANT_ID = #tenantID#	
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.getThemeList" parameterClass="Map" resultMap="portalGetThemeListVO">
+		<![CDATA[
+			{CALL EZSP_GET_THEME_LIST(#v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.getThemeList" parameterClass="Map" resultMap="portalGetThemeListVO">
 		<![CDATA[
@@ -1253,6 +1433,12 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getPortalPageCategory"  resultMap="portalTBLPortalPageCategoryVO">
+		<![CDATA[
+			{CALL EZSP_GETPORTALPAGECATEGORY(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
 	<select id="EzPortalDAO.getPortalPageCategory" parameterClass="Integer" resultMap="portalTBLPortalPageCategoryVO">
 		SELECT 
 			* 
@@ -1261,6 +1447,12 @@
         WHERE
         	TENANT_ID = #tenantID#	
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.newMyPortalPageCreate" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_NEWMYPOTALPAGE_CREATE(#v_pPARENTPAGEID#, #v_pPAGEID#, #v_pUSERID#, #v_pGUBUNFLAG#, #v_pNEWPAGEID#, #v_pDEPTH#, #v_pCOMPANYID#, #v_pACCESSID#, #v_pACCESSNAME#, #v_pVIEW_RIGHT#, #v_pEDIT_RIGHT#, #v_pMODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.newMyPortalPageCreate_S"  parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -1376,6 +1568,12 @@
 		]]>
 	</insert>
 	
+	<!-- <procedure id="EzPortalDAO.newMyPortalPageCreate2" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_NEWMYPORTALPAGE_CREATE2(#v_pUSERFLAG#, #v_pUSERID#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
 	<select id="EzPortalDAO.newMyPortalPageCreate2_S" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -1417,6 +1615,12 @@
 		]]>
 	</select>  
 	
+	<!-- <procedure id="EzPortalDAO.newMyPortalPageCreate3" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_NEWMYPORTALPAGE_CREATE3(#v_pUSEFLAG#, #v_pUID#, #v_pCOMPANYID#, #v_pUSERID#)}
+		]]>
+	</procedure> -->
+	
 	<update id="EzPortalDAO.newMyPortalPageCreate3" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -1433,6 +1637,12 @@
         		TENANT_ID = #tenantID#	
 		]]>
 	</update>
+	
+	<!-- <procedure id="EzPortalDAO.urlPortlet" parameterClass="Map"  resultMap="portalUrlPortletVO">
+		<![CDATA[
+			{CALL EZSP_URLPORTLET(#v_UID#, #v_CREATORID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.urlPortlet" parameterClass="Map"  resultMap="portalUrlPortletVO">
 		<![CDATA[
@@ -1451,6 +1661,12 @@
 				TENANT_ID = #tenantID#	
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.boardPortlet" parameterClass="Map"  resultMap="portalTBLPortletBoardVO">
+		<![CDATA[
+			{CALL EZSP_BOARDPORTLET(#v_UID#, #v_CREATORID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.boardPortlet" parameterClass="Map"  resultMap="portalTBLPortletBoardVO">
 		<![CDATA[
@@ -1472,6 +1688,12 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getPorletProperties" parameterClass="Map"  resultClass="PortalPortletGeneralVO" >
+		<![CDATA[
+			{CALL EZSP_GETPORLETPROPERTIES(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
 	<select id="EzPortalDAO.getPorletProperties_S" parameterClass="Map"  resultClass="String">
 		<![CDATA[
 			SELECT
@@ -1486,9 +1708,7 @@
                        		WHERE
                        			UID_ = #v_pUID#
                        		AND
-                       			TENANT_ID = #tenantID#
-                            AND
-                                COMPANYID = #companyID# )
+                       			TENANT_ID = #tenantID#	 )
 		]]>
 	</select>
 	
@@ -1501,11 +1721,15 @@
        		WHERE
        			UID_ = #v_pUID#
        		AND
-       			TENANT_ID = #tenantID#
-       		AND
-       			COMPANYID = #companyID#
+       			TENANT_ID = #tenantID#	
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.myPortalList" parameterClass="Map" resultClass="PortalMyPortalListVO">
+		<![CDATA[
+			{CALL EZSP_MYPORTALLIST(#v_pCOMPANYID#, #v_pGUBUNFLAG#, #v_pIDUSER#, #v_pIDDEPT#, #v_pIDCOMPANY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.myPortalList" parameterClass="Map" resultClass="PortalMyPortalListVO">
 		<![CDATA[
@@ -1549,12 +1773,16 @@
                                                AND TENANT_ID = #tenantID# )
                		) )
             AND
-            	A.TENANT_ID = #tenantID#
-            AND
-                A.COMPANYID = #v_pIDCOMPANY#        		
+            	A.TENANT_ID = #tenantID#   		
         	ORDER BY A.UID_ ASC
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.newMyPortalList" parameterClass="Map" resultClass="PortalNewMyPortalPageListVO">
+		<![CDATA[
+			{CALL EZSP_NEWMYPOTALPAGELIST(#v_pDISPLAYNAME#, #v_pGUBUNFLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.newMyPortalList" parameterClass="Map" resultClass="PortalNewMyPortalPageListVO">
 		<![CDATA[
@@ -1570,13 +1798,16 @@
 			AND
 				GUBUNFLAG = #v_pGUBUNFLAG#
 			AND
-				TENANT_ID = #tenantID#
-            AND
-                COMPANYID = #companyID#     	
-        	ORDER BY
-                UID_ ASC
+				TENANT_ID = #tenantID#	
+        	ORDER BY UID_ ASC
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.searchMyPortalPageCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SEARCHMYPORTALPAGECOUNT(#v_pCOMPANYID#, #v_pGUBUNFLAG#, #v_pIDUSER#, #v_pIDDEPT#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.searchMyPortalPageCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -1613,6 +1844,12 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.searchMyPortalPage3" parameterClass="Map" resultClass="PortalSearchMyPortalPage3VO">
+		<![CDATA[
+			{CALL EZSP_SEARCHMYPORTALPAGE3(#v_pCOMPANYID#, #v_pENDROW#, #v_pDISPLAYNAME#, #v_pGUBUNFLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
 	<select id="EzPortalDAO.searchMyPortalPage3" parameterClass="Map" resultClass="PortalSearchMyPortalPage3VO">
 		<![CDATA[
 			SELECT
@@ -1625,9 +1862,7 @@
    				WHERE
    					UID_=B.THEMEUID
    				AND
-   					TENANT_ID = #tenantID#
-                AND
-                    COMPANAYID = #v_pCOMPANYID# ) AS IMAGEURL
+   					TENANT_ID = #tenantID#	) AS IMAGEURL
 			FROM
 				TBL_PORTALPAGE_GENERAL A ,
    				(SELECT
@@ -1656,13 +1891,17 @@
 			AND
 				A.TENANT_ID = #tenantID#
 			AND
-				B.TENANT_ID = #tenantID#
-            AND
-                A.COMPANYID = B.COMPANYID     		
+				B.TENANT_ID = #tenantID#		
 			ORDER BY
 				DISPLAYNAME ASC
 		]]>
 	</select>
+	
+	 <!-- <procedure id="EzPortalDAO.useTopMenuID2" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
+		<![CDATA[
+			{CALL EZSP_USE_TOPMENUID2(#v_pCOMPANYID#, #v_pUSEFLAG#, #v_pLANG#, #v_pUSERTHEMEUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>  -->
 	
 	<select id="EzPortalDAO.useTopMenuID2" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
 		<![CDATA[
@@ -1691,6 +1930,12 @@
 				a.TENANT_ID = #tenantID#	
 		]]>
 	</select> 
+	
+	<!--  <procedure id="EzPortalDAO.useTopMenuID" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
+		<![CDATA[
+			{CALL EZSP_USE_TOPMENUID(#v_pCOMPANYID#, #v_pUSEFLAG#, #v_pUSERTHEMEUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.useTopMenuID" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
 		<![CDATA[
@@ -1724,6 +1969,12 @@
 				a.TENANT_ID = #tenantID#	
 		]]>
 	</select> 
+	
+	<!-- <procedure id="EzPortalDAO.searchStartPage2" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZSP_SEARCHSTARTPAGE2(#v_pPARENTUID#, #v_pUSERID#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.searchStartPage2_S" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -1764,6 +2015,12 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.searchStartPage" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_SEARCHSTARTPAGE(#v_pPARENTUID#, #v_pUSERID#, #v_pCOMPANYID#, #v_pHOMEUID#, #v_pIMAGEUID#, #v_pLINKURL#)}
+		]]>
+	</procedure> -->
+	
 	<select id="EzPortalDAO.searchStartPage_S" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -1784,11 +2041,17 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_USERSTARTPAGE_ITEM
-       			( UID_, PARENTUID, IMAGEUID, ACCESSID, COMPANYID, LINKURL, LANG, TENANT_ID )
+       			( UID_, PARENTUID, IMAGEUID, ACCESSID, COMPANYID, LINKURL, TENANT_ID )
        		VALUES
-       			( '$v_pHOMEUID$', '$v_pPARENTUID$', '$v_pIMAGEUID$', '$v_pUSERID$', '$v_pCOMPANYID$', '$v_pLINKURL$', #lang# ,$tenantID$ )
+       			( '$v_pHOMEUID$', '$v_pPARENTUID$', '$v_pIMAGEUID$', '$v_pUSERID$', '$v_pCOMPANYID$', '$v_pLINKURL$', $tenantID$ )
 		]]>
 	</insert>
+	
+	<!-- <procedure id="EzPortalDAO.firstMainList" parameterClass="Map" resultClass="PortalFirstMainListVO">
+		<![CDATA[
+			{CALL EZSP_FIRSTMAIN_LIST(#v_PUSETOPMENUID#, #v_DEPTPATH#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.firstMainList" parameterClass="Map" resultClass="PortalFirstMainListVO" remapResults="true">
 		<![CDATA[
@@ -1798,7 +2061,7 @@
                       		  AA.OWNERPAGEID ,
                       		  AA.DISPLAYNAME ,
                       		  AA.LINKURL ,
-                      		  NVL(AA.COLUMNPOS, 0) AS COLUMNPOS ,
+                      		  AA.COLUMNPOS ,
                       		  AA.VIEW_RIGHT ,
                       		  AA.ACCESSID ,
                       		  AA.ORDERNUM 
@@ -1831,10 +2094,16 @@
        		WHERE
        			AA.FLAG = '1'
         	ORDER BY
-        		COLUMNPOS,
+        		AA.COLUMNPOS,
                 AA.ORDERNUM
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.setUseMyStartPage2" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_SETUSEMYSTARTPAGE2(#v_pOLDUID#, #v_pUSERID#, #v_pCOMPANYID#, #v_pLANGSTR#, #v_pUID#)}
+		]]>
+	</procedure> -->
 	
 	<delete id="EzPortalDAO.setUseMyStartPage2_D" parameterClass="Map">
 		<![CDATA[
@@ -1887,6 +2156,11 @@
 		]]>
 	</insert>
 	
+	<!-- <procedure id="EzPortalDAO.setUseMyPortalPage" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_SETUSEMYPOTALPAGE(#v_pUID#, #v_pUSERID#, #v_pCOMPANYID#, #v_pGUBUNFLAG#, #v_pUSEFLAG#)}
+		]]>
+	</procedure> -->
 	<update id="EzPortalDAO.setUseMyPortalPage" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
@@ -1924,6 +2198,12 @@
         		TENANT_ID = #tenantID#		
 		]]>
 	</update>
+	
+	<!-- <procedure id="EzPortalDAO.searchPortalPage" parameterClass="Map" resultClass="PortalSearchPortalPageVO">
+		<![CDATA[
+			{CALL EZSP_SEARCHPORTALPAGE(#v_ENDROW#, #v_DISPLAYNAME#, #v_USERFLAG#, #v_GUBUNFLAG#, #v_ARRPARAM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.searchPortalPage" parameterClass="Map" resultClass="PortalSearchPortalPageVO">
 		<![CDATA[
@@ -1972,6 +2252,12 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.searchPortletCheckRight2" parameterClass="Map" resultClass="PortalPortletGeneralVO">
+		<![CDATA[
+			{CALL EZSP_SEARCHPORTLETCHECKRIGHT2(#v_pGUBUNFLAG#, #v_pPAGEGUBUNFLAG#, #v_pDISPLAYNAME#, #v_pENDROW#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
 	<select id="EzPortalDAO.searchPortletCheckRight2" parameterClass="Map" resultClass="PortalPortletGeneralVO">
 		<![CDATA[
 			SELECT
@@ -1979,9 +2265,7 @@
 			FROM
 				TBL_PORTLET_GENERAL 
 			WHERE
-				DISPLAYNAME LIKE '%' || #v_pDISPLAYNAME# || '%' 
-			AND 
-				ROWNUM <= #v_pENDROW#
+				DISPLAYNAME LIKE '%' || #v_pDISPLAYNAME# || '%' AND ROWNUM <= #v_pENDROW#
 			AND
 				TENANT_ID = #tenantID#	
 		]]>
@@ -2003,8 +2287,7 @@
 		<isNotEmpty property="v_pPAGEGUBUNFLAG">
 			<![CDATA[
 				AND
-                    /* GUBUNFLAG IN ('0', '|| $v_pPAGEGUBUNFLAG$ ||') */
-					GUBUNFLAG IN ('0', '$v_pPAGEGUBUNFLAG$')
+					GUBUNFLAG IN ('0', '|| $v_pPAGEGUBUNFLAG$ ||')
 			]]>	
 		</isNotEmpty>
 		
@@ -2021,6 +2304,11 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.searchMenuItem" parameterClass="Map" resultClass="PortalSearchMenuItemVO">
+		<![CDATA[
+			{CALL EZSP_SEARCHMENUITEM(#v_pENDROW#, #v_pDISPLAYNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.searchMenuItem" parameterClass="Map" resultClass="PortalSearchMenuItemVO">
 		<![CDATA[
 			SELECT
@@ -2034,10 +2322,14 @@
    					)
           	WHERE
           		RNUM <= $v_pENDROW$
-          	ORDER BY
-          		DISPLAYNAME ASC
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.ezCkAdminACL" parameterClass="Map"  resultClass="String" >
+		<![CDATA[
+			{CALL EZSP_EZCK_ADMINACL(#v_pOWNERPAGEID#, #v_pLANG#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.ezCkAdminACL" parameterClass="Map"  resultClass="String">
 		<isEqual property="v_pLANG" compareValue="1">
@@ -2109,6 +2401,12 @@
 		</isEqual>
 		
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.ezCkAdminACL2" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_EZCK_ADMINACL2(#v_pACL#, #v_pRESULT#,#v_pACCESSID#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.ezCkAdminACL2_S1" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -2189,6 +2487,12 @@
 		]]>
 	</update>
 	
+	<!-- <procedure id="EzPortalDAO.getPortletPrameters" parameterClass="String"  resultClass="PortalGetPortletParametersVO" >
+		<![CDATA[
+			{CALL EZSP_GETPORLETPARAMETERS(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
 	<select id="EzPortalDAO.getPortletPrameters" parameterClass="Map"  resultClass="PortalGetPortletParametersVO">
 		<![CDATA[
 			SELECT 
@@ -2211,6 +2515,11 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.getAclItems" parameterClass="String"  resultClass="PortalTBLPortalACLVO" >
+		<![CDATA[
+			{CALL EZSP_GETACLITEMS(#pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	<select id="EzPortalDAO.getAclItems" parameterClass="Map"  resultClass="PortalTBLPortalACLVO">
 		<![CDATA[
 			SELECT 
@@ -2224,6 +2533,12 @@
 		]]>
 	</select>
 	
+	<!-- <procedure id="EzPortalDAO.imagePortlet" parameterClass="String"  resultClass="PortalImagePortletVO" >
+		<![CDATA[
+			{CALL EZSP_IMAGEPORTLET(#pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
 	<select id="EzPortalDAO.imagePortlet" parameterClass="Map"  resultClass="PortalImagePortletVO">
 		<![CDATA[
 			SELECT
@@ -2234,16 +2549,18 @@
              	TBL_PORTLET_IMAGE B
        		WHERE
        			A.UID_ = B.UID_
-            AND
-                A.TENANT_ID = B.TENANT_ID    
 			AND
 				A.UID_ = #v_UID#
 			AND
-				A.TENANT_ID = #tenantID#
-            AND
-                A.COMPANYID = #companyID#       	
+				A.TENANT_ID = #tenantID#	
 		]]>
 	</select>
+	
+	<!-- <procedure id="EzPortalDAO.htmlPortlet" parameterClass="String"  resultClass="String" >
+		<![CDATA[
+			{CALL EZSP_HTMLPORTLET(#pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
 	
 	<select id="EzPortalDAO.htmlPortlet" parameterClass="Map"  resultClass="String">
 		<![CDATA[
@@ -2268,8 +2585,6 @@
       			UID_	=	#parentTopMenuID#
       		AND
       			TENANT_ID = #tenantID#
-            AND
-                COMPANYID = #companyID#    
 		]]>
 	</select>
 	
@@ -2282,9 +2597,7 @@
       		WHERE
       			UID_	=	#temp#
       		AND
-      			TENANT_ID = #tenantID#
-            AND
-                COMPANYID = #companyID#    	
+      			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
@@ -2338,9 +2651,7 @@
       		WHERE
       			UID_	=	#pUID#
       		AND
-      			TENANT_ID = #tenantID#
-            AND
-                COMPANAYID = #companyID#   	
+      			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
@@ -2353,9 +2664,7 @@
       		WHERE
       			UID_	=	#pUID#
       		AND
-      			TENANT_ID = #tenantID#
-            AND
-                COMPANAYID = #companyID#    	
+      			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
@@ -2520,5 +2829,7 @@
 				TENANT_ID = #tenantID#	
 		]]>
 	</update>
+	
+	
 </sqlMap>
 

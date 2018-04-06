@@ -53,7 +53,7 @@
 		            alert("<spring:message code='ezEmail.t115' />");
 		            return;
 		        }
-		        if (parseInt(document.getElementById("expiretime").value) != document.getElementById("expiretime").value || parseInt(document.getElementById("expiretime").value) < 1) {
+		        if (parseInt(document.getElementById("expiretime").value) != document.getElementById("expiretime").value || parseInt(document.getElementById("expiretime").value) < 0) {
 		            alert("<spring:message code='ezEmail.t116' />");
 		            return;
 		        }

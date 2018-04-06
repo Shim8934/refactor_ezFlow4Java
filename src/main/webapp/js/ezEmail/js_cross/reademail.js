@@ -1056,3 +1056,4 @@ function mail_link(){
 	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(820, 900));
 
 }
+
