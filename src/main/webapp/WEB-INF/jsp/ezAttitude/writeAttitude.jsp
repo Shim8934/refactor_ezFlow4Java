@@ -43,7 +43,7 @@
 		    var dayMsg = "일;월;화;수;목;금;토";
 		    var dayStr = dayMsg.split(";");
 		    
-			function setDatePicker() {
+			function setDatePicker(type) {
 				$("#Sdatepicker").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
@@ -84,15 +84,19 @@
 		        
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
-		        $('#Stimepicker').timepicker();
-		        $('#Stimepicker').timepicker('setTime', SDate);
-		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
-
 		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Edatepicker").datepicker('setDate', EDate);
-		        $('#Etimepicker').timepicker();
-		        $('#Etimepicker').timepicker('setTime', EDate);
-		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        
+		        if (type == 2 || type == 3 || type == 5) {
+			        $('#Stimepicker').timepicker();
+			        $('#Stimepicker').timepicker('setTime', SDate);
+			        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+			        if (type == 3 || type == 5) {
+				        $('#Etimepicker').timepicker();
+				        $('#Etimepicker').timepicker('setTime', EDate);
+				        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+			        }
+		        }
 		        
 		        $.datepicker.regional["ko"] = {
 			        	closeText: "닫기",
@@ -144,8 +148,10 @@
 						typeId : selectType
 					},
 					success : function (result) {
+						$("#attiwriteForm tr").not("tr:first").remove();
 						$("#attiwriteForm tbody").append(result.formHtml);
-						setDatePicker();
+						
+						setDatePicker($("#periodblock").attr("datetype"));
 						
 						$("#writerName").text(writerName);
 					}
@@ -155,23 +161,33 @@
 			var startDate = "";
 			var endDate = "";
 			function dateTypeCheck() {
-				alert($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val());
-				var dateType = $("periodblock").attr("datetype");
+				var dateType = $("#periodblock").attr("datetype");
+				startDate = "";
+				endDate = "";
 				
 				switch (dateType) {
 					case "1":
 						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
 						break;
 					case "2":
-						startDate = $("#Sdatepicker").datepicker('getDate') + " " + $('#Stimepicker').timepicker('getTime');
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 						break;
 					case "3":
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+						endDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 						break;
 					case "4":
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
 						break;
 					case "5":
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd'}).val() + " " + $('#Etimepicker').val();
 						break;
 				}
+				
+				alert(startDate + "\n" + endDate);
+				
 			}
 			
 			//저장
