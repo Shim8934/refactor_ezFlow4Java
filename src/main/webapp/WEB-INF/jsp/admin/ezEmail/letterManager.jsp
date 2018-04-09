@@ -202,7 +202,7 @@
 							lmPreviewChange();
 						}
 						
-						alert(""); 
+						alert("<spring:message code='ezEmail.letter30'/>"); 
 					}
 				});
 			}
