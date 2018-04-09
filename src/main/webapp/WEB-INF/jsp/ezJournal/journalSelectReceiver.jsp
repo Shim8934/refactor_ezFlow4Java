@@ -382,7 +382,7 @@
 					        	</div>
 					        </div>
 				        	<td id="journalOrgan_content" style="display: none;">
-				        		<div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px; padding:0px;">
+				        		<div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px; padding:0px; border-top: none;">
 				                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
 				                        <table style="margin-top: 3px; width: 100%;">
 				                            <tr>
@@ -400,7 +400,7 @@
 								                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 								                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 				                                        </select>
-				                                        <input type="text" id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" value="" style="width: 130px; margin: 0px;" />
+				                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" value="" style="width: 130px; margin: 0px;" />
 				                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 				                                    </div>
 				                                </td>
@@ -436,7 +436,7 @@
 		                                        <a class="imgbtn"><span onclick="deleteFavorite()"><spring:message code='ezJournal.t97'/></span></a>
 		                                    </div>
 	                                        <div class="border_gray">
-	                                            <div id="journalFavorite" style="Width: 100%; Height: 173px; OVERFLOW: AUTO; padding-top: 0px;">
+	                                            <div id="journalFavorite" style="Width: 100%; Height: 174px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table class="mainlist" id="favoriteList" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
@@ -485,7 +485,7 @@
 									<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
 								</h2>
 								<div class="receiver_borderbox">
-									<div id="receiverList" style="width: 250px; Height: 473px; overflow-x: auto; overflow-y: auto;">
+									<div id="receiverList" style="width: 250px; Height: 478px; overflow-x: auto; overflow-y: auto;">
 									</div>
 								</div>
 	                        </td>
