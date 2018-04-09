@@ -416,8 +416,9 @@
 							$("#Preview_ContentH").html(journal);
 							if(listType=='recv'){
 								parent.left.setRecvCount();
-								setJournalList();
+// 								setJournalList();
 								setRecvCount();
+								$(parentElem).find("td:eq(1)").find("img").attr("src", "/images/ImgIcon/icon-msg-read.gif");
 							}
 							var textContentSize;
 							textContentSize = $("#PreviewRayerH").height()-55;

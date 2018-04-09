@@ -25,17 +25,17 @@
 						<img style="cursor:pointer" src="/images/ImgIcon/view-document.gif ">
 					</th>
 				</c:if>
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
-						<img src="/images/newAttach.gif">
-					</th>
 				<c:if test="${listType eq 'mine' }">
 					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center; width:20px;" class="h5_center">
 						<img src="/images/lock_icon.png" style="width: 20px; height: 20px;">
 						<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> -->
 					</th>
 				</c:if>
+					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
+						<img src="/images/newAttach.gif">
+					</th>
 				<c:if test="${listType eq 'recv' or listType eq 'temp' }">
-					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="8" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; padding: 0px; text-align: left; width:15%;" class="h5_center">
+					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="8" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: left; width:15%;" class="h5_center">
 						<spring:message code='ezJournal.t12'/>
 					</th>
 				</c:if>
@@ -91,6 +91,14 @@
 							</c:otherwise>
 						</c:choose>
 					</c:if>
+					<c:if test="${listType eq 'mine' }">
+						<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+							<c:if test="${journal.deptShare eq 'N' }">
+								<img src="/images/lock_icon.png" style="width: 20px; height: 20px;">
+								<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> --> 
+							</c:if>
+						</td>
+					</c:if>
 					<c:choose>
 						<c:when test="${journal.fileCount ne 0}">
 							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;">
@@ -101,14 +109,6 @@
 							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;"></td>
 						</c:otherwise>
 					</c:choose>
-					<c:if test="${listType eq 'mine' }">
-						<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-							<c:if test="${journal.deptShare eq 'N' }">
-								<img src="/images/lock_icon.png" style="width: 20px; height: 20px;">
-								<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> --> 
-							</c:if>
-						</td>
-					</c:if>
 					<c:if test="${listType eq 'recv' or listType eq 'temp' }">
 						<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 							<spring:message code='${journal.typeId}'/>
