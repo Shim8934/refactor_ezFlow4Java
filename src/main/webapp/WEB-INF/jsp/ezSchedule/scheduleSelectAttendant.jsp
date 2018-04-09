@@ -723,6 +723,7 @@
 		        
 		        if (pListType == "IMG") {
 		            document.getElementById("DeptUserImgList").style.display = "";
+		            document.getElementById("DeptUserImgList").style.width = "467px";
 		            document.getElementById("txtlist_Layer").style.display = "none";
 		            document.getElementById("txtlist_table").style.display = "none";
 		            document.getElementById("Search_txtlist_table").style.display = "none";
@@ -1262,14 +1263,14 @@
 	                            </div>
 	                            <table style="margin-top: 3px;">
 	                                <tr>
-	                                    <td class="box" style="border-right:0px">
-	                                        <div style="width: 220px; height: 500px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+	                                    <td class="box" style="border-right:0px; padding-top:0px; padding-bottom:0px;">
+	                                        <div style="width: 240px; height: 508px; margin-top:0px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 	                                    </td>
 	                                    <td></td>
-	                                    <td class="listview" style="width: 426px" id="orglistView">
+	                                    <td class="listview" style="width: 467px" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
-	                                                <th style="white-space:normal">
+	                                                <th style="white-space:normal; border-top:none;">
 	                                                    <span id="SelectDeptNM" style="font-weight: bold; width: 300px;height:30px;text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 	                                                    <span style="float:right;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
@@ -1278,7 +1279,7 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 467px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
@@ -1310,7 +1311,7 @@
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezSchedule.t152' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 477px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 240px; Height: 516px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
