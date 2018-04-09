@@ -1008,3 +1008,5 @@ var strLangSpjj32 =	"후결 승인시에 에러가 발생하였습니다."
 
 var strLangSpjj33 = "결재 문서 바로가기";
 var strLangSpjj34 = "님이 기안한 결재 문서가 도착했습니다. <br> 결재를 하시려면 아래 링크를 클릭하세요.";
+
+var strLang129 = "수신자"
