@@ -37,6 +37,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
+import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
@@ -1526,7 +1527,7 @@ public class EzAttitudeGWController {
 			String order = orderCell + " " + orderOption;
 			
 			//모든근태조회
-			List<AttitudeVO> list = ezAttitudeService.getAttitudeList2(companyId, pageNum, listSize, typeId, userIdList, order, startDate, endDate, offset, info.getTenantId());
+			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(companyId, pageNum, listSize, typeId, userIdList, order, startDate, endDate, offset, info.getTenantId());
 			
 			//리스트 총 갯수
 			String totalCount = ezAttitudeService.getAttitudeCount2(info.getTenantId(), companyId, typeId, userIdList, startDate, endDate, offset);

@@ -212,6 +212,7 @@
     		for (var i = 0; i < result.length; i ++) {
     			resultHtml += "<tr userid='" + result[i].writerId + "'>"
     			   			+ "<td>" + result[i].userName + "</td>"
+    			   			+ "<td>" + result[i].userTitle + "</td>"
     			   			+ "<td>" + result[i].deptName + "</td>"
     						+ "<td>" + result[i].typeName + "</td>";
     			if ( result[i].endDate == null || result[i].endDate == "") {
@@ -380,9 +381,10 @@
 			<thead>
 				<tr>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
+					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직급</th>
 					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
-					<th style="width:5%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
-					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
+					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
+					<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime">시작시간</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="endtime">종료시간</th>
 				</tr>

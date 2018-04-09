@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
@@ -107,7 +108,7 @@ public interface EzAttitudeService {
 
 	public void deleteAttitudeUserConfig(int tenantId, String selecUserList) throws Exception;
 	
-	public List<AttitudeVO> getAttitudeList2(String companyId, String pageNum, String listSize,String typeId, String userIdList, String order, String startDate, String endDate, String offset, int tenantId) throws Exception;
+	public List<AdminAttitudeVO> getAttitudeList2(String companyId, String pageNum, String listSize,String typeId, String userIdList, String order, String startDate, String endDate, String offset, int tenantId) throws Exception;
 	
 	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId, String offset) throws Exception;
 	

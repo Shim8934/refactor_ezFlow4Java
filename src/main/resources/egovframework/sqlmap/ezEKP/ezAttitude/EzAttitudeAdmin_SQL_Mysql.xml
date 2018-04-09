@@ -88,16 +88,13 @@
 		<result  property="endDate" 			column="END_DATE"				columnIndex="8"/>
 		<result  property="endTime" 			column="END_TIME"				columnIndex="9"/>
 		<result  property="modAppl" 			column="MODAPPL"				columnIndex="10"/>
-		<result  property="region" 				column="REGION"					columnIndex="11"/>
-		<result  property="mobile" 				column="MOBILE"					columnIndex="12"/>
-		<result  property="bizSub" 				column="BIZSUB"					columnIndex="13"/>
-		<result  property="content" 			column="CONTENT"				columnIndex="14"/>
-		<result  property="ip" 					column="IP"						columnIndex="15"/>
-		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="16"/>
-		<result  property="typeId" 				column="TYPE_ID"				columnIndex="17"/>
-		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="18"/>
-		<result  property="userName"			column="USER_NAME"				columnIndex="19"/>
-		<result  property="deptName"			column="DEPT_NAME"				columnIndex="20"/>
+		<result  property="ip" 					column="IP"						columnIndex="11"/>
+		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="12"/>
+		<result  property="typeId" 				column="TYPE_ID"				columnIndex="13"/>
+		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="14"/>
+		<result  property="userName"			column="USER_NAME"				columnIndex="15"/>
+		<result  property="deptName"			column="DEPT_NAME"				columnIndex="16"/>
+		<result  property="userTitle"			column="USER_TITLE"				columnIndex="17"/>
 	</resultMap>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
@@ -500,16 +497,13 @@
                 ifnull(substr(date_add(A.END_DATE, INTERVAL #offsetMin# minute), 1, 11),'') AS END_DATE,
                 ifnull(substr(date_add(A.END_DATE, INTERVAL #offsetMin# minute), 12),'') AS END_TIME,
 				A.MODAPPL,
-				A.REGION,
-				A.MOBILE,
-				A.BIZSUB,
-				A.CONTENT,
 				A.IP,
 				A.DATE_TYPE,
 				A.TYPE_ID,
 				B.TYPE_NAME,
 				C.DISPLAYNAME AS USER_NAME,
-                C.DESCRIPTION AS DEPT_NAME
+                C.DESCRIPTION AS DEPT_NAME,
+                C.TITLE AS USER_TITLE
 			FROM   
 				tbl_attitude A 
 			INNER JOIN 

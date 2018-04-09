@@ -18,6 +18,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
+import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
@@ -758,7 +759,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		ezAttitudeDAO.attModAppModify(map);
 	}
 
-	public List<AttitudeVO> getAttitudeList2(String companyId, String pageNum,
+	public List<AdminAttitudeVO> getAttitudeList2(String companyId, String pageNum,
 			String listSize, String typeId, String userIdList,
 			String order, String startDate,
 			String endDate, String offset, int tenantId) throws Exception {
@@ -792,7 +793,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 
-		List<AttitudeVO> resultList = new ArrayList<AttitudeVO>();
+		List<AdminAttitudeVO> resultList = new ArrayList<AdminAttitudeVO>();
 		if (userIdList != null && userIdList != "") {
 			String[] userList = userIdList.split(",");
 			for (int i = 0; i < userList.length; i++) {
