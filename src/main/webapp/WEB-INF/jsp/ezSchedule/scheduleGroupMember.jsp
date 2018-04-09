@@ -80,7 +80,7 @@
 				    		url : "/ezSchedule/scheduleAddMember.do",
 				    		success: function(text){
 				    			alert("<spring:message code='ezSchedule.t174' />");
-			                    window.location.reload(false);		    				    			
+			                    window.location.reload(false);	
 				    		},
 				    		error: function(err){
 				    			alert("<spring:message code='ezSchedule.t173' />");
@@ -139,8 +139,8 @@
 			    		success: function(text){
 			    			OpenWin.alert("<spring:message code='ezSchedule.t174' />");
 							OpenWin.close();
-			    			
-		                    window.location.reload(false);		    				    			
+		                    window.location.reload(false);	
+		                    opener.View_Detail();
 			    		},
 			    		error: function(err){
 			    			OpenWin.alert("<spring:message code='ezSchedule.t173' />");
@@ -182,6 +182,7 @@
 		    		success: function(text){
 		    			 alert(count + "<spring:message code='ezSchedule.t178' />");
 				         window.location.reload(false);   			
+				         opener.View_Detail();
 		    		},
 		    		error: function(err){
 		    			alert("<spring:message code='ezSchedule.t177' />");
@@ -247,7 +248,7 @@
 			<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:435px; HEIGHT:277px"> 
 				<table class="popuplist" style="width:100%; table-layout: fixed">
 			    	<tr>
-				    	<th style="width:40px; text-align:center"><spring:message code='ezSchedule.t190' /></th>
+				    	<th style="width:20px; text-align:center"><spring:message code='ezSchedule.t190' /></th>
 				      	<th style="width:130px; text-align:center;"><spring:message code='ezSchedule.t163' /></th>
 				      	<th style="width:80px; text-align:center"><spring:message code='ezSchedule.t164' /></th>
 				      	<th style="width:100px; text-align:center"><spring:message code='ezSchedule.t165' /></th>
