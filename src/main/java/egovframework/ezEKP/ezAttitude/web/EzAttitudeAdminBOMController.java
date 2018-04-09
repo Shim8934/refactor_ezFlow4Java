@@ -997,14 +997,17 @@ public class EzAttitudeAdminBOMController {
 		JSONArray list = new JSONArray();
 		JSONObject data = new JSONObject();
 		String adminCompany = "";
+		String today = "";
 		if (status.equals("ok")) {
 		
 			data = (JSONObject) resultBody.get("data");
 			list = (JSONArray) data.get("list");
 			adminCompany = (String) data.get("adminCompany");
+			today = (String) data.get("today");
 			
 			model.addAttribute("list", list);
 			model.addAttribute("adminCompany", adminCompany);
+			model.addAttribute("today", today);
 		}
 		
 		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf ended");

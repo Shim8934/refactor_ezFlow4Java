@@ -35,11 +35,13 @@
     	var orderOption = ""; // 정렬 형식(ASC, DESC)
     	var selecUserList = "";//리스트에 선택된 userList(,로 구분)
     	var adminCompany = "${adminCompany}";
+    	var today = "${today}";
 
     	
     	//"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"
     	
     	$(function(){
+    		//회사리스트
 	        if (document.getElementById("ListCompany").length == 0) {
 	            alert("<spring:message code = 'ezAttitude.t32' />");
 	        } else {
@@ -50,6 +52,9 @@
 	    		}
 	            company_change();
 	        }
+    		//검색시 날짜 오늘날짜로 기본값 적용
+    		$("#Sdatepicker").val(today);
+    		$("#Edatepicker").val(today);
     		
     		//헤더 클릭 시 정렬
     		$(document).on('click', '#attiBoardList th', function(){
@@ -93,33 +98,6 @@
 		        buttonImage: "/images/ImgIcon/calendar-month.gif",
 		        buttonImageOnly: true
 		    });
-// 			var uploadSDate = date + " 00:00:00";
-// 			var sYear = uploadSDate.substring(0, 4);
-// 			var sMonth = uploadSDate.substring(5, 7);
-// 			var sDay = uploadSDate.substring(8, 10);
-// 			var sHour = uploadSDate.substring(11, 13);
-// 			var sMin = uploadSDate.substring(14, 16);
-						
-// 			var uploadEDate = date + " 23:59:59";
-// 			var eYear = uploadEDate.substring(0, 4);
-// 			var eMonth = uploadEDate.substring(5, 7);
-// 			var eDay = uploadEDate.substring(8, 10);
-// 			var eHour = uploadEDate.substring(11, 13);
-// 			var eMin = uploadEDate.substring(14, 16);
-		
-// 		    var SDate = new Date();
-// 		    SDate.setFullYear(sYear, sMonth-1, sDay);
-// 		    SDate.setHours(sHour, sMin, 0, 0);
-		    
-// 		    var EDate = new Date();
-// 		    EDate.setFullYear(eYear, eMonth-1, eDay);
-// 		    EDate.setHours(eHour, eMin, 0, 0);
-		    
-// 		    $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-// 		    $("#Sdatepicker").datepicker('setDate', SDate);
-
-// 		    $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-// 		    $("#Edatepicker").datepicker('setDate', EDate);
 		});
 		    
 		var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
@@ -147,6 +125,9 @@
 		        showMonthAfterYear: true
 		    };
 		    $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		    
+		    $("#Sdatepicker").datepicker('disable');
+	        $("#Edatepicker").datepicker('disable');
 		});
     	
     	function company_change(){
@@ -161,6 +142,7 @@
     		if (typeId == "total") {
     			typeId = "";
     		}
+    		
     		//조회자 id리스트
     		var spanLength = $('#receiverlist').find('span').length;
     		var userIdList = "";
@@ -171,6 +153,20 @@
     			//마지막 ',' 제거
     			userIdList = userIdList.slice(0, -1);
     		}
+    		
+    		//검색기간 사용 유무
+    		var startDate = "";
+    		var endDate = "";
+    		if ($('#usedate').val() == true) {
+    			startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    			endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    		}
+    		
+    		if (startDate > edate) {
+				alert("시작일을 종료일보다 빠르게 지정해주십시오.");
+	            return;
+			}
+
     		
     		$.ajax({
     			data : "GET",
@@ -184,8 +180,8 @@
     					userIdList : userIdList,
     					orderCell : orderCell,
     					orderOption : orderOption,
-    					startDate : $('#Sdatepicker').val(),
-    					endDate : $('#Edatepicker').val()},
+    					startDate : startDate,
+    					endDate : endDate},
     			success : function(result){
     				totalCount = result.totalCount;
     				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
@@ -289,6 +285,7 @@
     	}
     	
 		//////////////////
+		var usedate = false;
 		function DateSearch_Click() {
 	        if(usedate){
 	        	usedate = false;
@@ -354,12 +351,7 @@
 	  						</tr>
 	  						<tr>
 	  							<th style="text-align:center">검색기간</th>
-	  							<td>                        
-<!-- 	  								<span id="periodblock"> -->
-<!-- 			                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> -->
-<!-- 			                        ~ -->
-<!-- 			                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> -->
-<!-- 			                        </span> -->
+	  							<td>
 					      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" /><label for="usedate">검색기간 사용&nbsp;</label>
 					            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
 					      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>

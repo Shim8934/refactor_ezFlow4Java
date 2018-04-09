@@ -20,6 +20,9 @@ $(document).on('click', '#HeaderAllCheckBox', function() {
 
 //tr클릭 시 체크박스 선택/해제
 $(document).on('click', 'tr:not(#attiBoardList tr:eq(0))', function() {
+	if ($(this).parents("#layer_popup").length) {
+		return;
+	}
 	var checkValue = "";
 	if ($(this).find("input[type='checkbox']").is(":checked") == true) {
 		checkValue = false;
