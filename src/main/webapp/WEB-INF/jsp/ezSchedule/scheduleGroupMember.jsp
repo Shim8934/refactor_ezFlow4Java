@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezSchedule.t170" /></title>
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />			    
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -244,11 +244,11 @@
 			</div>
 			<div id="close"><ul><li><span onClick="window.close()"><spring:message code='ezSchedule.t16' /></span></li></ul></div>
 			<span class="txt">▒ <spring:message code="ezSchedule.t17902" /></span>
-			<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:435px; HEIGHT:277px"> 
-				<table class="popuplist" style="width:100%; table-layout: fixed">
+			<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:403px; HEIGHT:277px"> 
+				<table width="100%" class="popuplist">
 			    	<tr>
 				    	<th style="width:40px; text-align:center"><spring:message code='ezSchedule.t190' /></th>
-				      	<th style="width:130px; text-align:center;"><spring:message code='ezSchedule.t163' /></th>
+				      	<th style="text-align:center"><spring:message code='ezSchedule.t163' /></th>
 				      	<th style="width:80px; text-align:center"><spring:message code='ezSchedule.t164' /></th>
 				      	<th style="width:100px; text-align:center"><spring:message code='ezSchedule.t165' /></th>
 				  	</tr>
@@ -257,7 +257,7 @@
 				  		<td style="text-align:center">
 		                	<input type='checkbox' value="1" memberid="${item.memberId}" memberstatus="${item.status}">
 		                </td> 
-		                <td style="width:150px; cursor:pointer; white-space:nowrap; text-align:center; overflow:hidden; text-overflow:ellipsis;" title="<spring:message code='ezSchedule.t162' />" onClick="show_personinfo('${item.memberId}')">
+		                <td style="cursor:pointer; white-space:nowrap; text-align:center" title="<spring:message code='ezSchedule.t162' />" onClick="show_personinfo('${item.memberId}')">
 			                <c:if test="${userInfo.primary == '1'}">${item.memberName}</c:if>
 			                <c:if test="${userInfo.primary != '1'}">${item.memberName2}</c:if>		                 
 		                </td> 
