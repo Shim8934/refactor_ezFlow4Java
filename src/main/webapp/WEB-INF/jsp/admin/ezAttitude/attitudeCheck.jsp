@@ -158,11 +158,11 @@
     		var startDate = "";
     		var endDate = "";
     		if ($('#usedate').val() == true) {
-    			startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-    			endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    			startDate = $("#Sdatepicker").val();
+    			endDate = $("#Edatepicker").val();
     		}
     		
-    		if (startDate > edate) {
+    		if (startDate > endDate) {
 				alert("시작일을 종료일보다 빠르게 지정해주십시오.");
 	            return;
 			}
