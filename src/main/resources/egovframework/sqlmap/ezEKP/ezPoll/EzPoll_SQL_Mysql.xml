@@ -8,6 +8,7 @@
     <typeAlias  alias="PollCommentVO"           	   type="egovframework.ezEKP.ezPoll.vo.PollCommentVO"/>
     <typeAlias  alias="PollUserAnswerVO"               type="egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO"/>
     <typeAlias  alias="PollQuestionStatusVO"           type="egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO"/>
+    <typeAlias  alias="PollUserVO"   				   type="egovframework.ezEKP.ezPoll.vo.PollUserVO"/>
 
     <!-- question resultMap -->
     <resultMap id="pollQuestion" class="PollQuestionVO">
@@ -30,6 +31,7 @@
         <result property="setDate"          	column="set_date"              	   columnIndex="17" />
         <result property="isSorting"          	column="is_sorting"                columnIndex="18" />
         <result property="isSelOnlyOnce"        column="is_selonlyonce"            columnIndex="19" />
+        <result property="sendPostNotice"   	column="sendpostnotice"		   	   columnIndex="20" />
         
     </resultMap>    
     
@@ -75,6 +77,13 @@
         <result property="comment"         		column="comment"                	columnIndex="5"/>
         <result property="hide"         		column="hide"               	    columnIndex="6"/>
     </resultMap>  
+    
+    <resultMap id="pollUser" class="PollUserVO">
+    	<result property="qstId"             	column="qst_id"                   	columnIndex="1"/>
+    	<result property="userId"             	column="user_id"                   	columnIndex="2"/>
+        <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
+        <result property="userType"         	column="user_type"                	columnIndex="4"/>
+    </resultMap>  
      
     <insert id="EzPollDAO.insertQuestion" parameterClass="Map">      	
         <selectKey keyProperty="v_temp" resultClass="Integer">
@@ -102,13 +111,13 @@
 	                ID,        			TENANT_ID,         CONTENT,        		MULTI_SELECT,       CREATE_DATE,
 	                START_DATE,         END_DATE,          TARGET,              TITLE,          	SECRET_VOTE,        
 	                CREATOR,			CREATOR_NAME1,	   CREATOR_NAME2,	    FILE_PATH,		    RESULT_FIRST,		
-	                SET_DATE,			IS_SORTING,		   IS_SELONLYONCE
+	                SET_DATE,			IS_SORTING,		   IS_SELONLYONCE,		SENDPOSTNOTICE
 	            )
 	            VALUES(
 	                #id#,          	 	#tenant_id#,        #content#,          #multi_select#,     #create_date#,
 	                #start_date#,       #end_date#,         #target#,           #title#,     		#secret_vote#,
 	                #creator#,		    #creator_name1#,	#creator_name2#,	#file_path#,		#result_first#,		
-	                #set_date#,			#is_sorting#,		#is_selonlyonce#
+	                #set_date#,			#is_sorting#,		#is_selonlyonce#,	#sendpostnotice#
             )  
         	]]>
         </isEqual>
@@ -117,22 +126,23 @@
 	            UPDATE 
 	            	TBL_VOTE_QUESTION
 	            SET 
-	            	 CONTENT 		= #content#,
-	            	 MULTI_SELECT 	= #multi_select#,
-	            	 CREATE_DATE	= #create_date#,
-	            	 START_DATE		= #start_date#,
-	            	 END_DATE		= #end_date#, 
-	            	 TARGET			= #target#, 
-	            	 TITLE			= #title#,  
-	            	 SECRET_VOTE	= #secret_vote#,
-	            	 CREATOR		= #creator#,
-	            	 CREATOR_NAME1	= #creator_name1#,
-	            	 CREATOR_NAME2	= #creator_name2#,
-	            	 FILE_PATH		= #file_path#,
-	            	 RESULT_FIRST	= #result_first#,
-	            	 SET_DATE		= #set_date#,
-	            	 IS_SORTING		= #is_sorting#,
-            	 	 IS_SELONLYONCE	= #is_selonlyonce#
+	            	 CONTENT 			= #content#,
+	            	 MULTI_SELECT 		= #multi_select#,
+	            	 CREATE_DATE		= #create_date#,
+	            	 START_DATE			= #start_date#,
+	            	 END_DATE			= #end_date#, 
+	            	 TARGET				= #target#, 
+	            	 TITLE				= #title#,  
+	            	 SECRET_VOTE		= #secret_vote#,
+	            	 CREATOR			= #creator#,
+	            	 CREATOR_NAME1		= #creator_name1#,
+	            	 CREATOR_NAME2		= #creator_name2#,
+	            	 FILE_PATH			= #file_path#,
+	            	 RESULT_FIRST		= #result_first#,
+	            	 SET_DATE			= #set_date#,
+	            	 IS_SORTING			= #is_sorting#,
+            	 	 IS_SELONLYONCE		= #is_selonlyonce#,
+            	 	 SENDPOSTNOTICE		= #sendpostnotice#
 	            WHERE
 	            		ID				= #id#
 	            	AND
@@ -1062,4 +1072,17 @@
 				LENGTH(FILE_TYPE) > 0
 		]]>				
     </select>  
+    
+    <select id="EzPollDAO.getListOfUserIdForQstByQstId" resultMap="pollUser">             
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_USER_AND_QUESTION
+			WHERE  
+				TENANT_ID = #tenantID#	
+			AND
+				QST_ID    = #qst_id#
+		]]>			
+    </select>
 </sqlMap>
