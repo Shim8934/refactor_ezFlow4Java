@@ -32,7 +32,7 @@
 					</th>
 				</c:if>
 				<!-- 취합여부아이콘 -->
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
+					<th id="BoardList_TH_10" onclick="setListOrder(this)" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
 						<img src="/images/i_sum2.png">
 					</th>
 					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
@@ -72,6 +72,7 @@
 				<c:if test="${listType eq 'department' or listType eq 'mine' }">
 					<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center; width:25px;" class="h5_center">
 						<spring:message code='ezJournal.t65'/>
+					</th>
 				</c:if>
 			</tr>
 		</thead>
@@ -185,7 +186,7 @@
 			</c:when>
 			<c:otherwise>
 				<tr selected="false" class="" style="background-color: rgb(255, 255, 255);">
-					<td	style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colspan="<c:choose><c:when test="${listType eq 'mine'}">9</c:when><c:when test="${listType eq 'recv' }">10</c:when><c:when test="${listType eq 'department' }">8</c:when><c:otherwise>6</c:otherwise></c:choose>">
+					<td	style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colspan="<c:choose><c:when test="${listType eq 'mine'}">10</c:when><c:when test="${listType eq 'recv' }">11</c:when><c:when test="${listType eq 'department' }">9</c:when><c:otherwise>7</c:otherwise></c:choose>">
 						<spring:message code='ezJournal.t125'/>
 					</td>
 				</tr>

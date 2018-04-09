@@ -36,7 +36,6 @@
 	   		}
 	   	
 	   		function close_Click(){
-	   			opener.location.reload();
 	   			window.close();
 	   		}
 	   		//조직도 뿌리는 펑션

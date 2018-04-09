@@ -313,7 +313,8 @@
 					}
 				});
 				if(selects.length==0){
-					basicFormFlag = false;
+					alert("<spring:message code='ezJournal.t148'/>");
+					return;
 				}
 				if(basicFormFlag){
 					var url = "/ezJournal/getFormList.do";
