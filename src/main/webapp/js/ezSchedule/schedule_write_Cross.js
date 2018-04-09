@@ -455,7 +455,7 @@ function manage_attendant_after() {
     schedule_select_attendant_dialogArguments[0] = g_attendant;
     schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
 
-    GetOpenWindow("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI(strLang19) + "&StartTime=" + StartTime + "&EndTime=" + EndTime, "schedule_select_attendant", 970, 655);
+    GetOpenWindow("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI(strLang19) + "&StartTime=" + StartTime + "&EndTime=" + EndTime, "schedule_select_attendant", 1000, 655);
 }
 
 function manage_attendant_Complete(rtn) {
