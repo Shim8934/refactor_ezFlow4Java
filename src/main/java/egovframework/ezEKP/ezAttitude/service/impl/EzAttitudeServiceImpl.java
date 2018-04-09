@@ -747,7 +747,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	public List<AttitudeVO> getAttitudeList2(String companyId, String pageNum,
-			String listSize, String typeId, String userIdList, String startDate,
+			String listSize, String typeId, String userIdList,
+			String order, String startDate,
 			String endDate, String offset, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeList2 started");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -774,11 +775,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("limit", limit);
 		map.put("listSize", listSize);
 		map.put("typeId", typeId);
-		// map.put("order", order.trim());
+		map.put("order", order.trim());
 		map.put("offsetMin", offsetMin);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
-		
+
 		List<AttitudeVO> resultList = new ArrayList<AttitudeVO>();
 		if (userIdList != null && userIdList != "") {
 			String[] userList = userIdList.split(",");
@@ -789,7 +790,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		} else {
 			resultList = ezAttitudeDAO.getAttitudeList2(map);
 		}
-
 
 		LOGGER.debug("getAttitudeList2 ended");
 		return resultList;

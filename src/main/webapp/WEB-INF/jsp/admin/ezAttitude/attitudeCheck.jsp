@@ -6,10 +6,12 @@
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
+	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
+	<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
     <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-    <script type="text/javascript" src="/js/Common.js"></script>
+<!--     <script type="text/javascript" src="/js/mouseeffect.js"></script> -->
+<!--     <script type="text/javascript" src="/js/Common.js"></script> -->
     <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
     <!-- data picker-->		
@@ -32,12 +34,22 @@
     	var orderCell = ""; // 정렬 명
     	var orderOption = ""; // 정렬 형식(ASC, DESC)
     	var selecUserList = "";//리스트에 선택된 userList(,로 구분)
+    	var adminCompany = "${adminCompany}";
 
     	
     	//"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"
     	
     	$(function(){
-    		company_change();
+	        if (document.getElementById("ListCompany").length == 0) {
+	            alert("<spring:message code = 'ezAttitude.t32' />");
+	        } else {
+	    		if (adminCompany != null) {
+	    			$('#ListCompany').val(adminCompany);
+	    		} else {
+		            document.getElementById("ListCompany").selectedIndex = 0;
+	    		}
+	            company_change();
+	        }
     		
     		//헤더 클릭 시 정렬
     		$(document).on('click', '#attiBoardList th', function(){
@@ -275,6 +287,20 @@
 			var url = "/admin/ezAttitude/getSearchList.do?companyId=" + $('#ListCompany').val() + "&searchIdList=" + searchIdList + "&searchNameList=" + searchNameList;
     		window.open(url, "view", "width=940, height=580");
     	}
+    	
+		//////////////////
+		function DateSearch_Click() {
+	        if(usedate){
+	        	usedate = false;
+	            $("#Sdatepicker").datepicker('disable');
+	            $("#Edatepicker").datepicker('disable');
+	        } else {
+	        	usedate = true;
+	            $("#Sdatepicker").datepicker('enable');
+	            $("#Edatepicker").datepicker('enable');
+	        }
+	    }
+		//////////////////
     </script>
 	<style>
 		tr.hover:hover{background:#eee; color:#fff;}
@@ -329,11 +355,15 @@
 	  						<tr>
 	  							<th style="text-align:center">검색기간</th>
 	  							<td>                        
-	  								<span id="periodblock">
-			                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-			                        ~
-			                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-			                        </span>
+<!-- 	  								<span id="periodblock"> -->
+<!-- 			                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> -->
+<!-- 			                        ~ -->
+<!-- 			                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> -->
+<!-- 			                        </span> -->
+					      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" /><label for="usedate">검색기간 사용&nbsp;</label>
+					            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
+					      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
+					          		<div style="margin-top:9px">&nbsp;(검색기간 미지정시 오늘날짜로 검색)</div> 
                         		</td>
 	  						</tr>
 	  					</tbody>
@@ -359,8 +389,8 @@
 				<tr>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
 					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
-					<th style="width:5%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="typename">구분</th>
-					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="date">날짜</th>
+					<th style="width:5%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
+					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime">시작시간</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="endtime">종료시간</th>
 				</tr>

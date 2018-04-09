@@ -99,10 +99,16 @@ public class EzAttitudeAdminBOMController {
 		String status = resultBody.get("status").toString();
 		
 		JSONArray list = new JSONArray();
-		if(status.equals("ok")){
-			list = (JSONArray) resultBody.get("data");
+		JSONObject data = new JSONObject();
+		String adminCompany = "";
+		if (status.equals("ok")) {
+		
+			data = (JSONObject) resultBody.get("data");
+			list = (JSONArray) data.get("list");
+			adminCompany = (String) data.get("adminCompany");
 			
 			model.addAttribute("list", list);
+			model.addAttribute("adminCompany", adminCompany);
 		}
 		
 		LOGGER.debug("attitudeConfig ended.");
@@ -226,12 +232,16 @@ public class EzAttitudeAdminBOMController {
 		String status = resultBody.get("status").toString();
 		
 		JSONArray list = new JSONArray();
-		if(status.equals("ok")){
-			list = (JSONArray) resultBody.get("data");
-			
-			LOGGER.debug("list : " + list);
+		JSONObject data = new JSONObject();
+		String adminCompany = "";
+		if (status.equals("ok")) {
+		
+			data = (JSONObject) resultBody.get("data");
+			list = (JSONArray) data.get("list");
+			adminCompany = (String) data.get("adminCompany");
 			
 			model.addAttribute("list", list);
+			model.addAttribute("adminCompany", adminCompany);
 		}
 		
 		LOGGER.debug("attitudeTypeConfig ended.");
@@ -579,12 +589,16 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("status : " + status);
 		
 		JSONArray list = new JSONArray();
+		JSONObject data = new JSONObject();
+		String adminCompany = "";
 		if (status.equals("ok")) {
-			list = (JSONArray) resultBody.get("data");
-			
-			LOGGER.debug("list : " + list);
+		
+			data = (JSONObject) resultBody.get("data");
+			list = (JSONArray) data.get("list");
+			adminCompany = (String) data.get("adminCompany");
 			
 			model.addAttribute("list", list);
+			model.addAttribute("adminCompany", adminCompany);
 		}
 		
 		LOGGER.debug("/admin/ezAttitude/attitudeUserConf ended");
@@ -946,7 +960,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 관리자 부서 근태관리 메인화면 호출
+	 * 관리자 근태조회 메인화면 호출
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeCheck.do")
 	public String attitudeCheck(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -981,12 +995,16 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("status : " + status);
 		
 		JSONArray list = new JSONArray();
+		JSONObject data = new JSONObject();
+		String adminCompany = "";
 		if (status.equals("ok")) {
-			list = (JSONArray) resultBody.get("data");
-			
-			LOGGER.debug("list : " + list);
+		
+			data = (JSONObject) resultBody.get("data");
+			list = (JSONArray) data.get("list");
+			adminCompany = (String) data.get("adminCompany");
 			
 			model.addAttribute("list", list);
+			model.addAttribute("adminCompany", adminCompany);
 		}
 		
 		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf ended");
@@ -995,7 +1013,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 사용자별 근태설정 리스트 출력
+	 * 관리자 근태조회 리스트 출력
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeCheckList.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
@@ -1010,8 +1028,8 @@ public class EzAttitudeAdminBOMController {
 		String listSize = request.getParameter("listSize");
 		String typeId = request.getParameter("typeId");
 		String userIdList = request.getParameter("userIdList");
-//		String orderCell = request.getParameter("orderCell");
-//		String orderOption = request.getParameter("orderOption");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		String userId = userInfo.getId();
@@ -1035,8 +1053,8 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("listSize", listSize)
 				.queryParam("typeId", typeId)
 				.queryParam("userIdList", userIdList)
-//				.queryParam("orderCell", orderCell)
-//				.queryParam("orderOption", orderOption)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption)
 				.queryParam("startDate", startDate)
 				.queryParam("endDate", endDate)
 				.queryParam("offsetMin", offsetMin);
@@ -1066,7 +1084,7 @@ public class EzAttitudeAdminBOMController {
 //		return jArray;
 	}
 	/**
-	 * 부서근태관리 > 조회자 검색 화면 출력 메서드
+	 * 근태조회 > 조회자 검색(조직도) 화면 출력 메서드
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/getSearchList.do")
 	public String attitudeCheckUserSearch(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {

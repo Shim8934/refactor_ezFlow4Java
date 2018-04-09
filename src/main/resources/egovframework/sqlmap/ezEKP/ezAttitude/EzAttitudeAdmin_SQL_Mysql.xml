@@ -545,11 +545,14 @@
 				A.TYPE_ID = #typeId#
 		]]>
 		</isNotEmpty>
+		<isNotEmpty prepend="" property="order">
 		<![CDATA[
-			ORDER BY
-				A.TYPE_ID
+			ORDER BY $order$
+		]]>
+		</isNotEmpty>
+		<![CDATA[
 			LIMIT 
-				#limit#, #listSize#
+				#limit#, #listSize# 
 		]]>
 	</select>
 	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
