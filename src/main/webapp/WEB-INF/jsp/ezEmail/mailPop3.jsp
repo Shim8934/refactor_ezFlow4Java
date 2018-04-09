@@ -575,7 +575,7 @@
 		</table> 
 		<br />
 		<div style="width:720px;text-align:center;">
-		    <a class="imgbtn" onClick="SavePop3()"><span><spring:message code='ezEmail.t48' /></span></a>
+		    <a class="imgbtn" onClick="SavePop3()"><span><spring:message code='main.sp09' /></span></a>
 		    <a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
