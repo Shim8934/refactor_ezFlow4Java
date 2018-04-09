@@ -22,7 +22,10 @@
 		        getGroupList();
 		    }
 				    
-		    function getGroupList() {
+		    function getGroupList() {	
+		    	var checkId = $(":checkbox:checked").attr("id");
+		 	  	var selectId = $("#GroupListView tr[selected=true]").attr("id");
+		    	
 		    	$.ajax({
 		    		type : "POST",
 		    		dataType : "xml",
@@ -55,6 +58,13 @@
 				        listview.DataSource(xmlDoc);
 				        listview.DataBind("GroupList");				        
 				        xmldom = null;
+				        
+				        //선택된 체크박스와 리스트가 있다면, 리스트 출력 후에도 유지한다.
+				        if(typeof(checkId) != "undefined" && typeof(selectId) != "undefined"){
+				        	document.getElementById(checkId).checked = true;
+				        	document.getElementById(selectId).setAttribute("selected", "true");
+				        	document.getElementById(selectId).style.backgroundColor = "rgb(237, 244, 253)";
+				        }
 		    		}
 		    	});		        
 		    }
