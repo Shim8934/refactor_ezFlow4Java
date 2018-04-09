@@ -1055,29 +1055,29 @@ public class EzAttitudeGWController {
 			@RequestParam(value="endPoint", required=false) String endPoint,
 			@RequestParam(value="type", required=false) String type,
 			@RequestParam(value="orderCell", required=false) String orderCell,
-			@RequestParam(value="orderOption", required=false) String orderOption) {
+			@RequestParam(value="orderOption", required=false) String orderOption,
+			@RequestParam(value="adminFlag", required=false) String adminFlag) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
-
+		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
-		
-		String order = orderCell + " " + orderOption;
-		
-		if (orderCell == null || orderOption == null) {
-			order = null;
-		}
-		
-		if (type != null) { 
-			if (type.equals("all")) {
-				type = null;
-			}
-		}
-		
-		LOGGER.debug("#################order : " + order);
-		
+
 		try{
-			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint, type, order);
+			
+			String order = orderCell + " " + orderOption;
+			
+			if (orderCell == null || orderOption == null) {
+				order = null;
+			}
+			
+			if (type != null) { 
+				if (type.equals("all")) {
+					type = null;
+				}
+			}
+			
+			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint, type, order, adminFlag);
 			for (int i = 0 ; i < attList.size(); i++ ) {
 				LOGGER.debug(attList.get(i).toString());
 			}
@@ -1108,21 +1108,22 @@ public class EzAttitudeGWController {
 			@RequestParam(value="apprUserName", required=false) String apprUserName,
 			@RequestParam(value="sysLang", required=false) String sysLang,
 			@RequestParam(value="offset", required=false) String offset,
-			@RequestParam(value="type", required=false) String type) {
+			@RequestParam(value="type", required=false) String type,
+			@RequestParam(value="adminFlag", required=false) String adminFlag) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] started.");
 
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
 
-		if (type != null) {
-			if (type.equals("all")) {
-				type = null;
-			}
-		}
-		
 		try{
-			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, type);
+			if (type != null) {
+				if (type.equals("all")) {
+					type = null;
+				}
+			}
+			
+			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, type, adminFlag);
 
 			result.put("status", "ok");
 			result.put("code", 0);			

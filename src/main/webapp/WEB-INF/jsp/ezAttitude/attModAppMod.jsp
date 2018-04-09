@@ -206,7 +206,7 @@
 	                    <td style="height: 20px">
 	                        <div id="menu">
 	                            <ul id="menuTable">	
-	                                <li><span onclick="modify()">수정</span></li>
+	                                <li><span onclick="modify()">저장 후 닫기</span></li>
 	                                <li><span onclick="del()">삭제</span></li>
 	                            </ul>
 	                        </div>
