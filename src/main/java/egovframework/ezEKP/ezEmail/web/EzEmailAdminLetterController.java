@@ -105,7 +105,7 @@ public class EzEmailAdminLetterController {
 		logger.debug("companyId=" + companyId);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userLang = userInfo.getLang();
+		String userLang = userInfo.getPrimary();
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
@@ -442,7 +442,7 @@ public class EzEmailAdminLetterController {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = userInfo.getCompanyID();
-		String userLang = userInfo.getLang();
+		String userLang = userInfo.getPrimary();
 
 		model.addAttribute("letterBox", letterBox);
 		model.addAttribute("letterId", letterId);
