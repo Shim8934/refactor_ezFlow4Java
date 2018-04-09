@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
 import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezEmail.vo.MailLetterVO;
@@ -59,6 +60,9 @@ public class EzEmailAdminLetterController {
 
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+
+	@Autowired
+	private EzCommonService ezCommonService;
 
 	/**
 	 * 편지지 메인화면 호출 함수
@@ -410,6 +414,11 @@ public class EzEmailAdminLetterController {
 		logger.debug("letterAdminAddSetPopUp started.");
 		logger.debug("letterBoxNo=" + letterBoxNo + ", popUpType=" + popUpType + ", letterNo=" + letterNo);
 
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+
+        String primary = ezCommonService.getTenantConfig("LangPrimary" + loginInfo.getLang(), loginInfo.getTenantId());
+        String secondary = ezCommonService.getTenantConfig("LangSecondary" + loginInfo.getLang(), loginInfo.getTenantId());
+
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		if (auth == null) {
@@ -428,6 +437,8 @@ public class EzEmailAdminLetterController {
 		model.addAttribute("letterId", letterId);
 		model.addAttribute("letterNo", letterNo);
 		model.addAttribute("popUpType", popUpType);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 
 		logger.debug("letterAdminAddSetPopUp ended.");
 		return "admin/ezEmail/letterEditPopUp";
