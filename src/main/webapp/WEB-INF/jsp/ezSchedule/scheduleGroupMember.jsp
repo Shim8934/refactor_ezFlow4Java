@@ -139,8 +139,7 @@
 			    		success: function(text){
 			    			OpenWin.alert("<spring:message code='ezSchedule.t174' />");
 							OpenWin.close();
-		                    window.location.reload(false);
-		                    opener.getGroupList();
+		                    window.location.reload(false);	
 		                    opener.View_Detail();
 			    		},
 			    		error: function(err){
@@ -182,8 +181,7 @@
 		    		url : "/ezSchedule/scheduleDelMember.do",
 		    		success: function(text){
 		    			 alert(count + "<spring:message code='ezSchedule.t178' />");
-				         window.location.reload(false);
-				         opener.getGroupList();
+				         window.location.reload(false);   			
 				         opener.View_Detail();
 		    		},
 		    		error: function(err){
