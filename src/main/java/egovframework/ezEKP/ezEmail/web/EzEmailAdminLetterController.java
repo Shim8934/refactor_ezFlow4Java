@@ -65,9 +65,6 @@ public class EzEmailAdminLetterController {
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
 
-	@Autowired
-	private EzCommonService ezCommonService;
-
 	/**
 	 * 편지지 메인화면 호출 함수
 	 * 
