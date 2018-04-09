@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
 import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezEmail.vo.MailLetterVO;
@@ -59,6 +61,9 @@ public class EzEmailAdminLetterController {
 
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
 
 	/**
 	 * 편지지 메인화면 호출 함수
@@ -106,7 +111,9 @@ public class EzEmailAdminLetterController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userLang = userInfo.getPrimary();
-
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		if (auth == null) {
@@ -116,7 +123,11 @@ public class EzEmailAdminLetterController {
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("pageType", "letterBox");
 		model.addAttribute("userLang", userLang);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 		
+		logger.debug("primary=" + primary);
+		logger.debug("secondary=" + secondary);
 		logger.debug("userLang=" + userLang);
 		logger.debug("letterBoxManagerView ended.");
 
@@ -443,7 +454,7 @@ public class EzEmailAdminLetterController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = userInfo.getCompanyID();
 		String userLang = userInfo.getPrimary();
-
+		
 		model.addAttribute("letterBox", letterBox);
 		model.addAttribute("letterId", letterId);
 		model.addAttribute("letterNo", letterNo);
