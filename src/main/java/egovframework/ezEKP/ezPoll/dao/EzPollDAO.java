@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPollDAO")
@@ -187,4 +188,36 @@ public class EzPollDAO extends EgovAbstractDAO {
 	public PollUserAnswerVO getSpecificPollUserAndAnswer(Map<String, Object> map) {		
 		return (PollUserAnswerVO) select("EzPollDAO.getSpecificPollUserAndAnswer", map);
 	}	
+	
+	public int checkUsingFile(Map<String, Object> map) {		
+		return (int) select("EzPollDAO.checkUsingFile", map);
+	}
+	
+	public int checkQstUsingFile(Map<String, Object> map) {		
+		return (int) select("EzPollDAO.checkQstUsingFile", map);
+	}
+	
+	public String getQuestionFileById(Map<String, Object> map) {		
+		return (String) select("EzPollDAO.getQuestionFileById", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getAnswerFilesByQstId(Map<String, Object> map) {		
+		return (List<String>) list("EzPollDAO.getAnswerFilesByQstId", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getCommentFilesByQstId(Map<String, Object> map) {		
+		return (List<String>) list("EzPollDAO.getCommentFilesByQstId", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getCommentImgFilesByQstId(Map<String, Object> map) {		
+		return (List<String>) list("EzPollDAO.getCommentImgFilesByQstId", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PollUserVO> getListOfUserIdForQstByQstId(Map<String, Object> map) {		
+		return (List<PollUserVO>) list("EzPollDAO.getListOfUserIdForQstByQstId", map);
+	}
 }

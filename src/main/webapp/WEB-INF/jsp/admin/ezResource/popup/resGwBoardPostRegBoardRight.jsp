@@ -1103,7 +1103,7 @@
                 	<table id="TreeViewTD">
                     	<tr>
                         	<td>
-                            	<div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
+                            	<div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
                                 	<div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
                                     	<table style="margin-top: 3px; width: 100%;">
                                         	<tr>
@@ -1121,12 +1121,12 @@
                                                         	<option value="streetAddress"><spring:message code="ezResource.t140" /></option>
                                                     	</select>
                                                     	<input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
-                                                    		<a class="imgbtn"><span onclick="search_click()"><spring:message code="ezResource.t141" /></span></a>
+                                                    		<a class="imgbtn"><span onclick="search_click()"><spring:message code="ezResource.t14" /></span></a>
                                                 	</div>
                                             	</td>
                                             	<td>
                                                 	<div style="float: right; margin-right: 5px;">
-                                                    	<a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code="ezResource.t344" /></span></a>
+                                                    	<a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code="ezSchedule.t1052" /></span></a>
                                                 	</div>
                                             	</td>
                                         	</tr>
@@ -1156,14 +1156,14 @@
                                             	</tr>
                                         	</table>
                                         	<div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
-                                            	<table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
+                                            	<table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
                                                 	<tr>
                                                     	<td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code="ezResource.t9" /></td>
                                                     	<td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code="ezResource.t10" /></td>
                                                     	<td class="td_gray" style="font-weight: bold;"><spring:message code="ezResource.t11" /></td>
                                                 	</tr>
                                             	</table>
-                                            	<table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
+                                            	<table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
     	                                                <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code="ezResource.t132" /></td>
         	                                            <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code="ezResource.t9" /></td>

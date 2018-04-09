@@ -593,11 +593,13 @@
 	        	var MaxNum;
 	        	var i;
 	        	var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+	        	
 	        	if (totalPage >= (startNum + parseInt(BlockSize))) {
 		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
 	    	    } else {
 	            	MaxNum = totalPage;
 	        	}
+	        	
 	        	for (i = startNum; i <= MaxNum; i++) {
 		            if (i == pageNum) {
 		                strtext = "<span class='on'>" + i + "</span>";
@@ -607,6 +609,13 @@
 	                	PagingHTML += strtext;
 	            	}
 	        	}
+	        	
+	        	/* 2018.03.23 서주연 - #12123 데이터없는경우 페이지네이션 1이 없는 문제해결 */
+	        	if (i == 1) {
+		           	strtext = "<span class='off'>" + i + "</span>";
+	                PagingHTML += strtext;
+	            }
+	        	
 	        	if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang1001 + "</span>";
@@ -829,7 +838,7 @@
     			<li><span id="pn_img" onClick="btn_ApprovCancel()"><spring:message code='ezResource.t190'/></span></li>
     			<li><span onclick='btn_Delete();'><spring:message code='ezResource.t65'/></span></li>
     			<li><span onclick='ViewCalendar()'><spring:message code='ezResource.t255'/></span></li>
-    			<li style="background:none">
+    			<li style="background:none;float:right">
         			<select id="listviewtype" onchange="getCalendarList('search')">
             			<option value=""><spring:message code='ezResource.t2000'/></option>
             			<option value="1"><spring:message code='ezResource.t2001'/></option>
@@ -838,15 +847,16 @@
     			</li>
   			</ul>
 		</div>
-		<div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;border:1px solid #d3d2d2">
-    		<a class="imgbtn" style="vertical-align:middle"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
+		<div class="portlet_tabpart03" style="background-color: #f8f8fa; border:1px solid #ddd; padding:5px 0px 5px 5px">
     		<input id="writername" type="text" style="width: 80px" />
-    		<a class="imgbtn" style="vertical-align:middle"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
-    		<input id="writerdept" type="text" style="width: 80px" />
+    		<a class="imgbtn" style="padding-top:2px"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
+    		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->
+    		<input id="writerdept" type="text" style="width: 120px" />
+    		<a class="imgbtn" style="padding-top:2px"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
     		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center"> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center">
-       		<a class="imgbtn" style="vertical-align:middle"><span id="btn_OK" onclick="getCalendarList('search')"><spring:message code='ezResource.t14'/></span></a>
+       		<a class="imgbtn" style="padding-top:2px"><span id="btn_OK" onclick="getCalendarList('search')"><spring:message code='ezResource.t14'/></span></a>
 		</div>
-		<div id="ApprovList" style ="BORDER:0;WIDTH:100%; height:100%;margin-top:10px"></div>
+		<div id="ApprovList" style ="BORDER:0;WIDTH:100%; height:100%;border-top:0px;"></div>
 		<div id="tblPageRayer" style="text-align:center"></div>
 		<script type="text/javascript">
     		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

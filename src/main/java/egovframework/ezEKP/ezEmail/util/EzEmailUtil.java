@@ -398,6 +398,16 @@ public class EzEmailUtil {
                 
                 subject = decodeNonAsciiBytes(rawBytes);
             } else {
+            	
+            	// 일부 Mailer에서 표준을 지키지 않고 큰 따옴표 두개로 감싸서
+            	// Subject를 구성하여 디코딩이 안 되는 경우가 있어 추가함
+            	// ex: "=?euc-kr?B?".Z3ctc25zLW5vZGUyICgyMjAuNzMuMTc4LjE4KSBbMV0gZ3ctc25zLW5vZGUyIENQVSBVc2VkICglKQ==."?="
+            	if (rawHeader.startsWith("\"=?") && rawHeader.endsWith("?=\"")) {
+            		rawHeader = rawHeader.substring(1, rawHeader.length() - 1);
+            		
+            		subject = String.format("\"%s\"", MimeUtility.decodeText(rawHeader));
+            	}
+            	
                 if (rawHeader.startsWith("=?")) {
                     int secondQuestionPos = rawHeader.indexOf("?", 2);
                     int thirdQuestionPos = rawHeader.indexOf("?", secondQuestionPos + 1);
@@ -678,8 +688,6 @@ public class EzEmailUtil {
                 
                 filename = MimeUtility.decodeText(originalFilename);
             } else if (filename != null) {
-			    // filename이 US-ASCII 로만 되어 있지 않은 경우는 위에서 part.getFileName 메소드에 의해 디코딩된 경우이므로
-			    // 디코딩 처리를 하지 않는다.
 				if (isPureAscii(filename)) {
 				    // Content-Disposition 헤더에 있는 filename 속성의 값이 Non-Ascii 문자를 포함할 경우에는 직접 디코딩을 처리한다.
                     if (NonAsciiFilename !=  null) {
@@ -689,7 +697,20 @@ public class EzEmailUtil {
                     } else {				    
                         filename = MimeUtility.decodeText(filename);
                     }
-				} 
+			    // filename이 US-ASCII 로만 되어 있지 않은 경우는 위에서 part.getFileName 메소드에 의해 디코딩된
+                // 경우로 보고 원칙적으로 해당 값을 이용한다.
+				} else {
+					// filename이 NonAsciiFilename과 동일한 경우는 part.getFileName 메소드에 의해 디코딩이
+					// 제대로 이루어지지 않은 경우로 판단하여 직접 디코딩을 처리한다.
+					// 예) Content-Type: text/plain; name="첨부파일 테스트1.txt"
+					//		  Content-Transfer-Encoding: 7bit
+					//		  Content-Disposition: attachment; filename="첨부파일 테스트1.txt" - EUC-KR로 인코딩됨					
+					if (NonAsciiFilename !=  null && filename.equals(NonAsciiFilename)) {
+                        byte[] rawBytes = NonAsciiFilename.getBytes("iso-8859-1");
+                        
+                        filename = decodeNonAsciiBytes(rawBytes);						
+					}
+				}
 			} else {
 				filename = "";
 			}
@@ -1851,32 +1872,47 @@ public class EzEmailUtil {
 	public Part getInlinePart(Part part, String contentId) throws MessagingException, IOException{
 		logger.debug("getInlinePart started.");
 		
-		if(part.isMimeType("multipart/related")){
+		if (part.isMimeType("multipart/related")){
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
+			
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
-				if(p instanceof MimePart){
-					if(((MimePart)p).getContentID()!=null && ((MimePart)p).getContentID().equals(contentId)){
+				
+				if (p instanceof MimePart) {
+					if (((MimePart)p).getContentID() != null && ((MimePart)p).getContentID().equals(contentId)) {
 						logger.debug("getInlinePart ended.");
+						
 						return p;
 					}
 				}
 			}
-		} else if(part.isMimeType("multipart/*")){
+		} else if (part.isMimeType("multipart/*")) {
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
 			Part p = null;
+			
 			for (int i = 0; i < count; i++) {
 				p = getInlinePart(mp.getBodyPart(i), contentId);
-				if(p != null){
+				
+				if (p != null) {
 					logger.debug("getInlinePart ended.");
+					
 					return p;
 				}
 			}
+		} else {
+			if (part instanceof MimePart) {
+				if (((MimePart)part).getContentID() != null && ((MimePart)part).getContentID().equals(contentId)) {
+					logger.debug("getInlinePart ended.");
+					
+					return part;
+				}
+			}			
 		}
 		
 		logger.debug("getInlinePart ended.");
+		
 		return null;
 	}
 	
@@ -2217,6 +2253,62 @@ public class EzEmailUtil {
             }                    
         }                 
     }    
+    
+    public Double[] adjustUserQuotaForMessageMove(Message[] msgs, String userEmail, String domainName, IMAPAccess ia) {
+    	Double[] returnData = {null, null, null};
+    	
+    	try {
+			// 이동할 메시지들의 총 크기를 구한다.
+			double messagesTotalSize = 0;
+			
+			for (Message msg : msgs) {
+				messagesTotalSize += msg.getSize();
+			}
+			
+			// in MBs
+			messagesTotalSize /= (1024.0*1024.0);
+			
+			logger.debug("messagesTotalSize=" + messagesTotalSize);
+			
+			// 사용자의 Quota 설정값을 구한다.
+			Double[] userQuotaData = getUserQuota(userEmail);
+			Double userQuota = userQuotaData[0];
+			Double userWarn = userQuotaData[1];
+	        
+	        // 사용자 Quota 설정값이 없을 때는 디폴트 설정값을 적용한다.
+	        if (userQuota == null) {
+	        	Double[] defaultQuotaData = getDefaultQuota(domainName);
+	        	
+	        	userQuota = defaultQuotaData[0];
+	        	userWarn = defaultQuotaData[0];
+	        } else {
+	        	// 사용자 레벨의 Quota 설정값이 있는 경우 1.0 없으면 null임
+	        	returnData[2] = 1.0;
+	        }
+	        
+	        // 사용자의 현재 메일박스 사용량을 구한다.
+	        // in MBs
+	        double mailboxUsage = ia.getStorageUsageAndLimit()[0]/1024.0;
+	        
+	        logger.debug("mailboxUsage=" + mailboxUsage);
+	        
+	        // 지운 편지함으로 복사할 메시지의 크기와 현재 메일박스 사용량을 더한 크기가 Quota를 초과하면 Quota를 증가시킨다.
+	        if ((mailboxUsage + messagesTotalSize) > userQuota) {
+		        double newUserQuota = (mailboxUsage + messagesTotalSize)*1.1;
+		        
+		        logger.debug("newUserQuota=" + newUserQuota);
+		        
+		        setUserQuota(userEmail, String.valueOf(newUserQuota), String.valueOf(userWarn));
+		        
+		        returnData[0] = userQuota;
+		        returnData[1] = userWarn;
+	        }    	
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+        
+    	return returnData;
+    }
     
     /**
      * 비즈메카 스팸편지함과 연동하기 위한 Credential을 반환하는 메소드
@@ -3077,4 +3169,50 @@ public class EzEmailUtil {
 		String fileName = senderName + "_[" + senderAddress + "]_" + "[" + dateStrExceptTime + "]_" + subject ;
 		return fileName;
 	}
+	
+	// 메일 용량(사용량 및 퍼센트) 리턴하는 함수
+	public String[] getMailUsage(double mailboxUsage, double mailboxQuota) {
+		logger.debug("getMailUsage started");
+		logger.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+		
+		int mailPercent = 0;
+		String mailboxDetail = "";
+		String mailboxQuotaStr = "";
+		
+		if (mailboxUsage < mailboxQuota) {
+			mailPercent = (int)Math.round((mailboxUsage/mailboxQuota) * 100);
+		} else {
+			mailPercent = 100;
+		}
+					
+		// 분자
+		if (mailboxUsage >= 1024*1024 ) {
+			mailboxDetail = String.format("%.1fG", mailboxUsage/(1024*1024));
+		} else if (mailboxUsage >= 1024) {
+			mailboxDetail = String.format("%.1fM", mailboxUsage/1024);
+		} else {
+			mailboxDetail = String.format("%.1fK", mailboxUsage);
+		}
+
+		// 분모
+		if (mailboxQuota >= 1024*1024) {
+			mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
+			
+			if (mailboxQuotaStr.contains(".0")) {
+				mailboxQuotaStr = mailboxQuotaStr.substring(0, mailboxQuotaStr.indexOf(".")) + "G";
+			}
+		} else if (mailboxQuota >= 1024) {
+			mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
+		} else {
+			mailboxQuotaStr = (int)mailboxQuota + "K";
+		}
+		
+		String[] returnStr = new String[3];
+		returnStr[0] = Integer.toString(mailPercent);
+		returnStr[1] = mailboxDetail;
+		returnStr[2] = mailboxQuotaStr;
+		
+		logger.debug("getMailUsage ended");
+		return returnStr;
 	}
+}

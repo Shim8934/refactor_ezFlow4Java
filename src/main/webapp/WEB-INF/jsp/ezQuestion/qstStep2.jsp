@@ -718,21 +718,21 @@
                     		for (var j = 0; j <= QuestionNode.childNodes[i].getElementsByTagName("ANSWER_ANSWER").length; j++) {
 		                        if (k == 0 && j == 0) {
         		                    oTh = document.createElement("th");
-                		            oTh.setAttribute("style", "background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center;");
+                		            oTh.setAttribute("style", "background-color:#f8f8f8; border:1px solid #ddd; text-align:center;");
                         		    oTr.appendChild(oTh);
                         		} else if (k == 0 && j != 0) {
                             		oTh = document.createElement("th");
-                            		oTh.setAttribute("style", "background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;");
+                            		oTh.setAttribute("style", "background-color:#f8f8f8; border:1px solid #ddd; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;");
                             		oTh.innerHTML = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER_TITLE")[j - 1])
                             		oTr.appendChild(oTh);
                         		} else if (k != 0 && j == 0) {
                             		oTh = document.createElement("th");
-                            		oTh.setAttribute("style", "background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;");
+                            		oTh.setAttribute("style", "background-color:#f8f8f8; border:1px solid #ddd; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;");
                             		oTh.innerHTML = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWERTITLE")[k - 1])
                             		oTr.appendChild(oTh);
                         		} else {
                             		oTd = document.createElement("td");
-                            		oTd.setAttribute("style", "border:1px solid #b6b6b6; text-align:center;");
+                            		oTd.setAttribute("style", "border:1px solid #ddd; text-align:center;");
                             		oInput = document.createElement("input");
                             		oInput.setAttribute("type", "radio");
                             		oInput.disabled = "true";
@@ -821,7 +821,7 @@
             		<!------------------ 질문리스트 ------------------------>
             		<tr>
                 		<td colspan="4" bgcolor="#f5f5f5">
-                    		<select id="selQues" name="selQues" onclick="javascript:fun_SelClick();" ondblclick="javascript:fun_QuesEdit();" size="20" style="WIDTH: 100%; HEIGHT: 300px;"></select>
+                    		<select id="selQues" name="selQues" onclick="javascript:fun_SelClick();" ondblclick="javascript:fun_QuesEdit();" size="20" style="WIDTH: 100%; HEIGHT: 300px; background:none;"></select>
                 		</td>
             		</tr>
         		</table>

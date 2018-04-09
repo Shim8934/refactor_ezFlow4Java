@@ -668,17 +668,20 @@ function tableListControl_Week()
                 }
                 else if (s_weekDateSet < weekdatename[0] && e_weekDateSet <= weekdatename[6]) {
                     var endCnt = getNodeText(xmldom.getElementsByTagName("deDaytype")[j]);
-                    for (var i = endCnt; 0 < i; i--) {
+                    for (var i = endCnt; 0 <= i; i--) {
                         makeTable(xmldom, j, i);
                     }
                 }
                 else if (weekdatename[0] <= s_weekDateSet && weekdatename[6] < e_weekDateSet) {
                     var startCnt = getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]);
                     for (var i = startCnt; i < 8; i++) {
-                        if (i == 7)
-                            makeTable(xmldom, j, 0);
-                        else
-                            makeTable(xmldom, j, i);
+                        if (i == 7) {
+                        	//makeTable(xmldom, j, 0); // 천성준 2018-03-09 자원관리 > 금토일 자원예약시 폴더 주보기에서 자원예약이 잘못표시되는 버그수정
+                        	break;
+                        }
+                        else{
+                        	makeTable(xmldom, j, i);
+                        }
                     }
                 }
                 else {
@@ -761,7 +764,8 @@ function makeTable(xmldom, pNum, dayType) {
     _span.onmouseout = new Function("onmouse_out(this);");
     var pResourceName = "";
     pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();
-    _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + encodeURIComponent(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
+    // 2018-03-12 서주연 - 2일 이상 자원예약시 자원메인 주보기에서 자원이름이 깨지는 현상 수정
+    _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
     setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[pNum]));
     _td.appendChild(_span);
     _tr.appendChild(_td);
@@ -861,6 +865,7 @@ function DataSetRemove(fs_Date, fe_Date) {
     }
 }
 
+var agent = navigator.userAgent.toLowerCase(); 
 function tableListControl_today() {
     if (c_xmlhttp.readyState == 4 && c_xmlhttp.status == 200) {
         var xmldom = createXmlDom();
@@ -980,7 +985,6 @@ function tableListControl_today() {
                 var pObjectId = "Day_" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]);
                 var pObjectSP = Math.floor((parseInt(getNodeText(xmldom.getElementsByTagName("dstartTime")[j])) / 30)) + 1;
                 var pObjectEP = Math.ceil((parseInt(getNodeText(xmldom.getElementsByTagName("dendTime")[j])) / 30));
-
                 var pObjectSPDay = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0];
                 var pObjectEPDay = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0];
                 
@@ -1026,13 +1030,19 @@ function tableListControl_today() {
                             document.getElementById(pObjectId + "_" + TCnt).setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
                             document.getElementById(pObjectId + "_" + TCnt).setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
 
-                            document.getElementById(pObjectId + "_" + TCnt).style.backgroundColor = "#0090d0";
-                            document.getElementById(pObjectId + "_" + TCnt).style.border = "1px solid #0090d0";
+                            document.getElementById(pObjectId + "_" + TCnt).style.backgroundColor = "rgba(237, 244, 253, 1)";
+                            document.getElementById(pObjectId + "_" + TCnt).style.border = "1.1px solid #b5c8e3";//일보기>공유자원 td border
                             document.getElementById(pObjectId + "_" + TCnt).style.cursor = "pointer";
                             document.getElementById(pObjectId + "_" + TCnt).onmouseover = function (event) { onmouse_over_today(this, event); };
                             document.getElementById(pObjectId + "_" + TCnt).onmouseout = new Function("onmouse_out_today(this);");
                             document.getElementById(pObjectId + "_" + pObjectSP).onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_" + pObjectSP).parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
-                            document.getElementById(pObjectId + "_" + TCnt).colSpan = (pObjectEP - pObjectSP) + 1;
+                            document.getElementById(pObjectId + "_" + TCnt).colSpan = (pObjectEP - pObjectSP) + 1; 
+                          //늘어난 colspan만큼 오른쪽으로 밀려난 td들을 display:none 처리한다.(ie11문제 수정)
+                            if (!CrossYN() || agent.search( "trident" ) > -1 ) {
+                                for(var tdR = 1; tdR < (pObjectEP - pObjectSP) + 1; tdR++){
+                               	 	document.getElementById(pObjectId + "_" + (TCnt+tdR)).style.display = "none";    	
+                                }
+                			}	
                         }
                     }
                 } else {
@@ -1060,15 +1070,20 @@ function tableListControl_today() {
                     document.getElementById(pObjectId + "_1").setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
                     document.getElementById(pObjectId + "_1").setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
 
-                    document.getElementById(pObjectId + "_1").style.backgroundColor = "#0090d0";
-                    document.getElementById(pObjectId + "_1").style.border = "1px solid #0090d0";
+                    document.getElementById(pObjectId + "_1").style.backgroundColor = "rgba(237, 244, 253, 1)";
+                    document.getElementById(pObjectId + "_1").style.border = "1.1px solid #b5c8e3";
                     document.getElementById(pObjectId + "_1").style.cursor = "pointer";
                     document.getElementById(pObjectId + "_1").onmouseover = function (event) { onmouse_over_today(this, event); };
                     document.getElementById(pObjectId + "_1").onmouseout = new Function("onmouse_out_today(this);");
                     document.getElementById(pObjectId + "_1").onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_1").parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                     document.getElementById(pObjectId + "_1").colSpan = 48;
-                }
-                
+                  //하루종일 시 우측 td 전부 삭제(ie11문제 수정)
+                    if (!CrossYN() || agent.search( "trident" ) > -1 ) {
+                        for(var tdR = 2; tdR <= 48; tdR++){
+                       	 	document.getElementById(pObjectId + "_" + (tdR)).style.display = "none";    	
+                        }
+        			}	
+                }     
             }
         }
         var dateresult = "";
@@ -1078,6 +1093,7 @@ function tableListControl_today() {
         var _table = document.createElement("TABLE");
         _table.setAttribute("class", "table_layout");
         var _tr = document.createElement("TR");
+        _tr.style.borderTop="1px solid #dedede";
         var _th = document.createElement("TH");
         _th.style.textAlign = "center";
         _th.style.verticalAlign = "middle";
@@ -1121,9 +1137,9 @@ function tableListControl_today() {
                         _TD.onselectstart = function () { return false; };
 
                         if (title_name[k].split("/")[2] == "1")
-                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         else
-                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         
                         _TD.style.verticalAlign = "middle";
                         _Tr2.appendChild(_TD);
@@ -1186,8 +1202,8 @@ function tableListControl_today() {
                                     
                                     _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
                                     _TD.align = "center";
-                                    _TD.style.backgroundColor = "#0090d0";
-                                    _TD.style.border = "1px solid #0090d0";
+                                    _TD.style.backgroundColor = "rgba(237, 244, 253, 1)";
+                                    _TD.style.border = "1.1px solid #b5c8e3";
                                     _TD.style.width = Math.floor((100/48)*width_td) + "%";
                                     _TD.setAttribute("class", "todaytd_02");
                                     _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
@@ -1196,7 +1212,7 @@ function tableListControl_today() {
                                     _TD.onmouseout = new Function("onmouse_out_today(this);");
                                     _TD.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + title_name[k].split("/")[1] + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                                     _TD.colSpan = width_td;
-                                    
+
                                     _Tr2.appendChild(_TD);
                                     
                                 } else {
@@ -1238,8 +1254,8 @@ function tableListControl_today() {
 
                             _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
                             _TD.align = "center";
-                            _TD.style.backgroundColor = "#0090d0";
-                            _TD.style.border = "1px solid #0090d0";
+                            _TD.style.backgroundColor = "rgba(237, 244, 253, 1)";
+                            _TD.style.border = "1.1px solid #b5c8e3";//일보기>허가요청중인 자원 td border
                             _TD.style.width = 100 + "%";
                             _TD.setAttribute("class", "todaytd_02");
                             _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
@@ -1326,14 +1342,12 @@ function onmouse_out_resource(td) {
 //일보기 마우스임팩트
 function onmouse_over_today(td, event) {
     td.style.cursor = "pointer";
-    td.style.backgroundColor = "#2876b6";
-
+    td.style.backgroundColor = "#e6edf6";
     showTooltip_MouseOver(td, event);
 }
 //일보기 마우스임팩트
 function onmouse_out_today(td) {
-    td.style.backgroundColor = "#0090d0";
-
+    td.style.backgroundColor = "rgba(237, 244, 253, 1)";
     hideTooltip();
 }
 //일보기 마우스임팩트
@@ -1362,7 +1376,7 @@ function onmouse_over_Week(td) {
 //일보기 마우스임팩트
 function onmouse_out_Week(td) {
     if (p_Type != "MAIN") {
-        //td.style.backgroundColor = "#F8F8F8";
+        //td.style.backgroundColor = "#f8f8fa";
         td.style.backgroundColor = "transparent";
     }
 }
@@ -1398,17 +1412,22 @@ function showTooltip_MouseOver(obj, e) {
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
     tTh.setAttribute("scope", "col");
+    tTh.style.background = "#edf4fd";
+    tTh.style.border = "1px solid #d1ddec";
     setNodeText(tTh,GetAttribute(obj,"subject").split("&apos;").join("'"));
     tTr.appendChild(tTh);
     tTable.appendChild(tTr);
 
     var tTr = document.createElement("TR");
     var tTd = document.createElement("TD");
+    tTd.style.borderTop = "0px";
+    tTd.style.backgroundColor = "white";
     tTd.className = "text";
-
+    
     var sTable = document.createElement("TABLE");
     var sTr = document.createElement("TR");
     var sTd = document.createElement("TD");
+    sTable.style.backgroundColor = "white";
     sTable.className = "td_list";
     sTable.setAttribute("cellpadding", "0");
     sTable.setAttribute("cellspacing", "0");

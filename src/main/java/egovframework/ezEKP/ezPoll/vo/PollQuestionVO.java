@@ -27,6 +27,9 @@ public class PollQuestionVO implements Serializable {
 	private int isHidden;
 	private int isMofifying;
 	private int setDate;
+	private int isSorting;
+	private int isSelOnlyOnce;
+	private int sendPostNotice;
 	
 	public int getQstId() {
 		return qstId;
@@ -202,6 +205,30 @@ public class PollQuestionVO implements Serializable {
 
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
+	}
+
+	public int getIsSorting() {
+		return isSorting;
+	}
+
+	public void setIsSorting(int isSorting) {
+		this.isSorting = isSorting;
+	}
+
+	public int getIsSelOnlyOnce() {
+		return isSelOnlyOnce;
+	}
+
+	public void setIsSelOnlyOnce(int isSelOnlyOnce) {
+		this.isSelOnlyOnce = isSelOnlyOnce;
+	}
+
+	public int getSendPostNotice() {
+		return sendPostNotice;
+	}
+
+	public void setSendPostNotice(int sendPostNotice) {
+		this.sendPostNotice = sendPostNotice;
 	}
 
 	public boolean equals(Object object) {

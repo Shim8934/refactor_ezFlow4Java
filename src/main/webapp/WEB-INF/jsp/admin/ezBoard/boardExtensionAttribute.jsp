@@ -62,6 +62,11 @@
 
 		                if (result != "") {
 		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
+		                    /* 2018.02.12 김기하 */
+		                    var temp = xmlRtn.getElementsByTagName("VALUE");
+		                	for(i = 0; i < temp.length ; i++){
+		                		temp[i].innerHTML = "<![CDATA[" + ConvMakeXMLString(temp[i].innerHTML) + "]]>";
+		                	}
 		                    headerData.documentElement.appendChild(xmlRtn);
 		                }
 
@@ -92,6 +97,11 @@
 
 		                if (result != "") {
 		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
+		                    /* 2018.02.12 김기하 */
+		                    var temp = xmlRtn.getElementsByTagName("VALUE");
+		                	for(i = 0; i < temp.length ; i++){
+		                		temp[i].innerHTML = "<![CDATA[" + ConvMakeXMLString(temp[i].innerHTML) + "]]>";
+		                	}
 		                    headerData.documentElement.appendChild(xmlRtn);
 		                }
 
@@ -677,8 +687,12 @@
 		    }
 
 		    function ConvMakeXMLString(str) {
-		        str = ReplaceText(str, "&amp;", "&");
-		        str = ReplaceText(str, "&lt;", "<");
+		        /* 2018.02.12 김기하 */
+		    	var strTemp = str;
+		        while((str = ReplaceText(str, "&amp;", "&")) != strTemp){
+		        	strTemp = str;
+		        }
+		    	str = ReplaceText(str, "&lt;", "<");
 		        str = ReplaceText(str, "&gt;", ">");
 		        str = ReplaceText(str, "&quot;", "\"");
 		        str = ReplaceText(str, "&#39;", "'");
@@ -823,7 +837,7 @@
 			</tr>
 		</table>
 		<div class="listview">
-		    <div id="SelectList" style="border: 0px solid #B6B6B6; Width: 99%; Height: 150px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		    <div id="SelectList" style="border: 0px solid #ddd; Width: 99%; Height: 150px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		</div>		
 		<div id="divListHeader" style="padding-top:10px">
 			<span style="font-weight:bold"><spring:message code='ezBoard.t999040'/></span>
@@ -849,7 +863,7 @@
 				</tr>
 			</table>
 			<div class="listview">
-			    <div id="HeaderList" style="border: 0px solid #B6B6B6; Width: 99%; Height: 300px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+			    <div id="HeaderList" style="border: 0px solid #ddd; Width: 99%; Height: 300px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 			</div>
 		</div>		
 		<div class="btnposition">

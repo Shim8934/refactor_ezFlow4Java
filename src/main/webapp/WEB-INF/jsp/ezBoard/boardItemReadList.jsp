@@ -117,18 +117,18 @@
 			            		listTd[i].style.cursor = "pointer";
 			            	}
 			            	if((i%4) == 1) {
-			            		listTd[i].style.width = "130px";
+			            		listTd[i].style.width = "120px";
 			            		listTd[i].style.textAlign = "center";
 			            		listTd[i].style.cursor = "pointer";
 			            		listTd[i].innerHTML = listTd[i].textContent.split("(")[0];
 			            	}
 			            	if((i%4) == 2) {
-			            		listTd[i].style.width = "130px";
+			            		listTd[i].style.width = "80px";
 			            		listTd[i].style.textAlign = "center";
 			            		listTd[i].style.cursor = "pointer";
 			            	}
 			            	if((i%4) == 3){
-			            		listTd[i].style.width = "130px";
+			            		listTd[i].style.width = "150px";
 			            		listTd[i].style.textAlign = "center";
 			            		listTd[i].style.cursor = "pointer";
 			            	}
@@ -139,7 +139,7 @@
 				        	show_info(userID);
 				        });
 			            
-			            $("#lvBoardList tbody tr:odd td").css("background-color", "#f8f8f8");
+			            $("#lvBoardList tbody tr:odd td").css("background-color", "#f8f8fa");
 		            } else {
 		            	var msg = "<spring:message code='ezBoard.kbm01'/>";
 		            	var htmlContent = "<tr><td style='text-align:center'>" + msg +"</td></tr>";

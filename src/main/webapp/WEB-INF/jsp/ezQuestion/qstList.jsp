@@ -549,12 +549,20 @@
 		            return;
 		        }
 		    }
+		    
+			function qstWhite() {
+				window.location = "/ezQuestion/qstStep1.do?brdID=5";		        	        
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezQuestion.t300" /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
+				<c:if test="${adminYN == 'Y' }">
+					<li><span onclick="qstWhite()"><spring:message code="ezBoard.t367" /></span></li>
+					<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
+				</c:if>	
 				<li><span onClick="menu_Result()"><spring:message code="ezQuestion.t303" /></span></li>
 				<li><span onClick="menu_Analysis()"><spring:message code="ezQuestion.t304" /></span></li>
 				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>

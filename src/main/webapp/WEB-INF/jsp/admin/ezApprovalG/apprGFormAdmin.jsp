@@ -379,14 +379,13 @@
 		            }
 		            else {
 		            	if (approvalFlag =='S') {
-							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 								url = "/admin/ezApprovalG/formMainOther.do";
 							} else {
 								url = "/admin/ezApprovalG/formMain.do";
 							}
 						} else {
-// 							if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
-							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 
 								url = "/admin/ezApprovalG/formMainOther.do";
 							} else {
@@ -686,7 +685,7 @@
 		<table style="margin-top:5px;width:1005px;height:500px">
 			<tr>
 		    	<td rowspan="3" style="width:400px; vertical-align:top">
-					<div id="divFromTreeView" style="vertical-align:top; padding-top:5px; height:500px; width:100%; overflow-x:auto;overflow-y:auto;BORDER:#b6b6b6 1px solid; BACKGROUND-COLOR:#ffffff" ></div>
+					<div id="divFromTreeView" style="vertical-align:top; padding-top:5px; height:500px; width:100%; overflow-x:auto;overflow-y:auto;BORDER:#ddd 1px solid; BACKGROUND-COLOR:#ffffff" ></div>
 				</td>
 		    	<td style="width:600px; padding-left:5px; padding-right:5px;vertical-align:top">
 			    	<div class="listview">

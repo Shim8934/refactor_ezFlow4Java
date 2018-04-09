@@ -281,7 +281,7 @@
 		</table>
 		<div style="width:780px;text-align:center;margin-top:5px;">
 		    <%--<a class="imgbtn" onClick="NoSign()"><span><%=RM.GetString("t99000009")%></span></a>--%>
-		    <a class="imgbtn" onClick="SetSig()"><span><spring:message code='ezEmail.t48' /></span></a>
+		    <a class="imgbtn" onClick="SetSig()"><span><spring:message code='main.sp09' /></span></a>
 		    <a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>
 		<xml id="_signature1" style="display: none;">${signature1}</xml>
@@ -294,7 +294,7 @@
 	</script>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0); display: none;" id="mailPanel">&nbsp;</div>	
 	<div class="layerpopup"  style="top: 10px; z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-		<iframe src="<spring:message code='main.kms4' />" style="border:1px solid #b6b6b6;" id="iFrameLayer"></iframe>
+		<iframe src="<spring:message code='main.kms4' />" style="border:1px solid #ddd;" id="iFrameLayer"></iframe>
 	</div>
 </html>
 

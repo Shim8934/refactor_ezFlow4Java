@@ -124,7 +124,7 @@
 
 .mainlist1{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist1 tr{height:31px}
-.mainlist1 tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(/images/sub/th_bg1.gif) #fff repeat-x bottom;}
+.mainlist1 tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background:url(/images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist1 tr th.title{width:100%; text-align:left;}
 
 .mainlist1 tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; border-bottom:1px solid #ebebed; border-spacing:0;}
@@ -135,7 +135,7 @@
 
 .mainlist1_free{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 /* fomace */
-.mainlist1_free tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(/images/sub/th_bg1.gif) #fff repeat-x bottom;}
+.mainlist1_free tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background:url(/images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist1_free tr th.title{width:100%; text-align:left;}
 
 .mainlist1_free tr td{ border:0px; font-weight:normal; font-size:12px;padding:4px 4px; line-height:150%; border-bottom:1px solid #ebebed; border-spacing:0;}
@@ -143,17 +143,17 @@
 .mainlist1_free tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
 .mainlist1_depth{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px;}
-.mainlist1_depth tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg2.gif) #eee repeat-x bottom;}
+.mainlist1_depth tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background:url(../images/sub/th_bg2.gif) #eee repeat-x bottom;}
 .mainlist1_depth tr th.title{width:100%; text-align:left;}
-.mainlist1_depth tr th.left {border-left:1px solid #b6b6b6;}
-.mainlist1_depth tr th.right {border-right:1px solid #b6b6b6;}
+.mainlist1_depth tr th.left {border-left:1px solid #ddd;}
+.mainlist1_depth tr th.right {border-right:1px solid #ddd;}
 
 .mainlist1_depth tr td{  font-weight:normal; font-size:12px; padding:4px 4px; line-height:150%; border-bottom:1px solid #ebebed; background:transparent;}
 .mainlist1_depth tr td.title{width:100%; text-align:left;}
 .mainlist1_depth tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
 #mainmenu11 ul, #mainmenu11 ul.on{ list-style-type: none; padding-bottom: 5px;}
-.myBorder{ border-bottom: 1px solid #b6b6b6;}
+.myBorder{ border-bottom: 1px solid #ddd;}
 .floatedTable{ float:left;}
 
 #mainmenu1{	clear: both; margin:0; padding:0;}
@@ -173,8 +173,8 @@ input[type=text]::-ms-clear{ display:none;}
 /* 20171114 추가 */
 .content .createPoll_title{margin:0px 0px 10px 0px; padding:0px 12px 0px 12px; height:50px;}
 .content .pollButton01{width:129px; height:30px; line-height:28px; font-size:13px; background:#efefef; border:1px solid #dcdcdc; border-radius:5px;}
-.pollButton02 .pollButton03{background:#004896; color:#FFF; width:64px; height:30px; line-height:30px; border-radius:5px; text-align:center; margin:0px; padding:0px;}
-.pollButton02 .pollButton03 span{background:#004896; color:#FFF; display:block; height:30px; line-height:30px; margin:0px; padding:0px; border-radius:5px;}
+.pollButton02 .pollButton03{background:#0470e4; color:#FFF; width:64px; height:30px; line-height:30px; border-radius:5px; text-align:center; margin:0px; padding:0px;}
+.pollButton02 .pollButton03 span{background:#0470e4; color:#FFF; display:block; height:30px; line-height:30px; margin:0px; padding:0px; border-radius:5px;}
 .pollButton02 .pollButton04{background:#efefef; color:#000; border:1px solid #dcdcdc; width:64px; height:28px; line-height:28px; border-radius:5px; text-align:center; margin:0px; padding:0px;}
 .pollButton02 .pollButton04 span{background:#efefef; color:#000; display:block; height:28px; line-height:28px; margin:0px; padding:0px; border-radius:5px;}
 
@@ -187,6 +187,15 @@ input[type=text]::-ms-clear{ display:none;}
 .pollImgbtn1 span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:20px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:20px;}
 
 /* 20171129 showSeenUserInfo */
-.voteSeenTbl th{height:40px; background:#edf5ff; color:#304d7f; border:1px solid #c4d3e6; position:relative;}
-#seenUser_{ color:#304d7f; position: absolute; top:16px; left:15px;}
-.voteUnseenTbl th{height:40px; background:#efefef; color:#000; border:1px solid #ddd; position:relative;}
+.voteSeenTbl th{height:40px; background:#edf5ff; color:#304d7f; border:1px solid #c4d3e6;}
+#seenUser_{ color:#304d7f; float:left; margin-top:8px; display:block;}
+.voteUnseenTbl th{height:40px; background:#efefef; color:#000; border:1px solid #ddd;}
+
+#ballotSystemBody{min-width: 800px}
+
+.imgPopup{width: auto; height: auto; position: relative; float: left; max-width: 400px; max-height: 400px;}
+.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 50px;}
+.imgPopupBoxOff, .imgPopupOff{display: none;}
+.thumbnail{cursor: pointer}
+
+img.voteUserMailImg{float: right; margin-right: 10px; cursor: pointer;}

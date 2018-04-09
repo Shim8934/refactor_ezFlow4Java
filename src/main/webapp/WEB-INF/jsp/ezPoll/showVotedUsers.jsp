@@ -56,9 +56,9 @@
 	<body class = "popup" id = "mainbody" style="overflow: hidden;">
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
-			    <div id="menu1" style="float: left; display: inline-block; padding-left: 5px; text-align:left;">
-			        <h1><c:out value='${content}'/>&nbsp;(<c:out value='${totalVotesForOption}'/>)</h1>
-			        <img style="position: fixed; right: 15px; top: 4px; cursor: pointer; height: 35px; width: 35px;" src="/images/poll/sendMail.png" onClick="sendMailAll('${qstID}','${optID}')">
+			    <div id="menu1" style="float: left; display: inline-block; padding-left: 5px; text-align:left; width: 100%;">
+			        <h1 style="display: inline-block;"><c:out value='${content}'/>&nbsp;(<c:out value='${totalVotesForOption}'/>)</h1>
+			        <img style="float: right; margin-right: 10px; cursor: pointer;" src="/images/poll/sendMail01.png" onClick="sendMailAll('${qstID}','${optID}')">
 			    </div>				
 			</div>
 			<%-- <div style="display: inline-block; width: 100%; height:35px; line-height:34px; text-align:center; font-size:16px; background:#d1e3f5; border-radius:5px; color:#212121;"><b><c:out value='${content}'/></b></div>	
@@ -70,7 +70,7 @@
 			<div style="height:313px; overflow-y: auto; overflow-x: hidden;" id="divTbl">
 				<table border=1 style="width:100%; border-color:grey;">
 					<c:forEach var="list" items="${listOfVotedUsers}"> 
-						<tr id="${list.userId}" class="white" style="border: 1px solid #b6b6b6;">
+						<tr id="${list.userId}" class="white" style="border: 1px solid #ddd;">
 							<td style="border-right:none; min-width: 200px; width: 200px;">
 								<img src="${list.userImage}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list.userId}')">								
 								<a style="cursor:pointer; display:inline-block; padding: 0px 10px 0px 10px; float: left; line-height: 51px; overflow: hidden; text-overflow: ellipsis; max-width:120px; white-space: nowrap;" onClick="menuQst_DetailUserInfo('${list.userId}')">			
@@ -86,7 +86,7 @@
 							</td>
 							<td style="border:none; width: 110px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list.phone}"/></td>
 							<%-- <td style="border-left:none; position: relative;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick="sendMail('${list.userId}')"></td> --%>
-							<td style="border-left:none; width: 60px; min-width: 60px;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; top: 5px; padding-right: 10px; padding-left: 10px; cursor: pointer;" onClick="sendMail('${list.userId}')"></td> 	
+							<td style="border-left:none; width: 60px; min-width: 60px;"><img class="voteUserMailImg" src="/images/poll/sendMail.png" onClick="sendMail('${list.userId}')"></td> 	
 						</tr>
 					</c:forEach>
 				</table>				

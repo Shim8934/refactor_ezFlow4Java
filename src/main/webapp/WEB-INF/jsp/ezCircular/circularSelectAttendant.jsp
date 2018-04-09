@@ -1321,7 +1321,10 @@
 		    }
 		    function selbeforeBlock() {
 		        var pageNum = parseInt(CurPage);
-		        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+		        if(pageNum%BlockSize==0) {
+	            	pageNum = pageNum -1;
+	            }
+	            pageNum = ((parseInt(pageNum / BlockSize)) * BlockSize) ;
 		        goToPageByNum(pageNum);
 		    }
 		    function selbeforeBlock_one() {
@@ -1522,7 +1525,7 @@
 						        </div>
 						    </div>
 	                    	<td id="circularOrgan_content" style="display:none;">
-	                            <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px; padding:0px;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px; padding:0px;">
 	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
@@ -1571,14 +1574,14 @@
 	                                            </tr>
 	                                        </table>
 	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
-	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
+	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t80' /></td>
 	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t154' /></td>
 	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezCircular.t155' /></td>
 	                                                </tr>
 	                                            </table>
-	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
+	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t78' /></td>
 	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t80' /></td>
@@ -1588,7 +1591,7 @@
 	                                            </table>
 	                                        </div>
 	                                        <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-	                                        <div id="tblPageRayer" style="text-align:center;border-top:1px solid #B6B6B6;height:32px"></div>
+	                                        <div id="tblPageRayer" style="text-align:center;border-top:1px solid #ddd;height:32px"></div>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -1596,7 +1599,7 @@
 	                        <td id="circularDept_content" style="display:none; width:664px;">
 	                        	<table style="width:100%">
 	                                <tr>
-	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+	                                    <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                        <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezCircular.t87'/></h2>
 	                                        <div class="border_gray">
 	                                            <div id="circularDept" style="Width: 100%; Height: 182px; OVERFLOW: AUTO; padding-top: 0px;">

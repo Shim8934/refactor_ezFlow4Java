@@ -434,9 +434,9 @@
 
 	        function ReaderList() {
 	            var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-	            var strFeature = "status:no;dialogHeight: 400px;dialogWidth: 520px;help: no;resizable:yes";
-	            var feature = "width=520, height=400, resizable=yes, scrollbars=0";
-	            feature = feature + GetOpenPosition(520, 400);
+	            var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
+	            var feature = "width=600, height=415, resizable=yes, scrollbars=0";
+	            feature = feature + GetOpenPosition(600, 415);
 	            window.open(szHref, "", feature);
 	        }
 
@@ -723,7 +723,7 @@
 				
 				<c:otherwise>
 				    <td class="pad1" id="messagePad" style="height:450px">
-				    	<div class="viewbox" style="border:1px solid #b6b6b6;"><img src='${gImageUrl}' border=0 width='${gWidth }' height ='${gHeight}' name=zb_target_resize style='cursor:pointer' onclick=window.open(this.src, "_blank", "" ,"false") >
+				    	<div class="viewbox" style="border:1px solid #ddd;"><img src='${gImageUrl}' border=0 width='${gWidth }' height ='${gHeight}' name=zb_target_resize style='cursor:pointer' onclick=window.open(this.src, "_blank", "" ,"false") >
 				        	<iframe id="message" class='margin' name="message" style="padding: 0;width:100%;border:0px"></iframe>      
 				    	</div>
 				    </td>

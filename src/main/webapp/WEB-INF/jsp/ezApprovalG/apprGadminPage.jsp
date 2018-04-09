@@ -1186,6 +1186,18 @@
 		    }
 		    PagingHTML += "</div>";
 		    td_Create1(PagingHTML);
+		    TotalCount(pTotalCnt)
+		}
+		
+		//리스트 총 갯수
+		function TotalCount(pTotalCnt){
+			if(pTotalCnt != null || pTotalCnt != undefined) {
+				document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + "]";
+				}
+			else {
+	            document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
+			}
+			
 		}
 	    </script>
 	</head>

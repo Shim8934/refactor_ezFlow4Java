@@ -278,9 +278,9 @@
 		            var pheight = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
 		            var pTop = (pheight - 660) / 2;
-		            var pLeft = (pwidth - 770) / 2;
+		            var pLeft = (pwidth - 790) / 2;
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
-                                "height = 670px, width = 770px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+                                "height = 670px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		        }
 		    }
 
@@ -297,9 +297,9 @@
 		            var pheight = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
 		            var pTop = (pheight - 660) / 2;
-		            var pLeft = (pwidth - 770) / 2;
+		            var pLeft = (pwidth - 790) / 2;
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
-					            "height = 670px, width = 770px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+					            "height = 670px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		        } else {
 		            return;
 		        }
@@ -744,9 +744,9 @@
 		    }
 
 		    function open_schedule(scheduleid) {
-		        var feature = GetOpenPosition(770, 660);
+		        var feature = GetOpenPosition(790, 660);
 		        window.open("/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleid), "",
-					"height = 660px, width = 770px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+					"height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 
 		    function ShowSchedule() {
@@ -966,7 +966,7 @@
 		   
 	    </script>				
 	</head>
-	<body class="mainbody" style="overflow: auto">
+	<body class="mainbody" style="overflow: auto; margin-bottom:0px">
         <h1 id="titleimg">${defaultTitle}</h1>
         <div id="mainmenu">
             <ul>
@@ -1013,7 +1013,7 @@
 		</table>                
 		<br/>
 		<div id="showDiv" style="display:none;position:absolute;background-color:white;">
-			<table style="width:200px;height:60px;margin:1px;border:1px solid #b6b6b6" class="popuplist" >
+			<table style="width:200px;height:60px;margin:1px;border:1px solid #ddd" class="popuplist" >
 				<tr>    
 		            <th style="height:20px; width:30%" align=center><img src="/images/bt_edit.gif" onclick="showUpdate('EDIT')" style="cursor: pointer;" />&nbsp;
 		            	<img src="/images/bt_del.gif" onclick="showUpdate('DEL')" style="cursor: pointer;"/>

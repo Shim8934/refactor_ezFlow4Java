@@ -119,7 +119,7 @@
 	    <table style="border: 0; border-collapse: collapse; border-spacing: 0; padding: 0px; width: 400px;">
 	        <tr>
 	            <td style="height: 50px; text-align: center;">
-	                <a class="imgbtn"><span onclick="return SaveColor()"><spring:message code='ezEmail.t48' /></span></a>
+	                <a class="imgbtn"><span onclick="return SaveColor()"><spring:message code='main.sp09' /></span></a>
 	                <a class="imgbtn"><span onclick="document.location.reload()"><spring:message code='ezEmail.t39' /></span></a>
 	            </td>
 	        </tr>

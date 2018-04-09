@@ -781,7 +781,7 @@
                     </li>
                     <li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">
                     	<input type="checkbox" id="chkSecureMail" />
-                    	<label for="chkSecureMail" style="color:white"><spring:message code='ezEmail.lhm63' /></label>
+                    	<label for="chkSecureMail"><spring:message code='ezEmail.lhm63' /></label>
                     </li>
 		          </ul>
 		        </div>
@@ -875,7 +875,7 @@
 			          <!-- <asp:PlaceHolder ID="HolderDocSend" Runat="server" Visible="false"> 
 			            <tr> 
 			                <td height="150">
-			                    <div id="docContentBorder" style="border:#B6B6B6 1px solid; BACKGROUND-COLOR: white; margin-top:5px;"> 
+			                    <div id="docContentBorder" style="border:#ddd 1px solid; BACKGROUND-COLOR: white; margin-top:5px;"> 
 			                       <iframe id="docContent" style="height:150px; width:100%" frameborder="0" ></iframe> 
 			                    </div>
 			                </td> 

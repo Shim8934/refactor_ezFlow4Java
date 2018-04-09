@@ -134,7 +134,7 @@
 	    <table>
 	    	<tr>
 	        	<td style="padding-right:5px">
-	            	<div style="border: 1px solid #b6b6b6; padding-top:3px; height: 326px; width: 253px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
+	            	<div style="border: 1px solid #ddd; padding-top:3px; height: 476px; width:278px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
 	        	</td>
 	        </tr>
 	    </table>	    

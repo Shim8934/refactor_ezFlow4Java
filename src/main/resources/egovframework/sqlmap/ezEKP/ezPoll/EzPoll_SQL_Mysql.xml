@@ -8,6 +8,7 @@
     <typeAlias  alias="PollCommentVO"           	   type="egovframework.ezEKP.ezPoll.vo.PollCommentVO"/>
     <typeAlias  alias="PollUserAnswerVO"               type="egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO"/>
     <typeAlias  alias="PollQuestionStatusVO"           type="egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO"/>
+    <typeAlias  alias="PollUserVO"   				   type="egovframework.ezEKP.ezPoll.vo.PollUserVO"/>
 
     <!-- question resultMap -->
     <resultMap id="pollQuestion" class="PollQuestionVO">
@@ -28,6 +29,10 @@
         <result property="resultFirst"          column="result_first"              columnIndex="15" />
         <result property="isMofifying"          column="is_modifying"              columnIndex="16" />
         <result property="setDate"          	column="set_date"              	   columnIndex="17" />
+        <result property="isSorting"          	column="is_sorting"                columnIndex="18" />
+        <result property="isSelOnlyOnce"        column="is_selonlyonce"            columnIndex="19" />
+        <result property="sendPostNotice"   	column="sendpostnotice"		   	   columnIndex="20" />
+        
     </resultMap>    
     
     <resultMap id="pollAnswer" class="PollAnswerVO">
@@ -36,6 +41,7 @@
         <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
         <result property="content"         		column="content"               		columnIndex="4"/>
         <result property="votesNumber"         	column="votes_num"               	columnIndex="5"/>
+        <result	property="filePath"				column="file_path"					columnIndex="6"/>
     </resultMap>    
     
     <resultMap id="pollComment" class="PollCommentVO">
@@ -71,6 +77,13 @@
         <result property="comment"         		column="comment"                	columnIndex="5"/>
         <result property="hide"         		column="hide"               	    columnIndex="6"/>
     </resultMap>  
+    
+    <resultMap id="pollUser" class="PollUserVO">
+    	<result property="qstId"             	column="qst_id"                   	columnIndex="1"/>
+    	<result property="userId"             	column="user_id"                   	columnIndex="2"/>
+        <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
+        <result property="userType"         	column="user_type"                	columnIndex="4"/>
+    </resultMap>  
      
     <insert id="EzPollDAO.insertQuestion" parameterClass="Map">      	
         <selectKey keyProperty="v_temp" resultClass="Integer">
@@ -98,13 +111,13 @@
 	                ID,        			TENANT_ID,         CONTENT,        		MULTI_SELECT,       CREATE_DATE,
 	                START_DATE,         END_DATE,          TARGET,              TITLE,          	SECRET_VOTE,        
 	                CREATOR,			CREATOR_NAME1,	   CREATOR_NAME2,	    FILE_PATH,		    RESULT_FIRST,		
-	                SET_DATE
+	                SET_DATE,			IS_SORTING,		   IS_SELONLYONCE,		SENDPOSTNOTICE
 	            )
 	            VALUES(
 	                #id#,          	 	#tenant_id#,        #content#,          #multi_select#,     #create_date#,
 	                #start_date#,       #end_date#,         #target#,           #title#,     		#secret_vote#,
 	                #creator#,		    #creator_name1#,	#creator_name2#,	#file_path#,		#result_first#,		
-	                #set_date#
+	                #set_date#,			#is_sorting#,		#is_selonlyonce#,	#sendpostnotice#
             )  
         	]]>
         </isEqual>
@@ -113,20 +126,23 @@
 	            UPDATE 
 	            	TBL_VOTE_QUESTION
 	            SET 
-	            	 CONTENT 		= #content#,
-	            	 MULTI_SELECT 	= #multi_select#,
-	            	 CREATE_DATE	= #create_date#,
-	            	 START_DATE		= #start_date#,
-	            	 END_DATE		= #end_date#, 
-	            	 TARGET			= #target#, 
-	            	 TITLE			= #title#,  
-	            	 SECRET_VOTE	= #secret_vote#,
-	            	 CREATOR		= #creator#,
-	            	 CREATOR_NAME1	= #creator_name1#,
-	            	 CREATOR_NAME2	= #creator_name2#,
-	            	 FILE_PATH		= #file_path#,
-	            	 RESULT_FIRST	= #result_first#,
-	            	 SET_DATE		= #set_date#
+	            	 CONTENT 			= #content#,
+	            	 MULTI_SELECT 		= #multi_select#,
+	            	 CREATE_DATE		= #create_date#,
+	            	 START_DATE			= #start_date#,
+	            	 END_DATE			= #end_date#, 
+	            	 TARGET				= #target#, 
+	            	 TITLE				= #title#,  
+	            	 SECRET_VOTE		= #secret_vote#,
+	            	 CREATOR			= #creator#,
+	            	 CREATOR_NAME1		= #creator_name1#,
+	            	 CREATOR_NAME2		= #creator_name2#,
+	            	 FILE_PATH			= #file_path#,
+	            	 RESULT_FIRST		= #result_first#,
+	            	 SET_DATE			= #set_date#,
+	            	 IS_SORTING			= #is_sorting#,
+            	 	 IS_SELONLYONCE		= #is_selonlyonce#,
+            	 	 SENDPOSTNOTICE		= #sendpostnotice#
 	            WHERE
 	            		ID				= #id#
 	            	AND
@@ -222,10 +238,12 @@
 		<isEqual property="v_temp" compareValue="1">     
         	<![CDATA[
 	            INSERT INTO TBL_VOTE_ANSWER(
-	               ID, 				QST_ID,        		TENANT_ID,          CONTENT, 		    VOTES_NUM
+	               ID, 				QST_ID,        		TENANT_ID,          CONTENT, 		    VOTES_NUM,
+	               FILE_PATH
 	            )
 	            VALUES(
-	               #id#,          	 #qst_id#, 			#tenant_id#,       #content#,			#vote_number# 
+	               #id#,          	 #qst_id#, 			#tenant_id#,       #content#,			#vote_number#,
+	               #filePath#
 	            )  
         	]]>
         </isEqual>
@@ -235,7 +253,8 @@
 	            	TBL_VOTE_ANSWER
 	            SET 
 	            	 CONTENT	 		= #content#,
-	            	 VOTES_NUM			= #vote_number# 
+	            	 VOTES_NUM			= #vote_number#, 
+	            	 FILE_PATH			= #filePath# 
 
 	            WHERE
 	            		QST_ID			= #qst_id#
@@ -967,5 +986,103 @@
 	            		TENANT_ID	= #tenant_id#
 		]]>
    </update>   
+   
+   <select id="EzPollDAO.checkUsingFile" resultClass="Integer">   
+		<![CDATA[
+			SELECT 
+				count(FILE_PATH)
+			FROM 
+				TBL_VOTE_ANSWER
+			WHERE  
+				TENANT_ID = #tenant_id#		
+			AND
+				FiLE_PATH = #file_path#
+		]]>				
+    </select>  
+   
+   <select id="EzPollDAO.checkQstUsingFile" resultClass="Integer">   
+		<![CDATA[
+			SELECT 
+				count(FILE_PATH)
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID = #tenant_id#		
+			AND
+				ID <> #qst_id#		
+			AND
+				FiLE_PATH like CONCAT('%', #file_path#, '%')
+		]]>				
+    </select>  
 
+   <select id="EzPollDAO.getQuestionFileById" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_PATH
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				ID			= #qst_id#
+		]]>				
+    </select>  
+   
+   <select id="EzPollDAO.getAnswerFilesByQstId" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_PATH
+			FROM 
+				TBL_VOTE_ANSWER
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				QST_ID		= #qst_id#
+			AND
+				FILE_PATH IS NOT NULL
+		]]>				
+    </select>  
+
+   <select id="EzPollDAO.getCommentFilesByQstId" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_PATH
+			FROM 
+				TBL_VOTE_COMMENT
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				QST_ID		= #qst_id#
+			AND
+				LENGTH(FILE_PATH) > 0
+		]]>				
+    </select>  
+    
+   <select id="EzPollDAO.getCommentImgFilesByQstId" parameterClass="Map" resultClass="String">   
+		<![CDATA[
+			SELECT 
+				FILE_TYPE
+			FROM 
+				TBL_VOTE_COMMENT
+			WHERE  
+				TENANT_ID 	= #tenant_id#
+			AND
+				QST_ID		= #qst_id#
+			AND
+				LENGTH(FILE_TYPE) > 0
+		]]>				
+    </select>  
+    
+    <select id="EzPollDAO.getListOfUserIdForQstByQstId" resultMap="pollUser">             
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_USER_AND_QUESTION
+			WHERE  
+				TENANT_ID = #tenantID#	
+			AND
+				QST_ID    = #qst_id#
+		]]>			
+    </select>
 </sqlMap>

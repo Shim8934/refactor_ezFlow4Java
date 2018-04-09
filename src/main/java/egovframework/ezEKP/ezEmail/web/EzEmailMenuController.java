@@ -294,8 +294,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				isDotNetAdmin = true;
 			}			
 		}
+		String pDeleteBoxID = egovMessageSource.getMessage("ezEmail.t99000028", locale);
 		
 		model.addAttribute("isDotNetAdmin", isDotNetAdmin);
+		model.addAttribute("pDeleteBoxID", pDeleteBoxID);
 		
 		logger.debug("showMailLeft ended.");
 		

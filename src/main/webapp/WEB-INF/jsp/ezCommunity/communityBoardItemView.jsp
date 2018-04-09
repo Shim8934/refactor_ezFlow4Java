@@ -572,17 +572,17 @@
 // 	            GetOpenWindow(szHref, "", 520, 400);
 	        	var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 400) / 2;
+		        var left = (width - 600) / 2;
+		        var top = (heigth - 415) / 2;
 		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-		        var strFeature = "status:no;dialogHeight: 400px;dialogWidth: 520px;help: no;resizable:yes";
+		        var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
 		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-		            DivPopUpShow(520, 410, szHref);
+		            DivPopUpShow(600, 415, szHref);
 		        }
 		        else
-		            window.open(szHref, "", "width=520, height=400, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		            window.open(szHref, "", "width=600, height=415, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
 		    }
 		    function ReaderList_Complete() {
 		        DivPopUpHidden();
@@ -1066,12 +1066,12 @@
 	        <c:choose>
 	        <c:when test="${boardInfo.gubun == '2'}"> 
 	            <td class="pad1" id="messagePad" style="vertical-align:top; height:460px">
-	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #b6b6b6;"></iframe>
+	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
 	            </td>
             </c:when>
             <c:otherwise>
 	           	<td class="pad1" id="messagePad" style="vertical-align:top; height:440px">
-	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #b6b6b6;"></iframe>
+	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
 	            </td>
             </c:otherwise>
 			</c:choose>

@@ -463,7 +463,7 @@ function ListView() {
                 var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
                 if(strColName == "DocTitle")
                     _titleIdx = i;
-               
+                
                 if (strColName == "ProcessDate") {
                 	if (CrossYN() && navigator.userAgent.search('rv:11.0') == -1) {
                 		strWidth = parseInt(strWidth) + parseInt("20");		
@@ -502,6 +502,10 @@ function ListView() {
 
                 if (strColName == "HASATTACHYN")
                     objTd.style.textAlign = "center";
+                
+                if (strColName == "ISPUBLIC") {
+                	objTd.style.textAlign = "center";
+                }
 
                 if (strClass != "") {
                     if (i == 0) {       //// 현재는 header에 class가 없으므로 고정함.
@@ -547,6 +551,14 @@ function ListView() {
 
                 var oText = document.createTextNode(strName);
                 //objTd.appendChild(oText);
+                
+                // 2018-01-08 강민수92 첨부파일이면 첨부파일 이미지로 출력
+//                if (strColName == "HASATTACHYN") {
+//                	objTd.innerHTML = '<img src="/images/newAttach.gif">';
+//                } else {
+//                	objTd.innerHTML = strName;
+//                }
+                
                 objTd.innerHTML = strName;
                 objTr.appendChild(objTd);
 

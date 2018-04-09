@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title><spring:message code='ezApprovalG.pjj03'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -241,14 +242,14 @@
     </div>
 
     <span id="SelectDeptNM" style="font-weight:bold;width:300px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;display:inline-block;vertical-align:bottom;"></span>    
-    <table style="width:100%;height:auto;border:1px solid #B6B6B6;display:none;" id="Print_txtlist_table" class="mainlist" > 
+    <table style="width:100%;height:auto;border:1px solid #ddd;display:none;" id="Print_txtlist_table" class="mainlist" > 
               <tr>
                   <td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
                   <td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
                   <td class="td_gray" style="font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
               </tr>
           </table>
-          <table style="width:100%;height:100%; border:1px solid #B6B6B6;display:none;" id="Print_Search_txtlist_table" class="mainlist" > 
+          <table style="width:100%;height:100%; border:1px solid #ddd;display:none;" id="Print_Search_txtlist_table" class="mainlist" > 
               <tr>
                   <td style="width:110px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t305'/></td>
                   <td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>

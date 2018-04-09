@@ -826,7 +826,7 @@
                     		radioBtn.setAttribute("type", "radio");
                     		radioBtn.setAttribute("name", "radio" + j);
                     		radioBtn.setAttribute("disabled", "true")
-                    		oTd.setAttribute("style", "border: 1px solid #b6b6b6;text-align:center;");
+                    		oTd.setAttribute("style", "border: 1px solid #ddd;text-align:center;");
                     		oTd.appendChild(radioBtn);
                     		oTr.appendChild(oTd);
                     		oTd = null;
@@ -893,7 +893,7 @@
             		oRadioBtn.setAttribute("type", "radio")
             		oRadioBtn.setAttribute("disabled", "true")
             		oTd.appendChild(oRadioBtn);
-            		oTd.setAttribute("style", "border: 1px solid #b6b6b6;text-align:center;");
+            		oTd.setAttribute("style", "border: 1px solid #ddd;text-align:center;");
             		oTr.appendChild(oTd);
         		}
         		table.appendChild(oTr);
@@ -919,7 +919,7 @@
                 		oRadioBtn.setAttribute("type", "radio");
                 		oRadioBtn.setAttribute("disabled", "true");
                 		oTd.appendChild(oRadioBtn);
-                		oTd.setAttribute("style", "border: 1px solid #b6b6b6;text-align:center;");
+                		oTd.setAttribute("style", "border: 1px solid #ddd;text-align:center;");
                 		oTr.appendChild(oTd);
             		}
         		}
@@ -961,8 +961,8 @@
         	    <tr>
             	    <th rowspan="3"><spring:message code='ezQuestion.t517' /></th>
                 	<td colspan="2">
-                    	<input onclick="javascript:TypeDetermination(1)" type="radio" value="1" name="selView" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t487' />
-                    	<input type="checkbox" value="0" name="MultiResponse" disabled="disabled" style="vertical-align:-2px;"/>
+                    	<input onclick="javascript:TypeDetermination(1)" type="radio" value="1" name="selView"/><spring:message code='ezQuestion.t487' />
+                    	<input type="checkbox" value="0" name="MultiResponse" disabled="disabled"/>
 <%--                     	<c:if test="${userInfo.lang != '3'}"> --%>
 <%--                     		<spring:message code='ezQuestion.t518' /> --%>
 <%--                     	</c:if> --%>
@@ -971,14 +971,14 @@
 	                </td>
     	        </tr>
 	            <tr>
-    	            <td colspan="2"><input onclick="javascript:TypeDetermination(2)" type="radio" value="2" name="selView" checked=checked style="vertical-align:-2px;"/><spring:message code='ezQuestion.t372' /></td>
+    	            <td colspan="2"><input onclick="javascript:TypeDetermination(2)" type="radio" value="2" name="selView" checked=checked/><spring:message code='ezQuestion.t372' /></td>
         	    </tr>
             	<tr>
                 	<td colspan="2">    <!-------------- 보기선택형(우선순위) ----------------->
                     	<input style="DISPLAY: none; WIDTH: 50px" type="text" value="1" name="sNum">
                     	<input style="DISPLAY: none; WIDTH: 50px" type="text" name="eNum">
                     	<input type="radio" name="selView" value="3" style="vertical-align:-2px;DISPLAY:none" onclick="javascript:TypeDetermination(3)">
-                    	<input onclick="javascript:TypeDetermination(4)" type="radio" value="4" name="selView" style="vertical-align:-2px;"><spring:message code='ezQuestion.t373' />
+                    	<input onclick="javascript:TypeDetermination(4)" type="radio" value="4" name="selView"><spring:message code='ezQuestion.t373' />
                 	</td>
             	</tr>
         	</table>
@@ -1011,7 +1011,7 @@
             	<tr id="Objectivity_step3" style="DISPLAY:none">
                 	<th></th>
                 	<td>
-	                    <select AnsInfo name="input_Ans" id="input_Ans" size="4" onclick="javascript:fun_SelClick();" style="WIDTH:100%;HEIGHT:100px">${questionAddVO.pSelectOption}</select>
+	                    <select AnsInfo name="input_Ans" id="input_Ans" size="4" onclick="javascript:fun_SelClick();" style="WIDTH:100%;HEIGHT:100px; background:none;">${questionAddVO.pSelectOption}</select>
     	            </td>
         	    </tr>
         	</table>

@@ -165,15 +165,19 @@
 		        xmlhttp = null;
 		
 		    }
+		    
 	        var mail_newreceiverchoose_dialogArguments = new Array();
+	        
 	        function SelectReceiver_onClick() {
 	            var type = "auto";
 	            var receiverData = new Array();
+	            
 	            receiverData["addReceiver"] = addReceiver;
 	            receiverData["window"] = this;
 	            mail_newreceiverchoose_dialogArguments[0] = receiverData;
 	            mail_newreceiverchoose_dialogArguments[1] = addReceiver;
-	            var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "", "mail_foldermanage_Cross", GetOpenWindowfeature(690, 630));
+	            
+	            var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "", "mail_foldermanage_Cross", GetOpenWindowfeature(690, 650));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	
@@ -186,19 +190,19 @@
 		<form id="form1">
 			<br/>
 			<span>▒ <spring:message code='ezEmail.t138' /></span>
-			<table class="content" style="width:490px;margin-top:5px">
+			<table class="content" style="width:520px;margin-top:5px">
 				<tr>
 			    	<th><spring:message code='ezEmail.t139' /></th>
 			    	<td style="height:32px">
 			        	<input type="text" id="ForwardAddress" value="${forwardAddress}" class="textarea" style="WIDTH:80%;margin-left:2px" NAME="ForwardAddress" onkeyup="onkeydown_SaveKeyEvent(event);">
-			        	<a id="ReceiverSelect" class="imgbtn" onClick="SelectReceiver_onClick()"><span><spring:message code='ezEmail.t488' /></span></a>
+			        	<a id="ReceiverSelect" class="imgbtn" style="width:14%;" onClick="SelectReceiver_onClick()"><span style="width:80%;text-align:center;"><spring:message code='ezEmail.t488' /></span></a>
 			        </td>
 			  	</tr>
 			</table>
 			<div class="btnposition"></div>
 			<div style="text-align:center;width:490px;">
 			    <a class="imgbtn" id="ForwardDel" onClick="ButtonSaveAutoForward_Click()"><span><spring:message code='ezEmail.t95' /></span></a>
-			    <a id="btnSave" class="imgbtn" onClick="btnSave_onClick()"><span><spring:message code='ezEmail.t48' /></span></a>
+			    <a id="btnSave" class="imgbtn" onClick="btnSave_onClick()"><span><spring:message code='main.sp09' /></span></a>
 			    <a class="imgbtn" onClick="window.location.href='/ezEmail/mailAutoForward.do'"><span><spring:message code='ezEmail.t39' /></span></a>			    
 			</div>
 			<div style="display:none;">

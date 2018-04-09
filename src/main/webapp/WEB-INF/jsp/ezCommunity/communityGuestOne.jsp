@@ -39,7 +39,7 @@
 		        var html = "";
 
 		        for(var i = 0; i < SelectNodes(xmlDoc, "DATA/ROW").length; i++) {
-		        	html += "<table class=\"content\" style=\"margin-top:10px;margin-bottom:20px;border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
+		        	html += "<table class=\"content\" style=\"margin-top:10px;margin-bottom:12px;border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
 		        	html += "<tr style=\"border-left:1px solid #dddddd;border-right:1px solid #dddddd;\" >";
 		        	html += "<th style=\"height:25px; border-left:1px solid #dddddd;border-right:0px; width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
 		        	/* html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:50px;\" nowrap>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "</th>"; */
@@ -243,6 +243,10 @@
 	                }
 	            }
 	            
+	            if (MaxNum == 0) {
+	            	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+	            }
+	            
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
@@ -401,7 +405,7 @@
 
 		<table class="content" style="margin-bottom:15px;">
 			<tr>
-	  			<td style="background-color: #f8f8f8;border:1px solid #ddd">
+	  			<td style="background-color: #f8f8fa;border:1px solid #ddd">
 					<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 20px;margin-left:2px;margin-top:1px">
 						<option selected value="titleContent" ><spring:message code='ezCommunity.t585' /></option>
 						<option value="writer"><spring:message code='ezCommunity.t445' /></option>
@@ -417,6 +421,6 @@
 			<input type=hidden name=memo value="<c:out value='${memo}' />">
 			<input type=hidden name=mode value=delete>
 		</form>
-		<div id="tblPageRayer" style="margin-top:10px"></div>
+		<div id="tblPageRayer"></div>
 	</body>
 </html>

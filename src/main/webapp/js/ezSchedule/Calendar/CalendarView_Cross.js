@@ -44,7 +44,7 @@ function CalendarView(pTagetID) {
         tDiv.style.position = "absolute";
         tDiv.style.visibility = "hidden";
         tDiv.style.zIndex = "1000";
-        tDiv.style.backgroundColor = "lightyellow";
+        tDiv.style.backgroundColor = "white";
         tDiv.innerHTML = "";
         objElm.appendChild(tDiv);
 
@@ -65,6 +65,7 @@ function CalendarView(pTagetID) {
             oTable.setAttribute("border", "0");
             oTable.setAttribute("width", "100%");
             oTh.setAttribute("id", "calTitle");
+            oTh.style.fontSize = "15px";
             oTh.colSpan = "2";
             if (typeCal == 2) {
                 var tempyear = sDate.getFullYear();

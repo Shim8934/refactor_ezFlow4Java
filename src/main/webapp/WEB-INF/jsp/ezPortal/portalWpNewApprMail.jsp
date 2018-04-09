@@ -56,13 +56,13 @@
     								<dt><spring:message code='main.t00010' /></dt>
     							</c:when>
     							<c:otherwise>
-    								<dt style="font-size:8pt"><spring:message code='main.t00010' /></dt>
+    								<dt><spring:message code='main.t00010' /></dt>
     							</c:otherwise>
     						</c:choose>
     						
     						<dd>
     							<div class="point_count">
-        							<span id="OTHER" >000</span>
+        							<span id="OTHER" >0</span>
         						</div>
         					</dd>
     					</dl>
@@ -234,7 +234,7 @@
 		                if (xmldom.getElementsByTagName("CELL").length > 0) {
 		                    listHTML = "<ul class=\"listtype_txt \">";
 		                    for (var i = 0; i < xmldom.getElementsByTagName("CELL").length; i++) {
-		                        var DOCTITLE = getNodeText(xmldom.getElementsByTagName("DOCTITLE").item(i));
+		                        var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("DOCTITLE").item(i)));
 		                        var WRITERNAME = getNodeText(xmldom.getElementsByTagName("WRITERNAME").item(i));
 		                        var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
 	

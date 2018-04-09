@@ -1321,7 +1321,7 @@ function OpenWin(wfileLocation, wName, wWidth, wHeigth) {
 }
 
 function HasRecReadRight(pRecID, pSepAttNo, pUserID) {
-    if (GetUserRecRight(pRecID, pSepAttNo, pUserID) == "1")
+    if (GetUserRecRight(pRecID, pSepAttNo, pUserID) != "0")
         return true;
     else
         return false;
@@ -1771,7 +1771,7 @@ function btnSearchDelivery_onclick(opnOption) {
 
     var url = "/ezApprovalG/searchDelivery.do";
 
-    var OpenWin = window.open(url, "SearchDelivery_Cross", GetOpenWindowfeature(465, 370));
+    var OpenWin = window.open(url, "SearchDelivery_Cross", GetOpenWindowfeature(460, 370));
     try { OpenWin.focus(); } catch (e) { }
 }
 

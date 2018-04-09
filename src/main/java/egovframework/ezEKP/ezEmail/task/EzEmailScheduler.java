@@ -26,8 +26,9 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Header;
 import javax.mail.Message;
-import javax.mail.Transport;
 import javax.mail.Message.RecipientType;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -39,6 +40,7 @@ import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -56,6 +58,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
@@ -105,6 +108,50 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	
 	@Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
+	
+	/**
+	 * 관리자 - 자동삭제 
+	 */
+	@Scheduled(cron = "${config.cron.deleteAllUserOldMail}")
+	public void deleteAllUserMail() throws Exception {
+		logger.debug("deleteAllUserOldMail scheduler started.");
+		
+		if (!preScheduler("deleteAllUserOldMail")) {
+			logger.debug("deleteAllUserOldMail scheduler ended.");
+			return;
+		}
+		
+		try {
+			int tenantId = 0;
+					
+			String useAllUserOldMailDelete = ezCommonService.getTenantConfig("useAllUserOldMailDelete", tenantId);
+			String useAllUserOldMailDeletePeriod = ezCommonService.getTenantConfig("useAllUserOldMailDeletePeriod", tenantId);
+			
+			if (useAllUserOldMailDelete.equals("YES") && !useAllUserOldMailDeletePeriod.equals("0")) {
+				
+				String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteAllUserOldMail";
+				String param = "period=" + useAllUserOldMailDeletePeriod;
+				
+				String inputParams = param;
+				logger.debug("inputParams=" + inputParams);
+				
+				String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+				logger.debug("response=" + response);
+				
+				JSONParser parser = new JSONParser();
+				JSONObject object = (JSONObject) parser.parse(response);
+				
+				if (!object.get("resultCode").equals("OK")) {
+					logger.debug("Cannot delete AllUserOldMail.");
+				}
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("deleteAllUserMail scheduler ended.");
+	}
 	
 	/**
 	 * 환경설정 - 자동삭제 스케줄러
@@ -674,6 +721,143 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		}
 		
 		logger.debug("dailyFileManage scheduler ended.");
+	}
+	
+	/**
+	 * @since 2018.03.06
+	 * @author jwseo99
+	 * 
+	 * 편지함 용량 경고 메일 자동 발송
+	 * */
+	@Scheduled(cron = "${config.cron.broadcastQuotaWarning}")
+	public void broadcastQuotaWarning() throws Exception {
+		logger.debug("broadcastQuotaWarning started.");
+		
+		List<String> emailArray = new ArrayList<>();
+		
+		try {
+			// get all rows from jmocha_storage_warning_sent table
+			String requestURI = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getEmailForStorageWarningSent";
+			String resultJsonStr = ezEmailUtil.getWebServiceResult(requestURI, null);
+			
+			// result json parsing
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObject;
+			
+			jsonObject = (JSONObject) jsonParser.parse(resultJsonStr);
+			JSONArray emailJsonArray = (JSONArray) jsonObject.get("data");
+			
+			// JSONArray to ArrayList<String>
+			for (Object emailObject : emailJsonArray) {
+				String emailAddress = emailObject.toString();
+				emailArray.add(emailAddress);
+			}			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		// using system locale
+		Locale locale = Locale.getDefault();
+		// mail access info
+		String mailServerAddress = config.getProperty("config.MailServerAddress");
+		String imapPort = config.getProperty("config.IMAPPort");
+		
+		// message info
+		InternetAddress from = new InternetAddress("postmaster@localhost");		
+		String fontFamily = egovMessageSource.getMessage("ezEmail.sjw01", locale);
+		String subject = egovMessageSource.getMessage("ezEmail.sjw02", locale);
+		String suggestion = egovMessageSource.getMessage("ezEmail.sjw03", locale);
+		
+		String fontStyle = String.format("style='font-family: %s; font-size: %spx;'", fontFamily, 13);
+		
+		// process mailQuota
+		for (String userEmail : emailArray) {
+			
+			try {
+				// user quota info
+				Double[] userQuotaData = ezEmailUtil.getUserQuota(userEmail);
+				
+				if (userQuotaData[0] == null) {
+					String domainName = userEmail.substring(userEmail.indexOf("@") + 1, userEmail.length());
+					userQuotaData = ezEmailUtil.getDefaultQuota(domainName);
+				}
+				
+				IMAPAccess imapAccess = IMAPAccess.getInstance(mailServerAddress, imapPort, userEmail, jspw, egovMessageSource, locale);
+				
+				// KB
+				long mailboxUsage = imapAccess.getStorageUsageAndLimit()[0];
+				long mailboxQuota = imapAccess.getStorageUsageAndLimit()[1];
+				// MB to KB
+				double mailboxWarning = userQuotaData[1] * 1024;
+				
+				logger.debug("============");
+				logger.debug(String.format("user: %s", userEmail));
+				logger.debug(String.format("quota max: %s", mailboxQuota));
+				logger.debug(String.format("quota used: %s", mailboxUsage));
+				logger.debug(String.format("quota warning: %s", mailboxWarning));
+				
+				// 메일함 용량이 경고 발생 용량보다 작으면 continue
+				if (mailboxUsage < mailboxWarning) {
+					logger.debug("============");
+					continue;
+				}
+				
+				int progressWidth = 200;
+				
+				int usedPercent = (int) ((progressWidth / (float) mailboxQuota) * mailboxUsage);
+	            int unusedPercent = progressWidth - usedPercent;
+				
+	            logger.debug(String.format("used percent: %s", usedPercent));
+	            logger.debug(String.format("unused percent: %s", unusedPercent));
+	            logger.debug("============");
+	            
+	            // content
+	            StringBuilder content = new StringBuilder();
+	            content.append(String.format("<span %s>%s</span><br/><br/>", fontStyle, subject));
+	            content.append("<table cellspacing='0;'>")
+	            	.append("	<tbody>")
+	            	.append("		<tr>")
+	            	.append("			<td style='background-color:#FFCC00;width:" + usedPercent + "px;border-left-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'><font color='#000000' size='2' face='Tahoma'>" + humanReadableByteCount(mailboxUsage * 1024) + "</font></td>")
+	            	.append("			<td style='background-color:#ffffff;width:" + unusedPercent + "px;border-right-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'>&nbsp;</td>")
+	            	.append("			<td><span " + fontStyle + "><b>" + humanReadableByteCount(mailboxQuota * 1024) + "</b></span></td>")
+	            	.append("		</tr>")
+	            	.append("	</tbody>")
+	            	.append("</table>");
+	            content.append(String.format("<br/><span %s>%s</span><br/>", fontStyle, suggestion));
+				
+	            // send mail
+				ezEmailService.sendMail(userEmail, jspw, null, from, new InternetAddress[]{ new InternetAddress(userEmail) }, null, null, subject, content.toString(), false, EmailImportance.HIGH);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			
+		}
+		
+		logger.debug("broadcastQuotaWarning end.");
+	}
+	
+	/**
+	 * org.apache.james.transport.mailets.JMochaQuotaWarning humanReadableByteCount(long bytes) 복사
+	 * 
+	 * @since 2018.03.06
+	 * @author jwseo99
+	 * 
+	 * @param bytes
+	 *            계산 대상 바이트
+	 * @return 100,000 -> 97.6 KB<br>
+	 *         5,242,880 -> 5 MB
+	 * */
+	private String humanReadableByteCount(long bytes) {
+		int unit = 1024;
+		
+		if (bytes < unit) {
+			return bytes + " B";
+		}
+		
+		int exp = (int) (Math.log(bytes) / Math.log(unit));
+		String pre = ("KMGTPE").charAt(exp - 1) + "";
+		
+		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
 	
 	/**

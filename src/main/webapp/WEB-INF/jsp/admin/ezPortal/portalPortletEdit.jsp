@@ -460,6 +460,13 @@
 				xmlhttp.open("POST", "/admin/ezPortal/addParameter.do?mode=1", false);
 				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send(strXML);
+				if (xmlhttp.status == 200) {
+					if (xmlhttp.responseText == "Duplicate entry") {
+						alert("<spring:message code='ezEmail.t136'/>" + " <spring:message code='ezApprovalG.t730'/>");
+					}
+				} else {
+					alert("<spring:message code='main.sp12'/>");
+				}
 				xmlhttp = null;
 				
 				g_bSaved = true;
@@ -1183,7 +1190,7 @@
 	            						</select> 
 									</td>
 	          						<td>
-	          							<input type="text" id="newBoardName" readonly style="width:75%">
+	          							<input type="text" id="newBoardName" onClick="MoveSelect()" readonly style="width:75%">
 	          							<input type="text" id="newParamValue" style="width:75%; display:none">
 	          							<a class="imgbtn"><span onClick="MoveSelect()"><spring:message code='ezCommunity.t352'/></span></a>
 	          						</td>

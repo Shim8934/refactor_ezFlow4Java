@@ -160,16 +160,19 @@
 		        }
 		    }
 		    function Editor_Complete() {
-		        try {
-		            tbContentElement1.SetEditorContent(document.getElementById("BujaeBody1").innerHTML);
+		    	try {
+		        	if (tbContentElement1.editorLoadFlag) {
+			            tbContentElement1.SetEditorContent(document.getElementById("BujaeBody1").innerHTML);
+		        	}
 		        } catch (e) { }
 		        
 		        try {
-		            tbContentElement2.SetEditorContent(document.getElementById("BujaeBody2").innerHTML);
+		        	if (tbContentElement2.editorLoadFlag) {
+			            tbContentElement2.SetEditorContent(document.getElementById("BujaeBody2").innerHTML);
+		        	}
 		        } catch (e) { }
+		        
 		        try {document.body.scrollTop = 0;} catch (e) {}
-		        
-		        
 		    }
 		    function SetToggle(param) {
 		        document.getElementById("Stimepicker").disabled = true;
@@ -341,7 +344,7 @@
 		<iframe id="tbContentElement2" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement2" style="padding:0; height:500px; width:100%; overflow:auto;"></iframe>
 	</div> 
 	<div style="width:700px;text-align:center;margin-top:10px">
-	    <a class="imgbtn" onClick="Save()"><span><spring:message code='ezEmail.t48' /></span></a>
+	    <a class="imgbtn" onClick="Save()"><span><spring:message code='main.sp09' /></span></a>
 	    <a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
 	</div>
 	<XMP id="BujaeBody1" style="DISPLAY: none">${gInternal}</XMP> 

@@ -405,8 +405,8 @@
 				var item_readlist_cross_dialogArguments = new Array();
 				function ReaderList()
 				{
-		            var swidth = 520;
-		            var sheight = 400;
+		            var swidth = 600;
+		            var sheight = 415;
 		
 		            var pwidth = window.screen.availWidth;
 		            var pheight = window.screen.availHeight;
@@ -415,12 +415,12 @@
 		            var ptop = (pheight - sheight) / 2;
 		
 					var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;			
-					var strFeature = "status:no;dialogHeight: 400px;dialogWidth: 520px;help: no;resizable:yes";
+					var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
 		
 					if (CrossYN()) {
 					    item_readlist_cross_dialogArguments[0] = "";
 					    item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-					    DivPopUpShow(520, 400, szHref);
+					    DivPopUpShow(600, 415, szHref);
 					}
 					else
 					    window.open(szHref,"", "width=" + swidth + ",height=" + sheight + ",top=" + ptop + ",left=" + pleft + ", resizable=yes, scrollbars=yes");
@@ -1174,7 +1174,7 @@
 		</script>
 	</head>
 	<body class="popup">
-		<table class="layout" style="border-spacing:0; border-bottom:1px solid #b6b6b6; border:0px; width:100%">
+		<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%">
 		  <tr>
 		    <td style="height:20px; vertical-align:top">
 		      <div id="menu">
@@ -1265,7 +1265,7 @@
 		  </tr>
 		  <tr>
 		    <td style="width:100%;  text-align:center; vertical-align:top;padding-top:10px;" >
-		        <table style="width:100%; border:1px solid #b6b6b6;  ">
+		        <table style="width:100%; border:1px solid #ddd;  ">
 				  <tr>
 		        	<td style="height:68px;" colspan="3">
 		            </td>
@@ -1302,7 +1302,7 @@
 		    </tr>
 		    <tr>
 		        <td  >
-					<div style="background:#e5e5e5; border:1px solid #b6b6b6; border-top:0 none; height:70px; text-align:center; padding-top:30px;">
+					<div style="background:#e5e5e5; border:1px solid #ddd; border-top:0 none; height:70px; text-align:center; padding-top:30px;">
 		            <table border="0">
 		                <tr>
 		                    <td style="width:30px; padding-bottom:5px; vertical-align:bottom; text-align:left" onmouseover="pageimageover()" onmouseout="pageimageout()">
