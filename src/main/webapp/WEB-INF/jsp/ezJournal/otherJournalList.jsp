@@ -11,18 +11,33 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<style type="text/css">
+			#divList #otherJournalList tr:not(.selectTR):hover{
+				background-color: rgb(244,245,245);
+			}
+			.selectTR{
+				background-color: rgb(233, 241, 255);
+			}
+		</style>
 		<script type="text/javascript">
+			var journalId="";
 		    function close_onclick() {
 		    	parent.DivPopUpHidden();
 		    }
 		    
 		    function bindOtherJournal(){
-		    	var journalId = $("input[type='radio'][name='otherJournalRadio']:checked").val();
+// 		    	var journalId = $("input[type='radio'][name='otherJournalRadio']:checked").val();
 		    	if(journalId){
 			    	parent.getOtherJournal(journalId);
 		    	} else {
 		    		alert("<spring:message code='ezJournal.t148'/>");
 		    	}
+		    }
+		    
+		    function selectedTR(elem){
+		    	$("#otherJournalList tr").removeClass("selectTR");
+	   			$(elem).addClass("selectTR");
+	   			journalId = $(elem).attr("journalId");
 		    }
 		</script>
 	</head>
@@ -39,13 +54,13 @@
 		    selToggleList(document.getElementById("close"), "ul", "li", "0");
 		  </script>
 	        <div style="width:100%; height:305px" id="divList">
-	            <table class="popuplist" style="width:100%">
+	            <table class="mainlist" id="otherJournalList" style="width:100%">
 	            <c:choose>
 		            <c:when test="${fn:length(journalList) ne 0 }">
 			            <c:forEach items="${journalList }" var="journal" varStatus="status">
-							<tr style="background-color: rgb(255, 255, 255);">
-								<td style="width:13px; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-								<input type="radio" value="${journal.journalId }" name="otherJournalRadio" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>
+							<tr style="cursor:pointer;" journalId="${journal.journalId }" onclick="selectedTR(this);" ondblclick="bindOtherJournal();">
+<!-- 								<td style="width:13px; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"> -->
+<%-- 								<input type="radio" value="${journal.journalId }" name="otherJournalRadio" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td> --%>
 								<td align="left" style="width: 300px; text-align: left;">${journal.journalTitle }</td>
 <!-- 								<td align="left" -->
 <%-- 									style="width: 130px; text-align: center; cursor: pointer;">${journal.formName }</td> --%>

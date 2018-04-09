@@ -92,6 +92,11 @@
 	    				$("#optForm").html(str);
 	    			}
 	    		});
+	    		if(mode=="sum"){
+	    			setTimeout(function(){
+						$('#loading').hide()
+					},0);
+	    		}
 	    		
 	    	}
 			
@@ -143,7 +148,7 @@
 				$.ajax({
 	    			type : "POST",
 	   				dataType : "json",
-// 	   				async:false,
+	   				async:false,
 	   				url : "/ezJournal/journalGetForm.do",
 	   				data : {
 	   					mode : mode, formId : formId, typeId : typeId,
@@ -267,12 +272,17 @@
 					selFormId = opener.sumFormId;
 					journalIdList = opener.journalIdList;
 					var selectedType = $("#optType");
+					
+				
+// 					getFormList(selectedType).setTimeout(function(){
+// 						$('#loading').hide()
+// 					},0);
+					
 					getFormList(selectedType);
+					
 					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
 		    		getJournalForm(selFormId);
 		    		opener.sumFormId = "";
-
-		    		$('#loading').hide(); 
 					break;
 					
 				case 'reuse': case 'modify': case 'temp':
@@ -504,7 +514,7 @@
 					});
 				} else {
 					opener.setJournalList();
-					window.closd();
+					window.close();
 				}
 			}
 	    </script>

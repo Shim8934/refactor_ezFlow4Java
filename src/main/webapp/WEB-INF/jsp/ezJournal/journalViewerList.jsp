@@ -40,25 +40,27 @@
 		    selToggleList(document.getElementById("close"), "ul", "li", "0");
 		  </script>
 	        <div style="width:100%; height:305px" id="divList">
-	            <table class="popuplist" style="width:100%; height: 100%;">
 	            <c:choose>
 		            <c:when test="${fn:length(viewerList) ne 0 }">
-			            <c:forEach items="${viewerList }" var="viewer" varStatus="status">
-							<tr userid="${viewer.userId }" onclick="show_info(this);" style="background-color: rgb(255, 255, 255);">
-								<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.userName }</td>
-								<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.deptName }</td>
-								<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.jikwi }</td>
-								<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.date }</td>
-							</tr>
-			            </c:forEach>
+	            		<table class="popuplist" style="width:100%;">
+				            <c:forEach items="${viewerList }" var="viewer" varStatus="status">
+								<tr userid="${viewer.userId }" onclick="show_info(this);" style="background-color: rgb(255, 255, 255);">
+									<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.userName }</td>
+									<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.deptName }</td>
+									<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.jikwi }</td>
+									<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.date }</td>
+								</tr>
+				            </c:forEach>
+						</table>
 		            </c:when>
 		            <c:otherwise>
-		            	<tr style="background-color: rgb(255, 255, 255);">
-							<td align="left" colspan="3" style="height:100%; width: 130px; text-align: center; cursor: pointer;"><spring:message code='ezBoard.kbm01'/></td>
-						</tr>
+	            		<table class="popuplist" style="width:100%; height:100%;">
+			            	<tr style="background-color: rgb(255, 255, 255);">
+								<td align="left" colspan="3" style="height:100%; width: 130px; text-align: center; cursor: pointer;"><spring:message code='ezBoard.kbm01'/></td>
+							</tr>
+						</table>
 		            </c:otherwise>
 	            </c:choose>
-			</table>
 	        </div>
 	        <div id='runtime' style="color:#666;padding-top:5px"></div>
 			<c:if test="${paging.endPage>0 }">

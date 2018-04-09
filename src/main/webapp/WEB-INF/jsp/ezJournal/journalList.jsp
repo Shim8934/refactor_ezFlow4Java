@@ -31,9 +31,9 @@
 						<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> -->
 					</th>
 				</c:if>
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
-						<img src="/images/newAttach.gif">
-					</th>
+				<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
+					<img src="/images/newAttach.gif">
+				</th>
 				<c:if test="${listType eq 'recv' or listType eq 'temp' }">
 					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="8" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: left; width:15%;" class="h5_center">
 						<spring:message code='ezJournal.t12'/>
@@ -68,6 +68,7 @@
 				<c:if test="${listType eq 'department' or listType eq 'mine' }">
 					<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center; width:5%;" class="h5_center">
 						<spring:message code='ezJournal.t65'/>
+					</th>
 				</c:if>
 			</tr>
 		</thead>

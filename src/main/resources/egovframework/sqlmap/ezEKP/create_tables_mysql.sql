@@ -8707,11 +8707,11 @@ CREATE TABLE `tbl_journal` (
   `journal_status` varchar(200) DEFAULT NULL COMMENT '일지 상태',
   `journal_dept` varchar(80) DEFAULT NULL,
   `journal_text` longtext,
+  `journal_sum` varchar(45) DEFAULT 'N',
   PRIMARY KEY (`journal_id`,`tenant_id`),
   KEY `FK_tbl_journal_form_id_tbl_journal_form_form_id` (`form_id`),
   CONSTRAINT `FK_tbl_journal_form_id_tbl_journal_form_form_id` FOREIGN KEY (`form_id`) REFERENCES `tbl_journal_form` (`form_id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지';
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지'
 
 -- jmocha.tbl_journal_recv_favorite Table Create SQL
 CREATE TABLE `tbl_journal_recv_favorite` (

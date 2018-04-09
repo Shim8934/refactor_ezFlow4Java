@@ -796,13 +796,12 @@ public class EzJournalServiceImpl implements EzJournalService {
 //			Element nextElem = journalBody.getElementById("nextJournal");
 //			String nextContent = nextElem.html();
 			
-			formThisHtml += "<p>---------- " + journal.getJournalTitle().trim() + " ----------</p>";
-			formThisHtml += thisContent.trim() + "<p></p>";
+			formThisHtml += "<p> - " + journal.getJournalTitle().trim() + " - </p>";
+			formThisHtml += thisContent.trim() + "<p></p><p></p>";
 			
-			formNextHtml += "<p>---------- " + journal.getJournalTitle().trim() + " ----------</p>";   
-			formNextHtml += nextContent.trim() + "<p></p>";
+			formNextHtml += "<p> - " + journal.getJournalTitle().trim() + " - </p>";   
+			formNextHtml += nextContent.trim() + "<p></p><p></p>";
 		}
-		logger.debug("여기는 취합 포문이 끝나는곳");
 		
 		formThis.append(formThisHtml);
 		formNext.append(formNextHtml);
