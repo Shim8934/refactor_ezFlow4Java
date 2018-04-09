@@ -319,7 +319,7 @@
 			                
 			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
 			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')\" title='" + TITLE + "'>";
-			                listHTML += "<nobr><b>&nbsp;" + TITLE + "</b></nobr></span></li>";
+			                listHTML += "<nobr>&nbsp;" + TITLE + "</nobr></span></li>";
 			                count++;
 			        	}
 			        }
