@@ -245,10 +245,10 @@
 		        }
       		            
 		        var Selected = listview.GetSelectedRows();
-		        var feature = GetOpenPosition(430, 370);
+		        var feature = GetOpenPosition(455, 370);
 		        //window.open("/myoffice/ezSchedule/schedule_group_member.aspx?id=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		        
-		        window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		        window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 455px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		        
 		        //getGroupList();		
 		    }
