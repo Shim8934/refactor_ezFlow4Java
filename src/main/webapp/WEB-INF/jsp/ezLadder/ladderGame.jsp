@@ -21,6 +21,9 @@
 	
 		var _ladder = {};
 		var _ladderLine = [];
+		
+		var _ladderOrder = [];
+		
 		var id = "${id}";
 		var writerId = "${vo.writerId}";
 		var status = "${vo.status}";
@@ -618,10 +621,15 @@
 			text-align: center;
 			float: left;
 		}
+		.icon {
+			border: 1px solid #dddddd;
+			border-radius: 15px;
+			margin-left: 5px;
+		}
 	</style>
 </head>
 	<body class="mainbody">
-		<div id="ladderInfo" style="margin-top: 50px; margin-left: 50px; margin-right: 50px;">
+		<%-- <div id="ladderInfo" style="margin-top: 50px; margin-left: 50px; margin-right: 50px;">
 			<h2>${vo.title }
 				<span style="float: right; font-weight:normal;color:black;">
 					종류 : ${vo.type }, 상태 : ${vo.status }, 공개 : ${vo.secretFlag } | 작성자 ${vo.writerName }, 부서 ${vo.deptName }, 
@@ -638,17 +646,58 @@
 					</c:choose>
 				</span> 
 			</h2>
-		</div>
-		<br>
+		</div> --%>
 		<div class="directionBtn">
 			<c:if test="${vo.status eq 1 }">
 					<div id="immediatelyDirection" align="center">바로 보기</div>
 					<div id="autoDirection" align="center">자동 진행</div>
 			</c:if>
 		</div>
-		
-		<div class="fullwidth" style="margin-top: 100px;" >
+		<h1><spring:message code='ezLadder.t001' /></h1>
+		<div class="fullwidth">
 			<table class="setTable" style="position: relative;">
+				<tr>
+					<td>
+						<div style="overflow: hidden; margin-bottom: 20px; margin-top: 30px;">
+							<div style="float: left; height: 70px; width: 70%; line-height: 70px;">
+								<div style="display: inline-block; margin-right: 20px; padding-left: 20px;">${vo.title}</div>
+								<div style="float: right; padding-top: 12px; padding-right: 20px; border-right: 1px solid #dddddd; line-height: 0; height: 60px;">
+									<c:choose>
+										<c:when test="${vo.type eq 0}"><img src="/images/ezLadder/icon_bombSelected.png" class="icon"/></c:when>
+										<c:when test="${vo.type eq 1}"><img src="/images/ezLadder/icon_moneySelected.png" class="icon"/></c:when>
+										<c:when test="${vo.type eq 2}"><img src="/images/ezLadder/icon_orderSelected.png" class="icon"/></c:when>
+										<c:when test="${vo.type eq 3}"><img src="/images/ezLadder/icon_handworkSelected.png" class="icon"/></c:when>
+									</c:choose>
+									<c:choose>
+										<c:when test="${vo.status eq 0}"><img src="/images/ezLadder/icon_wait.png" class="icon"/></c:when>
+										<c:when test="${vo.status eq 1}"><img src="/images/ezLadder/icon_complete.png" class="icon"/></c:when>
+									</c:choose>
+									<c:choose>
+										<c:when test="${vo.secretFlag eq 0}"><img src="/images/ezLadder/icon_public.png" class="icon"/></c:when>
+										<c:when test="${vo.secretFlag eq 1}"><img src="/images/ezLadder/icon_private.png" class="icon"/></c:when>
+									</c:choose>
+								</div>
+							</div>
+							<div style="float: left; width: 30%;">
+								<div style="float: left; padding-top: 3px;">
+									<div style="float: left; padding-left: 20px;"><img src="${vo.pic}" style="width: 60px; height: 60px; border: 1px solid #ddd; border-radius: 35px; display: inline-block;"/></div>
+									<div class="voteTextTest" style="float: left; margin-left: 10px">
+										<span class="questionFont">${vo.writerName}</span>
+										<span style="padding-top: 5px;">${vo.deptName}</span>
+										<span class="questionFontS">${vo.writeDate}</span>
+									</div>
+								</div>
+								<div style="float: right; padding-top: 12px; padding-right: 20px;">
+									<img src="/images/ezLadder/icon_reuse.png" id="usePreladder" class="icon" style="cursor: pointer;"/>
+									<c:choose>
+										<c:when test="${vo.writerId == id}"><img src="/images/ezLadder/icon_posDelete.png" class="icon" onclick="deleteLadder(${vo.ladderId})" style="cursor: pointer;"/></c:when>
+										<c:when test="${vo.writerId != id}"><img src="/images/ezLadder/icon_imposDelete.png" class="icon"/></c:when>
+									</c:choose>
+								</div>
+							</div>
+						</div>
+					</td>
+				</tr>
 				<tr>
 					<td>
 						<c:if test="${vo.status eq 0}">

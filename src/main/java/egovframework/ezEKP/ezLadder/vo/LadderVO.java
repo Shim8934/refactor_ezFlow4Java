@@ -41,7 +41,7 @@ public class LadderVO {
 	private String offset;
 	/** 사용자 아이디*/
 	private String userId;
-	
+	private String pic;
 	
 	
 	public int getTenant_id() {
@@ -164,6 +164,12 @@ public class LadderVO {
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+	public String getPic() {
+		return pic;
+	}
+	public void setPic(String pic) {
+		this.pic = pic;
 	}
 	
 	@Override

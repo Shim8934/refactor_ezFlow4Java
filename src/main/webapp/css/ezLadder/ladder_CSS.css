@@ -27,13 +27,8 @@
 
 /* 사다리 만들기 */
 .input {
-    /* padding: 20px; */
-    margin: 0px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    -webkit-transition: 0.5s;
-    transition: 0.5s;
-    outline: none;
+	border: 1px solid #ccc;
+	padding: 0px 20px;
 }
 
 .input:focus {
@@ -42,18 +37,6 @@
 
 .fullwidth {
 	width: 100%;
-}
-
-.title {
-	position: relative;
-	padding-right: 20px;
-	width: 100%;
-	height: 100%;
-}
-
-.icondiv {
-	cursor: pointer;
-	z-index: 5px;
 }
 
 #ladderPreList {
@@ -68,18 +51,6 @@
 
 .floatL {
 	float: left;
-}
-
-.ladderType {
-	display: -webkit-inline-box;
-    float: left;
-    margin-left: 8px;
-}
-
-#slider-range-min {
-	top: 14px;
-    left: 60px;
-    margin-top: 8px;
 }
 
 #ladderLineBox {
@@ -106,10 +77,6 @@
     height: 30px;
     text-align: center;
 }
-
-/* #itemList {
-	margin-top: 433px;
-} */
 
 .addAttendWrap {
 	border: 1px solid black;

@@ -726,7 +726,8 @@
 				DELETEFLAG,
 				DEPTNAME$lang$,
 				LINECNT,
-				LINEARRAY
+				LINEARRAY,
+				TENANT_ID
 			FROM
 				TBL_LADDER 
 			WHERE

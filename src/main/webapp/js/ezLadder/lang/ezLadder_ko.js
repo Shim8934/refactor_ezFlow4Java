@@ -44,3 +44,8 @@ var strLang42 = "작성자만이 삭제할 수 있습니다.";
 
 	/** boh */
 var strLang100 = "검색결과";
+var strLang101 = "꽝 더하기";
+var strLang102 = "꽝 빼기";
+var strLang103 = "꽝";
+var strLang104 = "개";
+var strLang105 = "원";
