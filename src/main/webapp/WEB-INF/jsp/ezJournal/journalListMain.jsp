@@ -349,7 +349,7 @@
 			
 			//취합하기
 			function writeSumJournal(){
-				if(sumFormId!=null && sumFormId!=undefined){
+				if(sumFormId != null && sumFormId != undefined && sumFormId != ""){
 					 $('input:checkbox[name="journalCheckbox"]:checked').each(function() {
 						 var sumJournalId = $(this).parent().parent().attr("id");
 						 journalIdList.push(sumJournalId);
@@ -362,6 +362,7 @@
 					document.getElementById("selectSumJournal").style.display = "none";
 			        $("#basicFormList").html("");
 			        sumTypeId="";
+				//	sumFormId = "";
 			        $.modal.close();
 				} else {
 					alert("<spring:message code='ezJournal.t71' />");
@@ -828,7 +829,7 @@
 	       	 <li><span onClick="doSelectSumJournal();"><spring:message code='ezJournal.t60' /></span></li>
 		  	</c:if>
 		  	<c:if test="${listType eq 'department' or listType eq 'mine'}">
-		  	<li style="background:none; padding-right:2px; "><img src="/images/i_bar.gif" style="margin-bottom:10px;" alt=""></li>
+		  	<li style="background:none; padding-right:2px; "><img src="/images/i_bar.gif" alt=""></li>
 		  	</c:if>
 	        <c:if test="${listType eq 'department'}">
 		        <li style="background:none">

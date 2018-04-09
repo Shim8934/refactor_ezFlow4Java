@@ -27,10 +27,14 @@
 				</c:if>
 				<c:if test="${listType eq 'mine' }">
 					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center; width:20px;" class="h5_center">
-						<img src="/images/lock_icon.png" style="width: 20px; height: 20px;">
+						<img src="/images/lock_icon.png" style="width:20px;height:20px;">
 						<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> -->
 					</th>
 				</c:if>
+				<!-- 취합여부아이콘 -->
+					<th id="BoardList_TH_2" onclick="setListOrder(this)" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
+						<img src="/images/i_sum2.png">
+					</th>
 					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
 						<img src="/images/newAttach.gif">
 					</th>
@@ -61,12 +65,12 @@
 					</th>
 				</c:if>
 				<c:if test="${listType eq 'mine' }">
-					<th id="BoardList_TH_9" onclick="setListOrder(this)" order="12" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:5%;" class="h5_center">
+					<th id="BoardList_TH_9" onclick="setListOrder(this)" order="12" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:45px;" class="h5_center">
 						<spring:message code='ezJournal.t110'/>
 					</th>
 				</c:if>
 				<c:if test="${listType eq 'department' or listType eq 'mine' }">
-					<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center; width:5%;" class="h5_center">
+					<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center; width:25px;" class="h5_center">
 						<spring:message code='ezJournal.t65'/>
 				</c:if>
 			</tr>
@@ -94,11 +98,24 @@
 					<c:if test="${listType eq 'mine' }">
 						<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 							<c:if test="${journal.deptShare eq 'N' }">
-								<img src="/images/lock_icon.png" style="width: 20px; height: 20px;">
+								<img src="/images/lock_icon.png" style="width:20px;height:20px;">
 								<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> --> 
 							</c:if>
 						</td>
 					</c:if>
+					<!-- 취합여부아이콘 -->
+					<c:choose>
+						<c:when test="${journal.isSum eq 'Y'}">
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;">
+								<img src="/images/i_sum2.png">
+							</td>
+						</c:when>
+						<c:otherwise>
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;">
+								<img src="/images/i_sum1.png">
+							</td>
+						</c:otherwise>
+					</c:choose>
 					<c:choose>
 						<c:when test="${journal.fileCount ne 0}">
 							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;">
@@ -147,13 +164,13 @@
 						</td>
 					</c:if>
 					<c:if test="${listType eq 'mine' }">
-						<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+						<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 							<c:choose>
 								<c:when test="${journal.totalRecv ne 0}">
 									${journal.checkRecv} / ${journal.totalRecv}
 								</c:when>
 								<c:otherwise>
-									<span style="word-spacing: -0.6px;">&nbsp;&nbsp;-</span>
+									<span>-</span>
 								</c:otherwise>
 							</c:choose>
 						</td>
@@ -168,7 +185,7 @@
 			</c:when>
 			<c:otherwise>
 				<tr selected="false" class="" style="background-color: rgb(255, 255, 255);">
-					<td	style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colspan="<c:choose><c:when test="${listType eq 'mine'}">8</c:when><c:when test="${listType eq 'recv' }">9</c:when><c:when test="${listType eq 'department' }">7</c:when><c:otherwise>5</c:otherwise></c:choose>">
+					<td	style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colspan="<c:choose><c:when test="${listType eq 'mine'}">9</c:when><c:when test="${listType eq 'recv' }">10</c:when><c:when test="${listType eq 'department' }">8</c:when><c:otherwise>6</c:otherwise></c:choose>">
 						<spring:message code='ezJournal.t125'/>
 					</td>
 				</tr>

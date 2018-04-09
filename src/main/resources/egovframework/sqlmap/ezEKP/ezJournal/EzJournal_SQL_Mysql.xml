@@ -40,6 +40,7 @@
 		<result property="totalRecv" 		column="total_recv"/>
 		<result property="checkRecv" 		column="check_recv"/>
 		<result property="mine" 			column="mine"/>
+		<result property="isSum"	 		column="journal_sum" />
 		<result property="fileList" 		resultMap="ezJournal.fileMap"/>
 	</resultMap>
 
@@ -65,6 +66,7 @@
 		<result property="checkRecv" 		column="check_recv" />
 		<result property="isView" 			column="is_view" />
 		<result property="formStatus" 		column="form_status" />
+		<result property="isSum"	 		column="journal_sum" />
 	</resultMap>
 
 	<resultMap class="journalEnvVO" id="journalEnvMap">
@@ -737,7 +739,8 @@
 		journal_writer=#userId# and journal_id=j.journal_id and tenant_id =
 		j.tenant_id
 		),'noView') as is_view ,
-		f.form_status as form_status
+		f.form_status as form_status,
+		j.journal_sum as journal_sum
 		from jmocha.tbl_journal j
 		inner join jmocha.tbl_journal_form f on (j.form_id=f.form_id and
 		j.tenant_id = f.tenant_id)
@@ -804,7 +807,7 @@
 		<isEqual property="listType" compareValue="department">
 			and dept_share='Y'
 		</isEqual>
-		group by 1,2,3,4,5,6,7,8,14,15
+		group by 1,2,3,4,5,6,7,8,14,15,16
 		<isEmpty property="orderNum">
 			<isEmpty property="orderHow">
 			order by 3 desc
@@ -1057,6 +1060,7 @@
 			u.DISPLAYNAME as writer_name, 
 			f.form_name as form_name, 
 			f.type_id as type_id,
+			j.journal_sum as journal_sum,
 		    (select count(jr.reply_id) from jmocha.tbl_journal_reply jr where jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id) as reply_count,    
 		    (select count(r.user_id) from jmocha.tbl_journal_recv r where r.journal_id=j.journal_id and r.tenant_id=j.tenant_id) as total_recv,   
 		    (select count(r.recieve_date) from jmocha.tbl_journal_recv r where r.journal_id=j.journal_id and r.tenant_id=j.tenant_id) as check_recv,
@@ -1082,13 +1086,13 @@
 	<insert id="insertJournal" parameterClass="map">
 		insert into tbl_journal (
 			tenant_id, 	journal_title, 	journal_content, 	journal_date, 	journal_writer,
-			form_id, 	dept_share, 	journal_dept,		journal_text
+			form_id, 	dept_share, 	journal_dept,		journal_text,	journal_sum
 			<isNotEmpty property="journalStatus">
 				, journal_status
 			</isNotEmpty>
 		) values (
 			#tenantId#,	 #title#, 		#content#, 			#writeDate#, 	#writerId#, 
-			#formId#, 	 #deptShare#,	#deptId#,			#journalText#
+			#formId#, 	 #deptShare#,	#deptId#,			#journalText#,	#isSum#
 			<isEqual property="journalStatus" compareValue="temp">
 				, #journalStatus#
 			</isEqual>

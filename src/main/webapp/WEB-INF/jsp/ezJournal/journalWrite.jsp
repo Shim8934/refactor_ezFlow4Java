@@ -67,8 +67,10 @@
 	    	// 수정, 임시저장, 재사용시 가져오는 수신자리스트
 	    	var receiverId = "";
 	    	var receiverName = "";
-	    	//취합할 양식 아이디들
+	    	// 취합할 양식 아이디들
 	    	var journalIdList = [];
+	    	// 취합일지여부
+	    	var isSum = "N";
 	    	
 			// 선택된 일지함의 양식 리스트 가져오기
 	    	function getFormList(elem) {
@@ -143,7 +145,7 @@
 				$.ajax({
 	    			type : "POST",
 	   				dataType : "json",
-// 	   				async:false,
+ 	   				async:false,
 	   				url : "/ezJournal/journalGetForm.do",
 	   				data : {
 	   					mode : mode, formId : formId, typeId : typeId,
@@ -160,7 +162,8 @@
    						
    						$("#title").val(result.journalTitle);
    						message.SetEditorContent(result.journalContent);
-   						opener.journalIdList = [];
+   					//	opener.journalIdList = [];
+   						opener.journalIdList.length = 0;
 	   				},
 	   				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);
@@ -238,7 +241,16 @@
 	    			}
 	    			
 	    			var fileList = '${fileList}';
-	    			dadiframe.setAttachFileInfo(fileList);
+	    			if (fileList != null && fileList != "") {
+		    			dadiframe.setAttachFileInfo(fileList);
+	    			}
+	    			
+    	    		var checkSum = "<c:out value='${journal.isSum}'/>";
+    	    		if (checkSum != null && checkSum != "") {
+    	    			isSum = checkSum;
+    	    		}
+	    		} else if (mode == "sum") {
+    	    		isSum = "Y"
 	    		}
 	    	
 	    	}; 
@@ -265,6 +277,7 @@
 					
 				case 'sum':
 					selFormId = opener.sumFormId;
+				//	selFormId = "${sumFormId}";
 					journalIdList = opener.journalIdList;
 					var selectedType = $("#optType");
 					getFormList(selectedType);
@@ -361,6 +374,7 @@
 	                			content : content,
 	                			fileList : fileList,
 	                			oldJournalId : oldJournalId,
+	                			isSum : isSum,
 	                			mode : mode
 	                },  
 	                cache: false,
@@ -453,6 +467,7 @@
 	                			content : content,
 	                			fileList : fileList,
 	                			oldJournalId : journalId,
+	                			isSum : isSum
 	                },  
 	                cache: false,
 	                success: function(result) {

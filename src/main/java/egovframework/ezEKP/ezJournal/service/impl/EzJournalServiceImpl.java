@@ -649,6 +649,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("formId", jsonParam.get("formId"));
 		map.put("deptShare", jsonParam.get("deptShare"));
 		map.put("journalText", journalText);
+		map.put("isSum", jsonParam.get("isSum"));
 		if (mode != null && mode.equals("temp") || !isTemp.equals("")) {
 			map.put("journalStatus", "temp");
 		}

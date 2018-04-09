@@ -347,6 +347,10 @@ public class EzJournalController extends EgovFileMngUtil {
 		String receiverIds = "";
 		String receiverNames = "";
 		
+//		if (request.getParameter("sumFormId") != null && !request.getParameter("sumFormId").equals("")) {
+//			model.addAttribute("sumFormId", request.getParameter("sumFormId"));
+//		}
+		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("userId", userInfo.getId());
@@ -985,8 +989,9 @@ public class EzJournalController extends EgovFileMngUtil {
 		String content = request.getParameter("content");
 		String typeId = request.getParameter("typeId");
 		String formId = request.getParameter("formId");
+		String isSum = request.getParameter("isSum");
 		
-		logger.debug("journalId:"+originJournalId+",mode:"+mode+",title:"+title+",isPublic:"+isPublic+",formId:"+formId+",typeId:"+typeId);
+		logger.debug("journalId:"+originJournalId+",mode:"+mode+",title:"+title+",isPublic:"+isPublic+",formId:"+formId+",typeId:"+typeId+",isSum:"+isSum);
 		
 		fileList = request.getParameter("fileList");
 		logger.debug("fileList : " + fileList);
@@ -1011,6 +1016,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		jsonParam.put("receiverList", receiverList);
 		jsonParam.put("fileList", fileList);
 		jsonParam.put("mode", mode);
+		jsonParam.put("isSum", isSum);
 		if (mode.equals("temp")) {
 			jsonParam.put("isTemp", "N");
 		}
@@ -1058,8 +1064,9 @@ public class EzJournalController extends EgovFileMngUtil {
 		String content = request.getParameter("content");
 		String typeId = request.getParameter("typeId");
 		String formId = request.getParameter("formId");
+		String isSum = request.getParameter("isSum");
 		
-		logger.debug("journalId:"+originJournalId+",mode:"+mode+",title:"+title+",isPublic:"+isPublic+",formId:"+formId+",typeId:"+typeId);
+		logger.debug("journalId:"+originJournalId+",mode:"+mode+",title:"+title+",isPublic:"+isPublic+",formId:"+formId+",typeId:"+typeId+",isSum:"+isSum);
 		
 		fileList = request.getParameter("fileList");
 		logger.debug("fileList : " + fileList);
@@ -1084,6 +1091,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		jsonParam.put("receiverList", receiverList);
 		jsonParam.put("fileList", fileList);
 		jsonParam.put("mode", mode);
+		jsonParam.put("isSum", isSum);
 		jsonParam.put("isTemp", "Y");
 		
 		JSONObject result = new JSONObject();

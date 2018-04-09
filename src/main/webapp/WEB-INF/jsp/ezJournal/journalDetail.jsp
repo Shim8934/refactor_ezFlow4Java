@@ -34,16 +34,17 @@
 			var journalTitle = "${journal.journalTitle}";
 			var typeId = "${journal.typeId}";
 			var viewType = "detail";
+			var isSum = "<c:out value='${journal.isSum}'/>";
 			
 			// 수정
 			function journalModify() {
-				console.log("formId : " + formId + ",journalId : " + journalId);
-				window.location.href = "/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=modify";
+				console.log("formId : " + formId + ",journalId : " + journalId + ",isSum : " + isSum);
+				window.location.href = "/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=modify" + "&isSum=" + isSum;
 			}
 			
 			// 재사용
 			function journalReuse() {
-				window.location.href = "/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=reuse";
+				window.location.href = "/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=reuse" + "&isSum=" + isSum;
 			}
 			
 			// 삭제
