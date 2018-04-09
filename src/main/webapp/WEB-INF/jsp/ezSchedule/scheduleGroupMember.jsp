@@ -25,7 +25,7 @@
 		        if (CrossYN()) {
 		            schedule_select_attendant_dialogArguments[0] = "";
 		            schedule_select_attendant_dialogArguments[1] = add_member_Complete;
-		            OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t171' />") + "&type=group", "schedule_group_write", GetOpenWindowfeature(980, 670));
+		            OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t171' />") + "&type=group", "schedule_group_write", GetOpenWindowfeature(1000, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -33,7 +33,7 @@
 		            var pwidth = window.screen.availWidth;
 		            var pTop = (pheight - 535) / 2;
 		            var pLeft = (pwidth - 737) / 2;
-		            var rtn = window.showModalDialog("scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t171' />") + "&type=group", "", "dialogHeight:670px; dialogWidth:980px; dialogLeft:" + pLeft + "; dialogTop:" + pTop + "; status:no; scroll:no; help:no; edge:sunken");
+		            var rtn = window.showModalDialog("scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t171' />") + "&type=group", "", "dialogHeight:670px; dialogWidth:1000px; dialogLeft:" + pLeft + "; dialogTop:" + pTop + "; status:no; scroll:no; help:no; edge:sunken");
 		            
 		            if (typeof (rtn) != "undefined") {
 		                if (rtn["id"].length == 0)
