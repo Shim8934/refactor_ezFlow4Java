@@ -10,7 +10,8 @@
 	<typeAlias alias="AttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
 	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
 	<typeAlias alias="HolidayVO" type="egovframework.ezEKP.ezAttitude.vo.HolidayVO"/>
-
+	<typeAlias alias="attitudeFormVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO"/>
+	
 	<resultMap id="attitudeApplicationVO" class="AttitudeApplicationVO">
 		<result property="attitudeId"		column="ATTITUDE_ID" 	columnIndex="1"/>
 		<result property="changeDate"		column="CHANGE_DATE" 	columnIndex="2"/>
@@ -79,6 +80,11 @@
 		<result property="typeName"			column="TYPE_NAME" 		columnIndex="6"/> 		
 		<result property="typeName2"		column="TYPE_NAME2" 	columnIndex="7"/>
 		<result property="content"			column="CONTENT" 		columnIndex="8"/>
+	</resultMap>
+	
+	<resultMap id="getFormBody" class="AttitudeFormVO">
+		<result property="formId"		    column="FORM_ID"		columnIndex="1"/>
+		<result property="formHtml"			column="FORM_HTML"		columnIndex="2"/>
 	</resultMap>
 	
 	<select id="ezAttitude.getAttitudeList" parameterClass="Map" resultMap="attitude">
@@ -414,6 +420,26 @@
 		      #ids[]# 
 		</iterate>
 	</delete>
+	
+	<select id="ezAttitudeDAO.getFormBody" parameterClass="Map" resultMap="getFormBody">
+		<![CDATA[
+			SELECT 
+				A.FORM_ID,
+				A.FORM_HTML
+			FROM 
+				jmocha.tbl_attitude_form A
+			INNER JOIN
+				jmocha.tbl_attitude_type B
+			ON
+				A.FORM_ID = B.FORM_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE
+				B.COMPANY_ID = #companyId#
+			AND
+				B.TYPE_ID = #typeId#
+		]]>
+	</select>
 	
 	<update id="ezAttitudeDAO.attModAppModify" parameterClass="map">
 		<![CDATA[

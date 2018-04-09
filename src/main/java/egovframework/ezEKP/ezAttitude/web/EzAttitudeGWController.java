@@ -1394,26 +1394,32 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 작성양식
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}/forms/formId", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getFormBody(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] started.");
+	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}/forms/form", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getFormBody(@PathVariable String attitudetypeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/{attitudetypeId}/forms/form] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try{
-			String data = "";
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			
+			AttitudeFormVO formVO = ezAttitudeService.getFormBody(attitudetypeId, companyId, tenantId);
 			
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", data);
+			result.put("data", formVO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/{attitudetypeId}/forms/form] ended.");
 		
 		return result;
 	}
@@ -1487,29 +1493,48 @@ public class EzAttitudeGWController {
 			String companyId = request.getParameter("companyId");
 			String pageNum = request.getParameter("pageNum");
 			String listSize = request.getParameter("listSize");
+			String typeId = request.getParameter("typeId");
+			String userIdList = request.getParameter("userIdList");
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
 			String offsetMin = request.getParameter("offsetMin");
+			String isAdmin = request.getParameter("isAdmin");
+			String isuse = "1";
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			String offset = info.getOffSet();
 			
-			List<AttitudeVO> resultList = ezAttitudeService.getAttitudeList2(companyId, pageNum, listSize, startDate, endDate, offset, info.getTenantId());
+			//모든근태조회
+			List<AttitudeVO> list = ezAttitudeService.getAttitudeList2(companyId, pageNum, listSize, typeId, userIdList, startDate, endDate, offset, info.getTenantId());
 			
 			//imgPath 셋팅
-			
-			for (int i = 0; i < resultList.size(); i++) {
-				String imgPath = resultList.get(i).getImgPath();
-				if (imgPath != null && !imgPath.equals("")) {
-					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + info.getCompanyId() + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
-					resultList.get(i).setImgPath(imgPath);
-				}
-			}
+//			for (int i = 0; i < list.size(); i++) {
+//				String imgPath = list.get(i).getImgPath();
+//				if (imgPath != null && !imgPath.equals("")) {
+//					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + info.getCompanyId() + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+//					list.get(i).setImgPath(imgPath);
+//				}
+//			}
 	         
+//			result.put("status", "ok");
+//			result.put("code", 0);			
+//			result.put("data", resultList);
+			
+			//리스트 총 갯수
+			String totalCount = ezAttitudeService.getAttitudeCount2(info.getTenantId(), companyId, typeId, userIdList, startDate, endDate, offset);
+			
+			//구분 리스트
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, info.getTenantId());
+			
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("totalCount", totalCount);
+			data.put("typeList", typeList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", resultList);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			

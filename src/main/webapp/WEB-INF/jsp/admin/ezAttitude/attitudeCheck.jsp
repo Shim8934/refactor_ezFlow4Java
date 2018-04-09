@@ -136,7 +136,6 @@
 		    };
 		    $.datepicker.setDefaults($.datepicker.regional["ko"]);
 		});
-    	//
     	
     	function company_change(){
     		$('#receiverlist').empty();
@@ -145,15 +144,32 @@
     	}
     	
     	function getUserConfList(){
+    		//구분
+    		var typeId = $('#attitudeType').val();
+    		if (typeId == "total") {
+    			typeId = "";
+    		}
+    		//조회자 id리스트
+    		var spanLength = $('#receiverlist').find('span').length;
+    		var userIdList = "";
+    		if (spanLength > 0) {
+    			for (var i = 0; i < spanLength; i++) {
+    				userIdList += $('#receiverlist span').eq(i).attr('id') + ",";
+    			}
+    			//마지막 ',' 제거
+    			userIdList = userIdList.slice(0, -1);
+    		}
+    		
     		$.ajax({
     			data : "GET",
     			dataType : "json",
     			async : false,
     			url : "/admin/ezAttitude/attitudeCheckList.do",
-    			data : {companyId : pCompanyId, 
-//     					userName : searchUserName, 
-    					pageNum : pageNum, 
+    			data : {companyId : pCompanyId,
+    					pageNum : pageNum,
     					listSize : listSize,
+    					typeId : typeId,
+    					userIdList : userIdList,
     					orderCell : orderCell,
     					orderOption : orderOption,
     					startDate : $('#Sdatepicker').val(),
@@ -162,26 +178,46 @@
     				totalCount = result.totalCount;
     				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
     				getUserConfList_after(result.list);
+    				//구분 리스트
+    				getAttitudeTypeList(result.typeList);
     				//더블클릭 이벤트
-    				addTrDblclickEvent(userDbClick);
+//     				addTrDblclickEvent(userDbClick);
+    			},
+    			error : function() {
+    				alert('리스트를 가져오는중 오류 발생');
     			}
     		});
+    	}
+    	
+    	function getAttitudeTypeList(typeList) {
+    		var html = "<option value='total'>전체</option>";
+    		for (var i = 0; i < typeList.length; i ++) {
+    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
+    		}
+    		$('#attitudeType').html(html);
     	}
     	
     	function getUserConfList_after(result){
     		var resultHtml = "";
     		$("#attiBoardList tbody").html("");
     		
-    		for (var resultLeng = 0; resultLeng < result.length; resultLeng ++) {
-    			resultHtml += "<tr userid='" + result[resultLeng].userId + "'><td></td>"
-    			   			+ "<td>" + result[resultLeng].userName+ "</td>"
-    			   			+ "<td>" + result[resultLeng].userTitle+ "</td>"
-    			   			+ "<td>" + result[resultLeng].deptName+ "</td>"
-    			   			+ "<td>" + result[resultLeng].workStartTime + " ~ " + result[resultLeng].workEndTime + "</td></tr>";
+    		for (var i = 0; i < result.length; i ++) {
+    			resultHtml += "<tr userid='" + result[i].writerId + "'>"
+    			   			+ "<td>" + result[i].userName + "</td>"
+    			   			+ "<td>" + result[i].deptName + "</td>"
+    						+ "<td>" + result[i].typeName + "</td>";
+    			if ( result[i].endDate == null || result[i].endDate == "") {
+    				resultHtml += "<td>" + result[i].startDate + "</td>";
+    			} else {
+    				resultHtml += "<td>" + result[i].startDate + " ~ " + result[i].endDate + "</td>";
+    			}
+    			resultHtml += "<td>" + result[i].startTime + "</td>"
+    			   				+ "<td>" + result[i].endTime + "</td>";
+    			+"</tr>";
     		}
     		
     		if (resultHtml == "") {
-    			resultHtml = "<tr><td colspan='9' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
+    			resultHtml = "<tr><td colspan='6' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
     		}
     		
     		$("#attiBoardList tbody").append(resultHtml);
@@ -279,7 +315,7 @@
 	  						<tr>
 	  							<th style="text-align:center">구분</th>
 	  							<td>
-	  								<select name="attitudeType" id="attitudeType" onchange="attitudeType_change()" style="margin-top:4px; padding-right:40px;">
+	  								<select name="attitudeType" id="attitudeType" style="margin-top:4px; padding-right:40px;">
 	  								</select>
 	  							</td>
 	  						</tr>
@@ -321,13 +357,10 @@
 		<table id="attiBoardList" class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
-					<th style="width:5%;">NO</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
 					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="workstarttime">출근시각</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="workendtime">퇴근시각</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="typename">구분</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="date">날짜</th>
+					<th style="width:5%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="typename">구분</th>
+					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="date">날짜</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime">시작시간</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="endtime">종료시간</th>
 				</tr>

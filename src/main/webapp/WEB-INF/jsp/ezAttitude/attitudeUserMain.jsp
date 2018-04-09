@@ -219,7 +219,6 @@
 			function attitudeWrite(obj) {
 				var date = $(obj).attr("dispdate");
 				var pAttitudeId = $(obj).attr("attitudeId"); 
-				alert(pAttitudeId);
 				if (CrossYN()) {
                     var OpenWin = window.open("/ezAttitude/attitudeWrite.do?date=" + date, "writeAttitude", GetOpenWindowfeature(650, 580));
                     

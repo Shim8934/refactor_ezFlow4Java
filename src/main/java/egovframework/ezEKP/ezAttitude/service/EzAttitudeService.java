@@ -29,7 +29,7 @@ public interface EzAttitudeService {
 	
 	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, int tenantId) throws Exception;
 	
-	public String getFormBody(String typeId, int tenantId) throws Exception;
+	public AttitudeFormVO getFormBody(String typeId, String companyId, int tenantId) throws Exception;
 	
 	public void updateAttitude(String attitudeId, String startdate, String enddate, String starttime, String endtime, String region,
 			String mobile, String bizsub, String content, String ip, String typeId, String companyId, int tenantId) throws Exception;
@@ -107,9 +107,11 @@ public interface EzAttitudeService {
 
 	public void deleteAttitudeUserConfig(int tenantId, String selecUserList) throws Exception;
 	
-	public List<AttitudeVO> getAttitudeList2(String companyId, String pageNum, String listSize, String startDate, String endDate, String offset, int tenantId) throws Exception;
+	public List<AttitudeVO> getAttitudeList2(String companyId, String pageNum, String listSize,String typeId, String userIdList, String startDate, String endDate, String offset, int tenantId) throws Exception;
 	
 	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId, String offset) throws Exception;
 	
 	public void attModAppModify(String companyId, int tenantId, String userId, String attModId, String offset, String content, String changeDate) throws Exception;
+
+	public String getAttitudeCount2(int tenantId, String companyId, String typeId, String userIdList, String startDate, String endDate, String offset) throws Exception;
 }

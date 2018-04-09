@@ -35,12 +35,16 @@
 // 	                document.getElementById("alldaycheck").checked = false;
 // 	                allday_change();
 // 	            }
-
 				form_change();
 			}
 			
-			$(function () {
-		        $("#Sdatepicker").datepicker({
+		    var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "일;월;화;수;목;금;토";
+		    var dayStr = dayMsg.split(";");
+		    
+			function setDatePicker(type) {
+				$("#Sdatepicker").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
 		            autoSize: true,
@@ -80,60 +84,41 @@
 		        
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
-		        $('#Stimepicker').timepicker();
-		        $('#Stimepicker').timepicker('setTime', SDate);
-		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
-
 		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Edatepicker").datepicker('setDate', EDate);
-		        $('#Etimepicker').timepicker();
-		        $('#Etimepicker').timepicker('setTime', EDate);
-		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
-		    });
-		    
-		    var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
-		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "일;월;화;수;목;금;토";
-		    var dayStr = dayMsg.split(";");
-		    
-		    $(function () {
+		        
+		        if (type == 2 || type == 3 || type == 5) {
+			        $('#Stimepicker').timepicker();
+			        $('#Stimepicker').timepicker('setTime', SDate);
+			        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+			        if (type == 3 || type == 5) {
+				        $('#Etimepicker').timepicker();
+				        $('#Etimepicker').timepicker('setTime', EDate);
+				        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+			        }
+		        }
+		        
 		        $.datepicker.regional["ko"] = {
-		        	closeText: "닫기",
-		            prevText: "이전달",
-		            nextText: "다음달",
-					currentText: "오늘",
-		            monthNames: monthStr,
-		            monthNamesShort: monthStr,
-		            dayNames: dayStr,
-		            dayNamesShort: dayStr,
-		            dayNamesMin: dayStr,
-		            weekHeader: 'Wk',
-		            dateFormat: 'yy-mm-dd',
-		            firstDay: 0,
-		            isRTL: false,
-		            duration: 200,
-		            showAnim: 'show',
-		            showMonthAfterYear: true
-		        };
+			        	closeText: "닫기",
+			            prevText: "이전달",
+			            nextText: "다음달",
+						currentText: "오늘",
+			            monthNames: monthStr,
+			            monthNamesShort: monthStr,
+			            dayNames: dayStr,
+			            dayNamesShort: dayStr,
+			            dayNamesMin: dayStr,
+			            weekHeader: 'Wk',
+			            dateFormat: 'yy-mm-dd',
+			            firstDay: 0,
+			            isRTL: false,
+			            duration: 200,
+			            showAnim: 'show',
+			            showMonthAfterYear: true
+			        };
 		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
-		    });
-			
-			//저장
-			function save_attitude() {
-				$.ajax({
-		        	type : "POST",
-		        	url : "/ezAttitude/",
-		        	async : false,
-		        	data : {
-		        		companyId : companyId
-		        	},
-		        	success : function (result) {
-		        		
-		        	}
-		        });
 			}
 			
-			// 근태종류 선택 시 이벤트
 			var selectType = "";
 			function form_change(obj) {
 				// 근태종류를 선택하면 폼이 바뀌어야 된다.
@@ -146,6 +131,9 @@
 					selectType = $(obj).val();
 				} else {
 					selectType = $(obj).val();
+				}
+				if (selectType == "" || selectType == undefined) {
+					selectType = $("#selectAtti").val();
 				}
 				
 				getFormBody();
@@ -160,10 +148,69 @@
 						typeId : selectType
 					},
 					success : function (result) {
-						alert(result);
+						$("#attiwriteForm tr").not("tr:first").remove();
+						$("#attiwriteForm tbody").append(result.formHtml);
+						
+						setDatePicker($("#periodblock").attr("datetype"));
+						
+						$("#writerName").text(writerName);
 					}
 				})
 			}
+			
+			var startDate = "";
+			var endDate = "";
+			function dateTypeCheck() {
+				var dateType = $("#periodblock").attr("datetype");
+				startDate = "";
+				endDate = "";
+				
+				switch (dateType) {
+					case "1":
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+						break;
+					case "2":
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+						break;
+					case "3":
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+						endDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
+						break;
+					case "4":
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+						break;
+					case "5":
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd'}).val() + " " + $('#Etimepicker').val();
+						break;
+				}
+				
+				alert(startDate + "\n" + endDate);
+				
+			}
+			
+			//저장
+			function save_attitude() {
+				$.ajax({
+		        	type : "POST",
+		        	url : "/ezAttitude/saveAttitude.do",
+		        	async : false,
+		        	data : {
+		        		selectType : selectType,
+		        		writerName : $("#writerName").text(),
+		        		region : $("input[name=region]").val(),
+		        		mobile : $("input[name=mobile]").val(),
+		        		bizsub : $("input[name=bizsub]").val(),
+		        		dateType : $("#periodblock").attr("datetype")
+		        	},
+		        	success : function (result) {
+		        		
+		        	}
+		        });
+			}
+			
+			// 근태종류 선택 시 이벤트
 			
 		</script>
 	</head>
@@ -171,7 +218,7 @@
 <!-- 		<h1>근태 작성</h1> -->
 		<div id="menu">
 			<ul>
-				<li><span onClick="save_attitude()">저장</span></li>
+				<li><span onClick="dateTypeCheck()">저장</span></li>
 			</ul>
 		</div>
 		<div id="close">
@@ -179,60 +226,28 @@
 				<li><span onClick="window.close()">닫기</span></li>
 			</ul>
 		</div>
-		<table class="content"> 
-			<tr> 
-    			<th>구분</th> 
-    			<td>
-					<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
-						<c:forEach var="item" items="${attitudeTypeList }">
-							<c:if test="${item.parentId ne 'A05'}">
-								<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
-							</c:if>
-						</c:forEach>
-					</select>
-					<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)">
-						<c:forEach var="item" items="${attitudeTypeList }">
-							<c:if test="${item.parentId eq 'A05'}">
-								<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
-							</c:if>
-						</c:forEach>
-					</select>
-				</td> 
-  			</tr>
-  			<tr> 
-    			<th>성명</th> 
-    			<td id="writerName" style=""> 배현상 </td> 
-  			</tr>
-  			<tr>
-  				<th>일시 </th>
-                    <td colspan="2">
-                        <span id="periodblock">
-                        <input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1" checked>
-                                                               하루종일
-                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
-                        ~
-                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
-                        </span>
-                	</td>
-  			</tr>
-  			<tr> 
-    			<th>근무지</th> 
-    			<td id="region" style="">
-					<input name="region" type="text" style="width:98%" value="">
-    			</td> 
-  			</tr>
-  			<tr> 
-    			<th>연락처</th> 
-    			<td id="mobile" style="">
-					<input name="mobile" type="text" style="width:98%" value="">
-    			</td> 
-  			</tr>
-  			<tr> 
-    			<th>업무대리</th> 
-    			<td id="bizsub" style="">
-					<input name="bizsub" type="text" style="width:98%" value="">
-    			</td> 
-  			</tr>
+		<table id="attiwriteForm" class="content">
+			<tbody>
+				<tr> 
+	    			<th>구분</th> 
+	    			<td>
+						<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
+							<c:forEach var="item" items="${attitudeTypeList }">
+								<c:if test="${item.parentId ne 'A05' && item.typeId ne 'A01' && item.typeId ne 'A02' && item.typeId ne 'A03'}">
+									<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
+								</c:if>
+							</c:forEach>
+						</select>
+						<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)">
+							<c:forEach var="item" items="${attitudeTypeList }">
+								<c:if test="${item.parentId eq 'A05'}">
+									<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
+								</c:if>
+							</c:forEach>
+						</select>
+					</td> 
+	  			</tr>
+  			</tbody>
 		</table>
 		<table id="content" class="content" style="width:100%; margin-top: 10px;">
 		  	<tr>

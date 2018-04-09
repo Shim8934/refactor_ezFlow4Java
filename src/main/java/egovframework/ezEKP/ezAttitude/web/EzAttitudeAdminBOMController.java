@@ -251,7 +251,7 @@ public class EzAttitudeAdminBOMController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/companies/" + request.getParameter("companyId") + "/attitudetypes";
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + request.getParameter("companyId") + "/attitudetypes";//TODO
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1000,6 +1000,7 @@ public class EzAttitudeAdminBOMController {
 	@RequestMapping(value = "/admin/ezAttitude/attitudeCheckList.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject getAttitudeCheckList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+//	public JSONArray getAttitudeCheckList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/admin/ezAttitude/attitudeCheckList started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -1007,6 +1008,8 @@ public class EzAttitudeAdminBOMController {
 		String companyId = request.getParameter("companyId");
 		String pageNum = request.getParameter("pageNum");
 		String listSize = request.getParameter("listSize");
+		String typeId = request.getParameter("typeId");
+		String userIdList = request.getParameter("userIdList");
 //		String orderCell = request.getParameter("orderCell");
 //		String orderOption = request.getParameter("orderOption");
 		String startDate = request.getParameter("startDate");
@@ -1030,6 +1033,8 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("userId", userId)
 				.queryParam("pageNum", pageNum)
 				.queryParam("listSize", listSize)
+				.queryParam("typeId", typeId)
+				.queryParam("userIdList", userIdList)
 //				.queryParam("orderCell", orderCell)
 //				.queryParam("orderOption", orderOption)
 				.queryParam("startDate", startDate)
@@ -1047,6 +1052,10 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("status : " + status);
 		
 		
+//		JSONArray jArray = new JSONArray();
+//		if(status.equals("ok")){
+//			jArray = (JSONArray) resultBody.get("data");
+//		}
 		JSONObject jObject = new JSONObject();
 		if(status.equals("ok")){
 			jObject = (JSONObject) resultBody.get("data");
@@ -1054,6 +1063,7 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("/admin/ezAttitude/attitudeCheckList ended");
 		return jObject;
+//		return jArray;
 	}
 	/**
 	 * 부서근태관리 > 조회자 검색 화면 출력 메서드
