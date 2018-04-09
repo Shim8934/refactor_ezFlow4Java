@@ -406,8 +406,8 @@ public class EzEmailAdminLetterController {
 		model.addAttribute("pageType", "letter");
 		model.addAttribute("companyId", companyId);
 		
-		//model.addAttribute("strLang", commonUtil.getMultiData(loginInfo.getLang(), loginInfo.getTenantId()));
-		model.addAttribute("userLang", loginInfo.getLang());
+		model.addAttribute("userLang", commonUtil.getPrimaryData(loginInfo.getLang(), loginInfo.getTenantId()));
+		//model.addAttribute("userLang", loginInfo.getLang());
 
 		logger.debug("letterAdminPage ended.");
 		return "admin/ezEmail/letterManager";
