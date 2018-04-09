@@ -28,14 +28,14 @@
 		<div id="divInput">
 			<form id="myForm" action="/admin/ezEmail/updateLetterBox.do" method="post">
 				<label for="display">
-					<b><spring:message code='main.t76'/>(<spring:message code='ezPersonal.s81'/>)</b>
+					<b><spring:message code='main.t76'/>(${primary})</b>
 				</label>
 				<input type="text" id="display" name="displayname" size="30" maxlength="40">
 				
 				<br><br>
 				
 				<label for="display2">
-					<b><spring:message code='main.t76'/>(<spring:message code='ezPersonal.s82'/>)</b>
+					<b><spring:message code='main.t76'/>(${secondary})</b>
 				</label>
 				<input type="text" id="display2" name="displayname2" size="30" maxlength="40">
 				
