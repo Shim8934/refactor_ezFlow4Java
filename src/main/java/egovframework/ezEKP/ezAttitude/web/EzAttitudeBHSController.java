@@ -158,14 +158,14 @@ public class EzAttitudeBHSController {
 		String userOffset = userInfo.getOffset().split("\\|")[1];
 		boolean attitudeAdminCheck = true;
 		
-		if (userInfo.getRollInfo().indexOf("d=1") == -1) {
+		if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
 			attitudeAdminCheck = false;
 		}
 		
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("attitudeAdminCheck", attitudeAdminCheck);
 		
-		LOGGER.debug("/ezAttitude/attitudeLeft ended");
+		LOGGER.debug("/ezAttitude/attitudeLeft ended"); 
 		return "/ezAttitude/attitudeLeft";
 	}
 	

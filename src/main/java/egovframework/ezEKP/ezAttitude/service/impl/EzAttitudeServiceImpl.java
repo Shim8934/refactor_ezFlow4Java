@@ -544,14 +544,20 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId,
-			String userId, String startDate, String endDate, String apprUserName, String sysLang, String offset,String startPoint, String endPoint, String type, String order) throws Exception {
+			String userId, String startDate, String endDate, String apprUserName, String sysLang, String offset,String startPoint, String endPoint, String type, String order, String adminFlag) throws Exception {
 		LOGGER.debug("getUsersModiyAtt started");
+		
+		if (adminFlag == null) {
+			adminFlag = "false";
+		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		map.put("userId", userId);
+		if (!adminFlag.trim().equals("true")){
+			map.put("userId", userId);
+		}
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("apprUserName", apprUserName);
@@ -601,14 +607,20 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public int getUsersModiyAttCount(String companyId, int tenantId,
 			String userId, String startDate, String endDate,
-			String apprUserName, String sysLang, String offset, String type)
+			String apprUserName, String sysLang, String offset, String type, String adminFlag)
 			throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		if (adminFlag == null) {
+			adminFlag = "false";
+		}
+		
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		map.put("userId", userId);
+		if (!adminFlag.trim().equals("true")){
+			map.put("userId", userId);
+		}
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("apprUserName", apprUserName);

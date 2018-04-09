@@ -198,6 +198,9 @@
 	</select>
 	
 	<sql id="ezAttitudeDAO.searchQuery">
+		<isNotEmpty property="userId" prepend="and"> 
+				a.WRITER_ID = #userId#
+		</isNotEmpty>
 		<isNotEmpty property="apprUserName" prepend="and">
 			<isNotEmpty property="apprUserName" >
 				<isEqual property="sysLang" compareValue="primary" >
@@ -253,8 +256,6 @@
 				a.COMPANY_ID = #companyId#
 			and 
 				a.TENANT_ID = #tenantId#
-			and 
-				a.WRITER_ID = #userId#
 		]]>
 		<include refid="ezAttitudeDAO.searchQuery"/>
 	</select>
@@ -374,8 +375,6 @@
 				a.COMPANY_ID = #companyId#
 			and 
 				a.TENANT_ID = #tenantId#
-			and 
-				a.WRITER_ID = #userId#
 		]]>
 		<include refid="ezAttitudeDAO.searchQuery"/>
 	</select>

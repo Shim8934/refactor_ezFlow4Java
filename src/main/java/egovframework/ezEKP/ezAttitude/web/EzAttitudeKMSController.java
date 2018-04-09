@@ -235,6 +235,191 @@ public class EzAttitudeKMSController {
 		model.addAttribute("totalAtt", totalAtt);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("adminFlag", "false");
+		
+		LOGGER.debug("attModAppList ended");
+		
+		return "/ezAttitude/attModAppList";
+	}
+
+	/**
+	 * 근태 수정 신청 현황
+	 */
+	@RequestMapping(value="/admin/ezAttitude/attModAppList.do")
+	public String adminGetAttModAppList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=false)String pageNum,
+			@RequestParam(required=false)String apprUserName,
+			@RequestParam(required=false)String startDate,
+			@RequestParam(required=false)String endDate) throws Exception {
+		LOGGER.debug("adminAttModAppList started");
+		
+		int totalAtt = 0;
+		int currentPage = 1;
+		int totalPages = 0;
+		int pageSize = 15;
+		int startPoint = 0;
+		int endPoint = 15;
+		String adminFlag = "true";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("apprUserName", apprUserName)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate)
+				.queryParam("sysLang", sysLang)
+				.queryParam("offset", offsetMin)
+				.queryParam("pageNum", pageNum)
+				.queryParam("adminFlag", adminFlag);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = new JSONObject();
+		JSONArray list = new JSONArray();
+		
+		if(status.equals("ok")){
+			totalAtt = Integer.parseInt(resultBody.get("data").toString());
+		}
+		
+		totalPages = (totalAtt + pageSize - 1)/pageSize;
+		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("apprUserName", apprUserName)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate)
+				.queryParam("sysLang", sysLang)
+				.queryParam("offset", offsetMin)
+				.queryParam("pageNum", pageNum)
+				.queryParam("adminFlag", adminFlag);
+		
+		if (totalPages == 0 || totalPages == 1) {
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			jp = new JSONParser();
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			
+			data = new JSONObject();
+			list = new JSONArray();
+			
+			if(status.equals("ok")){
+				data = (JSONObject) resultBody.get("data");
+				list = (JSONArray) data.get("list");
+				model.addAttribute("list", list);
+			}
+		}
+		else {
+			if (currentPage < totalPages) {
+				startPoint = (currentPage - 1)*pageSize;
+				endPoint = currentPage*pageSize;
+				
+			}
+			else {
+				if (currentPage > totalPages) {
+					currentPage = totalPages;
+				}
+				startPoint = (currentPage - 1) * pageSize;
+				endPoint = totalAtt;
+			}
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", userInfo.getCompanyID())
+					.queryParam("tenantId", userInfo.getTenantId())
+					.queryParam("apprUserName", apprUserName)
+					.queryParam("startDate", startDate)
+					.queryParam("endDate", endDate)
+					.queryParam("sysLang", sysLang)
+					.queryParam("offset", offsetMin)
+					.queryParam("pageNum", pageNum)
+					.queryParam("startPoint", startPoint)
+					.queryParam("endPoint", endPoint)
+					.queryParam("adminFlag", adminFlag);
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			jp = new JSONParser();
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			
+			data = new JSONObject();
+			list = new JSONArray();
+			
+			if(status.equals("ok")){
+				data = (JSONObject) resultBody.get("data");
+				list = (JSONArray) data.get("list");
+				model.addAttribute("list", list);
+			}
+		}
+		
+		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		data = new JSONObject();
+		list = new JSONArray();
+		
+		if(status.equals("ok")){
+			data = (JSONObject) resultBody.get("data");
+			list = (JSONArray) data.get("list");
+			model.addAttribute("list", list);
+		}
+		
+		for (int i = 0 ; i < list.size(); i++ ) {
+			LOGGER.debug(list.get(i).toString());
+		}
+		
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("userTimeSet", offset);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("totalAtt", totalAtt);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("adminFlag", adminFlag);
 		
 		LOGGER.debug("attModAppList ended");
 		
@@ -251,7 +436,8 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String type,
 			@RequestParam(required=false)String excelReq,
 			@RequestParam(required=false)String orderCell,
-			@RequestParam(required=false)String orderOption) throws Exception {
+			@RequestParam(required=false)String orderOption,
+			@RequestParam(required=false)String adminFlag) throws Exception {
 		
 		int currentPage = 1;
 		int pageSize = 15;
@@ -268,9 +454,19 @@ public class EzAttitudeKMSController {
 			excelReq = "false";
 		}
 		
+		if (adminFlag == null) {
+			adminFlag = "false";
+		}
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
-
+		
+		if(adminFlag.equals("true")){
+			if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
+				return new JSONObject();
+			}
+		}
+		
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
@@ -298,7 +494,8 @@ public class EzAttitudeKMSController {
 				.queryParam("pageNum", pageNum)
 				.queryParam("type", type)
 				.queryParam("orderCell", orderCell)
-				.queryParam("orderOption", orderOption);
+				.queryParam("orderOption", orderOption)
+				.queryParam("adminFlag", adminFlag);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -354,7 +551,8 @@ public class EzAttitudeKMSController {
 					.queryParam("offset", offsetMin)
 					.queryParam("type", type)
 					.queryParam("orderCell", orderCell)
-					.queryParam("orderOption", orderOption);
+					.queryParam("orderOption", orderOption)
+					.queryParam("adminFlag", adminFlag);
 		} else {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", userInfo.getCompanyID())
@@ -368,7 +566,8 @@ public class EzAttitudeKMSController {
 					.queryParam("endPoint", endPoint)
 					.queryParam("type", type)
 					.queryParam("orderCell", orderCell)
-					.queryParam("orderOption", orderOption);
+					.queryParam("orderOption", orderOption)
+					.queryParam("adminFlag", adminFlag);
 		}
 
 		rest = new RestTemplate();

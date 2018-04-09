@@ -8,7 +8,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <head>
-		<title>mail_list</title>
+		<title>근태신청현황</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
@@ -35,6 +35,7 @@
 		var m_strColorSelect = "#edf4fd";
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
+		var adminFlag = "${adminFlag}";
 		
 		$(function(){
 			$(document).on('click', '#AttList th', function(){
@@ -240,6 +241,7 @@
 	    function att_search() {
 // 	    	popup_close();
 			get_att_list();
+			goToPageByNum("1");
 	    }
 	    
 	    function att_refresh() {
@@ -269,6 +271,7 @@
 			obj.type = type;
 			obj.orderCell = orderCell;
 			obj.orderOption = orderOption;
+			obj.adminFlag = adminFlag;
 			
 		    $.ajax({
 				type : 'get',
@@ -763,6 +766,9 @@
 		</script>
 </head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
+	<c:if test="${list.apprStatus == 1}">
+				          		<td>승인</td>	
+	</c:if>
 		<h1>근태수정현황<span id="mailBoxInfo">-신청관리현황[총 xxx개-xxxx년 xx월 xx일~xxxx년 xx월 xx일]</span>
 	    </h1>	
         <div id="mainmenu">
