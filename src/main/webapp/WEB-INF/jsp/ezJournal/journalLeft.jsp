@@ -56,21 +56,21 @@
 	        	<span><spring:message code='ezJournal.t1'/></span>
 	        </div>
 		    <h2><span listType='department' id="fmenu" onClick="goJournalList(this);" typeId='${typeList[0].journaltypeId }' style="width:100%;display:inline-block;"><spring:message code='ezJournal.t49'/></span></h2>
-		    <ul>
+		    <ul id="iconul">
 		    	<c:choose>
 		    		<c:when test="${not empty typeList }">
 		    			<c:forEach items="${typeList }" var="type">
-						    <li listType='department' typeId='${type.journaltypeId }' onClick="goJournalList(this);" ><spanstyle="width:100%;display:inline-block;"><spring:message code="${type.journaltypeId}"/></span></li>
+						    <li listType='department' typeId='${type.journaltypeId }' onClick="goJournalList(this);" ><span style="width:100%;display:inline-block;"><img style="width:16px;height:16px;" class="icon" src="/images/ImgIcon/icon_approval.gif"/><spring:message code="${type.journaltypeId}"/></span></li>
 		    			</c:forEach>
 		    		</c:when>
 		    	</c:choose>
 		    </ul>
-		    <h2><span listType='mine' onClick="goJournalList(this);" typeId='${typeList[0].journaltypeId }' style="width:100%;display:inline-block;"><spring:message code='ezJournal.t50'/></span></h2>
-		    <ul>
+		    <h2><span listType='mine' onClick="goJournalList(this);" typeId='${typeList[0].journaltypeId }' style="width:100%; display:inline-block;"><spring:message code='ezJournal.t50'/></span></h2>
+		    <ul id="iconul">
 		    	<c:choose>
 		    		<c:when test="${not empty typeList }">
 		    			<c:forEach items="${typeList }" var="type">
-						    <li listType='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);" ><spanstyle="width:100%;display:inline-block;"><spring:message code="${type.journaltypeId}"/></span></li>
+						    <li listType='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);" ><span style="width:100%; display:inline-block;"><img style="width:16px;height:16px;" class="icon" src="/images/ImgIcon/icon_approval.gif"/><spring:message code="${type.journaltypeId}"/></span></li>
 		    			</c:forEach>
 		    		</c:when>
 		    	</c:choose>

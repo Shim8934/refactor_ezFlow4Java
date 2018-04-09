@@ -504,7 +504,7 @@
 					});
 				} else {
 					opener.setJournalList();
-					window.closd();
+					window.close();
 				}
 			}
 	    </script>
@@ -547,7 +547,7 @@
 	                <table class="content" style="width: 100%;">
 	                    <tr>
 	                        <th style="width: 6%;"><spring:message code='ezJournal.t76'/></th>
-	                        <td style="width: 40%">
+	                        <td style="width: 45%" colspan="2">
 	                        	<select id="optType" style="width: 38%;" onchange="changeType(this);">
 	                        		<c:forEach var="type" items="${typeList}">
 	                        			<option value="<c:out value='${type.journaltypeId }'/>"
@@ -561,7 +561,7 @@
 	                        	</select>
 	                        </td>
 	                        <th style="width: 10%;"><spring:message code='ezJournal.t77' /></th>
-	                        <td style="width: 40%; border-right: none;">
+	                        <td style="width: 35%; border-right: none;">
 	                        	<c:choose>
 	                        		<c:when test="${journal.deptShare eq 'N' && journal.deptShare ne null }">
 			                        	<input type="radio" id="selPublic" name="isPublic" value="Y"/><label for="selPublic"><spring:message code='ezJournal.t78'/></label>
@@ -576,11 +576,11 @@
 	                    </tr>
 	                    <tr>
 	                        <th><spring:message code='ezJournal.t80' /></th>
-	                        <td colspan="3" style="border-right: none; vertical-align: middle; height: 28px;">
-		                        <div style="display: inline;">
-	                        		<a class="imgbtn"><span style="text-align: right;" id="clickbtn" onclick="selectReceiver()"><spring:message code='ezJournal.t81'/></span></a>
-		                        </div>
-	                       		<div style="overflow-y: auto; height: 28px; display: inline;">
+	                        <td style="width: 5%; border-right: none;">
+                        		<a class="imgbtn"><span style="text-align: right;" id="clickbtn" onclick="selectReceiver()"><spring:message code='ezJournal.t81'/></span></a>
+	                        </td>
+	                        <td colspan="3" style="border-left: none; vertical-align: middle; height: 28px;">
+	                       		<div style="overflow-y: auto; height: 28px;">
 	                       			<div style="display: table; height: 100%;">
 	                       				<div id="receiverlist" style="display: table-cell; vertical-align: middle;">
 	                       				</div>
@@ -591,7 +591,7 @@
 	                    </tr>
 	                    <tr>
 	                        <th><spring:message code='ezJournal.t56' /></th>
-	                        <td colspan="3">
+	                        <td colspan="4">
 	                            <input type="text" id="title" style="WIDTH: 100%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" >
 	                        </td>
 	                    </tr>
