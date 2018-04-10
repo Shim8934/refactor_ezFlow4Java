@@ -23570,13 +23570,13 @@
 									B.HREF = '') A)
 	  </delete>
 	  	  
-<!-- 	  <insert id="EzApprovalG.insertRelayDB" parameterClass="Map"> -->
-<!-- 	  	INSERT INTO  -->
-<!-- 	  		TBL_RECRELAYINFO  -->
-<!-- 	  	(DOCID, XDOCID, RECDATE, MFROM, MTO, SUBJECT, XMAILTYPE, XFROMCODE, XTOCODE, XGW, XDOCTYPE, XDTDVERSION, XXSLVERSION, CONTENTTYPE, SEALURL, XMLURL, RECEIVEDDATE, COMPANYID, TENANT_ID) -->
-<!-- 		VALUES  -->
-<!-- 		(#docID#, #xDocID#, #recDate#, #from#, #to#, #subject#, #xMailType#, #xFromCode#, #xToCode#, #xGw#, #xDocType#, #xDtdVersion#, #xxslVersion#, #contentType#, #sealUrl#, #xmlUrl#, #lastDate#, #companyID#, #v_TENANTID#) -->
-<!-- 	  </insert> -->
+      <insert id="EzApprovalG.insertRelayDB" parameterClass="Map">
+        INSERT INTO
+            TBL_RECRELAYINFO 
+        (DOCID, XDOCID, RECDATE, MFROM, MTO, SUBJECT, XMAILTYPE, XFROMCODE, XTOCODE, XGW, XDOCTYPE, XDTDVERSION, XXSLVERSION, CONTENTTYPE, SEALURL, XMLURL, RECEIVEDDATE, COMPANYID, IDX,TENANT_ID)
+        VALUES 
+        (#docID#, #xDocID#, to_date(#recDate#,'YYYY-MM-DD HH24:MI:SS'), #from#, #to#, #subject#, #xMailType#, #xFromCode#, #xToCode#, #xGw#, #xDocType#, #xDtdVersion#, #xxslVersion#, #contentType#, #sealUrl#, #xmlUrl#, #lastDate#, #companyID#, SEQ_TBL_RECRELAYINFO.NEXTVAL,#v_TENANTID#)
+      </insert>
 	 	  
 	  <update  id="EzApprovalG.updateRelayFiled" parameterClass="Map">
 	  	UPDATE 
@@ -23750,7 +23750,7 @@
 	  			TBL_APRRECEIPTPROCESSINFO 
 	  		(RECEIVESN, DOCID, SENTDEPTID, SENTDEPTNAME, SENTDEPTNAME2, RECEIVEDDEPTID, RECEIVEDDEPTNAME, RECEIVEDDEPTNAME2, DOCSTATE, APRSTATE, PROCESSDATE, PROCESSYN, PROCESSDOCID, PROCESSORID, PROCESSORNAME, PROCESSORNAME2 , PROCESSORJOBTITLE, PROCESSORJOBTITLE2, PARENTSDOCID, COMPANYID, TENANT_ID)
 			VALUES 
-				(1, #NEWID#, #FROMDEPTID#, #FROMDEPTNAME#, #FROMDEPTNAME#, #TODEPTID#, #TODEPTNAME#, #TODEPTNAME#, '011', '011', #RECDATE#, 'N', '', '', '', '', '', '', #XDOCID#, #companyID#, #v_TENANTID#)
+				(1, #NEWID#, #FROMDEPTID#, #FROMDEPTNAME#, #FROMDEPTNAME#, #TODEPTID#, #TODEPTNAME#, #TODEPTNAME#, '011', '011', TO_DATE(#RECDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N', '', '', '', '', '', '', #XDOCID#, #companyID#, #v_TENANTID#)
 	  </insert>
 		
 	  <update id="EzApprovalG.updateRecRelayInfo" parameterClass="Map">
