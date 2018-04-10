@@ -1,4 +1,4 @@
-﻿var DefaultView = 0;
+﻿﻿var DefaultView = 0;
 var sStartDate, sEndDate;
 var typeCal = 0;
 var sDate = parent.frames["left"].sDate;
@@ -268,16 +268,20 @@ function CalendarView(pTagetID) {
             oDiv.setAttribute("id", "CalDiv")
         }
 
-
-
         var oTable = document.createElement("TABLE");
         oTable.setAttribute("id", "dayDiv");
         oTable.setAttribute("cellpadding", "0");
         oTable.setAttribute("cellspacing", "0");
         oTable.setAttribute("border", "0");
         oTable.setAttribute("width", "100%");
-        if (typeCal == 0)
+        if (typeCal == 0){
             oTable.className = "calendar_month";
+            //ie에서의 일정관리 하단높이 조정
+            var agent = navigator.userAgent.toLowerCase(); 
+			if (!CrossYN() || agent.search( "trident" ) > -1 ) {
+				oTable.style.minHeight = "670px";
+			}
+        }
         else if (typeCal == 1)
             oTable.className = "calendar_week";
         else if (typeCal == 2)
