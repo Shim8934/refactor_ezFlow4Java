@@ -17,12 +17,12 @@
 	        var minZoom = 80;
 	
 	        $(document).ready(function() { 
-		    	$('.journalPreviewContentIframe').contents().find('body').html('<div style="text-align: left;"><img onclick="parent.Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> <img onclick="parent.Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"></div><div class="txtContent" id="journalContent" style="width:100%; text-align: center; height:10px;display:inline-block;"></div>');
-		    	$('.journalPreviewContentIframe').contents().find('#journalContent').html('${journal.journalContent }');
+// 		    	$('.journalPreviewContentIframe').contents().find('body').html('<div style="text-align: left;"><img onclick="parent.Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> <img onclick="parent.Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"></div><div class="txtContent" id="journalContent" style="width:100%; text-align: center; height:10px;display:inline-block;"></div>');
+// 		    	$('.journalPreviewContentIframe').contents().find('#journalContent').html('${journal.journalContent }');
 		    	
-		    	var $head = $(".journalPreviewContentIframe").contents().find("head");
+// 		    	var $head = $(".journalPreviewContentIframe").contents().find("head");
 
-		    	$head.append('<style type="text/css">p{margin-top:0px; margin-bottom:0px;}</style>');
+// 		    	$head.append('<style type="text/css">p{margin-top:0px; margin-bottom:0px;}</style>');
 	        });
 // 	        window.onload = function (){
 // // 		    	var journalContent = '<c:out value="${journal.journalContent }" />';
@@ -65,7 +65,7 @@
 	        </div>
          </span>
 <!-- 		<div style="overflow: auto; height: 300px;"> -->
-			<iframe class="journalPreviewContentIframe" style="text-align:center; padding:0; width:100%; height:100%; overflow:auto; border:none;">
+			<iframe src="/ezJournal/journalDetailContent.do?journalId=${journal.journalId }" class="journalPreviewContentIframe" style="text-align:center; padding:0; width:100%; height:100%; overflow:auto; border:none;">
 			</iframe>
 <!-- 			<div style="height:100%; margin-left:5px; margin-right:5px; overflow: auto;"> -->
 <!-- 				<div style="text-align: left;"> -->

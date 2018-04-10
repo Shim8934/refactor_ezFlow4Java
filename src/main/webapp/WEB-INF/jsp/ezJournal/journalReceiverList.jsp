@@ -73,7 +73,7 @@
 					<div class="pagenavi">   
 						<c:choose>
 								<c:when test="${paging.currentPage gt 1}">   
-									<span onclick="goToPageByNum(1)" class="btnimg"><img src="/images/sub/btn_p_prev.gif" width="16" height="16"></span>            
+									<span onclick="parent.journalReceiverList(1)" class="btnimg"><img src="/images/sub/btn_p_prev.gif" width="16" height="16"></span>            
 								</c:when>
 								<c:otherwise>
 									<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>            
@@ -81,27 +81,27 @@
 						</c:choose>
 						<c:choose>
 							<c:when test="${paging.startPage gt 1}">
-								<span onclick="goToPageByNum(${paging.startPage-1})" class="btnimg"><img src="/images/sub/btn_prev.gif" width="16" height="16"></span>              
+								<span onclick="parent.journalReceiverList(${paging.startPage-1})" class="btnimg"><img src="/images/sub/btn_prev.gif" width="16" height="16"></span>              
 							</c:when>
 							<c:otherwise>
 								<span class="btnimg"><img src="/images/sub/btn_prev01.gif" width="16" height="16"></span>              
 							</c:otherwise>                                                                    
 						</c:choose>
-						<span class="ptxt" onclick="<c:if test="${paging.currentPage gt 1 }">goToPageByNum(${paging.currentPage-1})</c:if>"><spring:message code='ezApproval.t931'/></span>                                   
+						<span class="ptxt" onclick="<c:if test="${paging.currentPage gt 1 }">parent.journalReceiverList(${paging.currentPage-1})</c:if>"><spring:message code='ezApproval.t931'/></span>                                   
 						<c:forEach begin="0" end="${paging.endPage-paging.startPage }" varStatus="status">
 							<c:choose>
 								<c:when test="${paging.startPage+status.index eq  paging.currentPage}">
 									<span class="on">${paging.currentPage }</span>
 								</c:when>
 								<c:otherwise>
-									<span onclick="goToPageByNum(${paging.startPage+status.index})">${paging.startPage+status.index}</span>
+									<span onclick="parent.journalReceiverList(${paging.startPage+status.index})">${paging.startPage+status.index}</span>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
-						<span class="ptxt" onclick="<c:if test="${paging.totalPage gt paging.currentPage }">goToPageByNum(${paging.currentPage+1})</c:if>"><spring:message code='ezApproval.t932'/></span>
+						<span class="ptxt" onclick="<c:if test="${paging.totalPage gt paging.currentPage }">parent.journalReceiverList(${paging.currentPage+1})</c:if>"><spring:message code='ezApproval.t932'/></span>
 						<c:choose>
 							<c:when test="${paging.totalPage gt paging.endPage }">
-								<span class="btnimg" onclick="goToPageByNum(${paging.endpage+1})"><img src="/images/sub/btn_next.gif" width="16" height="16"></span>
+								<span class="btnimg" onclick="parent.journalReceiverList(${paging.endpage+1})"><img src="/images/sub/btn_next.gif" width="16" height="16"></span>
 							</c:when>
 							<c:otherwise>
 								<span class="btnimg"><img src="/images/sub/btn_next01.gif" width="16" height="16"></span>
@@ -109,7 +109,7 @@
 						</c:choose>
 						<c:choose>
 							<c:when test="${paging.totalPage gt paging.currentPage }">
-								<span class="btnimg" onclick="goToPageByNum(${paging.totalPage})"><img src="/images/sub/btn_n_next.gif" width="16" height="16"></span>
+								<span class="btnimg" onclick="parent.journalReceiverList(${paging.totalPage})"><img src="/images/sub/btn_n_next.gif" width="16" height="16"></span>
 							</c:when>
 							<c:otherwise>
 								<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" width="16" height="16"></span>

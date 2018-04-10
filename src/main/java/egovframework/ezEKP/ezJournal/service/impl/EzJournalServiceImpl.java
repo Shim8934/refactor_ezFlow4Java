@@ -1041,6 +1041,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("journalId", journalId);
 		map.put("tenantId", tenantId);
+		map.put("startCount", Integer.parseInt(startCount));
+		map.put("listCnt", Integer.parseInt(listCnt));
 		
 		List<JournalReceiverVO> receiverList = ezJournalDAO.getReceiverList(map);
 		logger.debug("수신자리스트 확인용 : " + receiverList);
@@ -1055,8 +1057,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("journalId", journalId);
 		map.put("tenantId", tenantId);
-		map.put("startCount", startCount);
-		map.put("listCnt", listCnt);
+		map.put("startCount", Integer.parseInt(startCount));
+		map.put("listCnt", Integer.parseInt(listCnt));
 		
 		List<JournalReceiverVO> viewerList = ezJournalDAO.getViewerList(map);
 		logger.debug("조회자리스트 확인용 : " + viewerList);

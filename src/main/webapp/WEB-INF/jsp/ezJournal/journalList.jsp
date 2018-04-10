@@ -32,7 +32,7 @@
 					</th>
 				</c:if>
 				<!-- 취합여부아이콘 -->
-					<th id="BoardList_TH_10" onclick="setListOrder(this)" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
+					<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
 						<img src="/images/i_sum2.png">
 					</th>
 					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
