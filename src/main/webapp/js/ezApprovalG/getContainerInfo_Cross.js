@@ -759,16 +759,22 @@ function lvtDoclist_SelChange() {
     var SelList = new ListView();
     SelList.LoadFromID("DocList");
     var oArrRows = SelList.GetSelectedRows();
-    ext = oArrRows.substring(oArrRows.lastIndexOf(".")+1);
+    ext = oArrRows[0].getAttribute("DATA3").substr(oArrRows[0].getAttribute("DATA3").lastIndexOf(".")+1);
+
     if (oArrRows.length != 0) {
         var tr = oArrRows[0];
 
         oArrRowsid = tr.id;
         if (approvalFlag == "G") {
-	        if (tr.getAttribute("DATA5").trim() != "")
-	            document.getElementById("tDocInfo").style.display = "";
-	        else
-	            document.getElementById("tDocInfo").style.display = "none";
+	        if (tr.getAttribute("DATA5").trim() != "") {
+	        	if (document.getElementById("tDocInfo") != null ){
+	        		document.getElementById("tDocInfo").style.display = "";
+	        	}
+	        } else {
+	        	if (document.getElementById("tDocInfo") != null) {
+	        		document.getElementById("tDocInfo").style.display = "none";
+	        	}
+	        }
         }
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
