@@ -97,7 +97,7 @@
 	   			
 	   			if(selectedUserId != ""){
 		   			var html = "<tr id='" + selectedUserId + "' class='hover'>";
-		   			html += "<td style='cursor: pointer; padding-left:10px;'>" + selectedUserName + "</td>";
+		   			html += "<td style='cursor: pointer; padding-left:10px;' ondblclick='DeleteReceiver()'>" + selectedUserName + "</td>";
 		   			html += "</tr>";
 		   			$(html).appendTo('#txtlist_table2');
 	   			}
@@ -184,7 +184,6 @@
 	                                        <a class="imgbtn"><span onclick="search_click()">검색</span></a>
 	                                    </div>
 	                                </td>    
-<!-- 	                          삭제?      <td></td> -->
 	                            </tr>
 	                        </table>
 	                    </div>

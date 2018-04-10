@@ -21,14 +21,6 @@ public class AdminAttitudeVO {
 	private String endTime;
 	/** 수정신청여부*/
 	private String modAppl;
-	/** 근무지역*/
-	private String region;
-	/** 연락처*/
-	private String mobile;
-	/** 업무대리인*/
-	private String bizSub;
-	/** 내용*/
-	private String content;
 	/** IP*/
 	private String ip;
 	/** 날짜입력형식*/
@@ -43,6 +35,8 @@ public class AdminAttitudeVO {
 	private String userName;
 	/** 부서 이름*/
 	private String deptName;
+	/** 유저 직급*/
+	private String userTitle;
 	
 	public String getTypeName() {
 		return typeName;
@@ -116,30 +110,6 @@ public class AdminAttitudeVO {
 	public void setModAppl(String modAppl) {
 		this.modAppl = modAppl;
 	}
-	public String getRegion() {
-		return region;
-	}
-	public void setRegion(String region) {
-		this.region = region;
-	}
-	public String getMobile() {
-		return mobile;
-	}
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-	public String getBizSub() {
-		return bizSub;
-	}
-	public void setBizSub(String bizSub) {
-		this.bizSub = bizSub;
-	}
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
-	}
 	public String getIp() {
 		return ip;
 	}
@@ -169,5 +139,11 @@ public class AdminAttitudeVO {
 	}
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
+	}
+	public String getUserTitle() {
+		return userTitle;
+	}
+	public void setUserTitle(String userTitle) {
+		this.userTitle = userTitle;
 	}
 }

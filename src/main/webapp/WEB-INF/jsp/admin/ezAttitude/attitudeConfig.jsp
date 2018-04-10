@@ -13,11 +13,17 @@
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">
+	    	var adminCompany = "${adminCompany}";
+	    
 	        $(document).ready(function() {
 		        if (document.getElementById("ListCompany").length == 0) {
 		            alert("<spring:message code = 'ezAttitude.t32' />");
 		        } else {
-		            document.getElementById("ListCompany").selectedIndex = 0;
+		    		if (adminCompany != null) {
+		    			$('#ListCompany').val(adminCompany);
+		    		} else {
+			            document.getElementById("ListCompany").selectedIndex = 0;
+		    		}
 		            company_change();
 		        }
 	        });

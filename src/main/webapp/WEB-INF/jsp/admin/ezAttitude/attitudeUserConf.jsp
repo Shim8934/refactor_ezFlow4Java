@@ -30,11 +30,21 @@
     	var orderCell = ""; // 정렬 명
     	var orderOption = ""; // 정렬 형식(ASC, DESC)
     	var selecUserList = "";//리스트에 선택된 userList(,로 구분)
+    	var adminCompany = "${adminCompany}";
     	
     	//"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"
     	
     	$(function(){
-    		company_change();
+	        if (document.getElementById("ListCompany").length == 0) {
+	            alert("<spring:message code = 'ezAttitude.t32' />");
+	        } else {
+	    		if (adminCompany != null) {
+	    			$('#ListCompany').val(adminCompany);
+	    		} else {
+		            document.getElementById("ListCompany").selectedIndex = 0;
+	    		}
+	            company_change();
+	        }
     		
     		//헤더 클릭 시 정렬
     		$(document).on('click', '#attiBoardList th', function(){

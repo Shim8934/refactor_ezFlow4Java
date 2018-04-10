@@ -6,10 +6,12 @@
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
+	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
+	<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
     <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-    <script type="text/javascript" src="/js/Common.js"></script>
+<!--     <script type="text/javascript" src="/js/mouseeffect.js"></script> -->
+<!--     <script type="text/javascript" src="/js/Common.js"></script> -->
     <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
     <!-- data picker-->		
@@ -32,12 +34,27 @@
     	var orderCell = ""; // 정렬 명
     	var orderOption = ""; // 정렬 형식(ASC, DESC)
     	var selecUserList = "";//리스트에 선택된 userList(,로 구분)
+    	var adminCompany = "${adminCompany}";
+    	var today = "${today}";
 
     	
     	//"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"
     	
     	$(function(){
-    		company_change();
+    		//회사리스트
+	        if (document.getElementById("ListCompany").length == 0) {
+	            alert("<spring:message code = 'ezAttitude.t32' />");
+	        } else {
+	    		if (adminCompany != null) {
+	    			$('#ListCompany').val(adminCompany);
+	    		} else {
+		            document.getElementById("ListCompany").selectedIndex = 0;
+	    		}
+	            company_change();
+	        }
+    		//검색시 날짜 오늘날짜로 기본값 적용
+    		$("#Sdatepicker").val(today);
+    		$("#Edatepicker").val(today);
     		
     		//헤더 클릭 시 정렬
     		$(document).on('click', '#attiBoardList th', function(){
@@ -81,33 +98,6 @@
 		        buttonImage: "/images/ImgIcon/calendar-month.gif",
 		        buttonImageOnly: true
 		    });
-// 			var uploadSDate = date + " 00:00:00";
-// 			var sYear = uploadSDate.substring(0, 4);
-// 			var sMonth = uploadSDate.substring(5, 7);
-// 			var sDay = uploadSDate.substring(8, 10);
-// 			var sHour = uploadSDate.substring(11, 13);
-// 			var sMin = uploadSDate.substring(14, 16);
-						
-// 			var uploadEDate = date + " 23:59:59";
-// 			var eYear = uploadEDate.substring(0, 4);
-// 			var eMonth = uploadEDate.substring(5, 7);
-// 			var eDay = uploadEDate.substring(8, 10);
-// 			var eHour = uploadEDate.substring(11, 13);
-// 			var eMin = uploadEDate.substring(14, 16);
-		
-// 		    var SDate = new Date();
-// 		    SDate.setFullYear(sYear, sMonth-1, sDay);
-// 		    SDate.setHours(sHour, sMin, 0, 0);
-		    
-// 		    var EDate = new Date();
-// 		    EDate.setFullYear(eYear, eMonth-1, eDay);
-// 		    EDate.setHours(eHour, eMin, 0, 0);
-		    
-// 		    $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-// 		    $("#Sdatepicker").datepicker('setDate', SDate);
-
-// 		    $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-// 		    $("#Edatepicker").datepicker('setDate', EDate);
 		});
 		    
 		var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
@@ -135,6 +125,9 @@
 		        showMonthAfterYear: true
 		    };
 		    $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		    
+		    $("#Sdatepicker").datepicker('disable');
+	        $("#Edatepicker").datepicker('disable');
 		});
     	
     	function company_change(){
@@ -149,6 +142,7 @@
     		if (typeId == "total") {
     			typeId = "";
     		}
+    		
     		//조회자 id리스트
     		var spanLength = $('#receiverlist').find('span').length;
     		var userIdList = "";
@@ -159,6 +153,20 @@
     			//마지막 ',' 제거
     			userIdList = userIdList.slice(0, -1);
     		}
+    		
+    		//검색기간 사용 유무
+    		var startDate = "";
+    		var endDate = "";
+    		if ($('#usedate').val() == true) {
+    			startDate = $("#Sdatepicker").val();
+    			endDate = $("#Edatepicker").val();
+    		}
+    		
+    		if (startDate > endDate) {
+				alert("시작일을 종료일보다 빠르게 지정해주십시오.");
+	            return;
+			}
+
     		
     		$.ajax({
     			data : "GET",
@@ -172,8 +180,8 @@
     					userIdList : userIdList,
     					orderCell : orderCell,
     					orderOption : orderOption,
-    					startDate : $('#Sdatepicker').val(),
-    					endDate : $('#Edatepicker').val()},
+    					startDate : startDate,
+    					endDate : endDate},
     			success : function(result){
     				totalCount = result.totalCount;
     				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
@@ -204,6 +212,7 @@
     		for (var i = 0; i < result.length; i ++) {
     			resultHtml += "<tr userid='" + result[i].writerId + "'>"
     			   			+ "<td>" + result[i].userName + "</td>"
+    			   			+ "<td>" + result[i].userTitle + "</td>"
     			   			+ "<td>" + result[i].deptName + "</td>"
     						+ "<td>" + result[i].typeName + "</td>";
     			if ( result[i].endDate == null || result[i].endDate == "") {
@@ -275,6 +284,21 @@
 			var url = "/admin/ezAttitude/getSearchList.do?companyId=" + $('#ListCompany').val() + "&searchIdList=" + searchIdList + "&searchNameList=" + searchNameList;
     		window.open(url, "view", "width=940, height=580");
     	}
+    	
+		//////////////////
+		var usedate = false;
+		function DateSearch_Click() {
+	        if(usedate){
+	        	usedate = false;
+	            $("#Sdatepicker").datepicker('disable');
+	            $("#Edatepicker").datepicker('disable');
+	        } else {
+	        	usedate = true;
+	            $("#Sdatepicker").datepicker('enable');
+	            $("#Edatepicker").datepicker('enable');
+	        }
+	    }
+		//////////////////
     </script>
 	<style>
 		tr.hover:hover{background:#eee; color:#fff;}
@@ -328,12 +352,11 @@
 	  						</tr>
 	  						<tr>
 	  							<th style="text-align:center">검색기간</th>
-	  							<td>                        
-	  								<span id="periodblock">
-			                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-			                        ~
-			                        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-			                        </span>
+	  							<td>
+					      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" /><label for="usedate">검색기간 사용&nbsp;</label>
+					            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
+					      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
+					          		<div style="margin-top:9px">&nbsp;(검색기간 미지정시 오늘날짜로 검색)</div> 
                         		</td>
 	  						</tr>
 	  					</tbody>
@@ -358,9 +381,10 @@
 			<thead>
 				<tr>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
+					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직급</th>
 					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
-					<th style="width:5%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="typename">구분</th>
-					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="date">날짜</th>
+					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
+					<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime">시작시간</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="endtime">종료시간</th>
 				</tr>

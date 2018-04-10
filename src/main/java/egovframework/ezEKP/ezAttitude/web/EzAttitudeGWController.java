@@ -37,6 +37,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
+import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
@@ -816,17 +817,25 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies] started.");
 		
 		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
+			//테넌트별 회사리스트
 			List<AttitudeDeptVO> list = ezAttitudeService.getCompanyList(info.getPrimary(), info.getTenantId());
+			data.put("list", list);
+			//로그인한 관리자의 회사
+			data.put("adminCompany", info.getCompanyId());
+			//오늘날짜
+			String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			data.put("today", commonUtil.getDateStringInUTC(today, info.getOffSet(), false));
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", list);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -1540,6 +1549,8 @@ public class EzAttitudeGWController {
 			String listSize = request.getParameter("listSize");
 			String typeId = request.getParameter("typeId");
 			String userIdList = request.getParameter("userIdList");
+			String orderCell = request.getParameter("orderCell");
+			String orderOption = request.getParameter("orderOption");
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
 			String offsetMin = request.getParameter("offsetMin");
@@ -1547,24 +1558,21 @@ public class EzAttitudeGWController {
 			String isuse = "1";
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			
 			String offset = info.getOffSet();
 			
-			//모든근태조회
-			List<AttitudeVO> list = ezAttitudeService.getAttitudeList2(companyId, pageNum, listSize, typeId, userIdList, startDate, endDate, offset, info.getTenantId());
+			//정렬시 date_format(now(),'%Y-%m-%d')
+			if (orderCell.equals("start_date")) {
+				orderCell = "date_format(substr(date_add(A.START_DATE, INTERVAL " + offsetMin + " minute), 1, 11), '%Y-%m-%d')";
+			} else if (orderCell.equals("starttime")) {
+				orderCell = "date_format(substr(date_add(A.START_DATE, INTERVAL " + offsetMin + " minute), 12), '%T')";
+			} else if (orderCell.equals("endtime")) {
+				orderCell = "date_format(substr(date_add(A.END_DATE, INTERVAL " + offsetMin + " minute), 12), '%T')";
+			}
+
+			String order = orderCell + " " + orderOption;
 			
-			//imgPath 셋팅
-//			for (int i = 0; i < list.size(); i++) {
-//				String imgPath = list.get(i).getImgPath();
-//				if (imgPath != null && !imgPath.equals("")) {
-//					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + info.getCompanyId() + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
-//					list.get(i).setImgPath(imgPath);
-//				}
-//			}
-	         
-//			result.put("status", "ok");
-//			result.put("code", 0);			
-//			result.put("data", resultList);
+			//모든근태조회
+			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(companyId, pageNum, listSize, typeId, userIdList, order, startDate, endDate, offset, info.getTenantId());
 			
 			//리스트 총 갯수
 			String totalCount = ezAttitudeService.getAttitudeCount2(info.getTenantId(), companyId, typeId, userIdList, startDate, endDate, offset);
