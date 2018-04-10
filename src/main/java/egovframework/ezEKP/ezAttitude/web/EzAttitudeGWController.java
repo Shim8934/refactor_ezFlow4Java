@@ -1392,6 +1392,51 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
+	 * G/W 근태관리 [DELETE] 수정신청 승인,반려
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyattitudes", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject changeUsersModiyAtt(@PathVariable String userId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="idList", required=true) String idList,
+			@RequestParam(value="changeStatus", required=true) String changeStatus) {
+			
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/{userId}/modifyattitudes] started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		JSONObject attJson = new JSONObject();
+		
+		try{
+			String[] ids = idList.split(",");
+
+			idList = "(";
+
+			for (int i = 0; i < ids.length; i++) {
+				idList += ids[i] + ",";
+			}
+			idList = idList.substring(0, idList.length()-1);
+			idList += ")";
+
+			LOGGER.debug("companyId : " + companyId + ", tenantId : " + tenantId 
+					+ ", idList : " + idList + ", changeStatus : " + changeStatus);
+			
+			ezAttitudeService.changeUsersModifyAtt(companyId, tenantId, ids, changeStatus);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "fail");
+		}
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
+		return result;
+	}
+	
+	/**
 	 * G/W 근태관리 작성양식
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}/forms/form", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
@@ -1434,13 +1479,13 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
 		JSONObject result = new JSONObject();
 		try {
-			
 			AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(companyId, tenantId, userId, attModId, offset);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
