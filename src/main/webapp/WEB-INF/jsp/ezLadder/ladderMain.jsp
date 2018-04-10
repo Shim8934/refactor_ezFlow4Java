@@ -80,8 +80,8 @@
 			.effect img {
 				width:30px;
 				height:30px;
-				border:1px solid black;
-				border-radius:25px;
+				border:1px solid #a9a9a9;
+				border-radius:30px;
 			}
 			#mainmenu li span {
 				border-color: #B5B3B3;
@@ -99,17 +99,17 @@
 			<span id="mailBoxInfo"></span>
 			<span style="float: right; font-weight:normal;color:black; margin-right: 30px;">
 				<select id="searchOption">
-				  <option value="title" <c:if test = "${searchSelect eq 'title' }" >selected="selected"</c:if>>사다리 제목</option>
-				  <option value="kind" <c:if test = "${searchSelect eq 'kind' }" >selected="selected"</c:if>>사다리 종류</option>
-				  <option value="writer" <c:if test = "${searchSelect eq 'writer' }" >selected="selected"</c:if>>작성자</option>
-				  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>>참여자</option>
+				  <option value="title" <c:if test = "${searchSelect eq 'title' }" >selected="selected"</c:if>><spring:message code="ezLadder.t125"/></option>
+				  <option value="kind" <c:if test = "${searchSelect eq 'kind' }" >selected="selected"</c:if>><spring:message code="ezLadder.t126"/></option>
+				  <option value="writer" <c:if test = "${searchSelect eq 'writer' }" >selected="selected"</c:if>><spring:message code="ezLadder.t004"/></option>
+				  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>><spring:message code="ezLadder.t127"/></option>
 				</select>
 
 				<select id="ladderType">
-				  <option value="0" <c:if test = "${searchInput eq '0' }" >selected="selected"</c:if>>꽝뽑기</option>
-				  <option value="1" <c:if test = "${searchInput eq '1' }" >selected="selected"</c:if>>돈내기</option>
-				  <option value="2" <c:if test = "${searchInput eq '2' }" >selected="selected"</c:if>>순서정하기</option>
-				  <option value="3" <c:if test = "${searchInput eq '3' }" >selected="selected"</c:if>>직접쓰기</option>
+				  <option value="0" <c:if test = "${searchInput eq '0' }" >selected="selected"</c:if>><spring:message code="ezLadder.t101"/></option>
+				  <option value="1" <c:if test = "${searchInput eq '1' }" >selected="selected"</c:if>><spring:message code="ezLadder.t102"/></option>
+				  <option value="2" <c:if test = "${searchInput eq '2' }" >selected="selected"</c:if>><spring:message code="ezLadder.t103"/></option>
+				  <option value="3" <c:if test = "${searchInput eq '3' }" >selected="selected"</c:if>><spring:message code="ezLadder.t104"/></option>
 				</select>
 				
 				<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" onkeypress="check_key(event);" value="<c:out value='${searchInput}'/>">

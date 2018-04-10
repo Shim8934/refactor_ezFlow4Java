@@ -602,7 +602,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 			}
 
 			jungbockCnt++;// 만들 수 없는 사다리 배제
-			if (jungbockCnt >= 10000) {
+			if (jungbockCnt >= 20000) {
 				jungbockCnt = 0;
 				lineCnt = 0;
 				for (int i = 0; i < choice.length; i++) {
