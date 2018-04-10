@@ -47,9 +47,8 @@
 			    if (formId != null && formId != "") {
 		        	document.title = "<spring:message code='ezJournal.t18' />";
 		        	
-		        	useDepts = JSON.parse(useDepts.replace(/&#034;/g, "\""));
-		        	
-		        	if (useDepts != null) {
+		        	if (useDepts != null && useDepts != "") {
+			        	useDepts = JSON.parse(useDepts.replace(/&#034;/g, "\""));
 		        		useDeptList = useDepts.slice();
 		        	//	console.log("useDeptList : " + useDeptList)
 		        		$("#setUseDeptList").show();

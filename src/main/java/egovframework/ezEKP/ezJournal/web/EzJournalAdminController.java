@@ -683,12 +683,12 @@ public class EzJournalAdminController {
 	 * @param response
 	 * @throws IOException 
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezJournal/saveAuthor.do")
 	@ResponseBody
 	public String saveAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws IOException{
 		logger.debug("saveAuthor started");
 		
-		String result = "";
 		JSONObject jsonString = new JSONObject();
 		String userId = request.getParameter("userId");
 		String depts = request.getParameter("depts");
@@ -697,14 +697,9 @@ public class EzJournalAdminController {
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", null, request, "post", jsonString);
 		
 		String status = resultBody.get("status").toString();
-		if (status.equals("ok")) {	
-			result = "save complete";
-		} else {
-			result = "save failed";
-		}
 		
 		logger.debug("saveAuthor ended");
-		return result;
+		return status;
 	}
 	
 	/**
@@ -716,26 +711,17 @@ public class EzJournalAdminController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/admin/ezJournal/deleteAuthor.do")
-	public void deleteAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException{
+	@ResponseBody
+	public String deleteAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws IOException{
 		logger.debug("deleteAuthor started");
 		
-		String result = "";
-		
 		Map<String, Object> param = new HashMap<String, Object>();
-		
 		param.put("userId", request.getParameter("userId"));
-		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", param, request, "delete", null);
-		
 		String status = resultBody.get("status").toString();
-		if (status.equals("ok")) {	
-			result="delete complete";
-		} else {
-			result="delete failed";
-		}
 		
 		logger.debug("deleteAuthor ended");
-		response.getWriter().println(result);
+		return status;
 	}
 	
 }

@@ -1781,7 +1781,7 @@ public class EzJournalController extends EgovFileMngUtil {
 					toArr[i] = toArrList.get(i);
 				}
 				
-				String subject = egovMessageSource.getMessage("ezJournal.t155")+journalTitle;
+				String subject = egovMessageSource.getMessage("ezJournal.t155") +journalTitle;
 				
 				String content = "<p>" + egovMessageSource.getMessage("ezJournal.t156") + "</p>";
 				content += "<p></p>";

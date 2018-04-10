@@ -41,7 +41,7 @@
 					setUserList("DEPARTMENT", id,deptName);
 				  })
 				.jstree({ 
-					'core'   : {'data' : treeContent},
+					'core'   : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
 				});

@@ -57,8 +57,10 @@
 			   				url:"/admin/ezJournal/deleteAuthor.do",
 			   				data:{"userId":selectedUser},
 			   				success: function(result){
-			   					alert(result);
-						        window.location.reload(true);
+			   					if (result == "ok") {
+				   					alert("<spring:message code='ezJournal.t138'/>");
+							        window.location.reload(true);
+			   					}
 			   				}
 			   			});
 			    	}

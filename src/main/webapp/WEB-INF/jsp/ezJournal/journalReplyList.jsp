@@ -103,10 +103,16 @@
 			// 메일보내기
 			function sendJournalReplyMail(replyContent,journalId,journalWriter,journalTitle){
 				$.ajax({
-					type:"post",
-					data:{"replyContent":replyContent,"journalId":journalId,"journalTitle":journalTitle,"journalWriter":journalWriter},
-					url:"/ezJournal/sendJournalReplyMail.do",
-					success: function(){
+					type : "post",
+					async : false,
+					data : {
+						"replyContent" : replyContent,
+						"journalId" : journalId,
+						"journalTitle" : journalTitle,
+						"journalWriter" : journalWriter
+					},
+					url : "/ezJournal/sendJournalReplyMail.do",
+					success : function(){
 					}
 				});
 			}

@@ -416,9 +416,14 @@
 	    	//수신자에게 메일 보내기
 	    	function sendJournalRecvMail(journalTitle,recvIds,journalId){
 	    		$.ajax({
-					type:"post",
-					data:{"journalTitle":journalTitle,"recvIds":recvIds,"journalId":journalId},
-					url:"/ezJournal/sendJournalRecvMail.do",
+					type : "post",
+					async : false,
+					data : {
+						"journalTitle" : journalTitle,
+						"recvIds" : recvIds,
+						"journalId" : journalId
+					},
+					url : "/ezJournal/sendJournalRecvMail.do",
 					success: function(){
 					}
 				});

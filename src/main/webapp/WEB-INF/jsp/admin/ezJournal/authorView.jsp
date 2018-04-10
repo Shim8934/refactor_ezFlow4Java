@@ -73,10 +73,12 @@
 	   					userId:selectedUser,
 	   					depts:JSON.stringify(deptIds)
 	   				},
-	   				success: function(result){
-	   					alert(result);
-   						opener.location.reload();
-   						window.close();
+	   				success: function(result) {
+	   					if (result == "ok") {
+		   					alert("<spring:message code='ezJournal.t137'/>");
+	   						opener.location.reload();
+	   						window.close();
+	   					}
 	   				}
 	   			});
 	   		}
