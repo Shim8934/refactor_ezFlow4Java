@@ -1200,7 +1200,7 @@ public class EzAttitudeGWController {
 			filePath = filePath + companyId + commonUtil.separator + "uploadIconFile";//  /files/upload_attitude/companyId/uploadIconFile
 			filePath2 = "/ezCommon/downloadAttach.do?filePath=" + filePath + commonUtil.separator + fileName;
 			
-			tempFilePath = commonUtil.getUploadPath("upload_attitude.TEMPUPLOADICON", info.getTenantId());//  /files/upload_attitude/tempUploadIcon
+			tempFilePath = commonUtil.getUploadPath("upload_attitude.TEMPUPLOAD", info.getTenantId());//  /files/upload_attitude/tempUploadIcon
 			if (!tempFilePath.substring(tempFilePath.length() - 1).equals(commonUtil.separator)) { 
 				tempFilePath = tempFilePath + commonUtil.separator;
 			}
@@ -1493,7 +1493,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/attitudes/bombom", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject attitudeMainList2(HttpServletRequest request) {
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/bombom] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1539,6 +1539,7 @@ public class EzAttitudeGWController {
 			data.put("list", list);
 			data.put("totalCount", totalCount);
 			data.put("typeList", typeList);
+			data.put("typeId", typeId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1548,7 +1549,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/bombom] ended.");
 		return result;
 	}
 }
