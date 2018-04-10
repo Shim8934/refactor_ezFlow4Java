@@ -334,9 +334,13 @@
 			                parent.frames["right"].document.getElementById("presentcell").textContent = tempValue;
 			            else
 			                parent.frames["right"].document.getElementById("presentcell").innerText = tempValue;
+			        
+			            parent.frames["right"].initselyear();
+
 			        }
 			        catch (e) { }
-			        parent.frames["right"].initselyear();
+			        
+			        
 		    	} else {
 /* 		    	    if (tempValue == "")
 		    	        tempValue = localValue;
