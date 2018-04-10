@@ -480,9 +480,9 @@
 		    }
 		    function btnClose_onclick() {
 		        rtnVal[0] = "FALSE";
-		
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
+		            window.close();
 		        }
 		        else {
 		            window.returnValue = rtnVal;
