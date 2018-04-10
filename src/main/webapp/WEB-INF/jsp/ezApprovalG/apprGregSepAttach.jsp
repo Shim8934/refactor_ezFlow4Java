@@ -307,6 +307,7 @@
 		
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(rtnVal);
+		                    window.close();
 		                }
 		                else {
 		                    window.returnValue = rtnVal;
