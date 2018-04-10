@@ -23564,13 +23564,13 @@
 									B.HREF = '') A)
 	  </delete>
 	  	  
-<!-- 	  <insert id="EzApprovalG.insertRelayDB" parameterClass="Map"> -->
-<!-- 	  	INSERT INTO  -->
-<!-- 	  		TBL_RECRELAYINFO  -->
-<!-- 	  	(DOCID, XDOCID, RECDATE, MFROM, MTO, SUBJECT, XMAILTYPE, XFROMCODE, XTOCODE, XGW, XDOCTYPE, XDTDVERSION, XXSLVERSION, CONTENTTYPE, SEALURL, XMLURL, RECEIVEDDATE, COMPANYID, TENANT_ID) -->
-<!-- 		VALUES  -->
-<!-- 		(#docID#, #xDocID#, #recDate#, #from#, #to#, #subject#, #xMailType#, #xFromCode#, #xToCode#, #xGw#, #xDocType#, #xDtdVersion#, #xxslVersion#, #contentType#, #sealUrl#, #xmlUrl#, #lastDate#, #companyID#, #v_TENANTID#) -->
-<!-- 	  </insert> -->
+      <insert id="EzApprovalG.insertRelayDB" parameterClass="Map">
+        INSERT INTO
+            TBL_RECRELAYINFO 
+        (DOCID, XDOCID, RECDATE, MFROM, MTO, SUBJECT, XMAILTYPE, XFROMCODE, XTOCODE, XGW, XDOCTYPE, XDTDVERSION, XXSLVERSION, CONTENTTYPE, SEALURL, XMLURL, RECEIVEDDATE, COMPANYID, IDX,TENANT_ID)
+        VALUES 
+        (#docID#, #xDocID#, to_date(#recDate#,'YYYY-MM-DD HH24:MI:SS'), #from#, #to#, #subject#, #xMailType#, #xFromCode#, #xToCode#, #xGw#, #xDocType#, #xDtdVersion#, #xxslVersion#, #contentType#, #sealUrl#, #xmlUrl#, #lastDate#, #companyID#, SEQ_TBL_RECRELAYINFO.NEXTVAL,#v_TENANTID#)
+      </insert>
 	 	  
 	  <update  id="EzApprovalG.updateRelayFiled" parameterClass="Map">
 	  	UPDATE 
