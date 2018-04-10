@@ -16,7 +16,9 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	// fileList 가져오는 메소드
 	public List<FileVO> getFileList(Map<String, Object> map) {
 		return  (List<FileVO>) list("EzWebFolderDAO_y.getFileList",map);
-		
+	}
+	public List<FileVO> searchFileList(Map<String, Object> map) {
+		return  (List<FileVO>) list("EzWebFolderDAO_y.searchFileList",map);
 	}
 	
 	public int getFldTotalCount (Map<String, Object> map) {
@@ -24,6 +26,9 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	}
 	public int getFileTotalCount (Map<String, Object> map) {
 		return (int) select("EzWebFolderDAO_y.getFileToTalCount",map);
+	}
+	public int searchFileToTalCount (Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.searchFileToTalCount",map);
 	}
 	
 	// jstree사용하기 위해서는 최상단이 #으로 출력되어야합니다. 
@@ -59,10 +64,6 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public String deptInsertTest(Map<String, Object> map) {
 		return  (String) insert("EzWebFolderDAO_y.deptInsertTest",map);
 	}
-	public String insertFolderUsr(Map<String, Object> map) {
-		return  (String) insert("EzWebFolderDAO_y.insertFolderUsr",map);
-	}
-
 	public LoginVO getUserInfo(Map<String, Object> map) {
 		return  (LoginVO) select("EzWebFolderDAO_y.getUserInfo", map);
 	}
@@ -73,7 +74,7 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return  (List<Map<String, Object>>) list("EzWebFolderDAO_y.deptTest",map );
 	}
 	public List<Map<String, Object>> getDeptFolder(Map<String, Object> map) {
-		return  (List<Map<String, Object>>) list("EzWebFolderDAO_y.getDeptFolder",map );
+		return  (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList_D",map );
 	}
 	public List<Map<String, Object>> getAddJobList(Map<String, Object> map) {
 		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getAddJobList",map );
@@ -109,6 +110,10 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	// result는 만약 다른 사람이 만든 폴더나 파일이 있으면 1-return 
 	public int checkFileCreater(Map<String, Object> map) {
 		return (int) select("EzWebFolderDAO_y.checkFileCreater",map );
+	}
+
+	public int getUsrListCnt(Map<String, Object> map) {
+		return (int) select ("EzWebFolderDAO_y.getUsrListCnt",map);
 	}
 	
 

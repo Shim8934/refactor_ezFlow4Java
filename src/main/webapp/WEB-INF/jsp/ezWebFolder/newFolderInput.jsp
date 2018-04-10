@@ -78,7 +78,7 @@
 							},
 						dataType: "JSON",
 						success : function (data) {
-							alert("newFolderName1 : " + szInput1+ "를 insert를 완료하였습니다.");
+							alert("<spring:message code='ezWebFolder.t263' />");
 				            ReturnFunction(szInput1);
 						}
 		        	})
@@ -95,7 +95,7 @@
 								},
 							dataType: "JSON",
 							success : function (data) {
-								alert("newFolderName1 :" + szInput1+ "를 업데이트 완료하였습니다.");
+								alert("<spring:message code='ezWebFolder.t264' />");
 					            ReturnFunction(szInput1);
 							}
 			        })
@@ -113,17 +113,17 @@
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
 	    <h1>테스트</h1>
-	    <div class="txt">만들 폴더명을 입력하세요</div>
+	    <div class="txt"><spring:message code='ezWebFolder.t265' /></div>
 	    <div class="nobox">
-	    	<span id = "ko_lang">한글 </span>
-	        <input id="txt_FolderName1" type="text" onkeydown="folderName_onkeydown()" style="width: 80%;margin-top:2px" maxlength="8">
+	    	<span id = "ko_lang"><spring:message code='ezWebFolder.t226' /></span>
+	        <input id="txt_FolderName1" type="text" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:2px" maxlength="8">
 	        <br>
-	    	<span id = "ko_lang">영문 </span>
-	        <input id="txt_FolderName2" type="text" onkeydown="folderName_onkeydown()" style="width: 80%;margin-top:2px" maxlength="8">
+	    	<span id = "ko_lang"><spring:message code='ezWebFolder.t227' /></span>
+	        <input id="txt_FolderName2" type="text" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:2px" maxlength="8">
 	    </div>
 	    <div class="btnposition btnpositionNew">
-	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezEmail.t38' /></span></a>
-	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezEmail.t39' /></span></a>
+	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezWebFolder.t116' /></span></a>
+	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezWebFolder.t112' /></span></a>
 	    </div>	
 	</body>
 </html>

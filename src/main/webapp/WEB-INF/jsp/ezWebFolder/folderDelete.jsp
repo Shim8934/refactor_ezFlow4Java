@@ -14,9 +14,11 @@
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript">
 		var folderId = "";
+		var ReturnFunction;
 		window.onload = function () {
             try {
             	folderId = parent.deleteFolderDlg_cross_dialogArguments[0];
+            	ReturnFunction = parent.deleteFolderDlg_cross_dialogArguments[1];
             } catch (e) { }
 //	            if (InputValue != "") {
 //	                txt_FolderName.value = InputValue;
@@ -52,8 +54,9 @@
 					var reason = data.status;
 					
 					if (reason == "ok") {
-						alert(reason);
-						wClose();
+// 						wClose();
+						ReturnFunction(folderId);
+						alert("<spring:message code='ezWebFolder.t280'/>")
 					}
 					else {
 						alert("<spring:message code='ezWebFolder.t113'/>");

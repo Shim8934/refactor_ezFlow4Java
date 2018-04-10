@@ -71,6 +71,8 @@ public class EzWebFolderGWController_y {
 			String deptId = common.getDeptId();
 			int tenantId = common.getTenantId();
 			String offset = common.getOffSet();
+			String primary = common.getPrimary(); 
+			LOGGER.debug("primary : "+ primary);
 			List<Map<String, Object>> folderList = new ArrayList< Map<String,Object>>();
 			FolderVO vo = null;
 			String createName1 = "";
@@ -87,10 +89,9 @@ public class EzWebFolderGWController_y {
 			if ( folderType.equals("D")) {
 				createName1 = common.getDeptName();
 				createName2 = common.getDeptId();
-				// 부서폴더 폴더 존재하는지 판단
-				// 부서폴더 존재하는지 판단 위해서는 
-				String chk = service.existFolderChk_D(userId, deptId, comId, folderType, tenantId, timeUTC);
-				
+				// 부서폴더 폴더 존재하는지 판단 후 존재하지 않으면 생성
+				String chk = service.existFolderChk_D(userId, deptId, comId, folderType, tenantId, timeUTC, primary);
+				LOGGER.debug("primary : "+ primary);
 				if (chk.equals("ok")) {
 					LOGGER.debug("department insert success");
 				}else {
@@ -103,7 +104,7 @@ public class EzWebFolderGWController_y {
 				LOGGER.debug("folderType is not comming");
 			}else {
 				// 회사폴더, 개인폴더 
-				int chk = service.existFolderChk(userId, deptId, comId, folderType, tenantId);
+				int chk = service.existFolderChk(userId, deptId, comId, folderType, tenantId, primary);
 				if (chk != 0 ) {
 					LOGGER.debug("folder exist");
 				}else {
@@ -125,7 +126,7 @@ public class EzWebFolderGWController_y {
 					} 					
 				}
 			}
-			folderList = service.getFolderList(admin,userId,deptId,comId, folderId, folderType, tenantId);
+			folderList = service.getFolderList(admin,userId,deptId,comId, folderId, folderType, tenantId ,primary);
 			
 			data.put("status", "ok");
 			data.put("code", 0);
@@ -216,7 +217,7 @@ public class EzWebFolderGWController_y {
 	@RequestMapping ( value = "/rest/ezwebfolder/folders/{folderId}/{mode}" , method = RequestMethod.PUT , produces ="application/json;charset=utf-8")
 	public JSONObject folderCopy (@PathVariable String folderId,@PathVariable String mode, HttpServletRequest request ,Locale locale ,@RequestBody JSONObject jsonObject ) throws Exception  {
 		String serverName	= request.getHeader("host-name")      	!= null ?	request.getHeader("host-name") 			: "";
-		String primary  	= (String) jsonObject.get("primary")   	!= null ?	(String) jsonObject.get("primary") 		: "";
+		String lang  		= (String) jsonObject.get("lang")   	!= null ?	(String) jsonObject.get("lang") 		: "";
 		String userId		= (String) jsonObject.get("id") 		!= null ?	(String) jsonObject.get("id")			: "";
 		String uppId		= (String) jsonObject.get("uppFolderId")!= null ?	(String) jsonObject.get("uppFolderId") 	: "";
 		String resmode  	= "";
@@ -227,10 +228,10 @@ public class EzWebFolderGWController_y {
 			int tenantId = common.getTenantId();
 			String comId = common.getCompanyId();
 			String offset = common.getOffSet();
-			LOGGER.debug("folderId :"+folderId + "serverName : "+serverName + "primary : " + primary + "userId : "+userId + "tenantId : "+ tenantId
+			LOGGER.debug("folderId :"+folderId + "serverName : "+serverName + "lang : " + lang + "userId : "+userId + "tenantId : "+ tenantId
 					+ "comId : " + comId + "offset" + offset);
 			
-			LoginVO userInfo = commonutil.getUserForGw(userId, serverName, primary, offset);
+			LoginVO userInfo = commonutil.getUserForGw(userId, serverName, lang, offset);
 			
 			if (folderId.equals("") || serverName.equals("") || uppId.equals("") || offset.equals("") || mode.equals("") ) {
 				LOGGER.debug("Parameter error!");
@@ -378,11 +379,12 @@ public class EzWebFolderGWController_y {
 			String offset = common.getOffSet();
 			String timeUTC             = commonutil.getDateStringInUTC(formatter.format(date), offset, true);
 			service.deleteSubFldAFile(folderId, tenantId, comId, userId, timeUTC);
-			jsonObj.put("data", "ok");
+			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
 			jsonObj.put("data", "");
 		} catch (Exception e) {
-			jsonObj.put("data", "fail");
+			e.printStackTrace();
+			jsonObj.put("status", "fail");
 			jsonObj.put("code", 1);
 			jsonObj.put("data", "");
 		}
@@ -406,12 +408,8 @@ public class EzWebFolderGWController_y {
 		String searchPageCount = request.getParameter("searchPageCount") 	!= null ? request.getParameter("searchPageCount") 	: "" ;
 		
 		int totalCount = request.getParameter("totalCount") 				!= null ? Integer.parseInt(request.getParameter("totalCount"))	: 0;
-		int listCount = request.getParameter("listCount") 					!= null ? Integer.parseInt(request.getParameter("listCount")) 	: 10;
 		int currPage = request.getParameter("currPage") 					!= null ? Integer.parseInt(request.getParameter("currPage")) 	: 1;
 		int totalpages = request.getParameter("totalpages") 				!= null ? Integer.parseInt(request.getParameter("totalpages"))	: 1;
-		
-		int pEnd = request.getParameter("pEnd")								!=null ?Integer.parseInt(request.getParameter("pEnd")) 			: listCount;
-		int pStart  =request.getParameter("pStart")							!=null? Integer.parseInt(request.getParameter("pStart"))		: 0;
 		
 		List<FileVO> fileList = new ArrayList<FileVO>();
 		JSONObject data = new JSONObject();
@@ -420,14 +418,32 @@ public class EzWebFolderGWController_y {
 			String deptId = common.getDeptId();
 			int tenantId = common.getTenantId();
 			String offset = common.getOffSet();
+			
+			// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
+			int usrListCnt = service.getUsrListCount(tenantId, userId);
+			LOGGER.debug(" usrListCnt : " + usrListCnt + "tenantId : " +tenantId + "userId : " + userId);
+			int listCount = request.getParameter("listCount") 	!= null ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
+			if ( Integer.parseInt(request.getParameter("listCount")) == 0 ) {
+				listCount = usrListCnt ;
+			}
+			int pStart  =request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
+			int pEnd = listCount;
+			
+			LOGGER.debug("listCount : " + listCount + " currPage" + currPage+ " totalpages"+ totalpages + " pEnd" + pEnd );
+			LOGGER.debug("folderId : " + folderId + " folderType : " + folderType + " deptId : "+ deptId + "offset" + offset );
+			LOGGER.debug("pStart : " + pStart + " pEnd : " + pEnd);
+			
 			fileList = service.getFileList(folderId, folderType, userId, deptId, tenantId , common.getCompanyId(),
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset);
+			LOGGER.debug("fileListSize : " + fileList.size()+ "searchStartDate" +searchStartDate+"searchEndDate"+searchEndDate );
 			
 			// fileCnt : 파일 개수 , fldCnt : 폴더 개수 , totalCount : 파일, 폴더 둘다 합한 개수 ( 페이징 하기 위해 필요 ) 
 			Map<String, Integer> cnt = service.getFileToTalCount(folderId,folderType,userId,deptId,tenantId , common.getCompanyId(),
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset);
+			LOGGER.debug("fileListSize : " + fileList.size()+ "searchStartDate" +searchStartDate+"searchEndDate"+searchEndDate );
+			
 			int fileCnt = cnt.get("fileTotalCnt");
 			int fldCnt  = cnt.get("fldTotalCnt");
 			totalCount  = cnt.get("totalCount");
@@ -480,7 +496,9 @@ public class EzWebFolderGWController_y {
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
 			jsonObj.put("data", data);
-		} catch (Exception e) {			
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.debug(" fail ");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
 			jsonObj.put("data", "");

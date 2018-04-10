@@ -49,25 +49,36 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId",folderId);
 		map.put("tenantId",tenantId);
-		parentId = ezWebFolderDAO_y.getparentId (map);
-		
+		map.put("comId",comId);
+		FolderVO detailFld = ezWebFolderDAO_y.getFolderDetail(map);
+		parentId = detailFld.getFolderUpper();
+		String folderPath = detailFld.getFolderPath();
+		String flag = "0";
+		map.put("flag", flag);
 		map.put("deptId", deptId);
 		map.put("userId", userId);
+		map.put("folderPath", folderPath);
 		map.put("parentId", parentId);
 		map.put("folderType",folderType);
-		map.put("comId",comId);
 		map.put("searchExt", searchExt);
 		map.put("searchFileName", searchFileName);
 		map.put("searchStartDate", searchStartDate);
 		map.put("searchEndDate", searchEndDate);
 		map.put("searchCreateName", searchCreateName);
 		map.put("searchFileType", searchFileType);
-		map.put("searchPageCount", searchPageCount);
 		map.put("pStart", pStart);
 		map.put("pEnd", pEnd);
 		map.put("offset", offset);
-		
-		List<FileVO> filevo = (List<FileVO>) ezWebFolderDAO_y.getFileList(map);
+		List<FileVO> filevo  = new ArrayList<FileVO>();
+		if (searchExt != "" || searchStartDate != "" || searchEndDate != "" || searchCreateName != "" || searchFileName!="" ) {
+			flag = "1";
+		}
+		map.put("flag", flag);
+		if (flag.equals("1")) {
+			filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileList(map);
+		}else {
+			filevo = (List<FileVO>) ezWebFolderDAO_y.getFileList(map);
+		}
 		return filevo;
 	}
 	
@@ -83,13 +94,16 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId",folderId);
 		map.put("tenantId",tenantId);
-		parentId = ezWebFolderDAO_y.getparentId (map);
-		
+		map.put("comId",companyId);
+		String flag = "0";
+		FolderVO detailFld = ezWebFolderDAO_y.getFolderDetail(map);
+		parentId = detailFld.getFolderUpper();
+		String folderPath = detailFld.getFolderPath();
 		map.put("userId", userId);
 		map.put("deptId", deptId);
 		map.put("parentId", parentId);
+		map.put("folderPath", folderPath);
 		map.put("folderType",folderType);
-		map.put("comId",companyId);
 		map.put("searchExt", searchExt);
 		map.put("searchFileName", searchFileName);
 		map.put("searchStartDate", searchStartDate);
@@ -100,8 +114,17 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("pStart", pStart);
 		map.put("pEnd", pEnd);
 		map.put("offset", offset);
-		
-		int fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
+		int fileTotalCnt = 0;
+		List<FileVO> filevo  = new ArrayList<FileVO>();
+		if (searchExt != "" || searchStartDate != "" || searchEndDate != "" || searchCreateName != "" || searchFileName!="") {
+			flag = "1";
+		}
+		map.put("flag", flag);
+		if (flag.equals("1")) {
+			fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount(map);
+		}else {
+			fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
+		}
 		int fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount(map);
 		
 		Map<String, Integer> cnt = new HashMap<String, Integer>();
@@ -115,7 +138,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	
 	@Override
 	public List<Map<String, Object>> getFolderList(String admin, String userId,String deptId, String comId ,
-			String folderId, String folderType, int tenantId) throws Exception {
+			String folderId, String folderType, int tenantId , String primary) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -125,6 +148,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("folderId", folderId);
 		map.put("folderType", folderType);
 		map.put("tenantId", tenantId);
+		map.put("primary", primary);
 		
 		
 		List<Map<String, Object>> folderList = new ArrayList< Map<String,Object>>();
@@ -153,7 +177,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	public FolderVO getFolderDetail(String folderUppId,  String userId,	int tenantId, String comId) throws Exception {
 		FolderVO uppFolder  = new FolderVO() ;
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("folderUppId", folderUppId);
+		map.put("folderId", folderUppId);
 		map.put("tenantId", tenantId);
 		map.put("comId", comId);
 		map.put("userId", userId);
@@ -264,13 +288,14 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	// 첫 로그인 후 폴더가 존재하는지 판단하는 메서드 
 	@Override
 	public int existFolderChk(String userId, String deptId, String comId,
-			String folderType, int tenantId) {
+			String folderType, int tenantId, String primary) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);		
 		map.put("userId", userId);		
 		map.put("deptId", deptId);		
 		map.put("comId", comId);		
 		map.put("folderType", folderType);		
+		map.put("primary", primary);		
 		
 		//해당 폴더가 있으면 flag=1, 없으면 flag=0을 반환
 		int  result = ezWebFolderDAO_y.existFolderChk(map);
@@ -279,7 +304,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 
 	// 부서폴더가 존재하는지 판단하는 메서드 
 	@Override
-	public String existFolderChk_D(String userId, String deptId, String comId, String folderType, int tenantId, String timeUTC)  throws Exception{
+	public String existFolderChk_D(String userId, String deptId, String comId, String folderType,
+			int tenantId, String timeUTC, String primary)  throws Exception{
 		
 		// 부서폴더 폴더 존재하는지 판단
 		// 부서폴더 존재하는지 판단 위해서는 부서폴더에 필요한 자기관련된 부서들을 다 찾을 수 있는 쿼리를 돌려서 다 없으면 다 만들고 다 있은면 안만든다 
@@ -297,7 +323,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("folderType", folderType);
 		map.put("tenantId", tenantId);
 		map.put("timeUTC", timeUTC);
-		LOGGER.debug("timeUTC : " + timeUTC + "existFolderChk_d");
+		map.put("primary", primary);
+		LOGGER.debug("timeUTC : " + timeUTC + "existFolderChk_d  . primary : " + primary);
 		
 		Map<String, Object> deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
 		// 부서장인지 판단  부서장
@@ -342,7 +369,6 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		} else {
 				
 				map.put("deptId", deptId);
-				
 				map.put("folderUppId", "root");
 				map.put("folderType", folderType);
 				map.put("folderStep", 0);
@@ -516,6 +542,19 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			result =0;
 		}
 		return result;
+	}
+
+	@Override
+	public int getUsrListCount(int tenantId, String userId) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		
+		int listCount = ezWebFolderDAO_y.getUsrListCnt(map);
+		
+		return listCount;
 	}
 	
 }

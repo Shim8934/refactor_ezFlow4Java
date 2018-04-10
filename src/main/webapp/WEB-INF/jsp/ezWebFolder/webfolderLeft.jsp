@@ -27,30 +27,7 @@
 		    $(function() { 
 				folderList('C');
 		    	folderType = 'C';
-		    	
-
-// 				console.log("+++++++++++++++++++++++++");
-				
-// 				var id = folderId + "_anchor";
-// 				console.log("Folder Id: " + folderId);
-// 				console.log("Folder Id: " + id);
-				
-// 				var clicked = document.getElementById(id);
-// 				console.log(clicked);
-				
-// 				if (clicked) {
-// 					clicked.setAttribute("class", "jstree-anchor jstree-clicked");
-// 				}
-// 				console.log("+++++++++++++++++++++++++");
-				
-				/* 				var clicked = document.getElementById(folderId + "_anchor");
-								console.log(clicked);
-								console.log(clicked.className);
-								if (clicked) {
-									clicked.setAttribute("class", "jstree-anchor jstree-clicked");
-								} */
-		    	
-				});		
+			});		
 		    function refreshView(){
 		    	$.jstree.destroy()
 		    	folderList(folderType);
@@ -87,19 +64,12 @@
 						})
 						.on('loaded.jstree', function() {
 							var test = "#" + folderId;
-							//console.log("Test: " + test);
-							
-							//console.log("-----------------------------------");
 							var elmentTest = document.getElementById(folderId);
-							//console.log(elmentTest);
 							var childE = document.getElementById(folderId + "_anchor");
-							//console.log(childE);
-							//console.log("-----------------------------------");
 							
 							elmentTest.setAttribute("aria-selected", "true");
 							childE.setAttribute("class", "jstree-anchor jstree-clicked");
 							
-							//$($element).jstree("selected_node", '#8', true);
 						})
 						.jstree({
 							'plugins': ["core","types","json_data","themes","ui"],
@@ -197,7 +167,6 @@
 	        }	
 		    
 		    function getFileList(folderId) {
-		    	// + 버튼 누르면 오른쪽 화면 뜨고 오른쪽 화면에서 ajax로 띄움
 		    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do?folderId="+folderId+"&folderType="+folderType;
 		   	}
 		    function treeTest() {
@@ -218,18 +187,18 @@
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%" onload="drawVolume();">
 		<div id="left" style="overflow: none">
-			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"><span>웹폴더</span>
+			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"><span><spring:message code='ezWebFolder.t10' /></span>
 				<img style="width:20px;height:20px;" onClick="refreshView()" class="ui-datepicker-trigger" src="/images/webfolder/reload.png" alt title>
 			</div>
 			<h2>
-  				<span style="display:inline-block;width:100%;" onclick="folderList('C');">회사폴더</span>
+  				<span style="display:inline-block;width:100%;" onclick="folderList('C');"><spring:message code='ezWebFolder.t233' /></span>
   			</h2>  
     		<ul class ="tree">
     			<div id ="tree" style="width:210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
 <!-- 	  			<li id ="company"></li> -->
 		    </ul>  	
 		    <h2>
-  				<span style="display:inline-block; width:100%;" onclick="folderList('D');">부서폴더</span>
+  				<span style="display:inline-block; width:100%;" onclick="folderList('D');"><spring:message code='ezWebFolder.t234' /></span>
   			</h2>  
     		<ul class ="tree">
     			<div id ="treeDept" style="width: 210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
@@ -237,7 +206,7 @@
 		    </ul>  
 		    	
 		   	<h2>
-  				<span style="display:inline-block;width:100%;" onclick="folderList('U');">개인폴더</span>
+  				<span style="display:inline-block;width:100%;" onclick="folderList('U');"><spring:message code='ezWebFolder.t235' /></span>
   			</h2>  
     		<ul class ="tree">
     			<div id ="treePer" style="width: 210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
@@ -245,26 +214,26 @@
 		    </ul>  
 		    
 		    <h2>
-				<span style="display:inline-block;width:100%;" onclick="getReceivedShare();">공유폴더</span>
+				<span style="display:inline-block;width:100%;" onclick="getReceivedShare();"><spring:message code='ezWebFolder.t266' /></span>
 			</h2>
 			<ul>
-				<li><span style="width: 100%; display: inline-block;" onclick="getReceivedShare();">공유받은 폴더</span></li>
-				<li><span style="width: 100%; display: inline-block;" onclick="getGivenShare();"   >공유한 폴더</span></li>
+				<li><span style="width: 100%; display: inline-block;" onclick="getReceivedShare();"><spring:message code='ezWebFolder.t214' /></span></li>
+				<li><span style="width: 100%; display: inline-block;" onclick="getGivenShare();"   ><spring:message code='ezWebFolder.t266' /></span></span></li>
 			</ul>
 		    
 		    <h2>
-  				<span style="display:inline-block;width:100%;">츨겨찾기</span>
+  				<span style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t216'/></span>
   			</h2>  
     		<ul>
 		    </ul>
 		    <h2>
-  				<span style="display:inline-block;width:100%;">폴더관리</span>
+  				<span style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span>
   			</h2>  
 		    <ul>
 		    </ul> 
 
 		    <h2>
-  				<span style="display:inline-block;width:100%;">휴지통</span>
+  				<span style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t269'/></span>
   			</h2>
     		<ul>
 			</ul>
@@ -272,7 +241,7 @@
 <!-- 		        <span onclick="boardConfig()" style="width:100%; display:inline-block;">휴지통</span> -->
 <!-- 		    </h3> -->
 			<h3>
-		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;">폴더관리</span>
+		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span>
 		    </h3>
 			<h3>
 				<span onclick="wfConfig();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t236" /></span>

@@ -17,7 +17,7 @@
 	<script type="text/javascript">
 		var primary        = "<c:out value='${primary}'/>";
 		var folderId       = "";
-		var uppFolderId       = "";
+		var uppFolderId    = "";
 		var selectedFolder = null;
 		var arrSubFolder   = [];
 		
@@ -155,39 +155,6 @@
 				}
 			});
 		}
-		/*
-		function folderMove() {
-			if (uppFolderId == "") {
-				alert(uppFolderId);
-				alert("<spring:message code='ezWebFolder.t181'/>");
-				return;
-			}
-			
-			if (folderId == uppFolderId) {
-				alert("같은 폴더로 이동할 수 없습니다.");
-				return;
-			}
-			
-			$.ajax({
-				type: "POST",
-				url: "/ezWebFolder/moveFolder.do",
-				data: {
-					 "folderId"     : folderId
-					,"uppFolderId"  : uppFolderId
-					,"mode"			: "move"
-				},
-				dataType: "JSON",
-				async: false,
-				success : function(data) {
-					var reason = data.reason;
-					afterSuccess(reason);
-				},
- 				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134'/>" + error);
-				}
-			});
-		}
-		*/
 		
 	</script>
 </head>

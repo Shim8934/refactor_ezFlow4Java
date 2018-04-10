@@ -12,11 +12,6 @@
     <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
     <script type="text/javascript" src="/js/mouseeffect.js"></script>
-<!--     <script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script> -->
-<!--     <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script> -->
-<!--     <script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script> -->
-<!--     <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script> -->
-    
    	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
     <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
     <link rel="stylesheet" href="/js/jsTree/dist/themes/default/style.css" />
@@ -104,7 +99,6 @@
 								'responsive' : false,
 								'variant'    : 'small',
 								'stripes'    : false
-// 								'selected'	 : true
 							}
 						},
 						"types" : {
@@ -125,17 +119,16 @@
 				}
 			});
 			$("#folderTree").on("changed.jstree", function (e, data) {
-			   folderId =data.selected[0]; 
-			   folderId =data.node.original.id; 
-			   createId =data.node.original.createId; 
-			   parent =data.node.original.parent; 
+			   folderId = data.selected[0]; 
+			   createId = folderId != null ? data.node.original.createId : ""; 
+			   parent   = data.node.original.parent; 
 			   console.log("The selected nodes are:" + folderId);
 			});
 	    }
         
         function add_onclick() {
             if (folderId == "") {
-                alert("하위폴더를 만들 폴더를 선택해주세요");
+                alert("<spring:message code='ezWebFolder.t257'/>");
                 return;
             }
             var functionType = "insert"; 
@@ -147,11 +140,12 @@
         }
         function update_onclick() {
             if (folderId == "") {
-                alert("수정할 폴더를 선택해주세요");
+                alert("<spring:message code='ezWebFolder.t256'/>");
                 return;
             }
             if (userId !=createId ) {
-            	alert("폴더 생성자가 아니면 폴더명을 수정할 수 없습니다.,createId : " + createId+ "userId"+ userId);
+            	alert("<spring:message code='ezWebFolder.t258'/>");
+            	
             	return;
             }else {
             }
@@ -165,10 +159,17 @@
         var deleteFolderDlg_cross_dialogArguments = [];
         function delete_onclick() {
             if (folderId == "") {
-                alert("삭제할 폴더를 선택해주세요");
+                alert("<spring:message code='ezWebFolder.t259'/>");
                 return;
             }
+            if (userId !=createId ) {
+            	alert("<spring:message code='ezWebFolder.t260'/>");
+            	
+            	return;
+            }else {
+            }
             deleteFolderDlg_cross_dialogArguments[0] = folderId;
+            deleteFolderDlg_cross_dialogArguments[1] = add_onclick_Complete
             console.log("folderId delete_onclick function" + folderId);
             console.log("deleteFolderDlg_cross_dialogArguments delete_onclick function" + deleteFolderDlg_cross_dialogArguments[0]);
             DivPopUpShow(330, 170, "/ezWebFolder/folderDelete.do");
@@ -176,21 +177,18 @@
         var moveCopyFolderDlg_cross_dialogArguments = [];
         function move_onclick() {
             if (folderId == "") {
-                alert("이동할 폴더를 선택해주세요");
+                alert("<spring:message code='ezWebFolder.t261'/>");
                 return;
             }
-           	// parent 가 root인거는 가온아이, 박예연 이렇게 하고 
-           	// parent 가 root인거의 폴더 id가져와서  또 거기의 parent 가 id인거를 가져오면 됨 
-           	
            	
             if ( parent =='#' ) {
-	            alert("이 폴더는 이동할 수 없습니다.");
+	            alert("<spring:message code='ezWebFolder.t262'/>");
 	            return;
             }else if (folderType == "C") {
             	for ( var i = 0 ; i <test.length; i++) {
             		if (test[i].id == parent) {
             			if(test[i].parent == '#') {
-				            alert("이 폴더는 이동할 수 없습니다.");
+				            alert("<spring:message code='ezWebFolder.t262'/>");
 				            return;
             			} 
             		}
@@ -203,11 +201,9 @@
         }
         function copy_onclick() {
             if (folderId == "") {
-                alert("이동할 폴더를 선택해주세요");
+                alert("<spring:message code='ezWebFolder.t261'/>");
                 return;
             }
-           	// parent 가 root인거는 가온아이, 박예연 이렇게 하고 
-           	// parent 가 root인거의 폴더 id가져와서  또 거기의 parent 가 id인거를 가져오면 됨 
            	
             moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
             console.log("folderId copy_onclick function" + folderId);
@@ -245,20 +241,20 @@
 	
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('C');"> <span><spring:message code="ezWebFolder.t233"/></span>
-			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('D');"> <span><spring:message code="ezWebFolder.t234"/></span>
-			<input name="treeType" id="radio3" type="radio" value="user"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('U');"> <span><spring:message code="ezWebFolder.t234"/></span>
+			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('C');"> <span><spring:message code='ezWebFolder.t233'/></span>
+			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('D');"> <span><spring:message code='ezWebFolder.t234'/></span>
+			<input name="treeType" id="radio3" type="radio" value="user"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('U');"> <span><spring:message code='ezWebFolder.t235'/></span>
 		</div>
 	</div>
 	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto;" id="folderTree"></div>
 	
 	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
-		<a class="imgbtn"><span onclick="">공 유</span></a>
-      	<a class="imgbtn" onclick="add_onclick()"><span>새폴더</span></a>
-      	<a class="imgbtn" onclick="update_onclick()"><span>수 정</span></a>
-      	<a class="imgbtn" onclick="move_onclick()"><span>이동</span></a>
-      	<a class="imgbtn" onclick="copy_onclick()"><span>복사</span></a>
-      	<a class="imgbtn" onclick="delete_onclick()"><span>삭 제</span></a>
+		<a class="imgbtn"><span onclick=""><spring:message code="ezWebFolder.t254"/></span></a>
+      	<a class="imgbtn" onclick="add_onclick()"><span><spring:message code="ezWebFolder.t255"/></span></a>
+      	<a class="imgbtn" onclick="update_onclick()"><span><spring:message code="ezWebFolder.t162"/></span></a>
+      	<a class="imgbtn" onclick="move_onclick()"><span><spring:message code="ezWebFolder.t121"/></span></a>
+      	<a class="imgbtn" onclick="copy_onclick()"><span><spring:message code="ezWebFolder.t122"/></span></a>
+      	<a class="imgbtn" onclick="delete_onclick()"><span><spring:message code="ezWebFolder.t111"/></span></a>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
