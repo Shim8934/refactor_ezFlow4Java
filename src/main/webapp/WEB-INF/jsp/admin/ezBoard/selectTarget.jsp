@@ -633,12 +633,12 @@
 		                  		<table>
 		                      		<tr>
 		                            	<td>
-		                                	<div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:280px;HEIGHT:440px;BACKGROUND-COLOR:#ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
+		                                	<div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:270px;HEIGHT:440px;BACKGROUND-COLOR:#ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
 		                            	</td>
 		                            	<td width="5"></td>
 		                            	<td>
 		                                	<div class="listview">
-		                	                <div id=OrganListView style ="OVERFLOW:auto; WIDTH:100%; min-width:602px; HEIGHT:440px; border:0"></div></div>
+		                	                <div id=OrganListView style ="OVERFLOW:auto; WIDTH:100%; min-width:612px; HEIGHT:440px; border:0"></div></div>
 		                    	        </td>
 		                      		</tr>
 		                 		</table>

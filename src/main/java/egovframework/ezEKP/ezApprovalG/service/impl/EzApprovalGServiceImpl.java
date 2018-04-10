@@ -11483,19 +11483,31 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (resultXML.getDocumentElement().getChildNodes().getLength() > 0) {
 					if (resultXML.getElementsByTagName("DISPLAYNAME").item(0) == null) {
-						rtnVal.append("- " + tempDeptName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));
+						/*rtnVal.append("- " + tempDeptName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));*/
+						
+						/* 2018-04-10 장진혁 "-" 제거 */
+						rtnVal.append(tempDeptName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));
 					} 
 					
 					if (resultXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0) != null) {
 						if (!userCompanyID.trim().equals(resultXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().trim())) {
-							rtnVal.append("- " + tempDeptName + messageSource.getMessage("ezApprovalG.pjj09", userInfo.getLocale()) + userCompanyID);
+							/*rtnVal.append("- " + tempDeptName + messageSource.getMessage("ezApprovalG.pjj09", userInfo.getLocale()) + userCompanyID);*/
+							
+							/* 2018-04-10 장진혁 "-" 제거 */
+							rtnVal.append(tempDeptName + messageSource.getMessage("ezApprovalG.pjj09", userInfo.getLocale()) + userCompanyID);
 							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()) + resultXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tempDeptName + messageSource.getMessage("ezApprovalG.pjj12", userInfo.getLocale()));
+						/*rtnVal.append("- " + tempDeptName + messageSource.getMessage("ezApprovalG.pjj12", userInfo.getLocale()));*/
+						
+						/* 2018-04-10 장진혁 "-" 제거 */
+						rtnVal.append(tempDeptName + messageSource.getMessage("ezApprovalG.pjj12", userInfo.getLocale()));
 					}
 				} else {
-					rtnVal.append("- " + tempDeptName +  messageSource.getMessage("ezApprovalG.pjj13", userInfo.getLocale()));
+					/*rtnVal.append("- " + tempDeptName +  messageSource.getMessage("ezApprovalG.pjj13", userInfo.getLocale()));*/
+					
+					/* 2018-04-10 장진혁 "-" 제거 */
+					rtnVal.append(tempDeptName +  messageSource.getMessage("ezApprovalG.pjj13", userInfo.getLocale()));
 				}
 			}
 		} else {
@@ -11511,20 +11523,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (resultXML.getDocumentElement().getChildNodes().getLength() > 0) {
 				if (resultXML.getElementsByTagName("DISPLAYNAME1").item(0) != null) {
 					if (!userName.trim().equals(resultXML.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent().trim())) {
-						rtnVal.append("- " + userName + messageSource.getMessage("ezApprovalG.pjj14", userInfo.getLocale())+ userName);
+						/*rtnVal.append("- " + userName + messageSource.getMessage("ezApprovalG.pjj14", userInfo.getLocale())+ userName);*/
+						
+						/* 2018-04-10 장진혁 "-" 제거 */
+						rtnVal.append(userName + messageSource.getMessage("ezApprovalG.pjj14", userInfo.getLocale())+ userName);
 						rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale())+ resultXML.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent());
 						rtnVal.append(messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 					} else if (resultXML.getElementsByTagName("DISPLAYNAME2").item(0) != null) {
 						if (!userName2.trim().equals(resultXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent().trim())) {
-							rtnVal.append("- " + userName2 + messageSource.getMessage("ezApprovalG.pjj14", userInfo.getLocale()) + userName2);
+							/*rtnVal.append("- " + userName2 + messageSource.getMessage("ezApprovalG.pjj14", userInfo.getLocale()) + userName2);*/
+							
+							/* 2018-04-10 장진혁 "-" 제거 */
+							rtnVal.append(userName2 + messageSource.getMessage("ezApprovalG.pjj14", userInfo.getLocale()) + userName2);
 							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()) + resultXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent());
 							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));
+						/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));*/
+						
+						/* 2018-04-10 장진혁 "-" 제거 */
+						rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));
 					}
 				} else {
-					rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));
+					/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));*/
+					
+					/* 2018-04-10 장진혁 "-" 제거 */
+					rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));
 				}
 				
 				boolean subTitleFlag = false;
@@ -11580,7 +11604,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (!subTitleFlag) {
-							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj155", userInfo.getLocale()));
+							/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj155", userInfo.getLocale()));*/
+							
+							/* 2018-04-10 장진혁 "-" 제거 */
+							rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj155", userInfo.getLocale()));
 							rtnVal.append(userCompanyID + ", " + userDeptID + ", " + userDeptName + "(" + userDeptName2 + "), ");
 							rtnVal.append(userJobTitle + "(" + userJobTitle2 + ")" + messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));
 							
@@ -11597,62 +11624,104 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj16", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj17", userInfo.getLocale()));
+						/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj17", userInfo.getLocale()));*/
+						
+						/* 2018-04-10 장진혁 "-" 제거 */
+						rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj17", userInfo.getLocale()));
 					}
 				} else {
 					if (resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0) != null) {
 						if (!userCompanyID.trim().equals(resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent().trim())) {
-							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj09", userInfo.getLocale()) + userCompanyID);
+							/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj09", userInfo.getLocale()) + userCompanyID);*/
+							
+							/* 2018-04-10 장진혁 "-" 제거 */
+							rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj09", userInfo.getLocale()) + userCompanyID);
 							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()) + resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent());
 							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj12", userInfo.getLocale()));
+						/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj12", userInfo.getLocale()));*/
+						
+						/* 2018-04-10 장진혁 "-" 제거 */
+						rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj12", userInfo.getLocale()));
 					}
 					
 					if (resultXML.getElementsByTagName("DEPARTMENT").item(0) != null) {
 						if (!userDeptID.trim().equals(resultXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent().trim())) {
-							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj15", userInfo.getLocale()) + userDeptID);
+							/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj15", userInfo.getLocale()) + userDeptID);*/
+							
+							/* 2018-04-10 장진혁 "-" 제거 */
+							rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj15", userInfo.getLocale()) + userDeptID);
 							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()) + resultXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent() + messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj18", userInfo.getLocale()));
+						/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj18", userInfo.getLocale()));*/
+						
+						/* 2018-04-10 장진혁 "-" 제거 */
+						rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj18", userInfo.getLocale()));
 					}
 					
 					if (resultXML.getElementsByTagName("DESCRIPTION1").item(0) != null) {
 						if (!userDeptName.trim().equals(resultXML.getElementsByTagName("DESCRIPTION1").item(0).getTextContent().trim())) {
-							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj19", userInfo.getLocale()) + userDeptName);
+							/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj19", userInfo.getLocale()) + userDeptName);*/
+							
+							/* 2018-04-10 장진혁 "-" 제거 */
+							rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj19", userInfo.getLocale()) + userDeptName);
 							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale())+ resultXML.getElementsByTagName("DESCRIPTION1").item(0).getTextContent() + messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 						} else if (resultXML.getElementsByTagName("DESCRIPTION2").item(0) != null) {
 							if (!userDeptName2.trim().equals(resultXML.getElementsByTagName("DESCRIPTION2").item(0).getTextContent().trim())) {
-								rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj19", userInfo.getLocale()) + userDeptName2);
+								/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj19", userInfo.getLocale()) + userDeptName2);*/
+								
+								/* 2018-04-10 장진혁 "-" 제거 */
+								rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj19", userInfo.getLocale()) + userDeptName2);
 								rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()) + resultXML.getElementsByTagName("DESCRIPTION2").item(0).getTextContent() + messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 							}
 						} else {
-							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj18", userInfo.getLocale()));
+							/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj18", userInfo.getLocale()));*/
+							
+							/* 2018-04-10 장진혁 "-" 제거 */
+							rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj18", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj18", userInfo.getLocale()));
+						/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj18", userInfo.getLocale()));*/
+						
+						/* 2018-04-10 장진혁 "-" 제거 */
+						rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj18", userInfo.getLocale()));
 					}
 					
 					if (resultXML.getElementsByTagName("TITLE1").item(0) != null) {
 						if (!userJobTitle.trim().equals(resultXML.getElementsByTagName("TITLE1").item(0).getTextContent().trim())) {
-							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj20", userInfo.getLocale()) + userJobTitle + messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));
+							/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj20", userInfo.getLocale()) + userJobTitle + messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));*/
+							
+							/* 2018-04-10 장진혁 "-" 제거 */
+							rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj20", userInfo.getLocale()) + userJobTitle + messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));
 							rtnVal.append(resultXML.getElementsByTagName("TITLE1").item(0).getTextContent() + messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 						} else if (resultXML.getElementsByTagName("TITLE2").item(0) != null) {
 							if (!userJobTitle2.trim().equals(resultXML.getElementsByTagName("TITLE2").item(0).getTextContent().trim())) {
-								rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj20", userInfo.getLocale()) + userJobTitle2 + messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));
+								/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj20", userInfo.getLocale()) + userJobTitle2 + messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));*/
+								
+								/* 2018-04-10 장진혁 "-" 제거 */
+								rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj20", userInfo.getLocale()) + userJobTitle2 + messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));
 								rtnVal.append(resultXML.getElementsByTagName("TITLE2").item(0).getTextContent() + messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 							}
 						} else {
-							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj21", userInfo.getLocale()));
+							/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj21", userInfo.getLocale()));*/
+							
+							/* 2018-04-10 장진혁 "-" 제거 */
+							rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj21", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj21", userInfo.getLocale()));
+						/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj21", userInfo.getLocale()));*/
+						
+						/* 2018-04-10 장진혁 "-" 제거 */
+						rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj21", userInfo.getLocale()));
 					}
 				}
-			} else {
-				rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj22", userInfo.getLocale()));
+			} else {				
+				/*rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj22", userInfo.getLocale()));*/
+				
+				/* 2018-04-10 장진혁 "-" 제거 */
+				rtnVal.append(tmpUserName + messageSource.getMessage("ezApprovalG.pjj22", userInfo.getLocale()));
 			}
 		}
 
@@ -24595,7 +24664,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
              
-             strSamplePath = config.getProperty("relay_root") + config.getProperty("upload_relay.ROOT")  + commonUtil.separator + "sample.xml";
+             strSamplePath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator + "sample.xml";
              strSendOrgCode = strCompanyID;
              strSendName = ezOrganService.getPropertyValue(strCompanyID, "displayName", tenantID);
 
