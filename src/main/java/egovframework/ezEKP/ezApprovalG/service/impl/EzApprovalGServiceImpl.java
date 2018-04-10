@@ -24595,7 +24595,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
              
-             strSamplePath = config.getProperty("relay_root") + config.getProperty("upload_relay.ROOT")  + commonUtil.separator + "sample.xml";
+             strSamplePath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator + "sample.xml";
              strSendOrgCode = strCompanyID;
              strSendName = ezOrganService.getPropertyValue(strCompanyID, "displayName", tenantID);
 
