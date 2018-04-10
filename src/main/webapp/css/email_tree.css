@@ -1,9 +1,9 @@
 .node_normal
 {
-    height:16px;
-    line-height:16px;
-    /* height: 19px; */    
-    /* line-height:19px; */
+    /* height:16px;
+    line-height:16px; */
+    height: 19px;    
+    line-height:19px;
     color:#555;    
     padding-left: 3px;    
     font-size:9pt;
@@ -19,10 +19,10 @@
 }
 .node_selected
 {    
-    height: 16px;
-    line-height:16px;    
-    /* height: 19px; */    
-    /* line-height:19px; */
+    /* height: 16px;
+    line-height:16px; */    
+    height: 19px;    
+    line-height:19px;
     color: #333;    
     padding-left: 3px;
     font-size: 9pt;
@@ -39,10 +39,10 @@
 }
 .node_hover
 {
-    height: 16px;
-    line-height:16px;
-    /* height: 19px; */    
-    /* line-height:19px; */
+    /* height: 16px;
+    line-height:16px; */
+    height: 19px;    
+    line-height:19px;
     color: #333;    
     padding-left: 3px;
     font-size: 9pt;

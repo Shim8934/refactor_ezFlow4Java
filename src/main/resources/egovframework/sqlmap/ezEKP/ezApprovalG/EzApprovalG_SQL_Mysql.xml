@@ -3483,7 +3483,7 @@
 	     AND
        		COMPANYID = #companyID#
 	     ORDER BY 
-	     	APRDEPTMEMBERSN DESC
+	     	APRDEPTMEMBERSN ASC
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTempListDB" parameterClass="Map" resultClass="ApprGAdminReceiveVO" remapResults="true"> -->
