@@ -27,8 +27,8 @@
 							<td><input type="text" id="displayname" name="displayname" maxlength="40" placeholder="<spring:message code='ezEmail.letter10'/>"></td>
 						</tr>
 						<tr>
-							<th><spring:message code='ezEmail.letter9'/> (${secondary })</th>
-							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" placeholder="<spring:message code='ezEmail.letter11'/>"></td>
+							<th><spring:message code='ezEmail.letter8'/> (${secondary })</th>
+							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" placeholder="<spring:message code='ezEmail.letter10'/>"></td>
 						</tr>
 					</table>
 				</div> <!-- leLetterInfo End -->
@@ -64,7 +64,7 @@
 					
 					modifyLoad(popLetterNo);
 				} else {
-					$(".leTitle").text("<spring:message code='ezEmail.letter13'/>");
+					$(".leTitle").text("<spring:message code='ezEmail.letter3'/>");
 				}
 				
 				$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=MAILLETTER"); // 에디터
