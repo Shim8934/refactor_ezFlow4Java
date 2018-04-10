@@ -98,7 +98,7 @@
 		    var condition = new Array();
 		    var nowDate = "${nowDateUTC}";
 		    var ext;
-		    
+		   
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -244,13 +244,13 @@
 		                onSelect_Year(data.item.value);
 		            }
 		        });
-		
+		        
 		        $("#number")
 		          .selectmenu()
 		          .selectmenu("menuWidget")
 		            .addClass("overflow");
 		    });
-		    
+		  
 		    function window_onload() {
 		        CurrentHeight = document.documentElement.clientHeight;
 		        CurrenWidth = document.documentElement.clientWidth;
@@ -1699,6 +1699,9 @@
 		    	return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 		    }
 		    
+		    function initselyear() {
+		        $('#sel_year').selectmenu('close');
+		    }
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
@@ -1751,7 +1754,7 @@
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li>
 		        <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-		        <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
+		        <select id="sel_year" name="sel_year" style="width:75px;" onmouseover="onSelect_Year(this);">    
 		            <option value="ALL">ALL</option>
 		        </select>  
 			</ul>
