@@ -30,6 +30,8 @@
 		    var UserLang = "${userInfo.lang}";
 		    var RetValue;
 		    var ReturnFunction;
+		    var ext = "";
+		    
 		    window.onload = function () {
 		        try {
 		            RetValue = parent.inssepattach_cross_dialogArguments[0];
@@ -46,7 +48,7 @@
 		            document.getElementById("listviewdiv").style.height = "500px";
 		            document.getElementById("lvList").style.height = "500px";
 		        }
-
+  	 			ext = RetValue[3];
 		        g_SepAttchLVXml = RetValue[0];
 		        g_CabinetID = RetValue[1];
 		        if (RetValue[2])
@@ -136,14 +138,13 @@
 		
 		        var url = "/ezApprovalG/regSepAttach.do";
 		
-		        if (CrossYN()) {
+		        if (CrossYN() && ext != "hwp") {
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		
 		            DivPopUpShow(700, 615, url);
 
-		        }
-		        else {
+		        } else {
 		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
 		            feature = feature + GetShowModalPosition(410, 555);
 		
@@ -306,7 +307,7 @@
 		
 		            var url = "/ezApprovalG/regSepAttach.do";
 		
-		            if (CrossYN()) {
+		            if (CrossYN() && ext != "hwp") {
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		
